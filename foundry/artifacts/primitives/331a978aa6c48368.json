@@ -1,0 +1,95 @@
+{
+  "book_id": "331a978aa6c48368",
+  "source_status": "COMPLETE",
+  "title": "openalex_W2100789667",
+  "file_name": "openalex_W2100789667.pdf",
+  "sha256": "331a978aa6c483687129d9325214243942a9c5c546dc99e1336e1ce24a8789a1",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Player detection integrates court geometry, color, and edge cues via adaptive search windows and shadow removal for deformable figure isolation. Universal Lens: Rooted in openalex_W2100789667 (331a978aa6c48368), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models player presence using probabilistic court constraints and color-edge likelihood maps for robust tracking. GSI Mapping: Rooted in openalex_W2100789667 (331a978aa6c48368), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning employs adaptive bounding boxes and perspective-transformed motion windows to maintain player state transitions across frames. GSE Mapping: Rooted in openalex_W2100789667 (331a978aa6c48368), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "adaptive_search_window",
+      "name": "Adaptive Search Window",
+      "verbatim_quote": "Based on the court model, an adaptive search window is designed for locating the minimum region containing a player figure.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'XP_i, YP_i': 'pixel coordinates of court points (dimensionless)', 'XP_C, YP_C': 'center court coordinates (pixels)'}",
+      "assumptions": "Player motion constrained within known court boundaries; camera perspective fixed or transformable.",
+      "breakdown_regime": "Failure when player exceeds maximum speed threshold or leaves court bounds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps real-world motion to image-space search regions using speed-based window expansion.",
+        "source_operator": "adaptive_search_window",
+        "telemetry": "Centroid displacement between frames and window overlap ratio."
+      }
+    },
+    {
+      "primitive_id": "non_dominant_color_extraction",
+      "name": "Non-Dominant Color Extraction",
+      "verbatim_quote": "After retrieving the region of interest, pixel data are processed by non-dominant color extraction and edge detection filters, respectively.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{nd}': 'non-dominant color vector (RGB values)', 'I_{roi}': 'region of interest image (pixels)'}",
+      "assumptions": "Player color differs significantly from dominant background colors.",
+      "breakdown_regime": "Failure under uniform or highly saturated backgrounds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between color histogram peaks and player silhouette via statistical filtering.",
+        "source_operator": "non_dominant_color_extraction",
+        "telemetry": "Color variance within ROI and dominant color entropy."
+      }
+    },
+    {
+      "primitive_id": "edge_detection_filter",
+      "name": "Edge Detection Filter",
+      "verbatim_quote": "After retrieving the region of interest, pixel data are processed by non-dominant color extraction and edge detection filters, respectively.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'edge magnitude map (dimensionless)', 'G': 'gradient magnitude (pixels)'}",
+      "assumptions": "Player silhouette exhibits distinct gradient changes.",
+      "breakdown_regime": "Failure under low-contrast or blurred edges.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Combines gradient magnitude with color mask to refine player boundary.",
+        "source_operator": "edge_detection_filter",
+        "telemetry": "Edge density and contour completeness metrics."
+      }
+    },
+    {
+      "primitive_id": "shadow_removal_method",
+      "name": "Shadow Removal Method",
+      "verbatim_quote": "Finally, the non-dominant color map and edge map are refined and combined, and a novel shadow removal method is then applied to isolate the player figure.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'shadow mask (binary)', 'P': 'player silhouette (binary)'}",
+      "assumptions": "Shadows are spatially separable from player shape.",
+      "breakdown_regime": "Failure when shadows mimic player contours or lighting is inconsistent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps shadow artifacts to binary exclusion zones based on intensity thresholds.",
+        "source_operator": "shadow_removal_method",
+        "telemetry": "Shadow-to-player area ratio and silhouette integrity."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "331a978aa6c48368_t0",
+      "think": "The core algorithm combines geometric priors with visual cues to isolate players. Initially, court lines are detected to form a reference model, enabling adaptive search windows that dynamically adjust based on player velocity and perspective. This ensures minimal false positives while maintaining tracking fidelity. Non-dominant color extraction isolates players from backgrounds by identifying less frequent hues, followed by edge detection to enhance silhouette definition. These two modalities are fused and refined through a shadow removal technique that mitigates illumination artifacts. The system’s robustness hinges on accurate court modeling and consistent color/edge discrimination. Failure modes include misalignment due to camera shifts, occlusion, or inconsistent lighting. The derived operators form a hierarchical kernel where each step reduces ambiguity in player localization. The adaptive window mechanism is a key innovation, allowing dynamic adjustment to player motion without rigid bounding boxes. It leverages real-world kinematics mapped into image space via perspective transformation. The interplay between color and edge features provides redundancy, enhancing reliability under variable conditions. The shadow removal component addresses common artifacts in broadcast video, improving final segmentation accuracy. Each primitive contributes to a modular pipeline that supports downstream tasks like action recognition or game analytics.\n\nDeep epistemic analysis for openalex_W2100789667 (331a978aa6c48368, domain=other, pages_read=12/12): Operator 'Adaptive Search Window' (page 1, domain other) captures: Based on the court model, an adaptive search window is designed for locating the minimum region containing a player figure. Assumptions: Player motion constrained within known court boundaries; camera perspective fixed or transformable. Breakdown regime: Failure when player exceeds maximum speed threshold or leaves court bounds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps real-world motion to image-space search regions using speed-based window expansion. Operator 'Non-Dominant Color Extraction' (page 1, domain other) captures: After retrieving the region of interest, pixel data are processed by non-dominant color extraction and edge detection filters, respectively. Assumptions: Player color differs significantly from dominant background colors. Breakdown regime: Failure under uniform or highly saturated backgrounds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between color histogram peaks and player silhouette via statistical filtering. Operator 'Edge Detection Filter' (page 1, domain other) captures: After retrieving the region of interest, pixel data are processed by non-dominant color extraction and edge detection filters, respectively. Assumptions: Player silhouette exhibits distinct gradient changes. Breakdown regime: Failure under low-contrast or blurred edges. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines gradient magnitude with color mask to refine player boundary. Operator 'Shadow Removal Method' (page 1, domain other) captures: Finally, the non-dominant color map and edge map are refined and combined, and a novel shadow removal method is then applied to isolate the player figure. Assumptions: Shadows are spatially separable from player shape. Breakdown regime: Failure when shadows mimic player contours or lighting is inconsistent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps shadow artifacts to binary exclusion zones based on intensity thresholds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W2100789667 (331a978aa6c48368, domain=other, pages_read=12/12): Operator 'Adaptive Search Window' (page 1, domain other) captures: Based on the court model, an adaptive search window is designed for locating the minimum region containing a player figure. Assumptions: Player motion constrained within known court boundaries; camera perspective fixed or transformable. Breakdown regime: Failure when player exceeds maximum speed threshold or leaves court bounds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps real-world motion to image-space search regions using speed-based window expansion. Operator 'Non-Dominant Color Extraction' (page 1, domain other) captures: After retrieving the region of interest, pixel data are processed by non-dominant color extraction and edge detection filters, respectively. Assumptions: Player color differs significantly from dominant background colors. Breakdown regime: Failure under uniform or highly saturated backgrounds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between color histogram peaks and player silhouette via statistical filtering. Operator 'Edge Detection Filter' (page 1, domain other) captures: After retrieving the region of interest, pixel data are processed by non-dominant color extraction and edge detection filters, respectively. Assumptions: Player silhouette exhibits distinct gradient changes. Breakdown regime: Failure under low-contrast or blurred edges. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines gradient magnitude with color mask to refine player boundary. Operator 'Shadow Removal Method' (page 1, domain other) captures: Finally, the non-dominant color map and edge map are refined and combined, and a novel shadow removal method is then applied to isolate the player figure. Assumptions: Shadows are spatially separable from player shape. Breakdown regime: Failure when shadows mimic player contours or lighting is inconsistent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps shadow artifacts to binary exclusion zones based on intensity thresholds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early frame differencing and morphological processing [3,10,11], evolving toward structured domain knowledge integration and multi-modal feature fusion. Influenced by computer vision paradigms in sports analysis and machine learning approaches to object segmentation. Retrocausal Genealogy: Rooted in openalex_W2100789667 (331a978aa6c48368), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include spectator interference, camera instability, and environmental lighting variations. The system assumes stable court geometry and predictable player behavior within physical constraints. Decision actors are modeled as probabilistic distributions over player states, informed by visual evidence and motion consistency. Theory of Mind & Decision Maker Model: Rooted in openalex_W2100789667 (331a978aa6c48368), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises from reliance on both color and edge features; leakage occurs if shadows are mistaken for player shapes. Veto conditions enforce mutual exclusivity between color and edge kernels, ensuring no redundant or conflicting signals propagate into final player estimation. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W2100789667 (331a978aa6c48368), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

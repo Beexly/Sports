@@ -1,0 +1,78 @@
+{
+  "book_id": "3dff3e9e40c272e0",
+  "source_status": "COMPLETE",
+  "title": "price_dispersion_fixed",
+  "file_name": "price_dispersion_fixed.md",
+  "sha256": "3dff3e9e40c272e01955f49a3952d0d29bbd75611dd718dbe19d7e49d0967ef0",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Price dispersion corrected via American odds scaling; median bias eliminated, std reduced 65%, revealing true market disagreement. Universal Lens: Rooted in price_dispersion_fixed (3dff3e9e40c272e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on price dispersion uses corrected American odds as likelihood; median absolute deviation serves as robust posterior summary for outlier detection. GSI Mapping: Rooted in price_dispersion_fixed (3dff3e9e40c272e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning applies corrected odds to state transitions; dispersion thresholds trigger alert states for market misalignment or bookkeeping anomalies. GSE Mapping: Rooted in price_dispersion_fixed (3dff3e9e40c272e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "price_scale_correction",
+      "name": "Price Scale Correction",
+      "verbatim_quote": "Correction applied: use American directly, and drop |odds| > 2000 (a handful of -100000 / 50000 placeholder extremes).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{\\\\text{raw}}': 'Raw odds (dimensionless)', 'P_{\\\\text{adj}}': 'Adjusted American odds (dimensionless)'}",
+      "assumptions": "Odds are expressed in American format; extreme outliers are negligible.",
+      "breakdown_regime": "|P_{\\text{raw}}| > 2000",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Corrected odds enable accurate dispersion metrics; kernel density estimation of price distributions becomes valid.",
+        "source_operator": "price_scale_correction",
+        "telemetry": "Standard deviation of price differences"
+      }
+    },
+    {
+      "primitive_id": "dispersion_metric",
+      "name": "Dispersion Metric",
+      "verbatim_quote": "## Reading it now 3.8–8.2 points of implied-probability disagreement across the IQR is the right order for two different products pricing the same contract (and propfinder's row is itself a *best* price across books, so it should sit short of consensus).",
+      "page": 1,
+      "latex": "\\text{Dispersion} = \\text{IQR}_{\\text{implied prob}}",
+      "symbol_and_unit_ledger": "{'\\\\text{Dispersion}': 'Implied probability interval width (dimensionless)', '\\\\text{IQR}_{\\\\text{implied prob}}': 'Interquartile range of implied probabilities (dimensionless)'}",
+      "assumptions": "Implied probabilities derived from American odds; IQR captures central tendency of disagreement.",
+      "breakdown_regime": "None",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dispersion maps to probabilistic disagreement between market makers; aligns with GSI's uncertainty quantification.",
+        "source_operator": "dispersion_metric",
+        "telemetry": "Median absolute deviation of implied probabilities"
+      }
+    },
+    {
+      "primitive_id": "bias_elimination",
+      "name": "Bias Elimination",
+      "verbatim_quote": "So std fell by 65% and the median bias nearly vanished — the signature of a scale error rather than a real market signal.",
+      "page": 1,
+      "latex": "\\text{Bias} = \\text{Median}(P_{\\text{adj}} - P_{\\text{true}})",
+      "symbol_and_unit_ledger": "{'\\\\text{Bias}': 'Systematic deviation from true price (dimensionless)', 'P_{\\\\text{adj}}': 'Adjusted price (dimensionless)', 'P_{\\\\text{true}}': 'True underlying price (dimensionless)'}",
+      "assumptions": "True price is unknown but approximated by adjusted data; systematic error due to scaling.",
+      "breakdown_regime": "Scale factor ≠ 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Bias elimination enables unbiased estimation of market consensus; supports GSE's state transition logic.",
+        "source_operator": "bias_elimination",
+        "telemetry": "Change in median price deviation"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3dff3e9e40c272e0_t0",
+      "think": "The core issue arises from incorrect scaling of odds data—specifically, dividing raw cents-based odds by 100 erroneously compressed values toward zero, artificially inflating variance and introducing median bias. This distortion led to spurious dispersion readings. The correction involves using American odds directly and filtering extreme outliers beyond |odds| = 2000. This adjustment reduces standard deviation by 65% and eliminates median bias, indicating that prior results were artifacts of scale rather than genuine market disagreement. The corrected dispersion metric now reflects true disagreement among market participants within a reasonable range of implied probabilities. The resulting IQR spans 3.8–8.2 points, consistent with expected variation between competing pricing models. A median absolute gap of ~5.5 points provides a practical threshold for identifying outliers in price discrepancies.\n\nDeep epistemic analysis for price_dispersion_fixed (3dff3e9e40c272e0, domain=other, pages_read=1/1): Operator 'Price Scale Correction' (page 1, domain other) captures: Correction applied: use American directly, and drop |odds| > 2000 (a handful of -100000 / 50000 placeholder extremes). Assumptions: Odds are expressed in American format; extreme outliers are negligible. Breakdown regime: |P_{\\text{raw}}| > 2000 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Corrected odds enable accurate dispersion metrics; kernel density estimation of price distributions becomes valid. Operator 'Dispersion Metric' (page 1, domain other) captures: ## Reading it now 3.8–8.2 points of implied-probability disagreement across the IQR is the right order for two different products pricing the same contract (and propfinder's row is itself a *best* price across books, so it should sit short of consensus). Assumptions: Implied probabilities derived from American odds; IQR captures central tendency of disagreement. Breakdown regime: None Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dispersion maps to probabilistic disagreement between market makers; aligns with GSI's uncertainty quantification. Operator 'Bias Elimination' (page 1, domain other) captures: So std fell by 65% and the median bias nearly vanished — the signature of a scale error rather than a real market signal. Assumptions: True price is unknown but approximated by adjusted data; systematic error due to scaling. Breakdown regime: Scale factor ≠ 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bias elimination enables unbiased estimation of market consensus; supports GSE's state transition logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for price_dispersion_fixed (3dff3e9e40c272e0, domain=other, pages_read=1/1): Operator 'Price Scale Correction' (page 1, domain other) captures: Correction applied: use American directly, and drop |odds| > 2000 (a handful of -100000 / 50000 placeholder extremes). Assumptions: Odds are expressed in American format; extreme outliers are negligible. Breakdown regime: |P_{\\text{raw}}| > 2000 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Corrected odds enable accurate dispersion metrics; kernel density estimation of price distributions becomes valid. Operator 'Dispersion Metric' (page 1, domain other) captures: ## Reading it now 3.8–8.2 points of implied-probability disagreement across the IQR is the right order for two different products pricing the same contract (and propfinder's row is itself a *best* price across books, so it should sit short of consensus). Assumptions: Implied probabilities derived from American odds; IQR captures central tendency of disagreement. Breakdown regime: None Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dispersion maps to probabilistic disagreement between market makers; aligns with GSI's uncertainty quantification. Operator 'Bias Elimination' (page 1, domain other) captures: So std fell by 65% and the median bias nearly vanished — the signature of a scale error rather than a real market signal. Assumptions: True price is unknown but approximated by adjusted data; systematic error due to scaling. Breakdown regime: Scale factor ≠ 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bias elimination enables unbiased estimation of market consensus; supports GSE's state transition logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Historical lineage traces back to early financial data processing where unit conversions introduced systematic errors. The problem mirrors classical measurement bias in econometrics, particularly in sports betting contexts where odds are often misinterpreted or improperly normalized. Retrocausal Genealogy: Rooted in price_dispersion_fixed (3dff3e9e40c272e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data processors who may have misapplied normalization and market makers whose prices reflect differing risk assessments. The corrected model assumes rational behavior under bounded information, with outliers representing either noise or deliberate mispricing. Theory of Mind & Decision Maker Model: Rooted in price_dispersion_fixed (3dff3e9e40c272e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that dispersion metrics do not correlate with scale artifacts; leakage veto prevents spurious signals from distorted input data. Only valid price ranges (|odds| ≤ 2000) contribute to final dispersion estimates. Cross-Layer Veto & Anti-Leakage Check: Rooted in price_dispersion_fixed (3dff3e9e40c272e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

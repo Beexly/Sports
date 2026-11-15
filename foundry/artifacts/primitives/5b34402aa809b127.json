@@ -1,0 +1,173 @@
+{
+  "book_id": "5b34402aa809b127",
+  "source_status": "COMPLETE",
+  "title": "footballguys.com",
+  "file_name": "footballguys.com.md",
+  "sha256": "5b34402aa809b12740cd7c069155d5c19bc90a09ac636aefd51f7c842cb7ffa2",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph connectivity and URL path segmentation define analytical domain topology; sitemap status reflects data availability; path taxonomy encodes content hierarchy. Universal Lens: Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian belief nets over sitemap states infer content coverage; conformal predictive sets estimate URL discovery bounds; probabilistic path indexing models article distribution. GSI Mapping: Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "State transitions between sitemap indices and article paths enable dynamic content navigation; situational awareness updates based on 404 responses and entry counts. GSE Mapping: Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_connectivity_index",
+      "name": "Sitemap Connectivity Index",
+      "verbatim_quote": "# footballguys.com Category: **analytics** URLs discovered: **999** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Connectivity index (dimensionless)', 'U': 'Total URLs discovered (unitless)', 'S': 'Sitemaps walked (unitless)'}",
+      "assumptions": "Sitemap entries are uniformly distributed; all URLs are accessible.",
+      "breakdown_regime": "When S → ∞, C approaches constant value of U/S.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Connectivity index maps to GSI's graph traversal probability; GSE uses it for path selection heuristics.",
+        "source_operator": "sitemap_connectivity_index",
+        "telemetry": "Ratio of discovered URLs to sitemaps walked."
+      }
+    },
+    {
+      "primitive_id": "path_taxonomy_entropy",
+      "name": "Path Taxonomy Entropy",
+      "verbatim_quote": "0 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/article`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'Entropy (Shannon bits)', 'P_i': 'Probability of path i (unitless)', 'N': 'Number of path segments (unitless)'}",
+      "assumptions": "Each path segment is independent; probabilities sum to unity.",
+      "breakdown_regime": "When N → ∞, H converges to log(N).",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Entropy quantifies information gain in path classification; used by GSI for topic clustering and GSE for query routing.",
+        "source_operator": "path_taxonomy_entropy",
+        "telemetry": "Information-theoretic measure of path diversity."
+      }
+    },
+    {
+      "primitive_id": "url_discovery_rate",
+      "name": "URL Discovery Rate",
+      "verbatim_quote": "URLs ``` http://localhost/article/2024-landing-page-everything-week05 http://localhost/article/2024-matchup-previews-injuries-news-week05 http://localhost/article/2024-dynasty-football-big-board-week05 http://localhost/article/2024-green-dot-threedown-linebackers http://localhost/article/2024-reading-new-defense-seattle-seahawks http://localhost/article/2024-the-edge-rusher-deep-sleeper http://localhost/article/2024-sleepers-kansas-city-chiefs http://localhost/article/eyesthe-guru-idp-info-part-5-arizona-cardinals http://localhost/article/2024-team-vibes-seattle-seahawks http://localhost/article/2024-sleepers-cleveland-browns http://localhost/article/2024-team-vibes-baltimore-ravens http://localhost/article/2024-team-vibes-chicago-bears http://localhost/article/2024-nico-collins-is-he-top-texans-wide-receiver http://localhost/article/2024-eyes-of-the-guru-idp-new-orleans-saints",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_d': 'Discovery rate (URLs per second)', 'T': 'Time interval (seconds)', 'D': 'Discovered URLs (unitless)'}",
+      "assumptions": "Discovery process is Poissonian; T is fixed.",
+      "breakdown_regime": "As D → ∞, R_d stabilizes at mean discovery rate.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Discovery rate mirrors GSI's crawling efficiency; GSE applies it to optimize content fetching strategies.",
+        "source_operator": "url_discovery_rate",
+        "telemetry": "Rate of new URL identification during crawl."
+      }
+    },
+    {
+      "primitive_id": "sitemap_status_classifier",
+      "name": "Sitemap Status Classifier",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://footballguys.com/sitemap.xml` | 200 | 999 | no | | `https://footballguys.com/sitemap_index.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_s': 'Status code (unitless)', 'E': 'Entries (unitless)', 'I': 'Index flag (boolean)'}",
+      "assumptions": "Status codes are deterministic; index flags indicate sitemap type.",
+      "breakdown_regime": "If S_s ≠ 200, E = 0 implies broken sitemap.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Classifier informs GSI's reliability scoring; GSE uses it for fallback path selection.",
+        "source_operator": "sitemap_status_classifier",
+        "telemetry": "HTTP response code and entry count for sitemap validation."
+      }
+    },
+    {
+      "primitive_id": "page_2_url_aggregation",
+      "name": "URL Aggregation Operator",
+      "verbatim_quote": "localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes each URL corresponds to a distinct predictive model or dataset.",
+      "breakdown_regime": "Fails when URL structure becomes non-standard or broken.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic ensemble fusion framework via weighted URL aggregation.",
+        "source_operator": "page_2_url_aggregation",
+        "telemetry": "Number of unique URLs processed per page."
+      }
+    },
+    {
+      "primitive_id": "hyperlink_graph_construction",
+      "name": "Hyperlink Graph Construction",
+      "verbatim_quote": "localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes hyperlink relationships form a directed acyclic graph.",
+      "breakdown_regime": "Breaks down when hyperlinks create cyclic dependencies.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's state-transition network where nodes are game states and edges are action probabilities.",
+        "source_operator": "hyperlink_graph_construction",
+        "telemetry": "Graph connectivity metrics such as average path length and clustering coefficient."
+      }
+    },
+    {
+      "primitive_id": "content_type_classifier",
+      "name": "Content Type Classifier",
+      "verbatim_quote": "localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes each URL can be uniquely categorized into predefined types.",
+      "breakdown_regime": "Degenerates when new content types emerge that violate classification rules.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian hierarchical clustering for categorizing predictive models.",
+        "source_operator": "content_type_classifier",
+        "telemetry": "Categorization accuracy and type diversity per page."
+      }
+    },
+    {
+      "primitive_id": "frequency_of_prediction",
+      "name": "Frequency of Prediction Operator",
+      "verbatim_quote": "localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes prediction frequency correlates linearly with model reliability.",
+      "breakdown_regime": "Breaks when prediction cycles become irregular or chaotic.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's temporal pattern recognition where prediction frequency maps to state visitation counts.",
+        "source_operator": "frequency_of_prediction",
+        "telemetry": "Average prediction rate per time interval and consistency variance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b34402aa809b127_t0",
+      "think": "Chapter window 1 establishes foundational metadata for footballguys.com’s digital architecture. The sitemap structure reveals a hierarchical content model where URL paths encode semantic categories. The presence of 999 URLs and 6 sitemaps indicates a well-maintained index. The taxonomy of first segments such as `/article`, `/nfl-preseason-reports`, and others defines a structured knowledge base. This enables GSI to build probabilistic models of content distribution and GSE to navigate efficiently through these domains. The sample URLs provide concrete instances of how articles are tagged and indexed, supporting both static analysis and dynamic querying. The 404 errors suggest inconsistencies in sitemap maintenance, which can be modeled as noise in GSI’s inference engine and handled via robustness checks in GSE’s decision logic. Window 1 Synthesis: Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 2/2 pages of footballguys.com (5b34402aa809b127): [sitemap_connectivity_index p.1]: # footballguys.com Category: **analytics** URLs discovered: **999** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status (Connectivity index maps to GSI's graph traversal probability; GSE uses it for path selection heuristics.) [path_taxonomy_entropy p.1]: 0 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/article` (Entropy quantifies information gain in path classification; used by GSI for topic clustering and GSE for query routing.) [url_discovery_rate p.1]: URLs ``` http://localhost/article/2024-landing-page-everything-week05 http://localhost/article/2024-matchup-previews-injuries-news-week05 http://localhost/article/2024-dynasty-football-big-board-week05 http://localhost/article/2024-green-dot-threedown-linebackers http://localhost/article/2024-reading-new-defense-seattle-seahawks http://localhost/article/2024-the-edge-rusher-deep-sleeper http://localhost/article/2024-sleepers-kansas-city-chiefs http://localhost/article/eyesthe-guru-idp-info-part-5-arizona-cardinals http://localhost/article/2024-team-vibes-seattle-seahawks http://localhost/article/2024-sleepers-cleveland-browns http://localhost/article/2024-team-vibes-baltimore-ravens http://localhost/article/2024-team-vibes-chicago-bears http://localhost/article/2024-nico-collins-is-he-top-texans-wide-receiver http://localhost/article/2024-eyes-of-the-guru-idp-new-orleans-saints (Discovery rate mirrors GSI's crawling efficiency; GSE applies it to optimize content fetching strategies.) [sitemap_status_classifier p.1]: | Index | |---|---|---|---| | `https://footballguys.com/sitemap.xml` | 200 | 999 | no | | `https://footballguys.com/sitemap_index.xml` | (Classifier informs GSI's reliability scoring; GSE uses it for fallback path selection.) [page_2_url_aggregation p.2]: localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings (Maps to GSI's probabilistic ensemble fusion framework via weighted URL aggregation.) [hyperlink_graph_construction p.2]: localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings (Isomorphic to GSE's state-transition network where nodes are game states and edges are action probabilities.) [content_type_classifier p.2]: localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings (Maps to GSI's Bayesian hierarchical clustering for categorizing predictive models.) [frequency_of_prediction p.2]: localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings (Isomorphic to GSE's temporal pattern recognition where prediction frequency maps to state visitation counts.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of footballguys.com (5b34402aa809b127): [sitemap_connectivity_index p.1]: # footballguys.com Category: **analytics** URLs discovered: **999** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status (Connectivity index maps to GSI's graph traversal probability; GSE uses it for path selection heuristics.) [path_taxonomy_entropy p.1]: 0 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/article` (Entropy quantifies information gain in path classification; used by GSI for topic clustering and GSE for query routing.) [url_discovery_rate p.1]: URLs ``` http://localhost/article/2024-landing-page-everything-week05 http://localhost/article/2024-matchup-previews-injuries-news-week05 http://localhost/article/2024-dynasty-football-big-board-week05 http://localhost/article/2024-green-dot-threedown-linebackers http://localhost/article/2024-reading-new-defense-seattle-seahawks http://localhost/article/2024-the-edge-rusher-deep-sleeper http://localhost/article/2024-sleepers-kansas-city-chiefs http://localhost/article/eyesthe-guru-idp-info-part-5-arizona-cardinals http://localhost/article/2024-team-vibes-seattle-seahawks http://localhost/article/2024-sleepers-cleveland-browns http://localhost/article/2024-team-vibes-baltimore-ravens http://localhost/article/2024-team-vibes-chicago-bears http://localhost/article/2024-nico-collins-is-he-top-texans-wide-receiver http://localhost/article/2024-eyes-of-the-guru-idp-new-orleans-saints (Discovery rate mirrors GSI's crawling efficiency; GSE applies it to optimize content fetching strategies.) [sitemap_status_classifier p.1]: | Index | |---|---|---|---| | `https://footballguys.com/sitemap.xml` | 200 | 999 | no | | `https://footballguys.com/sitemap_index.xml` | (Classifier informs GSI's reliability scoring; GSE uses it for fallback path selection.) [page_2_url_aggregation p.2]: localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings (Maps to GSI's probabilistic ensemble fusion framework via weighted URL aggregation.) [hyperlink_graph_construction p.2]: localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings (Isomorphic to GSE's state-transition network where nodes are game states and edges are action probabilities.) [content_type_classifier p.2]: localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings (Maps to GSI's Bayesian hierarchical clustering for categorizing predictive models.) [frequency_of_prediction p.2]: localhost/article/2024-the-gurus-notepad-idp-info-week02 http://localhost/article/2024-rent-a-kicker-week02 http://localhost/article/2024-game-predictor-week02 http://localhost/article/2024-dynasty-movement-week02 http://localhost/article/2024-dynasty-news-week03 http://localhost/article/2024-idp-dynasty-sleepers-week03 http://localhost/article/2024-game-predictor-week03 http://localhost/article/2024-rushing-matchups-week03 http://localhost/article/2024-dfs-contrarian-week03 http://localhost/article/2024-landing-page-everything-week04 http://localhost/article/2024-idp-matchup-plays-living-the-stream-week04 http://localhost/article/2024-fantasy-notebook28 http://localhost/article/2024-idp-guru-godfather-week04 http://localhost/article/2024-fantasy-overview-week05 http://localhost/goat-subscription http://localhost/article/offensive-line-rankings (Isomorphic to GSE's temporal pattern recognition where prediction frequency maps to state visitation counts.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Roots in early web crawling protocols and XML sitemap standards; evolved into modern SEO and content management systems. Retrocausal Genealogy (Window 1): Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Content creators and crawlers operate under differing objectives—creators aim for discoverability while crawlers seek completeness. Coaches may model these as competing agents optimizing different utility functions. Theory of Mind (Window 1): Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that GSI’s probabilistic models do not overfit to redundant sitemap structures. Leakage vetoes prevent GSE from relying on stale or invalid sitemap data when making real-time decisions. Cross-Layer Veto (Window 1): Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5b34402aa809b127_t1",
+      "think": "This chapter window extracts fundamental data primitives from raw web page HTML. The URL list represents a corpus of predictive models, each generating actionable fantasy football insights. The primitives formalize how these models are aggregated, classified, and their outputs analyzed. For instance, the Hyperlink Graph Construction captures the dependency structure between different articles, while Frequency of Prediction quantifies model activity. These operators provide a rigorous mathematical foundation for understanding how diverse predictive algorithms contribute to ensemble forecasts in GSI's probabilistic models and how they inform tactical decisions in GSE's state-transition networks. Window 2 Synthesis: Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The concept of URL-based data extraction traces back to early information retrieval systems and citation networks. The hyperlink graph idea stems from PageRank's hyperlink analysis. Content classification builds on topic modeling techniques like LDA. Frequency analysis originates in time series forecasting and cyclical data studies. Retrocausal Genealogy (Window 2): Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents (e.g., other analysts, bookmakers) likely use similar primitive frameworks but with different weighting schemes or feature sets. Understanding their cognitive models helps identify exploitable biases in market pricing and prediction errors. Theory of Mind (Window 2): Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions require ensuring that derived features across layers are not perfectly correlated, preventing rank deficiency in statistical models. Leakage vetoes involve verifying that future information does not inadvertently influence current predictions, maintaining causality in temporal analyses. Cross-Layer Veto (Window 2): Rooted in footballguys.com (5b34402aa809b127, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "eeef5d6d9f710fda",
+  "source_status": "COMPLETE",
+  "title": "d3e723e1aa5a",
+  "file_name": "d3e723e1aa5a.txt",
+  "sha256": "eeef5d6d9f710fda18c14d851c5d52bfd99fbb816e03a57aa0e2887bba399635",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The processSport function unifies live odds ingestion, game context enrichment, and pick scoring into a single canonical pipeline with bootstrap provenance control. Universal Lens: Rooted in d3e723e1aa5a (eeef5d6d9f710fda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference on enriched game contexts to generate probabilistic pick signals, using isBootstrap flags for historical consistency in posterior updates. GSI Mapping: Rooted in d3e723e1aa5a (eeef5d6d9f710fda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies conformal prediction to derive situational states from GameContextInput, enabling dynamic pick selection through state-transition logic conditioned on schedule density and form. GSE Mapping: Rooted in d3e723e1aa5a (eeef5d6d9f710fda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "canonical_ingestion_pipeline",
+      "name": "Canonical Ingestion Pipeline",
+      "verbatim_quote": "/** * processSport — Single source of truth for per-sport pick generation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All ingestion paths must yield identical outcomes via shared function call.",
+      "breakdown_regime": "Failure occurs when gates misalign or API responses diverge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic signal generation and GSE's state transition engine via unified GameContextInput.",
+        "source_operator": "canonical_ingestion_pipeline",
+        "telemetry": "Consistency of isBootstrap flag propagation across ingestion paths."
+      }
+    },
+    {
+      "primitive_id": "bootstrap_provenance_control",
+      "name": "Bootstrap Provenance Control",
+      "verbatim_quote": "// This is the single gating point for bootstrap provenance.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "isBootstrap is derived from readiness gates and controls historical data handling.",
+      "breakdown_regime": "Misalignment between gate states and isBootstrap leads to inconsistent pick histories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from the core logic of processSport to ensure deterministic pick provenance.",
+        "source_operator": "bootstrap_provenance_control",
+        "telemetry": "Verification that isBootstrap flag matches expected ingestion mode."
+      }
+    },
+    {
+      "primitive_id": "game_context_enrichment",
+      "name": "Game Context Enrichment",
+      "verbatim_quote": "Enrich game context (opening lines, rest days, schedule density) * — isBootstrap propagated correctly for GameSignal provenance * 4.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Enriched fields like openingSpread and restDays are critical for predictive modeling.",
+      "breakdown_regime": "Incomplete or stale enrichment results in degraded model performance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's situational reasoning module where enriched fields drive state transitions.",
+        "source_operator": "game_context_enrichment",
+        "telemetry": "Accuracy of enriched fields such as openingSpread and restDaysHome."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "eeef5d6d9f710fda_t0",
+      "think": "The canonical ingestion pipeline ensures deterministic pick generation by centralizing all data flows through processSport. It enforces consistency via shared inputs (sport config, API key, gates) and outputs (pick signals). Bootstrap provenance control uses readiness gates to determine whether data should be treated as canonical or historical. This dualism enables GSI to maintain coherent Bayesian posteriors while allowing GSE to reason about evolving game states. The enrichment step injects temporal and spatial context—like rest days and schedule density—that inform both probabilistic inference and situational logic. Failure modes include API divergence, incorrect gate states, or stale enrichment data, each undermining either signal integrity or state accuracy.\n\nDeep epistemic analysis for d3e723e1aa5a (eeef5d6d9f710fda, domain=other, pages_read=6/6): Operator 'Canonical Ingestion Pipeline' (page 1, domain other) captures: /** * processSport — Single source of truth for per-sport pick generation. Assumptions: All ingestion paths must yield identical outcomes via shared function call. Breakdown regime: Failure occurs when gates misalign or API responses diverge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic signal generation and GSE's state transition engine via unified GameContextInput. Operator 'Bootstrap Provenance Control' (page 2, domain other) captures: // This is the single gating point for bootstrap provenance. Assumptions: isBootstrap is derived from readiness gates and controls historical data handling. Breakdown regime: Misalignment between gate states and isBootstrap leads to inconsistent pick histories. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from the core logic of processSport to ensure deterministic pick provenance. Operator 'Game Context Enrichment' (page 1, domain other) captures: Enrich game context (opening lines, rest days, schedule density) * — isBootstrap propagated correctly for GameSignal provenance * 4. Assumptions: Enriched fields like openingSpread and restDays are critical for predictive modeling. Breakdown regime: Incomplete or stale enrichment results in degraded model performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's situational reasoning module where enriched fields drive state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for d3e723e1aa5a (eeef5d6d9f710fda, domain=other, pages_read=6/6): Operator 'Canonical Ingestion Pipeline' (page 1, domain other) captures: /** * processSport — Single source of truth for per-sport pick generation. Assumptions: All ingestion paths must yield identical outcomes via shared function call. Breakdown regime: Failure occurs when gates misalign or API responses diverge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic signal generation and GSE's state transition engine via unified GameContextInput. Operator 'Bootstrap Provenance Control' (page 2, domain other) captures: // This is the single gating point for bootstrap provenance. Assumptions: isBootstrap is derived from readiness gates and controls historical data handling. Breakdown regime: Misalignment between gate states and isBootstrap leads to inconsistent pick histories. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from the core logic of processSport to ensure deterministic pick provenance. Operator 'Game Context Enrichment' (page 1, domain other) captures: Enrich game context (opening lines, rest days, schedule density) * — isBootstrap propagated correctly for GameSignal provenance * 4. Assumptions: Enriched fields like openingSpread and restDays are critical for predictive modeling. Breakdown regime: Incomplete or stale enrichment results in degraded model performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's situational reasoning module where enriched fields drive state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical control theory and modern probabilistic programming paradigms, particularly those addressing data consistency in distributed systems. Retrocausal Genealogy: Rooted in d3e723e1aa5a (eeef5d6d9f710fda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in d3e723e1aa5a (eeef5d6d9f710fda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the Odds API (unreliable data source), the ingestion worker (subject to race conditions), and the prediction engine (interpreting noisy features). Each introduces uncertainty that must be mitigated through robust provenance and enrichment. Theory of Mind & Decision Maker Model: Rooted in d3e723e1aa5a (eeef5d6d9f710fda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that isBootstrap and canonical history flags do not conflict across layers. Leakage vetoes occur if enrichment data leaks into non-bootstrap contexts or vice versa. Cross-Layer Veto & Anti-Leakage Check: Rooted in d3e723e1aa5a (eeef5d6d9f710fda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

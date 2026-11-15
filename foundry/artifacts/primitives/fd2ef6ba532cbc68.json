@@ -1,0 +1,78 @@
+{
+  "book_id": "fd2ef6ba532cbc68",
+  "source_status": "COMPLETE",
+  "title": "ORBIT_MAP",
+  "file_name": "ORBIT_MAP.md",
+  "sha256": "fd2ef6ba532cbc68314db84f406b8d45ea0f8ae45eb57463aa74e0b65b268b03",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Orbit map encodes high-leverage operational layers as Bayesian feedback loops: money inflows/outflows, agent evaluation, inference costs, and skill-based coding velocity. Universal Lens: Rooted in ORBIT_MAP (fd2ef6ba532cbc68), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages CIR calibration and Kelly portfolio optimization to infer predictive confidence from settled picks, mapping edge to probabilistic outcomes via holdout splits. GSI Mapping: Rooted in ORBIT_MAP (fd2ef6ba532cbc68), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning through agent ops flags and skill-based evals, transitioning states via checkout attempts and idempotent session handling under dual-layered operational constraints. GSE Mapping: Rooted in ORBIT_MAP (fd2ef6ba532cbc68), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "money_out",
+      "name": "Financial Outflow Gatekeeper",
+      "verbatim_quote": "operator) | Hard non-goal | |-------|-------------------------------------|---------------| | **Money out** | Blank `THE_ODDS_API_KEY` for free path; AI",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'KEY': 'dimensionless flag', 'AI_GATEWAY_TAG': 'dimensionless identifier'}",
+      "assumptions": "API key absence triggers free path; AI routing is deterministic within tag scope.",
+      "breakdown_regime": "When KEY is absent, system defaults to AI Gateway/LiteLLM tagging.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps financial outflow logic to AI routing decisions via API key state.",
+        "source_operator": "money_out",
+        "telemetry": "API key presence/absence observed via system logs."
+      }
+    },
+    {
+      "primitive_id": "money_in",
+      "name": "Revenue Stream Validator",
+      "verbatim_quote": "Flash default | GPU self-host | | **Money in** | Stripe `checkout.session.expired`; free embed `/embed/edge-index/[gameId]` **SHIPPED**",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'STRIPE_EVENT': 'dimensionless event identifier', 'EMBED_PATH': 'dimensionless URI path'}",
+      "assumptions": "Stripe events are idempotent; embed paths are validated at runtime.",
+      "breakdown_regime": "Session expiration triggers fallback to free embed path.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives revenue validation from Stripe session lifecycle and embed delivery.",
+        "source_operator": "money_in",
+        "telemetry": "Stripe webhook receipts and embed access logs."
+      }
+    },
+    {
+      "primitive_id": "agent_evaluation",
+      "name": "Multi-Agent Diagnostic Engine",
+      "verbatim_quote": "| | **Agent evaluation** | agent-eval fixtures; promptfoo; CIR distinct-count diagnostic | Academic multi-agent tourism |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'FIXTURES': 'dimensionless test set', 'CIR_DIAGNOSTIC': 'dimensionless count measure'}",
+      "assumptions": "Diagnostic metrics are independent across agent types; fixtures are representative.",
+      "breakdown_regime": "Distinct-count diagnostics fail when agent diversity is insufficient.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps agent performance to CIR-based distinct-count diagnostics via fixture evaluation.",
+        "source_operator": "agent_evaluation",
+        "telemetry": "Agent response variance and CIR metric convergence."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fd2ef6ba532cbc68_t0",
+      "think": "The orbit map defines four core operational layers—money out/in, coding velocity, agent ops, and inference cost—that form a closed-loop system. Each layer is governed by a primitive operator that maps inputs to outputs via defined assumptions and telemetry. Money out uses API key state to gate AI routing; money in validates Stripe sessions and embed delivery. Agent evaluation employs CIR diagnostics to assess multi-agent performance. Inference cost is managed via model routing and custom gateways. These operators interact through shared data flows such as idempotency and session state, forming a dualistic structure where each layer's failure mode can cascade into others. For example, an expired session may trigger fallback to free embeds, which in turn affects agent evaluation metrics. The system's robustness depends on maintaining integrity across these interdependent primitives.\n\nDeep epistemic analysis for ORBIT_MAP (fd2ef6ba532cbc68, domain=other, pages_read=1/1): Operator 'Financial Outflow Gatekeeper' (page 1, domain other) captures: operator) | Hard non-goal | |-------|-------------------------------------|---------------| | **Money out** | Blank `THE_ODDS_API_KEY` for free path; AI Assumptions: API key absence triggers free path; AI routing is deterministic within tag scope. Breakdown regime: When KEY is absent, system defaults to AI Gateway/LiteLLM tagging. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps financial outflow logic to AI routing decisions via API key state. Operator 'Revenue Stream Validator' (page 1, domain other) captures: Flash default | GPU self-host | | **Money in** | Stripe `checkout.session.expired`; free embed `/embed/edge-index/[gameId]` **SHIPPED** Assumptions: Stripe events are idempotent; embed paths are validated at runtime. Breakdown regime: Session expiration triggers fallback to free embed path. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives revenue validation from Stripe session lifecycle and embed delivery. Operator 'Multi-Agent Diagnostic Engine' (page 1, domain other) captures: | | **Agent evaluation** | agent-eval fixtures; promptfoo; CIR distinct-count diagnostic | Academic multi-agent tourism | Assumptions: Diagnostic metrics are independent across agent types; fixtures are representative. Breakdown regime: Distinct-count diagnostics fail when agent diversity is insufficient. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps agent performance to CIR-based distinct-count diagnostics via fixture evaluation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ORBIT_MAP (fd2ef6ba532cbc68, domain=other, pages_read=1/1): Operator 'Financial Outflow Gatekeeper' (page 1, domain other) captures: operator) | Hard non-goal | |-------|-------------------------------------|---------------| | **Money out** | Blank `THE_ODDS_API_KEY` for free path; AI Assumptions: API key absence triggers free path; AI routing is deterministic within tag scope. Breakdown regime: When KEY is absent, system defaults to AI Gateway/LiteLLM tagging. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps financial outflow logic to AI routing decisions via API key state. Operator 'Revenue Stream Validator' (page 1, domain other) captures: Flash default | GPU self-host | | **Money in** | Stripe `checkout.session.expired`; free embed `/embed/edge-index/[gameId]` **SHIPPED** Assumptions: Stripe events are idempotent; embed paths are validated at runtime. Breakdown regime: Session expiration triggers fallback to free embed path. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives revenue validation from Stripe session lifecycle and embed delivery. Operator 'Multi-Agent Diagnostic Engine' (page 1, domain other) captures: | | **Agent evaluation** | agent-eval fixtures; promptfoo; CIR distinct-count diagnostic | Academic multi-agent tourism | Assumptions: Diagnostic metrics are independent across agent types; fixtures are representative. Breakdown regime: Distinct-count diagnostics fail when agent diversity is insufficient. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps agent performance to CIR-based distinct-count diagnostics via fixture evaluation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical control theory and modern reinforcement learning frameworks, this structure reflects the evolution of autonomous systems from deterministic feedback to probabilistic inference engines. Retrocausal Genealogy: Rooted in ORBIT_MAP (fd2ef6ba532cbc68), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ORBIT_MAP (fd2ef6ba532cbc68), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the AI gateway (optimizing for cost), the Stripe validator (ensuring revenue integrity), and the agent evaluator (measuring performance). Their interactions are modeled as competing objectives within a constrained optimization space. Theory of Mind & Decision Maker Model: Rooted in ORBIT_MAP (fd2ef6ba532cbc68), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when agent evaluation metrics conflict with financial validation signals. Leakage occurs if session state is not properly isolated between layers, leading to cascading failures in both revenue and inference pipelines. Cross-Layer Veto & Anti-Leakage Check: Rooted in ORBIT_MAP (fd2ef6ba532cbc68), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

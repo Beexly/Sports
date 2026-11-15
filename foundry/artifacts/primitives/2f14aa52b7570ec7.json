@@ -1,0 +1,757 @@
+{
+  "book_id": "2f14aa52b7570ec7",
+  "source_status": "COMPLETE",
+  "source_note": "Source: local PDF of Daniel A. Roberts and Sho Yaida (based on research in collaboration with Boris Hanin), 'The Principles of Deep Learning Theory: An Effective Theory Approach to Understanding Neural Networks', Cambridge University Press, 2022. The local file is the arXiv version (arXiv:2106.10165v2, 24 Aug 2021) of the same work. PDF size 4786010 bytes; sha256 over (str(size) encoded + full file bytes) = 2f14aa52b7570ec7e2a06852b79568319a8b6f74d295556786b41f3688c87abd; book_id is the first 16 hex characters. Text layer: clean publisher-quality extraction (about 206,000 words); displayed equations are partially garbled in the text layer, so LaTeX transcriptions follow the book's printed equations as read in context, and all verbatim quotes were verified as contiguous substrings of the extracted text within a single page. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "effective_theory_approach",
+      "name": "Effective theory: the macroscopic behavior of a network with very many components is captured by a simple effective theory of a few collective observables, the way statistical mechanics yields thermodynamics",
+      "verbatim_quote": "For our study of deep learning, the key takeaway from this discussion is that a theoretical matter simplifies when it is made up of many elementary constituents.",
+      "page": "Chapter 0, section 0.1 (pp. 3-5)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The system has a very large number of elementary constituents (neurons and parameters), so collective observables self-average.",
+        "Only a sparse set of low-order macroscopic observables is needed to describe the behavior of interest."
+      ],
+      "breakdown_regime": "Fails when the number of constituents is small or when the observable of interest is dominated by microscopic detail that no sparse set of collective variables captures.",
+      "domain": "statistical mechanics of learning systems; theory construction",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A many-component system (gas, magnet, neural network, agent ensemble) maps to a short list of macroscopic observables whose statistics close on themselves, with microscopic detail entering only through a few effective parameters.",
+        "source_operator": "coarse graining from microscopic constituents to collective observables",
+        "telemetry": "the small set of retained observables and their measured statistics (means, covariances, connected correlators)"
+      }
+    },
+    {
+      "primitive_id": "one_over_n_expansion",
+      "name": "The trained network distribution admits a perturbative 1/n expansion around the infinite-width limit, with the first finite-width correction at order 1/n",
+      "verbatim_quote": "In other words, we're going to back off the strict infinite-width limit and compute the trained distribution (0.9) with the following expansion:",
+      "page": "Chapter 0, section 0.2, eq. (0.14) (pp. 8-12)",
+      "latex": "p(f^\\star) = p^{\\{0\\}}(f^\\star) + \\frac{p^{\\{1\\}}(f^\\star)}{n} + \\frac{p^{\\{2\\}}(f^\\star)}{n^2} + \\cdots",
+      "symbol_and_unit_ledger": {
+        "p(f^star)": "probability density of the trained network function (the network output regarded as a random variable over initializations and training)",
+        "p^{0}(f^star)": "leading, infinite-width trained distribution",
+        "p^{k}(f^star)": "k-th finite-width correction to the trained distribution",
+        "n": "layer width (number of neurons in a hidden layer), the large parameter of the expansion; dimensionless count"
+      },
+      "assumptions": [
+        "Widths are large enough that successive terms decrease parametrically.",
+        "The expansion is taken around the strict infinite-width limit, where the leading theory is exactly solvable."
+      ],
+      "breakdown_regime": "The expansion is asymptotic: when depth grows comparably to width, higher-order terms stop being small and the truncated series misdescribes the network (see the aspect-ratio and chaos primitives).",
+      "domain": "perturbation theory for wide neural networks",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any near-solvable system with a large size parameter N maps to a leading solvable theory plus a tower of corrections ordered by inverse powers of N; truncating after the first correction is the controlled approximation.",
+        "source_operator": "perturbative expansion in the small parameter 1/n about the infinite-width fixed point",
+        "telemetry": "the relative size of successive correction terms, which diagnoses whether the truncation is trustworthy"
+      }
+    },
+    {
+      "primitive_id": "aspect_ratio_depth_to_width",
+      "name": "The depth-to-width aspect ratio r = L/n is the emergent dimensionless scale that controls the size of finite-width corrections and separates the perturbative regime from the chaotic regime",
+      "verbatim_quote": "That is, we'll see that the relative magnitudes of the terms in the expansion (0.14) are given by the depth-to-width aspect ratio:",
+      "page": "Chapter 0, section 0.2, eq. (0.19) (pp. 10-12)",
+      "latex": "r \\equiv \\frac{L}{n}",
+      "symbol_and_unit_ledger": {
+        "r": "depth-to-width aspect ratio; dimensionless",
+        "L": "network depth (number of layers); dimensionless count",
+        "n": "layer width (neurons per layer); dimensionless count"
+      },
+      "assumptions": [
+        "Layers have comparable widths so a single n characterizes the network.",
+        "Corrections organize by powers of r rather than by 1/n alone once depth is large."
+      ],
+      "breakdown_regime": "For r of order one or larger the effective description crosses over to a chaotic regime where fluctuations are order one; for r extremely small the network is effectively shallow and depth-driven effects vanish.",
+      "domain": "scaling theory of deep networks",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "In layered systems generally, the ratio of sequential depth to parallel breadth acts as the coupling that decides whether layerwise noise averages out or compounds into macroscopic fluctuation.",
+        "source_operator": "formation of the dimensionless ratio of depth to width from the recursion structure",
+        "telemetry": "growth of output fluctuations and non-Gaussianity as a function of r"
+      }
+    },
+    {
+      "primitive_id": "wicks_theorem",
+      "name": "Wick's theorem: every even moment of a mean-zero multivariable Gaussian equals the sum over all pairings of products of two-point covariances, and every odd moment vanishes",
+      "verbatim_quote": "The formula (1.45) is Wick's theorem. Put a box around it.",
+      "page": "Chapter 1, section 1.1, eq. (1.45) (pp. 20-23)",
+      "latex": "\\mathbb{E}\\left[z_{\\mu_1} \\cdots z_{\\mu_{2m}}\\right] = \\sum_{\\text{all pairings}} K_{\\mu_{k_1}\\mu_{k_2}} \\cdots K_{\\mu_{k_{2m-1}}\\mu_{k_{2m}}}",
+      "symbol_and_unit_ledger": {
+        "z_mu": "component mu of a mean-zero Gaussian random vector (in the network setting, a preactivation)",
+        "K_{mu nu}": "covariance (two-point correlator) E[z_mu z_nu] of the Gaussian",
+        "m": "half the number of factors in the moment; the number of pairings is (2m-1)!!",
+        "E[...]": "expectation over the Gaussian distribution"
+      },
+      "assumptions": [
+        "The distribution is exactly Gaussian with mean zero.",
+        "All moments are computed with respect to that single Gaussian measure."
+      ],
+      "breakdown_regime": "Any non-Gaussianity (a nonzero connected correlator of order higher than two) breaks the pairing reduction; Wick's theorem then holds only as the leading term of a perturbative expansion.",
+      "domain": "probability theory; Gaussian integration"
+    },
+    {
+      "primitive_id": "connected_correlators_cumulants",
+      "name": "Connected correlators (cumulants) isolate genuinely new correlation at each order: the connected four-point correlator subtracts all Wick pairings, vanishes for a Gaussian, and its nonzero value measures the deviation from Gaussian statistics",
+      "verbatim_quote": "Essentially by design, the connected four-point correlator vanishes for the Gaussian distribution, and a nonzero value signifies a deviation from Gaussian statistics.",
+      "page": "Chapter 1, section 1.2, eqs. (1.53)-(1.55) (pp. 24-28)",
+      "latex": "\\mathbb{E}\\left[z_{\\mu_1} z_{\\mu_2} z_{\\mu_3} z_{\\mu_4}\\right]_{\\mathrm{connected}} = \\mathbb{E}\\left[z_{\\mu_1} z_{\\mu_2} z_{\\mu_3} z_{\\mu_4}\\right] - \\mathbb{E}\\left[z_{\\mu_1} z_{\\mu_2}\\right]\\mathbb{E}\\left[z_{\\mu_3} z_{\\mu_4}\\right] - \\mathbb{E}\\left[z_{\\mu_1} z_{\\mu_3}\\right]\\mathbb{E}\\left[z_{\\mu_2} z_{\\mu_4}\\right] - \\mathbb{E}\\left[z_{\\mu_1} z_{\\mu_4}\\right]\\mathbb{E}\\left[z_{\\mu_2} z_{\\mu_3}\\right]",
+      "symbol_and_unit_ledger": {
+        "E[...]_connected": "connected part (cumulant) of the four-point correlator",
+        "z_mu": "components of the random vector (preactivations)",
+        "E[z_mu z_nu]": "two-point correlator (covariance) K_{mu nu}"
+      },
+      "assumptions": [
+        "Correlators are defined with respect to a fixed probability distribution over the vector components.",
+        "The decomposition into connected and disconnected parts is the standard cumulant expansion."
+      ],
+      "breakdown_regime": "When connected correlators of high order are as large as low-order ones, the cumulant hierarchy does not truncate and no finite set of correlators describes the distribution.",
+      "domain": "probability theory; statistical field theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In any stochastic system, subtracting all products of lower-order statistics from a joint moment isolates the irreducible interaction at that order; the size of the irreducible part is the honest measure of coupling between components.",
+        "source_operator": "cumulant (connected-correlator) decomposition of joint moments",
+        "telemetry": "the connected four-point correlator, the leading gauge of interaction strength and non-Gaussianity"
+      }
+    },
+    {
+      "primitive_id": "nearly_gaussian_distribution",
+      "name": "A nearly-Gaussian distribution is one whose connected correlators beyond second order are parametrically small, with higher connected correlators smaller still, so the distribution is captured by its covariance plus a few leading corrections",
+      "verbatim_quote": "we can finally define a nearly-Gaussian distribution as a distribution for which all the connected correlators for M > 2 are small.",
+      "page": "Chapter 1, section 1.2 (pp. 27-28)",
+      "latex": "p(z) \\propto e^{-S(z)}",
+      "symbol_and_unit_ledger": {
+        "p(z)": "probability density over the random vector z",
+        "S(z)": "the action whose exponential gives the density; quadratic for a Gaussian, with higher terms generating the small connected correlators"
+      },
+      "assumptions": [
+        "A clear separation exists between the order-one covariance and the suppressed higher connected correlators.",
+        "The smallness is parametric (controlled by a small parameter such as 1/width), not accidental."
+      ],
+      "breakdown_regime": "Deep or chaotic regimes where connected correlators grow to order one destroy near-Gaussianity; the distribution then needs its full correlator tower.",
+      "domain": "probability theory; effective field theory"
+    },
+    {
+      "primitive_id": "quartic_action_perturbation_theory",
+      "name": "Nearly-Gaussian distributions are generated by deforming the quadratic Gaussian action with a small quartic term; expectations then reduce order by order to Gaussian (Wick) integrals, with the quartic coupling setting the size of the connected four-point correlator",
+      "verbatim_quote": "We should be able to generate a small connected four-point correlator by deforming the Gaussian distribution through the addition of a small quartic term to the quadratic action (1.66), giving us a quartic action",
+      "page": "Chapter 1, section 1.3, eq. (1.71) (pp. 29-33)",
+      "latex": "S(z) = \\frac{1}{2}\\sum_{\\mu,\\nu} K^{\\mu\\nu} z_\\mu z_\\nu + \\frac{\\epsilon}{4!}\\sum_{\\mu,\\nu,\\rho,\\lambda} V^{\\mu\\nu\\rho\\lambda} z_\\mu z_\\nu z_\\rho z_\\lambda",
+      "symbol_and_unit_ledger": {
+        "S(z)": "action of the nearly-Gaussian distribution, p(z) proportional to exp(-S(z))",
+        "K^{mu nu}": "inverse covariance (the quadratic kernel of the action)",
+        "z_mu": "components of the random vector",
+        "epsilon": "small dimensionless parameter controlling the deformation; for neural networks it is played by 1/width",
+        "V^{mu nu rho lambda}": "quartic coupling tensor; sources the connected four-point correlator at order epsilon"
+      },
+      "assumptions": [
+        "epsilon is small enough that expanding the exponential of the quartic term is controlled.",
+        "Only the leading correction in epsilon is retained."
+      ],
+      "breakdown_regime": "When epsilon times the accumulated number of interaction opportunities (for networks, depth) becomes order one, the single-insertion approximation fails and multi-vertex diagrams must be resummed.",
+      "domain": "perturbative statistical field theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A Gaussian reference model plus a weak quartic interaction is the universal first correction for weakly coupled stochastic systems; the interaction strength is read off from the connected four-point statistic.",
+        "source_operator": "perturbative expansion of exp(-S) in the quartic coupling about the Gaussian action",
+        "telemetry": "connected four-point correlator of order epsilon, and the ratio of successive orders"
+      }
+    },
+    {
+      "primitive_id": "mlp_iteration_equation",
+      "name": "The multilayer perceptron is defined recursively: the preactivations of each layer are the layer biases plus the layer weight matrix acting on the elementwise activations of the previous layer's preactivations, with the network output read off the final layer",
+      "verbatim_quote": "The MLP is recursively defined through the following iteration equations",
+      "page": "Chapter 2, section 2.1, eqs. (2.5)-(2.6) (pp. 38-40)",
+      "latex": "z^{(\\ell+1)}_i = b^{(\\ell+1)}_i + \\sum_{j=1}^{n_\\ell} W^{(\\ell+1)}_{ij}\\, \\sigma\\!\\left(z^{(\\ell)}_j\\right)",
+      "symbol_and_unit_ledger": {
+        "z^{(l)}_i": "preactivation of neuron i in layer l for a given input",
+        "b^{(l)}_i": "bias parameter of neuron i in layer l",
+        "W^{(l)}_{ij}": "weight parameter connecting neuron j of layer l-1 to neuron i of layer l",
+        "sigma": "elementwise activation (nonlinearity) function",
+        "n_l": "width (neuron count) of layer l"
+      },
+      "assumptions": [
+        "Feedforward layered architecture with elementwise nonlinearity.",
+        "The input layer preactivations are the input vector components themselves."
+      ],
+      "breakdown_regime": "Architectures with weight sharing, recurrence, attention, or skip connections need modified iteration equations; the book treats residual connections separately (Appendix B) because they change the flow.",
+      "domain": "neural network architecture; function definition"
+    },
+    {
+      "primitive_id": "gaussian_initialization",
+      "name": "Network parameters are initialized independently from zero-mean Gaussians: biases with variance Cb and weights with variance CW divided by the previous layer's width, so (Cb, CW) are the initialization hyperparameters whose tuning is the subject of criticality",
+      "verbatim_quote": "to initialize MLPs, we'll independently sample each bias and each weight from zero-mean Gaussian distributions with variances given by",
+      "page": "Chapter 2, section 2.3, eqs. (2.19)-(2.20) (pp. 44-47)",
+      "latex": "\\mathbb{E}\\left[W^{(\\ell)}_{i_1 j_1} W^{(\\ell)}_{i_2 j_2}\\right] = \\delta_{i_1 i_2}\\, \\delta_{j_1 j_2}\\, \\frac{C_W^{(\\ell)}}{n_{\\ell-1}}",
+      "symbol_and_unit_ledger": {
+        "W^{(l)}_{ij}": "weight from neuron j of layer l-1 to neuron i of layer l",
+        "C_W^{(l)}": "weight variance hyperparameter of layer l (dimensionless scale)",
+        "C_b^{(l)}": "bias variance hyperparameter of layer l (companion eq. (2.19))",
+        "n_{l-1}": "width of the previous layer; the 1/n scaling keeps preactivation variances order one",
+        "delta": "Kronecker delta enforcing independence of distinct parameters"
+      },
+      "assumptions": [
+        "Parameters are drawn independently at initialization (the ensemble viewpoint).",
+        "The 1/n_{l-1} variance scaling is imposed so that layerwise statistics have a finite large-width limit."
+      ],
+      "breakdown_regime": "Correlated, structured, or data-dependent initializations violate the independence assumption and change the induced preactivation statistics; non-Gaussian parameter distributions alter higher correlators at leading order.",
+      "domain": "neural network initialization; ensemble statistics"
+    },
+    {
+      "primitive_id": "scale_invariant_activations",
+      "name": "Scale-invariant activations obey sigma(lambda z) = lambda sigma(z) for positive lambda and are exactly the two-slope piecewise linear functions, a class containing the linear activation, ReLU, and leaky ReLU",
+      "verbatim_quote": "The ReLU is the most popular of the activation functions used in deep neural networks and therefore will be of substantial interest for us in this book.",
+      "page": "Chapter 2, section 2.2, eqs. (2.13)-(2.14) (pp. 42-44)",
+      "latex": "\\sigma(\\lambda z) = \\lambda \\sigma(z), \\qquad \\lambda > 0",
+      "symbol_and_unit_ledger": {
+        "sigma": "activation function",
+        "z": "preactivation (real scalar)",
+        "lambda": "positive rescaling factor; dimensionless",
+        "a_+, a_-": "the two slopes for positive and negative preactivations in the piecewise linear form (2.14)"
+      },
+      "assumptions": [
+        "Homogeneity of degree one under positive rescalings.",
+        "The activation is applied elementwise to scalar preactivations."
+      ],
+      "breakdown_regime": "Smooth saturating activations (tanh, sigmoid) are not scale-invariant and fall into different universality classes with different criticality conditions.",
+      "domain": "activation function taxonomy"
+    },
+    {
+      "primitive_id": "deep_linear_kernel_recursion",
+      "name": "For deep linear networks the layer-to-layer covariance recursion is multiplication by CW, with the closed-form solution that the covariance at layer l is CW raised to the l times the input Gram matrix",
+      "verbatim_quote": "which describes how the covariance Gα1 α2 evolves from layer to layer.",
+      "page": "Chapter 3, section 3.1, eqs. (3.14)-(3.15) (pp. 52-56)",
+      "latex": "G^{(\\ell)}_{\\alpha_1 \\alpha_2} = \\left(C_W\\right)^{\\ell} G^{(0)}_{\\alpha_1 \\alpha_2}",
+      "symbol_and_unit_ledger": {
+        "G^{(l)}_{alpha1 alpha2}": "covariance (kernel) between the preactivations on inputs alpha1 and alpha2 at layer l",
+        "C_W": "weight variance hyperparameter",
+        "G^{(0)}": "input Gram matrix, the inner products of the input vectors",
+        "l": "layer index (depth)"
+      },
+      "assumptions": [
+        "Linear activation function.",
+        "Infinite-width limit so layer statistics are exactly Gaussian with this covariance."
+      ],
+      "breakdown_regime": "Any nonlinearity replaces the scalar recursion by a nonlinear kernel map; at finite width the covariance itself fluctuates between instantiations.",
+      "domain": "deep linear networks; signal propagation"
+    },
+    {
+      "primitive_id": "deep_linear_criticality",
+      "name": "Deep linear networks are critical at CW = 1: for CW below one the covariance decays exponentially to zero with depth, for CW above one it explodes exponentially, and at CW = 1 the input covariance is preserved exactly through all layers",
+      "verbatim_quote": "When we fine-tune the initialization hyperparameters of a network so that the covariance avoids exponential behavior, we'll call them critical initialization hyperparameters.",
+      "page": "Chapter 3, section 3.2 (pp. 56-59)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Linear activations and depth large enough that the exponential trend dominates.",
+        "Bias variance set to zero or absorbed, so CW is the only control parameter."
+      ],
+      "breakdown_regime": "At finite width, fluctuations around the mean covariance grow with depth even at criticality, so exact preservation holds only for the ensemble mean.",
+      "domain": "initialization theory; criticality",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any iterated linear amplification with gain g per step maps to the same trichotomy: signals die for g below one, explode for g above one, and propagate unchanged only at the critical gain g equal to one.",
+        "source_operator": "iteration of the scalar covariance map and classification by its fixed points",
+        "telemetry": "the layerwise covariance magnitude, whose exponential trend diagnoses subcritical, critical, or supercritical settings"
+      }
+    },
+    {
+      "primitive_id": "finite_width_fluctuations",
+      "name": "At finite width the connected four-point correlator is nonzero and grows linearly with depth, so observable fluctuations between instantiations scale with the depth-to-width ratio: the variance of a layer observable is (2l/n) times the squared two-point function at criticality",
+      "verbatim_quote": "All these finite-width effects - be they non-Gaussianities, intralayer interactions, or finite-width fluctuations - are proportional to the depth-to-width ratio of the network.",
+      "page": "Chapter 3, section 3.3, eqs. (3.28) and (3.33) (pp. 59-66)",
+      "latex": "\\mathrm{Var}\\left[O^{(\\ell)}\\right] = \\frac{2\\ell}{n}\\left(G^{(\\ell)}_2\\right)^2 + O\\!\\left(\\frac{1}{n^2}\\right)",
+      "symbol_and_unit_ledger": {
+        "Var[O^(l)]": "variance across network instantiations of a layer-l observable (a normalized sum of squared preactivations)",
+        "l/n": "depth-to-width ratio at layer l; dimensionless",
+        "G^(l)_2": "two-point function (covariance) at layer l",
+        "O(1/n^2)": "next-order finite-width corrections"
+      },
+      "assumptions": [
+        "Critical initialization, so the mean covariance neither grows nor decays and the fluctuation growth is purely from finite width.",
+        "Leading order in 1/n; widths large, depth-to-width ratio small."
+      ],
+      "breakdown_regime": "When l/n becomes order one the variance is order one, individual networks differ macroscopically from the ensemble mean, and the leading-order formula underestimates the spread.",
+      "domain": "finite-width corrections; ensemble statistics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "In any layered stochastic system, the relative fluctuation of a collective observable after l layers of n parallel units scales like l/n: depth compounds independent finite-sample noise while width averages it down.",
+        "source_operator": "connected four-point correlator generated by intralayer neuron interactions, accumulated layer by layer",
+        "telemetry": "instantiation-to-instantiation variance of observables, growing linearly in depth at fixed width"
+      }
+    },
+    {
+      "primitive_id": "chaos_double_scaling_limit",
+      "name": "The limits of infinite width and infinite depth do not commute: holding the aspect ratio r fixed while both grow (the double-scaling limit), the 2m-point correlator acquires the factor exp(m(m-1)r), so the output distribution crosses over from Gaussian to fully chaotic",
+      "verbatim_quote": "the distribution implied by these correlators is extremely non-Gaussian, to say the least, and in practice the outputs of these networks will fluctuate chaotically from instantiation to instantiation.",
+      "page": "Chapter 3, section 3.4, eqs. (3.51)-(3.57) (pp. 66-72)",
+      "latex": "G^{(L)}_{2m} \\longrightarrow e^{m(m-1)r} \\left(G^{(L)}_2\\right)^m",
+      "symbol_and_unit_ledger": {
+        "G^(L)_{2m}": "2m-point correlator of final-layer preactivations on a single input",
+        "G^(L)_2": "two-point correlator (variance) at the final layer",
+        "r": "aspect ratio L/n held fixed in the double-scaling limit",
+        "m": "positive integer labeling the correlator order"
+      },
+      "assumptions": [
+        "Critical linear network (CW = 1) so the two-point function is depth-independent.",
+        "Double-scaling limit: n and L both large with r = L/n fixed."
+      ],
+      "breakdown_regime": "For r much less than one the exponential factors are near one and the distribution stays nearly Gaussian; the chaotic form is the large-r fate of the same formula.",
+      "domain": "scaling limits; chaos in deep networks"
+    },
+    {
+      "primitive_id": "rg_flow_marginalization",
+      "name": "Marginalizing the preactivation distribution layer by layer induces a flow of its couplings (kernel, vertex, and higher couplings) known as representation group (RG) flow, in complete parallel with renormalization group flow, with depth playing the role of scale",
+      "verbatim_quote": "Given the complete parallel, we will call our flow representation group (RG) flow.",
+      "page": "Chapter 4, sections 4.4 and 4.6 (pp. 92-104)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The distribution at each layer is nearly Gaussian, so it is summarized by its couplings: the kernel and the interaction vertices.",
+        "Marginalization over one layer's preactivations is the elementary coarse-graining step."
+      ],
+      "breakdown_regime": "If the distribution at some layer is strongly non-Gaussian, the coupling set does not close under marginalization and the flow description loses its finite parameterization.",
+      "domain": "renormalization group methods for networks",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Successively integrating out fine-grained variables and tracking how the effective couplings of the remaining variables change is the universal RG pattern; here the layers of a network are the scales and the preactivation couplings are the running couplings.",
+        "source_operator": "layer-by-layer marginalization (partial trace) over preactivations",
+        "telemetry": "the trajectories of the kernel and vertex couplings as functions of depth"
+      }
+    },
+    {
+      "primitive_id": "kernel_recursion_general_activation",
+      "name": "For a general activation the infinite-width kernel obeys the recursion: the kernel at layer l+1 is Cb plus CW times the Gaussian expectation of the product of activations of two Gaussian variables whose covariance is the layer-l kernel",
+      "verbatim_quote": "keeping the leading finite-width 1/n corrections, we'll obtain recursion equations for the two-point and four-point correlators, encoding how these observables evolve with increasing depth.",
+      "page": "Chapter 4, eq. (4.86); Chapter 5, section 5.1, eq. (5.1) (pp. 88-91, 110)",
+      "latex": "K^{(\\ell+1)}_{\\alpha\\beta} = C_b + C_W \\left\\langle \\sigma_\\alpha \\sigma_\\beta \\right\\rangle_{K^{(\\ell)}}",
+      "symbol_and_unit_ledger": {
+        "K^(l)_{alpha beta}": "kernel (two-point correlator) between preactivations on inputs alpha and beta at layer l",
+        "C_b, C_W": "bias and weight variance hyperparameters",
+        "sigma_alpha": "activation evaluated on a Gaussian variable representing the preactivation for input alpha",
+        "< . >_{K^(l)}": "expectation over the bivariate Gaussian with covariance matrix built from the layer-l kernel"
+      },
+      "assumptions": [
+        "Infinite-width limit at each layer, so preactivations are exactly Gaussian given the previous layer's kernel.",
+        "Independent Gaussian initialization with variances Cb and CW/n."
+      ],
+      "breakdown_regime": "At finite width the kernel fluctuates and couples to the four-point vertex; the closed recursion is then only the leading term of the joint kernel-vertex flow.",
+      "domain": "signal propagation; Gaussian process limit",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A nonlinear iterated map on covariance matrices, completely determined by the activation's Gaussian moments, is the engine of signal propagation: fixed points and stability of this map decide what information survives depth.",
+        "source_operator": "Gaussian expectation of the activation product under the current kernel (the kernel map)",
+        "telemetry": "the kernel trajectory across layers and its distance to the fixed point"
+      }
+    },
+    {
+      "primitive_id": "vertex_recursion",
+      "name": "The four-point vertex obeys its own recursion: a homogeneous term transports the previous vertex through activation correlators, and a source term injects new interaction each layer, so the quartic coupling v = V/n stays perturbatively small for wide networks while the vertex itself remains order one",
+      "verbatim_quote": "As we explained in §3.3, such fluctuations are generically finite-width effects",
+      "page": "Chapter 4, eq. (4.90); Chapter 5, section 5.4, eq. (5.109) (pp. 91, 139-146)",
+      "latex": "V^{(\\ell+1)} = \\chi_{\\parallel}^2\\!\\left(K^{(\\ell)}\\right) V^{(\\ell)} + C_W^2 \\left[ \\left\\langle \\sigma^4(z) \\right\\rangle_{K^{(\\ell)}} - \\left\\langle \\sigma^2(z) \\right\\rangle_{K^{(\\ell)}}^2 \\right]",
+      "symbol_and_unit_ledger": {
+        "V^(l)": "four-point vertex (rescaled connected four-point correlator) at layer l for a single input; order one",
+        "chi_parallel(K^(l))": "parallel susceptibility at the layer-l kernel; its square transports the vertex",
+        "C_W": "weight variance hyperparameter",
+        "<sigma^4>, <sigma^2>": "Gaussian moments of the activation under the layer-l kernel; their difference sources new vertex each layer",
+        "v = V/n": "the quartic coupling of the effective action, order 1/n"
+      },
+      "assumptions": [
+        "Single-input specialization of the general vertex recursion (4.90).",
+        "Nearly-Gaussian statistics at each layer so the kernel and vertex suffice."
+      ],
+      "breakdown_regime": "At criticality the homogeneous coefficient is one, so the vertex grows linearly with depth; once V/n times depth is order one, higher vertices and multi-vertex terms can no longer be dropped.",
+      "domain": "finite-width corrections; interaction flow"
+    },
+    {
+      "primitive_id": "susceptibilities",
+      "name": "The parallel susceptibility chi_parallel(K) = CW g'(K) governs how perturbations of the kernel along the coincident direction grow or shrink per layer, and the perpendicular susceptibility chi_perp(K) = CW times the Gaussian mean of sigma-prime squared governs perturbations transverse to it",
+      "verbatim_quote": "The susceptibility χk (K) characterizes how susceptible the kernel is to perturbations around the fixed point, hence the name:",
+      "page": "Chapter 5, section 5.1, eqs. (5.10) and (5.51) (pp. 111-122)",
+      "latex": "\\chi_{\\parallel}(K) \\equiv C_W\\, g'(K), \\qquad \\chi_{\\perp}(K) \\equiv C_W \\left\\langle \\sigma'(z)\\, \\sigma'(z) \\right\\rangle_K",
+      "symbol_and_unit_ledger": {
+        "chi_parallel(K)": "parallel susceptibility: derivative of the kernel map g with respect to K, times CW; per-layer amplification of coincident perturbations",
+        "g(K)": "the single-input kernel map, K maps to Cb + CW <sigma(z)^2>_K",
+        "chi_perp(K)": "perpendicular susceptibility: per-layer amplification of the separation between kernels of two distinct inputs",
+        "sigma'(z)": "derivative of the activation at a Gaussian preactivation z with variance K",
+        "< . >_K": "Gaussian expectation with variance K"
+      },
+      "assumptions": [
+        "Perturbations about a kernel trajectory are small enough for linearization per layer.",
+        "Two-input geometry decomposed into a midpoint (parallel) and a difference (perpendicular) coordinate."
+      ],
+      "breakdown_regime": "Far from the fixed point, or for perturbations too large for one-step linearization, the susceptibilities vary along the trajectory and must be composed layer by layer rather than read off at a single K.",
+      "domain": "stability analysis of signal propagation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Linearizing any iterated map about its trajectory yields per-step amplification factors; the product of these factors over steps is the Lyapunov-style growth of perturbations, and unity is the boundary between contraction and explosion.",
+        "source_operator": "differentiation of the kernel recursion with respect to coincident and transverse perturbations",
+        "telemetry": "the two susceptibility values at the operating kernel, compared against one"
+      }
+    },
+    {
+      "primitive_id": "criticality_conditions",
+      "name": "Criticality for a general activation requires both susceptibilities to equal one at the kernel fixed point, chi_parallel(K*) = chi_perp(K*) = 1 with K* = Cb + CW g(K*); these two conditions fix the critical initialization hyperparameters and prevent exponential growth or decay of both the kernel and input separations",
+      "verbatim_quote": "Taken all together, our general notion of criticality requires the following two conditions to hold",
+      "page": "Chapter 5, section 5.1, eqs. (5.55)-(5.56) (pp. 121-122)",
+      "latex": "\\chi_{\\parallel}\\!\\left(K^\\star_{00}\\right) = 1, \\qquad \\chi_{\\perp}\\!\\left(K^\\star_{00}\\right) = 1, \\qquad K^\\star_{00} = C_b + C_W\\, g\\!\\left(K^\\star_{00}\\right)",
+      "symbol_and_unit_ledger": {
+        "K*_{00}": "fixed-point kernel value for coincident inputs",
+        "chi_parallel, chi_perp": "the two susceptibilities evaluated at the fixed point",
+        "C_b, C_W": "initialization hyperparameters solved for by the criticality conditions",
+        "g": "single-input kernel map"
+      },
+      "assumptions": [
+        "A fixed point of the kernel recursion exists for the chosen activation.",
+        "Depth is large, so fixed-point stability rather than transient behavior is the relevant criterion."
+      ],
+      "breakdown_regime": "Activations or hyperparameter regions with no finite nonzero fixed point, or with coincident fixed points that are repulsive in one direction, admit no critical initialization of this form.",
+      "domain": "initialization theory; critical phenomena",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Requiring every independent perturbation channel of an iterated system to be marginally stable at the operating point, neither amplified nor damped, is the general definition of a critical working point.",
+        "source_operator": "simultaneous fixed-point and unit-susceptibility conditions on the kernel flow",
+        "telemetry": "both susceptibilities evaluated at the fixed point, and the distance of (Cb, CW) from the critical values"
+      }
+    },
+    {
+      "primitive_id": "scale_invariant_critical_initialization",
+      "name": "For scale-invariant activations the two susceptibilities coincide and are kernel-independent, chi = A2 CW with A2 = (a+^2 + a-^2)/2, so criticality is Cb = 0 and CW = 1/A2, which for ReLU (A2 = 1/2) reproduces the Kaiming initialization (0, 2), and the fixed points form a line parameterized by the input norm",
+      "verbatim_quote": "For the ReLU activation function, this reproduces the Kaiming initialization (Cb , CW )critical = (0, 2)",
+      "page": "Chapter 5, section 5.2, eqs. (5.61)-(5.67) (pp. 123-127)",
+      "latex": "\\left(C_b, C_W\\right)^{\\mathrm{critical}} = \\left(0, \\frac{1}{A_2}\\right), \\qquad A_2 = \\frac{a_+^2 + a_-^2}{2}",
+      "symbol_and_unit_ledger": {
+        "A_2": "second Gaussian moment factor of the scale-invariant activation, set by its two slopes",
+        "a_+, a_-": "slopes of the piecewise linear activation for positive and negative preactivations",
+        "C_b, C_W": "critical bias and weight variances; for ReLU (a+ = 1, a- = 0), A2 = 1/2 and CW = 2"
+      },
+      "assumptions": [
+        "Activation is scale-invariant (piecewise linear with slopes a+ and a-).",
+        "Bias variance vanishes at criticality for this class."
+      ],
+      "breakdown_regime": "Adding bias variance or leaving the scale-invariant class breaks the degeneracy of the two susceptibilities and the line of fixed points collapses to isolated fixed points.",
+      "domain": "initialization theory; universality classes"
+    },
+    {
+      "primitive_id": "kstar_zero_universality_class",
+      "name": "Smooth activations with sigma(0) = 0 and sigma'(0) nonzero form the K* = 0 universality class (tanh and sin are members), critical at Cb = 0 and CW = 1/sigma_1^2, where the kernel approaches its fixed point by a universal power law with exponent p0 = 1 rather than exponentially",
+      "verbatim_quote": "The canonical class member is the tanh activation function, though there are obviously a very large number of members in this class, e.g. the sin activation function is a member too.",
+      "page": "Chapter 5, section 5.3.3, eqs. (5.89)-(5.92) (pp. 133-136)",
+      "latex": "\\left(C_b, C_W\\right)^{\\mathrm{critical}} = \\left(0, \\frac{1}{\\sigma_1^2}\\right), \\qquad \\Delta K^{(\\ell)} \\approx \\frac{1}{(-a_1)\\, \\ell}",
+      "symbol_and_unit_ledger": {
+        "sigma_1": "first Taylor coefficient (slope at the origin) of the activation",
+        "sigma_0 = 0, sigma_1 nonzero": "defining conditions of the class, from the Taylor expansion of sigma about zero",
+        "Delta K^(l)": "distance of the layer-l kernel from the fixed point K* = 0",
+        "a_1": "coefficient from the expansion of the susceptibility near K = 0; negative for this class",
+        "l": "layer index; the 1/l decay is the universal power law with exponent p0 = 1"
+      },
+      "assumptions": [
+        "Activation is smooth at the origin with a Taylor expansion, vanishes there, and has nonzero slope there.",
+        "Critical hyperparameters chosen so the fixed point sits at K* = 0."
+      ],
+      "breakdown_regime": "Nonsmooth activations (ReLU family) are outside this class; off criticality the approach to the fixed point is exponential instead of power-law, and at accessible depths the slow power-law transient dominates behavior.",
+      "domain": "universality classes; critical phenomena",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Systems whose linearization vanishes at the fixed point relax by universal power laws whose exponents depend only on the class, not on microscopic detail; membership is decided by the first terms of an expansion about the fixed point.",
+        "source_operator": "Taylor expansion of the activation and of the susceptibility about K = 0, classifying fixed-point stability",
+        "telemetry": "the measured decay exponent of the kernel distance with depth, compared against the universal value one"
+      }
+    },
+    {
+      "primitive_id": "evidence_for_criticality",
+      "name": "Bayesian model comparison over initialization hypotheses favors criticality at large depth: hypotheses flowing to the zero kernel or the infinite kernel have evidence vanishing polynomially or exponentially, while the critical hypothesis keeps the output kernel finite and nonzero and its evidence peaks when the kernel matches the output scale",
+      "verbatim_quote": "for generic nonzero and finite output values, the maximal evidence should lie between these two extrema.",
+      "page": "Chapter 6, section 6.3.1, eqs. (6.37)-(6.38) (pp. 170-175)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Bayesian model fitting with the initialization distribution reinterpreted as a prior over parameters (section 6.2).",
+        "Large depth, so the kernel flow has converged toward its fixed-point fate under each hypothesis."
+      ],
+      "breakdown_regime": "At shallow depth the three hypotheses are not yet separated by the flow, and the evidence ordering need not favor criticality; strong data can also overwhelm the prior-level effect.",
+      "domain": "Bayesian model selection; Occam's razor",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "When hypotheses differ by how a propagated signal scales, model evidence automatically penalizes both the hypothesis that erases the signal and the one that blows it up; the surviving hypothesis is the critical one that preserves scale.",
+        "source_operator": "marginal likelihood (evidence) of the output data under each initialization hypothesis, in the large-depth limit",
+        "telemetry": "the evidence as a function of the propagated kernel, peaked at the data's own scale"
+      }
+    },
+    {
+      "primitive_id": "no_representation_learning_infinite_width",
+      "name": "At infinite width the Bayesian posterior over hidden-layer preactivations equals the prior: observing training outputs has no consequence for hidden representations, so there is no representation learning at infinite width, and outputs on distinct examples are not wired together",
+      "verbatim_quote": "Since the posterior equals the prior, our observation of yA had no consequence on the penultimate-layer representation; thus, we conclude that there is no representation learning at infinite width.",
+      "page": "Chapter 6, sections 6.3.2-6.3.3, eq. (6.71) (pp. 175-178)",
+      "latex": "p\\left(z^{(L-1)}_D \\,\\middle|\\, y_A\\right) = p\\left(z^{(L-1)}_D\\right)",
+      "symbol_and_unit_ledger": {
+        "p(z^(L-1)_D | y_A)": "posterior distribution of penultimate-layer preactivations on data subset D after observing outputs y_A on subset A",
+        "p(z^(L-1)_D)": "the prior (initialization) distribution of the same preactivations",
+        "z^(L-1)": "preactivations of the penultimate layer, the learned representation in this analysis"
+      },
+      "assumptions": [
+        "Strict infinite-width limit, where layers are exactly Gaussian and independent across output components.",
+        "Bayesian (posterior) notion of learning with the initialization as prior."
+      ],
+      "breakdown_regime": "Any finite width restores coupling between layers and examples: the posterior departs from the prior at order 1/n and representation learning switches on (see the dNTK and Hebbian primitives).",
+      "domain": "Bayesian deep learning; representation learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Whenever a model's internal variables are a priori independent of the readout given the data partition, conditioning on data cannot update them: no internal learning is possible in any system whose hidden layer factorizes from its output layer at leading order.",
+        "source_operator": "Bayesian conditioning of hidden-layer variables on observed outputs under a factorized prior",
+        "telemetry": "the divergence between hidden-layer posterior and prior, zero at leading order and order 1/n at finite width"
+      }
+    },
+    {
+      "primitive_id": "hebbian_learning_finite_width",
+      "name": "At finite width the non-Gaussian interactions between neurons generate an automatic Hebbian inductive bias, with effective weight updates proportional to correlated pre and post activity in the spirit of the slogan that neurons that fire together wire together",
+      "verbatim_quote": "Hebbian learning is often summarized by the following slogan: neurons that fire together, wire together.",
+      "page": "Chapter 6, section 6.4.1 (pp. 179-184)",
+      "latex": "W_{ij} \\propto z_i(x)\\, z_j(x)",
+      "symbol_and_unit_ledger": {
+        "W_{ij}": "weight connecting neurons i and j, whose effective update follows the Hebbian proportionality",
+        "z_i(x), z_j(x)": "activities (preactivations) of the post and pre neurons on input x; their product measures co-activity"
+      },
+      "assumptions": [
+        "Finite width, so the order 1/n interactions that correlate neurons are present.",
+        "Bayesian effective description in which integrating out other neurons induces the association term."
+      ],
+      "breakdown_regime": "In the strict infinite-width limit the effect vanishes with the interactions; it is a leading finite-width phenomenon, not a property of the Gaussian process limit.",
+      "domain": "associative learning; finite-width effects"
+    },
+    {
+      "primitive_id": "neural_tangent_kernel",
+      "name": "The neural tangent kernel (NTK) is the learning-rate-weighted Gram matrix of output derivatives with respect to all parameters; it is the main driver of training dynamics, converting parameter updates into function updates and coupling the errors on different examples",
+      "verbatim_quote": "The quantity in the second square bracket is called the neural tangent kernel (NTK)",
+      "page": "Chapter 7, section 7.2, eq. (7.17); Chapter 8, eq. (8.1) (pp. 197-205, 213)",
+      "latex": "H_{i_1 i_2; \\tilde{\\alpha}_1 \\tilde{\\alpha}_2} = \\sum_{\\mu,\\nu} \\lambda_{\\mu\\nu} \\frac{\\partial z_{i_1; \\tilde{\\alpha}_1}}{\\partial \\theta_\\mu} \\frac{\\partial z_{i_2; \\tilde{\\alpha}_2}}{\\partial \\theta_\\nu}",
+      "symbol_and_unit_ledger": {
+        "H": "the neural tangent kernel, a matrix over output components i and training examples alpha-tilde",
+        "lambda_{mu nu}": "inverse learning-rate metric over parameters (diagonal in the book's parametrization)",
+        "dz/dtheta": "derivative of an output preactivation with respect to a parameter, computed by backpropagation",
+        "theta_mu": "the mu-th network parameter (weights and biases of all layers)"
+      },
+      "assumptions": [
+        "Gradient-based training with a (possibly parameter-dependent) learning-rate metric.",
+        "The NTK as defined is independent of the loss function; the loss enters only through the error factors it multiplies."
+      ],
+      "breakdown_regime": "At finite width the NTK fluctuates at initialization and evolves during training at order 1/n, so the frozen-NTK picture is only the leading term.",
+      "domain": "training dynamics; kernel methods",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "For any parametrized model trained by gradient flow, the Gram matrix of output gradients defines a kernel that converts parameter motion into function motion; freezing that kernel linearizes the learning problem.",
+        "source_operator": "contraction of output Jacobians with the learning-rate metric",
+        "telemetry": "the NTK spectrum and its cross-blocks between training and test examples, which determine what is learned and how predictions move"
+      }
+    },
+    {
+      "primitive_id": "ntk_forward_equation",
+      "name": "The NTK obeys a forward iteration equation across layers, assembled from the same chain-rule factors as backpropagation, and with the tensorial gradient-descent scaling of learning rates by inverse layer width its expectation stays order one at large width",
+      "verbatim_quote": "This means that we can find a simple iterative expression for the NTK, similar in spirit to the forward equation for the preactivations that defines the MLP.",
+      "page": "Chapter 8, section 8.0, eqs. (8.12)-(8.15) (pp. 215-222)",
+      "latex": "z_{i;\\delta}\\left(\\theta(t+1)\\right) - z_{i;\\delta}\\left(\\theta(t)\\right) = -\\eta \\sum_{j, \\tilde{\\alpha}} H_{ij; \\delta \\tilde{\\alpha}}\\, \\epsilon_{j; \\tilde{\\alpha}} + O\\!\\left(\\eta^2\\right)",
+      "symbol_and_unit_ledger": {
+        "z_{i;delta}(theta(t))": "output i on example delta after t steps of gradient descent",
+        "eta": "overall learning-rate scale",
+        "H_{ij; delta alpha-tilde}": "NTK block coupling output i on example delta to output j on training example alpha-tilde",
+        "epsilon_{j; alpha-tilde}": "error factor (derivative of the loss with respect to the output) on training example alpha-tilde"
+      },
+      "assumptions": [
+        "One step of (tensorial) gradient descent with small learning rate eta.",
+        "Learning rates for layer-l weights carry the 1/n_{l-1} normalization, without which the NTK would be order n."
+      ],
+      "breakdown_regime": "Large learning rates invalidate the order-eta truncation; finite width makes the NTK a stochastic, time-evolving object rather than a fixed kernel.",
+      "domain": "training dynamics; recursive kernel computation"
+    },
+    {
+      "primitive_id": "criticality_solves_exploding_vanishing_gradients",
+      "name": "The exploding and vanishing gradient problem is the multiplicative accumulation of the perpendicular susceptibility through the chain rule: the criticality condition chi_perp(K*) = 1 keeps every layer's contribution to the NTK comparable, so criticality is a complete solution to the problem",
+      "verbatim_quote": "we see that contribution of the chain-rule factor to the exploding and vanishing gradient problem is directly connected to an exponentially growing or decaying multiplicative factor in the NTK",
+      "page": "Chapter 9, section 9.4, eq. (9.93) (pp. 242-244)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Gradient contributions factorize into per-layer chain-rule factors whose ensemble mean per layer is the perpendicular susceptibility.",
+        "Critical initialization, so that mean factor is exactly one at the fixed point."
+      ],
+      "breakdown_regime": "Away from criticality the exponential trend returns; at finite width, fluctuations around the mean factor can still produce ill-conditioned individual networks even when the ensemble mean is critical.",
+      "domain": "optimization; gradient propagation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In any deep composition, the gradient signal is a product of per-stage gains; setting the mean gain of every stage to one is the universal fix that keeps early stages trainable, independent of what the stages compute.",
+        "source_operator": "chain-rule factorization of parameter gradients into per-layer susceptibility factors",
+        "telemetry": "the per-layer gradient magnitudes and NTK contributions, flat across depth at criticality"
+      }
+    },
+    {
+      "primitive_id": "learning_rate_equivalence_principle",
+      "name": "The learning-rate equivalence principle demands parametrically equal NTK contributions from every parameter group in every layer; for the scale-invariant class it is satisfied by rescaling bias learning rates by 1/L and weight learning rates by 1/(L n_{l-1})",
+      "verbatim_quote": "we demand parametrically equal contributions to the NTK for each parameter group from every layer. This gives an equivalence principle for setting the training hyperparameters",
+      "page": "Chapter 9, section 9.4, eq. (9.94) (pp. 244-247)",
+      "latex": "\\eta \\lambda^{(\\ell)}_b = \\frac{\\eta \\tilde{\\lambda}_b}{L}, \\qquad \\eta \\lambda^{(\\ell)}_W = \\frac{\\eta \\tilde{\\lambda}_W}{L\\, n_{\\ell-1}}",
+      "symbol_and_unit_ledger": {
+        "eta lambda^(l)_b, eta lambda^(l)_W": "effective learning rates for biases and weights of layer l",
+        "eta lambda-tilde_b, eta lambda-tilde_W": "layer-independent rescaled learning rates, the remaining free hyperparameters",
+        "L": "depth; the 1/L factor equalizes contributions across layers",
+        "n_{l-1}": "previous layer width; the 1/n factor equalizes weight contributions against the width sum"
+      },
+      "assumptions": [
+        "Critical initialization, so no layer is exponentially suppressed or amplified to begin with.",
+        "Scale-invariant universality class for the displayed solution; other classes give analogous rescalings."
+      ],
+      "breakdown_regime": "Without criticality no polynomial rescaling can compensate exponential layer imbalance; the principle sets scaling, not the overall learning-rate magnitude, which remains a stability question.",
+      "domain": "optimization hyperparameters; scaling laws"
+    },
+    {
+      "primitive_id": "kernel_prediction",
+      "name": "A fully-trained infinite-width network predicts by kernel regression: the test output equals its initial value minus the NTK cross-block between test and training examples times the inverse training NTK times the initial training errors, making test predictions Gaussian with computable mean and covariance",
+      "verbatim_quote": "The stochastic equation (10.39) describes the predictions of a particular instantiation of a fully-trained neural network.",
+      "page": "Chapter 10, section 10.2.4, eqs. (10.39)-(10.41) (pp. 260-263)",
+      "latex": "z^{(L)}_{i; \\dot{\\beta}}(T) = z^{(L)}_{i; \\dot{\\beta}} - \\sum_{\\tilde{\\alpha}_1, \\tilde{\\alpha}_2 \\in A} \\Theta^{(L)}_{\\dot{\\beta} \\tilde{\\alpha}_1} \\left[\\left(\\Theta^{(L)}_A\\right)^{-1}\\right]_{\\tilde{\\alpha}_1 \\tilde{\\alpha}_2} \\left(z^{(L)}_{i; \\tilde{\\alpha}_2} - y_{i; \\tilde{\\alpha}_2}\\right)",
+      "symbol_and_unit_ledger": {
+        "z^(L)_{i; beta-dot}(T)": "fully-trained output i on test example beta-dot",
+        "Theta^(L)": "the (frozen) NTK at the output layer; its cross-block couples test to training examples and Theta_A is its training-set block",
+        "(Theta_A)^{-1}": "inverse of the training-block NTK (written with a tilde in the book's notation)",
+        "z^(L)_{i; alpha-tilde} - y_{i; alpha-tilde}": "initial errors on the training set",
+        "A": "the training set index set"
+      },
+      "assumptions": [
+        "Infinite width, so the NTK is frozen at its initialization value and training is exactly linear.",
+        "Training runs to interpolation of the training targets (full training)."
+      ],
+      "breakdown_regime": "Finite width adds NTK-fluctuation and dNTK corrections; partial training or early stopping replaces the inverse with a damped (regularized) version.",
+      "domain": "kernel regression; generalization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Prediction as prior value minus kernel-weighted residuals of the training set is the universal form of Gaussian-process and kernel-ridge updating; the trained network inherits it exactly whenever its tangent kernel freezes.",
+        "source_operator": "solution of the linearized training dynamics, expressed as a kernel solve against the initial residuals",
+        "telemetry": "predicted mean and covariance on test points, and the residual vector the kernel solve acts on"
+      }
+    },
+    {
+      "primitive_id": "algorithm_independence",
+      "name": "At infinite width the fully-trained solution is independent of the learning algorithm: gradient descent, stochastic gradient descent, and Newton's method, with any training time and any of the considered losses, reach the same function, which is fixed by the initialization, the frozen NTK, and the training outputs alone",
+      "verbatim_quote": "It doesn't matter which loss function we used, e.g. MSE or cross-entropy, how many steps we took to get to the minimum, or whether we used gradient descent or SGD",
+      "page": "Chapter 10, section 10.2.2, eq. (10.35) (pp. 256-259)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Strict infinite-width limit with the frozen NTK.",
+        "Training proceeds to a fully-trained (interpolating) solution."
+      ],
+      "breakdown_regime": "Finite width breaks algorithm independence at order 1/n: the solution acquires algorithm-dependent pieces (the projectors of the finite-width prediction formula), so the optimizer becomes part of the model.",
+      "domain": "optimization theory; implicit bias"
+    },
+    {
+      "primitive_id": "bias_variance_tradeoff_at_criticality",
+      "name": "Generalization error decomposes into a bias term governed by the perpendicular component of the NTK and a variance term governed by the perpendicular component of the kernel; the criticality condition chi_perp(K*) = 1 balances the tradeoff, as measured by the robustness ratio Theta_{-+}/Theta_{++} - 1",
+      "verbatim_quote": "This setting of the initialization hyperparameters has the potential to balance the bias-variance tradeoff, leading to the best outcome without a priori knowing anything more about the underling dataset we're trying to model.",
+      "page": "Chapter 10, section 10.3.1, eqs. (10.57)-(10.63) (pp. 266-271)",
+      "latex": "\\frac{\\Theta_{-+}}{\\Theta_{++}} - 1 = \\frac{-2\\, \\delta\\delta\\Theta[2]}{\\Theta_{00}}",
+      "symbol_and_unit_ledger": {
+        "Theta_{++}, Theta_{-+}": "NTK evaluated on coincident and on separated (plus/minus) input pairs in the two-point robustness analysis",
+        "delta-delta Theta[2]": "perpendicular (second-order difference) component of the NTK, the piece controlling sensitivity to input differences",
+        "Theta_{00}": "coincident NTK value; the ratio measures robustness of predictions to small input perturbations"
+      },
+      "assumptions": [
+        "Two-point analysis with nearly coincident inputs, expanded to second order in their separation.",
+        "Infinite width, with kernel and NTK both frozen and Gaussian statistics."
+      ],
+      "breakdown_regime": "For widely separated inputs or strongly non-Gaussian data geometry the second-order expansion fails; at finite width the tradeoff acquires fluctuation corrections.",
+      "domain": "generalization theory; robustness"
+    },
+    {
+      "primitive_id": "dntk_representation_learning",
+      "name": "The differential NTK (dNTK), built from second derivatives of preactivations, controls how the NTK itself changes under training; it is an order 1/n object that vanishes at infinite width, and its nonvanishing at finite width is sufficient for representation learning",
+      "verbatim_quote": "a nonvanishing dNTK is sufficient for a network to exhibit representation learning, and thus by showing that the dNTK is of order 1/n, we will firmly establish that the leading-order finite-width effective theory is able to describe this essential property of deep learning.",
+      "page": "Chapter 11, sections 11.1-11.2, eq. (11.8) (pp. 283-292)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "One step of gradient descent from initialization, at leading order in 1/n.",
+        "The dNTK vanishes in the first layer and first becomes nonzero from the second layer on."
+      ],
+      "breakdown_regime": "The sufficiency statement is a leading-order result: over long training times the accumulated kernel evolution resums into effects beyond the single-step dNTK contraction.",
+      "domain": "representation learning; finite-width training dynamics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A frozen-feature model cannot learn features; the first object that measures feature learning is the derivative of the model's kernel with respect to its own training, and it is generically suppressed by one power of the system size.",
+        "source_operator": "differentiation of the NTK along a gradient-descent step (the dNTK contracted with the error factor)",
+        "telemetry": "the change in the NTK after one training step, the leading gauge of representation learning"
+      }
+    },
+    {
+      "primitive_id": "nearly_kernel_methods",
+      "name": "Finite-width networks are dually described as nearly-kernel machines: their predictions keep the kernel term linear in the training targets and add a correction term quadratic in the targets across pairs of training examples, generated by a meta-kernel built from the NTK fluctuation and the dNTKs",
+      "verbatim_quote": "When the prediction of a quadratic model is computed in this way, we'll hereby make it known as a nearly-kernel machine or nearly-kernel methods.",
+      "page": "Chapter 11, section 11.4.2, eq. (11.132) (pp. 313-320)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Leading finite-width (order 1/n) effective theory with both NTK fluctuations and dNTK effects retained.",
+        "Quadratic model viewpoint: the trained network is expanded to second order in the training targets."
+      ],
+      "breakdown_regime": "At order 1/n^2 and beyond, cubic and higher target dependence enters; deep in the chaotic regime (r order one) the quadratic truncation itself fails.",
+      "domain": "kernel methods; model duality",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Weakly interacting learners map to kernel machines plus a universal first correction that is quadratic in the data: the same trained system admits a microscopic (parameters) and a macroscopic (kernels) description, and the correction is where data-dependent feature learning lives.",
+        "source_operator": "dual reformulation of the finite-width trained predictor in terms of kernels, meta-kernels, and target polynomials",
+        "telemetry": "the relative size of the quadratic-in-targets term against the linear kernel term"
+      }
+    },
+    {
+      "primitive_id": "finite_width_prediction",
+      "name": "At finite width the fully-trained prediction is universally given by the kernel prediction plus order 1/n corrections built from the NTK fluctuation and the two dNTKs, with all algorithm dependence isolated in the algorithm projectors ZA and ZB",
+      "verbatim_quote": "At finite width, the predictions of a fully-trained network are universally governed",
+      "page": "Chapter ∞, section ∞.2.3, eq. (∞.154) (pp. 373-376)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Leading order in the 1/n expansion about the infinite-width kernel solution.",
+        "Mean-squared-error loss for the stated form; other losses modify the algorithm-dependent part (the book flags this as a stated conjecture for cross-entropy)."
+      ],
+      "breakdown_regime": "Corrections cease to be perturbative when the aspect ratio is order one; the formula is the leading term of the same expansion whose breakdown the chaos primitive describes.",
+      "domain": "finite-width generalization; prediction theory"
+    },
+    {
+      "primitive_id": "model_complexity_duality",
+      "name": "Under the duality between the microscopic parameter description and the macroscopic coupling description, model complexity should be counted in data-dependent couplings rather than parameters: an infinite-width trained ensemble is specified by order ND^2 numbers and an order 1/n finite-width ensemble by order ND^4 numbers",
+      "verbatim_quote": "In the overparameterized regime, this duality indicates that we really should identify the model complexity with the data-dependent couplings rather than the model parameters.",
+      "page": "Epilogue ε, eqs. (ε.14)-(ε.15) and (ε.25) (pp. 395-399)",
+      "latex": "\\mathcal{O}\\!\\left(N_D^2\\right) \\quad \\text{at infinite width}, \\qquad \\mathcal{O}\\!\\left(N_D^4\\right) \\quad \\text{at order } 1/n",
+      "symbol_and_unit_ledger": {
+        "N_D": "number of training data points",
+        "O(N_D^2)": "count of data-dependent couplings (kernel entries) specifying the infinite-width trained ensemble",
+        "O(N_D^4)": "count including four-point (vertex) couplings at first finite-width order; order 1/n^k accuracy costs O(N_D^{2k+2}) couplings by eq. (epsilon.25)"
+      },
+      "assumptions": [
+        "Overparameterized regime, where parameter counting vastly overstates effective complexity.",
+        "The macroscopic description in terms of dataset-indexed couplings (kernels and vertices) is complete at the stated order."
+      ],
+      "breakdown_regime": "When the dataset is small or the model underparameterized, parameter counting and coupling counting coincide in scale and the duality gives no compression.",
+      "domain": "model complexity; statistical learning theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "For any overparameterized system with a dual macroscopic description, the honest complexity budget is the number of effective couplings the data actually determines, not the number of microscopic parameters the implementation happens to carry.",
+        "source_operator": "counting of independent data-dependent couplings in the dual (macroscopic) description at each order of the expansion",
+        "telemetry": "the coupling count as a function of dataset size and expansion order, against raw parameter count"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2f14aa52b7570ec7-t1",
+      "think": "The book's problem is that deep learning works far better than anyone can explain, and the usual explanations are folklore: rules of thumb about initialization, depth, and learning rates with no derivation. Roberts and Yaida, with Hanin, attack this the way a physicist attacks matter. A neural network has an enormous number of elementary constituents, and systems with many constituents simplify: statistical mechanics replaces molecular chaos with a handful of thermodynamic variables. The network analog of temperature and pressure is the statistics of preactivations, the signals flowing through the layers, described not parameter by parameter but by their correlators over the ensemble of random initializations. The first great simplification is that at infinite width these statistics become Gaussian and factorize, the network function becomes a Gaussian process, training dynamics linearize, and everything is computable. That solvable limit is the leading term, not the answer: the book's real subject is the systematic expansion around it in powers of one over width, with the trained distribution written as the infinite-width result plus corrections at order 1/n, 1/n^2, and beyond.\n\nThe language of the expansion is imported wholesale from field theory. Moments of a Gaussian are given by Wick's theorem as sums over pairings of covariances. Connected correlators, the cumulants, subtract those pairings and isolate genuinely new correlation at each order; the connected four-point correlator is the precise meter of non-Gaussianity. A nearly-Gaussian distribution is one where all higher connected correlators are parametrically small, and such distributions are generated by deforming a quadratic action with a small quartic term, the coupling of that term setting the size of the four-point interaction. For networks the small parameter is one over width, and depth quietly multiplies it: because each layer offers fresh chances to interact, the true control parameter of the whole theory is the aspect ratio r = L/n, depth over width. Small r is the perturbative, effectively shallow world; r of order one is where fluctuations become macroscopic and the outputs of individual networks fluctuate chaotically from one initialization to the next, a fact the book proves in the tractable case of deep linear networks, where in the double-scaling limit the 2m-point correlator picks up the factor exp(m(m-1)r) and Gaussianity is destroyed by resummed interactions.\n\nThe engine of the theory is marginalization. Starting from the MLP iteration equations and independent Gaussian initialization with bias variance Cb and weight variance CW/n, the distribution of each layer's preactivations is obtained by integrating out the previous layer, and this layer-by-layer marginalization induces a flow of couplings exactly parallel to renormalization group flow: a kernel recursion for the two-point function and a vertex recursion for the four-point interaction. Fixed points of the kernel flow, and their stability, organize everything. The parallel and perpendicular susceptibilities measure how perturbations along and transverse to the coincident direction amplify per layer, and criticality is the demand that both equal one at the fixed point, which fixes the critical initialization hyperparameters. Activations fall into universality classes. Scale-invariant activations, the piecewise linear family containing ReLU, have coincident kernel-independent susceptibilities and are critical at Cb = 0 and CW = 1/A2, reproducing Kaiming initialization (0, 2) for ReLU as a theorem rather than a heuristic. Smooth activations vanishing at the origin with nonzero slope form the K* = 0 class, critical at CW = 1/sigma_1 squared, where the kernel creeps toward its fixed point by a universal power law with exponent one. At criticality the leading finite-width fluctuations scale with L/n for general activations, so depth and width trade against each other in one dimensionless combination.\n\nTwo applications discipline the theory. Read Bayesianly, initialization is a prior, and model evidence at large depth selects criticality, because hypotheses flowing to the zero or infinite kernel have evidence that vanishes polynomially or exponentially while the critical hypothesis keeps the output kernel at the scale of the data. But the same Bayesian analysis exposes the poverty of the infinite-width limit: the posterior over hidden representations equals the prior, distinct outputs are never wired together, and there is no representation learning at infinite width. Representation learning is therefore an intrinsically finite-width phenomenon, and the book shows the leading correction already carries a Hebbian inductive bias, neurons that fire together wiring together, emerging automatically from the order 1/n interactions. Training dynamics get the same treatment. Gradient descent updates are mediated by the neural tangent kernel, the Gram matrix of output derivatives contracted with the learning-rate metric, which obeys its own forward recursion across layers. The exploding and vanishing gradient problem dissolves: gradient factors accumulate the perpendicular susceptibility layer by layer, so criticality, chi_perp equal to one, is a complete solution, and the learning-rate equivalence principle extends the logic by demanding parametrically equal NTK contributions from every parameter group in every layer. At infinite width the fully trained network is algorithm independent and predicts by kernel regression, test output equals initial output minus the NTK cross-block times the inverse training NTK times the initial residuals, with a bias-variance tradeoff that criticality again balances.\n\nFinite width then returns as controlled correction rather than chaos. The NTK fluctuates at order 1/n and evolves through the differential NTK, the dNTK, an order 1/n object whose nonvanishing is sufficient for representation learning. The dual description of a finite-width network is a nearly-kernel machine: predictions keep the kernel term linear in the targets and add a term quadratic in the targets across training examples, and the full finite-width prediction formula assembles the kernel answer plus corrections from NTK fluctuations and dNTKs, with all algorithm dependence isolated in projectors. The epilogue draws the moral in complexity terms: count the model not by its parameters but by its data-dependent couplings, order ND squared numbers at infinite width and order ND to the fourth at first finite-width order. Depth is a flow, width is a coupling constant, criticality is the tuned point where information survives, and feature learning lives precisely in the first correction to the Gaussian world.",
+      "retrocausal_genealogy": "The genealogy runs backward through twentieth-century physics and statistics. The correlator machinery descends from Wick's theorem (1950) and the cumulant expansions of Thiele and Fisher; the action and quartic-coupling perturbation theory is quantum and statistical field theory transplanted intact; the layer-by-layer flow is Wilsonian renormalization, renamed representation group flow because the coarse-grained variables are layer representations. The infinite-width Gaussian limit descends from the Bayesian neural network tradition of the 1990s, and the NTK from the 2018 kernel reformulation of gradient training that the book systematizes and then corrects at finite width. Even the oldest idea in the book, Hebb's 1949 association rule, is recovered rather than assumed: it falls out of the finite-width effective theory as an inductive bias, which is the authors' signature move throughout: every piece of practitioner folklore, from Hebb to Kaiming initialization, is re-derived as a theorem about correlators, so the genealogy is a chain of demotions of heuristics into corollaries.",
+      "theory_of_mind": "The authors write as physicists who believe the reader's intuition is the bottleneck, so they build the theory twice: once in the clean language of distributions and correlators, and once in constant translation back to networks, boxing the equations they judge load-bearing. Their mental model of a good explanation is a physicist's: a result counts when it is universal, when it survives changes of microscopic detail, which is why universality classes and critical exponents organize the book and why conjectures in the final chapter are flagged as conjectures rather than quietly promoted. They model the practitioner reader as fluent in folklore but not in field theory, so every practitioner concept, initialization, exploding gradients, representation learning, is re-founded on a correlator statement before it is used. Their wager is that the right observables make deep learning look inevitable; their honesty is that the expansion is asymptotic, and they say exactly where it stops being trustworthy.",
+      "cross_layer_veto": "Cross-layer veto conditions, stated plainly. The primitives assume feedforward MLPs with independent Gaussian initialization, i.i.d.-style inputs entering through Gram matrices, and perturbative aspect ratios; any downstream use must veto transfer when r is order one, because there the expansion's own chaos result says corrections are macroscopic and truncated formulas understate fluctuation. Veto the frozen-kernel primitives (kernel prediction, algorithm independence, no representation learning) for any system where feature learning is the phenomenon of interest, since the book proves those are infinite-width statements whose finite-width corrections reverse the qualitative conclusion. Veto the criticality numbers outside their universality class: Kaiming (0, 2) is a theorem about scale-invariant activations only, and the K* = 0 class values belong to smooth activations vanishing at the origin. Veto the finite-width prediction formula for losses other than mean squared error, where the book offers only a conjecture with modified projectors. Finally, veto any use that treats ensemble means as single-instance guarantees: the theory's own fluctuation primitives bound, but do not remove, instantiation-to-instantiation spread."
+    }
+  ],
+  "universal_lens": "The portable lens is this: any system built from very many weakly interacting components admits an effective description in a few collective observables, and the honest way to improve that description is a controlled expansion in the inverse system size. Track the low-order statistics of the collective variables, means, covariances, and the connected higher correlators that measure true interaction; let a coarse-graining flow carry those couplings across scales; find the fixed points of the flow and tune to the critical ones, where signals propagate without exploding or vanishing and where behavior becomes universal, independent of microscopic detail. Count complexity in the effective couplings the data determines, not in the components. Wherever a layered, wide, stochastic system appears, this lens converts folklore about its tuning into derivable statements about its correlators.",
+  "gsi_mapping": "For general intelligence systems, the book supplies a design and audit discipline for any architecture made of many interacting units, whether neurons, agents, or reasoning modules. Describe the system's behavior by ensemble statistics over its units rather than by individual components: a mean behavior, a covariance across tasks or scenarios, and connected higher correlators as the meter of genuine interaction and emergent coordination. Expect a depth-to-breadth tradeoff with the same shape as the aspect ratio: deeper chains of dependent processing compound fluctuations, wider parallel redundancy averages them down, and the ratio predicts when outputs become chaotic. Tune the system to its critical operating point, where signals survive many stages of processing without amplifying into instability or decaying into noise, and audit feature adaptation by measuring whether the system's internal kernel changes under experience, the analog of the dNTK test. Budget complexity in effective couplings, not component counts.",
+  "gse_mapping": "For the Galaxy Sports Edge prediction and reasoning engine, the transferable value is a statistics-first architecture for ensembles of forecasts. Represent the engine's output on any event as a distribution characterized by a kernel, the mean and covariance of predictions across scenarios and model variants, and monitor the connected higher correlators as an early-warning gauge of when model variants stop being independent variations and start interacting, the point where ensemble confidence statements break. Use susceptibility thinking diagnostically: a signal that is amplified or damped by a constant factor at each reasoning layer will explode or vanish across a deep reasoning chain, so per-layer gain near one is the design target for information that must survive from raw inputs to final projections. Use the kernel prediction form as the update discipline, new estimate equals prior estimate minus kernel-weighted residuals on settled cases, and count the engine's effective complexity in data-dependent couplings when judging whether added model machinery is real capacity or parameter bloat."
+}

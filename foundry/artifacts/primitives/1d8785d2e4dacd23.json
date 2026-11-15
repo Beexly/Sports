@@ -1,0 +1,78 @@
+{
+  "book_id": "1d8785d2e4dacd23",
+  "source_status": "COMPLETE",
+  "title": "2007 - A Markov model for basketball - Unknown Authors",
+  "file_name": "2007 - A Markov model for basketball - Unknown Authors.pdf",
+  "sha256": "1d8785d2e4dacd23dc8cc0b2af4045f15949113199dc3fbe47d552891dfcb1dd",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A Markov chain models basketball as state transitions, where each state encodes possession type, prior points, and game dynamics, enabling probabilistic microsimulation. Universal Lens: Rooted in 2007 - A Markov model for basketball - Unknown Authors (1d8785d2e4dacd23), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference on transition matrices to compute in-game win probabilities and strategic value, using conformal prediction for uncertainty quantification. GSI Mapping: Rooted in 2007 - A Markov model for basketball - Unknown Authors (1d8785d2e4dacd23), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses state-transition graphs to simulate game paths, enabling real-time tactical reasoning through dynamic programming over reduced-state Markov chains. GSE Mapping: Rooted in 2007 - A Markov model for basketball - Unknown Authors (1d8785d2e4dacd23), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "markov_chain_state_encoding",
+      "name": "Markov Chain State Encoding",
+      "verbatim_quote": "THE DEFINITION OF THE STATES The states of the Markov chain are defined in terms of three factors: 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Set of all valid states, dimensionless', 'P': 'Points scored on previous possession, {0,1,2,3}', 'T': 'Type of possession gain, {Inbound, Steal, OReb, DReb, FThrows}'}",
+      "assumptions": "States are fully observable and depend only on current state; transitions are memoryless.",
+      "breakdown_regime": "When rare events like 4-point plays occur, model becomes invalid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each state maps to a node in a directed graph with weighted edges representing transition probabilities; GSE simulates paths, GSI computes posterior beliefs.",
+        "source_operator": "markov_chain_state_encoding",
+        "telemetry": "Transition frequency counts per state pair"
+      }
+    },
+    {
+      "primitive_id": "transition_probability_matrix",
+      "name": "Transition Probability Matrix",
+      "verbatim_quote": "Specifically, the model is a Markov chain, which specifies that the probability distribution of the next state depends only on the present state.",
+      "page": 1,
+      "latex": "\\mathbf{P}_{ij} = \\Pr(S_{t+1} = j | S_t = i)",
+      "symbol_and_unit_ledger": "{'P_{ij}': 'Probability of transitioning from state i to state j, dimensionless'}",
+      "assumptions": "Stationarity of transition probabilities across time; finite state space.",
+      "breakdown_regime": "When external variables (e.g., injuries) alter transition likelihoods.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Matrix exponentiation enables long-term behavior prediction; used in GSE for scenario planning and in GSI for risk assessment.",
+        "source_operator": "transition_probability_matrix",
+        "telemetry": "Eigenvalues of P matrix indicate mixing rate and stationarity"
+      }
+    },
+    {
+      "primitive_id": "possession_outcome_determinism",
+      "name": "Possession Outcome Determinism",
+      "verbatim_quote": "A minimum requirement for the complexity of the Markov model is that the exact number of points scored by each team is determined by the transition count (i.e.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_p': 'Number of points scored in a possession, {0,1,2,3}'}",
+      "assumptions": "Each transition uniquely determines outcome; no stochasticity in scoring beyond transition choice.",
+      "breakdown_regime": "When scoring rules vary (e.g., foul shots with multiple attempts).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Outcome function N_p(S_t) links state to deterministic point total; GSE uses this for score simulation, GSI for outcome forecasting.",
+        "source_operator": "possession_outcome_determinism",
+        "telemetry": "Mean points per transition type"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1d8785d2e4dacd23_t0",
+      "think": "The core insight of the Markov model for basketball is that game evolution can be captured through discrete state transitions governed by conditional probabilities. Each state combines possession type, prior scoring, and game context into a structured representation. This allows for probabilistic modeling of sequences of actions, where future states depend only on the current state. The model's strength lies in its ability to encode both common and rare events within a unified framework. However, it fails when rare events like 4-point plays occur, violating the assumption of deterministic outcomes. The transition probability matrix encapsulates all strategic possibilities, enabling microsimulation of games. The model's utility extends to computing win probabilities and evaluating tactical decisions, though it requires simplifying assumptions to remain tractable.\n\nDeep epistemic analysis for 2007 - A Markov model for basketball - Unknown Authors (1d8785d2e4dacd23, domain=other, pages_read=1/1): Operator 'Markov Chain State Encoding' (page 1, domain other) captures: THE DEFINITION OF THE STATES The states of the Markov chain are defined in terms of three factors: 1. Assumptions: States are fully observable and depend only on current state; transitions are memoryless. Breakdown regime: When rare events like 4-point plays occur, model becomes invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each state maps to a node in a directed graph with weighted edges representing transition probabilities; GSE simulates paths, GSI computes posterior beliefs. Operator 'Transition Probability Matrix' (page 1, domain other) captures: Specifically, the model is a Markov chain, which specifies that the probability distribution of the next state depends only on the present state. Assumptions: Stationarity of transition probabilities across time; finite state space. Breakdown regime: When external variables (e.g., injuries) alter transition likelihoods. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Matrix exponentiation enables long-term behavior prediction; used in GSE for scenario planning and in GSI for risk assessment. Operator 'Possession Outcome Determinism' (page 1, domain other) captures: A minimum requirement for the complexity of the Markov model is that the exact number of points scored by each team is determined by the transition count (i.e. Assumptions: Each transition uniquely determines outcome; no stochasticity in scoring beyond transition choice. Breakdown regime: When scoring rules vary (e.g., foul shots with multiple attempts). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Outcome function N_p(S_t) links state to deterministic point total; GSE uses this for score simulation, GSI for outcome forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2007 - A Markov model for basketball - Unknown Authors (1d8785d2e4dacd23, domain=other, pages_read=1/1): Operator 'Markov Chain State Encoding' (page 1, domain other) captures: THE DEFINITION OF THE STATES The states of the Markov chain are defined in terms of three factors: 1. Assumptions: States are fully observable and depend only on current state; transitions are memoryless. Breakdown regime: When rare events like 4-point plays occur, model becomes invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each state maps to a node in a directed graph with weighted edges representing transition probabilities; GSE simulates paths, GSI computes posterior beliefs. Operator 'Transition Probability Matrix' (page 1, domain other) captures: Specifically, the model is a Markov chain, which specifies that the probability distribution of the next state depends only on the present state. Assumptions: Stationarity of transition probabilities across time; finite state space. Breakdown regime: When external variables (e.g., injuries) alter transition likelihoods. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Matrix exponentiation enables long-term behavior prediction; used in GSE for scenario planning and in GSI for risk assessment. Operator 'Possession Outcome Determinism' (page 1, domain other) captures: A minimum requirement for the complexity of the Markov model is that the exact number of points scored by each team is determined by the transition count (i.e. Assumptions: Each transition uniquely determines outcome; no stochasticity in scoring beyond transition choice. Breakdown regime: When scoring rules vary (e.g., foul shots with multiple attempts). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Outcome function N_p(S_t) links state to deterministic point total; GSE uses this for score simulation, GSI for outcome forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in stochastic process theory from Kolmogorov and Markov, adapted for sports analytics in the late 20th century, building upon earlier work in game theory and statistical mechanics. Retrocausal Genealogy: Rooted in 2007 - A Markov model for basketball - Unknown Authors (1d8785d2e4dacd23), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Model assumes rational agents who choose transitions based on maximizing expected points, with opponents modeled as stochastic processes. Strategic depth emerges from optimizing over transition paths rather than individual plays. Theory of Mind & Decision Maker Model: Rooted in 2007 - A Markov model for basketball - Unknown Authors (1d8785d2e4dacd23), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that state encoding does not redundantly represent similar game situations. Leakage veto prevents inclusion of non-Markovian dependencies, such as memory of past scores, which would invalidate the model's predictive structure. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2007 - A Markov model for basketball - Unknown Authors (1d8785d2e4dacd23), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

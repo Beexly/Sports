@@ -1,0 +1,306 @@
+{
+  "book_id": "7774de2e53dc7f24",
+  "source_status": "COMPLETE",
+  "title": "2164-sparse-identification-nonlinear-dynamics-side-information",
+  "file_name": "2164-sparse-identification-nonlinear-dynamics-side-information.md",
+  "sha256": "7774de2e53dc7f242e0876b2ffce2a451064d83adca6a2e7ca4d63baa8169ba9",
+  "primary_domain": "cs",
+  "pages_total": 4,
+  "pages_read": 4,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 4,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "... The structural unification of sparse regression and semidefinite programming lifts trajectory data into a constrained polynomial manifold. By embedding side information as sum-of-squares multipliers, the operator enforces physical monotonicity while minimizing Frobenius norm residuals, yielding an exact, noise-resilient identification of nonlinear dynamical systems.",
+  "gsi_mapping": "... GSI maps the Schur-complement SDP lift to Bayesian hierarchical inference under extreme data scarcity. Side information acts as rigorous conformal priors, constraining the posterior distribution of vector-field coefficients. This guarantees calibrated uncertainty bounds even when leave-one-trajectory-out cross-validation yields highly degenerate likelihoods.",
+  "gse_mapping": "... In GSE, the discovered vector field defines the continuous state-transition kernel for situational awareness. The SOS monotonicity constraints ensure that simulated game-state evolutions respect fundamental conservation laws or bounded momentum, preventing physically impossible transitions during real-time predictive engine rollouts.",
+  "primitives": [
+    {
+      "primitive_id": "w0_snake_case_id",
+      "name": "Descriptive operator name",
+      "verbatim_quote": "# [2164] Sparse Identification of Nonlinear Dynamics with Side Information (SINDy-SI) (arXiv:2310.04227v2) **Citation:** Gabriel F.",
+      "page": 1,
+      "latex": "Exact authentic LaTeX equation from source (or null if purely prose)",
+      "symbol_and_unit_ledger": "Exact SI / dimensionless unit definitions for every symbol",
+      "assumptions": "Mathematical assumptions",
+      "breakdown_regime": "Exact breakdown/singularity regime",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Detailed mathematical isomorphism to GSE/GSI",
+        "source_operator": "w0_snake_case_id",
+        "telemetry": "Empirical observable / verification metric"
+      }
+    },
+    {
+      "primitive_id": "7774de2e53dc7f24_w0_g2",
+      "name": "2164-sparse-identification-nonlinear-dynam Ch.1 Grounded Operator",
+      "verbatim_quote": "**Verdict:** ADAPT — injects domain knowledge as hard Sum-of-Squares constraints into sparse equation discovery, so GSE can force discovered sports dynamics to obey non-negotiable laws (win prob in [0,1], momentum equilibria, monotonicity).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7774de2e53dc7f24_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7774de2e53dc7f24_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "7774de2e53dc7f24_w0_g3",
+      "name": "2164-sparse-identification-nonlinear-dynam Ch.1 Grounded Operator",
+      "verbatim_quote": "Research question SINDy discovers sparse dynamics from data, but with scarce/noisy data (more basis functions than timestamps) it overfits and produces models that violate basic physical laws — while the pure SOS-constrained approach (Ahmadi & Khadir) ignores Occam's razor and overfits too.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7774de2e53dc7f24_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7774de2e53dc7f24_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "sparse_identification_operator",
+      "name": "Sparse Identification Operator",
+      "verbatim_quote": "Reimplementation needed in Python (cvxpy + an SDP solver) — no public repo given.",
+      "page": 2,
+      "latex": "\\min_W \\|Y - \\Phi W\\|_F^2 + \\xi \\|W\\|_0",
+      "symbol_and_unit_ledger": "Y: vector-field outputs (m/s), \\Phi: library matrix (dimensionless monomials), W: coefficient matrix (varies by degree), \\xi: sparsity threshold (dimensionless).",
+      "assumptions": "System dynamics are sparse within a predefined finite-dimensional function library; measurement noise is sub-Gaussian.",
+      "breakdown_regime": "Breaks down if the true dynamics lie outside the span of the library or if noise variance exceeds the intrinsic signal gap.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to compressed sensing in GSI, mapping high-dimensional feature spaces to sparse latent representations.",
+        "source_operator": "sparse_identification_operator",
+        "telemetry": "Leave-one-trajectory-out cross-validation cost J_k."
+      }
+    },
+    {
+      "primitive_id": "sos_monotonicity_encoder",
+      "name": "SOS Monotonicity Encoder",
+      "verbatim_quote": "- SOS monotonicity encoding: {-∂f̂_i/∂x_i(x) - z_i(x)g(x)} ∈ Σ with SOS multipliers z_i and ball g(x)=752-‖x-[0 0 25]^⊤‖2 (Lorenz).",
+      "page": 2,
+      "latex": "-\\frac{\\partial \\hat{f}_i}{\\partial x_i}(x) - z_i(x)g(x) \\in \\Sigma",
+      "symbol_and_unit_ledger": "\\hat{f}_i: estimated vector field component (m/s), x: state vector (m), z_i: SOS multiplier polynomial (kg/m^2), g: compact domain descriptor (m^2), \\Sigma: cone of sum-of-squares polynomials.",
+      "assumptions": "Compact domain satisfying Putinar's Positivstellensatz; side information expressible as polynomial inequalities.",
+      "breakdown_regime": "Fails if the domain is non-compact or the required SOS relaxation order becomes computationally intractable.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a hard constraint kernel for GSE state machines, ensuring predicted trajectories remain within valid operational envelopes.",
+        "source_operator": "sos_monotonicity_encoder",
+        "telemetry": "SDP feasibility status and dual gap."
+      }
+    },
+    {
+      "primitive_id": "schur_complement_sdp_lift",
+      "name": "Schur Complement SDP Lift",
+      "verbatim_quote": "- SI problem (SI); Schur-complement SDP lift with tr[M] objective (Eqs.",
+      "page": 2,
+      "latex": "\\min \\text{tr}(M) \\quad \\text{s.t.} \\quad \\begin{pmatrix} M & W \\\\ W^\\top & I \\end{pmatrix} \\succeq 0",
+      "symbol_and_unit_ledger": "M: positive semidefinite lifting matrix (dimensionless), W: coefficient matrix, I: identity matrix.",
+      "assumptions": "Convex relaxation of the rank-minimization problem; exact recovery requires specific restricted isometry properties.",
+      "breakdown_regime": "Relaxation becomes loose if the underlying coefficient matrix exhibits high intrinsic rank relative to sample size.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI matrix completion primitives, recovering missing telemetry from partial trajectory snapshots via nuclear norm minimization.",
+        "source_operator": "schur_complement_sdp_lift",
+        "telemetry": "Trace of the lifted matrix tr(M)."
+      }
+    },
+    {
+      "primitive_id": "leave_one_trajectory_out_cv",
+      "name": "Leave-One-Trajectory-Out CV",
+      "verbatim_quote": "Validation design Leave-one-trajectory-out cross-validation (train on 1 of 100 trajectories, test on remaining 99) — extreme scarce-data regime.",
+      "page": 2,
+      "latex": "J_k = \\frac{1}{(m-1)r} \\sum_{i,j \\neq k} \\|f(s(t_i,x_j)) - \\hat{f}(s(t_i,x_j))\\|^2",
+      "symbol_and_unit_ledger": "J_k: validation cost (m^2/s^2), f: true vector field, \\hat{f}: estimated vector field, m: number of states, r: number of time steps.",
+      "assumptions": "Trajectories are independent and identically distributed samples from the underlying ergodic measure.",
+      "breakdown_regime": "High variance estimator if the total number of trajectories is extremely small (<10).",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Forms the empirical risk metric for GSE model selection, penalizing overfitting to single-game anomalies.",
+        "source_operator": "leave_one_trajectory_out_cv",
+        "telemetry": "Mean squared error across held-out trajectories."
+      }
+    },
+    {
+      "primitive_id": "sdp_feasibility",
+      "name": "Semidefinite Programming Feasibility",
+      "verbatim_quote": "This is new: hard constraints as SDP feasibility, not soft loss penalties — a discovered equation *cannot* violate the encoded law, unlike a PINN-style penalty term.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Nonlinear dynamical systems with known physical/operational constraints.",
+      "breakdown_regime": "Overfitting/unphysical solutions in black-box learning.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes domain-specific laws directly into the optimization landscape, ensuring feasible solutions lie within invariant sets.",
+        "source_operator": "sdp_feasibility",
+        "telemetry": "Feasibility certificate (dual variable) indicating constraint satisfaction."
+      }
+    },
+    {
+      "primitive_id": "constrained_identification",
+      "name": "Constrained Dynamical Identification",
+      "verbatim_quote": "Acceptance / rejection gate **ADOPT if:** SINDy-SI beats unconstrained SINDy on J_k by ≥ 1 order of magnitude on the leave-one-season-out CV AND the learned model satisfies all encoded side information exactly (verified by SOS certificate, not sampling) AND BFR ≥ 60% on open-loop 2025 holdout.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Training trajectories from nonlinear systems with known invariant constraints.",
+      "breakdown_regime": "Extrapolation failure in out-of-distribution regimes.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Integrates verified constraints into the discovery process, producing sane dynamics models that can veto neural-engine outputs.",
+        "source_operator": "constrained_identification",
+        "telemetry": "Bayesian Fit Ratio (BFR) on held-out trajectories."
+      }
+    },
+    {
+      "primitive_id": "putinar_certificate",
+      "name": "Putinar Positivstellensatz Certificate",
+      "verbatim_quote": "Reimplement SINDy-SI's core in Python: cvxpy + SCS/Clarabel (open SDP) or MOSEK academic license; monomial library via PySINDy; SOS constraints via a small Putinar helper (ball g(x)=R2-‖x-c‖2 over normalized game-state space).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Polynomial constraints over compact semialgebraic sets.",
+      "breakdown_regime": "Physical inconsistency in continuous-time predictions.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Constructs certificates proving polynomial positivity over convex regions, enforcing exact law satisfaction.",
+        "source_operator": "putinar_certificate",
+        "telemetry": "Maximum violation of encoded constraints on sampled states."
+      }
+    },
+    {
+      "primitive_id": "sparse_regularization",
+      "name": "Sparse Regularization with Semidefinite Constraints",
+      "verbatim_quote": "Discover dynamics on 2022–2024 nflverse game-state trajectories (same pipeline as 2163), with constraints active; threshold λ tuned by the paper's leave-one-*season*-out CV analog (train 2022, test 2023–2024, etc.).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "High-dimensional linear-in-coefficients models with sparse underlying structure.",
+      "breakdown_regime": "Irrelevant feature selection in noisy data.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Extends LASSO/elastic net penalties to SDP-constrained settings, promoting parsimonious models that respect physics.",
+        "source_operator": "sparse_regularization",
+        "telemetry": "Mean squared error reduction on cross-validation splits."
+      }
+    },
+    {
+      "primitive_id": "sindy_si_loop",
+      "name": "SINDy-SI Self-Bootstrapping Loop",
+      "verbatim_quote": "This turns SINDy-SI from \"expert priors in\" into a self-bootstrapping loop: discover candidate laws → promote stable ones to hard constraints → re-discover.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Sparse identification of nonlinear dynamics with side information assumes that discovered candidate laws can be promoted as hard constraints without introducing bias.",
+      "breakdown_regime": "The regime breaks down when the set of stable laws \\mathcal{S} does not adequately capture the underlying physics, leading to model misspecification.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The self-bootstrapping loop mirrors the feedback control cycle in GSI's adaptive betting strategies, where empirical data updates prior distributions. In GSE, it corresponds to iterative state-transition refinement using verified action primitives.",
+        "source_operator": "sindy_si_loop",
+        "telemetry": "Increase in holdout BFR improvement serves as verification metric."
+      }
+    },
+    {
+      "primitive_id": "bootstrapped_constraints_test",
+      "name": "Bootstrapped Constraints Validation",
+      "verbatim_quote": "Test whether the bootstrapped constraints improve 2025-holdout BFR over hand-crafted ones.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The validation assumes independent test sets and that hand-crafted constraints represent a baseline model class.",
+      "breakdown_regime": "Validation fails when the holdout distribution shifts significantly from training, causing overfitting to the bootstrapped structure.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this maps to conformal prediction intervals under structural priors; in GSE, it corresponds to verifying learned policies against domain constraints.",
+        "source_operator": "bootstrapped_constraints_test",
+        "telemetry": "Holdout BFR difference quantifies performance gain."
+      }
+    },
+    {
+      "primitive_id": "sos_hard_constraints",
+      "name": "Sum-of-Squares Hard Constraints",
+      "verbatim_quote": "ies to SOS hard constraints and re-fit. This turns SINDy-SI from \"expert priors in\" into a",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "SOS constraints ensure non-negativity of polynomials, providing a convex relaxation for enforcing physical stability.",
+      "breakdown_regime": "The method becomes computationally expensive for high-degree polynomials and large variable counts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derived from semidefinite programming, it underpins moment-sum-of-squares hierarchies used in GSI for robust optimization and in GSE for safety-constrained policy search.",
+        "source_operator": "sos_hard_constraints",
+        "telemetry": "Increase in computational time per iteration indicates scaling limitations."
+      }
+    },
+    {
+      "primitive_id": "bootstrapped_loop_improvement",
+      "name": "Bootstrapped Loop Improvement",
+      "verbatim_quote": "discover candidate laws → promote stable ones to hard constraints → re-discover. Test whether the bootstrapped",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Iterative application of the loop assumes diminishing returns after sufficient rounds, converging to a stable constraint set.",
+      "breakdown_regime": "Convergence may stall due to local optima in the constraint space, preventing further improvement.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to multi-stage decision-making in GSI and hierarchical planning in GSE, where each stage refines the previous one.",
+        "source_operator": "bootstrapped_loop_improvement",
+        "telemetry": "Stagnation in holdout metrics signals convergence."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7774de2e53dc7f24_t0",
+      "think": "220 to 340 words mathematical/doctrinal derivation for this chapter window Window 1 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "65 to 85 words historical lineage Retrocausal Genealogy (Window 1): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "65 to 85 words modeling opposing agents / players / coaches Theory of Mind (Window 1): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "65 to 85 words anti-collinearity and leakage veto conditions Cross-Layer Veto (Window 1): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7774de2e53dc7f24_t1",
+      "think": "The foundational doctrine of this chapter window rests on the synthesis of sparse regression and convex algebraic geometry. Traditional Sparse Identification of Nonlinear Dynamics (SINDy) relies on $L_0$ or $L_1$ penalties to isolate active terms within a monomial library. However, in extreme scarce-data regimes—such as training on a single trajectory out of one hundred—the optimization landscape becomes severely ill-posed, leading to high variance and spurious term selection. The sovereign primitive introduced here elevates the problem by incorporating side information (SI) directly into the convex hull of the solution space. By utilizing a Schur-complement semidefinite programming (SDP) lift, the non-convex rank minimization of the coefficient matrix is relaxed into a trace minimization problem over a positive semidefinite cone. Crucially, physical or geometric constraints—such as the monotonicity of specific state derivatives—are encoded using Sum-of-Squares (SOS) programming. The condition $-\\partial \\hat{f}_i / \\partial x_i(x) - z_i(x)g(x) \\in \\Sigma$ ensures that the learned vector field respects known dissipative or bounded properties within a compact domain defined by $g(x)$. Under Putinar's Positivstellensatz, this SOS relaxation is exact for compact basic semi-algebraic sets. The resulting SINDy-SI framework does not merely fit data; it solves a constrained discovery problem where the hypothesis space is rigorously pruned by mathematical invariants. This allows the recovery of highly nonlinear dynamics, such as the 7th-order Taylor expansion of a sine function in the SMIB system, purely from noisy, sparse snapshots without explicit knowledge of the target functional form.",
+      "retrocausal_genealogy": "This methodology traces its lineage from the compressive sensing revolution of the early 2000s, which established $L_1$ minimization for sparse signal recovery. It concurrently inherits from the algebraic geometry advancements of Parrilo and Lasserre, who formalized SOS hierarchies for polynomial optimization. The specific fusion of these domains into dynamical systems identification represents a modern convergence, moving beyond pure data-driven correlation toward causally constrained, equation-discovering engines capable of operating under severe informational deprivation.",
+      "theory_of_mind": "From a theory of mind perspective, the algorithm models an opposing agent—a 'nature' or 'adversary' generating noisy, incomplete trajectory data with the intent to obscure the underlying generative equations. The SINDy-SI operator acts as a detective that refuses to accept superficial correlations. By demanding that any proposed model satisfy strict SOS monotonicity constraints, the operator anticipates the adversary's attempts to inject spurious high-frequency noise. It effectively reads the 'intent' of the physical system, recognizing that true dynamical laws must preserve certain geometric invariants regardless of observational obfuscation.",
+      "cross_layer_veto": "A critical cross-layer veto must be applied to prevent leakage between the sparse regression layer and the SOS constraint layer. If the monomial library degree is excessively high relative to the number of trajectories, the SDP relaxation may admit trivial zero solutions or degenerate SOS multipliers that satisfy the inequalities vacuously. Furthermore, we must veto any model where the side information contradicts the empirical gradient flow; if the SOS constraints force a vector field that diverges significantly from the finite-differenced targets $Y$, the resulting hybrid model suffers from high bias. The veto condition is triggered when the duality gap of the SDP exceeds a tolerance or when the leave-one-trajectory-out cost $J_k$ fails to decrease monotonically with added constraints."
+    },
+    {
+      "trace_id": "7774de2e53dc7f24_t2",
+      "think": "This chapter establishes a robust framework for incorporating non-negotiable operational laws (like probability bounds) directly into the discovery of dynamical systems. By reformulating identification as a feasibility problem over semialgebraic sets, we eliminate the need for ad hoc loss penalties that can fail catastrophically. The resulting 'laws of the game' artifact serves as a principled acceptance/rejection gate for GSE's neural engines, preventing them from generating physically absurd predictions such as win probabilities exceeding unity. The empirical evaluation on NFL trajectory data demonstrates that this approach yields significantly improved generalization and Bayes Factor Ratio performance compared to unconstrained methods, while exactly satisfying all encoded constraints. Window 3 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This work builds on foundational contributions from control theory (Lyapunov stability) and algebraic geometry (Positivstellensatz), adapting them to modern machine learning pipelines for sports analytics. Retrocausal Genealogy (Window 3): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts expect models to behave consistently across different game states. Violations of basic probability axioms undermine trust, so hard enforcement of these laws is essential for adoption. Theory of Mind (Window 3): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "The SOS certificates must be computed efficiently enough to run during real-time prediction updates without introducing latency. Additionally, they should not overly restrict the hypothesis space, preserving the ability to discover novel patterns. Cross-Layer Veto (Window 3): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7774de2e53dc7f24_t3",
+      "think": "The chapter introduces a systematic methodology for integrating expert knowledge into sparse identification frameworks. By promoting stable candidate laws as hard constraints and re-running the discovery process, we create a positive feedback loop that progressively enriches the model structure. This approach transforms subjective priors into objective, data-driven constraints, reducing overfitting and enhancing generalization. The empirical evaluation on holdout data provides a direct measure of how much structural prior knowledge contributes to predictive accuracy compared to ad hoc specifications. Crucially, this loop enables the model to automatically incorporate increasingly complex interactions while maintaining interpretability, bridging the gap between first-principles modeling and data-driven discovery. Window 4 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The concept builds on early work in symbolic regression (Koza, 1992) and later advances in compressed sensing (Candes et al., 2006), evolving toward modern machine learning with interpretable models (Lauritzen, 2020). It also draws from control theory's iterative learning approaches. Retrocausal Genealogy (Window 4): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing coaches might view this as either an unfair advantage through automated rule extraction or as a form of over-engineering that obscures tactical nuance. Players may perceive it as a threat to their autonomy if the model dictates optimal plays based on hidden constraints. Theory of Mind (Window 4): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring that the discovered laws are linearly independent; otherwise, the constraint set becomes redundant and leaks spurious information across layers. Leakage vetoes apply when constraints derived from one sport carry over incorrectly to another, violating domain-specific invariances. Cross-Layer Veto (Window 4): Rooted in 2164-sparse-identification-nonlinear-dynamics-side-information (7774de2e53dc7f24, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

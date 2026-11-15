@@ -1,0 +1,78 @@
+{
+  "book_id": "062baebc72dcae7f",
+  "source_status": "COMPLETE",
+  "title": "pfr-advstats-verdict-2026-07-16",
+  "file_name": "pfr-advstats-verdict-2026-07-16.md",
+  "sha256": "062baebc72dcae7f88e9863dd8ff710ca4856cb5f8e53407eb7d02381a3138f8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "License compliance as a binary classification problem over data access regimes: {internal, public} × {modeling, display}. Universal Lens: Rooted in pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on data provenance using GSI's conformal predictive logic for risk-adjusted inference under licensing constraints. GSI Mapping: Rooted in pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in GSE governed by legal regime adherence: {hold, model, display} with conditional entropy penalties for non-compliance. GSE Mapping: Rooted in pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "license_compliance_classifier",
+      "name": "License Compliance Classifier",
+      "verbatim_quote": "# pfr_advstats license verdict — 2026-07-16 **Verdict: YELLOW (internal modeling) / RED (public commercial display) — HOLD both.** Registry: `pfr-advstats-via-nflverse` → `permission_required`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'License status (binary: 0=red, 1=yellow)', 'R': 'Regime (binary: 0=public, 1=internal)'}",
+      "assumptions": "Data access is classified into two regimes with distinct legal implications.",
+      "breakdown_regime": "L = 0 when R = 1 (public display forbidden); L = 1 when R = 0 (internal modeling allowed).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's probabilistic inference maps to GSE's state transition graph over legal regimes.",
+        "source_operator": "license_compliance_classifier",
+        "telemetry": "Compliance score derived from license status and access regime."
+      }
+    },
+    {
+      "primitive_id": "data_origin_verification",
+      "name": "Data Origin Verification",
+      "verbatim_quote": "Load-bearing facts (all fetched from primary sources): - pfr_advstats is **Sportradar-licensed content displayed on PFR** and scraped by nflverse (SRL blog, 2019 advanced-stats post).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'O': 'Origin identifier (Sportradar, nflverse, etc.)', 'V': 'Verification flag (binary: 0=unverified, 1=verified)'}",
+      "assumptions": "Data integrity depends on tracing origin to licensed third parties.",
+      "breakdown_regime": "V = 1 only if O is verified through official channels.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's data validation kernel uses O to compute V for trustworthiness.",
+        "source_operator": "data_origin_verification",
+        "telemetry": "Origin traceability score from primary source registry."
+      }
+    },
+    {
+      "primitive_id": "ml_usage_restriction",
+      "name": "ML Usage Restriction",
+      "verbatim_quote": "supporting machine learning methods used to predict, classify, label, or score\"** — no internal-use carve-out.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'Machine learning usage (binary: 0=prohibited, 1=allowed)', 'U': 'Usage context (binary: 0=non-internal, 1=internal)'}",
+      "assumptions": "ML applications are restricted regardless of internal use.",
+      "breakdown_regime": "M = 0 for all U due to explicit prohibition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's constraint logic aligns with GSE's policy enforcement engine.",
+        "source_operator": "ml_usage_restriction",
+        "telemetry": "ML usage violation probability under SRL terms."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "062baebc72dcae7f_t0",
+      "think": "The core operators define a triadic structure: (access_regime, data_origin, ml_usage) → compliance_status. Each operator encodes a distinct layer of legal and technical constraint. License compliance classifier maps access type to legal status; data origin verification ensures traceability; ML usage restriction enforces a blanket ban. These combine into a logical conjunction where any failure triggers a red flag. Dualities emerge between internal modeling (permitted) and public display (forbidden), and between verified origins (trusted) and unverified (risk). Failure modes include unauthorized public display, unattributed data reuse, and ML application without permission. The system must enforce a zero-tolerance policy for violations across all layers.\n\nDeep epistemic analysis for pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f, domain=other, pages_read=1/1): Operator 'License Compliance Classifier' (page 1, domain other) captures: # pfr_advstats license verdict — 2026-07-16 **Verdict: YELLOW (internal modeling) / RED (public commercial display) — HOLD both.** Registry: `pfr-advstats-via-nflverse` → `permission_required`. Assumptions: Data access is classified into two regimes with distinct legal implications. Breakdown regime: L = 0 when R = 1 (public display forbidden); L = 1 when R = 0 (internal modeling allowed). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic inference maps to GSE's state transition graph over legal regimes. Operator 'Data Origin Verification' (page 1, domain other) captures: Load-bearing facts (all fetched from primary sources): - pfr_advstats is **Sportradar-licensed content displayed on PFR** and scraped by nflverse (SRL blog, 2019 advanced-stats post). Assumptions: Data integrity depends on tracing origin to licensed third parties. Breakdown regime: V = 1 only if O is verified through official channels. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's data validation kernel uses O to compute V for trustworthiness. Operator 'ML Usage Restriction' (page 1, domain other) captures: supporting machine learning methods used to predict, classify, label, or score\"** — no internal-use carve-out. Assumptions: ML applications are restricted regardless of internal use. Breakdown regime: M = 0 for all U due to explicit prohibition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's constraint logic aligns with GSE's policy enforcement engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f, domain=other, pages_read=1/1): Operator 'License Compliance Classifier' (page 1, domain other) captures: # pfr_advstats license verdict — 2026-07-16 **Verdict: YELLOW (internal modeling) / RED (public commercial display) — HOLD both.** Registry: `pfr-advstats-via-nflverse` → `permission_required`. Assumptions: Data access is classified into two regimes with distinct legal implications. Breakdown regime: L = 0 when R = 1 (public display forbidden); L = 1 when R = 0 (internal modeling allowed). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic inference maps to GSE's state transition graph over legal regimes. Operator 'Data Origin Verification' (page 1, domain other) captures: Load-bearing facts (all fetched from primary sources): - pfr_advstats is **Sportradar-licensed content displayed on PFR** and scraped by nflverse (SRL blog, 2019 advanced-stats post). Assumptions: Data integrity depends on tracing origin to licensed third parties. Breakdown regime: V = 1 only if O is verified through official channels. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's data validation kernel uses O to compute V for trustworthiness. Operator 'ML Usage Restriction' (page 1, domain other) captures: supporting machine learning methods used to predict, classify, label, or score\"** — no internal-use carve-out. Assumptions: ML applications are restricted regardless of internal use. Breakdown regime: M = 0 for all U due to explicit prohibition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's constraint logic aligns with GSE's policy enforcement engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in digital rights management and open data licensing frameworks, particularly CC-BY-SA and CC-BY-4.0, with precedent in sports data governance from SRL and nflverse. Retrocausal Genealogy: Rooted in pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include SRL (enforcing usage restrictions), nflverse (scraping and redistributing), and GSI/GSE (evaluating compliance). Decision actors are constrained by legal liability and data ethics. Theory of Mind & Decision Maker Model: Rooted in pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive operates independently to prevent cascading errors. Leakage vetoes ensure that ML usage does not bypass origin verification, and vice versa. Cross-Layer Veto & Anti-Leakage Check: Rooted in pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in pfr-advstats-verdict-2026-07-16 (062baebc72dcae7f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

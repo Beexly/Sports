@@ -1,0 +1,78 @@
+{
+  "book_id": "a6e947ed883fbcac",
+  "source_status": "COMPLETE",
+  "title": "arxiv2510_rules",
+  "file_name": "arxiv2510_rules.txt",
+  "sha256": "a6e947ed883fbcac99138144032dc564dec00eeba6be42fe67a64c5a8287d1a4",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "block_paths_recursive",
+      "name": "Block Paths Recursive",
+      "verbatim_quote": "Instead of testing arbitrary subsets of adjacents or Possible-D-SEP sets, this procedure analyzes paths between nodes to construct blocking sets on the fly, choosing at each step a single CI tests to perform.",
+      "page": 1,
+      "latex": "\\text{Recursive construction of minimal separating sets from path structures}",
+      "symbol_and_unit_ledger": "{'X, Y, Z': 'Nodes in the graph (dimensionless)', 'sepset(X,Y|Z)': 'Conditional independence test result (binary)', 'block_path(X,Y,Z)': 'Indicator function for blocked path (binary)'}",
+      "assumptions": "Graphical Markov properties, faithfulness, finite sample consistency",
+      "breakdown_regime": "High-dimensional sparse graphs with bounded degree",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State-transition logic in GSE for sequential decision-making under uncertainty",
+        "source_operator": "block_paths_recursive",
+        "telemetry": "Number of conditional independence queries per state transition"
+      }
+    },
+    {
+      "primitive_id": "circle_only_path_detection",
+      "name": "Circle-Only Path Detection",
+      "verbatim_quote": "At each step, the graph is checked to make sure it is a well-formed PAG; if not, the graph is reverted to the previous PAG before continuing.",
+      "page": 1,
+      "latex": "G_{circle} = (V, E_{circle});\\quad E_{circle} = \\{(X,Y) | X ̋ ́ ̋ Y \\}",
+      "symbol_and_unit_ledger": "{'G_{circle}': 'Auxiliary circle-only graph (graph)', 'E_{circle}(G)': 'Edge set of circle-only edges (binary)', 'reachable(X,Y)_circle': 'Existence of path in G_{circle} (binary)'}",
+      "assumptions": "Deterministic edge orientation, transitive reduction",
+      "breakdown_regime": "Sparse high-degree networks with many unoriented edges",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Situational reasoning in GSE for detecting hidden variable patterns",
+        "source_operator": "circle_only_path_detection",
+        "telemetry": "Graph density of circle-only subgraphs"
+      }
+    },
+    {
+      "primitive_id": "semidirected_path_checking_r10",
+      "name": "Semidirected Path Checking R10",
+      "verbatim_quote": "At each step, the graph is checked to make sure it is a well-formed PAG; if not, the graph is reverted to the previous PAG before continuing.",
+      "page": 1,
+      "latex": "\\text{Path composition analysis for semidirected triplets } \\alpha ̋Ñ γ, \\beta Ñ γ Ð θ",
+      "symbol_and_unit_ledger": "{'p1, p2': 'Potentially directed paths (directed walk)', 'sepset_{min}(α,γ|β)': 'Minimal separating set (binary)', 'orientation_rule_R10': 'Binary indicator for application of rule'}",
+      "assumptions": "No directed cycles, consistent orientation propagation",
+      "breakdown_regime": "Complex semidirected structures with multiple possible routes",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian network structure learning in GSI",
+        "source_operator": "semidirected_path_checking_r10",
+        "telemetry": "Probability of correct orientation given partial evidence"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a6e947ed883fbcac_t0",
+      "think": "The core bottleneck in FCI-family algorithms is the repeated testing of large conditioning sets, especially for rules requiring path enumeration. Block_paths_recursive optimizes by constructing separating sets directly from the graph topology rather than exhaustively testing adjacents. Circle-only path detection reduces a combinatorial search to a sparse graph connectivity query, exploiting the fact that oriented edges rarely participate in latent confounder signatures. Semidirected path checking for R10 avoids costly subset enumeration by analyzing the compositional structure of directed and semidirected triples. Together these primitives reduce the search space from exponential to linear in the neighborhood size, transforming a cubic scaling bottleneck into a nearly linear pass through the graph.\n\nDeep epistemic analysis for arxiv2510_rules (a6e947ed883fbcac, domain=other, pages_read=4/4): Operator 'Block Paths Recursive' (page 1, domain other) captures: Instead of testing arbitrary subsets of adjacents or Possible-D-SEP sets, this procedure analyzes paths between nodes to construct blocking sets on the fly, choosing at each step a single CI tests to perform. Assumptions: Graphical Markov properties, faithfulness, finite sample consistency Breakdown regime: High-dimensional sparse graphs with bounded degree Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-transition logic in GSE for sequential decision-making under uncertainty Operator 'Circle-Only Path Detection' (page 1, domain other) captures: At each step, the graph is checked to make sure it is a well-formed PAG; if not, the graph is reverted to the previous PAG before continuing. Assumptions: Deterministic edge orientation, transitive reduction Breakdown regime: Sparse high-degree networks with many unoriented edges Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Situational reasoning in GSE for detecting hidden variable patterns Operator 'Semidirected Path Checking R10' (page 1, domain other) captures: At each step, the graph is checked to make sure it is a well-formed PAG; if not, the graph is reverted to the previous PAG before continuing. Assumptions: No directed cycles, consistent orientation propagation Breakdown regime: Complex semidirected structures with multiple possible routes Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian network structure learning in GSI Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv2510_rules (a6e947ed883fbcac, domain=other, pages_read=4/4): Operator 'Block Paths Recursive' (page 1, domain other) captures: Instead of testing arbitrary subsets of adjacents or Possible-D-SEP sets, this procedure analyzes paths between nodes to construct blocking sets on the fly, choosing at each step a single CI tests to perform. Assumptions: Graphical Markov properties, faithfulness, finite sample consistency Breakdown regime: High-dimensional sparse graphs with bounded degree Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-transition logic in GSE for sequential decision-making under uncertainty Operator 'Circle-Only Path Detection' (page 1, domain other) captures: At each step, the graph is checked to make sure it is a well-formed PAG; if not, the graph is reverted to the previous PAG before continuing. Assumptions: Deterministic edge orientation, transitive reduction Breakdown regime: Sparse high-degree networks with many unoriented edges Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Situational reasoning in GSE for detecting hidden variable patterns Operator 'Semidirected Path Checking R10' (page 1, domain other) captures: At each step, the graph is checked to make sure it is a well-formed PAG; if not, the graph is reverted to the previous PAG before continuing. Assumptions: No directed cycles, consistent orientation propagation Breakdown regime: Complex semidirected structures with multiple possible routes Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian network structure learning in GSI Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling the decision actor as a computationally bounded scientist who trades off false positives (type-I error) against computational cost, seeking minimal sufficient tests that maximize information gain per hypothesis. Theory of Mind & Decision Maker Model: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents overfitting by ensuring each added orientation is supported by a minimal separating set, avoiding leakage of noise into the partially oriented graph (PAG) and maintaining structural well-formedness. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv2510_rules (a6e947ed883fbcac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

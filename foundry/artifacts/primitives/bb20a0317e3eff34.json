@@ -1,0 +1,95 @@
+{
+  "book_id": "bb20a0317e3eff34",
+  "source_status": "COMPLETE",
+  "title": "canary",
+  "file_name": "canary.md",
+  "sha256": "bb20a0317e3eff34445feb2b5d8505d2d58e04daef5a1b6d45bcfb175b997cff",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in canary (bb20a0317e3eff34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in canary (bb20a0317e3eff34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in canary (bb20a0317e3eff34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in canary (bb20a0317e3eff34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in canary (bb20a0317e3eff34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in canary (bb20a0317e3eff34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "vercel_deployment_health_check",
+      "name": "Vercel Deployment Health Check",
+      "verbatim_quote": "Read its exit code and output: exit 1 = FAIL; exit 0 with \"warning(s)\" in the summary line = WATCH; exit 0 with \"all green\" = SHIP.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The underlying smoke test script accurately reflects system operational status.",
+      "breakdown_regime": "System failure triggers immediate shutdown.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction framework where health checks serve as calibration tests.",
+        "source_operator": "vercel_deployment_health_check",
+        "telemetry": "Exit codes as empirical observables."
+      }
+    },
+    {
+      "primitive_id": "git_origin_main_sha_fetch",
+      "name": "Git Origin Main SHA Fetch",
+      "verbatim_quote": "`git fetch origin` then `git rev-parse origin/main` for the expected SHA.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Local git repository is synchronized with remote origin.",
+      "breakdown_regime": "SHA mismatch indicates divergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state-transition logic where SHA consistency ensures correct system state.",
+        "source_operator": "git_origin_main_sha_fetch",
+        "telemetry": "SHA values as state identifiers."
+      }
+    },
+    {
+      "primitive_id": "public_surface_truth_api_query",
+      "name": "Public Surface Truth API Query",
+      "verbatim_quote": "`curl` the target's `/api/ops/public-surface-truth` and read `deployment.sha` (the real field, per `apps/web/app/api/ops/public-surface-truth/route.ts`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "API endpoint provides accurate deployment metadata.",
+      "breakdown_regime": "Mismatch between API-reported SHA and expected SHA triggers degradation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives posterior distribution over deployment states from API responses.",
+        "source_operator": "public_surface_truth_api_query",
+        "telemetry": "Deployment SHA as direct observable."
+      }
+    },
+    {
+      "primitive_id": "deploy_lag_verification",
+      "name": "Deploy Lag Verification",
+      "verbatim_quote": "Compare it to `origin/main`'s SHA per `docs/ops/DEPLOY_LAG.md` — code on `main` is not live until Vercel serves that SHA.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Deployment lag documentation accurately describes the production pipeline.",
+      "breakdown_regime": "Lag exceeding threshold indicates potential inconsistency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian updating where deployment lag serves as a prior constraint.",
+        "source_operator": "deploy_lag_verification",
+        "telemetry": "SHA comparison as evidence."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "bb20a0317e3eff34_t0",
+      "think": "The four sovereign primitives form a unified mathematical framework for verifying production deployments. Primitive 1 acts as an aggregator, translating multiple health signals into a single SHIP/WATCH/FAIL verdict. Primitives 2 and 3 provide independent measurements of the current and expected system states, respectively. Primitive 4 establishes the temporal relationship between code integration and runtime availability. Together, they implement a rigorous cross-layer validation protocol that detects both immediate failures (primitive 1) and persistent inconsistencies (primitives 2-4). This structure mirrors GSI's conformal prediction methodology by treating each check as a separate calibration test, while also incorporating GSE's state-transition models through the SHA-based consistency verification. The overall system operates as a conservative decision rule: any single failure leads to shutdown, ensuring high confidence in production reliability.\n\nDeep epistemic analysis for canary (bb20a0317e3eff34, domain=other, pages_read=1/1): Operator 'Vercel Deployment Health Check' (page 1, domain other) captures: Read its exit code and output: exit 1 = FAIL; exit 0 with \"warning(s)\" in the summary line = WATCH; exit 0 with \"all green\" = SHIP. Assumptions: The underlying smoke test script accurately reflects system operational status. Breakdown regime: System failure triggers immediate shutdown. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction framework where health checks serve as calibration tests. Operator 'Git Origin Main SHA Fetch' (page 1, domain other) captures: `git fetch origin` then `git rev-parse origin/main` for the expected SHA. Assumptions: Local git repository is synchronized with remote origin. Breakdown regime: SHA mismatch indicates divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition logic where SHA consistency ensures correct system state. Operator 'Public Surface Truth API Query' (page 1, domain other) captures: `curl` the target's `/api/ops/public-surface-truth` and read `deployment.sha` (the real field, per `apps/web/app/api/ops/public-surface-truth/route.ts`). Assumptions: API endpoint provides accurate deployment metadata. Breakdown regime: Mismatch between API-reported SHA and expected SHA triggers degradation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives posterior distribution over deployment states from API responses. Operator 'Deploy Lag Verification' (page 1, domain other) captures: Compare it to `origin/main`'s SHA per `docs/ops/DEPLOY_LAG.md` — code on `main` is not live until Vercel serves that SHA. Assumptions: Deployment lag documentation accurately describes the production pipeline. Breakdown regime: Lag exceeding threshold indicates potential inconsistency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian updating where deployment lag serves as a prior constraint. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for canary (bb20a0317e3eff34, domain=other, pages_read=1/1): Operator 'Vercel Deployment Health Check' (page 1, domain other) captures: Read its exit code and output: exit 1 = FAIL; exit 0 with \"warning(s)\" in the summary line = WATCH; exit 0 with \"all green\" = SHIP. Assumptions: The underlying smoke test script accurately reflects system operational status. Breakdown regime: System failure triggers immediate shutdown. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction framework where health checks serve as calibration tests. Operator 'Git Origin Main SHA Fetch' (page 1, domain other) captures: `git fetch origin` then `git rev-parse origin/main` for the expected SHA. Assumptions: Local git repository is synchronized with remote origin. Breakdown regime: SHA mismatch indicates divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition logic where SHA consistency ensures correct system state. Operator 'Public Surface Truth API Query' (page 1, domain other) captures: `curl` the target's `/api/ops/public-surface-truth` and read `deployment.sha` (the real field, per `apps/web/app/api/ops/public-surface-truth/route.ts`). Assumptions: API endpoint provides accurate deployment metadata. Breakdown regime: Mismatch between API-reported SHA and expected SHA triggers degradation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives posterior distribution over deployment states from API responses. Operator 'Deploy Lag Verification' (page 1, domain other) captures: Compare it to `origin/main`'s SHA per `docs/ops/DEPLOY_LAG.md` — code on `main` is not live until Vercel serves that SHA. Assumptions: Deployment lag documentation accurately describes the production pipeline. Breakdown regime: Lag exceeding threshold indicates potential inconsistency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian updating where deployment lag serves as a prior constraint. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The concept traces back to early software deployment pipelines in the 1990s, evolving through continuous integration practices in the 2000s, and maturing into modern DevOps verification patterns. Retrocausal Genealogy: Rooted in canary (bb20a0317e3eff34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in canary (bb20a0317e3eff34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling opposing actors reveals that developers seek rapid feedback, while operations teams prioritize stability. These primitives balance both objectives by providing immediate alerts while maintaining backward compatibility with documented deployment procedures. Theory of Mind & Decision Maker Model: Rooted in canary (bb20a0317e3eff34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring independent verification across different layers (code repository vs. runtime API). Leakage is prevented by ensuring that no single primitive dominates the final verdict, thus avoiding information cascade failures. Cross-Layer Veto & Anti-Leakage Check: Rooted in canary (bb20a0317e3eff34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

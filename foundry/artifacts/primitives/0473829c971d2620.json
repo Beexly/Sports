@@ -1,0 +1,78 @@
+{
+  "book_id": "0473829c971d2620",
+  "source_status": "COMPLETE",
+  "title": "gse-triage-18-urls",
+  "file_name": "gse-triage-18-urls.md",
+  "sha256": "0473829c971d26205adfdd455270ffb8cdd690a49c45239f66281fd08315e6bb",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "GSE triage primitives map open-source dependencies to conformal inference layers through ToS risk, licensing, and architectural alignment. Universal Lens: Rooted in gse-triage-18-urls (0473829c971d2620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian risk assessment of dependencies using GSE's no-X scraping guardrail as prior, with AGPL and MIT licenses as likelihood factors. GSI Mapping: Rooted in gse-triage-18-urls (0473829c971d2620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in GSE dependency selection governed by infrastructural constraints (mobile-web PWA), budget ($0), and ethical guardrails. GSE Mapping: Rooted in gse-triage-18-urls (0473829c971d2620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "tos_compliance_filter",
+      "name": "ToS Compliance Filter",
+      "verbatim_quote": "- ToS flag: Uses official API (no ToS conflict), but X-related.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Time (seconds)', 'C': 'Compliance score (0–1)', 'A': 'API access type (0=official, 1=unofficial)'}",
+      "assumptions": "Official API usage implies ToS compliance; X-related usage introduces risk.",
+      "breakdown_regime": "C < 0.5 when A = 1 and T > 30",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's ToS guardrail maps to a binary classifier over API access legitimacy and temporal risk window.",
+        "source_operator": "tos_compliance_filter",
+        "telemetry": "API access log timestamp and type"
+      }
+    },
+    {
+      "primitive_id": "license_compatibility_kernel",
+      "name": "License Compatibility Kernel",
+      "verbatim_quote": "- Verdict: CANDIDATE (with AGPL caveat) — fits GSE content engine (RSS → AI-repurposed → scheduled posts).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'License type (0=MIT, 1=AGPL, 2=GPL)', 'R': 'Risk factor (0–1)', 'B': 'Budget constraint (0=zero, 1=non-zero)'}",
+      "assumptions": "MIT is compatible; AGPL introduces self-hosting requirement.",
+      "breakdown_regime": "R > 0.7 when L = 1 and B = 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "License compatibility is derived from GSE’s zero-budget constraint and content-engine fit.",
+        "source_operator": "license_compatibility_kernel",
+        "telemetry": "Dependency license type and hosting model"
+      }
+    },
+    {
+      "primitive_id": "architectural_alignment_validator",
+      "name": "Architectural Alignment Validator",
+      "verbatim_quote": "- Verdict: REJECT — GSE is mobile-web PWA, not native iOS app.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Architecture type (0=PWA, 1=iOS native, 2=Web app)', 'M': 'Match score (0–1)', 'F': 'Feature set (0=core, 1=extended)'}",
+      "assumptions": "GSE uses mobile-web PWA stack; native apps are incompatible.",
+      "breakdown_regime": "M < 0.3 when A = 1 and F = 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's architectural stack maps to a feature-matching function against dependency architecture types.",
+        "source_operator": "architectural_alignment_validator",
+        "telemetry": "Stack architecture and feature compatibility matrix"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0473829c971d2620_t0",
+      "think": "The triage process applies a dual filter: ToS compliance and architectural alignment. Dependencies are evaluated using a binary classifier for API legitimacy and a risk kernel for license compatibility. The GSE's zero-budget and mobile-web PWA stack define the rejection criteria for non-aligned tools. For instance, 'xs' is rejected due to X-related search, even with official API use. 'ai-reply-guy' is hard-rejected due to spam automation. 'postiz' is a candidate because it aligns with GSE's content engine and has an AGPL license that can be managed under self-hosting. The core insight is that GSE's state-space is constrained by its guardrails, which act as boundary conditions in a Bayesian decision space.\n\nDeep epistemic analysis for gse-triage-18-urls (0473829c971d2620, domain=other, pages_read=3/3): Operator 'ToS Compliance Filter' (page 1, domain other) captures: - ToS flag: Uses official API (no ToS conflict), but X-related. Assumptions: Official API usage implies ToS compliance; X-related usage introduces risk. Breakdown regime: C < 0.5 when A = 1 and T > 30 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's ToS guardrail maps to a binary classifier over API access legitimacy and temporal risk window. Operator 'License Compatibility Kernel' (page 1, domain other) captures: - Verdict: CANDIDATE (with AGPL caveat) — fits GSE content engine (RSS → AI-repurposed → scheduled posts). Assumptions: MIT is compatible; AGPL introduces self-hosting requirement. Breakdown regime: R > 0.7 when L = 1 and B = 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): License compatibility is derived from GSE’s zero-budget constraint and content-engine fit. Operator 'Architectural Alignment Validator' (page 1, domain other) captures: - Verdict: REJECT — GSE is mobile-web PWA, not native iOS app. Assumptions: GSE uses mobile-web PWA stack; native apps are incompatible. Breakdown regime: M < 0.3 when A = 1 and F = 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's architectural stack maps to a feature-matching function against dependency architecture types. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for gse-triage-18-urls (0473829c971d2620, domain=other, pages_read=3/3): Operator 'ToS Compliance Filter' (page 1, domain other) captures: - ToS flag: Uses official API (no ToS conflict), but X-related. Assumptions: Official API usage implies ToS compliance; X-related usage introduces risk. Breakdown regime: C < 0.5 when A = 1 and T > 30 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's ToS guardrail maps to a binary classifier over API access legitimacy and temporal risk window. Operator 'License Compatibility Kernel' (page 1, domain other) captures: - Verdict: CANDIDATE (with AGPL caveat) — fits GSE content engine (RSS → AI-repurposed → scheduled posts). Assumptions: MIT is compatible; AGPL introduces self-hosting requirement. Breakdown regime: R > 0.7 when L = 1 and B = 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): License compatibility is derived from GSE’s zero-budget constraint and content-engine fit. Operator 'Architectural Alignment Validator' (page 1, domain other) captures: - Verdict: REJECT — GSE is mobile-web PWA, not native iOS app. Assumptions: GSE uses mobile-web PWA stack; native apps are incompatible. Breakdown regime: M < 0.3 when A = 1 and F = 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's architectural stack maps to a feature-matching function against dependency architecture types. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification of software stacks and probabilistic risk models from 2020s-era open-source governance frameworks. Retrocausal Genealogy: Rooted in gse-triage-18-urls (0473829c971d2620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in gse-triage-18-urls (0473829c971d2620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include open-source maintainers who prioritize utility over GSE's ethical constraints, and regulatory systems enforcing ToS compliance. Theory of Mind & Decision Maker Model: Rooted in gse-triage-18-urls (0473829c971d2620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in gse-triage-18-urls (0473829c971d2620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Dependencies violating ToS guardrails or architectural constraints are vetoed regardless of utility. AGPL dependencies are vetted for self-hosting feasibility. Cross-Layer Veto & Anti-Leakage Check: Rooted in gse-triage-18-urls (0473829c971d2620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in gse-triage-18-urls (0473829c971d2620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

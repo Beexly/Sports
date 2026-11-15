@@ -1,0 +1,78 @@
+{
+  "book_id": "0f8d720e3cdaf9d5",
+  "source_status": "COMPLETE",
+  "title": "p0317",
+  "file_name": "p0317.txt",
+  "sha256": "0f8d720e3cdaf9d55b44cc10755916523e4783dbe95ac6ee6c36d2db94d4a7b3",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Course constraints define positional kinematics; finish line tape establishes event termination; hurdle configurations encode discrete obstacle dynamics. Universal Lens: Rooted in p0317 (0f8d720e3cdaf9d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models race positioning and foul probabilities; conformal prediction bounds finish timing and outcome likelihoods. GSI Mapping: Rooted in p0317 (0f8d720e3cdaf9d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes course adherence and stride-based transitions; state transitions track competitor positions and hurdle interactions. GSE Mapping: Rooted in p0317 (0f8d720e3cdaf9d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "keeping_proper_course",
+      "name": "Keeping Proper Course",
+      "verbatim_quote": "KEEPING PROPER COURSE In all races on a straight track each competitor shall keep his own position on the course from start to finish.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x(t)': 'position along track (meters)', 't': 'time (seconds)', 'P_i(t)': \"competitor i's path (dimensionless)\"}",
+      "assumptions": "Linear track, fixed lane boundaries, deterministic motion.",
+      "breakdown_regime": "Collision or deviation from lane boundary.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Positional trajectory constraint maps to control-theoretic path-following problem.",
+        "source_operator": "keeping_proper_course",
+        "telemetry": "Lane deviation metrics, positional continuity"
+      }
+    },
+    {
+      "primitive_id": "change_of_course",
+      "name": "Change of Course",
+      "verbatim_quote": "CHANGE OF COURSE In all races other than on a straight track a competitor may change toward the inside whenever he is two strides ahead of the man whose path he crosses.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'s': 'stride length (meters)', 'θ': 'angle of turn (radians)', 'v_i': 'velocity of competitor i (m/s)'}",
+      "assumptions": "Competitors move in lanes, turn only when ahead by two strides.",
+      "breakdown_regime": "Failure to yield or illegal crossing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Turn logic derived from relative velocity and spatial separation.",
+        "source_operator": "change_of_course",
+        "telemetry": "Stride count difference, angular displacement"
+      }
+    },
+    {
+      "primitive_id": "the_finish",
+      "name": "The Finish",
+      "verbatim_quote": "THE FINISH The finish shall be represented by a line between two finishing posts, drawn across and at right angles to the side of the track.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_f': 'finish line (meters)', 'T_f': 'finish time (seconds)', 'tape_height': '3 feet above finish line (meters)'}",
+      "assumptions": "Finish line is perpendicular to track edge, tape is taut.",
+      "breakdown_regime": "Partial contact or tape misalignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Finish detection modeled as event-triggered measurement of body contact.",
+        "source_operator": "the_finish",
+        "telemetry": "Body contact timestamp, tape intersection"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0f8d720e3cdaf9d5_t0",
+      "think": "The primitives form a coherent framework for race dynamics: 'Keeping Proper Course' defines positional constraints under linear motion; 'Change of Course' introduces conditional turning logic based on relative motion; 'The Finish' provides a termination condition via geometric intersection. These map into a control-theoretic model where competitors navigate constrained paths while maintaining positional integrity. Failure modes include collision, improper turn initiation, and incomplete finish detection. The system exhibits dualities in spatial and temporal resolution—position tracking and timing precision must align for accurate outcome determination. Hurdle configurations introduce discrete event dynamics that modulate continuous motion, creating a hybrid system of differential equations and discrete transitions.\n\nDeep epistemic analysis for p0317 (0f8d720e3cdaf9d5, domain=other, pages_read=1/1): Operator 'Keeping Proper Course' (page 1, domain other) captures: KEEPING PROPER COURSE In all races on a straight track each competitor shall keep his own position on the course from start to finish. Assumptions: Linear track, fixed lane boundaries, deterministic motion. Breakdown regime: Collision or deviation from lane boundary. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Positional trajectory constraint maps to control-theoretic path-following problem. Operator 'Change of Course' (page 1, domain other) captures: CHANGE OF COURSE In all races other than on a straight track a competitor may change toward the inside whenever he is two strides ahead of the man whose path he crosses. Assumptions: Competitors move in lanes, turn only when ahead by two strides. Breakdown regime: Failure to yield or illegal crossing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Turn logic derived from relative velocity and spatial separation. Operator 'The Finish' (page 1, domain other) captures: THE FINISH The finish shall be represented by a line between two finishing posts, drawn across and at right angles to the side of the track. Assumptions: Finish line is perpendicular to track edge, tape is taut. Breakdown regime: Partial contact or tape misalignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Finish detection modeled as event-triggered measurement of body contact. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0317 (0f8d720e3cdaf9d5, domain=other, pages_read=1/1): Operator 'Keeping Proper Course' (page 1, domain other) captures: KEEPING PROPER COURSE In all races on a straight track each competitor shall keep his own position on the course from start to finish. Assumptions: Linear track, fixed lane boundaries, deterministic motion. Breakdown regime: Collision or deviation from lane boundary. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Positional trajectory constraint maps to control-theoretic path-following problem. Operator 'Change of Course' (page 1, domain other) captures: CHANGE OF COURSE In all races other than on a straight track a competitor may change toward the inside whenever he is two strides ahead of the man whose path he crosses. Assumptions: Competitors move in lanes, turn only when ahead by two strides. Breakdown regime: Failure to yield or illegal crossing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Turn logic derived from relative velocity and spatial separation. Operator 'The Finish' (page 1, domain other) captures: THE FINISH The finish shall be represented by a line between two finishing posts, drawn across and at right angles to the side of the track. Assumptions: Finish line is perpendicular to track edge, tape is taut. Breakdown regime: Partial contact or tape misalignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Finish detection modeled as event-triggered measurement of body contact. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical mechanics and racecourse geometry, these rules reflect early 20th-century formalization of athletic competition, influenced by Newtonian kinematics and Euclidean space-time assumptions. Retrocausal Genealogy: Rooted in p0317 (0f8d720e3cdaf9d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0317 (0f8d720e3cdaf9d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents optimize path selection within lane constraints, balancing speed against risk of foul or disqualification. Each competitor evaluates relative position and velocity to decide turn timing, modeling strategic decision-making under uncertainty. Theory of Mind & Decision Maker Model: Rooted in p0317 (0f8d720e3cdaf9d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no redundant path constraints; leakage veto prevents false positives in finish detection due to tape misalignment or partial body contact. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0317 (0f8d720e3cdaf9d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0317 (0f8d720e3cdaf9d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

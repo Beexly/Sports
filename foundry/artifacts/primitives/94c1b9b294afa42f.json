@@ -1,0 +1,78 @@
+{
+  "book_id": "94c1b9b294afa42f",
+  "source_status": "COMPLETE",
+  "title": "RECOMPUTE-RESULTS",
+  "file_name": "RECOMPUTE-RESULTS.md",
+  "sha256": "94c1b9b294afa42f9a78d1f60aae347cfb50c595b3bcb260a44b2bf538ba4a38",
+  "primary_domain": "cs",
+  "pages_total": 8,
+  "pages_read": 8,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sinkhorn iteration residual computation via libm exp in IEEE-754 double precision, constrained to jq engine with no external dependencies. Universal Lens: Rooted in RECOMPUTE-RESULTS (94c1b9b294afa42f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian marginal consistency check using Sinkhorn-Knopp fixed-point residual as conformal predictive uncertainty measure for probabilistic transport plans. GSI Mapping: Rooted in RECOMPUTE-RESULTS (94c1b9b294afa42f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine employs iterative matrix scaling with exact row marginals, leveraging jq's libm exp for kernel computation under strict execution constraints. GSE Mapping: Rooted in RECOMPUTE-RESULTS (94c1b9b294afa42f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sinkhorn_residual",
+      "name": "Sinkhorn Marginal Residual",
+      "verbatim_quote": "--## CLAIM 1 — Sinkhorn marginal residual (decisive) ### 1.1 Exact implementation extracted `executeRealSinkhornKnoppMarginalAudit(iterations = 40, epsilon = 0.15)` — `index.ts:1360-1419`.",
+      "page": 1,
+      "latex": "\\text{Residual} = \\left\\| \\mathbf{u}^{(k)} - \\mathbf{v}^{(k)} \\right\\|_1 \\quad \\text{where } K = \\exp\\left(-\\frac{\\text{cost}}{\\epsilon}\\right)",
+      "symbol_and_unit_ledger": "{'u': 'row marginal vector, dimensionless', 'v': 'column marginal vector, dimensionless', 'K': 'kernel matrix, dimensionless', 'epsilon': 'regularization parameter, dimensionless', 'cost': 'cost matrix, dimensionless'}",
+      "assumptions": "Kernel computed via libm exp with IEEE-754 double precision; Sinkhorn iterations converge to fixed point with alternating updates.",
+      "breakdown_regime": "Residual vanishes when row marginals match target distribution exactly.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Residual is derived from the difference between updated row/column marginals in iterative Sinkhorn scaling.",
+        "source_operator": "sinkhorn_residual",
+        "telemetry": "L1 norm of marginal discrepancy after 40 iterations."
+      }
+    },
+    {
+      "primitive_id": "exponential_kernel",
+      "name": "Libm Exponential Kernel",
+      "verbatim_quote": "The loop ends on a `v` update, so all fou",
+      "page": 1,
+      "latex": "K_{ij} = \\exp\\left(-\\frac{\\text{cost}_{ij}}{\\epsilon} \\right)",
+      "symbol_and_unit_ledger": "{'K': 'transport kernel, dimensionless', 'cost': 'cost matrix, dimensionless', 'epsilon': 'regularization parameter, dimensionless'}",
+      "assumptions": "Exponential computed via platform libm exp with IEEE-754 binary64 precision; no rounding artifacts in intermediate steps.",
+      "breakdown_regime": "Numerical overflow or underflow at extreme cost values.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kernel is isomorphic to the exponential map in information geometry under log-linear structure.",
+        "source_operator": "exponential_kernel",
+        "telemetry": "Computed kernel matrix from cost and epsilon parameters."
+      }
+    },
+    {
+      "primitive_id": "execution_constraint",
+      "name": "Execution Environment Constraint",
+      "verbatim_quote": "**The only compute engine that ran was `jq`** (zero-arity libm math filters `exp`, `sqrt`, `floor`; `pow/2`).",
+      "page": 1,
+      "latex": "\\mathcal{E} = \\{ \\texttt{jq} \\}",
+      "symbol_and_unit_ledger": "{'jq': 'JSON query processor with libm math support, dimensionless'}",
+      "assumptions": "No access to Python, NumPy, or general-purpose compute engines; all numerical operations must use jq.",
+      "breakdown_regime": "Any computation requiring external tools fails due to execution denial.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Execution constraint defines the domain of valid numerical computations for GSE.",
+        "source_operator": "execution_constraint",
+        "telemetry": "Successful jq-based computation of kernel and residual."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "94c1b9b294afa42f_t0",
+      "think": "The Sinkhorn residual is computed through iterative scaling of a cost-based kernel matrix K = exp(-cost/ε), where ε=0.15. Each iteration alternates updating row and column marginals u and v until convergence. The final residual is measured as L1 norm of the difference between these vectors. Due to the jq-only execution environment, all floating-point arithmetic uses IEEE-754 double precision via libm exp, which introduces small numerical errors. These errors manifest as slight variations in reported residuals such as 1.11e-16 vs. 2.66e-7, depending on how the exponential is evaluated. The discrepancy arises because the literal 2.66e-7 is not present in source code but emerges from a different ε value during re-runs. The actual computation is deterministic within the jq engine and constrained by its math library.\n\nDeep epistemic analysis for RECOMPUTE-RESULTS (94c1b9b294afa42f, domain=cs, pages_read=8/8): Operator 'Sinkhorn Marginal Residual' (page 1, domain cs) captures: --## CLAIM 1 — Sinkhorn marginal residual (decisive) ### 1.1 Exact implementation extracted `executeRealSinkhornKnoppMarginalAudit(iterations = 40, epsilon = 0.15)` — `index.ts:1360-1419`. Assumptions: Kernel computed via libm exp with IEEE-754 double precision; Sinkhorn iterations converge to fixed point with alternating updates. Breakdown regime: Residual vanishes when row marginals match target distribution exactly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Residual is derived from the difference between updated row/column marginals in iterative Sinkhorn scaling. Operator 'Libm Exponential Kernel' (page 1, domain cs) captures: The loop ends on a `v` update, so all fou Assumptions: Exponential computed via platform libm exp with IEEE-754 binary64 precision; no rounding artifacts in intermediate steps. Breakdown regime: Numerical overflow or underflow at extreme cost values. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kernel is isomorphic to the exponential map in information geometry under log-linear structure. Operator 'Execution Environment Constraint' (page 1, domain cs) captures: **The only compute engine that ran was `jq`** (zero-arity libm math filters `exp`, `sqrt`, `floor`; `pow/2`). Assumptions: No access to Python, NumPy, or general-purpose compute engines; all numerical operations must use jq. Breakdown regime: Any computation requiring external tools fails due to execution denial. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Execution constraint defines the domain of valid numerical computations for GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RECOMPUTE-RESULTS (94c1b9b294afa42f, domain=cs, pages_read=8/8): Operator 'Sinkhorn Marginal Residual' (page 1, domain cs) captures: --## CLAIM 1 — Sinkhorn marginal residual (decisive) ### 1.1 Exact implementation extracted `executeRealSinkhornKnoppMarginalAudit(iterations = 40, epsilon = 0.15)` — `index.ts:1360-1419`. Assumptions: Kernel computed via libm exp with IEEE-754 double precision; Sinkhorn iterations converge to fixed point with alternating updates. Breakdown regime: Residual vanishes when row marginals match target distribution exactly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Residual is derived from the difference between updated row/column marginals in iterative Sinkhorn scaling. Operator 'Libm Exponential Kernel' (page 1, domain cs) captures: The loop ends on a `v` update, so all fou Assumptions: Exponential computed via platform libm exp with IEEE-754 binary64 precision; no rounding artifacts in intermediate steps. Breakdown regime: Numerical overflow or underflow at extreme cost values. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kernel is isomorphic to the exponential map in information geometry under log-linear structure. Operator 'Execution Environment Constraint' (page 1, domain cs) captures: **The only compute engine that ran was `jq`** (zero-arity libm math filters `exp`, `sqrt`, `floor`; `pow/2`). Assumptions: No access to Python, NumPy, or general-purpose compute engines; all numerical operations must use jq. Breakdown regime: Any computation requiring external tools fails due to execution denial. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Execution constraint defines the domain of valid numerical computations for GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Sinkhorn-Knopp algorithm (1967) for approximate matrix scaling, extended to optimal transport theory (Cuturi, 2013) and adapted for probabilistic inference in machine learning contexts. Retrocausal Genealogy: Rooted in RECOMPUTE-RESULTS (94c1b9b294afa42f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in RECOMPUTE-RESULTS (94c1b9b294afa42f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include a hypothetical full-stack Python+NumPy implementation that would yield different numerical outcomes due to higher precision or alternative exponentiation methods. However, the system enforces jq-only execution, ensuring consistency across runs despite potential inaccuracies in floating-point handling. Theory of Mind & Decision Maker Model: Rooted in RECOMPUTE-RESULTS (94c1b9b294afa42f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes reliance on hardcoded literals like 2.66e-7, which do not appear in source code and thus cannot be trusted as stable outputs. Leakage veto prevents use of non-deterministic or unverified external libraries. Cross-Layer Veto & Anti-Leakage Check: Rooted in RECOMPUTE-RESULTS (94c1b9b294afa42f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

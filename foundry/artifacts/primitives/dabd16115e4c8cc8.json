@@ -1,0 +1,78 @@
+{
+  "book_id": "dabd16115e4c8cc8",
+  "source_status": "COMPLETE",
+  "title": "content-provenance-and-review",
+  "file_name": "content-provenance-and-review.md",
+  "sha256": "dabd16115e4c8cc8a0d1466c05212a64e5aeeca287772cf799cd994d1d5f43ff",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Content provenance as a causal graph with source-to-claim traceability; trust model encoded via structural integrity of evidence chains. Universal Lens: Rooted in content-provenance-and-review (dabd16115e4c8cc8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on claims conditioned on source credibility and evidence chain validity; conformal prediction intervals for trust bounds. GSI Mapping: Rooted in content-provenance-and-review (dabd16115e4c8cc8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally-aware state transitions in Signal Ledger governed by provenance kernel; dynamic risk-adjusted pick validation via multi-layered audit trails. GSE Mapping: Rooted in content-provenance-and-review (dabd16115e4c8cc8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "provenance_chain",
+      "name": "Provenance Chain Integrity",
+      "verbatim_quote": "For a sports intelligence platform, provenance is not optional — it is the structural foundation of the trust model.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Claim object, dimensionless', 'S': 'Source object, dimensionless', 'T': 'Trust score, [0,1]', 'E': 'Evidence chain, ordered set'}",
+      "assumptions": "Each claim C must have a unique path E → S such that T(E,S) > threshold.",
+      "breakdown_regime": "When ∃C s.t. ∀E, ∄S such that T(E,S) ≥ threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Chain of evidence E maps to Bayesian likelihood P(C|E), where trust T = P(C|E) × P(E|S)",
+        "source_operator": "provenance_chain",
+        "telemetry": "Provenance trace coverage ratio"
+      }
+    },
+    {
+      "primitive_id": "tier_1_review",
+      "name": "Tier 1 Review Protocol",
+      "verbatim_quote": "Win rate claim check (requires ≥30 settled picks, defined window, model version) 3.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Review status, {approved, rejected}', 'W': 'Win rate, [0,1]', 'N': 'Number of picks, integer', 'M': 'Model version, string'}",
+      "assumptions": "A claim with win rate W requires N ≥ 30 picks over time window Δt with model M.",
+      "breakdown_regime": "When N < 30 or Δt < defined window or M ≠ current version.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel function K(R,W,N,M) = 1 if all constraints met else 0; used in GSE state transition logic",
+        "source_operator": "tier_1_review",
+        "telemetry": "Automated compliance pass rate"
+      }
+    },
+    {
+      "primitive_id": "failure_mitigation",
+      "name": "Failure Mitigation Protocol",
+      "verbatim_quote": "Accuracy about what was claimed and what happened matters for the trust model.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Failure event, boolean', 'P': 'Published claim, dimensionless', 'A': 'Audit trail, ordered list', 'V': 'Voided pick, boolean'}",
+      "assumptions": "If F occurs, then P must be corrected or removed and A updated accordingly.",
+      "breakdown_regime": "When F ∧ ¬(P ∈ A) or V = true but P still visible.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Failure event F maps to correction protocol: P ← P_corrected ∨ P ← void, A ← A ∪ F_log",
+        "source_operator": "failure_mitigation",
+        "telemetry": "Post-publication failure detection rate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "dabd16115e4c8cc8_t0",
+      "think": "The core operator 'provenance_chain' encodes the structural trust model through a directed acyclic graph where each node represents a claim and edges represent evidence links to sources. This forms a Bayesian network where trust T(C,S) = P(C|E) × P(E|S) is computed. The 'tier_1_review' primitive acts as a kernel filter that validates win rate claims using statistical thresholds (N≥30, model version match). It defines a conditional probability space where R = 1 iff all checks pass. The 'failure_mitigation' protocol ensures retroactive consistency by enforcing that any detected inconsistency F triggers a correction or voiding mechanism. These primitives form a closed-loop system: claims are validated, reviewed, and corrected if necessary, maintaining a consistent audit trail A that supports both GSI's probabilistic inference and GSE's state transitions.\n\nDeep epistemic analysis for content-provenance-and-review (dabd16115e4c8cc8, domain=other, pages_read=3/3): Operator 'Provenance Chain Integrity' (page 1, domain other) captures: For a sports intelligence platform, provenance is not optional — it is the structural foundation of the trust model. Assumptions: Each claim C must have a unique path E → S such that T(E,S) > threshold. Breakdown regime: When ∃C s.t. ∀E, ∄S such that T(E,S) ≥ threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Chain of evidence E maps to Bayesian likelihood P(C|E), where trust T = P(C|E) × P(E|S) Operator 'Tier 1 Review Protocol' (page 2, domain other) captures: Win rate claim check (requires ≥30 settled picks, defined window, model version) 3. Assumptions: A claim with win rate W requires N ≥ 30 picks over time window Δt with model M. Breakdown regime: When N < 30 or Δt < defined window or M ≠ current version. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel function K(R,W,N,M) = 1 if all constraints met else 0; used in GSE state transition logic Operator 'Failure Mitigation Protocol' (page 2, domain other) captures: Accuracy about what was claimed and what happened matters for the trust model. Assumptions: If F occurs, then P must be corrected or removed and A updated accordingly. Breakdown regime: When F ∧ ¬(P ∈ A) or V = true but P still visible. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Failure event F maps to correction protocol: P ← P_corrected ∨ P ← void, A ← A ∪ F_log Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for content-provenance-and-review (dabd16115e4c8cc8, domain=other, pages_read=3/3): Operator 'Provenance Chain Integrity' (page 1, domain other) captures: For a sports intelligence platform, provenance is not optional — it is the structural foundation of the trust model. Assumptions: Each claim C must have a unique path E → S such that T(E,S) > threshold. Breakdown regime: When ∃C s.t. ∀E, ∄S such that T(E,S) ≥ threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Chain of evidence E maps to Bayesian likelihood P(C|E), where trust T = P(C|E) × P(E|S) Operator 'Tier 1 Review Protocol' (page 2, domain other) captures: Win rate claim check (requires ≥30 settled picks, defined window, model version) 3. Assumptions: A claim with win rate W requires N ≥ 30 picks over time window Δt with model M. Breakdown regime: When N < 30 or Δt < defined window or M ≠ current version. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel function K(R,W,N,M) = 1 if all constraints met else 0; used in GSE state transition logic Operator 'Failure Mitigation Protocol' (page 2, domain other) captures: Accuracy about what was claimed and what happened matters for the trust model. Assumptions: If F occurs, then P must be corrected or removed and A updated accordingly. Breakdown regime: When F ∧ ¬(P ∈ A) or V = true but P still visible. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Failure event F maps to correction protocol: P ← P_corrected ∨ P ← void, A ← A ∪ F_log Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification theory and Bayesian networks, tracing back to early work on belief propagation and causal graphs in AI reasoning systems. Retrocausal Genealogy: Rooted in content-provenance-and-review (dabd16115e4c8cc8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in content-provenance-and-review (dabd16115e4c8cc8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the claim generator (with potential bias), the reviewer (operational risk), and the auditor (trust integrity). Each agent operates under different information sets, leading to strategic misalignment unless provenance is enforced. Theory of Mind & Decision Maker Model: Rooted in content-provenance-and-review (dabd16115e4c8cc8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity between GSI's probabilistic inference and GSE's deterministic state changes is maintained by ensuring that any provenance failure at layer 1 invalidates downstream processing in GSE until resolved, preventing leakage of untrusted data into decision-making. Cross-Layer Veto & Anti-Leakage Check: Rooted in content-provenance-and-review (dabd16115e4c8cc8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

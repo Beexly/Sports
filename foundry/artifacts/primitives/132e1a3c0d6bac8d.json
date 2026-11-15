@@ -1,0 +1,78 @@
+{
+  "book_id": "132e1a3c0d6bac8d",
+  "source_status": "COMPLETE",
+  "title": "route_coverage_unregularised",
+  "file_name": "route_coverage_unregularised.md",
+  "sha256": "132e1a3c0d6bac8dd49c7031dd1c63f3c85ac52f11b44d4b1867a960d27a6e1f",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Unregularised OLS regression isolates route×coverage interaction effects, eliminating shrinkage artefacts from Ridge penalties. Universal Lens: Rooted in route_coverage_unregularised (132e1a3c0d6bac8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian posterior inference on route YOE via conformal prediction bounds, leveraging unregularised fit for robust signal detection. GSI Mapping: Rooted in route_coverage_unregularised (132e1a3c0d6bac8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps route-specific payoff dynamics through coverage interaction states, enabling state-transition planning under minimal data. GSE Mapping: Rooted in route_coverage_unregularised (132e1a3c0d6bac8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "shrinkage_artefact_removal",
+      "name": "Shrinkage Artefact Removal",
+      "verbatim_quote": "**The shrinkage artefact was small** — unregularised fitting reproduces the same collapse, so the previous upper-bound caveat can be relaxed: route×coverage genuinely absorbs the great majority of route YOE.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'YOE': 'yards over expected, dimensionless', 'Ridge': 'regularization parameter, dimensionless', 'OLS': 'ordinary least squares, dimensionless'}",
+      "assumptions": "Residuals are bounded; interaction terms are sparse but informative.",
+      "breakdown_regime": "When Ridge penalty dominates residual variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Unregularised fit enables accurate estimation of route×coverage effect without shrinkage bias.",
+        "source_operator": "shrinkage_artefact_removal",
+        "telemetry": "Correlation between OLS and Ridge estimates."
+      }
+    },
+    {
+      "primitive_id": "leverage_route_detection",
+      "name": "Leverage Route Detection",
+      "verbatim_quote": "SLANT (+0.997 on n=141) and FLAT (+0.693 on n=153) survive unregularised and are the only two routes that do.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SLANT': 'route type, dimensionless', 'FLAT': 'route type, dimensionless', 'n': 'sample size, integer'}",
+      "assumptions": "Route payoff depends on defender-receiver dynamics rather than route depth.",
+      "breakdown_regime": "When interaction effects are strong and sample sizes exceed threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Route payoff is modeled as a function of defender-reactivity and receiver positioning.",
+        "source_operator": "leverage_route_detection",
+        "telemetry": "Posterior probability of route survival under OLS."
+      }
+    },
+    {
+      "primitive_id": "interaction_cell_pruning",
+      "name": "Interaction Cell Pruning",
+      "verbatim_quote": "Reran unregularised: OLS, interaction cells restricted to n>=30 (51 of 86 cells kept).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'n': 'cell sample size, integer', 'cells': 'interaction bins, dimensionless'}",
+      "assumptions": "Sparse interaction cells with low sample counts introduce noise.",
+      "breakdown_regime": "When n < 30 in interaction cell.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pruned cells improve model stability and reduce overfitting.",
+        "source_operator": "interaction_cell_pruning",
+        "telemetry": "Number of retained interaction cells vs. total."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "132e1a3c0d6bac8d_t0",
+      "think": "The core insight is that regularized models like Ridge induce shrinkage, distorting estimates of route-specific effects. By switching to unregularised OLS, we recover true signal strength in route×coverage interactions. The key is that the shrinkage artefact is small enough to be negligible, allowing us to trust the OLS results. This confirms that route×coverage jointly explains most variation in YOE. Leverage routes such as SLANT and FLAT persist under OLS because their payoff structure is driven by defender-receiver dynamics rather than route depth. Interaction pruning ensures statistical validity by excluding unreliable cells with insufficient data. The model's surface increases with interaction count but remains constrained by small sample sizes per route, necessitating careful validation.\n\nDeep epistemic analysis for route_coverage_unregularised (132e1a3c0d6bac8d, domain=other, pages_read=1/1): Operator 'Shrinkage Artefact Removal' (page 1, domain other) captures: **The shrinkage artefact was small** — unregularised fitting reproduces the same collapse, so the previous upper-bound caveat can be relaxed: route×coverage genuinely absorbs the great majority of route YOE. Assumptions: Residuals are bounded; interaction terms are sparse but informative. Breakdown regime: When Ridge penalty dominates residual variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Unregularised fit enables accurate estimation of route×coverage effect without shrinkage bias. Operator 'Leverage Route Detection' (page 1, domain other) captures: SLANT (+0.997 on n=141) and FLAT (+0.693 on n=153) survive unregularised and are the only two routes that do. Assumptions: Route payoff depends on defender-receiver dynamics rather than route depth. Breakdown regime: When interaction effects are strong and sample sizes exceed threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Route payoff is modeled as a function of defender-reactivity and receiver positioning. Operator 'Interaction Cell Pruning' (page 1, domain other) captures: Reran unregularised: OLS, interaction cells restricted to n>=30 (51 of 86 cells kept). Assumptions: Sparse interaction cells with low sample counts introduce noise. Breakdown regime: When n < 30 in interaction cell. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pruned cells improve model stability and reduce overfitting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for route_coverage_unregularised (132e1a3c0d6bac8d, domain=other, pages_read=1/1): Operator 'Shrinkage Artefact Removal' (page 1, domain other) captures: **The shrinkage artefact was small** — unregularised fitting reproduces the same collapse, so the previous upper-bound caveat can be relaxed: route×coverage genuinely absorbs the great majority of route YOE. Assumptions: Residuals are bounded; interaction terms are sparse but informative. Breakdown regime: When Ridge penalty dominates residual variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Unregularised fit enables accurate estimation of route×coverage effect without shrinkage bias. Operator 'Leverage Route Detection' (page 1, domain other) captures: SLANT (+0.997 on n=141) and FLAT (+0.693 on n=153) survive unregularised and are the only two routes that do. Assumptions: Route payoff depends on defender-receiver dynamics rather than route depth. Breakdown regime: When interaction effects are strong and sample sizes exceed threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Route payoff is modeled as a function of defender-reactivity and receiver positioning. Operator 'Interaction Cell Pruning' (page 1, domain other) captures: Reran unregularised: OLS, interaction cells restricted to n>=30 (51 of 86 cells kept). Assumptions: Sparse interaction cells with low sample counts introduce noise. Breakdown regime: When n < 30 in interaction cell. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pruned cells improve model stability and reduce overfitting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical linear regression theory, extended by modern regularization frameworks and empirical Bayes methods for robust inference. Retrocausal Genealogy: Rooted in route_coverage_unregularised (132e1a3c0d6bac8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in route_coverage_unregularised (132e1a3c0d6bac8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the defensive system attempting to neutralize receiver movement and the offensive coordinator optimizing route selection based on coverage patterns. Theory of Mind & Decision Maker Model: Rooted in route_coverage_unregularised (132e1a3c0d6bac8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in route_coverage_unregularised (132e1a3c0d6bac8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by restricting interaction cells to n≥30, preventing leakage from sparsely sampled regimes into broader inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in route_coverage_unregularised (132e1a3c0d6bac8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in route_coverage_unregularised (132e1a3c0d6bac8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galaxy Sports Edge — Parlay MRI &amp; Week 10 Two-Door Storefront</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { color-scheme: light; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    .font-mono-num {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased">
+
+  <!-- Top Brand & Navigation Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap items-center justify-between gap-3 py-3">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-extrabold tracking-tight text-sm shadow-sm" aria-hidden="true">GSE</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-base tracking-tight text-slate-900">Galaxy Sports Edge</span>
+              <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">NFL Week 10 Live</span>
+            </div>
+            <p class="text-xs text-slate-600 font-medium">We're not AI. We're math you can read.</p>
+          </div>
+        </div>
+
+        <nav aria-label="Primary sections" class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+          <button type="button" id="nav-tab-mri" data-target-view="mri" class="nav-view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-slate-900 shadow-sm">Parlay MRI</button>
+          <button type="button" id="nav-tab-storefront" data-target-view="storefront" class="nav-view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-slate-600 hover:text-slate-900">Two-Door Storefront</button>
+          <button type="button" id="nav-tab-verify" data-target-view="verify" class="nav-view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-slate-600 hover:text-slate-900">Receipt Verifier</button>
+        </nav>
+
+        <div class="flex items-center gap-2">
+          <button type="button" id="wallet-pill-btn" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-900 text-xs font-semibold transition">
+            <span class="w-2 h-2 rounded-full bg-emerald-600" aria-hidden="true"></span>
+            <span>Store Credit:</span>
+            <span id="header-wallet-balance" class="font-mono-num font-bold">$0.00</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Toast Notification -->
+  <div id="app-toast" role="status" aria-live="polite" class="hidden fixed bottom-5 right-5 z-50 max-w-md bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl border border-slate-700 text-sm font-medium">
+    <div class="flex items-start justify-between gap-3">
+      <span id="app-toast-msg">Updated.</span>
+      <button type="button" id="app-toast-close" class="text-slate-400 hover:text-white text-xs font-bold px-1" aria-label="Dismiss notification">✕</button>
+    </div>
+  </div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+    <!-- VIEW 1: /parlay-mri -->
+    <section id="view-mri" aria-labelledby="mri-heading" class="space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-sm">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div class="max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs font-semibold mb-2">
+              <span>Free Public Diagnostic · /parlay-mri</span>
+            </div>
+            <h1 id="mri-heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+              X-Ray Your SGP Before You Bet It
+            </h1>
+            <p class="mt-2 text-sm sm:text-base text-slate-600 leading-relaxed">
+              Sportsbooks advertise big Same-Game Parlay payouts while quietly taxing how NFL plays move together—especially fourth-quarter passing surges and red-zone goal-line splits. Enter 2 to 5 legs and the quoted SGP price to expose the exact hidden house hold before you stake a dollar.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" data-preset="shootout_425" class="preset-btn px-3 py-2 rounded-lg text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition">Load +425 Shootout Stack (3 Legs)</button>
+            <button type="button" data-preset="classic_2leg" class="preset-btn px-3 py-2 rounded-lg text-xs font-semibold bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-300 transition">QB + WR1 Stack (+140)</button>
+            <button type="button" data-preset="cannibal_trap" class="preset-btn px-3 py-2 rounded-lg text-xs font-semibold bg-rose-50 text-rose-900 hover:bg-rose-100 border border-rose-200 transition">Red-Zone Conflict Trap (+575)</button>
+            <button type="button" data-preset="rush_script_4leg" class="preset-btn px-3 py-2 rounded-lg text-xs font-semibold bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-300 transition">Favorite Ground Script (4 Legs)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Left Builder -->
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">1. Build Your Week 10 Same-Game Parlay (2–5 Legs)</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Each leg is stripped of single-bet juice before measuring shared NFL game-script movement.</p>
+            </div>
+            <div class="w-full sm:w-64">
+              <label for="mri-matchup-select" class="sr-only">Select Week 10 NFL Matchup</label>
+              <select id="mri-matchup-select" class="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                <option value="SF@DAL">SF @ DAL · Sun Nov 15, 4:25 PM ET</option>
+                <option value="NE@DET">NE vs DET (Munich) · Sun Nov 15, 9:30 AM ET</option>
+                <option value="KC@ATL">KC @ ATL · Sun Nov 15, 1:00 PM ET</option>
+                <option value="MIN@GB">MIN @ GB · Sun Nov 15, 1:00 PM ET</option>
+                <option value="BUF@NYJ">BUF @ NYJ · Sun Nov 15, 1:00 PM ET</option>
+                <option value="HOU@CLE">HOU @ CLE · Sun Nov 15, 1:00 PM ET</option>
+                <option value="PIT@CIN">PIT @ CIN (SNF) · Sun Nov 15, 8:20 PM ET</option>
+                <option value="LAC@BAL">LAC @ BAL (MNF) · Mon Nov 16, 8:15 PM ET</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="mri-legs-container" class="space-y-3"></div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <button type="button" id="add-leg-btn" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition">
+              <span>+ Add Parlay Leg</span>
+              <span id="leg-count-badge" class="px-1.5 py-0.5 rounded bg-blue-800 text-white font-mono-num">3/5</span>
+            </button>
+            <span class="text-xs text-slate-500">Valid American odds: <span class="font-mono-num">&lt;= -100</span> or <span class="font-mono-num">&gt;= +100</span></span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+            <div>
+              <label for="mri-quoted-odds" class="block text-xs font-bold text-slate-700 mb-1">Sportsbook Quoted SGP Odds (American)</label>
+              <input id="mri-quoted-odds" type="number" step="5" value="425" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono-num font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" />
+              <p id="mri-odds-validation-msg" class="text-xs text-slate-500 mt-1">Enter positive (e.g. +425) or negative (e.g. -115) American price.</p>
+            </div>
+            <div>
+              <label for="mri-stake-dollars" class="block text-xs font-bold text-slate-700 mb-1">Hypothetical Stake Amount ($)</label>
+              <input id="mri-stake-dollars" type="number" min="5" max="10000" step="5" value="100" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono-num font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" />
+              <p class="text-xs text-slate-500 mt-1">Used only to display expected house dollar retention.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Verdict & Chart -->
+        <div class="lg:col-span-5 space-y-5">
+          <div id="mri-verdict-card" class="bg-white rounded-2xl border-2 border-rose-300 p-5 sm:p-6 shadow-sm space-y-4">
+            <div class="flex items-center justify-between gap-2">
+              <span id="mri-severity-pill" class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-rose-100 text-rose-900">HEAVY HIDDEN CORRELATION HOLD</span>
+              <span id="mri-matchup-pill" class="text-xs font-mono-num font-semibold text-slate-500">SF@DAL</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-1">
+              <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200">
+                <div class="text-xs font-semibold text-slate-500">Hidden Correlation Hold</div>
+                <div id="mri-hold-pct" class="text-2xl sm:text-3xl font-extrabold font-mono-num text-rose-600 mt-1">26.8%</div>
+                <div id="mri-house-keep" class="text-xs font-medium text-slate-600 mt-1">$26.80 kept per $100</div>
+              </div>
+              <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200">
+                <div class="text-xs font-semibold text-slate-500">True Fair SGP Odds</div>
+                <div id="mri-fair-odds" class="text-2xl sm:text-3xl font-extrabold font-mono-num text-slate-900 mt-1">+617</div>
+                <div id="mri-book-vs-fair-sub" class="text-xs font-medium text-slate-600 mt-1">vs +425 Book Quote</div>
+              </div>
+            </div>
+
+            <div>
+              <h3 id="mri-verdict-headline" class="text-sm font-bold text-slate-900">Heavy SGP Markup: 26.8% Hidden Correlation Hold</h3>
+              <p id="mri-verdict-body" class="text-xs sm:text-sm text-slate-700 mt-1.5 leading-relaxed"></p>
+            </div>
+
+            <div class="pt-3 border-t border-slate-200 space-y-2 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-600 font-medium">Sportsbook Implied Hit Rate:</span>
+                <span id="mri-prob-book" class="font-mono-num font-bold text-rose-700">19.05%</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-900 font-bold">True NFL Game-Flow Hit Rate (Heavy-Tail t4):</span>
+                <span id="mri-prob-t4" class="font-mono-num font-bold text-emerald-700">13.94%</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-600 font-medium">Standard Bell-Curve Hit Rate (Normal):</span>
+                <span id="mri-prob-gauss" class="font-mono-num font-semibold text-slate-800">13.96%</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500">Naive Uncorrelated Multiplication:</span>
+                <span id="mri-prob-naive" class="font-mono-num text-slate-600">9.65% (+937)</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-200">
+              <button type="button" id="mri-to-storefront-cta" class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-sm">
+                <span>Skip High-Hold SGPs · View Pre-Committed Week 10 Packs</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Hit Rate Comparison: Book Implied vs True Correlated Math</h3>
+            <div class="relative h-64">
+              <canvas id="mri-prob-chart" aria-label="Bar chart comparing sportsbook implied hit rate against heavy-tail, normal, and uncorrelated hit probabilities"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pairwise Matrix Breakdown -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">2. Pairwise Football Game-Script Links Inside Your Ticket</h2>
+            <p class="text-xs text-slate-600 mt-0.5">Positive links mean legs surge together in shootouts or blowout scripts; negative links mean legs cannibalize each other's volume or red-zone touches.</p>
+          </div>
+          <span id="mri-psd-badge" class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">Exact Positive-Definite NFL Matrix</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200 text-xs font-bold text-slate-600 uppercase tracking-wider bg-slate-50">
+                <th class="py-2.5 px-3">Leg Pair</th>
+                <th class="py-2.5 px-3 text-right">Correlation (rho)</th>
+                <th class="py-2.5 px-3 text-right">Extreme Surge Link</th>
+                <th class="py-2.5 px-3">Football Explanation</th>
+              </tr>
+            </thead>
+            <tbody id="mri-pairwise-tbody" class="divide-y divide-slate-200 text-xs sm:text-sm"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: /packages (Two-Door Storefront) -->
+    <section id="view-storefront" aria-labelledby="storefront-heading" class="hidden space-y-7">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-sm">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold mb-2">
+              <span>NFL Week 10 Storefront · Two Clear Ways In</span>
+            </div>
+            <h2 id="storefront-heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+              Pre-Committed NFL Intelligence. Zero Hype. Aligned Incentives.
+            </h2>
+            <p class="mt-2 text-sm sm:text-base text-slate-600 leading-relaxed">
+              Every official play is sealed with a cryptographic SHA-256 hash prior to kickoff, scored on a strict integer <span class="font-mono-num font-semibold text-slate-800">XX/100</span> conviction scale, and graded automatically in units. Choose full-platform Founding All-Access or a single-slate Week 10 pack with contractual 100% Store-Credit Alignment.
+            </p>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 min-w-[240px]">
+            <div class="text-xs font-semibold text-slate-500">Your Store-Credit Balance</div>
+            <div id="storefront-wallet-readout" class="text-2xl font-extrabold font-mono-num text-emerald-700 mt-0.5">$0.00</div>
+            <label class="mt-2 flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer">
+              <input type="checkbox" id="toggle-upgrade-bridge" class="rounded border-slate-300 text-blue-600 focus:ring-blue-600" />
+              <span>Preview $35 All-Access Upgrade Bridge</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <!-- DOOR 1 -->
+        <div class="lg:col-span-5 bg-slate-900 text-white rounded-2xl p-6 sm:p-7 shadow-md flex flex-col justify-between border border-slate-800">
+          <div class="space-y-5">
+            <div class="flex items-center justify-between gap-2">
+              <span class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-200 border border-blue-400/30">Door 1 · Full Platform</span>
+              <span class="text-xs font-mono-num font-semibold text-emerald-300">38 / 100 Founding Spots Claimed</span>
+            </div>
+
+            <div>
+              <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight">Founding All-Access Membership</h3>
+              <p class="text-xs sm:text-sm text-slate-300 mt-1.5">
+                Locked for first 100 members ($79.99/mo standard rate after Founding cap closes). Includes every NFL Week 10–Super Bowl board, prop, SGP, and DFS slate automatically.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 bg-slate-800 p-1.5 rounded-xl border border-slate-700">
+              <button type="button" id="door1-plan-monthly" class="py-2 px-3 rounded-lg text-xs font-bold transition bg-white text-slate-900 shadow-sm">$59.99 / Month</button>
+              <button type="button" id="door1-plan-ros" class="py-2 px-3 rounded-lg text-xs font-bold transition text-slate-300 hover:text-white">$249 ROS + Playoffs</button>
+            </div>
+
+            <div class="bg-slate-800/80 rounded-xl p-4 border border-slate-700">
+              <div class="flex items-baseline gap-2">
+                <span id="door1-effective-price" class="text-3xl sm:text-4xl font-extrabold font-mono-num text-white">$59.99</span>
+                <span id="door1-price-period" class="text-xs font-semibold text-slate-300">/ month (Locked for First 100 Members)</span>
+              </div>
+              <p id="door1-bridge-note" class="text-xs text-emerald-300 font-medium mt-1.5">
+                Holding a Door 2 Aligned Pack? Apply your $35 Upgrade Bridge Credit to start All-Access for $24.99 first month.
+              </p>
+            </div>
+
+            <ul class="space-y-2.5 text-xs sm:text-sm text-slate-200">
+              <li class="flex items-start gap-2.5"><span class="text-emerald-400 font-bold mt-0.5">✓</span><span><strong>All 14 Week 10 Games &amp; 360° Player Props:</strong> Sides, totals, derivatives, and player yardage/attempt distributions with explicit PASS discipline when no edge clears.</span></li>
+              <li class="flex items-start gap-2.5"><span class="text-emerald-400 font-bold mt-0.5">✓</span><span><strong>Unlimited Correlated SGP Fair-Odds Engine:</strong> Full multi-leg tail-dependent pricing across every Week 10 matchup.</span></li>
+              <li class="flex items-start gap-2.5"><span class="text-emerald-400 font-bold mt-0.5">✓</span><span><strong>Member-Only DFS Optimizer:</strong> Showdown &amp; Sunday Main-Slate correlated lineup builder.</span></li>
+              <li class="flex items-start gap-2.5"><span class="text-emerald-400 font-bold mt-0.5">✓</span><span><strong>Every Door 2 Pack Included Automatically:</strong> TNF, Munich, Sunday 360°, SNF, and MNF cards unlocked at $0 extra cost.</span></li>
+            </ul>
+          </div>
+
+          <div class="pt-6 mt-6 border-t border-slate-800">
+            <button type="button" id="door1-checkout-btn" class="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition shadow-sm">
+              Reserve Founding All-Access Spot ($59.99/mo)
+            </button>
+          </div>
+        </div>
+
+        <!-- DOOR 2 -->
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-6 sm:p-7 shadow-sm flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-emerald-50 text-emerald-900 border border-emerald-200">Door 2 · Single-Slate &amp; Showdown Packs</span>
+              <span class="text-xs font-semibold text-slate-600">Contractual 100% Store-Credit Alignment if Graded Plays &lt;= 0.00u</span>
+            </div>
+
+            <div>
+              <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">Pay Only for Today's Slate — Aligned With Post-Game Settlement</h3>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                Every pack offers a Standard tier or our Contractual 100% Store-Credit Alignment tier: if the official graded plays in that pack settle at or below <span class="font-mono-num font-semibold text-slate-800">0.00u</span> net profit, 100% of your purchase price mints automatically to your Store-Credit Wallet.
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 p-4 bg-slate-50/70 space-y-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-sm sm:text-base text-slate-900">Week 10 Sunday 360° Full-Slate Pack</span>
+                  <span class="px-2 py-0.5 rounded text-xs font-mono-num font-bold bg-slate-900 text-white">Top Conviction: 82/100</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-1">
+                  Covers Munich (<span class="font-semibold">NE vs DET</span> 9:30 AM ET), 1:00 PM &amp; 4:25 PM ET windows (<span class="font-semibold">KC @ ATL</span>, <span class="font-semibold">MIN @ GB</span>, <span class="font-semibold">SF @ DAL</span>), through SNF (<span class="font-semibold">PIT @ CIN</span>). Pick sides remain server-sealed until unlock.
+                </p>
+                <p class="text-[11px] font-mono-num text-slate-500 mt-1">Pre-Kickoff Commitment SHA-256: e3f9c41a8b02d715...94c10be2</p>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <button type="button" data-pack-sku="SUNDAY_360_STANDARD_29" class="door2-buy-btn text-left p-3 rounded-lg border border-slate-300 bg-white hover:border-slate-400 transition">
+                  <div class="flex items-center justify-between"><span class="text-xs font-bold text-slate-700">Standard Access</span><span class="text-base font-extrabold font-mono-num text-slate-900">$29</span></div>
+                  <div class="text-[11px] text-slate-500 mt-0.5">One-time Sunday card unlock (no store-credit rebate)</div>
+                </button>
+                <button type="button" data-pack-sku="SUNDAY_360_ALIGNED_39" class="door2-buy-btn text-left p-3 rounded-lg border-2 border-emerald-600 bg-emerald-50/60 hover:bg-emerald-50 transition">
+                  <div class="flex items-center justify-between"><span class="text-xs font-bold text-emerald-950">100% Store-Credit Aligned</span><span class="text-base font-extrabold font-mono-num text-emerald-900">$39</span></div>
+                  <div class="text-[11px] text-emerald-800 font-medium mt-0.5">Auto-mints $39.00 credit if graded plays finish &lt;= 0.00u</div>
+                </button>
+              </div>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 p-4 bg-slate-50/70 space-y-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-sm sm:text-base text-slate-900">TNF / MNF Island-Game Showdown Pack</span>
+                  <span class="px-2 py-0.5 rounded text-xs font-mono-num font-bold bg-slate-900 text-white">Top Conviction: 79/100</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-1">
+                  Active Island Slate: <span class="font-semibold">Week 10 MNF — LAC @ BAL</span> (Mon Nov 16, 8:15 PM ET, M&amp;T Bank Stadium; Week 10 TNF WSH 24, NYG 21 settled). Includes full game script, player props, and correlated Showdown SGP structure.
+                </p>
+                <p class="text-[11px] font-mono-num text-slate-500 mt-1">Pre-Kickoff Commitment SHA-256: 7a12d804f391bc6e...4120fa89</p>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <button type="button" data-pack-sku="MNF_SHOWDOWN_STANDARD_19" class="door2-buy-btn text-left p-3 rounded-lg border border-slate-300 bg-white hover:border-slate-400 transition">
+                  <div class="flex items-center justify-between"><span class="text-xs font-bold text-slate-700">Standard Showdown</span><span class="text-base font-extrabold font-mono-num text-slate-900">$19</span></div>
+                  <div class="text-[11px] text-slate-500 mt-0.5">Single primetime island-game release</div>
+                </button>
+                <button type="button" data-pack-sku="MNF_SHOWDOWN_ALIGNED_29" class="door2-buy-btn text-left p-3 rounded-lg border-2 border-emerald-600 bg-emerald-50/60 hover:bg-emerald-50 transition">
+                  <div class="flex items-center justify-between"><span class="text-xs font-bold text-emerald-950">100% Store-Credit Aligned</span><span class="text-base font-extrabold font-mono-num text-emerald-900">$29</span></div>
+                  <div class="text-[11px] text-emerald-800 font-medium mt-0.5">Auto-mints $29.00 credit if graded plays finish &lt;= 0.00u</div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-xl bg-slate-100 border border-slate-200 p-3.5 text-xs text-slate-700 leading-relaxed">
+            <strong>Contractual Store-Credit Alignment Terms:</strong> Graded in flat standard units against the pre-kickoff committed line. When net settled units across official released plays in an Aligned Pack finish <span class="font-mono-num font-semibold">&lt;= 0.00u</span> (including exact <span class="font-mono-num">0.00u</span> push/break-even slates), our settlement ledger idempotently credits 100% of your pack price to your account balance—usable on your next pack or boosted to a <strong>$35.00 Upgrade Bridge Credit</strong> toward Door 1 Founding All-Access ($24.99 net first month).
+          </div>
+        </div>
+      </div>
+
+      <!-- Store-Credit Simulator -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Interactive Post-Settlement Store-Credit Ledger Verification Sandbox</h3>
+            <p class="text-xs text-slate-600 mt-0.5">Test the exact production <span class="font-mono-num">store-credit-ledger.ts</span> idempotency &amp; <span class="font-mono-num">$35</span> All-Access Upgrade Bridge state machine live in your browser.</p>
+          </div>
+          <button type="button" id="sim-reset-ledger-btn" class="self-start sm:self-auto px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition">Reset Demo Wallet</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+          <div>
+            <label for="sim-pack-select" class="block text-xs font-bold text-slate-700 mb-1">Purchased Pack Tier</label>
+            <select id="sim-pack-select" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold bg-slate-50">
+              <option value="SUNDAY_360_ALIGNED_39">Sunday 360° Aligned ($39.00)</option>
+              <option value="TNF_SHOWDOWN_ALIGNED_29">TNF/MNF Showdown Aligned ($29.00)</option>
+              <option value="MNF_SHOWDOWN_STANDARD_19">TNF/MNF Showdown Standard ($19.00)</option>
+            </select>
+          </div>
+          <div>
+            <label for="sim-outcome-select" class="block text-xs font-bold text-slate-700 mb-1">Post-Game Official Settlement</label>
+            <select id="sim-outcome-select" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold bg-slate-50">
+              <option value="LOSS_MINUS_1_10">Net -1.10u (1W - 2L · &lt;= 0.00u)</option>
+              <option value="BREAKEVEN_0_00">Exact 0.00u Break-Even (1W +100, 1L, 1P)</option>
+              <option value="PROFIT_PLUS_1_82">Net +1.82u Winning Card (&gt; 0.00u)</option>
+            </select>
+          </div>
+          <div>
+            <button type="button" id="sim-run-settlement-btn" class="w-full py-2 px-3.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition">Run Post-Settlement Grading</button>
+          </div>
+          <div>
+            <button type="button" id="sim-apply-bridge-btn" class="w-full py-2 px-3.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition">Redeem $35 All-Access Bridge</button>
+          </div>
+        </div>
+
+        <div id="sim-status-banner" class="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 text-xs text-slate-700 font-medium">
+          Ready: Select a pack and settlement outcome above. Re-clicking "Run Post-Settlement Grading" on the same purchase ID demonstrates strict idempotency (zero duplicate credits).
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200 text-xs font-bold text-slate-600 uppercase bg-slate-50">
+                <th class="py-2 px-3">Entry Kind</th>
+                <th class="py-2 px-3">Idempotency Key</th>
+                <th class="py-2 px-3 text-right">Net Units</th>
+                <th class="py-2 px-3 text-right">Credit Delta</th>
+                <th class="py-2 px-3 text-right">Balance After</th>
+              </tr>
+            </thead>
+            <tbody id="sim-ledger-tbody" class="divide-y divide-slate-200 text-xs font-mono-num">
+              <tr><td colspan="5" class="py-4 px-3 text-center font-sans text-slate-500">No ledger entries recorded in this browser session yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: /verify -->
+    <section id="view-verify" aria-labelledby="verify-heading" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-sm space-y-4">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-300 text-slate-800 text-xs font-semibold">
+          <span>Cryptographic Audit Trail · Zero Retrospective Edits</span>
+        </div>
+        <h2 id="verify-heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+          Pre-Kickoff SHA-256 Commitment Receipt Verifier
+        </h2>
+        <p class="text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed">
+          Before every kickoff, Galaxy Sports Edge serializes the official card—matchup, UTC seal timestamp, integer <span class="font-mono-num font-semibold">XX/100</span> conviction, exact line, unit stake, and random salt—and publishes its 64-character SHA-256 digest. Once the game ends, the plaintext JSON is revealed so anyone can recompute the hash directly in their browser.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Settled Week 10 Audit Specimen: WSH @ NYG (Thu Nov 12, 2026 · Final: WSH 24, NYG 21)</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Sealed 2026-11-13T00:30:00Z (45 mins prior to 8:15 PM ET kickoff at MetLife Stadium · Conviction: 78/100)</p>
+          </div>
+
+          <div>
+            <label for="verify-expected-hash" class="block text-xs font-bold text-slate-700 mb-1">Published Pre-Kickoff Commitment SHA-256 Digest</label>
+            <input id="verify-expected-hash" type="text" readonly value="b3c72e5296d0b51ea8d9284c9aa029c01b9e28314bbfbcd5f2c6fea957c7e280" class="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-xs font-mono-num text-slate-800" />
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="verify-json-input" class="block text-xs font-bold text-slate-700">Revealed Canonical Commitment JSON Payload (Editable to Test Tamper Detection)</label>
+              <button type="button" id="copy-receipt-json-btn" class="text-xs font-semibold text-blue-600 hover:text-blue-800">Copy JSON</button>
+            </div>
+            <textarea id="verify-json-input" rows="8" spellcheck="false" class="w-full rounded-lg border border-slate-300 bg-slate-50 p-3 text-xs font-mono-num text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600"></textarea>
+          </div>
+
+          <div class="flex flex-wrap gap-2.5">
+            <button type="button" id="btn-run-sha256" class="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition">Recompute SHA-256 Hash</button>
+            <button type="button" id="btn-tamper-payload" class="px-3.5 py-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-200 text-xs font-bold transition">Simulate 1-Char Line Tamper</button>
+            <button type="button" id="btn-restore-payload" class="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-semibold transition">Restore Original Sealed Payload</button>
+          </div>
+
+          <div id="verify-result-card" class="rounded-xl border-2 border-emerald-500 bg-emerald-50/70 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span id="verify-status-title" class="text-xs sm:text-sm font-extrabold text-emerald-950">✓ CRYPTOGRAPHIC MATCH VERIFIED (PRE-KICKOFF SEAL INTACT)</span>
+              <span id="verify-engine-label" class="text-[11px] font-mono-num text-emerald-800">SHA-256</span>
+            </div>
+            <div class="text-xs text-slate-700">
+              <span>Computed Digest: </span>
+              <span id="verify-computed-hash" class="font-mono-num font-bold break-all text-slate-900"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm space-y-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Active Sealed Week 10 Envelopes (Pre-Kickoff)</h3>
+            <p class="text-xs text-slate-600 mt-0.5">Plaintext selections stay server-gated until kickoff so paid member edges never leak early; commitment digests are already anchored publicly.</p>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between"><span class="font-bold text-slate-900">NE vs DET · Munich International Slate</span><span class="px-2 py-0.5 rounded bg-slate-900 text-white font-mono-num font-bold">77/100</span></div>
+              <div class="text-slate-600">Kickoff: Sun Nov 15, 2026 · 9:30 AM ET (Allianz Arena)</div>
+              <div class="font-mono-num text-[11px] text-slate-500 break-all">SHA-256: e3f9c41a8b02d7154c88b21f09e6a3d1558c44e921b7a608d31f77a094c10be2</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between"><span class="font-bold text-slate-900">Week 10 Sunday 360° Main &amp; Late Window</span><span class="px-2 py-0.5 rounded bg-slate-900 text-white font-mono-num font-bold">82/100</span></div>
+              <div class="text-slate-600">Kickoff: Sun Nov 15, 2026 · 1:00 PM – 8:20 PM ET (11 Games)</div>
+              <div class="font-mono-num text-[11px] text-slate-500 break-all">SHA-256: 9b41e072c65d18f3a20944c8e71b3056f89d2210c4a7e831b50692f418d3e7a5</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between"><span class="font-bold text-slate-900">LAC @ BAL · Monday Night Showdown</span><span class="px-2 py-0.5 rounded bg-slate-900 text-white font-mono-num font-bold">79/100</span></div>
+              <div class="text-slate-600">Kickoff: Mon Nov 16, 2026 · 8:15 PM ET (M&amp;T Bank Stadium)</div>
+              <div class="font-mono-num text-[11px] text-slate-500 break-all">SHA-256: 7a12d804f391bc6e2085d41a9c73e110b64f8293c105e772a94b30814120fa89</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-modal-title" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <span id="modal-door-badge" class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-blue-50 text-blue-800 border border-blue-200">Door 1 Checkout</span>
+          <h3 id="checkout-modal-title" class="text-lg font-extrabold text-slate-900 mt-1">Founding All-Access Membership</h3>
+        </div>
+        <button type="button" id="checkout-modal-close" class="text-slate-400 hover:text-slate-700 font-bold text-sm px-2 py-1" aria-label="Close checkout preview">✕</button>
+      </div>
+      <div id="checkout-modal-lines" class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 text-xs sm:text-sm"></div>
+      <p id="checkout-modal-note" class="text-xs text-slate-600 leading-relaxed"></p>
+      <div class="flex items-center justify-end gap-2.5 pt-2">
+        <button type="button" id="checkout-modal-cancel" class="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700">Back</button>
+        <button type="button" id="checkout-modal-confirm" class="px-4 py-2 rounded-lg text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white">Confirm Preview Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-600">
+      <div>
+        <strong class="text-slate-900">Galaxy Sports Edge</strong> · Quantitative Sports Analytics &amp; Publishing Platform. Takes no wagers. All conviction scores strictly <span class="font-mono-num">XX/100</span>.
+      </div>
+      <div class="text-slate-500">
+        Set limits before emotion enters · Responsible Play Help: <strong class="text-slate-800">1-800-GAMBLER</strong>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      function sha256PureJs(asciiStr) {
+        const utf8 = new TextEncoder().encode(asciiStr);
+        const K = [
+          0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+          0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+          0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+          0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+          0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+          0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+          0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+          0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+        ];
+        const H = [
+          0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+          0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+        ];
+        const bitLen = utf8.length * 8;
+        const padLen = ((utf8.length + 9 + 63) >> 6) << 6;
+        const padded = new Uint8Array(padLen);
+        padded.set(utf8);
+        padded[utf8.length] = 0x80;
+        const view = new DataView(padded.buffer);
+        view.setUint32(padLen - 8, Math.floor(bitLen / 4294967296), false);
+        view.setUint32(padLen - 4, bitLen >>> 0, false);
+
+        const W = new Uint32Array(64);
+        const rotr = (n, x) => (x >>> n) | (x << (32 - n));
+
+        for (let offset = 0; offset < padLen; offset += 64) {
+          for (let i = 0; i < 16; i += 1) W[i] = view.getUint32(offset + i * 4, false);
+          for (let i = 16; i < 64; i += 1) {
+            const s0 = rotr(7, W[i - 15]) ^ rotr(18, W[i - 15]) ^ (W[i - 15] >>> 3);
+            const s1 = rotr(17, W[i - 2]) ^ rotr(19, W[i - 2]) ^ (W[i - 2] >>> 10);
+            W[i] = (W[i - 16] + s0 + W[i - 7] + s1) >>> 0;
+          }
+          let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+          for (let i = 0; i < 64; i += 1) {
+            const S1 = rotr(6, e) ^ rotr(11, e) ^ rotr(25, e);
+            const ch = (e & f) ^ (~e & g);
+            const temp1 = (h + S1 + ch + K[i] + W[i]) >>> 0;
+            const S0 = rotr(2, a) ^ rotr(13, a) ^ rotr(22, a);
+            const maj = (a & b) ^ (a & c) ^ (b & c);
+            const temp2 = (S0 + maj) >>> 0;
+            h = g; g = f; f = e; e = (d + temp1) >>> 0;
+            d = c; c = b; b = a; a = (temp1 + temp2) >>> 0;
+          }
+          H[0] = (H[0] + a) >>> 0; H[1] = (H[1] + b) >>> 0; H[2] = (H[2] + c) >>> 0; H[3] = (H[3] + d) >>> 0;
+          H[4] = (H[4] + e) >>> 0; H[5] = (H[5] + f) >>> 0; H[6] = (H[6] + g) >>> 0; H[7] = (H[7] + h) >>> 0;
+        }
+        return H.map((v) => v.toString(16).padStart(8, '0')).join('');
+      }
+
+      async function computeSha256Browser(text) {
+        if (window.crypto && window.crypto.subtle && typeof window.crypto.subtle.digest === 'function') {
+          try {
+            const bytes = new TextEncoder().encode(text);
+            const buf = await window.crypto.subtle.digest('SHA-256', bytes);
+            const hex = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+            return { hex, engine: 'WebCrypto SubtleCrypto SHA-256' };
+          } catch (_) {}
+        }
+        return { hex: sha256PureJs(text), engine: 'Deterministic FIPS 180-4 SHA-256' };
+      }
+
+      const DEFAULT_OVERROUND = 1 / 21;
+
+      const LEG_ARCHETYPE_OPTIONS = [
+        { value: 'QB_PASS_YDS_OVER', label: 'QB Passing Yards Over' },
+        { value: 'QB_PASS_YDS_UNDER', label: 'QB Passing Yards Under' },
+        { value: 'WR1_REC_YDS_OVER', label: 'WR1 Receiving Yards Over' },
+        { value: 'WR1_REC_YDS_UNDER', label: 'WR1 Receiving Yards Under' },
+        { value: 'WR2_REC_YDS_OVER', label: 'WR2 Receiving Yards Over' },
+        { value: 'TE1_REC_YDS_OVER', label: 'TE1 Receiving Yards Over' },
+        { value: 'QB_PASS_TDS_OVER', label: 'QB Passing Touchdowns Over' },
+        { value: 'QB_PASS_TD_INSIDE_5', label: 'QB Inside-5 Pass Touchdown' },
+        { value: 'RB1_RUSH_ATT_OVER', label: 'RB1 Rushing Attempts Over' },
+        { value: 'RB1_RUSH_YDS_OVER', label: 'RB1 Rushing Yards Over' },
+        { value: 'RB1_RUSH_TD_INSIDE_5', label: 'RB1 Inside-5 Rush Touchdown' },
+        { value: 'TEAM_TOTAL_OVER', label: 'Team Total Points Over' },
+        { value: 'TEAM_FAV_SPREAD', label: 'Team Favorite Spread' },
+        { value: 'GAME_TOTAL_OVER', label: 'Full-Game Total Over' },
+        { value: 'GAME_TOTAL_UNDER', label: 'Full-Game Total Under' },
+        { value: 'OPP_WR1_REC_YDS_OVER', label: 'Opposing WR1 Bring-Back Yards Over' }
+      ];
+
+      const CANONICAL_PAIRS = {
+        'QB_PASS_YDS_OVER|WR1_REC_YDS_OVER': 0.48,
+        'QB_PASS_TDS_OVER|TEAM_TOTAL_OVER': 0.42,
+        'RB1_RUSH_ATT_OVER|TEAM_FAV_SPREAD': 0.36,
+        'QB_PASS_TD_INSIDE_5|RB1_RUSH_TD_INSIDE_5': -0.22,
+        'GAME_TOTAL_UNDER|QB_PASS_YDS_OVER': -0.38,
+        'QB_PASS_YDS_OVER|WR2_REC_YDS_OVER': 0.34,
+        'QB_PASS_YDS_OVER|TE1_REC_YDS_OVER': 0.29,
+        'QB_PASS_YDS_OVER|QB_PASS_TDS_OVER': 0.52,
+        'QB_PASS_YDS_OVER|QB_PASS_TD_INSIDE_5': 0.26,
+        'QB_PASS_YDS_OVER|TEAM_TOTAL_OVER': 0.39,
+        'QB_PASS_YDS_OVER|GAME_TOTAL_OVER': 0.38,
+        'QB_PASS_YDS_OVER|RB1_RUSH_ATT_OVER': -0.24,
+        'QB_PASS_YDS_OVER|RB1_RUSH_YDS_OVER': -0.14,
+        'QB_PASS_YDS_OVER|RB1_RUSH_TD_INSIDE_5': -0.09,
+        'QB_PASS_YDS_OVER|TEAM_FAV_SPREAD': 0.12,
+        'QB_PASS_YDS_OVER|OPP_WR1_REC_YDS_OVER': 0.22,
+        'QB_PASS_YDS_OVER|WR1_REC_YDS_UNDER': -0.48,
+        'WR1_REC_YDS_OVER|QB_PASS_TDS_OVER': 0.33,
+        'WR1_REC_YDS_OVER|TEAM_TOTAL_OVER': 0.31,
+        'WR1_REC_YDS_OVER|GAME_TOTAL_OVER': 0.30,
+        'WR1_REC_YDS_OVER|GAME_TOTAL_UNDER': -0.30,
+        'WR1_REC_YDS_OVER|WR2_REC_YDS_OVER': -0.08,
+        'WR1_REC_YDS_OVER|TE1_REC_YDS_OVER': -0.06,
+        'WR1_REC_YDS_OVER|RB1_RUSH_ATT_OVER': -0.18,
+        'WR1_REC_YDS_OVER|RB1_RUSH_YDS_OVER': -0.12,
+        'WR1_REC_YDS_OVER|RB1_RUSH_TD_INSIDE_5': -0.11,
+        'WR1_REC_YDS_OVER|QB_PASS_TD_INSIDE_5': 0.21,
+        'WR1_REC_YDS_OVER|TEAM_FAV_SPREAD': 0.14,
+        'WR1_REC_YDS_OVER|OPP_WR1_REC_YDS_OVER': 0.18,
+        'QB_PASS_TDS_OVER|GAME_TOTAL_OVER': 0.40,
+        'QB_PASS_TDS_OVER|GAME_TOTAL_UNDER': -0.40,
+        'QB_PASS_TDS_OVER|TEAM_FAV_SPREAD': 0.31,
+        'QB_PASS_TDS_OVER|RB1_RUSH_TD_INSIDE_5': -0.19,
+        'QB_PASS_TDS_OVER|QB_PASS_TD_INSIDE_5': 0.58,
+        'QB_PASS_TDS_OVER|TE1_REC_YDS_OVER': 0.25,
+        'QB_PASS_TDS_OVER|WR2_REC_YDS_OVER': 0.27,
+        'RB1_RUSH_ATT_OVER|RB1_RUSH_YDS_OVER': 0.68,
+        'RB1_RUSH_ATT_OVER|RB1_RUSH_TD_INSIDE_5': 0.32,
+        'RB1_RUSH_ATT_OVER|TEAM_TOTAL_OVER': 0.22,
+        'RB1_RUSH_ATT_OVER|GAME_TOTAL_UNDER': 0.14,
+        'RB1_RUSH_ATT_OVER|GAME_TOTAL_OVER': -0.14,
+        'RB1_RUSH_ATT_OVER|QB_PASS_TD_INSIDE_5': -0.16,
+        'RB1_RUSH_YDS_OVER|TEAM_FAV_SPREAD': 0.33,
+        'RB1_RUSH_YDS_OVER|RB1_RUSH_TD_INSIDE_5': 0.34,
+        'RB1_RUSH_YDS_OVER|TEAM_TOTAL_OVER': 0.26,
+        'RB1_RUSH_YDS_OVER|GAME_TOTAL_OVER': 0.08,
+        'RB1_RUSH_YDS_OVER|GAME_TOTAL_UNDER': -0.08,
+        'RB1_RUSH_YDS_OVER|QB_PASS_TD_INSIDE_5': -0.15,
+        'RB1_RUSH_TD_INSIDE_5|TEAM_TOTAL_OVER': 0.35,
+        'RB1_RUSH_TD_INSIDE_5|GAME_TOTAL_OVER': 0.24,
+        'RB1_RUSH_TD_INSIDE_5|GAME_TOTAL_UNDER': -0.24,
+        'RB1_RUSH_TD_INSIDE_5|TEAM_FAV_SPREAD': 0.29,
+        'QB_PASS_TD_INSIDE_5|TEAM_TOTAL_OVER': 0.34,
+        'QB_PASS_TD_INSIDE_5|GAME_TOTAL_OVER': 0.26,
+        'QB_PASS_TD_INSIDE_5|GAME_TOTAL_UNDER': -0.26,
+        'QB_PASS_TD_INSIDE_5|TEAM_FAV_SPREAD': 0.22,
+        'TEAM_FAV_SPREAD|TEAM_TOTAL_OVER': 0.46,
+        'TEAM_FAV_SPREAD|GAME_TOTAL_OVER': 0.14,
+        'TEAM_FAV_SPREAD|GAME_TOTAL_UNDER': -0.14,
+        'TEAM_FAV_SPREAD|OPP_WR1_REC_YDS_OVER': 0.19,
+        'GAME_TOTAL_OVER|TEAM_TOTAL_OVER': 0.64,
+        'GAME_TOTAL_UNDER|TEAM_TOTAL_OVER': -0.64,
+        'GAME_TOTAL_OVER|OPP_WR1_REC_YDS_OVER': 0.30,
+        'GAME_TOTAL_UNDER|OPP_WR1_REC_YDS_OVER': -0.30,
+        'QB_PASS_YDS_UNDER|WR1_REC_YDS_UNDER': 0.48,
+        'QB_PASS_YDS_UNDER|WR1_REC_YDS_OVER': -0.48,
+        'QB_PASS_YDS_UNDER|GAME_TOTAL_UNDER': 0.38,
+        'QB_PASS_YDS_UNDER|GAME_TOTAL_OVER': -0.38,
+        'QB_PASS_YDS_UNDER|TEAM_TOTAL_OVER': -0.39,
+        'QB_PASS_YDS_UNDER|QB_PASS_TDS_OVER': -0.52
+      };
+
+      const DIRECT_OPPOSITES = new Set([
+        'QB_PASS_YDS_OVER|QB_PASS_YDS_UNDER',
+        'WR1_REC_YDS_OVER|WR1_REC_YDS_UNDER',
+        'GAME_TOTAL_OVER|GAME_TOTAL_UNDER'
+      ]);
+
+      function isValidAmericanOdds(v) {
+        return Number.isFinite(v) && (v <= -100 || v >= 100);
+      }
+
+      function americanToDecimal(am) {
+        return am >= 100 ? 1 + am / 100 : 1 + 100 / Math.abs(am);
+      }
+
+      function decimalToAmerican(dec) {
+        if (dec >= 2.0) return Math.round((dec - 1) * 100);
+        return -Math.round(100 / (dec - 1));
+      }
+
+      function formatAmerican(am) {
+        const r = Math.round(am);
+        return r > 0 ? '+' + r : String(r);
+      }
+
+      function shinDevigTwoWay(d1, d2) {
+        const p1 = 1 / d1;
+        const p2 = 1 / d2;
+        const S = p1 + p2;
+        if (S <= 1 + 1e-12) return [p1 / S, p2 / S];
+        const sumAtZ = (z) => {
+          const denom = 2 * (1 - z);
+          const t1 = (Math.sqrt(z * z + (4 * (1 - z) * p1 * p1) / S) - z) / denom;
+          const t2 = (Math.sqrt(z * z + (4 * (1 - z) * p2 * p2) / S) - z) / denom;
+          return t1 + t2;
+        };
+        let lo = 0, hi = 1 - 1e-12, mid = 0;
+        for (let i = 0; i < 64; i += 1) {
+          mid = 0.5 * (lo + hi);
+          const f = sumAtZ(mid) - 1;
+          if (Math.abs(f) < 1e-13) break;
+          if (f > 0) lo = mid; else hi = mid;
+        }
+        const denom = 2 * (1 - mid);
+        const u1 = Math.max(0, (Math.sqrt(mid * mid + (4 * (1 - mid) * p1 * p1) / S) - mid) / denom);
+        const u2 = Math.max(0, (Math.sqrt(mid * mid + (4 * (1 - mid) * p2 * p2) / S) - mid) / denom);
+        const tot = u1 + u2;
+        return tot > 0 ? [u1 / tot, u2 / tot] : [p1 / S, p2 / S];
+      }
+
+      function devigLegFairProb(americanOdds, counterOddsOpt) {
+        const d1 = americanToDecimal(americanOdds);
+        const pi1 = 1 / d1;
+        if (counterOddsOpt !== null && isValidAmericanOdds(counterOddsOpt)) {
+          return shinDevigTwoWay(d1, americanToDecimal(counterOddsOpt))[0];
+        }
+        const targetSum = Math.max(1 + DEFAULT_OVERROUND, pi1 + 0.015);
+        const pi2 = Math.min(0.992, Math.max(0.008, targetSum - pi1));
+        return shinDevigTwoWay(d1, 1 / pi2)[0];
+      }
+
+      function lookupPairRho(legA, legB) {
+        if (legA.id === legB.id) return 1.0;
+        const sideA = legA.teamSide || 'HOME';
+        const sideB = legB.teamSide || 'HOME';
+        const sameOrGlobal = sideA === sideB || sideA === 'GAME' || sideB === 'GAME';
+        const k1 = legA.archetype + '|' + legB.archetype;
+        const k2 = legB.archetype + '|' + legA.archetype;
+        if (sameOrGlobal && (DIRECT_OPPOSITES.has(k1) || DIRECT_OPPOSITES.has(k2))) return -0.88;
+        if (legA.archetype === legB.archetype) {
+          if (sideA === sideB) return 0.85;
+          if (legA.archetype.indexOf('PASS') !== -1 || legA.archetype.indexOf('REC') !== -1) return 0.21;
+          if (legA.archetype === 'RB1_RUSH_ATT_OVER') return -0.28;
+          return 0.0;
+        }
+        const direct = CANONICAL_PAIRS[k1] !== undefined ? CANONICAL_PAIRS[k1] : CANONICAL_PAIRS[k2];
+        if (direct !== undefined) {
+          if (sameOrGlobal) return direct;
+          const bothAerial =
+            (legA.archetype.indexOf('PASS') !== -1 || legA.archetype.indexOf('REC') !== -1) &&
+            (legB.archetype.indexOf('PASS') !== -1 || legB.archetype.indexOf('REC') !== -1);
+          return bothAerial ? Number((direct * 0.42).toFixed(4)) : Number((-direct * 0.35).toFixed(4));
+        }
+        return 0.0;
+      }
+
+      function buildPsdAndLowerFactor(rawMat) {
+        const n = rawMat.length;
+        const a = rawMat.map((r, i) => r.map((v, j) => (i === j ? 1.0 : Math.max(-0.95, Math.min(0.95, v)))));
+        const vMat = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (__, j) => (i === j ? 1.0 : 0.0)));
+        for (let sweep = 0; sweep < 40; sweep += 1) {
+          let maxOff = 0, p = 0, q = 1;
+          for (let i = 0; i < n; i += 1) {
+            for (let j = i + 1; j < n; j += 1) {
+              if (Math.abs(a[i][j]) > maxOff) { maxOff = Math.abs(a[i][j]); p = i; q = j; }
+            }
+          }
+          if (maxOff < 1e-14) break;
+          const app = a[p][p], aqq = a[q][q], apq = a[p][q];
+          const tau = (aqq - app) / (2 * apq);
+          const t = tau >= 0 ? 1 / (tau + Math.sqrt(1 + tau * tau)) : -1 / (-tau + Math.sqrt(1 + tau * tau));
+          const c = 1 / Math.sqrt(1 + t * t), s = t * c;
+          a[p][p] = app - t * apq; a[q][q] = aqq + t * apq; a[p][q] = 0; a[q][p] = 0;
+          for (let k = 0; k < n; k += 1) {
+            if (k !== p && k !== q) {
+              const akp = a[k][p], akq = a[k][q];
+              a[k][p] = c * akp - s * akq; a[p][k] = a[k][p];
+              a[k][q] = s * akp + c * akq; a[q][k] = a[k][q];
+            }
+            const vkp = vMat[k][p], vkq = vMat[k][q];
+            vMat[k][p] = c * vkp - s * vkq; vMat[k][q] = s * vkp + c * vkq;
+          }
+        }
+        let projected = false;
+        const eig = a.map((row, i) => {
+          if (row[i] < 1e-4) { projected = true; return 1e-4; }
+          return row[i];
+        });
+        const psd = Array.from({ length: n }, () => new Array(n).fill(0));
+        if (!projected) {
+          for (let i = 0; i < n; i += 1) {
+            for (let j = 0; j < n; j += 1) psd[i][j] = i === j ? 1.0 : Math.max(-0.95, Math.min(0.95, rawMat[i][j]));
+          }
+        } else {
+          for (let i = 0; i < n; i += 1) {
+            for (let j = 0; j < n; j += 1) {
+              let sum = 0;
+              for (let k = 0; k < n; k += 1) sum += vMat[i][k] * eig[k] * vMat[j][k];
+              psd[i][j] = sum;
+            }
+          }
+          const invS = psd.map((r, i) => 1 / Math.sqrt(Math.max(1e-12, r[i])));
+          for (let i = 0; i < n; i += 1) {
+            for (let j = 0; j < n; j += 1) psd[i][j] = i === j ? 1.0 : psd[i][j] * invS[i] * invS[j];
+          }
+        }
+        const lowerFactor = Array.from({ length: n }, () => new Array(n).fill(0));
+        for (let i = 0; i < n; i += 1) {
+          for (let j = 0; j <= i; j += 1) {
+            let sum = psd[i][j];
+            for (let k = 0; k < j; k += 1) sum -= lowerFactor[i][k] * lowerFactor[j][k];
+            lowerFactor[i][j] = i === j ? Math.sqrt(Math.max(1e-12, sum)) : sum / lowerFactor[j][j];
+          }
+        }
+        return { psd, lowerFactor, projected };
+      }
+
+      function stdNormCdf(x) {
+        if (x <= -38) return 0;
+        if (x >= 38) return 1;
+        const absX = Math.abs(x) / Math.SQRT2;
+        const t = 1 / (1 + 0.5 * absX);
+        const poly = t * Math.exp(
+          -absX * absX - 1.26551223 +
+          t * (1.00002368 + t * (0.37409196 + t * (0.09678418 + t * (-0.18628806 +
+          t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277))))))))
+        );
+        return x >= 0 ? 1 - 0.5 * poly : 0.5 * poly;
+      }
+
+      function stdNormQuantile(p) {
+        if (p <= 0) return -38;
+        if (p >= 1) return 38;
+        const a1 = -39.69683028665376, a2 = 220.9460984245205, a3 = -275.9285104469687,
+              a4 = 138.357751867269, a5 = -30.66479806614716, a6 = 2.506628277459239;
+        const b1 = -54.47609879822406, b2 = 161.5858368580409, b3 = -155.6989798598866,
+              b4 = 66.80131188771972, b5 = -13.28068155288572;
+        const c1 = -0.007784894002430293, c2 = -0.3223964580411365, c3 = -2.400758277161838,
+              c4 = -2.549732539343734, c5 = 4.374664141464968, c6 = 2.938163982698783;
+        const d1 = 0.007784695709041462, d2 = 0.3224671290700398, d3 = 2.445134137142996, d4 = 3.754408661907416;
+        if (p < 0.02425) {
+          const q = Math.sqrt(-2 * Math.log(p));
+          return (((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6) / ((((d1 * q + d2) * q + d3) * q + d4) * q + 1);
+        }
+        if (p <= 0.97575) {
+          const q = p - 0.5, r = q * q;
+          return ((((((a1 * r + a2) * r + a3) * r + a4) * r + a5) * r + a6) * q) / (((((b1 * r + b2) * r + b3) * r + b4) * r + b5) * r + 1);
+        }
+        const q = Math.sqrt(-2 * Math.log(1 - p));
+        return -((((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6) / ((((d1 * q + d2) * q + d3) * q + d4) * q + 1));
+      }
+
+      function studentT4Quantile(p) {
+        if (Math.abs(p - 0.5) < 1e-15) return 0;
+        const alpha = 4 * p * (1 - p);
+        const sa = Math.sqrt(alpha);
+        const q = Math.cos(Math.acos(Math.min(1, Math.max(-1, sa))) / 3) / sa;
+        const mag = 2 * Math.sqrt(Math.max(0, q - 1));
+        return p > 0.5 ? mag : -mag;
+      }
+
+      function t4UpperTailSurge(rho) {
+        if (rho <= -0.999999) return 0;
+        if (rho >= 0.999999) return 1;
+        const t = -Math.sqrt((5 * (1 - rho)) / (1 + rho));
+        const theta = Math.atan(t / Math.sqrt(5));
+        const ct = Math.cos(theta), st = Math.sin(theta);
+        const cdf5 = 0.5 + (theta + st * ct * (1 + (2 / 3) * ct * ct)) / Math.PI;
+        return Math.min(1, Math.max(0, 2 * cdf5));
+      }
+
+      const GL24_X = [
+        0.002406389560964431, 0.012635721696966628, 0.030862723934399817, 0.05679223648607558,
+        0.08999900702096378, 0.12993790397897156, 0.17595317407419576, 0.22728926430133018,
+        0.2831032461070091, 0.34247866013215524, 0.4044405663042829, 0.4679715573364964,
+        0.5320284426635036, 0.5955594336957171, 0.6575213398678448, 0.7168967538929909,
+        0.7727107356986698, 0.8240468259258042, 0.8700620960210284, 0.9100009929790362,
+        0.9432077635139244, 0.9691372760656002, 0.9873642783030334, 0.9975936104390356
+      ];
+      const GL24_W = [
+        0.006170614899993585, 0.014265694314466832, 0.022138719408709903, 0.029649292457718394,
+        0.03667324070554015, 0.04309508076597664, 0.04880932605205694, 0.05372213505798284,
+        0.0577528340268628, 0.0608352364639017, 0.06291872817341414, 0.06396909767337608,
+        0.06396909767337608, 0.06291872817341414, 0.0608352364639017, 0.0577528340268628,
+        0.05372213505798284, 0.04880932605205694, 0.04309508076597664, 0.03667324070554015,
+        0.029649292457718394, 0.022138719408709903, 0.014265694314466832, 0.006170614899993585
+      ];
+
+      function halton(idx, base) {
+        let res = 0, f = 1 / base, i = idx;
+        while (i > 0) { res += f * (i % base); i = Math.floor(i / base); f /= base; }
+        return res;
+      }
+
+      const HALTON_GRID = Array.from({ length: 384 }, (_, idx) => {
+        const n = idx + 1;
+        return [halton(n, 2), halton(n, 3), halton(n, 5), halton(n, 7)];
+      });
+
+      function mvnOrthant(bounds, lowerFactor, qmcLen) {
+        const k = bounds.length;
+        const d0 = stdNormCdf(bounds[0] / lowerFactor[0][0]);
+        if (d0 <= 1e-15) return 0;
+        if (k === 2) {
+          let s = 0;
+          for (let m = 0; m < 24; m += 1) {
+            const u0 = Math.min(1 - 1e-15, Math.max(1e-15, GL24_X[m] * d0));
+            const y0 = stdNormQuantile(u0);
+            s += GL24_W[m] * stdNormCdf((bounds[1] - lowerFactor[1][0] * y0) / lowerFactor[1][1]);
+          }
+          return Math.min(1, Math.max(0, d0 * s));
+        }
+        const y = new Array(k - 1).fill(0);
+        let sum = 0;
+        for (let pIdx = 0; pIdx < qmcLen; pIdx += 1) {
+          const h = HALTON_GRID[pIdx];
+          for (let mir = 0; mir < 2; mir += 1) {
+            let w = d0, prevD = d0;
+            for (let i = 1; i < k; i += 1) {
+              const uc = mir === 0 ? h[i - 1] : 1 - h[i - 1];
+              y[i - 1] = stdNormQuantile(Math.min(1 - 1e-14, Math.max(1e-14, uc * prevD)));
+              let dot = 0;
+              for (let j = 0; j < i; j += 1) dot += lowerFactor[i][j] * y[j];
+              const di = stdNormCdf((bounds[i] - dot) / lowerFactor[i][i]);
+              w *= di; prevD = di;
+              if (w <= 1e-15) break;
+            }
+            sum += w;
+          }
+        }
+        return Math.min(1, Math.max(0, sum / (2 * qmcLen)));
+      }
+
+      function computeCopulaDiagnosis(legs, quotedAmOdds, stakeDollars) {
+        const bookDec = americanToDecimal(quotedAmOdds);
+        const bookImplied = 1 / bookDec;
+        const fairProbs = legs.map((l) => devigLegFairProb(l.americanOdds, l.counterOdds));
+        const naiveProb = fairProbs.reduce((acc, p) => acc * p, 1);
+
+        const k = legs.length;
+        const rawMat = Array.from({ length: k }, (_, i) =>
+          Array.from({ length: k }, (__, j) => (i === j ? 1.0 : lookupPairRho(legs[i], legs[j])))
+        );
+        const { psd, lowerFactor, projected } = buildPsdAndLowerFactor(rawMat);
+
+        const zBounds = fairProbs.map((p) => stdNormQuantile(Math.min(1 - 1e-12, Math.max(1e-12, p))));
+        const gaussProb = mvnOrthant(zBounds, lowerFactor, 384);
+
+        const tBounds = fairProbs.map((p) => studentT4Quantile(Math.min(1 - 1e-12, Math.max(1e-12, p))));
+        let t4Prob = 0;
+        const scaled = new Array(k).fill(0);
+        for (let s = 0; s < 24; s += 1) {
+          const v = GL24_X[s];
+          const negLn = -Math.log(v);
+          const sc = Math.sqrt(0.5 * negLn);
+          for (let i = 0; i < k; i += 1) scaled[i] = tBounds[i] * sc;
+          t4Prob += GL24_W[s] * negLn * mvnOrthant(scaled, lowerFactor, 192);
+        }
+        t4Prob = Math.min(0.995, Math.max(0.0005, t4Prob));
+
+        const holdPct = (1 - t4Prob * bookDec) * 100;
+        const keepDollars = (holdPct / 100) * stakeDollars;
+        const fairT4Am = decimalToAmerican(1 / t4Prob);
+        const naiveAm = decimalToAmerican(1 / Math.min(0.995, Math.max(0.0005, naiveProb)));
+
+        const pairs = [];
+        for (let i = 0; i < k; i += 1) {
+          for (let j = i + 1; j < k; j += 1) {
+            const rho = psd[i][j];
+            let desc = 'Mostly independent legs: minimal shared game-flow overlap.';
+            if (rho >= 0.4) desc = 'Strong positive game-script link: when one hits, the other surges with it (books heavily shade payout).';
+            else if (rho >= 0.18) desc = 'Moderate positive link: both legs benefit from the same offensive script.';
+            else if (rho <= -0.3) desc = 'Strong script conflict: these legs fight the same game flow, slashing your true hit rate.';
+            else if (rho <= -0.12) desc = 'Cannibalistic red-zone/volume pair: one player steals touches or goal-line scores from the other.';
+            pairs.push({
+              labelA: legs[i].customLabel,
+              labelB: legs[j].customLabel,
+              rho,
+              tailSurgePct: t4UpperTailSurge(rho) * 100,
+              desc
+            });
+          }
+        }
+
+        return { fairProbs, bookImplied, naiveProb, naiveAm, gaussProb, t4Prob, fairT4Am, holdPct, keepDollars, projected, pairs };
+      }
+
+      const PRESETS = {
+        shootout_425: {
+          matchup: 'SF@DAL',
+          quotedOdds: 425,
+          legs: [
+            { id: 'p1', archetype: 'QB_PASS_YDS_OVER', teamSide: 'HOME', customLabel: 'Home QB Pass Yds Over 264.5', americanOdds: -110, counterOdds: null },
+            { id: 'p2', archetype: 'WR1_REC_YDS_OVER', teamSide: 'HOME', customLabel: 'Home WR1 Rec Yds Over 81.5', americanOdds: -110, counterOdds: null },
+            { id: 'p3', archetype: 'OPP_WR1_REC_YDS_OVER', teamSide: 'AWAY', customLabel: 'Away WR1 Alt Rec Yds 80+', americanOdds: 145, counterOdds: null }
+          ]
+        },
+        classic_2leg: {
+          matchup: 'KC@ATL',
+          quotedOdds: 140,
+          legs: [
+            { id: 'c1', archetype: 'QB_PASS_YDS_OVER', teamSide: 'AWAY', customLabel: 'Away QB Pass Yds Over 258.5', americanOdds: -110, counterOdds: -110 },
+            { id: 'c2', archetype: 'WR1_REC_YDS_OVER', teamSide: 'AWAY', customLabel: 'Away WR1 Rec Yds Over 72.5', americanOdds: -110, counterOdds: -110 }
+          ]
+        },
+        cannibal_trap: {
+          matchup: 'PIT@CIN',
+          quotedOdds: 575,
+          legs: [
+            { id: 't1', archetype: 'GAME_TOTAL_UNDER', teamSide: 'GAME', customLabel: 'Full-Game Total Under 44.5', americanOdds: -110, counterOdds: null },
+            { id: 't2', archetype: 'QB_PASS_YDS_OVER', teamSide: 'HOME', customLabel: 'Home QB Pass Yds Over 262.5', americanOdds: -110, counterOdds: null },
+            { id: 't3', archetype: 'RB1_RUSH_TD_INSIDE_5', teamSide: 'HOME', customLabel: 'Home RB1 Inside-5 Rush TD', americanOdds: 125, counterOdds: null },
+            { id: 't4', archetype: 'QB_PASS_TD_INSIDE_5', teamSide: 'HOME', customLabel: 'Home QB Inside-5 Pass TD', americanOdds: 145, counterOdds: null }
+          ]
+        },
+        rush_script_4leg: {
+          matchup: 'LAC@BAL',
+          quotedOdds: 350,
+          legs: [
+            { id: 'r1', archetype: 'TEAM_FAV_SPREAD', teamSide: 'HOME', customLabel: 'Home Favorite Spread -3.5', americanOdds: -110, counterOdds: null },
+            { id: 'r2', archetype: 'RB1_RUSH_ATT_OVER', teamSide: 'HOME', customLabel: 'Home RB1 Rush Attempts Over 17.5', americanOdds: -115, counterOdds: null },
+            { id: 'r3', archetype: 'TEAM_TOTAL_OVER', teamSide: 'HOME', customLabel: 'Home Team Total Over 24.5', americanOdds: -110, counterOdds: null },
+            { id: 'r4', archetype: 'QB_PASS_TDS_OVER', teamSide: 'HOME', customLabel: 'Home QB Pass TDs Over 1.5', americanOdds: -115, counterOdds: null }
+          ]
+        }
+      };
+
+      const ORIGINAL_TNF_RECEIPT_OBJ = {
+        integerConviction: '78/100',
+        kickoffUtc: '2026-11-13T01:15:00Z',
+        matchupCode: 'WSH@NYG',
+        packId: 'wk10-tnf-wsh-nyg',
+        plays: [
+          { americanOdds: -110, playId: 'wk10-tnf-01', riskUnits: 1, selection: 'WSH +2.5' }
+        ],
+        saltNonce: '9f4c2e1b8a7d6f05',
+        schemaVersion: 'gse.commitment.v1',
+        sealedBeforeKickoffUtc: '2026-11-13T00:30:00Z',
+        week: 10
+      };
+      const ORIGINAL_TNF_CANONICAL_JSON = JSON.stringify(ORIGINAL_TNF_RECEIPT_OBJ, null, 2);
+      const ORIGINAL_TNF_COMPACT_JSON = JSON.stringify(ORIGINAL_TNF_RECEIPT_OBJ);
+      const EXPECTED_TNF_HASH = sha256PureJs(ORIGINAL_TNF_COMPACT_JSON);
+
+      const state = {
+        activeView: 'mri',
+        matchup: 'SF@DAL',
+        quotedOdds: 425,
+        stakeDollars: 100,
+        nextLegSeq: 10,
+        legs: JSON.parse(JSON.stringify(PRESETS.shootout_425.legs)),
+        door1Billing: 'MONTHLY',
+        previewBridge35: false,
+        walletCents: 0,
+        bridgeRedeemed: false,
+        alignedHistory: false,
+        ledgerEntries: [],
+        ledgerKeys: new Set()
+      };
+
+      let probChart = null;
+
+      function showToast(message) {
+        const el = document.getElementById('app-toast');
+        document.getElementById('app-toast-msg').textContent = message;
+        el.classList.remove('hidden');
+        if (window.__toastTimer) clearTimeout(window.__toastTimer);
+        window.__toastTimer = setTimeout(() => { el.classList.add('hidden'); }, 4000);
+      }
+
+      function switchView(viewName) {
+        state.activeView = viewName;
+        ['mri', 'storefront', 'verify'].forEach((v) => {
+          const sec = document.getElementById('view-' + v);
+          const btn = document.getElementById('nav-tab-' + v);
+          if (v === viewName) {
+            sec.classList.remove('hidden');
+            btn.className = 'nav-view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-slate-900 shadow-sm';
+          } else {
+            sec.classList.add('hidden');
+            btn.className = 'nav-view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition text-slate-600 hover:text-slate-900';
+          }
+        });
+      }
+
+      function renderLegsBuilder() {
+        const container = document.getElementById('mri-legs-container');
+        container.innerHTML = '';
+        const canRemove = state.legs.length > 2;
+
+        state.legs.forEach((leg, idx) => {
+          const fairP = isValidAmericanOdds(leg.americanOdds)
+            ? (devigLegFairProb(leg.americanOdds, leg.counterOdds) * 100).toFixed(1) + '% Shin fair'
+            : 'Invalid odds';
+
+          const row = document.createElement('div');
+          row.className = 'rounded-xl border border-slate-200 bg-slate-50/70 p-3.5 space-y-2.5';
+          const optionsHtml = LEG_ARCHETYPE_OPTIONS.map((opt) =>
+            `<option value="${opt.value}" ${opt.value === leg.archetype ? 'selected' : ''}>${opt.label}</option>`
+          ).join('');
+
+          row.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-extrabold text-slate-800">Leg ${idx + 1} · <span class="font-mono-num text-emerald-700">${fairP}</span></span>
+              <button type="button" data-remove-idx="${idx}" ${canRemove ? '' : 'disabled'} class="leg-remove-btn text-xs font-semibold text-rose-700 hover:text-rose-900 disabled:opacity-30 disabled:cursor-not-allowed">Remove</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+              <div class="sm:col-span-5">
+                <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">Football Archetype</label>
+                <select data-leg-idx="${idx}" data-field="archetype" class="leg-input w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900">${optionsHtml}</select>
+              </div>
+              <div class="sm:col-span-3">
+                <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">Team Side</label>
+                <select data-leg-idx="${idx}" data-field="teamSide" class="leg-input w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-900">
+                  <option value="HOME" ${leg.teamSide === 'HOME' ? 'selected' : ''}>Home Team</option>
+                  <option value="AWAY" ${leg.teamSide === 'AWAY' ? 'selected' : ''}>Away Team</option>
+                  <option value="GAME" ${leg.teamSide === 'GAME' ? 'selected' : ''}>Full Game</option>
+                </select>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">Leg Odds</label>
+                <input type="number" step="5" data-leg-idx="${idx}" data-field="americanOdds" value="${leg.americanOdds}" class="leg-input w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-mono-num font-bold text-slate-900" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">Other Side (Opt)</label>
+                <input type="number" step="5" placeholder="-110" data-leg-idx="${idx}" data-field="counterOdds" value="${leg.counterOdds !== null ? leg.counterOdds : ''}" class="leg-input w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-mono-num text-slate-700" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">Prop / Line Label</label>
+              <input type="text" data-leg-idx="${idx}" data-field="customLabel" value="${leg.customLabel.replace(/"/g, '&quot;')}" class="leg-input w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800" />
+            </div>
+          `;
+          container.appendChild(row);
+        });
+
+        document.getElementById('leg-count-badge').textContent = state.legs.length + '/5';
+        document.getElementById('add-leg-btn').disabled = state.legs.length >= 5;
+      }
+
+      function renderMriDiagnosis() {
+        const oddsMsg = document.getElementById('mri-odds-validation-msg');
+        if (!isValidAmericanOdds(state.quotedOdds)) {
+          oddsMsg.textContent = 'Enter valid American odds (<= -100 or >= +100, e.g. +425 or -115).';
+          oddsMsg.className = 'text-xs text-rose-600 font-semibold mt-1';
+          return;
+        }
+        for (let i = 0; i < state.legs.length; i += 1) {
+          if (!isValidAmericanOdds(state.legs[i].americanOdds)) {
+            oddsMsg.textContent = 'Leg ' + (i + 1) + ' requires American odds <= -100 or >= +100.';
+            oddsMsg.className = 'text-xs text-rose-600 font-semibold mt-1';
+            return;
+          }
+        }
+        oddsMsg.textContent = 'Live heavy-tail joint probability & Shin de-vig active.';
+        oddsMsg.className = 'text-xs text-emerald-700 font-medium mt-1';
+
+        const diag = computeCopulaDiagnosis(state.legs, state.quotedOdds, state.stakeDollars);
+        document.getElementById('mri-matchup-pill').textContent = state.matchup;
+
+        const holdStr = diag.holdPct.toFixed(1) + '%';
+        document.getElementById('mri-hold-pct').textContent = (diag.holdPct > 0 ? '' : '+') + holdStr;
+        const keepAbs = Math.abs(diag.keepDollars).toFixed(2);
+        document.getElementById('mri-house-keep').textContent =
+          diag.holdPct >= 0
+            ? '$' + keepAbs + ' kept per $' + state.stakeDollars
+            : '+$' + keepAbs + ' player edge per $' + state.stakeDollars;
+
+        document.getElementById('mri-fair-odds').textContent = formatAmerican(diag.fairT4Am);
+        document.getElementById('mri-book-vs-fair-sub').textContent = 'vs ' + formatAmerican(state.quotedOdds) + ' Book Quote';
+
+        document.getElementById('mri-prob-book').textContent = (diag.bookImplied * 100).toFixed(2) + '%';
+        document.getElementById('mri-prob-t4').textContent = (diag.t4Prob * 100).toFixed(2) + '%';
+        document.getElementById('mri-prob-gauss').textContent = (diag.gaussProb * 100).toFixed(2) + '%';
+        document.getElementById('mri-prob-naive').textContent = (diag.naiveProb * 100).toFixed(2) + '% (' + formatAmerican(diag.naiveAm) + ')';
+
+        const card = document.getElementById('mri-verdict-card');
+        const pill = document.getElementById('mri-severity-pill');
+        const holdEl = document.getElementById('mri-hold-pct');
+        const head = document.getElementById('mri-verdict-headline');
+        const body = document.getElementById('mri-verdict-body');
+
+        if (diag.holdPct <= 4.0) {
+          card.className = 'bg-white rounded-2xl border-2 border-emerald-400 p-5 sm:p-6 shadow-sm space-y-4';
+          pill.className = 'inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-900';
+          pill.textContent = diag.holdPct <= 0 ? 'RARE PLUS-VALUE QUOTE' : 'LOW HOUSE MARGIN';
+          holdEl.className = 'text-2xl sm:text-3xl font-extrabold font-mono-num text-emerald-700 mt-1';
+          head.textContent = diag.holdPct <= 0
+            ? 'Rare Mispriced SGP: +' + Math.abs(diag.holdPct).toFixed(1) + '% Player Edge vs Fair Odds'
+            : 'Fairly Priced Ticket: ' + holdStr + ' House Hold';
+        } else if (diag.holdPct < 15.0) {
+          card.className = 'bg-white rounded-2xl border-2 border-amber-300 p-5 sm:p-6 shadow-sm space-y-4';
+          pill.className = 'inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-900';
+          pill.textContent = 'MODERATE SGP TAX';
+          holdEl.className = 'text-2xl sm:text-3xl font-extrabold font-mono-num text-amber-600 mt-1';
+          head.textContent = 'Moderate SGP Tax: ' + holdStr + ' Hidden Correlation Hold';
+        } else if (diag.holdPct <= 30.0) {
+          card.className = 'bg-white rounded-2xl border-2 border-rose-300 p-5 sm:p-6 shadow-sm space-y-4';
+          pill.className = 'inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-rose-100 text-rose-900';
+          pill.textContent = 'HEAVY HIDDEN CORRELATION HOLD';
+          holdEl.className = 'text-2xl sm:text-3xl font-extrabold font-mono-num text-rose-600 mt-1';
+          head.textContent = 'Heavy SGP Markup: ' + holdStr + ' Hidden Correlation Hold';
+        } else {
+          card.className = 'bg-white rounded-2xl border-2 border-rose-500 p-5 sm:p-6 shadow-sm space-y-4';
+          pill.className = 'inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-rose-600 text-white';
+          pill.textContent = 'SEVERE SGP TAX TRAP';
+          holdEl.className = 'text-2xl sm:text-3xl font-extrabold font-mono-num text-rose-700 mt-1';
+          head.textContent = 'Severe SGP Trap: ' + holdStr + ' Hidden House Hold';
+        }
+
+        body.textContent = diag.holdPct > 0
+          ? 'After removing single-leg juice and modeling how NFL game scripts connect these ' +
+            state.legs.length + ' legs (including overtime and fourth-quarter surge co-movement), this ticket cashes ' +
+            (diag.t4Prob * 100).toFixed(1) + '% of the time — a fair price of ' + formatAmerican(diag.fairT4Am) +
+            '. At the sportsbook\'s ' + formatAmerican(state.quotedOdds) + ' quote, the house retains $' +
+            keepAbs + ' out of every $' + state.stakeDollars + ' staked.'
+          : 'After removing single-leg juice and modeling shared NFL game scripts across all ' +
+            state.legs.length + ' legs, this ticket hits ' + (diag.t4Prob * 100).toFixed(1) +
+            '% of the time (fair price ' + formatAmerican(diag.fairT4Am) + '). The quoted ' +
+            formatAmerican(state.quotedOdds) + ' payout exceeds true fair value.';
+
+        document.getElementById('mri-psd-badge').textContent = diag.projected
+          ? 'Eigenvalue PSD Repair Applied (Valid Joint Matrix)'
+          : 'Exact Positive-Definite NFL Matrix';
+
+        document.getElementById('mri-pairwise-tbody').innerHTML = diag.pairs.map((p) => {
+          const rhoSign = p.rho > 0 ? '+' : '';
+          const badgeCls = p.rho >= 0.15
+            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+            : p.rho <= -0.12
+              ? 'bg-rose-50 text-rose-800 border-rose-200'
+              : 'bg-slate-100 text-slate-700 border-slate-200';
+          return `
+            <tr>
+              <td class="py-2.5 px-3 font-semibold text-slate-900">${p.labelA} <span class="text-slate-400">×</span> ${p.labelB}</td>
+              <td class="py-2.5 px-3 text-right font-mono-num"><span class="inline-block px-2 py-0.5 rounded border font-bold ${badgeCls}">${rhoSign}${p.rho.toFixed(2)}</span></td>
+              <td class="py-2.5 px-3 text-right font-mono-num text-slate-700">${p.tailSurgePct.toFixed(1)}%</td>
+              <td class="py-2.5 px-3 text-slate-600">${p.desc}</td>
+            </tr>
+          `;
+        }).join('');
+
+        const seriesData = [
+          Number((diag.bookImplied * 100).toFixed(2)),
+          Number((diag.t4Prob * 100).toFixed(2)),
+          Number((diag.gaussProb * 100).toFixed(2)),
+          Number((diag.naiveProb * 100).toFixed(2))
+        ];
+
+        if (window.Chart) {
+          const ctx = document.getElementById('mri-prob-chart');
+          if (!probChart) {
+            probChart = new window.Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ['Book Implied', 'True Heavy-Tail (t4)', 'Normal Copula', 'Uncorrelated'],
+                datasets: [{
+                  label: 'Joint Hit Probability (%)',
+                  data: seriesData,
+                  backgroundColor: ['#e11d48', '#059669', '#2563eb', '#94a3b8'],
+                  borderRadius: 8
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { callbacks: { label: function (c) { return c.parsed.y.toFixed(2) + '% hit rate'; } } }
+                },
+                scales: { y: { beginAtZero: true, ticks: { callback: function (v) { return v + '%'; } } } }
+              }
+            });
+          } else {
+            probChart.data.datasets[0].data = seriesData;
+            probChart.update();
+          }
+        }
+      }
+
+      function renderStorefrontPricingAndWallet() {
+        const walletFormatted = '$' + (state.walletCents / 100).toFixed(2);
+        document.getElementById('header-wallet-balance').textContent = walletFormatted;
+        document.getElementById('storefront-wallet-readout').textContent = walletFormatted;
+
+        const btnMonthly = document.getElementById('door1-plan-monthly');
+        const btnRos = document.getElementById('door1-plan-ros');
+        const priceEl = document.getElementById('door1-effective-price');
+        const periodEl = document.getElementById('door1-price-period');
+        const noteEl = document.getElementById('door1-bridge-note');
+        const ctaEl = document.getElementById('door1-checkout-btn');
+
+        const bridgeActive =
+          state.door1Billing === 'MONTHLY' &&
+          !state.bridgeRedeemed &&
+          (state.previewBridge35 || state.walletCents > 0 || state.alignedHistory);
+
+        if (state.door1Billing === 'MONTHLY') {
+          btnMonthly.className = 'py-2 px-3 rounded-lg text-xs font-bold transition bg-white text-slate-900 shadow-sm';
+          btnRos.className = 'py-2 px-3 rounded-lg text-xs font-bold transition text-slate-300 hover:text-white';
+          if (bridgeActive) {
+            priceEl.textContent = '$24.99';
+            periodEl.textContent = 'first month ($59.99/mo Founding Rate after)';
+            noteEl.textContent = '✓ $35.00 All-Access Upgrade Bridge Credit applied ($59.99 - $35.00 = $24.99 net today).';
+            ctaEl.textContent = 'Upgrade to Founding All-Access ($24.99 First Month)';
+          } else {
+            priceEl.textContent = '$59.99';
+            periodEl.textContent = '/ month (Locked for First 100 Members)';
+            noteEl.textContent = state.bridgeRedeemed
+              ? 'Founding rate $59.99/mo active ($35 one-time Upgrade Bridge already redeemed).'
+              : 'Holding a Door 2 Aligned Pack? Apply your $35 Upgrade Bridge Credit to start All-Access for $24.99 first month.';
+            ctaEl.textContent = 'Reserve Founding All-Access Spot ($59.99/mo)';
+          }
+        } else {
+          btnRos.className = 'py-2 px-3 rounded-lg text-xs font-bold transition bg-white text-slate-900 shadow-sm';
+          btnMonthly.className = 'py-2 px-3 rounded-lg text-xs font-bold transition text-slate-300 hover:text-white';
+          const netRosCents = Math.max(0, 24900 - state.walletCents);
+          priceEl.textContent = '$' + (netRosCents / 100).toFixed(netRosCents % 100 === 0 ? 0 : 2);
+          periodEl.textContent = 'one-time · Weeks 10–18 + Entire NFL Playoffs';
+          noteEl.textContent = state.walletCents > 0
+            ? 'Includes ' + walletFormatted + ' Store-Credit wallet deduction off $249 ROS + Playoffs Pass.'
+            : 'One payment covers every NFL game, prop, SGP, and DFS slate through Super Bowl Sunday.';
+          ctaEl.textContent = 'Unlock ROS + Playoffs Pass (' + priceEl.textContent + ')';
+        }
+
+        const tbody = document.getElementById('sim-ledger-tbody');
+        if (state.ledgerEntries.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="py-4 px-3 text-center font-sans text-slate-500">No ledger entries recorded in this browser session yet.</td></tr>';
+        } else {
+          tbody.innerHTML = state.ledgerEntries.map((e) => {
+            const deltaStr = (e.deltaCents >= 0 ? '+$' : '-$') + (Math.abs(e.deltaCents) / 100).toFixed(2);
+            const deltaColor = e.deltaCents >= 0 ? 'text-emerald-700 font-bold' : 'text-blue-700 font-bold';
+            return `
+              <tr>
+                <td class="py-2 px-3 font-semibold text-slate-900">${e.kind}</td>
+                <td class="py-2 px-3 text-slate-500">${e.key}</td>
+                <td class="py-2 px-3 text-right text-slate-700">${e.unitsStr}</td>
+                <td class="py-2 px-3 text-right ${deltaColor}">${deltaStr}</td>
+                <td class="py-2 px-3 text-right font-bold text-slate-900">$${(e.balanceAfter / 100).toFixed(2)}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      function openCheckoutModal(config) {
+        document.getElementById('modal-door-badge').textContent = config.doorLabel;
+        document.getElementById('checkout-modal-title').textContent = config.title;
+        document.getElementById('checkout-modal-lines').innerHTML = config.lines.map((l) => `
+          <div class="flex items-center justify-between">
+            <span class="${l.bold ? 'font-bold text-slate-900' : 'text-slate-600'}">${l.label}</span>
+            <span class="font-mono-num ${l.bold ? 'font-extrabold text-slate-900' : 'font-semibold text-slate-800'}">${l.value}</span>
+          </div>
+        `).join('');
+        document.getElementById('checkout-modal-note').textContent = config.note;
+        document.getElementById('checkout-modal').classList.remove('hidden');
+      }
+
+      async function runVerifierCheck() {
+        const expected = document.getElementById('verify-expected-hash').value.trim().toLowerCase();
+        const rawInput = document.getElementById('verify-json-input').value;
+        let normalizedToHash = rawInput;
+        try {
+          normalizedToHash = JSON.stringify(JSON.parse(rawInput));
+        } catch (_) {
+          normalizedToHash = rawInput;
+        }
+        const res = await computeSha256Browser(normalizedToHash);
+        const match = res.hex.toLowerCase() === expected;
+
+        document.getElementById('verify-computed-hash').textContent = res.hex;
+        document.getElementById('verify-engine-label').textContent = res.engine;
+
+        const card = document.getElementById('verify-result-card');
+        const title = document.getElementById('verify-status-title');
+        if (match) {
+          card.className = 'rounded-xl border-2 border-emerald-500 bg-emerald-50/70 p-4 space-y-2';
+          title.className = 'text-xs sm:text-sm font-extrabold text-emerald-950';
+          title.textContent = '✓ CRYPTOGRAPHIC MATCH VERIFIED (PRE-KICKOFF SEAL INTACT)';
+        } else {
+          card.className = 'rounded-xl border-2 border-rose-500 bg-rose-50 p-4 space-y-2';
+          title.className = 'text-xs sm:text-sm font-extrabold text-rose-900';
+          title.textContent = '✕ HASH MISMATCH — PAYLOAD MODIFIED AFTER PRE-KICKOFF SEAL';
+        }
+      }
+
+      document.querySelectorAll('.nav-view-btn').forEach((btn) => {
+        btn.addEventListener('click', function () { switchView(this.getAttribute('data-target-view')); });
+      });
+      document.getElementById('wallet-pill-btn').addEventListener('click', function () { switchView('storefront'); });
+      document.getElementById('mri-to-storefront-cta').addEventListener('click', function () { switchView('storefront'); });
+      document.getElementById('app-toast-close').addEventListener('click', function () { document.getElementById('app-toast').classList.add('hidden'); });
+
+      document.querySelectorAll('.preset-btn').forEach((btn) => {
+        btn.addEventListener('click', function () {
+          const preset = PRESETS[this.getAttribute('data-preset')];
+          if (!preset) return;
+          state.matchup = preset.matchup;
+          state.quotedOdds = preset.quotedOdds;
+          state.legs = JSON.parse(JSON.stringify(preset.legs));
+          document.getElementById('mri-matchup-select').value = state.matchup;
+          document.getElementById('mri-quoted-odds').value = String(state.quotedOdds);
+          renderLegsBuilder();
+          renderMriDiagnosis();
+          showToast('Loaded preset SGP scenario for ' + state.matchup + '.');
+        });
+      });
+
+      document.getElementById('mri-matchup-select').addEventListener('change', function () {
+        state.matchup = this.value;
+        renderMriDiagnosis();
+      });
+      document.getElementById('mri-quoted-odds').addEventListener('input', function () {
+        state.quotedOdds = Number(this.value);
+        renderMriDiagnosis();
+      });
+      document.getElementById('mri-stake-dollars').addEventListener('input', function () {
+        const v = Number(this.value);
+        if (Number.isFinite(v) && v > 0) { state.stakeDollars = v; renderMriDiagnosis(); }
+      });
+
+      document.getElementById('add-leg-btn').addEventListener('click', function () {
+        if (state.legs.length >= 5) return;
+        state.nextLegSeq += 1;
+        state.legs.push({
+          id: 'u_' + state.nextLegSeq,
+          archetype: 'TE1_REC_YDS_OVER',
+          teamSide: 'HOME',
+          customLabel: 'Home TE1 Rec Yds Over 46.5',
+          americanOdds: -110,
+          counterOdds: null
+        });
+        renderLegsBuilder();
+        renderMriDiagnosis();
+      });
+
+      document.getElementById('mri-legs-container').addEventListener('input', function (e) {
+        const target = e.target;
+        if (!target.classList.contains('leg-input')) return;
+        const idx = Number(target.getAttribute('data-leg-idx'));
+        const field = target.getAttribute('data-field');
+        const leg = state.legs[idx];
+        if (!leg) return;
+        if (field === 'archetype') {
+          leg.archetype = target.value;
+          const found = LEG_ARCHETYPE_OPTIONS.find((o) => o.value === target.value);
+          if (found) leg.customLabel = found.label;
+          renderLegsBuilder();
+        } else if (field === 'teamSide') {
+          leg.teamSide = target.value;
+        } else if (field === 'americanOdds') {
+          leg.americanOdds = Number(target.value);
+        } else if (field === 'counterOdds') {
+          leg.counterOdds = target.value.trim() === '' ? null : Number(target.value);
+        } else if (field === 'customLabel') {
+          leg.customLabel = target.value;
+        }
+        renderMriDiagnosis();
+      });
+
+      document.getElementById('mri-legs-container').addEventListener('click', function (e) {
+        const btn = e.target.closest('.leg-remove-btn');
+        if (!btn || state.legs.length <= 2) return;
+        state.legs.splice(Number(btn.getAttribute('data-remove-idx')), 1);
+        renderLegsBuilder();
+        renderMriDiagnosis();
+      });
+
+      document.getElementById('door1-plan-monthly').addEventListener('click', function () {
+        state.door1Billing = 'MONTHLY';
+        renderStorefrontPricingAndWallet();
+      });
+      document.getElementById('door1-plan-ros').addEventListener('click', function () {
+        state.door1Billing = 'ROS';
+        renderStorefrontPricingAndWallet();
+      });
+      document.getElementById('toggle-upgrade-bridge').addEventListener('change', function () {
+        state.previewBridge35 = this.checked;
+        renderStorefrontPricingAndWallet();
+      });
+
+      document.getElementById('door1-checkout-btn').addEventListener('click', function () {
+        const bridgeActive =
+          state.door1Billing === 'MONTHLY' &&
+          !state.bridgeRedeemed &&
+          (state.previewBridge35 || state.walletCents > 0 || state.alignedHistory);
+
+        if (state.door1Billing === 'MONTHLY') {
+          openCheckoutModal({
+            doorLabel: 'Door 1 · Founding All-Access (Spot #39 of 100)',
+            title: 'Founding All-Access Monthly Membership',
+            lines: bridgeActive
+              ? [
+                  { label: 'Founding Monthly Rate (Locked)', value: '$59.99' },
+                  { label: 'All-Access Upgrade Bridge Credit', value: '-$35.00' },
+                  { label: 'Due Today (First Month Net)', value: '$24.99', bold: true }
+                ]
+              : [
+                  { label: 'Founding Monthly Rate (Locked)', value: '$59.99' },
+                  { label: 'Due Today', value: '$59.99', bold: true }
+                ],
+            note: 'Unlocks all 14 NFL Week 10 games, 360° player props, correlated SGPs, Member-Only DFS, and every TNF/Sunday/MNF pack automatically.'
+          });
+        } else {
+          const creditApplied = Math.min(24900, state.walletCents);
+          const netDue = 24900 - creditApplied;
+          openCheckoutModal({
+            doorLabel: 'Door 1 · Season + Playoffs Pass',
+            title: 'Rest-of-Season + NFL Playoffs All-Access Pass',
+            lines: [
+              { label: 'ROS + Playoffs All-Access Pass', value: '$249.00' },
+              { label: 'Store-Credit Balance Applied', value: '-$' + (creditApplied / 100).toFixed(2) },
+              { label: 'Due Today', value: '$' + (netDue / 100).toFixed(2), bold: true }
+            ],
+            note: 'One-time pass through Super Bowl Sunday with zero recurring monthly rebills.'
+          });
+        }
+      });
+
+      const DOOR2_META = {
+        SUNDAY_360_STANDARD_29: { title: 'Week 10 Sunday 360° Pack (Standard)', cents: 2900, aligned: false, conv: '82/100' },
+        SUNDAY_360_ALIGNED_39: { title: 'Week 10 Sunday 360° Pack (100% Store-Credit Aligned)', cents: 3900, aligned: true, conv: '82/100' },
+        MNF_SHOWDOWN_STANDARD_19: { title: 'LAC @ BAL MNF Showdown Pack (Standard)', cents: 1900, aligned: false, conv: '79/100' },
+        MNF_SHOWDOWN_ALIGNED_29: { title: 'LAC @ BAL MNF Showdown Pack (100% Store-Credit Aligned)', cents: 2900, aligned: true, conv: '79/100' }
+      };
+
+      document.querySelectorAll('.door2-buy-btn').forEach((btn) => {
+        btn.addEventListener('click', function () {
+          const item = DOOR2_META[this.getAttribute('data-pack-sku')];
+          if (!item) return;
+          const creditUsed = Math.min(item.cents, state.walletCents);
+          const netCash = item.cents - creditUsed;
+          openCheckoutModal({
+            doorLabel: 'Door 2 · Top Card Conviction ' + item.conv,
+            title: item.title,
+            lines: [
+              { label: 'Pack Price', value: '$' + (item.cents / 100).toFixed(2) },
+              { label: 'Store-Credit Wallet Applied', value: '-$' + (creditUsed / 100).toFixed(2) },
+              { label: 'Net Due Today', value: '$' + (netCash / 100).toFixed(2), bold: true }
+            ],
+            note: item.aligned
+              ? 'Includes Contractual 100% Store-Credit Alignment: if official graded plays finish <= 0.00u net profit, $' + (item.cents / 100).toFixed(2) + ' mints automatically to your Store-Credit Wallet.'
+              : 'Standard single-slate access tier (upgrade to the Aligned tier for automatic <= 0.00u store-credit protection).'
+          });
+        });
+      });
+
+      document.getElementById('checkout-modal-close').addEventListener('click', function () { document.getElementById('checkout-modal').classList.add('hidden'); });
+      document.getElementById('checkout-modal-cancel').addEventListener('click', function () { document.getElementById('checkout-modal').classList.add('hidden'); });
+      document.getElementById('checkout-modal-confirm').addEventListener('click', function () {
+        document.getElementById('checkout-modal').classList.add('hidden');
+        showToast('Preview checkout verified — wire to /api/packages/checkout in Next.js.');
+      });
+
+      document.getElementById('sim-run-settlement-btn').addEventListener('click', function () {
+        const sku = document.getElementById('sim-pack-select').value;
+        const outcome = document.getElementById('sim-outcome-select').value;
+        const banner = document.getElementById('sim-status-banner');
+        const packMeta = {
+          SUNDAY_360_ALIGNED_39: { cents: 3900, aligned: true, id: 'wk10_sun360' },
+          TNF_SHOWDOWN_ALIGNED_29: { cents: 2900, aligned: true, id: 'wk10_island' },
+          MNF_SHOWDOWN_STANDARD_19: { cents: 1900, aligned: false, id: 'wk10_std19' }
+        }[sku];
+        const outcomeMeta = {
+          LOSS_MINUS_1_10: { units: -1.10, label: '-1.10u' },
+          BREAKEVEN_0_00: { units: 0.00, label: '0.00u' },
+          PROFIT_PLUS_1_82: { units: 1.82, label: '+1.82u' }
+        }[outcome];
+        const idempKey = 'sc_mint_' + packMeta.id + '_' + outcome;
+
+        if (state.ledgerKeys.has(idempKey)) {
+          banner.className = 'rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 text-xs text-blue-900 font-semibold';
+          banner.textContent = 'ALREADY_MINTED_IDEMPOTENT: Replay caught by key "' + idempKey + '". Zero duplicate cents minted.';
+          showToast('Idempotency guard blocked duplicate store-credit mint.');
+          return;
+        }
+        if (!packMeta.aligned) {
+          banner.className = 'rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900 font-semibold';
+          banner.textContent = 'INELIGIBLE_STANDARD_TIER: $19 Standard tier does not carry Store-Credit Alignment ($0.00 minted).';
+          return;
+        }
+        state.alignedHistory = true;
+        if (outcomeMeta.units > 0) {
+          banner.className = 'rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-xs text-emerald-900 font-semibold';
+          banner.textContent = 'PROFITABLE_NO_CREDIT_DUE: Official plays finished ' + outcomeMeta.label + ' (> 0.00u). Customer profited on the slate; $0.00 credit owed.';
+          renderStorefrontPricingAndWallet();
+          return;
+        }
+        state.ledgerKeys.add(idempKey);
+        state.walletCents += packMeta.cents;
+        state.ledgerEntries.push({
+          kind: 'MINT_ALIGNMENT_CREDIT',
+          key: idempKey,
+          unitsStr: outcomeMeta.label,
+          deltaCents: packMeta.cents,
+          balanceAfter: state.walletCents
+        });
+        banner.className = 'rounded-xl bg-emerald-50 border border-emerald-300 px-4 py-3 text-xs text-emerald-950 font-semibold';
+        banner.textContent = 'MINTED_100_PCT_STORE_CREDIT: Official plays settled at ' + outcomeMeta.label + ' (<= 0.00u). Minted +$' + (packMeta.cents / 100).toFixed(2) + ' to Store-Credit Wallet.';
+        renderStorefrontPricingAndWallet();
+        showToast('Minted +$' + (packMeta.cents / 100).toFixed(2) + ' Store Credit!');
+      });
+
+      document.getElementById('sim-apply-bridge-btn').addEventListener('click', function () {
+        const banner = document.getElementById('sim-status-banner');
+        if (state.bridgeRedeemed) {
+          banner.className = 'rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900 font-semibold';
+          banner.textContent = 'One-time $35.00 All-Access Upgrade Bridge has already been redeemed on this customer account.';
+          return;
+        }
+        if (state.walletCents <= 0 && !state.alignedHistory) {
+          banner.className = 'rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900 font-semibold';
+          banner.textContent = 'Mint an Aligned Pack settlement credit first (e.g. $29 or $39) to test the $35 Upgrade Bridge redemption.';
+          return;
+        }
+        const walletUsed = Math.min(3500, state.walletCents);
+        const topUp = 3500 - walletUsed;
+        if (topUp > 0) {
+          state.walletCents += topUp;
+          state.ledgerEntries.push({
+            kind: 'MINT_UPGRADE_BRIDGE_SUPPLEMENT',
+            key: 'sc_bridge35_demo_topup',
+            unitsStr: '—',
+            deltaCents: topUp,
+            balanceAfter: state.walletCents
+          });
+        }
+        state.walletCents -= 3500;
+        state.bridgeRedeemed = true;
+        state.ledgerEntries.push({
+          kind: 'REDEEM_ALL_ACCESS_BRIDGE_35',
+          key: 'sc_bridge35_demo_sub01',
+          unitsStr: '—',
+          deltaCents: -3500,
+          balanceAfter: state.walletCents
+        });
+        banner.className = 'rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 text-xs text-blue-950 font-semibold';
+        banner.textContent = 'REDEEMED $35.00 ALL-ACCESS BRIDGE: Door 1 Founding Monthly first month reduced from $59.99 to $24.99. Remaining Store Credit: $' + (state.walletCents / 100).toFixed(2) + '.';
+        renderStorefrontPricingAndWallet();
+        showToast('Applied $35 Upgrade Bridge ($24.99 Door 1 first month).');
+      });
+
+      document.getElementById('sim-reset-ledger-btn').addEventListener('click', function () {
+        state.walletCents = 0;
+        state.bridgeRedeemed = false;
+        state.alignedHistory = false;
+        state.ledgerEntries = [];
+        state.ledgerKeys.clear();
+        document.getElementById('sim-status-banner').className = 'rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 text-xs text-slate-700 font-medium';
+        document.getElementById('sim-status-banner').textContent = 'Demo wallet reset to $0.00.';
+        renderStorefrontPricingAndWallet();
+      });
+
+      document.getElementById('btn-run-sha256').addEventListener('click', function () { runVerifierCheck(); });
+      document.getElementById('verify-json-input').addEventListener('input', function () { runVerifierCheck(); });
+      document.getElementById('btn-tamper-payload').addEventListener('click', function () {
+        document.getElementById('verify-json-input').value = ORIGINAL_TNF_CANONICAL_JSON.replace('"WSH +2.5"', '"NYG -2.5"');
+        runVerifierCheck();
+        showToast('Simulated post-game line tamper ("WSH +2.5" -> "NYG -2.5") — hash mismatch flagged!');
+      });
+      document.getElementById('btn-restore-payload').addEventListener('click', function () {
+        document.getElementById('verify-json-input').value = ORIGINAL_TNF_CANONICAL_JSON;
+        runVerifierCheck();
+        showToast('Restored authentic pre-kickoff sealed JSON payload.');
+      });
+      document.getElementById('copy-receipt-json-btn').addEventListener('click', function () {
+        const txt = document.getElementById('verify-json-input').value;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(txt).then(() => showToast('Copied canonical receipt JSON.')).catch(() => {});
+        } else {
+          const el = document.getElementById('verify-json-input');
+          el.select();
+          document.execCommand('copy');
+          showToast('Copied canonical receipt JSON.');
+        }
+      });
+
+      document.getElementById('verify-expected-hash').value = EXPECTED_TNF_HASH;
+      document.getElementById('verify-json-input').value = ORIGINAL_TNF_CANONICAL_JSON;
+      renderLegsBuilder();
+      renderMriDiagnosis();
+      renderStorefrontPricingAndWallet();
+      runVerifierCheck();
+    })();
+  </script>
+</body>
+</html>

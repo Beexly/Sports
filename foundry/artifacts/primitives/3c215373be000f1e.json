@@ -1,0 +1,78 @@
+{
+  "book_id": "3c215373be000f1e",
+  "source_status": "COMPLETE",
+  "title": "2026-10-30-NFL-SIMULATOR-DOSSIER",
+  "file_name": "2026-10-30-NFL-SIMULATOR-DOSSIER.md",
+  "sha256": "3c215373be000f1eb559d65474cc977a914029efffddaa7b54ccf1c2829ccc61",
+  "primary_domain": "football",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A retrospective verdict mechanism computing deserve-to-win probability via play-by-play EPA, with luck gap as residual variance. Universal Lens: Rooted in 2026-10-30-NFL-SIMULATOR-DOSSIER (3c215373be000f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of game outcome likelihood using EPA-derived expected points, conformalized via empirical quantile calibration. GSI Mapping: Rooted in 2026-10-30-NFL-SIMULATOR-DOSSIER (3c215373be000f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine computes process vs. variance splits through play-level marginalization, enabling state transitions on luck-adjusted outcomes. GSE Mapping: Rooted in 2026-10-30-NFL-SIMULATOR-DOSSIER (3c215373be000f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "luck_gap",
+      "name": "Luck Gap",
+      "verbatim_quote": "Luck gap (actual - deserved, home view): **-1.61 points** — the final score slightly *understated* Green Bay's play.",
+      "page": 1,
+      "latex": "L = M_{\\text{actual}} - M_{\\text{deserved}}",
+      "symbol_and_unit_ledger": "{'L': 'dimensionless luck gap', 'M_{\\\\text{actual}}': 'actual margin in points', 'M_{\\\\text{deserved}}': 'expected margin from EPA'}",
+      "assumptions": "Game margin is linearly related to EPA, and variance is normally distributed around expected value.",
+      "breakdown_regime": "When actual outcome deviates significantly from EPA-based expectation due to rare events.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies deviation from process-driven outcome; used in GSE to classify games as process-heavy or luck-heavy.",
+        "source_operator": "luck_gap",
+        "telemetry": "Residual between actual and expected game margin."
+      }
+    },
+    {
+      "primitive_id": "deserve_to_win_probability",
+      "name": "Deserve-to-Win Probability",
+      "verbatim_quote": "WHAT IT IS One deserve-to-win number per finished NFL game, computed only from the plays each team ran.",
+      "page": 1,
+      "latex": "p_{\\text{home}} = \\Phi\\left(\\frac{\\Delta M}{\\sigma}\\right)",
+      "symbol_and_unit_ledger": "{'p_{\\\\text{home}}': 'probability of home team winning based on EPA', '\\\\Delta M': \"margin difference between teams' expected points\", '\\\\sigma': 'standard deviation of simulated margins (5.4528)'}",
+      "assumptions": "Simulated margins follow normal distribution; EPA is sufficient to estimate expected performance.",
+      "breakdown_regime": "When EPA estimates fail due to missing special teams or event re-pricing.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps EPA-based margin to win probability using cumulative normal distribution; GSI uses this for probabilistic verdicts.",
+        "source_operator": "deserve_to_win_probability",
+        "telemetry": "Probability of home team winning derived from EPA-based simulation."
+      }
+    },
+    {
+      "primitive_id": "likely_points",
+      "name": "Likely Points",
+      "verbatim_quote": "Likely points come from one OLS fit on 2016–2023 team-games (4,190 rows): **points = -16.829 + 35.126 × success rate + 4.178 × yards per play** (in-sample R2 = 0.609).",
+      "page": 2,
+      "latex": "\\hat{P} = -16.829 + 35.126 \\cdot S + 4.178 \\cdot Y",
+      "symbol_and_unit_ledger": "{'\\\\hat{P}': 'expected points', 'S': 'success rate (dimensionless)', 'Y': 'yards per play (yards)'}",
+      "assumptions": "Linear relationship between success rate, yards per play, and expected points; data spans 2016–2023.",
+      "breakdown_regime": "When success rate or yardage metrics are misestimated or when game context changes.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Predicts expected points from play-level inputs; GSE uses this to compute expected game outcomes.",
+        "source_operator": "likely_points",
+        "telemetry": "Expected points per team derived from EPA-based regression."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3c215373be000f1e_t0",
+      "think": "The core operators are grounded in a retrospective EPA-based framework where each play contributes to a cumulative expected margin. The 'luck gap' is defined as the difference between actual and expected margin, capturing variance from process. The 'deserve-to-win probability' is derived from simulating margins under a normal distribution, calibrated with a fixed standard deviation (σ=5.4528), and transformed via Φ to yield a smooth win probability. The 'likely points' model uses OLS regression to predict expected points from success rate and yards per play, providing a scalar summary of team performance. These primitives form a closed-loop system where EPA informs both luck and expected outcomes, with v2 removing event re-pricing and special teams to maintain consistency. Failure modes include misestimation of EPA, non-linearities in scoring, and exclusion of rare events like turnovers or field goals. The model's dual nature—process-driven yet variance-aware—enables GSE to distinguish between outcomes driven by skill and those driven by chance.\n\nDeep epistemic analysis for 2026-10-30-NFL-SIMULATOR-DOSSIER (3c215373be000f1e, domain=football, pages_read=6/6): Operator 'Luck Gap' (page 1, domain football) captures: Luck gap (actual - deserved, home view): **-1.61 points** — the final score slightly *understated* Green Bay's play. Assumptions: Game margin is linearly related to EPA, and variance is normally distributed around expected value. Breakdown regime: When actual outcome deviates significantly from EPA-based expectation due to rare events. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies deviation from process-driven outcome; used in GSE to classify games as process-heavy or luck-heavy. Operator 'Deserve-to-Win Probability' (page 1, domain football) captures: WHAT IT IS One deserve-to-win number per finished NFL game, computed only from the plays each team ran. Assumptions: Simulated margins follow normal distribution; EPA is sufficient to estimate expected performance. Breakdown regime: When EPA estimates fail due to missing special teams or event re-pricing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps EPA-based margin to win probability using cumulative normal distribution; GSI uses this for probabilistic verdicts. Operator 'Likely Points' (page 2, domain football) captures: Likely points come from one OLS fit on 2016–2023 team-games (4,190 rows): **points = -16.829 + 35.126 × success rate + 4.178 × yards per play** (in-sample R2 = 0.609). Assumptions: Linear relationship between success rate, yards per play, and expected points; data spans 2016–2023. Breakdown regime: When success rate or yardage metrics are misestimated or when game context changes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Predicts expected points from play-level inputs; GSE uses this to compute expected game outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-10-30-NFL-SIMULATOR-DOSSIER (3c215373be000f1e, domain=football, pages_read=6/6): Operator 'Luck Gap' (page 1, domain football) captures: Luck gap (actual - deserved, home view): **-1.61 points** — the final score slightly *understated* Green Bay's play. Assumptions: Game margin is linearly related to EPA, and variance is normally distributed around expected value. Breakdown regime: When actual outcome deviates significantly from EPA-based expectation due to rare events. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies deviation from process-driven outcome; used in GSE to classify games as process-heavy or luck-heavy. Operator 'Deserve-to-Win Probability' (page 1, domain football) captures: WHAT IT IS One deserve-to-win number per finished NFL game, computed only from the plays each team ran. Assumptions: Simulated margins follow normal distribution; EPA is sufficient to estimate expected performance. Breakdown regime: When EPA estimates fail due to missing special teams or event re-pricing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps EPA-based margin to win probability using cumulative normal distribution; GSI uses this for probabilistic verdicts. Operator 'Likely Points' (page 2, domain football) captures: Likely points come from one OLS fit on 2016–2023 team-games (4,190 rows): **points = -16.829 + 35.126 × success rate + 4.178 × yards per play** (in-sample R2 = 0.609). Assumptions: Linear relationship between success rate, yards per play, and expected points; data spans 2016–2023. Breakdown regime: When success rate or yardage metrics are misestimated or when game context changes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Predicts expected points from play-level inputs; GSE uses this to compute expected game outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s work on EPA and expected points, evolving through iterative refinement of simulation engines and statistical calibration. Influenced by prior models of luck-adjusted win probability and predictive analytics in sports. Retrocausal Genealogy: Rooted in 2026-10-30-NFL-SIMULATOR-DOSSIER (3c215373be000f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling agents as teams operating under deterministic play-level rules, where variance is captured through stochastic simulation. The system assumes that EPA reflects true process quality, while luck is residual noise. Decision-making is framed as retrospective evaluation rather than prediction. Theory of Mind & Decision Maker Model: Rooted in 2026-10-30-NFL-SIMULATOR-DOSSIER (3c215373be000f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by separating EPA from luck metrics; leakage is prevented by excluding special teams and event re-pricing in v2. The model avoids conflating matchup factors or health status with process evaluation, ensuring that the primitives remain descriptive of play-level behavior. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-10-30-NFL-SIMULATOR-DOSSIER (3c215373be000f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

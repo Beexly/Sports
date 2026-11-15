@@ -1,0 +1,876 @@
+{
+  "book_id": "48a955c72873ccf6",
+  "source_status": "COMPLETE",
+  "source_note": "Luc Devroye, Non-Uniform Random Variate Generation, Springer-Verlag (New York), 1986, ISBN 0-387-96305-7; author at the School of Computer Science, McGill University, Montreal. The local source is the publisher PDF scan held at ~/workspace/full-library-2026-11-12/library/books-must-have/Devroye-1986-NonUniformRandomVariateGeneration.pdf (40,610,306 bytes). Gatekeeper identity: sha256 over (str(size) encoded + full file bytes) = 48a955c72873ccf60f28bda656f95e5b8e1c3c04ac2fcbd974af8d37bf4a05b6, book_id = first 16 hex = 48a955c72873ccf6. Extraction text used for all quotes: the companion .txt extraction (1,786,676 bytes, 39,873 lines, 246,747 words) at ~/workspace/full-library-2026-11-12/text/books-must-have/Devroye-1986-NonUniformRandomVariateGeneration.pdf.txt. Text quality: complete born-print OCR of the full book (preface, 15 chapters, references, index); OCR carries systematic ligature and glyph noise (for example '1s' for 'is', 'wlth' for 'with', mangled display equations), so verbatim quotes were selected from clean passages and each was verified as an exact whitespace-normalized substring of the extraction before inclusion; some displayed equations were transcribed in standard notation from the theorem statements and unambiguous display fragments, and those primitives say so in their assumptions. No catalog corrections needed: title, author, year and publisher in the fleet catalog match the title page and the Library of Congress data printed in the book (QA274.D48 1986). Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "idealized_model_exact_algorithms",
+      "name": "Generation is analyzed in an idealized model (real arithmetic, a perfect uniform [0,1] source, unit cost fundamental operations); only exact algorithms are admitted and cost is measured as expected complexity E(C)",
+      "verbatim_quote": "Because of our assumptlons, we can treat random varlates as If they were random varlables!",
+      "page": "Ch I Sec 1, book p.2; text lines 655-700",
+      "latex": "\\bar{C}_n = \\frac{1}{n} \\sum_{i=1}^{n} C_i \\longrightarrow E(C)",
+      "symbol_and_unit_ledger": {
+        "C_i": "complexity (fundamental operations) spent on the i-th variate [operations]",
+        "E(C)": "expected complexity per variate; the strong law of large numbers makes the running average converge to it [operations]"
+      },
+      "assumptions": [
+        "Assumption 1: the computer can store and manipulate real numbers.",
+        "Assumption 2: a perfect uniform [0,1] random variate generator exists, producing iid uniforms.",
+        "Assumption 3: addition, multiplication, division, compare, truncate, move, uniform generation, exp, log, square root, arctan, sin, cos each cost one unit of time.",
+        "A generator is called exact when the variates it produces have exactly the distribution asked for; inexact algorithms are excluded from the theory."
+      ],
+      "breakdown_regime": "Finite word length breaks exactness in practice, and real pseudorandom generators are deterministic, so the perfect source is an idealization. The text notes there are algorithms with infinite expected complexity, so E(C) can fail to exist as a finite design target.",
+      "domain": "computational-model",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine adopts the same accounting kernel: every stochastic subroutine is admitted only with a proof level claim about the law it samples, and its price is carried as an expected cost per emitted variate, never as a worst case slogan. Model selection then compares samplers by expected operations per correct draw.",
+        "source_operator": "idealized_model_exact_algorithms",
+        "telemetry": "per-generator operation counts, uniform source quality tests, variate throughput logs"
+      }
+    },
+    {
+      "primitive_id": "transformation_density_rule",
+      "name": "A strictly increasing transformation of a random variable has distribution function F(h^{-1}(x)) and density (h^{-1})'(x) f(h^{-1}(x)) (Theorem I.4.1)",
+      "verbatim_quote": "If F has denslty f and h-' Is absolutely continuous, then h (X) has denslty",
+      "page": "Ch I Sec 4.1, Theorem 4.1, book p.11; text lines 1137-1150",
+      "latex": "g(x) = (h^{-1})'(x)\\, f(h^{-1}(x))",
+      "symbol_and_unit_ledger": {
+        "h": "strictly increasing transformation [maps units of X to units of h(X)]",
+        "f": "density of X [1 / unit of X]",
+        "g": "density of h(X) [1 / unit of h(X)]",
+        "F": "distribution function of X [dimensionless]"
+      },
+      "assumptions": [
+        "h is strictly increasing on R or a proper subset of R.",
+        "F has a density f and h^{-1} is absolutely continuous, so the density exists almost everywhere."
+      ],
+      "breakdown_regime": "One-to-one monotone maps only. Many-to-one transformations need a branch sum over preimages (treated separately in Ch IV.4), and a non-invertible or flat h destroys the density formula.",
+      "domain": "probability",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every change of variables in the engine, rescaling a projection, applying a link function, or mapping a latent score to an observable, is this rule: the density picks up the derivative of the inverse map, so any engine transform that forgets the Jacobian factor silently changes the distribution it claims to sample.",
+        "source_operator": "transformation_density_rule",
+        "telemetry": "transform definitions in the model registry, Jacobian factors logged per transform"
+      }
+    },
+    {
+      "primitive_id": "inversion_principle",
+      "name": "If U is uniform [0,1], then F^{-1}(U) has distribution function F, and F(X) is uniform [0,1] when X has distribution function F (Theorem II.2.1)",
+      "verbatim_quote": "If U 1s a unlform [O,l]random varlable, then F - ' ( U ) has dlstrlbutlon functlon F",
+      "page": "Ch II Sec 2.1, Theorem 2.1, book p.28; text lines 1886-1908",
+      "latex": "F^{-1}(u) = \\inf\\{x : F(x) = u,\\ 0 < u < 1\\}, \\qquad X = F^{-1}(U)",
+      "symbol_and_unit_ledger": {
+        "F": "continuous distribution function on R [dimensionless]",
+        "F^{-1}": "generalized inverse (quantile function) [units of X]",
+        "U": "uniform [0,1] random variable [dimensionless]",
+        "X": "variate with distribution function F"
+      },
+      "assumptions": [
+        "F is a continuous distribution function; the inverse is the generalized inverse defined in the theorem.",
+        "The method is exact when F^{-1} is explicitly known; examples tabulated in the text include exponential, Cauchy, Rayleigh, Pareto and triangular laws.",
+        "The same uniform can drive several inverses to induce controlled dependence between outputs (Example 2.1), and inversion through uniform order statistics yields all order statistics at once (Example 2.3).",
+        "The text calls inversion the only truly universal method (Example 2.4): computability of F alone suffices, given unlimited time."
+      ],
+      "breakdown_regime": "When F^{-1} is not explicit, numerical solution of F(X) = U with any stopping rule is necessarily inexact (Ch II Sec 2.2), and the text shows no stopping rule (absolute, relative, or in F) is universally recommendable. Slow quantile evaluation makes inversion the bottleneck for complex laws.",
+      "domain": "random-variate-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Inversion is the engine's canonical sampler interface: any predictive distribution that exposes a quantile function can be sampled, coupled across scenarios by shared uniforms for antithetic and common random number designs, and audited, because F(X) of an output must test uniform. Scenario generation in the engine is inversion over stored quantile representations.",
+        "source_operator": "inversion_principle",
+        "telemetry": "quantile function evaluations, uniformity tests on F(X) of emitted samples, shared-uniform coupling keys"
+      }
+    },
+    {
+      "primitive_id": "rejection_method",
+      "name": "Rejection sampling: draw X from an easy dominating density g with f(x) <= c g(x) everywhere and accept with probability f(X) / (c g(X)); the number of iterations is geometric with mean E(N) = c (Theorems II.3.1 and II.3.2)",
+      "verbatim_quote": "The rejectlon method 1s based upon the followlng fundamental property of densltles:",
+      "page": "Ch II Sec 3.1, Theorems 3.1-3.2, book pp.40-43; text lines 2456-2610",
+      "latex": "f(x) \\le c\\, g(x) \\quad \\text{for all } x, \\qquad E(N) = c",
+      "symbol_and_unit_ledger": {
+        "f": "target density [1 / unit of X]",
+        "g": "dominating (proposal) density, easy to generate [1 / unit of X]",
+        "c": "rejection constant, c >= 1 [dimensionless]",
+        "N": "number of iterations before acceptance; geometric with success probability 1/c [count]"
+      },
+      "assumptions": [
+        "A dominating density g exists and a constant c with f <= c g is known.",
+        "Random variates with density g are simple to generate, and the ratio f / g is simple to compute.",
+        "g must have heavier tails and sharper infinite peaks than f (text, Sec 3.1).",
+        "Correctness rests on Theorem 3.1: (X, cU g(X)) is uniform under the curve of c g, so accepted points are uniform under f."
+      ],
+      "breakdown_regime": "Cost is exactly the area ratio c, so a badly matched g (light tails, wrong peak) makes the method arbitrarily slow. The text warns that a constant dominating curve for a bounded density on [a,b] can be horribly inefficient and should be avoided except in a few cases.",
+      "domain": "random-variate-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Rejection is the engine's proposal scoring loop: a cheap proposal law generates candidate states, an exact ratio test filters them, and the rejection constant c is a live health metric for proposal quality. Any engine component that proposes and filters is running this primitive, and its measured acceptance rate estimates c directly.",
+        "source_operator": "rejection_method",
+        "telemetry": "proposal acceptance rates per model family, iteration counts per accepted sample, ratio evaluation costs"
+      }
+    },
+    {
+      "primitive_id": "wald_equation",
+      "name": "Wald's equation: for iid per-iteration contributions and any stopping rule N, the expected total is the per-iteration expectation times the expected number of iterations (Theorem II.3.5)",
+      "verbatim_quote": "To thls sum, we can apply Wald's equatlon, and thus,",
+      "page": "Ch II Sec 3.4, Theorem 3.5, book p.50; text lines 2961-3030",
+      "latex": "E\\left(\\sum_{i=1}^{N} Z_i\\right) = E(Z_1)\\, E(N), \\qquad Z_i = \\phi(W_i)",
+      "symbol_and_unit_ledger": {
+        "W_i": "collection of random variables used in iteration i",
+        "phi": "nonnegative Borel measurable cost function on the iteration variables",
+        "N": "stopping rule (number of iterations) [count]",
+        "Z_i": "cost contributed by iteration i [cost units]"
+      },
+      "assumptions": [
+        "The W_i are iid and phi is nonnegative and measurable.",
+        "The identity holds for every stopping rule N, not only the rejection rule; the proof uses independence of Z_i and the event [N >= i] plus monotone convergence, and remains valid when one or both expectations are infinite."
+      ],
+      "breakdown_regime": "For signed phi the clean form needs finite expectations; the text's proof route is the nonnegative case. Wald accounting prices expectation only, so variance of the total cost needs separate analysis (the text computes Var(N) = c(c-1) style quantities separately for rejection).",
+      "domain": "probability",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Wald's equation is the engine's cost kernel for every randomized loop with a data dependent stopping time: expected total compute factors into per-step cost times expected steps. Budgeting, capacity planning, and algorithm comparison inside the engine should all be Wald factorizations, because the stopping rule does not contaminate the per-step term.",
+        "source_operator": "wald_equation",
+        "telemetry": "per-step cost telemetry, stopping time distributions, expected total cost per pipeline stage"
+      }
+    },
+    {
+      "primitive_id": "letac_lower_bound",
+      "name": "Letac's lower bound: any sampler that outputs X = U_N for a stopping time N over an iid uniform sequence needs E(N) >= ||f||_infinity uniforms in expectation for a density f on [0,1] (Theorem II.3.6)",
+      "verbatim_quote": "More Importantly, Letac has obtalned lower bounds on the performance of any algorlthm of thls type.",
+      "page": "Ch II Sec 3.5, Theorem 3.6, book p.52; text lines 3035-3110",
+      "latex": "E(N) \\ge \\|f\\|_{\\infty}",
+      "symbol_and_unit_ledger": {
+        "E(N)": "expected number of uniform variates consumed [count]",
+        "||f||_infinity": "essential supremum of the target density f on [0,1] [1 / unit of X]",
+        "U_N": "the uniform selected by the stopping rule, equal in law to X"
+      },
+      "assumptions": [
+        "X = U_N where N is a stopping time with respect to an iid uniform [0,1] sequence.",
+        "f is a density on [0,1]; the proof shows P(X in B) <= E(N) P(U in B) for all Borel B, then takes the supremum."
+      ],
+      "breakdown_regime": "The bound prices one specific output architecture (stopping time selection). The text notes rejection with a constant dominating curve comes within a factor of 2 of this lower bound, so the bound certifies near optimality rather than giving an achievable exact target; unbounded f makes the bound vacuous.",
+      "domain": "complexity-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is a veto grade bound for the engine: any sampling design whose promised uniform budget sits below the supremum of its target density is impossible, not merely optimistic. The engine uses such bounds to reject architectures at design time and to certify that a rejection sampler within a factor of 2 of the floor cannot be beaten by more cleverness of the same type.",
+        "source_operator": "letac_lower_bound",
+        "telemetry": "target density supremum estimates, uniform consumption per emitted sample"
+      }
+    },
+    {
+      "primitive_id": "squeeze_principle",
+      "name": "Squeeze principle (Marsaglia): sandwich f between cheap functions h_1 <= f <= h_2 so most rejection decisions are made by quick acceptance or quick rejection steps without evaluating f (Ch II Sec 3.6)",
+      "verbatim_quote": "Here we will briefly discuss the squeeze princlple",
+      "page": "Ch II Sec 3.6, book pp.53-57; text lines 3113-3320",
+      "latex": "h_1(x) \\le f(x) \\le h_2(x)",
+      "symbol_and_unit_ledger": {
+        "h_1, h_2": "cheap to evaluate lower and upper bounds on f [1 / unit of X]",
+        "W": "the rejection ordinate cU g(X) compared against h_1(X), h_2(X), then f(X) only in the sandwich gap",
+        "N_f": "number of exact evaluations of f; with only a quick acceptance step E(N_f) = c - integral of h_1 (text)"
+      },
+      "assumptions": [
+        "Proper sandwiching: 0 <= h_1 <= f <= h_2 <= c g (boundary violations allowed but gain nothing, per text).",
+        "Dropping both quick steps recovers the standard rejection algorithm, so validity never depends on the squeezes.",
+        "Taylor series expansions are the text's standard source of polynomial squeezes (worked for the normal density against a Cauchy proposal)."
+      ],
+      "breakdown_regime": "The gain is exactly the probability mass where W falls outside the sandwich gap; wide gaps (poor bounds) return the full rejection cost. The iteration count distribution is unchanged (E(N) = c), only the number of expensive f evaluations drops.",
+      "domain": "random-variate-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The squeeze is the engine's lazy evaluation pattern: cheap certified bounds decide most cases, and the expensive exact model is invoked only inside the uncertainty gap. Bound tightness is measurable, so the engine can price a bound by the fraction of decisions it settles, exactly as the text prices squeezes by the expected number of f evaluations avoided.",
+        "source_operator": "squeeze_principle",
+        "telemetry": "bound evaluation rates, gap frequency (exact model invocations per decision), bound tightness integrals"
+      }
+    },
+    {
+      "primitive_id": "composition_method",
+      "name": "Composition (discrete mixture decomposition): if f = sum_i p_i f_i with (p_i) a probability vector, sample the index Z with P(Z = i) = p_i, then sample from f_Z (Ch II Sec 4.1)",
+      "verbatim_quote": "If our target denslty f can be decomposed lnto a dlscrete mlxture",
+      "page": "Ch II Sec 4.1, book p.66; text lines 3740-3780",
+      "latex": "f(x) = \\sum_{i=1}^{\\infty} p_i f_i(x), \\qquad \\sum_{i} p_i = 1, \\quad p_i \\ge 0",
+      "symbol_and_unit_ledger": {
+        "p_i": "mixture weights [probabilities]",
+        "f_i": "component densities [1 / unit of X]",
+        "Z": "discrete index variate with P(Z = i) = p_i [count]"
+      },
+      "assumptions": [
+        "The decomposition of f into the mixture is known explicitly.",
+        "A generator for the discrete index Z and a generator for each component f_i are available; the text treats finite mixtures with K components as the practical case."
+      ],
+      "breakdown_regime": "The method relocates difficulty rather than removing it: a bad decomposition (many components, hard components, an awkward discrete index law) gains nothing. Infinite mixtures need a summable, generatable index law.",
+      "domain": "random-variate-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Composition is the engine's mixture architecture: predictive laws are stored as weighted component lists, sampling is index draw then component draw, and updating a model means editing weights or swapping a component. It is also the audit structure, since posterior weight on each component is directly observable from the index draws.",
+        "source_operator": "composition_method",
+        "telemetry": "component weight vectors, index draw frequencies, per-component sampling costs"
+      }
+    },
+    {
+      "primitive_id": "interval_partition_jigsaw",
+      "name": "Partition the real line into intervals A_i and decompose f by its restrictions to the intervals; troublesome regions (infinite tails, unbounded peaks) are isolated into small leftover pieces handled by rejection (the jigsaw puzzle method, Ch II Sec 4.2-4.3)",
+      "verbatim_quote": "Thls technlque wlll be called the jigsaw puzzle method, a term coined by Marsaglla.",
+      "page": "Ch II Sec 4.2-4.3, book pp.66-68; text lines 3780-3900",
+      "latex": "f = \\sum_{i=1}^{K} p_i \\, \\frac{f \\, \\mathbf{1}_{A_i}}{p_i}, \\qquad p_i = \\int_{A_i} f(x)\\, dx",
+      "symbol_and_unit_ledger": {
+        "A_i": "intervals partitioning the real line",
+        "p_i": "probability mass of f on A_i [dimensionless]",
+        "f 1_{A_i} / p_i": "density of f restricted and renormalized on A_i [1 / unit of X]"
+      },
+      "assumptions": [
+        "Restricted densities on each interval can be generated, often by rejection from simple per-interval dominating curves h_i.",
+        "The constants p_i are available when the distribution function F is easy to evaluate at arbitrary points (text, Sec 4.3).",
+        "Simple pieces (rectangles, triangles) are chosen to carry probability p_1 + ... + p_{K-2} close to 1, leaving only a small strangely shaped residual for rejection."
+      ],
+      "breakdown_regime": "For parametric families the decomposition itself is a function of the parameters (the text flags this for beta and gamma), so set-up cost recurs per parameter value. Very many intervals mechanize well but inflate tables and set-up.",
+      "domain": "random-variate-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Partition decomposition maps to the engine's regime splitting: a predictive law is cut at structurally meaningful boundaries, bulk regions are served by fast exact pieces, and pathological tails are quarantined into a small rejection handled region. The mass of the quarantined piece is the design metric, exactly the text's small p_{K-1}, p_K criterion.",
+        "source_operator": "interval_partition_jigsaw",
+        "telemetry": "interval mass vector, residual piece mass, per-interval generator types"
+      }
+    },
+    {
+      "primitive_id": "acceptance_complement_method",
+      "name": "Acceptance-complement (Kronmal and Peterson): write f = f_1 + f_2 with f_1 <= g for an easy density g; return a g-draw with probability f_1(X)/g(X), otherwise draw from the residual density f_2 / p. No rejection step occurs in the main path (Ch II Sec 5.1)",
+      "verbatim_quote": "Thls, the acceptance-complement method, was flrst proposed by Kronmal and Peterson (1981,1984).",
+      "page": "Ch II Sec 5.1, book pp.75-76; text lines 4201-4280",
+      "latex": "f(x) = f_1(x) + f_2(x), \\qquad f_1 \\le g, \\qquad p = \\int f_2",
+      "symbol_and_unit_ledger": {
+        "g": "easy density used for the first draw [1 / unit of X]",
+        "f_1": "part of f dominated by g [1 / unit of X]",
+        "f_2 / p": "residual (complement) density [1 / unit of X]",
+        "p": "total mass of the residual part [dimensionless]"
+      },
+      "assumptions": [
+        "g is an easy density and f_1 / g is not difficult to evaluate.",
+        "The residual density f_2 / p is easy to generate when p is not small; when p is small this hardly matters (text conditions (i)-(iii)).",
+        "Design goal per text: maximize the probability of returning the first draw, which pushes g to be almost equal to f."
+      ],
+      "breakdown_regime": "Unlike rejection it has two design variables (f_1 and g), and the residual is very often still generated by rejection, so the method wins only when the first-draw acceptance probability is high. It generalizes composition (take f_1 = f on a set A, g the restricted density).",
+      "domain": "random-variate-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Acceptance-complement is the engine's fast path pattern: an easy approximate law produces a candidate that is kept with an exact correction probability, and only the complement mass routes to a heavier exact generator. The kept fraction is the measurable payoff, and the complement mass p is the budget line for the expensive path.",
+        "source_operator": "acceptance_complement_method",
+        "telemetry": "first-draw keep probability, complement mass p, residual generator invocation rate"
+      }
+    },
+    {
+      "primitive_id": "marsaglia_table_lookup",
+      "name": "Marsaglia's multilevel table look-up: store a discrete distribution as digit-block tables so one uniform resolves the draw at the first table level most of the time, with finer auxiliary tables only for the unresolved entries (Ch III Sec 3)",
+      "verbatim_quote": "What we have descrlbed here forms the essence of Marsaglia's table look-up method",
+      "page": "Ch III Sec 3, book pp.102-106; text lines 5560-5665",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The probabilities are multiples of a word fraction such as 2^-16 or 2^-32 (truncated by word size), so the tables represent the law to machine resolution.",
+        "Identical entries in the original table are grouped, which forces a nonmonotone relation between U and X (text).",
+        "In the text's worked example, 80 percent of draws never touch the auxiliary table, and the second level resolves 90 percent of the remainder."
+      ],
+      "breakdown_regime": "Set-up and memory grow with resolution, and rare entries cascade through several table levels. The method trades memory and set-up for near constant time draws, the opposite end of the spectrum from sequential inversion.",
+      "domain": "discrete-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Table look-up is the engine's precomputation pattern for hot categorical laws: spend memory once so repeated draws cost one or two array reads. The engine applies it to high frequency discrete choices (play categories, lineup slots) where the law is fixed for long stretches and draw volume dwarfs set-up cost.",
+        "source_operator": "marsaglia_table_lookup",
+        "telemetry": "table hit depth distribution, table memory footprint, draws per set-up"
+      }
+    },
+    {
+      "primitive_id": "alias_method",
+      "name": "Walker's alias method: every probability vector on K points is an equiprobable mixture of K two-point distributions, so after an O(K) set-up each draw costs two uniforms and one comparison, independent of K and of the vector (Theorem III.4.1)",
+      "verbatim_quote": "Walker (1974, 1977) proposed an lngenlous method for generatlng a random varlate X wlth probablllty vector",
+      "page": "Ch III Sec 4.1, Theorem 4.1, book pp.107-108; text lines 5667-5760",
+      "latex": "p_i = \\frac{1}{K} \\sum_{l=0}^{K-1} \\left( q_l \\mathbf{1}[i_l = i] + (1 - q_l) \\mathbf{1}[j_l = i] \\right)",
+      "symbol_and_unit_ledger": {
+        "K": "number of support points [count]",
+        "(i_l, j_l)": "alias pair stored in column l",
+        "q_l": "split probability of column l [dimensionless]",
+        "p_i": "target probability of outcome i [dimensionless]"
+      },
+      "assumptions": [
+        "Support is finite with K points; the equiprobable mixture representation exists by the induction in Theorem 4.1 (repeatedly pair the smallest remaining probability with the largest).",
+        "Set-up constructs the pairs (i_l, j_l) and thresholds q_l in O(K); generation picks a column uniformly, then flips a q_l coin between i_l and j_l."
+      ],
+      "breakdown_regime": "Worst case time per draw is constant, but any change to the probability vector needs a fresh O(K) set-up, and infinite or continuous laws must first be truncated or discretized. Table memory is O(K).",
+      "domain": "discrete-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The alias method is the engine's default categorical sampler: any discrete predictive law (next play type, turnover class, scoring outcome) is compiled once into alias tables and then drawn at constant cost regardless of support size. Weight updates are batch events that trigger recompilation, mirroring the text's set-up versus generation split.",
+        "source_operator": "alias_method",
+        "telemetry": "alias table size, recompilation frequency, draws served per compilation"
+      }
+    },
+    {
+      "primitive_id": "forsythe_von_neumann_method",
+      "name": "Forsythe's method: for a density of the form f = c g e^{-F} with 0 <= F <= 1, accept a g-draw X when the length K of a decreasing uniform chain started at F(X) is odd; this replaces the exponential evaluation by comparisons (Theorem IV.2.1, Ch IV Sec 2.1)",
+      "verbatim_quote": "Observe that Forsythe’s method does not requlre any exponentlatlon.",
+      "page": "Ch IV Sec 2.1, Theorem 2.1, book pp.121-124; text lines 6368-6520",
+      "latex": "f(x) = c\\, g(x)\\, e^{-F(x)}",
+      "symbol_and_unit_ledger": {
+        "g": "easy density supplying candidate draws [1 / unit of X]",
+        "F": "function with values in [0,1], not necessarily a distribution function [dimensionless]",
+        "c": "normalization constant [dimensionless]",
+        "K": "length of the decreasing uniform chain U_1 > U_2 > ... started below F(X) [count]"
+      },
+      "assumptions": [
+        "The density can be written in the form c g e^{-F} with F bounded in [0,1].",
+        "Theorem 2.1 part (iii) gives P(Y <= x, K odd) as a ratio of integrals of e^{-F} dG, which is exactly the target law; the exit probability p is shared with the equivalent rejection method."
+      ],
+      "breakdown_regime": "F must be bounded by 1; common densities in this form have unbounded F (for example F(x) = x or x^2 / 2), forcing the line to be split into pieces treated separately. The text concludes the method is unlikely to beat rejection when exponential variates are cheap, since rejection can swap its e^{-F} evaluation for an F evaluation plus an exponential draw.",
+      "domain": "random-variate-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Forsythe's method is an isomorphism for expensive link evaluations in the engine: when an exponential or logistic factor is the costly term, a parity test on a cheap uniform chain can stand in for evaluating it, trading many cheap comparisons for one expensive transcendental call. The engine uses this trade wherever hardware makes exp costly relative to compares.",
+        "source_operator": "forsythe_von_neumann_method",
+        "telemetry": "chain length distribution, F evaluations per accepted sample, exp evaluations avoided"
+      }
+    },
+    {
+      "primitive_id": "von_neumann_exponential_generator",
+      "name": "Von Neumann's exponential generator: an exponential variate is (Z-1) + Y with Z geometric and Y a truncated exponential on [0,1] produced by the Forsythe parity test, using only comparisons, uniform variates and a counter; Z is obtained free as the outer loop count (Lemma IV.2.1, Ch IV Sec 2.2)",
+      "verbatim_quote": "The remarkable fact 1s that thls method requlres only comparlsons, unlform",
+      "page": "Ch IV Sec 2.2, Lemma 2.1, book pp.125-126; text lines 6520-6600",
+      "latex": "E \\stackrel{d}{=} (Z-1)\\rho + Y, \\qquad P(Z = i) = e^{-(i-1)\\rho} - e^{-i\\rho}",
+      "symbol_and_unit_ledger": {
+        "E": "exponential random variable [time or unit scale]",
+        "rho": "block length, arbitrary positive constant; the generator uses rho = 1 [units of E]",
+        "Z": "geometric block index [count]",
+        "Y": "truncated exponential on [0, rho) [units of E]"
+      },
+      "assumptions": [
+        "Lemma 2.1 gives the block decomposition of the exponential law for any rho > 0.",
+        "With rho = 1 the truncated part Y needs only uniform variates through Forsythe's method because F(x) = x.",
+        "Von Neumann's observation (text): the number of outer loop executions is itself geometric with the correct parameter and independent of Y, so Z costs no extra experiment."
+      ],
+      "breakdown_regime": "The text calls the expected number of uniforms a high bottom line (the analysis bounds E(N) between quantities involving e), so once a logarithm is affordable the one-line inversion X = -log U supersedes it. Its value is the existence proof that a transcendental law can be sampled with zero transcendental operations.",
+      "domain": "random-variate-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The block decomposition is the engine's template for memoryless waiting times: any exponential clock in a simulation splits into a geometric block count plus a within-block residual, and loop counters that already exist in the code can serve as the geometric part. Event simulations in the engine reuse counters this way instead of drawing fresh variates.",
+        "source_operator": "von_neumann_exponential_generator",
+        "telemetry": "loop counts reused as geometric draws, uniforms consumed per exponential variate"
+      }
+    },
+    {
+      "primitive_id": "khinchine_theorem",
+      "name": "Khinchine's theorem: a random variable is unimodal (mode at 0) if and only if it is distributed as UY with U uniform [0,1] independent of Y; the distribution function is F(x) = integral_0^1 G(x/u) du (Theorem IV.6.1)",
+      "verbatim_quote": "where U , Y are lndependent random varlables: U 1s unlformly dlstrlbuted on [ O , l ) and Y 1s another random varlable",
+      "page": "Ch IV Sec 6.2, Theorem 6.1, book pp.171-172; text lines 8820-8870",
+      "latex": "F(x) = \\int_0^1 G\\!\\left(\\frac{x}{u}\\right) du",
+      "symbol_and_unit_ledger": {
+        "U": "uniform [0,1] random variable [dimensionless]",
+        "Y": "independent random variable with distribution function G on [0, infinity)",
+        "F": "distribution function of the product UY [dimensionless]",
+        "G": "distribution function of Y [dimensionless]"
+      },
+      "assumptions": [
+        "Unimodality is in the text's sense: F convex on (-infinity, 0] and concave on [0, infinity), mode at 0 (other mode locations are set aside to keep notation simple).",
+        "Y is not required to possess a density."
+      ],
+      "breakdown_regime": "The representation helps only when Y is simpler than X; it is an existence theorem, and tracking down a usable Y is the actual work (the text frames the whole section as hunting useful continuous mixtures). Non-unimodal laws are outside the theorem entirely.",
+      "domain": "probability",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Khinchine gives the engine a factorization test for any one-peaked predictive law: if the law is unimodal, it factors into a uniform shrinkage times an independent scale variable, so sampling and uncertainty decomposition reduce to the scale factor. Engine uncertainty reports can therefore split a unimodal projection into a shape-free uniform part and a magnitude part with separate provenance.",
+        "source_operator": "khinchine_theorem",
+        "telemetry": "unimodality flags on predictive laws, implied scale variable distributions"
+      }
+    },
+    {
+      "primitive_id": "monotone_density_representation",
+      "name": "For a monotone (nonincreasing) density f on [0, infinity), X is distributed as UY where Y has density g(x) = -x f'(x), and f(x) = -integral_x^infinity f'(u) du (Theorem IV.6.2)",
+      "verbatim_quote": "and X 1s dlstrlbuted as UY where U 1s a unlform [0,1] random varlable, and Y 1s lndependent of U and has denslty",
+      "page": "Ch IV Sec 6.2, Theorem 6.2, book pp.172-173; text lines 8890-8920",
+      "latex": "g(x) = -x f'(x), \\qquad x > 0",
+      "symbol_and_unit_ledger": {
+        "f": "monotone nonincreasing density on [0, infinity) [1 / unit of X]",
+        "f'": "derivative of f, defined almost everywhere [1 / unit of X squared]",
+        "g": "density of the Khinchine factor Y [1 / unit of X]",
+        "U": "uniform [0,1] [dimensionless]"
+      },
+      "assumptions": [
+        "f is nonincreasing on [0, infinity) and vanishes on (-infinity, 0); f may blow up at 0.",
+        "f is absolutely continuous on all closed intervals of (0, infinity), so f' exists almost everywhere.",
+        "Theorem 6.2 also gives lim x f(x) = 0 both as x to 0 and as x to infinity."
+      ],
+      "breakdown_regime": "Requires a derivative: densities with jumps or flat plus curved mixtures fall outside the clean form, and the factor density -x f'(x) may itself be hard to sample. It is the representation behind the inverse-function methods for monotone densities in Sec IV.6.3, not a universal monotone sampler on its own.",
+      "domain": "probability",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is a derived kernel for the engine's decreasing-hazard and decay models: the slope of a monotone density, weighted by x, is itself a density, so the engine can convert a fitted decay curve into a sampling law for its scale factor without numerical inversion. Derivative information already computed for fitting becomes generation machinery.",
+        "source_operator": "monotone_density_representation",
+        "telemetry": "density derivative curves, implied factor densities for monotone model families"
+      }
+    },
+    {
+      "primitive_id": "chambers_mallows_stuck_stable",
+      "name": "Chambers-Mallows-Stuck representation (from Zolotarev): every stable(alpha, beta) variate is an explicit function of one uniform variate on [-pi/2, pi/2] and one exponential variate (Theorem IV.6.7)",
+      "verbatim_quote": "To All the vold, Chambers, Mallows and Stuck (1976) proposed t o use a representatlon of Zolotarev's (1966):",
+      "page": "Ch IV Sec 6.6, Theorem 6.7, book pp.184-185; text lines 9500-9545",
+      "latex": "X = \\frac{\\sin(\\alpha (U - \\gamma))}{(\\cos U)^{1/\\alpha}} \\left( \\frac{\\cos(U - \\alpha (U - \\gamma))}{E} \\right)^{\\frac{1-\\alpha}{\\alpha}}",
+      "symbol_and_unit_ledger": {
+        "U": "uniform [-pi/2, pi/2] random variable [radians]",
+        "E": "exponential random variable [dimensionless]",
+        "alpha": "stable index in (0, 2]",
+        "gamma": "Zolotarev shift constant determined by alpha and the skewness parameter beta, as defined in Theorem 6.7 [radians]",
+        "X": "stable(alpha, beta) variate"
+      },
+      "assumptions": [
+        "Formula as displayed in Theorem 6.7 for alpha not equal to 1; the alpha = 1 case has its own displayed form in the text (involving tan(U) and a log term).",
+        "Special cases in the text: alpha = 2 recovers a Box-Muller form for the normal, alpha = 1, beta = 0 gives tan(U) (Cauchy by inversion), alpha = 1/2, beta = 1 gives a function of a normal variate."
+      ],
+      "breakdown_regime": "Stable densities have no closed form in general, so the representation is the only exact route; for alpha < 2 the variance is infinite and for alpha <= 1 the mean is infinite, which vetoes moment based downstream summaries. Near alpha = 1 the two formulas must be switched carefully.",
+      "domain": "probability",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "For the engine this is the heavy tail module: return, error, and upset magnitudes that refuse Gaussian assumptions can be sampled exactly from two elementary variates, with alpha and beta as interpretable dials. The representation also proves such laws are cheap to simulate despite having no density formula, so absence of a closed form is never an excuse for a Gaussian substitute.",
+        "source_operator": "chambers_mallows_stuck_stable",
+        "telemetry": "tail index estimates, skewness parameters, uniform and exponential draws per stable sample"
+      }
+    },
+    {
+      "primitive_id": "ratio_of_uniforms_method",
+      "name": "Ratio-of-uniforms (Kinderman and Monahan): if (U, V) is uniform over A = {(u, v): 0 <= u <= sqrt(f(v/u))}, then V/U has density proportional to f; implemented as rejection in an enclosing rectangle with acceptance test U^2 <= f(V/U) (Theorem IV.7.1)",
+      "verbatim_quote": "The ratlo-of-unlforms method was flrst proposed by Klnderman and Monahan (1977)",
+      "page": "Ch IV Sec 7.1, Theorem 7.1, book pp.194-196; text lines 9996-10070",
+      "latex": "X = \\frac{V}{U}, \\qquad \\text{accept when } U^2 \\le f(X)",
+      "symbol_and_unit_ledger": {
+        "U": "uniform on [0, b] with b >= sup sqrt(f(x))",
+        "V": "uniform on [a_-, a_+] with a_- <= inf x sqrt(f(x)) and a_+ >= sup x sqrt(f(x))",
+        "f": "integrable function proportional to the target density; normalization constant not needed",
+        "X": "variate with density f / integral f"
+      },
+      "assumptions": [
+        "f is bounded and x^2 f(x) is bounded, which the text notes covers bounded densities with subquadratic tails such as normal, gamma, beta, t and exponential.",
+        "The expected number of iterations is the rectangle area over the area of A; this ratio is named the rejection constant in the text."
+      ],
+      "breakdown_regime": "Densities with tails heavier than x^-2 cannot be enclosed in a finite rectangle and are excluded. Good performance needs A to fill most of its rectangle, which holds when f concentrates near zero with monotone decreasing tails; the acceptance test cannot be log-transformed away because U is needed explicitly in X = V/U (text).",
+      "domain": "random-variate-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ratio-of-uniforms is the engine's sampler for unnormalized posteriors: only ratios of the target are needed, the normalization constant cancels, and the geometry of region A doubles as a diagnostic, since a thin A inside its rectangle warns that the density shape fights the method. Posterior sampling modules in the engine expose sup sqrt(f) and sup x sqrt(f) as their set-up contract.",
+        "source_operator": "ratio_of_uniforms_method",
+        "telemetry": "enclosing rectangle dimensions, acceptance test rates, unnormalized density evaluations"
+      }
+    },
+    {
+      "primitive_id": "uniform_spacings_simplex",
+      "name": "The spacings S_j = U_(j) - U_(j-1) of a uniform sample are jointly uniform over the simplex (Theorem V.2.1)",
+      "verbatim_quote": "Let u,, . . . , u, be lld unlform [O,l] random varlables wlth order statlstlcs",
+      "page": "Ch V Sec 2.1, Theorem 2.1, book p.207; text lines 10568-10615",
+      "latex": "S_j = U_{(j)} - U_{(j-1)}, \\qquad j = 1, \\ldots, n+1, \\quad U_{(0)} = 0, \\ U_{(n+1)} = 1",
+      "symbol_and_unit_ledger": {
+        "U_(j)": "j-th order statistic of n iid uniform [0,1] variates [dimensionless]",
+        "S_j": "j-th uniform spacing; the vector (S_1, ..., S_n) is uniform over the simplex {x_i >= 0, sum x_i <= 1}",
+        "n": "sample size [count]"
+      },
+      "assumptions": [
+        "The sample is iid uniform [0,1]; the proof is the unit Jacobian of the order statistic to spacing transformation."
+      ],
+      "breakdown_regime": "The statement is about the joint law of gaps, not a generation method by itself; it becomes one when combined with the exponential representation (next primitive) or with ordered sample constructions in Ch V Sec 3.",
+      "domain": "probability",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Spacings uniformity is the engine's null geometry for allocations: any split of a whole into n+1 parts that claims to be structureless must look like uniform spacings, so deviations of observed gap patterns (possession shares, play distribution across a game, time between events) from simplex uniformity are a measurable signal rather than an impression.",
+        "source_operator": "uniform_spacings_simplex",
+        "telemetry": "gap vectors from event streams, simplex uniformity test statistics"
+      }
+    },
+    {
+      "primitive_id": "spacings_exponential_representation",
+      "name": "Uniform spacings are distributed as normalized iid exponentials, and an independent gamma(n+1) multiple of the spacings is exactly the exponential vector (Theorem V.2.2)",
+      "verbatim_quote": "1s a sequence of lld exponentlal random variables.",
+      "page": "Ch V Sec 2.1, Theorem 2.2, book p.208; text lines 10610-10655",
+      "latex": "(S_1, \\ldots, S_{n+1}) \\stackrel{d}{=} \\left( \\frac{E_1}{\\sum_{i=1}^{n+1} E_i}, \\ldots, \\frac{E_{n+1}}{\\sum_{i=1}^{n+1} E_i} \\right)",
+      "symbol_and_unit_ledger": {
+        "E_i": "iid exponential random variables",
+        "S_j": "uniform spacings",
+        "G_{n+1}": "gamma(n+1) variate independent of the spacings; G_{n+1} (S_1, ..., S_{n+1}) is distributed as (E_1, ..., E_{n+1}) (text)"
+      },
+      "assumptions": [
+        "Exponential variates are available and independent; the gamma factor is independent of the spacing vector."
+      ],
+      "breakdown_regime": "Normalization couples all components, so independent exponentials cannot be read off without the shared gamma factor; for ordered samples the partial sums still need the batch constructions of Ch V Sec 3 rather than a sort when n is large.",
+      "domain": "probability",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This representation is how the engine builds random allocations: draw independent exponential weights and normalize. It is the continuous backbone behind Dirichlet style share vectors, so any engine module that splits a total (win probability mass across outcomes, workload across players) can generate and reason about splits through independent exponential clocks.",
+        "source_operator": "spacings_exponential_representation",
+        "telemetry": "exponential weight draws, normalization sums, allocation vectors"
+      }
+    },
+    {
+      "primitive_id": "radial_symmetry_sphere",
+      "name": "A radially symmetric random vector has density depending only on the norm, f(x) = g(||x||), and its direction X / ||X|| is uniform on the unit sphere C_d, independent of the radius (Ch V Sec 4.1, Theorem 4.1)",
+      "verbatim_quote": "radlal symmetry 1s thus nothlng else but lnvarlance under rotatlons of the",
+      "page": "Ch V Sec 4.1, Theorem 4.1, book pp.225-227; text lines 11547-11630",
+      "latex": "f(x_1, \\ldots, x_d) = g(\\|x\\|), \\qquad \\int_0^{\\infty} \\omega_d\\, r^{d-1} g(r)\\, dr = 1",
+      "symbol_and_unit_ledger": {
+        "g": "radial density profile on [0, infinity)",
+        "omega_d": "surface content (volume) of the unit sphere C_d as defined in the text",
+        "||x||": "Euclidean norm [units of the components]",
+        "C_d": "unit sphere in R^d"
+      },
+      "assumptions": [
+        "Strict radial symmetry: P(X = 0) = 0, so the direction is well defined.",
+        "Squared components of a uniform point on C_d are ratios of gamma(1/2) and gamma((d-1)/2) variates, and X_1^2 is beta(1/2, (d-1)/2) (Theorem 4.1 parts 2-3)."
+      ],
+      "breakdown_regime": "Elliptical radial symmetry is explicitly not treated here; real multivariate data with unequal coordinate scales needs the linear transformation machinery of Ch XI first. The characterization collapses when the law is only approximately rotation invariant.",
+      "domain": "multivariate",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Direction radius separation is the engine's spherical sampling kernel: isotropic uncertainty around a projection is generated as a uniform direction times an independent radius, and any test of isotropy reduces to testing uniformity of directions on the sphere. Multivariate normal generation in the engine is exactly this kernel with a chi distributed radius.",
+        "source_operator": "radial_symmetry_sphere",
+        "telemetry": "direction vectors, radius draws, isotropy diagnostics"
+      }
+    },
+    {
+      "primitive_id": "polar_method_box_muller",
+      "name": "Polar method: for (X_1, X_2) uniform in the unit disk, S^2 = X_1^2 + X_2^2 is uniform [0,1] and independent of the direction (X_1/S, X_2/S); scaling the direction by a gamma based radius gives normal variates in batches, including the Box-Muller and Marsaglia-Bray forms (Theorem V.4.4, Ch V Sec 4.4)",
+      "verbatim_quote": "The second formula 1s the well-known Box-Muller method",
+      "page": "Ch V Sec 4.4, Theorem 4.4, book pp.234-235; text lines 11928-12035",
+      "latex": "S^2 \\sim \\mathrm{Uniform}(0,1), \\qquad \\left( \\frac{X_1}{S}, \\frac{X_2}{S} \\right) \\text{ uniform on } C_2, \\text{ independent of } S",
+      "symbol_and_unit_ledger": {
+        "S": "radius sqrt(X_1^2 + X_2^2) of a point uniform in the unit disk",
+        "(X_1/S, X_2/S)": "uniform direction on the unit circle C_2",
+        "R": "radius with density proportional to r^{d-1} e^{-r^2/2}; the polar generator returns R times a uniform direction (text Sec 4.4)"
+      },
+      "assumptions": [
+        "Theorem 4.4 lists the needed facts: S and the direction are independent, S^2 is uniform, X_2/X_1 is Cauchy, and the doubled angle map preserves uniformity on C_2.",
+        "For general d the radius R is distributed through a gamma(d/2) variate (text Sec 4.4)."
+      ],
+      "breakdown_regime": "Rejection into the disk wastes the corner mass (acceptance pi/4 in 2D), and the trigonometric Box-Muller form pays for sin and cos; the text's batch view (d variates at once) is where the method pays off. Numerical underflow of log(S^2) style terms needs guarding in finite precision, outside the text's exact model.",
+      "domain": "random-variate-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The polar construction is the engine's normal factory and its template for paired simulation: two independent normals come from one uniform direction and one scalar radius, so antithetic and rotated designs are free. Any engine module drawing Gaussian noise in batches inherits the direction radius split and its independence guarantees.",
+        "source_operator": "polar_method_box_muller",
+        "telemetry": "disk rejection counts, radius draws, normal pairs emitted per uniform consumed"
+      }
+    },
+    {
+      "primitive_id": "thinning_method_poisson",
+      "name": "Thinning (Lewis and Shedler): generate a dominating nonhomogeneous Poisson process with rate mu >= lambda, keep each event at time T with probability lambda(T) / mu(T); the kept events form a nonhomogeneous Poisson process with rate lambda (Ch VI Sec 1.3)",
+      "verbatim_quote": "Consider now the thlnnlng algorlthm of Lewls and Shedler (1979):",
+      "page": "Ch VI Sec 1.3, book pp.255-256; text lines 12856-12905",
+      "latex": "\\text{keep event } T \\iff U \\le \\frac{\\lambda(T)}{\\mu(T)}",
+      "symbol_and_unit_ledger": {
+        "lambda(t)": "target rate function [events / unit time]",
+        "mu(t)": "dominating rate function, mu(t) >= lambda(t) [events / unit time]",
+        "T": "event time of the dominating process [time]",
+        "U": "uniform [0,1] thinning coin [dimensionless]"
+      },
+      "assumptions": [
+        "The dominating process is usually produced by inversion; the proof runs through Theorem 1.3: (Y_i, U_i mu(Y_i)) is a unit rate homogeneous Poisson process under the curve of mu, and the subsequence under lambda inherits the property.",
+        "Worked example in the text: cyclic rate lambda(t) = Lambda(1 + cos t) with dominating rate 2 Lambda, acceptance probability (1 + cos T)/2; the squeeze principle can avoid most cosine evaluations."
+      ],
+      "breakdown_regime": "Efficiency is the ratio of integrated rates over the window, integral lambda over integral mu, so a loose dominating rate wastes events without bound. The text warns the expected value of the ratio cannot be used as the efficiency measure because there is positive probability of returning no variates at all.",
+      "domain": "stochastic-processes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Thinning is the engine's event simulator: a tractable super-process of candidate events is generated first, then an exact state dependent keep probability carves out the true process. Game event streams, injury occurrences, and scoring runs are all thinning problems, and the integrated rate ratio is the simulator's published efficiency.",
+        "source_operator": "thinning_method_poisson",
+        "telemetry": "candidate event counts, keep rates, integrated target and dominating rates per window"
+      }
+    },
+    {
+      "primitive_id": "poisson_time_change",
+      "name": "Time rescaling: if T_1 < T_2 < ... is a unit rate homogeneous Poisson process and Lambda is an integrated rate function, then Lambda^{-1}(T_1) < Lambda^{-1}(T_2) < ... is a nonhomogeneous Poisson process with rate lambda (Theorem VI.1.4)",
+      "verbatim_quote": "1s a homogeneous Polsson process wlth unlt rate on [O,oo),and If A 1s an lntegrated rate functlon, then",
+      "page": "Ch VI Sec 1.4, Theorem 1.4, book p.257; text lines 12934-12955",
+      "latex": "0 < \\Lambda^{-1}(T_1) < \\Lambda^{-1}(T_2) < \\cdots, \\qquad \\Lambda(t) = \\int_0^t \\lambda(s)\\, ds",
+      "symbol_and_unit_ledger": {
+        "T_i": "event times of a unit rate homogeneous Poisson process [operational time]",
+        "Lambda": "integrated rate function [expected event count]",
+        "lambda": "rate function [events / unit time]"
+      },
+      "assumptions": [
+        "Lambda is an integrated rate function, hence nondecreasing and invertible in the generalized sense; the result is quoted from Cinlar (1975) in the text."
+      ],
+      "breakdown_regime": "Requires Lambda^{-1}: the text notes the inversion and composition methods for nonhomogeneous processes require computing Lambda^{-1}, whereas the thinning method does not. Numerical inversion reintroduces the inexactness of Ch II Sec 2.2.",
+      "domain": "stochastic-processes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Time change is the engine's clock conversion: processes modeled in operational time (plays, possessions, exposures) map to calendar time through the integrated intensity, and the inverse map sends observed event times back to a unit rate clock where residuals must test as a homogeneous Poisson process. That residual test is the engine's goodness of fit check for every event model.",
+        "source_operator": "poisson_time_change",
+        "telemetry": "integrated intensity curves, rescaled inter-event times, unit rate residual tests"
+      }
+    },
+    {
+      "primitive_id": "hazard_rate_inversion",
+      "name": "A variate with cumulative hazard rate H is obtained by inverting an exponential variate: X = H^{-1}(E), since F(x) = 1 - e^{-H(x)} (Ch VI Sec 2.1-2.2)",
+      "verbatim_quote": "For generatlng a random varlate wlth cumulatlve hazard rate H , i t sufflces to lnvert an exponentlal random varlate:",
+      "page": "Ch VI Sec 2.1-2.2, book pp.260-261; text lines 13140-13190",
+      "latex": "F(x) = 1 - e^{-H(x)}, \\qquad X = H^{-1}(E)",
+      "symbol_and_unit_ledger": {
+        "H(x)": "cumulative hazard rate, integral of the hazard rate h [dimensionless]",
+        "h(t)": "hazard rate [events / unit time]",
+        "E": "exponential(1) random variable [dimensionless]",
+        "F": "distribution function of X [dimensionless]"
+      },
+      "assumptions": [
+        "Validity follows from the Poisson process connection (Theorem 2.1 of Ch VI): the first event time of a process with rate h has survival function e^{-H(x)}.",
+        "The text's table gives Weibull and Pareto as closed form examples (H easily invertible).",
+        "Additive hazard decompositions h = h_1 + ... + h_n reduce to the minimum of component variates (composition method, Sec 2.3)."
+      ],
+      "breakdown_regime": "If H^{-1} is not explicit, iterative solution inherits numerical inversion inexactness. Distributions with decreasing hazard rate need the separate dynamic thinning machinery of Sec 2.5; the plain inversion presumes H can be inverted at all.",
+      "domain": "stochastic-processes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Hazard inversion is the engine's survival module: time to injury, time to failure, and time to first score are all specified by hazard curves in practice, and this primitive turns any specified hazard into exact event times through one exponential draw. Hazard additivity maps directly to competing risk minima in the engine's event models.",
+        "source_operator": "hazard_rate_inversion",
+        "telemetry": "hazard curves by state, exponential draws, simulated first event times"
+      }
+    },
+    {
+      "primitive_id": "black_box_philosophy",
+      "name": "A universal method is black box for a family when it requires nothing beyond what is given in the definition of the family; the larger the family, the slower one should expect the method to be (Ch VII Sec 1)",
+      "verbatim_quote": "Unlversal methods whlch do not requlre anythlng beyond what 1s glven in the deflnltlon of the famlly are called black box methods.",
+      "page": "Ch VII Sec 1, book p.286; text lines 14381-14420",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each point evaluation of the density is charged as one unit, the black box oracle.",
+        "Text example: sequential inversion is a black box method for all discrete distributions on the positive integers, needing only evaluations p_i; continuous inversion is not black box because finite time generation is possible only in special cases."
+      ],
+      "breakdown_regime": "The philosophy is a deliberate trade: black box methods are the fallback when everything else fails, and the text says comparative timings against specially designed algorithms are not fair. Any extra usable information (a bound, a mode, a shape class) exits the black box regime and should be exploited instead.",
+      "domain": "algorithm-design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Black box discipline is an admission kernel for engine components: a module must declare exactly which properties of its input law it is allowed to use (evaluations only, a mode, a bound, a shape class), and its guaranteed cost is then priced against that declaration. Undeclared side information is treated as a contract violation, which keeps universal fallbacks honest and comparable.",
+        "source_operator": "black_box_philosophy",
+        "telemetry": "declared input contracts per sampler, oracle evaluation counts"
+      }
+    },
+    {
+      "primitive_id": "log_concave_envelope_bound",
+      "name": "For a log-concave density on [0, infinity) with mode at 0 and f(0) = 1, there is a single implicit envelope g dominating every such f at once, and the tail satisfies integral_x^infinity f <= e^{-x} f(0) (Theorem VII.2.1)",
+      "verbatim_quote": "Assume that f 1s a log-concave denslty on [O,m) wlth a mode at 0",
+      "page": "Ch VII Sec 2.2, Theorem 2.1, book p.288; text lines 14490-14515",
+      "latex": "f(x) \\le g(x), \\qquad \\int_x^{\\infty} f(t)\\, dt \\le e^{-x} f(0) \\quad (x \\ge 0)",
+      "symbol_and_unit_ledger": {
+        "f": "log-concave density with mode at 0, rescaled so f(0) = 1 [1 / unit of X]",
+        "g": "universal envelope; for x > 1 it is defined implicitly through the unique solution t < 1 of t = e^{-x(1-t)} (text)",
+        "f(0)": "density value at the mode, computable at run time for rescaling [1 / unit of X]"
+      },
+      "assumptions": [
+        "log f is concave on its support; the class LC_0 of the text is all such densities with mode at 0, and f(0) = 1 is arranged by rescaling since f(0) can be computed at run time.",
+        "The text states the inequality cannot be improved because g is the supremum of all densities in the family."
+      ],
+      "breakdown_regime": "The mode must be given beforehand, and the result is one dimensional (d = 1 in this section). The envelope is implicit, so generating from g itself needs the machinery of Sec 2.4; the simple exponential version of the algorithm pays a larger rejection constant.",
+      "domain": "universal-methods",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A family wide envelope is the engine's route to universal samplers for shape constrained predictive laws: once a model family is certified log-concave (normal, gamma with shape >= 1, Weibull with shape >= 1, logistic, and others in the text's table), one envelope serves every member, so the engine can promise a uniform cost bound across the whole family instead of per model tuning.",
+        "source_operator": "log_concave_envelope_bound",
+        "telemetry": "shape class certifications, mode locations, family wide rejection constants"
+      }
+    },
+    {
+      "primitive_id": "optimal_rejection_log_concave",
+      "name": "The optimal rejection algorithm for log-concave densities generates points uniformly under the optimal envelope g using exponentials E_1, E_2 and a discrete variate D with P(D = n) = 6 / (pi^2 n^2); the integral of g is pi^2 / 6 (Theorem VII.2.3, Ch VII Sec 2.4)",
+      "verbatim_quote": "Nevertheless, I t 1s posslble to generate random varlates wlth denslty",
+      "page": "Ch VII Sec 2.4, Theorem 2.3, book pp.293-294; text lines 14685-14750",
+      "latex": "X = \\frac{U Z}{1 - e^{-Z}}, \\qquad Z = \\frac{E_1 + E_2}{D}, \\qquad P(D = n) = \\frac{6}{\\pi^2 n^2},\\ n \\ge 1",
+      "symbol_and_unit_ledger": {
+        "U": "uniform [0,1] [dimensionless]",
+        "E_1, E_2": "iid exponential variates; E_1 + E_2 has density z e^{-z}",
+        "D": "integer variate with the zeta(2) law 6 / (pi^2 n^2)",
+        "X": "variate with density g / integral g; paired with e^{-Z} it is uniform under g (Theorem 2.3)"
+      },
+      "assumptions": [
+        "The integral of the optimal envelope g equals pi^2 / 6, which the text's proof of Theorem 2.3 exhibits and calls about 18 percent better than the algorithms of the previous section.",
+        "Acceptance then proceeds by ordinary rejection of the g-draw against f, giving a uniformly bounded rejection constant over the whole normalized log-concave class."
+      ],
+      "breakdown_regime": "D must itself be generated, and the text warns that a rejection based D generator has a rejection constant that offsets the 18 percent gain; it recommends an alias plus tail rejection combination for D since that generator does not vary with f. The envelope g is only implicitly defined.",
+      "domain": "universal-methods",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the engine's proof that shape information converts to a hard cost ceiling: a whole nonparametric family shares one rejection constant, pi^2 / 6 at best. Engine service level guarantees for sampling should be stated family wide in exactly this way, with the auxiliary variate costs (like D) audited so they do not quietly eat the advertised gain.",
+        "source_operator": "optimal_rejection_log_concave",
+        "telemetry": "family wide rejection constants, auxiliary generator costs, acceptance rates across the log-concave family"
+      }
+    },
+    {
+      "primitive_id": "mirror_principle",
+      "name": "Mirror principle (Brent): for a two-tailed normalized log-concave density with mode 0 and p = F(0) known, one-sided exponential envelopes mirrored at the mode bound f with total area 2, cutting the rejection constant from 4 to 2 (Theorem VII.2.4)",
+      "verbatim_quote": "then the rejectlon constant can be reduced to 2 agaln.",
+      "page": "Ch VII Sec 2.5, Theorem 2.4, book p.295; text lines 14747-14785",
+      "latex": "f(x) \\le \\min\\left(1, e^{-|x|/(1-p)}\\right) \\ (x \\ge 0), \\qquad f(x) \\le \\min\\left(1, e^{-|x|/p}\\right) \\ (x < 0)",
+      "symbol_and_unit_ledger": {
+        "p": "F(0), the probability mass left of the mode [dimensionless]",
+        "f": "log-concave density with mode m = 0 and f(0) = 1 [1 / unit of X]",
+        "bounding curve": "the two mirrored one-sided envelopes; the text states the area under the bounding curve is 2"
+      },
+      "assumptions": [
+        "Inequality as displayed in Theorem 2.4 of the text; the two cases split at the mode.",
+        "The improvement is one of two observations of Richard Brent reported in this section; the other is the exponential version algorithm of Sec 2.3."
+      ],
+      "breakdown_regime": "Without knowing p = F(m) the two-tailed algorithms keep rejection constant 4 (text). The principle presumes exact log-concavity and a known mode; a mislocated mode invalidates the envelope split.",
+      "domain": "universal-methods",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The mirror principle maps to asymmetric envelope design in the engine: when a predictive law is unimodal with known mass split at the mode, left and right tails deserve separate exponential envelopes calibrated to their own masses rather than one symmetric bound. The halved constant is the measurable value of knowing one scalar, F at the mode.",
+        "source_operator": "mirror_principle",
+        "telemetry": "mode mass estimates, left and right envelope constants, per-tail acceptance rates"
+      }
+    },
+    {
+      "primitive_id": "strip_methods",
+      "name": "Strip methods: divide [0,1] into n equal strips under a stepwise dominating function g, split each strip at height h_i so the bottom part lies entirely under f; most draws then finish with one discrete draw and one uniform, evaluating f only for top strip hits (Ch VIII Sec 2, Theorem 2.1)",
+      "verbatim_quote": "Suppose now that each strlp 1s cut lnto two parts by a horlzontal llne, and that the bottom part 1s completely tucked under the graph of f",
+      "page": "Ch VIII Sec 2.1-2.2, Theorem 2.1, book pp.359-361; text lines 17815-17910",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "f is a bounded density on [0,1]; g is constant on the n user chosen strips and at least f everywhere.",
+        "Tables store g_i, h_i and 2n strip probabilities; the text notes redundant information is stored deliberately to increase speed.",
+        "Theorem 2.1 prices the method with Wald's equation: expected iterations, expected number of f computations (proportional to the summed top strip areas), and expected uniforms are all given explicitly."
+      ],
+      "breakdown_regime": "Memory grows linearly in n while the f evaluation count falls; the unsplit version cannot avoid two uniforms and one f computation per iteration regardless of n (text). Continuous unbounded or non compact laws need transformation or tail pieces before strips apply.",
+      "domain": "table-methods",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Strip methods are the continuous ancestor of the engine's histogram samplers: a stepwise dominating histogram plus a tucked under acceptance layer turns a density into a table driven generator whose expensive evaluations concentrate on a vanishing top layer. Modern ziggurat style samplers in production libraries are this primitive, and the engine prices them by top layer mass exactly as Theorem 2.1 does.",
+        "source_operator": "strip_methods",
+        "telemetry": "strip count, top layer total mass, f evaluations per emitted variate"
+      }
+    },
+    {
+      "primitive_id": "johnk_theorem",
+      "name": "Johnk's theorem: conditioned on U^{1/a} + V^{1/b} <= 1 for iid uniform U, V, the ratio U^{1/a} / (U^{1/a} + V^{1/b}) is beta(a, b) distributed, yielding beta and gamma generators for small parameters (Theorem IX.3.4)",
+      "verbatim_quote": "Let a ,b > O be glven constants, and let U ,V be lld unlform [O,l]random",
+      "page": "Ch IX Sec 3.5, Theorem 3.4, book p.416; text lines 20452-20485",
+      "latex": "\\frac{U^{1/a}}{U^{1/a} + V^{1/b}} \\sim \\mathrm{Beta}(a, b) \\quad \\text{conditioned on} \\quad U^{1/a} + V^{1/b} \\le 1",
+      "symbol_and_unit_ledger": {
+        "U, V": "iid uniform [0,1] random variables [dimensionless]",
+        "a, b": "beta parameters, both positive [dimensionless]",
+        "X^{1/a}": "power transform; X = U^{1/a} has density a x^{a-1} on [0,1] (proof of Theorem 3.4)"
+      },
+      "assumptions": [
+        "The proof transforms (X, Y) = (U^{1/a}, V^{1/b}) to (Z, T) = (X + Y, X / (X + Y)) with Jacobian z, making T independent of the conditioning event's density shape.",
+        "Gamma variates follow because YZ is gamma(a) when Y is beta(a, 1-a) and Z is gamma(1), or Y beta(a, 2-a) and Z gamma(2) (text summary after Theorem 3.5)."
+      ],
+      "breakdown_regime": "Acceptance probability deteriorates as a + b grows; the text's later comparison (Sec IX.4) prefers Johnk when both parameters are below 1 with a + b below about 1.5, and finds neither Johnk nor the alternative particularly fast when both parameters are large.",
+      "domain": "special-distributions",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Johnk's construction is the engine's small shape beta sampler, and beta laws are the engine's native currency for probabilities (win chances, conversion rates). The conditioning trick also teaches a general lesson the engine reuses: a ratio of power transformed uniforms, conditioned on a simplex event, manufactures a whole distribution family from two elementary draws.",
+        "source_operator": "johnk_theorem",
+        "telemetry": "acceptance rates by (a, b) region, beta draws for probability valued model outputs"
+      }
+    },
+    {
+      "primitive_id": "dirichlet_gamma_construction",
+      "name": "Dirichlet vectors are normalized independent gammas: if Y_j are independent gamma(a_j), then (Y_1 / Y, ..., Y_k / Y) with Y = sum Y_j is Dirichlet(a_1, ..., a_{k+1}) and is independent of Y (Theorem XI.4.1)",
+      "verbatim_quote": "Theorem 4 . 1 suggests a generator for the Dlrlchlet dlstrlbutlon vla gamma generators.",
+      "page": "Ch XI Sec 4.1, Theorem 4.1, book pp.594-595; text lines 28799-28855",
+      "latex": "X_i = \\frac{Y_i}{\\sum_{j=1}^{k+1} Y_j}, \\qquad Y_j \\sim \\mathrm{Gamma}(a_j) \\ \\text{independent}",
+      "symbol_and_unit_ledger": {
+        "a_j": "Dirichlet parameters, positive [dimensionless]",
+        "Y_j": "independent gamma(a_j) variates",
+        "X_i": "components of the Dirichlet vector on the simplex {x_i > 0, sum_{i=1}^k x_i < 1}"
+      },
+      "assumptions": [
+        "The converse also holds in the text: a gamma(total) variate independent of a Dirichlet vector splits back into independent gammas.",
+        "The text relates the construction to spacings: with integer parameters the components behave like grouped uniform spacings (Ch V Sec 2)."
+      ],
+      "breakdown_regime": "Cost is k+1 gamma draws per vector, and very small a_j make the gamma generators themselves the bottleneck; the construction gives the joint law on the simplex only, so dependent structures beyond Dirichlet neutrality are out of reach.",
+      "domain": "multivariate",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the engine's compositional sampler: any probability vector output (outcome shares, play mix, market share style allocations) is generated as normalized independent gamma weights, which makes simulation, prior specification, and sensitivity analysis share one mechanism. Independence of the total and the composition lets the engine model volume and mix separately.",
+        "source_operator": "dirichlet_gamma_construction",
+        "telemetry": "gamma weight draws, simplex vectors emitted, total versus composition correlation checks"
+      }
+    },
+    {
+      "primitive_id": "reservoir_sampling",
+      "name": "Reservoir sampling (Knuth, Vitter): a uniform random sample of size k from a stream of unknown length n is maintained by keying each record with an independent uniform and keeping the k largest keys; the expected number of replacements is sum_{i=k+1}^n k/i (Ch XII Sec 5)",
+      "verbatim_quote": "Knuth (1969) glves a partlcularly elegant solutlon for drawlng such a random sample called the reservoir method.",
+      "page": "Ch XII Sec 5.1, book pp.637-639; text lines 30813-30895",
+      "latex": "E[\\text{replacements}] = \\sum_{i=k+1}^{n} \\frac{k}{i}",
+      "symbol_and_unit_ledger": {
+        "k": "sample size, known [records]",
+        "n": "population size, unknown [records]",
+        "k/i": "probability that the i-th record enters the reservoir",
+        "harmonic sum": "evaluated in the text through log(n) + Euler constant asymptotics"
+      },
+      "assumptions": [
+        "k is known but n is not; the stream is seen once, sequentially.",
+        "Implementation per text: a heap keyed on the uniform values gives log(k) expected and worst case delete cost; the geometric jumps variant (Sec 5.2) skips records when random access is available, with waiting time generated from an exponential variate."
+      ],
+      "breakdown_regime": "The basic method spends one uniform per record, an unavoidable Theta(n) term the text isolates; without random access there is no way around traversing the whole file. Exact uniformity depends on the independence of the per-record keys.",
+      "domain": "sampling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reservoir sampling is the engine's streaming data contract: any unbounded feed (plays, events, telemetry) can be reduced to an unbiased fixed memory sample with a published replacement budget. The engine uses it for evaluation sets and drift monitoring, where the harmonic replacement count is the operating cost line and the uniform key trick keeps the sample provably unbiased.",
+        "source_operator": "reservoir_sampling",
+        "telemetry": "reservoir size, replacement counts versus harmonic prediction, stream lengths processed"
+      }
+    },
+    {
+      "primitive_id": "prufer_construction",
+      "name": "Pruefer's construction: labeled free trees on n nodes are in one-to-one correspondence with codewords (a_1, ..., a_{n-2}) over {1, ..., n}; hence there are n^{n-2} such trees (Cayley), and a uniform random tree is a uniform codeword decoded (Theorem XIII.5.1)",
+      "verbatim_quote": "To generate a random labeled free tree wlth n nodes (such that all such trees are equally llkely), one can proceed as follows:",
+      "page": "Ch XIII Sec 5.1, Theorem 5.1, book pp.662-663; text lines 31852-31925",
+      "latex": "\\#\\{\\text{labeled free trees on } n \\text{ nodes}\\} = n^{n-2}",
+      "symbol_and_unit_ledger": {
+        "n": "number of labeled nodes [count]",
+        "codeword": "(a_1, ..., a_{n-2}), each entry in {1, ..., n}; a node's degree is 1 plus its number of occurrences in the codeword (text)",
+        "leaf": "node of degree 1; encoding repeatedly records the neighbor of the smallest labeled leaf"
+      },
+      "assumptions": [
+        "Labels are 1..n and trees are free (unrooted, acyclic, connected).",
+        "Decoding is constructive in the text via availability and leaf flags, and re-encoding the decoded tree returns the initial codeword."
+      ],
+      "breakdown_regime": "The bijection is specific to labeled free trees; rooted, ordered, or degree constrained trees need different encodings (the text treats given leaf counts by reshaping the codeword distribution). Uniformity of the tree is exactly uniformity of the codeword, so any bias in digit generation transfers directly.",
+      "domain": "combinatorial-generation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pruefer's construction is the engine's encoding principle for structured objects: when a combinatorial family admits a bijection to flat codewords, generation, counting, and uniformity auditing all collapse to digit generation. The engine looks for codeword encodings before designing any bespoke sampler for structured outputs such as brackets, trees, and schedules.",
+        "source_operator": "prufer_construction",
+        "telemetry": "codeword digit draws, decoded structure counts, degree histograms versus codeword predictions"
+      }
+    },
+    {
+      "primitive_id": "knuth_yao_entropy_bound",
+      "name": "Knuth-Yao lower bound: in the random bit model every DDG-tree algorithm for a discrete law (p_i) needs at least the entropy H(p_1, p_2, ...) random bits in expectation, with H(x) = x log_2 (1/x) (Theorem XV.2.1)",
+      "verbatim_quote": "Every algorithm based upon random blts can be represented as a binary tree",
+      "page": "Ch XV Sec 2, Theorem 2.1, book pp.771-772; text lines 36810-36890",
+      "latex": "H(p_1, p_2, \\ldots) \\le E(N), \\qquad H(x) = x \\log_2 \\frac{1}{x}",
+      "symbol_and_unit_ledger": {
+        "N": "number of random bits consumed by a DDG-tree algorithm [bits]",
+        "H(p_1, p_2, ...)": "entropy of the target probability vector [bits]",
+        "DDG tree": "discrete distribution generating tree: branch nodes consume a bit, terminal nodes are labeled with outputs (Knuth and Yao, 1976, per text)"
+      },
+      "assumptions": [
+        "Part A of Theorem 2.1 sharpens the bound to E(N) >= sum_i psi(p_i) where psi is built from the binary expansions of the p_i; the text notes both bounds are attainable in the senses discussed there.",
+        "DDG-tree algorithms halt with probability one exactly when the terminal node probabilities sum to 1."
+      ],
+      "breakdown_regime": "Laws with infinite entropy (the text exhibits such probability vectors) need infinitely many bits in expectation, so no finite expected bit budget exists for them. Dyadic probabilities are the cheap extreme; everything else pays an entropy priced tax that no implementation cleverness removes.",
+      "domain": "complexity-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The entropy bound is the engine's information budget kernel: the Shannon entropy of any discrete predictive law is a hard floor on the randomness cost of sampling it, so the engine can price categorical outputs in bits and detect impossible efficiency claims at design review. It also justifies entropy reduction (sharper predictive laws) as a direct sampling cost reduction.",
+        "source_operator": "knuth_yao_entropy_bound",
+        "telemetry": "entropy of emitted categorical laws, bits consumed per draw, bound gap measurements"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "48a955c72873ccf6-t1",
+      "think": "This book is the founding complexity theory of a single question: given a perfect source of uniform randomness, what does it cost, exactly, to manufacture randomness of any other prescribed shape. Devroye sets up an idealized machine with real arithmetic, a perfect uniform [0,1] generator, and unit cost fundamental operations, then admits only exact algorithms, programs that halt with probability one and return a variate whose law is provably the requested one. Within that frame the whole subject reorganizes itself into a small number of load bearing ideas. Inversion says a distribution function and its quantile are the same object read in two directions, and it is the only method that needs nothing beyond F itself. Rejection says a density is a region under a curve, that uniform points under a dominating curve can be filtered into uniform points under the target, and that the exchange rate is a pure area ratio, the constant c, with a geometric iteration count. Composition says a density that decomposes into a discrete mixture should be sampled by decomposing the sampling act itself. Acceptance-complement says the same for a sum split against an easy majorant, returning the easy draw most of the time and repairing the rest. Around these four sit the accounting tools and the accelerants. Wald's equation prices any of these loops by factoring expected cost into a per iteration term and an expected iteration count, valid for every stopping rule. Letac's lower bound and the Knuth-Yao entropy bound mark the floor: no stopping time architecture on [0,1] beats the supremum of the density, and no bit driven sampler beats the entropy of its target law, so the book can certify when a method is within a factor of two of optimal and further cleverness is provably wasted. The squeeze principle is lazy evaluation inside rejection: cheap certified bounds settle most decisions and the expensive density is evaluated only inside the sandwich gap. The discrete chapters convert the same ideas into data structures, Marsaglia's multilevel tables and Walker's alias method, where an O(K) compilation turns a categorical law into a constant time draw. The middle of the book is a sustained argument that representation precedes algorithm. Khinchine factorizes every unimodal law into a uniform times an independent scale. Monotone densities expose their own factor density through the derivative, g(x) = -x f'(x). Uniform spacings are uniform on the simplex and are normalized exponentials. Radially symmetric laws split into a uniform direction and an independent radius, which is what makes the polar method and Box-Muller work. Johnk manufactures beta and gamma variates from conditioned uniforms, Dirichlet vectors are normalized gammas, and Chambers, Mallows and Stuck write every stable law as one trigonometric expression in a uniform and an exponential. In each case the generator exists because a distributional identity was found first. The process chapters lift the static theory to streams: a nonhomogeneous Poisson process is either a time changed unit rate process through the integrated rate, or a thinned dominating process, and a hazard rate is just an exponential variate read through H inverse. The universal chapters ask what one algorithm can promise an entire shape class: for log-concave densities a single implicit envelope dominates the whole family, the optimal rejection constant is pi squared over 6, and Brent's mirror principle halves the two tailed constant when the mass at the mode is known. Strip methods discretize the same envelope idea into tables whose expensive layer provably shrinks. The book also carries an assessment doctrine that is easy to miss because it is stated in Chapter I and then used silently everywhere. Cost splits into set-up time and per variate time, and the right trade depends on whether the parameters change between calls: when a law is fixed and heavily used, almost any set-up is justified, which is why the normal and exponential chapters are willing to build elaborate rectangle and wedge decompositions, while parametric families are judged on total cost per call. There is an explicit bias toward short programs, on the stated ground that short smooth programs survive longer and are understood by a larger audience, balanced against the admission that fast programs are seldom short. Woven through the applications is a compile once pattern: alias tables, guide tables, strip tables, and interval decompositions all pay memory and preparation up front so that the steady state draw is a couple of array reads and one comparison. The engine reading is that a predictive law used a million times should be compiled like code, with its compilation artifacts versioned and its per draw cost driven toward the information theoretic floor, while a law used twice should fall back to inversion or a black box method and pay the honest universal price. For a reasoning engine the transfer is direct. A predictive distribution should be stored as a representation, a mixture list, a product factorization, a transform of base variates, a ratio of uniforms region, never as a bare density to be numerically inverted at runtime. Proposal mechanisms should publish their rejection constants as health metrics. Every randomized subroutine should carry Wald factored expected cost, and entropy should be quoted as the bit floor under any categorical sampler. The book also disciplines refusal: it shows exactly which side information each universal method needs, a mode, a bound, a shape class, an integrated rate, and proves that without that information the guarantee evaporates. Where it breaks is equally clear. The perfect uniform source does not exist, real arithmetic does not exist, and the exactness doctrine excludes the approximations production systems actually ship. The theory prices expectation, not tail latency. But as a contract language for what a sampler is, what it may assume, and what it must cost, nothing in the later literature replaces it.",
+      "retrocausal_genealogy": "The lineage runs from von Neumann's 1951 rejection idea and his exponential generator built from comparisons alone, through Box and Muller (1958) and Marsaglia's table methods, squeezes and polar variants in the 1960s, Forsythe (1972), Walker's alias method (1974, 1977), the Knuth and Yao bit model (1976), Kinderman and Monahan's ratio of uniforms (1977), Chambers, Mallows and Stuck (1976) building on Zolotarev (1966), Lewis and Shedler's thinning (1979), and Kronmal and Peterson's acceptance-complement (1981, 1984). Older strata show through everywhere: Khinchine's unimodality factorization, Johnk (1964), Pruefer's tree codewords, Cayley's count, and Knuth's 1969 reservoir. Devroye's own log-concave black box results (1984) close the book's arc from craft to complexity theory.",
+      "theory_of_mind": "Devroye believes the reader is a builder who distrusts recipes without proofs, so every algorithm arrives attached to the theorem that licenses it. His model of the domain is that inequalities, not formulas, are the real design material: a generator is good when a bound says so, uniformly over a family, and timing experiments are deliberately banished because they age while complexity results do not. He assumes exactness is achievable and worth demanding, that a perfect uniform source is the right fiction to build theory on, and that a short program whose cost is understood beats a fast program whose cost is folklore. The preface roots the book in his McGill course CS690, taught since 1977, and the writing keeps a teacher's habit of proving the tool before recommending it.",
+      "cross_layer_veto": "The book vetoes several things other layers of a system are tempted to claim. It vetoes any sampler budget below the Letac supremum bound or below the Knuth-Yao entropy floor: those are impossibility results, not targets. It vetoes calling a method black box when it secretly uses a mode, a bound, or a shape fact it did not declare, because the universal guarantees are proved only against the declared information. It vetoes numerical inversion with an unexamined stopping rule, since the text shows every such rule manufactures inexactness that no better uniform generator can repair. And it vetoes treating rejected candidates and thinned events as information free waste: the rejection theorems certify structure in what was discarded, and thinning's correctness depends on it."
+    }
+  ],
+  "universal_lens": "Read as a general template, the book describes how to convert a generic resource into structured outcomes under an audited budget. Keep one universal but slow exact method as the correctness anchor. Add a propose and filter method whose exchange rate is a measurable area ratio. Decompose targets into mixtures of solved subproblems. Insert cheap certified bounds so the expensive exact evaluation fires only inside a narrow gap. Then compute the floor, an entropy or supremum bound, below which no conversion process can go, and stop optimizing when the design sits within a small factor of it. Any field that transforms uniform inputs into shaped outputs, sampling, scheduling, allocation, randomized rounding, can be organized on exactly this skeleton.",
+  "gsi_mapping": "For the Institute, the book is a curriculum spine and a standards document for simulation literacy. It teaches that a distribution is its representations, that expected cost factors by Wald, and that entropy prices randomness itself. Its spacings, thinning, and hazard chapters ground event process modeling; its reservoir and Pruefer chapters ground streaming samples and combinatorial structures; its black box chapter teaches the discipline of declaring what a method is allowed to know. Institute research standards follow directly: every simulation claim should name its generating principle, its dominating bound or envelope, its expected cost identity, and the side information it consumed, so results remain reproducible and comparable across projects and years.",
+  "gse_mapping": "For the Edge engine, the book supplies the sampling layer's contract language. Predictive laws are carried as representations, mixtures, products, transforms, and ratio regions, so they can be resampled exactly under new conditioning instead of refit. Rejection constants become published health metrics for every proposal family; squeeze style cheap bounds gate expensive model evaluations; thinning and hazard inversion drive event time simulation for game processes; alias and strip tables serve high volume categorical draws over play and lineup outcomes. Wald factorization prices every stochastic subroutine in expectation, the Knuth-Yao bound sets the bit budget no categorical sampler may beat, and the log-concave envelope results justify family wide cost guarantees for shape certified model classes."
+}

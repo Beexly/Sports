@@ -1,0 +1,78 @@
+{
+  "book_id": "6f3dd695a9aa482d",
+  "source_status": "COMPLETE",
+  "title": "TESTING_GUIDE",
+  "file_name": "TESTING_GUIDE.md",
+  "sha256": "6f3dd695a9aa482d9810bc9fa99225a812a1a055527aa236442d7d40b31a8777",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "FABLE testing framework unifies probabilistic uncertainty quantification with drift detection and labeling consistency across distributed systems. Universal Lens: Rooted in TESTING_GUIDE (6f3dd695a9aa482d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference engine maps FABLE test outcomes to belief updates on data integrity and model drift using conformal predictive distributions. GSI Mapping: Rooted in TESTING_GUIDE (6f3dd695a9aa482d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine encodes test command sequences as state transitions in a Markov decision process over system trustworthiness. GSE Mapping: Rooted in TESTING_GUIDE (6f3dd695a9aa482d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "targeted_fable_tests",
+      "name": "Targeted FABLE Test Suite",
+      "verbatim_quote": "# Testing Guide Targeted FABLE tests: ```bash npm run test --workspace=apps/web -- lib/fable/source-registry.test.ts lib/fable/uncertainty.test.ts lib/fable/labeling.test.ts lib/fable/drift.test.ts",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Tests assume deterministic execution environments and consistent input-output behavior of FABLE modules.",
+      "breakdown_regime": "Failure occurs when test coverage drops below 95% or module dependencies are unresolved.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian update kernel where test results serve as likelihoods for posterior belief revision.",
+        "source_operator": "targeted_fable_tests",
+        "telemetry": "Test suite pass/fail ratio and runtime variance"
+      }
+    },
+    {
+      "primitive_id": "requested_package_tests",
+      "name": "Requested Package Test Execution",
+      "verbatim_quote": "lib/fable/docs-claims.test.ts ``` Requested package tests: ```bash npm run test --workspace=packages/prediction-engine npm run test --workspace=packages/data-ingestion npm run",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All packages maintain semantic versioning and isolated test environments.",
+      "breakdown_regime": "Execution halts upon first failing test in any workspace.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's state transition logic by encoding each package's test result into a conditional action space.",
+        "source_operator": "requested_package_tests",
+        "telemetry": "Aggregate test success rate per package"
+      }
+    },
+    {
+      "primitive_id": "guard_secrets_trust",
+      "name": "Security Verification Guards",
+      "verbatim_quote": "--if-present npm run guard:secrets npm run guard:trust ``` Recording rule: - Exact commands, outcomes, failures, and",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Secrets and trust assertions follow zero-trust architecture principles.",
+      "breakdown_regime": "Guard failure triggers immediate rollback and alert generation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's adversarial robustness layer, where guards act as prior constraints on belief states.",
+        "source_operator": "guard_secrets_trust",
+        "telemetry": "Number of guard violations and time-to-resolution"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6f3dd695a9aa482d_t0",
+      "think": "The primitives form a hierarchical Bayesian network where targeted FABLE tests provide evidence for model correctness, package tests ensure integration stability, and security guards enforce trust boundaries. Each primitive operates under a shared epistemic regime governed by error propagation and conditional probability. The failure modes are characterized by information loss or adversarial interference. Dualities emerge between test coverage and belief confidence, with drift detection serving as a critical cross-layer constraint. The system exhibits a recursive structure where test outcomes inform subsequent verification steps, forming a closed-loop inference mechanism.\n\nDeep epistemic analysis for TESTING_GUIDE (6f3dd695a9aa482d, domain=other, pages_read=1/1): Operator 'Targeted FABLE Test Suite' (page 1, domain other) captures: # Testing Guide Targeted FABLE tests: ```bash npm run test --workspace=apps/web -- lib/fable/source-registry.test.ts lib/fable/uncertainty.test.ts lib/fable/labeling.test.ts lib/fable/drift.test.ts Assumptions: Tests assume deterministic execution environments and consistent input-output behavior of FABLE modules. Breakdown regime: Failure occurs when test coverage drops below 95% or module dependencies are unresolved. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian update kernel where test results serve as likelihoods for posterior belief revision. Operator 'Requested Package Test Execution' (page 1, domain other) captures: lib/fable/docs-claims.test.ts ``` Requested package tests: ```bash npm run test --workspace=packages/prediction-engine npm run test --workspace=packages/data-ingestion npm run Assumptions: All packages maintain semantic versioning and isolated test environments. Breakdown regime: Execution halts upon first failing test in any workspace. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's state transition logic by encoding each package's test result into a conditional action space. Operator 'Security Verification Guards' (page 1, domain other) captures: --if-present npm run guard:secrets npm run guard:trust ``` Recording rule: - Exact commands, outcomes, failures, and Assumptions: Secrets and trust assertions follow zero-trust architecture principles. Breakdown regime: Guard failure triggers immediate rollback and alert generation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's adversarial robustness layer, where guards act as prior constraints on belief states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for TESTING_GUIDE (6f3dd695a9aa482d, domain=other, pages_read=1/1): Operator 'Targeted FABLE Test Suite' (page 1, domain other) captures: # Testing Guide Targeted FABLE tests: ```bash npm run test --workspace=apps/web -- lib/fable/source-registry.test.ts lib/fable/uncertainty.test.ts lib/fable/labeling.test.ts lib/fable/drift.test.ts Assumptions: Tests assume deterministic execution environments and consistent input-output behavior of FABLE modules. Breakdown regime: Failure occurs when test coverage drops below 95% or module dependencies are unresolved. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian update kernel where test results serve as likelihoods for posterior belief revision. Operator 'Requested Package Test Execution' (page 1, domain other) captures: lib/fable/docs-claims.test.ts ``` Requested package tests: ```bash npm run test --workspace=packages/prediction-engine npm run test --workspace=packages/data-ingestion npm run Assumptions: All packages maintain semantic versioning and isolated test environments. Breakdown regime: Execution halts upon first failing test in any workspace. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's state transition logic by encoding each package's test result into a conditional action space. Operator 'Security Verification Guards' (page 1, domain other) captures: --if-present npm run guard:secrets npm run guard:trust ``` Recording rule: - Exact commands, outcomes, failures, and Assumptions: Secrets and trust assertions follow zero-trust architecture principles. Breakdown regime: Guard failure triggers immediate rollback and alert generation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's adversarial robustness layer, where guards act as prior constraints on belief states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian statistical inference and formal verification theory, extending earlier work on probabilistic program logics and compositional testing frameworks. Retrocausal Genealogy: Rooted in TESTING_GUIDE (6f3dd695a9aa482d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in TESTING_GUIDE (6f3dd695a9aa482d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial inputs that attempt to corrupt test outcomes, and environmental noise that introduces false positives. Decision actors are automated test runners and human auditors who validate the integrity of derived beliefs. Theory of Mind & Decision Maker Model: Rooted in TESTING_GUIDE (6f3dd695a9aa482d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through orthogonal test suites; leakage vetoes prevent cross-contamination between trust domains via explicit boundary checks. Cross-Layer Veto & Anti-Leakage Check: Rooted in TESTING_GUIDE (6f3dd695a9aa482d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in TESTING_GUIDE (6f3dd695a9aa482d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

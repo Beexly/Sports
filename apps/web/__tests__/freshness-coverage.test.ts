@@ -37,16 +37,12 @@ function readWeb(path: string): string {
 
 describe("freshness-truth coverage audit", () => {
   describe("/board renders a freshness signal", () => {
-    it("under-construction stub renders no data-derived numbers, so it owes no freshness stamp", () => {
-      // No numbers → nothing to stamp. The stub's honesty surface is the
-      // under-construction notice (it says the live board is parked), which
-      // is a stronger guarantee than a freshness tile on rows that do not
-      // exist. Pin the CURRENT shape so the stub can never silently turn
-      // into an unstamped live board: no board state is loaded, no
-      // freshness or "Last refresh" copy is rendered.
+    it("two-doctrines board delegates provenance to DoctrineBoardView + /record without fake live refresh copy", () => {
       const page = readWeb("app/board/page.tsx");
-      expect(page).toContain("data-testid=\"under-construction-notice\"");
-      expect(page).not.toContain("loadBoardState");
+      expect(page).toContain("loadDoctrineBoard");
+      expect(page).toContain("DoctrineBoardView");
+      expect(page).toContain('href="/record"');
+      expect(page).toContain('href="/board/gate"');
       expect(page).not.toContain("board-freshness");
       expect(page).not.toContain("Last refresh");
       expect(page).not.toContain("StateTile");
@@ -54,14 +50,13 @@ describe("freshness-truth coverage audit", () => {
   });
 
   describe("/picks renders a freshness signal", () => {
-    it("sealed card renders the seal digest as provenance, not a live freshness badge", () => {
-      // The sealed card is static: a LineFreshnessBadge implying live line
-      // refreshes would fabricate freshness. The digest + evaluated-count
-      // line is the honest provenance signal for a sealed surface.
+    it("renders verifiedLedger + DoctrineBoardView provenance instead of fake live refresh badges", () => {
       const page = readWeb("app/picks/page.tsx");
-      expect(page).toContain("sealed-board.json");
-      expect(page).toContain("card.seal_digest");
-      expect(page).toContain("card.counts.evaluated");
+      expect(page).toContain("loadDoctrineBoard");
+      expect(page).toContain("DoctrineBoardView");
+      expect(page).toContain("verifiedLedger");
+      expect(page).toContain('data-testid="verified-record-strip"');
+      expect(page).toContain('href="/record"');
       expect(page).not.toContain("LineFreshnessBadge");
       expect(page).not.toContain("data-testid=\"picks-freshness\"");
     });

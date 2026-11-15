@@ -1,0 +1,78 @@
+{
+  "book_id": "6ca74a3fc3f7cc98",
+  "source_status": "COMPLETE",
+  "title": "p0291",
+  "file_name": "p0291.txt",
+  "sha256": "6ca74a3fc3f7cc98189fffd9e5166b8e8edb5bc8d7ca9b4569143a65d879d0eb",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The sport is defined as a constrained dynamical system on a bounded rectangular manifold. The prolate spheroid introduces anisotropic aerodynamic forces, while the discrete goal structure and fixed team cardinality establish a finite state space for competitive optimization.",
+  "gsi_mapping": "GSI models field dimensions and goal geometry as prior constraints in a Bayesian spatial distribution of scoring probability. Team cardinality dictates the scaling of player density fields, while ball shape parameters inform conformal prediction intervals for trajectory uncertainty.",
+  "gse_mapping": "GSE treats the field boundaries and goal posts as hard collision potentials in a continuous state-transition graph. Officials act as discrete event triggers resetting local game states, while the inflated bladder defines the elastic collision coefficients between agents.",
+  "primitives": [
+    {
+      "primitive_id": "spatial_bounded_manifold",
+      "name": "Field Geometry Operator",
+      "verbatim_quote": "(a) The game shall be played upon a rectangular field, 33o feet in length and 16o feet in width, enclosed by heavy white lines marked in lime upon the ground.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "L = 330 ft (Length), W = 160 ft (Width). SI equivalent: L ≈ 100.58 m, W ≈ 48.77 m.",
+      "assumptions": "Euclidean planar geometry; perfectly rigid boundary conditions at the white lines.",
+      "breakdown_regime": "Singularity occurs if boundary markers are occluded or if the playing surface deviates significantly from a flat plane.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a bounded 2D phase space in GSE, defining the maximum spatial extent for agent trajectories and interaction kernels.",
+        "source_operator": "spatial_bounded_manifold",
+        "telemetry": "Agent position tracking relative to boundary coordinates."
+      }
+    },
+    {
+      "primitive_id": "agent_cardinality_constraint",
+      "name": "Team Population Operator",
+      "verbatim_quote": "(b) The game shall be played by two teams of eleven men each.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "N_T = 11 (Agents per team), N_Total = 22 (Total active agents). Dimensionless integers.",
+      "assumptions": "All agents possess identical kinematic capabilities; no substitution dynamics altering instantaneous N.",
+      "breakdown_regime": "System degeneracy when N < 11 due to ejections or injuries, altering optimal packing fractions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines the particle density in GSI's spatial heatmaps and sets the branching factor for GSE's tactical tree search.",
+        "source_operator": "agent_cardinality_constraint",
+        "telemetry": "Active player count and spatial clustering metrics."
+      }
+    },
+    {
+      "primitive_id": "anisotropic_projectile_kernel",
+      "name": "Ball Shape Operator",
+      "verbatim_quote": "The ball shall have the shape of a prolate spheroid.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "a = semi-major axis, b = semi-minor axis. Aspect ratio k = a/b > 1. Units: meters.",
+      "assumptions": "Rigid body rotation during flight; uniform mass distribution within the leather shell.",
+      "breakdown_regime": "Aerodynamic model fails under extreme deflation (loss of spheroidal shape) or supersonic velocities inducing shockwaves.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Injects rotational drag tensors into GSE physics engine; informs GSI probabilistic models of pass completion based on orientation.",
+        "source_operator": "anisotropic_projectile_kernel",
+        "telemetry": "Ball spin rate, orientation vector, and velocity decay."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6ca74a3fc3f7cc98_t0",
+      "think": "The foundational rules of this sport can be rigorously abstracted into a set of mathematical operators governing a complex dynamical system. First, the 'spatial_bounded_manifold' establishes the domain of definition—a strictly Euclidean rectangle with absorbing boundary conditions. This creates a finite metric space where all subsequent interactions occur. Second, the 'agent_cardinality_constraint' introduces a fixed number of interacting particles (N=22) distributed across this manifold. In statistical mechanics terms, this fixes the extensive variables of the system, dictating baseline entropy and collision frequencies. Third, the 'anisotropic_projectile_kernel' defines the unique interaction medium. Unlike a standard isotropic sphere, the prolate spheroid introduces direction-dependent drag and lift coefficients, fundamentally altering the equations of motion for the primary object of exchange. These primitives do not merely describe equipment; they form the axiomatic basis for any predictive modeling. The interplay between the fixed boundary, the constant population density, and the non-spherical projectile creates a highly constrained optimization problem. Failure modes arise when these axioms are violated—e.g., an injured player reduces N, breaking the symmetry assumptions of the defensive formation, or a waterlogged field alters the friction coefficients assumed by the manifold operator. Thus, the historical rules serve as the initial conditions and boundary constraints for modern quantitative analysis.\n\nDeep epistemic analysis for p0291 (6ca74a3fc3f7cc98, domain=other, pages_read=1/1): Operator 'Field Geometry Operator' (page 1, domain other) captures: (a) The game shall be played upon a rectangular field, 33o feet in length and 16o feet in width, enclosed by heavy white lines marked in lime upon the ground. Assumptions: Euclidean planar geometry; perfectly rigid boundary conditions at the white lines. Breakdown regime: Singularity occurs if boundary markers are occluded or if the playing surface deviates significantly from a flat plane. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a bounded 2D phase space in GSE, defining the maximum spatial extent for agent trajectories and interaction kernels. Operator 'Team Population Operator' (page 1, domain other) captures: (b) The game shall be played by two teams of eleven men each. Assumptions: All agents possess identical kinematic capabilities; no substitution dynamics altering instantaneous N. Breakdown regime: System degeneracy when N < 11 due to ejections or injuries, altering optimal packing fractions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the particle density in GSI's spatial heatmaps and sets the branching factor for GSE's tactical tree search. Operator 'Ball Shape Operator' (page 1, domain other) captures: The ball shall have the shape of a prolate spheroid. Assumptions: Rigid body rotation during flight; uniform mass distribution within the leather shell. Breakdown regime: Aerodynamic model fails under extreme deflation (loss of spheroidal shape) or supersonic velocities inducing shockwaves. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Injects rotational drag tensors into GSE physics engine; informs GSI probabilistic models of pass completion based on orientation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0291 (6ca74a3fc3f7cc98, domain=other, pages_read=1/1): Operator 'Field Geometry Operator' (page 1, domain other) captures: (a) The game shall be played upon a rectangular field, 33o feet in length and 16o feet in width, enclosed by heavy white lines marked in lime upon the ground. Assumptions: Euclidean planar geometry; perfectly rigid boundary conditions at the white lines. Breakdown regime: Singularity occurs if boundary markers are occluded or if the playing surface deviates significantly from a flat plane. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a bounded 2D phase space in GSE, defining the maximum spatial extent for agent trajectories and interaction kernels. Operator 'Team Population Operator' (page 1, domain other) captures: (b) The game shall be played by two teams of eleven men each. Assumptions: All agents possess identical kinematic capabilities; no substitution dynamics altering instantaneous N. Breakdown regime: System degeneracy when N < 11 due to ejections or injuries, altering optimal packing fractions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the particle density in GSI's spatial heatmaps and sets the branching factor for GSE's tactical tree search. Operator 'Ball Shape Operator' (page 1, domain other) captures: The ball shall have the shape of a prolate spheroid. Assumptions: Rigid body rotation during flight; uniform mass distribution within the leather shell. Breakdown regime: Aerodynamic model fails under extreme deflation (loss of spheroidal shape) or supersonic velocities inducing shockwaves. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Injects rotational drag tensors into GSE physics engine; informs GSI probabilistic models of pass completion based on orientation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives trace back to late 19th-century codifications of rugby and early American football. The shift from chaotic mob games to structured contests required the imposition of strict geometric and numerical constraints. The adoption of the prolate spheroid was a critical bifurcation point, distinguishing this sport's physics from soccer or basketball, necessitating entirely new kinematic models for forward passing and aerial reception.",
+      "theory_of_mind": "Modeling opposing agents requires treating them as rational optimizers operating under the same primitive constraints. Each team seeks to maximize territorial gain and minimize the opponent's scoring probability within the bounded manifold. The fixed cardinality forces a zero-sum allocation of attention resources. Agents must predict the anisotropic flight paths of the ball while simultaneously accounting for the stochastic movements of the 21 other particles on the field.",
+      "cross_layer_veto": "To prevent model collapse, we must veto collinear dependencies between primitives. For instance, if the spatial density of players scales linearly with field dimensions without accounting for the anisotropic reach of the ball, the predictive kernel will overfit to static formations. Leakage occurs if officials (discrete event triggers) are modeled as continuous forces rather than instantaneous state resets, corrupting the temporal integrity of the game state transitions."
+    }
+  ]
+}

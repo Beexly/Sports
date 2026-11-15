@@ -1,0 +1,173 @@
+{
+  "book_id": "6102b20c5c5cee89",
+  "source_status": "COMPLETE",
+  "title": "1539-research-on-dynamic-analysis-and-prediction",
+  "file_name": "1539-research-on-dynamic-analysis-and-prediction.md",
+  "sha256": "6102b20c5c5cee893f442ebbec4a69bf4623371911cc524a7259ab7828c9e1c4",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian inference via posterior probability ratios combined with analytic hierarchy process weightings for multi-timescale tennis match prediction. AHP pairwise comparisons, momentum dynamics, and 4-class win probability modeling form a unified framework for situational tennis prediction.",
+  "gsi_mapping": "GSI employs conformal predictive distributions derived from empirical Bayes estimates to generate probabilistic match outcome forecasts with uncertainty bands. Bayesian inference on AHP weights and momentum constants enables conformal prediction of win probabilities using probabilistic graphical models.",
+  "gse_mapping": "GSE utilizes state-space models with momentum scores and AHP-derived feature weights to simulate real-time tactical shifts and player performance dynamics. State transitions driven by serve order, streaks, and psychological factors are modeled through dynamic logistic regression with momentum kernels.",
+  "primitives": [
+    {
+      "primitive_id": "w0_bayesian_win_probability",
+      "name": "Bayesian Win Probability",
+      "verbatim_quote": "Method / model (1) \"Bayesian probability\": P(W|B) = P(B|W)P(W)/P(B) computed from empirical counts — the average P(player 1 wins | serves first) = 0.6734, failure 0.3266 — used as class labels for a multinomial logistic regression (Eqs.",
+      "page": 1,
+      "latex": "\\mathbb{P}(W \\mid B) = \\frac{\\mathbb{P}(B \\mid W) \\cdot \\mathbb{P}(W)}{\\mathbb{P}(B)}",
+      "symbol_and_unit_ledger": "{'W': 'player wins', 'B': 'serve first', 'P(W|B)': 'probability of win given serve first'}",
+      "assumptions": "Empirical frequency approximates true probability; independence of serve-first advantage across matches.",
+      "breakdown_regime": "When prior probabilities are undefined or when sample size is insufficient for stable estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The empirical Bayes estimate maps to GSI's probabilistic forecasting framework through likelihood calibration and predictive interval construction.",
+        "source_operator": "w0_bayesian_win_probability",
+        "telemetry": "Match-level win rate accuracy against holdout data."
+      }
+    },
+    {
+      "primitive_id": "w1_momentum_score",
+      "name": "Momentum Score",
+      "verbatim_quote": "(2) Momentum score: P(n) = a1·M(n) + a2·N(n) (15), where M(n) averages points over ±1 games and N(n) over ±3 games, plus exponential bonuses e^{2k}/e^{k} for k consecutive scoring games (Eqs.",
+      "page": 1,
+      "latex": "P(n) = a_1 \\cdot M(n) + a_2 \\cdot N(n) + \\sum_{k} \\frac{e^{2k}}{e^k}",
+      "symbol_and_unit_ledger": "{'P(n)': 'momentum at time n', 'M(n)': 'average points ±1 game', 'N(n)': 'average points ±3 games', 'a1, a2': 'weight coefficients', 'k': 'consecutive scoring games'}",
+      "assumptions": "Momentum decays exponentially with lag; scoring streaks provide non-linear reinforcement.",
+      "breakdown_regime": "At match start or after significant disruptions such as injury or weather delay.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Momentum score acts as a derived kernel in GSE's temporal state transition function, influencing next-move predictions.",
+        "source_operator": "w1_momentum_score",
+        "telemetry": "Correlation between momentum score and actual game outcomes over time."
+      }
+    },
+    {
+      "primitive_id": "w2_ahp_weighting",
+      "name": "Analytic Hierarchy Process Weighting",
+      "verbatim_quote": "(3) AHP: 9-scale pairwise judgment matrices, consistency ratio CR = 0.085 < 0.1.",
+      "page": 1,
+      "latex": "\\text{CR} = \\frac{ρ_{max} - n}{(n - 1) ρ_{max}} < 0.1",
+      "symbol_and_unit_ledger": "{'CR': 'consistency ratio', 'ρ_max': 'maximum eigenvalue of pairwise matrix', 'n': 'matrix dimension'}",
+      "assumptions": "Pairwise judgments are consistent; expert input reflects true relative importance.",
+      "breakdown_regime": "When inconsistency exceeds threshold CR > 0.1 or when judgments lack coherence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "AHP weights map to GSE's feature importance layer, enabling prioritized tactical decision-making.",
+        "source_operator": "w2_ahp_weighting",
+        "telemetry": "Weight stability across multiple tournaments and match types."
+      }
+    },
+    {
+      "primitive_id": "w3_trend_similarity",
+      "name": "Cosine Similarity Trend Test",
+      "verbatim_quote": "(4) Cosine-similarity trend test between momentum score and win rate (poly22 surface fit, R2 = 0.7599; cosine similarity 0.0923).",
+      "page": 1,
+      "latex": "\\cos(\\theta) = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\| \\mathbf{u} \\| \\cdot \\| \\mathbf{v} \\|}",
+      "symbol_and_unit_ledger": "{'θ': 'angle between vectors', 'u, v': 'momentum and win rate time series', 'cos(θ)': 'similarity measure'}",
+      "assumptions": "Linear relationship between momentum and win rate exists within observed range.",
+      "breakdown_regime": "When trend divergence occurs beyond polynomial fit validity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cosine similarity provides a derived kernel for GSE’s pattern recognition engine to detect momentum misalignment.",
+        "source_operator": "w3_trend_similarity",
+        "telemetry": "Prediction error increase when cosine similarity drops below 0.1."
+      }
+    },
+    {
+      "primitive_id": "momentum_score",
+      "name": "Dynamic Momentum Score",
+      "verbatim_quote": "Features / target Inputs: serve order, streak lengths, score differentials, running distance, \"psychological factors.\" Targets: 4-class win-probability label {0, 0.3266, 0.6734, 1}; momentum score.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P(n)': 'probability of winning at round n, dimensionless', 'α1, β1': 'momentum decay constants, s⁻¹', 'w1': 'weight factor for momentum influence, dimensionless'}",
+      "assumptions": "Momentum constants are hand-set; psychological factors are encoded via heuristic features.",
+      "breakdown_regime": "When α1 + α2 = 0 and β1 + β2 = 0, momentum becomes static.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Momentum score acts as a derived kernel in logistic regression for win probability estimation.",
+        "source_operator": "momentum_score",
+        "telemetry": "Correlation coefficient between momentum score and win rate (cosine similarity = 0.0923)."
+      }
+    },
+    {
+      "primitive_id": "ahp_pairwise_judgment",
+      "name": "Analytic Hierarchy Process Judgment",
+      "verbatim_quote": "Assumptions: hand-set momentum constants; AHP pairwise judgments are subjective; women's generalization via renormalizing men's model to best-of-3.",
+      "page": 2,
+      "latex": "\\text{AHP weight} = \\frac{w_{ij}}{\\sum w_{ij}}, \\quad w_{ij} \\in \\mathbb{R}^+",
+      "symbol_and_unit_ledger": "{'w_{ij}': 'pairwise comparison value between criteria i and j, dimensionless', 'W': 'normalized AHP weight vector, dimensionless'}",
+      "assumptions": "Judgments are subjective and not statistically validated.",
+      "breakdown_regime": "When AHP consistency ratio (CR) exceeds threshold (e.g., CR > 0.1), judgments become unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "AHP weights map to feature importance in machine learning classifiers.",
+        "source_operator": "ahp_pairwise_judgment",
+        "telemetry": "Consistency Ratio (CR = 0.085) indicates acceptable judgment consistency."
+      }
+    },
+    {
+      "primitive_id": "win_probability_label",
+      "name": "Win Probability Label",
+      "verbatim_quote": "Validation design Table 2: classification metrics on the 4-class problem (accuracy ~0.91–0.93, macro-F1 0.912, micro-F1 0.931, ROC curves).",
+      "page": 2,
+      "latex": "P_{win} \\in \\{0, 0.3266, 0.6734, 1\\}",
+      "symbol_and_unit_ledger": "{'P_{win}': 'win probability class label, dimensionless'}",
+      "assumptions": "Labels are precomputed from Bayes' rule applied to match data.",
+      "breakdown_regime": "Class imbalance may lead to overfitting toward dominant classes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Win probability labels are used as targets in multi-class classification models.",
+        "source_operator": "win_probability_label",
+        "telemetry": "Classification accuracy ranges from 0.91 to 0.93 across classes."
+      }
+    },
+    {
+      "primitive_id": "psychological_factor",
+      "name": "Psychological Factor Encoding",
+      "verbatim_quote": "Momentum-vs-win correlation via surface fit; women's-data \"migration\" shown only as fitted plots (Figures 10–11), no numeric generalization metrics.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PF': 'psychological factor vector, dimensionless'}",
+      "assumptions": "Psychological variables are abstracted into numerical features without empirical grounding.",
+      "breakdown_regime": "No quantifiable measure of psychological impact leads to speculative modeling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Psychological factor encodes latent behavioral shifts influencing momentum.",
+        "source_operator": "psychological_factor",
+        "telemetry": "Not directly measurable; inferred via regression residuals."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6102b20c5c5cee89_t0",
+      "think": "This chapter introduces a hybrid model combining Bayesian inference, momentum scoring, and AHP for tennis match prediction. The core innovation lies in applying Bayes’ rule to serve-first win rates rather than full probabilistic modeling, which limits its adaptability. Momentum scoring uses fixed averaging windows and exponential bonuses without dynamic adjustment, suggesting limited responsiveness to changing match conditions. AHP contributes structured weighting but lacks sensitivity to evolving player form. The cosine similarity test indicates weak correlation between momentum and win rate, implying that the model may not generalize well. For GSI, this work demonstrates a foundational approach to probabilistic forecasting using empirical frequencies, while GSE could leverage the momentum framework for situational awareness. However, due to absence of true Bayesian updating and lack of robustness checks, it fails to meet GSE’s requirements for adaptive state transitions and deep reasoning. Window 1 Synthesis: Rooted in 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 2/2 pages of 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89): [w0_bayesian_win_probability p.1]: Method / model (1) \"Bayesian probability\": P(W|B) = P(B|W)P(W)/P(B) computed from empirical counts — the average P(player 1 wins | serves first) = 0.6734, failure 0.3266 — used as class labels for a multinomial logistic regression (Eqs. (The empirical Bayes estimate maps to GSI's probabilistic forecasting framework through likelihood calibration and predictive interval construction.) [w1_momentum_score p.1]: (2) Momentum score: P(n) = a1·M(n) + a2·N(n) (15), where M(n) averages points over ±1 games and N(n) over ±3 games, plus exponential bonuses e^{2k}/e^{k} for k consecutive scoring games (Eqs. (Momentum score acts as a derived kernel in GSE's temporal state transition function, influencing next-move predictions.) [w2_ahp_weighting p.1]: (3) AHP: 9-scale pairwise judgment matrices, consistency ratio CR = 0.085 < 0.1. (AHP weights map to GSE's feature importance layer, enabling prioritized tactical decision-making.) [w3_trend_similarity p.1]: (4) Cosine-similarity trend test between momentum score and win rate (poly22 surface fit, R2 = 0.7599; cosine similarity 0.0923). (Cosine similarity provides a derived kernel for GSE’s pattern recognition engine to detect momentum misalignment.) [momentum_score p.2]: Features / target Inputs: serve order, streak lengths, score differentials, running distance, \"psychological factors.\" Targets: 4-class win-probability label {0, 0.3266, 0.6734, 1}; momentum score. (Momentum score acts as a derived kernel in logistic regression for win probability estimation.) [ahp_pairwise_judgment p.2]: Assumptions: hand-set momentum constants; AHP pairwise judgments are subjective; women's generalization via renormalizing men's model to best-of-3. (AHP weights map to feature importance in machine learning classifiers.) [win_probability_label p.2]: Validation design Table 2: classification metrics on the 4-class problem (accuracy ~0.91–0.93, macro-F1 0.912, micro-F1 0.931, ROC curves). (Win probability labels are used as targets in multi-class classification models.) [psychological_factor p.2]: Momentum-vs-win correlation via surface fit; women's-data \"migration\" shown only as fitted plots (Figures 10–11), no numeric generalization metrics. (Psychological factor encodes latent behavioral shifts influencing momentum.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89): [w0_bayesian_win_probability p.1]: Method / model (1) \"Bayesian probability\": P(W|B) = P(B|W)P(W)/P(B) computed from empirical counts — the average P(player 1 wins | serves first) = 0.6734, failure 0.3266 — used as class labels for a multinomial logistic regression (Eqs. (The empirical Bayes estimate maps to GSI's probabilistic forecasting framework through likelihood calibration and predictive interval construction.) [w1_momentum_score p.1]: (2) Momentum score: P(n) = a1·M(n) + a2·N(n) (15), where M(n) averages points over ±1 games and N(n) over ±3 games, plus exponential bonuses e^{2k}/e^{k} for k consecutive scoring games (Eqs. (Momentum score acts as a derived kernel in GSE's temporal state transition function, influencing next-move predictions.) [w2_ahp_weighting p.1]: (3) AHP: 9-scale pairwise judgment matrices, consistency ratio CR = 0.085 < 0.1. (AHP weights map to GSE's feature importance layer, enabling prioritized tactical decision-making.) [w3_trend_similarity p.1]: (4) Cosine-similarity trend test between momentum score and win rate (poly22 surface fit, R2 = 0.7599; cosine similarity 0.0923). (Cosine similarity provides a derived kernel for GSE’s pattern recognition engine to detect momentum misalignment.) [momentum_score p.2]: Features / target Inputs: serve order, streak lengths, score differentials, running distance, \"psychological factors.\" Targets: 4-class win-probability label {0, 0.3266, 0.6734, 1}; momentum score. (Momentum score acts as a derived kernel in logistic regression for win probability estimation.) [ahp_pairwise_judgment p.2]: Assumptions: hand-set momentum constants; AHP pairwise judgments are subjective; women's generalization via renormalizing men's model to best-of-3. (AHP weights map to feature importance in machine learning classifiers.) [win_probability_label p.2]: Validation design Table 2: classification metrics on the 4-class problem (accuracy ~0.91–0.93, macro-F1 0.912, micro-F1 0.931, ROC curves). (Win probability labels are used as targets in multi-class classification models.) [psychological_factor p.2]: Momentum-vs-win correlation via surface fit; women's-data \"migration\" shown only as fitted plots (Figures 10–11), no numeric generalization metrics. (Psychological factor encodes latent behavioral shifts influencing momentum.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in classical statistics and decision theory, this work builds upon early Bayesian applications in sports analytics and extends into multi-timescale modeling inspired by signal processing techniques. Retrocausal Genealogy (Window 1): Rooted in 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models assume rational actors with static preferences and predictable behavior patterns. It does not account for psychological factors or strategic adaptation during play, limiting its applicability to coaching scenarios involving dynamic opponent modeling. Theory of Mind (Window 1): Rooted in 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "The model suffers from anti-collinearity issues due to overlapping features like serve order and point winners. Leakage occurs through redundant variables in momentum calculation and inconsistent use of AHP weights across different match contexts. Cross-Layer Veto (Window 1): Rooted in 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6102b20c5c5cee89_t1",
+      "think": "The chapter presents a dynamic model for predicting tennis outcomes using a combination of momentum-based scoring, AHP judgments, and 4-class win probabilities. It assumes that psychological factors can be encoded into numerical features, which are then used in a classification framework. However, the model suffers from several critical flaws: momentum constants are hand-set without estimation or sensitivity analysis; AHP weights are subjective and lack statistical validation; the claimed strong correlation between momentum and win rate is undermined by a low cosine similarity of 0.0923. Additionally, the model does not employ Bayesian inference, lacks replicable code or data, and fails to beat established benchmarks. The use of multi-time scale logistic regression appears circular since labels are derived from the same Bayes-rule computation. These issues collectively violate the lane bar requirements for robust scientific modeling. The model's reliance on precomputed labels and subjective judgments creates a high risk of overfitting and poor generalizability. The absence of proper scoring rules and empirical validation further undermines its credibility. The paper's failure to provide accessible data or code prevents independent verification or adaptation. The theoretical underpinning lacks formal probabilistic rigor, especially in how it treats momentum dynamics and psychological factors. This makes the model unsuitable for deployment in GSI or GSE systems requiring reliable, reproducible, and mathematically sound predictions.",
+      "retrocausal_genealogy": "This work builds upon earlier tennis analytics frameworks that attempt to quantify momentum and psychological states, but diverges by integrating AHP and classification techniques without sufficient statistical grounding or replication protocols. Retrocausal Genealogy (Window 2): Rooted in 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The model implicitly assumes players behave rationally and consistently, with momentum acting as a deterministic force. Coaches might interpret psychological factors as strategic adjustments, while opponents could exploit perceived patterns in momentum dynamics. Theory of Mind (Window 2): Rooted in 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "The model exhibits anti-collinearity issues due to overlapping features such as streak lengths and score differentials. Leakage occurs when psychological factors are conflated with momentum, leading to spurious correlations. The lack of Bayesian modeling and replicable benchmarks invalidates cross-layer integration with GSI and GSE. Cross-Layer Veto (Window 2): Rooted in 1539-research-on-dynamic-analysis-and-prediction (6102b20c5c5cee89, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

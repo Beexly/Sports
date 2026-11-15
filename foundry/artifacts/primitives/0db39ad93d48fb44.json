@@ -1,0 +1,78 @@
+{
+  "book_id": "0db39ad93d48fb44",
+  "source_status": "COMPLETE",
+  "title": "2017 - What does it mean to draft perfectly - Unknown Authors",
+  "file_name": "2017 - What does it mean to draft perfectly - Unknown Authors.md",
+  "sha256": "0db39ad93d48fb4427d33442cd12ac3a725a0752cd8c938bdb325708e6104c0c",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A retrocausal optimization framework models draft efficiency as a backward-induction game-theoretic process, where teams maximize expected value under perfect information. Universal Lens: Rooted in 2017 - What does it mean to draft perfectly - Unknown Authors (0db39ad93d48fb44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps observed draft selections to posterior distributions over optimal picks, enabling conformal prediction of draft efficiency metrics. GSI Mapping: Rooted in 2017 - What does it mean to draft perfectly - Unknown Authors (0db39ad93d48fb44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes draft state transitions via recursive backward induction, capturing inter-team strategic interactions and pick-value dynamics. GSE Mapping: Rooted in 2017 - What does it mean to draft perfectly - Unknown Authors (0db39ad93d48fb44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "perfect_draft_value",
+      "name": "Perfect Draft Value",
+      "verbatim_quote": "The perfect draft can be thought of as what would happen if a GM could redo a draft with complete knowledge **Backward** of prospects' career values as well as other teams' choices, while all other teams act just as they did previously.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_{\\\\text{opt}}': 'Career point shares (dimensionless)', 'V_{\\\\text{actual}}': 'Career point shares (dimensionless)'}",
+      "assumptions": "Teams act rationally with full knowledge of future outcomes and opponent behavior.",
+      "breakdown_regime": "When future outcomes are unknown or stochastic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic draft evaluation engine, computing expected value under known futures.",
+        "source_operator": "perfect_draft_value",
+        "telemetry": "Draft efficiency ratio V_actual / V_opt"
+      }
+    },
+    {
+      "primitive_id": "backwards_calculated_risk",
+      "name": "Backwards Calculated Risk",
+      "verbatim_quote": "There were people_ <mark>PS: Career Point Shares from hockey-reference.com (through 2015-16)</mark> _banging their hands on the table, like, 'Oh, we should have taken him a round earlier.' It's a_ **_Backwards calculated risk_** _.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{\\\\text{risk}}': 'Risk-adjusted draft position (dimensionless)', 'T_{\\\\text{time}}': 'Time step in draft sequence (rounds)'}",
+      "assumptions": "Risk is quantified through temporal proximity to optimal selection.",
+      "breakdown_regime": "When selection timing deviates from optimal backward-induction strategy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's temporal risk-sensitivity kernel, modeling delayed regret.",
+        "source_operator": "backwards_calculated_risk",
+        "telemetry": "Temporal deviation from optimal pick order"
+      }
+    },
+    {
+      "primitive_id": "best_player_available",
+      "name": "Best Player Available",
+      "verbatim_quote": "The Flames got Gaudreau in a_ **Best Player Available Best Player Available** **_really good spot_** _.\"_ **Pick Player PS Pick Player PS** ~ John Weisbrod, former Bruins scout 2 Jamie Benn 55.8 182 Justin Braun 21.1 Gaudreau was drafted with the 2011 104<sup>th</sup> overall 41 P.K.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'BPA': 'Best available player index (dimensionless)', 'P_{\\\\text{pick}}': 'Draft pick number (dimensionless)'}",
+      "assumptions": "Players are ranked by career value and availability is deterministic.",
+      "breakdown_regime": "When BPA ranking changes due to external selection.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes GSE's dynamic player valuation logic, prioritizing BPA in sequential picks.",
+        "source_operator": "best_player_available",
+        "telemetry": "Ranking consistency vs. actual pick position"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0db39ad93d48fb44_t0",
+      "think": "The framework defines a retrocausal optimization problem where teams seek to maximize career point shares under perfect information. The 'perfect draft' is modeled as a backward-induction game, where each pick is evaluated against all future outcomes. This yields a deterministic upper bound on draft value. The 'backwards calculated risk' captures the regret of missing optimal picks, which is quantified by temporal deviation from the idealized sequence. The 'best player available' heuristic is embedded within this structure as a strategic choice that must align with the global optimum. Failure modes include stochastic uncertainty in player value estimation and non-rational opponent behavior, both of which break the assumption of full information. The framework thus operates under a dual duality: between actual and optimal outcomes, and between forward selection and backward reasoning.\n\nDeep epistemic analysis for 2017 - What does it mean to draft perfectly - Unknown Authors (0db39ad93d48fb44, domain=other, pages_read=3/3): Operator 'Perfect Draft Value' (page 1, domain other) captures: The perfect draft can be thought of as what would happen if a GM could redo a draft with complete knowledge **Backward** of prospects' career values as well as other teams' choices, while all other teams act just as they did previously. Assumptions: Teams act rationally with full knowledge of future outcomes and opponent behavior. Breakdown regime: When future outcomes are unknown or stochastic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic draft evaluation engine, computing expected value under known futures. Operator 'Backwards Calculated Risk' (page 1, domain other) captures: There were people_ <mark>PS: Career Point Shares from hockey-reference.com (through 2015-16)</mark> _banging their hands on the table, like, 'Oh, we should have taken him a round earlier.' It's a_ **_Backwards calculated risk_** _. Assumptions: Risk is quantified through temporal proximity to optimal selection. Breakdown regime: When selection timing deviates from optimal backward-induction strategy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's temporal risk-sensitivity kernel, modeling delayed regret. Operator 'Best Player Available' (page 1, domain other) captures: The Flames got Gaudreau in a_ **Best Player Available Best Player Available** **_really good spot_** _.\"_ **Pick Player PS Pick Player PS** ~ John Weisbrod, former Bruins scout 2 Jamie Benn 55.8 182 Justin Braun 21.1 Gaudreau was drafted with the 2011 104<sup>th</sup> overall 41 P.K. Assumptions: Players are ranked by career value and availability is deterministic. Breakdown regime: When BPA ranking changes due to external selection. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes GSE's dynamic player valuation logic, prioritizing BPA in sequential picks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2017 - What does it mean to draft perfectly - Unknown Authors (0db39ad93d48fb44, domain=other, pages_read=3/3): Operator 'Perfect Draft Value' (page 1, domain other) captures: The perfect draft can be thought of as what would happen if a GM could redo a draft with complete knowledge **Backward** of prospects' career values as well as other teams' choices, while all other teams act just as they did previously. Assumptions: Teams act rationally with full knowledge of future outcomes and opponent behavior. Breakdown regime: When future outcomes are unknown or stochastic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic draft evaluation engine, computing expected value under known futures. Operator 'Backwards Calculated Risk' (page 1, domain other) captures: There were people_ <mark>PS: Career Point Shares from hockey-reference.com (through 2015-16)</mark> _banging their hands on the table, like, 'Oh, we should have taken him a round earlier.' It's a_ **_Backwards calculated risk_** _. Assumptions: Risk is quantified through temporal proximity to optimal selection. Breakdown regime: When selection timing deviates from optimal backward-induction strategy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's temporal risk-sensitivity kernel, modeling delayed regret. Operator 'Best Player Available' (page 1, domain other) captures: The Flames got Gaudreau in a_ **Best Player Available Best Player Available** **_really good spot_** _.\"_ **Pick Player PS Pick Player PS** ~ John Weisbrod, former Bruins scout 2 Jamie Benn 55.8 182 Justin Braun 21.1 Gaudreau was drafted with the 2011 104<sup>th</sup> overall 41 P.K. Assumptions: Players are ranked by career value and availability is deterministic. Breakdown regime: When BPA ranking changes due to external selection. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes GSE's dynamic player valuation logic, prioritizing BPA in sequential picks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in game theory and backward induction principles from economics and operations research, particularly applied to sequential decision-making in competitive environments. Retrocausal Genealogy: Rooted in 2017 - What does it mean to draft perfectly - Unknown Authors (0db39ad93d48fb44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing teams as rational agents with identical information, optimizing for career value while anticipating others' moves. Assumes symmetric knowledge and strategic equilibrium. Theory of Mind & Decision Maker Model: Rooted in 2017 - What does it mean to draft perfectly - Unknown Authors (0db39ad93d48fb44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents collision between GSI’s Bayesian inference and GSE’s state transition logic when future outcomes are uncertain or when player value estimates are unreliable. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2017 - What does it mean to draft perfectly - Unknown Authors (0db39ad93d48fb44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

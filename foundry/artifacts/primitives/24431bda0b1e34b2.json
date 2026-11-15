@@ -1,0 +1,78 @@
+{
+  "book_id": "24431bda0b1e34b2",
+  "source_status": "COMPLETE",
+  "title": "ngs_expected_value_surfaces",
+  "file_name": "ngs_expected_value_surfaces.md",
+  "sha256": "24431bda0b1e34b2e515759cba1aad96196033d1b03daf4717dba5cf0dd8b487",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "NGS provides direct access to expected value surfaces via anonymous API paths, enabling precise reconstruction of completion probability and YACoE without BDB proxies. Universal Lens: Rooted in ngs_expected_value_surfaces (24431bda0b1e34b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps NGS' completionProbability to posterior belief over catch likelihood, while YACoE encodes residual deviation from expected yardage under conditional independence. GSI Mapping: Rooted in ngs_expected_value_surfaces (24431bda0b1e34b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models throws as state transitions where airYards and separation features drive dynamic updates to receiver-centric expected outcomes and completion risk. GSE Mapping: Rooted in ngs_expected_value_surfaces (24431bda0b1e34b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "completion_probability",
+      "name": "Completion Probability Surface",
+      "verbatim_quote": "# BREAKTHROUGH: NGS serves its own completionProbability and YACoE The mission's primitive #2 is not hidden at all.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{comp}': 'dimensionless probability'}",
+      "assumptions": "Conditional on launch parameters and receiver tracking features; modeled as deterministic function of airYards and separation.",
+      "breakdown_regime": "0.218–0.286 band across 4.4–33.6 air yards; minimal sensitivity to distance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "P_{comp}(\\text{airYards}, \\text{separation}) = \\mathbb{E}[\\text{catch} | \\text{features}]",
+        "source_operator": "completion_probability",
+        "telemetry": "Residual difference between actual and predicted catch outcomes."
+      }
+    },
+    {
+      "primitive_id": "expected_yards_after_catch",
+      "name": "Expected Yards After Catch",
+      "verbatim_quote": "So the published metric is the residual we were reconstructing — NGS just serves the expectation term, which is the part BDB could not give us.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathbb{E}[Y_{\\\\text{after}}]': 'yards'}",
+      "assumptions": "Conditional on catch event; derived from historical trajectory and receiver performance data.",
+      "breakdown_regime": "Computed per receiver on highlight plays; limited by sample size.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "\\mathbb{E}[Y_{\\text{after}}] = \\mathbb{E}[\\text{yards after catch} | \\text{catch}]",
+        "source_operator": "expected_yards_after_catch",
+        "telemetry": "Difference between observed and expected yards post-catch."
+      }
+    },
+    {
+      "primitive_id": "air_yards_measure",
+      "name": "Air Yards Launch Point Measure",
+      "verbatim_quote": "- `airYards` is signed (negative behind the LOS: -5.64 observed), so it is a launch-point measure, not a distance.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'y_{\\\\text{air}}': 'yards (signed)'}",
+      "assumptions": "Signed variable indicating relative position to line of scrimmage at release.",
+      "breakdown_regime": "Negative values indicate behind-line throws; positive values indicate forward progress.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "y_{\\text{air}} = \\text{position}_{\\text{release}} - \\text{LOS}",
+        "source_operator": "air_yards_measure",
+        "telemetry": "Launch point displacement from line of scrimmage."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "24431bda0b1e34b2_t0",
+      "think": "The NGS system exposes two core expected-value primitives: completionProbability and expectedYardsAfterCatch. These are not merely proxy estimates but direct outputs from a proprietary model trained on high-fidelity tracking data. The former is a scalar probability conditioned on launch and receiver features, while the latter is a continuous expectation over yardage gains post-catch. Both are validated through exact residuals (YACoE = yardsAfterCatch − expectedYAC), confirming their role as decomposed components of total expected value. The anomaly in completionProbability across air yards (0.218–0.286) suggests either strong conditioning on tracking features or per-receiver field computation, which challenges traditional per-play modeling assumptions. The signed nature of airYards implies a directional bias from the line of scrimmage, making it a key input for spatial reasoning in GSE. However, the limited harvest volume (2–5 rows/game) constrains statistical robustness, necessitating larger datasets for reliable inference.\n\nDeep epistemic analysis for ngs_expected_value_surfaces (24431bda0b1e34b2, domain=other, pages_read=1/1): Operator 'Completion Probability Surface' (page 1, domain other) captures: # BREAKTHROUGH: NGS serves its own completionProbability and YACoE The mission's primitive #2 is not hidden at all. Assumptions: Conditional on launch parameters and receiver tracking features; modeled as deterministic function of airYards and separation. Breakdown regime: 0.218–0.286 band across 4.4–33.6 air yards; minimal sensitivity to distance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): P_{comp}(\\text{airYards}, \\text{separation}) = \\mathbb{E}[\\text{catch} | \\text{features}] Operator 'Expected Yards After Catch' (page 1, domain other) captures: So the published metric is the residual we were reconstructing — NGS just serves the expectation term, which is the part BDB could not give us. Assumptions: Conditional on catch event; derived from historical trajectory and receiver performance data. Breakdown regime: Computed per receiver on highlight plays; limited by sample size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): \\mathbb{E}[Y_{\\text{after}}] = \\mathbb{E}[\\text{yards after catch} | \\text{catch}] Operator 'Air Yards Launch Point Measure' (page 1, domain other) captures: - `airYards` is signed (negative behind the LOS: -5.64 observed), so it is a launch-point measure, not a distance. Assumptions: Signed variable indicating relative position to line of scrimmage at release. Breakdown regime: Negative values indicate behind-line throws; positive values indicate forward progress. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): y_{\\text{air}} = \\text{position}_{\\text{release}} - \\text{LOS} Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ngs_expected_value_surfaces (24431bda0b1e34b2, domain=other, pages_read=1/1): Operator 'Completion Probability Surface' (page 1, domain other) captures: # BREAKTHROUGH: NGS serves its own completionProbability and YACoE The mission's primitive #2 is not hidden at all. Assumptions: Conditional on launch parameters and receiver tracking features; modeled as deterministic function of airYards and separation. Breakdown regime: 0.218–0.286 band across 4.4–33.6 air yards; minimal sensitivity to distance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): P_{comp}(\\text{airYards}, \\text{separation}) = \\mathbb{E}[\\text{catch} | \\text{features}] Operator 'Expected Yards After Catch' (page 1, domain other) captures: So the published metric is the residual we were reconstructing — NGS just serves the expectation term, which is the part BDB could not give us. Assumptions: Conditional on catch event; derived from historical trajectory and receiver performance data. Breakdown regime: Computed per receiver on highlight plays; limited by sample size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): \\mathbb{E}[Y_{\\text{after}}] = \\mathbb{E}[\\text{yards after catch} | \\text{catch}] Operator 'Air Yards Launch Point Measure' (page 1, domain other) captures: - `airYards` is signed (negative behind the LOS: -5.64 observed), so it is a launch-point measure, not a distance. Assumptions: Signed variable indicating relative position to line of scrimmage at release. Breakdown regime: Negative values indicate behind-line throws; positive values indicate forward progress. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): y_{\\text{air}} = \\text{position}_{\\text{release}} - \\text{LOS} Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach builds upon early work in NFL analytics where expected value was approximated using BDB-derived metrics. The shift to NGS-native surfaces represents a paradigmatic move toward ground-truth estimation, aligning with developments in probabilistic modeling and conformal prediction frameworks. Retrocausal Genealogy: Rooted in ngs_expected_value_surfaces (24431bda0b1e34b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents—such as quarterbacks optimizing for completion likelihood or defenders minimizing airYards—interact within a shared space defined by these expected-value surfaces. Each agent’s decision-making process can be modeled as maximizing utility over these probabilistic outcomes, leading to strategic equilibrium points in play design. Theory of Mind & Decision Maker Model: Rooted in ngs_expected_value_surfaces (24431bda0b1e34b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that tracking features like separation and closing speed do not redundantly encode depth information, otherwise the model would suffer from multicollinearity. Leakage vetoes ensure that the model does not inadvertently use future-state variables during training, preserving temporal causality in situational reasoning. Cross-Layer Veto & Anti-Leakage Check: Rooted in ngs_expected_value_surfaces (24431bda0b1e34b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

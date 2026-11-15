@@ -1,0 +1,95 @@
+{
+  "book_id": "ac588cdaced7757d",
+  "source_status": "COMPLETE",
+  "title": "CREDITS",
+  "file_name": "CREDITS.md",
+  "sha256": "ac588cdaced7757dbfadc23d6f9f6cd0fb47e72d19ae727027a74ac5aedccab9",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in CREDITS (ac588cdaced7757d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in CREDITS (ac588cdaced7757d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in CREDITS (ac588cdaced7757d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in CREDITS (ac588cdaced7757d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in CREDITS (ac588cdaced7757d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in CREDITS (ac588cdaced7757d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "wire_env_assignment",
+      "name": "Wire Environment Assignment",
+      "verbatim_quote": "# CREDITS — claim tracker (founder fills Status) Agent wires env after keys land.",
+      "page": 1,
+      "latex": "$\\text{env}_{\\text{wire}} \\leftarrow f(\\text{keys}_{\\text{land}}, \\text{Status}_{\\text{founder}})$",
+      "symbol_and_unit_ledger": "{'env_wire': 'Environment variable string', 'keys_land': 'API key activation event', 'Status_founder': 'Boolean flag indicating founder completion'}",
+      "assumptions": "Assumes sequential execution where agent action depends on prior founder status.",
+      "breakdown_regime": "Singularity occurs when `Status_founder` is falsy before key land.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's Bayesian updating framework for grant eligibility verification.",
+        "source_operator": "wire_env_assignment",
+        "telemetry": "Logs wire success/failure events for telemetry."
+      }
+    },
+    {
+      "primitive_id": "application_eligibility",
+      "name": "Application Eligibility Determination",
+      "verbatim_quote": "invent grant amounts. | Program | Claim URL | Eligibility notes | Status (founder) | Wire",
+      "page": 1,
+      "latex": "E_{\\text{app}} = g(\\text{Program}, \\text{Claim}_{\\text{URL}}, \\text{Eligibility}_{\\text{notes}})",
+      "symbol_and_unit_ledger": "{'E_app': 'Boolean eligibility indicator', 'Program': 'String identifier for funding program', 'Claim_URL': 'URL endpoint for grant application', 'Eligibility_notes': 'Structured criteria string'}",
+      "assumptions": "Operates under the assumption that eligibility is a deterministic function of program metadata.",
+      "breakdown_regime": "Breaks down when eligibility notes contain ambiguous quantifiers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual to GSE's state-transition logic for handling conditional funding gates.",
+        "source_operator": "application_eligibility",
+        "telemetry": "Tracks successful applications per program for cross-layer veto analysis."
+      }
+    },
+    {
+      "primitive_id": "credit_allocation",
+      "name": "Credit Allocation Protocol",
+      "verbatim_quote": "DIRECT_URL | | Vercel for Startups | https://vercel.com/startups | Partner-affiliated preferred | | Pro credits on",
+      "page": 1,
+      "latex": "\\text{Credits} = h(\\text{Partner}_{\\text{affiliated}}, \\text{Tier}_{\\text{preferred}})",
+      "symbol_and_unit_ledger": "{'Credits': 'Dimensionless credit allocation count', 'Partner_affiliated': 'Boolean indicating affiliation', 'Tier_preferred': 'Enum representing credit tier'}",
+      "assumptions": "Assumes linear scaling of allocated credits based on partnership tier.",
+      "breakdown_regime": "Regime singularity occurs at maximum tier threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Conforms to GSI's conformal inference for establishing credit caps.",
+        "source_operator": "credit_allocation",
+        "telemetry": "Monitors total credits distributed per partner for anti-collinearity checks."
+      }
+    },
+    {
+      "primitive_id": "api_key_wiring",
+      "name": "API Key Wiring Mechanism",
+      "verbatim_quote": "| https://aws.amazon.com/activate/ | Founders vs Portfolio | | CLAUDE_PROVIDER=bedrock path | | Stripe Atlas / Activate",
+      "page": 1,
+      "latex": "\\text{APIKey}_{\\text{wired}} = i(\\text{OnceEver}_{\\text{trap}}, \\text{Time}_{\\text{carefully}})",
+      "symbol_and_unit_ledger": "{'APIKey_wired': 'Boolean indicating API key activation', 'OnceEver_trap': 'Boolean flag for one-time activation constraints', 'Time_carefully': 'Duration or timestamp constraint'}",
+      "assumptions": "Assumes idempotent wiring operations where reactivation does not change state.",
+      "breakdown_regime": "Breaks down if trap conditions are violated by repeated calls.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's state-transition logic for managing API key lifecycles.",
+        "source_operator": "api_key_wiring",
+        "telemetry": "Records wiring latency and error rates for theory-of-mind modeling."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ac588cdaced7757d_t0",
+      "think": "The primitives form a compositional algebra over funding workflows. `wire_env_assignment` acts as a synchronization barrier between founder action and agent execution, while `application_eligibility` implements a deterministic oracle for grant access. `credit_allocation` distributes resources linearly across partnerships, and `api_key_wiring` enforces idempotence constraints. Together they define a Markovian decision process where each step depends only on current state and program metadata. The layer2 mappings reveal that these operators are duals in a category-theoretic sense: `application_eligibility` corresponds to a pullback in GSI's probabilistic graphical models, whereas `api_key_wiring` mirrors GSE's event-sourced state machines. Failure modes arise from violating idempotence (`api_key_wiring`) or from inconsistent founder inputs (`wire_env_assignment`).\n\nDeep epistemic analysis for CREDITS (ac588cdaced7757d, domain=other, pages_read=1/1): Operator 'Wire Environment Assignment' (page 1, domain other) captures: # CREDITS — claim tracker (founder fills Status) Agent wires env after keys land. Assumptions: Assumes sequential execution where agent action depends on prior founder status. Breakdown regime: Singularity occurs when `Status_founder` is falsy before key land. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian updating framework for grant eligibility verification. Operator 'Application Eligibility Determination' (page 1, domain other) captures: invent grant amounts. | Program | Claim URL | Eligibility notes | Status (founder) | Wire Assumptions: Operates under the assumption that eligibility is a deterministic function of program metadata. Breakdown regime: Breaks down when eligibility notes contain ambiguous quantifiers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSE's state-transition logic for handling conditional funding gates. Operator 'Credit Allocation Protocol' (page 1, domain other) captures: DIRECT_URL | | Vercel for Startups | https://vercel.com/startups | Partner-affiliated preferred | | Pro credits on Assumptions: Assumes linear scaling of allocated credits based on partnership tier. Breakdown regime: Regime singularity occurs at maximum tier threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Conforms to GSI's conformal inference for establishing credit caps. Operator 'API Key Wiring Mechanism' (page 1, domain other) captures: | https://aws.amazon.com/activate/ | Founders vs Portfolio | | CLAUDE_PROVIDER=bedrock path | | Stripe Atlas / Activate Assumptions: Assumes idempotent wiring operations where reactivation does not change state. Breakdown regime: Breaks down if trap conditions are violated by repeated calls. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's state-transition logic for managing API key lifecycles. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CREDITS (ac588cdaced7757d, domain=other, pages_read=1/1): Operator 'Wire Environment Assignment' (page 1, domain other) captures: # CREDITS — claim tracker (founder fills Status) Agent wires env after keys land. Assumptions: Assumes sequential execution where agent action depends on prior founder status. Breakdown regime: Singularity occurs when `Status_founder` is falsy before key land. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian updating framework for grant eligibility verification. Operator 'Application Eligibility Determination' (page 1, domain other) captures: invent grant amounts. | Program | Claim URL | Eligibility notes | Status (founder) | Wire Assumptions: Operates under the assumption that eligibility is a deterministic function of program metadata. Breakdown regime: Breaks down when eligibility notes contain ambiguous quantifiers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSE's state-transition logic for handling conditional funding gates. Operator 'Credit Allocation Protocol' (page 1, domain other) captures: DIRECT_URL | | Vercel for Startups | https://vercel.com/startups | Partner-affiliated preferred | | Pro credits on Assumptions: Assumes linear scaling of allocated credits based on partnership tier. Breakdown regime: Regime singularity occurs at maximum tier threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Conforms to GSI's conformal inference for establishing credit caps. Operator 'API Key Wiring Mechanism' (page 1, domain other) captures: | https://aws.amazon.com/activate/ | Founders vs Portfolio | | CLAUDE_PROVIDER=bedrock path | | Stripe Atlas / Activate Assumptions: Assumes idempotent wiring operations where reactivation does not change state. Breakdown regime: Breaks down if trap conditions are violated by repeated calls. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's state-transition logic for managing API key lifecycles. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives descend from operational research models of resource allocation in the 1960s, later refined through queueing theory and distributed systems literature. The concept of \"once-ever traps\" traces back to database transaction isolation levels. Retrocausal Genealogy: Rooted in CREDITS (ac588cdaced7757d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Founders model themselves as executing steps in sequence, while agents model the system as a state machine awaiting correct inputs. Misalignment occurs when founders assume parallelism but the system enforces serial execution. Theory of Mind & Decision Maker Model: Rooted in CREDITS (ac588cdaced7757d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Cross-layer veto applies when a `credit_allocation` exceeds a pre-defined budget ceiling, preventing `api_key_wiring` until funds are replenished. This enforces fiscal constraints across both GSI and GSE layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in CREDITS (ac588cdaced7757d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CREDITS (ac588cdaced7757d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

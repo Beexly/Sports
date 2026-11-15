@@ -1,0 +1,78 @@
+{
+  "book_id": "2e5bbd2b0376542c",
+  "source_status": "COMPLETE",
+  "title": "hermes_restart_single_item",
+  "file_name": "hermes_restart_single_item.md",
+  "sha256": "2e5bbd2b0376542c102bcf7620ea1e53548946b24052bf0722e7511130575e43",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Off-by-one error in capReached logic maps to discrete threshold crossing in data processing pipelines. Universal Lens: Rooted in hermes_restart_single_item (2e5bbd2b0376542c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on stale pick counts uses cumulative distribution over cap boundary; capReached triggers only when excess exceeds cap. GSI Mapping: Rooted in hermes_restart_single_item (2e5bbd2b0376542c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition in settle-backfill updates batch persistence conditionally on capReached=true, requiring >cap stale items for activation. GSE Mapping: Rooted in hermes_restart_single_item (2e5bbd2b0376542c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "cap_reached_threshold",
+      "name": "Cap Reached Threshold Operator",
+      "verbatim_quote": "## The one task: fix the capReached off-by-one in settle-backfill.ts File: `apps/web/lib/data-sources/settle-backfill.ts` Find the line that currently reads (or close to it): `capReached: stale.length >= cap,` Change `>=` to `>`.",
+      "page": 1,
+      "latex": "\\text{capReached} = \\begin{cases} \\text{true}, & |\\text{stale}| > \\text{cap} \\\\ \\text{false}, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'stale': 'dimensionless count of overdue picks', 'cap': 'dimensionless upper bound on batch size'}",
+      "assumptions": "Stale picks are ordered, cap defines exclusive upper limit for batch processing.",
+      "breakdown_regime": "When |stale| = cap, capReached incorrectly evaluates to true due to inclusive comparison.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "capReached serves as a kernel trigger for batched data settlement, where >cap ensures sufficient backlog for processing.",
+        "source_operator": "cap_reached_threshold",
+        "telemetry": "Boolean flag indicating whether batched settlement should proceed based on stale count exceeding cap."
+      }
+    },
+    {
+      "primitive_id": "batch_fetch_adjustment",
+      "name": "Batch Fetch Adjustment Kernel",
+      "verbatim_quote": "If the surrounding code fetches exactly `cap` rows, you may need to fetch `cap + 1` so this comparison is meaningful, then slice back to `cap` for the actual persisted batch — read the function fully before editing so the slice logic stays correct.",
+      "page": 1,
+      "latex": "\\text{fetchSize} = \\text{cap} + 1, \\quad \\text{actualBatch} = \\text{fetchSlice}(\\text{fetchSize}, \\text{cap})",
+      "symbol_and_unit_ledger": "{'fetchSize': 'dimensionless number of fetched rows', 'actualBatch': 'dimensionless subset of rows after slicing'}",
+      "assumptions": "Data fetching must precede threshold evaluation to ensure valid comparison.",
+      "breakdown_regime": "Failure occurs if fetchSize equals cap without padding, leading to ambiguous capReached state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ensures sufficient data is retrieved to correctly evaluate capReached boundary; prevents underfetching edge case.",
+        "source_operator": "batch_fetch_adjustment",
+        "telemetry": "Number of rows fetched and sliced to maintain correct batch size for settlement."
+      }
+    },
+    {
+      "primitive_id": "test_boundary_verification",
+      "name": "Test Boundary Verification Logic",
+      "verbatim_quote": "Update the existing test for this field (search the test files for `capReached` to find it) so it asserts the corrected boundary.",
+      "page": 1,
+      "latex": "\\forall \\text{testCases}: \\text{capReached}(\\text{stale} = \\text{cap}+1) = \\text{true}, \\quad \\text{capReached}(\\text{stale} = \\text{cap}) = \\text{false}",
+      "symbol_and_unit_ledger": "{'testCases': 'dimensionless set of input configurations', 'capReached': 'boolean outcome of threshold check'}",
+      "assumptions": "Unit tests must validate both boundary cases to prevent regression.",
+      "breakdown_regime": "Incorrect test assertion leads to silent failure of boundary correction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Test logic mirrors operational logic to ensure correctness of capReached behavior across inputs.",
+        "source_operator": "test_boundary_verification",
+        "telemetry": "Pass/fail status of unit test suite covering capReached edge cases."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2e5bbd2b0376542c_t0",
+      "think": "The core issue lies in an off-by-one logical error within the capReached predicate. Originally, `stale.length >= cap` treats equality as inclusion, which misclassifies scenarios where exactly 'cap' items are present. Correcting to `stale.length > cap` ensures that capReached is triggered only when there are strictly more than cap items, aligning with intended semantics. This requires a dual adjustment in data fetching logic to ensure the comparison remains meaningful—fetching cap+1 rows allows accurate detection of overflow. The test suite must also reflect this corrected expectation to prevent future regressions. The mathematical structure reflects a discrete threshold operator with a strict inequality, forming a binary decision boundary in data processing pipelines.\n\nDeep epistemic analysis for hermes_restart_single_item (2e5bbd2b0376542c, domain=other, pages_read=1/1): Operator 'Cap Reached Threshold Operator' (page 1, domain other) captures: ## The one task: fix the capReached off-by-one in settle-backfill.ts File: `apps/web/lib/data-sources/settle-backfill.ts` Find the line that currently reads (or close to it): `capReached: stale.length >= cap,` Change `>=` to `>`. Assumptions: Stale picks are ordered, cap defines exclusive upper limit for batch processing. Breakdown regime: When |stale| = cap, capReached incorrectly evaluates to true due to inclusive comparison. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): capReached serves as a kernel trigger for batched data settlement, where >cap ensures sufficient backlog for processing. Operator 'Batch Fetch Adjustment Kernel' (page 1, domain other) captures: If the surrounding code fetches exactly `cap` rows, you may need to fetch `cap + 1` so this comparison is meaningful, then slice back to `cap` for the actual persisted batch — read the function fully before editing so the slice logic stays correct. Assumptions: Data fetching must precede threshold evaluation to ensure valid comparison. Breakdown regime: Failure occurs if fetchSize equals cap without padding, leading to ambiguous capReached state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures sufficient data is retrieved to correctly evaluate capReached boundary; prevents underfetching edge case. Operator 'Test Boundary Verification Logic' (page 1, domain other) captures: Update the existing test for this field (search the test files for `capReached` to find it) so it asserts the corrected boundary. Assumptions: Unit tests must validate both boundary cases to prevent regression. Breakdown regime: Incorrect test assertion leads to silent failure of boundary correction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Test logic mirrors operational logic to ensure correctness of capReached behavior across inputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for hermes_restart_single_item (2e5bbd2b0376542c, domain=other, pages_read=1/1): Operator 'Cap Reached Threshold Operator' (page 1, domain other) captures: ## The one task: fix the capReached off-by-one in settle-backfill.ts File: `apps/web/lib/data-sources/settle-backfill.ts` Find the line that currently reads (or close to it): `capReached: stale.length >= cap,` Change `>=` to `>`. Assumptions: Stale picks are ordered, cap defines exclusive upper limit for batch processing. Breakdown regime: When |stale| = cap, capReached incorrectly evaluates to true due to inclusive comparison. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): capReached serves as a kernel trigger for batched data settlement, where >cap ensures sufficient backlog for processing. Operator 'Batch Fetch Adjustment Kernel' (page 1, domain other) captures: If the surrounding code fetches exactly `cap` rows, you may need to fetch `cap + 1` so this comparison is meaningful, then slice back to `cap` for the actual persisted batch — read the function fully before editing so the slice logic stays correct. Assumptions: Data fetching must precede threshold evaluation to ensure valid comparison. Breakdown regime: Failure occurs if fetchSize equals cap without padding, leading to ambiguous capReached state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures sufficient data is retrieved to correctly evaluate capReached boundary; prevents underfetching edge case. Operator 'Test Boundary Verification Logic' (page 1, domain other) captures: Update the existing test for this field (search the test files for `capReached` to find it) so it asserts the corrected boundary. Assumptions: Unit tests must validate both boundary cases to prevent regression. Breakdown regime: Incorrect test assertion leads to silent failure of boundary correction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Test logic mirrors operational logic to ensure correctness of capReached behavior across inputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical control theory's threshold logic and discrete event systems, where boundary conditions define system states. Influenced by early software engineering practices around off-by-one errors in loop bounds and array indexing. Retrocausal Genealogy: Rooted in hermes_restart_single_item (2e5bbd2b0376542c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include the legacy implementation (incorrectly inclusive) and the corrected version (strictly exclusive). Decision actors are the developer (implementing fix) and CI pipeline (validating correctness). Theory of Mind & Decision Maker Model: Rooted in hermes_restart_single_item (2e5bbd2b0376542c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if test coverage does not span boundary values. Leakage occurs if fetch logic is not adjusted alongside predicate change, causing runtime inconsistency. Veto applies if either validation step fails. Cross-Layer Veto & Anti-Leakage Check: Rooted in hermes_restart_single_item (2e5bbd2b0376542c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

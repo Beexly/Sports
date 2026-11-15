@@ -1,0 +1,78 @@
+{
+  "book_id": "50569551ce61ddbe",
+  "source_status": "COMPLETE",
+  "title": "p0208",
+  "file_name": "p0208.txt",
+  "sha256": "50569551ce61ddbe02b69884b102beae6f17e851bdd54ef6fe4ed40eb9dec020",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Stimulus generalization as a summation of overlapping habit strengths, modeled via negative growth functions of discrimination thresholds. Universal Lens: Rooted in p0208 (50569551ce61ddbe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of habit strength integrates stimulus proximity and reinforcement history through probabilistic habit summation. GSI Mapping: Rooted in p0208 (50569551ce61ddbe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps stimulus generalization to state transitions using effective habit thresholds and gradient decay. GSE Mapping: Rooted in p0208 (50569551ce61ddbe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "stimulus_generalization",
+      "name": "Stimulus Generalization",
+      "verbatim_quote": "STIMULUS GENERALIZATION 199 or indirect stimulus generalization, a second form of stimulus equivalence.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sHR': 'effective habit strength, dimensionless', 'd': 'distance between stimuli on continuum, discrimination thresholds'}",
+      "assumptions": "Habit strength decays with stimulus distance; summation of subliminal reinforcements raises effective threshold.",
+      "breakdown_regime": "When d approaches zero, sHR diverges; when d exceeds discrimination capacity, sHR vanishes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Effective habit strength sHR emerges from stimulus proximity and reinforcement history, enabling prediction of untrained responses.",
+        "source_operator": "stimulus_generalization",
+        "telemetry": "Reaction threshold crossing at untrained stimuli"
+      }
+    },
+    {
+      "primitive_id": "superthreshold_learning",
+      "name": "Superthreshold Learning",
+      "verbatim_quote": "In this way are explained both the paradox of the occurrence of superthreshold learning where the conditioned stimulus is never exactly repeated, and the paradox of reaction evocation where the evoking stimulus has never been associated with the reaction evoked.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'s': 'stimulus point, dimensionless', 'R': 'reaction, dimensionless'}",
+      "assumptions": "Learning occurs beyond exact repetition due to generalized habit activation.",
+      "breakdown_regime": "When stimulus variation exceeds discrimination limits, learning fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Superthreshold learning mirrors stimulus generalization in its reliance on habit strength summation across stimulus continua.",
+        "source_operator": "superthreshold_learning",
+        "telemetry": "Reaction emergence without direct stimulus-reaction pairing"
+      }
+    },
+    {
+      "primitive_id": "habit_strength_gradient",
+      "name": "Habit Strength Gradient",
+      "verbatim_quote": "sHR is jointly (1) a negative growth function of the strength of the habit at the",
+      "page": 1,
+      "latex": "\\frac{dsHR}{dt} = -f(S, d)",
+      "symbol_and_unit_ledger": "{'sHR': 'effective habit strength, dimensionless', 'S': 'reinforcement strength, arbitrary units', 'd': 'stimulus distance, discrimination thresholds', 't': 'time, seconds'}",
+      "assumptions": "Habit strength decreases with increasing stimulus distance and reinforcement strength.",
+      "breakdown_regime": "At d=0, gradient becomes infinite; at large d, sHR approaches zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Gradient model defines how habit strength varies spatially across stimulus space, enabling prediction of generalization.",
+        "source_operator": "habit_strength_gradient",
+        "telemetry": "Spatial decay of habit strength"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "50569551ce61ddbe_t0",
+      "think": "Stimulus generalization arises from the summation of overlapping habit strengths across a stimulus continuum. Each reinforcement contributes to a localized habit strength, which decays with distance according to a negative growth function. This leads to superthreshold learning, where a novel stimulus elicits a response due to accumulated habit strength from nearby trained stimuli. The effective habit strength sHR is a joint function of reinforcement strength S and stimulus distance d, expressed as a negative growth function. As d increases, sHR diminishes, eventually falling below the reaction threshold. This mechanism resolves paradoxes of learning and reaction evocation by modeling habit strength as a continuous field rather than discrete associations.\n\nDeep epistemic analysis for p0208 (50569551ce61ddbe, domain=other, pages_read=1/1): Operator 'Stimulus Generalization' (page 1, domain other) captures: STIMULUS GENERALIZATION 199 or indirect stimulus generalization, a second form of stimulus equivalence. Assumptions: Habit strength decays with stimulus distance; summation of subliminal reinforcements raises effective threshold. Breakdown regime: When d approaches zero, sHR diverges; when d exceeds discrimination capacity, sHR vanishes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Effective habit strength sHR emerges from stimulus proximity and reinforcement history, enabling prediction of untrained responses. Operator 'Superthreshold Learning' (page 1, domain other) captures: In this way are explained both the paradox of the occurrence of superthreshold learning where the conditioned stimulus is never exactly repeated, and the paradox of reaction evocation where the evoking stimulus has never been associated with the reaction evoked. Assumptions: Learning occurs beyond exact repetition due to generalized habit activation. Breakdown regime: When stimulus variation exceeds discrimination limits, learning fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Superthreshold learning mirrors stimulus generalization in its reliance on habit strength summation across stimulus continua. Operator 'Habit Strength Gradient' (page 1, domain other) captures: sHR is jointly (1) a negative growth function of the strength of the habit at the Assumptions: Habit strength decreases with increasing stimulus distance and reinforcement strength. Breakdown regime: At d=0, gradient becomes infinite; at large d, sHR approaches zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Gradient model defines how habit strength varies spatially across stimulus space, enabling prediction of generalization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0208 (50569551ce61ddbe, domain=other, pages_read=1/1): Operator 'Stimulus Generalization' (page 1, domain other) captures: STIMULUS GENERALIZATION 199 or indirect stimulus generalization, a second form of stimulus equivalence. Assumptions: Habit strength decays with stimulus distance; summation of subliminal reinforcements raises effective threshold. Breakdown regime: When d approaches zero, sHR diverges; when d exceeds discrimination capacity, sHR vanishes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Effective habit strength sHR emerges from stimulus proximity and reinforcement history, enabling prediction of untrained responses. Operator 'Superthreshold Learning' (page 1, domain other) captures: In this way are explained both the paradox of the occurrence of superthreshold learning where the conditioned stimulus is never exactly repeated, and the paradox of reaction evocation where the evoking stimulus has never been associated with the reaction evoked. Assumptions: Learning occurs beyond exact repetition due to generalized habit activation. Breakdown regime: When stimulus variation exceeds discrimination limits, learning fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Superthreshold learning mirrors stimulus generalization in its reliance on habit strength summation across stimulus continua. Operator 'Habit Strength Gradient' (page 1, domain other) captures: sHR is jointly (1) a negative growth function of the strength of the habit at the Assumptions: Habit strength decreases with increasing stimulus distance and reinforcement strength. Breakdown regime: At d=0, gradient becomes infinite; at large d, sHR approaches zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Gradient model defines how habit strength varies spatially across stimulus space, enabling prediction of generalization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early behaviorist theories of conditioning and stimulus control, later formalized in operant learning models and extended into neural network architectures. Retrocausal Genealogy: Rooted in p0208 (50569551ce61ddbe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0208 (50569551ce61ddbe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents must model both learned habit fields and their gradients to predict novel responses. Opposing agents may exploit stimulus boundaries or reinforce alternative pathways to disrupt expected behaviors. Theory of Mind & Decision Maker Model: Rooted in p0208 (50569551ce61ddbe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct stimulus representations to avoid spurious generalization. Leakage vetoes occur when habit fields overlap excessively, causing false positives in prediction. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0208 (50569551ce61ddbe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0208 (50569551ce61ddbe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "0f81438afa76a11b",
+  "source_status": "COMPLETE",
+  "title": "sgl-project-SpecForge",
+  "file_name": "sgl-project-SpecForge.md",
+  "sha256": "0f81438afa76a11bafbc7517f3f8c47a7367b9b62e6e84d32374738a9e7b74ce",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Speculative decoding enables efficient inference by having a fast draft model propose tokens, verified in parallel by a larger target model—mathematically, this is a dual-system architecture where \\(\\mathcal{D}\\) (draft) and \\(\\mathcal{T}\\) (target) operate in sequence with shared output space.",
+  "gsi_mapping": "In GSI, the draft model corresponds to a fast screening layer that generates candidate edges; the target model calibrates these, aligning with Bayesian inference over belief states and conformal prediction intervals.",
+  "gse_mapping": "For GSE, speculative decoding maps to a state-transition system where a cheap model proposes actions (edges), and the full engine verifies only those, enabling selective computation under resource constraints. GSE Mapping: Rooted in sgl-project-SpecForge (0f81438afa76a11b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "draft_then_verify",
+      "name": "Draft-Then-Verify Architecture",
+      "verbatim_quote": "Speculative decoding: a small fast draft model proposes tokens, the large target model verifies them in parallel — same output, much faster.",
+      "page": 1,
+      "latex": "\\mathcal{O} = \\mathcal{T}(\\mathcal{D}(x)) \\quad \\text{where } \\mathcal{D} \\ll \\mathcal{T}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{D}': 'dimensionless, fast draft operator', '\\\\mathcal{T}': 'dimensionless, target operator', 'x': 'input signal vector', '\\\\mathcal{O}': 'output token sequence'}",
+      "assumptions": "Draft model approximates target distribution; verification is probabilistic and parallelizable.",
+      "breakdown_regime": "When \\(\\mathcal{D}\\) fails to approximate \\(\\mathcal{T}\\) sufficiently, error propagation occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's draft model mirrors \\(\\mathcal{D}\\); GSI's screening layer mirrors \\(\\mathcal{D}\\)’s recall function.",
+        "source_operator": "draft_then_verify",
+        "telemetry": "Token acceptance rate and latency reduction ratio."
+      }
+    },
+    {
+      "primitive_id": "train_the_speedup",
+      "name": "Training the Speedup Mechanism",
+      "verbatim_quote": "- **Train the speedup, don't just hope for it:** SpecForge exists because draft models need their own training recipe (distilled from the target).",
+      "page": 1,
+      "latex": "\\mathcal{L}_{\\text{distill}}(\\theta_{\\mathcal{D}}, \\theta_{\\mathcal{T}}) = \\mathbb{E}_{x \\sim \\mathcal{D}}[\\mathcal{T}(x) - \\mathcal{D}(x)]^2",
+      "symbol_and_unit_ledger": "{'\\\\theta_{\\\\mathcal{D}}': 'parameters of draft model', '\\\\theta_{\\\\mathcal{T}}': 'parameters of target model', '\\\\mathcal{L}_{\\\\text{distill}}': 'distillation loss (scalar)', '\\\\mathcal{D}': 'draft model operator', '\\\\mathcal{T}': 'target model operator'}",
+      "assumptions": "Target model output can be distilled into draft model via feature distillation.",
+      "breakdown_regime": "When \\(\\mathcal{D}\\) cannot learn \\(\\mathcal{T}\\)'s behavior, training divergence occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE’s draft model training kernel is derived from \\(\\mathcal{T}\\)’s historical outputs, mirroring EAGLE-style distillation.",
+        "source_operator": "train_the_speedup",
+        "telemetry": "Distillation accuracy and convergence time."
+      }
+    },
+    {
+      "primitive_id": "close_train_serve_loop",
+      "name": "Closing the Train-Serve Loop",
+      "verbatim_quote": "- **Close the train-serve loop:** SpecForge ports directly into SGLang.",
+      "page": 1,
+      "latex": "\\mathcal{S}_{\\text{serve}} = \\text{Port}(\\mathcal{D}_{\\text{trained}}) \\Rightarrow \\mathcal{S}_{\\text{serve}}(x) = \\mathcal{T}(\\mathcal{D}(x))",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{S}_{\\\\text{serve}}': 'serving system', '\\\\mathcal{D}_{\\\\text{trained}}': 'trained draft model', 'x': 'input signal vector'}",
+      "assumptions": "Model portability between training and serving environments is preserved.",
+      "breakdown_regime": "When deployment environment differs from training, performance degradation occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE’s serving pipeline mirrors SpecForge’s portability, ensuring draft model execution matches training fidelity.",
+        "source_operator": "close_train_serve_loop",
+        "telemetry": "Deployment consistency and runtime latency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0f81438afa76a11b_t0",
+      "think": "The core insight of speculative decoding is a dual-system architecture where a fast draft model \\(\\mathcal{D}\\) proposes tokens and a slower target model \\(\\mathcal{T}\\) verifies them. This is mathematically modeled as a composition \\(\\mathcal{O} = \\mathcal{T}(\\mathcal{D}(x))\\), where \\(\\mathcal{D}\\) is significantly less computationally expensive than \\(\\mathcal{T}\\). The key innovation lies in training \\(\\mathcal{D}\\) to mimic \\(\\mathcal{T}\\) through distillation, forming a closed-loop system. In GSE, this translates to a fast screening model proposing candidate edges, which are then verified by the full engine—a dual-system approach that reduces computational load while maintaining quality. The failure mode arises when \\(\\mathcal{D}\\) deviates too far from \\(\\mathcal{T}\\), leading to incorrect proposals and re-computation overhead. The training process must ensure \\(\\mathcal{D}\\) learns \\(\\mathcal{T}\\)'s behavior accurately, using techniques like EAGLE-style feature distillation. The serving phase must maintain fidelity across environments, achieved through tools like SGLang that support seamless deployment of trained models.\n\nDeep epistemic analysis for sgl-project-SpecForge (0f81438afa76a11b, domain=other, pages_read=2/2): Operator 'Draft-Then-Verify Architecture' (page 1, domain other) captures: Speculative decoding: a small fast draft model proposes tokens, the large target model verifies them in parallel — same output, much faster. Assumptions: Draft model approximates target distribution; verification is probabilistic and parallelizable. Breakdown regime: When \\(\\mathcal{D}\\) fails to approximate \\(\\mathcal{T}\\) sufficiently, error propagation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's draft model mirrors \\(\\mathcal{D}\\); GSI's screening layer mirrors \\(\\mathcal{D}\\)’s recall function. Operator 'Training the Speedup Mechanism' (page 1, domain other) captures: - **Train the speedup, don't just hope for it:** SpecForge exists because draft models need their own training recipe (distilled from the target). Assumptions: Target model output can be distilled into draft model via feature distillation. Breakdown regime: When \\(\\mathcal{D}\\) cannot learn \\(\\mathcal{T}\\)'s behavior, training divergence occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE’s draft model training kernel is derived from \\(\\mathcal{T}\\)’s historical outputs, mirroring EAGLE-style distillation. Operator 'Closing the Train-Serve Loop' (page 1, domain other) captures: - **Close the train-serve loop:** SpecForge ports directly into SGLang. Assumptions: Model portability between training and serving environments is preserved. Breakdown regime: When deployment environment differs from training, performance degradation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE’s serving pipeline mirrors SpecForge’s portability, ensuring draft model execution matches training fidelity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sgl-project-SpecForge (0f81438afa76a11b, domain=other, pages_read=2/2): Operator 'Draft-Then-Verify Architecture' (page 1, domain other) captures: Speculative decoding: a small fast draft model proposes tokens, the large target model verifies them in parallel — same output, much faster. Assumptions: Draft model approximates target distribution; verification is probabilistic and parallelizable. Breakdown regime: When \\(\\mathcal{D}\\) fails to approximate \\(\\mathcal{T}\\) sufficiently, error propagation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's draft model mirrors \\(\\mathcal{D}\\); GSI's screening layer mirrors \\(\\mathcal{D}\\)’s recall function. Operator 'Training the Speedup Mechanism' (page 1, domain other) captures: - **Train the speedup, don't just hope for it:** SpecForge exists because draft models need their own training recipe (distilled from the target). Assumptions: Target model output can be distilled into draft model via feature distillation. Breakdown regime: When \\(\\mathcal{D}\\) cannot learn \\(\\mathcal{T}\\)'s behavior, training divergence occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE’s draft model training kernel is derived from \\(\\mathcal{T}\\)’s historical outputs, mirroring EAGLE-style distillation. Operator 'Closing the Train-Serve Loop' (page 1, domain other) captures: - **Close the train-serve loop:** SpecForge ports directly into SGLang. Assumptions: Model portability between training and serving environments is preserved. Breakdown regime: When deployment environment differs from training, performance degradation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE’s serving pipeline mirrors SpecForge’s portability, ensuring draft model execution matches training fidelity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early work on speculative decoding (e.g., 2023-2024 literature), this framework builds upon prior research in model compression and parallel inference. It inherits the conceptual duality of fast-slow systems from neural architecture search and transformer efficiency studies. Retrocausal Genealogy: Rooted in sgl-project-SpecForge (0f81438afa76a11b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the draft model (optimizing for speed) and the target model (optimizing for correctness). The system assumes that the draft model will make errors, but these are corrected by the target. The GSE agent must balance speed and accuracy, while GSI agents must manage uncertainty in edge generation. Theory of Mind & Decision Maker Model: Rooted in sgl-project-SpecForge (0f81438afa76a11b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the draft model does not simply replicate the target’s behavior but instead provides a distinct, cheaper approximation. Leakage veto ensures that the draft model’s outputs do not carry information beyond its intended scope, preserving the integrity of the verification layer. Cross-Layer Veto & Anti-Leakage Check: Rooted in sgl-project-SpecForge (0f81438afa76a11b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

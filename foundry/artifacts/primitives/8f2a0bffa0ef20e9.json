@@ -1,0 +1,78 @@
+{
+  "book_id": "8f2a0bffa0ef20e9",
+  "source_status": "COMPLETE",
+  "title": "COMPETITION_SUBMISSION",
+  "file_name": "COMPETITION_SUBMISSION.md",
+  "sha256": "8f2a0bffa0ef20e981e171c6518285b381d26ce0a0ccf9833c1b47d3c7866dba",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Speed build dynamics in defensive line performance are captured via early acceleration, late acceleration, and retention metrics from 40-yard traces, with selection bias mitigated through nested audits. Universal Lens: Rooted in COMPETITION_SUBMISSION (8f2a0bffa0ef20e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive inference to assess early acceleration's statistical significance in draft evaluations, adjusting for selection bias via nested model validation. GSI Mapping: Rooted in COMPETITION_SUBMISSION (8f2a0bffa0ef20e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses Bayesian state transitions to model how early acceleration influences role-specific performance trajectories, conditioned on exposure and context-adjusted outcomes. GSE Mapping: Rooted in COMPETITION_SUBMISSION (8f2a0bffa0ef20e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "early_acceleration",
+      "name": "Early Acceleration",
+      "verbatim_quote": "We define early acceleration over the first second of movement, later acceleration over 10–20 yards, and retention as the speed ratio near 40 versus 20 yards.",
+      "page": 1,
+      "latex": "\\Delta v_{\\text{early}} = \\frac{1}{T} \\int_0^T \\dot{v}(t) dt, \\quad T = 1 \\, \\text{s}",
+      "symbol_and_unit_ledger": "{'\\\\Delta v_{\\\\text{early}}': 'm/s', 'T': 's', '\\\\dot{v}(t)': 'm/s²'}",
+      "assumptions": "Movement begins at onset threshold; acceleration is computed over fixed temporal window.",
+      "breakdown_regime": "Post-onset motion only; excludes reaction time.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Captures dynamic speed gain during initial sprint phase, used in GSI's nested selection audit.",
+        "source_operator": "early_acceleration",
+        "telemetry": "RMSE change in pooled held-out folds."
+      }
+    },
+    {
+      "primitive_id": "late_acceleration",
+      "name": "Late Acceleration",
+      "verbatim_quote": "We define early acceleration over the first second of movement, later acceleration over 10–20 yards, and retention as the speed ratio near 40 versus 20 yards.",
+      "page": 1,
+      "latex": "\\Delta v_{\\text{late}} = \\frac{1}{T} \\int_{10}^{20} \\dot{v}(x) dx, \\quad T = 10 \\, \\text{yd}",
+      "symbol_and_unit_ledger": "{'\\\\Delta v_{\\\\text{late}}': 'm/s', 'T': 'yd', '\\\\dot{v}(x)': 'm/s²'}",
+      "assumptions": "Acceleration measured over fixed spatial interval post-onset.",
+      "breakdown_regime": "Spatially bounded; requires distance tracking.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Captures deceleration or plateau behavior in mid-sprint phase, used in GSE's situational reasoning.",
+        "source_operator": "late_acceleration",
+        "telemetry": "RMSE change in 2023 and 2024 outer folds."
+      }
+    },
+    {
+      "primitive_id": "speed_retention",
+      "name": "Speed Retention",
+      "verbatim_quote": "We define early acceleration over the first second of movement, later acceleration over 10–20 yards, and retention as the speed ratio near 40 versus 20 yards.",
+      "page": 1,
+      "latex": "R = \\frac{v(40 \\, \\text{yd})}{v(20 \\, \\text{yd})}",
+      "symbol_and_unit_ledger": "{'R': 'dimensionless', 'v(40 \\\\, \\\\text{yd})': 'm/s', 'v(20 \\\\, \\\\text{yd})': 'm/s'}",
+      "assumptions": "Speed values at defined distances are measurable and comparable.",
+      "breakdown_regime": "Ratio-based; sensitive to noise in final velocity estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Measures endurance or efficiency of top-end speed maintenance, used in GSI's robustness checks.",
+        "source_operator": "speed_retention",
+        "telemetry": "RMSE change in exploratory ablations."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8f2a0bffa0ef20e9_t0",
+      "think": "The primitives encode distinct aspects of sprint dynamics—early acceleration, late acceleration, and speed retention—each defined over specific temporal or spatial domains. Early acceleration is derived from instantaneous velocity gain in the first second post-onset, excluding reaction time. Late acceleration is computed over a fixed spatial range (10–20 yd), capturing mid-sprint behavior. Retention is a ratio of velocities at two points, measuring top-end speed sustainability. These operators are not mutually exclusive but form a basis for evaluating speed-building strategies. Their failure modes include measurement noise, insufficient data coverage, and misalignment with actual game scenarios. Nested audits reveal that early acceleration is not selected in pooled analyses, suggesting it lacks strong predictive value for draft outcomes. However, post-screen analysis shows a discovery effect, indicating potential utility when properly validated. The lack of transferability under fixed windows implies that context matters, which GSE models via Bayesian state transitions. GSI’s conformal inference addresses selection bias by validating against out-of-fold data, while GSE ensures robustness through repeated sampling and sensitivity analysis.\n\nDeep epistemic analysis for COMPETITION_SUBMISSION (8f2a0bffa0ef20e9, domain=other, pages_read=4/4): Operator 'Early Acceleration' (page 1, domain other) captures: We define early acceleration over the first second of movement, later acceleration over 10–20 yards, and retention as the speed ratio near 40 versus 20 yards. Assumptions: Movement begins at onset threshold; acceleration is computed over fixed temporal window. Breakdown regime: Post-onset motion only; excludes reaction time. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures dynamic speed gain during initial sprint phase, used in GSI's nested selection audit. Operator 'Late Acceleration' (page 1, domain other) captures: We define early acceleration over the first second of movement, later acceleration over 10–20 yards, and retention as the speed ratio near 40 versus 20 yards. Assumptions: Acceleration measured over fixed spatial interval post-onset. Breakdown regime: Spatially bounded; requires distance tracking. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures deceleration or plateau behavior in mid-sprint phase, used in GSE's situational reasoning. Operator 'Speed Retention' (page 1, domain other) captures: We define early acceleration over the first second of movement, later acceleration over 10–20 yards, and retention as the speed ratio near 40 versus 20 yards. Assumptions: Speed values at defined distances are measurable and comparable. Breakdown regime: Ratio-based; sensitive to noise in final velocity estimates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Measures endurance or efficiency of top-end speed maintenance, used in GSI's robustness checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for COMPETITION_SUBMISSION (8f2a0bffa0ef20e9, domain=other, pages_read=4/4): Operator 'Early Acceleration' (page 1, domain other) captures: We define early acceleration over the first second of movement, later acceleration over 10–20 yards, and retention as the speed ratio near 40 versus 20 yards. Assumptions: Movement begins at onset threshold; acceleration is computed over fixed temporal window. Breakdown regime: Post-onset motion only; excludes reaction time. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures dynamic speed gain during initial sprint phase, used in GSI's nested selection audit. Operator 'Late Acceleration' (page 1, domain other) captures: We define early acceleration over the first second of movement, later acceleration over 10–20 yards, and retention as the speed ratio near 40 versus 20 yards. Assumptions: Acceleration measured over fixed spatial interval post-onset. Breakdown regime: Spatially bounded; requires distance tracking. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures deceleration or plateau behavior in mid-sprint phase, used in GSE's situational reasoning. Operator 'Speed Retention' (page 1, domain other) captures: We define early acceleration over the first second of movement, later acceleration over 10–20 yards, and retention as the speed ratio near 40 versus 20 yards. Assumptions: Speed values at defined distances are measurable and comparable. Breakdown regime: Ratio-based; sensitive to noise in final velocity estimates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Measures endurance or efficiency of top-end speed maintenance, used in GSI's robustness checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in kinematic modeling of human locomotion, extended into sports analytics through motion capture and biomechanical studies. Influenced by signal processing techniques such as median filtering and onset detection algorithms. Retrocausal Genealogy: Rooted in COMPETITION_SUBMISSION (8f2a0bffa0ef20e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in COMPETITION_SUBMISSION (8f2a0bffa0ef20e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the evaluator who seeks reliable predictors and the system that generates noisy, variable data. The evaluator must distinguish between spurious correlations and true performance indicators, especially when dealing with small sample sizes and exploratory findings. Theory of Mind & Decision Maker Model: Rooted in COMPETITION_SUBMISSION (8f2a0bffa0ef20e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive captures a unique aspect of motion. Leakage occurs if early acceleration is conflated with retention or late acceleration, undermining model interpretability. Veto conditions include high variance in early acceleration estimates across positions and lack of consistent transferability across datasets. Cross-Layer Veto & Anti-Leakage Check: Rooted in COMPETITION_SUBMISSION (8f2a0bffa0ef20e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

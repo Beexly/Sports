@@ -1,0 +1,78 @@
+{
+  "book_id": "2d21d649719a90c0",
+  "source_status": "COMPLETE",
+  "title": "DISPATCH",
+  "file_name": "DISPATCH.md",
+  "sha256": "2d21d649719a90c0c815c771d51ba28d4b3c2e6b7f2c8001e293eaa002e37283",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Neon database synchronization and NFL game log backfilling under integrity constraints. Universal Lens: Rooted in DISPATCH (2d21d649719a90c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on team performance logs using conformal prediction for edge score normalization. GSI Mapping: Rooted in DISPATCH (2d21d649719a90c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine updates rest day metrics and picks with verifiable edge constraints. GSE Mapping: Rooted in DISPATCH (2d21d649719a90c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "database_sync_and_backfill",
+      "name": "Database Synchronization and Backfill Operator",
+      "verbatim_quote": "Backfill all settled 2026 regular-season NFL games (Weeks 1–5 plus Week 6 TNF SEA@DEN, commenceTime >= '2026-09-01' and < '2026-10-17', mergedIntoGameId IS NULL) from `games` into `team_game_logs` for all 32 NFL teams.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'gameDate': 'dimensionless date string', 'mergedIntoGameId': 'null or UUID', 'commenceTime': 'ISO 8601 timestamp'}",
+      "assumptions": "All games within time range are settled and not merged; 32 teams exist in team_game_logs.",
+      "breakdown_regime": "Time interval [2026-09-01, 2026-10-17)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each game entry maps to 32 team entries in team_game_logs via join on teamId.",
+        "source_operator": "database_sync_and_backfill",
+        "telemetry": "Row count in team_game_logs per team >= 4, max(gameDate) >= '2026-10-04'"
+      }
+    },
+    {
+      "primitive_id": "rest_day_calculation",
+      "name": "Rest Day Calculation Kernel",
+      "verbatim_quote": "Recalculate and update `restDaysAway` and `restDaysHome` on all 14 Week 6 NFL `games` rows to true rest days (ensuring all <= 14, zero 56 or 57 values).",
+      "page": 1,
+      "latex": "\\text{restDays} = \\left\\lfloor \\frac{\\text{daysSinceLastGame}}{1} \\right\\rfloor",
+      "symbol_and_unit_ledger": "{'restDaysAway': 'integer days', 'restDaysHome': 'integer days', 'daysSinceLastGame': 'float days'}",
+      "assumptions": "Games are ordered chronologically; last game date is known per team.",
+      "breakdown_regime": "All 14 Week 6 games with valid prior game dates",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Computed rest days derived from game schedule and previous game dates.",
+        "source_operator": "rest_day_calculation",
+        "telemetry": "All values in [0, 14], none at 56 or 57"
+      }
+    },
+    {
+      "primitive_id": "edge_score_normalization",
+      "name": "Edge Score Normalization Function",
+      "verbatim_quote": "Update published Week 6 NFL `picks` rows: normalize edgeScores (from 76-77 down to 52-54), ensure non-empty reasoning (>250 chars), populate `injuryEvidence` and `continuityDeltas`, and ensure `noBet: null`.",
+      "page": 1,
+      "latex": "\\text{normalizedEdgeScore} = \\frac{\\text{rawEdgeScore} - 76}{77 - 76} \\cdot (54 - 52) + 52",
+      "symbol_and_unit_ledger": "{'rawEdgeScore': 'real number', 'normalizedEdgeScore': 'real number in [52, 54]'}",
+      "assumptions": "Raw scores lie in [76, 77]; linear transformation preserves monotonicity.",
+      "breakdown_regime": "All picks with rawEdgeScore ∈ [76, 77]",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Linear rescaling of raw edge scores to target interval [52, 54].",
+        "source_operator": "edge_score_normalization",
+        "telemetry": "All normalizedEdgeScore ∈ [52, 54], reasoning length > 250 characters"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2d21d649719a90c0_t0",
+      "think": "The core operations involve data integrity checks through database synchronization, temporal logic for rest day calculations, and probabilistic normalization of edge scores. The system enforces dual consistency: first, that all 32 teams have sufficient historical game logs; second, that computed rest days fall within expected bounds. Third, edge scores are normalized to maintain internal consistency while preserving relative ranking. Failure modes include data corruption during sync, incorrect temporal logic in rest day computation, and improper scaling in edge score normalization. These are mitigated by verifying row counts, enforcing value ranges, and validating transformations against known input/output domains.\n\nDeep epistemic analysis for DISPATCH (2d21d649719a90c0, domain=other, pages_read=1/1): Operator 'Database Synchronization and Backfill Operator' (page 1, domain other) captures: Backfill all settled 2026 regular-season NFL games (Weeks 1–5 plus Week 6 TNF SEA@DEN, commenceTime >= '2026-09-01' and < '2026-10-17', mergedIntoGameId IS NULL) from `games` into `team_game_logs` for all 32 NFL teams. Assumptions: All games within time range are settled and not merged; 32 teams exist in team_game_logs. Breakdown regime: Time interval [2026-09-01, 2026-10-17) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each game entry maps to 32 team entries in team_game_logs via join on teamId. Operator 'Rest Day Calculation Kernel' (page 1, domain other) captures: Recalculate and update `restDaysAway` and `restDaysHome` on all 14 Week 6 NFL `games` rows to true rest days (ensuring all <= 14, zero 56 or 57 values). Assumptions: Games are ordered chronologically; last game date is known per team. Breakdown regime: All 14 Week 6 games with valid prior game dates Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computed rest days derived from game schedule and previous game dates. Operator 'Edge Score Normalization Function' (page 1, domain other) captures: Update published Week 6 NFL `picks` rows: normalize edgeScores (from 76-77 down to 52-54), ensure non-empty reasoning (>250 chars), populate `injuryEvidence` and `continuityDeltas`, and ensure `noBet: null`. Assumptions: Raw scores lie in [76, 77]; linear transformation preserves monotonicity. Breakdown regime: All picks with rawEdgeScore ∈ [76, 77] Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Linear rescaling of raw edge scores to target interval [52, 54]. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for DISPATCH (2d21d649719a90c0, domain=other, pages_read=1/1): Operator 'Database Synchronization and Backfill Operator' (page 1, domain other) captures: Backfill all settled 2026 regular-season NFL games (Weeks 1–5 plus Week 6 TNF SEA@DEN, commenceTime >= '2026-09-01' and < '2026-10-17', mergedIntoGameId IS NULL) from `games` into `team_game_logs` for all 32 NFL teams. Assumptions: All games within time range are settled and not merged; 32 teams exist in team_game_logs. Breakdown regime: Time interval [2026-09-01, 2026-10-17) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each game entry maps to 32 team entries in team_game_logs via join on teamId. Operator 'Rest Day Calculation Kernel' (page 1, domain other) captures: Recalculate and update `restDaysAway` and `restDaysHome` on all 14 Week 6 NFL `games` rows to true rest days (ensuring all <= 14, zero 56 or 57 values). Assumptions: Games are ordered chronologically; last game date is known per team. Breakdown regime: All 14 Week 6 games with valid prior game dates Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computed rest days derived from game schedule and previous game dates. Operator 'Edge Score Normalization Function' (page 1, domain other) captures: Update published Week 6 NFL `picks` rows: normalize edgeScores (from 76-77 down to 52-54), ensure non-empty reasoning (>250 chars), populate `injuryEvidence` and `continuityDeltas`, and ensure `noBet: null`. Assumptions: Raw scores lie in [76, 77]; linear transformation preserves monotonicity. Breakdown regime: All picks with rawEdgeScore ∈ [76, 77] Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Linear rescaling of raw edge scores to target interval [52, 54]. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in relational algebra and temporal databases, extended by conformal prediction frameworks for uncertainty quantification in sports analytics. Retrocausal Genealogy: Rooted in DISPATCH (2d21d649719a90c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in DISPATCH (2d21d649719a90c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to manipulate edge scores or game logs. The system counters this by enforcing deterministic transformations and requiring verifiable reasoning lengths. Theory of Mind & Decision Maker Model: Rooted in DISPATCH (2d21d649719a90c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in DISPATCH (2d21d649719a90c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no two primitives produce overlapping telemetry signals. Leakage veto prevents use of external data sources beyond the Neon DB and .env.production.local. Cross-Layer Veto & Anti-Leakage Check: Rooted in DISPATCH (2d21d649719a90c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in DISPATCH (2d21d649719a90c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

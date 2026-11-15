@@ -1,0 +1,166 @@
+{
+  "book_id": "3178b5fdce0fc1a5",
+  "source_status": "COMPLETE",
+  "pages_total": 352,
+  "pages_read": 352,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Expected Points Added (EPA) as a play-level state-value difference",
+      "verbatim_quote": "The difference between a team’s expected points from one play to the next",
+      "page": 332,
+      "printed_page": 310,
+      "latex": "\\mathrm{EPA}_t = \\mathrm{EP}(s_{t+1}) - \\mathrm{EP}(s_t), \\qquad \\mathrm{EP}(s) = \\mathbb{E}[\\text{points scored next on drive} \\mid s]",
+      "symbol_and_unit_ledger": "EP(s): expected points conditional on game state s [points, dimensionless scoring unit]; s: state tuple (down, yards-to-go, field position, score differential, time remaining) [down=count, yards=yd, time=s]; EPA_t: realized change in expected points across play t [points]; E[.]: expectation over historical league outcomes [points]. Both terms of the difference carry points, so the expression is dimensionally homogeneous. Formalization of the printed glossary definition (the book states it in prose, not symbols).",
+      "assumptions": "Drive-level Markov state: EP depends only on the current down/distance/field-position/time state, not the full drive history. Expectation estimated from historical play-by-play (the book uses nflfastR). Stationarity of the scoring environment within the estimation window. The companion glossary defines expected point as: The estimated, or expected, value for the number of points one would expect a team to score given the current game situation on that drive.",
+      "breakdown_regime": "Stationarity fails in garbage time, end-of-half two-minute drills, and kneel/spike plays where the EP surface is degenerate. The book's own glossary warns that high-leverage situations are not stable predictors: These plays, while of great importance, are generally not predictive game to game or season to season. A single-game EPA spike therefore cannot license a season-long valuation.",
+      "domain": "football",
+      "timescales": [
+        "tau_play (~6-40 s snap-to-whistle)",
+        "tau_drive",
+        "tau_game",
+        "tau_season"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "EPA is the realized Bellman residual of the drive-value function in the 22-player dynamical system: with V(s)=E[r+V(s')], EPA_t = V(s_{t+1})-V(s_t) is the play-level advantage under a league-average policy. Bind it as the per-play value head of the GSE Coach-Mind simulator; the state s is the shared observable both offenses and defenses condition on, so deception is modeled as a perturbation of the opponent's EP surface rather than a change to the true V.",
+        "source_operator": "p1",
+        "telemetry": "nflfastR play-by-play: down, ydstogo, yardline_100, score_differential, game_seconds_remaining, half_seconds_remaining, play_type, yards_gained. Calibrate EP(s) by binning historical next-score points per state; validate on held-out seasons. No sportsbook odds or market totals used as inputs."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Metric stability via lagged Pearson correlation (signal-to-noise gate)",
+      "verbatim_quote": "The football industry generally uses Pearson’s correlation coefficient, or its square, the coefficient of determination, to measure stability.",
+      "page": 42,
+      "printed_page": 20,
+      "latex": "r = \\frac{\\mathrm{cov}(X_t, X_{t+1})}{\\sigma_{X_t}\\,\\sigma_{X_{t+1}}}, \\quad r\\in[-1,1]; \\qquad r_{\\text{short}}=0.438,\\; r_{\\text{long}}=0.234",
+      "symbol_and_unit_ledger": "X_t: per-player metric in season t (here yards per attempt) [yd/attempt]; X_{t+1}: same metric next season [yd/attempt]; cov: covariance [ (yd/attempt)^2 ]; sigma: standard deviation [yd/attempt]; r: Pearson correlation [dimensionless]. Ratio of like units -> dimensionless. Book values r_short=0.438, r_long=0.234 printed at PDF p.71 (printed p.49).",
+      "assumptions": "Paired season-level observations per player; linear association; approximately bivariate normal for the reliability interpretation. The book filters to qualified passers with n>=100 attempts per season (PDF p.61-62, printed p.39-40) before computing the lag. Definition as printed: in this book we refer to the stability of an evaluation metric as the metric’s consistency over a pre‐ determined time frame.",
+      "breakdown_regime": "Small samples inflate noise and depress r; r conflates true talent change with measurement error; role/scheme/injury changes break the lagged pairing. The book's result: a quarterback’s performance on shorter passes is twice as stable as on longer passes. Deep-pass YPA (r=0.234) is mostly noise, so it cannot alone support a valuation.",
+      "domain": "math",
+      "timescales": [
+        "tau_game",
+        "tau_season",
+        "tau_career"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to test-retest reliability / intraclass correlation in psychometrics and to the signal fraction of a Gaussian channel: under the classical true-score model X=T+e with independent noise, r ~ Var(T)/(Var(T)+Var(e)). Bind it as the GSE feature-reliability gate: any per-play feature entering Coach-Mind must clear a season-split reliability floor before it can license a decision; below the floor the feature is shrunk, not trusted.",
+        "source_operator": "p2",
+        "telemetry": "Season-split per-player feature tables built from play-by-play (attempts/targets as sample-size weights); compute lagged r per feature per position; set the gate threshold on held-out seasons per held-out-discipline. No odds inputs."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Logit-link generalized linear model for binary completion (CPOE expectation kernel)",
+      "verbatim_quote": "For example, a logit function can link between the observed probability of an outcome occurring on the bounded 0–1 probability scale to the log-odds scale that ranges from negative to positive infinity.",
+      "page": 333,
+      "printed_page": 311,
+      "latex": "\\log\\frac{p}{1-p} = \\beta_0 + \\beta_1\\,\\text{air\\_yards}, \\qquad \\hat\\beta_0=1.0720,\\; \\hat\\beta_1=-0.0573; \\qquad \\mathrm{CPOE}=\\text{completion}-\\hat p",
+      "symbol_and_unit_ledger": "p: completion probability [dimensionless, 0-1]; log(p/(1-p)): log-odds [dimensionless log-odds]; beta_0: intercept [log-odds]; beta_1: slope [log-odds per yd]; air_yards: pass depth from line of scrimmage to intended receiver [yd]; completion: binary outcome {0,1} [dimensionless]; CPOE: completion percentage over expected [dimensionless probability points]. beta_1*air_yards carries log-odds, matching the left side. Fitted coefficients printed at PDF p.140 (printed p.118); binomial dispersion fixed at 1 (PDF p.141). CPOE formalizes the glossary definition (PDF p.331).",
+      "assumptions": "Bernoulli binary response; logit link linear in predictors; attempts independent conditional on features; dispersion parameter for the binomial family taken to be 1 (printed PDF p.141). The book's base model uses air_yards as the sole context feature; qualified passers n>=100 attempts (PDF p.144). Glossary CPOE: The rate at which a quarterback has suc‐ cessful (completed) passes, compared to what would be predicted (expected) given a situation based on an expected comple‐ tion percentage model.",
+      "breakdown_regime": "Residual-metric endogeneity: the quarterback partly dictates his own context, so CPOE and expected completion are not independent. As printed (PDF p.153, printed p.131): The assumption that a player doesn’t dictate the situation that they are embedded in on a given play is likely violated, and repeatedly. and To assume the two are completely independent will likely lead to errors. Extreme air_yards drives p->0/1 and the log-odds diverges; omitted pressure/separation variables bias the residual.",
+      "domain": "math",
+      "timescales": [
+        "tau_play",
+        "tau_drive",
+        "tau_season"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "p(completion | air_yards, down, distance) is the quarterback's throw-policy value surface in Coach-Mind; CPOE is his advantage over a league-average policy in the same state. Because the QB selects throw difficulty (the endogeneity veto), the kernel must be read as a policy evaluation, not a context-free trait, and must be paired with the p2 reliability gate before any roster use.",
+        "source_operator": "p3",
+        "telemetry": "Play-by-play: air_yards, complete_pass flag, down, ydstogo, yardline_100, qb_hit/pressure flags, receiver separation where available. Fit per season with held-out splits; report CPOE alongside expected completion (never alone). No sportsbook odds inputs."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Poisson count kernel for discrete scoring events",
+      "verbatim_quote": "The Poisson distribution models the likelihood of a given number of events occurring in a fixed interval of time or space.",
+      "page": 167,
+      "printed_page": 145,
+      "latex": "P(X=x)=\\frac{e^{-\\lambda}\\lambda^{x}}{x!}, \\quad x\\in\\{0,1,2,\\dots\\}; \\qquad \\mathbb{E}[X]=\\mathrm{Var}[X]=\\lambda",
+      "symbol_and_unit_ledger": "X: count of events in a fixed interval (one game) [dimensionless count]; x: realized count [count]; lambda: mean event rate per interval [count/game]; P(X=x): probability mass [dimensionless, 0-1]; e: Euler's number [dimensionless]; x!: factorial [dimensionless]. The PMF is dimensionless throughout. The book prints the formula as glyphs (e^{-lambda} lambda^x / x!) and implements it via dpois(x, lambda); lambda is defined as printed: In this equation, the Greek letter λ (lambda) is the average value of the population, and ! is the factorial function.",
+      "assumptions": "As printed (PDF p.168, printed p.146): The events occur with equal probability. The events are independent of the time since the last event. Fixed interval of time or space (one game). These are the memoryless / constant-rate Poisson-process assumptions.",
+      "breakdown_regime": "As printed (PDF p.168): These assumptions are not exactly satisfied in football, as a team that scores one touchdown in a game may or may not be likely to have “figured out” the defense on the other side of the field Scoring is not memoryless because teams adapt within a game. Over-dispersion (variance>mean) breaks the Poisson equality; the book prescribes: you could use a different distribution entirely (such as a negative binomial distribution or quasi-Poisson that accounts for over dispersion).",
+      "domain": "math",
+      "timescales": [
+        "tau_snap",
+        "tau_drive",
+        "tau_game",
+        "tau_season"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a homogeneous Poisson arrival process in queueing/reliability theory: the null generator of independent scoring arrivals. Bind it as the GSE scoring-event simulator with lambda_team = pace x EP-per-drive conversion estimated from play-by-play only. DOCTRINE NOTE: the book's Chapter 6 application feeds sportsbook market totals into lambda; the sovereign kernel extracted here is the PMF itself, and the GSE mapping deliberately replaces all market features with odds-free pace/efficiency telemetry. No sportsbook odds are used as model inputs anywhere in this artifact.",
+        "source_operator": "p4",
+        "telemetry": "Per-game passing-touchdown counts, drive counts, plays per game, seconds per snap (pace), red-zone trips from play-by-play; lambda by MLE = sample mean; dispersion diagnostic Var/mean to trigger negative-binomial fallback. No odds inputs."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Regression toward the mean (reliability-weighted shrinkage of noisy performance)",
+      "verbatim_quote": "With regression, observations are expected to regress to the mean (average) value through time.",
+      "page": 335,
+      "printed_page": 313,
+      "latex": "\\mathbb{E}[Y_{t+1}\\mid Y_t] = \\mu + r\\,(Y_t-\\mu), \\quad 0<r<1",
+      "symbol_and_unit_ledger": "Y_t: season-t performance metric [metric units, e.g. yd/attempt]; mu: stable population mean [metric units]; r: lagged reliability correlation from p2 [dimensionless]; E[Y_{t+1}|Y_t]: conditional expectation [metric units]. r*(Y_t-mu) carries metric units, matching mu. Formalization of the printed prose under a bivariate-normal/stationary model; the book states the phenomenon in words and attributes it to Galton: will return, or regress, to the average over time, as noted by Francis Galton in 1877.",
+      "assumptions": "Stable population mean mu; stationary joint distribution across seasons; imperfect reliability r<1; linear conditional expectation (bivariate normal). The book's prose (PDF p.181, printed p.159): When people are above average, statistical models expect them to decrease to be closer to average (and the converse is true as well: below average players are expected to increase to be closer to the average).",
+      "breakdown_regime": "Genuine talent jumps (rookie development, scheme change, injury recovery) violate stationarity, so shrinking a true breakout erases signal; r estimated on small samples is itself noisy. The Mahomes example shows the model predicts decline for the best QB purely from regression to the mean, not from a causal claim - it is a noise correction, not a forecast of ability.",
+      "domain": "math",
+      "timescales": [
+        "tau_season",
+        "tau_career"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Shrinkage prior for GSE player-evaluation posteriors: posterior talent = mu + r_hat*(observed-mu), with r_hat supplied by the p2 reliability gate. This is the tail-risk control for roster and DFS/portfolio construction: noisy single-season outliers are exactly the assets that blow up a portfolio, so they are pulled toward the mean in proportion to their unreliability rather than bought at face value.",
+        "source_operator": "p5",
+        "telemetry": "Multi-season per-player stats with sample-size weights (attempts/targets/carries); per-feature reliability r from p2; population mean mu per position/era. Held-out validation of shrinkage strength. No odds inputs."
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Principal component analysis (orthogonal latent-feature extraction)",
+      "verbatim_quote": "Conceptually, a PCA reduces the number of dimensions of data to use the fewest possible.",
+      "page": 239,
+      "printed_page": 217,
+      "latex": "\\Sigma v_k = \\lambda_k v_k, \\quad v_j^{\\top}v_k = 0\\ (j\\ne k); \\qquad \\text{PC1 explained variance}=70.07\\%",
+      "symbol_and_unit_ledger": "Sigma: covariance matrix of standardized features [dimensionless after scaling]; v_k: k-th eigenvector / principal-component loading [dimensionless]; lambda_k: k-th eigenvalue = variance along v_k [dimensionless variance]; orthogonality v_j^T v_k=0 [dimensionless]. Features are standardized before PCA (the book scales combine data), so all quantities are dimensionless. PC1=70.07% printed at PDF p.245 (printed p.223); glossary: A statistical tool for creating fewer inde‐ pendent features from a set of features.",
+      "assumptions": "Linear combinations capture the structure; features standardized; components mutually orthogonal; variance used as a proxy for information. The book motivates PCA by collinearity among combine measurables (PDF p.226, printed p.204) and reduces dimensions to the fewest possible (PDF p.239).",
+      "breakdown_regime": "Nonlinear manifolds are missed by linear PCA; outliers dominate the covariance; components are statistical, not causal, and require domain interpretation (the book's clustering caveats and 'tweener' players, PDF p.236-238). PC1 carrying 70.07% means combine data is largely a single size/athleticism axis, so higher PCs may be noise rather than distinct skills.",
+      "domain": "math",
+      "timescales": [
+        "tau_combine (pre-career)",
+        "tau_season",
+        "tau_career"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to factor analysis / latent-trait extraction in psychometrics and to the Karhunen-Loeve expansion: an orthogonal basis that concentrates variance. Bind it as GSE skill-vector compression for 22-agent role embeddings, turning collinear combine + tracking features into a few orthogonal latent axes that feed the reliability gate (p2) before valuation.",
+        "source_operator": "p6",
+        "telemetry": "NFL Scouting Combine measurables as used by the book (Ht, Wt, 40yd, Vertical, Bench, Broad Jump, 3Cone, Shuttle; PDF p.239/244), standardized; per-position PC loadings and explained-variance ratios. No odds inputs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Trace the lineage of the value-difference idea before trusting it. The book opens its history with Virgil Carter, the Cincinnati Bengals / San Diego Chargers quarterback who, as coauthor of the 1971 paper 'Technical Note: Operations Research in Football,' created the notion of an expected point (PDF p.23, printed p.1). That origin matters: EPA was born as an operations-research currency for play value, decades before play-by-play was digitized, so its Markov-state assumption is a tractability convenience inherited from 1971, not a discovered law of drives. In 2007 Brian Burke, a former US Navy pilot, built the public expected-points and expected-points-added approach and a win-probability model on the Advanced Football Analytics website (PDF p.24, printed p.2), and the Carnegie Mellon trio behind nflscrapR republished EPA and win probability as open code in 2018 (PDF p.24). The sovereign invariant that survives this lineage is the difference form itself: EPA_t = EP(s_{t+1}) - EP(s_t). Raw points scored confounds opportunity with execution - a garbage-time touchdown and a game-winning drive both add six points - whereas conditioning on the state s isolates the marginal contribution of the play. Read against Bellman, V(s) = E[r + V(s')], EPA is exactly the realized residual V(s') - V(s) under a league-average policy: a temporal-difference-like error signal that says how much better or worse the new state is than the old. That is why it compiles cleanly into a Coach-Mind value head. But the book's own stability chapter is the epistemic gate on that head. A value function is only as trustworthy as the reliability of the features it conditions on, and the glossary explicitly warns that high-leverage situations - third-down conversions, fourth-and-goal - 'are generally not predictive game to game or season to season' (PDF p.333). So a single-game EPA spike on a handful of clutch plays is statistically fragile and cannot, by itself, license a season-long roster or portfolio decision. The correct compilation is to aggregate EPA over many plays, weight by context, and pass the resulting feature through the lagged-reliability gate (primitive p2) before it touches valuation. The deeper lesson is that a value head is a compressed model of the league-average defense, and compression is where bias enters. The league-average EP surface does not see the specific safety's leverage, the corner's press technique, or the quarterback's shoulder. When Coach-Mind uses EPA to rank a fourth-down decision, it must treat the number as a prior over states, not as a verdict on the current snap, and it must allow lower layers - biomechanics, pressure physics, the defensive coordinator's disguise - to veto the prior. This is the cross-layer discipline the book models implicitly by pairing every metric with a stability check: the value-difference kernel is sovereign, but its authority is bounded by the reliability of its inputs and by the physical and psychological constraints of the 22 agents actually on the field.",
+      "retrocausal_genealogy": "The hidden state that produced EPA is a chain of scarcity scars. In 1971 Carter needed a play-value currency before play-by-play existed in digital form, so he imposed a Markov state (down, distance, field position) because it was computable, not because drives are memoryless. The 2007 blog-era scar was closed team data: Burke, a Navy pilot outsider, built public models precisely because franchises would not share theirs, which is why the public EPA lineage is open and replicable. The 2018 nflscrapR replication turned EPA into a public good and froze the 1971 state assumption into library code. Each layer left a scar: the tractability convenience became an inherited default that modern users forget to question.",
+      "theory_of_mind": "Recursive belief clash under pressure: the coach's comfort call is a run up the middle on third-and-two because his model believes three yards is safe; the defensive coordinator's tendency trap is a loaded box because his model believes the offense will run; the quarterback's internal clock believes protection holds for roughly two-and-a-half seconds. The EPA model believes the league-average defense, the DC believes the offense's tendency, and the QB believes his line. Each agent holds a compressed, biased EP surface and a model of the others' models. The sovereign kernel must represent this clash explicitly rather than average it away, because the value of a call is determined by whose belief is wrong on this snap, not by the population mean.",
+      "cross_layer_veto": "Cross-layer veto: the league-average EPA surface may say go for it on fourth-and-one at midfield, but the physiology layer (the quarterback's shoulder injury) and the physics layer (the defense's stacked box and leverage) can veto that high-EV call. The book's glossary supplies the statistical veto too: high-leverage plays are not stable predictors, so a clutch EPA spike cannot override a season of evidence. A value-head number is a prior, not a command; when a biomechanical constraint or a reliability floor contradicts it, the lower layer wins. This is where psychology and physics veto a high-EV call, and the artifact records the veto rather than hiding it behind a point estimate."
+    },
+    {
+      "trace_id": "t2",
+      "think": "The second arc of the book is reliability before valuation, and it is the arc that keeps a foundry honest. It begins with a biological observation, not a football one: the book notes that observations 'will return, or regress, to the average over time, as noted by Francis Galton in 1877' (PDF p.78, printed p.56). Regression toward the mean is therefore a statistical phenomenon with a nineteenth-century lineage, and it must not be given a fabricated football origin. The football adoption is a 2010s fantasy-football scar - the buy-low / sell-high folklore (PDF p.20) needed a noise filter, and 'sticky stats' became the industry's name for reliable metrics. The book makes the gate explicit and codes it: stability is the metric's consistency over a predetermined time frame (PDF p.42), measured by lagged Pearson correlation, and the empirical split is decisive - short-pass YPA correlates at 0.438 across seasons while deep-pass YPA correlates at only 0.234 (PDF p.71-72), so a quarterback's short-pass performance is 'twice as stable' as his deep-pass performance. The CPOE chapter then asks whether residualizing helps. It does, but only marginally: completion percentage correlates at 0.445, CPOE at 0.465, and expected completion at 0.474 (PDF p.151-153). The most stable metric is the expectation itself, not the residual. That ordering is the sovereign lesson, and the book drives it home with the residual-metric critique (PDF p.153, printed p.131): 'The assumption that a player doesn't dictate the situation that they are embedded in on a given play is likely violated, and repeatedly.' The quarterback chooses his target, moves defenders with his eyes, and decides whether to throw, run, or take a sack - Joe Burrow led the league in YPA and completion but also took 51 sacks. So the 'context-free' residual still carries the player's choices, and 'to assume the two are completely independent will likely lead to errors.' Residualization is not identification. This is a theory-of-mind correction: the metric designer must model the player as a strategic agent who selects his own task difficulty, not as a passive emitter of statistics. The Poisson chapter completes the arc. Even the count model's lambda is shrunk toward the mean - the book's Mahomes example predicts a decline for the best quarterback purely from regression toward the mean (PDF p.181, printed p.159) - and the book explicitly warns that the Poisson assumptions fail because a team that scores may have 'figured out' the defense (PDF p.168). Compile all of this into the GSE discipline: gate every feature by lagged reliability (p2), shrink every estimate by its reliability (p5), refuse to treat any residual as a causal player trait (p3), and never extrapolate a memoryless count model inside a game after adaptation has occurred (p4). For DFS and portfolio tail risk this is not optional: noisy single-season outliers are precisely the assets that blow up a portfolio, and shrinkage is the tail-risk control. The book's quiet contribution is to make the reliability gate a first-class, coded step rather than an afterthought, and that is the invariant the foundry extracts.",
+      "retrocausal_genealogy": "Galton's 1877 studies of heredity created regression toward the mean as a biological observation about heights and sweet peas, not about athletes; the football adoption is a much later fantasy-football scar. The industry's incentive to sell confidence in noisy statistics produced the 'sticky stats' folklore and the buy-low / sell-high heuristic (PDF p.20). The hidden state is commercial: analysts needed to distinguish skill from luck to price players, so they borrowed a nineteenth-century statistical phenomenon and renamed it. The book's contribution is to strip the folklore back to a coded reliability gate and to warn that the residual still carries the player's strategic choices.",
+      "theory_of_mind": "Three-way belief clash: the front-office analyst believes CPOE isolates the quarterback; the quarterback believes he is being judged on 'his' throws; the agent believes the residual is a negotiable trait that should raise a contract. The book's residual-metric critique is a theory-of-mind correction aimed at all three: the player is a strategic agent who selects his own difficulty - target choice, eye manipulation, throw-away versus sack - so the residual is partly his choice, not a pure trait. Meanwhile the coach believes the scheme created the completion. The metric cannot adjudicate this clash by itself; the designer must model the player's selection process, or the 'over expected' number silently re-imports the context it claimed to remove.",
+      "cross_layer_veto": "Two cross-layer vetoes. First, the endogeneity veto: a high CPOE built on short, high-percentage throws the quarterback chose cannot veto evidence of a deep-shot deficiency, because the physics layer (air yards versus coverage leverage) and the psychology layer (risk preference) jointly show the residual is selection-biased. Second, the memorylessness veto: a Poisson lambda fit on season totals cannot be extrapolated inside a game after the defense has 'figured out' the offense - the book's own caveat (PDF p.168) is a cross-layer veto on naive in-game extrapolation. In both cases a higher-layer statistical convenience is overruled by a lower-layer causal or adaptive reality, and the artifact must record the veto rather than let a clean number stand in for a contested truth."
+    }
+  ],
+  "universal_lens": "The polymath audit lens this book compiles to is a four-question checklist applicable to any sequential decision system under noise: What is the state-value function (EPA)? What link maps the bounded observation to an unbounded predictor (logit)? What is the reliability of each feature across time (lagged Pearson r)? And what does the residual still carry after 'context' is stripped (endogeneity)? Every metric is a composition of value function, link, reliability gate, and shrinkage prior; the audit fails any model that cannot answer all four, regardless of domain.",
+  "gsi_mapping": "For GSI's fluid/axonal shear, bioenergetics, and clinical telemetry the same kernels compile directly: EP(s) becomes a state-value over physiological state (lactate, glycogen, core temperature); the logit link maps a bounded clinical probability such as injury or arrhythmia risk to an unbounded linear predictor; the lagged-correlation reliability gate is the test-retest reliability of a biomarker; the Poisson count kernel models discrete clinical events per monitoring window with the same memorylessness caveat (physiological adaptation breaks it); and shrinkage guards against over-reacting to a single noisy measurement. The reliability-before-valuation discipline is identical whether the agent is a quarterback or a patient.",
+  "gse_mapping": "For GSE's Coach-Mind simulation, deception modeling, and DFS/portfolio tail risk: EPA binds as the per-play value head; CPOE binds as quarterback throw-policy evaluation (read as policy, not trait, because of the endogeneity veto); the Poisson kernel binds as an odds-free scoring-event generator with lambda from pace times efficiency, never from market totals; the reliability gate plus shrinkage bind as roster and DFS tail-risk control; PCA binds as role-embedding compression. Deception is modeled as a perturbation of the opponent's EP surface, and every high-EV call remains subject to cross-layer physiological and psychological vetoes. No sportsbook odds are used as model inputs."
+}

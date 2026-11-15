@@ -1,0 +1,95 @@
+{
+  "book_id": "f08d6b0713dd3f36",
+  "source_status": "COMPLETE",
+  "title": "literature_coverage_report",
+  "file_name": "literature_coverage_report.md",
+  "sha256": "f08d6b0713dd3f3694e69d962a379127023ed387b4fb15497dec63d8cb3557f4",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Honesty machinery integrity ensures causal residuals reflect true premise-game alignment, not artifactual misgrading. Universal Lens: Rooted in literature_coverage_report (f08d6b0713dd3f36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian conformity checks enforce probabilistic premise validation via game-specific residual scoring. GSI Mapping: Rooted in literature_coverage_report (f08d6b0713dd3f36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning updates edge states based on verified premise validity, preventing stale promotions. GSE Mapping: Rooted in literature_coverage_report (f08d6b0713dd3f36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "category_error_in_residual_grading",
+      "name": "Residual Grading Consistency",
+      "verbatim_quote": "| # | Defect | Damage | Fix | |---|---|---|---| | 1 | **Category error in residual grading.** A bridge premise asserts a probability for a *specific named game* (`bridge:2025_02_CLE_BAL` = P(home wins) for 2025 CLE vs BAL).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{ij}': 'signed residual for premise i and game j', 'P_{ij}': 'probability assigned by premise i to game j', 'A_{ij}': 'actual outcome for game j (0 or 1)'}",
+      "assumptions": "Premise-grade alignment must be enforced via game-key resolution.",
+      "breakdown_regime": "When R_ij is computed against incorrect game context.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Residuals are mapped to premise-game consistency through HNSW vector indexing and game-key resolution.",
+        "source_operator": "category_error_in_residual_grading",
+        "telemetry": "Mean signed residual equality to mean absolute residual indicates misalignment."
+      }
+    },
+    {
+      "primitive_id": "support_factor_counted_residual_rows",
+      "name": "Support Factor Normalization",
+      "verbatim_quote": "| | 2 | **Support factor counted residual ROWS.** A game-scoped premise is activated once per retrieval event touching its game — **21 rows for one game** in the measured run.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_i': 'support factor for premise i', 'N_j': 'number of retrieval events for game j', 'w_i': 'weight assigned to premise i'}",
+      "assumptions": "Support scaling must normalize over distinct retrieval events, not raw row counts.",
+      "breakdown_regime": "When support is inflated by row count instead of unique event count.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Support factors derived from normalized event counts rather than raw row counts.",
+        "source_operator": "support_factor_counted_residual_rows",
+        "telemetry": "Weight saturation due to overcounting rows leads to spurious premise strength."
+      }
+    },
+    {
+      "primitive_id": "promotion_was_add_only",
+      "name": "Edge Promotion State Integrity",
+      "verbatim_quote": "| | 3 | **Promotion was ADD-ONLY.** Edges whose premise no longer cleared the gate stayed `'promoted'`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_e': 'promotion status of edge e', 'Q_e': 'qualifying premise count for edge e', 'M_e': 'maximal promotion threshold'}",
+      "assumptions": "Promotion flags must be dynamically updated based on current premise validity.",
+      "breakdown_regime": "When P_e remains 1 despite Q_e = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Promotion logic mirrors causal edge validity through dynamic flag reconciliation.",
+        "source_operator": "promotion_was_add_only",
+        "telemetry": "Zero-qualifying edges marked as promoted signals state inconsistency."
+      }
+    },
+    {
+      "primitive_id": "premise_score_promoted_flag_not_cleared",
+      "name": "Flag Synchronization",
+      "verbatim_quote": "| | 4 | **`premise_score.promoted` was never cleared on demotion.** | The flag read 16 while `causal_edge` had 0 promoted / 16 retired — two tables disagreeing about the same fact.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_p': 'flag indicating premise p is promoted', 'E_e': \"edge e's promoted state\", 'D_e': 'demotion status of edge e'}",
+      "assumptions": "Flags must synchronize with underlying edge state changes.",
+      "breakdown_regime": "Disagreement between F_p and E_e when D_e = 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Promotion flags are now reconciled from edge set using existence checks.",
+        "source_operator": "premise_score_promoted_flag_not_cleared",
+        "telemetry": "Flag reconciliation ensures consistency between premise and edge state."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f08d6b0713dd3f36_t0",
+      "think": "The five defects identified in the literature loop represent systemic failures in honesty machinery—specifically, how premises are validated before influencing published numbers. Each defect introduces a form of logical or computational artifact: misaligned residual grading causes false improvement trends; inflated support factors distort premise weights; persistent promotion flags create stale causal links; and unsynchronized flags lead to data inconsistencies. These failures collectively undermine trust in the system’s probabilistic inference pipeline. The fix involves enforcing correct game-key alignment for residuals, normalizing support factors by unique events, enabling bidirectional promotion state updates, and synchronizing flags with edge validity. These corrections ensure that the system's internal consistency aligns with its external behavior, making the literature loop both honest and productive.\n\nDeep epistemic analysis for literature_coverage_report (f08d6b0713dd3f36, domain=other, pages_read=5/5): Operator 'Residual Grading Consistency' (page 1, domain other) captures: | # | Defect | Damage | Fix | |---|---|---|---| | 1 | **Category error in residual grading.** A bridge premise asserts a probability for a *specific named game* (`bridge:2025_02_CLE_BAL` = P(home wins) for 2025 CLE vs BAL). Assumptions: Premise-grade alignment must be enforced via game-key resolution. Breakdown regime: When R_ij is computed against incorrect game context. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Residuals are mapped to premise-game consistency through HNSW vector indexing and game-key resolution. Operator 'Support Factor Normalization' (page 1, domain other) captures: | | 2 | **Support factor counted residual ROWS.** A game-scoped premise is activated once per retrieval event touching its game — **21 rows for one game** in the measured run. Assumptions: Support scaling must normalize over distinct retrieval events, not raw row counts. Breakdown regime: When support is inflated by row count instead of unique event count. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Support factors derived from normalized event counts rather than raw row counts. Operator 'Edge Promotion State Integrity' (page 1, domain other) captures: | | 3 | **Promotion was ADD-ONLY.** Edges whose premise no longer cleared the gate stayed `'promoted'`. Assumptions: Promotion flags must be dynamically updated based on current premise validity. Breakdown regime: When P_e remains 1 despite Q_e = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Promotion logic mirrors causal edge validity through dynamic flag reconciliation. Operator 'Flag Synchronization' (page 1, domain other) captures: | | 4 | **`premise_score.promoted` was never cleared on demotion.** | The flag read 16 while `causal_edge` had 0 promoted / 16 retired — two tables disagreeing about the same fact. Assumptions: Flags must synchronize with underlying edge state changes. Breakdown regime: Disagreement between F_p and E_e when D_e = 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Promotion flags are now reconciled from edge set using existence checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for literature_coverage_report (f08d6b0713dd3f36, domain=other, pages_read=5/5): Operator 'Residual Grading Consistency' (page 1, domain other) captures: | # | Defect | Damage | Fix | |---|---|---|---| | 1 | **Category error in residual grading.** A bridge premise asserts a probability for a *specific named game* (`bridge:2025_02_CLE_BAL` = P(home wins) for 2025 CLE vs BAL). Assumptions: Premise-grade alignment must be enforced via game-key resolution. Breakdown regime: When R_ij is computed against incorrect game context. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Residuals are mapped to premise-game consistency through HNSW vector indexing and game-key resolution. Operator 'Support Factor Normalization' (page 1, domain other) captures: | | 2 | **Support factor counted residual ROWS.** A game-scoped premise is activated once per retrieval event touching its game — **21 rows for one game** in the measured run. Assumptions: Support scaling must normalize over distinct retrieval events, not raw row counts. Breakdown regime: When support is inflated by row count instead of unique event count. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Support factors derived from normalized event counts rather than raw row counts. Operator 'Edge Promotion State Integrity' (page 1, domain other) captures: | | 3 | **Promotion was ADD-ONLY.** Edges whose premise no longer cleared the gate stayed `'promoted'`. Assumptions: Promotion flags must be dynamically updated based on current premise validity. Breakdown regime: When P_e remains 1 despite Q_e = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Promotion logic mirrors causal edge validity through dynamic flag reconciliation. Operator 'Flag Synchronization' (page 1, domain other) captures: | | 4 | **`premise_score.promoted` was never cleared on demotion.** | The flag read 16 while `causal_edge` had 0 promoted / 16 retired — two tables disagreeing about the same fact. Assumptions: Flags must synchronize with underlying edge state changes. Breakdown regime: Disagreement between F_p and E_e when D_e = 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Promotion flags are now reconciled from edge set using existence checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s work on causal graph integrity and Bayesian validation pipelines, these issues echo earlier concerns in machine learning fairness and model accountability where misaligned metrics led to spurious conclusions. Retrocausal Genealogy: Rooted in literature_coverage_report (f08d6b0713dd3f36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the literature engine seeking to optimize premise utility and the audit system detecting logical inconsistencies. The former may favor noisy improvements, while the latter enforces truthfulness through cross-table validation. Theory of Mind & Decision Maker Model: Rooted in literature_coverage_report (f08d6b0713dd3f36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that residual computation does not depend on row counts or stale flags. Leakage is prevented by enforcing strict game-key resolution and synchronized state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in literature_coverage_report (f08d6b0713dd3f36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

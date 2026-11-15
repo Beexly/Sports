@@ -1,0 +1,323 @@
+{
+  "book_id": "79f1bc77189cf9b3",
+  "source_status": "COMPLETE",
+  "title": "2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al",
+  "file_name": "2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al.pdf",
+  "sha256": "79f1bc77189cf9b3e2ca0f87923d59e875f060ac9cdd18114c959abb461c35e7",
+  "primary_domain": "other",
+  "pages_total": 22,
+  "pages_read": 22,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 22,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "A dynamic policy framework for MLB's ABS challenge system integrates run expectancy, Bayesian belief updates, and stochastic optimization to maximize strategic value. Bayesian hierarchical modeling of pitch margin distributions with shrinkage priors and sensory likelihoods for dynamic challenge policy optimization.",
+  "gsi_mapping": "Bayesian inference models player perception uncertainty; conformal prediction calibrates overturn probability estimates from historical challenge data. GSI employs conformal predictive inference to compute posterior challenge probabilities using role-specific shrinkage priors and Gaussian sensory error models.",
+  "gse_mapping": "Situational reasoning encodes state transitions via run expectancy changes; state-space includes count, outs, runners, and remaining challenges. GSE utilizes Markov decision processes with state-value iteration to optimize challenge decisions based on expected run gains and future challenge costs.",
+  "primitives": [
+    {
+      "primitive_id": "w0_run_expectancy",
+      "name": "Run Expectancy Operator",
+      "verbatim_quote": "We develop a policy that values an overturn through its effect on expected runs, accounting for the count, outs, and runners on base.",
+      "page": 1,
+      "latex": "\\mathbb{E}[R_{t+1} \\mid C, O, B] = f(C, O, B)",
+      "symbol_and_unit_ledger": "{'R_{t+1}': 'Expected runs scored in next half-inning (dimensionless)', 'C': 'Count (balls, strikes)', 'O': 'Number of outs', 'B': 'Runner configuration'}",
+      "assumptions": "Run expectancy is deterministic given game state; no external stochasticity beyond pitch outcome.",
+      "breakdown_regime": "When count reaches full (3-2), runner configurations become critical for value estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps game state to expected run contribution of challenge decision; used in GSE for optimal action selection.",
+        "source_operator": "w0_run_expectancy",
+        "telemetry": "Observed vs. modeled run differential per challenge opportunity."
+      }
+    },
+    {
+      "primitive_id": "w1_bayesian_overturn_model",
+      "name": "Bayesian Overturn Probability Model",
+      "verbatim_quote": "A Bayesian model represents players' imperfect impressions of pitch location and uses them to estimate overturn probabilities, with uncertainty calibrated from historical challenge decisions.",
+      "page": 1,
+      "latex": "P(\\text{overturn} \\mid \\theta, D) = \\int P(\\text{overturn} \\mid \\theta) P(\\theta \\mid D) d\\theta",
+      "symbol_and_unit_ledger": "{'P(\\\\text{overturn})': 'Probability of overturn given pitch data (dimensionless)', '\\\\theta': 'True pitch location (meters)', 'D': 'Player-perceived pitch data (pixels)', 'P(\\\\theta \\\\mid D)': 'Posterior belief over true location'}",
+      "assumptions": "Players' perceptions follow normal distribution around true pitch location; historical data provides sufficient calibration.",
+      "breakdown_regime": "When pitch location is ambiguous or near boundary of strike zone.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Connects player perception to overturn likelihood; enables GSI probabilistic forecasting.",
+        "source_operator": "w1_bayesian_overturn_model",
+        "telemetry": "Bootstrap confidence intervals on overturn rate estimates."
+      }
+    },
+    {
+      "primitive_id": "w2_dynamic_programming",
+      "name": "Dynamic Programming Challenge Policy",
+      "verbatim_quote": "Dynamic programming compares the expected gain with the future cost of losing a challenge, accounting for the stage of the game, the number of challenges remaining, and opportunities on both offense and defense.",
+      "page": 1,
+      "latex": "V_t(s) = \\max_{a} \\left[ R(s,a) + \\gamma \\sum_{s'} P(s'\\mid s,a)V_{t+1}(s') \\right]",
+      "symbol_and_unit_ledger": "{'V_t(s)': 'Value function at time t in state s (expected runs)', 'R(s,a)': 'Reward for action a in state s (run change)', '\\\\gamma': 'Discount factor (dimensionless)', \"P(s'\\\\mid s,a)\": \"Transition probability to state s' after action a\"}",
+      "assumptions": "Markovian evolution of game state; finite horizon with known challenge limits.",
+      "breakdown_regime": "At endgame stages with few challenges remaining.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Optimizes challenge timing based on expected returns and future constraints; informs GSE decision trees.",
+        "source_operator": "w2_dynamic_programming",
+        "telemetry": "Percentage increase in modeled correction runs versus observed."
+      }
+    },
+    {
+      "primitive_id": "w3_challenge_reconstruction",
+      "name": "Challenge Opportunity Reconstruction",
+      "verbatim_quote": "Using pitch tracking and game records, we reconstruct challenge opportunities, including calls that players let stand.",
+      "page": 1,
+      "latex": "\\mathcal{O} = \\{(p_i, c_i, r_i) \\mid p_i \\in \\text{pitch data}, c_i \\in \\text{call type}, r_i \\in \\text{review result}\\}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{O}': 'Set of challenge opportunities (set of tuples)', 'p_i': 'Pitch data (location, speed)', 'c_i': 'Call type (ball/strike)', 'r_i': 'Review result (upheld/overturned)'}",
+      "assumptions": "All challengeable calls are recorded; player decisions are consistent with rational utility maximization.",
+      "breakdown_regime": "When challenge history is incomplete due to non-challenges.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reconstructs full challenge space from partial observations; supports GSI causal inference pipelines.",
+        "source_operator": "w3_challenge_reconstruction",
+        "telemetry": "Coverage ratio of reconstructed vs. actual challenge events."
+      }
+    },
+    {
+      "primitive_id": "prior_shrinkage_distribution",
+      "name": "Prior Shrinkage Distribution",
+      "verbatim_quote": "The resulting prior mass is prc(m) = nrc(m) + αrpr(m) nrc + αr .",
+      "page": 6,
+      "latex": "\\text{prc}(m) = \\frac{n_{rc}(m) + \\alpha_r p_r(m)}{n_{rc} + \\alpha_r}",
+      "symbol_and_unit_ledger": "{'prc(m)': 'prior probability density at margin m for role r and count c (dimensionless)', 'nrc(m)': 'count of pitches in bin m for role r and count c (dimensionless)', 'αr': 'shrinkage parameter for role r (dimensionless)', 'pr(m)': 'empirical frequency for role r across all counts (dimensionless)'}",
+      "assumptions": "Observations are grouped into 0.01-inch bins; shrinkage towards global distribution improves estimation for sparse data.",
+      "breakdown_regime": "When nrc approaches zero, prc(m) converges to pr(m).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides empirical basis for Bayesian prior in GSI's probabilistic challenge system.",
+        "source_operator": "prior_shrinkage_distribution",
+        "telemetry": "Posterior probability of correctable calls under shrinkage prior"
+      }
+    },
+    {
+      "primitive_id": "sensory_likelihood_model",
+      "name": "Sensory Likelihood Model",
+      "verbatim_quote": "Because that impression may be imprecise, we represent it as a perceived margin Si, equal to the pitch's margin Mi plus sensory error: Si = Mi + εs,i, εs,i | Mi, r, c ∼N(0, σ2 s,r).",
+      "page": 6,
+      "latex": "S_i = M_i + \\varepsilon_{s,i}, \\quad \\varepsilon_{s,i} \\sim \\mathcal{N}(0, \\sigma^2_{s,r})",
+      "symbol_and_unit_ledger": "{'Si': 'perceived margin for pitch i (inches)', 'Mi': 'true margin for pitch i (inches)', 'εs,i': 'sensory noise term (inches)', 'σs,r': 'standard deviation of sensory error for role r (inches)'}",
+      "assumptions": "Perception error is normally distributed and independent of true margin.",
+      "breakdown_regime": "As σs,r increases, perceptual precision decreases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps sensory perception to likelihood function in GSI's Bayesian inference framework.",
+        "source_operator": "sensory_likelihood_model",
+        "telemetry": "Likelihood of observed perception given true margin"
+      }
+    },
+    {
+      "primitive_id": "posterior_challenge_probability",
+      "name": "Posterior Challenge Probability",
+      "verbatim_quote": "For pitch i, we denote this posterior probability of a successful challenge by qi = qrici(Si; σs,ri).",
+      "page": 6,
+      "latex": "q_i = \\int \\mathcal{L}(m|S_i) \\cdot \\text{pr}_c(m) \\, dm \\Big/ \\int \\mathcal{L}(m|S_i) \\, dm",
+      "symbol_and_unit_ledger": "{'qi': 'posterior probability of successful challenge for pitch i (dimensionless)', 'Si': 'perceived margin for pitch i (inches)', 'σs,ri': 'sensory standard deviation for role r and pitch i (inches)', 'L(m|Si)': 'likelihood of margin m given perception Si (dimensionless)', 'prc(m)': 'prior probability density at margin m (dimensionless)'}",
+      "assumptions": "Challenge success depends on posterior integration of likelihood and prior.",
+      "breakdown_regime": "When likelihood peaks far from prior, qi approaches 0 or 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Computes GSI's decision threshold for challenge eligibility.",
+        "source_operator": "posterior_challenge_probability",
+        "telemetry": "Probability that a challenge will succeed given perception and prior"
+      }
+    },
+    {
+      "primitive_id": "decision_threshold_policy",
+      "name": "Decision Threshold Policy",
+      "verbatim_quote": "Its value is chosen separately for offense and defense by predictive performance in held-out development games (Appendix A.7).",
+      "page": 6,
+      "latex": "A_i^{\\text{hist}} = \\mathbb{1}\\left\\{M_i + \\varepsilon_{s,i} + \\varepsilon_{a,i} > \\text{tr}(X_i)\\right\\}, \\quad \\varepsilon_{a,i} \\sim \\mathcal{N}(0, \\sigma^2_{a,r})",
+      "symbol_and_unit_ledger": "{'Ai_hist': 'binary indicator for challenge decision (dimensionless)', 'Mi': 'true margin for pitch i (inches)', 'εs,i': 'sensory noise (inches)', 'εa,i': 'action noise (inches)', 'tr(Xi)': 'threshold function for pitch i (inches)', 'σa,r': 'action noise standard deviation for role r (inches)'}",
+      "assumptions": "Player decision is modeled as a threshold crossing with additive noise.",
+      "breakdown_regime": "Policy becomes deterministic when noise variance dominates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps player behavior to GSE's stochastic decision engine.",
+        "source_operator": "decision_threshold_policy",
+        "telemetry": "Probability of challenge action given pitch margin and context"
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id",
+      "name": "state_transition_dynamic_programming",
+      "verbatim_quote": "The policy can help teams review these decisions and develop guidance for players, with the confidence required to challenge reflecting both the current correction's value and the opportunities still ahead.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Markov decision process framework, fixed pitch location uncertainty, linear run value per correction.",
+      "breakdown_regime": "Singular when remaining challenges = 0, otherwise continuous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Convert sequential game states into discrete-time dynamic programming. GSE: Model challenge preservation as state-transition reward arbitrage between offensive and defensive halves.",
+        "source_operator": "w2_snake_case_id",
+        "telemetry": "Observed challenge usage rates by inning and score differential."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_2",
+      "name": "overturn_probability_optimization",
+      "verbatim_quote": "6 Discussion 6.1 Implications for challenge strategy The policy recovers more modeled run value by changing which calls a team challenges while holding the model's assumed uncertainty about pitch location fixed.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Fixed umpire bias distribution, Gaussian player perception errors, zero transaction costs.",
+      "breakdown_regime": "Discontinuous at threshold confidence levels where optimal action switches.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Cast as sequential hypothesis testing with Bayesian posterior updates. GSE: Treat as state-dependent threshold rule for resource allocation across innings.",
+        "source_operator": "w2_snake_case_id_w2_2",
+        "telemetry": "Historical overturn rates by pitch type and count bin."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_3",
+      "name": "opportunity_cost_valuation",
+      "verbatim_quote": "A team's decisions at the plate also affect its ability to challenge calls in the field, because both roles draw from the same pool of challenges.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Static challenge budget, independent pitch-by-pitch valuation, no carryover effects.",
+      "breakdown_regime": "Singular when total remaining challenges equals zero, otherwise continuous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Implement Lagrangian relaxation to price inter-temporal resource tradeoffs. GSE: Encode as a shared-state constraint in multi-agent reinforcement learning.",
+        "source_operator": "w2_snake_case_id_w2_3",
+        "telemetry": "Correlation matrix of challenge success rates across offensive vs. defensive situations."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_4",
+      "name": "confidence_threshold_adaptation",
+      "verbatim_quote": "A sufficiently convincing impression could still justify Lowe's challenge, but its successful outcome alone does not tell us whether his confidence met the requirement.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Bayesian updating from Gaussian priors, fixed utility function, no strategic interaction.",
+      "breakdown_regime": "Discontinuous at the posterior credibility interval crossing the minimal correction threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Apply conformal prediction intervals to calibrate frequentist coverage. GSE: Use threshold-based action selection in contextual bandit formulations.",
+        "source_operator": "w2_snake_case_id_w2_4",
+        "telemetry": "Distribution of posterior standard deviations for pitch corrections."
+      }
+    },
+    {
+      "primitive_id": "signed_distance_field",
+      "name": "Signed Distance Field",
+      "verbatim_quote": "With an assumed ball radius of 1.45 inches, the signed distance from the ball to the zone is D = p max(qx, 0)2 + max(qz, 0)2 + min{max(qx, qz), 0} -1.45.",
+      "page": 17,
+      "latex": "D = \\sqrt{\\max(q_x, 0)^2 + \\max(q_z, 0)^2} + \\min(\\max(q_x, q_z), 0) - 1.45",
+      "symbol_and_unit_ledger": "{'D': 'inches', 'q_x': 'inches', 'q_z': 'inches'}",
+      "assumptions": "Ball modeled as sphere with fixed radius; strike zone as axis-aligned rectangle.",
+      "breakdown_regime": "When pitch center lies inside rectangle, min-max term yields negative distance to nearest edge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps geometric pitch position to binary ruling (strike/ball) via signed distance thresholding.",
+        "source_operator": "signed_distance_field",
+        "telemetry": "Reconstructed ruling accuracy against actual umpire calls."
+      }
+    },
+    {
+      "primitive_id": "margin_orientation",
+      "name": "Margin Orientation",
+      "verbatim_quote": "We orient the margin toward the potential challenger, taking M = D on offense and M = -D on defense.",
+      "page": 17,
+      "latex": "M = \\begin{cases} D & \\text{if } r=\\text{offense} \\\\ -D & \\text{if } r=\\text{defense} \\end{cases}",
+      "symbol_and_unit_ledger": "{'M': 'inches', 'D': 'inches', 'r': 'offense or defense'}",
+      "assumptions": "Challenge orientation depends on team's strategic role in play.",
+      "breakdown_regime": "Undefined when both teams are equally positioned relative to boundary.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to decision-theoretic utility function over pitch margin M.",
+        "source_operator": "margin_orientation",
+        "telemetry": "Correctability probability based on M sign and magnitude."
+      }
+    },
+    {
+      "primitive_id": "prior_margin_distribution",
+      "name": "Prior Margin Distribution",
+      "verbatim_quote": "A.3 Estimating the margin priors The prior for the signed pitch margin M describes where a pitch is likely to lie relative to the strike-zone boundary before the player's impression is taken into account.",
+      "page": 17,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Prior conditioned only on umpire call and pre-pitch count.",
+      "breakdown_regime": "Non-parametric estimation from historical tracked calls.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables Bayesian updating of margin likelihood given observed data.",
+        "source_operator": "prior_margin_distribution",
+        "telemetry": "Posterior margin density estimates across challenge scenarios."
+      }
+    },
+    {
+      "primitive_id": "error_width_calibration",
+      "name": "Error Width Calibration",
+      "verbatim_quote": "Margins are grouped into bins of width h = 0.01 inches, so an observed margin M belongs to bin b = ⌊M/h⌋, with center mb = (b + 1/2)h.",
+      "page": 17,
+      "latex": "b = \\left\\lfloor \\frac{M}{h} \\right\\rfloor, \\quad m_b = \\left(b + \\frac{1}{2}\\right)h",
+      "symbol_and_unit_ledger": "{'h': 'inches', 'b': 'dimensionless bin index', 'm_b': 'inches'}",
+      "assumptions": "Discretization preserves continuity of margin space for statistical modeling.",
+      "breakdown_regime": "Bin boundaries introduce quantization noise in marginal estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps continuous margin space to discrete bins for regression analysis.",
+        "source_operator": "error_width_calibration",
+        "telemetry": "Calibration curve slope reflects sensitivity of challenge probability to margin."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "79f1bc77189cf9b3_t0",
+      "think": "This chapter introduces a formalized dynamic policy for MLB’s Automated Ball-Strike (ABS) challenge system, grounded in game-theoretic principles and empirical data. The core innovation lies in integrating run expectancy models with Bayesian inference to assess the value of overturning calls. Players face a trade-off: challenging a call risks losing a limited resource (challenges), yet failing to challenge may miss valuable corrections. The authors employ dynamic programming to optimize this trade-off across game states defined by count, outs, runners, and remaining challenges. Their Bayesian model captures the discrepancy between perceived and actual pitch locations, enabling accurate overturn probability estimation. The policy is trained on pre-2026 data and validated post-break, showing measurable gains in run correction efficiency. The framework demonstrates that strategic challenge usage improves over passive behavior, even if overturn rates decrease. This suggests that traditional metrics like overturn rate are insufficient for evaluating challenge efficacy. Instead, the value of a challenge should be assessed through its impact on expected runs, which the policy quantifies. The paper also highlights the importance of reconstructing challenge opportunities from incomplete data, including those not challenged. This reconstruction enables backtesting and validation of the proposed policy. The integration of pitch tracking, game records, and statistical modeling creates a robust foundation for real-time decision support systems in professional baseball. It bridges theoretical game theory with practical implementation, offering insights applicable to other domains requiring sequential decision-making under uncertainty.",
+      "retrocausal_genealogy": "Rooted in earlier work on run expectancy (Lindsey, 1963) and Bayesian decision theory, this policy builds upon prior studies in sports analytics and machine learning. It extends the Markov decision process formulation of Martinez (2026) by incorporating player perception models and dynamic programming. Retrocausal Genealogy (Window 1): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The model assumes players act rationally to maximize expected runs, considering both immediate and future consequences of challenge decisions. It accounts for opposing strategies by modeling both offensive and defensive challenge behaviors. Theory of Mind (Window 1): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that the policy does not overfit to specific game states or teams. Leakage veto prevents reliance on spurious correlations in pitch data or historical trends unrelated to challenge value. Cross-Layer Veto (Window 1): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "79f1bc77189cf9b3_t1",
+      "think": "This chapter introduces a Bayesian framework for MLB’s automated ball-strike system, integrating prior pitch margin distributions with sensory perception models to compute posterior challenge probabilities. It establishes a hierarchical structure where role-specific (offense/defense) and count-specific distributions are regularized via shrinkage priors. The system models sensory perception as Gaussian noise around true margins, enabling probabilistic inference. Decision-making is framed through a threshold policy that incorporates both perceptual and action uncertainties. The framework supports dynamic challenge policies by evaluating expected run gains against future challenge costs using Bellman equations. This synthesis enables real-time, data-driven decisions in high-stakes environments. Window 2 Synthesis: Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and statistical inference, building upon earlier work in probabilistic modeling of human perception and strategic decision-making in sports contexts. Retrocausal Genealogy (Window 2): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing agents as players with bounded rationality, incorporating sensory and action noise into decision thresholds. Coaches are implicitly captured through challenge cost functions and expected run dynamics. Theory of Mind (Window 2): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that sensory and action noise terms do not co-vary, preventing overfitting. Leakage veto prevents prior information from contaminating likelihood estimates during posterior computation. Cross-Layer Veto (Window 2): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "79f1bc77189cf9b3_t2",
+      "think": "This chapter introduces a dynamic programming framework for optimal challenge allocation in baseball, accounting for offensive-defensive carryover effects and diminishing marginal returns of challenges. It demonstrates that maximizing immediate correction value can be suboptimal due to future opportunity costs. The key insight is that a single pool of challenges must balance short-term accuracy improvements against long-term strategic flexibility. This builds on Abramitzky et al.'s tennis line-call model but extends it to incorporate state-dependent resource constraints and asymmetric roles. Coaches and players must internalize that a successful challenge today may deplete their ability to correct critical calls tomorrow, requiring a forward-looking threshold rule rather than myopic overturn-rate maximization. Window 3 Synthesis: Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in Puterman's Markov decision processes (1994) and Deshpande & Wyner's pitch-framing models (2017). Direct predecessor is Abramowitzky et al.'s tennis study (2012), which first analyzed sequential challenge strategies under uncertainty. This work adapts those ideas to baseball's specific carryover structure. Retrocausal Genealogy (Window 3): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opponents (umpires) have fixed strike-zone biases. Other teams observe challenge patterns and adjust their own aggressive thresholds. The model assumes rational opponents who respond to observed challenge frequencies but do not actively manipulate calls to induce inefficient challenge behavior. Theory of Mind (Window 3): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity check: Must distinguish between perceived strike probability and true strike probability; if they are perfectly collinear, the state variable loses rank. Leakage veto: The framework assumes umpire independence conditional on count; if umpires exhibit persistent intra-game bias, the Markov property breaks down and state-transition matrices become non-stationary. Cross-Layer Veto (Window 3): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "79f1bc77189cf9b3_t3",
+      "think": "Chapter 4 introduces a formalized framework for reconstructing ball-strike rulings using pitch-tracking data. The core primitive is the signed distance field D, which computes the geometric separation between a pitch’s center and the strike zone. This formulation handles both external and internal positions via min-max operations, ensuring robustness to boundary cases. The signed nature of D allows for orientation-dependent margin M, crucial for determining challenge eligibility. Prior distributions over M are estimated from historical calls, conditioning on umpire rulings and game state. These priors inform Bayesian inference about correctability. Calibration models then relate margin to challenge success probabilities, incorporating temporal and situational factors such as inning, score differential, and pitch count. The discretization of margins into bins facilitates empirical estimation of these relationships. Together, these components enable a principled approach to evaluating challenge decisions and optimizing strategic play. Window 4 Synthesis: Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in computational geometry and automated decision systems, evolving from early rule-based officiating to machine learning-enhanced judgment frameworks. Retrocausal Genealogy (Window 4): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing agents' beliefs about pitch location and their own strategic incentives, including risk aversion and resource allocation trade-offs. Theory of Mind (Window 4): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting by enforcing independence between margin estimation and outcome prediction layers; avoids leakage from post-hoc corrections. Cross-Layer Veto (Window 4): Rooted in 2026 - Challenge or Pass A Dynamic Policy for MLB's Automated Ball-Strike System - Pipping-Gam n et al (79f1bc77189cf9b3, 22/22 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

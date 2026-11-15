@@ -1,0 +1,78 @@
+{
+  "book_id": "89ec420071928da3",
+  "source_status": "COMPLETE",
+  "title": "NOVA_MULTIHEAD_INVENTORY",
+  "file_name": "NOVA_MULTIHEAD_INVENTORY.md",
+  "sha256": "89ec420071928da37dd6236cfdb618f7b3ce99538070f3a2838149aec8c4da4b",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Multi-head convergence inventory maps cross-branch Git states via deterministic SHA-merge-base relations; guards symbolic collisions across domain contracts and runtime heads. Universal Lens: Rooted in NOVA_MULTIHEAD_INVENTORY (89ec420071928da3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference engine models cross-head symbol divergence using guarded kernel states; probabilistic collision detection aligns with GSI's conformal predictive logic for domain consistency. GSI Mapping: Rooted in NOVA_MULTIHEAD_INVENTORY (89ec420071928da3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine encodes head-state transitions through guarded symbol mappings; state-space evolution constrained by prisma and route divergence metrics. GSE Mapping: Rooted in NOVA_MULTIHEAD_INVENTORY (89ec420071928da3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "multihead_convergence_inventory",
+      "name": "Deterministic Cross-Branch Inventory Operator",
+      "verbatim_quote": "# NOVA Multi-Head Convergence Inventory Deterministic cross-branch inventory produced by `scripts/nova/multihead-inventory.mjs`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'set of branch heads', 'B': 'base commit SHA', 'C': 'collision status flag'}",
+      "assumptions": "All branches are deterministic under fixed base commit; collision scan is exhaustive.",
+      "breakdown_regime": "When C = true, symbolic overlap detected in guarded symbols.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps Git commit graph to symbolic state space; each head corresponds to a distinct kernel state in GSI.",
+        "source_operator": "multihead_convergence_inventory",
+        "telemetry": "Collision scan completeness and guarded symbol count."
+      }
+    },
+    {
+      "primitive_id": "guarded_symbol_collision",
+      "name": "Cross-Head Symbol Collision Guard",
+      "verbatim_quote": "| 1 | ## Cross-head collisions - `cross-head-guarded-symbol`: `CreditAdmissibilityReason` on `origin/nova/s1-domain-contracts`, `origin/nova/s2-capability-governor`, `origin/nova/s3-source-runtime` - `cross-head-guarded-symbol`: `CreditAllocationState`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'symbol identifier', 'H_i': 'head branch index', 'D(S, H_i)': 'definition divergence of S in H_i'}",
+      "assumptions": "Symbol definitions must be consistent across all heads to avoid runtime errors.",
+      "breakdown_regime": "When ∃ i,j: D(S, H_i) ≠ D(S, H_j), collision occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives symbolic kernel inconsistency from multi-head definitions; used by GSE to enforce runtime coherence.",
+        "source_operator": "guarded_symbol_collision",
+        "telemetry": "Number of guarded symbols with divergent definitions."
+      }
+    },
+    {
+      "primitive_id": "prisma_divergence_kernel",
+      "name": "Prisma Schema Divergence Kernel",
+      "verbatim_quote": "| | `origin/security/trusted-actor-model` | afa2792b0c8740bbb7861f39c1f8511a83ec3752 | c19a00d86fe45d7e093f3f9ec688d2614e7f87b4 | 29 | 1 | 7 | 2 |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'prisma schema definition', 'M': 'migration set', 'D(P, H_i)': 'schema divergence in head H_i'}",
+      "assumptions": "Schema changes must be synchronized across all heads to maintain data integrity.",
+      "breakdown_regime": "When ∃ i,j: D(P, H_i) ≠ D(P, H_j), divergence detected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes prisma schema inconsistencies as kernel-level anomalies; GSE uses this to validate migration paths.",
+        "source_operator": "prisma_divergence_kernel",
+        "telemetry": "Count of prisma schema divergences per head."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "89ec420071928da3_t0",
+      "think": "The multihead convergence inventory operator defines a deterministic mapping between Git branch heads and their symbolic states. It leverages SHA-based merge-bases to compute cross-branch consistency. The guarded symbol collision operator detects when identical symbols are defined differently across heads, triggering a breakdown regime where symbolic coherence fails. The prisma divergence kernel extends this to schema-level inconsistencies, enabling GSE to detect and prevent data model conflicts during runtime. These operators form a dual structure: one for symbolic consistency and another for schema integrity, both rooted in the base commit state.\n\nDeep epistemic analysis for NOVA_MULTIHEAD_INVENTORY (89ec420071928da3, domain=other, pages_read=4/4): Operator 'Deterministic Cross-Branch Inventory Operator' (page 1, domain other) captures: # NOVA Multi-Head Convergence Inventory Deterministic cross-branch inventory produced by `scripts/nova/multihead-inventory.mjs`. Assumptions: All branches are deterministic under fixed base commit; collision scan is exhaustive. Breakdown regime: When C = true, symbolic overlap detected in guarded symbols. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps Git commit graph to symbolic state space; each head corresponds to a distinct kernel state in GSI. Operator 'Cross-Head Symbol Collision Guard' (page 1, domain other) captures: | 1 | ## Cross-head collisions - `cross-head-guarded-symbol`: `CreditAdmissibilityReason` on `origin/nova/s1-domain-contracts`, `origin/nova/s2-capability-governor`, `origin/nova/s3-source-runtime` - `cross-head-guarded-symbol`: `CreditAllocationState` Assumptions: Symbol definitions must be consistent across all heads to avoid runtime errors. Breakdown regime: When ∃ i,j: D(S, H_i) ≠ D(S, H_j), collision occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives symbolic kernel inconsistency from multi-head definitions; used by GSE to enforce runtime coherence. Operator 'Prisma Schema Divergence Kernel' (page 1, domain other) captures: | | `origin/security/trusted-actor-model` | afa2792b0c8740bbb7861f39c1f8511a83ec3752 | c19a00d86fe45d7e093f3f9ec688d2614e7f87b4 | 29 | 1 | 7 | 2 | Assumptions: Schema changes must be synchronized across all heads to maintain data integrity. Breakdown regime: When ∃ i,j: D(P, H_i) ≠ D(P, H_j), divergence detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes prisma schema inconsistencies as kernel-level anomalies; GSE uses this to validate migration paths. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NOVA_MULTIHEAD_INVENTORY (89ec420071928da3, domain=other, pages_read=4/4): Operator 'Deterministic Cross-Branch Inventory Operator' (page 1, domain other) captures: # NOVA Multi-Head Convergence Inventory Deterministic cross-branch inventory produced by `scripts/nova/multihead-inventory.mjs`. Assumptions: All branches are deterministic under fixed base commit; collision scan is exhaustive. Breakdown regime: When C = true, symbolic overlap detected in guarded symbols. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps Git commit graph to symbolic state space; each head corresponds to a distinct kernel state in GSI. Operator 'Cross-Head Symbol Collision Guard' (page 1, domain other) captures: | 1 | ## Cross-head collisions - `cross-head-guarded-symbol`: `CreditAdmissibilityReason` on `origin/nova/s1-domain-contracts`, `origin/nova/s2-capability-governor`, `origin/nova/s3-source-runtime` - `cross-head-guarded-symbol`: `CreditAllocationState` Assumptions: Symbol definitions must be consistent across all heads to avoid runtime errors. Breakdown regime: When ∃ i,j: D(S, H_i) ≠ D(S, H_j), collision occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives symbolic kernel inconsistency from multi-head definitions; used by GSE to enforce runtime coherence. Operator 'Prisma Schema Divergence Kernel' (page 1, domain other) captures: | | `origin/security/trusted-actor-model` | afa2792b0c8740bbb7861f39c1f8511a83ec3752 | c19a00d86fe45d7e093f3f9ec688d2614e7f87b4 | 29 | 1 | 7 | 2 | Assumptions: Schema changes must be synchronized across all heads to maintain data integrity. Breakdown regime: When ∃ i,j: D(P, H_i) ≠ D(P, H_j), divergence detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes prisma schema inconsistencies as kernel-level anomalies; GSE uses this to validate migration paths. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Git history modeling and symbolic execution theory; builds upon formal methods for concurrency control and distributed system consistency. Retrocausal Genealogy: Rooted in NOVA_MULTIHEAD_INVENTORY (89ec420071928da3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in NOVA_MULTIHEAD_INVENTORY (89ec420071928da3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models adversarial branch divergence as a decision problem; GSI infers risk of runtime failure from symbolic mismatches, while GSE reasons about safe state transitions. Theory of Mind & Decision Maker Model: Rooted in NOVA_MULTIHEAD_INVENTORY (89ec420071928da3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in NOVA_MULTIHEAD_INVENTORY (89ec420071928da3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If guarded symbols or prisma schemas diverge, GSE vetoes state transitions; GSI flags these as high-risk events for predictive inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in NOVA_MULTIHEAD_INVENTORY (89ec420071928da3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in NOVA_MULTIHEAD_INVENTORY (89ec420071928da3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

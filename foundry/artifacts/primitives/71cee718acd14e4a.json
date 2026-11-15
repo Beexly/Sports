@@ -1,0 +1,78 @@
+{
+  "book_id": "71cee718acd14e4a",
+  "source_status": "COMPLETE",
+  "title": "p0145",
+  "file_name": "p0145.txt",
+  "sha256": "71cee718acd14e4a30e6714a810cc51596d33fe6226d79072042dd2ef70a1aeb",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Spatial perception integrates visceral, somatic, and sensory modalities into unified volumetric experience via neural space-elements. Universal Lens: Rooted in p0145 (71cee718acd14e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps spatial sensation as posterior belief over sensory manifold, conditioning on organ-specific priors and interoceptive feedback. GSI Mapping: Rooted in p0145 (71cee718acd14e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models body-state transitions through phase-space trajectories in perceptual manifolds, driven by sensory-motor coupling. GSE Mapping: Rooted in p0145 (71cee718acd14e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "spatial_sensory_volume",
+      "name": "Spatial Sensory Volume",
+      "verbatim_quote": "The epithet sharp given to the acid class would seem to show that to the popular mind there is something narrow and, as it were, streaky, in the impression they make, other flavors and odors being bigger and rounder.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_s': 'cubic units of perceived spatial extent', 'S': 'sensory modality index'}",
+      "assumptions": "Perceptual volume scales with sensory modality's spatial resolution and internal organ involvement.",
+      "breakdown_regime": "When sensory input lacks spatial coherence or is localized to single receptors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI belief update on V_s conditioned on S; GSE trajectory in sensory phase space",
+        "source_operator": "spatial_sensory_volume",
+        "telemetry": "Perceived volume magnitude vs. actual stimulus size"
+      }
+    },
+    {
+      "primitive_id": "interoceptive_volumetricity",
+      "name": "Interoceptive Volumetricity",
+      "verbatim_quote": "Repletion and emptiness, suffocation, palpitation, headache, are examples of this, and certainly not less spatial is the consciousness we have of our general bodily condition in nausea, fever, heavy drowsiness, and fatigue.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_i': 'interoceptive spatial extent', 'C': 'bodily condition state vector'}",
+      "assumptions": "Internal states generate volumetric spatial awareness via central nervous system integration.",
+      "breakdown_regime": "In pathological or extreme physiological states where internal sensations dominate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI probabilistic model of C influencing V_i; GSE state transition kernel over C",
+        "source_operator": "interoceptive_volumetricity",
+        "telemetry": "Subjective volumetricity score during physiological stress"
+      }
+    },
+    {
+      "primitive_id": "retinal_space_element",
+      "name": "Retinal Space Element",
+      "verbatim_quote": "Skin and retina are, however, the organs in which the spaceelement plays the most active part.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_r': 'retinal space element intensity', 'A_r': 'retinal area of activation'}",
+      "assumptions": "Visual space perception is dominated by retinal neural architecture and spatial frequency processing.",
+      "breakdown_regime": "When visual field is reduced or occluded, leading to diminished spatial awareness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI encoding of E_r as spatial feature; GSE visual scene reconstruction",
+        "source_operator": "retinal_space_element",
+        "telemetry": "Retinal activation area vs. perceived visual extent"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "71cee718acd14e4a_t0",
+      "think": "The derivation begins with the observation that spatial perception is not uniform across sensory modalities but varies according to the organ involved—especially skin and retina. This suggests a hierarchical structure where sensory inputs are mapped into a shared spatial framework. The concept of 'sharp' versus 'big and rounder' flavors implies a dimensional distinction in how stimuli are encoded. Interoceptive sensations like nausea or fever are shown to be equally spatially expansive, indicating a common underlying mechanism. The retina’s dominance in spatial perception supports a neural basis for volumetric representation. These primitives form a coherent mathematical framework where sensory space is modeled as a function of modality-specific activation fields and integrated through a central perceptual kernel. Failure modes occur when sensory input is fragmented or when interoception overrides external spatial cues.\n\nDeep epistemic analysis for p0145 (71cee718acd14e4a, domain=other, pages_read=1/1): Operator 'Spatial Sensory Volume' (page 1, domain other) captures: The epithet sharp given to the acid class would seem to show that to the popular mind there is something narrow and, as it were, streaky, in the impression they make, other flavors and odors being bigger and rounder. Assumptions: Perceptual volume scales with sensory modality's spatial resolution and internal organ involvement. Breakdown regime: When sensory input lacks spatial coherence or is localized to single receptors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI belief update on V_s conditioned on S; GSE trajectory in sensory phase space Operator 'Interoceptive Volumetricity' (page 1, domain other) captures: Repletion and emptiness, suffocation, palpitation, headache, are examples of this, and certainly not less spatial is the consciousness we have of our general bodily condition in nausea, fever, heavy drowsiness, and fatigue. Assumptions: Internal states generate volumetric spatial awareness via central nervous system integration. Breakdown regime: In pathological or extreme physiological states where internal sensations dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI probabilistic model of C influencing V_i; GSE state transition kernel over C Operator 'Retinal Space Element' (page 1, domain other) captures: Skin and retina are, however, the organs in which the spaceelement plays the most active part. Assumptions: Visual space perception is dominated by retinal neural architecture and spatial frequency processing. Breakdown regime: When visual field is reduced or occluded, leading to diminished spatial awareness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI encoding of E_r as spatial feature; GSE visual scene reconstruction Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0145 (71cee718acd14e4a, domain=other, pages_read=1/1): Operator 'Spatial Sensory Volume' (page 1, domain other) captures: The epithet sharp given to the acid class would seem to show that to the popular mind there is something narrow and, as it were, streaky, in the impression they make, other flavors and odors being bigger and rounder. Assumptions: Perceptual volume scales with sensory modality's spatial resolution and internal organ involvement. Breakdown regime: When sensory input lacks spatial coherence or is localized to single receptors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI belief update on V_s conditioned on S; GSE trajectory in sensory phase space Operator 'Interoceptive Volumetricity' (page 1, domain other) captures: Repletion and emptiness, suffocation, palpitation, headache, are examples of this, and certainly not less spatial is the consciousness we have of our general bodily condition in nausea, fever, heavy drowsiness, and fatigue. Assumptions: Internal states generate volumetric spatial awareness via central nervous system integration. Breakdown regime: In pathological or extreme physiological states where internal sensations dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI probabilistic model of C influencing V_i; GSE state transition kernel over C Operator 'Retinal Space Element' (page 1, domain other) captures: Skin and retina are, however, the organs in which the spaceelement plays the most active part. Assumptions: Visual space perception is dominated by retinal neural architecture and spatial frequency processing. Breakdown regime: When visual field is reduced or occluded, leading to diminished spatial awareness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI encoding of E_r as spatial feature; GSE visual scene reconstruction Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in 19th-century psychophysics and phenomenology, particularly influenced by Helmholtz's work on sensory integration and Fechner’s law of sensory perception. Later developed in cognitive science and neurophysiology. Retrocausal Genealogy: Rooted in p0145 (71cee718acd14e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0145 (71cee718acd14e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include the brain's tendency toward top-down interpretation versus bottom-up sensory fidelity. Decision actors might be the conscious self attempting to reconcile internal states with external spatial cues, or the unconscious processing layer that prioritizes survival-related interoceptive signals. Theory of Mind & Decision Maker Model: Rooted in p0145 (71cee718acd14e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when tactile and visual spatial representations conflict, e.g., in phantom limb syndrome. Leakage occurs when interoceptive signals overwhelm external spatial awareness, such as in severe illness. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0145 (71cee718acd14e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0145 (71cee718acd14e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

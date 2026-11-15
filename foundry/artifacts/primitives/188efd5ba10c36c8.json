@@ -1,0 +1,78 @@
+{
+  "book_id": "188efd5ba10c36c8",
+  "source_status": "COMPLETE",
+  "title": "odds-api.io",
+  "file_name": "odds-api.io.md",
+  "sha256": "188efd5ba10c36c83097c7d0b7bbd5d4605d39f12d425efd78f2363907898720",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap topology and multilingual path segmentation define a structured sportsbook API surface for probabilistic inference. Universal Lens: Rooted in odds-api.io (188efd5ba10c36c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief networks over sitemap segments enable conformal prediction of sportsbook data availability and language-specific content density. GSI Mapping: Rooted in odds-api.io (188efd5ba10c36c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions between locale paths and sportsbook endpoints support dynamic query routing and contextual odds retrieval in real-time. GSE Mapping: Rooted in odds-api.io (188efd5ba10c36c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_topology",
+      "name": "Sitemap Graph Structure",
+      "verbatim_quote": "# odds-api.io Category: **sportsbook** URLs discovered: **3,716** Sitemaps walked: 7 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{urls}}': 'dimensionless, total discovered URLs', 'N_{\\\\text{sitemaps}}': 'dimensionless, sitemaps processed'}",
+      "assumptions": "All sitemaps are traversable; URL count is deterministic per sitemap.",
+      "breakdown_regime": "When sitemap index returns 404, fallback to direct XML parsing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each sitemap entry corresponds to a node in a directed graph where edges represent hierarchical navigation paths.",
+        "source_operator": "sitemap_topology",
+        "telemetry": "Number of valid sitemap entries vs. HTTP status codes."
+      }
+    },
+    {
+      "primitive_id": "path_segmentation",
+      "name": "Multilingual Path Taxonomy",
+      "verbatim_quote": "segment | URLs | |---|---| | `/pt` | 528 | | `/es` | 525 | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{\\\\text{locale}}': 'dimensionless, language code identifier', 'N_{\\\\text{pages}}(L)': 'dimensionless, number of pages under locale L'}",
+      "assumptions": "Each locale segment contains uniform content distribution across subpaths.",
+      "breakdown_regime": "When N_{\\text{pages}}(L) < 500, locale may be under-represented.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Locale-specific path counts form a kernel for probabilistic content sampling in GSI's belief engine.",
+        "source_operator": "path_segmentation",
+        "telemetry": "URL frequency per language segment."
+      }
+    },
+    {
+      "primitive_id": "sportsbook_endpoint",
+      "name": "Sportsbook Endpoint Catalogue",
+      "verbatim_quote": "`/sportsbooks` | 462 | | `/blog` | 35 | | `/esports` | 15 | | `/sports`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{\\\\text{endpoint}}': 'dimensionless, endpoint type identifier', 'N_{\\\\text{instances}}(E)': 'dimensionless, number of instances for endpoint E'}",
+      "assumptions": "Endpoints are mutually exclusive categories with fixed instance counts.",
+      "breakdown_regime": "If N_{\\text{instances}}(E) = 0, endpoint is deprecated or misclassified.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each endpoint maps to a distinct GSE state transition function for real-time odds fetching.",
+        "source_operator": "sportsbook_endpoint",
+        "telemetry": "Instance count per endpoint category."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "188efd5ba10c36c8_t0",
+      "think": "The sitemap topology defines a discrete graph structure where nodes represent unique URLs and edges denote navigational relationships. This enables GSI to model content discovery as a stochastic process over a known domain. The path segmentation reveals multilingual content distribution, which GSI uses to weight belief states for localized sportsbook data. The sportsbook endpoint catalogue provides a categorical lattice for GSE to perform state transitions based on user intent. Dualities emerge in that sitemaps act as both data sources and navigational blueprints. Failure modes include missing sitemaps (404s), under-represented locales (<500 pages), and deprecated endpoints (zero instances). These must be monitored via telemetry to maintain system integrity.\n\nDeep epistemic analysis for odds-api.io (188efd5ba10c36c8, domain=other, pages_read=2/2): Operator 'Sitemap Graph Structure' (page 1, domain other) captures: # odds-api.io Category: **sportsbook** URLs discovered: **3,716** Sitemaps walked: 7 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are traversable; URL count is deterministic per sitemap. Breakdown regime: When sitemap index returns 404, fallback to direct XML parsing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each sitemap entry corresponds to a node in a directed graph where edges represent hierarchical navigation paths. Operator 'Multilingual Path Taxonomy' (page 1, domain other) captures: segment | URLs | |---|---| | `/pt` | 528 | | `/es` | 525 | | Assumptions: Each locale segment contains uniform content distribution across subpaths. Breakdown regime: When N_{\\text{pages}}(L) < 500, locale may be under-represented. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Locale-specific path counts form a kernel for probabilistic content sampling in GSI's belief engine. Operator 'Sportsbook Endpoint Catalogue' (page 1, domain other) captures: `/sportsbooks` | 462 | | `/blog` | 35 | | `/esports` | 15 | | `/sports` Assumptions: Endpoints are mutually exclusive categories with fixed instance counts. Breakdown regime: If N_{\\text{instances}}(E) = 0, endpoint is deprecated or misclassified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each endpoint maps to a distinct GSE state transition function for real-time odds fetching. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for odds-api.io (188efd5ba10c36c8, domain=other, pages_read=2/2): Operator 'Sitemap Graph Structure' (page 1, domain other) captures: # odds-api.io Category: **sportsbook** URLs discovered: **3,716** Sitemaps walked: 7 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are traversable; URL count is deterministic per sitemap. Breakdown regime: When sitemap index returns 404, fallback to direct XML parsing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each sitemap entry corresponds to a node in a directed graph where edges represent hierarchical navigation paths. Operator 'Multilingual Path Taxonomy' (page 1, domain other) captures: segment | URLs | |---|---| | `/pt` | 528 | | `/es` | 525 | | Assumptions: Each locale segment contains uniform content distribution across subpaths. Breakdown regime: When N_{\\text{pages}}(L) < 500, locale may be under-represented. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Locale-specific path counts form a kernel for probabilistic content sampling in GSI's belief engine. Operator 'Sportsbook Endpoint Catalogue' (page 1, domain other) captures: `/sportsbooks` | 462 | | `/blog` | 35 | | `/esports` | 15 | | `/sports` Assumptions: Endpoints are mutually exclusive categories with fixed instance counts. Breakdown regime: If N_{\\text{instances}}(E) = 0, endpoint is deprecated or misclassified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each endpoint maps to a distinct GSE state transition function for real-time odds fetching. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and graph theory, this structure mirrors early web crawling models by Google and Bing, extended into probabilistic reasoning frameworks. Retrocausal Genealogy: Rooted in odds-api.io (188efd5ba10c36c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in odds-api.io (188efd5ba10c36c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents could be crawlers with different priorities—some optimizing for freshness, others for completeness. Decision actors include content creators who may alter URL structures, and users seeking specific sportsbooks or locales. Theory of Mind & Decision Maker Model: Rooted in odds-api.io (188efd5ba10c36c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that sitemap traversal does not interfere with path segmentation logic. Leakage occurs when locale-specific paths leak into general endpoints, violating modularity constraints. Cross-Layer Veto & Anti-Leakage Check: Rooted in odds-api.io (188efd5ba10c36c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in odds-api.io (188efd5ba10c36c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

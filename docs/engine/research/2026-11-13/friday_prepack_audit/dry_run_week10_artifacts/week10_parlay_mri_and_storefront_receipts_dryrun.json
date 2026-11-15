@@ -1,0 +1,100 @@
+{
+  "generated_at_utc": "2026-11-14T03:17:20.719095+00:00",
+  "mnf_positive_parlay_mri": {
+    "quotedSgpAmericanOdds": 420,
+    "studentT4FairAmericanOdds": 351,
+    "studentT4CopulaProb": 0.221515,
+    "gaussianCopulaProb": 0.221785,
+    "naiveIndependentProb": 0.125,
+    "hiddenCorrelationHoldPct": -15.19,
+    "correlationMultiplierPct": 77.21,
+    "gradeSeverity": "FAIR_OR_PLUS_EV",
+    "plainEnglishHeadline": "Rare Mispriced Ticket: +15.2% Player Edge vs Fair Value",
+    "headlineCompliance": {
+      "passed": true,
+      "violations": []
+    }
+  },
+  "commitments": {
+    "mnfShowdownReceipt": {
+      "sha256": "d811b23bfd5aa44124d4d8544bed1a39e339379e5b88e84ad7f2879595496eed",
+      "sealedBeforeKickoff": true,
+      "verified": true
+    },
+    "sunday360Receipt": {
+      "sha256": "0bbd69a4e9cc40a349194eb8490d82410f86f228e903387bbc5632858666d1a9",
+      "sealedBeforeKickoff": true,
+      "verified": true
+    }
+  },
+  "storefront_5_skus": {
+    "catalogDoor2Count": 6,
+    "door2Catalog": {
+      "TNF_SHOWDOWN_STANDARD_19": {
+        "sku": "TNF_SHOWDOWN_STANDARD_19",
+        "label": "Thursday Night Showdown Pack (Standard)",
+        "priceCents": 1900,
+        "storeCreditAligned": false,
+        "slateWindow": "TNF_SHOWDOWN"
+      },
+      "TNF_SHOWDOWN_ALIGNED_29": {
+        "sku": "TNF_SHOWDOWN_ALIGNED_29",
+        "label": "Thursday Night Showdown Pack (100% Store-Credit Alignment)",
+        "priceCents": 2900,
+        "storeCreditAligned": true,
+        "slateWindow": "TNF_SHOWDOWN"
+      },
+      "MNF_SHOWDOWN_STANDARD_19": {
+        "sku": "MNF_SHOWDOWN_STANDARD_19",
+        "label": "Monday Night Showdown Pack (Standard)",
+        "priceCents": 1900,
+        "storeCreditAligned": false,
+        "slateWindow": "MNF_SHOWDOWN"
+      },
+      "MNF_SHOWDOWN_ALIGNED_29": {
+        "sku": "MNF_SHOWDOWN_ALIGNED_29",
+        "label": "Monday Night Showdown Pack (100% Store-Credit Alignment)",
+        "priceCents": 2900,
+        "storeCreditAligned": true,
+        "slateWindow": "MNF_SHOWDOWN"
+      },
+      "SUNDAY_360_STANDARD_29": {
+        "sku": "SUNDAY_360_STANDARD_29",
+        "label": "Sunday 360\u00b0 Full-Slate Pack (Standard)",
+        "priceCents": 2900,
+        "storeCreditAligned": false,
+        "slateWindow": "SUNDAY_360"
+      },
+      "SUNDAY_360_ALIGNED_39": {
+        "sku": "SUNDAY_360_ALIGNED_39",
+        "label": "Sunday 360\u00b0 Full-Slate Pack (100% Store-Credit Alignment)",
+        "priceCents": 3900,
+        "storeCreditAligned": true,
+        "slateWindow": "SUNDAY_360"
+      }
+    },
+    "foundingMonthlyCents": 5999,
+    "foundingCap": 100,
+    "rosPlayoffsPassCents": 24900,
+    "allAccessBridgeCents": 3500,
+    "sku1_std19_outcome": "INELIGIBLE_STANDARD_TIER",
+    "sku2_aligned29_outcome": "MINTED_100_PCT_STORE_CREDIT",
+    "sku2_aligned29_mintedCents": 2900,
+    "sku2_aligned29_replayStatus": "ALREADY_MINTED_IDEMPOTENT",
+    "sku3_bridge35_quoteFirstMonthCents": 2499,
+    "sku3_bridge35_promoTopUpCents": 600,
+    "sku3_bridge35_redeemedFirstMonthCents": 2499,
+    "sku4_sunday39_mintedCents": 3900,
+    "sku4_redeemTowardSun29_cashDueCents": 0,
+    "sku4_redeemTowardSun29_remainingWalletCents": 1000,
+    "posthogEventsCaptured": [
+      "store_credit_alignment_minted",
+      "all_access_bridge_35_redeemed"
+    ]
+  },
+  "public_ui_compliance_checks": {
+    "cleanPassed": true,
+    "dirtyControlBlocked": true,
+    "dirtyViolationsCount": 8
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "book_id": "78c54ffe199aace3",
+  "source_status": "COMPLETE",
+  "title": "Positional Value in Soccer Expected League Points Added above Replacement",
+  "file_name": "Positional Value in Soccer Expected League Points Added above Replacement.pdf",
+  "sha256": "78c54ffe199aace36a383a9921529f8b2ef3479d55541f0dcaba12ec5b436787",
+  "primary_domain": "other",
+  "pages_total": 16,
+  "pages_read": 16,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 16,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bivariate Poisson regression models joint goal-scoring distributions, enabling probabilistic win expectancy and positional value attribution via Skellam-distributed score differentials. eLPAR integrates formation-aware positional ratings into a probabilistic win-draw-loss framework for expected league point contribution.",
+  "gsi_mapping": "Bayesian calibration of win probability models using lineup data; conformal prediction bounds for eLPAR estimates via posterior sampling over latent player contributions. Bayesian inference models eLPAR as a posterior distribution over player impact, conditioned on formation and replacement baseline.",
+  "gse_mapping": "State-space transition dynamics of team possession and scoring events mapped through positional influence fields; stochastic control policies for optimal lineup selection and tactical adjustments. Situational reasoning maps eLPAR to state transitions in team performance, updating belief states via formation-specific likelihoods.",
+  "primitives": [
+    {
+      "primitive_id": "bivariate_poisson_model",
+      "name": "Bivariate Poisson Goal Distribution",
+      "verbatim_quote": "In this work, we take a first step towards developing metrics that can estimate the contribution of a soccer player to his team's winning chances.",
+      "page": 1,
+      "latex": "\\begin{equation}\nP(X = x, Y = y) = e^{-(\\lambda_1 + \\lambda_2 + \\lambda_3)} \\frac{\\lambda_1^x}{x!} \\frac{\\lambda_2^y}{y!} \\sum_{k=0}^{\\min(x,y)} \\binom{x}{k} \\binom{y}{k} k! \\left( \\frac{\\lambda_3}{\\lambda_1 \\lambda_2} \\right)^k\n\\end{equation}",
+      "symbol_and_unit_ledger": "{'X': 'number of goals scored by home team (dimensionless)', 'Y': 'number of goals scored by away team (dimensionless)', '\\\\lambda_1': 'mean rate of home team goals (goals per game)', '\\\\lambda_2': 'mean rate of away team goals (goals per game)', '\\\\lambda_3': 'covariance parameter between home and away goal rates (goals² per game)'}",
+      "assumptions": "Goals follow a bivariate Poisson process with fixed mean and covariance parameters; independence of shots within a game given lineup.",
+      "breakdown_regime": "When \\( \\lambda_3 < 0 \\), negative correlation between teams' goal-scoring becomes significant.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps observed goal differentials to expected league points added above replacement (eLPAR) via Skellam regression.",
+        "source_operator": "bivariate_poisson_model",
+        "telemetry": "Observed vs predicted goal differentials from match outcomes."
+      }
+    },
+    {
+      "primitive_id": "skellam_regression",
+      "name": "Skellam Regression for Score Differential",
+      "verbatim_quote": "In particular, using data from (i) approximately 20,000 games from 11 European leagues for 8 seasons, as well as, (ii) player ratings from FIFA, we estimate through a Skellam regression model the importance of every line in winning a soccer game.",
+      "page": 1,
+      "latex": "\\begin{equation}\n\\text{ScoreDiff} \\sim \\text{Skellam}(\\mu_1, \\mu_2)\n\\end{equation}",
+      "symbol_and_unit_ledger": "{'\\\\text{ScoreDiff}': 'difference in goals scored between home and away teams (dimensionless)', '\\\\mu_1': 'expected goals for home team (goals per game)', '\\\\mu_2': 'expected goals for away team (goals per game)'}",
+      "assumptions": "Expected goals are independent and normally distributed; score differentials follow Skellam distribution.",
+      "breakdown_regime": "When \\( \\mu_1 \\approx \\mu_2 \\), variance increases, leading to higher uncertainty in outcome predictions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Estimates positional impact on expected goal difference using regression coefficients across lineups.",
+        "source_operator": "skellam_regression",
+        "telemetry": "Regression residuals indicating deviation from baseline positional expectations."
+      }
+    },
+    {
+      "primitive_id": "expected_league_points_added",
+      "name": "Expected League Points Added Above Replacement",
+      "verbatim_quote": "We consequently translate the model to expected league points added (per game) above a replacement player eLPAR.",
+      "page": 1,
+      "latex": "\\begin{equation}\n\\text{eLPAR} = \\mathbb{E}[\\text{Points}] - \\mathbb{E}[\\text{Points}_{\\text{replacement}}]\n\\end{equation}",
+      "symbol_and_unit_ledger": "{'\\\\text{eLPAR}': 'expected league points added above replacement per game (points per game)', '\\\\mathbb{E}[\\\\text{Points}]': \"expected points earned by a player's contribution (points per game)\", '\\\\mathbb{E}[\\\\text{Points}_{\\\\text{replacement}}]': 'expected points from a replacement-level player (points per game)'}",
+      "assumptions": "Replacement player contributes zero net value; point system assumes 3 for win, 1 for draw, 0 for loss.",
+      "breakdown_regime": "When \\( \\mathbb{E}[\\text{Points}] < \\mathbb{E}[\\text{Points}_{\\text{replacement}}] \\), player is below replacement level.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to basketball’s adjusted +/-, adapted for soccer’s co-linearity constraints.",
+        "source_operator": "expected_league_points_added",
+        "telemetry": "Player-specific eLPAR scores aggregated over season for valuation purposes."
+      }
+    },
+    {
+      "primitive_id": "positional_value_attribution",
+      "name": "Positional Value Attribution Framework",
+      "verbatim_quote": "Finally, we discuss how this model can be significantly enhanced using optical tracking data, but also, how it can be used to obtain positional (and consequently player) value for American football (another sports where achieving division of credit has been proven to be hard to date).",
+      "page": 1,
+      "latex": "\\begin{equation}\n\\text{Value}_{\\text{position}} = f(\\text{spatial influence}, \\text{goal contribution})\n\\end{equation}",
+      "symbol_and_unit_ledger": "{'\\\\text{Value}_{\\\\text{position}}': 'quantitative measure of positional effectiveness (points per game)', '\\\\text{spatial influence}': 'area coverage and movement efficiency (m² per game)', '\\\\text{goal contribution}': 'probability of scoring or assisting from position (dimensionless)'}",
+      "assumptions": "Spatial influence correlates with goal-scoring opportunity; positional roles are defined by movement patterns.",
+      "breakdown_regime": "When spatial influence is low but goal contribution high, position may be underappreciated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps positional influence fields to eLPAR using tracking data; enables cross-sport applicability.",
+        "source_operator": "positional_value_attribution",
+        "telemetry": "Tracking-derived spatial heatmaps aligned with eLPAR rankings."
+      }
+    },
+    {
+      "primitive_id": "78c54ffe199aace3_w1_g1",
+      "name": "Positional Value in Soccer Expected League Ch.2 Grounded Operator",
+      "verbatim_quote": "POSITIONAL VALUE IN SOCCER: EXPECTED LEAGUE POINTS ADDED ABOVE REPLACEMENT 5 Figure 2.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 78c54ffe199aace3_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "78c54ffe199aace3_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "78c54ffe199aace3_w1_g2",
+      "name": "Positional Value in Soccer Expected League Ch.2 Grounded Operator",
+      "verbatim_quote": "For our analysis we grouped the various player positions to four distinct groups, namely, goalkeeping, attack, middlefielders and defense.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 78c54ffe199aace3_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "78c54ffe199aace3_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "78c54ffe199aace3_w1_g3",
+      "name": "Positional Value in Soccer Expected League Ch.2 Grounded Operator",
+      "verbatim_quote": "Nevertheless, in our study we are only interested for the win/lose/draw probability and hence, this does not pose any limitations for our purposes.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 78c54ffe199aace3_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "78c54ffe199aace3_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "expected_league_points_above_replacement",
+      "name": "Expected League Points Above Replacement",
+      "verbatim_quote": "eLPARp describes how many league points (win=3 points, draw = 1 point, loss = 0 points) p is expected to add for his team.",
+      "page": 9,
+      "latex": "\\text{eLPAR}_p(\\phi) = 3 \\cdot \\delta P_w + 1 \\cdot \\delta P_d",
+      "symbol_and_unit_ledger": "{'eLPAR_p': 'Expected league points added by player p above replacement, dimensionless', 'φ': 'Formation configuration, categorical', 'δP_w': 'Change in win probability, dimensionless', 'δP_d': 'Change in draw probability, dimensionless'}",
+      "assumptions": "Player substitution affects win/draw/loss probabilities; formation impacts positional value; replacement player has zero eLPAR.",
+      "breakdown_regime": "When replacement player rating equals baseline, eLPAR = 0; when formation changes, eLPAR varies accordingly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "eLPAR is derived from win probability shifts under substitution, mapped to GSE state transition probabilities.",
+        "source_operator": "expected_league_points_above_replacement",
+        "telemetry": "Observed match outcomes and player substitutions."
+      }
+    },
+    {
+      "primitive_id": "positional_rating_impact",
+      "name": "Positional Rating Impact",
+      "verbatim_quote": "The replacement level rating (green vertical line) for each one of the positional lines in soccer is around 56.",
+      "page": 9,
+      "latex": "r_{\\text{replacement}, \\phi, \\lambda} = 56",
+      "symbol_and_unit_ledger": "{'r_replacement': 'Replacement player rating, dimensionless', 'φ': 'Formation configuration, categorical', 'λ': 'Line type (e.g., defense, midfield), categorical'}",
+      "assumptions": "All positional lines have consistent replacement baseline; ratings are normalized across formations.",
+      "breakdown_regime": "At replacement level, eLPAR = 0; deviations from 56 indicate value addition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Positional rating is isomorphic to expected performance deviation from baseline in GSE tactical models.",
+        "source_operator": "positional_rating_impact",
+        "telemetry": "Average player ratings per position and formation."
+      }
+    },
+    {
+      "primitive_id": "formation_aware_value",
+      "name": "Formation-Aware Value Estimation",
+      "verbatim_quote": "Therefore, in order to estimate the expected points to be added by inserting player p in the lineup we have to consider the formation used by the team.",
+      "page": 9,
+      "latex": "\\text{eLPAR}_p(\\phi) = f(r_p, \\phi, r_{\\text{replacement}, \\phi, \\lambda})",
+      "symbol_and_unit_ledger": "{'f': 'Function mapping player and formation to expected points', 'r_p': 'Player rating, dimensionless', 'φ': 'Formation configuration, categorical', 'r_replacement': 'Replacement rating, dimensionless'}",
+      "assumptions": "Formation influences positional effectiveness; value estimation depends on team structure.",
+      "breakdown_regime": "Different formations yield different eLPAR values for same player due to positional role variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Formation-aware value is derived from tactical kernel in GSE, incorporating positional constraints.",
+        "source_operator": "formation_aware_value",
+        "telemetry": "Match-level formation and player usage data."
+      }
+    },
+    {
+      "primitive_id": "player_positional_contribution",
+      "name": "Player Positional Contribution",
+      "verbatim_quote": "10 KONSTANTINOS PELECHRINIS, WAYNE WINSTON combination of position and formation would have had their own coefficients3.",
+      "page": 10,
+      "latex": "\\text{eLPAR}_p(\\phi) = 3 \\cdot \\delta P_w + 1 \\cdot \\delta P_d",
+      "symbol_and_unit_ledger": "{'eLPAR_p': 'Expected league points added by player p, dimensionless', 'φ': 'Formation configuration, categorical', 'δP_w': 'Change in win probability, dimensionless', 'δP_d': 'Change in draw probability, dimensionless'}",
+      "assumptions": "Win/draw/loss probabilities are modeled linearly; player impact is additive across outcomes.",
+      "breakdown_regime": "When δP_w = δP_d = 0, eLPAR = 0; positive changes increase expected points.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Player contribution is computed as a weighted sum of outcome probability shifts in GSE probabilistic state space.",
+        "source_operator": "player_positional_contribution",
+        "telemetry": "Probability shift metrics from substitution events."
+      }
+    },
+    {
+      "primitive_id": "positional_premium_discount",
+      "name": "Positional Premium Discount",
+      "verbatim_quote": "Rule of Thumb 3.1: Positional Premiums Buy bulk expected league points at a discount through defense and pay a smaller premium for an average goalkeeper We further examine some real budgets from team.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'eLPAR': 'Expected League Points Added above Replacement (dimensionless)', 'FIFA_rating': 'Player skill rating (unitless)', 'Wage': 'Annual compensation in euros (€)', 'discount_factor': 'Ratio of premium to baseline cost (dimensionless)'}",
+      "assumptions": "Players are valued based on marginal contribution to league points; wage premiums reflect market demand for positional roles.",
+      "breakdown_regime": "When positional roles are optimized for bulk point acquisition, premium discounts emerge for defensive positions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps wage-to-performance ratios into strategic decision-making kernels within GSE's tactical state space.",
+        "source_operator": "positional_premium_discount",
+        "telemetry": "Observed wage differentials between attackers and defenders relative to eLPAR gains."
+      }
+    },
+    {
+      "primitive_id": "budget_allocation_optimization",
+      "name": "Budget Allocation Optimization",
+      "verbatim_quote": "A club with a fixed budget B can distribute it in such a way that maximizes the expected league points bought (even under positional constraints).",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'Fixed club budget in euros (€)', 'eLPAR_total': 'Total expected league points acquired (dimensionless)', 'constraint_set': 'Set of positional constraints (e.g., 4-4-2, 4-3-3)', 'allocation_vector': 'Vector of wage distribution across positions (€)'}",
+      "assumptions": "Clubs operate under bounded rationality; optimization is subject to positional and financial constraints.",
+      "breakdown_regime": "Optimal allocation occurs when marginal eLPAR per euro spent is equalized across all positions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphs budget allocation problem to a constrained convex optimization in GSI's Bayesian belief space.",
+        "source_operator": "budget_allocation_optimization",
+        "telemetry": "Actual vs. predicted eLPAR per euro spent across clubs with varying budgets."
+      }
+    },
+    {
+      "primitive_id": "market_value_investment",
+      "name": "Market Value Investment",
+      "verbatim_quote": "The premium that clubs are willing to pay an attacker over a defender for the same amount of league points can be seen as an investment.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'premium': 'Wage differential between attacker and defender (€)', 'investment_return': 'Expected eLPAR per euro invested (dimensionless/€)', 'ROI_threshold': 'Minimum acceptable return on investment (dimensionless)'}",
+      "assumptions": "Investment decisions are driven by expected returns rather than absolute performance metrics.",
+      "breakdown_regime": "Premiums exceed ROI threshold when attackers generate disproportionately higher fan engagement and revenue.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives investment kernel from eLPAR and wage data to inform GSE's resource planning logic.",
+        "source_operator": "market_value_investment",
+        "telemetry": "Fan attendance, jersey sales, and sponsorship revenue correlated with player position and eLPAR."
+      }
+    },
+    {
+      "primitive_id": "performance_discount_model",
+      "name": "Performance Discount Model",
+      "verbatim_quote": "This will eventually get us about 0.028 expected league points per 90 minutes (a goalkeeper with a 74 FIFA rating and a defender with a 73 FIFA rating).",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'eLPAR_90min': 'Expected league points per 90 minutes (dimensionless)', 'FIFA_rating_gk': 'Goalkeeper FIFA rating (unitless)', 'FIFA_rating_def': 'Defender FIFA rating (unitless)', 'discount_rate': 'Reduction in eLPAR due to positional role (dimensionless)'}",
+      "assumptions": "Performance degradation is modeled as a function of positional role and skill level.",
+      "breakdown_regime": "Discount rate increases with decreasing skill level in non-attacking roles.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps performance discount into GSI's probabilistic belief update mechanism for tactical predictions.",
+        "source_operator": "performance_discount_model",
+        "telemetry": "Observed eLPAR rates for goalkeepers and defenders across different FIFA rating tiers."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "78c54ffe199aace3_t0",
+      "think": "Chapter 1 introduces a foundational framework for quantifying soccer player value through expected league points added above replacement (eLPAR). It begins by acknowledging soccer’s popularity and lack of quantitative rigor, contrasting it with sports like basketball where metrics such as adjusted +/- provide clear player attribution. The core innovation lies in modeling goal-scoring as a bivariate Poisson process, which accounts for both teams’ scoring tendencies and their interdependence. This is followed by a Skellam regression approach to estimate score differentials, allowing for the derivation of win probabilities from starting lineups. These probabilities are then translated into eLPAR, offering a metric for evaluating individual player contributions. The paper also highlights the underpricing of defensive line players in the market, suggesting that current valuation methods fail to capture positional nuances. The framework is further extended to incorporate optical tracking data, opening avenues for future enhancements and cross-sport applications. The mathematical rigor ensures that the model remains grounded in statistical principles while addressing key challenges in soccer analytics. Window 1 Synthesis: Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on Poisson processes for sports scoring, builds upon prior attempts to apply Skellam distributions to soccer outcomes, extending earlier models of win probability and player impact. Retrocausal Genealogy (Window 1): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models assume rational decision-making by coaches selecting lineups based on maximizing expected points, while players act according to strategic positioning and role-specific responsibilities. Theory of Mind (Window 1): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents collinearity issues inherent in soccer by avoiding direct attribution of individual actions to outcomes; instead uses aggregate positional effects and probabilistic modeling to isolate player impact. Cross-Layer Veto (Window 1): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "78c54ffe199aace3_t1",
+      "think": "Window 2 Synthesis: Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "78c54ffe199aace3_t2",
+      "think": "Chapter 3 introduces Expected League Points Above Replacement (eLPAR) as a metric to quantify a player’s impact relative to a replacement-level substitute. It begins by defining eLPAR in terms of win, draw, and loss probabilities, which are estimated through substitution effects. The formulation assumes that a player's value is not static but depends on both their rating and the formation they play in. This is critical because a defender in a 5-3-2 formation contributes differently than in a 3-5-2. The model uses a two-step process: first, calculating the change in line rating upon substitution; second, applying a win probability model to derive the expected point change. This approach allows for a formation-average assessment of positional value, capturing how tactical structure modulates individual performance. The implications extend beyond pure statistics—eLPAR enables strategic decision-making for team managers and reveals market inefficiencies in player valuation. For instance, defenders may be undervalued despite high eLPAR, while goalkeepers, though low-paid, are overvalued in terms of expected contribution. The derivation thus bridges empirical data with tactical theory, forming a foundational lens for analyzing positional dynamics in soccer. Window 3 Synthesis: Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on player evaluation and formation modeling, this chapter builds on prior studies linking tactical roles to match outcomes, extending earlier frameworks to incorporate probabilistic forecasting. Retrocausal Genealogy (Window 3): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Players, coaches, and managers must model opponent strategies and internal team dynamics to optimize eLPAR. Coaches weigh positional value against formation constraints, while agents assess market inefficiencies through eLPAR comparisons. Theory of Mind (Window 3): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that eLPAR does not conflate positional rating with formation effect; leakage is mitigated by conditioning on formation-specific baselines. Cross-Layer Veto (Window 3): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "78c54ffe199aace3_t3",
+      "think": "Chapter 4 explores the integration of positional value in soccer through the lens of expected league points added above replacement (eLPAR). It establishes that while clubs aim to win, they also seek monetary returns, leading to strategic budget allocation decisions. The chapter introduces the concept of positional premiums—where attackers command higher wages despite contributing similarly to league points as defenders. This is contextualized through real-world examples like FC Barcelona and Manchester United, where wage structures reflect these premiums. The core mathematical framework hinges on translating FIFA ratings into eLPAR, which serves as a proxy for performance impact. The analysis reveals that while attackers may be fewer in number, they drive disproportionate commercial success, justifying their premium. The chapter concludes by emphasizing that maximizing eLPAR under budgetary constraints is a key strategic objective. This leads to a deeper understanding of how tactical positioning and resource allocation interplay in modern soccer economics. The derivation of eLPAR from player ratings and wages allows for a quantitative approach to evaluating positional importance, which is essential for both GSI’s probabilistic modeling and GSE’s tactical simulations. Window 4 Synthesis: Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 2000s sports analytics literature on expected goals and player valuation, this chapter builds upon foundational work in soccer data science and econometrics, particularly in modeling player impact through game outcomes. Retrocausal Genealogy (Window 4): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents (clubs) optimize under dual objectives: winning and profit maximization. Coaches and front offices must balance tactical effectiveness with commercial appeal, especially when selecting players who offer high eLPAR but also strong brand value. Theory of Mind (Window 4): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that eLPAR does not become redundant with traditional metrics like goals or assists. Leakage veto prevents overfitting by ensuring that wage premiums do not solely reflect market sentiment but also actual performance impact. Cross-Layer Veto (Window 4): Rooted in Positional Value in Soccer Expected League Points Added above Replacement (78c54ffe199aace3, 16/16 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

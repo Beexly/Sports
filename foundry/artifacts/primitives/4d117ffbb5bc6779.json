@@ -1,0 +1,78 @@
+{
+  "book_id": "4d117ffbb5bc6779",
+  "source_status": "COMPLETE",
+  "title": "MySportsFeeds-mysportsfeeds-node",
+  "file_name": "MySportsFeeds-mysportsfeeds-node.md",
+  "sha256": "4d117ffbb5bc67795606f27137df88bfb882a2ec58f2ee179db86d39a86033f3",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "MySportsFeeds API wrapper encodes multi-league sports data via RESTful parameters; GSE requires commercial-grade data feeds with conformal validity. Universal Lens: Rooted in MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic event likelihoods from structured feeds using Bayesian belief updates over temporal sequences of game states. GSI Mapping: Rooted in MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE evaluates situational constraints through state transitions governed by data licensing regimes and feature utility thresholds. GSE Mapping: Rooted in MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "api_data_access",
+      "name": "API Data Access Control",
+      "verbatim_quote": "Constraints - **License: MIT** (wrapper) — but the *data* is a paid/donated commercial API.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{w}': 'dimensionless wrapper license type', 'L_{d}': 'dimensionless data license type', 'C': 'commercial usage flag'}",
+      "assumptions": "Wrapper and data licenses are independent; commercial usage requires paid data access.",
+      "breakdown_regime": "When L_d = non-commercial AND C = true, access fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "API access control maps to GSI's conditional probability space where P(data|license) determines inference reliability.",
+        "source_operator": "api_data_access",
+        "telemetry": "Access denial rate under commercial flag"
+      }
+    },
+    {
+      "primitive_id": "account_inventory",
+      "name": "Account Inventory State",
+      "verbatim_quote": "- Garrett already holds an account on this service (2026-09-18 API-account inventory: baxley.garrett@gmail.com on MySportsFeeds).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'account identifier', 'T': 'timestamp of registration', 'S': 'status of account (active/inactive)'}",
+      "assumptions": "Account exists and is registered under known credentials.",
+      "breakdown_regime": "When S = inactive or T < current date, account is stale.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Account state is a derived kernel in GSE's producer registry, determining eligibility for data ingestion.",
+        "source_operator": "account_inventory",
+        "telemetry": "Active account count per user in GSE registry"
+      }
+    },
+    {
+      "primitive_id": "feed_semantics",
+      "name": "Feed Semantic Versioning",
+      "verbatim_quote": "Vision The official Node.js wrapper for the MySportsFeeds sports-data API: developer-friendly multi-league feeds (NFL, NBA, MLB, NHL) with league/season/feed/params as the only calling convention.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'feed version identifier', 'P': 'parameter set', 'L': 'league identifier'}",
+      "assumptions": "Semantic consistency across versions ensures deterministic data interpretation.",
+      "breakdown_regime": "When F changes without backward compatibility, feed parsing fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feed semantics map to GSE’s parameterized state transition functions, where P and L define valid input domains.",
+        "source_operator": "feed_semantics",
+        "telemetry": "Version mismatch frequency in data pipeline logs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4d117ffbb5bc6779_t0",
+      "think": "The MySportsFeeds wrapper presents a dual-license structure: MIT for code, proprietary for data. This creates a fundamental constraint for GSE, which operates under commercial constraints. The API's data access is gated by a commercial tier, rendering free-tier data unusable for GSE's predictive models. The account inventory confirms ownership but does not imply active usage. Feed versioning introduces risk of semantic drift, undermining reproducibility. These primitives form a logical framework for evaluating data viability against GSE's requirements. The core failure mode arises when GSE attempts to integrate non-commercial data into a commercial system, violating licensing terms and introducing legal and operational risks.\n\nDeep epistemic analysis for MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779, domain=other, pages_read=1/1): Operator 'API Data Access Control' (page 1, domain other) captures: Constraints - **License: MIT** (wrapper) — but the *data* is a paid/donated commercial API. Assumptions: Wrapper and data licenses are independent; commercial usage requires paid data access. Breakdown regime: When L_d = non-commercial AND C = true, access fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): API access control maps to GSI's conditional probability space where P(data|license) determines inference reliability. Operator 'Account Inventory State' (page 1, domain other) captures: - Garrett already holds an account on this service (2026-09-18 API-account inventory: baxley.garrett@gmail.com on MySportsFeeds). Assumptions: Account exists and is registered under known credentials. Breakdown regime: When S = inactive or T < current date, account is stale. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Account state is a derived kernel in GSE's producer registry, determining eligibility for data ingestion. Operator 'Feed Semantic Versioning' (page 1, domain other) captures: Vision The official Node.js wrapper for the MySportsFeeds sports-data API: developer-friendly multi-league feeds (NFL, NBA, MLB, NHL) with league/season/feed/params as the only calling convention. Assumptions: Semantic consistency across versions ensures deterministic data interpretation. Breakdown regime: When F changes without backward compatibility, feed parsing fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Feed semantics map to GSE’s parameterized state transition functions, where P and L define valid input domains. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779, domain=other, pages_read=1/1): Operator 'API Data Access Control' (page 1, domain other) captures: Constraints - **License: MIT** (wrapper) — but the *data* is a paid/donated commercial API. Assumptions: Wrapper and data licenses are independent; commercial usage requires paid data access. Breakdown regime: When L_d = non-commercial AND C = true, access fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): API access control maps to GSI's conditional probability space where P(data|license) determines inference reliability. Operator 'Account Inventory State' (page 1, domain other) captures: - Garrett already holds an account on this service (2026-09-18 API-account inventory: baxley.garrett@gmail.com on MySportsFeeds). Assumptions: Account exists and is registered under known credentials. Breakdown regime: When S = inactive or T < current date, account is stale. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Account state is a derived kernel in GSE's producer registry, determining eligibility for data ingestion. Operator 'Feed Semantic Versioning' (page 1, domain other) captures: Vision The official Node.js wrapper for the MySportsFeeds sports-data API: developer-friendly multi-league feeds (NFL, NBA, MLB, NHL) with league/season/feed/params as the only calling convention. Assumptions: Semantic consistency across versions ensures deterministic data interpretation. Breakdown regime: When F changes without backward compatibility, feed parsing fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Feed semantics map to GSE’s parameterized state transition functions, where P and L define valid input domains. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2010s API design patterns, this structure reflects a shift from open-source to paywalled data ecosystems, mirroring broader trends in digital content monetization. Retrocausal Genealogy: Rooted in MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include MySportsFeeds' commercial interests and GSE's need for scalable, compliant data. Decision actors must balance cost-efficiency with regulatory compliance. Theory of Mind & Decision Maker Model: Rooted in MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes integration if data license conflicts with GSE's commercial model. Leakage veto applies when free-tier data is misused in production, risking legal exposure. Cross-Layer Veto & Anti-Leakage Check: Rooted in MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in MySportsFeeds-mysportsfeeds-node (4d117ffbb5bc6779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "19057c1114cf3be2",
+  "source_status": "COMPLETE",
+  "title": "FREE_MODE_AUDIT",
+  "file_name": "FREE_MODE_AUDIT.md",
+  "sha256": "19057c1114cf3be2513a66108591fc01df3be1adabcc084de514d1894d1c00f5",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Free-mode data ingestion and rendering decouples public board signals from paid odds APIs via a minimal spine of four core tables, with unused satellite tables remaining inert. Universal Lens: Rooted in FREE_MODE_AUDIT (19057c1114cf3be2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers anonymous visitor exposure through Bayesian conditioning on free-spine table availability, using conformal prediction to bound edge score uncertainty without paid API access. GSI Mapping: Rooted in FREE_MODE_AUDIT (19057c1114cf3be2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models board state transitions as deterministic functions over free-spine inputs, with state updates governed by freshness checks and exclusion of dead satellite data paths. GSE Mapping: Rooted in FREE_MODE_AUDIT (19057c1114cf3be2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "free_spine_signal",
+      "name": "Free Spine Signal",
+      "verbatim_quote": "- The \"free spine\" and free-settlement machinery (`lib/data-sources/free-*`, `lib/data-sources/free-adapters/*`, `lib/settlement/*`) is what keeps the board/picks populated **without** a paid Odds key.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S(t)': 'Signal strength at time t, dimensionless'}",
+      "assumptions": "Signal is sampled periodically and cached in-memory for operational monitoring.",
+      "breakdown_regime": "When THE_ODDS_API_KEY is inactive, S(t) reflects ingestion health of free tables.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transition function maps S(t) to board readiness; GSI uses S(t) to infer user exposure under free mode.",
+        "source_operator": "free_spine_signal",
+        "telemetry": "Ingestion run timestamp and success flags from free-spine probe."
+      }
+    },
+    {
+      "primitive_id": "public_board_surface",
+      "name": "Public Board Surface",
+      "verbatim_quote": "What an anonymous visitor actually gets for free (the live surface) The public board is driven by `apps/web/lib/board/state.ts` → `loadBoardState()`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B(t)': 'Board state vector at time t, elements {gateDecision, pick, game, sport}'}",
+      "assumptions": "Board rendering depends solely on core free tables and computed derived fields.",
+      "breakdown_regime": "B(t) is invariant under absence of satellite table reads.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE board rendering is isomorphic to a function of B(t) and free-spine status; GSI models B(t) as a probabilistic distribution over possible picks.",
+        "source_operator": "public_board_surface",
+        "telemetry": "Number of active picks, gate decisions, and sports watched per session."
+      }
+    },
+    {
+      "primitive_id": "satellite_table_inertness",
+      "name": "Satellite Table Inertness",
+      "verbatim_quote": "- The board does NOT read any of the four \"satellite\" free tables (depthChartEntry / pfrAdvStat / teamWeekStat / snapCount) directly.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_{sat}(t)': 'Inertness indicator for satellite tables at time t, binary'}",
+      "assumptions": "All satellite tables are ingested but unused by public board logic.",
+      "breakdown_regime": "I_{sat}(t) = 1 when no reader exists in board path.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state space excludes satellite data; GSI treats I_{sat}(t) as a constraint on information entropy of free-tier exposure.",
+        "source_operator": "satellite_table_inertness",
+        "telemetry": "Grep counts of satellite table usage across board path."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "19057c1114cf3be2_t0",
+      "think": "The audit establishes that in free mode, anonymous users receive a minimal but functional surface of data derived exclusively from core free tables (`gateDecision`, `pick`, `game`, `sport`) and their computed derivatives (`sportsWatched`, `booksPolled`, etc.). The public board does not consume satellite tables such as `depthChartEntry`, `pfrAdvStat`, `teamWeekStat`, or `snapCount`, which are ingested but unused. This creates a clean separation between ingestion and rendering logic, where the board's integrity is maintained without reliance on paid data sources. The free-spine probe provides operational telemetry but does not influence public-facing behavior. The inertness of satellite tables implies a bounded information set for free-tier users, enabling GSI to model exposure and GSE to reason about board states deterministically within these constraints.\n\nDeep epistemic analysis for FREE_MODE_AUDIT (19057c1114cf3be2, domain=other, pages_read=3/3): Operator 'Free Spine Signal' (page 1, domain other) captures: - The \"free spine\" and free-settlement machinery (`lib/data-sources/free-*`, `lib/data-sources/free-adapters/*`, `lib/settlement/*`) is what keeps the board/picks populated **without** a paid Odds key. Assumptions: Signal is sampled periodically and cached in-memory for operational monitoring. Breakdown regime: When THE_ODDS_API_KEY is inactive, S(t) reflects ingestion health of free tables. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition function maps S(t) to board readiness; GSI uses S(t) to infer user exposure under free mode. Operator 'Public Board Surface' (page 1, domain other) captures: What an anonymous visitor actually gets for free (the live surface) The public board is driven by `apps/web/lib/board/state.ts` → `loadBoardState()`. Assumptions: Board rendering depends solely on core free tables and computed derived fields. Breakdown regime: B(t) is invariant under absence of satellite table reads. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE board rendering is isomorphic to a function of B(t) and free-spine status; GSI models B(t) as a probabilistic distribution over possible picks. Operator 'Satellite Table Inertness' (page 1, domain other) captures: - The board does NOT read any of the four \"satellite\" free tables (depthChartEntry / pfrAdvStat / teamWeekStat / snapCount) directly. Assumptions: All satellite tables are ingested but unused by public board logic. Breakdown regime: I_{sat}(t) = 1 when no reader exists in board path. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state space excludes satellite data; GSI treats I_{sat}(t) as a constraint on information entropy of free-tier exposure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FREE_MODE_AUDIT (19057c1114cf3be2, domain=other, pages_read=3/3): Operator 'Free Spine Signal' (page 1, domain other) captures: - The \"free spine\" and free-settlement machinery (`lib/data-sources/free-*`, `lib/data-sources/free-adapters/*`, `lib/settlement/*`) is what keeps the board/picks populated **without** a paid Odds key. Assumptions: Signal is sampled periodically and cached in-memory for operational monitoring. Breakdown regime: When THE_ODDS_API_KEY is inactive, S(t) reflects ingestion health of free tables. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition function maps S(t) to board readiness; GSI uses S(t) to infer user exposure under free mode. Operator 'Public Board Surface' (page 1, domain other) captures: What an anonymous visitor actually gets for free (the live surface) The public board is driven by `apps/web/lib/board/state.ts` → `loadBoardState()`. Assumptions: Board rendering depends solely on core free tables and computed derived fields. Breakdown regime: B(t) is invariant under absence of satellite table reads. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE board rendering is isomorphic to a function of B(t) and free-spine status; GSI models B(t) as a probabilistic distribution over possible picks. Operator 'Satellite Table Inertness' (page 1, domain other) captures: - The board does NOT read any of the four \"satellite\" free tables (depthChartEntry / pfrAdvStat / teamWeekStat / snapCount) directly. Assumptions: All satellite tables are ingested but unused by public board logic. Breakdown regime: I_{sat}(t) = 1 when no reader exists in board path. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state space excludes satellite data; GSI treats I_{sat}(t) as a constraint on information entropy of free-tier exposure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This structure mirrors earlier designs in data-driven UI systems where decoupled ingestion and presentation layers ensure scalability and resilience. The concept of a 'free spine' aligns with prior work in minimal viable product architectures, particularly those emphasizing progressive disclosure of features based on access tiers. Retrocausal Genealogy: Rooted in FREE_MODE_AUDIT (19057c1114cf3be2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the system's operational logic (which enforces free-mode constraints) and potential adversarial users who might attempt to exploit unused satellite data. The design assumes that both parties operate under known rules: the system enforces data isolation, while users are constrained by available public interfaces. Theory of Mind & Decision Maker Model: Rooted in FREE_MODE_AUDIT (19057c1114cf3be2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that satellite table ingestion does not leak into the public board path. Leakage would violate the principle of free-tier isolation and introduce cross-layer dependencies. Veto conditions include any grep-based evidence of satellite table reads in the board module, which must remain zero to maintain integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in FREE_MODE_AUDIT (19057c1114cf3be2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

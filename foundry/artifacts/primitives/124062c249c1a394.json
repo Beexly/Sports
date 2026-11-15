@@ -1,0 +1,78 @@
+{
+  "book_id": "124062c249c1a394",
+  "source_status": "COMPLETE",
+  "title": "automation-architecture",
+  "file_name": "automation-architecture.md",
+  "sha256": "124062c249c1a394bde3708d034af5190f9aeae847ae729cbd55aa5b1076e563",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Self-hosted n8n on Coolify enables autonomous, cost-optimal automation of social media, content, and operational workflows with 400+ integrations and fair-code licensing. Universal Lens: Rooted in automation-architecture (124062c249c1a394), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers Bayesian posterior distributions over automated content scheduling and health monitoring using n8n's workflow engine as a probabilistic inference layer. GSI Mapping: Rooted in automation-architecture (124062c249c1a394), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions between pick-published events, auto-drafts, and Slack approvals through n8n's declarative workflow orchestration kernel. GSE Mapping: Rooted in automation-architecture (124062c249c1a394), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "automation_stack",
+      "name": "Automation Stack Operator",
+      "verbatim_quote": "# Galaxy Sports Edge Automation Architecture **Decision: self-hosted n8n on Coolify.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'n8n': 'workflow engine (dimensionless)', 'coolify': 'platform deployment abstraction (dimensionless)', 'vps_cost': '$5/month'}",
+      "assumptions": "n8n operates with fair-code license; Coolify provides containerized deployment; VPS supports all required integrations.",
+      "breakdown_regime": "When external API rate limits or platform outages occur, fallback to local cron jobs or manual override.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "n8n's workflow graph maps to GSI's belief propagation over event sequences; Coolify's deployment model mirrors GSE's state transition semantics.",
+        "source_operator": "automation_stack",
+        "telemetry": "Monthly cost savings, uptime percentage, number of active workflows."
+      }
+    },
+    {
+      "primitive_id": "content_scheduling",
+      "name": "Content Scheduling Kernel",
+      "verbatim_quote": "Here's why three of them win and six lose: | Tool | Verdict | Reasoning | |---|---|---| | **n8n** | ✅ Core | 400+ integrations, AI-native (LangChain), fair-code license, runs anywhere, has a real UI.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'cron_schedule': 'time-based trigger (seconds)', 'anthropic_draft': 'AI-generated content (bytes)', 'buffer_api': 'social media posting interface (API calls)'}",
+      "assumptions": "Anthropic node generates compliant content under 280 characters; Buffer API handles cross-platform publishing.",
+      "breakdown_regime": "When Anthropic fails, fallback to static template generation or human curation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Content scheduling is derived from GSE's pick-published event stream and transformed into temporal workflow states.",
+        "source_operator": "content_scheduling",
+        "telemetry": "Number of scheduled posts, approval rates, average time-to-publish."
+      }
+    },
+    {
+      "primitive_id": "health_monitoring",
+      "name": "Health Monitoring Module",
+      "verbatim_quote": "--## Week-1 deploy plan ### Day 1 — Provision 1.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'health_check_interval': '5 minutes', 'api_endpoint': 'galaxysportsedge.com/api/health', 'slack_alert': 'notification channel (events)'}",
+      "assumptions": "API endpoint returns valid HTTP status codes; Slack alerts are triggered on failure.",
+      "breakdown_regime": "If endpoint becomes unreachable, system escalates to manual intervention or alternate monitoring.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Health checks derive from GSE's internal state transitions and feed into GSI's anomaly detection framework.",
+        "source_operator": "health_monitoring",
+        "telemetry": "Uptime percentage, alert frequency, response latency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "124062c249c1a394_t0",
+      "think": "The core automation architecture is defined by the n8n workflow engine operating atop a self-hosted Coolify platform. The stack replaces commercial SaaS tools like Zapier and Buffer with a modular, open-source solution that reduces monthly cost from ~$62 to ~$5 while maintaining full data ownership. The system's dualism lies in its ability to act as both a content scheduler (via Anthropic-drafted posts) and a health monitor (via cron-triggered API checks). Failure modes include API rate limits, platform downtime, or misconfigured workflows. These are mitigated through redundancy, fallbacks, and telemetry-driven alerting. The mathematical structure is a directed acyclic graph of events and actions, where each node represents a deterministic transformation of input to output, governed by conditional logic and time triggers.\n\nDeep epistemic analysis for automation-architecture (124062c249c1a394, domain=other, pages_read=3/3): Operator 'Automation Stack Operator' (page 1, domain other) captures: # Galaxy Sports Edge Automation Architecture **Decision: self-hosted n8n on Coolify. Assumptions: n8n operates with fair-code license; Coolify provides containerized deployment; VPS supports all required integrations. Breakdown regime: When external API rate limits or platform outages occur, fallback to local cron jobs or manual override. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): n8n's workflow graph maps to GSI's belief propagation over event sequences; Coolify's deployment model mirrors GSE's state transition semantics. Operator 'Content Scheduling Kernel' (page 1, domain other) captures: Here's why three of them win and six lose: | Tool | Verdict | Reasoning | |---|---|---| | **n8n** | ✅ Core | 400+ integrations, AI-native (LangChain), fair-code license, runs anywhere, has a real UI. Assumptions: Anthropic node generates compliant content under 280 characters; Buffer API handles cross-platform publishing. Breakdown regime: When Anthropic fails, fallback to static template generation or human curation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Content scheduling is derived from GSE's pick-published event stream and transformed into temporal workflow states. Operator 'Health Monitoring Module' (page 2, domain other) captures: --## Week-1 deploy plan ### Day 1 — Provision 1. Assumptions: API endpoint returns valid HTTP status codes; Slack alerts are triggered on failure. Breakdown regime: If endpoint becomes unreachable, system escalates to manual intervention or alternate monitoring. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Health checks derive from GSE's internal state transitions and feed into GSI's anomaly detection framework. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for automation-architecture (124062c249c1a394, domain=other, pages_read=3/3): Operator 'Automation Stack Operator' (page 1, domain other) captures: # Galaxy Sports Edge Automation Architecture **Decision: self-hosted n8n on Coolify. Assumptions: n8n operates with fair-code license; Coolify provides containerized deployment; VPS supports all required integrations. Breakdown regime: When external API rate limits or platform outages occur, fallback to local cron jobs or manual override. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): n8n's workflow graph maps to GSI's belief propagation over event sequences; Coolify's deployment model mirrors GSE's state transition semantics. Operator 'Content Scheduling Kernel' (page 1, domain other) captures: Here's why three of them win and six lose: | Tool | Verdict | Reasoning | |---|---|---| | **n8n** | ✅ Core | 400+ integrations, AI-native (LangChain), fair-code license, runs anywhere, has a real UI. Assumptions: Anthropic node generates compliant content under 280 characters; Buffer API handles cross-platform publishing. Breakdown regime: When Anthropic fails, fallback to static template generation or human curation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Content scheduling is derived from GSE's pick-published event stream and transformed into temporal workflow states. Operator 'Health Monitoring Module' (page 2, domain other) captures: --## Week-1 deploy plan ### Day 1 — Provision 1. Assumptions: API endpoint returns valid HTTP status codes; Slack alerts are triggered on failure. Breakdown regime: If endpoint becomes unreachable, system escalates to manual intervention or alternate monitoring. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Health checks derive from GSE's internal state transitions and feed into GSI's anomaly detection framework. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architecture builds upon decades of workflow automation paradigms, from Unix pipes to modern low-code platforms. It inherits principles from distributed systems theory, particularly fault tolerance and state machine design, and applies them to content operations. Retrocausal Genealogy: Rooted in automation-architecture (124062c249c1a394), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include legacy SaaS vendors seeking market dominance, and potential competitors offering proprietary solutions. Decision actors are the Galaxy Sports Edge team and their users—both benefit from reduced vendor lock-in and increased control over data and processes. Theory of Mind & Decision Maker Model: Rooted in automation-architecture (124062c249c1a394), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between n8n’s workflow logic and external tools like Bridgy or postwill, which introduce unnecessary complexity or incorrect use cases. Leakage occurs when workflows depend on volatile third-party services rather than stable internal APIs. Cross-Layer Veto & Anti-Leakage Check: Rooted in automation-architecture (124062c249c1a394), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

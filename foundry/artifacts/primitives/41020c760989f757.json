@@ -1,0 +1,78 @@
+{
+  "book_id": "41020c760989f757",
+  "source_status": "COMPLETE",
+  "title": "path_b_sameas_experiment",
+  "file_name": "path_b_sameas_experiment.md",
+  "sha256": "41020c760989f7575be7bf68bf8faf792bc825a98ff9efa40f6c3888ecde4850",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural same-as edges in GraphRAG are blocked to prevent identity-merge hallucinations, enabling precise entity resolution via statistical and consistent edge validation. Universal Lens: Rooted in path_b_sameas_experiment (41020c760989f757), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on entity mentions using GraphRAG pre-filtering to compute posterior probabilities of identity merges, with conformal prediction bounds on false merge rates. GSI Mapping: Rooted in path_b_sameas_experiment (41020c760989f757), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine applies state transitions on entity graphs where structural edges are pruned, allowing statistical and consistent edges to guide realignment decisions. GSE Mapping: Rooted in path_b_sameas_experiment (41020c760989f757), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "structural_edge_block",
+      "name": "Structural Edge Blocking",
+      "verbatim_quote": "# Path B — CRC as GraphRAG same-as pre-filter ## Hypothesis Structural same-as edges should be **blocked from retrieval**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Same-as edges are structurally derived and may introduce hallucinations in identity merging.",
+      "breakdown_regime": "When structural edges exceed statistical consistency thresholds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian identity resolution by filtering out unreliable structural links before probabilistic inference.",
+        "source_operator": "structural_edge_block",
+        "telemetry": "Precision@identity and false merge rate compared to string-equality baseline."
+      }
+    },
+    {
+      "primitive_id": "policy_edge_validation",
+      "name": "Edge Validation Policy",
+      "verbatim_quote": "Policy: structural → block; statistical → allow + realign flag; consistent → allow 4.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Edges are classified into structural, statistical, or consistent categories based on reliability.",
+      "breakdown_regime": "At decision boundary between edge types during graph traversal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives GSE state transition rules from edge type classification to optimize entity alignment.",
+        "source_operator": "policy_edge_validation",
+        "telemetry": "False merge rate and precision@identity metrics under policy enforcement."
+      }
+    },
+    {
+      "primitive_id": "graph_entity_resolution",
+      "name": "Graph-Based Entity Resolution",
+      "verbatim_quote": "Graph: nodes = entity mentions; edges = proposed same-as 2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Entity mentions form nodes; same-as relationships form directed edges in a knowledge graph.",
+      "breakdown_regime": "Upon graph construction and edge validation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically maps to GSI’s entity resolution framework through node-edge semantics.",
+        "source_operator": "graph_entity_resolution",
+        "telemetry": "Ontology hygiene report and merge accuracy against baseline."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "41020c760989f757_t0",
+      "think": "The core operator 'structural_edge_block' operates on a directed graph where nodes represent entity mentions and edges denote proposed same-as relationships. By blocking structural edges, the system prevents erroneous identity merges that arise from spurious syntactic matches. This is modeled as a constraint on the edge-weighted adjacency matrix, where structural edges are set to zero prior to inference. The policy 'policy_edge_validation' acts as a ternary classifier over edge types, assigning actions: block, allow with flag, or allow. These actions define a conditional probability distribution over valid entity identities. The resulting graph is then processed by 'graph_entity_resolution', which computes a stable partition of entities. The failure mode occurs when structural edges are not properly filtered, leading to high false merge rates. The dual nature of this system lies in its ability to balance between deterministic blocking and probabilistic validation, ensuring robustness against hallucination while maintaining semantic fidelity.\n\nDeep epistemic analysis for path_b_sameas_experiment (41020c760989f757, domain=other, pages_read=1/1): Operator 'Structural Edge Blocking' (page 1, domain other) captures: # Path B — CRC as GraphRAG same-as pre-filter ## Hypothesis Structural same-as edges should be **blocked from retrieval**. Assumptions: Same-as edges are structurally derived and may introduce hallucinations in identity merging. Breakdown regime: When structural edges exceed statistical consistency thresholds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian identity resolution by filtering out unreliable structural links before probabilistic inference. Operator 'Edge Validation Policy' (page 1, domain other) captures: Policy: structural → block; statistical → allow + realign flag; consistent → allow 4. Assumptions: Edges are classified into structural, statistical, or consistent categories based on reliability. Breakdown regime: At decision boundary between edge types during graph traversal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSE state transition rules from edge type classification to optimize entity alignment. Operator 'Graph-Based Entity Resolution' (page 1, domain other) captures: Graph: nodes = entity mentions; edges = proposed same-as 2. Assumptions: Entity mentions form nodes; same-as relationships form directed edges in a knowledge graph. Breakdown regime: Upon graph construction and edge validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps to GSI’s entity resolution framework through node-edge semantics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for path_b_sameas_experiment (41020c760989f757, domain=other, pages_read=1/1): Operator 'Structural Edge Blocking' (page 1, domain other) captures: # Path B — CRC as GraphRAG same-as pre-filter ## Hypothesis Structural same-as edges should be **blocked from retrieval**. Assumptions: Same-as edges are structurally derived and may introduce hallucinations in identity merging. Breakdown regime: When structural edges exceed statistical consistency thresholds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian identity resolution by filtering out unreliable structural links before probabilistic inference. Operator 'Edge Validation Policy' (page 1, domain other) captures: Policy: structural → block; statistical → allow + realign flag; consistent → allow 4. Assumptions: Edges are classified into structural, statistical, or consistent categories based on reliability. Breakdown regime: At decision boundary between edge types during graph traversal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSE state transition rules from edge type classification to optimize entity alignment. Operator 'Graph-Based Entity Resolution' (page 1, domain other) captures: Graph: nodes = entity mentions; edges = proposed same-as 2. Assumptions: Entity mentions form nodes; same-as relationships form directed edges in a knowledge graph. Breakdown regime: Upon graph construction and edge validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps to GSI’s entity resolution framework through node-edge semantics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in graph theory and knowledge representation, particularly influenced by RDF triple stores and entity resolution systems such as DBpedia Spotlight and Wikidata's entity linking protocols. Retrocausal Genealogy: Rooted in path_b_sameas_experiment (41020c760989f757), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in path_b_sameas_experiment (41020c760989f757), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the entity linker, which seeks to maximize recall at cost of precision, and the integrity checker, which prioritizes correctness over coverage. The system models these as competing objectives within a unified probabilistic framework. Theory of Mind & Decision Maker Model: Rooted in path_b_sameas_experiment (41020c760989f757), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that structural edge filtering does not co-vary with statistical edge validation. Leakage is prevented by isolating the GSE's state transitions from direct dependency on raw string equality, thus avoiding overfitting to surface-level patterns. Cross-Layer Veto & Anti-Leakage Check: Rooted in path_b_sameas_experiment (41020c760989f757), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+
+[pressure] support=0.805 chunks=seeded sit=5 stmt=5 chunk=5 
+  q: pass rush pressure blitz quarterback sacks offensive line protection
+  - (chunk w=0.438) lit.corpus_chunk:fbd6a2c6b3ca#15 [undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf] s and less on more traditional rushes). Positioning is very important, both in a raw tracking sense but also in the traditional charting sense (i.e., if you’re an edge player or an interior player). Stadium effects are n
+  - (chunk w=0.412) lit.corpus_chunk:fbd6a2c6b3ca#30 [undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf] er means of deception – run-pass options, read options, pre-snap, and at-the-snap motion – to understand how these tactics displace defenders and how that displacement affects defensive performance. There have been studi
+  - (chunk w=0.410) lit.corpus_chunk:fbd6a2c6b3ca#16 [undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf] ). Most importantly when both of these rates are used together the r- squared values increase. In other words, charting data combined with tracking data do a better job than either one individually. Metric R-Squared (Pre
+
+[coveragePersonnel] support=0.906 chunks=seeded sit=5 stmt=5 chunk=5 
+  q: man coverage zone coverage cornerback receiver matchup
+  - (situation w=0.600) lit.situation:8d17a3b7ae94#40 Classifying cornerback coverage as man or zone using patterns of motion. -> Do not infer man or zone coverage from cornerback motion patterns, because the analysis found no apparent relationship.. Lesson: Cornerback moti
+  - (situation w=0.556) lit.situation:8d17a3b7ae94#23 defensive back in zone coverage -> expect the player to watch the quarterback rather than a receiver, with motion that is more static and has greater variance in direction relative to the nearest offensive player. Lesson
+  - (chunk w=0.470) lit.corpus_chunk:8d17a3b7ae94#39 [2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf] e-34 is in man coverage according to the GMM. Defense-21 does not follow Oﬀense-17 and instead occupies a zone in the middle frame, where his pattern of motion only slightly follows that of Oﬀense-17. Finally, Defense-23
+
+[qbSkillScript] support=0.833 chunks=seeded sit=5 stmt=3 chunk=5 
+  q: quarterback passing accuracy completion decision under pressure play action
+  - (chunk w=0.470) lit.corpus_chunk:f3c94eb45d5d#29 [2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf] time step 59 (2.9 seconds into the play), which ends the pass rush event according to the logic provided by the NFL. As he runs, he is tackled for a loss and the PFF label gives the tackler a sack. Due to the pass rush f
+  - (chunk w=0.444) lit.corpus_chunk:f3c94eb45d5d#28 [2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf] igs. 8-10 shows three examples of different type of plays predicted by the model. The first, shown in Fig. 8, is a random play where three players get pressure on the quarterback throughout the play. The video of the tra
+  - (chunk w=0.433) lit.corpus_chunk:f3c94eb45d5d#19 [2024 - Feeling the Pressure A Unified Framework for Automating Pass Rushing Statistics in NFL Games - Unknown Authors.pdf] players behind the passer. Finally, we can calculate the orthogonal distance and add a weighting approach to indicate how close the defender is to blocking the path of the rusher to the quarterback. If a player is within
+
+[marketMicrostructure] support=0.790 chunks=seeded sit=5 stmt=5 chunk=3 
+  q: betting market point spread closing line odds efficiency
+  - (statement w=0.450) lit.corpus_statement:p? ADAPT — soccer-specific Asian Handicap apparatus does not port directly, but four portable results do: (1) optimize bet-selection thresholds for total profit, not per-season ROI (Section 6, points iv & vi); (2) the avera
+  - (chunk w=0.382) lit.corpus_chunk:457c38ae522f#123 [The Logic Of Sports Betting] have an extra possession. • College football halftime totals in 2006. This was a one year only thing, but something similar could happen again at any ED MILLER AND MATTHEW DAVIDOW 107 time. They changed the clock rules t
+  - (chunk w=0.382) lit.corpus_chunk:6c9af5069d2e#123 [The Logic Of Sports Betting] have an extra possession. • College football halftime totals in 2006. This was a one year only thing, but something similar could happen again at any ED MILLER AND MATTHEW DAVIDOW 107 time. They changed the clock rules t
+
+[other] support=0.920 chunks=seeded sit=5 stmt=4 chunk=0 
+  q: fourth down decision go for it punt field goal win probability
+  - (situation w=0.600) lit.situation:7e98ad100cb6#33 A team faces a fourth down and must choose between punting and going for it. -> Evaluate the punt-or-go-for-it decision by how it affects the team’s win probability.. Lesson: Fourth-down choices should be assessed by the
+  - (situation w=0.600) lit.situation:1acab2f2b51d#0 Fourth down with the available choices to go for it, kick a field goal, or punt -> Choose the fourth-down action that maximizes win probability. Lesson: Fourth-down decisions should be made by maximizing win probability 
+  - (situation w=0.500) lit.situation:708938c12c8a#27 A fourth-down decision between punting and going for it. -> Evaluate the choice by how it affects the team's win probability.. Lesson: Fourth-down punt-or-go decisions should be judged by their impact on win probability.
+
+[restFatigue] support=0.824 chunks=seeded sit=5 stmt=5 chunk=4 
+  q: short week rest fatigue recovery between games
+  - (chunk w=0.469) lit.corpus_chunk:6b7d4b42bf90#10 [PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION] score, factor descriptions, recommendations, and derived values. The recommendation service branches on configured thresholds for ACWR, sleep, RPE, rest days, injury recency, and deceleration counts. Some recommendation 
+  - (chunk w=0.435) lit.corpus_chunk:6b7d4b42bf90#7 [PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION] efined transformations, not validated physiological thresholds. $$\text{ACWR} = \text{L7} / \max(\text{Lc},\, ?), \quad \text{spike} = (\text{L7} \,?\, \text{Lc}) / \max(\text{Lc},\, ?) \qquad (1)$$ The implemented fatig
+  - (chunk w=0.414) lit.corpus_chunk:6b7d4b42bf90#3 [PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION] is paper asks what the repository implements, what the saved synthetic-data evaluation supports, and which gaps prevent the current prototype from being interpreted as a validated athlete-risk model. The contributions ar
+
+[weather] support=0.808 chunks=seeded sit=5 stmt=5 chunk=4 
+  q: cold wind weather outdoor passing kicking accuracy
+  - (chunk w=0.482) lit.corpus_chunk:38890283f2c9#1 [2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al.pdf] act each of these respective weather conditions can have on offensive efficiency in an attempt to answer the question: How do temperature and wind speed affect NFL rushing and passing efficiency? Goal Question: How do te
+  - (chunk w=0.399) lit.corpus_chunk:38890283f2c9#7 [2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al.pdf] ses ○ Likely because hands are colder in cold weather making it harder to throw and catch ● Interestingly, rushing EPA means are at their highest in freezing weather and steadily decline after that. This could be explain
+  - (chunk w=0.383) lit.corpus_chunk:38890283f2c9#6 [2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al.pdf] hrows, hence the lack of super high and super low EPAs. For example, teams would likely be much more hesitant to dial up a 40-yard post route in heavy wind not knowing where the ball may even land. Wind Speed Observation
+
+[other] support=0.570 chunks=seeded sit=1 stmt=2 chunk=0 
+  q: divisional rivalry familiarity opponent repeated matchup
+  - (situation w=0.333) lit.situation:9b5ee083c57a#217 The second play of a series is being tried after the first play has become tolerably familiar through repeated use. -> Emphasize the disadvantage to the opponents when trying the second play of the series.. Lesson: A fir
+  - (statement w=0.219) lit.corpus_statement:9b5ee083c57ap217 [Football] It is difficult to lay too much emphasis upon the disadvantage to the opponents when the second play of a series is tried, the first play having already become tolerably familiar through repeated use.
+  - (statement w=0.175) lit.corpus_statement:b6fb6ecaeaddp223 [Inside-Football] The advantages, whether for effect on your own team, or on opponents when they learn that their rivals have seen them play, are wholly psychological.
+
+overallSupport=0.813886 coverage=1 latencyMs=211769
+
+overlay call: coverage=1 support=0.813886; pressurex0.902579 weatherx0.903868 restFatiguex0.91206 coveragePersonnelx0.952849 qbSkillScriptx0.916423 marketMicrostructurex0.894834
+  pressure: support=0.805 x0.902579 0.03 -> 0.02708
+  weather: support=0.808 x0.903868 -0.01 -> -0.00904
+  restFatigue: support=0.824 x0.91206 -0.02 -> -0.01824
+  coveragePersonnel: support=0.906 x0.952849 0.025 -> 0.02382
+  qbSkillScript: support=0.833 x0.916423 0.035 -> 0.03207
+  marketMicrostructure: support=0.790 x0.894834 0.015 -> 0.01342
+publishAllowed (fixture PASS): false
+SMOKE PASS

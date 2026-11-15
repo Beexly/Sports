@@ -1,0 +1,95 @@
+{
+  "book_id": "5eaa610f7601a7fa",
+  "source_status": "COMPLETE",
+  "title": "p0105",
+  "file_name": "p0105.txt",
+  "sha256": "5eaa610f7601a7faa8d5d3564a5285178d67d98715fbe9e6132d4f5178eccbda",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0105 (5eaa610f7601a7fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0105 (5eaa610f7601a7fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0105 (5eaa610f7601a7fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0105 (5eaa610f7601a7fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0105 (5eaa610f7601a7fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0105 (5eaa610f7601a7fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "stature_random_marriage",
+      "name": "p0105 Operator 1",
+      "verbatim_quote": "I find the Q of Stature among the male population to be 1·7 inch, and similarly for the transmuted statures of the female population.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q_male_stature': 'Quartile deviation of male stature (inches)', 'Q_female_stature': 'Quartile deviation of transmuted female stature (inches)'}",
+      "assumptions": "Random mating with respect to stature; no assortative mating bias.",
+      "breakdown_regime": "Breaks down when assortative mating based on stature becomes significant.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian hierarchical models for trait correlation in mating pairs, where random mating serves as the null hypothesis.",
+        "source_operator": "stature_random_marriage",
+        "telemetry": "Observed quartile deviations of paired parental statures compared to expected under random mating."
+      }
+    },
+    {
+      "primitive_id": "couple_stature_variance",
+      "name": "p0105 Operator 2",
+      "verbatim_quote": "Consequently if the men and (transmuted) women married at random so far as stature was concerned, the Q in a group of couples, each couple consisting of a pair of summed statures, would be √2 × 1·7 inches = 2·41 inches.",
+      "page": 1,
+      "latex": "Q_{\\text{summed couples}} = \\sqrt{2} \\times Q_{\\text{male}}",
+      "symbol_and_unit_ledger": "{'Q_summed_couples': 'Quartile deviation of summed statures in randomly paired couples (inches)', 'Q_male': 'Quartile deviation of male stature (inches)'}",
+      "assumptions": "Summation of independent normally distributed traits; random pairing.",
+      "breakdown_regime": "Fails when stature components are correlated across mating partners.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derived from GSE's state-transition kernels for genetic variance propagation, where the kernel describes how trait variance scales under linear combination.",
+        "source_operator": "couple_stature_variance",
+        "telemetry": "Variance of total height in mating pairs relative to parental variances."
+      }
+    },
+    {
+      "primitive_id": "mid_parent_definition",
+      "name": "p0105 Operator 3",
+      "verbatim_quote": "Thc word \"Mid-Parent,\" in the headings to those columns, expresses an ideal person of composite sex, whose Stature is half way between the Stature of the father and the transmuted Stature of the mother.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'mid_parent_stature': 'Mean stature of mid-parent (inches)'}",
+      "assumptions": "Equal contribution from both parents; transmutation adjusts maternal stature to male scale.",
+      "breakdown_regime": "Invalid when parental contributions are asymmetric or when transmutation factors differ.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction methods for constructing joint distributions over parent-child trait pairs, using the mid-parent as a central anchor point.",
+        "source_operator": "mid_parent_definition",
+        "telemetry": "Deviation of offspring stature from the mid-parent average as a measure of regression to the mean."
+      }
+    },
+    {
+      "primitive_id": "no_significant_assortative_mating",
+      "name": "p0105 Operator 4",
+      "verbatim_quote": "I therefore conclude that marriage selection does not pay such regard to Stature, as deserves being taken into account in the cases with which we are concerned.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Observed quartiles match expectations under random mating; no systematic bias in pairing.",
+      "breakdown_regime": "Assumption fails if there exists hidden stratification or preference for similar statures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates to GSE's situational reasoning framework where the absence of trait-based selection is a baseline assumption for state-transition models of demographic dynamics.",
+        "source_operator": "no_significant_assortative_mating",
+        "telemetry": "Residual analysis of observed versus randomized mating patterns to detect assortative mating signals."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5eaa610f7601a7fa_t0",
+      "think": "The core argument hinges on quartile deviation (Q) as a robust measure of dispersion, assuming normality for male and transmuted female stature. By treating mating as a random draw from these independent distributions, the variance of the sum (and hence the quartile deviation of the sum) scales as √2. This provides a null expectation against which observed coupling statistics can be tested. The key failure mode occurs when stature is not independent of mating choice, leading to assortative mating that inflates the observed quartile deviation of summed statures. In modern terms, this is a foundational application of probabilistic independence in biparental trait inheritance, later formalized in multivariate Gaussian copula models used for joint risk assessment.\n\nDeep epistemic analysis for p0105 (5eaa610f7601a7fa, domain=other, pages_read=1/1): Operator 'p0105 Operator 1' (page 1, domain other) captures: I find the Q of Stature among the male population to be 1·7 inch, and similarly for the transmuted statures of the female population. Assumptions: Random mating with respect to stature; no assortative mating bias. Breakdown regime: Breaks down when assortative mating based on stature becomes significant. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian hierarchical models for trait correlation in mating pairs, where random mating serves as the null hypothesis. Operator 'p0105 Operator 2' (page 1, domain other) captures: Consequently if the men and (transmuted) women married at random so far as stature was concerned, the Q in a group of couples, each couple consisting of a pair of summed statures, would be √2 × 1·7 inches = 2·41 inches. Assumptions: Summation of independent normally distributed traits; random pairing. Breakdown regime: Fails when stature components are correlated across mating partners. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from GSE's state-transition kernels for genetic variance propagation, where the kernel describes how trait variance scales under linear combination. Operator 'p0105 Operator 3' (page 1, domain other) captures: Thc word \"Mid-Parent,\" in the headings to those columns, expresses an ideal person of composite sex, whose Stature is half way between the Stature of the father and the transmuted Stature of the mother. Assumptions: Equal contribution from both parents; transmutation adjusts maternal stature to male scale. Breakdown regime: Invalid when parental contributions are asymmetric or when transmutation factors differ. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction methods for constructing joint distributions over parent-child trait pairs, using the mid-parent as a central anchor point. Operator 'p0105 Operator 4' (page 1, domain other) captures: I therefore conclude that marriage selection does not pay such regard to Stature, as deserves being taken into account in the cases with which we are concerned. Assumptions: Observed quartiles match expectations under random mating; no systematic bias in pairing. Breakdown regime: Assumption fails if there exists hidden stratification or preference for similar statures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSE's situational reasoning framework where the absence of trait-based selection is a baseline assumption for state-transition models of demographic dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0105 (5eaa610f7601a7fa, domain=other, pages_read=1/1): Operator 'p0105 Operator 1' (page 1, domain other) captures: I find the Q of Stature among the male population to be 1·7 inch, and similarly for the transmuted statures of the female population. Assumptions: Random mating with respect to stature; no assortative mating bias. Breakdown regime: Breaks down when assortative mating based on stature becomes significant. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian hierarchical models for trait correlation in mating pairs, where random mating serves as the null hypothesis. Operator 'p0105 Operator 2' (page 1, domain other) captures: Consequently if the men and (transmuted) women married at random so far as stature was concerned, the Q in a group of couples, each couple consisting of a pair of summed statures, would be √2 × 1·7 inches = 2·41 inches. Assumptions: Summation of independent normally distributed traits; random pairing. Breakdown regime: Fails when stature components are correlated across mating partners. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from GSE's state-transition kernels for genetic variance propagation, where the kernel describes how trait variance scales under linear combination. Operator 'p0105 Operator 3' (page 1, domain other) captures: Thc word \"Mid-Parent,\" in the headings to those columns, expresses an ideal person of composite sex, whose Stature is half way between the Stature of the father and the transmuted Stature of the mother. Assumptions: Equal contribution from both parents; transmutation adjusts maternal stature to male scale. Breakdown regime: Invalid when parental contributions are asymmetric or when transmutation factors differ. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction methods for constructing joint distributions over parent-child trait pairs, using the mid-parent as a central anchor point. Operator 'p0105 Operator 4' (page 1, domain other) captures: I therefore conclude that marriage selection does not pay such regard to Stature, as deserves being taken into account in the cases with which we are concerned. Assumptions: Observed quartiles match expectations under random mating; no systematic bias in pairing. Breakdown regime: Assumption fails if there exists hidden stratification or preference for similar statures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSE's situational reasoning framework where the absence of trait-based selection is a baseline assumption for state-transition models of demographic dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0105 (5eaa610f7601a7fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0105 (5eaa610f7601a7fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The author assumes individuals mate without explicit consideration of height difference, contrasting with agents who might prefer partners of similar stature (positive assortative mating) or opposite extremes (disassortative mating). The null hypothesis implicitly models rational actors optimizing fitness without trait-specific constraints. Theory of Mind & Decision Maker Model: Rooted in p0105 (5eaa610f7601a7fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To avoid anti-collinearity, the analysis must ensure that the transmutation factor correctly adjusts female stature to male scale, preventing double-counting of variance. Additionally, the sample must be free from population substructure (e.g., distinct ethnic groups) that could induce artificial correlations. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0105 (5eaa610f7601a7fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

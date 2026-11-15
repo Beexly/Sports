@@ -1,0 +1,289 @@
+{
+  "book_id": "49b4b4e94c2bda62",
+  "source_status": "COMPLETE",
+  "title": "openalex_W4404209445",
+  "file_name": "openalex_W4404209445.pdf",
+  "sha256": "49b4b4e94c2bda62a092d5f020025656887e724e0fa1256f6f6f456738cca615",
+  "primary_domain": "other",
+  "pages_total": 17,
+  "pages_read": 17,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 17,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Distance zones (4–6) encode high-intensity game dynamics; normalized metrics reflect physiological adaptation via summed effort aggregation over time windows. The mapping from pre-match training loads to in-match performance extremes constitutes a non-stationary, high-dimensional operator. Aggregating this operator across subgroups induces Simpson's paradox, necessitating a hierarchical kernel that isolates individual temporal dynamics from collective momentary correlations.",
+  "gsi_mapping": "Bayesian inference maps zone-based distance and intensity profiles to probabilistic performance outcomes using historical training data and real-time kinematic inputs. GSI employs conformal inference over the descriptive operator to generate distributional bounds for extreme match outputs. By treating pre-match activity as covariates, we quantify epistemic uncertainty arising from sparse test samples, ensuring robust qualitative indications rather than overconfident point predictions.",
+  "gse_mapping": "Situationally-aware state transitions model tactical evolution through dynamic intensity thresholds, enabling real-time decision-making under uncertainty. GSE translates these descriptive models into state-transition priors. The identified contribution of specific drills updates the situational reasoning engine, dynamically adjusting tactical templates and predicting deviations from average team efficiency based on localized physical condition states.",
+  "primitives": [
+    {
+      "primitive_id": "49b4b4e94c2bda62_w0_g1",
+      "name": "openalex_W4404209445 Ch.1 Grounded Operator",
+      "verbatim_quote": "The collected training and matched data average is 9000 records per month.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49b4b4e94c2bda62_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49b4b4e94c2bda62_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49b4b4e94c2bda62_w0_g2",
+      "name": "openalex_W4404209445 Ch.1 Grounded Operator",
+      "verbatim_quote": "A standard workweek at the RKS Academy consisted of 5 training units and at least 1 match.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49b4b4e94c2bda62_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49b4b4e94c2bda62_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49b4b4e94c2bda62_w0_g3",
+      "name": "openalex_W4404209445 Ch.1 Grounded Operator",
+      "verbatim_quote": "The best individual models found predict selected game performance metrics with a relative error of 2.3%, suggesting an excellent model fit between prediction and the actual value.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49b4b4e94c2bda62_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49b4b4e94c2bda62_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "distance_zone_aggregation",
+      "name": "Distance Zone Aggregation",
+      "verbatim_quote": "• Distance Zone — the distance covered in a specific zone (e.g.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'d': 'distance in meters', 'z': 'zone identifier (4, 5, 6)', 'q': 'configurable parameter vector'}",
+      "assumptions": "Zones are discrete intensity bins; distances are additive per zone.",
+      "breakdown_regime": "When q is undefined or non-configurable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps zone-based distance coverage to normalized physiological load indices in GSI.",
+        "source_operator": "distance_zone_aggregation",
+        "telemetry": "Cumulative distance per zone normalized by total match duration."
+      }
+    },
+    {
+      "primitive_id": "high_effort_interval_detection",
+      "name": "High-Effort Interval Detection",
+      "verbatim_quote": "Maximal and sub-maximal efforts allow for appropriate stimulation and force adaptations.",
+      "page": 5,
+      "latex": "\\mathcal{S}(t_{\\text{min}}, v_{\\text{min}}, d, H) = \\{S_i\\} \\quad \\text{where } S_i = \\{(t, v): d - H \\leq t < d, v \\geq v_{\\text{min}}\\} \\text{ and } \\max S_i t - \\min S_i t \\geq t_{\\text{min}}",
+      "symbol_and_unit_ledger": "{'t': 'time in seconds', 'v': 'velocity in m/s', 'd': 'match time reference', 'H': 'history window in days', 't_{\\\\text{min}}': 'minimum duration threshold in seconds', 'v_{\\\\text{min}}': 'minimum velocity threshold in m/s'}",
+      "assumptions": "Intervals must exceed minimum duration and velocity thresholds.",
+      "breakdown_regime": "When no interval meets both thresholds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives high-intensity episodes from raw kinematic traces for predictive modeling in GSE.",
+        "source_operator": "high_effort_interval_detection",
+        "telemetry": "Scalar representation of high-effort episode count and duration."
+      }
+    },
+    {
+      "primitive_id": "normalized_performance_index",
+      "name": "Normalized Performance Index",
+      "verbatim_quote": "Moreover, selected measurements get divided by the distance covered in [t, t + τ), in order to address cases when the player was active only partly in the time covered by a sample.",
+      "page": 5,
+      "latex": "x_d = \\frac{\\sum_{t \\in [t, t+\\tau)} \\text{metric}_i(t)}{\\text{distance}_{\\text{covered}}(t, t+\\tau)}",
+      "symbol_and_unit_ledger": "{'x_d': 'normalized performance index', 't': 'time in seconds', 'τ': 'time window in seconds', '\\\\text{metric}_i': 'performance metric (e.g., acceleration, deceleration)', '\\\\text{distance}_{\\\\text{covered}}': 'total distance covered in window'}",
+      "assumptions": "Performance metrics are temporally aligned with distance coverage.",
+      "breakdown_regime": "When distance covered is zero or undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Normalizes performance indicators against physical displacement for comparative analysis in GSI.",
+        "source_operator": "normalized_performance_index",
+        "telemetry": "Ratio of metric sum to distance covered per time segment."
+      }
+    },
+    {
+      "primitive_id": "physiological_adaptation_model",
+      "name": "Physiological Adaptation Model",
+      "verbatim_quote": "From the point of view of physiology, the development of the athlete's body's efficiency is aimed at leveling it to a higher level.",
+      "page": 5,
+      "latex": "E_{\\text{adapt}} = f(\\text{maximal efforts}, \\text{sub-maximal efforts})",
+      "symbol_and_unit_ledger": "{'E_{\\\\text{adapt}}': 'physiological adaptation level', '\\\\text{maximal efforts}': 'intensity profile', '\\\\text{sub-maximal efforts}': 'recovery-adjusted workload'}",
+      "assumptions": "Adaptation is a function of maximal and sub-maximal effort exposure.",
+      "breakdown_regime": "When effort profiles are absent or inconsistent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models physiological load response to training stimuli in GSE.",
+        "source_operator": "physiological_adaptation_model",
+        "telemetry": "Aggregate adaptation score derived from effort intensity and recovery."
+      }
+    },
+    {
+      "primitive_id": "49b4b4e94c2bda62_w2_g1",
+      "name": "openalex_W4404209445 Ch.3 Grounded Operator",
+      "verbatim_quote": "APX-Ind piecewise linear The main reason for application of pure linear model is the extremely low number of individual matches played, which maps directly to the number of available training samples.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49b4b4e94c2bda62_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49b4b4e94c2bda62_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49b4b4e94c2bda62_w2_g2",
+      "name": "openalex_W4404209445 Ch.3 Grounded Operator",
+      "verbatim_quote": "Such situation is intentional: by limiting data history to one season only, we prepare a kind of a snapshot of individual capacity, which we further treat as time-invariant.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49b4b4e94c2bda62_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49b4b4e94c2bda62_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49b4b4e94c2bda62_w2_g3",
+      "name": "openalex_W4404209445 Ch.3 Grounded Operator",
+      "verbatim_quote": "Should we expand the dataset time range, we would also have to account in the model for timedependant factors such as the trend, which we otherwise have learned to be extremely difficult to capture in the field data.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49b4b4e94c2bda62_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49b4b4e94c2bda62_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "simpsons_paradox_aggregation",
+      "name": "Simpson's Paradox Aggregation Operator",
+      "verbatim_quote": "Building a standard linear model for an entire soccer team or subgroup, as in the APX-Grp approach, can be misleading and should be used cautiously and only when not enough individual data is available.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "Group Model: dimensionless statistical construct; Individual Data: discrete spatiotemporal tracking points (meters, seconds)",
+      "assumptions": "Assumes underlying individual dynamics are heterogeneous and non-linearly coupled within the group structure.",
+      "breakdown_regime": "Breaks down when intra-group variance exceeds inter-group signal, causing joint modeling to invert true causal directions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to conditional probability inversion in Bayesian networks where marginalizing over a confounding latent variable (player role) flips edge signs.",
+        "source_operator": "simpsons_paradox_aggregation",
+        "telemetry": "Discrepancy between individual R^2 scores and aggregated group R^2 score."
+      }
+    },
+    {
+      "primitive_id": "non_stationary_sample_window",
+      "name": "Non-Stationary Sample Window Constraint",
+      "verbatim_quote": "Collecting samples for longer period would introduce non-stationary phenomena into the data that the model is incapable of handling.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "t_min: minimum temporal window (days); Non-stationary phenomena: time-varying statistical moments (variance, mean)",
+      "assumptions": "Assumes player physiological and tactical states evolve continuously, violating strict ergodicity over long horizons.",
+      "breakdown_regime": "Fails when the sampling window exceeds the characteristic relaxation time of the athlete's physical adaptation cycle.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to a sliding-window kernel density estimator where the bandwidth is constrained by the Kolmogorov-Smirnov test for stationarity.",
+        "source_operator": "non_stationary_sample_window",
+        "telemetry": "Statistical significance of distribution shifts between consecutive training blocks."
+      }
+    },
+    {
+      "primitive_id": "descriptive_performance_kernel",
+      "name": "Descriptive Performance Kernel",
+      "verbatim_quote": "The quality of the obtained models strongly indicates a relationship between pre-match activity and in-match performance.",
+      "page": 14,
+      "latex": null,
+      "symbol_and_unit_ledger": "Pre-match activity: aggregate distance/sprint volume (meters); In-match performance: extreme event frequency (dimensionless count)",
+      "assumptions": "Assumes a continuous, albeit noisy, functional dependence between accumulated training load and acute match output.",
+      "breakdown_regime": "Degenerates into pure noise when sample size approaches zero, rendering predictive power statistically indistinguishable from chance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a low-rank matrix factorization linking historical training embeddings to real-time match event tensors.",
+        "source_operator": "descriptive_performance_kernel",
+        "telemetry": "Coefficient of determination (R^2) on held-out validation folds."
+      }
+    },
+    {
+      "primitive_id": "qualitative_drill_attribution",
+      "name": "Qualitative Drill Attribution Metric",
+      "verbatim_quote": "However, they have considerable practical utility because they give the coach qualitative indications of which training periods (and thus which drills) contribute most to extreme match performance.",
+      "page": 14,
+      "latex": null,
+      "symbol_and_unit_ledger": "Drill contribution: partial derivative of performance metric w.r.t drill intensity (dimensionless sensitivity)",
+      "assumptions": "Assumes additive separability of drill contributions to the overall physiological readiness state.",
+      "breakdown_regime": "Invalid under highly synergistic or antagonistic multi-drill interactions that violate linear superposition principles.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a Shapley value approximation for feature importance within the GSE situational reasoning graph.",
+        "source_operator": "qualitative_drill_attribution",
+        "telemetry": "Mean Absolute Percentage Error (MAPE) reduction upon removing top-contributing drill features."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "49b4b4e94c2bda62_t0",
+      "think": "Window 1 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "49b4b4e94c2bda62_t1",
+      "think": "Chapter window 2 introduces foundational concepts for modeling athletic performance through structured spatial-temporal metrics. Distance zones (4–6) represent increasing intensity levels, forming a basis for quantifying high-effort behavior. These zones are not static but configurable, allowing for user-defined expansion. The core idea is to aggregate isolated performance metrics—such as metabolic time zones or acceleration events—into meaningful indices. Normalization ensures comparability across varying durations and distances. High-effort interval detection formalizes how sustained bursts of activity are identified and tracked, using thresholds for both velocity and duration. This approach enables robust modeling of tactical and physiological demands. The physiological adaptation model ties these metrics to long-term fitness gains, emphasizing maximal and sub-maximal efforts. Together, these primitives form a coherent framework for predictive analytics in sports intelligence systems. Window 2 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early biomechanical studies of motion and exertion, evolving into modern GPS and sensor-based tracking systems like Apex Pro Series, which standardize performance measurement protocols. Retrocausal Genealogy (Window 2): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models account for opposing agent behaviors by simulating varied intensity profiles and effort distributions, enabling prediction of strategic shifts and competitive advantages. Theory of Mind (Window 2): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting by ensuring that only statistically significant metrics contribute to model inputs, avoiding collinearity between normalized and raw performance indicators. Cross-Layer Veto (Window 2): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "49b4b4e94c2bda62_t2",
+      "think": "Window 3 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in openalex_W4404209445 (49b4b4e94c2bda62, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "49b4b4e94c2bda62_t3",
+      "think": "The mathematical foundation of this chapter window rests on the tension between ergodicity and finite-sample bias in high-dimensional sports telemetry. We observe that constructing a global linear operator over an entire squad inherently masks local, non-linear dynamical systems governing individual athletes. This manifests mathematically as Simpson's paradox, where the covariance matrix of the aggregated group exhibits sign inversions relative to the block-diagonal covariance matrices of isolated players. To circumvent this, we must impose a strict non-stationary constraint on our sampling windows. If the temporal horizon $T$ exceeds the intrinsic timescale of physiological adaptation, the underlying probability measure $P(X_t)$ drifts, invalidating standard maximum likelihood estimators. Consequently, the derived models are fundamentally descriptive kernels rather than predictive engines. They map the manifold of pre-match training loads—comprising distinct drills and recovery periods—to the boundary conditions of in-match extreme performance. While the sparsity of test samples prevents us from claiming asymptotic consistency in prediction, the gradient of this descriptive kernel provides a rigorous, quantitative attribution of specific training stimuli to match-day outputs. This transforms coaching intuition into a formal optimization problem, allowing for aggressive experimentation with the 'training puzzle mix' to maximize the probability of favorable extreme events.",
+      "retrocausal_genealogy": "This derivation traces back to the foundational works of Yule and Simpson on spurious correlations in aggregated biological data. It further inherits the rigorous treatment of non-stationary time series from econophysics, specifically the application of rolling-window spectral analysis to market volatility. In sports science, it bridges the gap between classical periodization theory and modern, data-driven load monitoring, acknowledging that historical averages are poor proxies for instantaneous athletic capacity.",
+      "theory_of_mind": "Modeling the coach as a bounded rational agent seeking to maximize expected match utility under severe information asymmetry. The coach does not possess the true generative model of player fatigue but relies on these descriptive kernels as heuristic priors. Conversely, the opposing team acts as an adaptive adversary, attempting to exploit predictable patterns in our training-induced performance fluctuations. Our primitives must therefore account for the strategic layer where qualitative drill attributions are weaponized to induce tactical surprise.",
+      "cross_layer_veto": "We must strictly veto any cross-layer leakage where post-match performance metrics inadvertently influence the definition of pre-match training clusters. Furthermore, anti-collinearity checks are mandatory; if weather conditions or travel fatigue perfectly correlate with specific drill schedules in our limited dataset, the resulting attribution metric will suffer from multicollinearity, producing unstable gradients that mislead the optimization of the training puzzle mix."
+    }
+  ]
+}

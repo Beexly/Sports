@@ -1,0 +1,78 @@
+{
+  "book_id": "65448b7874facb3c",
+  "source_status": "COMPLETE",
+  "title": "site-surgeries-2026-10-05",
+  "file_name": "site-surgeries-2026-10-05.md",
+  "sha256": "65448b7874facb3c5d41f5a0f751761aa9d023242d2ae0f1826b64b164516680",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Site surgeries formalize a deletion protocol for public-facing intelligence, rankings, and NGS routes, mapping to a structured state transition in web application architecture. Universal Lens: Rooted in site-surgeries-2026-10-05 (65448b7874facb3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference models the removal of public intelligence routes as a probabilistic update over belief states, where prior beliefs about data utility are revised upon observing that public exposure yields no strategic value.",
+  "gse_mapping": "GSE situational reasoning treats each surgical deletion as a state transition in a finite automaton, where public access states are mapped to internal-only states through authentication gates and route pruning.",
+  "primitives": [
+    {
+      "primitive_id": "public_intelligence_route_deletion",
+      "name": "Public Intelligence Route Deletion",
+      "verbatim_quote": "- **What it does:** Deletes the entire `/intelligence` route tree (`apps/web/app/intelligence/*` — clv, engines, expected-points, metrics, opportunity-transfer, players pages) and strips references from nav, footer, sitemap, and other pages (academy, airwave, board, calibration, deck, gsn) plus related tests.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{\\\\text{int}}': 'Set of public intelligence routes', 'T_{\\\\text{ref}}': 'Set of reference points (nav, footer, sitemap)', 'T_{\\\\text{test}}': 'Set of test cases'}",
+      "assumptions": "Routes and references are fully decoupled from public API surface.",
+      "breakdown_regime": "Route tree deletion triggers cascading reference removal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The deletion operation maps to a topological contraction in the web application graph, where nodes representing public routes are removed and edges representing cross-references are severed.",
+        "source_operator": "public_intelligence_route_deletion",
+        "telemetry": "Production build returns 404 on `/intelligence`."
+      }
+    },
+    {
+      "primitive_id": "rankings_link_removal",
+      "name": "Rankings Link Removal",
+      "verbatim_quote": "- **What it does:** Removes every nav link, footer link, CTA, and sitemap reference to `/rankings`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{\\\\text{rank}}': 'Set of ranking-related links', 'S_{\\\\text{ref}}': 'Set of site references (nav, footer, sitemap)'}",
+      "assumptions": "Rankings functionality was never implemented and thus no backend logic needs preservation.",
+      "breakdown_regime": "Link references are stripped without affecting underlying systems.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Link removal is a derived kernel operation from the broader route deletion primitive, operating on a subgraph of the site’s navigation structure.",
+        "source_operator": "rankings_link_removal",
+        "telemetry": "No internal links point to `/rankings` post-deletion."
+      }
+    },
+    {
+      "primitive_id": "ngs_public_surface_removal",
+      "name": "NGS Public Surface Removal",
+      "verbatim_quote": "- **What it does:** Removes every *public* NGS route and reference.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{\\\\text{ngs}}': 'Set of public Next Gen Stats routes', 'R_{\\\\text{auth}}': 'Set of authenticated NGS routes'}",
+      "assumptions": "Public NGS routes are distinct from internal ingestion endpoints.",
+      "breakdown_regime": "Public-facing NGS routes are isolated and removed while preserving internal APIs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The operation mirrors a network partitioning task, where public NGS endpoints are severed from the public interface, leaving only internal access paths intact.",
+        "source_operator": "ngs_public_surface_removal",
+        "telemetry": "Internal ingestion routes (`/api/cron/ngs-ingest`, `/api/ops/ngs-backfill`) remain auth-gated."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "65448b7874facb3c_t0",
+      "think": "Each surgery represents a structured deletion protocol applied to a web application’s architectural graph. The intelligence route deletion (primitive 1) operates as a topological contraction, removing a connected component of the site’s routing tree and all associated references. This action is modeled as a set-theoretic operation on the public route space R_int, where R_int ⊂ R_web and all T_ref ∩ R_int = ∅ post-surgery. The rankings link removal (primitive 2) is a derived kernel of the former, acting on a subset of navigation links S_ref ⊆ R_int. The NGS surface removal (primitive 3) applies a similar principle but distinguishes between public and private API surfaces, ensuring R_ngs ⊂ R_web and R_auth ∩ R_ngs = ∅. Failure modes include residual references in cache or CDN, which are mitigated by verifying 404 responses and internal link integrity. Dualities emerge in that each surgery preserves internal data structures while erasing external accessibility, aligning with a functional separation of concerns in software architecture.\n\nDeep epistemic analysis for site-surgeries-2026-10-05 (65448b7874facb3c, domain=other, pages_read=2/2): Operator 'Public Intelligence Route Deletion' (page 1, domain other) captures: - **What it does:** Deletes the entire `/intelligence` route tree (`apps/web/app/intelligence/*` — clv, engines, expected-points, metrics, opportunity-transfer, players pages) and strips references from nav, footer, sitemap, and other pages (academy, airwave, board, calibration, deck, gsn) plus related tests. Assumptions: Routes and references are fully decoupled from public API surface. Breakdown regime: Route tree deletion triggers cascading reference removal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The deletion operation maps to a topological contraction in the web application graph, where nodes representing public routes are removed and edges representing cross-references are severed. Operator 'Rankings Link Removal' (page 1, domain other) captures: - **What it does:** Removes every nav link, footer link, CTA, and sitemap reference to `/rankings`. Assumptions: Rankings functionality was never implemented and thus no backend logic needs preservation. Breakdown regime: Link references are stripped without affecting underlying systems. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Link removal is a derived kernel operation from the broader route deletion primitive, operating on a subgraph of the site’s navigation structure. Operator 'NGS Public Surface Removal' (page 1, domain other) captures: - **What it does:** Removes every *public* NGS route and reference. Assumptions: Public NGS routes are distinct from internal ingestion endpoints. Breakdown regime: Public-facing NGS routes are isolated and removed while preserving internal APIs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The operation mirrors a network partitioning task, where public NGS endpoints are severed from the public interface, leaving only internal access paths intact. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for site-surgeries-2026-10-05 (65448b7874facb3c, domain=other, pages_read=2/2): Operator 'Public Intelligence Route Deletion' (page 1, domain other) captures: - **What it does:** Deletes the entire `/intelligence` route tree (`apps/web/app/intelligence/*` — clv, engines, expected-points, metrics, opportunity-transfer, players pages) and strips references from nav, footer, sitemap, and other pages (academy, airwave, board, calibration, deck, gsn) plus related tests. Assumptions: Routes and references are fully decoupled from public API surface. Breakdown regime: Route tree deletion triggers cascading reference removal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The deletion operation maps to a topological contraction in the web application graph, where nodes representing public routes are removed and edges representing cross-references are severed. Operator 'Rankings Link Removal' (page 1, domain other) captures: - **What it does:** Removes every nav link, footer link, CTA, and sitemap reference to `/rankings`. Assumptions: Rankings functionality was never implemented and thus no backend logic needs preservation. Breakdown regime: Link references are stripped without affecting underlying systems. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Link removal is a derived kernel operation from the broader route deletion primitive, operating on a subgraph of the site’s navigation structure. Operator 'NGS Public Surface Removal' (page 1, domain other) captures: - **What it does:** Removes every *public* NGS route and reference. Assumptions: Public NGS routes are distinct from internal ingestion endpoints. Breakdown regime: Public-facing NGS routes are isolated and removed while preserving internal APIs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The operation mirrors a network partitioning task, where public NGS endpoints are severed from the public interface, leaving only internal access paths intact. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach reflects a modernization of legacy web architectures toward microservices and modular design, echoing principles from domain-driven design and service-oriented architecture (SOA), particularly in how public interfaces are decoupled from internal data pipelines. Retrocausal Genealogy: Rooted in site-surgeries-2026-10-05 (65448b7874facb3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The decision actors—Garrett and Jules—operate under a shared model of prioritizing high-value features (spreads, props, parlays, fantasy, DFS) over low-utility or unused components. The surgical deletions reflect a rational agent optimizing for resource allocation and system clarity, with minimal risk of regression due to pre-approved sessions and fleet standards. Theory of Mind & Decision Maker Model: Rooted in site-surgeries-2026-10-05 (65448b7874facb3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that route deletions do not interfere with internal ingestion paths or data integrity. Leakage vetoes prevent accidental exposure of internal NGS routes during the public-facing removal process, maintaining a clean separation between public and private data layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in site-surgeries-2026-10-05 (65448b7874facb3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

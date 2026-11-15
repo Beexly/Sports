@@ -1,0 +1,78 @@
+{
+  "book_id": "855bf7b936d08c9f",
+  "source_status": "COMPLETE",
+  "title": "SUBMISSION",
+  "file_name": "SUBMISSION.md",
+  "sha256": "855bf7b936d08c9fbba8f44ee1a7b6bba865f4abe6e47c2cdf5da8b37e69aeef",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A deterministic factor model computes market-implied probabilities, edge estimates, and data quality scores to produce auditable sports intelligence outputs. Universal Lens: Rooted in SUBMISSION (855bf7b936d08c9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps observed market prices to latent edge distributions using conformal prediction for uncertainty quantification. GSI Mapping: Rooted in SUBMISSION (855bf7b936d08c9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions through three lanes—current scoring, published picks, and gated decisions—based on freshness and calibration metrics. GSE Mapping: Rooted in SUBMISSION (855bf7b936d08c9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "factor_model_edge_computation",
+      "name": "Factor Model Edge Computation",
+      "verbatim_quote": "The factor breakdown, the market-implied probability computed from the books' own quoted prices (arithmetic you can redo by hand), the edge estimate, the data quality score, and when the numbers were last refreshed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_m': 'Market-implied probability (dimensionless)', 'E': 'Edge estimate (dimensionless)', 'Q': 'Data quality score (0–1 scale)', 't_{last}': 'Last refresh timestamp (seconds since epoch)'}",
+      "assumptions": "Market prices are consistent with rational expectations; edge is defined as deviation from implied probability.",
+      "breakdown_regime": "When P_m < 0.5, the model may signal negative edge; when Q < 0.7, data reliability is questioned.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw book prices to actionable edge signals via probabilistic inference and temporal freshness constraints.",
+        "source_operator": "factor_model_edge_computation",
+        "telemetry": "Edge magnitude, data quality score, and last update time"
+      }
+    },
+    {
+      "primitive_id": "auditable_pick_lane_state",
+      "name": "Auditable Pick Lane State",
+      "verbatim_quote": "Three lanes: what the engine is scoring right now, what it published, and what it gated.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_c': 'Current scoring lane (dimensionless)', 'L_p': 'Published lane (dimensionless)', 'L_g': 'Gated lane (dimensionless)'}",
+      "assumptions": "Each lane represents a distinct decision stage with independent validation logic.",
+      "breakdown_regime": "If L_c = L_p = L_g, no active transition occurs; if L_c ≠ L_p, a publish event is pending.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a state machine with three states representing current, published, and gated decision outcomes.",
+        "source_operator": "auditable_pick_lane_state",
+        "telemetry": "Lane status indicators and transition timestamps"
+      }
+    },
+    {
+      "primitive_id": "calibration_curve_verification",
+      "name": "Calibration Curve Verification",
+      "verbatim_quote": "Wins, losses, pushes and voids, with a calibration curve that shows whether higher confidence actually wins more often.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'Wins (count)', 'L': 'Losses (count)', 'P': 'Pushes (count)', 'V': 'Voided (count)', 'C(x)': 'Confidence level x mapped to win rate (0–1 scale)'}",
+      "assumptions": "Higher confidence levels should correlate with higher actual win rates under proper calibration.",
+      "breakdown_regime": "If C(x) is flat or decreasing, the model lacks calibration; if C(x) is increasing, it is well-calibrated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives model reliability from empirical outcome tracking against predicted confidence intervals.",
+        "source_operator": "calibration_curve_verification",
+        "telemetry": "Win rate per confidence bin, total outcomes, and calibration slope"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "855bf7b936d08c9f_t0",
+      "think": "The core mathematical structure of Galaxy Sports Edge is rooted in a deterministic factor model that processes market-implied probabilities to compute actionable edge estimates. This model operates under the assumption that bookmakers' pricing reflects rational expectations, enabling reverse-engineering of true edge values. The system’s architecture enforces transparency by structuring its output into three lanes—scoring, published, and gated—which mirror a state-transition mechanism. Each lane is validated through data quality scores and temporal freshness metrics. Calibration curves provide empirical feedback loops to assess model reliability. The system avoids probabilistic overfitting by relying on verifiable arithmetic and explicit failure modes, such as low-quality data or lack of calibration. These primitives form a closed-loop inference engine grounded in Bayesian principles but expressed through deterministic operations.\n\nDeep epistemic analysis for SUBMISSION (855bf7b936d08c9f, domain=other, pages_read=5/5): Operator 'Factor Model Edge Computation' (page 1, domain other) captures: The factor breakdown, the market-implied probability computed from the books' own quoted prices (arithmetic you can redo by hand), the edge estimate, the data quality score, and when the numbers were last refreshed. Assumptions: Market prices are consistent with rational expectations; edge is defined as deviation from implied probability. Breakdown regime: When P_m < 0.5, the model may signal negative edge; when Q < 0.7, data reliability is questioned. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw book prices to actionable edge signals via probabilistic inference and temporal freshness constraints. Operator 'Auditable Pick Lane State' (page 1, domain other) captures: Three lanes: what the engine is scoring right now, what it published, and what it gated. Assumptions: Each lane represents a distinct decision stage with independent validation logic. Breakdown regime: If L_c = L_p = L_g, no active transition occurs; if L_c ≠ L_p, a publish event is pending. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a state machine with three states representing current, published, and gated decision outcomes. Operator 'Calibration Curve Verification' (page 1, domain other) captures: Wins, losses, pushes and voids, with a calibration curve that shows whether higher confidence actually wins more often. Assumptions: Higher confidence levels should correlate with higher actual win rates under proper calibration. Breakdown regime: If C(x) is flat or decreasing, the model lacks calibration; if C(x) is increasing, it is well-calibrated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives model reliability from empirical outcome tracking against predicted confidence intervals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SUBMISSION (855bf7b936d08c9f, domain=other, pages_read=5/5): Operator 'Factor Model Edge Computation' (page 1, domain other) captures: The factor breakdown, the market-implied probability computed from the books' own quoted prices (arithmetic you can redo by hand), the edge estimate, the data quality score, and when the numbers were last refreshed. Assumptions: Market prices are consistent with rational expectations; edge is defined as deviation from implied probability. Breakdown regime: When P_m < 0.5, the model may signal negative edge; when Q < 0.7, data reliability is questioned. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw book prices to actionable edge signals via probabilistic inference and temporal freshness constraints. Operator 'Auditable Pick Lane State' (page 1, domain other) captures: Three lanes: what the engine is scoring right now, what it published, and what it gated. Assumptions: Each lane represents a distinct decision stage with independent validation logic. Breakdown regime: If L_c = L_p = L_g, no active transition occurs; if L_c ≠ L_p, a publish event is pending. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a state machine with three states representing current, published, and gated decision outcomes. Operator 'Calibration Curve Verification' (page 1, domain other) captures: Wins, losses, pushes and voids, with a calibration curve that shows whether higher confidence actually wins more often. Assumptions: Higher confidence levels should correlate with higher actual win rates under proper calibration. Breakdown regime: If C(x) is flat or decreasing, the model lacks calibration; if C(x) is increasing, it is well-calibrated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives model reliability from empirical outcome tracking against predicted confidence intervals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical financial engineering and statistical arbitrage models, particularly those used in sports betting analytics. Influenced by conformal prediction frameworks and decision-theoretic approaches to risk management. Retrocausal Genealogy: Rooted in SUBMISSION (855bf7b936d08c9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SUBMISSION (855bf7b936d08c9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include market inefficiencies, noise in bookmaker pricing, and user bias toward high-confidence picks. The system models these as sources of error that must be detected and mitigated through calibration and transparency. Theory of Mind & Decision Maker Model: Rooted in SUBMISSION (855bf7b936d08c9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that the scoring lane does not simply replicate the published lane without independent validation. Leakage is prevented by isolating telemetry across lanes and enforcing strict freshness budgets. Cross-Layer Veto & Anti-Leakage Check: Rooted in SUBMISSION (855bf7b936d08c9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

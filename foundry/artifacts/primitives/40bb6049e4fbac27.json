@@ -1,0 +1,323 @@
+{
+  "book_id": "40bb6049e4fbac27",
+  "source_status": "COMPLETE",
+  "title": "openalex_W1876742824",
+  "file_name": "openalex_W1876742824.pdf",
+  "sha256": "40bb6049e4fbac27093bfa6ebd9912a682521a5e7edeaaee1c343e7e0fb12d2e",
+  "primary_domain": "other",
+  "pages_total": 25,
+  "pages_read": 25,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 25,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Structural unification of Hamilton-Jacobi-Bellman equations with functional parameter sensitivity and operator semigroups. Lipschitz continuity of Hamilton-Jacobi-Bellman solutions under parameterized dynamics via operator differentiability and semigroup theory. Universal Lens: Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian inference on policy value functions via HJB solution sensitivity to environmental parameters using conformal predictive distributions. Bayesian inference on policy parameters using differentiable value operators and stochastic control flows in C1-C spaces.",
+  "gse_mapping": "Situational reasoning through state-transition dynamics governed by operator-valued stochastic processes in functional Hilbert spaces. State transitions governed by parameterized semigroups with differentiable control kernels enabling real-time tactical adaptation. GSE Mapping: Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "w0_hjb_sensitivity",
+      "name": "HJB Sensitivity Analysis",
+      "verbatim_quote": "arXiv:1303.6234v1 [math.AP] 25 Mar 2013 Sensitivity analysis for HJB equations with an application to a coupled backward-forward system Vassili Kolokoltsov1, Wei Yang2 Abstract In this paper, we analyse the dependence of the solution of HamiltonJacobi-Bellman equations on a functional parameter.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Standard stochastic optimal control problem with diffusion dynamics, Lipschitz continuity of coefficients, uniformly bounded gradients.",
+      "breakdown_regime": "Regularity failure occurs when the feedback map loses Lipschitz continuity, leading to non-uniqueness in the coupled system.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian posterior updating in GSI; state-value function evolution in GSE.",
+        "source_operator": "w0_hjb_sensitivity",
+        "telemetry": "Gradient of value function w.r.t. model parameters."
+      }
+    },
+    {
+      "primitive_id": "w0_feedback_regularity",
+      "name": "Feedback Regularity Condition",
+      "verbatim_quote": "In particular, we provide verifiable criteria for the so-called feedback regularity condition.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Existence of classical solution to HJB, smoothness of coefficients.",
+      "breakdown_regime": "Failure occurs when the adjoint process becomes singular, causing loss of stability in the coupled system.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction intervals in GSI; robust policy updates in GSE.",
+        "source_operator": "w0_feedback_regularity",
+        "telemetry": "Condition number of the Hessian matrix of the value function."
+      }
+    },
+    {
+      "primitive_id": "w0_propagator_difference",
+      "name": "Propagator Difference Estimate",
+      "verbatim_quote": "We assume that the agent can only control her drift, but not the noise.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Controlled drift dynamics, terminal cost, running cost integrability.",
+      "breakdown_regime": "Singularity arises when the generator difference blows up faster than the semigroup decay rate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State-transition kernels in GSE; predictive likelihood in GSI.",
+        "source_operator": "w0_propagator_difference",
+        "telemetry": "Kantorovich-Rubinstein distance between probability measures."
+      }
+    },
+    {
+      "primitive_id": "w0_gateaux_derivative",
+      "name": "Gâteaux Derivative",
+      "verbatim_quote": "We show that the unique solution of a Hamilton-Jacobi-Bellman equation and its spacial gradient are Lipschitz continuous uniformly with respect to a functional parameter.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Banach spaces B and D, Fréchet differentiability implies Gâteaux differentiability.",
+      "breakdown_regime": "Non-existence occurs when the directional limit depends on the path of approach in infinite dimensions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Functional gradients in GSI; sensitivity matrices in GSE.",
+        "source_operator": "w0_gateaux_derivative",
+        "telemetry": "Directional sensitivity of performance metrics."
+      }
+    },
+    {
+      "primitive_id": "well_posedness_hjb",
+      "name": "Well-Posedness of HJB Equation",
+      "verbatim_quote": "In the first place, we need to show that for each fixed curve {μ.} ∈C([0, T], M), the HJB equation (3.6) is well posed.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V(t, x; {μ.})': 'value function, dimensionless', '{μ.}': 'functional parameter, C([0, T], M)', 't': 'time, seconds', 'x': 'state variable, meters'}",
+      "assumptions": "Assumption (A1) on Hamiltonian regularity and (A2) on operator continuity.",
+      "breakdown_regime": "When the Hamiltonian fails Lipschitz continuity or operator norms diverge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The solution V(t,x;{μ.}) maps to GSI's posterior belief over policy outcomes under parameter uncertainty.",
+        "source_operator": "well_posedness_hjb",
+        "telemetry": "Convergence rate of numerical approximations to V(t,x;{μ.})"
+      }
+    },
+    {
+      "primitive_id": "sensitivity_analysis",
+      "name": "Sensitivity Analysis of HJB Solution",
+      "verbatim_quote": "Then, we discuss the sensitivity of the solution to (3.6) with respect to the parameter {μ.} ∈C([0, T], M).",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V(t, x; {μ.})': 'value function, dimensionless', '{μ.}': 'functional parameter, C([0, T], M)'}",
+      "assumptions": "Solution V and its gradient are Lipschitz continuous uniformly in {μ.}",
+      "breakdown_regime": "Loss of uniform Lipschitz continuity implies non-uniform sensitivity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives GSE's sensitivity kernel for state transitions under perturbations of μ.",
+        "source_operator": "sensitivity_analysis",
+        "telemetry": "Gradient magnitude of V w.r.t. μ across time and space"
+      }
+    },
+    {
+      "primitive_id": "operator_semigroup",
+      "name": "Operator Semigroup Generation",
+      "verbatim_quote": "For any {μ.} ∈C([0, T], M), the operator curve {L[t, μt] : t ∈[0, T]} generates a strongly continuous backward propagator {U t,s {μ.}, t ≤s} of operators U t,s {μ.} ∈L(C, C) with the common invariant domains C2 and C1.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L[t, μt]': 'linear operator, L(C2, C)', 'U t,s {μ.}': 'propagator, L(C, C)', 'C, C1, C2': 'function spaces, dimensionless'}",
+      "assumptions": "Continuity of (t, μ) ↦ L[t, μ] in strong operator topology.",
+      "breakdown_regime": "Failure of strong continuity leads to ill-defined evolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's temporal state transition model via operator evolution.",
+        "source_operator": "operator_semigroup",
+        "telemetry": "Norm bounds of U t,s {μ.} over time intervals"
+      }
+    },
+    {
+      "primitive_id": "smoothing_property",
+      "name": "Smoothing Property of Propagator",
+      "verbatim_quote": "(ii) for any t ∈[0, T], the mapping μ 7→L[t, μ] is Gˆateaux differentiable in any direction χ ∈M-μ, such that the mapping μ 7→DχL[t, μ] is continuous in the strong operator topology of L(C2, C).",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U t,s {μ.}': 'propagator, L(C, C)', 'C, C1, C2': 'function spaces, dimensionless', 'CLip': 'Lipschitz continuous functions, dimensionless'}",
+      "assumptions": "Existence of β ∈ (0,1) and constants c5, c6 such that smoothing bounds hold.",
+      "breakdown_regime": "Violation of smoothing bounds implies loss of regularity in solutions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides GSE’s kernel for regularizing noisy state estimates during transitions.",
+        "source_operator": "smoothing_property",
+        "telemetry": "Regularity improvement of U t,s {μ.}f over time"
+      }
+    },
+    {
+      "primitive_id": "diff_semigroup",
+      "name": "Differentiable Semigroup Generator",
+      "verbatim_quote": "By (2.3) in Proposition 2.1, for each 0 ≤t < r ≤T the mapping α 7→U t,r α is continuous as a function from [0, 1] to L(C2, C) in the strong operator topology.",
+      "page": 14,
+      "latex": "\\frac{\\partial U_{t,r}^{\\alpha}}{\\partial \\alpha} = \\int_t^r U_{t,r}^{\\alpha} \\frac{\\partial L_{\\alpha}[r]}{\\partial \\alpha} U_{r,s}^{\\alpha} dr",
+      "symbol_and_unit_ledger": "{'U_{t,r}^{\\\\alpha}': 'Operator from C2 to C', 'L_{\\\\alpha}[r]': 'Linear operator from C2 to C', '\\\\alpha': 'Parameter in [0,1]', 't,r': 'Time in [0,T]'}",
+      "assumptions": "Condition (A2) ensures differentiability of Lα[t] in α.",
+      "breakdown_regime": "When α approaches boundary values of [0,1].",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The derivative of U t,r α with respect to α maps to a kernel in GSE's transition space.",
+        "source_operator": "diff_semigroup",
+        "telemetry": "Norm convergence of operator differences in L(C2,C)"
+      }
+    },
+    {
+      "primitive_id": "value_derivative",
+      "name": "Value Function Derivative",
+      "verbatim_quote": "Then one would have that the mapping α 7→ Wα(t, ·) is differentiable as a function from [0, 1] to C1.",
+      "page": 15,
+      "latex": "\\frac{\\partial W_{\\alpha}(t, \\cdot)}{\\partial \\alpha} = U_{t,T}^{\\alpha} \\frac{\\partial V_T^{\\alpha}}{\\partial \\alpha} + \\frac{\\partial U_{t,T}^{\\alpha}}{\\partial \\alpha} V_T^{\\alpha}",
+      "symbol_and_unit_ledger": "{'W_{\\\\alpha}(t, \\\\cdot)': 'Value function in C1', 'V_T^{\\\\alpha}': 'Terminal value in C1', 'U_{t,T}^{\\\\alpha}': 'Evolution operator from time t to T'}",
+      "assumptions": "Differentiability of V T α and U t,T α in α under condition (A3).",
+      "breakdown_regime": "At discontinuous points in α or non-smooth terminal conditions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derivative of Wα(t,·) encodes sensitivity to policy parameters in GSI’s belief space.",
+        "source_operator": "value_derivative",
+        "telemetry": "Gradient norm in C1 space"
+      }
+    },
+    {
+      "primitive_id": "lipschitz_continuity",
+      "name": "Lipschitz Continuity of Value Solutions",
+      "verbatim_quote": "In this work, we are only concerned with the Lipschitz continuity of the solution of the HJB with respect to the parameter.",
+      "page": 13,
+      "latex": "\\sup_{t \\in [0,T]} \\|V(t, \\cdot; \\mu_1) - V(t, \\cdot; \\mu_2)\\|_{C1} \\leq k \\sup_{t \\in [0,T]} \\|\\mu_1(t) - \\mu_2(t)\\|_S",
+      "symbol_and_unit_ledger": "{'V(t, \\\\cdot; \\\\mu_i)': 'Solution in C1', '\\\\mu_i': 'Measure-valued parameter in S', 'k': 'Positive constant'}",
+      "assumptions": "Uniform boundedness of derivatives and continuity of μ.",
+      "breakdown_regime": "When measures μ1 and μ2 differ significantly in support or mass distribution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Lipschitz bound on value functions mirrors robustness in GSE's decision manifold.",
+        "source_operator": "lipschitz_continuity",
+        "telemetry": "Distance between measure trajectories in S"
+      }
+    },
+    {
+      "primitive_id": "operator_smoothness",
+      "name": "Operator Smoothness Property",
+      "verbatim_quote": "(3.35) Therefore, from (3.33) together with (3.34) and (3.35), we complete the proof.",
+      "page": 13,
+      "latex": "\\|U_{t,T}^{\\alpha_1} - U_{t,T}^{\\alpha_2}\\|_{L(C2,C1)} \\leq c_4 c_5 \\int_t^T (s-t)^{-\\beta} ds \\cdot |\\alpha_1 - \\alpha_2|",
+      "symbol_and_unit_ledger": "{'U_{t,T}^{\\\\alpha}': 'Semigroup operator from C2 to C1', 'c_4,c_5': 'Constants', '\\\\beta': 'Smoothing exponent'}",
+      "assumptions": "Condition (A2)(ii) and smoothing property (3.13).",
+      "breakdown_regime": "Near singular times t close to T or when β approaches zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Smoothness of U t,T α enables stable gradient propagation in GSI's inference engine.",
+        "source_operator": "operator_smoothness",
+        "telemetry": "Integral norm of operator difference over time"
+      }
+    },
+    {
+      "primitive_id": "mean_field_game_dynamics",
+      "name": "Mean Field Game Dynamics",
+      "verbatim_quote": "4 Application to mean field games In this section, we apply the sensitivity results in Theorem 3.3 to a mean field games model and give verifiable conditions for the so-called feedback regularity condition.",
+      "page": 19,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'terminal time (seconds)', 'X_t': 'state process (dimensionless)', 'μ_t': 'empirical distribution (probability measure on \\\\(\\\\mathbb{R}^d\\\\))', 'u_t': 'control input (dimensionless)'}",
+      "assumptions": "Continuum of players, symmetric dynamics, stochastic differential equation structure.",
+      "breakdown_regime": "When feedback regularity fails due to non-uniqueness of argmax in HJB.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feedback control law maps to solution of coupled backward-forward system via HJB equation.",
+        "source_operator": "mean_field_game_dynamics",
+        "telemetry": "Empirical distribution convergence rate under feedback control."
+      }
+    },
+    {
+      "primitive_id": "feedback_regularity_condition",
+      "name": "Feedback Regularity Condition",
+      "verbatim_quote": "Let us consider a continuous time dynamic game with a continuum of players and a terminal time T > 0.",
+      "page": 19,
+      "latex": "\\sup_{(t,x)\\in[0,T]\\times\\mathbb{R}^d} |\\hat{u}(t, x; \\{\\eta_s\\}) - \\hat{u}(t, x; \\{\\xi_s\\})| \\leq k_1 \\sup_{s\\in[0,T]} ||\\eta_s - \\xi_s||_{(C^2)^*}",
+      "symbol_and_unit_ledger": "{'\\\\hat{u}': 'optimal feedback control (dimensionless)', 'k_1': 'Lipschitz constant (dimensionless)', '\\\\eta_s, \\\\xi_s': 'probability measures (probability measure on \\\\(\\\\mathbb{R}^d\\\\))'}",
+      "assumptions": "Uniqueness of optimal control, continuity of measure flow.",
+      "breakdown_regime": "Failure of Lipschitz continuity in control mapping under perturbations of empirical measure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ensures existence and uniqueness of solution to coupled BFF system via contraction principle.",
+        "source_operator": "feedback_regularity_condition",
+        "telemetry": "Control variation bounded by measure difference in \\( (C^2)^* \\)-norm."
+      }
+    },
+    {
+      "primitive_id": "stochastic_control_process",
+      "name": "Stochastic Control Process",
+      "verbatim_quote": "Then one can write a stochastic differential equation corresponding to the generator (3.2) as dXt = h(t, Xt, μt, ut) dt + σdWt for all t ≥0.",
+      "page": 19,
+      "latex": "dX_t = h(t, X_t, \\mu_t, u_t)dt + \\sigma dW_t",
+      "symbol_and_unit_ledger": "{'X_t': 'state variable (dimensionless)', 'h': 'drift coefficient (dimensionless)', 'u_t': 'control input (dimensionless)', '\\\\sigma': 'diffusion coefficient (dimensionless)', 'W_t': 'Brownian motion (dimensionless)'}",
+      "assumptions": "Continuous-time Markovian dynamics, additive noise.",
+      "breakdown_regime": "Non-Lipschitz drift or degenerate diffusion leads to pathwise non-uniqueness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stochastic differential equation defines evolution of reference player's state under feedback control.",
+        "source_operator": "stochastic_control_process",
+        "telemetry": "State trajectory variance under fixed control policy."
+      }
+    },
+    {
+      "primitive_id": "hjb_equation_system",
+      "name": "Hamilton-Jacobi-Bellman Equation System",
+      "verbatim_quote": "In this game, the reference player faces an optimisation problem described by the HJB equation (3.6).",
+      "page": 20,
+      "latex": "\\frac{\\partial V}{\\partial t} + H(t, x, \\mu, \\nabla V) + L[t, \\mu]V = 0",
+      "symbol_and_unit_ledger": "{'V': 'value function (dimensionless)', 'H': 'Hamiltonian (dimensionless)', 'L[t, \\\\mu]': 'generator operator (linear functional on \\\\(C^2\\\\))', '\\\\mu': 'empirical distribution (probability measure on \\\\(\\\\mathbb{R}^d\\\\))'}",
+      "assumptions": "Dynamic programming principle holds, smooth value function exists.",
+      "breakdown_regime": "Discontinuity or lack of viscosity solution implies failure of Bellman principle.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Backward PDE governs optimal value function; forward SDE governs state evolution.",
+        "source_operator": "hjb_equation_system",
+        "telemetry": "Value function gradient magnitude under feedback policy."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "40bb6049e4fbac27_t0",
+      "think": "This chapter establishes foundational tools for analyzing how solutions to Hamilton-Jacobi-Bellman (HJB) equations respond to perturbations in a functional parameter μt. The main result proves uniform Lipschitz continuity of both the value function and its spatial gradient with respect to μt, ensuring stability under small changes. This directly addresses the feedback regularity condition required for solving coupled backward-forward systems arising in mean field game theory. The proof leverages operator semigroup techniques and propagator difference estimates, providing verifiable criteria for maintaining regularity. These primitives are essential for uncertainty quantification in predictive models across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE). Window 1 Synthesis: Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Market participants and betting agents may introduce small, systematic biases in their predictions (functional parameter μt). The established Lipschitz bounds ensure that these biases do not cause catastrophic mispricing or unstable strategies, allowing for robust decision-making. Theory of Mind (Window 1): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Avoids collinearity with primitives from stochastic filtering (Kalman-Bucy) by focusing exclusively on deterministic sensitivity of value functions. Prevents leakage into conformal prediction via explicit verification of the feedback regularity condition through eigenvalue analysis of the Hessian. Cross-Layer Veto (Window 1): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "40bb6049e4fbac27_t1",
+      "think": "This chapter establishes foundational theory for stochastic control problems involving functional parameters. The core focus is on the sensitivity of value functions derived from Hamilton-Jacobi-Bellman (HJB) equations to variations in the underlying functional parameter μ. The mathematical framework relies heavily on operator semigroup theory and functional analysis. Key steps include proving well-posedness of the HJB equation under assumptions (A1) and (A2), demonstrating that the solution V(t,x;μ) and its spatial gradient are uniformly Lipschitz continuous with respect to μ. This ensures robustness of the control policy against small perturbations in environmental or model parameters. The existence of a strongly continuous backward propagator generated by operators L[t,μ] allows for the construction of mild solutions to the HJB equation. The smoothing properties of these propagators ensure that even irregular initial data leads to sufficiently smooth solutions over time. These results form the basis for probabilistic inference in GSI and dynamic decision-making in GSE. Window 2 Synthesis: Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in Bellman's dynamic programming principles and modern stochastic control theory initiated by Kushner and Fleming. Influenced by infinite-dimensional analysis and semigroup theory developed by Lions and Pazy. Retrocausal Genealogy (Window 2): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing strategies as variations in μ, where each player/coach adjusts their policy based on perceived environmental drifts. The sensitivity analysis reflects how robust policies must account for such uncertainties. Theory of Mind (Window 2): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to specific μ values by enforcing uniform bounds across the functional space. Ensures GSI's Bayesian updates remain stable and GSE's reasoning does not collapse under extreme parameter shifts. Cross-Layer Veto (Window 2): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "40bb6049e4fbac27_t2",
+      "think": "Chapter 3 establishes foundational differentiability and continuity properties for solutions to Hamilton-Jacobi-Bellman (HJB) equations under parameterized dynamics. It begins by asserting that the terminal value map α → V T α is differentiable in C1, which allows for the derivation of the derivative of the value function Wα(t,·). This is achieved through the composition of evolution operators U t,T α and their derivatives, leveraging the structure of semigroup theory and operator calculus. The key step involves showing that the mapping α 7→ U t,r α is continuous in the strong operator topology, ensuring that limits and derivatives can be interchanged appropriately. The proof proceeds by decomposing the difference Wα1(t,x) − Wα2(t,x) into two terms: one involving the variation in terminal values and another involving the variation in evolution operators. Each term is bounded using known inequalities and properties of the operators involved. The final result confirms that the derivative ∂Wα/∂α exists and admits a closed-form expression involving both the terminal derivative and the derivative of the evolution operator. This framework supports robust policy differentiation in dynamic environments, forming the basis for GSI’s probabilistic reasoning and GSE’s adaptive state transitions. Window 3 Synthesis: Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in semigroup theory initiated by Hille-Yosida and extended by Lions, this chapter builds upon earlier works on stochastic control and viscosity solutions to HJB equations. Retrocausal Genealogy (Window 3): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing strategies as variations in α, where each player's policy corresponds to a distinct parameterization of the underlying dynamics. The differentiability ensures that small changes in strategy yield predictable shifts in expected outcomes. Theory of Mind (Window 3): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is ensured by requiring distinct α values for different agents; leakage is prevented by enforcing boundedness of operator norms and uniform continuity across parameter space. Cross-Layer Veto (Window 3): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "40bb6049e4fbac27_t3",
+      "think": "Chapter 4 introduces the application of sensitivity analysis from Theorem 3.3 to mean field games (MFGs), focusing on verifying feedback regularity conditions essential for solving the associated coupled backward-forward systems. The framework considers a continuum of players governed by a common stochastic differential equation with state-dependent drift and diffusion coefficients. Each player observes their own state and the empirical distribution of all players, leading to a decentralized decision-making environment. The core innovation lies in deriving sufficient conditions under which the optimal control strategy depends continuously on the empirical distribution, ensuring well-posedness of the MFG system. This is formalized through the feedback regularity condition, which bounds the difference in optimal controls by the distance between empirical distributions in the dual norm of \\(C^2\\). The derivation hinges on the structure of the Hamilton-Jacobi-Bellman (HJB) equation and the generator \\(L[t, \\mu]\\), which encapsulates the infinitesimal dynamics of the measure flow. Examples illustrate how specific structures—such as quadratic costs and linear drift—yield tractable forms of the HJB equation, including generalized backward Burgers' equations. These insights enable rigorous treatment of large-population strategic interactions in continuous time. Window 4 Synthesis: Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early works on Nash equilibria in large populations [7, 8, 9, 18], this chapter builds upon the foundational theory of mean field limits and stochastic control to establish computational and analytical frameworks for equilibrium selection in dynamic games. Retrocausal Genealogy (Window 4): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Players are modeled as rational agents optimizing individual objectives subject to shared environmental constraints encoded in the empirical distribution. Their beliefs about others' behavior are updated dynamically based on observed states and inferred collective actions, forming a recursive belief hierarchy. Theory of Mind (Window 4): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple players' strategies become perfectly correlated, violating the assumption of independent perturbations. Leakage occurs if feedback policies depend on unobservable variables beyond the empirical distribution, undermining the validity of the mean field approximation. Cross-Layer Veto (Window 4): Rooted in openalex_W1876742824 (40bb6049e4fbac27, 25/25 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

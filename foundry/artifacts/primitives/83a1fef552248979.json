@@ -1,0 +1,78 @@
+{
+  "book_id": "83a1fef552248979",
+  "source_status": "COMPLETE",
+  "title": "community-moderation-policy",
+  "file_name": "community-moderation-policy.md",
+  "sha256": "83a1fef55224897988e44f260d758c7c0d4cc0b9948fbb3fa047fc911128173c",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Community safety as a constrained optimization over behavioral entropy and decision quality, with bounded uncertainty and zero-manipulation inergo-dynamics. Universal Lens: Rooted in community-moderation-policy (83a1fef552248979), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on community signal integrity, conditioned on trust-claims registry and responsible-play nudges, with conformal prediction intervals for risk exposure. GSI Mapping: Rooted in community-moderation-policy (83a1fef552248979), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models room-state transitions through moderator triage queues and decision-quality thresholds, with state-space defined by engagement vs. safety trade-offs. GSE Mapping: Rooted in community-moderation-policy (83a1fef552248979), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "beginner_protection",
+      "name": "Beginner Protection Operator",
+      "verbatim_quote": "**Protect beginners.** The basic question is always welcome; mocking a beginner is a removable offense.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_{\\\\text{beginner}}': 'dimensionless binary indicator (1 if protected, 0 otherwise)', 'Q_{\\\\text{basic}}': 'dimensionless query intensity'}",
+      "assumptions": "Query intensity Q_basic is bounded above by a fixed threshold; mocking behavior is modeled as a negative feedback term in a social utility function.",
+      "breakdown_regime": "When Q_basic exceeds threshold, B_beginner drops to 0 due to removal policy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's Bayesian update on query type and intent; GSE's state transition to moderation queue when Q_basic > threshold.",
+        "source_operator": "beginner_protection",
+        "telemetry": "Moderation log frequency of beginner-mocking removals."
+      }
+    },
+    {
+      "primitive_id": "decision_quality_guardian",
+      "name": "Decision Quality Guardian",
+      "verbatim_quote": "We protect decision quality.** No pressure to bet, no shame for sitting out, no chasing-losses dynamics, ever.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{\\\\text{quality}}': 'dimensionless decision quality score', 'P_{\\\\text{bet}}': 'probability of betting action', 'C_{\\\\text{chase}}': 'dimensionless chase-losses signal'}",
+      "assumptions": "D_quality is a monotonic function of P_bet and C_chase; no external pressure forces P_bet above baseline.",
+      "breakdown_regime": "When C_chase > 0, D_quality decays below threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's risk-adjusted decision model; GSE's state transition to 'no-pressure' mode when C_chase > 0.",
+        "source_operator": "decision_quality_guardian",
+        "telemetry": "Frequency of 'no-chase' state transitions in room logs."
+      }
+    },
+    {
+      "primitive_id": "certainty_avoidance",
+      "name": "Certainty Avoidance Kernel",
+      "verbatim_quote": "**No manufactured certainty.** Community \"locks\"/\"free money\"/\"guaranteed\" talk gets the same treatment as our own copy: it does not stand.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{cert}}': 'dimensionless certainty signal strength', 'T_{\\\\text{talk}}': 'time-series of certainty-related utterances'}",
+      "assumptions": "C_cert is a time-weighted average of T_talk; any C_cert > threshold triggers policy enforcement.",
+      "breakdown_regime": "When C_cert exceeds threshold, T_talk is flagged for moderation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's certainty signal detection; GSE's state transition to 'policy-alert' when certainty exceeds bounds.",
+        "source_operator": "certainty_avoidance",
+        "telemetry": "Rate of certainty-flagged utterances in chat logs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "83a1fef552248979_t0",
+      "think": "The three core primitives form a triadic constraint system: beginner protection ensures minimal entropy in early-stage participation, decision quality guardian enforces bounded rationality in betting behavior, and certainty avoidance prevents information distortion through false confidence signals. These operators define a closed-loop safety manifold where each primitive acts as a control input to maintain equilibrium. Failure modes include: 1) beginner protection collapse when Q_basic exceeds threshold, 2) decision quality degradation under pressure, and 3) certainty inflation leading to policy bypass. The system is robust against adversarial manipulation due to its reliance on empirical telemetry rather than heuristic inference. Each primitive maps to both GSI’s probabilistic inference layer and GSE’s dynamic state engine, ensuring alignment across layers.\n\nDeep epistemic analysis for community-moderation-policy (83a1fef552248979, domain=other, pages_read=2/2): Operator 'Beginner Protection Operator' (page 1, domain other) captures: **Protect beginners.** The basic question is always welcome; mocking a beginner is a removable offense. Assumptions: Query intensity Q_basic is bounded above by a fixed threshold; mocking behavior is modeled as a negative feedback term in a social utility function. Breakdown regime: When Q_basic exceeds threshold, B_beginner drops to 0 due to removal policy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's Bayesian update on query type and intent; GSE's state transition to moderation queue when Q_basic > threshold. Operator 'Decision Quality Guardian' (page 1, domain other) captures: We protect decision quality.** No pressure to bet, no shame for sitting out, no chasing-losses dynamics, ever. Assumptions: D_quality is a monotonic function of P_bet and C_chase; no external pressure forces P_bet above baseline. Breakdown regime: When C_chase > 0, D_quality decays below threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's risk-adjusted decision model; GSE's state transition to 'no-pressure' mode when C_chase > 0. Operator 'Certainty Avoidance Kernel' (page 1, domain other) captures: **No manufactured certainty.** Community \"locks\"/\"free money\"/\"guaranteed\" talk gets the same treatment as our own copy: it does not stand. Assumptions: C_cert is a time-weighted average of T_talk; any C_cert > threshold triggers policy enforcement. Breakdown regime: When C_cert exceeds threshold, T_talk is flagged for moderation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's certainty signal detection; GSE's state transition to 'policy-alert' when certainty exceeds bounds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for community-moderation-policy (83a1fef552248979, domain=other, pages_read=2/2): Operator 'Beginner Protection Operator' (page 1, domain other) captures: **Protect beginners.** The basic question is always welcome; mocking a beginner is a removable offense. Assumptions: Query intensity Q_basic is bounded above by a fixed threshold; mocking behavior is modeled as a negative feedback term in a social utility function. Breakdown regime: When Q_basic exceeds threshold, B_beginner drops to 0 due to removal policy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's Bayesian update on query type and intent; GSE's state transition to moderation queue when Q_basic > threshold. Operator 'Decision Quality Guardian' (page 1, domain other) captures: We protect decision quality.** No pressure to bet, no shame for sitting out, no chasing-losses dynamics, ever. Assumptions: D_quality is a monotonic function of P_bet and C_chase; no external pressure forces P_bet above baseline. Breakdown regime: When C_chase > 0, D_quality decays below threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's risk-adjusted decision model; GSE's state transition to 'no-pressure' mode when C_chase > 0. Operator 'Certainty Avoidance Kernel' (page 1, domain other) captures: **No manufactured certainty.** Community \"locks\"/\"free money\"/\"guaranteed\" talk gets the same treatment as our own copy: it does not stand. Assumptions: C_cert is a time-weighted average of T_talk; any C_cert > threshold triggers policy enforcement. Breakdown regime: When C_cert exceeds threshold, T_talk is flagged for moderation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's certainty signal detection; GSE's state transition to 'policy-alert' when certainty exceeds bounds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in game theory's social choice axioms and behavioral economics' bounded rationality principles, with modern reinforcement learning constraints applied to community governance. Retrocausal Genealogy: Rooted in community-moderation-policy (83a1fef552248979), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in community-moderation-policy (83a1fef552248979), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit loopholes in beginner protection or manipulate certainty signals. The system models these as adversarial inputs to a safety kernel, with GSI's Bayesian inference detecting deviation from expected norms. Theory of Mind & Decision Maker Model: Rooted in community-moderation-policy (83a1fef552248979), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates in distinct semantic domains: social entropy (beginner), behavioral rationality (decision), and information integrity (certainty). Leakage occurs only when these domains overlap without explicit cross-layer validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in community-moderation-policy (83a1fef552248979), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

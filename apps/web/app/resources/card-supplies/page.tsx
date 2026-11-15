@@ -203,7 +203,7 @@ export default function ResourcesCardSuppliesPage(): JSX.Element {
         {/* Header & Title Section (title <= 60 chars) */}
         <div className="rounded-2xl border-2 border-mineral bg-obsidian/90 p-6 sm:p-10 shadow-2xl">
           <div className="flex flex-col gap-4">
-            <span className="inline-block w-fit rounded-md bg-caution/20 border border-caution/30/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
+            <span className="inline-block w-fit rounded-md bg-caution/20 border border-caution/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
               OPERATOR RESOURCES &amp; DESK STACK
             </span>
             <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
@@ -218,7 +218,7 @@ export default function ResourcesCardSuppliesPage(): JSX.Element {
           {/* Prominent Affiliate Disclosure Banner per Rule R4 / §4.3 */}
           <div
             id="affiliate-disclosure"
-            className="mt-6 rounded-xl border border-caution/30/30 bg-caution/10/40 p-4 text-xs sm:text-sm text-caution/90"
+            className="mt-6 rounded-xl border border-caution/30 bg-caution/40 p-4 text-xs sm:text-sm text-caution/90"
           >
             <p className="font-medium">
               Disclosure (#affiliate): As an Amazon Associate (tag: galaxysportse-20), Galaxy Sports Edge earns from qualifying purchases at no additional cost to you.
@@ -271,7 +271,7 @@ export default function ResourcesCardSuppliesPage(): JSX.Element {
                             href={amazonUrl}
                             target="_blank"
                             rel="noopener noreferrer sponsored"
-                            className="inline-flex w-full items-center justify-center rounded-lg border border-caution/30/40 bg-caution/10 px-4 py-2.5 text-sm font-semibold text-caution hover:bg-caution/20 hover:border-caution transition-colors"
+                            className="inline-flex w-full items-center justify-center rounded-lg border border-caution/40 bg-caution/10 px-4 py-2.5 text-sm font-semibold text-caution hover:bg-caution/20 hover:border-caution transition-colors"
                           >
                             Check Price on Amazon &rarr;
                           </a>
@@ -286,7 +286,7 @@ export default function ResourcesCardSuppliesPage(): JSX.Element {
         </div>
 
         {/* CTA section with >= 2 internal links to /packages and /fantasy/dfs */}
-        <div className="mt-16 rounded-2xl border border-mineral bg-gradient-to-r from-ion-2 to-ion-2 p-8 text-center sm:p-12 shadow-xl">
+        <div className="mt-16 rounded-2xl border border-mineral bg-gradient-to-r from-eclipse to-obsidian p-8 text-center sm:p-12 shadow-xl">
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
             Power Your Game Day Preparation
           </h2>

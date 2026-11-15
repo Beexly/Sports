@@ -1,0 +1,845 @@
+{
+ "book_id": "f384b0a6daff490e",
+ "source_status": "COMPLETE",
+ "source_note": "Yury Polyanskiy (MIT) and Yihong Wu (Yale), Information Theory: From Coding to Learning, Cambridge University Press, 2025. Local file: library/books-must-have/PolyanskiyWu-2025-InformationTheoryFromCodingToLearning.pdf, 5523972 bytes, full sha256 f384b0a6daff490e05029093445fdbab8ada58a6f53b994f363c580cf19a8686 (book_id is the first 16 hex of the scan digest sha256(str(size) + bytes) computed over the PDF only). The PDF is the authors' prepublication version dated August 16, 2024, whose page i notice states it has matching equation numbers and theorems with the printed version; the extracted text (47479 lines) is clean born-digital text with occasional symbol garbling inside displayed formulas, so all verbatim quotes were taken from clean prose passages and machine-verified as contiguous substrings of the extracted text file under whitespace normalization. Six parts, 33 chapters, references begin at printed p. 672 and the index at p. 695. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "shannon_entropy",
+   "name": "Shannon entropy H(X) = E[log 1/P_X(X)]: the expected surprise of a discrete random variable, in bits for log base 2 and nats for log base e",
+   "verbatim_quote": "Since entropy only depends on the distribution of a random variable, it is customary in information theory to also write H(PX ) in place of H(X), which we will do freely in this book.",
+   "page": "Chapter 1, Section 1.1, Definition 1.1, printed p. 8 (text lines 1456-1480)",
+   "latex": "H(X) = E\\left[\\log \\frac{1}{P_X(X)}\\right] = \\sum_{x} P_X(x) \\log \\frac{1}{P_X(x)}",
+   "symbol_and_unit_ledger": {
+    "P_X(x)": "probability mass function of X, dimensionless",
+    "log": "logarithm; base 2 gives bits, base e gives nats",
+    "H(X)": "entropy, bits or nats per symbol"
+   },
+   "assumptions": [
+    "X is discrete with a probability mass function",
+    "convention 0 log(1/0) = 0 by continuity (equation 1.1)"
+   ],
+   "breakdown_regime": "Stated for discrete variables only. The continuous analog is differential entropy, which can be negative and is not obtained as a limit of discrete entropies under refinement. Entropy also ignores all structure of the outcome space beyond the probability masses.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Entropy is the engine's unit of irreducible uncertainty about a discrete state: any predictive distribution the engine maintains over a finite outcome set carries an entropy that lower bounds the description length of its beliefs and prices the maximum value of any further observation about that state.",
+    "source_operator": "shannon_entropy",
+    "telemetry": "Empirical outcome frequencies and the engine's own predictive distributions over discrete events, from which entropy estimates are computed."
+   }
+  },
+  {
+   "primitive_id": "differential_entropy",
+   "name": "Differential entropy h(X) = -D(P_X || Leb) = E[log 1/p(X)] for a continuous random vector, with h(N(mu, sigma^2)) = (1/2) log(2 pi e sigma^2)",
+   "verbatim_quote": "There are many crucial differences between the Shannon entropy and the differential entropy. For example, from Theorem 1.4 we know that deterministic processing cannot increase the Shannon entropy, i.e. H(f(X)) ≤ H(X) for any discrete X, which is intuitively clear.",
+   "page": "Chapter 2, Section 2.3, Definition 2.6 and Example 2.4, printed p. 27 (text lines 2715-2748)",
+   "latex": "h(X) = E\\left[\\log \\frac{1}{p(X)}\\right], \\qquad h(\\mathcal{N}(\\mu,\\sigma^2)) = \\frac{1}{2}\\log(2\\pi e \\sigma^2)",
+   "symbol_and_unit_ledger": {
+    "p(x)": "probability density function of X, units of 1/(units of X)",
+    "Leb": "Lebesgue measure on R^d, the reference measure in the definition h(X) = -D(P_X || Leb)",
+    "sigma^2": "variance of the Gaussian, squared units of X"
+   },
+   "assumptions": [
+    "X has a density with respect to Lebesgue measure; otherwise h(X) = -infinity by the book's definition",
+    "finite second moment for the Gaussian formula and its capacity applications"
+   ],
+   "breakdown_regime": "Not an absolute information measure: it changes under rescaling and reparametrization, can be negative or undefined, deterministic processing can increase it, and sums of independent variables with finite differential entropy can fail to have one.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Differential entropy prices the log-volume of the typical region of a continuous belief state. In the engine it converts covariance structure into an information budget: a Gaussian belief with covariance Sigma carries (1/2) log det(2 pi e Sigma) nats, and any non-Gaussian belief with the same covariance carries no more.",
+    "source_operator": "differential_entropy",
+    "telemetry": "Covariance matrices of continuous latent states and noise floors of the engine's sensors and estimators."
+   }
+  },
+  {
+   "primitive_id": "kl_divergence_information_inequality",
+   "name": "KL divergence D(P||Q) = E_P[log (dP/dQ)] when P is absolutely continuous with respect to Q and +infinity otherwise; the information inequality D(P||Q) >= 0 with equality iff P = Q, which makes expected log-loss (cross-entropy) uniquely minimized at the true distribution",
+   "verbatim_quote": "Let P, Q be distributions on A, with Q called the reference measure. The divergence (or relative entropy) between P and Q is",
+   "page": "Chapter 2, Sections 2.1-2.2, Definition 2.1, Theorems 2.2-2.3 and Corollary 2.4, printed pp. 21-24 (text lines 2337-2560)",
+   "latex": "D(P\\|Q) = E_P\\left[\\log \\frac{dP}{dQ}\\right] \\ge 0",
+   "symbol_and_unit_ledger": {
+    "dP/dQ": "Radon-Nikodym derivative of P with respect to Q, dimensionless likelihood ratio",
+    "D(P||Q)": "divergence in nats (bits with log base 2); asymmetric, not a metric"
+   },
+   "assumptions": [
+    "P absolutely continuous with respect to Q for finiteness",
+    "expectations evaluated under the first argument P"
+   ],
+   "breakdown_regime": "Infinite whenever Q gives zero probability to an event of positive P probability, and asymmetric: the book's coin example has D(P||Q) = infinity while D(Q||P) = 1 bit. It satisfies no triangle inequality and is not a distance.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "KL divergence is the engine's canonical cost of being wrong about a distribution: model comparison, belief updating and scoring of probabilistic forecasts all reduce to expected log-likelihood ratios, and the information inequality certifies that reporting one's true belief is the unique minimizer of expected log-loss.",
+    "source_operator": "kl_divergence_information_inequality",
+    "telemetry": "Paired predictive and realized outcome distributions, and log-loss scores of competing internal models on identical event streams."
+   }
+  },
+  {
+   "primitive_id": "divergence_chain_rule_tensorization",
+   "name": "Chain rule and tensorization of divergence: D(P_{X,Y}||Q_{X,Y}) = D(P_X||Q_X) + D(P_{Y|X}||Q_{Y|X}|P_X), with the full chain rule summing conditional divergences over coordinates and divergence adding over independent pairs",
+   "verbatim_quote": "There is a nice interpretation of the full chain rule as a decomposition of the “distance” from PXn to QXn as a sum of “distances” between intermediate distributions, cf. Ex. I.43.",
+   "page": "Chapter 2, Section 2.5, Theorems 2.15-2.16, printed pp. 33-34 (text lines 3054-3210)",
+   "latex": "D(P_{X,Y}\\|Q_{X,Y}) = D(P_X\\|Q_X) + D(P_{Y|X}\\|Q_{Y|X}|P_X)",
+   "symbol_and_unit_ledger": {
+    "D(P_{Y|X}||Q_{Y|X}|P_X)": "conditional divergence averaged under P_X, nats",
+    "P_{X,Y}": "joint distribution of the pair (X, Y)"
+   },
+   "assumptions": [
+    "X and Y standard Borel spaces for the conditional versions",
+    "a common dominating measure exists for the density forms"
+   ],
+   "breakdown_regime": "Without the standard Borel assumption even the identity linking conditional and joint divergence can fail (the book's Example 2.5). Marginal divergences do not determine the joint divergence: with different dependence structure under P and Q the two can be incomparable.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The chain rule lets the engine attribute a total belief mismatch to individual factors in sequence: each new signal family contributes a conditional divergence term, so the marginal contribution of every information source to model error is separately auditable and adds over independent observations.",
+    "source_operator": "divergence_chain_rule_tensorization",
+    "telemetry": "Sequential forecast errors decomposed by signal family and by observation index."
+   }
+  },
+  {
+   "primitive_id": "data_processing_inequality",
+   "name": "Data-processing inequality: applying the same Markov kernel to two distributions cannot increase their divergence, D(P_Y||Q_Y) <= D(P_X||Q_X) when both outputs are generated through the shared kernel P_{Y|X}",
+   "verbatim_quote": "The following result, known as the Data-Processing Inequality (DPI), is an important principle in all of information theory. In many ways, it underpins the whole concept of information. The intuitive interpretation is that it is easier to distinguish two distributions using clean (resp. full) data as opposed to noisy (resp. partial) data.",
+   "page": "Chapter 2, Section 2.5, Theorem 2.17, printed p. 34 (text lines 3226-3260)",
+   "latex": "D(P_Y\\|Q_Y) \\le D(P_X\\|Q_X), \\qquad P_Y = P_{Y|X}\\circ P_X,\\; Q_Y = P_{Y|X}\\circ Q_X",
+   "symbol_and_unit_ledger": {
+    "P_{Y|X}": "Markov kernel (channel) applied identically to both distributions",
+    "D(P_Y||Q_Y)": "divergence after processing, nats, no larger than before processing"
+   },
+   "assumptions": [
+    "the same kernel processes both distributions",
+    "the kernel does not depend on which distribution generated the input"
+   ],
+   "breakdown_regime": "Equality holds only under sufficiency-type conditions; any many-to-one or noisy step strictly contracts divergence. Adaptive processing that is allowed to depend on the unknown hypothesis escapes the scope of the inequality.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "DPI is the engine's conservation law: no downstream transformation, feature map, summary statistic or model layer can create discriminating information that was not present in the raw observations. Any claimed improvement from reprocessing alone is thereby certified as an artifact of evaluation rather than of information.",
+    "source_operator": "data_processing_inequality",
+    "telemetry": "Divergence or discrimination scores measured before and after each stage of the data pipeline."
+   }
+  },
+  {
+   "primitive_id": "mutual_information",
+   "name": "Mutual information I(X;Y) = D(P_{X,Y} || P_X P_Y): the divergence of the joint distribution from the product of the marginals; symmetric, nonnegative, and zero iff X and Y are independent",
+   "verbatim_quote": "The intuitive interpretation of mutual information is that I(X; Y) measures the dependency between X and Y by comparing their joint distribution to the product of the marginals in the KL divergence, which, as we show next, is also equivalent to comparing the conditional distribution to the unconditional.",
+   "page": "Chapter 3, Section 3.1, Definition 3.1 and Theorem 3.2, printed p. 42 (text lines 3712-3790)",
+   "latex": "I(X;Y) = D(P_{X,Y}\\|P_X P_Y) = D(P_{Y|X}\\|P_Y|P_X)",
+   "symbol_and_unit_ledger": {
+    "P_X P_Y": "product of the marginal distributions, the independence benchmark",
+    "I(X;Y)": "mutual information, nats or bits; symmetric in its two arguments"
+   },
+   "assumptions": [
+    "defined for general random variables through the divergence",
+    "finite when one variable is discrete under mild entropy conditions; can be infinite for perfectly dependent continuous variables"
+   ],
+   "breakdown_regime": "Infinite when a continuous variable is a deterministic function of the other (the book's example X = Y Gaussian gives I = infinity). It measures dependence in the joint distribution, not causation, and plug-in estimation from finite samples is biased upward in high dimensions.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mutual information is the engine's dependence meter between any candidate signal and any target quantity: it prices, in bits, how much knowing the signal reduces uncertainty about the target, without assuming linearity, and it is the objective that feature selection and representation learning inside the engine should maximize.",
+    "source_operator": "mutual_information",
+    "telemetry": "Paired samples of candidate signals and realized targets across the engine's historical record."
+   }
+  },
+  {
+   "primitive_id": "fano_inequality",
+   "name": "Fano's inequality: H(X|Y) <= h(P_e) + P_e log(M-1) for estimating an M-ary X from Y, giving the converse form P_e >= 1 - (I(X;Y) + log 2)/log M for uniform W in a Markov chain W -> X -> Y -> W-hat",
+   "verbatim_quote": "The following corollary of the previous result emphasizes its role in providing converses (or impossibility results) for statistics and data transmission.",
+   "page": "Chapter 3, Section 3.6, Theorem 3.12 and Corollary 3.13, printed pp. 57-58 (text lines 4711-4790)",
+   "latex": "P_e \\ge 1 - \\frac{I(X;Y) + \\log 2}{\\log M}",
+   "symbol_and_unit_ledger": {
+    "P_e": "probability that the estimate differs from the true value, dimensionless",
+    "M": "number of possible values of X",
+    "h(P_e)": "binary entropy of the error probability, in the same log base as I(X;Y)"
+   },
+   "assumptions": [
+    "X takes finitely many values (a second form uses P_max for general alphabets)",
+    "the estimator is any, possibly randomized, function of Y"
+   ],
+   "breakdown_regime": "Loose when the error is dominated by a few confusable alternatives rather than spread over all M-1 wrong values, and weak for very large alphabets unless the mutual information grows proportionally to log M.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fano converts an information budget into a hard floor on classification error: before the engine attempts any M-way discrimination task, the mutual information between its observations and the truth certifies the best error rate any method could achieve, vetoing overconfident accuracy claims.",
+    "source_operator": "fano_inequality",
+    "telemetry": "Estimated mutual information between observation sets and ground-truth labels, plus the class count of each discrimination task."
+   }
+  },
+  {
+   "primitive_id": "i_mmse_identity",
+   "name": "I-MMSE identity: for the Gaussian observation Y = sqrt(gamma) X + Z with Z standard Gaussian independent of X, d/d gamma I(X;Y) = (log e / 2) mmse(X|Y); information accrues with SNR at exactly half the minimum mean-square error",
+   "verbatim_quote": "However, this section is not about such inequalities. Here we show a remarkable equality for the special case when Y is an observation of X corrupted by Gaussian noise.",
+   "page": "Chapter 3, Section 3.7, Theorem 3.14, printed pp. 58-59 (text lines 4760-4820)",
+   "latex": "\\frac{d}{d\\gamma} I(X; \\sqrt{\\gamma} X + Z) = \\frac{\\log e}{2}\\, \\mathrm{mmse}(X|\\sqrt{\\gamma} X + Z)",
+   "symbol_and_unit_ledger": {
+    "gamma": "signal-to-noise ratio scaling, dimensionless",
+    "mmse(X|Y)": "E||X - E[X|Y]||^2, squared units of X",
+    "Z": "standard Gaussian noise independent of X"
+   },
+   "assumptions": [
+    "noise is additive Gaussian and independent of X",
+    "E||X||^2 < infinity"
+   ],
+   "breakdown_regime": "The identity is special to Gaussian noise; for general noise channels only inequalities relate information and estimation error. It also presumes the single scalar SNR parametrization gamma.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "I-MMSE welds the engine's two scoreboards together: estimation error and information gain are the same quantity viewed along the SNR axis, so a denoiser's mean-square improvements can be integrated over noise level to certify exactly how many nats of information it extracted from a noisy feed.",
+    "source_operator": "i_mmse_identity",
+    "telemetry": "Estimation error curves as a function of noise level for the engine's continuous-state estimators."
+   }
+  },
+  {
+   "primitive_id": "donsker_varadhan_gibbs_variational",
+   "name": "Donsker-Varadhan representation D(P||Q) = sup_f { E_P f - log E_Q exp(f) }, and its dual Gibbs variational principle log E_Q exp(f) = sup_P { E_P f - D(P||Q) }, attained by the exponentially tilted measure Q_f",
+   "verbatim_quote": "The following is perhaps the most important variational characterization of divergence.",
+   "page": "Chapter 4, Sections 4.3-4.4, Theorem 4.6 and Proposition 4.7, printed pp. 71-75 (text lines 5674-5870)",
+   "latex": "D(P\\|Q) = \\sup_{f}\\left\\{ E_P[f(X)] - \\log E_Q\\left[e^{f(X)}\\right] \\right\\}",
+   "symbol_and_unit_ledger": {
+    "f": "test (witness) function on the sample space, in log-likelihood-ratio units",
+    "log E_Q e^f": "cumulant generating functional of f under Q, the convex conjugate term"
+   },
+   "assumptions": [
+    "supremum over functions with 0 < E_Q exp(f) < infinity; simple functions, or bounded continuous functions on normal spaces, suffice",
+    "the Gibbs maximizer Q_f exists when E_Q exp(f) is finite"
+   ],
+   "breakdown_regime": "The supremum is approached by f tending to the log likelihood ratio, which is unbounded, and is infinite when P is not absolutely continuous with respect to Q; restricting to a finite witness class yields only lower bounds on the divergence.",
+   "domain": "variational methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The variational form turns divergence into an optimization the engine can actually run: any candidate witness function yields a certified lower bound on the information distance between two beliefs, and the Gibbs dual is exactly the free-energy objective that variational inference and tempered posterior updates inside the engine optimize.",
+    "source_operator": "donsker_varadhan_gibbs_variational",
+    "telemetry": "Witness function classes (discriminators, energy functions) trained on samples drawn from pairs of internal distributions."
+   }
+  },
+  {
+   "primitive_id": "pac_bayes_generalization_bound",
+   "name": "PAC-Bayes bound (McAllester form, Theorem 4.16): with probability at least 1 - delta, uniformly over all data-dependent posteriors rho, true risk exceeds empirical risk by at most a term of order sqrt((D(rho||pi) + ln(1/delta))/n); the Gibbs posterior rho proportional to pi exp(-lambda Lhat_n) is the canonical optimizer of the bound",
+   "verbatim_quote": "Having a uniform bound like this suggests selecting that ρ which minimizes the right-hand side of the inequality, thus making the second term serve as a regularization term preventing overfitting.",
+   "page": "Chapter 4, Section 4.8.2, Theorem 4.16, printed pp. 87-88 (text lines 6725-6860)",
+   "latex": "\\rho(d\\theta) \\propto \\pi(d\\theta)\\, e^{-\\lambda \\hat{L}_n(\\theta)}",
+   "symbol_and_unit_ledger": {
+    "rho, pi": "data-dependent posterior and fixed reference prior over the parameter space",
+    "D(rho||pi)": "complexity cost of the learned posterior, nats",
+    "n": "training sample size",
+    "delta": "failure probability of the bound",
+    "lambda": "inverse temperature of the Gibbs posterior"
+   },
+   "assumptions": [
+    "loss bounded in [0, 1], or 1/4-subgaussian per observation in the book's variant",
+    "the reference prior pi is fixed before seeing the data"
+   ],
+   "breakdown_regime": "Vacuous when the posterior moves far from the prior relative to n; the constants in the displayed version are loose; data-dependent priors invalidate the guarantee unless separately accounted for.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "PAC-Bayes is the engine's honesty certificate for learned components: every fitted module carries a computable generalization gap priced by its KL distance from a reference prior, so model selection inside the engine can trade empirical fit against certified out-of-sample risk rather than against hope.",
+    "source_operator": "pac_bayes_generalization_bound",
+    "telemetry": "Training and validation losses of engine modules together with the KL divergence between fitted and reference parameter distributions."
+   }
+  },
+  {
+   "primitive_id": "capacity_saddle_point",
+   "name": "Saddle point of mutual information: at a capacity-achieving input P*_X with output P*_Y, every input satisfies D(P_{Y|X}||P*_Y|P_X) <= C and P*_Y minimizes the worst-case conditional divergence, so capacity equals the information radius min over Q_Y of max over P_X of D(P_{Y|X}||Q_Y|P_X), with P*_Y unique when C is finite",
+   "verbatim_quote": "The following result is a cornerstone of analyzing maximum of mutual information over convex sets of input distributions.",
+   "page": "Chapter 5, Section 5.2, Theorem 5.4 and Corollary 5.5, printed pp. 94-95 (text lines 7130-7200)",
+   "latex": "D(P_{Y|X}\\|P_Y^*|P_X) \\le C = D(P_{Y|X}\\|P_Y^*|P_X^*) \\le D(P_{Y|X}\\|Q_Y|P_X^*)",
+   "symbol_and_unit_ledger": {
+    "C": "capacity, the maximal mutual information, nats per use",
+    "P*_Y": "capacity-achieving output distribution",
+    "D(.||.|P_X)": "conditional divergence averaged under the input distribution, nats"
+   },
+   "assumptions": [
+    "the allowed set of input distributions is convex and a maximizer exists",
+    "C finite for uniqueness of the capacity-achieving output distribution"
+   ],
+   "breakdown_regime": "On nonconvex input sets, or when no maximizer exists, only approximate saddle points survive; the argument also presumes the channel is fixed while the input varies.",
+   "domain": "channel coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The saddle point characterizes every max-min information problem the engine faces: the value of an observation channel against an adversarially chosen input distribution is a radius problem, the optimal reference output is the center, and the per-input divergence inequality is an optimality certificate that can be checked input by input.",
+    "source_operator": "capacity_saddle_point",
+    "telemetry": "Conditional divergence profiles of candidate observation channels evaluated across the input simplex."
+   }
+  },
+  {
+   "primitive_id": "tensorization_single_letterization",
+   "name": "Tensorization (single-letterization): over a memoryless product channel, I(X^n;Y^n) <= sum_i I(X_i;Y_i) with equality for product inputs, so capacity is additive and multi-letter optimization collapses to single-letter optimization; dually, over a memoryless source the minimizing channel is a product channel",
+   "verbatim_quote": "This type of result is often known as single-letterization in information theory. It tremendously simplifies the optimization problem over a high-dimensional (multi-letter) problem to a scalar (single-letter) problem.",
+   "page": "Chapter 6, Section 6.1, Theorem 6.1, printed pp. 106-107 (text lines 7944-8018)",
+   "latex": "I(X^n; Y^n) \\le \\sum_{i=1}^{n} I(X_i; Y_i)",
+   "symbol_and_unit_ledger": {
+    "n": "blocklength, number of channel uses",
+    "I(X_i;Y_i)": "per-letter mutual information under the induced marginals, nats"
+   },
+   "assumptions": [
+    "the channel is memoryless: the n-letter kernel factors as a product of per-letter kernels",
+    "for the reverse direction, the source is memoryless instead"
+   ],
+   "breakdown_regime": "Fails for channels with memory or with constraints coupling the letters, where genuinely multi-letter expressions are required; feedback also changes the conclusion for channels with memory.",
+   "domain": "channel coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tensorization is the engine's decomposition license: when observations arrive through independent channels, total information is the sum of per-channel informations, so the engine can budget, price and optimize each information stream separately and simply add the results.",
+    "source_operator": "tensorization_single_letterization",
+    "telemetry": "Per-stream mutual information estimates between each observation channel and the target state."
+   }
+  },
+  {
+   "primitive_id": "f_divergence_family",
+   "name": "f-divergence D_f(P||Q) = E_Q[ f(dP/dQ) ] for convex f with f(1) = 0: a single family containing KL divergence, total variation, Hellinger distance and chi-square divergence, all jointly convex and all satisfying the data-processing inequality",
+   "verbatim_quote": "Let f : (0, ∞) → R be a convex function with f(1) = 0. Let P and Q be two probability distributions on a measurable space (X , F).",
+   "page": "Chapter 7, Section 7.1, Definition 7.1, printed p. 115 (text lines 8560-8600)",
+   "latex": "D_f(P\\|Q) = E_Q\\left[ f\\left(\\frac{dP}{dQ}\\right) \\right]",
+   "symbol_and_unit_ledger": {
+    "f": "convex generator with f(1) = 0; f(t) = t log t gives KL, f(t) = |t-1|/2 gives total variation",
+    "dP/dQ": "likelihood ratio, dimensionless"
+   },
+   "assumptions": [
+    "P and Q are probability distributions on a common measurable space",
+    "the singular part of P with respect to Q is handled by the f'(infinity) term in the book's general formula (7.2)"
+   ],
+   "breakdown_regime": "Different generators measure genuinely different aspects of discrepancy: the joint range of two f-divergences is typically a two-dimensional region, not a curve, so no single member of the family summarizes all distinguishability. Total variation is bounded while KL and chi-square can be infinite.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The f-divergence family gives the engine a shelf of discrepancy measures matched to the decision at hand: total variation for worst-case event disagreement, Hellinger for testing affinity, chi-square for variance-sensitive bounds, KL for log-loss; data processing holds for all of them simultaneously.",
+    "source_operator": "f_divergence_family",
+    "telemetry": "Likelihood-ratio samples between competing hypotheses, from which the whole family is estimated at once."
+   }
+  },
+  {
+   "primitive_id": "pinsker_inequality",
+   "name": "Pinsker's inequality: D(P||Q) >= (2 log e) TV(P,Q)^2; KL divergence controls total variation, so a small divergence certifies that no single event has very different probabilities under P and Q (proved by data processing to the Bernoulli case)",
+   "verbatim_quote": "In this section we study the relationship, in particular, inequalities, between f-divergences. To gain some intuition, we start with the ad hoc approach by proving the Pinsker’s inequality, which bounds total variation from above in terms of the KL divergence.",
+   "page": "Chapter 7, Section 7.4, Theorem 7.10, printed p. 126 (text lines 9305-9360)",
+   "latex": "D(P\\|Q) \\ge (2 \\log e)\\, \\mathrm{TV}(P,Q)^2",
+   "symbol_and_unit_ledger": {
+    "TV(P,Q)": "total variation, the supremum over events of |P(E) - Q(E)|, dimensionless in [0, 1]",
+    "2 log e": "constant under the book's baseless logarithm convention; equals 2 for natural log"
+   },
+   "assumptions": [
+    "no assumptions beyond the definitions of the two quantities"
+   ],
+   "breakdown_regime": "The quadratic dependence is sharp only for small total variation; the reverse implication fails entirely, since total variation can be moderate while KL is infinite, and the exact joint range of KL and TV improves on Pinsker away from the origin.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Pinsker turns the engine's KL bookkeeping into worst-case event guarantees: a bound on the divergence between the engine's belief and a reference model immediately bounds how wrong any single event probability can be, which is the form in which downstream decision rules consume model error.",
+    "source_operator": "pinsker_inequality",
+    "telemetry": "KL divergence estimates between engine beliefs and reference or realized distributions."
+   }
+  },
+  {
+   "primitive_id": "prefix_codes_kraft_huffman",
+   "name": "Kraft-McMillan inequality: a uniquely decodable binary code has codeword lengths satisfying sum_a 2^{-l_a} <= 1, and any such lengths are realized by a prefix code; prefix codes are exactly binary trees, and the Huffman code achieves the minimal average code length among all prefix (or uniquely decodable) codes",
+   "verbatim_quote": "Prefix codes are in one-to-one correspondence with binary trees (with codewords at leaves). It is also equivalent to strategies to ask “yes/no” questions previously mentioned at the end of Section 1.1.",
+   "page": "Chapter 10, Section 10.3, Theorems 10.9 and 10.11, printed pp. 207-208 (text lines 14690-14900)",
+   "latex": "\\sum_{a} 2^{-l_a} \\le 1",
+   "symbol_and_unit_ledger": {
+    "l_a": "codeword length for symbol a, bits",
+    "2^{-l_a}": "fraction of the binary code tree consumed by the leaf for a"
+   },
+   "assumptions": [
+    "binary code alphabet",
+    "unique decodability for the necessity direction of Kraft-McMillan"
+   ],
+   "breakdown_regime": "Optimality is symbol by symbol for a known distribution: integer length constraints cost up to one extra bit per symbol, and an unknown or drifting source distribution voids Huffman optimality, which motivates universal compression (Chapter 13).",
+   "domain": "data compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Kraft budget is the engine's template for allocating any finite resolution resource: codeword lengths, quantization cells or attention slots all obey a sum of 2^{-l} <= 1 constraint, and Huffman's greedy merging of the two least likely items is the proof pattern for optimal allocation under such budgets.",
+    "source_operator": "prefix_codes_kraft_huffman",
+    "telemetry": "Symbol frequency tables of the engine's discrete vocabularies and the resulting average description lengths."
+   }
+  },
+  {
+   "primitive_id": "shannon_source_coding_theorem",
+   "name": "Shannon's source coding theorem: for an iid source, the optimal fixed-length compression error satisfies lim epsilon*(S^n, nR) = 0 if R > H(S) and 1 if R < H(S); with finite varentropy the refined form is k = nH(S) + sqrt(n V(S)) Q^{-1}(epsilon)",
+   "verbatim_quote": "In the language of modern information theory, Corollary 11.3 derives both the asymptotic fundamental limit (minimal k/n) and the normal approximation under non-vanishing error.",
+   "page": "Chapter 11, Section 11.1, Corollary 11.3 with Theorem 11.2, printed p. 214 (text lines 15020-15130)",
+   "latex": "\\lim_{n\\to\\infty} \\epsilon^*(S^n, nR) = \\begin{cases} 0, & R > H(S) \\\\ 1, & R < H(S) \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "epsilon*": "optimal probability of compression error, dimensionless",
+    "H(S)": "entropy of the source, bits per symbol",
+    "V(S)": "varentropy, variance of the per-symbol information density"
+   },
+   "assumptions": [
+    "source is iid (stationary ergodic sources are covered via the entropy rate and Shannon-McMillan-Breiman, Chapter 12)",
+    "fixed-length almost-lossless criterion with detectable errors (Definition 11.1)"
+   ],
+   "breakdown_regime": "At exactly R = H(S) the error is governed by the normal approximation rather than vanishing; one-shot sources obey the exact fundamental limit of Theorem 11.2 instead of the asymptotic statement, and sources with memory require the entropy rate.",
+   "domain": "data compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The source coding theorem fixes the engine's compression floor: a stream of internal states with entropy rate H cannot be logged, transmitted or remembered at fewer than H bits per symbol without loss, and the varentropy term prices the extra room that finite horizons demand.",
+    "source_operator": "shannon_source_coding_theorem",
+    "telemetry": "Entropy rate and varentropy estimates of the engine's internal state streams and event logs."
+   }
+  },
+  {
+   "primitive_id": "slepian_wolf_theorem",
+   "name": "Slepian-Wolf theorem: a source S can be compressed to the conditional entropy rate H(S|T) even when the side information T is available only at the decompressor; asymptotically, separate encoding loses nothing against having the side information at both ends",
+   "verbatim_quote": "which shows that unavailability of the side information at compressor does not hinder the compression rate at all.",
+   "page": "Chapter 11, Section 11.5, Theorem 11.13 and Corollary 11.14, printed p. 223 (text lines 15670-15710)",
+   "latex": "\\lim_{n\\to\\infty} \\epsilon^*_{SW}(S^n|T^n, nR) = \\begin{cases} 0, & R > H(S|T) \\\\ 1, & R < H(S|T) \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "H(S|T)": "conditional entropy of the source given the side information, bits per symbol",
+    "epsilon*_SW": "optimal error probability when the encoder does not observe the side information"
+   },
+   "assumptions": [
+    "source and side information are jointly iid across time",
+    "the decompressor observes the side information exactly"
+   ],
+   "breakdown_regime": "The equality of rates is asymptotic and relies on random binning; at finite blocklength the encoder's ignorance costs extra rate, and noisy or quantized side information changes the achievable region (the helper problem of Section 11.7).",
+   "domain": "data compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Slepian-Wolf is the engine's license for distributed evidence: modules that cannot see each other's context can still transmit their observations at the conditional-entropy rate, because the fusion center's context substitutes for the encoder's missing knowledge.",
+    "source_operator": "slepian_wolf_theorem",
+    "telemetry": "Conditional entropy estimates between module observations and the shared context available at fusion time."
+   }
+  },
+  {
+   "primitive_id": "krichevsky_trofimov_estimator",
+   "name": "Krichevsky-Trofimov sequential probability assignment: mixing Bernoulli sources over the Jeffreys prior 1/sqrt(theta(1-theta)) gives a proper sequential distribution whose conditional is the add-1/2 rule Q(1|x^{n-1}) = (t_1 + 1/2)/n, asymptotically minimax optimal in redundancy",
+   "verbatim_quote": "This assignment can now be used to create a universal compressor via one of the methods outlined in the beginning of this chapter.",
+   "page": "Chapter 13, Section 13.5, equations (13.26)-(13.29), printed pp. 253-254 (text lines 17713-17795)",
+   "latex": "Q_{X_n|X^{n-1}}(1|x^{n-1}) = \\frac{t_1 + \\frac{1}{2}}{n}",
+   "symbol_and_unit_ledger": {
+    "t_1": "count of ones among the first n-1 observations",
+    "n": "index of the next symbol (past count plus one)",
+    "Q": "universal predictive distribution, a Bayesian mixture over all Bernoulli parameters with Jeffreys prior"
+   },
+   "assumptions": [
+    "binary alphabet in the displayed form; the mixture construction generalizes to finite alphabets and Markov classes",
+    "the source class is the Bernoulli family for the stated optimality"
+   ],
+   "breakdown_regime": "Optimality is asymptotic and in the minimax redundancy sense for the specified class; richer classes (long memory, context dependence) need other mixtures such as context trees, and per-symbol redundancy decays only like (d/2)(log n)/n.",
+   "domain": "universal compression and prediction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The KT rule is the engine's default sequential forecaster for categorical streams: a one-line, parameter-free probability assignment carrying a minimax regret certificate, serving as the baseline any fancier sequential predictor must beat and as the mixture update inside universal prediction modules.",
+    "source_operator": "krichevsky_trofimov_estimator",
+    "telemetry": "Running counts of categorical outcomes in the engine's event streams."
+   }
+  },
+  {
+   "primitive_id": "neyman_pearson_stein_regimes",
+   "name": "Neyman-Pearson lemma and Stein's lemma: optimal binary tests are likelihood-ratio threshold tests whose supporting hyperplanes trace the achievable (alpha, beta) region R(P, Q); in the iid setting, at any fixed type-I level in (0,1), the optimal type-II error exponent equals D(P||Q)",
+   "verbatim_quote": "Thus, we have shown that all supporting hyperplanes are parameterized by LRT. This completely recovers the region R(P, Q) except for the points corresponding to the faces (flat pieces) of the region.",
+   "page": "Chapter 14, Sections 14.2 and 14.5, Theorem 14.11 and Theorem 14.14, printed pp. 282 and 286 (text lines 19705-19990)",
+   "latex": "V_\\epsilon = D(P\\|Q) \\quad \\text{for all } \\epsilon \\in (0,1)",
+   "symbol_and_unit_ledger": {
+    "V_epsilon": "optimal exponent of the type-II error probability at fixed type-I tolerance epsilon",
+    "alpha, beta": "type-I and type-II error probabilities of a test",
+    "log dP/dQ": "log-likelihood ratio statistic, nats"
+   },
+   "assumptions": [
+    "iid observations for Stein's regime",
+    "randomized tests allowed at the threshold for exact attainment of boundary points"
+   ],
+   "breakdown_regime": "Stein's exponent is level-insensitive only asymptotically under iid sampling; finite samples and dependent data require the full Neyman-Pearson region or large-deviation corrections, and composite hypotheses break the single likelihood-ratio structure.",
+   "domain": "hypothesis testing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Neyman-Pearson fixes the shape of every binary discrimination the engine performs: threshold the likelihood ratio, and the achievable error tradeoff is a convex region whose supporting lines are exactly those tests. Stein's lemma then prices repeated evidence: each independent observation buys D(P||Q) nats of type-II error exponent.",
+    "source_operator": "neyman_pearson_stein_regimes",
+    "telemetry": "Log-likelihood ratio streams for paired hypotheses and the empirical error rates of deployed tests."
+   }
+  },
+  {
+   "primitive_id": "sanovs_theorem_information_projection",
+   "name": "Sanov's theorem: the probability that the empirical distribution of n iid samples lies in a set E decays as exp(-n min_{Q in E} D(Q||P) + o(n)); the exponent is the information projection (I-projection) of the true distribution P onto E",
+   "verbatim_quote": "The following theorem due to Sanov [370] quantifies the large-deviations behavior of this convergence.",
+   "page": "Chapter 15, Sections 15.3 and 15.5, Theorem 15.13, printed p. 307 (text lines 21290-21340)",
+   "latex": "P[\\hat{P} \\in E] = \\exp\\left\\{-n \\min_{Q \\in E} D(Q\\|P) + o(n)\\right\\}",
+   "symbol_and_unit_ledger": {
+    "hat P": "empirical distribution of the sample",
+    "min_{Q in E} D(Q||P)": "information projection distance from P to the set E, nats",
+    "n": "sample size"
+   },
+   "assumptions": [
+    "iid sampling",
+    "regularity on E: for finite alphabets E closed with nonempty interior and P fully supported; in general the interior and closure infima must agree"
+   ],
+   "breakdown_regime": "The o(n) term hides subexponential factors that matter at moderate n; for nonconvex E the projection need not be unique or attained, and infinite-alphabet versions need the Polish-space regularity conditions the book cites.",
+   "domain": "large deviations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sanov prices every anomalous empirical pattern the engine might observe: the rarity of a deviation is exponential in sample size with rate given by the KL distance to the nearest distribution exhibiting that pattern, which is exactly how surprising stretches of data should be scored.",
+    "source_operator": "sanovs_theorem_information_projection",
+    "telemetry": "Empirical distributions of rolling windows of engine observations, scored against the fitted reference distribution."
+   }
+  },
+  {
+   "primitive_id": "chernoff_information",
+   "name": "Chernoff information C(P,Q) = -inf over lambda in [0,1] of log integral (dP)^{1-lambda} (dQ)^lambda: the optimal Bayesian error exponent for discriminating P from Q with iid data, independent of the prior, emerging from the (E0, E1) tradeoff boundary of Theorem 16.1",
+   "verbatim_quote": "The following result determines the optimal (E0 , E1 )-tradeoff in a parametric form.",
+   "page": "Chapter 16, Section 16.1, Theorem 16.1 and Corollary 16.2, printed pp. 313-315 (text lines 21700-21780)",
+   "latex": "C(P,Q) = -\\inf_{\\lambda \\in [0,1]} \\log \\int (dP)^{1-\\lambda} (dQ)^{\\lambda}",
+   "symbol_and_unit_ledger": {
+    "lambda": "tilting parameter interpolating between the two hypotheses",
+    "C(P,Q)": "Chernoff exponent, nats per observation; symmetric in P and Q"
+   },
+   "assumptions": [
+    "P and Q mutually absolutely continuous",
+    "iid observations for the exponent statement"
+   ],
+   "breakdown_regime": "The optimizing tilt is generally not lambda = 1/2 except in symmetric cases (the Bhattacharyya special case); with asymmetric error costs the relevant object is the full (E0, E1) boundary rather than the single Bayesian number.",
+   "domain": "hypothesis testing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Chernoff information is the engine's price for symmetric discrimination: it states how many independent observations a decision between two rival explanations requires for a target error probability, and the optimizing tilt identifies the distribution under which the two hypotheses are hardest to separate.",
+    "source_operator": "chernoff_information",
+    "telemetry": "Estimated Chernoff exponents between rival internal models, converted into required sample sizes for adjudication."
+   }
+  },
+  {
+   "primitive_id": "information_density",
+   "name": "Information density i(x;y) = log [dP_{X,Y} / d(P_X P_Y)](x,y): the pointwise log-likelihood ratio (pointwise mutual information) whose expectation is the mutual information and whose fluctuations drive one-shot and finite-blocklength bounds",
+   "verbatim_quote": "We remark that in machine learning (especially natural language processing) information density is also called pointwise mutual information (PMI) [292].",
+   "page": "Chapter 18, Section 18.1, Definition 18.1 and Proposition 18.2, printed p. 351 (text lines 23920-23990)",
+   "latex": "i(x;y) = \\log \\frac{dP_{X,Y}}{d(P_X P_Y)}(x,y), \\qquad I(X;Y) = E[i(X;Y)]",
+   "symbol_and_unit_ledger": {
+    "i(x;y)": "pointwise mutual information for a specific pair (x, y), nats; can be negative or infinite",
+    "dP_{X,Y}/d(P_X P_Y)": "likelihood ratio of the joint distribution to the product of marginals"
+   },
+   "assumptions": [
+    "a common dominating measure for the joint and the product distribution",
+    "the book's extended Log convention handles zero and infinite values"
+   ],
+   "breakdown_regime": "Pointwise values are unbounded and can be heavy tailed; only averaged, thresholded or exponentiated versions (dependence-testing, Feinstein, meta-converse) are operational, and if P_{X,Y} is not absolutely continuous with respect to the product measure the density is +infinity on a nonnull set.",
+   "domain": "channel coding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Information density is the engine's per-observation evidence variable: each realized pair contributes a signed log-evidence i(x;y), and cumulative sums of it are the sufficient statistic for judging dependence, detecting change, and applying one-shot achievability and converse bounds without asymptotics.",
+    "source_operator": "information_density",
+    "telemetry": "Per-event log-likelihood ratios between joint and independence models across the observation stream."
+   }
+  },
+  {
+   "primitive_id": "shannon_channel_coding_theorem",
+   "name": "Shannon's noisy channel coding theorem: for a stationary memoryless channel the operational capacity equals the information capacity, C = sup over P_X of I(X;Y); reliable communication is possible at any rate below C and impossible above it",
+   "verbatim_quote": "As we mentioned several times already this result is among the most significant results in information theory. From the engineering point of view, the major surprise was that C > 0, i.e. communication over a channel is possible with strictly positive rate for any arbitrarily small probability of error.",
+   "page": "Chapter 19, Section 19.2, Theorem 19.9, printed p. 377 (text lines 25630-25700)",
+   "latex": "C = C^{(I)} = \\sup_{P_X} I(X;Y)",
+   "symbol_and_unit_ledger": {
+    "C": "channel capacity, nats or bits per channel use",
+    "sup over P_X": "optimization over input distributions; the channel kernel is fixed"
+   },
+   "assumptions": [
+    "stationary memoryless channel",
+    "blocklength tends to infinity with error probability tending to zero"
+   ],
+   "breakdown_regime": "Silent about finite blocklength (the gap is the dispersion of Chapter 22), about channels with memory, and about the computational feasibility of the codes whose existence it proves.",
+   "domain": "channel coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The theorem is the engine's archetype of an operational quantity collapsing to an information quantity: whenever a throughput or performance limit is defined operationally, the engine should expect an equal mutual-information formula and search for the single-letter optimization that computes it.",
+    "source_operator": "shannon_channel_coding_theorem",
+    "telemetry": "Mutual information surfaces of the engine's observation channels as functions of input allocation."
+   }
+  },
+  {
+   "primitive_id": "awgn_capacity",
+   "name": "AWGN capacity: under an average power constraint P and noise variance sigma^2, C(P) = (1/2) log(1 + P/sigma^2) per real dimension, attained uniquely by Gaussian inputs; Gaussian noise is the worst noise of a given variance (Gaussian saddle point), and non-Gaussian noise raises capacity by at most its non-Gaussianness D(P_Z || Gaussian)",
+   "verbatim_quote": "First, from the engineering point of view we immediately see that to transmit information faster (per unit time) one needs to pay with radiating at higher power, but the payoff in transmission speed is only logarithmic.",
+   "page": "Chapter 20, Section 20.3, Theorem 20.11 with Theorem 20.12 (Ihara), printed pp. 400-401 (text lines 27270-27400)",
+   "latex": "C(P) = \\frac{1}{2} \\log\\left(1 + \\frac{P}{\\sigma^2}\\right)",
+   "symbol_and_unit_ledger": {
+    "P": "average input power budget, squared units of the signal",
+    "sigma^2": "noise variance, same units",
+    "P/sigma^2": "signal-to-noise ratio, dimensionless"
+   },
+   "assumptions": [
+    "additive Gaussian noise independent of the input, for the exact formula",
+    "average (not peak) power constraint",
+    "real-valued channel; the complex case has pre-log factor 1 instead of 1/2"
+   ],
+   "breakdown_regime": "Peak or amplitude constraints lower capacity and make discrete inputs optimal; discrete noise can make capacity infinite; colored noise and intersymbol interference require the spectral (water-filling) versions of Sections 20.6-20.7.",
+   "domain": "channel coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The AWGN formula is the engine's canonical exchange rate between resource and information: doubling power buys a constant number of extra nats, never a multiple, and the sphere-packing picture behind it is the template for reasoning about any high-dimensional noisy measurement under an energy budget.",
+    "source_operator": "awgn_capacity",
+    "telemetry": "Signal power and noise variance estimates for the engine's continuous observation channels."
+   }
+  },
+  {
+   "primitive_id": "meta_converse",
+   "name": "Meta-converse: any (M, epsilon) code induces a binary hypothesis test between the true joint distribution P_{X,Y} and an auxiliary distribution Q_{X,Y} built from a freely chosen auxiliary channel, so every converse bound reduces to bounding that test's error tradeoff; it recovers the classical converses as special cases",
+   "verbatim_quote": "There are many other converse bounds that were developed over the years. It turns out that there is a very general approach that encompasses all of them. For its versatility it is sometimes referred to as the “meta-converse”.",
+   "page": "Chapter 22, Section 22.3, printed p. 428 (text lines 29231-29268)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "an auxiliary channel Q_{Y|X} may be chosen freely; tightness depends on the choice",
+    "applies at any blocklength, including one-shot"
+   ],
+   "breakdown_regime": "Only as strong as the auxiliary distribution chosen; poor choices recover weak classical converses, and optimizing the choice is itself a saddle problem. It bounds average error directly, so maximal error statements need an additional expurgation step.",
+   "domain": "channel coding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The meta-converse is the engine's universal impossibility machine: to prove that no procedure can beat a stated limit, exhibit one auxiliary world in which the procedure's success would imply an impossible hypothesis test. Every converse the engine needs can be attempted through this single reduction.",
+    "source_operator": "meta_converse",
+    "telemetry": "Error probabilities of the induced binary tests between actual and auxiliary observation models."
+   }
+  },
+  {
+   "primitive_id": "channel_dispersion",
+   "name": "Channel dispersion and normal approximation: log M*(n, epsilon) = nC - sqrt(nV) Q^{-1}(epsilon) + O(log n), where the dispersion V = Var[i(X*;Y*)|X*] is the variance of the information density under the capacity-achieving input",
+   "verbatim_quote": "Intuitively, though, the smaller values of ϵ should make convergence to capacity slower. This suggests that the term o(n) hides some interesting dependence on ϵ. What is it?",
+   "page": "Chapter 22, Section 22.5, Theorem 22.2, printed p. 435 (text lines 29661-29720)",
+   "latex": "\\log M^*(n,\\epsilon) = nC - \\sqrt{nV}\\, Q^{-1}(\\epsilon) + O(\\log n)",
+   "symbol_and_unit_ledger": {
+    "V": "channel dispersion, variance of the information density, nats squared",
+    "Q^{-1}": "inverse of the complementary standard normal CDF",
+    "M*(n, epsilon)": "largest code size at blocklength n and error probability epsilon"
+   },
+   "assumptions": [
+    "fixed epsilon in (0, 1/2)",
+    "channel in the classes listed in Theorem 22.2 (DMC, DMC with cost constraint, AWGN, parallel AWGN)",
+    "a capacity-achieving input with finite dispersion exists"
+   ],
+   "breakdown_regime": "The expansion lives in the central-limit regime of fixed error probability; when the error probability decays with n the error-exponent regime takes over, and zero-dispersion channels have different third-order behavior.",
+   "domain": "channel coding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Dispersion teaches the engine to quote second-order prices: every first-order limit (a capacity, an entropy rate) carries a square-root-of-n penalty whose coefficient is a variance the engine can estimate, turning asymptotic slogans into finite-horizon numbers with honest corrections.",
+    "source_operator": "channel_dispersion",
+    "telemetry": "Empirical variance of per-observation information densities for the engine's channels and sources."
+   }
+  },
+  {
+   "primitive_id": "rate_distortion_theorem",
+   "name": "Rate-distortion theorem: for a stationary memoryless source with separable distortion, the operational rate-distortion function equals the information rate-distortion function, R(D) = inf { I(S; S-hat) : E d(S, S-hat) <= D }, a single-letter mutual-information minimization",
+   "verbatim_quote": "In channel coding, the main result relates the Shannon capacity, an operational quantity, to the information capacity. Here we introduce the information rate-distortion function in an analogous way, which by itself is not an operational quantity.",
+   "page": "Chapter 24, Section 24.3, Definition 24.5, and Chapter 25, Section 25.1, Theorem 25.1, printed pp. 487 and 491 (text lines 32995-33230)",
+   "latex": "R(D) = \\inf_{P_{\\hat{S}|S}:\\, E[d(S,\\hat{S})] \\le D} I(S;\\hat{S})",
+   "symbol_and_unit_ledger": {
+    "D": "target average distortion, in units of the distortion measure",
+    "d(s, s-hat)": "per-letter distortion, separable across coordinates",
+    "R(D)": "minimum achievable rate, bits per source symbol"
+   },
+   "assumptions": [
+    "stationary memoryless source and separable distortion",
+    "D > D_0 and D_max finite for the clean equality of Theorem 25.1"
+   ],
+   "breakdown_regime": "At boundary points such as D = D_0 the operational and information functions can disagree; sources with D_max = infinity (for example Cauchy under quadratic distortion) need variable-length formulations, and the minimizing test channel usually has no closed form.",
+   "domain": "rate-distortion theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rate-distortion is the engine's theory of lossy summarization: any compressed representation of a state carries a rate equal to its mutual information with the original, and the R(D) curve is the exact frontier between memory spent and fidelity lost for every summary, embedding or sketch the engine maintains.",
+    "source_operator": "rate_distortion_theorem",
+    "telemetry": "Distortion versus description-length measurements for the engine's summarization and embedding modules."
+   }
+  },
+  {
+   "primitive_id": "gaussian_rate_distortion_shannon_lower_bound",
+   "name": "Gaussian rate-distortion function: for S Gaussian with variance sigma^2 under quadratic distortion, R(D) = (1/2) log^+(sigma^2/D), attained by a backward AWGN test channel; the Shannon lower bound R(D) >= h(S) - (1/2) log(2 pi e D) of Theorem 26.3 is tight in the Gaussian case",
+   "verbatim_quote": "The following results compute the Gaussian rate-distortion function for quadratic distortion in both the scalar and vector case.",
+   "page": "Chapter 26, Section 26.1.2, Theorems 26.2 and 26.3, printed p. 509 (text lines 34370-34395)",
+   "latex": "R(D) = \\frac{1}{2} \\log^{+}\\frac{\\sigma^2}{D}",
+   "symbol_and_unit_ledger": {
+    "sigma^2": "source variance, squared units of S",
+    "D": "mean-square distortion budget, same units",
+    "log^+": "positive part, max(log, 0)"
+   },
+   "assumptions": [
+    "Gaussian source and quadratic (squared-error) distortion for exactness",
+    "the vector case uses the covariance spectrum with reverse water-filling"
+   ],
+   "breakdown_regime": "The exact expression relies on Gaussianity, as the book notes; for general sources the Shannon lower bound is only a bound, and the gap is governed by the source's divergence from Gaussianity.",
+   "domain": "rate-distortion theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Gaussian R(D) gives the engine closed-form pricing for compressing continuous beliefs under squared error: halving the tolerated distortion costs a fixed number of extra nats per dimension, and reverse water-filling allocates description budget across latent dimensions according to their variances.",
+    "source_operator": "gaussian_rate_distortion_shannon_lower_bound",
+    "telemetry": "Covariance spectra of continuous latent states and the distortion tolerances of downstream consumers."
+   }
+  },
+  {
+   "primitive_id": "metric_entropy_covering_packing",
+   "name": "Metric entropy: the epsilon-covering number N(Theta, d, epsilon) and epsilon-packing number M(Theta, d, epsilon) of a set in a metric space, with log N the metric entropy; covering and packing are equivalent up to a factor of two in scale and are computed by volume bounds in finite dimensions",
+   "verbatim_quote": "Upon defining ϵ-covering and ϵ-packing, a natural question concerns the size of the optimal covering and packing, leading to the definition of covering and packing numbers:",
+   "page": "Chapter 27, Section 27.1, Definition 27.1, printed pp. 522-523 (text lines 35250-35300)",
+   "latex": "N(\\Theta, d, \\epsilon) = \\min\\{N : \\exists\\ \\epsilon\\text{-covering of } \\Theta \\text{ of size } N\\}",
+   "symbol_and_unit_ledger": {
+    "epsilon": "resolution radius in the metric d",
+    "N": "covering number, a count; its logarithm is the metric entropy",
+    "M": "packing number, maximum size of an epsilon-separated subset"
+   },
+   "assumptions": [
+    "(V, d) is a metric space and Theta a subset of it",
+    "volume bounds require finite dimension; infinite-dimensional sets are controlled by smoothness or eigenvalue decay"
+   ],
+   "breakdown_regime": "Volume arguments fail in infinite dimensions, where metric entropy is driven by smoothness (for example the Hilbert ball case of Section 27.3.2), and global covering numbers miss local geometry, which is why Chapter 32 refines them into local entropy.",
+   "domain": "metric entropy and empirical processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Metric entropy is the engine's complexity currency for hypothesis classes: the log covering number at resolution epsilon counts how many distinguishable models exist at that resolution, feeding directly into sample complexity, minimax rates and the capacity bounds of Chapter 32.",
+    "source_operator": "metric_entropy_covering_packing",
+    "telemetry": "Covering number estimates of the engine's model classes under problem-appropriate metrics such as KL, Hellinger or parameter distance."
+   }
+  },
+  {
+   "primitive_id": "minimax_bayes_duality",
+   "name": "Minimax-Bayes duality: the minimax risk lower bounds the worst-case Bayes risk, R* >= sup over pi of R*_pi, with equality (the minimax theorem) under finiteness or dominated-experiment conditions; priors are exactly the dual variables of the estimator optimization problem",
+   "verbatim_quote": "In summary, the minimax risk and the worst-case Bayes risk are related by convex duality, where the primal variables are (randomized) estimators and the dual variables are priors.",
+   "page": "Chapter 28, Section 28.3, Theorems 28.1 and 28.2, printed pp. 564-567 (text lines 37800-38015)",
+   "latex": "R^* = \\inf_{\\hat{\\theta}} \\sup_{\\theta \\in \\Theta} R_\\theta(\\hat{\\theta}) \\ge \\sup_{\\pi} \\inf_{\\hat{\\theta}} R_\\pi(\\hat{\\theta}) = R^*_{\\mathrm{Bayes}}",
+   "symbol_and_unit_ledger": {
+    "R_theta": "risk of an estimator at parameter theta, in loss units",
+    "pi": "prior distribution over the parameter space, the dual variable",
+    "R*_pi": "Bayes risk under prior pi"
+   },
+   "assumptions": [
+    "randomized estimators are allowed, making the risk set convex for the separation argument",
+    "equality needs the book's conditions: finite parameter and data spaces, or dominated experiments with level-compact loss"
+   ],
+   "breakdown_regime": "Without randomization a duality gap can open; least favorable priors may exist only as limits of prior sequences, and infinite-dimensional problems can require generalized or improper priors for equality.",
+   "domain": "statistical decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Duality reframes every worst-case design problem inside the engine as a game against a prior: to certify a procedure's worst-case risk it suffices to exhibit one hard distribution over scenarios, and to design the procedure it suffices to be Bayes against the least favorable such distribution.",
+    "source_operator": "minimax_bayes_duality",
+    "telemetry": "Risk profiles of engine procedures across scenario grids, and the least favorable weightings that maximize Bayes risk."
+   }
+  },
+  {
+   "primitive_id": "hcr_cramer_rao_bound",
+   "name": "Hammersley-Chapman-Robbins bound: any estimator satisfies Var_theta(theta-hat) >= sup over theta' != theta of (E_theta theta-hat - E_{theta'} theta-hat)^2 / chi^2(P_{theta'} || P_theta), proved by data processing for chi-square divergence; its local limit at theta' -> theta is the Cramer-Rao bound Var >= 1/J_F(theta)",
+   "verbatim_quote": "The following result due to [210, 87] is a direct consequence of the variational representation of χ2 -divergence in Section 7.13, which relates it to the mean and variance of test functions.",
+   "page": "Chapter 29, Section 29.1.1, Theorem 29.1, printed pp. 575-576 (text lines 38536-38600)",
+   "latex": "\\mathrm{Var}_\\theta(\\hat{\\theta}) \\ge \\sup_{\\theta' \\ne \\theta} \\frac{(E_\\theta[\\hat{\\theta}] - E_{\\theta'}[\\hat{\\theta}])^2}{\\chi^2(P_{\\theta'} \\| P_\\theta)}",
+   "symbol_and_unit_ledger": {
+    "chi^2(P'||P)": "chi-square divergence between the distributions at the two parameter values",
+    "J_F(theta)": "Fisher information at theta, inverse squared parameter units",
+    "Var_theta": "estimator variance at theta, squared parameter units"
+   },
+   "assumptions": [
+    "no unbiasedness is needed for HCR itself",
+    "the Cramer-Rao corollary uses unbiasedness plus the regularity conditions behind the local chi-square expansion (Theorem 7.22)"
+   ],
+   "breakdown_regime": "The bound is only as strong as the best alternative theta' chosen; biased estimators can beat the Cramer-Rao form, and in nonregular models where Fisher information does not exist the HCR form still applies through well-chosen pairs.",
+   "domain": "statistical estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "HCR is data processing turned into an estimation limit: an estimator is a channel from data to a number, so its sensitivity to the parameter is capped by the chi-square distance between nearby models. The engine uses it to certify that no estimator of a latent quantity can beat a stated variance given the observation model.",
+    "source_operator": "hcr_cramer_rao_bound",
+    "telemetry": "Chi-square divergences between fitted models at perturbed parameter values, and empirical estimator variances."
+   }
+  },
+  {
+   "primitive_id": "mutual_information_method",
+   "name": "Mutual information method: Bayes risk obeys R*_pi >= phi^{-1}(I(theta; X)), where phi is the rate-distortion function of the prior under the loss; estimation is thereby lossy compression of the parameter through the observation channel, and Le Cam's method, Assouad's lemma and Fano's method are its special cases for particular priors",
+   "verbatim_quote": "the lower bound in (30.1) depends only on the prior (source) and the loss function, while the capacity upper bound (30.2) depends only on the statistical model (channel).",
+   "page": "Chapter 30, equation (30.3) and surrounding discussion, printed p. 585 (text lines 39240-39260)",
+   "latex": "R^*_\\pi \\ge \\phi^{-1}(I(\\theta; X)) \\ge \\phi^{-1}(C)",
+   "symbol_and_unit_ledger": {
+    "phi(D)": "rate-distortion function of the prior: the minimum I(theta; theta-hat) subject to expected loss at most D",
+    "I(theta; X)": "mutual information between parameter and data, upper bounded by the channel capacity C",
+    "R*_pi": "Bayes risk under prior pi, in loss units"
+   },
+   "assumptions": [
+    "a prior pi on the parameter and a loss whose rate-distortion function phi is computable or boundable",
+    "an upper bound on the mutual information (capacity) of the observation channel is available"
+   ],
+   "breakdown_regime": "Tightness depends on matching the prior to the problem; loose capacity bounds or loose phi bounds each degrade the result, and problems such as estimation better than chance (Section 30.4) defeat the classical special cases while the full method still applies.",
+   "domain": "statistical estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The mutual information method is the engine's master lower-bound template: model any estimation task as compressing an unknown state through the observation channel, and the rate-distortion geometry of the state space plus the channel capacity immediately yield the best achievable risk, before any algorithm is proposed.",
+    "source_operator": "mutual_information_method",
+    "telemetry": "Mutual information between latent states and observations, and rate-distortion curves of the engine's prior state distributions."
+   }
+  },
+  {
+   "primitive_id": "minimax_reductions_le_cam_assouad_fano",
+   "name": "Reduction methods for minimax lower bounds: Le Cam's two-point bound (risk at least separation over 2 alpha times one minus total variation), Assouad's hypercube extension that restores dimension scaling, and Fano's method over an epsilon-packing controlled by channel capacity over log packing number",
+   "verbatim_quote": "In particular, Le Cam’s method reduces the estimation problem to binary hypothesis testing. This method is perhaps the easiest to evaluate; however, the disadvantage is that it is frequently loose in estimating high-dimensional parameters.",
+   "page": "Chapter 31, Sections 31.1, 31.2 and 31.4, Theorems 31.1, 31.2 and 31.3, printed pp. 594-599 (text lines 39785-40210)",
+   "latex": "\\inf_{\\hat{\\theta}} \\sup_{\\theta \\in \\Theta} E_\\theta[\\ell(\\theta,\\hat{\\theta})] \\ge \\sup_{\\theta_0,\\theta_1} \\frac{\\ell(\\theta_0,\\theta_1)}{2\\alpha}\\left(1 - \\mathrm{TV}(P_{\\theta_0}, P_{\\theta_1})\\right)",
+   "symbol_and_unit_ledger": {
+    "alpha": "constant in the alpha-triangle inequality for the loss (1 for metrics, 2 for squared loss)",
+    "TV": "total variation between the two candidate distributions",
+    "l(theta_0, theta_1)": "separation between the two hypotheses, in loss units"
+   },
+   "assumptions": [
+    "the loss satisfies the alpha-triangle inequality (31.1)",
+    "Assouad needs a hypercube subfamily with per-coordinate separation; Fano's method needs a packing and a capacity upper bound"
+   ],
+   "breakdown_regime": "Two-point bounds lose dimension factors because they effectively perturb one coordinate; Fano's method loses constant factors through the capacity bound; all three are corollaries of the mutual information method with particular priors and inherit its looseness when the prior is mismatched.",
+   "domain": "statistical estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "These reductions are the engine's quick impossibility tests: embed two (or a cube of, or a packing of) hard scenarios inside the problem, measure their statistical distance, and read off a certified floor on worst-case error without analyzing any particular algorithm.",
+    "source_operator": "minimax_reductions_le_cam_assouad_fano",
+    "telemetry": "Total variation distances and packing geometry between the engine's hardest scenario pairs and families."
+   }
+  },
+  {
+   "primitive_id": "yang_barron_capacity_bound",
+   "name": "Yang-Barron bound: the minimax KL risk of density estimation is governed by the capacity C_n of the channel from parameter to n samples, R*_KL(n) <= C_{n+1}/(n+1), and the capacity itself is bounded through KL covering numbers by a bias-versus-metric-entropy tradeoff, with a matching capacity lower bound; Bayes KL risk equals the conditional mutual information I(theta; X_{n+1} | X^n)",
+   "verbatim_quote": "Note that the capacity Cn is precisely the redundancy (13.10) which governs the minimax regret in universal compression; the fact that it bounds the KL risk can be attributed to a generic relation between individual and cumulative risks which we explain later in Section 32.1.4.",
+   "page": "Chapter 32, Section 32.1, Theorem 32.1, printed pp. 603-604 (text lines 40380-40445)",
+   "latex": "R^*_{KL}(n) \\le \\frac{C_{n+1}}{n+1}, \\qquad C_n = \\sup_{\\pi} I(\\theta; X^n)",
+   "symbol_and_unit_ledger": {
+    "C_n": "capacity of the channel from the parameter to n samples, nats",
+    "N_KL(P, epsilon)": "KL covering number of the model class at radius epsilon squared",
+    "R*_KL(n)": "minimax expected KL risk of a density estimator, nats"
+   },
+   "assumptions": [
+    "estimators may be improper predictive densities (the book notes they can step outside the model class)",
+    "KL covering numbers finite at the scales used in the bound"
+   ],
+   "breakdown_regime": "KL loss is asymmetric and often infinite under support mismatch, so the clean theory is for predictive one-step risk; for total variation and Hellinger losses the analogous theory (Sections 32.2-32.3) uses local Hellinger entropy instead.",
+   "domain": "statistical estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Yang-Barron identifies the engine's density-estimation difficulty with a channel capacity: the same mutual-information maximization that prices a communication channel prices a model class, and metric entropy is its computable upper bound, unifying complexity accounting across the engine.",
+    "source_operator": "yang_barron_capacity_bound",
+    "telemetry": "KL covering numbers of candidate model classes and the induced capacity estimates at each sample size."
+   }
+  },
+  {
+   "primitive_id": "strong_data_processing_inequality",
+   "name": "Strong data-processing inequality: a channel contracts every f-divergence by a factor eta_f(P_{Y|X}) = sup over input pairs of D_f(P_Y||Q_Y)/D_f(P_X||Q_X) <= 1; for total variation the coefficient is the Dobrushin coefficient sup over x, x' of TV(P_{Y|X=x}, P_{Y|X=x'}), and eta_KL is the slope of the FI-curve at the origin",
+   "verbatim_quote": "Recall that the data-processing inequality (DPI) in Theorem 7.4 states that Df (PX kQX ) ≥ Df (PY kQY ). The concept of the Strong DPI introduced above quantifies the multiplicative decrease between the two f-divergences.",
+   "page": "Chapter 33, Section 33.2, Definition 33.3 and Theorem 33.4, printed p. 629 (text lines 42220-42250)",
+   "latex": "\\eta_f(P_{Y|X}) = \\sup_{P_X, Q_X} \\frac{D_f(P_Y\\|Q_Y)}{D_f(P_X\\|Q_X)} \\le 1",
+   "symbol_and_unit_ledger": {
+    "eta_f": "contraction coefficient for the divergence f, dimensionless in [0, 1]",
+    "P_Y, Q_Y": "output distributions induced by passing P_X and Q_X through the channel"
+   },
+   "assumptions": [
+    "the supremum is over input pairs with 0 < D_f(P_X||Q_X) < infinity",
+    "the KL coefficient may need the input-dependent refinement of Section 33.4"
+   ],
+   "breakdown_regime": "Contraction coefficients are generally hard to compute (total variation is the exception, via the Dobrushin formula), can equal 1 for channels that preserve some distinctions perfectly, and tensorize in nontrivial ways for product channels with dependent inputs.",
+   "domain": "information measures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "SDPI gives the engine multiplicative signal-decay accounting: every noisy stage multiplies distinguishability by its contraction coefficient, so the information surviving a pipeline of stages is governed by the product of the stage coefficients, which prices long reasoning chains, iterated summaries and repeated noisy observations.",
+    "source_operator": "strong_data_processing_inequality",
+    "telemetry": "Pairwise output total variation between channel rows, and divergence ratios measured across pipeline stages."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "f384b0a6daff490e-t1",
+   "think": "This book is a complete rebuild of information theory around one object, the Kullback-Leibler divergence, and one question: what are the exact limits of extracting information from data, whether the data is a message to transmit, a sample to learn from, or a parameter to estimate. Its six parts move from measures (entropy, divergence, mutual information, f-divergences) through lossless compression, hypothesis testing and large deviations, channel coding, rate-distortion and metric entropy, and finally statistical applications, and the architecture is itself a claim: the same quantities that govern communication govern learning, because estimation is lossy compression of a parameter through the observation channel and testing is a one-bit channel. Three technical devices recur so often that they function as the book's operating system. First, variational characterizations: divergence and mutual information are repeatedly rewritten as optimizations (Donsker-Varadhan, the Gibbs principle, the golden formula, the saddle point of Chapter 5), which converts theorems into algorithms, since Blahut-Arimoto iteration, Gibbs posteriors and PAC-Bayes bounds are all the same duality machinery at work. Second, single-letterization through tensorization: whenever a system is memoryless, multi-letter quantities collapse to per-letter ones, and the book is disciplined about naming exactly which assumption (product channel, product source, separable cost) purchases the collapse. Third, the information density as the fundamental random variable: its mean gives capacities and entropies, its variance gives dispersions and varentropies, and threshold events on it give the one-shot bounds (random coding, dependence testing, Feinstein, the meta-converse) from which every asymptotic theorem is recovered by a limit theorem. Equally central is the book's one-shot discipline. Rather than beginning with asymptotics, the core coding results are first proved for a single use of a source or channel: the fundamental limit of fixed-length compression in Theorem 11.2, the Neyman-Pearson region for a single observation, Sanov's exponent for a single empirical distribution. Asymptotics then enter only through the law of large numbers and the central limit theorem applied to sums of information densities. This ordering matters for any practical system, because it separates what is true at every sample size from what is merely true in the limit, and it identifies the finite-sample corrections (varentropy, dispersion, the third-order log n term) as properties of the same random variable whose mean gives the first-order answer. The middle parts extend the accounting in two directions that a naive reading of Shannon misses. Hypothesis testing is developed as the geometry of an error region whose boundary is traced by likelihood-ratio tests, with the Stein, Chernoff and Hoeffding regimes corresponding to different supporting lines of one convex set; large deviations then identify the exponents with information projections, so the rarity of any empirical event is a distance in divergence. Rate-distortion and metric entropy develop the complementary geometry of approximation: covering and packing numbers measure the size of a hypothesis space at every resolution, and the same numbers reappear as the complexity terms in density estimation, so geometry, compression and statistics share one currency. Two further strands deserve emphasis. The variational chapter is quietly the most applied in the book: the Donsker-Varadhan and Gibbs principles underlie variational inference, PAC-Bayes generalization certificates and the analysis of Gibbs sampling, while the continuity results discipline when information quantities can be estimated or optimized at all. Universal compression completes the bridge to prediction: the Krichevsky-Trofimov mixture shows that compressing, predicting and estimating are one activity with a minimax regret price, and the redundancy that governs it is exactly the capacity that reappears in Yang and Barron's estimation bounds, closing the book's largest loop. The final part is where the book most changes how an engine should be built. Decision theory is set up so that minimax and Bayes are dual descriptions of one object; the mutual information method then shows that the whole taxonomy of lower-bound techniques is a choice of prior inside a single argument; and the strong data-processing chapter quantifies what ordinary data processing only orders, namely how much distinguishability survives each noisy transformation, with applications from computation with noisy gates to mixing times and distributed estimation. The through-line for system design is that information should be budgeted like energy: measured at intake, taxed at every transformation, and spent against explicit lower bounds rather than against benchmarks alone. For a reasoning engine the import is a complete accounting system for evidence. Data processing is a conservation law that vetoes any architecture claiming to manufacture information by reprocessing. Fano, Le Cam, Assouad and the mutual information method are impossibility certificates that price a task before compute is spent. Stein, Chernoff and Sanov convert divergences into exponents, stating how evidence accumulates with sample size in each decision regime, and dispersion adds the second-order correction that separates asymptotic slogans from finite-sample truth. The book's limits are equally instructive. Many headline results are asymptotic, or require memorylessness, Gaussianity, or finite alphabets, and the text is honest that removing each assumption costs either a harder proof or a different theorem. Mutual information and divergence can be infinite in continuous settings; several optimizations (capacity over general channels, information projections, contraction coefficients) are computable only in special cases; and estimating the information quantities themselves from data is statistically hard in high dimensions, a point the book's own minimax results make precise. Read as an engineer, the work is therefore both a toolbox and a set of guardrails: it supplies the objective functions and the lower bounds, and it marks, theorem by theorem, the exact boundary where each tool stops working.",
+   "retrocausal_genealogy": "The lineage runs from Fisher's likelihood and the Neyman-Pearson lemma of 1933 through Shannon's 1948 synthesis, which created entropy, capacity and rate-distortion as operational quantities with information-theoretic formulas. Kullback and Leibler added divergence in 1951; Fano, Feinstein and Wolfowitz built the first converses; the Soviet school around Pinsker and Kolmogorov developed the geometric and variational view, including the inequality bearing Pinsker's name and the information-projection tradition continued by Csiszar. Donsker and Varadhan supplied the large-deviation variational formula in the 1970s, Le Cam rebuilt statistics around experiments and their deficiencies, and Yang and Barron fused minimax estimation with metric entropy in 1999. The modern finite-blocklength layer is substantially the authors' own: Polyanskiy's work with Poor and Verdu around 2010 replaced first-order asymptotics with dispersion, and this book generalizes that program into a full curriculum.",
+   "theory_of_mind": "The authors write for a reader fluent in measure-theoretic probability and convex analysis who distrusts slogans: nearly every named result is first stated in a one-shot or finite form, with asymptotics derived rather than assumed. Their model of the subject is that information measures are not analogies but the actual quantities that operational problems optimize, so a theorem is finished only when an operational quantity and an information quantity are shown equal, or the gap between them is itself measured. Pedagogically they treat exercises as part of the theory, starred sections as markers of the research frontier, and history as evidence about which assumptions each generation had to surrender.",
+   "cross_layer_veto": "Several results in this book function as vetoes on any layered reasoning system. Data processing vetoes the claim that a downstream stage created information: distinguishability can only shrink along a pipeline. Fano's inequality vetoes accuracy claims that exceed the mutual information budget of the observations. The strong converse vetoes the hope that clever coding beats capacity at fixed error probability, and dispersion vetoes quoting first-order limits at finite sample sizes without the square-root penalty. Strong data processing vetoes long chains of noisy inference by multiplying contraction factors, and the minimax lower bounds of the final chapters veto, for any proposed estimator, performance below the floor set by the hardest embedded subproblem."
+  }
+ ],
+ "universal_lens": "Beyond its subject, the book is a template for turning any operational question into an optimization over distributions. Define the resource, define the error criterion, find the single random variable (here the information density) whose mean is the first-order answer and whose fluctuations give the corrections, and expect a duality in which a worst case over nature equals a best case over a well-chosen prior or reference measure. The pattern transfers to any domain where evidence accumulates under noise and decisions are made under a budget: measure the flow, tax every transformation, and certify the limits before optimizing within them.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book supplies the mathematical spine of a research curriculum on evidence: information measures as the language of uncertainty, hypothesis-testing exponents as the language for adjudicating between rival explanations, and minimax duality as the language of robust method design. Its estimation lower bounds teach what cannot be known from a given data stream and why, while metric entropy and the Yang-Barron theory provide the complexity accounting used to compare model classes honestly across research programs.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the book is an operating manual for evidence. Mutual information prices every candidate signal before it is wired in; data processing and strong data processing audit the pipeline so no stage is credited with information it cannot contain; Fano's inequality and the reduction methods certify floors on prediction error for each target; PAC-Bayes and the Krichevsky-Trofimov rule govern sequential forecasting and its honest evaluation; and dispersion converts asymptotic confidence into finite-sample numbers the engine can stand behind."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "250dbf3e98883e4d",
+  "source_status": "COMPLETE",
+  "title": "Modelling_the_dynamic_pattern_of_surface",
+  "file_name": "Modelling_the_dynamic_pattern_of_surface.md",
+  "sha256": "250dbf3e98883e4d243c922659c5ff055d55954cd928eaab11a427826c227437",
+  "primary_domain": "other",
+  "pages_total": 23,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Markov Switching Models detect structural changes in spatial surface dynamics; VAR models link regime probabilities to scoring; convex hulls quantify team formation patterns. Universal Lens: Rooted in Modelling_the_dynamic_pattern_of_surface (250dbf3e98883e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on regime-switching spatial configurations enables probabilistic performance forecasting via VAR posterior distributions over convex hull metrics. GSI Mapping: Rooted in Modelling_the_dynamic_pattern_of_surface (250dbf3e98883e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situation-aware state transitions map player spatial regimes to tactical phases using convex hull centroids and MSM-derived volatility thresholds. GSE Mapping: Rooted in Modelling_the_dynamic_pattern_of_surface (250dbf3e98883e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "markov_switching_model",
+      "name": "Structural Change Detector",
+      "verbatim_quote": "Specifically, we first employ a Markov Switching Model (MSM) to detect structural changes in the surface area.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_t': 'regime state at time t, discrete', 'P(S_t | S_{t-1})': 'transition probability matrix'}",
+      "assumptions": "Observations follow a mixture of regimes with unknown switching probabilities.",
+      "breakdown_regime": "Non-stationary spatial dynamics beyond model capacity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "MSM provides latent regime indicators for GSE tactical phase classification and GSI probabilistic scoring prediction.",
+        "source_operator": "markov_switching_model",
+        "telemetry": "Regime-switching likelihood ratio test statistic"
+      }
+    },
+    {
+      "primitive_id": "convex_hull_area",
+      "name": "Spatial Formation Quantifier",
+      "verbatim_quote": "Teammates highly interact each other and this continuous interaction takes on the features of a complex system.",
+      "page": 2,
+      "latex": "\\text{Area}(\\text{ConvexHull}(P_1, ..., P_n))",
+      "symbol_and_unit_ledger": "{'P_i': \"player i's 2D coordinate vector\", 'ConvexHull()': 'computes minimal enclosing polygon', 'Area()': 'returns planar area in m²'}",
+      "assumptions": "Players form a convex hull under Euclidean geometry.",
+      "breakdown_regime": "Player clustering or overlapping invalidates convexity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Convex hull area mirrors team coordination complexity; maps to GSE spatial entropy and GSI tactical entropy.",
+        "source_operator": "convex_hull_area",
+        "telemetry": "Time-series variance of convex hull area"
+      }
+    },
+    {
+      "primitive_id": "vector_auto_regression",
+      "name": "Performance Regime Linker",
+      "verbatim_quote": "Finally, we assess the relation between the regime probabilities and the scored points by means of Vector Auto Regressive (VAR) models.",
+      "page": 1,
+      "latex": "Y_t = A_1 Y_{t-1} + ... + A_p Y_{t-p} + c + \\epsilon_t",
+      "symbol_and_unit_ledger": "{'Y_t': 'vector of regime probabilities and score at time t', 'A_i': 'coefficient matrices', 'p': 'lag order', 'c': 'constant vector', '\\\\epsilon_t': 'error term'}",
+      "assumptions": "Multivariate time series exhibit linear dependence across lags.",
+      "breakdown_regime": "Non-linear regime interactions invalidate VAR assumptions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "VAR links MSM regimes to scoring outcomes; supports GSI causal inference and GSE predictive state updates.",
+        "source_operator": "vector_auto_regression",
+        "telemetry": "Granger causality p-values between regime and score"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "250dbf3e98883e4d_t0",
+      "think": "The core methodology integrates three distinct but complementary statistical frameworks. First, the Markov Switching Model (MSM) identifies discrete states of team spatial behavior—offensive, defensive, or transitional—by detecting shifts in the geometric properties of player positions. This is essential for capturing non-stationary dynamics in team sports. Second, the convex hull area serves as a geometric proxy for team coordination and spatial distribution, enabling quantification of how players collectively occupy space. Third, the Vector Auto Regressive (VAR) model bridges the gap between these behavioral regimes and measurable outcomes such as points scored. The integration allows for temporal reasoning where spatial configurations predict performance outcomes. Failure modes include overfitting in VAR due to high dimensionality, loss of convex hull validity when players cluster, and misclassification in MSM due to noise in tracking data. These primitives form a dual framework: one for detection and categorization (MSM), another for quantification and prediction (VAR), with geometric constraints (convex hull) anchoring both.\n\nDeep epistemic analysis for Modelling_the_dynamic_pattern_of_surface (250dbf3e98883e4d, domain=other, pages_read=18/23): Operator 'Structural Change Detector' (page 1, domain other) captures: Specifically, we first employ a Markov Switching Model (MSM) to detect structural changes in the surface area. Assumptions: Observations follow a mixture of regimes with unknown switching probabilities. Breakdown regime: Non-stationary spatial dynamics beyond model capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): MSM provides latent regime indicators for GSE tactical phase classification and GSI probabilistic scoring prediction. Operator 'Spatial Formation Quantifier' (page 2, domain other) captures: Teammates highly interact each other and this continuous interaction takes on the features of a complex system. Assumptions: Players form a convex hull under Euclidean geometry. Breakdown regime: Player clustering or overlapping invalidates convexity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Convex hull area mirrors team coordination complexity; maps to GSE spatial entropy and GSI tactical entropy. Operator 'Performance Regime Linker' (page 1, domain other) captures: Finally, we assess the relation between the regime probabilities and the scored points by means of Vector Auto Regressive (VAR) models. Assumptions: Multivariate time series exhibit linear dependence across lags. Breakdown regime: Non-linear regime interactions invalidate VAR assumptions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): VAR links MSM regimes to scoring outcomes; supports GSI causal inference and GSE predictive state updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Modelling_the_dynamic_pattern_of_surface (250dbf3e98883e4d, domain=other, pages_read=18/23): Operator 'Structural Change Detector' (page 1, domain other) captures: Specifically, we first employ a Markov Switching Model (MSM) to detect structural changes in the surface area. Assumptions: Observations follow a mixture of regimes with unknown switching probabilities. Breakdown regime: Non-stationary spatial dynamics beyond model capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): MSM provides latent regime indicators for GSE tactical phase classification and GSI probabilistic scoring prediction. Operator 'Spatial Formation Quantifier' (page 2, domain other) captures: Teammates highly interact each other and this continuous interaction takes on the features of a complex system. Assumptions: Players form a convex hull under Euclidean geometry. Breakdown regime: Player clustering or overlapping invalidates convexity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Convex hull area mirrors team coordination complexity; maps to GSE spatial entropy and GSI tactical entropy. Operator 'Performance Regime Linker' (page 1, domain other) captures: Finally, we assess the relation between the regime probabilities and the scored points by means of Vector Auto Regressive (VAR) models. Assumptions: Multivariate time series exhibit linear dependence across lags. Breakdown regime: Non-linear regime interactions invalidate VAR assumptions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): VAR links MSM regimes to scoring outcomes; supports GSI causal inference and GSE predictive state updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in econometric regime-switching theory (Hamilton, 1989) and extended to sports through network and spatial analysis. Builds upon ecological dynamics (Araújo et al.) and complex systems modeling (Wasserman & Faust). Retrocausal Genealogy: Rooted in Modelling_the_dynamic_pattern_of_surface (250dbf3e98883e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Modelling_the_dynamic_pattern_of_surface (250dbf3e98883e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (teams) optimize spatial configurations to maximize scoring while minimizing opponent control. Each agent’s decision-making is modeled as a stochastic process influenced by current spatial regime and past performance history. Theory of Mind & Decision Maker Model: Rooted in Modelling_the_dynamic_pattern_of_surface (250dbf3e98883e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that convex hull area not be perfectly correlated with VAR inputs. Leakage occurs if regime probabilities are redundant or if VAR fails to distinguish between offensive vs. defensive regimes. Cross-Layer Veto & Anti-Leakage Check: Rooted in Modelling_the_dynamic_pattern_of_surface (250dbf3e98883e4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

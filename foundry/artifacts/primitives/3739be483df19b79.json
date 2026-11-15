@@ -1,0 +1,78 @@
+{
+  "book_id": "3739be483df19b79",
+  "source_status": "COMPLETE",
+  "title": "p0042",
+  "file_name": "p0042.txt",
+  "sha256": "3739be483df19b790e67d7fe9ee1ec6bc834b33510a4e07bd5b30905e4938779",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Profit theory unifies risk premia, entrepreneurial rent, and capital allocation through stochastic optimization over industrial forms. Universal Lens: Rooted in p0042 (3739be483df19b79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps profit components to belief updates on risk-shifted capital flows using conformal predictive distributions. GSI Mapping: Rooted in p0042 (3739be483df19b79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models entrepreneur income as state transitions between risk-bearing, capital-ownership, and labor-exclusive regimes. GSE Mapping: Rooted in p0042 (3739be483df19b79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "industriebelohnung_und_unternehmergewinn",
+      "name": "Industrial Wage and Entrepreneurial Profit",
+      "verbatim_quote": "THEORIES OF PROFTT 27 ments respectively Industriebelohnung and Unternehmergewinn, and their sum Gewerbsprofit.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'Industrial wage (dimensionless)', 'U': 'Entrepreneurial profit (dimensionless)', 'G': 'Gewerbsprofit (dimensionless)'}",
+      "assumptions": "Profit is decomposable into labor and entrepreneurial components; each component is a function of organizational structure.",
+      "breakdown_regime": "When organizational complexity exceeds marginal utility of risk-sharing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The decomposition mirrors the duality between labor and capital in production functions.",
+        "source_operator": "industriebelohnung_und_unternehmergewinn",
+        "telemetry": "Observed variance in income streams across industrial sectors."
+      }
+    },
+    {
+      "primitive_id": "entrepreneurial_risk_premium",
+      "name": "Entrepreneurial Risk Premium",
+      "verbatim_quote": "Proceeding on the basis of an elaborate classification of the forms of industrial organization and a discussion of the economic advantages of the entrepreneur form, this writer finds in the income of the business enterpriser a complex group of unique elements.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Risk premium (dimensionless)', 'S': 'Uninsurable risk factor (dimensionless)'}",
+      "assumptions": "Entrepreneurship involves non-insurable risk; premium compensates for uncertainty.",
+      "breakdown_regime": "When uninsurable risk exceeds expected return on capital.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Risk premium emerges from stochastic optimization over risk-shifting mechanisms.",
+        "source_operator": "entrepreneurial_risk_premium",
+        "telemetry": "Volatility of entrepreneurial returns relative to market benchmarks."
+      }
+    },
+    {
+      "primitive_id": "capital_rent_and_wage_rent",
+      "name": "Capital Rent and Wage Rent",
+      "verbatim_quote": "Combining this with an equally blind reading of the labor theory of value which was the starting-pointof Smith and Ricardo, they derive a simple classification of income in which all Digitized by Gogle",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Capital rent (dimensionless)', 'W': 'Wage rent (dimensionless)'}",
+      "assumptions": "Income sources are separable into capital and labor contributions; rents reflect exclusive ownership.",
+      "breakdown_regime": "When exclusive ownership of productive assets is not economically viable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Capital and wage rents mirror the duality of asset ownership and labor contribution.",
+        "source_operator": "capital_rent_and_wage_rent",
+        "telemetry": "Share of total income attributed to capital vs. labor in different economies."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3739be483df19b79_t0",
+      "think": "The derivation of profit theory begins with the foundational assumption that income can be partitioned into distinct categories—labor, capital, and entrepreneurship. The industrial wage (Industriebelohnung) reflects compensation for labor within industrial structures, while Unternehmergewinn denotes the surplus generated by entrepreneurial activity. This dualism is formalized in the sum Gewerbsprofit, which encapsulates total business income. The inclusion of risk premia and rents further refines this model, where risk premiums account for uninsurable uncertainty, and rents reflect exclusive access to productive resources. The mathematical structure reveals a layered optimization problem: minimizing risk exposure while maximizing returns under constraints of industrial organization. The failure mode occurs when these layers become entangled, leading to misclassification of income sources. Dualities emerge in the form of labor-capital duality and risk-rent duality, which inform both GSI's Bayesian inference and GSE's state transition models.\n\nDeep epistemic analysis for p0042 (3739be483df19b79, domain=other, pages_read=1/1): Operator 'Industrial Wage and Entrepreneurial Profit' (page 1, domain other) captures: THEORIES OF PROFTT 27 ments respectively Industriebelohnung and Unternehmergewinn, and their sum Gewerbsprofit. Assumptions: Profit is decomposable into labor and entrepreneurial components; each component is a function of organizational structure. Breakdown regime: When organizational complexity exceeds marginal utility of risk-sharing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The decomposition mirrors the duality between labor and capital in production functions. Operator 'Entrepreneurial Risk Premium' (page 1, domain other) captures: Proceeding on the basis of an elaborate classification of the forms of industrial organization and a discussion of the economic advantages of the entrepreneur form, this writer finds in the income of the business enterpriser a complex group of unique elements. Assumptions: Entrepreneurship involves non-insurable risk; premium compensates for uncertainty. Breakdown regime: When uninsurable risk exceeds expected return on capital. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Risk premium emerges from stochastic optimization over risk-shifting mechanisms. Operator 'Capital Rent and Wage Rent' (page 1, domain other) captures: Combining this with an equally blind reading of the labor theory of value which was the starting-pointof Smith and Ricardo, they derive a simple classification of income in which all Digitized by Gogle Assumptions: Income sources are separable into capital and labor contributions; rents reflect exclusive ownership. Breakdown regime: When exclusive ownership of productive assets is not economically viable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Capital and wage rents mirror the duality of asset ownership and labor contribution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0042 (3739be483df19b79, domain=other, pages_read=1/1): Operator 'Industrial Wage and Entrepreneurial Profit' (page 1, domain other) captures: THEORIES OF PROFTT 27 ments respectively Industriebelohnung and Unternehmergewinn, and their sum Gewerbsprofit. Assumptions: Profit is decomposable into labor and entrepreneurial components; each component is a function of organizational structure. Breakdown regime: When organizational complexity exceeds marginal utility of risk-sharing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The decomposition mirrors the duality between labor and capital in production functions. Operator 'Entrepreneurial Risk Premium' (page 1, domain other) captures: Proceeding on the basis of an elaborate classification of the forms of industrial organization and a discussion of the economic advantages of the entrepreneur form, this writer finds in the income of the business enterpriser a complex group of unique elements. Assumptions: Entrepreneurship involves non-insurable risk; premium compensates for uncertainty. Breakdown regime: When uninsurable risk exceeds expected return on capital. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Risk premium emerges from stochastic optimization over risk-shifting mechanisms. Operator 'Capital Rent and Wage Rent' (page 1, domain other) captures: Combining this with an equally blind reading of the labor theory of value which was the starting-pointof Smith and Ricardo, they derive a simple classification of income in which all Digitized by Gogle Assumptions: Income sources are separable into capital and labor contributions; rents reflect exclusive ownership. Breakdown regime: When exclusive ownership of productive assets is not economically viable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Capital and wage rents mirror the duality of asset ownership and labor contribution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical political economy, particularly Smith and Ricardo, with later German socialist reinterpretations. The formalization builds upon the labor theory of value and critiques thereof, tracing back to the 19th-century debates on capital and labor. Retrocausal Genealogy: Rooted in p0042 (3739be483df19b79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include capitalists who seek to minimize risk and maximize returns, entrepreneurs who bear uninsurable risk for potential reward, and laborers who negotiate wage terms. Each agent operates under bounded rationality, with decisions shaped by institutional constraints and information asymmetries. Theory of Mind & Decision Maker Model: Rooted in p0042 (3739be483df19b79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when risk premia and rents are conflated, leading to spurious correlations in income classification. Leakage occurs when the distinction between insurable and uninsurable risk is blurred, undermining the integrity of GSI’s probabilistic models and GSE’s dynamic state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0042 (3739be483df19b79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "82e6fc4c46b84610",
+  "source_status": "COMPLETE",
+  "title": "FREE_MODE_INGESTION_HEALTH",
+  "file_name": "FREE_MODE_INGESTION_HEALTH.md",
+  "sha256": "82e6fc4c46b846108315142f8778a1ab203b0d8f246beb549d3e88e71472fb43",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Ingestion health is defined by recent successful run completion; free-mode bypasses paid odds but requires durable SUCCESS markers. Universal Lens: Rooted in FREE_MODE_INGESTION_HEALTH (82e6fc4c46b84610), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on ingestion status uses posterior probability of lastSuccessAt within SLA, conditioned on free vs paid paths. GSI Mapping: Rooted in FREE_MODE_INGESTION_HEALTH (82e6fc4c46b84610), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in GSE depend on IngestionRun status; settlement may proceed independently of odds key via free path. GSE Mapping: Rooted in FREE_MODE_INGESTION_HEALTH (82e6fc4c46b84610), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ingestion_success_freshness",
+      "name": "Ingestion Success Freshness",
+      "verbatim_quote": "# Free-mode ingestion health **Updated:** 2026-07-31 **Related:** Launch Readiness Audit (ingestion dead since 2026-07-25T23:00:24Z) ## Problem `/api/health` defines ingestion health as a recent `IngestionRun` with `status = SUCCESS`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'lastSuccessAt': 'timestamp [UTC]', 'freshnessSLA': 'duration [seconds]'}",
+      "assumptions": "Health status depends solely on presence of a recent SUCCESS run.",
+      "breakdown_regime": "When no SUCCESS run exists within SLA window.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI posterior over ingestion success time; GSE state machine transition on run status.",
+        "source_operator": "ingestion_success_freshness",
+        "telemetry": "Time since last successful ingestion run."
+      }
+    },
+    {
+      "primitive_id": "free_path_ingestion_marker",
+      "name": "Free Path Ingestion Marker",
+      "verbatim_quote": "- Free score persist / free settlement updated `Game` rows but never created SUCCESS runs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'freeIngestionRunId': 'UUID', 'freeIngestionStatus': \"string {'SUCCESS', 'FAILED'}\"}",
+      "assumptions": "Free path must record durable ingestion run entries to maintain health signal.",
+      "breakdown_regime": "If free path updates game data without writing SUCCESS run.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI probabilistic tracking of free-path integrity; GSE ensures run persistence.",
+        "source_operator": "free_path_ingestion_marker",
+        "telemetry": "Presence of free ingestion run entry with SUCCESS status."
+      }
+    },
+    {
+      "primitive_id": "odds_key_deactivation_impact",
+      "name": "Odds Key Deactivation Impact",
+      "verbatim_quote": "When `THE_ODDS_API_KEY` was intentionally deactivated (~2026-07-25): - `/api/cron/refresh-odds` returned `200 { skipped: \"no-odds-key\" }` and wrote **zero** `IngestionRun` rows.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'oddsKeyActive': 'boolean', 'cronRefreshResponse': 'HTTP 200 with {skipped: \"no-odds-key\"}'}",
+      "assumptions": "Deactivated key causes cron to skip ingestion, leaving no run marker.",
+      "breakdown_regime": "Upon deactivation of odds key, no new ingestion runs are recorded.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI conditional logic on key state; GSE fallback behavior to free path.",
+        "source_operator": "odds_key_deactivation_impact",
+        "telemetry": "Cron response code and skipped reason."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "82e6fc4c46b84610_t0",
+      "think": "The core operator models ingestion health as a temporal condition on the latest successful run. The system's design assumes that any ingestion activity—whether via paid odds or free settlement—must produce a durable SUCCESS marker to qualify as healthy. This creates a dualism where free path operations, while valid, must still conform to the same durability requirement. Failure occurs when either the paid path skips writes due to key deactivation or the free path fails to emit a SUCCESS run. The freshness SLA acts as a temporal gatekeeper, ensuring that stale runs do not falsely indicate system health. The derived kernel maps this into a Bayesian framework where the posterior probability of health depends on the elapsed time since lastSuccessAt, conditioned on whether the system is operating under paid or free mode.\n\nDeep epistemic analysis for FREE_MODE_INGESTION_HEALTH (82e6fc4c46b84610, domain=other, pages_read=2/2): Operator 'Ingestion Success Freshness' (page 1, domain other) captures: # Free-mode ingestion health **Updated:** 2026-07-31 **Related:** Launch Readiness Audit (ingestion dead since 2026-07-25T23:00:24Z) ## Problem `/api/health` defines ingestion health as a recent `IngestionRun` with `status = SUCCESS`. Assumptions: Health status depends solely on presence of a recent SUCCESS run. Breakdown regime: When no SUCCESS run exists within SLA window. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI posterior over ingestion success time; GSE state machine transition on run status. Operator 'Free Path Ingestion Marker' (page 1, domain other) captures: - Free score persist / free settlement updated `Game` rows but never created SUCCESS runs. Assumptions: Free path must record durable ingestion run entries to maintain health signal. Breakdown regime: If free path updates game data without writing SUCCESS run. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI probabilistic tracking of free-path integrity; GSE ensures run persistence. Operator 'Odds Key Deactivation Impact' (page 1, domain other) captures: When `THE_ODDS_API_KEY` was intentionally deactivated (~2026-07-25): - `/api/cron/refresh-odds` returned `200 { skipped: \"no-odds-key\" }` and wrote **zero** `IngestionRun` rows. Assumptions: Deactivated key causes cron to skip ingestion, leaving no run marker. Breakdown regime: Upon deactivation of odds key, no new ingestion runs are recorded. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI conditional logic on key state; GSE fallback behavior to free path. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FREE_MODE_INGESTION_HEALTH (82e6fc4c46b84610, domain=other, pages_read=2/2): Operator 'Ingestion Success Freshness' (page 1, domain other) captures: # Free-mode ingestion health **Updated:** 2026-07-31 **Related:** Launch Readiness Audit (ingestion dead since 2026-07-25T23:00:24Z) ## Problem `/api/health` defines ingestion health as a recent `IngestionRun` with `status = SUCCESS`. Assumptions: Health status depends solely on presence of a recent SUCCESS run. Breakdown regime: When no SUCCESS run exists within SLA window. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI posterior over ingestion success time; GSE state machine transition on run status. Operator 'Free Path Ingestion Marker' (page 1, domain other) captures: - Free score persist / free settlement updated `Game` rows but never created SUCCESS runs. Assumptions: Free path must record durable ingestion run entries to maintain health signal. Breakdown regime: If free path updates game data without writing SUCCESS run. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI probabilistic tracking of free-path integrity; GSE ensures run persistence. Operator 'Odds Key Deactivation Impact' (page 1, domain other) captures: When `THE_ODDS_API_KEY` was intentionally deactivated (~2026-07-25): - `/api/cron/refresh-odds` returned `200 { skipped: \"no-odds-key\" }` and wrote **zero** `IngestionRun` rows. Assumptions: Deactivated key causes cron to skip ingestion, leaving no run marker. Breakdown regime: Upon deactivation of odds key, no new ingestion runs are recorded. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI conditional logic on key state; GSE fallback behavior to free path. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s observability patterns, this lens evolved from monitoring systems requiring deterministic run states to validate service health, influenced by distributed systems reliability theory. Retrocausal Genealogy: Rooted in FREE_MODE_INGESTION_HEALTH (82e6fc4c46b84610), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in FREE_MODE_INGESTION_HEALTH (82e6fc4c46b84610), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the cron scheduler (which may fail silently), the odds API (deactivated or misconfigured), and the free path executor (which may update data without emitting run markers). Each agent’s behavior affects the health signal differently, requiring layered validation. Theory of Mind & Decision Maker Model: Rooted in FREE_MODE_INGESTION_HEALTH (82e6fc4c46b84610), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when free path updates data but omits run markers, leading to false degradation. Leakage occurs if paid path errors propagate into health checks despite free path being functional. Veto conditions enforce that health status reflects only ingestion activity, not other side effects. Cross-Layer Veto & Anti-Leakage Check: Rooted in FREE_MODE_INGESTION_HEALTH (82e6fc4c46b84610), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

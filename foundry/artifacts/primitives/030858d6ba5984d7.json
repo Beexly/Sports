@@ -1,0 +1,78 @@
+{
+  "book_id": "030858d6ba5984d7",
+  "source_status": "COMPLETE",
+  "title": "2011 Optimizing NBA Free Agency Choices",
+  "file_name": "2011 Optimizing NBA Free Agency Choices.md",
+  "sha256": "030858d6ba5984d77de3af6d883776a55dee1ea51c4c3ccf514bee80a43339e1",
+  "primary_domain": "cs",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Dynamic resource allocation under constrained optimization with private information asymmetry in labor markets. Universal Lens: Rooted in 2011 Optimizing NBA Free Agency Choices (030858d6ba5984d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating over latent player valuations using public skill data and observed contract signals. GSI Mapping: Rooted in 2011 Optimizing NBA Free Agency Choices (030858d6ba5984d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-space transitions driven by cap constraints and diminishing marginal returns in free agent acquisition. GSE Mapping: Rooted in 2011 Optimizing NBA Free Agency Choices (030858d6ba5984d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "salary_cap_constraint",
+      "name": "Salary Cap Constraint",
+      "verbatim_quote": "The NBA has a salary cap restricting the total amount that the teams can spend on salaries.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'total available salary cap (USD)', 'S_i': 'salary offered to player i (USD)'}",
+      "assumptions": "Cap is fixed per team; teams cannot exceed C without exceptions.",
+      "breakdown_regime": "When \\( \\sum S_i > C \\), constraint becomes binding.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models the upper bound on team spending as a deterministic constraint in GSE state transitions.",
+        "source_operator": "salary_cap_constraint",
+        "telemetry": "Total team salary vs. cap limit"
+      }
+    },
+    {
+      "primitive_id": "free_agent_valuation",
+      "name": "Free Agent Valuation",
+      "verbatim_quote": "There is also consensus information available on the market valuation of free agents based on the extensive amount of data related to their skills sets.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_i': 'market valuation of player i (USD)', 'A_i': 'available skill attributes of player i (dimensionless)'}",
+      "assumptions": "Publicly known skill metrics; V_i derived from A_i via empirical regression.",
+      "breakdown_regime": "When V_i is unknown to individual teams, private information creates asymmetric equilibrium.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic valuation kernel where V_i is estimated via Bayesian inference.",
+        "source_operator": "free_agent_valuation",
+        "telemetry": "Expected utility of signing player i vs. alternative investments"
+      }
+    },
+    {
+      "primitive_id": "multiple_choice_knapsack",
+      "name": "Multiple-Choice Knapsack",
+      "verbatim_quote": "This trade-off can be solved by a dynamic program based on the multiple-choice knapsack problem, which optimizes the benefit of signing a player at any particular point in the free agency period in comparison to the opportunity costs of the cap space required to do so.",
+      "page": 1,
+      "latex": "\\max \\sum_{i=1}^{n} v_i x_i \\quad \\text{s.t.} \\quad \\sum_{i=1}^{n} w_i x_i \\leq W",
+      "symbol_and_unit_ledger": "{'v_i': 'value of signing player i (USD)', 'w_i': 'salary cost of player i (USD)', 'x_i': 'binary selection variable (0 or 1)', 'W': 'available cap space (USD)'}",
+      "assumptions": "Players are discrete choices; value and cost are known; binary selection.",
+      "breakdown_regime": "When W shrinks due to prior signings, suboptimal selections may occur.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses this as core optimization engine for sequential player acquisition decisions.",
+        "source_operator": "multiple_choice_knapsack",
+        "telemetry": "Cumulative value of signed players vs. remaining cap space"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "030858d6ba5984d7_t0",
+      "think": "The core problem is optimizing team roster construction within a fixed budget (salary cap) while accounting for uncertain private valuations of players. The model treats free agents as items in a knapsack, where capacity is the salary cap and value is derived from skill-based market valuation. The dynamic programming formulation allows teams to evaluate trade-offs between immediate gains and future flexibility. Private information asymmetry introduces uncertainty in player valuation, leading to strategic behavior such as signaling interest early. As the season progresses, the cap shrinks, reducing the effective size of the knapsack and altering the optimal selection policy. The system exhibits non-stationary dynamics due to changing player availability and evolving cap constraints. Failure modes include overcommitment to high-value players early, leaving insufficient cap room for later acquisitions, or underestimating the true value of players whose skills align with team needs.\n\nDeep epistemic analysis for 2011 Optimizing NBA Free Agency Choices (030858d6ba5984d7, domain=cs, pages_read=10/10): Operator 'Salary Cap Constraint' (page 1, domain cs) captures: The NBA has a salary cap restricting the total amount that the teams can spend on salaries. Assumptions: Cap is fixed per team; teams cannot exceed C without exceptions. Breakdown regime: When \\( \\sum S_i > C \\), constraint becomes binding. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models the upper bound on team spending as a deterministic constraint in GSE state transitions. Operator 'Free Agent Valuation' (page 2, domain cs) captures: There is also consensus information available on the market valuation of free agents based on the extensive amount of data related to their skills sets. Assumptions: Publicly known skill metrics; V_i derived from A_i via empirical regression. Breakdown regime: When V_i is unknown to individual teams, private information creates asymmetric equilibrium. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic valuation kernel where V_i is estimated via Bayesian inference. Operator 'Multiple-Choice Knapsack' (page 1, domain cs) captures: This trade-off can be solved by a dynamic program based on the multiple-choice knapsack problem, which optimizes the benefit of signing a player at any particular point in the free agency period in comparison to the opportunity costs of the cap space required to do so. Assumptions: Players are discrete choices; value and cost are known; binary selection. Breakdown regime: When W shrinks due to prior signings, suboptimal selections may occur. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses this as core optimization engine for sequential player acquisition decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2011 Optimizing NBA Free Agency Choices (030858d6ba5984d7, domain=cs, pages_read=10/10): Operator 'Salary Cap Constraint' (page 1, domain cs) captures: The NBA has a salary cap restricting the total amount that the teams can spend on salaries. Assumptions: Cap is fixed per team; teams cannot exceed C without exceptions. Breakdown regime: When \\( \\sum S_i > C \\), constraint becomes binding. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models the upper bound on team spending as a deterministic constraint in GSE state transitions. Operator 'Free Agent Valuation' (page 2, domain cs) captures: There is also consensus information available on the market valuation of free agents based on the extensive amount of data related to their skills sets. Assumptions: Publicly known skill metrics; V_i derived from A_i via empirical regression. Breakdown regime: When V_i is unknown to individual teams, private information creates asymmetric equilibrium. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic valuation kernel where V_i is estimated via Bayesian inference. Operator 'Multiple-Choice Knapsack' (page 1, domain cs) captures: This trade-off can be solved by a dynamic program based on the multiple-choice knapsack problem, which optimizes the benefit of signing a player at any particular point in the free agency period in comparison to the opportunity costs of the cap space required to do so. Assumptions: Players are discrete choices; value and cost are known; binary selection. Breakdown regime: When W shrinks due to prior signings, suboptimal selections may occur. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses this as core optimization engine for sequential player acquisition decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classic combinatorial optimization (Knapsack Problem) and extended through game theory and labor economics. Influenced by earlier work on multi-armed bandits and auction theory in sports analytics. Retrocausal Genealogy: Rooted in 2011 Optimizing NBA Free Agency Choices (030858d6ba5984d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Teams act as rational agents maximizing expected utility subject to budget constraints. Players behave strategically by signaling interest to increase their perceived value. Opposing teams compete for same players, creating a simultaneous move game with asymmetric information. Theory of Mind & Decision Maker Model: Rooted in 2011 Optimizing NBA Free Agency Choices (030858d6ba5984d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple teams target identical players, causing valuation inflation. Leakage occurs if GSI fails to account for private information differences among teams. Veto conditions prevent overfitting to historical data by enforcing temporal consistency in valuation models. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2011 Optimizing NBA Free Agency Choices (030858d6ba5984d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

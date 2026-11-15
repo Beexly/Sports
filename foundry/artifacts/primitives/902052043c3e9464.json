@@ -1,0 +1,78 @@
+{
+  "book_id": "902052043c3e9464",
+  "source_status": "COMPLETE",
+  "title": "CLOUD_CREDIT_LAUNCH_MAP",
+  "file_name": "CLOUD_CREDIT_LAUNCH_MAP.md",
+  "sha256": "902052043c3e9464a16288d62a7316008c33d406b4fa6ec665ad6d366b635389",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Credit prioritization as a sequential resource allocation lattice with free-tier exhaustion before cash, modeled as a ranked ordinal decision space. Universal Lens: Rooted in CLOUD_CREDIT_LAUNCH_MAP (902052043c3e9464), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian credit lane inference maps free-tier readiness to model selection via `creditStack.anyCreditLaneReady`, enabling conformal prediction of cost-free execution paths. GSI Mapping: Rooted in CLOUD_CREDIT_LAUNCH_MAP (902052043c3e9464), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE encodes cloud failover logic through `JYNX_CLOUD_ORDER` and `CLAUDE_PROVIDER=auto`, transitioning states based on credit availability and model eligibility. GSE Mapping: Rooted in CLOUD_CREDIT_LAUNCH_MAP (902052043c3e9464), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "credit_burn_order",
+      "name": "Sequential Credit Exhaustion Operator",
+      "verbatim_quote": "Code is aligned to **burn credits and free tiers first**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'credit units', 'F': 'free tier units', 'C_f': 'free credit pool', 'C_c': 'paid credit pool'}",
+      "assumptions": "All credit types are ordered by priority: F ≥ C_f ≥ C_c.",
+      "breakdown_regime": "When C_f ∪ F = ∅, fallback to C_c occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a ranked decision tree where each node represents a credit tier, with traversal determined by availability and expiry.",
+        "source_operator": "credit_burn_order",
+        "telemetry": "Boolean flag `anyCreditLaneReady` from `creditStack`."
+      }
+    },
+    {
+      "primitive_id": "claude_provider_selection",
+      "name": "Claude Cloud Selection Protocol",
+      "verbatim_quote": "hropic cash** | Claude for Startups (if claimed) | `messages.ts` fallback | unset / fallback | Always last resort | **Only one** `CLAUDE_PROVIDER` at a time.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{cl}': 'selected Claude provider', 'P_{fallback}': 'Anthropic fallback provider', 'M_{cl}': 'model identifier for Claude'}",
+      "assumptions": "At most one Claude provider active per session; fallback is deterministic.",
+      "breakdown_regime": "When P_{cl} fails, M_{cl} transitions to P_{fallback}.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from `CLAUDE_PROVIDER=auto` and `JYNX_CLOUD_ORDER` to define a dynamic provider kernel.",
+        "source_operator": "claude_provider_selection",
+        "telemetry": "Observable `modelName` prefix check and `creditStack.attemptOrder`."
+      }
+    },
+    {
+      "primitive_id": "free_lane_activation",
+      "name": "Free-Lane Execution Gate",
+      "verbatim_quote": "--## Recommended launch order (maximize reward, minimize cash) ### Phase 0 — zero cash content (today) ```bash CONTENT_FREE_LANE_ENABLED=true CEREBRAS_API_KEY=...",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{f}': 'free lane activation flag', 'M_{gpt}': 'open-source model identifier', 'P_{c}': 'credit pool identifier'}",
+      "assumptions": "Free lane is enabled only if L_{f} = true and P_{c} ∈ {C_f, F}.",
+      "breakdown_regime": "If L_{f} = false, all models route to paid pools.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a conditional execution gate where model routing depends on `CONTENT_FREE_LANE_ENABLED` and credit availability.",
+        "source_operator": "free_lane_activation",
+        "telemetry": "Exit code of `smoke-free-lane.mjs` and `verify-credit-stack.mjs`."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "902052043c3e9464_t0",
+      "think": "The credit launch map defines a hierarchical ordinal decision space where free-tier resources are exhausted before paid credits. The `credit_burn_order` primitive establishes a precedence relation among credit pools, modeled as a ranked lattice. The `claude_provider_selection` protocol introduces a dynamic kernel over cloud providers, governed by `JYNX_CLOUD_ORDER` and `CLAUDE_PROVIDER=auto`. This enables a failover mechanism that ensures Claude model calls proceed through available credit lanes. The `free_lane_activation` gate enforces a binary switch between zero-cost and paid execution paths, contingent on `CONTENT_FREE_LANE_ENABLED`. These primitives form a closed-loop system where operational readiness is verified via `verify-credit-stack.mjs`, ensuring that both the free lane and a valid credit cloud are present in the execution path. Failure modes include misconfiguration leading to stale environment variables, which bypasses the intended credit flow and triggers fallbacks to paid resources.\n\nDeep epistemic analysis for CLOUD_CREDIT_LAUNCH_MAP (902052043c3e9464, domain=other, pages_read=3/3): Operator 'Sequential Credit Exhaustion Operator' (page 1, domain other) captures: Code is aligned to **burn credits and free tiers first**. Assumptions: All credit types are ordered by priority: F ≥ C_f ≥ C_c. Breakdown regime: When C_f ∪ F = ∅, fallback to C_c occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a ranked decision tree where each node represents a credit tier, with traversal determined by availability and expiry. Operator 'Claude Cloud Selection Protocol' (page 2, domain other) captures: hropic cash** | Claude for Startups (if claimed) | `messages.ts` fallback | unset / fallback | Always last resort | **Only one** `CLAUDE_PROVIDER` at a time. Assumptions: At most one Claude provider active per session; fallback is deterministic. Breakdown regime: When P_{cl} fails, M_{cl} transitions to P_{fallback}. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from `CLAUDE_PROVIDER=auto` and `JYNX_CLOUD_ORDER` to define a dynamic provider kernel. Operator 'Free-Lane Execution Gate' (page 2, domain other) captures: --## Recommended launch order (maximize reward, minimize cash) ### Phase 0 — zero cash content (today) ```bash CONTENT_FREE_LANE_ENABLED=true CEREBRAS_API_KEY=... Assumptions: Free lane is enabled only if L_{f} = true and P_{c} ∈ {C_f, F}. Breakdown regime: If L_{f} = false, all models route to paid pools. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a conditional execution gate where model routing depends on `CONTENT_FREE_LANE_ENABLED` and credit availability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CLOUD_CREDIT_LAUNCH_MAP (902052043c3e9464, domain=other, pages_read=3/3): Operator 'Sequential Credit Exhaustion Operator' (page 1, domain other) captures: Code is aligned to **burn credits and free tiers first**. Assumptions: All credit types are ordered by priority: F ≥ C_f ≥ C_c. Breakdown regime: When C_f ∪ F = ∅, fallback to C_c occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a ranked decision tree where each node represents a credit tier, with traversal determined by availability and expiry. Operator 'Claude Cloud Selection Protocol' (page 2, domain other) captures: hropic cash** | Claude for Startups (if claimed) | `messages.ts` fallback | unset / fallback | Always last resort | **Only one** `CLAUDE_PROVIDER` at a time. Assumptions: At most one Claude provider active per session; fallback is deterministic. Breakdown regime: When P_{cl} fails, M_{cl} transitions to P_{fallback}. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from `CLAUDE_PROVIDER=auto` and `JYNX_CLOUD_ORDER` to define a dynamic provider kernel. Operator 'Free-Lane Execution Gate' (page 2, domain other) captures: --## Recommended launch order (maximize reward, minimize cash) ### Phase 0 — zero cash content (today) ```bash CONTENT_FREE_LANE_ENABLED=true CEREBRAS_API_KEY=... Assumptions: Free lane is enabled only if L_{f} = true and P_{c} ∈ {C_f, F}. Breakdown regime: If L_{f} = false, all models route to paid pools. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a conditional execution gate where model routing depends on `CONTENT_FREE_LANE_ENABLED` and credit availability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in resource management paradigms of cloud economics and layered decision theory, tracing back to early 2020s credit optimization frameworks in serverless computing. Retrocausal Genealogy: Rooted in CLOUD_CREDIT_LAUNCH_MAP (902052043c3e9464), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CLOUD_CREDIT_LAUNCH_MAP (902052043c3e9464), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the deployment system (which sets flags), the runtime engine (which selects models), and the ops layer (which validates readiness). Each agent operates under constraints of availability and configuration, with potential misalignment in state propagation. Theory of Mind & Decision Maker Model: Rooted in CLOUD_CREDIT_LAUNCH_MAP (902052043c3e9464), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if `verify-credit-stack.mjs` reports success but `smoke-free-lane.mjs` fails due to stale config. Leakage occurs when `CLAUDE_PROVIDER` is not properly scoped, causing unintended fallbacks to Anthropic. Cross-Layer Veto & Anti-Leakage Check: Rooted in CLOUD_CREDIT_LAUNCH_MAP (902052043c3e9464), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CLOUD_CREDIT_LAUNCH_MAP (902052043c3e9464), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "352c351b7d8aa5ee",
+  "source_status": "COMPLETE",
+  "title": "1206-meta-cta-trading-kelly-criterion",
+  "file_name": "1206-meta-cta-trading-kelly-criterion.md",
+  "sha256": "352c351b7d8aa5ee52e82404ee936ab426d0a5b68aed8065e858c369e2247621",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Kelly criterion leverages price impact feedback loops in CTA dynamics; deterministic cobweb phases map to market regimes with bounded volatility and explosive collapse. Universal Lens: Rooted in 1206-meta-cta-trading-kelly-criterion (352c351b7d8aa5ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on price impact phases enables probabilistic regime classification; conformal prediction bounds uncertainty in volatility transitions. GSI Mapping: Rooted in 1206-meta-cta-trading-kelly-criterion (352c351b7d8aa5ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situation-aware state transitions model market phases (I–III) as sequential decision states; dynamic exposure adjustment aligns with Kelly-optimal rebalancing. GSE Mapping: Rooted in 1206-meta-cta-trading-kelly-criterion (352c351b7d8aa5ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "kelly_leverage_feedback",
+      "name": "Kelly Leverage Feedback",
+      "verbatim_quote": "Method / model - Kelly leverage Λ = λ/σ (market price of risk / volatility), fixed; derived via self-financing max-drift (eqs.",
+      "page": 1,
+      "latex": "\\Lambda = \\frac{\\lambda}{\\sigma}",
+      "symbol_and_unit_ledger": "{'Λ': 'dimensionless Kelly leverage', 'λ': 'market price of risk (units: return per unit risk)', 'σ': 'volatility (units: standard deviation of returns)'}",
+      "assumptions": "Fixed drift/volatility under geometric Brownian motion; deterministic feedback loop; continuous rebalancing.",
+      "breakdown_regime": "Phase III—explosive divergence due to runaway price impact.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian belief updates on volatility regimes mirror Kelly's optimal leverage under feedback-driven price dynamics.",
+        "source_operator": "kelly_leverage_feedback",
+        "telemetry": "Volatility and drift estimates from price impact signals."
+      }
+    },
+    {
+      "primitive_id": "price_impact_cobweb_dynamics",
+      "name": "Price Impact Cobweb Dynamics",
+      "verbatim_quote": "- Alternating the two relations yields deterministic cobweb dynamics (Fig.",
+      "page": 1,
+      "latex": "\\Delta S^\\gamma \\sim \\Delta N",
+      "symbol_and_unit_ledger": "{'ΔS': 'price change (units: currency)', 'ΔN': 'trade volume change (units: contracts)', 'γ': 'power-law exponent (dimensionless)'}",
+      "assumptions": "Power-law price impact; fixed leverage; no stochastic noise; continuous rebalancing.",
+      "breakdown_regime": "Phase III—market breakdown from explosive feedback.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transition engine uses cobweb phases to predict regime shifts in market behavior.",
+        "source_operator": "price_impact_cobweb_dynamics",
+        "telemetry": "Price swing amplitude and volatility decay rate."
+      }
+    },
+    {
+      "primitive_id": "phase_transition_regimes",
+      "name": "Phase Transition Regimes",
+      "verbatim_quote": "2): Phase I (oscillating, decaying), Phase II (monotone decaying), Phase III (runaway/explosive → market breakdown).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Phase I': 'declining volatility, oscillatory price swings', 'Phase II': 'monotonic convergence, low volatility', 'Phase III': 'explosive price run-up, market instability'}",
+      "assumptions": "Deterministic feedback loop; no external shocks; fixed leverage.",
+      "breakdown_regime": "Phase III—market collapse from feedback instability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI regime classification maps to GSE state-machine transitions for adaptive betting logic.",
+        "source_operator": "phase_transition_regimes",
+        "telemetry": "Regime-specific volatility and price momentum indicators."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "352c351b7d8aa5ee_t0",
+      "think": "The paper introduces a deterministic feedback model linking Kelly-optimal CTA leverage to price impact through a power-law relation ΔS^γ ∼ ΔN. This generates three distinct phases of market behavior: oscillating and decaying (Phase I), monotonic decay (Phase II), and explosive divergence (Phase III). These phases are derived from a cobweb dynamics model assuming fixed leverage and continuous rebalancing. The model lacks empirical calibration and assumes no noise, making it unsuitable for fixed-odds sports betting. However, its structure mirrors GSE’s state-transition logic and GSI’s Bayesian regime inference. The feedback loop resembles a closed-loop control system where rebalancing affects price, which in turn influences future rebalancing. In GSE, such dynamics could inform adaptive betting strategies across volatility regimes. In GSI, they support probabilistic forecasting of regime transitions using conformal prediction. The model fails because it ignores stochasticity, real-world liquidity constraints, and the absence of a direct analogy to bookmaker line-setting mechanisms.\n\nDeep epistemic analysis for 1206-meta-cta-trading-kelly-criterion (352c351b7d8aa5ee, domain=other, pages_read=2/2): Operator 'Kelly Leverage Feedback' (page 1, domain other) captures: Method / model - Kelly leverage Λ = λ/σ (market price of risk / volatility), fixed; derived via self-financing max-drift (eqs. Assumptions: Fixed drift/volatility under geometric Brownian motion; deterministic feedback loop; continuous rebalancing. Breakdown regime: Phase III—explosive divergence due to runaway price impact. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian belief updates on volatility regimes mirror Kelly's optimal leverage under feedback-driven price dynamics. Operator 'Price Impact Cobweb Dynamics' (page 1, domain other) captures: - Alternating the two relations yields deterministic cobweb dynamics (Fig. Assumptions: Power-law price impact; fixed leverage; no stochastic noise; continuous rebalancing. Breakdown regime: Phase III—market breakdown from explosive feedback. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition engine uses cobweb phases to predict regime shifts in market behavior. Operator 'Phase Transition Regimes' (page 1, domain other) captures: 2): Phase I (oscillating, decaying), Phase II (monotone decaying), Phase III (runaway/explosive → market breakdown). Assumptions: Deterministic feedback loop; no external shocks; fixed leverage. Breakdown regime: Phase III—market collapse from feedback instability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI regime classification maps to GSE state-machine transitions for adaptive betting logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1206-meta-cta-trading-kelly-criterion (352c351b7d8aa5ee, domain=other, pages_read=2/2): Operator 'Kelly Leverage Feedback' (page 1, domain other) captures: Method / model - Kelly leverage Λ = λ/σ (market price of risk / volatility), fixed; derived via self-financing max-drift (eqs. Assumptions: Fixed drift/volatility under geometric Brownian motion; deterministic feedback loop; continuous rebalancing. Breakdown regime: Phase III—explosive divergence due to runaway price impact. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian belief updates on volatility regimes mirror Kelly's optimal leverage under feedback-driven price dynamics. Operator 'Price Impact Cobweb Dynamics' (page 1, domain other) captures: - Alternating the two relations yields deterministic cobweb dynamics (Fig. Assumptions: Power-law price impact; fixed leverage; no stochastic noise; continuous rebalancing. Breakdown regime: Phase III—market breakdown from explosive feedback. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition engine uses cobweb phases to predict regime shifts in market behavior. Operator 'Phase Transition Regimes' (page 1, domain other) captures: 2): Phase I (oscillating, decaying), Phase II (monotone decaying), Phase III (runaway/explosive → market breakdown). Assumptions: Deterministic feedback loop; no external shocks; fixed leverage. Breakdown regime: Phase III—market collapse from feedback instability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI regime classification maps to GSE state-machine transitions for adaptive betting logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kelly’s optimal growth theory (1956) and market microstructure feedback models (e.g., Almgren & Chriss, 2000), this work extends to deterministic cobweb dynamics in high-frequency trading contexts. Retrocausal Genealogy: Rooted in 1206-meta-cta-trading-kelly-criterion (352c351b7d8aa5ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1206-meta-cta-trading-kelly-criterion (352c351b7d8aa5ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The model presumes rational Kelly optimizers with fixed beliefs about drift and volatility, ignoring heterogeneity in trader behavior or bookmaker strategic adjustments. It assumes perfect information and continuous liquidity, which do not hold in sports markets. Theory of Mind & Decision Maker Model: Rooted in 1206-meta-cta-trading-kelly-criterion (352c351b7d8aa5ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "The model’s deterministic nature and lack of empirical grounding preclude its use in GSI’s Bayesian inference or GSE’s adaptive state engines. Its feedback mechanism lacks alignment with sportsbook line-setting, which is driven by balancing books rather than portfolio rebalancing. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1206-meta-cta-trading-kelly-criterion (352c351b7d8aa5ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

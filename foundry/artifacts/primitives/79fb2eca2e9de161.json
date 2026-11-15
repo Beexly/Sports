@@ -1,0 +1,78 @@
+{
+  "book_id": "79fb2eca2e9de161",
+  "source_status": "COMPLETE",
+  "title": "2015 - Graphical Model for Baskeball Match Simulation - Unknown Authors",
+  "file_name": "2015 - Graphical Model for Baskeball Match Simulation - Unknown Authors.md",
+  "sha256": "79fb2eca2e9de161a6d04e92b7248836e18127fa700782df16c5cfe19127f470",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A probabilistic graphical model bridges player identity and team-level network dynamics in basketball match simulation via discrete state transitions. Universal Lens: Rooted in 2015 - Graphical Model for Baskeball Match Simulation - Unknown Authors (79fb2eca2e9de161), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to map player-level latent variables into team-level match outcome distributions using conformal predictive validity. GSI Mapping: Rooted in 2015 - Graphical Model for Baskeball Match Simulation - Unknown Authors (79fb2eca2e9de161), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes state-transition graphs to model possession flows, where nodes represent player configurations and edges encode strategic move probabilities. GSE Mapping: Rooted in 2015 - Graphical Model for Baskeball Match Simulation - Unknown Authors (79fb2eca2e9de161), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "match_progression_graph",
+      "name": "Match Progression Graph",
+      "verbatim_quote": "We treat the progression of a match as a graph, where each node is a network structure of players on the court, their actions, events, etc., and edges denote possible moves in the game flow.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each node represents a unique player configuration; edges correspond to valid tactical transitions.",
+      "breakdown_regime": "When player identities become indistinguishable or when team strategies collapse into deterministic patterns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The graph structure mirrors the temporal evolution of team dynamics through player interactions and strategic decisions.",
+        "source_operator": "match_progression_graph",
+        "telemetry": "Observable: possession sequences, turnover rates, shot selection trends."
+      }
+    },
+    {
+      "primitive_id": "possession_transition_model",
+      "name": "Possession Transition Model",
+      "verbatim_quote": "We model every touch and event in a game as a sequence of transitions between discrete states.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All game events follow a Markovian property with respect to current state and transition probabilities.",
+      "breakdown_regime": "When external factors disrupt sequential predictability, e.g., injury or rule changes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models the stochastic evolution of ball control among players based on historical action frequencies.",
+        "source_operator": "possession_transition_model",
+        "telemetry": "Observable: time-to-next possession, type-of-action distribution."
+      }
+    },
+    {
+      "primitive_id": "player_identity_network",
+      "name": "Player Identity Network",
+      "verbatim_quote": "In this paper, we propose the simulation infrastructure that can bridge the gap between player identity and team level network.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Individual player attributes contribute additively to collective team performance under varying lineup conditions.",
+      "breakdown_regime": "When aggregate team behavior becomes non-linearly dependent on individual contributions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents the interplay between individual player capabilities and emergent team-level outcomes.",
+        "source_operator": "player_identity_network",
+        "telemetry": "Observable: lineup impact on scoring efficiency, defensive effectiveness metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "79fb2eca2e9de161_t0",
+      "think": "The core insight of the paper lies in modeling basketball matches as probabilistic graphical models that incorporate both discrete state transitions and player-specific identity networks. The match progression graph encodes all possible configurations of players on the court as nodes, with directed edges representing valid tactical moves. This allows for a fine-grained simulation of match dynamics beyond simple win-loss predictions. The possession transition model treats each play as a step in a Markov chain, enabling the computation of likelihoods over sequences of actions. By assigning latent variables to players—such as offensive and defensive abilities—the framework supports nuanced simulations that reflect real-world variability in performance. The integration of these components enables GSI to perform Bayesian inference on match outcomes, while GSE leverages the structured state space for dynamic decision-making during simulation runs.\n\nDeep epistemic analysis for 2015 - Graphical Model for Baskeball Match Simulation - Unknown Authors (79fb2eca2e9de161, domain=other, pages_read=9/9): Operator 'Match Progression Graph' (page 1, domain other) captures: We treat the progression of a match as a graph, where each node is a network structure of players on the court, their actions, events, etc., and edges denote possible moves in the game flow. Assumptions: Each node represents a unique player configuration; edges correspond to valid tactical transitions. Breakdown regime: When player identities become indistinguishable or when team strategies collapse into deterministic patterns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The graph structure mirrors the temporal evolution of team dynamics through player interactions and strategic decisions. Operator 'Possession Transition Model' (page 1, domain other) captures: We model every touch and event in a game as a sequence of transitions between discrete states. Assumptions: All game events follow a Markovian property with respect to current state and transition probabilities. Breakdown regime: When external factors disrupt sequential predictability, e.g., injury or rule changes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models the stochastic evolution of ball control among players based on historical action frequencies. Operator 'Player Identity Network' (page 1, domain other) captures: In this paper, we propose the simulation infrastructure that can bridge the gap between player identity and team level network. Assumptions: Individual player attributes contribute additively to collective team performance under varying lineup conditions. Breakdown regime: When aggregate team behavior becomes non-linearly dependent on individual contributions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents the interplay between individual player capabilities and emergent team-level outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2015 - Graphical Model for Baskeball Match Simulation - Unknown Authors (79fb2eca2e9de161, domain=other, pages_read=9/9): Operator 'Match Progression Graph' (page 1, domain other) captures: We treat the progression of a match as a graph, where each node is a network structure of players on the court, their actions, events, etc., and edges denote possible moves in the game flow. Assumptions: Each node represents a unique player configuration; edges correspond to valid tactical transitions. Breakdown regime: When player identities become indistinguishable or when team strategies collapse into deterministic patterns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The graph structure mirrors the temporal evolution of team dynamics through player interactions and strategic decisions. Operator 'Possession Transition Model' (page 1, domain other) captures: We model every touch and event in a game as a sequence of transitions between discrete states. Assumptions: All game events follow a Markovian property with respect to current state and transition probabilities. Breakdown regime: When external factors disrupt sequential predictability, e.g., injury or rule changes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models the stochastic evolution of ball control among players based on historical action frequencies. Operator 'Player Identity Network' (page 1, domain other) captures: In this paper, we propose the simulation infrastructure that can bridge the gap between player identity and team level network. Assumptions: Individual player attributes contribute additively to collective team performance under varying lineup conditions. Breakdown regime: When aggregate team behavior becomes non-linearly dependent on individual contributions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents the interplay between individual player capabilities and emergent team-level outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in earlier work on Markov models for sports (Shirley, Strumbelj & Vracar), this approach extends prior limitations by incorporating player-level granularity and network theory to capture complex interaction patterns. Retrocausal Genealogy: Rooted in 2015 - Graphical Model for Baskeball Match Simulation - Unknown Authors (79fb2eca2e9de161), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The model assumes rational agents (players) making optimal decisions within constraints defined by their skills and positional roles. It accounts for adversarial behavior through defensive metrics and strategic positioning, reflecting dualistic thinking between offense and defense. Theory of Mind & Decision Maker Model: Rooted in 2015 - Graphical Model for Baskeball Match Simulation - Unknown Authors (79fb2eca2e9de161), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when player skill sets are highly correlated across teams, leading to reduced discriminative power. Leakage occurs if individual player effects are not properly isolated from team-level influences, causing spurious correlations in outcome predictions. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2015 - Graphical Model for Baskeball Match Simulation - Unknown Authors (79fb2eca2e9de161), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

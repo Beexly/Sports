@@ -1,0 +1,78 @@
+{
+  "book_id": "06d607e7e4b944d4",
+  "source_status": "COMPLETE",
+  "title": "2110.01395",
+  "file_name": "2110.01395.pdf",
+  "sha256": "06d607e7e4b944d443f8e5859dd0b56407e5f92b97baa3126f39828790cfb9fb",
+  "primary_domain": "other",
+  "pages_total": 8,
+  "pages_read": 8,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "IPL match outcome prediction via ML integrates team performance, player stats, and contextual features into probabilistic classifiers. Universal Lens: Rooted in 2110.01395 (06d607e7e4b944d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps historical IPL datasets to posterior belief distributions over match outcomes using Random Forest. GSI Mapping: Rooted in 2110.01395 (06d607e7e4b944d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models team dynamics and venue effects as state transitions in a Markovian game graph. GSE Mapping: Rooted in 2110.01395 (06d607e7e4b944d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "team_performance_index",
+      "name": "Team Performance Index",
+      "verbatim_quote": "There are many variables and constraints which makes The Analysis of Cricket Match Difficult.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'TPI': 'dimensionless score representing team strength'}",
+      "assumptions": "Team performance is quantifiable through historical win/loss ratios and contextual factors.",
+      "breakdown_regime": "When team composition changes drastically or venues shift significantly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from home/away win percentages and player statistics to compute team strength vector.",
+        "source_operator": "team_performance_index",
+        "telemetry": "Historical win rate, home advantage, and player form metrics."
+      }
+    },
+    {
+      "primitive_id": "match_outcome_classifier",
+      "name": "Match Outcome Classifier",
+      "verbatim_quote": "In this paper, we have proposed a model for predicting outcome of the IPL matches using Machine learning Algorithms namely SVM, Random Forest Classifier (RFC), Logistic Regression and K-Nearest Neighbor.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P(outcome)': 'probability of match outcome'}",
+      "assumptions": "Predictive accuracy improves with feature-rich datasets and robust ML algorithms.",
+      "breakdown_regime": "Under high variance in input features or insufficient training data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's Bayesian belief update mechanism using Random Forest outputs.",
+        "source_operator": "match_outcome_classifier",
+        "telemetry": "Accuracy metrics (e.g., 88.10%) and confusion matrices."
+      }
+    },
+    {
+      "primitive_id": "player_statistical_profile",
+      "name": "Player Statistical Profile",
+      "verbatim_quote": "Selection of a team is based on the player performance and other considerations like pitch factor, team size, venue etc.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PS': 'statistical profile vector of player attributes'}",
+      "assumptions": "Individual player contributions are additive and measurable via performance indicators.",
+      "breakdown_regime": "When individual form is inconsistent or external conditions alter play style.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Constructed from deliveries dataset features such as runs, wickets, and dismissals.",
+        "source_operator": "player_statistical_profile",
+        "telemetry": "Runs scored, balls faced, economy rate, strike rate, and dismissal frequency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "06d607e7e4b944d4_t0",
+      "think": "The core mathematical structure underpinning IPL match prediction lies in transforming discrete player and team features into continuous probability distributions. Each primitive—team performance index, match outcome classifier, and player statistical profile—is defined over a shared feature space derived from historical datasets. These primitives are composed via kernel-based aggregation functions that map inputs to latent representations. The Random Forest Classifier serves as the primary inference engine, operating in a dual mode: it learns from labeled match outcomes while simultaneously generating uncertainty estimates. This dualism enables both predictive accuracy and risk-awareness. Failure modes arise when data drift occurs due to rule changes or new player emergence, or when feature correlation introduces bias. The system must maintain robustness against adversarial inputs such as manipulated statistics or strategic misrepresentation.\n\nDeep epistemic analysis for 2110.01395 (06d607e7e4b944d4, domain=other, pages_read=8/8): Operator 'Team Performance Index' (page 1, domain other) captures: There are many variables and constraints which makes The Analysis of Cricket Match Difficult. Assumptions: Team performance is quantifiable through historical win/loss ratios and contextual factors. Breakdown regime: When team composition changes drastically or venues shift significantly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from home/away win percentages and player statistics to compute team strength vector. Operator 'Match Outcome Classifier' (page 1, domain other) captures: In this paper, we have proposed a model for predicting outcome of the IPL matches using Machine learning Algorithms namely SVM, Random Forest Classifier (RFC), Logistic Regression and K-Nearest Neighbor. Assumptions: Predictive accuracy improves with feature-rich datasets and robust ML algorithms. Breakdown regime: Under high variance in input features or insufficient training data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's Bayesian belief update mechanism using Random Forest outputs. Operator 'Player Statistical Profile' (page 1, domain other) captures: Selection of a team is based on the player performance and other considerations like pitch factor, team size, venue etc. Assumptions: Individual player contributions are additive and measurable via performance indicators. Breakdown regime: When individual form is inconsistent or external conditions alter play style. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Constructed from deliveries dataset features such as runs, wickets, and dismissals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2110.01395 (06d607e7e4b944d4, domain=other, pages_read=8/8): Operator 'Team Performance Index' (page 1, domain other) captures: There are many variables and constraints which makes The Analysis of Cricket Match Difficult. Assumptions: Team performance is quantifiable through historical win/loss ratios and contextual factors. Breakdown regime: When team composition changes drastically or venues shift significantly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from home/away win percentages and player statistics to compute team strength vector. Operator 'Match Outcome Classifier' (page 1, domain other) captures: In this paper, we have proposed a model for predicting outcome of the IPL matches using Machine learning Algorithms namely SVM, Random Forest Classifier (RFC), Logistic Regression and K-Nearest Neighbor. Assumptions: Predictive accuracy improves with feature-rich datasets and robust ML algorithms. Breakdown regime: Under high variance in input features or insufficient training data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's Bayesian belief update mechanism using Random Forest outputs. Operator 'Player Statistical Profile' (page 1, domain other) captures: Selection of a team is based on the player performance and other considerations like pitch factor, team size, venue etc. Assumptions: Individual player contributions are additive and measurable via performance indicators. Breakdown regime: When individual form is inconsistent or external conditions alter play style. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Constructed from deliveries dataset features such as runs, wickets, and dismissals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots trace back to early machine learning applications in sports analytics, particularly in baseball’s sabermetrics and football’s tactical modeling. The use of ensemble methods like Random Forest emerged from boosting theory and decision tree formalism in the 1990s. Retrocausal Genealogy: Rooted in 2110.01395 (06d607e7e4b944d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include rival franchises optimizing team selection, sponsors evaluating ROI, and betting markets adjusting probabilities. Each agent operates under distinct utility functions: franchise managers maximize win probability, sponsors seek brand exposure, and bookmakers aim for balanced risk exposure. Theory of Mind & Decision Maker Model: Rooted in 2110.01395 (06d607e7e4b944d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that team performance indices do not redundantly encode similar information as player profiles. Leakage vetoes prevent temporal leakage from future events influencing past predictions. Cross-layer validation ensures that GSE's state transitions remain consistent with GSI's probabilistic updates. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2110.01395 (06d607e7e4b944d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

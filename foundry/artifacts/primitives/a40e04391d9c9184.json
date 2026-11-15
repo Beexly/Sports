@@ -1,0 +1,78 @@
+{
+  "book_id": "a40e04391d9c9184",
+  "source_status": "COMPLETE",
+  "title": "UI_AUDIT",
+  "file_name": "UI_AUDIT.md",
+  "sha256": "a40e04391d9c91844351ebff73a9aebea9e362f34d5e812bc409534a9284fa1b",
+  "primary_domain": "other",
+  "pages_total": 8,
+  "pages_read": 8,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "UI consistency is modeled as a projection operator mapping high-dimensional token space onto low-dimensional perceptual manifolds. When compositional opacity yields zero RGB delta, the surface collapses into a degenerate subspace, causing critical navigational affordances to vanish from the observable state.",
+  "gsi_mapping": "The audit scanner functions as a conformal census over feature ladders. Layer 1 (class-string counts) provides raw priors, while Layer 2 (RGB compositing) acts as a Bayesian update, filtering out false-positive surface tokens that fail to generate measurable perceptual lift against the background ground truth.",
+  "gse_mapping": "Navigational states are governed by strict transition matrices requiring non-zero contrast deltas for active and hover vectors. The failure of `bg-carbon/60` represents a broken state-transition edge where the system fails to emit an observable signal upon user interaction, collapsing the situational awareness graph.",
+  "primitives": [
+    {
+      "primitive_id": "surface_compositing_kernel",
+      "name": "Surface Compositing Kernel",
+      "verbatim_quote": "**Composite** (the two math scripts): what those values actually render, in RGB deltas against the real page ground.",
+      "page": 1,
+      "latex": "\\Delta_{RGB} = \\left| C_{token}(\\alpha) \\cdot \\alpha + C_{ground} \\cdot (1 - \\alpha) - C_{ground} \\right|",
+      "symbol_and_unit_ledger": "\\Delta_{RGB}: Euclidean distance in sRGB color space (dimensionless). C_{token}, C_{ground}: Base hex color vectors. \\alpha: Opacity scalar [0,1].",
+      "assumptions": "Linear alpha blending over a uniform base ground color; sRGB color space without gamma correction for delta approximation.",
+      "breakdown_regime": "Singular when \\alpha \\to 0 or C_{token} = C_{ground}, resulting in \\Delta_{RGB} = 0 (invisible surface).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI sensor fusion, where raw telemetry (CSS classes) must be composited against environmental noise (page background) to yield actionable signals.",
+        "source_operator": "surface_compositing_kernel",
+        "telemetry": "dRGB(7,8,9) vs dRGB(0,0,0)"
+      }
+    },
+    {
+      "primitive_id": "affordance_signal_to_noise",
+      "name": "Affordance Signal-to-Noise Ratio",
+      "verbatim_quote": "- **323** className lines pair a `border-*` with a `bg-<family>/<n>`, i.e.",
+      "page": 2,
+      "latex": "SNR_{affordance} = \\frac{\\Delta_{background}}{\\Delta_{border}} \\quad \\text{where} \\quad \\Delta_{background} \\approx 0",
+      "symbol_and_unit_ledger": "SNR_{affordance}: Dimensionless ratio of perceptual lifts. \\Delta_{background}: Background RGB delta. \\Delta_{border}: Border RGB delta.",
+      "assumptions": "Perceptual weight is distributed between background wash and border stroke; human vision requires SNR > 1 for rapid parsing.",
+      "breakdown_regime": "System collapse when \\Delta_{background} = 0, forcing all wayfinding load onto the 1px border vector.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSE situational reasoning: if the primary state indicator (active row background) vanishes, the agent's cognitive load spikes to resolve position via secondary indicators (borders).",
+        "source_operator": "affordance_signal_to_noise",
+        "telemetry": "323 shell instances, 201 failing background lift"
+      }
+    },
+    {
+      "primitive_id": "semantic_hierarchy_inversion",
+      "name": "Semantic Hierarchy Inversion",
+      "verbatim_quote": "**Census** (scanner): how many distinct values exist on each ladder, and where.",
+      "page": 1,
+      "latex": "H_{semantic} = \\sum_{i=1}^{N} w_i \\cdot I(tag_i = h_1)",
+      "symbol_and_unit_ledger": "H_{semantic}: Information hierarchy score. w_i: Visual weight of element i. I(): Indicator function for correct DOM tag assignment.",
+      "assumptions": "DOM tree depth strictly correlates with visual prominence and accessibility reading order.",
+      "breakdown_regime": "Inversion occurs when a micro-label occupies the h1 node while the true title is demoted, breaking assistive tech traversal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSI data pipeline integrity checks, ensuring that high-priority event tags are not misaligned with their underlying statistical significance.",
+        "source_operator": "semantic_hierarchy_inversion",
+        "telemetry": "12 cockpit pages with eyebrow/h1 inversions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a40e04391d9c9184_t0",
+      "think": "The UI audit operates as a dual-layer mathematical verification system. Layer 1 performs a combinatorial census over the design token space, identifying 2,277 className lines across six distinct ladders (surface, radius, type, etc.). This establishes the prior distribution of intended visual states. However, Layer 1 alone suffers from a severe aliasing error: it assumes a bijective mapping between CSS class strings and rendered pixels. Layer 2 introduces the Surface Compositing Kernel, calculating the exact RGB delta (\\Delta_{RGB}) between the composited token and the page ground (#08090C). The derivation reveals a catastrophic degeneracy in the current state: 232 lines utilize obsidian/carbon/void surfaces that mathematically resolve to exactly the page ground, yielding \\Delta_{RGB} = 0. This creates a 'phantom geometry' where the DOM asserts boundaries that the renderer completely ignores. Furthermore, the Affordance Signal-to-Noise analysis exposes a structural fragility in the navigation sidebar. With the background hover state collapsed to zero, the entire interactive feedback loop relies on a 1px titanium border providing a meager dRGB(12,13,16) lift. The semantic hierarchy inversion compounds this by misaligning the DOM tree with visual weight, creating a disjointed epistemic map for both users and assistive technologies. The fix requires re-injecting non-zero vectors (like --iris) into the state-transition matrix to restore observability.\n\nDeep epistemic analysis for UI_AUDIT (a40e04391d9c9184, domain=other, pages_read=8/8): Operator 'Surface Compositing Kernel' (page 1, domain other) captures: **Composite** (the two math scripts): what those values actually render, in RGB deltas against the real page ground. Assumptions: Linear alpha blending over a uniform base ground color; sRGB color space without gamma correction for delta approximation. Breakdown regime: Singular when \\alpha \\to 0 or C_{token} = C_{ground}, resulting in \\Delta_{RGB} = 0 (invisible surface). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI sensor fusion, where raw telemetry (CSS classes) must be composited against environmental noise (page background) to yield actionable signals. Operator 'Affordance Signal-to-Noise Ratio' (page 2, domain other) captures: - **323** className lines pair a `border-*` with a `bg-<family>/<n>`, i.e. Assumptions: Perceptual weight is distributed between background wash and border stroke; human vision requires SNR > 1 for rapid parsing. Breakdown regime: System collapse when \\Delta_{background} = 0, forcing all wayfinding load onto the 1px border vector. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSE situational reasoning: if the primary state indicator (active row background) vanishes, the agent's cognitive load spikes to resolve position via secondary indicators (borders). Operator 'Semantic Hierarchy Inversion' (page 1, domain other) captures: **Census** (scanner): how many distinct values exist on each ladder, and where. Assumptions: DOM tree depth strictly correlates with visual prominence and accessibility reading order. Breakdown regime: Inversion occurs when a micro-label occupies the h1 node while the true title is demoted, breaking assistive tech traversal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSI data pipeline integrity checks, ensuring that high-priority event tags are not misaligned with their underlying statistical significance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for UI_AUDIT (a40e04391d9c9184, domain=other, pages_read=8/8): Operator 'Surface Compositing Kernel' (page 1, domain other) captures: **Composite** (the two math scripts): what those values actually render, in RGB deltas against the real page ground. Assumptions: Linear alpha blending over a uniform base ground color; sRGB color space without gamma correction for delta approximation. Breakdown regime: Singular when \\alpha \\to 0 or C_{token} = C_{ground}, resulting in \\Delta_{RGB} = 0 (invisible surface). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI sensor fusion, where raw telemetry (CSS classes) must be composited against environmental noise (page background) to yield actionable signals. Operator 'Affordance Signal-to-Noise Ratio' (page 2, domain other) captures: - **323** className lines pair a `border-*` with a `bg-<family>/<n>`, i.e. Assumptions: Perceptual weight is distributed between background wash and border stroke; human vision requires SNR > 1 for rapid parsing. Breakdown regime: System collapse when \\Delta_{background} = 0, forcing all wayfinding load onto the 1px border vector. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSE situational reasoning: if the primary state indicator (active row background) vanishes, the agent's cognitive load spikes to resolve position via secondary indicators (borders). Operator 'Semantic Hierarchy Inversion' (page 1, domain other) captures: **Census** (scanner): how many distinct values exist on each ladder, and where. Assumptions: DOM tree depth strictly correlates with visual prominence and accessibility reading order. Breakdown regime: Inversion occurs when a micro-label occupies the h1 node while the true title is demoted, breaking assistive tech traversal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSI data pipeline integrity checks, ensuring that high-priority event tags are not misaligned with their underlying statistical significance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This methodology traces back to Gestalt psychology's laws of proximity and similarity, formalized in modern Human-Computer Interaction through Norman's visibility principle. Mathematically, it mirrors the development of chromatic adaptation transforms in color science (e.g., CIEDE2000), where perceived difference is non-linear and context-dependent. The shift from counting classes to measuring composited deltas reflects the broader engineering evolution from static linting to dynamic, runtime property testing.",
+      "theory_of_mind": "The primary actor is the end-user navigating a dense 28-destination sidebar under time pressure. Their internal model expects immediate, high-contrast feedback (a 'lift') upon hovering or selecting a node. The opposing agent is the flawed design system, which silently absorbs these interactions due to zero-delta backgrounds. The user's frustration stems from a mismatch between their expected state-transition probability and the actual visual silence, forcing them to expend excessive cognitive load to locate the active row via hairline borders.",
+      "cross_layer_veto": "A strict anti-collinearity veto must be applied between the 'surface' ladder and the 'border' ladder. If the background vector \\Delta_{bg} approaches zero, the border vector \\Delta_{border} must asymptotically increase to maintain a constant total affordance SNR. Currently, they are collinear in their failure: both rely on low-opacity tokens that vanish against the dark mode ground. Additionally, a leakage veto prevents semantic tags (h1, p) from being swapped purely for stylistic reasons without verifying the resulting accessibility tree hierarchy remains logically sound."
+    }
+  ]
+}

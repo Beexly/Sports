@@ -1,0 +1,78 @@
+{
+  "book_id": "bcc6adc6503cddff",
+  "source_status": "COMPLETE",
+  "title": "signage",
+  "file_name": "signage.md",
+  "sha256": "bcc6adc6503cddffa73d18a0037daf5195740236c400fd0be67ea660ea7f01d7",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Signage as a structured state-space manifold with deterministic slot-based configuration and environmental constraint projection. Universal Lens: Rooted in signage (bcc6adc6503cddff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on signage state-space using approved slot priors and environmental likelihoods for optimal legibility and compliance. GSI Mapping: Rooted in signage (bcc6adc6503cddff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates sign artwork transitions through validated dimensions, constraints, and context-aware rendering states. GSE Mapping: Rooted in signage (bcc6adc6503cddff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "signage_configuration",
+      "name": "Signage Configuration",
+      "verbatim_quote": "# Signage Create signage once its required slots are separately approved.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'signage state vector (dimensionless)', 'A': 'approval status (boolean)'}",
+      "assumptions": "Configuration is a discrete state dependent on slot approval.",
+      "breakdown_regime": "S = ∅ when A = false",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI prior distribution over S conditioned on A; GSE transition function maps A → S",
+        "source_operator": "signage_configuration",
+        "telemetry": "Slot approval status and configuration completeness"
+      }
+    },
+    {
+      "primitive_id": "visual_compliance",
+      "name": "Visual Compliance",
+      "verbatim_quote": "Require logo and palette; require typography when copy/wayfinding text appears.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'logo compliance (boolean)', 'P': 'palette compliance (boolean)', 'T': 'typography compliance (boolean)'}",
+      "assumptions": "Compliance is a conjunction of L ∧ P ∧ T.",
+      "breakdown_regime": "¬(L ∧ P ∧ T) ⇒ invalid signage",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI visual validation kernel; GSE enforces L ∧ P ∧ T in render pipeline",
+        "source_operator": "visual_compliance",
+        "telemetry": "Compliance flags and visual fidelity metrics"
+      }
+    },
+    {
+      "primitive_id": "environmental_constraints",
+      "name": "Environmental Constraints",
+      "verbatim_quote": "Require: - sign type and environment - physical dimensions - viewing distance - fabrication/illumination constraints - exact copy and directional information - supplied site photos or plans Do not invent wayfinding destinations, measurements, safety information, or fabrication specifications.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'environment type (categorical)', 'D': 'physical dimensions (meters)', 'V': 'viewing distance (meters)', 'F': 'fabrication constraints (boolean)', 'C': 'copy content (string)', 'R': 'directional info (vector)'}",
+      "assumptions": "Constraints define a bounded domain for valid signage design.",
+      "breakdown_regime": "E ∩ D ∩ V ∩ F ∩ C ∩ R ⊆ Ω",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI environmental domain projection; GSE encodes E, D, V into render parameters",
+        "source_operator": "environmental_constraints",
+        "telemetry": "Constraint satisfaction score and domain overlap"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "bcc6adc6503cddff_t0",
+      "think": "The signage system operates as a deterministic state machine governed by slot approvals and environmental constraints. Each primitive defines a subspace of valid configurations. The configuration primitive ensures that signage is only created when all required slots are approved, forming a logical conjunction. Visual compliance ensures adherence to brand standards via boolean checks on logo, palette, and typography. Environmental constraints define a bounded space where signage must be legible and functional, modeled as a set intersection of categorical and dimensional parameters. Failure modes include missing approvals, non-compliant visuals, or violation of environmental bounds. The system's structure supports compositional reasoning and modular validation across layers.\n\nDeep epistemic analysis for signage (bcc6adc6503cddff, domain=other, pages_read=1/1): Operator 'Signage Configuration' (page 1, domain other) captures: # Signage Create signage once its required slots are separately approved. Assumptions: Configuration is a discrete state dependent on slot approval. Breakdown regime: S = ∅ when A = false Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI prior distribution over S conditioned on A; GSE transition function maps A → S Operator 'Visual Compliance' (page 1, domain other) captures: Require logo and palette; require typography when copy/wayfinding text appears. Assumptions: Compliance is a conjunction of L ∧ P ∧ T. Breakdown regime: ¬(L ∧ P ∧ T) ⇒ invalid signage Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI visual validation kernel; GSE enforces L ∧ P ∧ T in render pipeline Operator 'Environmental Constraints' (page 1, domain other) captures: Require: - sign type and environment - physical dimensions - viewing distance - fabrication/illumination constraints - exact copy and directional information - supplied site photos or plans Do not invent wayfinding destinations, measurements, safety information, or fabrication specifications. Assumptions: Constraints define a bounded domain for valid signage design. Breakdown regime: E ∩ D ∩ V ∩ F ∩ C ∩ R ⊆ Ω Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI environmental domain projection; GSE encodes E, D, V into render parameters Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for signage (bcc6adc6503cddff, domain=other, pages_read=1/1): Operator 'Signage Configuration' (page 1, domain other) captures: # Signage Create signage once its required slots are separately approved. Assumptions: Configuration is a discrete state dependent on slot approval. Breakdown regime: S = ∅ when A = false Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI prior distribution over S conditioned on A; GSE transition function maps A → S Operator 'Visual Compliance' (page 1, domain other) captures: Require logo and palette; require typography when copy/wayfinding text appears. Assumptions: Compliance is a conjunction of L ∧ P ∧ T. Breakdown regime: ¬(L ∧ P ∧ T) ⇒ invalid signage Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI visual validation kernel; GSE enforces L ∧ P ∧ T in render pipeline Operator 'Environmental Constraints' (page 1, domain other) captures: Require: - sign type and environment - physical dimensions - viewing distance - fabrication/illumination constraints - exact copy and directional information - supplied site photos or plans Do not invent wayfinding destinations, measurements, safety information, or fabrication specifications. Assumptions: Constraints define a bounded domain for valid signage design. Breakdown regime: E ∩ D ∩ V ∩ F ∩ C ∩ R ⊆ Ω Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI environmental domain projection; GSE encodes E, D, V into render parameters Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal systems theory and constraint satisfaction models from computer graphics and industrial design, tracing back to early CAD and UI specification frameworks. Retrocausal Genealogy: Rooted in signage (bcc6adc6503cddff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in signage (bcc6adc6503cddff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to bypass constraints or introduce unauthorized elements. The system enforces compliance through layered checks and disallows speculative additions such as fabricated safety data or wayfinding destinations. Theory of Mind & Decision Maker Model: Rooted in signage (bcc6adc6503cddff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating visual assets from context previews. Leakage is prevented by ensuring that editable artwork remains distinct from mockup outputs, maintaining integrity across GSI and GSE domains. Cross-Layer Veto & Anti-Leakage Check: Rooted in signage (bcc6adc6503cddff), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

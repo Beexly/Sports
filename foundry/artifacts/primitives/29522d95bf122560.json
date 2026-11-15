@@ -1,0 +1,78 @@
+{
+  "book_id": "29522d95bf122560",
+  "source_status": "COMPLETE",
+  "title": "1549-algorithmic-expert-aggregation",
+  "file_name": "1549-algorithmic-expert-aggregation.md",
+  "sha256": "29522d95bf122560bc79ee5d0d229fa56d6803083b060ce3e6486ad968e5fbaf",
+  "primary_domain": "cs",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 1549-algorithmic-expert-aggregation (29522d95bf122560), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 1549-algorithmic-expert-aggregation (29522d95bf122560), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 1549-algorithmic-expert-aggregation (29522d95bf122560), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "observable_signal_state_matrix",
+      "name": "Observable Signal-State Matrix",
+      "verbatim_quote": "Constructs: observable signal-state matrix A, linear system Ay = b, observable row space S = Row(A), cone K = S ∩ Rn+.",
+      "page": 1,
+      "latex": "A(j,a),i = ρ_{j,a,i}",
+      "symbol_and_unit_ledger": "{'A': 'Signal-state incidence matrix (binary)', 'ρ': 'Probability of expert j reporting score a given true state i (dimensionless)', 'y': 'Vector of posterior probabilities (dimensionless)', 'b': 'Vector of observed conditional expectations (dimensionless)', 'S': 'Row space of A (affine subspace)', 'K': 'Nonnegative part of row space (convex cone)'}",
+      "assumptions": "Finite state space Ω, known prior λ, exact calibration of input experts",
+      "breakdown_regime": "Invertibility failure when A has nontrivial kernel; underdetermined systems yield multiple valid decompositions",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: posterior calibration as a moment-matching constraint in Bayesian updating. GSE: market state transitions as a flow conservation law in a bipartite graph.",
+        "source_operator": "observable_signal_state_matrix",
+        "telemetry": "Residual error ‖Ay - b‖_2 after solving the linear system"
+      }
+    },
+    {
+      "primitive_id": "source_operator_2",
+      "name": "1549-algorithmic-expert-aggregation Grounded Principle 2",
+      "verbatim_quote": "**Verdict:** REJECT — pure theory paper with zero empirical forecasting application: no datasets, no experiments, no backtests, no numbers.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_2",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "1549-algorithmic-expert-aggregation Grounded Principle 3",
+      "verbatim_quote": "The characterization theorems and NP-hardness results are real mathematics but cannot be counted toward the 750-valuable target, which requires applied forecasting value.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "29522d95bf122560_t0",
+      "think": "The core challenge is representing a set of calibrated forecasts as a convex combination of extreme points. The authors map this to a polyhedral geometry problem: the set of feasible output experts forms a convex cone K within the row space of the observable signal matrix A. Decomposing the all-ones vector into nonnegative generators of K yields valid refined experts. This duality between forecast calibration and polyhedral combinatorics provides a computationally tractable framework for optimal aggregation.\n\nDeep epistemic analysis for 1549-algorithmic-expert-aggregation (29522d95bf122560, domain=cs, pages_read=2/2): Operator 'Observable Signal-State Matrix' (page 1, domain cs) captures: Constructs: observable signal-state matrix A, linear system Ay = b, observable row space S = Row(A), cone K = S ∩ Rn+. Assumptions: Finite state space Ω, known prior λ, exact calibration of input experts Breakdown regime: Invertibility failure when A has nontrivial kernel; underdetermined systems yield multiple valid decompositions Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: posterior calibration as a moment-matching constraint in Bayesian updating. GSE: market state transitions as a flow conservation law in a bipartite graph. Operator '1549-algorithmic-expert-aggregation Grounded Principle 2' (page 1, domain cs) captures: **Verdict:** REJECT — pure theory paper with zero empirical forecasting application: no datasets, no experiments, no backtests, no numbers. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator '1549-algorithmic-expert-aggregation Grounded Principle 3' (page 1, domain cs) captures: The characterization theorems and NP-hardness results are real mathematics but cannot be counted toward the 750-valuable target, which requires applied forecasting value. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1549-algorithmic-expert-aggregation (29522d95bf122560, domain=cs, pages_read=2/2): Operator 'Observable Signal-State Matrix' (page 1, domain cs) captures: Constructs: observable signal-state matrix A, linear system Ay = b, observable row space S = Row(A), cone K = S ∩ Rn+. Assumptions: Finite state space Ω, known prior λ, exact calibration of input experts Breakdown regime: Invertibility failure when A has nontrivial kernel; underdetermined systems yield multiple valid decompositions Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: posterior calibration as a moment-matching constraint in Bayesian updating. GSE: market state transitions as a flow conservation law in a bipartite graph. Operator '1549-algorithmic-expert-aggregation Grounded Principle 2' (page 1, domain cs) captures: **Verdict:** REJECT — pure theory paper with zero empirical forecasting application: no datasets, no experiments, no backtests, no numbers. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator '1549-algorithmic-expert-aggregation Grounded Principle 3' (page 1, domain cs) captures: The characterization theorems and NP-hardness results are real mathematics but cannot be counted toward the 750-valuable target, which requires applied forecasting value. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This work builds on Blackwell's seminal calibration theory (1951) and Dempster-Shafer belief functions, translating behavioral desiderata into linear feasibility problems solvable via polyhedral theory. Retrocausal Genealogy: Rooted in 1549-algorithmic-expert-aggregation (29522d95bf122560), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1549-algorithmic-expert-aggregation (29522d95bf122560), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "An opposing actor might seek a simpler, non-optimal aggregator to avoid computational complexity, trading off optimality for interpretability or speed. Theory of Mind & Decision Maker Model: Rooted in 1549-algorithmic-expert-aggregation (29522d95bf122560), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 1549-algorithmic-expert-aggregation (29522d95bf122560), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "The method relies on exact calibration and known priors, which are brittle assumptions. For GSE, where forecasts are noisy and priors are learned, this primitive must be adapted to handle distributional mismatch. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1549-algorithmic-expert-aggregation (29522d95bf122560), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

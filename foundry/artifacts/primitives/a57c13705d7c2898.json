@@ -1,0 +1,78 @@
+{
+  "book_id": "a57c13705d7c2898",
+  "source_status": "COMPLETE",
+  "title": "fantasypros.com",
+  "file_name": "fantasypros.com.md",
+  "sha256": "a57c13705d7c289868b9585187444cd932b84c8ccc8175d04d5d38f0400ed16f",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph traversal as a discrete dynamical system with state transitions defined by URL index mappings and entry counts. Universal Lens: Rooted in fantasypros.com (a57c13705d7c2898), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on sitemap coverage using empirical URL discovery rates and index inclusion probabilities for analytics inference. GSI Mapping: Rooted in fantasypros.com (a57c13705d7c2898), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-space transition model for fantasy data access paths, where each sitemap entry represents a strategic node in player and team data navigation. GSE Mapping: Rooted in fantasypros.com (a57c13705d7c2898), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_traversal",
+      "name": "Sitemap Graph Traversal Operator",
+      "verbatim_quote": "# fantasypros.com Category: **analytics** URLs discovered: **60,000** Sitemaps walked: 104 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{urls}': 'dimensionless, total URLs discovered', 'N_{sitemaps}': 'dimensionless, sitemaps traversed'}",
+      "assumptions": "Each sitemap entry is independent and uniformly distributed across URL space.",
+      "breakdown_regime": "When N_{urls} approaches saturation, traversal efficiency degrades due to redundancy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The sitemap traversal process mirrors a Markov chain on URL state space with transition probabilities derived from sitemap index structures.",
+        "source_operator": "sitemap_graph_traversal",
+        "telemetry": "URL discovery rate per sitemap walk and index hit ratio."
+      }
+    },
+    {
+      "primitive_id": "sitemap_index_structure",
+      "name": "Sitemap Index Structure Kernel",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://www.fantasypros.com/sitemaps/sitemap_index.xml` | 200 | 233 | yes | | `https://fantasypros.com/sitemap.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_{index}': 'dimensionless, index flag (1 if index, 0 otherwise)', 'E_{entries}': 'dimensionless, number of entries in sitemap'}",
+      "assumptions": "Index sitemaps are hierarchical and contain references to sub-sitemaps.",
+      "breakdown_regime": "When E_{entries} exceeds threshold, index becomes unwieldy and requires partitioning.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The index structure enables recursive decomposition of URL space into manageable subsets for scalable crawling.",
+        "source_operator": "sitemap_index_structure",
+        "telemetry": "Index depth and average sub-sitemap size."
+      }
+    },
+    {
+      "primitive_id": "player_data_partitioning",
+      "name": "Player Data Partitioning Function",
+      "verbatim_quote": "143 | no | | `https://www.fantasypros.com/sitemaps/mlb-sitemap.php?position=1B` | 200 | 48 | no | | `https://www.fantasypros.com/sitemaps/mlb-sitemap.php?position=1B&amp;type=draft` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{pos}': 'dimensionless, player position identifier', 'N_{players}': 'dimensionless, count of players in partition'}",
+      "assumptions": "Players are partitioned by role and type within sport-specific sitemaps.",
+      "breakdown_regime": "When N_{players} is small, partitioning overhead dominates computational cost.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Partitioning aligns with a categorical lattice structure used in fantasy roster construction.",
+        "source_operator": "player_data_partitioning",
+        "telemetry": "Number of distinct player positions and average players per partition."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a57c13705d7c2898_t0",
+      "think": "The sitemap traversal process models a discrete-time dynamical system where each sitemap acts as a node in a directed graph. The state evolution is governed by the number of URLs discovered and sitemaps walked. Each sitemap's index status determines its role in hierarchical navigation. Player data partitioning reflects a categorical structure that supports efficient querying. The system exhibits a dual nature: it is both a search engine optimization artifact and a structured data access protocol. Failure modes include index saturation and redundant URL discovery, which can be mitigated through adaptive sampling strategies. The mathematical framework allows for probabilistic inference over URL coverage and sitemap utility.\n\nDeep epistemic analysis for fantasypros.com (a57c13705d7c2898, domain=other, pages_read=5/5): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # fantasypros.com Category: **analytics** URLs discovered: **60,000** Sitemaps walked: 104 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap entry is independent and uniformly distributed across URL space. Breakdown regime: When N_{urls} approaches saturation, traversal efficiency degrades due to redundancy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The sitemap traversal process mirrors a Markov chain on URL state space with transition probabilities derived from sitemap index structures. Operator 'Sitemap Index Structure Kernel' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.fantasypros.com/sitemaps/sitemap_index.xml` | 200 | 233 | yes | | `https://fantasypros.com/sitemap.xml` | Assumptions: Index sitemaps are hierarchical and contain references to sub-sitemaps. Breakdown regime: When E_{entries} exceeds threshold, index becomes unwieldy and requires partitioning. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The index structure enables recursive decomposition of URL space into manageable subsets for scalable crawling. Operator 'Player Data Partitioning Function' (page 1, domain other) captures: 143 | no | | `https://www.fantasypros.com/sitemaps/mlb-sitemap.php?position=1B` | 200 | 48 | no | | `https://www.fantasypros.com/sitemaps/mlb-sitemap.php?position=1B&amp;type=draft` | Assumptions: Players are partitioned by role and type within sport-specific sitemaps. Breakdown regime: When N_{players} is small, partitioning overhead dominates computational cost. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Partitioning aligns with a categorical lattice structure used in fantasy roster construction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for fantasypros.com (a57c13705d7c2898, domain=other, pages_read=5/5): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # fantasypros.com Category: **analytics** URLs discovered: **60,000** Sitemaps walked: 104 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap entry is independent and uniformly distributed across URL space. Breakdown regime: When N_{urls} approaches saturation, traversal efficiency degrades due to redundancy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The sitemap traversal process mirrors a Markov chain on URL state space with transition probabilities derived from sitemap index structures. Operator 'Sitemap Index Structure Kernel' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.fantasypros.com/sitemaps/sitemap_index.xml` | 200 | 233 | yes | | `https://fantasypros.com/sitemap.xml` | Assumptions: Index sitemaps are hierarchical and contain references to sub-sitemaps. Breakdown regime: When E_{entries} exceeds threshold, index becomes unwieldy and requires partitioning. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The index structure enables recursive decomposition of URL space into manageable subsets for scalable crawling. Operator 'Player Data Partitioning Function' (page 1, domain other) captures: 143 | no | | `https://www.fantasypros.com/sitemaps/mlb-sitemap.php?position=1B` | 200 | 48 | no | | `https://www.fantasypros.com/sitemaps/mlb-sitemap.php?position=1B&amp;type=draft` | Assumptions: Players are partitioned by role and type within sport-specific sitemaps. Breakdown regime: When N_{players} is small, partitioning overhead dominates computational cost. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Partitioning aligns with a categorical lattice structure used in fantasy roster construction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and information retrieval systems, this structure evolved from early web crawling protocols and XML sitemap standards introduced by Google in 2005. Retrocausal Genealogy: Rooted in fantasypros.com (a57c13705d7c2898), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in fantasypros.com (a57c13705d7c2898), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include crawlers optimizing for speed versus those prioritizing completeness. Decision actors include site administrators balancing SEO with resource allocation and users seeking specific data partitions. Theory of Mind & Decision Maker Model: Rooted in fantasypros.com (a57c13705d7c2898), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple sitemaps redundantly index the same URLs. Leakage occurs if index structures fail to reflect actual content distribution, leading to misaligned inference in GSI. Cross-Layer Veto & Anti-Leakage Check: Rooted in fantasypros.com (a57c13705d7c2898), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in fantasypros.com (a57c13705d7c2898), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

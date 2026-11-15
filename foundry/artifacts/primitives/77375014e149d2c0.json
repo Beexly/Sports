@@ -1,0 +1,78 @@
+{
+  "book_id": "77375014e149d2c0",
+  "source_status": "COMPLETE",
+  "title": "p0168",
+  "file_name": "p0168.txt",
+  "sha256": "77375014e149d2c0cb60b4bb0e9d0e1d2173576a762d702fcab64e08cae75263",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Exponential goal gradient hypothesis unifies delay-dependent reinforcement learning via temporal proximity and discriminability. Universal Lens: Rooted in p0168 (77375014e149d2c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models reinforcement timing using exponential decay functions to estimate action-value confidence intervals. GSI Mapping: Rooted in p0168 (77375014e149d2c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes state transitions through delayed reward gradients, enabling dynamic policy adaptation based on temporal proximity. GSE Mapping: Rooted in p0168 (77375014e149d2c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "exponential_goal_gradient",
+      "name": "Exponential Goal Gradient",
+      "verbatim_quote": "This fact goes far to indicate that the goal gradient is a negative growth, or exponential, function.",
+      "page": 1,
+      "latex": "\\frac{dR}{dt} = -k \\cdot R(t)",
+      "symbol_and_unit_ledger": "{'R(t)': 'reinforcement magnitude, dimensionless', 't': 'time, seconds', 'k': 'decay constant, s^{-1}'}",
+      "assumptions": "Reinforcement strength decays exponentially with time; temporal proximity determines behavioral salience.",
+      "breakdown_regime": "As t → ∞, R(t) → 0; no reinforcement beyond threshold delay.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI estimates posterior belief over action outcomes using exponential decay of reward signals; GSE maps state transitions via gradient-based temporal salience.",
+        "source_operator": "exponential_goal_gradient",
+        "telemetry": "Discriminability of actions under varying delay conditions."
+      }
+    },
+    {
+      "primitive_id": "delayed_discrimination",
+      "name": "Delayed Discrimination",
+      "verbatim_quote": "Perhaps the most critical test of the hypothesis concerns the ease of learning to discriminate comparable acts associated with delays of equal relative, but of different absolute, duration.",
+      "page": 1,
+      "latex": "D(\\tau_1, \\tau_2) = \\frac{1}{1 + e^{\\alpha (\\tau_1 - \\tau_2)}}",
+      "symbol_and_unit_ledger": "{'D(\\\\tau_1, \\\\tau_2)': 'discriminability, dimensionless', '\\\\tau_1, \\\\tau_2': 'delays, seconds', '\\\\alpha': 'discrimination sensitivity, s^{-1}'}",
+      "assumptions": "Discriminability decreases with increasing absolute delay difference; relative delay ratios are invariant to scaling.",
+      "breakdown_regime": "When |\\tau_1 - \\tau_2| > \\tau_{\\text{max}}, D → 0; perfect discrimination at \\tau_1 = \\tau_2.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI uses logistic regression to model discriminability; GSE applies delay-weighted transition probabilities.",
+        "source_operator": "delayed_discrimination",
+        "telemetry": "Accuracy of action selection under delayed reinforcement."
+      }
+    },
+    {
+      "primitive_id": "temporal_proximity_bias",
+      "name": "Temporal Proximity Bias",
+      "verbatim_quote": "The movements nearest the end of the series have a greater readiness due to recency of performance.\" (14, p.",
+      "page": 1,
+      "latex": "P_{\\text{recency}}(t) = \\beta e^{-\\gamma t}",
+      "symbol_and_unit_ledger": "{'P_{\\\\text{recency}}(t)': 'probability of action, dimensionless', 't': 'time since last action, seconds', '\\\\beta': 'normalization factor, dimensionless', '\\\\gamma': 'recency decay rate, s^{-1}'}",
+      "assumptions": "Recent actions are more likely to be repeated; probability decays exponentially with time.",
+      "breakdown_regime": "As t → ∞, P_{\\text{recency}}(t) → 0; immediate actions dominate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI models recency bias in belief updating; GSE encodes temporal bias into policy transition matrices.",
+        "source_operator": "temporal_proximity_bias",
+        "telemetry": "Action repetition frequency vs. time since last occurrence."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "77375014e149d2c0_t0",
+      "think": "The exponential goal gradient primitive formalizes how reinforcement strength diminishes with time, modeled as a negative exponential decay. This is foundational to both GSI's Bayesian inference and GSE's state transitions. Delayed discrimination captures the idea that relative delays affect learning ease, mapped via a logistic function. Temporal proximity bias reflects Thorndike’s recency principle, where recent actions are more likely to recur, encoded as an exponential decay in action probability. These primitives form a dual structure: one governing reinforcement value (gradient), the other shaping behavioral recall (bias). Failure modes include overfitting to absolute delays or ignoring relative ratios, leading to incorrect discrimination or policy drift.\n\nDeep epistemic analysis for p0168 (77375014e149d2c0, domain=other, pages_read=1/1): Operator 'Exponential Goal Gradient' (page 1, domain other) captures: This fact goes far to indicate that the goal gradient is a negative growth, or exponential, function. Assumptions: Reinforcement strength decays exponentially with time; temporal proximity determines behavioral salience. Breakdown regime: As t → ∞, R(t) → 0; no reinforcement beyond threshold delay. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI estimates posterior belief over action outcomes using exponential decay of reward signals; GSE maps state transitions via gradient-based temporal salience. Operator 'Delayed Discrimination' (page 1, domain other) captures: Perhaps the most critical test of the hypothesis concerns the ease of learning to discriminate comparable acts associated with delays of equal relative, but of different absolute, duration. Assumptions: Discriminability decreases with increasing absolute delay difference; relative delay ratios are invariant to scaling. Breakdown regime: When |\\tau_1 - \\tau_2| > \\tau_{\\text{max}}, D → 0; perfect discrimination at \\tau_1 = \\tau_2. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI uses logistic regression to model discriminability; GSE applies delay-weighted transition probabilities. Operator 'Temporal Proximity Bias' (page 1, domain other) captures: The movements nearest the end of the series have a greater readiness due to recency of performance.\" (14, p. Assumptions: Recent actions are more likely to be repeated; probability decays exponentially with time. Breakdown regime: As t → ∞, P_{\\text{recency}}(t) → 0; immediate actions dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI models recency bias in belief updating; GSE encodes temporal bias into policy transition matrices. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0168 (77375014e149d2c0, domain=other, pages_read=1/1): Operator 'Exponential Goal Gradient' (page 1, domain other) captures: This fact goes far to indicate that the goal gradient is a negative growth, or exponential, function. Assumptions: Reinforcement strength decays exponentially with time; temporal proximity determines behavioral salience. Breakdown regime: As t → ∞, R(t) → 0; no reinforcement beyond threshold delay. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI estimates posterior belief over action outcomes using exponential decay of reward signals; GSE maps state transitions via gradient-based temporal salience. Operator 'Delayed Discrimination' (page 1, domain other) captures: Perhaps the most critical test of the hypothesis concerns the ease of learning to discriminate comparable acts associated with delays of equal relative, but of different absolute, duration. Assumptions: Discriminability decreases with increasing absolute delay difference; relative delay ratios are invariant to scaling. Breakdown regime: When |\\tau_1 - \\tau_2| > \\tau_{\\text{max}}, D → 0; perfect discrimination at \\tau_1 = \\tau_2. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI uses logistic regression to model discriminability; GSE applies delay-weighted transition probabilities. Operator 'Temporal Proximity Bias' (page 1, domain other) captures: The movements nearest the end of the series have a greater readiness due to recency of performance.\" (14, p. Assumptions: Recent actions are more likely to be repeated; probability decays exponentially with time. Breakdown regime: As t → ∞, P_{\\text{recency}}(t) → 0; immediate actions dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI models recency bias in belief updating; GSE encodes temporal bias into policy transition matrices. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Thorndike’s 1913 formulation of stimulus-response bonds, later refined by early reinforcement learning theory. The exponential decay model emerged from empirical studies on temporal contiguity and operant conditioning. Retrocausal Genealogy: Rooted in p0168 (77375014e149d2c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0168 (77375014e149d2c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may exhibit either uniform delay perception or adaptive bias toward recent rewards. A rational agent would optimize based on expected value, while a bounded agent might overvalue recent actions due to recency bias. Theory of Mind & Decision Maker Model: Rooted in p0168 (77375014e149d2c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct roles for gradient and bias; leakage occurs when temporal proximity is conflated with reinforcement magnitude. GSI must distinguish signal from noise in reward timing; GSE must avoid redundant encoding of temporal salience. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0168 (77375014e149d2c0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

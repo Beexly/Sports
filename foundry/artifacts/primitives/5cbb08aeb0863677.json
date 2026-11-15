@@ -1,0 +1,78 @@
+{
+  "book_id": "5cbb08aeb0863677",
+  "source_status": "COMPLETE",
+  "title": "CASE_STUDY_TEMPLATE",
+  "file_name": "CASE_STUDY_TEMPLATE.md",
+  "sha256": "5cbb08aeb0863677a48fc17067e8a458430061e4fbb6e3a81bf643a8d2f3e847",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Governed agents on {PLATFORM} formalize operational scope through structured receipt signing, cost proxies, and refusal rate telemetry. Universal Lens: Rooted in CASE_STUDY_TEMPLATE (5cbb08aeb0863677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps governed-agent decisions to receipt verification logs; conformal prediction bounds refusal rates via empirical cumulative distribution functions. GSI Mapping: Rooted in CASE_STUDY_TEMPLATE (5cbb08aeb0863677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models agent state transitions using signed receipt sequences; state-space evolution constrained by governance boundary constraints. GSE Mapping: Rooted in CASE_STUDY_TEMPLATE (5cbb08aeb0863677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "receipt_signing_protocol",
+      "name": "Receipt Signing Protocol",
+      "verbatim_quote": "## Architecture (diagram) A short description plus a diagram (link or embed) of how the governed-agent stack sits on top of {PLATFORM}: which services are used, where receipts are signed/verified, where the governance boundary sits relative to the platform's own infrastructure.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'receipt identifier (dimensionless)', 'S': 'signature (bitstring)', 'V': 'verification status (boolean)'}",
+      "assumptions": "Receipts are deterministic under identical inputs; signature integrity is preserved across platform boundaries.",
+      "breakdown_regime": "Failure occurs when signature validation fails or receipt duplication is detected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each receipt corresponds to a unique agent decision event; verification mirrors GSI's Bayesian update process on observed data.",
+        "source_operator": "receipt_signing_protocol",
+        "telemetry": "Signed receipt count per time window"
+      }
+    },
+    {
+      "primitive_id": "cost_proxy_metric",
+      "name": "Cost Proxy Metric",
+      "verbatim_quote": "## Metrics (refuse rate, cost saved, verify checks) Report only metrics you can trace to a real computed source: - **Usage / cost proxy** — from `usageSummary()` output (`apps/web/lib/platform/usage-meter.ts`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'estimated USD cost (USD)', 'U': 'usage units (dimensionless)'}",
+      "assumptions": "Cost scales linearly with usage units; proxy reflects actual resource consumption.",
+      "breakdown_regime": "Proxy becomes unreliable during peak load or infrastructural anomalies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cost proxy derived from raw usage telemetry; GSE uses this to estimate operational budget constraints.",
+        "source_operator": "cost_proxy_metric",
+        "telemetry": "Estimate from `usageSummary()` output"
+      }
+    },
+    {
+      "primitive_id": "refusal_rate_computation",
+      "name": "Refusal Rate Computation",
+      "verbatim_quote": "- **Refuse rate** — computed from the same receipt/decision log, cited by exact source.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'refusal rate (probability)', 'D': 'total decisions (dimensionless)', 'R': 'refused decisions (dimensionless)'}",
+      "assumptions": "All decisions are logged; refusal events are mutually exclusive.",
+      "breakdown_regime": "Rate approaches zero if all decisions pass verification; diverges if refusal threshold is exceeded.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Computed from receipt decision logs; GSI applies statistical tests to validate consistency over time.",
+        "source_operator": "refusal_rate_computation",
+        "telemetry": "Ratio of refused to total decisions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5cbb08aeb0863677_t0",
+      "think": "The governed-agent framework introduces a structured decision pipeline where each action generates a verifiable receipt. The receipt signing protocol ensures that every agent interaction is cryptographically bound to its execution context. This enables downstream metrics such as cost proxy and refusal rate to be grounded in empirical data rather than estimates. The cost proxy is derived from usage telemetry, which is aggregated into a dimensionless unit representing computational effort. Refusal rate computation relies on binary classification of decisions—either accepted or rejected—based on predefined criteria. These primitives form a dualistic system: one side governs behavior through bounded decision-making, while the other monitors outcomes via probabilistic inference. Failure modes arise when cryptographic integrity is compromised or when telemetry sources become inconsistent. The architecture enforces a clear separation between agent logic and platform infrastructure, ensuring that governance boundaries remain intact even under adversarial conditions.\n\nDeep epistemic analysis for CASE_STUDY_TEMPLATE (5cbb08aeb0863677, domain=other, pages_read=1/1): Operator 'Receipt Signing Protocol' (page 1, domain other) captures: ## Architecture (diagram) A short description plus a diagram (link or embed) of how the governed-agent stack sits on top of {PLATFORM}: which services are used, where receipts are signed/verified, where the governance boundary sits relative to the platform's own infrastructure. Assumptions: Receipts are deterministic under identical inputs; signature integrity is preserved across platform boundaries. Breakdown regime: Failure occurs when signature validation fails or receipt duplication is detected. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each receipt corresponds to a unique agent decision event; verification mirrors GSI's Bayesian update process on observed data. Operator 'Cost Proxy Metric' (page 1, domain other) captures: ## Metrics (refuse rate, cost saved, verify checks) Report only metrics you can trace to a real computed source: - **Usage / cost proxy** — from `usageSummary()` output (`apps/web/lib/platform/usage-meter.ts`). Assumptions: Cost scales linearly with usage units; proxy reflects actual resource consumption. Breakdown regime: Proxy becomes unreliable during peak load or infrastructural anomalies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cost proxy derived from raw usage telemetry; GSE uses this to estimate operational budget constraints. Operator 'Refusal Rate Computation' (page 1, domain other) captures: - **Refuse rate** — computed from the same receipt/decision log, cited by exact source. Assumptions: All decisions are logged; refusal events are mutually exclusive. Breakdown regime: Rate approaches zero if all decisions pass verification; diverges if refusal threshold is exceeded. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computed from receipt decision logs; GSI applies statistical tests to validate consistency over time. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CASE_STUDY_TEMPLATE (5cbb08aeb0863677, domain=other, pages_read=1/1): Operator 'Receipt Signing Protocol' (page 1, domain other) captures: ## Architecture (diagram) A short description plus a diagram (link or embed) of how the governed-agent stack sits on top of {PLATFORM}: which services are used, where receipts are signed/verified, where the governance boundary sits relative to the platform's own infrastructure. Assumptions: Receipts are deterministic under identical inputs; signature integrity is preserved across platform boundaries. Breakdown regime: Failure occurs when signature validation fails or receipt duplication is detected. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each receipt corresponds to a unique agent decision event; verification mirrors GSI's Bayesian update process on observed data. Operator 'Cost Proxy Metric' (page 1, domain other) captures: ## Metrics (refuse rate, cost saved, verify checks) Report only metrics you can trace to a real computed source: - **Usage / cost proxy** — from `usageSummary()` output (`apps/web/lib/platform/usage-meter.ts`). Assumptions: Cost scales linearly with usage units; proxy reflects actual resource consumption. Breakdown regime: Proxy becomes unreliable during peak load or infrastructural anomalies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cost proxy derived from raw usage telemetry; GSE uses this to estimate operational budget constraints. Operator 'Refusal Rate Computation' (page 1, domain other) captures: - **Refuse rate** — computed from the same receipt/decision log, cited by exact source. Assumptions: All decisions are logged; refusal events are mutually exclusive. Breakdown regime: Rate approaches zero if all decisions pass verification; diverges if refusal threshold is exceeded. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computed from receipt decision logs; GSI applies statistical tests to validate consistency over time. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification techniques from distributed systems theory, particularly those addressing Byzantine fault tolerance and secure multi-party computation. Retrocausal Genealogy: Rooted in CASE_STUDY_TEMPLATE (5cbb08aeb0863677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CASE_STUDY_TEMPLATE (5cbb08aeb0863677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents operate within a bounded rationality model, making decisions based on partial information and constrained by policy rules. Opposing actors may attempt to manipulate either the input space or the verification mechanism to influence outcomes. Theory of Mind & Decision Maker Model: Rooted in CASE_STUDY_TEMPLATE (5cbb08aeb0863677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring independent telemetry streams for cost and refusal metrics. Leakage vetoes prevent cross-layer contamination of sensitive data, ensuring that refusal computations do not leak into cost estimation modules. Cross-Layer Veto & Anti-Leakage Check: Rooted in CASE_STUDY_TEMPLATE (5cbb08aeb0863677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

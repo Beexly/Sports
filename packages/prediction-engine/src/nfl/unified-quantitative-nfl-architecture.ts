@@ -464,9 +464,14 @@ export function evaluateUnifiedQuantitativeArchitectureOverlay(input: {
     Math.max(-0.04, Math.min(0.04, 0.015 * circadian.cpi + 0.01 * (pr618.pr618StateEp - 1.15))).toFixed(4),
   );
 
+  const shinUnderdog = devig.Shin[1];
+  const powerUnderdog = devig.Power[1];
+  if (shinUnderdog === undefined || powerUnderdog === undefined) {
+    throw new Error("two-way devig self-test expected two outcomes");
+  }
   return {
-    devig2WayUnderdogShin: Number((devig.Shin[1] ?? Number.NaN).toFixed(4)),
-    devig2WayUnderdogPower: Number((devig.Power[1] ?? Number.NaN).toFixed(4)),
+    devig2WayUnderdogShin: Number(shinUnderdog.toFixed(4)),
+    devig2WayUnderdogPower: Number(powerUnderdog.toFixed(4)),
     pr618NetEp: pr618,
     cfbdCarryLineYardsSample: Number(cfbdPiecewiseLineYards(input.sampleRushYards ?? 6).toFixed(3)),
     circadianIndex: circadian,
@@ -477,3 +482,54 @@ export function evaluateUnifiedQuantitativeArchitectureOverlay(input: {
     combinedArchitectureLogOddsDelta: logOddsDelta,
   };
 }
+
+export {
+  atOrThrow,
+  at2DOrThrow,
+  setAtOrThrow,
+  set2DOrThrow,
+  recordGetOrDefault,
+  recordGetOrThrow,
+  createZeroVector,
+  createZeroMatrix,
+  LEGAL_ENTITY_NAME,
+  DBA_BRAND_NAME,
+  CANONICAL_WEB_DOMAIN,
+  PUBLIC_LEDGER_DISCLOSURE,
+  type PublicCopyAuditVerdict,
+  formatConfidenceScore,
+  auditAndSanitizePublicCopy,
+  type GalaxyLockedState,
+  GALAXY_LOCKED_STATE,
+  standardNormalPdf,
+  standardNormalCdf,
+  erfApprox,
+  conjugateShinDevig,
+  type CrpsHardGateVerdict,
+  computePiecewiseSimpsonCrps,
+  evaluateCrpsHardGate,
+  gaussianClosedFormCrps,
+  sinkhornKnoppCoupling,
+  computeHumidAirDensity,
+  NFL_FIELD_LENGTH_METERS,
+  NFL_FIELD_WIDTH_METERS,
+  YARDS_TO_METERS,
+  type Point2D,
+  type LineCorrespondence,
+  invert3x3,
+  matMul,
+  matTranspose,
+  solveLinearSystem,
+  smallestRightSingularVectorAndCond,
+  computeHartleyTransform,
+  estimateJointPointAndLineHomography,
+  projectPixelToField,
+  propagateSpatialUncertaintyJacobian,
+  simulateRule4VictoryFormation,
+  GAUSSIAN_BASELINE_SIGMA,
+  HARD_GATE_CRPS_THRESHOLD,
+  HARD_GATE_MIN_GAMES,
+  type HybridMarginModel,
+  buildEdge1bEdge2Hybrid,
+} from "./unified-quantitative-nfl-homography-and-crps";
+

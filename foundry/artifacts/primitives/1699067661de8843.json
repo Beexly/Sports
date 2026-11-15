@@ -1,0 +1,78 @@
+{
+  "book_id": "1699067661de8843",
+  "source_status": "COMPLETE",
+  "title": "coding-agent-briefs",
+  "file_name": "coding-agent-briefs.md",
+  "sha256": "1699067661de8843477d8e8ac084ebd370689b7b03553a28dadc056a57259ae4",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian conformal inference framework unifies DFS player valuation and odds data through probabilistic signal fusion and temporal consistency checks. Universal Lens: Rooted in coding-agent-briefs (1699067661de8843), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI maps player projections and ownership into a Bayesian belief network using historical line movement and market memory gates for risk-adjusted lineup optimization. GSI Mapping: Rooted in coding-agent-briefs (1699067661de8843), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models lineup construction as a constrained optimization over a Markovian state space defined by salary cap, positional constraints, and projection uncertainty. GSE Mapping: Rooted in coding-agent-briefs (1699067661de8843), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "dfs_salary_import",
+      "name": "DraftKings Salary Import",
+      "verbatim_quote": "- This week's NFL Classic main slate: draftGroupId `154078`, starts `2026-10-04T17:00:00Z`, 1,135 draftables → **619 unique players**, 12 games.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'draftGroupId': 'dimensionless', 'start_time': 'UTC timestamp', 'player_count': 'dimensionless', 'unique_players': 'dimensionless', 'games': 'dimensionless'}",
+      "assumptions": "Player list is exhaustive and static for given draft group.",
+      "breakdown_regime": "At draftGroupId boundary or when new slate is released.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's player valuation vector and GSE's lineup constraint matrix.",
+        "source_operator": "dfs_salary_import",
+        "telemetry": "HTTP 200 response from API endpoint."
+      }
+    },
+    {
+      "primitive_id": "projection_source",
+      "name": "Projection Source Dependency",
+      "verbatim_quote": "Matches the repo's `DfsPlayer` contract in `apps/web/lib/fantasy/dfs-slate.ts` (`{ id, name, pos, team, opp, salary, proj, floor, ceiling, own, ...",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'proj': 'points per game', 'floor': 'points per game', 'ceiling': 'points per game', 'own': 'percentage'}",
+      "assumptions": "Projections are independent of salary and ownership data.",
+      "breakdown_regime": "When projection model updates or becomes stale.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from salary import and maps to GSI's probabilistic forecast kernel.",
+        "source_operator": "projection_source",
+        "telemetry": "Projection data freshness and variance metrics."
+      }
+    },
+    {
+      "primitive_id": "optimizer_precedent",
+      "name": "Optimizer Precedent",
+      "verbatim_quote": "- Existing optimizer precedent: DimaKudosh/pydfs-lineup-optimizer is **CSV-only — zero API fetch code** (grep-verified, no `api.draftkings` references).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'csv_import': 'file format', 'api_fetch': 'boolean'}",
+      "assumptions": "CSV-based optimizers do not interact with live APIs.",
+      "breakdown_regime": "When API access is restricted or rate-limited.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state transition logic and GSI's data ingestion pipeline.",
+        "source_operator": "optimizer_precedent",
+        "telemetry": "Number of API calls vs CSV imports in optimizer stack."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1699067661de8843_t0",
+      "think": "The DFS salary import primitive establishes a foundational data structure for player valuation, mapping raw API responses to structured player entities. The projection source primitive then overlays probabilistic forecasts onto this base, enabling GSI to compute expected value distributions. The optimizer precedent provides a dual perspective: that of a CSV-driven system versus an API-dependent one, which informs GSE’s design choice between real-time data fetching and batch processing. These primitives form a triadic relationship where salary data constrains optimization, projections inform belief states, and precedent shapes implementation strategy. Failure modes include stale projections, incorrect API parsing, and unauthorized data scraping. The interplay of these elements defines a robust yet flexible framework for lineup construction under uncertainty.\n\nDeep epistemic analysis for coding-agent-briefs (1699067661de8843, domain=other, pages_read=9/9): Operator 'DraftKings Salary Import' (page 1, domain other) captures: - This week's NFL Classic main slate: draftGroupId `154078`, starts `2026-10-04T17:00:00Z`, 1,135 draftables → **619 unique players**, 12 games. Assumptions: Player list is exhaustive and static for given draft group. Breakdown regime: At draftGroupId boundary or when new slate is released. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's player valuation vector and GSE's lineup constraint matrix. Operator 'Projection Source Dependency' (page 1, domain other) captures: Matches the repo's `DfsPlayer` contract in `apps/web/lib/fantasy/dfs-slate.ts` (`{ id, name, pos, team, opp, salary, proj, floor, ceiling, own, ... Assumptions: Projections are independent of salary and ownership data. Breakdown regime: When projection model updates or becomes stale. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from salary import and maps to GSI's probabilistic forecast kernel. Operator 'Optimizer Precedent' (page 2, domain other) captures: - Existing optimizer precedent: DimaKudosh/pydfs-lineup-optimizer is **CSV-only — zero API fetch code** (grep-verified, no `api.draftkings` references). Assumptions: CSV-based optimizers do not interact with live APIs. Breakdown regime: When API access is restricted or rate-limited. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state transition logic and GSI's data ingestion pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for coding-agent-briefs (1699067661de8843, domain=other, pages_read=9/9): Operator 'DraftKings Salary Import' (page 1, domain other) captures: - This week's NFL Classic main slate: draftGroupId `154078`, starts `2026-10-04T17:00:00Z`, 1,135 draftables → **619 unique players**, 12 games. Assumptions: Player list is exhaustive and static for given draft group. Breakdown regime: At draftGroupId boundary or when new slate is released. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's player valuation vector and GSE's lineup constraint matrix. Operator 'Projection Source Dependency' (page 1, domain other) captures: Matches the repo's `DfsPlayer` contract in `apps/web/lib/fantasy/dfs-slate.ts` (`{ id, name, pos, team, opp, salary, proj, floor, ceiling, own, ... Assumptions: Projections are independent of salary and ownership data. Breakdown regime: When projection model updates or becomes stale. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from salary import and maps to GSI's probabilistic forecast kernel. Operator 'Optimizer Precedent' (page 2, domain other) captures: - Existing optimizer precedent: DimaKudosh/pydfs-lineup-optimizer is **CSV-only — zero API fetch code** (grep-verified, no `api.draftkings` references). Assumptions: CSV-based optimizers do not interact with live APIs. Breakdown regime: When API access is restricted or rate-limited. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state transition logic and GSI's data ingestion pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s fantasy sports automation, evolving through CSV-based tools like pydfs-lineup-optimizer and draftfast into modern API-first systems. Influenced by game theory and combinatorial optimization principles. Retrocausal Genealogy: Rooted in coding-agent-briefs (1699067661de8843), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in coding-agent-briefs (1699067661de8843), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include DraftKings' ToS enforcement and automated scraping bots. Decision actors are the user seeking optimal lineups and the platform enforcing usage policies. GSI and GSE must balance utility maximization with compliance. Theory of Mind & Decision Maker Model: Rooted in coding-agent-briefs (1699067661de8843), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that salary and projection data do not redundantly encode the same signal. Leakage veto prevents direct use of proprietary data without proper licensing. No cross-layer dependencies allow independent evolution of GSI and GSE components. Cross-Layer Veto & Anti-Leakage Check: Rooted in coding-agent-briefs (1699067661de8843), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

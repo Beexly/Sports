@@ -1,0 +1,95 @@
+{
+  "book_id": "d3c49555b2a30b8e",
+  "source_status": "COMPLETE",
+  "title": "deep-dive-props",
+  "file_name": "deep-dive-props.md",
+  "sha256": "d3c49555b2a30b8eab9717097198409c689ff5aeaaa71404669784104b6e35f1",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "rush_attempts_over_under",
+      "name": "Rush Attempts Over/Under",
+      "verbatim_quote": "Bucs are 0–4 but the defense is the respectable unit; offense is 24th in scoring (19.0 PPG).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes Daniels' scrambling tendency is consistent across starts, Bucs pass defense remains weak, and matchup favors QB runs.",
+      "breakdown_regime": "Breaks down when Daniels stabilizes into a pocket passer or Bucs adjust their defensive coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's implied probability framework for rush attempt counts, using conformal prediction intervals.",
+        "source_operator": "rush_attempts_over_under",
+        "telemetry": "Observed rush attempt frequency relative to the line (e.g., Daniels' 8 carries in Week 4)"
+      }
+    },
+    {
+      "primitive_id": "javonte_td_probability",
+      "name": "Javonte Williams TD Probability",
+      "verbatim_quote": "MySpariPicks model had Javonte TD at 65.5% (highest single-TD prob in 10k sims) but flagged negative edge at the steamed price.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes Williams maintains goal-line workload, Tampa Bay's run defense allows high TD rates, and the model's simulation captures true outcome likelihood.",
+      "breakdown_regime": "Breaks down if Williams loses goal-line access, injury occurs, or the Bucs D improves significantly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives from GSE's situational reasoning on running back touchdown propensity, incorporating state-transition probabilities.",
+        "source_operator": "javonte_td_probability",
+        "telemetry": "Williams' touchdown frequency versus the modeled 65.5% threshold"
+      }
+    },
+    {
+      "primitive_id": "lamb_rec_yards_over_under",
+      "name": "CeeDee Lamb Rec Yards Over/Under",
+      "verbatim_quote": "**Matchup:** Tampa Bay's run defense is the soft spot — but note the Bucs D held three straight under 300 total yards.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes Lamb's receiving yardage scales with Dallas' offensive efficiency, which improves with upgraded run blocking, and Tampa Bay's secondary remains vulnerable.",
+      "breakdown_regime": "Breaks down if Lamb is targeted less due to adjusted offensive strategy or Tampa Bay's secondary stiffens.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian inference on receiver performance, accounting for defensive adjustments and matchup quality.",
+        "source_operator": "lamb_rec_yards_over_under",
+        "telemetry": "Lamb's actual receiving yards compared against the O80.5 line"
+      }
+    },
+    {
+      "primitive_id": "egbuka_rec_yards_over_under",
+      "name": "Tylan Knightley Egbuka Rec Yards Over/Under",
+      "verbatim_quote": "Tyler Smith's activation (All-Pro LG, back from IR tonight) upgrades DAL's run blocking; he was out for W3 when Javonte posted his best rushing game anyway (98 yds @BAL).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes increased coaching emphasis translates to higher target share for Egbuka, Tampa Bay's secondary struggles continue, and volume leads to yardage.",
+      "breakdown_regime": "Breaks down if Egbuka fails to convert targets into receptions or Tampa Bay's defense tightens coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives from GSE's state-transition mapping on wide receiver receiving yardage, considering steam as a behavioral signal.",
+        "source_operator": "egbuka_rec_yards_over_under",
+        "telemetry": "Egbuka's actual receiving yards relative to the steamed 34.5 line"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d3c4955b_t0",
+      "think": "The primitive operators are grounded in empirical telemetry and statistical breakdowns. The rush_attempts_over_under leverages Daniels' rookie scrambling data against Bucs pass defense metrics. The javonte_td_probability uses a Monte Carlo simulation from MySpariPicks, calibrated against Tampa Bay's TD prevention efficiency. The lamb_rec_yards_over_under incorporates offensive line upgrades and Tampa Bay's secondary weakness, mapped to conformal prediction intervals. The egbuka_rec_yards_over_under accounts for coaching steam and matchup noise. These operators form a closed system: Daniels' rushing creates space for Williams, while Lamb and Egbuka compete for targets against a struggling secondary. Failure modes include regression to the mean, injury, or systematic defensive adaptation. Cross-layer veto conditions ensure no double-counting between primitives.\n\nDeep epistemic analysis for deep-dive-props (d3c49555b2a30b8e, domain=other, pages_read=5/5): Operator 'Rush Attempts Over/Under' (page 1, domain other) captures: Bucs are 0–4 but the defense is the respectable unit; offense is 24th in scoring (19.0 PPG). Assumptions: Assumes Daniels' scrambling tendency is consistent across starts, Bucs pass defense remains weak, and matchup favors QB runs. Breakdown regime: Breaks down when Daniels stabilizes into a pocket passer or Bucs adjust their defensive coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's implied probability framework for rush attempt counts, using conformal prediction intervals. Operator 'Javonte Williams TD Probability' (page 2, domain other) captures: MySpariPicks model had Javonte TD at 65.5% (highest single-TD prob in 10k sims) but flagged negative edge at the steamed price. Assumptions: Assumes Williams maintains goal-line workload, Tampa Bay's run defense allows high TD rates, and the model's simulation captures true outcome likelihood. Breakdown regime: Breaks down if Williams loses goal-line access, injury occurs, or the Bucs D improves significantly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from GSE's situational reasoning on running back touchdown propensity, incorporating state-transition probabilities. Operator 'CeeDee Lamb Rec Yards Over/Under' (page 2, domain other) captures: **Matchup:** Tampa Bay's run defense is the soft spot — but note the Bucs D held three straight under 300 total yards. Assumptions: Assumes Lamb's receiving yardage scales with Dallas' offensive efficiency, which improves with upgraded run blocking, and Tampa Bay's secondary remains vulnerable. Breakdown regime: Breaks down if Lamb is targeted less due to adjusted offensive strategy or Tampa Bay's secondary stiffens. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian inference on receiver performance, accounting for defensive adjustments and matchup quality. Operator 'Tylan Knightley Egbuka Rec Yards Over/Under' (page 2, domain other) captures: Tyler Smith's activation (All-Pro LG, back from IR tonight) upgrades DAL's run blocking; he was out for W3 when Javonte posted his best rushing game anyway (98 yds @BAL). Assumptions: Assumes increased coaching emphasis translates to higher target share for Egbuka, Tampa Bay's secondary struggles continue, and volume leads to yardage. Breakdown regime: Breaks down if Egbuka fails to convert targets into receptions or Tampa Bay's defense tightens coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from GSE's state-transition mapping on wide receiver receiving yardage, considering steam as a behavioral signal. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for deep-dive-props (d3c49555b2a30b8e, domain=other, pages_read=5/5): Operator 'Rush Attempts Over/Under' (page 1, domain other) captures: Bucs are 0–4 but the defense is the respectable unit; offense is 24th in scoring (19.0 PPG). Assumptions: Assumes Daniels' scrambling tendency is consistent across starts, Bucs pass defense remains weak, and matchup favors QB runs. Breakdown regime: Breaks down when Daniels stabilizes into a pocket passer or Bucs adjust their defensive coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's implied probability framework for rush attempt counts, using conformal prediction intervals. Operator 'Javonte Williams TD Probability' (page 2, domain other) captures: MySpariPicks model had Javonte TD at 65.5% (highest single-TD prob in 10k sims) but flagged negative edge at the steamed price. Assumptions: Assumes Williams maintains goal-line workload, Tampa Bay's run defense allows high TD rates, and the model's simulation captures true outcome likelihood. Breakdown regime: Breaks down if Williams loses goal-line access, injury occurs, or the Bucs D improves significantly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from GSE's situational reasoning on running back touchdown propensity, incorporating state-transition probabilities. Operator 'CeeDee Lamb Rec Yards Over/Under' (page 2, domain other) captures: **Matchup:** Tampa Bay's run defense is the soft spot — but note the Bucs D held three straight under 300 total yards. Assumptions: Assumes Lamb's receiving yardage scales with Dallas' offensive efficiency, which improves with upgraded run blocking, and Tampa Bay's secondary remains vulnerable. Breakdown regime: Breaks down if Lamb is targeted less due to adjusted offensive strategy or Tampa Bay's secondary stiffens. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian inference on receiver performance, accounting for defensive adjustments and matchup quality. Operator 'Tylan Knightley Egbuka Rec Yards Over/Under' (page 2, domain other) captures: Tyler Smith's activation (All-Pro LG, back from IR tonight) upgrades DAL's run blocking; he was out for W3 when Javonte posted his best rushing game anyway (98 yds @BAL). Assumptions: Assumes increased coaching emphasis translates to higher target share for Egbuka, Tampa Bay's secondary struggles continue, and volume leads to yardage. Breakdown regime: Breaks down if Egbuka fails to convert targets into receptions or Tampa Bay's defense tightens coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from GSE's state-transition mapping on wide receiver receiving yardage, considering steam as a behavioral signal. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bowden and BettingPros act as information intermediaries, shaping market expectations. MySpariPicks assumes rational player behavior within constraints. Bucs coaching responds to opponent adjustments, creating a dynamic game-theoretic environment. Theory of Mind & Decision Maker Model: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents correlation leakage between primitives (e.g., assuming Daniels' rushing always boosts Williams' TDs). Ensures each primitive operates on distinct event sets. Cross-Layer Veto & Anti-Leakage Check: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in deep-dive-props (d3c49555b2a30b8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

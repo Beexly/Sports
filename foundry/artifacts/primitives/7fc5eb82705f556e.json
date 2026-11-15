@@ -1,0 +1,732 @@
+{
+  "book_id": "7fc5eb82705f556e",
+  "source_status": "COMPLETE",
+  "source_note": "John von Neumann and Oskar Morgenstern, 'Theory of Games and Economic Behavior', Princeton University Press. Copyright 1944; the local file is the third edition printing of 1953 (title page: Princeton University Press 1953, fifth printing of the third edition), PDF, 33,143,357 bytes, sha256 (gatekeeper scan formula, sha256 of str(size) followed by full file bytes) 7fc5eb82705f556ec51603e84dcdc7718a858d5e052881e3049c9a58d5bb4b0f. Extracted text (2,405,162 chars, 46,009 lines) is OCR of the printed book: prose is clean and quotable, while mathematical glyphs are frequently garbled in the OCR layer, so all equations were reconstructed in standard notation from the numbered displays (11:2), (13:A*), (13:B*), (17:3), (25:3:b-c), (30:1)-(30:5), (49:L), (49:W), (56:2) and their surrounding prose, and every verbatim quote was verified as an exact whitespace-normalized substring of the extracted text. No catalog or title correction is needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "games_as_proper_instrument_for_economic_behavior",
+      "name": "The theory of games of strategy is the proper instrument for a theory of economic behavior, not a mere analogy",
+      "verbatim_quote": "theory of games of strategy is the proper instrument with which to develop a theory of economic behavior.",
+      "page": "Sec 1.1.2; text lines ~800-840",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Economic problems of exchange, bilateral monopoly, duopoly, oligopoly and free competition have the same structure as games of strategy.",
+        "A few plausible schematizations suffice to make typical problems of economic behavior strictly identical with mathematical notions of games."
+      ],
+      "breakdown_regime": "Breaks where the schematization cannot be made plausible: phenomena whose rules, participants or payoffs cannot be stated exactly enough to form a game.",
+      "domain": "foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any multi-agent prediction problem in the engine should first be schematized as a game: named participants, admissible actions, information and payoffs, before any statistical model is fit. The schematization is the model; the statistics only evaluate it.",
+        "source_operator": "games_as_proper_instrument_for_economic_behavior",
+        "telemetry": "Participant lists, action sets, payoff definitions for each modeled interaction."
+      }
+    },
+    {
+      "primitive_id": "rational_maximum_problem_is_ill_posed",
+      "name": "The textbook maximum problem does not formulate rationality unambiguously once other maximizers are present",
+      "verbatim_quote": "the maximum problem which is supposed to correspond to the notion of rationality is not at all formulated in an unambiguous way.",
+      "page": "Sec 2.1.2; text lines ~1130-1200",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An isolated maximizer faces a well posed ordinary maximum problem.",
+        "With several maximizers, each participant's outcome depends on the others' choices, so 'the optimum' has no unambiguous meaning."
+      ],
+      "breakdown_regime": "Breaks for the single participant case, where the ordinary maximum problem is adequate and no game structure is needed.",
+      "domain": "foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine must never score a matchup as independent single-side optimizations. Every projection is conditional on the opposing side's simultaneous optimization, which is exactly the ambiguity this primitive names.",
+        "source_operator": "rational_maximum_problem_is_ill_posed",
+        "telemetry": "Both sides' choice sets and objective functions, recorded jointly, never one side alone."
+      }
+    },
+    {
+      "primitive_id": "robinson_crusoe_single_will_economy",
+      "name": "The Robinson Crusoe economy: one will confronting commodities and wants, an ordinary maximum problem",
+      "verbatim_quote": "confronted with certain quantities of commodities and a number of wants which they may satisfy. The problem is to obtain a maximum satisfaction.",
+      "page": "Sec 2.2.1; text lines ~1240-1300",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The economy is organized under a single will, so no strategic interdependence exists.",
+        "Utility is treated as numerical, making satisfaction an ordinary function to maximize."
+      ],
+      "breakdown_regime": "Breaks as soon as a second independent will enters: imitation, custom and social influence are absent by construction, so the model cannot be transferred directly to a social exchange economy.",
+      "domain": "foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Baseline kernel: when the engine models a decision unit that truly acts alone against a fixed environment (a set play against a static scheme), the Crusoe maximum problem is the correct reduction, and game machinery should be switched off.",
+        "source_operator": "robinson_crusoe_single_will_economy",
+        "telemetry": "Indicators that the environment does not adapt: fixed opponent tendencies with no response to the modeled unit's choices."
+      }
+    },
+    {
+      "primitive_id": "preference_sensation_is_measurement_basis",
+      "name": "Preference sensation between two objects is the unanalyzed empirical basis on which any utility measurement must rest",
+      "verbatim_quote": "In the case of utility the immediate sensation of preference of one object or aggregate of objects as against another provides this basis.",
+      "page": "Sec 3.1.2; text lines ~1560-1620",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Every measurement claim must ultimately rest on an immediate sensation that need not be analyzed further.",
+        "The sensation alone yields only comparisons of greater and less for one person, not numbers and not interpersonal comparisons."
+      ],
+      "breakdown_regime": "Breaks if even pairwise preference cannot be stated reproducibly; the book concedes this completeness question is a question of fact (Sec 3.3.4).",
+      "domain": "measurement",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every engine feature must bottom out in an observable comparison of the same kind: a recorded preference between two outcomes under stated conditions. Features that cannot be traced to an observable comparison are definitions without empirical control.",
+        "source_operator": "preference_sensation_is_measurement_basis",
+        "telemetry": "Paired outcome comparisons with conditions recorded, per decision unit."
+      }
+    },
+    {
+      "primitive_id": "probability_mixtures_make_utility_differences_measurable",
+      "name": "Comparing an event against a probability mixture of two others measures ratios of utility differences",
+      "verbatim_quote": "It is well known that thereby utilities or rather differences of utilities become numerically measurable.",
+      "page": "Sec 3.3.2; text lines ~1650-1790",
+      "latex": "u(A) = \\alpha \\, u(C) + (1-\\alpha) \\, u(B)",
+      "symbol_and_unit_ledger": {
+        "u(A), u(B), u(C)": "utilities of the three events, in the individual's utility units",
+        "\\alpha": "probability weight of event C in the mixture that the individual judges exactly as desirable as A [dimensionless, 0 to 1]"
+      },
+      "assumptions": [
+        "The individual can compare not only events but combinations of events with stated probabilities.",
+        "The two alternatives in a combination are mutually exclusive and exhaust the possibilities.",
+        "Probability is used in the frequency in long runs sense, giving the numerical foothold."
+      ],
+      "breakdown_regime": "Breaks if complementarity between the combined events exists, or if preferences over mixtures are not reproducible by mere questioning.",
+      "domain": "measurement",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Calibration kernel: an uncertain prospect in the engine can be assigned a number by locating the mixture probability at which a decision maker is indifferent between the prospect and a reference mixture. This is the same construction the engine uses when it converts expert or model judgments about uncertain game states into numeric values.",
+        "source_operator": "probability_mixtures_make_utility_differences_measurable",
+        "telemetry": "Indifference probabilities elicited or implied for reference prospects, per state class."
+      }
+    },
+    {
+      "primitive_id": "utility_axiom_complete_ordering",
+      "name": "Axiom (3:A): preference is a complete ordering, trichotomy plus transitivity",
+      "verbatim_quote": "This is the statement of the completeness of the system of individual preferences.",
+      "page": "Sec 3.6.1-3.6.2; text lines ~2260-2400",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "(3:A:a) For any two utilities u, v exactly one of u = v, u > v, u < v holds.",
+        "(3:A:b) u > v and v > w imply u > w (transitivity)."
+      ],
+      "breakdown_regime": "Breaks for individuals or organizations that sometimes cannot state a preference nor declare equality; the book flags this and defers the partial ordering case (Sec 65.3).",
+      "domain": "axioms",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's ranking outputs inherit this axiom: a complete ranking of alternatives is legitimate output only where the underlying comparison data actually decides every pair. Undecided pairs must surface as ties or as unranked, not be silently ordered.",
+        "source_operator": "utility_axiom_complete_ordering",
+        "telemetry": "Pairwise comparison coverage per ranking: fraction of pairs decided by data."
+      }
+    },
+    {
+      "primitive_id": "utility_axiom_continuity_of_combining",
+      "name": "Axioms (3:B:c) and (3:B:d): a sufficiently small chance of even the best or worst outcome cannot overturn an intermediate preference",
+      "verbatim_quote": "However desirable v may be in itself, one can make its influence as weak as desired by giving it a sufficiently small chance.",
+      "page": "Sec 3.6.2 (3:B:c*); text lines ~2400-2480",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Ordering and combining interact: u < v implies u < alpha u + (1-alpha) v, and u > v implies u > alpha u + (1-alpha) v.",
+        "For u < w < v some mixture of u and v is still below w; dually for u > w > v."
+      ],
+      "breakdown_regime": "Breaks under lexicographic preferences, where no small probability of a catastrophic or supreme outcome is negligible; such preferences admit no numerical utility of this form.",
+      "domain": "axioms",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Continuity is the license for the engine to treat small probability mass as small influence. Where a low probability event has discontinuous impact (a single play that ends a season), this axiom fails and the engine must carry the event as a discrete scenario, not blend it into an expectation.",
+        "source_operator": "utility_axiom_continuity_of_combining",
+        "telemetry": "Tail event registry: low probability, high impact events flagged for scenario treatment instead of blending."
+      }
+    },
+    {
+      "primitive_id": "utility_unique_up_to_linear_transformation",
+      "name": "A numerical utility satisfying the axioms exists and is unique up to a positive linear transformation",
+      "verbatim_quote": "the system of (abstract) utilities is one of numbers up to a linear transformation.",
+      "page": "Sec 3.5.1; text lines ~2100-2200",
+      "latex": "v(\\alpha u + (1-\\alpha) v) = \\alpha v(u) + (1-\\alpha) v(v)",
+      "symbol_and_unit_ledger": {
+        "v": "the numerical correspondence attaching a number to a utility",
+        "u, v (arguments)": "two utilities being combined",
+        "\\alpha": "mixing probability [dimensionless, strictly between 0 and 1]"
+      },
+      "assumptions": [
+        "The correspondence must preserve the order relation: u > v implies v(u) > v(v).",
+        "Any two such correspondences are related by p' = omega p + p0 with omega > 0, so zero and unit are conventional."
+      ],
+      "breakdown_regime": "Breaks if any of (3:A)-(3:C) fails; in particular there is no absolute zero or absolute unit of utility to recover.",
+      "domain": "axioms",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scale discipline for the engine: any score built this way is an interval scale. Differences and ratios of differences are meaningful; absolute levels and cross-person comparisons are not, unless a separate normalization is declared.",
+        "source_operator": "utility_unique_up_to_linear_transformation",
+        "telemetry": "Declared zero and unit for every published score scale."
+      }
+    },
+    {
+      "primitive_id": "expectation_calculus_defines_numerical_utility",
+      "name": "The axioms define utility as precisely that quantity for which the calculus of mathematical expectations is legitimate",
+      "verbatim_quote": "We have practically defined numerical utility as being that thing for which the calculus of mathematical expectations is legitimate.",
+      "page": "Sec 3.7.1; text lines ~2480-2560",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Postulates (3:A)-(3:C) do not separately exclude a 'utility of gambling'; they absorb the question by construction.",
+        "Daniel Bernoulli's moral expectation is the same move with utility defined as the logarithm of monetary possessions."
+      ],
+      "breakdown_regime": "Breaks if a refined psychology can formulate a specific utility of gambling free of contradiction on this level; the authors doubt this is possible with the psychology available to economics.",
+      "domain": "axioms",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Evaluation rule: expected value is the engine's legitimate aggregator only over quantities that were constructed to satisfy the mixture axioms. Raw counts (yards, points) may be averaged as statistics, but interpreting the average as a preference requires the axiomatic construction behind it.",
+        "source_operator": "expectation_calculus_defines_numerical_utility",
+        "telemetry": "Per metric: whether it is a statistic (averageable freely) or a utility (averageable only under the axioms)."
+      }
+    },
+    {
+      "primitive_id": "zero_sum_versus_non_zero_sum_games",
+      "name": "Games split into zero-sum, where players pay only each other, and non-zero-sum, where the total depends on behavior",
+      "verbatim_quote": "We shall call games of the first-mentioned type zero-sum games, and those of the latter type non-zero-sum games.",
+      "page": "Sec 5.2.1; text lines ~3420-3480",
+      "latex": "\\sum_{k=1}^{n} \\mathcal{F}_k = 0",
+      "symbol_and_unit_ledger": {
+        "\\mathcal{F}_k": "payment to player k at the end of the game [utility units]",
+        "n": "number of players [count]"
+      },
+      "assumptions": [
+        "In a zero-sum game the sum of all payments is always zero, so no production or destruction of goods is involved.",
+        "In the economically significant schemes the sum is in general not zero and not even constant."
+      ],
+      "breakdown_regime": "The classification is about the payment sum only; it says nothing by itself about information, coalitions or determinateness.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "First triage in the engine: fixed-pie interactions (one side's gain is the other's loss, as in a single game's win) get zero-sum machinery; growing-pie interactions (pace and efficiency jointly changing total scoring) must not be forced into zero-sum form.",
+        "source_operator": "zero_sum_versus_non_zero_sum_games",
+        "telemetry": "Sum behavior of the payoff definition across outcomes: constant zero, constant, or variable."
+      }
+    },
+    {
+      "primitive_id": "game_is_totality_of_rules_play_is_instance",
+      "name": "The game is the totality of its rules; a play is one particular instance of it being played",
+      "verbatim_quote": "The game is simply the totality of the rules which describe it.",
+      "page": "Sec 6.1; text lines ~3540-3570",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Confusing the abstract game with an individual play is a category error the terminology is designed to prevent.",
+        "Every play runs from beginning to end under the same rules."
+      ],
+      "breakdown_regime": "Breaks when the rules themselves change mid-play or are incompletely specified; then no single game object exists to analyze.",
+      "domain": "formalism",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Object discipline: the engine's models are games (rules), its observations are plays (instances). A model is validated across many plays; a single play can never refute or confirm a rule-level claim by itself.",
+        "source_operator": "game_is_totality_of_rules_play_is_instance",
+        "telemetry": "Per model: the rule set version; per observation: the play identifier under that rule set."
+      }
+    },
+    {
+      "primitive_id": "strategy_is_complete_contingent_plan",
+      "name": "A strategy is a complete plan specifying the choice for every possible situation and every possible information the player may possess",
+      "verbatim_quote": "to specify every particular decision only as a function of just that amount of actual information which would be available for this purpose in an actual play.",
+      "page": "Sec 11.1.1; text lines ~5703-5780",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Requiring the plan in advance restricts no freedom of action, because each decision is specified as a function of exactly the information available when it arises.",
+        "The only extra burden is intellectual: a rule of behavior for all eventualities, although only one play will occur."
+      ],
+      "breakdown_regime": "Breaks when the contingency space cannot be enumerated or the information pattern cannot be stated; the formalism of Sec 9 handles this with partitions, at the cost of abstraction.",
+      "domain": "formalism",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's game plans and projections should be strategies in this sense: a complete contingent policy (what to project under each observable state), not a single forecast line. Completeness over contingencies is what makes a plan evaluable before the fact.",
+        "source_operator": "strategy_is_complete_contingent_plan",
+        "telemetry": "Contingency coverage of each issued plan: states enumerated versus states the rules allow."
+      }
+    },
+    {
+      "primitive_id": "information_pattern_as_partition",
+      "name": "A player's information at a move is a partition of the possible courses of play; the player cannot distinguish plays inside one block",
+      "verbatim_quote": "must choose his strategy, i.e. his r*, without any information concerning the choices of the other players, or of the chance events",
+      "page": "Secs 9.1 and 11.2.2; text lines ~4900-4960 and ~5990-6060",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Any two different courses up to a move initiate entirely disjoint sets of plays; the family of these sets is a partition.",
+        "In the final simplification every player chooses with absolutely no information concerning the outcome of all other choices."
+      ],
+      "breakdown_regime": "Breaks when signaling or leakage makes the nominal partition finer in practice than the rules state; the book treats signaling as a separate phenomenon to be specified explicitly.",
+      "domain": "formalism",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Information hygiene kernel: every engine feature must be timestamped by the information block in which it becomes knowable. A projection may only condition on its own partition block; anything finer is leakage from the future of the play.",
+        "source_operator": "information_pattern_as_partition",
+        "telemetry": "Feature availability timestamps versus decision timestamps, per projection."
+      }
+    },
+    {
+      "primitive_id": "normal_form_and_expected_payoff",
+      "name": "The whole game reduces to simultaneous uninformed choices of strategies, with chance replaced by mathematical expectation of the outcome",
+      "verbatim_quote": "every player has to make this choice with absolutely no information concerning the outcome of all other choices.",
+      "page": "Secs 11.2.2-11.2.3, eq. (11:2); text lines ~5990-6100",
+      "latex": "\\mathcal{H}_k(\\tau_1, \\dots, \\tau_n) = \\sum_{\\tau_0} p_{\\tau_0} \\mathcal{F}_k(\\tau_0, \\tau_1, \\dots, \\tau_n)",
+      "symbol_and_unit_ledger": {
+        "\\mathcal{H}_k": "expected outcome for player k after chance is eliminated [utility units]",
+        "\\mathcal{F}_k(\\tau_0, \\dots, \\tau_n)": "outcome for player k under the umpire's choice tau_0 and the players' strategies [utility units]",
+        "p_{\\tau_0}": "probability of the umpire's choice tau_0 [dimensionless, sums to 1]",
+        "\\tau_k": "strategy index chosen by player k"
+      },
+      "assumptions": [
+        "All chance choices can be made in advance by an umpire and disclosed at the proper moments, without changing the game.",
+        "The various moves, in particular the chance move, are completely isolated from each other in the reduced form."
+      ],
+      "breakdown_regime": "Breaks as a description of process (not of outcome) when the timing of information disclosure itself carries value, for example bluffing dynamics that the reduced form prices but does not narrate.",
+      "domain": "formalism",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reduction template: any sequential interaction the engine models can be collapsed to strategy profiles plus an expected payoff table, provided every information pattern is respected in the collapse. This is the license for matrix and simulation based evaluation.",
+        "source_operator": "normal_form_and_expected_payoff",
+        "telemetry": "Strategy profile enumeration and the chance distribution used for each evaluation."
+      }
+    },
+    {
+      "primitive_id": "maximin_minimax_gap_and_saddle_point",
+      "name": "Maximin never exceeds minimax; equality holds if and only if a saddle point exists",
+      "verbatim_quote": "the left-hand side of (13:3) is the maximum of the row minima and the right-hand side is the minimum of the column maxima.",
+      "page": "Secs 13.4.1-13.4.3, (13:A*) and (13:B*); text lines ~6836-6950",
+      "latex": "\\max_x \\min_y \\varphi(x, y) \\le \\min_y \\max_x \\varphi(x, y)",
+      "symbol_and_unit_ledger": {
+        "\\varphi(x, y)": "two-variable payoff function [utility units]",
+        "x, y": "choices (rows, columns) of the two players",
+        "\\max_x \\min_y \\varphi": "the maximum of the row minima, the first player's security level in pure strategies",
+        "\\min_y \\max_x \\varphi": "the minimum of the column maxima, the second player's security level in pure strategies"
+      },
+      "assumptions": [
+        "(13:A*) The inequality holds for all functions phi(x, y).",
+        "(13:B*) Equality holds if and only if a saddle point exists: a field that is simultaneously the minimum of its row and the maximum of its column.",
+        "All saddle points, if they exist, furnish the same value (the saddle value)."
+      ],
+      "breakdown_regime": "Pure strategies may admit no saddle point at all (Figs. 12 and 13 in the book); then the gap is positive and the pure maximin/minimax values do not determine the game.",
+      "domain": "zero-sum two-person",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Security level arithmetic: for any head to head evaluation the engine can always compute both security bounds. Their gap is a measured quantity, the value of information and of randomization, and must be reported rather than averaged away.",
+        "source_operator": "maximin_minimax_gap_and_saddle_point",
+        "telemetry": "Per matchup matrix: maximin, minimax, and their difference."
+      }
+    },
+    {
+      "primitive_id": "non_strictly_determined_games",
+      "name": "Games that are not strictly determined leave the value undetermined within the maximin-minimax interval for pure play",
+      "verbatim_quote": "All this disposes completely of the strictly determined games, but of no others.",
+      "page": "Sec 14.7.1; text lines ~7990-8060",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For a non strictly determined game the advantage Delta = v2 - v1 is positive.",
+        "Any value concept for pure play is restricted to the interval v1 <= v <= v2, which the book calls conceptually most unsatisfactory."
+      ],
+      "breakdown_regime": "The gap is closed not by more pure analysis but by enlarging the strategy space to mixed strategies (Sec 17).",
+      "domain": "zero-sum two-person",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Uncertainty accounting: when the engine's pure evaluation of an interaction leaves an interval rather than a point, the interval width is itself the finding. Collapsing it to the midpoint fabricates precision the theory says does not exist.",
+        "source_operator": "non_strictly_determined_games",
+        "telemetry": "Interval width per evaluated interaction, carried through to outputs."
+      }
+    },
+    {
+      "primitive_id": "mixed_strategy_as_defense_against_being_found_out",
+      "name": "Mixed strategies increase a player's ability to defend himself against having his strategy found out",
+      "verbatim_quote": "strategies has increased the player's ability to defend himself against having his strategy found out",
+      "page": "Sec 17.5.1; text lines ~11356-11460",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A mixed strategy is a probability distribution over pure strategies, chosen before play.",
+        "The opponent may learn the distribution without learning the realized choice, which is what removes the finder's advantage."
+      ],
+      "breakdown_regime": "Breaks if the realized choice leaks before the opponent must commit; then the defense collapses to the pure case and the finder's advantage returns.",
+      "domain": "zero-sum two-person",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Unpredictability as a measurable asset: in any repeated interaction the engine should track how predictable a unit's choices are. Predictability is exploitable exactly in proportion to the finder's advantage this primitive removes.",
+        "source_operator": "mixed_strategy_as_defense_against_being_found_out",
+        "telemetry": "Choice distribution entropy per unit and situation; opponent adjustment speed after tendencies are shown."
+      }
+    },
+    {
+      "primitive_id": "main_theorem_zero_sum_two_person",
+      "name": "Main theorem: with mixed strategies every zero-sum two-person game is generally strictly determined, v1 <= v'1 = v'2 <= v2",
+      "verbatim_quote": "To exclude all possibility of doubt we shall give a rigorous proof of (17:3).",
+      "page": "Secs 17.4-17.6, inequality (17:3); text lines ~11240-11600",
+      "latex": "v_1 \\le v'_1 = v'_2 \\le v_2",
+      "symbol_and_unit_ledger": {
+        "v_1, v_2": "pure strategy maximin and minimax values [utility units]",
+        "v'_1, v'_2": "maximin and minimax values when both players may use mixed strategies [utility units]",
+        "equality v'_1 = v'_2": "general strict determinateness: the game has a value in mixed strategies"
+      },
+      "assumptions": [
+        "The extension of the payoff to mixed strategies is bilinear, carried out by linear interpolation, i.e. by mathematical expectation.",
+        "The minorant and majorant games (Sec 17.4) bound the mixed values from the pure ones."
+      ],
+      "breakdown_regime": "The 1944 proof covers finite games; continuous infinite cases required later extension (the book's own technical note cites work extending the theorem). Non-zero-sum games are not covered by this theorem at all.",
+      "domain": "zero-sum two-person",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Existence anchor: whenever the engine frames an interaction as a finite zero-sum two-person game, a value and optimal mixed strategies provably exist, so solving is a computation problem, never an existence problem. Any solver failure is a bug, not a property of the game.",
+        "source_operator": "main_theorem_zero_sum_two_person",
+        "telemetry": "Solver status per framed game: value found, strategies certified optimal or not."
+      }
+    },
+    {
+      "primitive_id": "good_strategies_are_defensive_not_offensive",
+      "name": "Good (optimal) strategies are perfect defensively but do not in general extract the maximum from an opponent's mistakes",
+      "verbatim_quote": "while our good strategies are perfect from the defensive point of view, they will (in general) not get the maximum out of the opponent's (possible) mistakes",
+      "page": "Sec 17.10.2; text lines ~12530-12600",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A good strategy guarantees the value of the game regardless of the opponent's play.",
+        "Exploiting a known opponent error requires departing from the good strategy, which reopens losses if the read is wrong."
+      ],
+      "breakdown_regime": "In perfect information games permanently optimal strategies exist (Sec 17.10.3), where the defensive and offensive viewpoints coincide; the caveat governs imperfect information play.",
+      "domain": "zero-sum two-person",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Two mode evaluation: the engine should score any recommended approach twice, once by its guaranteed floor (the good strategy criterion) and once by its exploitative ceiling against the modeled opponent. Publishing only the ceiling hides the risk this primitive names.",
+        "source_operator": "good_strategies_are_defensive_not_offensive",
+        "telemetry": "Per recommendation: guaranteed value under optimal opposition, and modeled value against the specific opponent."
+      }
+    },
+    {
+      "primitive_id": "perfect_information_permanently_optimal_pure_strategies",
+      "name": "In games of perfect information, permanently optimal pure strategies exist",
+      "verbatim_quote": "there is an important class of (zero-sum two-person) games in which permanently optimal strategies exist. These are the games in which perfect information prevails",
+      "page": "Sec 17.10.3; text lines ~12580-12630",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Perfect information means every player always knows the full anterior course of the play.",
+        "Chess and Backgammon are the book's examples of the class."
+      ],
+      "breakdown_regime": "Breaks the moment any move is hidden or simultaneous; then only mixed strategy optimality survives, and bluffing type phenomena appear.",
+      "domain": "zero-sum two-person",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Regime switch: interactions where all relevant state is public and sequential (late game clock and score situations with full visibility) admit exact backward solution; the engine should solve those exactly instead of sampling them.",
+        "source_operator": "perfect_information_permanently_optimal_pure_strategies",
+        "telemetry": "Information classification per situation: perfect or imperfect, with solver choice following the classification."
+      }
+    },
+    {
+      "primitive_id": "bluffing_two_motives",
+      "name": "Bluffing has exactly two motives: a false impression of strength in weakness, and a false impression of weakness in strength",
+      "verbatim_quote": "Of the two possible motives for Bluffing, the first is the desire to give a (false) impression of strength in (real) weakness; the second is the desire to give a (false) impression of weakness in (real) strength.",
+      "page": "Sec 19.2.1; text lines ~14177-14245",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Both motives are instances of inverted signaling: misleading the opponent about the correlation between action and strength.",
+        "The first type succeeds when the opponent passes; the second succeeds when the opponent sees, i.e. when it 'fails'."
+      ],
+      "breakdown_regime": "The analysis is of the simplified Poker of Sec 19; richer betting structures complicate the frequencies but not the two motive structure.",
+      "domain": "imperfect information",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Signal design duality: any deceptive action in a modeled interaction serves one of the two motives, hiding strength or feigning it. The engine should classify observed deceptive behavior by motive before estimating its frequency, because the two motives have opposite success conditions.",
+        "source_operator": "bluffing_two_motives",
+        "telemetry": "Per deceptive action observed: motive class, and whether the opponent's response matched the motive's success condition."
+      }
+    },
+    {
+      "primitive_id": "bluffing_value_is_protective",
+      "name": "The importance of bluffing lies in protection against the opponent's potential deviations from the good strategy",
+      "verbatim_quote": "but in the protection which it provides against the opponent's potential deviations from the good strategy",
+      "page": "Sec 19.10.3; text lines ~15400-15480",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Incorrect bluffing causes no losses against an opponent who sticks to the good strategy, provided only the bluffing frequencies are right.",
+        "Deviations from the good strategy beyond incorrect bluffing cause immediate losses against good play."
+      ],
+      "breakdown_regime": "Breaks against opponents who never deviate exploitably; then bluffing only holds its defensive value and yields no extra gain, by design.",
+      "domain": "imperfect information",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Frequency discipline: deceptive options must be used at their equilibrium frequencies even when they show no direct profit, because their profit is the constraint they place on the opponent. The engine should audit frequencies, not just outcomes, of deceptive plays.",
+        "source_operator": "bluffing_value_is_protective",
+        "telemetry": "Observed versus equilibrium frequency of deceptive actions, per situation class."
+      }
+    },
+    {
+      "primitive_id": "characteristic_function_from_coalition_values",
+      "name": "The characteristic function v(S) assigns to every coalition the value it can guarantee against the complementary coalition",
+      "verbatim_quote": "Let us denote by v(S) the value of a play for the coalition of all k belonging to S",
+      "page": "Sec 25.1.2; text lines ~17588-17660",
+      "latex": "v(S) = \\max_{\\xi} \\min_{\\eta} \\sum_{k \\in S} \\mathcal{H}_k(\\tau_1, \\dots, \\tau_n)",
+      "symbol_and_unit_ledger": {
+        "v(S)": "value of the game to coalition S playing as one absolute coalition against its complement [utility units]",
+        "\\xi, \\eta": "mixed strategies of the composite players S and its complement -S",
+        "\\mathcal{H}_k": "expected payoff of player k in the normalized game [utility units]"
+      },
+      "assumptions": [
+        "Players within a party are assumed to cooperate absolutely, reducing the n-person game to a zero-sum two-person game between S and its complement.",
+        "The two-person value exists by the main theorem of Sec 17."
+      ],
+      "breakdown_regime": "v(S) is based on a hypothetical situation: it prices what S could force, not what S will get in any actual course of play, and by itself ignores how the complement organizes internally.",
+      "domain": "n-person cooperative",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Coalition pricing kernel: any subgroup of a larger system (a lineup unit, a position group, a subset of features acting jointly) can be priced by the same construction, what it guarantees against the rest treated as one opponent. Subgroup value is a set function, computable before any split of the total is discussed.",
+        "source_operator": "characteristic_function_from_coalition_values",
+        "telemetry": "Per subgroup: guaranteed value against the complement, computed under absolute internal cooperation."
+      }
+    },
+    {
+      "primitive_id": "characteristic_function_superadditivity",
+      "name": "The characteristic function is superadditive and antisymmetric: v(S union T) >= v(S) + v(T) for disjoint S, T, and v(-S) = -v(S)",
+      "verbatim_quote": "We call it the characteristic function of the game",
+      "page": "Secs 25.1.3 and 25.2.1, properties (25:3:b) and (25:3:c); text lines ~17755-17850",
+      "latex": "v(S \\cup T) \\ge v(S) + v(T) \\quad (S \\cap T = \\varnothing), \\qquad v(-S) = -v(S)",
+      "symbol_and_unit_ledger": {
+        "v(S), v(T)": "characteristic values of disjoint coalitions S and T [utility units]",
+        "v(S \\cup T)": "value of the merged coalition [utility units]",
+        "-S": "the complement of S in the player set I"
+      },
+      "assumptions": [
+        "Superadditivity (25:3:c) is the formal inducement to merge: two disjoint coalitions together can guarantee at least the sum of their separate guarantees.",
+        "v(empty set) = 0 and v(I) is the value of the grand coalition in the two-person reduction against the empty complement."
+      ],
+      "breakdown_regime": "Superadditivity can fail as a description when merging creates internal friction the absolute-cooperation assumption hides; the function then overstates what the merged group will actually realize.",
+      "domain": "n-person cooperative",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Merger test: before the engine credits any combined unit with synergy, it must check the superadditivity direction on measured values. A measured violation means the parts interfere, and the combined rating must be discounted below the sum, not raised above it.",
+        "source_operator": "characteristic_function_superadditivity",
+        "telemetry": "Measured subgroup values for parts and unions, with the superadditivity gap signed and sized."
+      }
+    },
+    {
+      "primitive_id": "imputation_individual_rationality_and_efficiency",
+      "name": "An imputation is a payoff vector with a_i >= v({i}) for every player and total equal to v(I)",
+      "verbatim_quote": "we mean by a distribution or imputation a set of n numbers",
+      "page": "Sec 30.1.1, conditions (30:1) and (30:2); text lines ~19404-19480",
+      "latex": "a_i \\ge v(\\{i\\}) \\ \\ (i = 1, \\dots, n), \\qquad \\sum_{i=1}^{n} a_i = v(I)",
+      "symbol_and_unit_ledger": {
+        "a_i": "amount allotted to player i in the distribution [utility units]",
+        "v(\\{i\\})": "what player i can guarantee alone, his individual rationality floor [utility units]",
+        "v(I)": "value of the grand coalition of all players [utility units]; in the book's reduced normalization v(I) = 0"
+      },
+      "assumptions": [
+        "No player can be allotted less than he can obtain by himself; otherwise he would refuse the distribution.",
+        "The allotments exhaust exactly the grand coalition value: feasibility with no remainder."
+      ],
+      "breakdown_regime": "Breaks when utility is not transferable between players, since then a single payoff vector cannot represent what each player can be given; Ch XII Secs 56-59 rebuild the theory for the general case.",
+      "domain": "n-person cooperative",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Allocation feasibility gate: any distribution the engine proposes (credit assignment across players, units or features) must pass both tests, no component below its standalone value and the total exactly exhausting the joint value. Distributions failing either test are not imputations and should not be published as fair shares.",
+        "source_operator": "imputation_individual_rationality_and_efficiency",
+        "telemetry": "Standalone value per component; joint value; proposed shares with both gate results."
+      }
+    },
+    {
+      "primitive_id": "domination_via_effective_set",
+      "name": "Imputation a dominates imputation b when some coalition, effective for a, strictly prefers a for every member",
+      "verbatim_quote": "x dominates y when there exists a group of participants each one of whom prefers his individual situation in x to that in y",
+      "page": "Secs 4.4.3 and 30.1.1, conditions (30:4:a)-(30:4:c); text lines ~2960-3010 and ~19480-19510",
+      "latex": "\\sum_{i \\in S} a_i \\le v(S)",
+      "symbol_and_unit_ledger": {
+        "S": "the effective set: a non-empty coalition that can deliver a for its members",
+        "a_i, and b_i implicitly": "member i's allotment under the dominating and the dominated imputation [utility units]",
+        "v(S)": "what coalition S can guarantee itself [utility units]"
+      },
+      "assumptions": [
+        "(30:4:a) The effective set S is not empty.",
+        "(30:4:b) S is effective for a: the sum of a over S does not exceed v(S), so S can actually enforce a.",
+        "(30:4:c) a_i > b_i for every i in S: every member has a positive motive to prefer a."
+      ],
+      "breakdown_regime": "Domination says nothing about players outside S, who may be made arbitrarily worse off; that is precisely why the relation misbehaves globally (see intransitivity).",
+      "domain": "n-person cooperative",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Challenge rule: one candidate allocation defeats another only through a named coalition that both prefers it unanimously and can enforce it. The engine should require both halves, preference and enforceability, before letting any ranking of allocations override another.",
+        "source_operator": "domination_via_effective_set",
+        "telemetry": "Per claimed dominance: the coalition, its members' comparisons, and its enforceability check against v(S)."
+      }
+    },
+    {
+      "primitive_id": "solution_as_stable_set_of_imputations",
+      "name": "A solution is a set V of imputations, internally undominated and dominating every imputation outside it",
+      "verbatim_quote": "A set V of imputations is a solution if it possesses the following properties",
+      "page": "Sec 30.1.1, conditions (30:5:a)-(30:5:c); text lines ~19480-19520",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "(30:5:a) No imputation in V is dominated by an imputation in V (internal stability).",
+        "(30:5:b) Every imputation not in V is dominated by some imputation in V (external stability).",
+        "(30:5:c) Equivalently, V is precisely the set of imputations undominated by elements of V."
+      ],
+      "breakdown_regime": "The definition is implicit: it characterizes solutions without guaranteeing existence or uniqueness. A game may have several solutions or, as later work showed, none; the 1944 text leaves both questions to further inquiry.",
+      "domain": "n-person cooperative",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stability certification: a published set of acceptable outcomes (a set of defensible rankings or allocations) should be certified the same way, no member of the set defeats another through an enforceable coalition, and every outcome outside the set is defeated by one inside it. Uncertified sets are drafts, not solutions.",
+        "source_operator": "solution_as_stable_set_of_imputations",
+        "telemetry": "The outcome set with internal and external domination checks run and logged."
+      }
+    },
+    {
+      "primitive_id": "solution_is_a_system_not_a_single_imputation",
+      "name": "Already in the three-person game the solution is a system of imputations forming a rational whole, not any single imputation",
+      "verbatim_quote": "It is clear that in the above three-person game no single imputation from the solution is in itself anything like a solution.",
+      "page": "Sec 4.3.3; text lines ~2860-2920",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The prototype solution of the essential three-person game consists of three imputations, one favoring each possible two-person alliance.",
+        "The system as a whole, not its constituent imputations, carries the balance and symmetry the concept requires."
+      ],
+      "breakdown_regime": "For inessential games and two-person games a single imputation can be the solution; the system character appears exactly when coalitions are essential.",
+      "domain": "n-person cooperative",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Anti point-estimate rule: where several alliances are live, the engine's answer is the system of outcomes, one per alliance configuration, with the configuration named. Reporting one member of the system as 'the' answer misrepresents the solution concept.",
+        "source_operator": "solution_is_a_system_not_a_single_imputation",
+        "telemetry": "Alliance configuration attached to every reported outcome in coalition-structured evaluations."
+      }
+    },
+    {
+      "primitive_id": "domination_is_intransitive",
+      "name": "Domination is not transitive: x can dominate y, y dominate z, and z dominate x, through disjoint effective sets",
+      "verbatim_quote": "Now the notion of domination on which we rely is, indeed, not transitive.",
+      "page": "Sec 4.4.3; text lines ~2960-3010",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "When x dominates y and y dominates z, the effective sets for the two dominations may be entirely disjoint, so no conclusion about z and x follows.",
+        "Cyclical dominations correspond to the ways states of society can upset each other through different groups acting as effective sets."
+      ],
+      "breakdown_regime": "Intransitivity is a property of this domination relation, not of preference itself; individual preferences remain transitive throughout.",
+      "domain": "n-person cooperative",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cycle guard: pairwise superiority claims in the engine (model A beats model B, unit A outranks unit B) cannot be chained transitively when each comparison rests on a different supporting coalition of evidence. The engine must test for cycles before publishing a total order built from pairwise wins.",
+        "source_operator": "domination_is_intransitive",
+        "telemetry": "Pairwise comparison graph per ranking, checked for directed cycles before release."
+      }
+    },
+    {
+      "primitive_id": "solution_as_standard_of_behavior",
+      "name": "Sets of imputations that are solutions correspond to accepted standards of behavior in a social organization",
+      "verbatim_quote": "human beings have a characteristic way of adjusting themselves to such a background.",
+      "page": "Sec 4.6.1; text lines ~3060-3120",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A standard of behavior does not fix one rigid distribution; it delimits which distributions are acceptable and which are not.",
+        "The interpretation requires the solution's two stability properties to mirror how an established order discourages deviations and absorbs proposals outside it."
+      ],
+      "breakdown_regime": "The interpretation is a correlation, not a theorem: a game can have several solutions (several possible standards) or the correspondence can fail to select among them.",
+      "domain": "interpretation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Norm layer: the engine's published conventions (how ties are broken, which outcomes are listable, what counts as an acceptable ranking) function as a standard of behavior and should be audited for the same stability: no accepted convention should be dominable by another accepted one.",
+        "source_operator": "solution_as_standard_of_behavior",
+        "telemetry": "The convention list with stability checks; proposals outside the list and the accepted member that dominates each."
+      }
+    },
+    {
+      "primitive_id": "essential_versus_inessential_games",
+      "name": "A game is inessential when coalitions have no raison d'etre and every player gets his lone-hand amount; otherwise it is essential",
+      "verbatim_quote": "in this case coalitions have no raison d'etre, and each player can get the same amount for himself",
+      "page": "Sec 23.1.3; text lines ~17150-17230",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The classification is quantitative: it turns on whether the coalition advantage quantity (Delta of Sec 23) is zero or positive.",
+        "In the inessential case a unique value of each play for each player exists, the values summing to zero."
+      ],
+      "breakdown_regime": "Stated here for zero-sum three-person games and expressly extended later to all games, where it becomes a differentiation of central importance (Secs 27 and 42.5).",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Interaction triage: the engine should measure whether grouping changes anything before modeling coalitions at all. Where measured coalition advantage is zero, additive individual ratings are exactly correct and coalition machinery is waste.",
+        "source_operator": "essential_versus_inessential_games",
+        "telemetry": "Coalition advantage measurement per grouping: joint value minus sum of standalone values."
+      }
+    },
+    {
+      "primitive_id": "simple_games_winning_and_losing_coalitions",
+      "name": "In a simple game a coalition is losing when it is flat, v(S) equals the sum of its members' standalone values, and winning when its complement is losing",
+      "verbatim_quote": "It is now easy to say what a winning coalition is. It is plausibly one, the opponents of which are losing",
+      "page": "Secs 49.1.2-49.1.3, (49:L) and (49:W); text lines ~30249-30340",
+      "latex": "v(S) = \\sum_{i \\in S} v(\\{i\\})",
+      "symbol_and_unit_ledger": {
+        "v(S)": "characteristic value of coalition S [utility units]",
+        "\\sum_{i \\in S} v(\\{i\\})": "sum of the members' standalone guaranteed amounts, the defeat criterion [utility units]",
+        "W, L": "the systems of all winning and all losing coalitions of the game"
+      },
+      "assumptions": [
+        "A player left to himself obtains v({i}), the worst that can happen to him since he can protect himself against further losses unaided.",
+        "The systems W and L are invariant under strategic equivalence."
+      ],
+      "breakdown_regime": "The derived W and L need not satisfy all the desirable postulates (48:A:a)-(48:A:d) for arbitrary games; simple games are the restricted class where the theory of W, and especially of the minimal winning coalitions W^m, becomes tractable.",
+      "domain": "simple games",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Threshold structure: many engine questions are simple games in disguise, which combinations of factors are jointly sufficient for an outcome. The minimal winning coalitions are the irreducible sufficient combinations, and they, not the full factor list, are the compact explanation of the outcome.",
+        "source_operator": "simple_games_winning_and_losing_coalitions",
+        "telemetry": "Per outcome class: the family of sufficient factor combinations, reduced to its minimal members."
+      }
+    },
+    {
+      "primitive_id": "general_game_reduced_to_zero_sum_extension",
+      "name": "Every general n-person game is re-interpreted as a zero-sum (n+1)-person game by adding a fictitious player who absorbs the negative of the total",
+      "verbatim_quote": "It consists of introducing a fictitious n + 1-st player who is assumed to lose the amount which the totality of the other n real players wins and vice versa.",
+      "page": "Sec 56.2.2, eq. (56:2); text lines ~36590-36660",
+      "latex": "\\mathcal{H}_{n+1}(\\tau_1, \\dots, \\tau_n) = -\\sum_{k=1}^{n} \\mathcal{H}_k(\\tau_1, \\dots, \\tau_n)",
+      "symbol_and_unit_ledger": {
+        "\\mathcal{H}_{n+1}": "payoff of the fictitious player [utility units]",
+        "\\mathcal{H}_k": "payoff function of real player k [utility units]",
+        "\\tau_1, \\dots, \\tau_n": "strategies of the real players; the fictitious player controls no variable and has no influence on the course of the game"
+      },
+      "assumptions": [
+        "The fictitious player must have no direct influence on the course of the game.",
+        "Whether the whole theory of the extension has validity for the original game is a foundational question the book subjects to separate scrutiny (Sec 56.3)."
+      ],
+      "breakdown_regime": "Breaks if the bookkeeping player is mistaken for a real agent with objectives; he is an accounting identity, not a participant, and solutions of the extension need reinterpretation before they describe the original game.",
+      "domain": "general games",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conservation device: adding an explicit residual absorber lets the engine treat variable-sum evaluations with zero-sum tools, provided everyone remembers the absorber is bookkeeping. Any analysis that starts optimizing the absorber's payoff has confused the device with an agent.",
+        "source_operator": "general_game_reduced_to_zero_sum_extension",
+        "telemetry": "A residual line in every variable-sum evaluation, labeled as accounting, excluded from agent level conclusions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7fc5eb82705f556e-t1",
+      "think": "This book builds the first complete mathematical theory of strategic interaction, and its architecture is a chain in which each link is forced by the failure of the previous one. It begins by refusing the textbook picture of rational behavior as a maximum problem. That picture works for Robinson Crusoe, one will facing nature, but the moment a second maximizer enters, each participant's outcome depends on choices he does not control, and the word optimum loses its unambiguous meaning. The authors' response is to rebuild from the measurement level up. Utility, usually left as a vague satisfaction, is made numerical by an explicit construction: if a person can compare events and also probability mixtures of events, then the mixture probability at which he is indifferent between an event and a mixture of two others measures a ratio of utility differences. The axioms (3:A) to (3:C), complete ordering, consistency of ordering with combining, and the algebra of combining, then prove that this numerical utility exists and is unique up to a linear transformation, and that mathematical expectation is not an extra assumption but the content of the definition. With payoffs numerical, a game can be described exactly. Chapter II climbs from the raw extensive description, moves, information patterns as partitions, personal and chance moves, to the decisive simplification: a strategy, a complete contingent plan. Once every player is required to name a strategy, and chance is pre-committed by an umpire and averaged out, the entire game collapses into the normal form, a payoff function over strategy profiles, with every player choosing in ignorance of the others. All the complexity of timing and information is preserved inside the definition of the strategies themselves. Chapter III then solves the zero-sum two-person case. In pure strategies the maximin can fall short of the minimax, and the gap is exactly the advantage of finding out the opponent. Enlarging the strategy space to probability distributions makes the extended payoff bilinear, and the main theorem closes the gap: v1 <= v'1 = v'2 <= v2, so every finite zero-sum two-person game has a value and good strategies, which are perfect defensively even though they do not exploit mistakes. Poker shows what this means in practice: bluffing is not decoration but the defensive use of randomization at exactly prescribed frequencies, motivated both by feigning strength and by concealing it. For three and more players the two-person value becomes a pricing device for groups. Treating any coalition and its complement as two absolute coalitions yields the characteristic function v(S), superadditive and antisymmetric, which prices every subgroup's guaranteed worth. What remains is distribution: imputations, payoff vectors that are individually rational and efficient, compared by domination through effective coalitions. Here the theory makes its most original move. Domination is intransitive, because different coalitions can upset different distributions in a cycle, so no single best imputation need exist. The solution concept is therefore lifted one level: a solution is a set of imputations, internally undominated and dominating everything outside it, and the authors identify such a set with an accepted standard of behavior in a society. The later chapters classify when coalitions matter at all (essential versus inessential games), reduce simple games to their winning coalitions, and absorb every general game into a zero-sum game with one fictitious bookkeeping player. For a reasoning engine the transferable machinery is the discipline of the chain: state the game before solving it, respect information partitions, report security bounds and their gap, price subgroups by what they can guarantee, test allocations by individual rationality and efficiency, and when superiority cycles, publish the stable set rather than a fabricated single winner.  Two further pieces of machinery deserve emphasis because they are easy to underrate. The first is the treatment of information. In the extensive description a player's knowledge at a move is a partition of all possible courses of play, and phenomena like signaling, deliberate misleading and the withholding of information are not informal color but moves within this partition structure; that is why bluffing can be analyzed as inverted signaling rather than as psychology. The second is the sequence of reductions that keeps the theory closed: constant-sum games are strategically equivalent to zero-sum games, inessential games collapse to independent lone-hand values, decomposable games split into independent constituent games on disjoint player sets, and the general game is absorbed by its zero-sum extension. Each reduction is a statement that some apparent complication adds no new strategic content, and knowing exactly which complications are empty is as valuable as the solution concepts themselves. The book is equally explicit about its unfinished edges. It does not prove that a solution exists for every game, it expects multiplicity where solutions do exist, it assumes transferable utility through most of the construction and only rebuilds for the general case in Chapter XII, and its treatment of bargaining and threats shows outcomes, like the threats in the two-person non-zero-sum game, that the stable set concept organizes without pretending to eliminate. A careful reader therefore takes away two things at once: a complete working calculus for the cases the axioms cover, and a precise map of where the calculus stops. The theory breaks where its assumptions do: preferences may be incomplete, utility may not be transferable, existence of stable sets is not guaranteed by the 1944 text, solutions can multiply beyond selection, and nothing in the book learns from repeated play. Those are boundaries to mark, not defects to hide.",
+      "retrocausal_genealogy": "The lineage runs through von Neumann's 1928 Mathematische Annalen paper 'Zur Theorie der Gesellschaftsspiele', which proved the minimax theorem for two-person zero-sum games, and his 1940-1941 completion of the theory published here for the first time. Behind it stand Borel's earlier strategic notes, Zermelo's work on chess, and the marginal utility school's maximum problem, whose failure for several maximizers is the book's starting wound. Morgenstern contributed the economic framing and the 1935 problem of perfect foresight in economic equilibrium, which showed that prediction among mutually predicting agents is paradoxical without a theory of games. The utility construction consciously repeats Pareto's observation and Euclid's derivation of numerical distances from comparisons, and answers Daniel Bernoulli's St. Petersburg problem in the background.",
+      "theory_of_mind": "The authors model every participant as a complete, consistent maximizer: preferences are complete and transitive, mixtures are understood, and each player can in principle prepare a plan for every contingency. They model the reader the same way, as someone who will accept a concept only when its axioms are stated and its theorems proved, and who distrusts literary paraphrase. Their model of society is a set of participants with parallel or opposite interests operating under an accepted standard of behavior, and their model of science is physics envy disciplined by modesty: economics must earn mathematization problem by problem, as mechanics did, rather than by decree.",
+      "cross_layer_veto": "Three vetoes run through the book. First, intransitive domination vetoes every single-point optimum claim in coalition games: any layer that outputs one best distribution without checking domination cycles is overruled. Second, the positive gap in non strictly determined games vetoes pure strategy valuation wherever information has value; a layer that prices an interaction without the maximin-minimax interval is incomplete. Third, the utility axioms veto interpersonal aggregation: numbers unique only up to separate linear transformations cannot be summed across persons, so any layer that totals utilities across participants without a declared common normalization is invalid."
+    }
+  ],
+  "universal_lens": "Read as a template, the book is a method for converting any contested multi-agent situation into mathematics without lying about it: fix the measurement scale by mixture comparisons, enumerate the rules and information exactly, compress behavior into complete contingent plans, price every subgroup by what it can guarantee against the rest, and replace the search for a single winner with a stability test on a set of candidates. The same five moves apply to markets, organizations, protocols, and any engineered system where agents adapt to each other.",
+  "gsi_mapping": "For the Galaxy Sports Institute the book supplies the formal spine for studying sport as strategic behavior: teams and athletes as players with information patterns, coaching as strategy selection under an opponent's simultaneous selection, and locker room and league norms as standards of behavior in the precise stable set sense. Its coalition pricing gives the Institute a rigorous way to ask what any unit, a line, a battery, a starting five, is worth against the rest of the system, and its bluffing analysis grounds the study of deception in frequencies rather than anecdotes.",
+  "gse_mapping": "For the Galaxy Sports Edge engine the transfer is the evaluation discipline, not any single formula: frame each matchup as a game with named information partitions so no projection conditions on unknowable state; carry maximin and minimax bounds and their gap as the honest uncertainty of a head to head evaluation; use mixed strategy thinking to price unpredictability and to audit how exploitable a predictable tendency is; price position groups and lineup units by characteristic function values before assigning credit; and gate every published allocation or ranking through individual rationality, efficiency, and domination cycle checks, publishing a stable set when the checks cycle instead of inventing a single answer."
+}

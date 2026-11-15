@@ -1,0 +1,622 @@
+{
+ "book_id": "e65127ebdc042eec",
+ "source_status": "COMPLETE",
+ "source_note": "Foundations of Machine Learning, 2nd edition (2018), by Mehryar Mohri, Afshin Rostamizadeh, and Ameet Talwalkar, MIT Press, Cambridge MA (Adaptive Computation and Machine Learning series). ISBN 9780262039406 (hardcover); LCCN 2018022812. Local source PDF: full-library-2026-11-12/library/books-must-have/MohriRostamizadehTalwalkar-2018-FoundationsOfMachineLearning2.pdf; size 6224448 bytes; full sha256 e65127ebdc042eec87325633201c1ba831a5f635847a4cc31f285f3146375873 (foundry scan digest sha256(str(size) + file bytes); book_id is its first 16 hex characters). Extracted text layer at the matching path under full-library-2026-11-12/text/; every verbatim quote in this artifact was machine-verified as a contiguous substring of that text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "mohri-pac-learnability",
+   "name": "PAC learnability and the finite-class sample complexity bound",
+   "verbatim_quote": "When such an algorithm A exists, it is called a PAC-learning algorithm for C.",
+   "page": "Chapter 2, Definition 2.3 (PAC-learning) and Theorem 2.5; extracted text lines 1017 and 1187",
+   "latex": "P_{S \\sim D^m}\\left[R(h_S) \\le \\epsilon\\right] \\ge 1 - \\delta \\quad (2.4); \\qquad R(h_S) \\le \\frac{1}{m}\\left[\\log |H| + \\log \\frac{1}{\\delta}\\right] \\quad (2.9)",
+   "symbol_and_unit_ledger": "epsilon: target accuracy (excess error tolerance), dimensionless; delta: failure probability, dimensionless; m: sample size, count of i.i.d. examples; |H|: cardinality of the finite hypothesis set; R(h_S): true error probability of the returned hypothesis; poly: polynomial sample-size function of 1/epsilon, 1/delta, instance size n, and size(c).",
+   "assumptions": "Examples are drawn i.i.d. from a fixed but arbitrary distribution D; the bound (2.9) requires a finite hypothesis set and an algorithm that returns a hypothesis consistent with the sample (zero empirical error). PAC-learnability itself only requires sample size polynomial in 1/epsilon and 1/delta.",
+   "breakdown_regime": "Breaks when sampling is not i.i.d. (drift, selection bias, adversarial ordering), when no consistent hypothesis exists in H, or when |H| is infinite so log |H| is vacuous; the guarantee is distribution-free in D but says nothing about computation time unless efficient PAC-learning is additionally required.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A projection slate is PAC-style evidence only if its error claim is stated with both an accuracy epsilon and a confidence delta bought by a stated sample size; the engine should refuse accuracy claims that do not name the m that paid for them.",
+    "source_operator": "uniform convergence over a finite hypothesis class via the union bound",
+    "telemetry": "per-market sample size m and the implied epsilon at fixed delta for every published accuracy figure"
+   }
+  },
+  {
+   "primitive_id": "mohri-agnostic-pac-bayes-error",
+   "name": "Agnostic PAC learning and the Bayes error floor",
+   "verbatim_quote": "In the stochastic case, there is a minimal non-zero error for any hypothesis.",
+   "page": "Chapter 2, Definitions 2.14 (agnostic PAC-learning) and 2.15 (Bayes error); extracted text lines 1518 and 1542",
+   "latex": "\\Pr\\left[R(h_S) - \\min_{h \\in H} R(h) \\le \\epsilon\\right] \\ge 1 - \\delta \\quad (2.21); \\qquad R^* = \\inf_{h \\text{ measurable}} R(h) \\quad (2.22); \\qquad h_{\\mathrm{Bayes}}(x) = \\arg\\max_{y \\in \\{0,1\\}} P[y \\mid x] \\quad (2.23)",
+   "symbol_and_unit_ledger": "R*: Bayes error, the irreducible error floor of the distribution, probability units; h_Bayes: pointwise argmax of the posterior P[y|x]; min over H: best-in-class error, the agnostic target; R(h): expected zero-one loss under D.",
+   "assumptions": "Labels may be stochastic: no target function in H need achieve zero error, so the learner is only required to compete with the best hypothesis in H up to epsilon. The Bayes classifier exists as a measurable function of the true posterior.",
+   "breakdown_regime": "Breaks as a target when the posterior P[y|x] is itself misspecified by the features available (the floor R* is relative to full information); agnostic guarantees degrade gracefully but the epsilon term hides constants that grow as the best-in-class error approaches 1/2.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every market has an irreducible uncertainty floor; the engine's job is to approach the best-in-class error given its features, not zero error, and residuals should be decomposed into floor (Bayes) versus gap-to-best-in-class before any model is blamed.",
+    "source_operator": "infimum of expected loss over all measurable functions",
+    "telemetry": "estimated irreducible share of error per market, separated from the reducible estimation gap"
+   }
+  },
+  {
+   "primitive_id": "mohri-rademacher-complexity",
+   "name": "Rademacher complexity as correlation with random noise",
+   "verbatim_quote": "Thus, the empirical Rademacher complexity measures on average how well the function class G correlates with random noise on S.",
+   "page": "Chapter 3, Definitions 3.1 and 3.2; extracted text lines 1895 and 1935",
+   "latex": "\\hat{\\mathfrak{R}}_S(G) = \\mathbb{E}_{\\sigma}\\left[\\sup_{g \\in G} \\frac{1}{m} \\sum_{i=1}^{m} \\sigma_i g(z_i)\\right] \\quad (3.1); \\qquad \\mathfrak{R}_m(G) = \\mathbb{E}_{S \\sim D^m}\\left[\\hat{\\mathfrak{R}}_S(G)\\right] \\quad (3.2)",
+   "symbol_and_unit_ledger": "sigma_i: independent Rademacher variables uniform on {-1,+1}; g_S: vector of function values on the sample; sup over G: worst-case alignment of the class with a random sign pattern; E_sigma: expectation over sign flips only (empirical version) or over samples as well (population version).",
+   "assumptions": "The supremum over G is assumed measurable; functions map into a bounded interval [a,b] (rescaled to [0,1] for the bounds). The empirical version is computable from the observed sample alone, which is what makes the resulting bounds data dependent.",
+   "breakdown_regime": "Breaks as a practical meter when the supremum cannot be computed or tightly bounded for the class actually used (deep nets, huge ensembles); correlation with noise measures worst-case richness, so a class can have high Rademacher complexity yet generalize under additional structure (margins, stability) that this meter does not see.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Capacity of any candidate signal family can be metered empirically by its correlation with randomized labels on historical slates; a family that fits noise as easily as signal is charged full capacity in the engine's complexity budget.",
+    "source_operator": "expected supremum of the empirical process indexed by G under random sign flips",
+    "telemetry": "noise-correlation score per signal family on rolling historical windows"
+   }
+  },
+  {
+   "primitive_id": "mohri-rademacher-generalization-bound",
+   "name": "Rademacher complexity generalization bound",
+   "verbatim_quote": "We are now ready to present our first generalization bounds based on Rademacher complexity.",
+   "page": "Chapter 3, Theorem 3.3; extracted text line 1945",
+   "latex": "\\mathbb{E}[g(z)] \\le \\frac{1}{m} \\sum_{i=1}^{m} g(z_i) + 2\\mathfrak{R}_m(G) + \\sqrt{\\frac{\\log \\frac{1}{\\delta}}{2m}} \\quad (3.3)",
+   "symbol_and_unit_ledger": "E[g(z)]: true expected loss; (1/m) sum g(z_i): empirical loss on the training sample; 2 R_m(G): complexity charge, same units as the loss; sqrt(log(1/delta)/(2m)): confidence width from McDiarmid concentration, dimensionless.",
+   "assumptions": "Functions in G map into [0,1]; samples are i.i.d.; the bound holds uniformly for all g in G simultaneously with probability at least 1-delta. The proof runs through McDiarmid's inequality applied to the supremum deviation (Theorem D.8).",
+   "breakdown_regime": "Breaks under distribution shift between training and deployment samples, and becomes vacuous when R_m(G) does not shrink with m (classes of infinite capacity at the given scale); the empirical variant (3.4) inherits estimation error in R_hat itself.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The canonical two-term budget for any engine claim: observed fit plus a complexity charge plus a confidence width; any internal evaluation that reports only the fit term is structurally incomplete in exactly the way this theorem names.",
+    "source_operator": "supremum deviation bounded by twice the Rademacher complexity plus a McDiarmid tail",
+    "telemetry": "fit term, complexity term, and confidence term logged separately for every backtest the engine publishes internally"
+   }
+  },
+  {
+   "primitive_id": "mohri-vc-dimension-sauer",
+   "name": "VC-dimension, Sauer's lemma, and the VC generalization bound",
+   "verbatim_quote": "The theorem provides another instance of Occam's razor principle where simplicity is measured in terms of smaller VC-dimension.",
+   "page": "Chapter 3, Definition 3.10, Theorem 3.17 (Sauer's lemma), Corollary 3.19; extracted text lines 2246, 2446, 2548",
+   "latex": "\\mathrm{VCdim}(H) = \\max\\{m : \\Pi_H(m) = 2^m\\} \\quad (3.24); \\qquad \\Pi_H(m) \\le \\sum_{i=0}^{d} \\binom{m}{i} \\quad (3.27); \\qquad R(h) \\le \\hat{R}_S(h) + \\sqrt{\\frac{2d \\log \\frac{em}{d}}{m}} + \\sqrt{\\frac{\\log \\frac{1}{\\delta}}{2m}} \\quad (3.29)",
+   "symbol_and_unit_ledger": "Pi_H(m): growth function, the maximum number of dichotomies H induces on m points; d: VC-dimension, size of the largest shattered set; e: Euler's number in the polynomial bound Pi_H(m) <= (em/d)^d valid for m >= d; m/d ratio: the effective data-per-capacity ratio the corollary says drives generalization.",
+   "assumptions": "H maps into {-1,+1}; shattering requires all 2^m labelings of some m-point set to be realized. Sauer's lemma needs only VCdim(H) = d finite; the corollary's bound is distribution free.",
+   "breakdown_regime": "Breaks for real-valued or margin-based classes where VC-dimension is infinite or pessimistic (the book switches to pseudo-dimension and margin/Rademacher tools); combinatorial capacity ignores the data distribution, so the bound can be loose by orders of magnitude on benign distributions.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Feature and signal families should carry a combinatorial capacity label next to their fit statistics; the m/d ratio is a usable first-pass gate for whether a family's backtest sample is even large enough to certify its claimed edge.",
+    "source_operator": "counting of dichotomies realized on finite point sets, bounded by Sauer's polynomial envelope",
+    "telemetry": "capacity label d and the m/d ratio attached to each signal family in the registry"
+   }
+  },
+  {
+   "primitive_id": "mohri-estimation-approximation-decomposition",
+   "name": "Estimation error versus approximation error decomposition",
+   "verbatim_quote": "The approximation error measures how well the Bayes error can be approximated using H.",
+   "page": "Chapter 4, Section 4.1, equation (4.1); extracted text lines 3419-3438",
+   "latex": "R(h) - R^* = \\underbrace{\\left[R(h) - \\inf_{h \\in H} R(h)\\right]}_{\\text{estimation}} + \\underbrace{\\left[\\inf_{h \\in H} R(h) - R^*\\right]}_{\\text{approximation}} \\quad (4.1)",
+   "symbol_and_unit_ledger": "R(h) - R*: excess error over the Bayes floor; estimation error: price of finite data within the chosen class; approximation error: price of the class itself, a property of H alone and not estimable from data; h*: best-in-class hypothesis when the infimum is attained.",
+   "assumptions": "H is a fixed family of {-1,+1}-valued functions for the classification statement; the decomposition is an identity, so it assumes nothing beyond the definitions of R and R*, but the two terms are not separately observable from a sample.",
+   "breakdown_regime": "Breaks as a decision tool when used to justify enriching H on the basis of training error alone: approximation error falls while estimation error rises, and only a complexity-charged bound (SRM, Rademacher, validation) can arbitrate the trade; the identity also hides optimization error, which the book treats separately.",
+   "domain": "model selection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every model review in the engine should split underperformance into wrong-family (approximation) versus not-enough-data (estimation) before prescribing a fix; the remedies are opposites, more data for one and a different family for the other.",
+    "source_operator": "telescoping decomposition of excess risk through the best-in-class error",
+    "telemetry": "two-line attribution (family gap, data gap) recorded for every underperforming model family"
+   }
+  },
+  {
+   "primitive_id": "mohri-structural-risk-minimization",
+   "name": "Structural risk minimization over a nested family",
+   "verbatim_quote": "returned by the SRM method is bounded as follows",
+   "page": "Chapter 4, Theorem 4.2 (SRM learning guarantee); extracted text line 3646",
+   "latex": "R(h^{\\mathrm{SRM}}_S) \\le \\inf_{h \\in H} \\left[ R(h) + 2\\mathfrak{R}_m(H_{k(h)}) + \\sqrt{\\frac{\\log k(h)}{m}} + \\sqrt{\\frac{2 \\log \\frac{3}{\\delta}}{m}} \\right]",
+   "symbol_and_unit_ledger": "H_k: the k-th subclass in a countable nested union H = union_k H_k; k(h): index of the smallest subclass containing h; log k(h): prior-style penalty for reaching deeper into the family; R_m(H_k): Rademacher complexity of the subclass that actually supplied the hypothesis.",
+   "assumptions": "The family is a countable union of subclasses, each with its own uniform bound; the guarantee is proved by a union bound over k with weights, so deeper subclasses pay both their own complexity and a log k coding price.",
+   "breakdown_regime": "Breaks when the nesting is chosen after seeing the data (the union bound no longer covers the adaptive choice), or when subclass complexities are mis-estimated; SRM arbitrates among predeclared families, it does not discover structure.",
+   "domain": "model selection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Model zoos in the engine should be organized as a declared nested family with per-tier complexity charges fixed in advance; promoting a hypothesis from a richer tier must pay that tier's price in the published bound, not the cheapest tier's.",
+    "source_operator": "penalized empirical risk minimization with a union bound over a countable family",
+    "telemetry": "tier index k(h) and the charged penalty logged with every promoted model"
+   }
+  },
+  {
+   "primitive_id": "mohri-surrogate-loss-consistency",
+   "name": "Surrogate loss consistency: Zhang's comparison theorem",
+   "verbatim_quote": "Theorem 4.7 is due to Zhang [2003a]. The proof given here is somewhat different",
+   "page": "Chapter 4, Theorem 4.7; extracted text lines 4246 and 4316",
+   "latex": "R(h) - R^* \\le 2c\\left[L_{\\Phi}(h) - L_{\\Phi}^*\\right]^{1/s}",
+   "symbol_and_unit_ledger": "Phi: convex non-decreasing surrogate margin loss (hinge, exponential, logistic are the worked cases); L_Phi: expected surrogate loss; L_Phi*: its infimum; s >= 1 and c > 0: calibration constants depending on the surrogate (hinge s = 1, c = 1/2; exponential and logistic s = 2); eta(x): posterior probability P[y=1|x] driving the condition |h*(x)|^s <= c^s times the surrogate excess at x.",
+   "assumptions": "The surrogate must satisfy the pointwise calibration inequality linking classification excess to surrogate excess through eta(x); convexity of Phi is used with Jensen's inequality in the proof. The result converts optimization success on the surrogate into a classification guarantee.",
+   "breakdown_regime": "Breaks for non-calibrated surrogates and at points where eta(x) = 1/2 (no signal), where the inequality degenerates; the exponent 1/s means loose surrogates (s = 2) convert excess surrogate loss into classification excess only at a square-root rate.",
+   "domain": "loss function theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any smooth training objective the engine optimizes (log-loss on probabilities, hinge-style margins on spreads) must carry its calibration constants: the conversion rate from surrogate progress to actual decision quality is a theorem-level quantity, not a hope.",
+    "source_operator": "pointwise comparison of conditional surrogate risk against conditional zero-one risk via the posterior eta(x)",
+    "telemetry": "surrogate-to-decision conversion exponent s and constant c recorded per training objective"
+   }
+  },
+  {
+   "primitive_id": "mohri-geometric-margin-svm",
+   "name": "Geometric margin and the maximum-margin hyperplane",
+   "verbatim_quote": "The SVM solution is the separating hyperplane with the maximum geometric margin and is thus known as the maximum-margin hyperplane.",
+   "page": "Chapter 5, Definition 5.1 (geometric margin) and Section 5.2.1; extracted text lines 4431-4470",
+   "latex": "\\rho_h(x) = \\frac{|w \\cdot x + b|}{\\|w\\|_2} \\quad (5.4); \\qquad \\min_{w,b}\\ \\frac{1}{2}\\|w\\|^2 \\ \\text{ subject to } \\ y_i(w \\cdot x_i + b) \\ge 1 \\ \\forall i \\in [m]",
+   "symbol_and_unit_ledger": "rho_h(x): Euclidean distance from x to the separating hyperplane, in input-space distance units; ||w||_2: Euclidean norm of the weight vector; the rescaling min_i y_i(w.x_i + b) = 1 fixes the functional margin so that maximizing the geometric margin 1/||w|| becomes minimizing (1/2)||w||^2; support vectors: points attaining the constraint with equality.",
+   "assumptions": "The separable case assumes a hyperplane exists with y_i(w.x_i + b) >= 0 for all i, in fact strictly separable after scaling; the geometry is Euclidean in the given feature representation.",
+   "breakdown_regime": "Breaks in the non-separable case, which the book repairs with slack variables and the soft-margin problem; margin in a badly scaled feature space is meaningless, since rescaling coordinates rescales rho, so the guarantee is representation dependent.",
+   "domain": "margin theory and support vector machines",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A projection's confidence should be reported as a distance to the decision boundary in the model's own geometry, not as a raw score; two picks with equal scores but different margins are different products, and the margin is the one with a generalization theorem behind it.",
+    "source_operator": "distance-to-hyperplane maximization recast as norm minimization under functional-margin constraints",
+    "telemetry": "margin distribution (not just mean score) logged for every slate of projections"
+   }
+  },
+  {
+   "primitive_id": "mohri-soft-margin-svm-dual",
+   "name": "Soft-margin SVM: the box-constrained dual",
+   "verbatim_quote": "This leads to the following dual optimization problem for SVMs in the non-separable case",
+   "page": "Chapter 5, equation (5.33); extracted text lines 4900-4930",
+   "latex": "\\max_{\\alpha}\\ \\sum_{i=1}^{m} \\alpha_i - \\frac{1}{2} \\sum_{i,j=1}^{m} \\alpha_i \\alpha_j y_i y_j (x_i \\cdot x_j) \\quad \\text{subject to: } 0 \\le \\alpha_i \\le C \\ \\wedge\\ \\sum_{i=1}^{m} \\alpha_i y_i = 0 \\quad (5.33)",
+   "symbol_and_unit_ledger": "alpha_i: dual variable per example, bounded above by C; C: penalty price per unit of slack in the primal (5.24), trading margin width against training violations; xi_i slack in the primal: amount by which example i violates the margin; the box 0 <= alpha_i <= C is the only change from the separable dual (5.14).",
+   "assumptions": "The primal is the convex QP (5.24) with hinge-type slack penalties (p = 1); KKT conditions hold, so primal and dual optima coincide; the hypothesis is recovered as h(x) = sgn(sum_i alpha_i y_i (x_i . x) + b) in (5.34).",
+   "breakdown_regime": "Breaks when C is mis-set: C to infinity recovers the brittle hard-margin solution, C to zero ignores the data; the dual depends on the data only through inner products, which is exactly the property kernelization exploits, and it inherits kernel misspecification wholesale.",
+   "domain": "support vector machines and convex duality",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Robust fitting under noisy labels is a priced-violation problem: the engine's fitting routines should expose their C, the explicit price paid per violation, because that single number encodes how much label noise the fit is allowed to buy its way out of.",
+    "source_operator": "Lagrangian dualization of a slack-penalized convex QP, yielding box constraints on the dual variables",
+    "telemetry": "effective violation price C and the count of bound support vectors (alpha_i = C) per fitted model"
+   }
+  },
+  {
+   "primitive_id": "mohri-margin-bound",
+   "name": "Margin bound for binary classification",
+   "verbatim_quote": "The main margin-based generalization bounds of this section are presented in terms of this loss function, which is formally defined as follows.",
+   "page": "Chapter 5, Definition 5.5 (margin loss) and Theorem 5.8; extracted text lines 4983 and 5097",
+   "latex": "R(h) \\le \\hat{R}_{S,\\rho}(h) + \\frac{2}{\\rho}\\mathfrak{R}_m(H) + \\sqrt{\\frac{\\log \\frac{1}{\\delta}}{2m}} \\quad (5.39); \\qquad \\Phi_{\\rho}(x) = \\min\\left(1, \\max\\left(0, 1 - \\frac{x}{\\rho}\\right)\\right)",
+   "symbol_and_unit_ledger": "rho: demanded confidence margin, in score units; R_hat_{S,rho}(h): empirical margin loss, the fraction of points classified with margin below rho (ramped by Phi_rho); Phi_rho: ramp loss, 1 below 0, 0 above rho, linear between; the complexity term is inflated by 1/rho, the Lipschitz constant of Phi_rho (Talagrand's lemma 5.7).",
+   "assumptions": "H is a set of real-valued scoring functions and rho > 0 is fixed before seeing the data (uniform-over-rho versions cost an extra log log term); labels in {-1,+1}; the proof composes the Rademacher bound with the contraction lemma.",
+   "breakdown_regime": "Breaks when rho is tuned on the same sample without paying the uniformization price, and when scores are rescaled post hoc, since rho is denominated in the score's own units; a large margin on a miscalibrated score buys a bound about the score, not about reality.",
+   "domain": "margin theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Confidence thresholds in the engine should be set as demanded margins with the 1/rho complexity charge made explicit: demanding more confidence from a fixed model family costs bound width at exactly the rate this theorem states.",
+    "source_operator": "Rademacher bound composed with a (1/rho)-Lipschitz ramp loss via Talagrand contraction",
+    "telemetry": "empirical margin loss curve as a function of rho for every production classifier"
+   }
+  },
+  {
+   "primitive_id": "mohri-pds-kernel",
+   "name": "Positive definite symmetric kernels and the Gram matrix",
+   "verbatim_quote": "Let us insist on the terminology: the kernel matrix associated to a positive definite kernel is positive semidefinite",
+   "page": "Chapter 6, Definitions 6.1 and 6.3, Theorem 6.2 (Mercer); extracted text lines 5671 and 5735",
+   "latex": "K(x, x') = \\langle \\Phi(x), \\Phi(x') \\rangle \\quad (6.1); \\qquad c^{\\top} K c = \\sum_{i,j=1}^{m} c_i c_j K(x_i, x_j) \\ge 0 \\quad \\forall c \\in \\mathbb{R}^m \\quad (6.2)",
+   "symbol_and_unit_ledger": "K: kernel function on pairs of inputs; Phi: feature map into a Hilbert space whose inner product K computes; K (bold): the m x m Gram/kernel matrix on a sample; SPSD: symmetric positive semidefinite, equivalently all eigenvalues non-negative; Mercer condition: integral-operator positivity characterizing kernels on compact domains.",
+   "assumptions": "PDS is required for every finite sample simultaneously, not just the observed one; Mercer's theorem additionally assumes a compact input domain and continuity. Standard examples verified in the text: polynomial kernels (6.3) and the Gaussian kernel (6.5).",
+   "breakdown_regime": "Breaks when a similarity score is used as a kernel without the PDS property: the SVM/KRR duals lose convexity and the RKHS does not exist; indefinite similarities need different machinery (KreIn spaces), and finite-sample PSD of one Gram matrix does not certify the kernel.",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any similarity the engine builds between games, players, or situations must pass the PDS test before it is fed to kernel machinery; the Gram matrix eigenvalue floor is a cheap, decisive audit that separates true kernels from plausible-looking similarities.",
+    "source_operator": "inner-product factorization through a feature map, certified by positive semidefiniteness of all Gram matrices",
+    "telemetry": "minimum eigenvalue of each production Gram matrix, logged at build time"
+   }
+  },
+  {
+   "primitive_id": "mohri-representer-theorem",
+   "name": "The representer theorem",
+   "verbatim_quote": "If G is further assumed to be increasing, then any solution has this form.",
+   "page": "Chapter 6, Theorem 6.11; extracted text line 6218",
+   "latex": "h^* = \\sum_{i=1}^{m} \\alpha_i K(x_i, \\cdot)",
+   "symbol_and_unit_ledger": "h*: minimizer of G(||h||_H) + L(h(x_1), ..., h(x_m)) over the RKHS H; alpha_i: real coefficients, one per training point; K(x_i, .): kernel section at x_i; H_1: span of the training kernel sections; h_perp: component orthogonal to H_1, shown to be pure cost.",
+   "assumptions": "G is non-decreasing (strictly increasing for the 'any solution' form); the loss L may be arbitrary, including non-convex, since the argument is purely geometric: by the reproducing property h(x_i) depends only on the H_1 component while the norm charges for both components.",
+   "breakdown_regime": "Breaks outside RKHS-regularized problems: if the objective involves h at points other than the training inputs (semi-supervised terms, derivative penalties at new points) the span enlarges to those points; it also says nothing about how to find alpha, only where the solution lives.",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fitted models in the engine can be stored and audited as coefficient vectors over historical exemplars rather than opaque parameter blobs; the theorem guarantees no representational loss, so an exemplar-based audit view is exact, not an approximation.",
+    "source_operator": "orthogonal decomposition of the RKHS into the data span and its complement, with the complement annihilated by the evaluation functionals",
+    "telemetry": "coefficient vector alpha and its support size stored with every kernel model artifact"
+   }
+  },
+  {
+   "primitive_id": "mohri-kernel-rademacher-bound",
+   "name": "Rademacher complexity of kernel-based hypotheses",
+   "verbatim_quote": "Here, we present general learning guarantees for hypothesis sets based on PDS kernels, which hold in particular for SVMs combined with PDS kernels.",
+   "page": "Chapter 6, Theorem 6.12; extracted text line 6248",
+   "latex": "\\hat{\\mathfrak{R}}_S(H) \\le \\frac{\\Lambda \\sqrt{\\mathrm{Tr}[K]}}{m} \\le \\sqrt{\\frac{r^2 \\Lambda^2}{m}} \\quad (6.16)",
+   "symbol_and_unit_ledger": "Lambda: bound on the RKHS norm ||w||_H of hypotheses; Tr[K]: trace of the Gram matrix, the sum of K(x_i, x_i) over the sample; r: uniform bound with K(x,x) <= r^2 (r = 1 for normalized kernels such as the Gaussian); the bound is dimension free: the ambient feature dimension never appears.",
+   "assumptions": "H = {x -> <w, Phi(x)> : ||w||_H <= Lambda} for a PDS kernel K; the proof is Cauchy-Schwarz plus Jensen plus E[sigma_i sigma_j] = 0 for i != j, so only the diagonal of K survives.",
+   "breakdown_regime": "Breaks when the norm bound Lambda is not actually enforced by the fitting procedure (unregularized interpolation escapes the class the bound describes), and the trace form is loose when the Gram spectrum is dominated by a few large eigenvalues.",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Complexity of a kernel model is controlled by its norm budget and the kernel's self-similarity scale, not by feature count; the engine should budget Lambda per kernel model the way it budgets sample size per claim.",
+    "source_operator": "expected supremum over a norm ball in the RKHS, evaluated in closed form through the Gram trace",
+    "telemetry": "norm budget Lambda and Tr[K]/m logged for every kernel fit"
+   }
+  },
+  {
+   "primitive_id": "mohri-adaboost",
+   "name": "AdaBoost: exponential-loss coordinate descent with an exponential training-error bound",
+   "verbatim_quote": "Thus, the product of the normalization factors can be expressed and upper bounded as follows",
+   "page": "Chapter 7, Figure 7.1 (AdaBoost) and Theorem 7.2; extracted text lines 7674 and 7827",
+   "latex": "\\alpha_t = \\frac{1}{2} \\log \\frac{1 - \\epsilon_t}{\\epsilon_t}; \\qquad D_{t+1}(i) = \\frac{D_t(i) \\exp(-\\alpha_t y_i h_t(x_i))}{Z_t}, \\quad Z_t = 2\\sqrt{\\epsilon_t (1 - \\epsilon_t)}; \\qquad \\hat{R}_S(f) \\le \\exp(-2\\gamma^2 T) \\quad (7.4)",
+   "symbol_and_unit_ledger": "epsilon_t: weighted error of base classifier h_t under distribution D_t; alpha_t: its vote weight; D_t: distribution over training points, reweighted toward current mistakes; Z_t: normalization factor, whose product telescopes into the training-error bound; gamma: uniform edge, gamma <= 1/2 - epsilon_t for all rounds; T: number of rounds.",
+   "assumptions": "Weak learning assumption: at every round, for every distribution D_t the base learner can return, some h_t with edge at least gamma over random guessing. The bound (7.4) is on training error only; the algorithm is exactly coordinate descent on the exponential loss (Section 7.2.2).",
+   "breakdown_regime": "Breaks when the weak learning assumption fails on reweighted distributions (the base class cannot fit the hard residual points), and exponential loss is notoriously sensitive to label noise: mislabeled points accumulate unbounded weight, which is why the book's later sections move to gentler losses and L1-margin analyses.",
+   "domain": "boosting and ensemble methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Iterative refitting on residual errors is a distribution-shaping process, not just an optimizer: the engine's boosting-style refinements should track the induced distribution over historical games, because the final model is a vote weighted by where that distribution traveled.",
+    "source_operator": "multiplicative distribution update paired with greedy coordinate descent on the exponential loss",
+    "telemetry": "per-round edge epsilon_t and the effective sample size of D_t logged across refinement runs"
+   }
+  },
+  {
+   "primitive_id": "mohri-boosting-margin-bound",
+   "name": "Boosting's margin bound: generalization independent of the number of rounds",
+   "verbatim_quote": "Remarkably, the number of rounds of boosting T does not appear in the generalization bound (7.16).",
+   "page": "Chapter 7, equation (7.16) and surrounding discussion; extracted text lines 8290-8330",
+   "latex": "R(f) \\le \\hat{R}_{S,\\rho}(\\bar{f}) + \\frac{2}{\\rho}\\mathfrak{R}_m(H) + \\sqrt{\\frac{\\log \\frac{1}{\\delta}}{2m}} \\quad (7.16)",
+   "symbol_and_unit_ledger": "f_bar: the L1-normalized ensemble, a convex combination in conv(H); rho: margin measured relative to the L1 norm of the vote weights (L1-geometric margin of Section 7.3.2); R_m(H): Rademacher complexity of the base class only, not of the ensemble; T: number of rounds, absent from the bound by design.",
+   "assumptions": "The bound applies to the normalized ensemble f_bar, whose classification agrees with the unnormalized vote; it requires the empirical margin loss at margin rho to be small, which AdaBoost tends to achieve by continuing to improve margins after training error vanishes.",
+   "breakdown_regime": "Breaks as an explanation when margins do not in fact grow (heavy label noise caps achievable margins), and it is silent about which rho to report; choosing rho post hoc from the same sample needs the uniform-over-rho correction.",
+   "domain": "boosting and ensemble methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Ensemble size is not a complexity confession: the engine should judge stacked models by their margin distribution and base-family capacity, and stop using parameter or member counts as a proxy for overfitting risk.",
+    "source_operator": "margin theory applied to the convex hull of the base class, whose Rademacher complexity equals that of the base class itself",
+    "telemetry": "margin distribution of the normalized ensemble at several rho values per release"
+   }
+  },
+  {
+   "primitive_id": "mohri-regret-expert-advice",
+   "name": "Regret against the best expert in hindsight",
+   "verbatim_quote": "The objective in the on-line setting is to minimize the cumulative loss over all rounds or to minimize the regret, that is the difference of the cumulative loss incurred and that of the best expert in hindsight.",
+   "page": "Chapter 1, Section 1.6 (scenario definition) and Chapter 8, equation (8.1); extracted text lines 838 and 9253-9265",
+   "latex": "R_T = \\sum_{t=1}^{T} L(\\hat{y}_t, y_t) - \\min_{i \\in [N]} \\sum_{t=1}^{T} L(\\hat{y}_{t,i}, y_t) \\quad (8.1)",
+   "symbol_and_unit_ledger": "R_T: cumulative regret over T rounds, in cumulative loss units; y_hat_t: the algorithm's prediction at round t, made before y_t is revealed; y_hat_{t,i}: expert i's prediction; N: number of experts; the comparator is the single best expert with full hindsight, not the best per-round expert.",
+   "assumptions": "No distributional assumption is made: instances and labels may be chosen adversarially, which is what makes regret the right currency here; losses are revealed after each prediction (full-information expert-advice setting of Section 8.2).",
+   "breakdown_regime": "Breaks as a benchmark when the hindsight comparator is too strong to be meaningful (the best fixed expert may itself be poor, so low regret can coexist with bad absolute performance) and in partial-information (bandit) settings, where this exact decomposition needs importance-weighted repairs.",
+   "domain": "online learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Slate-by-slate engine performance should be scored as regret against the best single standing strategy in hindsight, week over week; that separates 'our process lost to a simple baseline' from 'the week was unpredictable', which raw win rate cannot do.",
+    "source_operator": "cumulative-loss differencing against a hindsight-optimal fixed comparator",
+    "telemetry": "weekly regret versus the best standing baseline strategy, reported next to raw accuracy"
+   }
+  },
+  {
+   "primitive_id": "mohri-weighted-majority",
+   "name": "Weighted Majority mistake bound",
+   "verbatim_quote": "To prove this theorem, we first introduce a potential function.",
+   "page": "Chapter 8, Theorem 8.3; extracted text line 9409",
+   "latex": "m_T \\le \\frac{\\log N + m_T^* \\log \\frac{1}{\\beta}}{\\log \\frac{2}{1 + \\beta}} \\quad (8.6)",
+   "symbol_and_unit_ledger": "m_T: mistakes of the Weighted Majority algorithm over T rounds; m_T*: mistakes of the best expert; N: number of experts; beta in (0,1): multiplicative penalty factor applied to the weight of any expert that errs; W_t: total weight (potential), starting at N and multiplied by at most (1+beta)/2 on each algorithm mistake.",
+   "assumptions": "Deterministic weighted majority vote over N experts with zero-one loss; the proof is the potential method: upper-bound W_T from the algorithm's mistakes, lower-bound it from the best expert's survival, and combine.",
+   "breakdown_regime": "Breaks in its deterministic form when experts can be adversarially tied or when losses are not zero-one (the randomized version, Theorem 8.4, repairs this at an O(sqrt(T log N)) regret rate); beta must be tuned to the unknown m_T*, in practice by doubling tricks.",
+   "domain": "online learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Combining standing model opinions by multiplicative weights gives a guarantee that the combination is never much worse than the best member; the engine's ensemble layer can inherit that guarantee shape instead of relying on unweighted voting and hope.",
+    "source_operator": "potential-function accounting on the total expert weight W_t",
+    "telemetry": "expert weights and the implied mistake-bound ratio maintained in the ensemble registry"
+   }
+  },
+  {
+   "primitive_id": "mohri-perceptron-mistake-bound",
+   "name": "Perceptron mistake bound (Novikoff)",
+   "verbatim_quote": "Let I be the subset of the T rounds at which there is an update, and let M be the total number of updates",
+   "page": "Chapter 8, Theorem 8.8; extracted text line 9952",
+   "latex": "\\text{number of Perceptron updates} \\le \\frac{r^2}{\\rho^2}",
+   "symbol_and_unit_ledger": "r: radius bound, ||x_t|| <= r for all rounds, in input units; rho: margin of a witness vector v, rho <= y_t (v . x_t)/||v|| for all t; M: total update count; the bound is independent of T and of the dimension N, depending only on the geometry ratio (r/rho)^2.",
+   "assumptions": "Requires linear separability with margin rho > 0 by some unit-direction witness v; updates occur only on mistakes (or margin violations in variants); w_0 = 0 initialization is used in the telescoping proof.",
+   "breakdown_regime": "Breaks completely without separability: on non-separable streams the Perceptron can cycle forever, and the averaged/voted variants or slack-based repairs are needed; the bound also degrades quadratically as the true margin shrinks.",
+   "domain": "online learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A mistake-driven updater's total lifetime corrections are budgeted by geometry alone, (r/rho)^2; the engine can pre-compute an update budget for any margin-based learner from the radius and margin of its feature space before deployment.",
+    "source_operator": "two-sided accounting on ||w|| growth: alignment with the witness grows linearly per update while the norm grows only as the square root",
+    "telemetry": "running update count versus the (r/rho)^2 budget for margin-based online learners"
+   }
+  },
+  {
+   "primitive_id": "mohri-online-to-batch",
+   "name": "On-line to batch conversion: regret becomes a generalization bound",
+   "verbatim_quote": "the sequence of hypotheses generated by an on-line algorithm A sequentially processing S",
+   "page": "Chapter 8, Theorem 8.15; extracted text line 10518",
+   "latex": "R\\left(\\bar{h}\\right) \\le \\inf_{h \\in H} R(h) + \\frac{R_T}{T} + 2M\\sqrt{\\frac{2 \\log \\frac{2}{\\delta}}{T}} \\quad (8.28), \\qquad \\bar{h} = \\frac{1}{T} \\sum_{t=1}^{T} h_t",
+   "symbol_and_unit_ledger": "h_t: hypothesis produced by the online algorithm before seeing example t; h_bar: their uniform average; R_T: the algorithm's regret on the sample; M: uniform bound on the loss L; T: sample size playing the role of rounds; the first inequality (8.27) bounds the average risk of the h_t directly by their average empirical loss plus a concentration term.",
+   "assumptions": "The sample is drawn i.i.d. (this is the batch side of the bridge); the loss L must be convex in its first argument so that the averaged hypothesis inherits the average risk by Jensen; Lemma 8.14 supplies the martingale concentration step.",
+   "breakdown_regime": "Breaks for non-convex losses in the hypothesis-averaging step (randomized selection of h_t is the standard repair), and the conversion inherits the online algorithm's regret rate: a sqrt(T) regret becomes a 1/sqrt(T) excess-risk term, never better.",
+   "domain": "online learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any sequential updater the engine runs can be certified as a batch model by averaging its trajectory and charging its regret; this gives one audit path that covers both live-updating and frozen models with the same currency.",
+    "source_operator": "Jensen averaging of the hypothesis trajectory plus a martingale (Azuma/McDiarmid) concentration step",
+    "telemetry": "trajectory-averaged model risk and regret charge logged at each model freeze"
+   }
+  },
+  {
+   "primitive_id": "mohri-multiclass-svm",
+   "name": "Multi-class SVM: joint margin constraints over all rival classes",
+   "verbatim_quote": "Both the primal and dual problems are simple QPs generalizing those of the standard SVM algorithm.",
+   "page": "Chapter 9, Section 9.3.1, equation (9.12) and the primal that follows it; extracted text lines 11520-11560",
+   "latex": "\\min_{W, \\xi}\\ \\frac{1}{2} \\sum_{l=1}^{k} \\|w_l\\|^2 + C \\sum_{i=1}^{m} \\xi_i \\quad \\text{subject to: } w_{y_i} \\cdot \\Phi(x_i) \\ge w_l \\cdot \\Phi(x_i) + 1 - \\xi_i \\ \\forall i \\in [m],\\ \\forall l \\in Y \\setminus \\{y_i\\}",
+   "symbol_and_unit_ledger": "k: number of classes; W: the weight matrix with one vector w_l per class; xi_i (in (9.12) defined as max over rival classes of 1 - [w_{y_i}.Phi(x_i) - max_{l != y_i} w_l.Phi(x_i)], 0): per-example worst-rival margin violation; the decision is argmax_l w_l . Phi(x); problem size is Omega(mk) constraints.",
+   "assumptions": "Mono-label setting with a shared feature map Phi; the objective minimized is exactly the right-hand side of the margin bound (9.12), so the algorithm is the bound made operational; KKT conditions hold, giving the kernelized dual in terms of an m x k dual matrix alpha.",
+   "breakdown_regime": "Breaks computationally as k grows (Omega(mk) constraints demand decomposition methods), and as a model when classes share no useful common geometry; aggregated reductions (one-versus-all, error-correcting codes, Section 9.4) trade this joint formulation for many binary problems with weaker coupling.",
+   "domain": "multi-class classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multi-way outcome prediction (win/loss/push, or full finishing-position slates) should be fit jointly against the worst rival outcome, not as independent binaries; the binding constraint is always the strongest alternative, and the slack prices exactly that confusion.",
+    "source_operator": "simultaneous margin constraints against all rival classes with a shared slack per example",
+    "telemetry": "worst-rival margin distribution per multi-way market logged at fit time"
+   }
+  },
+  {
+   "primitive_id": "mohri-ranking-margin-bound",
+   "name": "Pairwise ranking error and its margin bound",
+   "verbatim_quote": "The general supervised learning problem of ranking consists of using labeled information to define an accurate ranking prediction function for all points.",
+   "page": "Chapter 10, Sections 10.1-10.2, equations (10.1) and Theorem 10.1; extracted text lines 12400-12560",
+   "latex": "R(h) = \\Pr_{(x, x') \\sim D}\\left[f(x, x') \\ne 0 \\ \\wedge\\ f(x, x')\\,(h(x') - h(x)) \\le 0\\right] \\quad (10.1); \\qquad R(h) \\le \\hat{R}_{S,\\rho}(h) + \\frac{2}{\\rho}\\left[\\mathfrak{R}_m^{D_1}(H) + \\mathfrak{R}_m^{D_2}(H)\\right] + \\sqrt{\\frac{\\log \\frac{1}{\\delta}}{2m}} \\quad (10.5)",
+   "symbol_and_unit_ledger": "f: preference function on pairs, values in {-1, 0, +1}, not assumed transitive; h: real-valued scoring function whose induced order is the prediction; D_1, D_2: marginal distributions of the first and second elements of pairs, each contributing its own Rademacher term; empirical error counts pairs the score orders against the stated preference.",
+   "assumptions": "The margin-bound section assumes pairwise labels in {-1,+1}; the target preference itself may be intransitive, in which case no scoring function can achieve zero error, an approximation floor intrinsic to the score-based setting that the text states explicitly.",
+   "breakdown_regime": "Breaks when preferences are strongly intransitive (rock-paper-scissors structure in the underlying comparisons), where any total order has irreducible pairwise error; also degrades when pairs are not i.i.d., for example when pairs are augmented by crossing a fixed pool of items, a dependency the text flags in Section 10.5.",
+   "domain": "learning to rank",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Power ratings are ranking hypotheses: their quality metric is pairwise misranking against realized preferences, and their complexity charge splits across the two marginals, which is the correct accounting for home/away asymmetric slates.",
+    "source_operator": "reduction of pairwise disagreement to a margin loss on score differences, bounded by summed marginal Rademacher complexities",
+    "telemetry": "pairwise misranking rate and margin loss reported for every ratings release"
+   }
+  },
+  {
+   "primitive_id": "mohri-auc-bipartite-ranking",
+   "name": "AUC as one minus bipartite pairwise misranking",
+   "verbatim_quote": "The performance of a bipartite ranking algorithm is typically reported in terms of the area under the receiver operating characteristic (ROC) curve, or the area under the curve (AUC ) for short.",
+   "page": "Chapter 10, Section 10.5.2; extracted text line 13308",
+   "latex": "\\mathrm{AUC}(h, U) = \\frac{1}{mn} \\sum_{i=1}^{m} \\sum_{j=1}^{n} \\mathbf{1}\\left[h(z_i') \\ge h(z_j)\\right] = \\Pr\\left[h(z') \\ge h(z)\\right], \\quad z' \\sim \\hat{D}_U^+,\\ z \\sim \\hat{D}_U^-",
+   "symbol_and_unit_ledger": "m, n: counts of positive and negative points in the evaluation sample U; z'_i: positive points, z_j: negative points; AUC in [0,1] with 1 perfect and 1/2 the chance level for a random ordering; empirical pairwise misranking R_hat(h, U) satisfies AUC = 1 - R_hat exactly.",
+   "assumptions": "Bipartite setting: two classes, and the metric cares only about relative order across the class boundary, not about within-class order or calibrated scores; ties counted by the >= convention in the text's definition.",
+   "breakdown_regime": "Breaks as a proxy for decision quality when the operating threshold matters: AUC averages over all thresholds, so a model can win AUC while being worse at every threshold anyone would actually use; it is also insensitive to class imbalance in a way precision-based metrics are not.",
+   "domain": "learning to rank and evaluation metrics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Discrimination quality of any engine score (separating winners from losers, covers from non-covers) is an AUC statement about cross-class ordering; report it as such, and never let a high AUC substitute for threshold-level performance where decisions are actually taken.",
+    "source_operator": "identity between ROC area and the probability that a random positive outranks a random negative (Mann-Whitney form)",
+    "telemetry": "AUC with its pairwise-count numerator and denominator stored for every scored slate"
+   }
+  },
+  {
+   "primitive_id": "mohri-pseudo-dimension",
+   "name": "Pseudo-dimension: VC theory for real-valued functions",
+   "verbatim_quote": "the notion of pseudo-dimension of a family of real-valued functions G coincides with that of the VC-dimension of the corresponding thresholded functions mapping X to {0, 1}",
+   "page": "Chapter 11, Definitions 11.4 and 11.5, Theorems 11.6-11.8; extracted text lines 14060-14160",
+   "latex": "\\mathrm{Pdim}(G) = \\mathrm{VCdim}\\left\\{(x, t) \\mapsto \\mathbf{1}(g(x) - t) > 0 : g \\in G\\right\\} \\quad (11.3); \\qquad \\mathrm{Pdim}\\left(\\{x \\mapsto w \\cdot x + b : w \\in \\mathbb{R}^N, b \\in \\mathbb{R}\\}\\right) = N + 1 \\quad (\\text{Thm } 11.6)",
+   "symbol_and_unit_ledger": "t_i: witness thresholds, one per point, replacing the fixed zero threshold of binary shattering; Pdim(G): size of the largest set shattered relative to some witness vector; Theorem 11.7: for a vector space of functions, Pdim equals its linear dimension; the induced bound (11.6) scales as M sqrt(2d log(em/d)/m) for loss bounded by M.",
+   "assumptions": "Loss functions are non-negative and bounded by M; the reduction of regression to classification runs through the layer-cake identity E[f] = integral of P[f > t] dt (11.5), so thresholded classification bounds integrate into regression bounds.",
+   "breakdown_regime": "Breaks for unbounded losses (heavy-tailed regression targets), where the M factor explodes and different tools (covering numbers at scale, fat-shattering dimension) take over; pseudo-dimension is scale blind, counting a function family the same at every threshold resolution.",
+   "domain": "regression theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Continuous projections (margins of victory, totals, player outputs) need capacity measured in pseudo-dimension, not VC-dimension; the engine's regression families should carry Pdim-style labels so sample-size gates apply to them with the same force as to classifiers.",
+    "source_operator": "thresholding of real-valued functions at witness levels, reducing regression capacity to binary VC capacity of the subgraph class",
+    "telemetry": "capacity label and the bounded-loss constant M recorded for every regression family"
+   }
+  },
+  {
+   "primitive_id": "mohri-kernel-ridge-regression",
+   "name": "Kernel ridge regression: closed-form dual solution",
+   "verbatim_quote": "Thus, as in the primal case, the dual optimization problem admits a closed-form solution.",
+   "page": "Chapter 11, Section 11.3.2, equations (11.12), (11.17), (11.19); extracted text lines 14308-14520",
+   "latex": "\\min_{w}\\ F(w) = \\lambda \\|w\\|^2 + \\sum_{i=1}^{m} (w \\cdot \\Phi(x_i) - y_i)^2 \\quad (11.12); \\qquad \\alpha = (K + \\lambda I)^{-1} Y \\quad (11.17); \\qquad h(x) = \\sum_{i=1}^{m} \\alpha_i K(x_i, x) \\quad (11.19)",
+   "symbol_and_unit_ledger": "lambda > 0: regularization price on ||w||^2, guaranteeing K + lambda I is invertible since K is SPSD; K: Gram matrix of the training sample; Y: label vector; alpha: dual coefficients; primal cost O(mN^2 + N^3) versus dual cost O(kappa m^2 + m^3) with kappa the cost of one kernel evaluation (Table 11.1).",
+   "assumptions": "Squared loss with an RKHS norm penalty; Theorem 11.11 motivates the objective from the generalization bound for bounded-norm kernel hypotheses; the push-through identity (Lemma 11.12) equates the primal and dual closed forms.",
+   "breakdown_regime": "Breaks under heavy-tailed label noise, where squared loss lets outliers dominate the fit (the book's SVR section is the robust counterpart); numerical breakdown when lambda is tiny relative to the Gram spectrum, since the closed form hides an ill-conditioned inversion.",
+   "domain": "kernel methods and regression",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Ridge-style projection fits in the engine have an exact dual audit form: predictions decompose as a weighted sum over historical games with weights alpha = (K + lambda I)^{-1} Y, so every projection can be attributed to the specific past games that produced it.",
+    "source_operator": "normal equations in the dual, solved by one regularized Gram inversion",
+    "telemetry": "lambda, Gram condition number, and top-attribution exemplars stored per ridge fit"
+   }
+  },
+  {
+   "primitive_id": "mohri-maxent-principle",
+   "name": "The maximum entropy principle as minimum relative entropy under moment constraints",
+   "verbatim_quote": "the Maxent principle consists of seeking a distribution p that is as agnostic as possible, that is as close as possible to the uniform distribution",
+   "page": "Chapter 12, Sections 12.3-12.4, equations (12.6) and (12.7); extracted text lines 15330-15420",
+   "latex": "\\min_{p \\in \\Delta}\\ D(p \\| p_0) \\quad \\text{subject to: } \\left\\| \\mathbb{E}_{x \\sim p}[\\Phi(x)] - \\mathbb{E}_{x \\sim \\hat{D}}[\\Phi(x)] \\right\\|_{\\infty} \\le \\lambda \\quad (12.7)",
+   "symbol_and_unit_ledger": "D(p||p_0): relative entropy to the prior p_0 (uniform prior turns the problem into entropy maximization, since D(p||p_0) = log|X| - H(p)); Phi: feature mapping with ||Phi||_infty <= r; lambda >= 0: tolerated moment mismatch, with lambda = 0 the exact-matching standard MaxEnt; Delta: the probability simplex over a finite X in the text's presentation.",
+   "assumptions": "The motivating guarantee is (12.5): empirical feature averages concentrate around true averages at a Rademacher rate, so matching moments to within lambda is statistically honest; the problem is convex (strictly, in p) and always feasible since the empirical distribution is a feasible point.",
+   "breakdown_regime": "Breaks when the chosen features omit a constraint that matters: MaxEnt is agnostic only within the span of Phi, and it will confidently spread mass in ways the unmeasured features would have forbidden; with lambda = 0 and many features it can also chase sampling noise in the empirical moments.",
+   "domain": "maximum entropy modeling and information theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Outcome distributions in the engine should be built MaxEnt-style: fix the feature moments the data actually supports (usage rates, pace, efficiency splits) and let entropy decide everything else, instead of hand-shaping a full distribution and pretending all of it was measured.",
+    "source_operator": "relative-entropy projection of a prior onto an affine moment-constraint set",
+    "telemetry": "the moment list Phi, the achieved mismatch versus lambda, and the entropy of the fitted distribution logged per market"
+   }
+  },
+  {
+   "primitive_id": "mohri-maxent-duality",
+   "name": "MaxEnt duality: the solution is a Gibbs distribution fit by regularized maximum likelihood",
+   "verbatim_quote": "Here, we derive an equivalent dual problem for (12.7) which, as we will show, can be formulated as a regularized maximum likelihood problem over the family of Gibbs distributions.",
+   "page": "Chapter 12, Section 12.5, Theorem 12.2, equations (12.9)-(12.11); extracted text lines 15420-15560",
+   "latex": "p_w[x] = \\frac{p_0[x]\\, e^{w \\cdot \\Phi(x)}}{Z(w)}, \\quad Z(w) = \\sum_{x \\in X} p_0[x]\\, e^{w \\cdot \\Phi(x)} \\quad (12.9); \\qquad G(w) = \\frac{1}{m} \\sum_{i=1}^{m} \\log \\frac{p_w[x_i]}{p_0[x_i]} - \\lambda \\|w\\|_1 \\quad (12.10); \\qquad \\sup_{w \\in \\mathbb{R}^N} G(w) = \\min_{p} F(p) \\quad (12.11)",
+   "symbol_and_unit_ledger": "w: dual weight vector, one component per feature; Z(w): partition function normalizing the Gibbs distribution; G(w): the dual objective, an average log-likelihood ratio minus an L1 penalty whose strength is exactly the primal tolerance lambda; the theorem also bounds D(p* || p_w) <= epsilon for any epsilon-optimal w.",
+   "assumptions": "Proved by Fenchel duality (Theorem B.39) applied to the extended relative entropy plus the indicator of the constraint set; requires lambda > 0 for the interior-point condition in the proof as presented, and finiteness of X for the sums as written.",
+   "breakdown_regime": "Breaks computationally when X is huge or continuous and Z(w) cannot be summed or integrated in closed form (sampling or variational approximations replace the exact dual); the L1 geometry of the penalty is tied to the L_infty form of the moment constraint, so changing the constraint norm changes the regularizer.",
+   "domain": "maximum entropy modeling and convex duality",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fitting an outcome distribution and fitting a regularized log-linear model are the same act seen from two sides; the engine can therefore audit any MaxEnt distribution by reading off its w, whose nonzero entries list exactly which measured moments the distribution is actually using.",
+    "source_operator": "Fenchel dualization turning a constrained entropy projection into unconstrained penalized likelihood over an exponential family",
+    "telemetry": "dual weights w, partition value log Z(w), and penalty lambda exported with every fitted distribution"
+   }
+  },
+  {
+   "primitive_id": "mohri-conditional-maxent-logistic",
+   "name": "Conditional MaxEnt duality and logistic regression",
+   "verbatim_quote": "In the special case of two classes, the algorithm is known as logistic regression.",
+   "page": "Chapter 13, Sections 13.3-13.4, Theorem 13.1, equations (13.5) and (13.6); extracted text lines 16230-16420",
+   "latex": "p_w[y \\mid x] = \\frac{p_0[y \\mid x]\\, e^{w \\cdot \\Phi(x, y)}}{Z(w, x)}, \\quad Z(w, x) = \\sum_{y \\in Y} p_0[y \\mid x]\\, e^{w \\cdot \\Phi(x, y)} \\quad (13.6); \\qquad G(w) = \\frac{1}{m} \\sum_{i=1}^{m} \\log \\frac{p_w[y_i \\mid x_i]}{p_0[y_i \\mid x_i]} - \\lambda \\|w\\|_1 \\quad (13.5)",
+   "symbol_and_unit_ledger": "Phi(x, y): joint feature map over input-label pairs, allowing label-dependent features; Z(w, x): per-input partition over the c classes; with two classes and class-indicator features this Gibbs form reduces to the logistic sigmoid; c: number of classes, Y = {1, ..., c}; lambda: moment tolerance from (13.2), again surfacing as the L1 penalty.",
+   "assumptions": "The primal (13.3) minimizes the empirical-marginal average of conditional relative entropies subject to the conditional moment constraint (13.2); strong duality (13.7) is Theorem 13.1, proved by the same Fenchel route as the unconditional case; estimates come with a Pinsker-based bound on the L1 distance between the primal solution and p_w.",
+   "breakdown_regime": "Breaks when classes are not mutually exclusive in the way the conditional simplex assumes (multi-label problems need the Chapter 9 machinery instead), and per-input normalization makes the model silent about the marginal distribution of x, by design.",
+   "domain": "probabilistic classification and maximum entropy modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Win-probability models in the engine are conditional MaxEnt objects: their feature weights are moment-matching multipliers, which gives a principled reading of what each weight means and a duality-based check that the fitted probabilities are the least-committal ones consistent with the measured moments.",
+    "source_operator": "conditional relative-entropy projection dualized into penalized conditional likelihood over Gibbs conditionals",
+    "telemetry": "per-class feature weights and conditional entropy of the fitted win-probability model per release"
+   }
+  },
+  {
+   "primitive_id": "mohri-uniform-stability",
+   "name": "Uniform stability and the stability generalization bound",
+   "verbatim_quote": "We are now able to define the notion of uniform stability, the algorithmic property used in the analyses of this chapter.",
+   "page": "Chapter 14, Definition 14.1 and Theorem 14.2; extracted text lines 17220-17330",
+   "latex": "\\forall z \\in Z, \\quad \\left| L_z(h_S) - L_z(h_{S'}) \\right| \\le \\beta \\quad (\\text{Def. } 14.1); \\qquad R(h_S) \\le \\hat{R}_S(h_S) + \\beta + (2m\\beta + M)\\sqrt{\\frac{\\log \\frac{1}{\\delta}}{2m}} \\quad (\\text{Thm } 14.2)",
+   "symbol_and_unit_ledger": "S, S': training samples differing in exactly one point; beta: stability coefficient, a function of m in general; M: uniform bound on the loss; the bound needs beta = o(1/sqrt(m)) for the last term to vanish and beta = O(1/m) for the clean rates of Section 14.3.",
+   "assumptions": "The loss is bounded by M on hypotheses the algorithm can return (a weaker condition than boundedness everywhere, as the text notes); the proof applies McDiarmid's inequality to the generalization gap viewed as a function of the sample, whose bounded-difference constant is 2beta + M/m.",
+   "breakdown_regime": "Breaks for algorithms whose output can swing on one point (unregularized ERM over rich classes, nearest-neighbor-like rules at the boundary); stability is sufficient, not necessary, for generalization, so an unstable algorithm is not thereby condemned, it just loses this certificate.",
+   "domain": "algorithmic stability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A production model should ship with a leave-one-out sensitivity certificate: retrain-minus-one-game deltas on the loss are the empirical beta, and the theorem converts that single number into a generalization statement without any capacity computation.",
+    "source_operator": "bounded-differences concentration of the generalization gap under single-point perturbations of the training set",
+    "telemetry": "empirical leave-one-out loss delta distribution for every production model, refreshed per season"
+   }
+  },
+  {
+   "primitive_id": "mohri-stability-regularization",
+   "name": "Kernel regularization is O(1/(lambda m))-stable",
+   "verbatim_quote": "Algorithms such as KRR, SVR and SVMs all fall under this general model.",
+   "page": "Chapter 14, Section 14.3, Definition 14.3 and Proposition 14.4; extracted text lines 17380-17480",
+   "latex": "\\beta \\le \\frac{\\sigma^2 r^2}{\\lambda m}",
+   "symbol_and_unit_ledger": "sigma: admissibility constant of the loss, |L(h'(x), y) - L(h(x), y)| <= sigma |h'(x) - h(x)| (sigma = 2M-style bound for quadratic loss on bounded outputs); r: kernel radius, K(x, x) <= r^2; lambda: coefficient of the ||h||^2_K regularizer in objective (14.6); the proof runs through generalized Bregman divergences of the regularized objectives on S and S'.",
+   "assumptions": "The loss must be convex and sigma-admissible; the algorithm must be exactly the minimizer of empirical loss plus lambda ||h||^2_K over an RKHS ball geometry; SVM, SVR, and KRR all fit the template as the text states.",
+   "breakdown_regime": "Breaks for non-convex losses, for approximate minimizers whose optimization error is not itself stable, and as lambda -> 0, where the certificate correctly reports that unregularized fits can be arbitrarily sensitive to one point.",
+   "domain": "algorithmic stability and regularization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Regularization strength in the engine is a stability budget with units: doubling lambda halves the certified one-point sensitivity, so lambda choices can be governed by a maximum tolerable beta rather than by validation folklore alone.",
+    "source_operator": "Bregman-divergence comparison of the regularized objectives on neighboring samples",
+    "telemetry": "certified beta = sigma^2 r^2/(lambda m) computed and stored for every regularized fit"
+   }
+  },
+  {
+   "primitive_id": "mohri-johnson-lindenstrauss",
+   "name": "The Johnson-Lindenstrauss lemma",
+   "verbatim_quote": "The Johnson-Lindenstrauss lemma is a fundamental result in dimensionality reduction that states that any m points in high-dimensional space can be mapped to a much lower dimension",
+   "page": "Chapter 15, Section 15.4, Lemma 15.4; extracted text lines 18100-18190",
+   "latex": "(1 - \\epsilon)\\|u - v\\|^2 \\le \\|f(u) - f(v)\\|^2 \\le (1 + \\epsilon)\\|u - v\\|^2 \\quad (15.13), \\qquad k = \\frac{20 \\log m}{\\epsilon^2}",
+   "symbol_and_unit_ledger": "m: number of points in the set V (note: here m counts points, not samples); epsilon in (0, 1/2): tolerated relative distortion of squared distances; k: target dimension, logarithmic in m and independent of the ambient dimension N; the map is realized by projection onto a random k-dimensional subspace, with chi-square concentration (Lemma 15.2) doing the work.",
+   "assumptions": "The statement is existential over the point set: for any fixed finite V there exists a linear map with the stated distortion, found with high probability by random projection; pairwise distances are preserved, not inner products with outside vectors or distances to new points.",
+   "breakdown_regime": "Breaks when the geometry that matters is not pairwise Euclidean distance (manifold structure, cosine geometry after normalization drift, distances to future points), and the constant factors matter at small m: the guarantee is asymptotic in flavor even though the statement is finite.",
+   "domain": "dimensionality reduction and randomized algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "High-dimensional matchup embeddings in the engine can be compressed to k = O(log m / epsilon^2) dimensions with a theorem-priced distortion; the price list is explicit, so compression is a budgeted engineering choice rather than an act of faith.",
+    "source_operator": "concentration of the squared norm of a Gaussian-projected vector around its mean (chi-square tails) plus a union bound over pairs",
+    "telemetry": "distortion epsilon and realized max pairwise distortion logged for every embedding compression"
+   }
+  },
+  {
+   "primitive_id": "mohri-exact-learning-queries",
+   "name": "Exact learning with membership and equivalence queries; passive DFA learning is NP-complete",
+   "verbatim_quote": "The model of learning with queries corresponds to that of a (minimal) teacher or oracle and an active learner.",
+   "page": "Chapter 16, Sections 16.3.1-16.3.2, Theorem 16.2; extracted text lines 18446-18530",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Membership queries return the true label of any instance the learner names; equivalence queries answer a conjectured hypothesis with yes or a counterexample; efficient exact learning requires time polynomial in the representation size of the target concept and of the largest counterexample.",
+   "breakdown_regime": "Breaks in practice because the oracle is rarely available: equivalence must be efficiently testable, which fails already for context-free grammars (undecidable, as the text notes); the passive counterpart is not just hard but inapproximable (Theorem 16.3), so the positive results are entirely an artifact of the query access.",
+   "domain": "computational learning theory and automata",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The gap between passive and query-based learning prices active data collection: where the engine can choose which historical cases to label or verify (counterexample-driven review), the complexity of identification drops from NP-hard search to polynomial query complexity; labeling budgets should be spent as queries, not as random samples, when a hypothesis is already on the table.",
+    "source_operator": "oracle interaction protocol (membership plus equivalence queries) versus passive consistency search",
+    "telemetry": "count of actively queried versus passively received labels in each model-review cycle"
+   }
+  },
+  {
+   "primitive_id": "mohri-mdp-bellman-optimality",
+   "name": "Markov decision processes and Bellman's optimality condition",
+   "verbatim_quote": "The model is Markovian because the transition and reward probabilities depend only on the current state s and not the entire history of states and actions taken.",
+   "page": "Chapter 17, Definition 17.1 (MDP), Definition 17.3 (policy value), Theorem 17.7; extracted text lines 19425, 19502, 19616",
+   "latex": "Q_{\\pi}(s, a) = \\mathbb{E}[r(s, a)] + \\mathbb{E}\\left[\\sum_{t=0}^{+\\infty} \\gamma^t r(s_t, a_t) \\,\\middle|\\, s_0 = s, a_0 = a\\right] \\quad (17.1); \\qquad \\pi \\text{ optimal } \\iff a \\in \\arg\\max_{a' \\in A} Q_{\\pi}(s, a') \\ \\forall (s, a) \\text{ with } \\pi(s)(a) > 0 \\quad (17.2)",
+   "symbol_and_unit_ledger": "S, A: state and action sets; P[s'|s,a], P[r|s,a]: transition and reward distributions; gamma in [0,1): discount factor pricing future rewards; V_pi(s): expected discounted return from s under pi; Q_pi(s,a): return from taking a once and following pi thereafter; Theorem 17.6 (policy improvement) is the engine behind the iff in 17.7.",
+   "assumptions": "Finite MDP for the clean existence statements (a deterministic optimal stationary policy exists); Markov property: transitions and rewards depend only on the current state and action; infinite-horizon discounted return is the objective unless the finite-horizon variant is stated.",
+   "breakdown_regime": "Breaks under partial observability (the state the agent sees is not Markov), under non-stationarity of P and r, and when gamma is chosen for convenience while the real objective is finite-horizon or average reward, since the optimal policies genuinely differ across those criteria.",
+   "domain": "reinforcement learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sequential in-game and in-season decisions in the engine (when to update a rating, when to act on a signal) are MDP-shaped: Bellman's condition says a standing policy is improvable exactly where some action's Q exceeds the policy's current action, which localizes every policy audit to specific states instead of global doubt.",
+    "source_operator": "policy improvement via one-step lookahead on the state-action value function",
+    "telemetry": "per-state advantage of the best alternative action over the standing policy, logged for policy reviews"
+   }
+  },
+  {
+   "primitive_id": "mohri-q-learning",
+   "name": "Q-learning: stochastic approximation of the Bellman optimality equation, with almost-sure convergence",
+   "verbatim_quote": "The algorithm can be viewed as a stochastic formulation of the value iteration algorithm presented in the previous section.",
+   "page": "Chapter 17, Section 17.5.3, equation (17.23) and Theorem 17.18; extracted text lines 20311-20390",
+   "latex": "Q(s, a) \\leftarrow (1 - \\alpha)\\, Q(s, a) + \\alpha\\left[r(s, a) + \\gamma \\max_{a' \\in A} Q(s', a')\\right] \\quad (17.23); \\qquad Q^*(s, a) = \\mathbb{E}[r(s, a)] + \\gamma \\sum_{s' \\in S} P[s' \\mid s, a]\\, V^*(s')",
+   "symbol_and_unit_ledger": "alpha (alpha_t(s,a) in the theorem): step size for the visited pair; the convergence conditions are the Robbins-Monro pair, sum_t alpha_t(s,a) = +infinity and sum_t alpha_t(s,a)^2 < +infinity, for every (s,a); s': sampled next state, replacing the unknown transition sum; the max over a' is what makes the update off-policy.",
+   "assumptions": "Finite MDP; every state-action pair must be visited infinitely often (the behavior policy, for example epsilon-greedy, must keep exploring); rewards assumed deterministic in the text's presentation of the algorithm, with the expectation form covering the stochastic case.",
+   "breakdown_regime": "Breaks with function approximation in place of the table: the combination of bootstrapping, off-policy updates, and approximation can diverge, none of which Theorem 17.18 covers; it also breaks in practice when exploration decays before all pairs are visited often enough, since the theorem's conditions are asymptotic.",
+   "domain": "reinforcement learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any bootstrapped value updater the engine experiments with inherits this exact contract: step sizes must satisfy the two Robbins-Monro sums and the visitation must never fully stop, or the convergence certificate is void and observed stability is anecdote.",
+    "source_operator": "stochastic approximation of a contraction fixed point (the Bellman optimality operator)",
+    "telemetry": "per-pair visit counts and step-size schedule audited against the two convergence sums"
+   }
+  },
+  {
+   "primitive_id": "mohri-kl-divergence",
+   "name": "Relative entropy (Kullback-Leibler divergence) and its non-negativity",
+   "verbatim_quote": "As for the entropy, the base of the logarithm is not critical in the definition of the relative entropy and we will consider the natural logarithm unless otherwise specified.",
+   "page": "Appendix E, Definition E.2 and Proposition E.3; extracted text lines 22859-22880",
+   "latex": "D(p \\| q) = \\mathbb{E}_{p}\\left[\\log \\frac{p(X)}{q(X)}\\right] = \\sum_{x \\in X} p(x) \\log \\frac{p(x)}{q(x)} \\quad (E.5); \\qquad D(p \\| q) \\ge 0 \\quad (E.6)",
+   "symbol_and_unit_ledger": "p, q: distributions on a common discrete space X; conventions 0 log 0 = 0 and a log(a/0) = +infinity for a > 0, so D(p||q) = +infinity whenever q assigns zero mass somewhere p does not; with log base 2 the value reads as extra coding bits for using q's code on p's data; entropy H(p) = -sum p log p (E.1) is the companion quantity.",
+   "assumptions": "p must be absolutely continuous with respect to q for a finite value; Proposition E.3 (Gibbs' inequality) holds with equality iff p = q; the divergence is not symmetric and not a metric, which the coding interpretation makes intuitive.",
+   "breakdown_regime": "Breaks as a discrepancy measure when support mismatch makes it infinite (common with empirical distributions on continuous spaces without smoothing), and its asymmetry means D(p||q) and D(q||p) answer different questions (mode-covering versus mode-seeking fits), a distinction the MaxEnt chapters exploit.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Distribution drift between a model's implied outcome distribution and realized outcomes should be audited in KL with the direction chosen deliberately: D(realized || model) prices the model's surprises, and the infinity convention is a feature, since assigning zero probability to a realized outcome is an infinite-cost error the engine must never make.",
+    "source_operator": "expected log-likelihood ratio, non-negative by Jensen's inequality applied to -log",
+    "telemetry": "directed KL between implied and realized outcome distributions per market, with zero-mass violations flagged separately"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "mohri-trace-01-one-ledger",
+   "think": "Read as a whole, the book is one tightening argument about a single question: when does success on a finite sample certify success on unseen draws. Chapter 2 fixes the contract in the PAC definition, where accuracy and confidence are separate currencies and sample size is the price paid for both. Chapters 3 and 4 supply two different meters for that price. Rademacher complexity measures a class by its correlation with pure noise, which makes the complexity term data dependent and estimable from the sample itself, while VC-dimension and Sauer's lemma count dichotomies, giving distribution-free bounds that are looser but need nothing from the data beyond its size. The estimation and approximation decomposition explains why neither meter suffices alone: enlarging the class buys approximation and pays estimation, and structural risk minimization is the bookkeeping device that charges each subclass its own price plus a coding penalty for its depth in the family. Chapter 5 converts the accounting into geometry, because the margin lets an infinite-VC class generalize when the bound is charged per unit of demanded confidence. Chapter 6 removes linearity without changing the ledger: kernels define the geometry implicitly, the representer theorem confines every solution to the span of the training points, and the trace of the Gram matrix replaces dimension as the quantity that pays. Chapter 7 shows the same ledger from the algorithmic side, since AdaBoost's generalization bound never mentions its round count, only margins and base-class complexity. Chapters 8 and 14 then relax the batch frame in two directions: regret replaces distribution assumptions with a hindsight comparator, and stability replaces class capacity with the algorithm's own sensitivity to one point, culminating in the result that norm regularization buys stability at rate one over lambda m. Chapters 12 and 13 close the probabilistic side, where maximum entropy turns out to be empirical risk minimization for distributions and its dual is penalized likelihood, so logistic regression is recovered rather than postulated. Chapters 9 through 11 extend the same accounting to richer outputs: multi-class problems charge against the worst rival class, ranking charges for pairwise disagreement across two marginals, and regression replaces counting with threshold counting through pseudo-dimension, yet in each case the second term of the budget remains a capacity quantity derived by the same symmetrization ideas. The appendices expose the shared engine room, since McDiarmid's inequality powers nearly every concentration step in the book and the information-theoretic quantities of Appendix E stop being tools and become the objectives themselves once the maximum entropy chapters arrive. The through line is that every guarantee in the book is a two-term budget, fit plus a complexity or sensitivity charge, and the craft lies in choosing the currency of the second term.",
+   "retrocausal_genealogy": "The genealogy runs from Valiant's PAC model through Vapnik's VC theory into the Rademacher era of Bartlett and Mendelson, and the book positions itself as the consolidation of that line: each chapter's tool is presented as the repair of the previous tool's looseness, from counting dichotomies, to noise correlation, to margins, to stability. Boosting enters as the empirical surprise (Schapire's weak-to-strong result) that margin theory was later built to explain, and MaxEnt enters from Jaynes through the computational linguistics tradition, re-derived here inside the same duality language as SVMs.",
+   "theory_of_mind": "The authors write for a reader they model as mathematically literate but tempted by two errors: trusting training error, and treating each algorithm as an isolated invention. Their pedagogy assumes the reader will accept a guarantee only when its proof mechanism is visible, so every bound is proved or sketched from a small kit (union bounds, McDiarmid, symmetrization, Fenchel duality), teaching the reader to distrust any future claim that cannot be re-expressed in that kit.",
+   "cross_layer_veto": "The layers veto each other productively. VC theory vetoes the naive reading of kernel methods (infinite dimension would be fatal) until margin and trace bounds override it; stability vetoes pure capacity accounting by certifying algorithms whose classes are huge; the surrogate chapter vetoes optimizing whatever loss is convenient by demanding calibration constants before the optimization counts as classification progress. No single layer is allowed to be the whole story."
+  },
+  {
+   "trace_id": "mohri-trace-02-engine-transfer",
+   "think": "For a sports reasoning engine, the book's value is that it prices every habit the engine already has. A projection is a hypothesis, a slate of games is a sample, and the PAC frame forces each published accuracy claim to name the sample size that bought it and the confidence it carries. The estimation and approximation split tells the engine how to read its own failures: a family that cannot express the pattern needs new structure, while a family that can express it but has not seen enough cases needs data, and confusing the two wastes a season. Margin theory converts directly into product design, because a projection's distance from the decision boundary, not its raw score, is what carries a generalization guarantee, so confidence should be reported in margin units. The ranking chapter fits power ratings exactly, since a rating is a scoring function whose error is pairwise misranking and whose AUC is a probability statement about cross-class ordering. Online learning is the honest frame for week-to-week operation, where regret against the best standing baseline separates a bad process from an unpredictable week, and the on-line to batch conversion certifies averaged trajectories of any sequential updater. Stability is the robustness doctrine: a model whose loss swings when one game is removed has no certificate regardless of its backtest, while the sigma squared r squared over lambda m formula turns regularization strength into a governed sensitivity budget. Maximum entropy disciplines the distributional layer, instructing the engine to fix only the moments it has actually measured and to let entropy decide the rest, with the dual weights serving as an audit trail of which moments are load-bearing. The reinforcement learning chapters govern the engine's own sequential choices about when to update and when to act, with Bellman's condition localizing every policy improvement to specific states. The book also disciplines evaluation mechanics directly: structural risk minimization and cross-validation are the sanctioned ways to choose among families, and both charge for the search itself, which forbids the common practice of trying forty variants and reporting the best as though it were the only one tried. The Johnson-Lindenstrauss result extends the same discipline to representation engineering, since compressing embeddings is permitted at a stated distortion for a stated number of points, and the statement expires when new points arrive. And the calibration theorem stands guard over every training objective: progress on a surrogate counts only at the rate its constants allow, so a falling log-loss is evidence about decision quality, never proof of it. What does not transfer is equally clear: games are not i.i.d. draws, schedules and rosters drift, and opponents adapt, so every bound in the book must be read as a budget discipline and an audit language rather than as a literal guarantee about next Sunday.",
+   "retrocausal_genealogy": "Each transfer has its own lineage: ratings-as-ranking descends from the bipartite ranking and AUC literature the book cites through RankBoost; regret-as-season-score descends from the expert-advice line of Littlestone, Warmuth, Freund and Schapire; stability descends from Bousquet and Elisseeff's reaction against worst-case capacity; the MaxEnt transfer descends from Jaynes's principle read through the book's Fenchel-duality proof, which is what makes the dual weights available as an audit artifact rather than a philosophical preference.",
+   "theory_of_mind": "Applied to an engine, the book models its operator as an adversary of itself: the operator's future self will be tempted to report the fit term alone, to tune thresholds on the evaluation sample, and to read asymptotic convergence as present-tense reliability. The formalism anticipates each temptation and pre-registers the charge against it (uniform bounds, margin accounting, Robbins-Monro conditions), so the theory of mind is that discipline must be structural, not motivational.",
+   "cross_layer_veto": "The transfer layer is vetoed by the theory layer at three points. The i.i.d. assumption vetoes reading any bound as a literal promise under schedule drift and opponent adaptation; the AUC analysis vetoes using ranking quality as decision quality at a fixed threshold; and the exact-learning chapter vetoes passive data collection strategies where query access exists, since the complexity gap between the two is the difference between NP-hard search and polynomial identification."
+  }
+ ],
+ "universal_lens": "The universal lens of this book is that learning is certified budgeting under uncertainty: every method is a way of spending a finite sample across two accounts, fidelity to what was observed and insurance against what was not, and the exchange rate between the accounts is a theorem, not a taste. Capacity, margin, stability, entropy, and regret are five denominations of the same currency, the price of having chosen one hypothesis, distribution, or policy over the alternatives the data could not rule out. Read through this lens, techniques from unrelated fields become commensurable: a regularizer is an insurance premium, a margin is a deductible, a moment constraint is a declared liability, and an audit is the act of checking that the premiums charged match the risks actually carried.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book supplies the research curriculum's spine: PAC and agnostic learning define what a claim of having learned means; Rademacher, VC, and pseudo-dimension give the measurement theory for model families; margin, kernel, and stability results give the construction theory; MaxEnt duality and KL geometry give the distribution theory; and regret, Bellman optimality, and Q-learning give the sequential-decision theory. Each primitive in this artifact is a teachable unit with a verbatim source anchor, a formal statement, stated assumptions, and a named breakdown regime, which is the Institute's standard for citable knowledge: nothing enters the curriculum as folklore when it can enter as a theorem with its conditions attached.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the mapping is operational. Sample-complexity accounting governs how much history a market claim requires; the estimation-approximation split governs model post-mortems; margin distributions govern how confidence is displayed on projections; kernel audits (Gram spectrum, trace, norm budget) govern similarity-based models; boosting telemetry (per-round edges, induced distributions) governs iterative refinement; regret against standing baselines governs weekly process review; leave-one-out stability certificates govern whether a model may ship; MaxEnt construction with dual-weight audits governs all outcome distributions; and Bellman-style advantage logging governs the engine's own update policies. Each mechanism lands as telemetry the engine can emit, which is the difference between citing this book and running on it."
+}

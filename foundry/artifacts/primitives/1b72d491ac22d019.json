@@ -1,0 +1,78 @@
+{
+  "book_id": "1b72d491ac22d019",
+  "source_status": "COMPLETE",
+  "title": "LAUNCH_BLOCKERS_ONLY",
+  "file_name": "LAUNCH_BLOCKERS_ONLY.md",
+  "sha256": "1b72d491ac22d019b12cf09779ea7ae9fc7e98d4b1d56b63aafb9b5935d514bf",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Scheduler liveness and settlement health define core operational resilience; billing readiness and calibration eligibility determine payment flow correctness and legal exposure. Universal Lens: Rooted in LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic readiness states from telemetry signals using conformal prediction; e.g., scheduler health maps to P(healthy|observed) = 1.0, and calibration status maps to Brier score thresholding. GSI Mapping: Rooted in LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models state transitions between operational gates and payment lifecycle stages; e.g., public picks gate toggles based on revenue ladder step, and webhook readiness gates subscription flow. GSE Mapping: Rooted in LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "scheduler_liveness",
+      "name": "Scheduler Operational Resilience",
+      "verbatim_quote": "\\| python3 -c \"print(d['schedulerLiveness']['status'], d['schedulerLiveness']['ageMinutes'])\"` | | Settlement health | `HEALTHY`, 0/1617 overdue | `...",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'status': 'dimensionless {healthy, dead}', 'ageMinutes': 'time in minutes'}",
+      "assumptions": "Scheduler uptime is deterministic within 1-min window; flapping implies transient instability.",
+      "breakdown_regime": "Scheduler failure occurs when ageMinutes > 5 or status ≠ healthy",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scheduler status maps to GSI's P(healthy|observed) = 1.0, indicating stable system state.",
+        "source_operator": "scheduler_liveness",
+        "telemetry": "Status and age from curl probe"
+      }
+    },
+    {
+      "primitive_id": "billing_flow_readiness",
+      "name": "Payment Flow Integrity",
+      "verbatim_quote": "The money path (Stripe checkout → webhook → entitlement) is wired and live-ready.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'checkoutCreatable': 'boolean', 'moneyPathReady': 'boolean', 'stripeSecretConfigured': 'boolean', 'webhookSecretConfigured': 'boolean', 'priceSlotsConfigured': 'count'}",
+      "assumptions": "All components of the payment chain are functionally connected and validated.",
+      "breakdown_regime": "Flow fails if any component returns false or missing",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Billing readiness kernel combines multiple sub-systems into a single readiness signal for subscription handling.",
+        "source_operator": "billing_flow_readiness",
+        "telemetry": "Multi-source validation from billingMoney keys"
+      }
+    },
+    {
+      "primitive_id": "calibration_eligibility",
+      "name": "Prediction Model Correctness",
+      "verbatim_quote": "d['stripeWebhookHosts']['gsePrimaryHealthy']` | | Calibration eligibility | `RED` (Brier 0.2563 > 0.22, ECE 0.0699 > 0.05) | `...",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'status': 'dimensionless {GREEN, YELLOW, RED}', 'BrierScore': 'probability error metric', 'ECE': 'expected calibration error'}",
+      "assumptions": "Model correctness is defined by Brier score < 0.22 and ECE < 0.05 thresholds.",
+      "breakdown_regime": "Red status triggers blocking of next revenue ladder step",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Calibration eligibility mirrors GSI's model confidence thresholds for predictive validity.",
+        "source_operator": "calibration_eligibility",
+        "telemetry": "Brier and ECE metrics from model evaluation"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1b72d491ac22d019_t0",
+      "think": "The core launch blockers form a logical dependency graph where scheduler liveness ensures system responsiveness, billing readiness enables monetization, and calibration eligibility validates predictive integrity. Scheduler health is a binary condition with a time-based degradation regime. Billing readiness aggregates multiple boolean flags into a composite readiness signal. Calibration eligibility introduces probabilistic thresholds that block progression through revenue steps. These primitives interact as a feedback loop: scheduler uptime enables billing checks, which inform calibration, which in turn affects revenue ladder advancement. Failure in any primitive causes cascading delays in product launch.\n\nDeep epistemic analysis for LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019, domain=other, pages_read=5/5): Operator 'Scheduler Operational Resilience' (page 1, domain other) captures: \\| python3 -c \"print(d['schedulerLiveness']['status'], d['schedulerLiveness']['ageMinutes'])\"` | | Settlement health | `HEALTHY`, 0/1617 overdue | `... Assumptions: Scheduler uptime is deterministic within 1-min window; flapping implies transient instability. Breakdown regime: Scheduler failure occurs when ageMinutes > 5 or status ≠ healthy Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scheduler status maps to GSI's P(healthy|observed) = 1.0, indicating stable system state. Operator 'Payment Flow Integrity' (page 1, domain other) captures: The money path (Stripe checkout → webhook → entitlement) is wired and live-ready. Assumptions: All components of the payment chain are functionally connected and validated. Breakdown regime: Flow fails if any component returns false or missing Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Billing readiness kernel combines multiple sub-systems into a single readiness signal for subscription handling. Operator 'Prediction Model Correctness' (page 1, domain other) captures: d['stripeWebhookHosts']['gsePrimaryHealthy']` | | Calibration eligibility | `RED` (Brier 0.2563 > 0.22, ECE 0.0699 > 0.05) | `... Assumptions: Model correctness is defined by Brier score < 0.22 and ECE < 0.05 thresholds. Breakdown regime: Red status triggers blocking of next revenue ladder step Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Calibration eligibility mirrors GSI's model confidence thresholds for predictive validity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019, domain=other, pages_read=5/5): Operator 'Scheduler Operational Resilience' (page 1, domain other) captures: \\| python3 -c \"print(d['schedulerLiveness']['status'], d['schedulerLiveness']['ageMinutes'])\"` | | Settlement health | `HEALTHY`, 0/1617 overdue | `... Assumptions: Scheduler uptime is deterministic within 1-min window; flapping implies transient instability. Breakdown regime: Scheduler failure occurs when ageMinutes > 5 or status ≠ healthy Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scheduler status maps to GSI's P(healthy|observed) = 1.0, indicating stable system state. Operator 'Payment Flow Integrity' (page 1, domain other) captures: The money path (Stripe checkout → webhook → entitlement) is wired and live-ready. Assumptions: All components of the payment chain are functionally connected and validated. Breakdown regime: Flow fails if any component returns false or missing Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Billing readiness kernel combines multiple sub-systems into a single readiness signal for subscription handling. Operator 'Prediction Model Correctness' (page 1, domain other) captures: d['stripeWebhookHosts']['gsePrimaryHealthy']` | | Calibration eligibility | `RED` (Brier 0.2563 > 0.22, ECE 0.0699 > 0.05) | `... Assumptions: Model correctness is defined by Brier score < 0.22 and ECE < 0.05 thresholds. Breakdown regime: Red status triggers blocking of next revenue ladder step Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Calibration eligibility mirrors GSI's model confidence thresholds for predictive validity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in operational reliability theory and Bayesian decision-making frameworks from systems engineering and machine learning calibration literature. Retrocausal Genealogy: Rooted in LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the automated GSE agent enforcing technical readiness and the human owner deciding legal exposure and revenue progression. Theory of Mind & Decision Maker Model: Rooted in LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Scheduler failure vetoes all downstream operations; billing readiness vetoes monetization; calibration vetoes revenue ladder advancement. No two primitives can be simultaneously valid if one is invalid. Cross-Layer Veto & Anti-Leakage Check: Rooted in LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in LAUNCH_BLOCKERS_ONLY (1b72d491ac22d019), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

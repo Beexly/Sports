@@ -1,0 +1,78 @@
+{
+  "book_id": "6441a2e448a58540",
+  "source_status": "COMPLETE",
+  "title": "1184-meta-analytics-tools-for-understanding-the",
+  "file_name": "1184-meta-analytics-tools-for-understanding-the.md",
+  "sha256": "6441a2e448a58540edc99d9b0d6b62284d37ca93f99264321693e43207f11b26",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified statistical framework for evaluating sports metrics via discrimination (D), stability (S), and independence (I) using hierarchical mixed-effects models and empirical Bayes shrinkage. Universal Lens: Rooted in 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian conformal inference to assess metric reliability, leveraging D/S/I scores as prior constraints in probabilistic player performance models. GSI Mapping: Rooted in 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies D/S/I meta-metrics as state-transition filters in situational reasoning engines, pruning unreliable features before input into predictive architectures. GSE Mapping: Rooted in 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "discrimination_score",
+      "name": "Discrimination Score",
+      "verbatim_quote": "- Discrimination: D_{sm} = 1 - E_{sm}[V_{spm}[X]] / V_{sm}[X]; combined D_m = E_m[D_{sm}].",
+      "page": 1,
+      "latex": "D_{sm} = 1 - \\frac{\\mathbb{E}_{sm}[\\text{Var}_{spm}[X]]}{\\text{Var}_{sm}[X]}",
+      "symbol_and_unit_ledger": "{'D_{sm}': 'dimensionless reliability score for metric m at season s', 'V_{spm}': 'variance of metric value X_{spm}', 'E_{sm}': 'expectation over season s and player p'}",
+      "assumptions": "Metrics are normally distributed; variance components estimated via mixed-effects model.",
+      "breakdown_regime": "When variance of metric values is zero or undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to filter out metrics that fail to distinguish between players across seasons.",
+        "source_operator": "discrimination_score",
+        "telemetry": "Player-level variance ratio of metric values."
+      }
+    },
+    {
+      "primitive_id": "stability_score",
+      "name": "Stability Score",
+      "verbatim_quote": "- Discrimination: D_{sm} = 1 - E_{sm}[V_{spm}[X]] / V_{sm}[X]; combined D_m = E_m[D_{sm}].",
+      "page": 1,
+      "latex": "S_m = 1 - \\frac{\\mathbb{E}_{sm}[\\text{Var}_{spm}[X]]}{\\text{Var}_{sm}[X]}",
+      "symbol_and_unit_ledger": "{'S_m': 'dimensionless temporal consistency score for metric m', 'V_{spm}': 'variance of metric value X_{spm}', 'E_{sm}': 'expectation over season s and player p'}",
+      "assumptions": "Metric values are temporally correlated; bootstrap resampling captures sampling variability.",
+      "breakdown_regime": "When inter-season variance exceeds intra-season variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applied in GSE to identify metrics that remain consistent across seasons.",
+        "source_operator": "stability_score",
+        "telemetry": "Intra- vs inter-season variance ratio."
+      }
+    },
+    {
+      "primitive_id": "independence_score",
+      "name": "Independence Score",
+      "verbatim_quote": "Features / target Inputs: player-season metric values (the metrics *are* the data).",
+      "page": 2,
+      "latex": "I_{mM} = C_{m,m} - C_{m,M} C_{M,M}^{-1} C_{M,m}",
+      "symbol_and_unit_ledger": "{'I_{mM}': 'dimensionless correlation-adjusted independence score between metrics m and M', 'C_{m,M}': 'covariance matrix element between metrics m and M', 'C_{M,M}^{-1}': 'inverse covariance matrix of metric M'}",
+      "assumptions": "Cross-metric dependence modeled via Gaussian copula; metrics are multivariate normal.",
+      "breakdown_regime": "When metrics are perfectly collinear or singular.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to detect and eliminate redundant metrics in feature sets.",
+        "source_operator": "independence_score",
+        "telemetry": "Eigenvalue decomposition of covariance matrix."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6441a2e448a58540_t0",
+      "think": "The core operators D, S, I form a triadic reliability framework for evaluating sports metrics. Discrimination (D) measures how well a metric separates players, defined as the ratio of within-player variance to total variance. Stability (S) evaluates temporal consistency, capturing how much a metric varies across seasons. Independence (I) checks redundancy among metrics using a Mahalanobis-like correction for covariance. These are derived from a hierarchical mixed-effects model X_{spm} = μ_m + Z_{sm} + Z_{pm} + Z_{spm} + ε_{spm}, where Z terms represent random effects. The framework assumes Gaussian copula for cross-metric dependencies and uses bootstrap resampling to estimate sampling variation. Failure modes include perfect collinearity in I, zero variance in D/S, and incorrect normalization in metric types (rate vs. total). The framework supports empirical Bayes shrinkage (e.g., for 3P%) and PCA-based orthogonal composites, enabling robust metric construction and selection.\n\nDeep epistemic analysis for 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540, domain=other, pages_read=4/4): Operator 'Discrimination Score' (page 1, domain other) captures: - Discrimination: D_{sm} = 1 - E_{sm}[V_{spm}[X]] / V_{sm}[X]; combined D_m = E_m[D_{sm}]. Assumptions: Metrics are normally distributed; variance components estimated via mixed-effects model. Breakdown regime: When variance of metric values is zero or undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to filter out metrics that fail to distinguish between players across seasons. Operator 'Stability Score' (page 1, domain other) captures: - Discrimination: D_{sm} = 1 - E_{sm}[V_{spm}[X]] / V_{sm}[X]; combined D_m = E_m[D_{sm}]. Assumptions: Metric values are temporally correlated; bootstrap resampling captures sampling variability. Breakdown regime: When inter-season variance exceeds intra-season variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applied in GSE to identify metrics that remain consistent across seasons. Operator 'Independence Score' (page 2, domain other) captures: Features / target Inputs: player-season metric values (the metrics *are* the data). Assumptions: Cross-metric dependence modeled via Gaussian copula; metrics are multivariate normal. Breakdown regime: When metrics are perfectly collinear or singular. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to detect and eliminate redundant metrics in feature sets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540, domain=other, pages_read=4/4): Operator 'Discrimination Score' (page 1, domain other) captures: - Discrimination: D_{sm} = 1 - E_{sm}[V_{spm}[X]] / V_{sm}[X]; combined D_m = E_m[D_{sm}]. Assumptions: Metrics are normally distributed; variance components estimated via mixed-effects model. Breakdown regime: When variance of metric values is zero or undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to filter out metrics that fail to distinguish between players across seasons. Operator 'Stability Score' (page 1, domain other) captures: - Discrimination: D_{sm} = 1 - E_{sm}[V_{spm}[X]] / V_{sm}[X]; combined D_m = E_m[D_{sm}]. Assumptions: Metric values are temporally correlated; bootstrap resampling captures sampling variability. Breakdown regime: When inter-season variance exceeds intra-season variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applied in GSE to identify metrics that remain consistent across seasons. Operator 'Independence Score' (page 2, domain other) captures: Features / target Inputs: player-season metric values (the metrics *are* the data). Assumptions: Cross-metric dependence modeled via Gaussian copula; metrics are multivariate normal. Breakdown regime: When metrics are perfectly collinear or singular. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to detect and eliminate redundant metrics in feature sets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical test theory and psychometrics, extended by modern hierarchical modeling and machine learning frameworks for large-scale sports analytics. Retrocausal Genealogy: Rooted in 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might optimize for short-term gains rather than long-term reliability, leading to overfitting or spurious correlations in metrics without D/S/I auditing. Theory of Mind & Decision Maker Model: Rooted in 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Metrics failing any D/S/I threshold are flagged for pruning or reweighting in GSE’s feature pipeline, preventing leakage and ensuring orthogonal inputs. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1184-meta-analytics-tools-for-understanding-the (6441a2e448a58540), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

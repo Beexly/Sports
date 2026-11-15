@@ -1,0 +1,519 @@
+{
+  "book_id": "33819cf53272627c",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_RECONSTRUCTED_LATEX",
+  "source_note": "Stephen Pettigrew (Harvard University), 'Assessing the offensive productivity of NHL players using in-game win probabilities', MIT Sloan Sports Analytics Conference 2015 Research Paper Competition (9 pages). Full paper with an NHL win-probability model (score + penalty time + home-ice, Poisson PPG/SHG), Added Goal Value and AGV per Game, printed rate tables and correlation results, and playoff-series extension; extracted faithfully (not a derivative summary). The win-probability, AGV, AGVG, and series equations are shifted-font (garbled symbols) on the pages, so they are reconstructed as labeled LaTeX from unambiguous prose and flagged in assumptions; printed numerical results (rates, 17% avg gain, r=0.647, beta 0.63499, AGVG table) are preserved. Outputs are statistical win probabilities and player values from public NHL data (nhlscrapr); zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "hockey_lacks_empirical_tools",
+      "name": "Hockey lacks the empirical tools of other sports",
+      "verbatim_quote": "Hockey journalists and statisticians currently lack many of the empirical tools available in other sports",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Hockey journalists and statisticians lack many of the empirical tools available in baseball, basketball, and football, motivating a win-probability metric and a context-aware player statistic."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A sport lagging in analytical tooling is the same gap GSE fills by porting win-probability and value-added methods across sports.",
+        "source_operator": "hockey_lacks_empirical_tools",
+        "telemetry": "NHL behind other sports in analytics"
+      }
+    },
+    {
+      "primitive_id": "wp_first_with_powerplay",
+      "name": "First NHL in-game WP metric to incorporate powerplay info",
+      "verbatim_quote": "The metric is the first of its kind to incorporate powerplay information and is the only NHL in-game win probability metric currently available",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The win-probability metric is the first to incorporate powerplay information and the only NHL in-game win-probability metric available, accounting for penalty time remaining each second."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A context-aware in-game win probability is the same live game-state kernel GSE uses for momentum and decision valuation.",
+        "source_operator": "wp_first_with_powerplay",
+        "telemetry": "first NHL WP with powerplay/penalty time"
+      }
+    },
+    {
+      "primitive_id": "agv_accounts_game_context",
+      "name": "Added Goal Value improves on stats by accounting for context",
+      "verbatim_quote": "I then introduce Added Goal Value which improves upon traditional offensive player statistics by accounting for game context",
+      "page": 1,
+      "latex": "\\mathrm{AGV}_i=\\sum_{k=1}^{K_i}\\big[\\mathrm{WP}(t_k^+)-\\mathrm{WP}(t_k^-)\\big]-K_i\\cdot\\mathbb{E}_{\\text{league}}[\\Delta\\mathrm{WP}_{\\text{goal}}]",
+      "symbol_and_unit_ledger": {
+        "K_i": "goals by player i",
+        "WP(t_k^+/-)": "win prob just after/before goal k",
+        "E_league": "league-average win-prob gain per goal = 0.17"
+      },
+      "assumptions": [
+        "Added Goal Value (AGV) sums the win-probability change from each of a player's goals and subtracts the league-average gain times the player's goal count; the formula is shifted-font on the page and reconstructed from the prose (first term = total WP change from player's goals, second term = average change from all other players times K)."
+      ],
+      "breakdown_regime": "shifted-font formula reconstructed from prose; league-average gain 17% stated",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "AGV is the same win-probability-added player valuation GSE uses to credit context-dependent offensive contribution.",
+        "source_operator": "agv_accounts_game_context",
+        "telemetry": "AGV = sum goal dWP - K*0.17"
+      }
+    },
+    {
+      "primitive_id": "agv_predictive_across_seasons",
+      "name": "AGV strongly correlates across seasons (predictive)",
+      "verbatim_quote": "A player's AGV has a strong positive correlation between seasons, making it a useful statistic for predicting future offensive productivity",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A player's AGV has a strong positive correlation between seasons, making it useful for predicting future offensive productivity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A stable, predictive value-added metric is the same repeatable-skill signal GSE requires before projecting a player forward.",
+        "source_operator": "agv_predictive_across_seasons",
+        "telemetry": "AGV strong between-season correlation"
+      }
+    },
+    {
+      "primitive_id": "wp_inputs_score_penalty_home",
+      "name": "WP uses score, penalty situation, home-ice",
+      "verbatim_quote": "The statistic incorporates information about the current score, penalty situation, and home-ice advantage",
+      "page": 2,
+      "latex": "\\mathrm{WP}_{\\text{home}}(t)=f(\\Delta_t,t)+\\sum_{\\text{pp}}\\mathrm{Pois}(\\gamma^{\\text{home}} s_{\\text{pp}};1)\\,\\Delta\\mathrm{WP}-\\sum_{\\text{sh}}\\mathrm{Pois}(\\gamma^{\\text{away}} s_{\\text{sh}};1)\\,\\Delta\\mathrm{WP}",
+      "symbol_and_unit_ledger": {
+        "Delta_t": "score differential home-away at t",
+        "gamma": "goal rates per second by strength",
+        "s_pp": "seconds remaining in each non-even strength"
+      },
+      "assumptions": [
+        "Win probability incorporates current score, penalty situation, and home-ice advantage; at even strength it reduces to the empirical score-and-time win probability, with Poisson powerplay/shorthanded adjustments during penalties. The equation is shifted-font and reconstructed from the prose."
+      ],
+      "breakdown_regime": "shifted-font equation reconstructed; even-strength base + Poisson penalty adjustment",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A win probability conditioned on score, man-power, and venue is the same multi-factor game-state kernel GSE builds.",
+        "source_operator": "wp_inputs_score_penalty_home",
+        "telemetry": "WP = f(score,time) + Poisson PP/SH adj"
+      }
+    },
+    {
+      "primitive_id": "penalty_time_algorithm",
+      "name": "Algorithm computes unexpired penalty time",
+      "verbatim_quote": "I developed an algorithm that calculates the time remaining based on unexpired penalty time, goals that may erase penalty time, and nuances in the rulebook",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Because NHL play-by-play omits penalty time remaining, an algorithm computes it from unexpired penalty time, goals that erase penalty time, and rulebook nuances for unusual situations like line brawls."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reconstructing a missing game-state variable from rules is the same state-recovery step GSE performs when raw feeds lack a field.",
+        "source_operator": "penalty_time_algorithm",
+        "telemetry": "penalty time from unexpired time + goals + rules"
+      }
+    },
+    {
+      "primitive_id": "even_strength_simplifies",
+      "name": "At full strength the penalty terms vanish",
+      "verbatim_quote": "These probabilities equal zero when the teams are playing at full strength because",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The powerplay/shorthanded scoring probabilities equal zero at full strength because the penalty-time vector is all zeros, so the model simplifies to the empirical even-strength win probability (5-on-5, or 4-on-4 in regular-season overtime)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A model that collapses to a base case when context is neutral is the same graceful-degradation GSE designs into its game-state kernel.",
+        "source_operator": "even_strength_simplifies",
+        "telemetry": "full strength -> penalty terms = 0"
+      }
+    },
+    {
+      "primitive_id": "empirical_wp_2005_2013",
+      "name": "Empirical WP from all 2005/06-2012/13 regular-season games",
+      "verbatim_quote": "based on data extracted from the summaries of all regular season games from 05/06 to 12/13",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Empirical win probabilities are estimated from all regular-season game summaries 2005/06 to 2012/13 (nhlscrapr, Thomas & Ventura 2014): for each score differential at each second, the fraction of times the leading team won; score differentials of 6+ are collapsed to 5."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A large historical play-by-play corpus for empirical win probabilities is the same data substrate GSE uses to calibrate game-state value.",
+        "source_operator": "empirical_wp_2005_2013",
+        "telemetry": "all reg-season games 05/06-12/13 (nhlscrapr)"
+      }
+    },
+    {
+      "primitive_id": "home_win_54_ot_even",
+      "name": "Home teams win ~54%, even odds in overtime",
+      "verbatim_quote": "Home teams win about 54% of games, but have almost exactly even odds of winning in overtime",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "When tied, the home-team win probability is used; home teams win about 54% of games but have almost exactly even odds in overtime."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A venue effect that vanishes in overtime is the same context-dependent home advantage GSE models.",
+        "source_operator": "home_win_54_ot_even",
+        "telemetry": "home win ~54%; OT ~50%"
+      }
+    },
+    {
+      "primitive_id": "beta_prior_small_sample",
+      "name": "Weak beta prior stabilizes small-sample early-game WP",
+      "verbatim_quote": "I then applied a weak beta prior distribution to minimize the variance generated by",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A weak beta prior minimizes the variance from the tiny number of observations early in the game, particularly for large goal differentials."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A weak prior stabilizing sparse early-game estimates is the same shrinkage GSE applies to low-sample game states.",
+        "source_operator": "beta_prior_small_sample",
+        "telemetry": "weak beta prior for early-game/large-diff"
+      }
+    },
+    {
+      "primitive_id": "third_order_polynomial_smooth",
+      "name": "Smooth WP curves with a third-order time polynomial",
+      "verbatim_quote": "I regress the empirical win probabilities for each goal differential on a third order polynomial for the time remaining in the game",
+      "page": 3,
+      "latex": "\\widehat{\\mathrm{WP}}(\\Delta,t)=\\beta_0(\\Delta)+\\beta_1(\\Delta)t+\\beta_2(\\Delta)t^2+\\beta_3(\\Delta)t^3",
+      "symbol_and_unit_ledger": {
+        "t": "seconds remaining",
+        "beta_k(Delta)": "per-differential polynomial coefficients"
+      },
+      "assumptions": [
+        "Empirical win probabilities for each goal differential are regressed on a third-order polynomial of time remaining to smooth the curves; the fitted values feed the model. The polynomial form is reconstructed from the prose."
+      ],
+      "breakdown_regime": "third-order polynomial form reconstructed from prose",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Smoothing empirical win probabilities over time is the same regularization GSE applies to its game-state value surface.",
+        "source_operator": "third_order_polynomial_smooth",
+        "telemetry": "WP(Delta,t) = cubic in t per Delta"
+      }
+    },
+    {
+      "primitive_id": "poisson_ppg_5on4_17",
+      "name": "Poisson PPG model: 5-on-4 ~17% in two minutes",
+      "verbatim_quote": "When two minutes of 5-on-4 are played, the probability of a powerplay goal is about 17%",
+      "page": 3,
+      "latex": "P(\\text{PPG in }s)=1-e^{-\\gamma_{\\text{pp}} s};\\ \\gamma_{5\\text{-on-}4}=0.00172/\\text{s}\\Rightarrow P(120\\text{s})\\approx16.79\\%",
+      "symbol_and_unit_ledger": {
+        "gamma_pp": "powerplay goal rate per second",
+        "s": "penalty seconds"
+      },
+      "assumptions": [
+        "Goals are assumed Poisson; the probability of a powerplay goal during penalty time uses the Poisson PMF. Table 1: 5-on-4 PPG 0.00172/s (16.79% in 2 min), 5-on-3 0.005245/s (33.54%), 4-on-3 0.002499/s (22.22%); SHG rates 0.000239/0.000101/0.000172 per second."
+      ],
+      "breakdown_regime": "Poisson assumption stated; rates from Table 1; multiple-PPG-on-major simplification noted",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A Poisson scoring-rate model over man-power states is the same hazard kernel GSE uses for special-teams value.",
+        "source_operator": "poisson_ppg_5on4_17",
+        "telemetry": "5-on-4 PPG 0.00172/s -> 16.79%/2min"
+      }
+    },
+    {
+      "primitive_id": "pp_pct_20_sanity",
+      "name": "Poisson PPG probs match ~20% NHL powerplay rate",
+      "verbatim_quote": "These probabilities match up well with the fact that the average powerplay percentage in the NHL is approximately 20%",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The Poisson powerplay probabilities match the fact that the average NHL powerplay percentage is approximately 20%, a sanity check on the rate estimates."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Calibrating a scoring model against a known league rate is the same external-validity check GSE requires.",
+        "source_operator": "pp_pct_20_sanity",
+        "telemetry": "model PPG ~ NHL PP% ~20%"
+      }
+    },
+    {
+      "primitive_id": "ppg_censoring_bias",
+      "name": "Powerplay goals censor the data (tiny downward bias)",
+      "verbatim_quote": "Because a powerplay goal censors the data, these estimates will slightly underestimate the true goal-scoring rates during powerplays",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Because a powerplay goal ends the penalty (censoring the observation), the rate estimates slightly underestimate true powerplay scoring rates; the bias is tiny because the rates are low."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Recognizing censoring bias in event-rate estimation is the same survival-analysis caution GSE applies to special-teams rates.",
+        "source_operator": "ppg_censoring_bias",
+        "telemetry": "PPG censors penalty -> slight rate underestimate"
+      }
+    },
+    {
+      "primitive_id": "agv_intuition_high_leverage",
+      "name": "AGV intuition: production in important moments is valued",
+      "verbatim_quote": "the more a player's offensive production comes during important moments during games, the more his team values him",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The intuition behind AGV is that the more a player's offensive production comes during important moments, the more his team values him."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Valuing production by game leverage is the same context-weighted contribution GSE uses to rank offensive impact.",
+        "source_operator": "agv_intuition_high_leverage",
+        "telemetry": "AGV: high-leverage production valued more"
+      }
+    },
+    {
+      "primitive_id": "agv_discounts_foregone_upweights_pressure",
+      "name": "AGV discounts foregone conclusions, upweights pressure",
+      "verbatim_quote": "Like PWA and WPA, AGV discounts events that occur when the outcome of a game is a foregone conclusion and upweights events during high pressure moments",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Like Sagarin's Player Win Averages and baseball/football WPA, AGV discounts events when the outcome is a foregone conclusion and upweights high-pressure moments, improving on goals/points that treat all goals equally."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Leverage-weighting that discounts garbage time is the same win-probability-added principle GSE inherits from WPA.",
+        "source_operator": "agv_discounts_foregone_upweights_pressure",
+        "telemetry": "AGV ~ PWA/WPA: discount blowouts, upweight pressure"
+      }
+    },
+    {
+      "primitive_id": "gwg_statistic_flaw",
+      "name": "Game-winning-goal stat miscredits inconsequential goals",
+      "verbatim_quote": "when a team builds a 5-0 lead but wins the game 5-4, the fifth goal scorer receives the game winner even though his goal seemed inconsequential at the time he scored it",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The game-winning-goal statistic is flawed: if a team builds a 5-0 lead but wins 5-4, the fifth-goal scorer gets the GWG even though that goal was inconsequential when scored; AGV instead accounts for pressure of the moment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Exposing a naive counting stat's context blindness is the same critique GSE makes of unweighted box-score metrics.",
+        "source_operator": "gwg_statistic_flaw",
+        "telemetry": "GWG miscredits 5th goal in 5-0->5-4"
+      }
+    },
+    {
+      "primitive_id": "corsi_fenwick_weak_goal_corr",
+      "name": "Corsi/Fenwick don't correlate well with goals/points",
+      "verbatim_quote": "While Corsi and Fenwick have their own merits, they do not correlate especially well with individual goals or points statistics",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Corsi and Fenwick proxy puck possession but do not correlate especially well with individual goals or points, so for adding a goal-scorer AGV is a more useful tool."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A possession proxy weakly tied to scoring is the same metric-target mismatch GSE resolves by choosing the right valuation statistic.",
+        "source_operator": "corsi_fenwick_weak_goal_corr",
+        "telemetry": "Corsi/Fenwick weak corr w/ goals/points"
+      }
+    },
+    {
+      "primitive_id": "league_avg_goal_17",
+      "name": "League-average win-prob gain per goal is 17%",
+      "verbatim_quote": "Since the 2004/2005 lockout, the average increase in probability from a goal is 17%",
+      "page": 6,
+      "latex": "\\mathbb{E}_{\\text{league}}[\\Delta\\mathrm{WP}_{\\text{goal}}]=0.17",
+      "symbol_and_unit_ledger": {
+        "E_league": "average win-probability increase per goal since 2004/05 lockout"
+      },
+      "assumptions": [
+        "Since the 2004/2005 lockout the average win-probability increase from a goal is 17%; multiplying by a player's goal count gives the expected total gain for an average contributor, and AGV is the difference from that baseline."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A league-average baseline for value-added is the same replacement-level reference GSE uses to center player contributions.",
+        "source_operator": "league_avg_goal_17",
+        "telemetry": "avg dWP/goal = 17% (post-lockout)"
+      }
+    },
+    {
+      "primitive_id": "agv_elite_limitation",
+      "name": "AGV limitation: elite high-volume scorers look average",
+      "verbatim_quote": "Any general manager would love to have Steven Stamkos, Sidney Crosby, or Evgeni Malkin on their roster, yet all three players have an AGV that is average",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "AGV's limitation: elite scorers like Stamkos, Crosby, and Malkin have only average AGV because they score so frequently; AGV is most helpful for comparing players with similar goal-scoring rates, while Ovechkin/Kovalchuk combine high impact with high volume."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A per-event value metric that underrates high-volume elites is the same rate-vs-value distinction GSE handles by pairing impact with volume.",
+        "source_operator": "agv_elite_limitation",
+        "telemetry": "Stamkos/Crosby/Malkin avg AGV (high volume)"
+      }
+    },
+    {
+      "primitive_id": "agv_best_similar_rates",
+      "name": "AGV best for comparing similar goal-scoring rates",
+      "verbatim_quote": "Thus the AGV metric is most helpful in comparing players with similar goal scoring rates",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "AGV is most helpful for comparing players with similar goal-scoring rates; for non-elite depth scoring (19-21 non-empty-net goals in 2013/14) it distinguishes consequential scorers like Shea Weber and Alexander Semin from Mats Zuccarello and Vladimir Tarasenko."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Using a leverage metric to separate similar-volume players is the same depth-player valuation GSE performs.",
+        "source_operator": "agv_best_similar_rates",
+        "telemetry": "AGV best at similar rates; Weber/Semin > Zuccarello/Tarasenko"
+      }
+    },
+    {
+      "primitive_id": "agv_between_year_corr_0647",
+      "name": "AGV between-season correlation r=0.647",
+      "verbatim_quote": "A player's AGV also tends to be strongly correlated",
+      "page": 7,
+      "latex": "r_{\\text{AGV},t\\to t+1}=0.647;\\quad \\mathrm{AGV}_{t+1}=\\beta\\,\\mathrm{AGV}_t+\\epsilon,\\ \\beta=0.63499\\ (\\mathrm{se}=0.01145)",
+      "symbol_and_unit_ledger": {
+        "r": "between-season AGV correlation",
+        "beta": "regression slope ~1-to-1"
+      },
+      "assumptions": [
+        "AGV is strongly correlated across seasons (r=0.647); regressing next-season on current-season AGV gives a near 1-to-1 line (beta 0.63499, se 0.01145), so high-AGV players tend to stay high-AGV. The correlation value is garbled on the page and taken from the printed '.647'."
+      ],
+      "breakdown_regime": "r=0.647 printed as '= .647' (garbled symbol); beta/se printed",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A year-over-year stability coefficient is the same repeatability evidence GSE uses to trust a projection metric.",
+        "source_operator": "agv_between_year_corr_0647",
+        "telemetry": "AGV r=0.647; beta 0.63499 (se 0.01145)"
+      }
+    },
+    {
+      "primitive_id": "agvg_per_game",
+      "name": "AGV per Game: average win-prob boost per game",
+      "verbatim_quote": "Dividing by the number of games played allows us to interpret the result as the average boost in win probability a team receives each game from a player's goals",
+      "page": 8,
+      "latex": "\\mathrm{AGVG}_i=\\frac{\\mathrm{AGV}_i}{G_i}",
+      "symbol_and_unit_ledger": {
+        "G_i": "games played by player i"
+      },
+      "assumptions": [
+        "Added Goal Value per Game divides AGV by games played, giving the average win-probability boost a team receives each game from a player's goals; Table 2 (2013/14): Ovechkin 13.68, Stamkos 13.03, Skinner 10.28, Perry 10.09; median forward AGVG 2.33."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Normalizing value-added by games is the same per-game impact rate GSE uses to compare players across availability.",
+        "source_operator": "agvg_per_game",
+        "telemetry": "AGVG = AGV/games; Ovechkin 13.68, median 2.33"
+      }
+    },
+    {
+      "primitive_id": "ovechkin_14pct_composite",
+      "name": "Ovechkin's ~14% per-game boost combines volume and impact",
+      "verbatim_quote": "Alex Ovechkin, for example, increased Washington's chance of winning by about 14% based on the composite effect of the number of goals he scored and the average contribution his goals had on their win probability",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Ovechkin increased Washington's win chance by about 14% per game via the composite of his goal volume and his goals' average win-probability contribution; Stamkos ranks second despite missing half the season because his 25 goals had large impact."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A per-game boost combining volume and leverage is the same composite impact GSE uses to rank offensive value.",
+        "source_operator": "ovechkin_14pct_composite",
+        "telemetry": "Ovechkin ~14%/game (volume x impact)"
+      }
+    },
+    {
+      "primitive_id": "playoff_series_knots",
+      "name": "Playoff-series WP chains in-game probs at game knots",
+      "verbatim_quote": "This formula ensures that the in-game probabilities for each game match up at each of the \"knots\" between each game",
+      "page": 4,
+      "latex": "P(\\text{series})=\\prod_{g}P(\\text{win series}\\mid\\text{results}_{<g},\\ \\text{home/away remaining})",
+      "symbol_and_unit_ledger": {
+        "knots": "boundaries between games where in-game and series probs align"
+      },
+      "assumptions": [
+        "Series win probability is estimated from in-game win probabilities using conditional probabilities from every best-of-7 series since the 12-team expansion, ensuring in-game probabilities match at the knots between games; the 2014 WCF Kings swung from 14% to 95%/92% and back to 12%."
+      ],
+      "breakdown_regime": "series formula shifted-font; conditional-chain form reconstructed from prose",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Chaining game-level probabilities into a series probability is the same multi-game aggregation GSE uses for playoff advancement.",
+        "source_operator": "playoff_series_knots",
+        "telemetry": "series WP = conditional chain over best-of-7 knots"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "nhlagv2015_trace",
+      "think": "The retrocausal genealogy of this paper is the analytical gap in hockey relative to other sports. Stephen Pettigrew of Harvard observes that hockey journalists and statisticians lack many of the empirical tools available in baseball, basketball, and football, and he introduces two tools: an in-game win-probability metric for the NHL and Added Goal Value, a context-aware offensive statistic. The win-probability lineage runs through Hal Stern's 1994 Brownian-motion model of sports scores and the win-expectancy tables of FanGraphs and Advanced Football Analytics, while the player-valuation lineage runs through Jeff Sagarin's Player Win Averages and the Win Probability Added metrics of baseball and football. The data lineage is the nhlscrapr package of Thomas and Ventura, compiling the NHL Real Time Scoring System. The win-probability model incorporates the current score, the penalty situation, and home-ice advantage, and is the first hockey metric to account for penalty time remaining at each second. Because the NHL play-by-play omits penalty time, an algorithm reconstructs it from unexpired penalty time, goals that erase penalty time, and rulebook nuances for situations like line brawls. At even strength the penalty terms vanish and the model reduces to an empirical win probability by score differential and time, estimated from all regular-season games from 2005/06 to 2012/13, with a weak beta prior to stabilize the tiny early-game samples and a third-order polynomial in time to smooth each differential's curve. Home teams win about 54 percent of games but have even odds in overtime. During penalties, goals are assumed Poisson, with rates per second estimated from time played and powerplay and shorthanded goals; two minutes of 5-on-4 gives about a 17 percent powerplay-goal probability, consistent with the roughly 20 percent NHL powerplay rate, and the censoring of a powerplay goal induces only a tiny downward bias. The recursive theory of mind is valuing a goal by the leverage of the moment it occurs rather than by its mere count. Added Goal Value sums the win-probability change from each of a player's goals and subtracts the league-average gain of 17 percent times the player's goal count, so it discounts goals in foregone-conclusion games and upweights high-pressure goals, exactly as Player Win Averages and WPA do. This improves on goals and points, which treat all goals equally, and on the game-winning-goal statistic, which can credit the fifth goal of a 5-0 lead that becomes a 5-4 win even though it was inconsequential when scored. AGV complements Corsi and Fenwick, which proxy possession but correlate poorly with individual scoring. Cross-layer veto adjudication is the metric's validation and its honest limitation. AGV is strongly correlated across seasons, r equals 0.647, with a near one-to-one regression slope of 0.63499 and standard error 0.01145, so it is predictive of future offensive productivity. But elite high-volume scorers such as Stamkos, Crosby, and Malkin have only average AGV, because scoring once every two games at average leverage still accumulates value; AGV is therefore most helpful for comparing players with similar goal-scoring rates, and for non-elite depth it separates consequential scorers like Shea Weber and Alexander Semin from Mats Zuccarello and Vladimir Tarasenko. Added Goal Value per Game divides by games played, yielding Ovechkin's roughly 14 percent per-game boost from the composite of volume and impact, against a median forward AGVG of 2.33. The win-probability metric also chains into playoff-series probabilities at the knots between games, illustrated by the 2014 Kings' swing from 14 percent to 95 and back to 12. The implementation invariants map directly onto GSE. The score-plus-manpower-plus-venue win probability is GSE's multi-factor game-state kernel; the Poisson special-teams scoring hazard is GSE's powerplay value model; the weak beta prior and cubic smoothing are GSE's regularization of sparse game states; AGV is GSE's win-probability-added player valuation; the league-average baseline is GSE's replacement-level centering; and the rate-versus-value limitation is GSE's reason to pair leverage with volume. The outputs are statistical win probabilities and player values from public NHL data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The corpus is all regular-season games 2005/06 to 2012/13 via nhlscrapr, with score differentials of six or more collapsed to five; the Poisson rates are 5-on-4 PPG 0.00172 per second, 5-on-3 0.005245, 4-on-3 0.002499, with corresponding shorthanded rates; the league-average win-probability gain per goal is 17 percent; the between-season AGV correlation is 0.647 with slope 0.63499; and the 2013/14 AGVG leaders are Ovechkin 13.68 and Stamkos 13.03 against a median of 2.33. The win-probability, AGV, and series equations are shifted-font on the pages, so they are reconstructed as labeled LaTeX from the unambiguous prose and flagged in the assumptions, with the printed numerical results preserved. The invariant for GSE is to carry the context-aware win-probability kernel and the leverage-weighted player valuation, while recording that AGV underrates high-volume elites and that the exact formula symbols live in the author's rendering. The author's proposed extensions, a shootout statistic treating attempts like at-bats, a goalie Average Goal Value, and shift-level win-probability changes beyond goals, are the same roadmap GSE follows to broaden a value-added metric from discrete events to continuous on-ice impact over time.",
+      "retrocausal_genealogy": "The paper originates in hockey's analytical gap vs baseball/basketball/football. Pettigrew (Harvard) introduces an NHL in-game win-probability metric and Added Goal Value (AGV). Lineage: Stern 1994 Brownian-motion score model, FanGraphs/Advanced Football Analytics win expectancy, Sagarin Player Win Averages, baseball/football WPA; data via nhlscrapr (Thomas & Ventura 2014, NHL RTSS). First NHL WP metric to use penalty time remaining each second in the league.",
+      "theory_of_mind": "A goal is valued by its moment's leverage, not its count. WP = empirical f(score diff, time) at even strength (weak beta prior, cubic smoothing; home ~54%, OT even) plus Poisson powerplay/shorthanded adjustments (5-on-4 PPG 0.00172/s -> ~17%/2min, matches ~20% NHL PP%). AGV_i = sum_k dWP(goal k) - K_i*0.17 (league avg gain per goal). Discounts foregone conclusions, upweights pressure; improves on goals/points and the flawed GWG stat; complements Corsi/Fenwick (weak goal correlation).",
+      "cross_layer_veto": "AGV between-season r=0.647, near 1-to-1 slope 0.63499 (se 0.01145) -> predictive. Limitation: elite high-volume scorers (Stamkos/Crosby/Malkin) have average AGV; best for comparing similar goal rates; separates depth scorers (Weber/Semin > Zuccarello/Tarasenko). AGVG=AGV/games: Ovechkin 13.68 (~14%/game), Stamkos 13.03, median forward 2.33. Series WP chains in-game probs at best-of-7 knots (2014 Kings 14%->95%->12%). Equations shifted-font, reconstructed as labeled LaTeX, flagged; zero sportsbook lines."
+    }
+  ],
+  "universal_lens": "NHL offensive productivity is measured by Added Goal Value, the sum of win-probability changes from a player's goals minus a league-average baseline, where win probability itself models score, penalty time, and home-ice via an empirical even-strength surface plus Poisson special-teams scoring, yielding a context-aware, season-stable player valuation analogous to WPA.",
+  "gsi_mapping": "GSI treats WP_home(t)=f(Delta,t)+Poisson PP/SH adjustments (even-strength base from 2005/06-2012/13 games, weak beta prior, cubic smoothing; home ~54%, OT even; 5-on-4 PPG 0.00172/s ~17%/2min); AGV_i=sum_k dWP - K_i*0.17, AGVG=AGV/games; between-season r=0.647, slope 0.63499 (se 0.01145); 2013/14 AGVG Ovechkin 13.68/Stamkos 13.03, median 2.33; series WP chains at best-of-7 knots; data nhlscrapr (Thomas & Ventura).",
+  "gse_mapping": "GSE lifts the multi-factor game-state win-probability kernel (score+manpower+venue), the Poisson special-teams hazard, the sparse-state regularization, the leverage-weighted AGV player valuation with league-average centering, and the rate-vs-volume caution; all outputs are statistical win probabilities and player values, never sportsbook lines."
+}

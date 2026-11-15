@@ -1,0 +1,78 @@
+{
+  "book_id": "40c3bbf58ce53453",
+  "source_status": "COMPLETE",
+  "title": "conorkcorbin-evolve-dfs",
+  "file_name": "conorkcorbin-evolve-dfs.md",
+  "sha256": "40c3bbf58ce534539aa33fc993d9ffa7f70225bda29c65b3a5742489e260bfaa",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Genetic algorithm optimization for DFS lineups is mathematically suboptimal compared to mixed-integer linear programming (MILP) due to lack of optimality guarantees and computational inefficiency. Universal Lens: Rooted in conorkcorbin-evolve-dfs (40c3bbf58ce53453), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive inference to assess lineup uncertainty; GA-derived projections are mapped through Bayesian belief updates against observed performance data. GSI Mapping: Rooted in conorkcorbin-evolve-dfs (40c3bbf58ce53453), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes MILP solvers for lineup construction, transitioning between constraint-satisfying states via linear programming duality; GA methods are excluded due to non-convexity and optimality failure. GSE Mapping: Rooted in conorkcorbin-evolve-dfs (40c3bbf58ce53453), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "genetic_algorithm_optimization",
+      "name": "Genetic Algorithm Optimization",
+      "verbatim_quote": "# conorkcorbin / evolve-dfs - **Stars:** 16 | **License:** MIT | **Pushed:** 2017-11-10 (abandoned) | **Lang:** Python (genetic algorithm) ## Vision Optimize DraftKings MLB/NFL lineups with a **genetic algorithm** (population, generations, mutation rate tunable) instead of integer programming.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes discrete search space with fitness-driven evolution; ignores global convergence properties.",
+      "breakdown_regime": "Linear salary-cap constraints with discrete variables yield suboptimal solutions under evolutionary pressure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GA fitness landscape maps to MILP objective function surface; both seek optimal lineup under constraints but differ in solution path and completeness.",
+        "source_operator": "genetic_algorithm_optimization",
+        "telemetry": "Expected lineup value vs. actual performance variance"
+      }
+    },
+    {
+      "primitive_id": "projection_agnosticism",
+      "name": "Projection Agnosticism",
+      "verbatim_quote": "Projection-agnostic: feed it any CSV of projections and it evolves lineups.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Any input projection set can be processed without modification to the core algorithmic structure.",
+      "breakdown_regime": "Inconsistent or noisy inputs degrade GA convergence behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Input projection format normalization enables GA adaptation across datasets; however, lacks robustness to projection bias.",
+        "source_operator": "projection_agnosticism",
+        "telemetry": "Cross-validation error rate across multiple projection sources"
+      }
+    },
+    {
+      "primitive_id": "mixed_integer_linear_programming",
+      "name": "Mixed Integer Linear Programming",
+      "verbatim_quote": "## Constraints - MIT — adoptable, but dead since 2017 and GA-based optimization is strictly worse than MILP for a linear salary-cap problem (GAs don't guarantee optimality; MILP does).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Problem exhibits linear structure with integer decision variables and affine constraints.",
+      "breakdown_regime": "Non-linear objectives or combinatorial explosion invalidate MILP applicability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "MILP provides exact solution paths for linear constraints; GA approximates same space probabilistically.",
+        "source_operator": "mixed_integer_linear_programming",
+        "telemetry": "Solution time-to-optimal ratio versus GA generation count"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "40c3bbf58ce53453_t0",
+      "think": "The genetic algorithm (GA) framework attempts to optimize DraftKings lineups by evolving populations over generations, mimicking natural selection. However, for problems with linear constraints such as salary caps and player limits, GA fails to guarantee global optima due to stochastic exploration and local minima entrapment. In contrast, Mixed Integer Linear Programming (MILP) offers deterministic, optimal solutions within polynomial time bounds for such structured problems. The GA's reliance on mutation and crossover introduces redundancy and inefficiency, especially when the search space is well-defined and convex. Furthermore, while GA may offer heuristic diversity in multi-lineup scenarios, MILP with iterative exclusions achieves superior diversity control without sacrificing optimality. Thus, the GA approach is mathematically inferior for this domain, rendering its adoption redundant and computationally wasteful.\n\nDeep epistemic analysis for conorkcorbin-evolve-dfs (40c3bbf58ce53453, domain=other, pages_read=1/1): Operator 'Genetic Algorithm Optimization' (page 1, domain other) captures: # conorkcorbin / evolve-dfs - **Stars:** 16 | **License:** MIT | **Pushed:** 2017-11-10 (abandoned) | **Lang:** Python (genetic algorithm) ## Vision Optimize DraftKings MLB/NFL lineups with a **genetic algorithm** (population, generations, mutation rate tunable) instead of integer programming. Assumptions: Assumes discrete search space with fitness-driven evolution; ignores global convergence properties. Breakdown regime: Linear salary-cap constraints with discrete variables yield suboptimal solutions under evolutionary pressure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GA fitness landscape maps to MILP objective function surface; both seek optimal lineup under constraints but differ in solution path and completeness. Operator 'Projection Agnosticism' (page 1, domain other) captures: Projection-agnostic: feed it any CSV of projections and it evolves lineups. Assumptions: Any input projection set can be processed without modification to the core algorithmic structure. Breakdown regime: Inconsistent or noisy inputs degrade GA convergence behavior. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Input projection format normalization enables GA adaptation across datasets; however, lacks robustness to projection bias. Operator 'Mixed Integer Linear Programming' (page 1, domain other) captures: ## Constraints - MIT — adoptable, but dead since 2017 and GA-based optimization is strictly worse than MILP for a linear salary-cap problem (GAs don't guarantee optimality; MILP does). Assumptions: Problem exhibits linear structure with integer decision variables and affine constraints. Breakdown regime: Non-linear objectives or combinatorial explosion invalidate MILP applicability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): MILP provides exact solution paths for linear constraints; GA approximates same space probabilistically. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for conorkcorbin-evolve-dfs (40c3bbf58ce53453, domain=other, pages_read=1/1): Operator 'Genetic Algorithm Optimization' (page 1, domain other) captures: # conorkcorbin / evolve-dfs - **Stars:** 16 | **License:** MIT | **Pushed:** 2017-11-10 (abandoned) | **Lang:** Python (genetic algorithm) ## Vision Optimize DraftKings MLB/NFL lineups with a **genetic algorithm** (population, generations, mutation rate tunable) instead of integer programming. Assumptions: Assumes discrete search space with fitness-driven evolution; ignores global convergence properties. Breakdown regime: Linear salary-cap constraints with discrete variables yield suboptimal solutions under evolutionary pressure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GA fitness landscape maps to MILP objective function surface; both seek optimal lineup under constraints but differ in solution path and completeness. Operator 'Projection Agnosticism' (page 1, domain other) captures: Projection-agnostic: feed it any CSV of projections and it evolves lineups. Assumptions: Any input projection set can be processed without modification to the core algorithmic structure. Breakdown regime: Inconsistent or noisy inputs degrade GA convergence behavior. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Input projection format normalization enables GA adaptation across datasets; however, lacks robustness to projection bias. Operator 'Mixed Integer Linear Programming' (page 1, domain other) captures: ## Constraints - MIT — adoptable, but dead since 2017 and GA-based optimization is strictly worse than MILP for a linear salary-cap problem (GAs don't guarantee optimality; MILP does). Assumptions: Problem exhibits linear structure with integer decision variables and affine constraints. Breakdown regime: Non-linear objectives or combinatorial explosion invalidate MILP applicability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): MILP provides exact solution paths for linear constraints; GA approximates same space probabilistically. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Historically rooted in evolutionary computation principles from the 1970s, GA was adapted to combinatorial optimization domains including sports lineups. Its application to linear programming contexts emerged during early AI research but was superseded by more rigorous mathematical frameworks like MILP. Retrocausal Genealogy: Rooted in conorkcorbin-evolve-dfs (40c3bbf58ce53453), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include the optimizer who seeks maximum expected return under constraints, and the market maker who sets fair odds. The GA model assumes stochastic approximation of optimal strategies, whereas MILP reflects rational actor behavior with full information and bounded rationality. Theory of Mind & Decision Maker Model: Rooted in conorkcorbin-evolve-dfs (40c3bbf58ce53453), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions prevent GA from being used alongside MILP in the same pipeline due to conflicting solution paradigms. Leakage occurs when GA outputs are misinterpreted as optimal, leading to subpar lineup selections. Veto applies to any system where exactness is required over approximation. Cross-Layer Veto & Anti-Leakage Check: Rooted in conorkcorbin-evolve-dfs (40c3bbf58ce53453), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

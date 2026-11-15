@@ -104,9 +104,10 @@ def build_armed_context_and_reasoning_trace(
     game_id: str = "2026_09_JAX_BAL",
     as_of_utc: str = "2026-11-05T18:00:00Z",
     persist: bool = False,
+    kickoff_utc: str | None = None,
 ) -> dict[str, Any]:
     """Build a point-in-time ContextPacket and execute the 26-layer ReasoningTrace workflow."""
-    pkt = build_context_packet(game_id=game_id, as_of_utc=as_of_utc, persist=persist)
+    pkt = build_context_packet(game_id=game_id, as_of_utc=as_of_utc, persist=persist, kickoff_utc=kickoff_utc)
     trace = execute_reasoning_workflow(pkt, persist=persist)
     return {"context_packet": pkt, "reasoning_trace": trace}
 
@@ -480,6 +481,108 @@ WEEK9_MATCHUP_ENVIRONMENT_REGISTRY: dict[tuple[str, str], dict[str, Any]] = {
 }
 
 
+# Verified Week 10 game environments (weather + venue metadata only). Posted
+# lines intentionally stay on the standard Week 10 fallback: no sportsbook odds
+# are introduced as model inputs; market comparison happens at Stage 5.
+WEEK10_MATCHUP_WEATHER_REGISTRY: dict[tuple[str, str], dict[str, Any]] = {
+    ("HOU", "CLE"): {
+        # Venue: ESPN 2026 Week 10 scoreboard (data/engine/espn_2026_week10_scoreboard.json,
+        # event 401873056, venue.fullName / indoor=false).
+        "stadium": "Huntington Bank Field",
+        "is_indoor": False,
+        # Forecast: NFLWeather.com Texans At Browns page, retrieved 2026-11-13
+        # (kickoff Sun Nov 15 2026 1:00 PM ET): 47F, feels like 42F, wind 9 mph,
+        # gusts 15 mph (Q4 14 mph), precip prob 8%, mostly cloudy.
+        "wind_mph": 9.0,
+        "temp_f": 47.0,
+        "precip_prob": 0.08,
+        "feels_like_f": 42.0,
+        "wind_gust_mph": 15.0,
+        "weather_note": (
+            "Huntington Bank Field outdoor (9 mph wind, gusts 15 mph, 47F feels like 42F, "
+            "mostly cloudy, 8% precip) — NFLWeather.com forecast retrieved 2026-11-13 "
+            "for Sun Nov 15 2026 1:00 PM ET kickoff"
+        ),
+        "weather_source": (
+            "https://www.nflweather.com/en/game/2026/week-10/texans-at-browns "
+            "(retrieved 2026-11-13)"
+        ),
+    },
+    ("SF", "DAL"): {
+        # Venue: AT&T Stadium (Arlington, TX), Dallas home — retractable roof,
+        # CLOSED for this game. ESPN 2026 Week 10 scoreboard
+        # (data/engine/espn_2026_week10_scoreboard.json, venue.indoor=true).
+        # Roof-closed evidence (retrieved 2026-11-13):
+        #   - DK Network Week 10 weather forecast (published 2026-11-13):
+        #     "AT&T Stadium (Retractable roof, expected closed) ... With the
+        #     roof expected to be closed, none of it should reach the field."
+        #     https://dknetwork.draftkings.com/2026/11/13/nfl-week-10-weather-forecast/
+        #   - FantasyInfoCentral Cowboys weather page: "Retractable Dome
+        #     (likely closed) No weather impact"; 2026 Cowboys home games in
+        #     bad weather all sealed "Dome closed (no weather impact)".
+        #     https://www.fantasyinfocentral.com/nfl/weather/cowboys
+        # Game-time temperature: climate-controlled ~70F indoors. Sourced from
+        # observed roof-closed conditions at the SAME venue (2026 World Cup
+        # semifinal, Soccer America / Mike Woitalla): "players and fans enjoyed
+        # a comfortable air-conditioned 70 or so degrees inside what's usually
+        # known as AT&T Stadium."
+        # https://www.socceramerica.com/the-world-cup-sparkled-magnificently-in-dallas-especially-for-spain/
+        # (retrieved 2026-11-13). The outdoor forecast (49F, 10 mph E wind,
+        # gusts 20, 62% rain — NFLWeather.com / DK Network 2026-11-13) is
+        # immaterial inside the closed roof: wind 0, precip 0.
+        "stadium": "AT&T Stadium",
+        "is_indoor": True,
+        "roof_closed": True,
+        "wind_mph": 0.0,
+        "temp_f": 70.0,
+        "precip_prob": 0.0,
+        "weather_note": (
+            "AT&T Stadium roof CLOSED — indoor climate-controlled (~70F, 0 mph wind, "
+            "0% precip); outdoor 49F / 10 mph / 62% rain forecast does not reach the "
+            "field (DK Network + FantasyInfoCentral 2026-11-13; ~70F indoor observed "
+            "at the same venue roof-closed, Soccer America 2026 World Cup)"
+        ),
+        "weather_source": (
+            "https://dknetwork.draftkings.com/2026/11/13/nfl-week-10-weather-forecast/ ; "
+            "https://www.fantasyinfocentral.com/nfl/weather/cowboys ; "
+            "https://www.socceramerica.com/the-world-cup-sparkled-magnificently-in-dallas-especially-for-spain/ "
+            "(all retrieved 2026-11-13)"
+        ),
+    },
+}
+
+
+def _lookup_espn_scoreboard_kickoff(away: str, home: str, week: int) -> str | None:
+    """Resolve the real kickoff from the repo's ESPN week scoreboard (no fabrication).
+
+    Prevents the Week 9 historical pin from leaking into Week 10+ context packets
+    when the caller (e.g. the bare CLI) does not thread a Neon kickoff through.
+    Returns None when the scoreboard or matchup is absent.
+    """
+    sb_path = REPO_ROOT / "data" / "engine" / f"espn_2026_week{int(week)}_scoreboard.json"
+    if not sb_path.is_file():
+        return None
+    try:
+        sb = json.loads(sb_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    for ev in sb.get("events", []):
+        comp = (ev.get("competitions") or [{}])[0]
+        away_ab, home_ab = "", ""
+        for c in comp.get("competitors") or []:
+            ab = str((c.get("team") or {}).get("abbreviation") or "").upper()
+            if ab == "LA":
+                ab = "LAR"
+            if c.get("homeAway") == "away":
+                away_ab = ab
+            elif c.get("homeAway") == "home":
+                home_ab = ab
+        if (away_ab, home_ab) == (away.strip().upper(), home.strip().upper()):
+            kickoff = str(ev.get("date") or "")
+            return kickoff or None
+    return None
+
+
 def _get_espn_week9_odds_lookup() -> dict[tuple[str, str], dict[str, Any]]:
     cache = globals().get("_ESPN_W9_ODDS_CACHE")
     if isinstance(cache, dict):
@@ -555,6 +658,10 @@ def _get_matchup_env(away: str, home: str, week: int = 9) -> dict[str, Any]:
             "home_qb_tier": "QB1",
             "weather_note": f"{away_u} @ {home_u} Week {week} standard outdoor conditions (7.5 mph wind, 58F)",
         }
+
+    # Verified Week 10 weather/venue overrides (no odds fields touched).
+    if week >= 10 and key in WEEK10_MATCHUP_WEATHER_REGISTRY:
+        env.update(WEEK10_MATCHUP_WEATHER_REGISTRY[key])
 
     # Enrich with real open/close lines & indoor status from _espn_week9_scoreboard.json
     espn_map = _get_espn_week9_odds_lookup()
@@ -1035,6 +1142,19 @@ def _ensure_dynamic_jev_spine(
 
     away_qb1 = str(stage0_allowlist["confirmed_qb1"].get(away, "")).strip()
     home_qb1 = str(stage0_allowlist["confirmed_qb1"].get(home, "")).strip()
+    # WP-8 doctrine (2026-11-13): Week 10+ publishable sims REQUIRE a real
+    # live-JEV spine (jevkit.client.ask on every snap) built by
+    # scripts/ops/build_week10_jev_spines.py. Never RNG-synthesize for these
+    # weeks; fail closed when the spine is missing. Week <= 9 keeps the legacy
+    # replay path (historical, non-publishable).
+    if int(week) >= 10:
+        if not dyn_spine_path.is_file():
+            raise RuntimeError(
+                f"STAGE2_GATE_FAIL: no live-JEV spine for {away}@{home} week{week} at {dyn_spine_rel}; "
+                "run scripts/ops/build_week10_jev_spines.py first (doctrine: live JEV on every snap)"
+            )
+        raw = json.loads(dyn_spine_path.read_text(encoding="utf-8"))
+        return raw, dyn_spine_rel
     tend = stage1a_receipt.get("coaching_tendencies_resolved") or {}
     aw_tend = tend.get(away) or {}
     hm_tend = tend.get(home) or {}
@@ -2011,6 +2131,7 @@ def compile_stage1_to_stage2_simulation_priors(
     merged_game_context["temp_f"] = float(env_cfg["temp_f"])
     merged_game_context["precip_prob"] = float(env_cfg["precip_prob"])
     merged_game_context["is_indoor"] = bool(env_cfg["is_indoor"])
+    merged_game_context["roof_closed"] = bool(env_cfg.get("roof_closed", False))
     merged_game_context.setdefault("qb_context", {})
     if (away_tm, home_tm) == ("JAX", "BAL"):
         merged_game_context["qb_context"]["qb_name"] = bal_starter_name
@@ -2269,6 +2390,12 @@ def compile_stage1_to_stage2_simulation_priors(
             opp_disguise_rate=float(aw_pbp_st.get("dc_man_rate", 0.28)),
             opp_blitz_rate=float(aw_pbp_st.get("dc_blitz_rate", 0.265)),
         )
+    # SG-0: the receipt must carry the Stage-0 VERIFIED starter, never the
+    # hardcoded team-default QB (which may be banned/IR, e.g. CLE Watson,
+    # SEA Darnold). resolve_qb_profile falls back to the team default when the
+    # verified name has no charted profile; pin the verified name explicitly.
+    away_qb_2x2["qb_name"] = away_starter_name
+    home_qb_2x2["qb_name"] = bal_starter_name
 
     roberts_yaida_crit = compute_critical_initialization("relu")
     vmls_rolling_tend = rolling_exp_decay_tendency(
@@ -2344,6 +2471,7 @@ def compile_stage1_to_stage2_simulation_priors(
             "wind_mph": float(env_cfg.get("wind_mph", 6.0)),
             "temp_f": float(env_cfg.get("temp_f", 62.0)),
             "is_indoor": bool(env_cfg.get("is_indoor", False)),
+            "roof_closed": bool(env_cfg.get("roof_closed", False)),
             "posted_home_spread": float(env_cfg.get("posted_home_spread", -3.0)),
             "posted_total": float(env_cfg.get("posted_total", 44.5)),
             "open_home_spread": float(env_cfg.get("open_home_spread", env_cfg.get("posted_home_spread", -3.0))),
@@ -2831,7 +2959,7 @@ def run_stage2_jev_spine_and_10k_world_simulation(
         expected_away_qb1=stage0_allowlist["confirmed_qb1"][away],
         expected_home_qb1=stage0_allowlist["confirmed_qb1"][home],
         max_age_hours=18.0,
-        reference_utc="2026-11-05T20:00:00Z",
+        reference_utc="2026-11-05T20:00:00Z" if week <= 9 else None,
         strict=False,
     )
     jev_tensor = build_jev_state_tensor(spine_game, enforce_freshness=False)
@@ -4318,6 +4446,62 @@ def run_stage5_360_conjunction_gate(
         std_v = max(min_std_req, float(st_quant["std"]))
         line_f = float(line)
 
+        # --- Prop Sniper Gate (Week 8 forensic doctrine; wired 2026-11-13) ---
+        # The exact Week 8 failure was backup micro-lines (7-8, -1.64u).
+        # Hard participation + line floors BEFORE any prop can publish:
+        #   route_share >= 0.45, snap_share >= 0.40 (snap-leak veto),
+        #   WR/TE rec-yds line >= 18.5, RB rush-yds line >= 24.5.
+        # Shares come from the Stage 1B 213-feature empirical PBP summary.
+        _213 = (stage1b_receipt.get("gse_213_athlete_evaluations") or {}).get(ath) or {}
+        _route_sh = float(_213.get("route_participation", 0.0))
+        _snap_sh = float(_213.get("snap_share", 0.0))
+        _pos = str(athlete_projs[ath]["position"]).upper()
+        _vol_rec = stat_key in ("rec_yds", "receptions", "rush_plus_rec_yds")
+        _vol_rush = stat_key in ("rush_yds", "carries")
+        sniper_vetoes: list[str] = []
+        if _pos in ("WR", "TE", "RB") and (_vol_rec or _vol_rush):
+            if _snap_sh < 0.40:
+                sniper_vetoes.append(f"snap-leak veto: snap_share {_snap_sh:.2f} < 0.40")
+            if _vol_rec and _route_sh < 0.45:
+                sniper_vetoes.append(f"route_share {_route_sh:.2f} < 0.45")
+            if _pos in ("WR", "TE") and stat_key == "rec_yds" and line_f < 18.5:
+                sniper_vetoes.append(f"WR/TE rec-yds micro-line {line_f} < 18.5")
+            if _pos == "RB" and stat_key == "rush_yds" and line_f < 24.5:
+                sniper_vetoes.append(f"RB rush-yds micro-line {line_f} < 24.5")
+        if sniper_vetoes:
+            prop_evaluations.append({
+                "athlete": ath,
+                "team": athlete_projs[ath]["team"],
+                "position": athlete_projs[ath]["position"],
+                "market": mkt,
+                "line": line_f,
+                "open_line": p.get("open_line"),
+                "post_sim_mean": mean_v,
+                "post_sim_p50": p50_v,
+                "post_sim_std": round(std_v, 4),
+                "post_sim_p25": st_quant["p25"],
+                "post_sim_p75": st_quant["p75"],
+                "model_lean": "NONE",
+                "model_prob_over": 0.0,
+                "model_prob_under": 0.0,
+                "win_prob_on_lean": 0.0,
+                "wilson_lower_90_on_lean": 0.0,
+                "edge_vs_minus_110_breakeven": 0.0,
+                "edge_vs_devig_50": 0.0,
+                "confidence_score": "0/100",
+                "playable_to_american_odds": None,
+                "market_over_american": p.get("over_american") if p.get("has_price") else None,
+                "market_under_american": p.get("under_american") if p.get("has_price") else None,
+                "has_two_sided_price": bool(p.get("has_price")),
+                "is_decoy_trap": bool((decoy_audit.get(ath) or {}).get("is_decoy_trap", False)),
+                "sniper_gate": {"route_share": _route_sh, "snap_share": _snap_sh, "vetoes": sniper_vetoes},
+                "recommended_kelly_units": 0.0,
+                "decision": "PASS_SNIPER_GATE",
+                "publishAllowed": False,
+                "gate_reason": "PASS_SNIPER_GATE: " + "; ".join(sniper_vetoes),
+            })
+            continue
+
         # Retrieve conserved 10,000-world trajectory vector from Stage 3/4 (zero Gaussian shortcut)
         cached_emp_vec = _STAGE3_4_EMPIRICAL_VECTORS_CACHE.get((away, home, ath, stat_key))
         if cached_emp_vec is not None and len(cached_emp_vec) == n_sims:
@@ -4531,6 +4715,14 @@ def run_stage5_360_conjunction_gate(
     sgp_eval["student_t_copula_df_nu"] = student_t_copula_df_nu
     sgp_eval["afml_meta_label_kelly_multiplier"] = afml_meta_label_kelly_multiplier
 
+    # Ticket-exposure caps (antigravity review item 4, wired 2026-11-13):
+    # max 1 Anchor + 1 SGP per leg, no ML+(-1.5) double-stake inside |spread|<=2.5,
+    # no sub-20.5-yard props in parlays. Fail-closed: implicated tickets refused.
+    from scripts.ops.ticket_exposure_guard import enforce_ticket_exposure
+    correlated_sgp_constructions, refused_tickets = enforce_ticket_exposure(correlated_sgp_constructions)
+    if refused_tickets:
+        sgp_eval["ticket_exposure_refusals"] = refused_tickets
+
     # 4. Load Dual-Panel Official Ledger (15,947 Replay beside 47-19-1 Official New Engine Ledger)
     ledger_audit_path = REPO_ROOT / "data" / "engine" / "replay_15947_vs_16_5_audit_2026_11_05.json"
     ledger_audit = json.loads(ledger_audit_path.read_text(encoding="utf-8")) if ledger_audit_path.is_file() else {}
@@ -4665,8 +4857,19 @@ def render_connected_master_call_sheet_markdown(
                 q = projs["kicking_points"]
                 st_lbl = "Kicking Pts"
             else:
-                q = projs["tackles_plus_assists"]
+                q = projs.get("tackles_plus_assists")
                 st_lbl = "Tackles + Ast"
+                if not isinstance(q, dict) or "mean" not in q or "p50" not in q:
+                    # IDP projection may key a different stat (sacks, INTs); fall
+                    # back to the first available projection rather than crash.
+                    fallback = next(
+                        (v for v in projs.values() if isinstance(v, dict) and "mean" in v and "p50" in v),
+                        None,
+                    )
+                    if fallback is None:
+                        continue
+                    q = fallback
+                    st_lbl = next(k for k, v in projs.items() if v is fallback)
             dyn_lines.append(
                 f"| `{tm}` | `{pos}` | **{name}** | {gp} | {st_lbl} | {q['mean']:.1f} | **{q['p50']:.1f}** |"
             )
@@ -5009,6 +5212,7 @@ def execute_connected_game_workflow(
     week: int = 9,
     n_sims: int = 10000,
     board_rel_path: str = "data/engine/tnf_jax_bal_dk_full_board_2026_11_05.json",
+    kickoff_utc: str | None = None,
 ) -> dict[str, Any]:
     """Run the entire connected Stage 0 -> Stage 1A -> Stage 1B -> Stage 2 -> Stage 3/4 -> Stage 5 pipeline."""
     away_u = away.strip().upper()
@@ -5048,8 +5252,17 @@ def execute_connected_game_workflow(
     assert_zero_roster_contamination(markdown_dossier, stage0, "markdown_dossier")
 
     armed_gid = f"2026_{week:02d}_{away_u}_{home_u}"
+    if kickoff_utc is None and week >= 10:
+        # Bare-CLI runs do not thread a Neon kickoff; resolve the real one from
+        # the repo ESPN week scoreboard so Week 10+ packets never inherit the
+        # Week 9 historical pin (temporal leakage). None if unavailable.
+        kickoff_utc = _lookup_espn_scoreboard_kickoff(away_u, home_u, week)
     armed_bundle = build_armed_context_and_reasoning_trace(
-        game_id=armed_gid, as_of_utc="2026-11-05T18:00:00Z", persist=True
+        game_id=armed_gid,
+        # Week 9 replays keep their historical pin; Week 10+ arms at run time.
+        as_of_utc="2026-11-05T18:00:00Z" if week <= 9 else datetime.now(timezone.utc).isoformat(),
+        persist=True,
+        kickoff_utc=kickoff_utc,
     )
     armed_pkt = armed_bundle["context_packet"]
     armed_trace = armed_bundle["reasoning_trace"]

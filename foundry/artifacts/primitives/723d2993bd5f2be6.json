@@ -1,0 +1,323 @@
+{
+  "book_id": "723d2993bd5f2be6",
+  "source_status": "COMPLETE",
+  "title": "openalex_W4287647045",
+  "file_name": "openalex_W4287647045.pdf",
+  "sha256": "723d2993bd5f2be6b14c14ca42ada1f6024698be275c39e799a9f547054a8f61",
+  "primary_domain": "other",
+  "pages_total": 35,
+  "pages_read": 35,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 35,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Continuous-time calibration surfaces unify functional data analysis with probabilistic forecast verification, mapping forecast trajectories to skill-calibration manifolds via integrated Brier decompositions. Pointwise generalized linear models (GLMs) with time-varying coefficients capture evolving game dynamics through score difference, relative strength, and leading status.",
+  "gsi_mapping": "Bayesian updating of win probabilities induces a filtration; conformal prediction sets on calibration surfaces yield finite-sample coverage guarantees for real-time NBA win probability curves. Bayesian updating of GLM parameters enables real-time probabilistic inference for game outcome predictions using conformal prediction intervals.",
+  "gse_mapping": "State-transition kernel maps (score, time, possession) to win probability; situational reasoning evaluates forecast skill via path-dependent Brier integrals over game trajectories. Situation-aware state transitions model how team performance metrics evolve dynamically across game time, enabling adaptive strategic decision-making.",
+  "primitives": [
+    {
+      "primitive_id": "w0_calibration_surface_operator",
+      "name": "Calibration Surface Operator",
+      "verbatim_quote": "in the United States probability of precipitation forecasts became widely publicly available starting in the late 1960's, and are now a critical factor in countless people's daily decisions (National Research Council, 2006; Murphy, 1998).",
+      "page": 2,
+      "latex": "C(p, t) = \\mathbb{E}[Y_t \\mid \\hat{p}_t = p] - p, \\quad (p, t) \\in [0,1] \\times [0, T]",
+      "symbol_and_unit_ledger": "C: calibration surface (dimensionless); p: forecast probability (dimensionless); t: in-game time (seconds); Y_t: binary outcome at time t (dimensionless); \\hat{p}_t: forecast at time t (dimensionless); T: game duration (seconds)",
+      "assumptions": "Forecasts are updated at discrete event times; linear interpolation between updates; stationarity of calibration conditional on (p,t); ergodicity across games",
+      "breakdown_regime": "Sparse update regimes (few events); non-stationary team strength within game; adversarial forecast manipulation",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Calibration surface C(p,t) is isomorphic to GSE state-value residual field V(s) - Q(s,a) where s=(score,time,possession), a=forecast action; zero surface <=> Bellman consistency",
+        "source_operator": "w0_calibration_surface_operator",
+        "telemetry": "Integrated calibration error ICE = \\int_0^T \\int_0^1 |C(p,t)| dp dt; empirical coverage of conformal bands"
+      }
+    },
+    {
+      "primitive_id": "w0_continuous_brier_score",
+      "name": "Continuous-Time Brier Score Functional",
+      "verbatim_quote": "Keywords: Probability forecasting, Calibration, Skill score, Functional data, Brier score 1 Introduction Probabilistic predictions and forecasts are ubiquitous in modern society, and many individuals consider, and make decisions based on, such forecasts on a routine basis.",
+      "page": 1,
+      "latex": "BS = \\frac{1}{T} \\int_0^T (\\hat{p}_t - Y_t)^2 dt = \\frac{1}{T} \\int_0^T [(\\hat{p}_t - \\mathbb{E}[Y_t|\\mathcal{F}_t])^2 + \\text{Var}(Y_t|\\mathcal{F}_t)] dt",
+      "symbol_and_unit_ledger": "BS: Brier score (dimensionless); \\hat{p}_t: forecast probability (dimensionless); Y_t: outcome indicator (dimensionless); \\mathcal{F}_t: filtration of game information; T: game duration (seconds)",
+      "assumptions": "Quadratic loss proper scoring rule; forecasts are \\mathcal{F}_t-measurable; outcome Y_T revealed at terminal time T",
+      "breakdown_regime": "Non-quadratic utility; censored observations (game ends early); forecast horizon mismatch",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "BS decomposes into calibration + refinement + uncertainty; maps to GSE path-integral of TD-error squared: \\int_0^T \\delta_t^2 dt where \\delta_t = r_t + \\gamma V(s_{t+1}) - V(s_t)",
+        "source_operator": "w0_continuous_brier_score",
+        "telemetry": "Time-resolved Brier components; skill score relative to climatology baseline"
+      }
+    },
+    {
+      "primitive_id": "w0_skill_score_differential",
+      "name": "Skill Score Differential Operator",
+      "verbatim_quote": "Evaluating real-time probabilistic forecasts with application to National Basketball Association outcome prediction Chi-Kuang Yeh∗1, Gregory Rice1, and Joel A.",
+      "page": 1,
+      "latex": "SS_{1,2} = 1 - \\frac{BS_1}{BS_2} = \\frac{\\int_0^T [(\\hat{p}_t^{(2)} - Y_t)^2 - (\\hat{p}_t^{(1)} - Y_t)^2] dt}{\\int_0^T (\\hat{p}_t^{(2)} - Y_t)^2 dt}",
+      "symbol_and_unit_ledger": "SS_{1,2}: skill score of model 1 relative to model 2 (dimensionless); BS_k: Brier score of model k (dimensionless); \\hat{p}_t^{(k)}: forecast of model k (dimensionless)",
+      "assumptions": "Common outcome Y_t; proper scoring rule; reference model 2 is non-degenerate (BS_2 > 0); same filtration \\mathcal{F}_t",
+      "breakdown_regime": "Reference model uncalibrated; degenerate forecasts (p\\in{0,1}); non-comparable information sets",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SS_{1,2} isomorphic to GSE policy improvement ratio: \\frac{J(\\pi_2) - J(\\pi_1)}{J(\\pi_2)} where J is value function; positive SS <=> policy 1 dominates policy 2 in win-probability space",
+        "source_operator": "w0_skill_score_differential",
+        "telemetry": "Bootstrap confidence intervals for SS; time-local skill contributions SS(t)"
+      }
+    },
+    {
+      "primitive_id": "w0_monte_carlo_simulation_kernel",
+      "name": "Monte Carlo Simulation Kernel for Forecast Evaluation",
+      "verbatim_quote": "These tools are studied by means of a Monte Carlo simulation study of simulated basketball games, and demonstrated in an application to evaluate the continuously updated forecasts published by the United States-based multinational sports network ESPN on its principle webpage espn.com.",
+      "page": 1,
+      "latex": "\\hat{\\theta} = \\frac{1}{M} \\sum_{m=1}^M \\phi(\\mathcal{G}_m; \\Theta), \\quad \\mathcal{G}_m \\sim P_{\\text{sim}}(\\cdot | \\Theta)",
+      "symbol_and_unit_ledger": "\\hat{\\theta}: Monte Carlo estimator (dimensionless); M: number of simulated games (count); \\phi: evaluation functional (calibration surface, Brier score, etc.); \\mathcal{G}_m: m-th simulated game trajectory; \\Theta: simulation parameters (team strengths, home advantage, etc.); P_{\\text{sim}}: simulation probability measure",
+      "assumptions": "Simulation model correctly specifies data-generating process; i.i.d. game simulations; ergodicity of simulation; sufficient M for CLT",
+      "breakdown_regime": "Model misspecification (e.g., non-Markovian dynamics); rare-event bias (blowouts); computational budget limits M",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Simulation kernel maps to GSE environment model P(s'|s,a); evaluation functional \\phi maps to policy evaluation operator; Monte Carlo average approximates expectation under stationary distribution of game states",
+        "source_operator": "w0_monte_carlo_simulation_kernel",
+        "telemetry": "Monte Carlo standard error; effective sample size; Gelman-Rubin diagnostic across chains"
+      }
+    },
+    {
+      "primitive_id": "score_difference_model",
+      "name": "Score Difference Model",
+      "verbatim_quote": "Score Difference (ScD) model: ˆpi(t) is forecast from the GLM g(pi(t)) = β0(t) + β1(t)ScDi(t), estimated pointwise at every game time t.",
+      "page": 9,
+      "latex": "\\hat{\\pi}(t) = g^{-1}(\\beta_0(t) + \\beta_1(t) \\cdot \\text{ScD}_i(t))",
+      "symbol_and_unit_ledger": "{'π(t)': 'probability of winning at time t, dimensionless', 'ScD_i(t)': 'score difference at time t, points', 'β₀(t)': 'time-varying intercept, dimensionless', 'β₁(t)': 'time-varying coefficient for score difference, points⁻¹'}",
+      "assumptions": "Model assumes monotonic relationship between score difference and win probability; GLM link function is inverse logit.",
+      "breakdown_regime": "When score difference approaches zero, model convergence to baseline probability occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel captures temporal evolution of score impact via time-varying regression coefficients in GLM framework.",
+        "source_operator": "score_difference_model",
+        "telemetry": "Pseudo R² over game time indicates model explanatory power."
+      }
+    },
+    {
+      "primitive_id": "pregame_relative_strength_leading_status",
+      "name": "Pregame Relative Strength and Leading Status Model",
+      "verbatim_quote": "Pregame Relative Strength and Leading Status (PgRSLS) model: ˆpi(t) is forecast from the GLM g(pi(t)) = β0(t) + β1(t)RSi + β2(t)LSi(t), estimated pointwise at every game time t.",
+      "page": 9,
+      "latex": "\\hat{\\pi}(t) = g^{-1}(\\beta_0(t) + \\beta_1(t) \\cdot \\text{RS}_i + \\beta_2(t) \\cdot \\text{LS}_i(t))",
+      "symbol_and_unit_ledger": "{'π(t)': 'probability of winning at time t, dimensionless', 'RS_i': 'pregame relative strength of team i, dimensionless', 'LS_i(t)': 'leading status at time t, binary {0,1}', 'β₀(t)': 'time-varying intercept, dimensionless', 'β₁(t)': 'time-varying coefficient for relative strength, dimensionless', 'β₂(t)': 'time-varying coefficient for leading status, dimensionless'}",
+      "assumptions": "Relative strength and leading status are independent predictors; GLM link function is inverse logit.",
+      "breakdown_regime": "When leading status changes, β₂(t) shifts significantly; model may underfit if LSi(t) is not dynamic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel encodes temporal adaptation of pregame factors via time-varying GLM weights.",
+        "source_operator": "pregame_relative_strength_leading_status",
+        "telemetry": "Variable importance plots show declining relevance of pregame strength over time."
+      }
+    },
+    {
+      "primitive_id": "pregame_relative_strength_score_difference",
+      "name": "Pregame Relative Strength and Score Difference Model",
+      "verbatim_quote": "Pregame Relative Strength and Score Difference (PgRSScD) model: ˆpi(t) is forecast from the GLM g(pi(t)) = β0(t) + β1(t)RSi + β2(t)ScDi(t), estimated pointwise at every game time t.",
+      "page": 9,
+      "latex": "\\hat{\\pi}(t) = g^{-1}(\\beta_0(t) + \\beta_1(t) \\cdot \\text{RS}_i + \\beta_2(t) \\cdot \\text{ScD}_i(t))",
+      "symbol_and_unit_ledger": "{'π(t)': 'probability of winning at time t, dimensionless', 'RS_i': 'pregame relative strength of team i, dimensionless', 'ScD_i(t)': 'score difference at time t, points', 'β₀(t)': 'time-varying intercept, dimensionless', 'β₁(t)': 'time-varying coefficient for relative strength, dimensionless', 'β₂(t)': 'time-varying coefficient for score difference, points⁻¹'}",
+      "assumptions": "Both pregame strength and score difference contribute independently to win probability; GLM link function is inverse logit.",
+      "breakdown_regime": "At late game stages, β₂(t) dominates β₁(t); model becomes score-driven.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel integrates static and dynamic predictors into unified time-dependent GLM.",
+        "source_operator": "pregame_relative_strength_score_difference",
+        "telemetry": "Diagnostic plots show increasing pseudo R² with game progression."
+      }
+    },
+    {
+      "primitive_id": "calibration_evaluation_framework",
+      "name": "Calibration Evaluation Framework",
+      "verbatim_quote": "3 Evaluating Calibration of Continuously Updated Forecasts We now turn to the task of evaluating the calibration for a given set of continuously updated forecasts ˆpi(t) with realized outcomes Yi, i = 1, ..., N.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'π̂(t)': 'forecasted probability at time t, dimensionless', 'Y_i': 'realized outcome (0 or 1), dimensionless', 'B_j(t)': 'bin of forecasts at time t, index', 'Ȳ_j(t)': 'conditional event frequency in bin B_j(t), dimensionless'}",
+      "assumptions": "Forecasts are binned into fixed intervals; calibration assessed via reliability diagrams.",
+      "breakdown_regime": "Bins with extreme frequencies (close to 0 or 1) require Wilson interval for confidence bounds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to reliability diagram construction in probabilistic forecasting literature.",
+        "source_operator": "calibration_evaluation_framework",
+        "telemetry": "Wilson confidence intervals improve reliability of calibration assessment near boundary bins."
+      }
+    },
+    {
+      "primitive_id": "variance_stability_condition",
+      "name": "Variance Stability Condition",
+      "verbatim_quote": "The two main conditions of the above theorem are that (1) s2 N(t), the variance of ∆N(t), should for large N behave like a positive constant, and (2) that the forecast loss differences should behave like martingale difference sequences.",
+      "page": 18,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'s^2_N(t)': 'variance of forecast loss differences, dimensionless', 'ΔN(t)': 'difference in forecast losses, dimensionless'}",
+      "assumptions": "Large sample size N, finite positive variance, martingale difference structure.",
+      "breakdown_regime": "When s^2_N(t) approaches zero or becomes non-positive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables statistical testing of forecast superiority via confidence intervals.",
+        "source_operator": "variance_stability_condition",
+        "telemetry": "Confidence interval width and coverage probability."
+      }
+    },
+    {
+      "primitive_id": "non_degeneracy_assumption",
+      "name": "Non-Degeneracy Assumption",
+      "verbatim_quote": "The first condition can be thought of as a non-degeneracy condition– this result only holds if the forecasts of the two methods to be compared do not coincide entirely.",
+      "page": 18,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_A_i(t)': 'forecast probability from model A, dimensionless', 'p_B_i(t)': 'forecast probability from model B, dimensionless'}",
+      "assumptions": "Forecasts from models A and B differ significantly.",
+      "breakdown_regime": "When p_A_i(t) ≈ p_B_i(t) for all i and t.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's requirement for distinguishable probabilistic forecasts in Bayesian updating.",
+        "source_operator": "non_degeneracy_assumption",
+        "telemetry": "Kullback-Leibler divergence between forecast distributions."
+      }
+    },
+    {
+      "primitive_id": "martingale_difference_sequence",
+      "name": "Martingale Difference Sequence",
+      "verbatim_quote": "It is not valid for two methods that produce equivalent, or almost equivalent, forecasts.",
+      "page": 18,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ΔN(t)': 'forecast loss difference, dimensionless'}",
+      "assumptions": "Loss differences are conditionally independent and mean-zero given past information.",
+      "breakdown_regime": "When conditional expectations deviate from zero or dependence exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Supports validity of confidence intervals under sequential forecasting.",
+        "source_operator": "martingale_difference_sequence",
+        "telemetry": "Autocorrelation of loss differences."
+      }
+    },
+    {
+      "primitive_id": "confidence_interval_construction",
+      "name": "Confidence Interval Construction",
+      "verbatim_quote": "The above results suggest constructing a 100(1 -α)% confidence interval for ∆N(t) as ˆ∆N(t) ± z1-α/2 sN(t) √ N .",
+      "page": 18,
+      "latex": "\\hat{\\Delta}_N(t) \\pm z_{1-\\alpha/2} \\frac{s_N(t)}{\\sqrt{N}}",
+      "symbol_and_unit_ledger": "{'\\\\hat{\\\\Delta}_N(t)': 'estimated loss difference, dimensionless', 'z_{1-\\\\alpha/2}': 'critical value from standard normal, dimensionless', 's_N(t)': 'standard error of loss difference, dimensionless', 'N': 'sample size, dimensionless'}",
+      "assumptions": "Asymptotic normality, known or estimated variance.",
+      "breakdown_regime": "Small sample sizes or non-normality of ΔN(t).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's temporal decision boundary construction for model selection.",
+        "source_operator": "confidence_interval_construction",
+        "telemetry": "Coverage rate and interval width."
+      }
+    },
+    {
+      "primitive_id": "calibration_kernel",
+      "name": "Calibration Kernel Operator",
+      "verbatim_quote": "In terms of calibration, the ESPN forecasts, as well as forecasts produced from simple logistic regression models using the in-game score difference and/or pre-game relative strength of teams as covariates, appear reasonably wellcalibrated.",
+      "page": 28,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'pi(t)': 'probability of outcome at time t, dimensionless', 't': 'time in game, minutes', 'C(t)': 'calibration covariance kernel, dimensionless'}",
+      "assumptions": "Forecast probabilities are generated from stationary stochastic processes; model outputs are bounded between 0 and 1.",
+      "breakdown_regime": "Near game end when score difference approaches zero and variance estimation becomes unstable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps forecast probability distributions to empirical calibration error through time-varying kernel functions.",
+        "source_operator": "calibration_kernel",
+        "telemetry": "Mean absolute calibration error over time bins"
+      }
+    },
+    {
+      "primitive_id": "skill_difference_test",
+      "name": "Skill Difference Test Statistic",
+      "verbatim_quote": "In terms of skill, the ESPN forecasts exhibited significantly higher skill over na ̈ıve models, but did not demonstrate superiority over simple logistic regression models based on the score difference and relative team strength.",
+      "page": 28,
+      "latex": "\\hat{\\Delta}_{1213}(t) = \\frac{1}{n} \\sum_{i=1}^{n} (\\hat{p}_1(t_i) - \\hat{p}_2(t_i))",
+      "symbol_and_unit_ledger": "{'\\\\hat{\\\\Delta}_{1213}(t)': 'difference in forecast skill at time t, dimensionless', '\\\\hat{p}_1(t)': 'forecast probability from ESPN model, dimensionless', '\\\\hat{p}_2(t)': 'forecast probability from logistic regression baseline, dimensionless', 'n': 'number of observations, unitless'}",
+      "assumptions": "Forecasts are independent and identically distributed; differences follow normal distribution under null hypothesis.",
+      "breakdown_regime": "When nested models produce degenerate covariance kernels due to shared parameters.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to likelihood ratio test statistic for comparing forecast accuracy across models.",
+        "source_operator": "skill_difference_test",
+        "telemetry": "Approximate p-values from permutation tests"
+      }
+    },
+    {
+      "primitive_id": "confidence_interval_adjustment",
+      "name": "Confidence Interval Adjustment Rule",
+      "verbatim_quote": "It is noteworthy that the confidence intervals defined in (6) may be made narrower and less conservative by using auxiliary information to improve the approximation of replacing pi(t)(1-pi(t)) with the upper bound 1/4.",
+      "page": 28,
+      "latex": "\\text{CI} = \\hat{p} \\pm z_{\\alpha/2} \\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n}}",
+      "symbol_and_unit_ledger": "{'\\\\hat{p}': 'estimated probability, dimensionless', 'z_{\\\\alpha/2}': 'critical value from standard normal, dimensionless', 'n': 'sample size, unitless', '\\\\text{CI}': 'confidence interval bounds, dimensionless'}",
+      "assumptions": "Binomial distribution holds; large sample approximations valid; auxiliary information improves variance estimation.",
+      "breakdown_regime": "When variance estimates become unreliable near game conclusion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Adjusts variance estimator in confidence interval construction using auxiliary variables.",
+        "source_operator": "confidence_interval_adjustment",
+        "telemetry": "Width of confidence intervals over time"
+      }
+    },
+    {
+      "primitive_id": "nested_model_comparison",
+      "name": "Nested Model Comparison Criterion",
+      "verbatim_quote": "but found both that this changed the intervals little, and lead to poor performance near the end of the game.",
+      "page": 29,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{cons}}': 'covariance kernel for nested models, dimensionless', 't': 'game time, minutes'}",
+      "assumptions": "Models are nested; covariance kernel is approximately degenerate under null hypothesis.",
+      "breakdown_regime": "When nested models yield nearly identical predictions leading to singular covariance structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Applies to comparison of forecast models where one is a special case of another.",
+        "source_operator": "nested_model_comparison",
+        "telemetry": "Variance inflation factor in nested model context"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "723d2993bd5f2be6_t0",
+      "think": "The chapter establishes a mathematical framework for evaluating continuously updated probabilistic forecasts, using NBA win probabilities as the canonical example. The core innovation is lifting static calibration diagrams to dynamic calibration surfaces C(p,t) over the probability-time manifold. This requires defining a filtration \\mathcal{F}_t generated by in-game events (score, time, possession, fouls, injuries) and treating the forecast curve \\hat{p}_t as an \\mathcal{F}_t-adapted process. The Brier score functional BS = T^{-1}\\int_0^T (\\hat{p}_t - Y_t)^2 dt decomposes into calibration, refinement, and uncertainty components via the law of total variance conditional on \\mathcal{F}_t. Skill scores compare forecasting models through relative Brier improvements, isomorphic to policy improvement in a Markov decision process where state s_t = (score differential, time remaining, possession) and action a_t = forecast probability. The Monte Carlo simulation kernel provides a generative environment P_{\\text{sim}} for counterfactual evaluation, enabling estimation of sampling distributions for calibration surfaces and skill scores under known data-generating processes. Critical assumptions include: (1) forecast updates occur at event times with linear interpolation, (2) the simulation model captures true game dynamics, (3) ergodicity across games justifies pooling. Breakdown occurs when forecasts are adversarially manipulated, when team strength shifts non-stationarily within a game (e.g., key injury), or when the simulation model omits critical state variables (e.g., player fatigue). The framework unifies functional data analysis, proper scoring rules, and sequential decision theory into a single evaluation apparatus for real-time probabilistic forecasting.",
+      "retrocausal_genealogy": "Lineage traces from Brier (1950) verification scores through Murphy (1973) reliability diagrams to Gneiting et al. (2007) proper scoring rules, extended to functional data by Ramsay & Silverman (2005). The NBA application follows Stern (1994) Brownian motion models and Lopez & Matthews (2015) win probability added. ESPN's real-time forecasts operationalize the theoretical filtration \\mathcal{F}_t. Retrocausal Genealogy (Window 1): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents: ESPN forecasters (proprietary model, possibly minimizing Brier score), bettors (exploiting miscalibration via Kelly criterion), coaches (making decisions affecting \\mathcal{F}_t). ESPN may shade probabilities toward 0.5 for engagement; bettors seek positive expected value where \\hat{p}_t \\neq \\mathbb{E}[Y_t|\\mathcal{F}_t]; coaches optimize win probability not forecast accuracy. The calibration surface C(p,t) reveals systematic biases exploitable by adversarial agents. Theory of Mind (Window 1): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity: calibration surface C(p,t) and skill score SS must be evaluated on independent game sets to avoid overfitting. Leakage veto: simulation parameters \\Theta must not incorporate information from ESPN forecasts being evaluated. Temporal leakage: forecasts at time t must not use future outcomes Y_{t'>t}. Filtration consistency requires \\hat{p}_t to be \\mathcal{F}_t-measurable; any violation invalidates Brier decomposition. Conformal coverage guarantees require exchangeability of calibration residuals across games."
+    },
+    {
+      "trace_id": "723d2993bd5f2be6_t1",
+      "think": "Chapter 2 introduces a dynamic modeling approach for predicting game outcomes using generalized linear models (GLMs) with time-varying coefficients. Each model is fitted pointwise over game time, allowing for evolving influences of variables such as score difference, pregame relative strength, and leading status. The core insight is that these factors do not maintain constant influence throughout a game—e.g., pregame strength matters early, while score difference becomes more predictive later. This temporal adaptability is captured through GLMs with time-dependent parameters β₀(t), β₁(t), etc., which are estimated separately at each moment. The paper emphasizes that such models implicitly account for home team advantage, suggesting that even simple GLMs can be calibrated effectively when properly structured. Diagnostic tools like pseudo R² and variable importance plots help assess model performance over time. Calibration evaluation is approached via reliability diagrams, where forecast bins are compared to actual event frequencies. However, traditional fixed binning fails with continuously updated forecasts due to clustering near 0 or 1. Therefore, the Wilson interval is proposed as a robust alternative for computing confidence bounds in calibration assessments. These methodological advances enable real-time probabilistic inference and adaptive strategic planning within the GSE framework.",
+      "retrocausal_genealogy": "Roots in classical statistical modeling and Bayesian inference trace back to McFadden's pseudo R² and Wilson’s confidence interval techniques, extended to dynamic forecasting contexts. Retrocausal Genealogy (Window 2): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models reflect an understanding that teams' performance trajectories shift during games, influenced by both static pregame attributes and evolving game states. Coaches and analysts must anticipate these shifts to optimize decisions. Theory of Mind (Window 2): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring distinct roles for each predictor (e.g., pregame strength vs. score difference). Leakage is mitigated by restricting each model to its designated set of variables. Cross-Layer Veto (Window 2): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "723d2993bd5f2be6_t2",
+      "think": "Chapter 3 focuses on rigorous statistical inference for comparing forecast models, particularly in the context of probabilistic predictions. The core idea revolves around establishing conditions under which meaningful comparisons can be made. The primary conditions involve ensuring that the variance of forecast loss differences stabilizes as sample size increases and that these differences form a martingale difference sequence. These conditions prevent degenerate cases where forecasts are identical or nearly identical, which would invalidate the comparison. The paper emphasizes that while the first condition ensures non-triviality, the second ensures that the comparison is valid under sequential forecasting frameworks. Confidence intervals derived from these conditions allow for assessing whether one model outperforms another at specific time points or across aggregated periods. The use of eigenvalues and functional tests further enables robustness checks against model nesting issues, which are common in nested regression models. This chapter provides foundational tools for evaluating forecast accuracy in dynamic environments, especially relevant for real-time sports analytics systems. Window 3 Synthesis: Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical statistical hypothesis testing and martingale theory, extending to modern machine learning applications in forecasting and econometrics. Retrocausal Genealogy (Window 3): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models A and B represent competing strategies; the analysis assumes rational agents with bounded information processing capabilities, aiming to minimize expected loss. Theory of Mind (Window 3): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Precludes direct comparison of models with overlapping or identical forecast structures, ensuring orthogonal signal spaces for valid statistical inference. Cross-Layer Veto (Window 3): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "723d2993bd5f2be6_t3",
+      "think": "Chapter 4 focuses on evaluating NBA game forecasts using statistical tools such as calibration checks and skill comparisons. The core methodology involves plotting forecast differences over time with confidence intervals and performing hypothesis tests. Key findings show that while ESPN's forecasts are well-calibrated, they do not outperform simpler logistic regression models based on score difference and team strength. Confidence intervals are adjusted using auxiliary information to reduce conservativeness, though this has limited impact near game end. Nested model comparisons reveal challenges when models share parameters, resulting in degenerate covariance structures. This chapter establishes a framework for continuous evaluation of probabilistic forecasts in real-time sports analytics, emphasizing the importance of both calibration and relative skill metrics. Window 4 Synthesis: Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon Dawid's work on probability forecasting and Gneiting's contributions to probabilistic forecasts, this chapter extends earlier methodologies to dynamic sports contexts with temporal dependencies. Retrocausal Genealogy (Window 4): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The analysis considers opposing viewpoints between ESPN’s proprietary model and simpler statistical benchmarks, acknowledging that ESPN's in-game data may only be useful in final moments, suggesting strategic limitations in their predictive architecture. Theory of Mind (Window 4): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that auxiliary variables used in variance adjustment do not redundantly encode information already captured by primary predictors. Leakage is mitigated by restricting adjustments to variance estimation steps rather than altering forecast generation mechanisms. Cross-Layer Veto (Window 4): Rooted in openalex_W4287647045 (723d2993bd5f2be6, 35/35 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

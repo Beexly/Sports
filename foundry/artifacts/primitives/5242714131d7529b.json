@@ -1,0 +1,78 @@
+{
+  "book_id": "5242714131d7529b",
+  "source_status": "COMPLETE",
+  "title": "MODELPROB_DESIGN",
+  "file_name": "MODELPROB_DESIGN.md",
+  "sha256": "5242714131d7529b29b2f9d305e1d09ee510e9bdb3c1812f45c24ea6d34559d8",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The independent model probability is constructed via a market-free aggregation of normalized player-level signals. By enforcing a strict zero-market invariant, the pipeline maps raw empirical rates into a calibrated probability simplex, ensuring the resulting measure reflects intrinsic physical performance rather than consensus-driven pricing artifacts.",
+  "gsi_mapping": "GSI utilizes these market-free primitives to construct a pure Bayesian prior over event outcomes. The rolling z-score normalization acts as a conformal calibration step, mapping idiosyncratic player success rates into a unified probabilistic space that remains strictly orthogonal to any external sportsbook priors or liquidity depth.",
+  "gse_mapping": "Within GSE, this primitive drives state transitions based purely on situational athletic execution. The engine evaluates in-flight builds using smoothed success rates and YACoe signals, updating the game-state manifold without ever collapsing the wavefunction via external line-movement or consensus betting data.",
+  "primitives": [
+    {
+      "primitive_id": "market_free_invariant",
+      "name": "Zero-Market Data Invariant",
+      "verbatim_quote": "**Market data invariant (LAW):** ZERO market/price/line/consensus/depth data enters this pipeline.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Invariant: Dimensionless boolean constraint; MarketData: Set of all odds, spreads, and volume metrics.",
+      "assumptions": "Assumes complete isolation from external financial markets and sportsbooks during the inference phase.",
+      "breakdown_regime": "Violated if any implicit leakage occurs through shared feature spaces between market data and player telemetry.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to an isolated thermodynamic system where no external work (market money) is performed on the state vector.",
+        "source_operator": "market_free_invariant",
+        "telemetry": "Static code analysis verifying `priced: false` and absence of market keywords."
+      }
+    },
+    {
+      "primitive_id": "signal_z_score_normalization",
+      "name": "Season-Window Z-Score Normalization",
+      "verbatim_quote": "league-season baseline) - Each signal `s_i` → `z_i = (s_i - μ_season) / σ_season` over the rolling league-season window.",
+      "page": 1,
+      "latex": "z_i = \\frac{s_i - \\mu_{\\text{season}}}{\\sigma_{\\text{season}}}",
+      "symbol_and_unit_ledger": "s_i: Raw player signal (dimensionless rate); z_i: Standardized score (dimensionless); μ_season: Season mean (dimensionless); σ_season: Season standard deviation (dimensionless).",
+      "assumptions": "Assumes the underlying distribution of player signals within the season approximates a stable Gaussian manifold.",
+      "breakdown_regime": "Singularities occur when σ_season approaches zero (e.g., extremely low sample sizes or uniform performance across the league).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw physical output into a standardized statistical kernel, enabling cross-player aggregation without scale bias.",
+        "source_operator": "signal_z_score_normalization",
+        "telemetry": "Distributional stability checks on μ_season and σ_season over rolling windows."
+      }
+    },
+    {
+      "primitive_id": "calibrated_model_prob",
+      "name": "Independent Calibrated Probability",
+      "verbatim_quote": "**Receipt contract (packages/prediction-engine/src/pick-proof-receipt.ts:48-52):** `modelProb?: number | null` — a genuinely calibrated 0..1 probability committed only when it exists; never `confidence/100`.",
+      "page": 1,
+      "latex": "p \\in [0, 1] \\cup \\{\\text{null}\\}",
+      "symbol_and_unit_ledger": "p: Independent model probability (dimensionless fraction); null: Honest absence of sufficient signal.",
+      "assumptions": "Assumes the aggregation function correctly maps the joint distribution of z-scores into a valid probability simplex.",
+      "breakdown_regime": "Fails if the system defaults to fabricating probabilities from non-probabilistic confidence scores under data scarcity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly represents the epistemic certainty of the GSI engine regarding a specific outcome, decoupled from financial confidence.",
+        "source_operator": "calibrated_model_prob",
+        "telemetry": "Brier score calibration curves computed exclusively against realized binary outcomes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5242714131d7529b_t0",
+      "think": "The derivation of the independent model probability begins by explicitly rejecting the flawed proxy of dividing subjective confidence by one hundred. Confidence, as observed in legacy scoring modules, is heavily contaminated by market structure—specifically line movement, consensus depth, and entry odds. To isolate the true physical probability of an event, we must construct a strictly market-free pipeline. This is achieved by aggregating independent player-level signals, such as the YACoe rolling signal and smoothed True Positive Rates (TPR). These raw signals are inherently dimensional and context-dependent. To unify them, we apply a rolling z-score normalization over the current league-season window. By subtracting the seasonal mean and dividing by the seasonal standard deviation, we project these disparate signals onto a standardized Gaussian manifold. Crucially, the baseline statistics are computed exclusively from completed games within the same season, entirely avoiding any contamination from market-implied rates. Once standardized, these z-scores serve as the inputs to a pure aggregation function. This function maps the multi-dimensional signal space directly into the unit interval [0, 1], yielding a genuinely calibrated probability. If the signal strength is insufficient, the operator honestly returns null, preserving the integrity of the receipt contract. This mathematical architecture ensures that the resulting probability is a direct reflection of athletic execution and situational dynamics, completely orthogonal to the financial forces shaping the betting market.\n\nDeep epistemic analysis for MODELPROB_DESIGN (5242714131d7529b, domain=other, pages_read=2/2): Operator 'Zero-Market Data Invariant' (page 1, domain other) captures: **Market data invariant (LAW):** ZERO market/price/line/consensus/depth data enters this pipeline. Assumptions: Assumes complete isolation from external financial markets and sportsbooks during the inference phase. Breakdown regime: Violated if any implicit leakage occurs through shared feature spaces between market data and player telemetry. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to an isolated thermodynamic system where no external work (market money) is performed on the state vector. Operator 'Season-Window Z-Score Normalization' (page 1, domain other) captures: league-season baseline) - Each signal `s_i` → `z_i = (s_i - μ_season) / σ_season` over the rolling league-season window. Assumptions: Assumes the underlying distribution of player signals within the season approximates a stable Gaussian manifold. Breakdown regime: Singularities occur when σ_season approaches zero (e.g., extremely low sample sizes or uniform performance across the league). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw physical output into a standardized statistical kernel, enabling cross-player aggregation without scale bias. Operator 'Independent Calibrated Probability' (page 1, domain other) captures: **Receipt contract (packages/prediction-engine/src/pick-proof-receipt.ts:48-52):** `modelProb?: number | null` — a genuinely calibrated 0..1 probability committed only when it exists; never `confidence/100`. Assumptions: Assumes the aggregation function correctly maps the joint distribution of z-scores into a valid probability simplex. Breakdown regime: Fails if the system defaults to fabricating probabilities from non-probabilistic confidence scores under data scarcity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly represents the epistemic certainty of the GSI engine regarding a specific outcome, decoupled from financial confidence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for MODELPROB_DESIGN (5242714131d7529b, domain=other, pages_read=2/2): Operator 'Zero-Market Data Invariant' (page 1, domain other) captures: **Market data invariant (LAW):** ZERO market/price/line/consensus/depth data enters this pipeline. Assumptions: Assumes complete isolation from external financial markets and sportsbooks during the inference phase. Breakdown regime: Violated if any implicit leakage occurs through shared feature spaces between market data and player telemetry. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to an isolated thermodynamic system where no external work (market money) is performed on the state vector. Operator 'Season-Window Z-Score Normalization' (page 1, domain other) captures: league-season baseline) - Each signal `s_i` → `z_i = (s_i - μ_season) / σ_season` over the rolling league-season window. Assumptions: Assumes the underlying distribution of player signals within the season approximates a stable Gaussian manifold. Breakdown regime: Singularities occur when σ_season approaches zero (e.g., extremely low sample sizes or uniform performance across the league). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw physical output into a standardized statistical kernel, enabling cross-player aggregation without scale bias. Operator 'Independent Calibrated Probability' (page 1, domain other) captures: **Receipt contract (packages/prediction-engine/src/pick-proof-receipt.ts:48-52):** `modelProb?: number | null` — a genuinely calibrated 0..1 probability committed only when it exists; never `confidence/100`. Assumptions: Assumes the aggregation function correctly maps the joint distribution of z-scores into a valid probability simplex. Breakdown regime: Fails if the system defaults to fabricating probabilities from non-probabilistic confidence scores under data scarcity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly represents the epistemic certainty of the GSI engine regarding a specific outcome, decoupled from financial confidence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This design traces its lineage to the foundational principles of frequentist calibration and the separation of signal from noise in early 20th-century statistical mechanics. It echoes the rigorous demands of pre-registration in experimental physics, where hypotheses must be defined before observing data. Historically, it reacts against the modern quant-finance conflation of price with probability, reclaiming the pure Bayesian update mechanism originally envisioned by Laplace for isolated systems.",
+      "theory_of_mind": "From the perspective of opposing agents, such as sportsbooks or contrarian bettors, this primitive represents an unpredictable, structurally blind spot. Because the model explicitly ignores their pricing actions and liquidity shifts, it cannot be reverse-engineered or manipulated through standard market signaling. It models the athlete's decision-making process in a vacuum, assuming they react solely to on-field geometry and fatigue, entirely indifferent to the financial expectations projected upon them by the crowd.",
+      "cross_layer_veto": "A strict anti-collinearity veto is enforced at every layer of the stack. Any attempt to introduce features correlated with market depth, line movement, or consensus odds triggers an immediate failure of the `priced: false` invariant. This prevents the subtle leakage of financial priors into the physical inference engine. The system actively vetoes the use of confidence scores derived from scoring modules that rely on market structure, ensuring the final probability remains a pristine measure of athletic reality."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "743140b318ebf2e5",
+  "source_status": "COMPLETE",
+  "title": "SHARP_MONEY_2026-10-27",
+  "file_name": "SHARP_MONEY_2026-10-27.md",
+  "sha256": "743140b318ebf2e531517b2179bb2f6e78e17b220d5d936cb8223c47099654e6",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sharp money divergence as a Bayesian update on ticket bias: D = money% - ticket%, where positive D implies contrarian sharp stake. Universal Lens: Rooted in SHARP_MONEY_2026-10-27 (743140b318ebf2e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers posterior belief shifts via conformal prediction of D divergence; sharp money acts as a calibrated evidence signal for model reweighting. GSI Mapping: Rooted in SHARP_MONEY_2026-10-27 (743140b318ebf2e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models game states as stochastic transitions; sharp money divergence triggers state-space refinement and risk-adjusted play prioritization. GSE Mapping: Rooted in SHARP_MONEY_2026-10-27 (743140b318ebf2e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "divergence_operator",
+      "name": "Divergence Operator",
+      "verbatim_quote": "Divergence = `money% - ticket%` per side, median across books.",
+      "page": 1,
+      "latex": "D = \\frac{\\sum_{i=1}^{N} m_i}{\\sum_{i=1}^{N} t_i} - 1",
+      "symbol_and_unit_ledger": "{'D': 'dimensionless divergence ratio', 'm_i': 'sharp stake percentage on side i', 't_i': 'ticket stake percentage on side i'}",
+      "assumptions": "Market efficiency holds locally; sharp money reflects informed betting.",
+      "breakdown_regime": "When D approaches zero, no significant divergence exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "D maps to GSI's Bayesian belief update kernel; GSE uses D to compute risk-adjusted play confidence.",
+        "source_operator": "divergence_operator",
+        "telemetry": "Observed D values across 14 games with 812 records."
+      }
+    },
+    {
+      "primitive_id": "contrarian_signal",
+      "name": "Contrarian Signal",
+      "verbatim_quote": "Positive = stake is heavier than the crowd on that side.",
+      "page": 1,
+      "latex": "\\text{Contrarian} = \\begin{cases} 1 & D > 0 \\\\ 0 & D \\leq 0 \\end{cases}",
+      "symbol_and_unit_ledger": "{'D': 'divergence ratio', 'Contrarian': 'binary indicator'}",
+      "assumptions": "Crowd behavior is representative of uninformed betting.",
+      "breakdown_regime": "When D < 0, signal becomes non-contrarian.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Contrarian signal mirrors GSE's state transition logic for play selection under uncertainty.",
+        "source_operator": "contrarian_signal",
+        "telemetry": "Binary classification of sharp stake dominance over ticket stake."
+      }
+    },
+    {
+      "primitive_id": "sharp_money_correction",
+      "name": "Sharp Money Correction",
+      "verbatim_quote": "**The money says the opposite.** Sharp stake is on CLE, MIN and CIN — against all three.",
+      "page": 1,
+      "latex": "\\text{Correction} = \\arg\\max_{s} \\left( \\sum_{i=1}^{N} m_i \\cdot \\mathbb{1}_{s_i} \\right)",
+      "symbol_and_unit_ledger": "{'Correction': 'optimal play based on sharp money', 'm_i': 'sharp stake on side i', 's_i': 'play side i'}",
+      "assumptions": "Sharp money is a proxy for superior information.",
+      "breakdown_regime": "When model and sharp money disagree, correction is applied.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Correction operator enables GSE to override model predictions when sharp money signals strong deviation.",
+        "source_operator": "sharp_money_correction",
+        "telemetry": "Comparison between model edge and sharp money alignment."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "743140b318ebf2e5_t0",
+      "think": "The divergence operator D = money% - ticket% captures the relative weight of informed versus uninformed bets. When D > 0, sharp money dominates the ticket side, indicating contrarian positioning. This creates a dualistic view: model predictions vs. sharp money consensus. The correction mechanism arises when D deviates significantly from model expectations—such as in TEN +10.5 where divergence is +18. Here, sharp money contradicts the model’s injury-based edge, suggesting an external factor. The system must evaluate whether to trust the model or the sharp money, using D as a probabilistic signal. In CHI +3.5, both model and sharp money align, reinforcing confidence. The failure mode occurs when D is near zero, implying no meaningful signal. The epistemic structure thus combines Bayesian updating with empirical validation through observed D values.\n\nDeep epistemic analysis for SHARP_MONEY_2026-10-27 (743140b318ebf2e5, domain=other, pages_read=2/2): Operator 'Divergence Operator' (page 1, domain other) captures: Divergence = `money% - ticket%` per side, median across books. Assumptions: Market efficiency holds locally; sharp money reflects informed betting. Breakdown regime: When D approaches zero, no significant divergence exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): D maps to GSI's Bayesian belief update kernel; GSE uses D to compute risk-adjusted play confidence. Operator 'Contrarian Signal' (page 1, domain other) captures: Positive = stake is heavier than the crowd on that side. Assumptions: Crowd behavior is representative of uninformed betting. Breakdown regime: When D < 0, signal becomes non-contrarian. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Contrarian signal mirrors GSE's state transition logic for play selection under uncertainty. Operator 'Sharp Money Correction' (page 1, domain other) captures: **The money says the opposite.** Sharp stake is on CLE, MIN and CIN — against all three. Assumptions: Sharp money is a proxy for superior information. Breakdown regime: When model and sharp money disagree, correction is applied. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Correction operator enables GSE to override model predictions when sharp money signals strong deviation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SHARP_MONEY_2026-10-27 (743140b318ebf2e5, domain=other, pages_read=2/2): Operator 'Divergence Operator' (page 1, domain other) captures: Divergence = `money% - ticket%` per side, median across books. Assumptions: Market efficiency holds locally; sharp money reflects informed betting. Breakdown regime: When D approaches zero, no significant divergence exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): D maps to GSI's Bayesian belief update kernel; GSE uses D to compute risk-adjusted play confidence. Operator 'Contrarian Signal' (page 1, domain other) captures: Positive = stake is heavier than the crowd on that side. Assumptions: Crowd behavior is representative of uninformed betting. Breakdown regime: When D < 0, signal becomes non-contrarian. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Contrarian signal mirrors GSE's state transition logic for play selection under uncertainty. Operator 'Sharp Money Correction' (page 1, domain other) captures: **The money says the opposite.** Sharp stake is on CLE, MIN and CIN — against all three. Assumptions: Sharp money is a proxy for superior information. Breakdown regime: When model and sharp money disagree, correction is applied. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Correction operator enables GSE to override model predictions when sharp money signals strong deviation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in behavioral finance and market microstructure theory, particularly the work of Kyle (1985) and Stoll (1989), which formalized the role of informed traders in price formation. Retrocausal Genealogy: Rooted in SHARP_MONEY_2026-10-27 (743140b318ebf2e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SHARP_MONEY_2026-10-27 (743140b318ebf2e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the uninformed crowd (ticket bettors) and the informed sharp money actors. The model represents a rational agent with partial information, while sharp money embodies a higher-order inference layer. Theory of Mind & Decision Maker Model: Rooted in SHARP_MONEY_2026-10-27 (743140b318ebf2e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring D ≠ 0; leakage is mitigated by verifying that sharp money is not merely noise but a statistically significant signal. If D falls below threshold, the correction is vetoed. Cross-Layer Veto & Anti-Leakage Check: Rooted in SHARP_MONEY_2026-10-27 (743140b318ebf2e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

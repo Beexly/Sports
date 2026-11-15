@@ -1,0 +1,78 @@
+{
+  "book_id": "df6f9cfd17aa005f",
+  "source_status": "COMPLETE",
+  "title": "reference-boards",
+  "file_name": "reference-boards.md",
+  "sha256": "df6f9cfd17aa005fcd7b11f97eb8f2b980c5d4d1da2c156481b4db0761350c43",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Reference boards encode design intent through compositional isomorphisms, mapping aesthetic choices to structural state transitions in visual information architecture. Universal Lens: Rooted in reference-boards (df6f9cfd17aa005f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers design consistency via Bayesian belief updates over combinatorial design parameters, using reference boards as evidence for probabilistic conformity to specified archetypes. GSI Mapping: Rooted in reference-boards (df6f9cfd17aa005f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions between design phases by parsing reference board metadata into actionable layout templates, enforcing compositional constraints through dynamic rendering pipelines. GSE Mapping: Rooted in reference-boards (df6f9cfd17aa005f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "compositional_isomorphism",
+      "name": "Compositional Isomorphism",
+      "verbatim_quote": "The reference boards ARE the design: a generic board guarantees a generic site, and no amount of code craft recovers from it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Design fidelity is preserved under isomorphic transformation of visual elements.",
+      "breakdown_regime": "When visual abstraction fails to maintain semantic alignment with intended user experience.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each reference board maps to a unique visual configuration that preserves functional semantics across sections.",
+        "source_operator": "compositional_isomorphism",
+        "telemetry": "Consistency score of visual motifs across rendered boards."
+      }
+    },
+    {
+      "primitive_id": "asynchronous_rendering_pipeline",
+      "name": "Asynchronous Rendering Pipeline",
+      "verbatim_quote": "Submit all boards as async jobs at once (no `--wait`; collect the printed job ids), keep working while they render, poll `higgsfield generate wait <id>` / `higgsfield generate get <id>`, download into the repo's `refs/` directory (working artifact — NOT `app/public/`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Parallel processing increases throughput without compromising quality.",
+      "breakdown_regime": "When synchronization errors cause race conditions in artifact retrieval.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pipeline execution state is derived from job ID polling and artifact validation.",
+        "source_operator": "asynchronous_rendering_pipeline",
+        "telemetry": "Average time-to-render per board and success rate of artifact download."
+      }
+    },
+    {
+      "primitive_id": "combinatorial_design_pick",
+      "name": "Combinatorial Design Pick",
+      "verbatim_quote": "## The combinatorial pick (commit BEFORE prompting) To avoid the AI defaults, pick ONE option per category, write the pick into `app/design-brief.md`, and hold it across ALL boards.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Fixed categorical selections ensure stylistic coherence across all visual outputs.",
+      "breakdown_regime": "When inconsistent choices across categories introduce visual dissonance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each selected category defines a fixed parameter set used uniformly across all boards.",
+        "source_operator": "combinatorial_design_pick",
+        "telemetry": "Frequency of adherence to predefined categorical selections."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "df6f9cfd17aa005f_t0",
+      "think": "The core insight is that reference boards function as deterministic encoders of design intent, where each board represents a unique instantiation of a higher-order compositional schema. This schema is defined by a tuple of discrete choices drawn from predefined categories—theme, background, typography, architecture, etc.—which collectively form a combinatorial space. The isomorphism between these choices and their visual manifestation ensures that the final site inherits a consistent aesthetic logic. Asynchronous rendering enables parallel exploration of this space, while the combinatorial pick enforces a coherent baseline. Failure modes arise when the design space is underspecified or when the rendering pipeline lacks error handling, leading to inconsistent or broken outputs.\n\nDeep epistemic analysis for reference-boards (df6f9cfd17aa005f, domain=other, pages_read=3/3): Operator 'Compositional Isomorphism' (page 1, domain other) captures: The reference boards ARE the design: a generic board guarantees a generic site, and no amount of code craft recovers from it. Assumptions: Design fidelity is preserved under isomorphic transformation of visual elements. Breakdown regime: When visual abstraction fails to maintain semantic alignment with intended user experience. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each reference board maps to a unique visual configuration that preserves functional semantics across sections. Operator 'Asynchronous Rendering Pipeline' (page 1, domain other) captures: Submit all boards as async jobs at once (no `--wait`; collect the printed job ids), keep working while they render, poll `higgsfield generate wait <id>` / `higgsfield generate get <id>`, download into the repo's `refs/` directory (working artifact — NOT `app/public/`). Assumptions: Parallel processing increases throughput without compromising quality. Breakdown regime: When synchronization errors cause race conditions in artifact retrieval. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pipeline execution state is derived from job ID polling and artifact validation. Operator 'Combinatorial Design Pick' (page 1, domain other) captures: ## The combinatorial pick (commit BEFORE prompting) To avoid the AI defaults, pick ONE option per category, write the pick into `app/design-brief.md`, and hold it across ALL boards. Assumptions: Fixed categorical selections ensure stylistic coherence across all visual outputs. Breakdown regime: When inconsistent choices across categories introduce visual dissonance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each selected category defines a fixed parameter set used uniformly across all boards. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for reference-boards (df6f9cfd17aa005f, domain=other, pages_read=3/3): Operator 'Compositional Isomorphism' (page 1, domain other) captures: The reference boards ARE the design: a generic board guarantees a generic site, and no amount of code craft recovers from it. Assumptions: Design fidelity is preserved under isomorphic transformation of visual elements. Breakdown regime: When visual abstraction fails to maintain semantic alignment with intended user experience. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each reference board maps to a unique visual configuration that preserves functional semantics across sections. Operator 'Asynchronous Rendering Pipeline' (page 1, domain other) captures: Submit all boards as async jobs at once (no `--wait`; collect the printed job ids), keep working while they render, poll `higgsfield generate wait <id>` / `higgsfield generate get <id>`, download into the repo's `refs/` directory (working artifact — NOT `app/public/`). Assumptions: Parallel processing increases throughput without compromising quality. Breakdown regime: When synchronization errors cause race conditions in artifact retrieval. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pipeline execution state is derived from job ID polling and artifact validation. Operator 'Combinatorial Design Pick' (page 1, domain other) captures: ## The combinatorial pick (commit BEFORE prompting) To avoid the AI defaults, pick ONE option per category, write the pick into `app/design-brief.md`, and hold it across ALL boards. Assumptions: Fixed categorical selections ensure stylistic coherence across all visual outputs. Breakdown regime: When inconsistent choices across categories introduce visual dissonance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each selected category defines a fixed parameter set used uniformly across all boards. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in formal systems theory and information architecture, tracing back to Shannon's information entropy and von Neumann’s computational models of symbolic representation. Retrocausal Genealogy: Rooted in reference-boards (df6f9cfd17aa005f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in reference-boards (df6f9cfd17aa005f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might include an AI that favors default patterns or a human designer who prioritizes subjective aesthetics over systematic constraints, both potentially undermining the structured approach. Theory of Mind & Decision Maker Model: Rooted in reference-boards (df6f9cfd17aa005f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each board contributes novel compositional data rather than redundant variants. Leakage vetoes occur if shared elements across boards violate the principle of independent design decisions. Cross-Layer Veto & Anti-Leakage Check: Rooted in reference-boards (df6f9cfd17aa005f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in reference-boards (df6f9cfd17aa005f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

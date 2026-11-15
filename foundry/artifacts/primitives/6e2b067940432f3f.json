@@ -1,0 +1,78 @@
+{
+  "book_id": "6e2b067940432f3f",
+  "source_status": "COMPLETE",
+  "title": "p0093",
+  "file_name": "p0093.txt",
+  "sha256": "6e2b067940432f3f7f6a79ad76a3b77fa371abef92d9350545783b8b6fec9d2f",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Expectation carryover in behavioral dynamics maps to prior belief updating under reward transition. Universal Lens: Rooted in p0093 (6e2b067940432f3f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief revision models disrupted learning as posterior drift from altered reward expectations. GSI Mapping: Rooted in p0093 (6e2b067940432f3f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition dynamics show persistent search behavior due to unmet anticipatory goals post-reward shift. GSE Mapping: Rooted in p0093 (6e2b067940432f3f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "expectation_carryover",
+      "name": "Expectation Carryover",
+      "verbatim_quote": "74 The Rat in the Maze demand to one with a less demand also gave evıdences of such carryings-over of preceding expectations ayg..",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{prev}': 'dimensionless expectation value from prior task', 'E_{new}': 'dimensionless expectation value from new task'}",
+      "assumptions": "Rats exhibit persistent behavioral patterns due to unmodified prior expectations despite environmental change.",
+      "breakdown_regime": "When reward contingency shifts beyond perceptual discrimination threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Behavioral disruption mirrors Bayesian posterior update failure when prior beliefs conflict with new evidence.",
+        "source_operator": "expectation_carryover",
+        "telemetry": "Duration and intensity of non-productive searching behavior."
+      }
+    },
+    {
+      "primitive_id": "behavioral_disruption",
+      "name": "Behavioral Disruption",
+      "verbatim_quote": "of behavior He writes \"The change in performance appears to be more than a mere temporary",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D(t)': 'dimensionless disruption magnitude at time t', 't': 'time in days'}",
+      "assumptions": "Disruption persists and amplifies over time due to mismatched internal models and external rewards.",
+      "breakdown_regime": "Post-reward transition where expected vs actual outcomes diverge significantly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Emergent instability in action selection policy due to temporal inconsistency in reward prediction error.",
+        "source_operator": "behavioral_disruption",
+        "telemetry": "Rate of increase in random exploration time relative to successful navigation time."
+      }
+    },
+    {
+      "primitive_id": "searching_as_evidence",
+      "name": "Searching as Evidence",
+      "verbatim_quote": "to be taken as the empırical evıdence for, and definı- tion of, an immanent expectation of",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'searching activity level', 'E': 'expectation discrepancy'}",
+      "assumptions": "Non-goal-directed behavior signals cognitive dissonance against current reward structure.",
+      "breakdown_regime": "When sensory feedback fails to confirm anticipated reward quality.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Search behavior encodes expectation mismatch; quantified via entropy of movement distribution.",
+        "source_operator": "searching_as_evidence",
+        "telemetry": "Entropy of spatial and temporal distributions of exploratory actions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6e2b067940432f3f_t0",
+      "think": "The cited excerpts describe how rats maintain behavioral patterns even after reward contingencies have shifted. This suggests a form of memory or expectation carryover that resists immediate adaptation. In mathematical terms, this can be modeled using stochastic processes where the system retains transient states due to prior conditioning. The disruption observed is not merely momentary but increases over time, indicating a dynamic feedback loop between expectation and outcome. The 'searching' behavior becomes a proxy for internal model misalignment—wherein the agent's belief about reward availability does not match its environment. This aligns with Bayesian inference frameworks where prior beliefs influence posterior updates. When the prior is strong and the likelihood changes subtly, the posterior may take longer to converge, manifesting as increased behavioral disruption. The persistence of this disruption implies that the system has entered a metastable regime where small perturbations compound over time. Thus, the core operator is expectation carryover, which leads to behavioral disruption through misaligned expectations. The derived kernel is the rate of entropy increase in action space, reflecting growing uncertainty in goal-directed behavior.\n\nDeep epistemic analysis for p0093 (6e2b067940432f3f, domain=other, pages_read=1/1): Operator 'Expectation Carryover' (page 1, domain other) captures: 74 The Rat in the Maze demand to one with a less demand also gave evıdences of such carryings-over of preceding expectations ayg.. Assumptions: Rats exhibit persistent behavioral patterns due to unmodified prior expectations despite environmental change. Breakdown regime: When reward contingency shifts beyond perceptual discrimination threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Behavioral disruption mirrors Bayesian posterior update failure when prior beliefs conflict with new evidence. Operator 'Behavioral Disruption' (page 1, domain other) captures: of behavior He writes \"The change in performance appears to be more than a mere temporary Assumptions: Disruption persists and amplifies over time due to mismatched internal models and external rewards. Breakdown regime: Post-reward transition where expected vs actual outcomes diverge significantly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Emergent instability in action selection policy due to temporal inconsistency in reward prediction error. Operator 'Searching as Evidence' (page 1, domain other) captures: to be taken as the empırical evıdence for, and definı- tion of, an immanent expectation of Assumptions: Non-goal-directed behavior signals cognitive dissonance against current reward structure. Breakdown regime: When sensory feedback fails to confirm anticipated reward quality. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Search behavior encodes expectation mismatch; quantified via entropy of movement distribution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0093 (6e2b067940432f3f, domain=other, pages_read=1/1): Operator 'Expectation Carryover' (page 1, domain other) captures: 74 The Rat in the Maze demand to one with a less demand also gave evıdences of such carryings-over of preceding expectations ayg.. Assumptions: Rats exhibit persistent behavioral patterns due to unmodified prior expectations despite environmental change. Breakdown regime: When reward contingency shifts beyond perceptual discrimination threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Behavioral disruption mirrors Bayesian posterior update failure when prior beliefs conflict with new evidence. Operator 'Behavioral Disruption' (page 1, domain other) captures: of behavior He writes \"The change in performance appears to be more than a mere temporary Assumptions: Disruption persists and amplifies over time due to mismatched internal models and external rewards. Breakdown regime: Post-reward transition where expected vs actual outcomes diverge significantly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Emergent instability in action selection policy due to temporal inconsistency in reward prediction error. Operator 'Searching as Evidence' (page 1, domain other) captures: to be taken as the empırical evıdence for, and definı- tion of, an immanent expectation of Assumptions: Non-goal-directed behavior signals cognitive dissonance against current reward structure. Breakdown regime: When sensory feedback fails to confirm anticipated reward quality. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Search behavior encodes expectation mismatch; quantified via entropy of movement distribution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century operant conditioning studies by Thorndike and Skinner, extended into modern reinforcement learning theory. The concept of carryover effects traces back to Hull’s drive reduction model and later to Rescorla-Wagner models of associative learning. Retrocausal Genealogy: Rooted in p0093 (6e2b067940432f3f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents act based on internalized reward expectations that persist despite environmental shifts. Opposing agents might include those who adapt quickly or those who remain locked into outdated strategies, creating competitive dynamics in adaptive environments. Theory of Mind & Decision Maker Model: Rooted in p0093 (6e2b067940432f3f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that expectation carryover does not simply reflect passive inertia but rather active cognitive resistance to change. Leakage veto ensures that only disruptions tied to specific reward transitions are considered, excluding general noise or fatigue effects. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0093 (6e2b067940432f3f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

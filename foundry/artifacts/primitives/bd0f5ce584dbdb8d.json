@@ -1,0 +1,78 @@
+{
+  "book_id": "bd0f5ce584dbdb8d",
+  "source_status": "COMPLETE",
+  "title": "repo-vetting-2026-10-27-recon-osint",
+  "file_name": "repo-vetting-2026-10-27-recon-osint.md",
+  "sha256": "bd0f5ce584dbdb8da65ce0972ea8c2398b7749433febb6e9b0ff3a0c78ebbfa2",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A conformal inference lattice governs the hierarchical stacking of OSINT primitives through runtime boundary constraints and epistemic closure. Universal Lens: Rooted in repo-vetting-2026-10-27-recon-osint (bd0f5ce584dbdb8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over source clearance and liveness predicates define GSI's probabilistic data ingestion pipeline. GSI Mapping: Rooted in repo-vetting-2026-10-27-recon-osint (bd0f5ce584dbdb8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE maps OSINT primitives to state transitions via stealth engine and captcha solver registries. GSE Mapping: Rooted in repo-vetting-2026-10-27-recon-osint (bd0f5ce584dbdb8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "captcha_solver_registry",
+      "name": "Pluggable CAPTCHA Solver Registry",
+      "verbatim_quote": "It actually ships `pkg/engine/headless/captcha/` — a full identify-and-solve subsystem for recaptcha v2/v3/ enterprise, turnstile and hcaptcha, with `RegisterSolver()` as a pluggable registry and a CapSolver backend, plus `browser/stealth/assets.go`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_s': 'solver registry identifier (dimensionless)', 'S_v': 'solver version string (dimensionless)', 'C_t': 'CAPTCHA type (dimensionless)'}",
+      "assumptions": "Registry supports dynamic solver injection at runtime with version compatibility checks.",
+      "breakdown_regime": "When CAPTCHA challenge exceeds solver capacity or registry misconfiguration occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's stealth engine state transition function where solver selection triggers replay logic.",
+        "source_operator": "captcha_solver_registry",
+        "telemetry": "Number of successful CAPTCHA solves per session"
+      }
+    },
+    {
+      "primitive_id": "cloudflare_wall_clearance",
+      "name": "Cloudflare Wall Clearance Engine",
+      "verbatim_quote": "It is a wall-clear-and-replay library: `antibot/cloudflare/` returns `cf_clearance` bound to the exact UA so plain HTTP replays the cleared session.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W_c': 'wall clearance status (boolean)', 'U_a': 'user agent string (dimensionless)', 'S_s': 'session state (dimensionless)'}",
+      "assumptions": "Wall clearance is deterministic given correct UA and session context.",
+      "breakdown_regime": "Upon CAPTCHA bypass failure or UA mismatch during replay.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's request routing logic when handling blocked responses.",
+        "source_operator": "cloudflare_wall_clearance",
+        "telemetry": "Percentage of requests cleared by wall engine"
+      }
+    },
+    {
+      "primitive_id": "runtime_boundary_constraint",
+      "name": "Runtime Boundary Constraint",
+      "verbatim_quote": "**Runtime boundary** — TypeScript (`packages/`, `apps/web`) and Python (`intelligence/`) are the only runtimes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_b': 'runtime boundary (dimensionless)', 'T_s': 'type system signature (dimensionless)', 'I_r': 'interoperability requirement (dimensionless)'}",
+      "assumptions": "Cross-runtime communication is limited to defined interfaces.",
+      "breakdown_regime": "When attempting to import non-conforming language constructs into restricted environments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's data flow graph where runtime boundaries define valid transformation paths.",
+        "source_operator": "runtime_boundary_constraint",
+        "telemetry": "Number of inter-language calls successfully executed"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "bd0f5ce584dbdb8d_t0",
+      "think": "The primitives form a layered epistemic lattice where each component contributes to a holistic understanding of OSINT infrastructure. The CAPTCHA solver registry enables adaptive evasion strategies, while the Cloudflare wall clearance engine ensures persistent access. The runtime boundary constraint enforces architectural integrity across heterogeneous systems. These components interact through a shared telemetry framework that validates operational correctness. Failure modes include registry misalignment, wall clearance degradation, and boundary violations. Dualities emerge between solver capabilities and wall complexity, and between runtime constraints and system modularity. The epistemic closure of this stack allows for recursive refinement of confidence intervals in data acquisition.\n\nDeep epistemic analysis for repo-vetting-2026-10-27-recon-osint (bd0f5ce584dbdb8d, domain=other, pages_read=5/5): Operator 'Pluggable CAPTCHA Solver Registry' (page 1, domain other) captures: It actually ships `pkg/engine/headless/captcha/` — a full identify-and-solve subsystem for recaptcha v2/v3/ enterprise, turnstile and hcaptcha, with `RegisterSolver()` as a pluggable registry and a CapSolver backend, plus `browser/stealth/assets.go`. Assumptions: Registry supports dynamic solver injection at runtime with version compatibility checks. Breakdown regime: When CAPTCHA challenge exceeds solver capacity or registry misconfiguration occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's stealth engine state transition function where solver selection triggers replay logic. Operator 'Cloudflare Wall Clearance Engine' (page 1, domain other) captures: It is a wall-clear-and-replay library: `antibot/cloudflare/` returns `cf_clearance` bound to the exact UA so plain HTTP replays the cleared session. Assumptions: Wall clearance is deterministic given correct UA and session context. Breakdown regime: Upon CAPTCHA bypass failure or UA mismatch during replay. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's request routing logic when handling blocked responses. Operator 'Runtime Boundary Constraint' (page 1, domain other) captures: **Runtime boundary** — TypeScript (`packages/`, `apps/web`) and Python (`intelligence/`) are the only runtimes. Assumptions: Cross-runtime communication is limited to defined interfaces. Breakdown regime: When attempting to import non-conforming language constructs into restricted environments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's data flow graph where runtime boundaries define valid transformation paths. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for repo-vetting-2026-10-27-recon-osint (bd0f5ce584dbdb8d, domain=other, pages_read=5/5): Operator 'Pluggable CAPTCHA Solver Registry' (page 1, domain other) captures: It actually ships `pkg/engine/headless/captcha/` — a full identify-and-solve subsystem for recaptcha v2/v3/ enterprise, turnstile and hcaptcha, with `RegisterSolver()` as a pluggable registry and a CapSolver backend, plus `browser/stealth/assets.go`. Assumptions: Registry supports dynamic solver injection at runtime with version compatibility checks. Breakdown regime: When CAPTCHA challenge exceeds solver capacity or registry misconfiguration occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's stealth engine state transition function where solver selection triggers replay logic. Operator 'Cloudflare Wall Clearance Engine' (page 1, domain other) captures: It is a wall-clear-and-replay library: `antibot/cloudflare/` returns `cf_clearance` bound to the exact UA so plain HTTP replays the cleared session. Assumptions: Wall clearance is deterministic given correct UA and session context. Breakdown regime: Upon CAPTCHA bypass failure or UA mismatch during replay. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's request routing logic when handling blocked responses. Operator 'Runtime Boundary Constraint' (page 1, domain other) captures: **Runtime boundary** — TypeScript (`packages/`, `apps/web`) and Python (`intelligence/`) are the only runtimes. Assumptions: Cross-runtime communication is limited to defined interfaces. Breakdown regime: When attempting to import non-conforming language constructs into restricted environments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's data flow graph where runtime boundaries define valid transformation paths. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s adversarial web scraping research, evolving through CAPTCHA solving frameworks and headless browser automation libraries. Retrocausal Genealogy: Rooted in repo-vetting-2026-10-27-recon-osint (bd0f5ce584dbdb8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in repo-vetting-2026-10-27-recon-osint (bd0f5ce584dbdb8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include CAPTCHA generators, bot detection systems, and legal compliance frameworks. Decision actors are the OSINT stack itself and its downstream consumers like GSI and GSE. Theory of Mind & Decision Maker Model: Rooted in repo-vetting-2026-10-27-recon-osint (bd0f5ce584dbdb8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when runtime boundaries conflict with solver requirements. Leakage occurs if telemetry crosses unauthorized domains without proper encapsulation. Cross-Layer Veto & Anti-Leakage Check: Rooted in repo-vetting-2026-10-27-recon-osint (bd0f5ce584dbdb8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in repo-vetting-2026-10-27-recon-osint (bd0f5ce584dbdb8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

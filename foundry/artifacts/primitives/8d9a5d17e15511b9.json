@@ -1,0 +1,95 @@
+{
+  "book_id": "8d9a5d17e15511b9",
+  "source_status": "COMPLETE",
+  "title": "EXPERIMENT_LOG",
+  "file_name": "EXPERIMENT_LOG.md",
+  "sha256": "8d9a5d17e15511b99eeb28bd5ca2b580a3c6e4523ac2e906dd1471e9f767f8c1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A structured experimental protocol framework unifying test execution, result validation, and decision logic across distributed workspace environments. Universal Lens: Rooted in EXPERIMENT_LOG (8d9a5d17e15511b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models the probability of experiment success given command execution and prior test outcomes; conformal prediction bounds decision confidence intervals for required vs demo-only flags. GSI Mapping: Rooted in EXPERIMENT_LOG (8d9a5d17e15511b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps experiment status transitions (local, complete, failed) into state-space manifolds; state transitions governed by telemetry feedback loops from npm commands and typecheck results. GSE Mapping: Rooted in EXPERIMENT_LOG (8d9a5d17e15511b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fable_evidence_harness",
+      "name": "FABLE Evidence Harness",
+      "verbatim_quote": "| --- | --- | --- | | FABLE evidence harness | local | `npm run",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The system operates under deterministic command execution with observable outcome states.",
+      "breakdown_regime": "When command fails or result is undefined, system enters pending state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic decision tree where each node represents an experiment command and edge weight reflects conditional probability of success.",
+        "source_operator": "fable_evidence_harness",
+        "telemetry": "Command execution log and result metadata"
+      }
+    },
+    {
+      "primitive_id": "fixture_forensic_demo",
+      "name": "Fixture Forensic Demo",
+      "verbatim_quote": "pending final run | required | | Fixture forensic demo | local | `npm run fable:demo`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Demo-only experiments do not affect core system integrity but provide diagnostic insight.",
+      "breakdown_regime": "Execution halts upon non-compliance with demo-only constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's state transition kernel, representing a diagnostic sub-state within broader experiment lifecycle.",
+        "source_operator": "fixture_forensic_demo",
+        "telemetry": "Demo execution trace and assertion pass/fail metrics"
+      }
+    },
+    {
+      "primitive_id": "first_level_targeted_fable_tests",
+      "name": "First-Level Targeted FABLE Tests",
+      "verbatim_quote": "final run | demo-only | | First-level targeted FABLE tests | complete | app vitest command",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Test suite is self-contained and fully validated before integration.",
+      "breakdown_regime": "Upon test failure, system reverts to previous stable configuration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSI's hypothesis verification module, where test outcomes update belief distributions over model parameters.",
+        "source_operator": "first_level_targeted_fable_tests",
+        "telemetry": "Test suite coverage and assertion count"
+      }
+    },
+    {
+      "primitive_id": "workspace_typecheck",
+      "name": "Workspace Typecheck",
+      "verbatim_quote": "18 tests | keep | | Workspace typecheck | failed | `npm run typecheck --workspaces --if-present`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Type safety is enforced across all workspace modules via static analysis.",
+      "breakdown_regime": "Failure occurs when incompatible types are detected in workspace dependencies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of GSE's dependency graph validation engine, identifying type mismatches that propagate through module interdependencies.",
+        "source_operator": "workspace_typecheck",
+        "telemetry": "Type resolution errors and workspace dependency mismatch logs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8d9a5d17e15511b9_t0",
+      "think": "Each primitive encodes a distinct operational mode within the experiment lifecycle. The FABLE Evidence Harness embodies a foundational control loop where command execution triggers state updates, modeled as a Markov chain over discrete experiment phases. The Fixture Forensic Demo introduces a diagnostic branch, enabling retroactive analysis without altering core state. First-Level Targeted FABLE Tests function as a validation kernel, asserting correctness through empirical sampling. Workspace Typecheck acts as a constraint enforcement layer, ensuring semantic consistency across modules. These primitives form a hierarchical lattice where failure in one component induces cascading corrections in others, maintaining system coherence. Dualities emerge between execution and validation layers—execution generates data, validation consumes it. Failure modes manifest as state transitions into error manifolds, requiring corrective telemetry to restore coherence. The system exhibits emergent behavior through compositional interactions among these primitives.\n\nDeep epistemic analysis for EXPERIMENT_LOG (8d9a5d17e15511b9, domain=other, pages_read=1/1): Operator 'FABLE Evidence Harness' (page 1, domain other) captures: | --- | --- | --- | | FABLE evidence harness | local | `npm run Assumptions: The system operates under deterministic command execution with observable outcome states. Breakdown regime: When command fails or result is undefined, system enters pending state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic decision tree where each node represents an experiment command and edge weight reflects conditional probability of success. Operator 'Fixture Forensic Demo' (page 1, domain other) captures: pending final run | required | | Fixture forensic demo | local | `npm run fable:demo` Assumptions: Demo-only experiments do not affect core system integrity but provide diagnostic insight. Breakdown regime: Execution halts upon non-compliance with demo-only constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's state transition kernel, representing a diagnostic sub-state within broader experiment lifecycle. Operator 'First-Level Targeted FABLE Tests' (page 1, domain other) captures: final run | demo-only | | First-level targeted FABLE tests | complete | app vitest command Assumptions: Test suite is self-contained and fully validated before integration. Breakdown regime: Upon test failure, system reverts to previous stable configuration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSI's hypothesis verification module, where test outcomes update belief distributions over model parameters. Operator 'Workspace Typecheck' (page 1, domain other) captures: 18 tests | keep | | Workspace typecheck | failed | `npm run typecheck --workspaces --if-present` Assumptions: Type safety is enforced across all workspace modules via static analysis. Breakdown regime: Failure occurs when incompatible types are detected in workspace dependencies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of GSE's dependency graph validation engine, identifying type mismatches that propagate through module interdependencies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for EXPERIMENT_LOG (8d9a5d17e15511b9, domain=other, pages_read=1/1): Operator 'FABLE Evidence Harness' (page 1, domain other) captures: | --- | --- | --- | | FABLE evidence harness | local | `npm run Assumptions: The system operates under deterministic command execution with observable outcome states. Breakdown regime: When command fails or result is undefined, system enters pending state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic decision tree where each node represents an experiment command and edge weight reflects conditional probability of success. Operator 'Fixture Forensic Demo' (page 1, domain other) captures: pending final run | required | | Fixture forensic demo | local | `npm run fable:demo` Assumptions: Demo-only experiments do not affect core system integrity but provide diagnostic insight. Breakdown regime: Execution halts upon non-compliance with demo-only constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's state transition kernel, representing a diagnostic sub-state within broader experiment lifecycle. Operator 'First-Level Targeted FABLE Tests' (page 1, domain other) captures: final run | demo-only | | First-level targeted FABLE tests | complete | app vitest command Assumptions: Test suite is self-contained and fully validated before integration. Breakdown regime: Upon test failure, system reverts to previous stable configuration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSI's hypothesis verification module, where test outcomes update belief distributions over model parameters. Operator 'Workspace Typecheck' (page 1, domain other) captures: 18 tests | keep | | Workspace typecheck | failed | `npm run typecheck --workspaces --if-present` Assumptions: Type safety is enforced across all workspace modules via static analysis. Breakdown regime: Failure occurs when incompatible types are detected in workspace dependencies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of GSE's dependency graph validation engine, identifying type mismatches that propagate through module interdependencies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification methodologies from software engineering, particularly influenced by model checking and static analysis frameworks such as those developed by Hoare and Dijkstra for program correctness. Retrocausal Genealogy: Rooted in EXPERIMENT_LOG (8d9a5d17e15511b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in EXPERIMENT_LOG (8d9a5d17e15511b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the automated test runner, which seeks to validate hypotheses, and the environment, which may introduce inconsistencies. Decision actors are the system's internal logic gates and external CI/CD orchestrators, balancing speed and accuracy in experiment scheduling. Theory of Mind & Decision Maker Model: Rooted in EXPERIMENT_LOG (8d9a5d17e15511b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that each primitive operates independently to prevent redundant checks. Leakage veto prevents cross-layer contamination, e.g., allowing a failing typecheck to influence unrelated test outcomes. This maintains modular integrity and enables precise attribution of failures. Cross-Layer Veto & Anti-Leakage Check: Rooted in EXPERIMENT_LOG (8d9a5d17e15511b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

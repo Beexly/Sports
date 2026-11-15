@@ -16,7 +16,7 @@
 
 import { db } from "@sports/db";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
-import { fetchScoresMultiSource } from "./multi-source-scores";
+import { fetchScoresMultiSource, scoreSourceChain } from "./multi-source-scores";
 import {
   fetchHenrygdScoreboard,
   HENRYGD_PATHS,
@@ -218,6 +218,51 @@ export async function persistFreeScores(options?: {
         gamesUpdated: 0,
         rightsRefused: 0,
         rightsDeniedSources: [],
+      });
+      continue;
+    }
+
+    // GSE-SEC-051, hoisted (settlement-stall RCA 2026-11-12). Every write below
+    // is gated on espn-public-api storage clearance. When that is denied, the
+    // DB load and the up-to-22 scoreboard fetches can never produce a write.
+    // Before this check was hoisted, they ran anyway for all seven sports every
+    // cycle (gamesUpserted 0 every ~15 min) and ate the cron's 300s budget
+    // ahead of runFreePathSettlement, the pass that actually grades picks. So
+    // check first, skip with a recorded reason, and fetch nothing.
+    // The per-write check below stays as defense in depth.
+    // GSE-SEC-051, hoisted (settlement-stall RCA 2026-11-12). Check every
+    // candidate source in scoreSourceChain(freeSport): only short-circuit
+    // when ALL candidate score sources lack storage clearance so multi-source
+    // fallback (e.g., henrygd-ncaa for NCAA) can still evaluate per-final
+    // provenance in storageClearanceForFinal below.
+    const candidateSources = scoreSourceChain(freeSport);
+    const precheckDenied: string[] = [];
+    for (const candidateSourceId of candidateSources) {
+      const clearance = checkClearance({
+        source_id: candidateSourceId,
+        mode: "public_logged_off_fact_extract",
+        tool_id: "fetch-native",
+        intents: ["storage"],
+      });
+      if (!clearance.allowed) {
+        precheckDenied.push(candidateSourceId);
+      }
+    }
+    if (precheckDenied.length === candidateSources.length) {
+      console.warn(
+        `[free-score-persist] STORAGE_NOT_CLEARED sport=${sport.key} sources=${precheckDenied.join(",")} ` +
+          `— skipping load+fetch; no write is possible this cycle (free settlement grades in its own pass).`,
+      );
+      out.push({
+        sport: sport.key,
+        freeSport,
+        ok: true,
+        finals: 0,
+        gamesMatched: 0,
+        gamesUpdated: 0,
+        rightsRefused: 0,
+        rightsDeniedSources: precheckDenied,
+        error: `skipped: ${precheckDenied.join(", ")} storage not cleared (GSE-SEC-051)`,
       });
       continue;
     }

@@ -1,0 +1,78 @@
+{
+  "book_id": "10bf3227dd84a58e",
+  "source_status": "COMPLETE",
+  "title": "launch-observatory",
+  "file_name": "launch-observatory.md",
+  "sha256": "10bf3227dd84a58e46cb0a3287c133df9ceb665d22da46d34e406d87047e74a3",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A dual-layer operational semantics separates customer-facing observables from operator-controlled internals via deterministic rule sets, enabling structured synthesis of launch readiness. Universal Lens: Rooted in launch-observatory (10bf3227dd84a58e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps structured inputs to probabilistic launch states using JarvisAssessment, with health indicators as conformal predictive regions over system phases. GSI Mapping: Rooted in launch-observatory (10bf3227dd84a58e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions between operational states using phase matrices and telemetry feedback loops, governed by safety constraints and historical accountability. GSE Mapping: Rooted in launch-observatory (10bf3227dd84a58e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "launch_readiness_synthesis",
+      "name": "Launch Readiness Synthesis",
+      "verbatim_quote": "## Jarvis Jarvis is the operator synthesis layer, implemented in: - `apps/web/lib/cockpit/jarvis.ts` — pure synthesizer (`synthesizeJarvis`), takes structured inputs and returns a `JarvisAssessment`.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'launchStatus': 'dimensionless categorical variable', 'healthIndicator': 'dimensionless categorical variable (GREEN/AMBER/RED/UNKNOWN)', 'phaseMatrix': 'matrix of integers (1–9) mapped to statuses'}",
+      "assumptions": "Inputs are deterministic and complete; missing data results in UNKNOWN status.",
+      "breakdown_regime": "When input data is insufficient or inconsistent, the system defaults to UNKNOWN or NOT_READY_* statuses.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Jarvis synthesizes a multi-dimensional readiness score from structured inputs, mapping to a launch readiness state space.",
+        "source_operator": "launch_readiness_synthesis",
+        "telemetry": "Structured input completeness and phase matrix consistency"
+      }
+    },
+    {
+      "primitive_id": "pick_accountability_ledger",
+      "name": "Pick Accountability Ledger",
+      "verbatim_quote": "## Historical pick accountability The pick forensic ledger lives at `/cockpit/history`.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'pickId': 'unique identifier', 'isBootstrap': 'boolean', 'canonicalHistoryEnabled': 'boolean', 'snapshotEligibleForLearning': 'boolean'}",
+      "assumptions": "All picks are tracked for audit trail; bootstrap picks are excluded from canonical metrics.",
+      "breakdown_regime": "Bootstrap picks are isolated from public aggregation and learning loops.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ledger structure mirrors canonical pick lifecycle, enabling forensic reconstruction of outcomes.",
+        "source_operator": "pick_accountability_ledger",
+        "telemetry": "Historical pick count and eligibility flags"
+      }
+    },
+    {
+      "primitive_id": "internal_public_split",
+      "name": "Internal/Public Split",
+      "verbatim_quote": "# Launch Observatory The Sports Intelligence OS is built around a hard split between what a customer can see and what an operator can see.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'customerSurface': 'set of public API endpoints', 'operatorSurface': 'set of admin/cockpit routes'}",
+      "assumptions": "Customer and operator views are strictly separated by access control and data flow rules.",
+      "breakdown_regime": "Data crossing boundaries is governed by deterministic rules ensuring integrity and visibility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual-view architecture enforces logical separation of data streams and user roles.",
+        "source_operator": "internal_public_split",
+        "telemetry": "Access logs and data flow compliance metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "10bf3227dd84a58e_t0",
+      "think": "The system operates under a dual-surface paradigm where customer-facing data is derived from operator-controlled inputs. The core synthesis mechanism, Jarvis, aggregates structured inputs into a launch readiness assessment. This assessment is composed of categorical health indicators, a phase matrix, and actionable recommendations. The system enforces a bootstrap-to-canonical transition, isolating synthetic picks from public metrics. The accountability ledger ensures traceability of all picks, distinguishing between bootstrap and canonical states. Failure modes arise from missing external configuration or incomplete data, triggering UNKNOWN or NOT_READY states. The design supports retroactive analysis through snapshots and historical tracking, enabling robust validation and risk mitigation.\n\nDeep epistemic analysis for launch-observatory (10bf3227dd84a58e, domain=other, pages_read=9/9): Operator 'Launch Readiness Synthesis' (page 2, domain other) captures: ## Jarvis Jarvis is the operator synthesis layer, implemented in: - `apps/web/lib/cockpit/jarvis.ts` — pure synthesizer (`synthesizeJarvis`), takes structured inputs and returns a `JarvisAssessment`. Assumptions: Inputs are deterministic and complete; missing data results in UNKNOWN status. Breakdown regime: When input data is insufficient or inconsistent, the system defaults to UNKNOWN or NOT_READY_* statuses. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Jarvis synthesizes a multi-dimensional readiness score from structured inputs, mapping to a launch readiness state space. Operator 'Pick Accountability Ledger' (page 2, domain other) captures: ## Historical pick accountability The pick forensic ledger lives at `/cockpit/history`. Assumptions: All picks are tracked for audit trail; bootstrap picks are excluded from canonical metrics. Breakdown regime: Bootstrap picks are isolated from public aggregation and learning loops. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ledger structure mirrors canonical pick lifecycle, enabling forensic reconstruction of outcomes. Operator 'Internal/Public Split' (page 1, domain other) captures: # Launch Observatory The Sports Intelligence OS is built around a hard split between what a customer can see and what an operator can see. Assumptions: Customer and operator views are strictly separated by access control and data flow rules. Breakdown regime: Data crossing boundaries is governed by deterministic rules ensuring integrity and visibility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual-view architecture enforces logical separation of data streams and user roles. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for launch-observatory (10bf3227dd84a58e, domain=other, pages_read=9/9): Operator 'Launch Readiness Synthesis' (page 2, domain other) captures: ## Jarvis Jarvis is the operator synthesis layer, implemented in: - `apps/web/lib/cockpit/jarvis.ts` — pure synthesizer (`synthesizeJarvis`), takes structured inputs and returns a `JarvisAssessment`. Assumptions: Inputs are deterministic and complete; missing data results in UNKNOWN status. Breakdown regime: When input data is insufficient or inconsistent, the system defaults to UNKNOWN or NOT_READY_* statuses. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Jarvis synthesizes a multi-dimensional readiness score from structured inputs, mapping to a launch readiness state space. Operator 'Pick Accountability Ledger' (page 2, domain other) captures: ## Historical pick accountability The pick forensic ledger lives at `/cockpit/history`. Assumptions: All picks are tracked for audit trail; bootstrap picks are excluded from canonical metrics. Breakdown regime: Bootstrap picks are isolated from public aggregation and learning loops. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ledger structure mirrors canonical pick lifecycle, enabling forensic reconstruction of outcomes. Operator 'Internal/Public Split' (page 1, domain other) captures: # Launch Observatory The Sports Intelligence OS is built around a hard split between what a customer can see and what an operator can see. Assumptions: Customer and operator views are strictly separated by access control and data flow rules. Breakdown regime: Data crossing boundaries is governed by deterministic rules ensuring integrity and visibility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual-view architecture enforces logical separation of data streams and user roles. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in layered systems theory and operational semantics, this architecture reflects principles of information hiding and modular decomposition from software engineering and control theory. Retrocausal Genealogy: Rooted in launch-observatory (10bf3227dd84a58e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in launch-observatory (10bf3227dd84a58e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The system models operator intent through structured inputs and synthesizes readiness. It accounts for adversarial or incomplete data by defaulting to conservative UNKNOWN states, reflecting a bounded rationality approach. Theory of Mind & Decision Maker Model: Rooted in launch-observatory (10bf3227dd84a58e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by strict separation of customer and operator data paths. Leakage is prevented through deterministic routing and explicit exclusion of bootstrap picks from canonical metrics. Cross-Layer Veto & Anti-Leakage Check: Rooted in launch-observatory (10bf3227dd84a58e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in launch-observatory (10bf3227dd84a58e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

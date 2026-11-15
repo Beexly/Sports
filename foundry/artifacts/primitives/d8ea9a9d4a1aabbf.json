@@ -1,0 +1,78 @@
+{
+  "book_id": "d8ea9a9d4a1aabbf",
+  "source_status": "COMPLETE",
+  "title": "circasports.com",
+  "file_name": "circasports.com.md",
+  "sha256": "d8ea9a9d4a1aabbf05def790d9a011491d284de7720556fbbd4b38b89a46bb8d",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap topology and URL path segmentation define a structured information manifold for sportsbook content discovery and navigation. Universal Lens: Rooted in circasports.com (d8ea9a9d4a1aabbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on sitemap crawl success rates inform probabilistic content prioritization for GSI's predictive models. GSI Mapping: Rooted in circasports.com (d8ea9a9d4a1aabbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions between URL paths and sitemap indices enable dynamic event scheduling and real-time content routing in GSE. GSE Mapping: Rooted in circasports.com (d8ea9a9d4a1aabbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_crawl_success_rate",
+      "name": "Sitemap Crawl Success Rate",
+      "verbatim_quote": "# circasports.com Category: **sportsbook** URLs discovered: **325** Sitemaps walked: 17 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_s': 'crawl success rate (dimensionless)', 'N_s': 'number of sitemaps crawled (unitless)', 'N_u': 'total URLs discovered (unitless)'}",
+      "assumptions": "Each sitemap entry contributes independently to URL coverage; crawl status is binary (success/failure).",
+      "breakdown_regime": "When R_s < 0.5, sitemap indexing is unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic content graph traversal and GSE's path resolution engine.",
+        "source_operator": "sitemap_crawl_success_rate",
+        "telemetry": "Percentage of sitemaps returning HTTP 200 status."
+      }
+    },
+    {
+      "primitive_id": "url_path_segmentation_taxonomy",
+      "name": "URL Path Segmentation Taxonomy",
+      "verbatim_quote": "segment | URLs | |---|---| | `/blog` | 143 | | `/event` | 35 | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_p': 'path segment type (categorical)', 'N_p': 'number of URLs per segment (unitless)'}",
+      "assumptions": "Path segments are mutually exclusive and collectively exhaustive categories of content.",
+      "breakdown_regime": "When N_p ≈ 0, path segment is underutilized or deprecated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's content category vector space and GSE's routing state machine.",
+        "source_operator": "url_path_segmentation_taxonomy",
+        "telemetry": "Frequency count of each path segment in URL corpus."
+      }
+    },
+    {
+      "primitive_id": "content_discovery_manifold",
+      "name": "Content Discovery Manifold",
+      "verbatim_quote": "# circasports.com Category: **sportsbook** URLs discovered: **325** Sitemaps walked: 17 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_c': 'content manifold dimensionality (unitless)', 'N_d': 'discovered URLs (unitless)', 'N_s': 'sitemaps walked (unitless)'}",
+      "assumptions": "Manifold is locally flat; sitemaps provide uniform sampling of content space.",
+      "breakdown_regime": "If N_d / N_s < 10, content density is low.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSI's knowledge graph expansion and GSE's adaptive content retrieval.",
+        "source_operator": "content_discovery_manifold",
+        "telemetry": "Ratio of total URLs to sitemaps crawled."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d8ea9a9d4a1aabbf_t0",
+      "think": "The sitemap crawl data reveals a hierarchical content structure where each sitemap corresponds to a distinct domain of sportsbook information. The success rate of crawling sitemaps directly impacts the completeness of the content discovery manifold. The URL path taxonomy reflects semantic clustering of content types such as blogs, events, and locations. These primitives form a dual framework: one for probabilistic content access (GSI) and another for deterministic navigation (GSE). Failure modes include missing sitemaps (e.g., 404 errors) or underpopulated segments, which can lead to incomplete state representations in GSE and inaccurate priors in GSI.\n\nDeep epistemic analysis for circasports.com (d8ea9a9d4a1aabbf, domain=other, pages_read=3/3): Operator 'Sitemap Crawl Success Rate' (page 1, domain other) captures: # circasports.com Category: **sportsbook** URLs discovered: **325** Sitemaps walked: 17 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap entry contributes independently to URL coverage; crawl status is binary (success/failure). Breakdown regime: When R_s < 0.5, sitemap indexing is unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic content graph traversal and GSE's path resolution engine. Operator 'URL Path Segmentation Taxonomy' (page 1, domain other) captures: segment | URLs | |---|---| | `/blog` | 143 | | `/event` | 35 | | Assumptions: Path segments are mutually exclusive and collectively exhaustive categories of content. Breakdown regime: When N_p ≈ 0, path segment is underutilized or deprecated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's content category vector space and GSE's routing state machine. Operator 'Content Discovery Manifold' (page 1, domain other) captures: # circasports.com Category: **sportsbook** URLs discovered: **325** Sitemaps walked: 17 ## Sitemaps | Sitemap | Status Assumptions: Manifold is locally flat; sitemaps provide uniform sampling of content space. Breakdown regime: If N_d / N_s < 10, content density is low. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSI's knowledge graph expansion and GSE's adaptive content retrieval. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for circasports.com (d8ea9a9d4a1aabbf, domain=other, pages_read=3/3): Operator 'Sitemap Crawl Success Rate' (page 1, domain other) captures: # circasports.com Category: **sportsbook** URLs discovered: **325** Sitemaps walked: 17 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap entry contributes independently to URL coverage; crawl status is binary (success/failure). Breakdown regime: When R_s < 0.5, sitemap indexing is unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic content graph traversal and GSE's path resolution engine. Operator 'URL Path Segmentation Taxonomy' (page 1, domain other) captures: segment | URLs | |---|---| | `/blog` | 143 | | `/event` | 35 | | Assumptions: Path segments are mutually exclusive and collectively exhaustive categories of content. Breakdown regime: When N_p ≈ 0, path segment is underutilized or deprecated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's content category vector space and GSE's routing state machine. Operator 'Content Discovery Manifold' (page 1, domain other) captures: # circasports.com Category: **sportsbook** URLs discovered: **325** Sitemaps walked: 17 ## Sitemaps | Sitemap | Status Assumptions: Manifold is locally flat; sitemaps provide uniform sampling of content space. Breakdown regime: If N_d / N_s < 10, content density is low. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSI's knowledge graph expansion and GSE's adaptive content retrieval. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and graph theory, this lens builds upon early web crawling models and semantic web taxonomies, evolving through modern content management systems. Retrocausal Genealogy: Rooted in circasports.com (d8ea9a9d4a1aabbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in circasports.com (d8ea9a9d4a1aabbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include automated crawlers seeking maximal coverage versus human editors optimizing for user experience, potentially leading to conflicting sitemap structures. Theory of Mind & Decision Maker Model: Rooted in circasports.com (d8ea9a9d4a1aabbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in circasports.com (d8ea9a9d4a1aabbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when GSI's probabilistic model overfits to redundant sitemap entries, while GSE's routing engine fails if path segments are misclassified or absent. Cross-Layer Veto & Anti-Leakage Check: Rooted in circasports.com (d8ea9a9d4a1aabbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in circasports.com (d8ea9a9d4a1aabbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

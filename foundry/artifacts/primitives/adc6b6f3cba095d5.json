@@ -1,0 +1,95 @@
+{
+  "book_id": "adc6b6f3cba095d5",
+  "source_status": "COMPLETE",
+  "title": "MIND-STAGING-RECOUNT-2026-11-07",
+  "file_name": "MIND-STAGING-RECOUNT-2026-11-07.md",
+  "sha256": "adc6b6f3cba095d5602bd07bc6e89d6beeed1cb2b35cb940aa16c5c8c56ddd72",
+  "primary_domain": "psych",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "jsonl_line_count",
+      "name": "Line Count Equality Operator",
+      "verbatim_quote": "Recounts (every JSONL line parsed; 0 unparseable anywhere): - mind_2026_11_05_full_corpus.jsonl: 1,389 lines, 1,281 trainer_ready — **manifest matches exactly.** (Its full_corpus_records 1,272 is a subset definition, not the line count.) - mind_batch3_batch4 file: 1,463 lines, 1,292 trainer_ready — **batch manifest matches exactly.** - mind_2026_11_06_mega_sweep_corpus.jsonl: 710 lines, 710 trainer_ready.",
+      "page": 1,
+      "latex": "$\\text{line count}_{\\text{manifest}} = \\text{line count}_{\\text{file}}$",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "No missing, duplicate, or corrupted records; exact one-to-one parsing.",
+      "breakdown_regime": "Data integrity failure when equality breaks.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian posterior exact-match test: $p(\\text{match} | \\text{data}) = 1$.",
+        "source_operator": "jsonl_line_count",
+        "telemetry": "Residual error between reported vs. counted line counts."
+      }
+    },
+    {
+      "primitive_id": "trainer_ready_fraction",
+      "name": "Trainer-Ready Fraction Operator",
+      "verbatim_quote": "Manifest self-reports: mind_2026_11_05_manifest.json — total_records 1,389, trainer_ready 1,281 (92.22%), full_corpus_records 1,272, \"pdf_pointers_hydrated 877/877\", status verified_clean_deduplicated.",
+      "page": 1,
+      "latex": "$f_{\\text{ready}} = \\frac{\\text{trainer-ready}}{\\text{total}}$",
+      "symbol_and_unit_ledger": "None (dimensionless fraction)",
+      "assumptions": "All records are independently ready or not.",
+      "breakdown_regime": "Drift in readiness probability over time.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal coverage: $1 - f_{\\text{ready}}$ is the false discovery rate.",
+        "source_operator": "trainer_ready_fraction",
+        "telemetry": "Time-series tracking of $f_{\\text{ready}}$ per wave/batch."
+      }
+    },
+    {
+      "primitive_id": "file_overlap_union",
+      "name": "File Overlap Union Operator",
+      "verbatim_quote": "- **Staging total: 14,040 lines, 13,265 trainer_ready-flagged (94.48%), 0 corrupt lines.** Note on totals: the files overlap by design (the unified feed aggregates waves 1–12; the batch file restates batch 3/4), so 14,040 is a line total across files, NOT a deduplicated record count.",
+      "page": 1,
+      "latex": "$|\\bigcup_i F_i| = \\sum_i |F_i|$",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Files share overlapping but distinct record sets.",
+      "breakdown_regime": "Overcounting due to non-disjoint unions.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Inclusion-exclusion principle for set unions.",
+        "source_operator": "file_overlap_union",
+        "telemetry": "Jaccard similarity coefficient between file pairs."
+      }
+    },
+    {
+      "primitive_id": "deduplication_subset",
+      "name": "Deduplication Subset Operator",
+      "verbatim_quote": "So the in-repo mind corpus is ~6.2K unique records in staging form, not 14K.",
+      "page": 1,
+      "latex": "$N_{\\text{unique}} < N_{\\text{total lines}}$",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Records can be perfectly identified and removed as duplicates.",
+      "breakdown_regime": "Failure to remove all duplicates ($N_{\\text{unique}}$ underestimates true diversity).",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian species richness estimation via Good-Turing frequency smoothing.",
+        "source_operator": "deduplication_subset",
+        "telemetry": "Histogram of record frequencies before vs. after deduplication."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "adc6b6f3cba095d5_t0",
+      "think": "The four primitives form a compositional algebra for dataset audit. Line-count equality enforces parsing correctness; trainer-ready fractions quantify data quality; union operators track redundancy; and deduplication subsets estimate true cardinality. Together they create a closed-loop verification cycle: report → recount → reconcile → verify. The key failure mode is systematic bias in any step—e.g., if some batches systematically omit ready records, the equalities break while the fraction remains deceptive. Thus, these operators serve as both diagnostic tools and performance metrics.\n\nDeep epistemic analysis for MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5, domain=psych, pages_read=1/1): Operator 'Line Count Equality Operator' (page 1, domain psych) captures: Recounts (every JSONL line parsed; 0 unparseable anywhere): - mind_2026_11_05_full_corpus.jsonl: 1,389 lines, 1,281 trainer_ready — **manifest matches exactly.** (Its full_corpus_records 1,272 is a subset definition, not the line count.) - mind_batch3_batch4 file: 1,463 lines, 1,292 trainer_ready — **batch manifest matches exactly.** - mind_2026_11_06_mega_sweep_corpus.jsonl: 710 lines, 710 trainer_ready. Assumptions: No missing, duplicate, or corrupted records; exact one-to-one parsing. Breakdown regime: Data integrity failure when equality breaks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian posterior exact-match test: $p(\\text{match} | \\text{data}) = 1$. Operator 'Trainer-Ready Fraction Operator' (page 1, domain psych) captures: Manifest self-reports: mind_2026_11_05_manifest.json — total_records 1,389, trainer_ready 1,281 (92.22%), full_corpus_records 1,272, \"pdf_pointers_hydrated 877/877\", status verified_clean_deduplicated. Assumptions: All records are independently ready or not. Breakdown regime: Drift in readiness probability over time. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal coverage: $1 - f_{\\text{ready}}$ is the false discovery rate. Operator 'File Overlap Union Operator' (page 1, domain psych) captures: - **Staging total: 14,040 lines, 13,265 trainer_ready-flagged (94.48%), 0 corrupt lines.** Note on totals: the files overlap by design (the unified feed aggregates waves 1–12; the batch file restates batch 3/4), so 14,040 is a line total across files, NOT a deduplicated record count. Assumptions: Files share overlapping but distinct record sets. Breakdown regime: Overcounting due to non-disjoint unions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Inclusion-exclusion principle for set unions. Operator 'Deduplication Subset Operator' (page 1, domain psych) captures: So the in-repo mind corpus is ~6.2K unique records in staging form, not 14K. Assumptions: Records can be perfectly identified and removed as duplicates. Breakdown regime: Failure to remove all duplicates ($N_{\\text{unique}}$ underestimates true diversity). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian species richness estimation via Good-Turing frequency smoothing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5, domain=psych, pages_read=1/1): Operator 'Line Count Equality Operator' (page 1, domain psych) captures: Recounts (every JSONL line parsed; 0 unparseable anywhere): - mind_2026_11_05_full_corpus.jsonl: 1,389 lines, 1,281 trainer_ready — **manifest matches exactly.** (Its full_corpus_records 1,272 is a subset definition, not the line count.) - mind_batch3_batch4 file: 1,463 lines, 1,292 trainer_ready — **batch manifest matches exactly.** - mind_2026_11_06_mega_sweep_corpus.jsonl: 710 lines, 710 trainer_ready. Assumptions: No missing, duplicate, or corrupted records; exact one-to-one parsing. Breakdown regime: Data integrity failure when equality breaks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian posterior exact-match test: $p(\\text{match} | \\text{data}) = 1$. Operator 'Trainer-Ready Fraction Operator' (page 1, domain psych) captures: Manifest self-reports: mind_2026_11_05_manifest.json — total_records 1,389, trainer_ready 1,281 (92.22%), full_corpus_records 1,272, \"pdf_pointers_hydrated 877/877\", status verified_clean_deduplicated. Assumptions: All records are independently ready or not. Breakdown regime: Drift in readiness probability over time. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal coverage: $1 - f_{\\text{ready}}$ is the false discovery rate. Operator 'File Overlap Union Operator' (page 1, domain psych) captures: - **Staging total: 14,040 lines, 13,265 trainer_ready-flagged (94.48%), 0 corrupt lines.** Note on totals: the files overlap by design (the unified feed aggregates waves 1–12; the batch file restates batch 3/4), so 14,040 is a line total across files, NOT a deduplicated record count. Assumptions: Files share overlapping but distinct record sets. Breakdown regime: Overcounting due to non-disjoint unions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Inclusion-exclusion principle for set unions. Operator 'Deduplication Subset Operator' (page 1, domain psych) captures: So the in-repo mind corpus is ~6.2K unique records in staging form, not 14K. Assumptions: Records can be perfectly identified and removed as duplicates. Breakdown regime: Failure to remove all duplicates ($N_{\\text{unique}}$ underestimates true diversity). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian species richness estimation via Good-Turing frequency smoothing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory's source coding theorem and Shannon's noiseless channel coding. The primitives formalize the \"rate\" at which useful data streams into training pipelines. Retrocausal Genealogy: Rooted in MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing actors include data engineers who may optimize for ingest speed over completeness, and ML practitioners who demand high readiness fractions. The primitives model their incentives: engineers prefer high $f_{\\text{ready}}$ even if inflated by overcounting, while practitioners seek low $N_{\\text{unique}}$ estimates to justify smaller model sizes. Theory of Mind & Decision Maker Model: Rooted in MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires independence across file sources; otherwise, covariance inflates false uniqueness. Leakage vetoes apply when deduplication removes records that carry predictive information, creating dataset drift between training and evaluation. Cross-Layer Veto & Anti-Leakage Check: Rooted in MIND-STAGING-RECOUNT-2026-11-07 (adc6b6f3cba095d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

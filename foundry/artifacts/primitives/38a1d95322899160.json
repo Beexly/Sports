@@ -1,0 +1,78 @@
+{
+  "book_id": "38a1d95322899160",
+  "source_status": "COMPLETE",
+  "title": "Cricket_Analytics_and_Predictor",
+  "file_name": "Cricket_Analytics_and_Predictor.md",
+  "sha256": "38a1d9532289916083fbc3c9f37b952e353ced322267e35f7b5fb6141911aa7a",
+  "primary_domain": "other",
+  "pages_total": 8,
+  "pages_read": 8,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Cricket outcome prediction via team strength modeling from player-level batting/bowling stats using supervised learning. Universal Lens: Rooted in Cricket_Analytics_and_Predictor (38a1d95322899160), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on match winners using historical player performance and team composition priors. GSI Mapping: Rooted in Cricket_Analytics_and_Predictor (38a1d95322899160), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in IPL matches modeled via clustering of team rosters and dynamic player contribution metrics. GSE Mapping: Rooted in Cricket_Analytics_and_Predictor (38a1d95322899160), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "team_strength_model",
+      "name": "Team Strength Model",
+      "verbatim_quote": "Our work suggests that the relative team strength between the competing teams forms a distinctive feature for predicting the winner.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{t}': 'Team strength scalar (dimensionless)', 'T_{i}': \"Team i's composite strength index\"}",
+      "assumptions": "Relative team strength is deterministic and static over a match lifecycle.",
+      "breakdown_regime": "When team composition changes drastically or player injury occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps team roster to probabilistic win likelihood using player-level stats.",
+        "source_operator": "team_strength_model",
+        "telemetry": "Match result accuracy post-training on historical data."
+      }
+    },
+    {
+      "primitive_id": "player_performance_index",
+      "name": "Player Performance Index",
+      "verbatim_quote": "Modeling the team strength boils down to modeling individual player's batting and bowling performances, forming the basis of our approach.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{p}': \"Player p's performance index (dimensionless)\", 'B_{p}': \"Player p's batting potential\", 'W_{p}': \"Player p's bowling potential\"}",
+      "assumptions": "Performance indices are independent and additive across roles.",
+      "breakdown_regime": "During inconsistent form or external stressors like weather.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Player stats mapped to latent performance vectors in GSE.",
+        "source_operator": "player_performance_index",
+        "telemetry": "Normalized deviation from expected performance per game."
+      }
+    },
+    {
+      "primitive_id": "match_outcome_predictor",
+      "name": "Match Outcome Predictor",
+      "verbatim_quote": "With this article, we embark on predicting the outcome of Indian Premier League (IPL) cricket match using a supervised learning approach from a team composition perspective.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'O_{m}': 'Outcome of match m (win/loss/draw)', 'X_{m}': 'Input features from team composition'}",
+      "assumptions": "Historical data reflects future behavior; inputs are fully observed.",
+      "breakdown_regime": "In cases of unforeseen events such as rain delays or umpire errors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Predictive model trained on team composition and historical outcomes.",
+        "source_operator": "match_outcome_predictor",
+        "telemetry": "Accuracy of predicted outcomes vs actual match results."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "38a1d95322899160_t0",
+      "think": "The core insight is that team strength emerges from aggregating individual player capabilities—batting and bowling potentials—into a scalar measure. This is formalized by assuming that team performance is a function of player-level contributions. The modeling process involves defining a performance index for each player based on career statistics and recent activity. These indices are then aggregated into a team strength vector. Supervised learning algorithms are applied to map these vectors to match outcomes. The key duality lies in treating team strength as both a descriptive statistic and a predictive variable. Failure modes include overfitting due to insufficient data or underestimating variance in player form. The model assumes stationarity in player performance and ignores contextual variables like pitch conditions or weather unless encoded in the input features.\n\nDeep epistemic analysis for Cricket_Analytics_and_Predictor (38a1d95322899160, domain=other, pages_read=8/8): Operator 'Team Strength Model' (page 1, domain other) captures: Our work suggests that the relative team strength between the competing teams forms a distinctive feature for predicting the winner. Assumptions: Relative team strength is deterministic and static over a match lifecycle. Breakdown regime: When team composition changes drastically or player injury occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps team roster to probabilistic win likelihood using player-level stats. Operator 'Player Performance Index' (page 1, domain other) captures: Modeling the team strength boils down to modeling individual player's batting and bowling performances, forming the basis of our approach. Assumptions: Performance indices are independent and additive across roles. Breakdown regime: During inconsistent form or external stressors like weather. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Player stats mapped to latent performance vectors in GSE. Operator 'Match Outcome Predictor' (page 1, domain other) captures: With this article, we embark on predicting the outcome of Indian Premier League (IPL) cricket match using a supervised learning approach from a team composition perspective. Assumptions: Historical data reflects future behavior; inputs are fully observed. Breakdown regime: In cases of unforeseen events such as rain delays or umpire errors. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Predictive model trained on team composition and historical outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Cricket_Analytics_and_Predictor (38a1d95322899160, domain=other, pages_read=8/8): Operator 'Team Strength Model' (page 1, domain other) captures: Our work suggests that the relative team strength between the competing teams forms a distinctive feature for predicting the winner. Assumptions: Relative team strength is deterministic and static over a match lifecycle. Breakdown regime: When team composition changes drastically or player injury occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps team roster to probabilistic win likelihood using player-level stats. Operator 'Player Performance Index' (page 1, domain other) captures: Modeling the team strength boils down to modeling individual player's batting and bowling performances, forming the basis of our approach. Assumptions: Performance indices are independent and additive across roles. Breakdown regime: During inconsistent form or external stressors like weather. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Player stats mapped to latent performance vectors in GSE. Operator 'Match Outcome Predictor' (page 1, domain other) captures: With this article, we embark on predicting the outcome of Indian Premier League (IPL) cricket match using a supervised learning approach from a team composition perspective. Assumptions: Historical data reflects future behavior; inputs are fully observed. Breakdown regime: In cases of unforeseen events such as rain delays or umpire errors. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Predictive model trained on team composition and historical outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical game theory and statistical mechanics, extended by machine learning paradigms in sports analytics. Influenced by early work in baseball sabermetrics and modern reinforcement learning frameworks. Retrocausal Genealogy: Rooted in Cricket_Analytics_and_Predictor (38a1d95322899160), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Cricket_Analytics_and_Predictor (38a1d95322899160), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include teams with varying strategies, coaching philosophies, and psychological resilience. The model must account for adaptive behaviors and hidden variables like player motivation or tactical surprise. Theory of Mind & Decision Maker Model: Rooted in Cricket_Analytics_and_Predictor (38a1d95322899160), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring distinct roles (batsman vs bowler) do not redundantly encode similar signals. Leakage is mitigated by excluding future-match data during training and validating on out-of-sample datasets. Cross-Layer Veto & Anti-Leakage Check: Rooted in Cricket_Analytics_and_Predictor (38a1d95322899160), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

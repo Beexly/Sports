@@ -512,7 +512,7 @@ export default function CockpitWorkflowsHubPage() {
                 Tracks the exact week horizon (`W1–W5` vs `W1–W6` vs `W1–W7` vs `Week 8 Live`) across every dataset on disk so stale data gaps are immediately visible.
               </p>
             </div>
-            <span className="text-xs font-mono px-2.5 py-1 rounded bg-caution/20 text-caution border border-caution/30/40">
+            <span className="text-xs font-mono px-2.5 py-1 rounded bg-caution/20 text-caution border border-caution/40">
               LIVE DATA HORIZON MONITOR
             </span>
           </div>
@@ -588,7 +588,7 @@ export default function CockpitWorkflowsHubPage() {
           <div className="rounded-xl border border-mineral bg-obsidian/60 p-5">
             <h2 className="text-lg font-bold mb-4 flex items-center justify-between">
               <span>3. All Live Working Apps &amp; Surfaces</span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-verify/20 text-verify border border-verify/40/40">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-verify/20 text-verify border border-verify/40">
                 11 / 11 ONLINE
               </span>
             </h2>

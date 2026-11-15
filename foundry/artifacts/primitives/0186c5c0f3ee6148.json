@@ -1,0 +1,78 @@
+{
+  "book_id": "0186c5c0f3ee6148",
+  "source_status": "COMPLETE",
+  "title": "POSTABLE_BOARD",
+  "file_name": "POSTABLE_BOARD.md",
+  "sha256": "0186c5c0f3ee6148a6bbb63f3f0b03efa471f8c0e6b93e24322910053cb302aa",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The Postable Board formalizes a constrained optimization over a time-dependent action space. It defines a strict filtration where permissible actions are filtered by live market liquidity and independent statistical edge, enforcing a hard boundary condition that prevents the execution of stale or structurally degenerate signals.",
+  "gsi_mapping": "Within GSI, this board acts as a rigorous conformal prediction filter. The `bookmakerCount >= 1` constraint ensures non-zero empirical calibration against market priors, while the pinned `consensusPct` at 1.0000 for run lines highlights structural degeneracies requiring explicit Bayesian adjustments to avoid false confidence intervals.",
+  "gse_mapping": "For GSE, the protocol dictates a discrete state-transition system. A pick's state transitions from 'candidate' to 'postable' only upon passing the provenance checklist. The expiration rule enforces a hard temporal cutoff, ensuring situational reasoning strictly adheres to current game clock dynamics and real-time line snapshots.",
+  "primitives": [
+    {
+      "primitive_id": "canonical_pre_post_filtration",
+      "name": "Canonical Pre-Post Filtration",
+      "verbatim_quote": "**Read-before-post.** No public pick is drafted or posted unless it appears in the current `Postable` section.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Action Space \\mathcal{A} (dimensionless set), Postable Set \\mathcal{P} \\subseteq \\mathcal{A}",
+      "assumptions": "Assumes a centralized, single-source truth mechanism exists to define \\mathcal{P}.",
+      "breakdown_regime": "Breaks down if multiple competing boards exist, violating the single-writer invariant.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's pre-execution validation layer, ensuring no agent executes an action outside the verified state space.",
+        "source_operator": "canonical_pre_post_filtration",
+        "telemetry": "Zero unauthorized posts; 100% adherence to the postable list."
+      }
+    },
+    {
+      "primitive_id": "temporal_expiration_boundary",
+      "name": "Temporal Expiration Boundary",
+      "verbatim_quote": "**Freshness.** A board expires when (a) a newer refresh supersedes it, or (b) any listed game's kickoff passes — whichever comes first.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Time t (ISO 8601), Kickoff T_k (ISO 8601), Refresh T_r (ISO 8601)",
+      "assumptions": "Time is monotonically increasing; event timestamps are globally synchronized.",
+      "breakdown_regime": "Fails under severe clock desynchronization or retroactive schedule changes without re-refreshing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to GSI's data freshness decay function, forcing model inputs to zero weight once T > min(T_r, T_k).",
+        "source_operator": "temporal_expiration_boundary",
+        "telemetry": "Latency between refresh and post; number of expired picks attempted."
+      }
+    },
+    {
+      "primitive_id": "market_liquidity_veto",
+      "name": "Market Liquidity Veto",
+      "verbatim_quote": "Full provenance verified row-by-row: `bookmakerCount`, `consensusPct`, `generatedAt`, `dataFreshnessAt`, `factorBreakdown.independentEdge`, live line snapshots.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Bookmaker Count N_b (integer \\ge 0), Consensus Percentage p_c \\in [0,1], Independent Edge \\epsilon (dimensionless)",
+      "assumptions": "Market pricing reflects aggregated rational expectations; N_b = 0 implies pure theoretical derivation without market friction.",
+      "breakdown_regime": "Singularities occur when N_b = 0, rendering the edge purely Elo-based and invalidating the market-fade logic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to GSI's liquidity-weighted inference, vetoing any prediction lacking empirical market anchoring (N_b \\ge 1).",
+        "source_operator": "market_liquidity_veto",
+        "telemetry": "Frequency of kills due to bookmakerCount = 0; variance in consensusPct."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0186c5c0f3ee6148_t0",
+      "think": "The POSTABLE_BOARD establishes a rigorous mathematical framework for filtering high-dimensional predictive outputs into a safe, executable subspace. At its core, it defines a time-dependent action space \\mathcal{A}(t) constrained by a strict filtration \\mathcal{F}_t. The primary operator is the Canonical Pre-Post Filtration, which asserts that any proposed action \\alpha must belong to the explicitly enumerated Postable Set \\mathcal{P} \\subseteq \\mathcal{A}(t). This eliminates arbitrary agent discretion, reducing the decision process to a deterministic lookup followed by execution.\n\nCrucially, the validity of \\mathcal{P} is governed by the Temporal Expiration Boundary. The set \\mathcal{P} is not static; it undergoes a hard reset at time T_{exp} = \\min(T_{refresh}, \\min_{g \\in Games}(T_{kickoff}^g)). This introduces a discontinuous state transition, ensuring that stale information—modeled as decaying signal-to-noise ratios—is aggressively pruned before it can corrupt the output distribution.\n\nFurthermore, the Market Liquidity Veto acts as a singularity avoidance mechanism. The requirement that `bookmakerCount` \\ge 1 serves as a regularization term, preventing the system from relying on pure Elo-derived edges (where N_b = 0), which lack empirical market calibration. When `consensusPct` is pinned at exactly 1.0000 (as seen in MLB run lines), the system recognizes a structural degeneracy where the edge provides zero discriminating information relative to the market. By appending dissent notes rather than unilaterally overriding the board, the protocol maintains a hierarchical consistency, treating disagreements as perturbations to be logged rather than immediate state changes. This dual-layer verification—temporal freshness and market liquidity—creates a robust, anti-fragile pipeline for deploying quantitative insights.\n\nDeep epistemic analysis for POSTABLE_BOARD (0186c5c0f3ee6148, domain=other, pages_read=2/2): Operator 'Canonical Pre-Post Filtration' (page 1, domain other) captures: **Read-before-post.** No public pick is drafted or posted unless it appears in the current `Postable` section. Assumptions: Assumes a centralized, single-source truth mechanism exists to define \\mathcal{P}. Breakdown regime: Breaks down if multiple competing boards exist, violating the single-writer invariant. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's pre-execution validation layer, ensuring no agent executes an action outside the verified state space. Operator 'Temporal Expiration Boundary' (page 1, domain other) captures: **Freshness.** A board expires when (a) a newer refresh supersedes it, or (b) any listed game's kickoff passes — whichever comes first. Assumptions: Time is monotonically increasing; event timestamps are globally synchronized. Breakdown regime: Fails under severe clock desynchronization or retroactive schedule changes without re-refreshing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to GSI's data freshness decay function, forcing model inputs to zero weight once T > min(T_r, T_k). Operator 'Market Liquidity Veto' (page 1, domain other) captures: Full provenance verified row-by-row: `bookmakerCount`, `consensusPct`, `generatedAt`, `dataFreshnessAt`, `factorBreakdown.independentEdge`, live line snapshots. Assumptions: Market pricing reflects aggregated rational expectations; N_b = 0 implies pure theoretical derivation without market friction. Breakdown regime: Singularities occur when N_b = 0, rendering the edge purely Elo-based and invalidating the market-fade logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSI's liquidity-weighted inference, vetoing any prediction lacking empirical market anchoring (N_b \\ge 1). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for POSTABLE_BOARD (0186c5c0f3ee6148, domain=other, pages_read=2/2): Operator 'Canonical Pre-Post Filtration' (page 1, domain other) captures: **Read-before-post.** No public pick is drafted or posted unless it appears in the current `Postable` section. Assumptions: Assumes a centralized, single-source truth mechanism exists to define \\mathcal{P}. Breakdown regime: Breaks down if multiple competing boards exist, violating the single-writer invariant. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's pre-execution validation layer, ensuring no agent executes an action outside the verified state space. Operator 'Temporal Expiration Boundary' (page 1, domain other) captures: **Freshness.** A board expires when (a) a newer refresh supersedes it, or (b) any listed game's kickoff passes — whichever comes first. Assumptions: Time is monotonically increasing; event timestamps are globally synchronized. Breakdown regime: Fails under severe clock desynchronization or retroactive schedule changes without re-refreshing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to GSI's data freshness decay function, forcing model inputs to zero weight once T > min(T_r, T_k). Operator 'Market Liquidity Veto' (page 1, domain other) captures: Full provenance verified row-by-row: `bookmakerCount`, `consensusPct`, `generatedAt`, `dataFreshnessAt`, `factorBreakdown.independentEdge`, live line snapshots. Assumptions: Market pricing reflects aggregated rational expectations; N_b = 0 implies pure theoretical derivation without market friction. Breakdown regime: Singularities occur when N_b = 0, rendering the edge purely Elo-based and invalidating the market-fade logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSI's liquidity-weighted inference, vetoing any prediction lacking empirical market anchoring (N_b \\ge 1). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This protocol inherits deeply from the theory of stochastic filtrations in continuous-time finance, specifically the concept of predictable processes where trading strategies must be adapted to the available information flow. It also echoes the strict version control and immutable ledger principles found in distributed systems, ensuring a single source of truth. Historically, it mirrors the evolution of sports betting from intuition-based handicapping to rigorously backtested, market-anchored quantitative models, where the 'line' acts as the ultimate arbiter of value.",
+      "theory_of_mind": "The board implicitly models the opposing agents—the sportsbooks and the broader betting public—as a highly efficient, albeit bounded-rational, aggregation mechanism. By mandating `bookmakerCount` \\ge 1, the system acknowledges that a pick devoid of market interaction is merely a theoretical construct, vulnerable to unseen variables. The 'Confidence-ladder rule' further demonstrates an understanding of human cognitive biases, specifically the tendency to overinterpret small numerical differences (e.g., 91 vs 72) as meaningful signals when they are merely artifacts of pinned constants. It forces the writer to act as a rational intermediary, translating raw model outputs into communicable truths that respect the market's collective intelligence.",
+      "cross_layer_veto": "The cross-layer veto conditions are explicitly defined by the Provenance Checklist. A critical anti-collinearity check is the rejection of picks where `independentEdge.decision` = PASS, even if the raw model score is high. This prevents the system from double-counting signals or fading a market that has already correctly priced the outcome. The 'One writer per refresh' rule acts as a synchronization barrier, vetoing any parallel execution paths that could lead to conflicting public narratives. Furthermore, the explicit killing of picks with `bookmakerCount` = 0 serves as a hard veto against overfitting to internal Elo ratings, ensuring that the final output remains orthogonal to pure theoretical bias and firmly grounded in observable market liquidity."
+    }
+  ]
+}

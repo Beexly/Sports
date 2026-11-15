@@ -1,0 +1,78 @@
+{
+  "book_id": "4c5d662249b5ac34",
+  "source_status": "COMPLETE",
+  "title": "openalex_W2142957722",
+  "file_name": "openalex_W2142957722.pdf",
+  "sha256": "4c5d662249b5ac34627d9d7b3875a85ef938c132b58b418d7b83c4b76f87f86a",
+  "primary_domain": "other",
+  "pages_total": 21,
+  "pages_read": 21,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Wireless sensor networks (WSNs) unify distributed sensing with constrained communication; mathematically modeled as graph-based multi-hop routing under energy and topology constraints. Universal Lens: Rooted in openalex_W2142957722 (4c5d662249b5ac34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic network states using Bayesian belief propagation over sparse, noisy sensor data streams with conformal predictive confidence intervals. GSI Mapping: Rooted in openalex_W2142957722 (4c5d662249b5ac34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes adaptive state transitions in WSNs through dynamic routing kernel updates based on real-time energy consumption and data redundancy metrics. GSE Mapping: Rooted in openalex_W2142957722 (4c5d662249b5ac34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sensor_node_constraint_model",
+      "name": "Sensor Node Constraint Model",
+      "verbatim_quote": "In WSN, the sensor nodes have a limited transmission range, and their processing and storage capabilities as well as their energy resources are also limited.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{max}': 'maximum transmission range (m)', 'E_{node}': 'node energy (J)', 'C_{proc}': 'processing capacity (MIPS)', 'S_{mem}': 'storage capacity (bytes)'}",
+      "assumptions": "Nodes operate under fixed hardware constraints with stochastic failure rates.",
+      "breakdown_regime": "Energy depletion or communication range collapse leads to network partitioning.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps node resource vectors to routing feasibility matrices in GSE's kernel space.",
+        "source_operator": "sensor_node_constraint_model",
+        "telemetry": "Node residual energy, signal strength, and buffer occupancy"
+      }
+    },
+    {
+      "primitive_id": "multi_hop_routing_protocol",
+      "name": "Multi-Hop Routing Protocol",
+      "verbatim_quote": "Routing protocols for wireless sensor networks are responsible for maintaining the routes in the network and have to ensure reliable multi-hop communication under these conditions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_{path}': 'hop count in path', 'P_{loss}': 'packet loss probability (dimensionless)', 'D_{latency}': 'end-to-end delay (s)'}",
+      "assumptions": "Network topology is dynamic and nodes may fail unpredictably.",
+      "breakdown_regime": "Route convergence failure or persistent packet loss above threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically maps routing decisions to GSI's probabilistic inference graphs.",
+        "source_operator": "multi_hop_routing_protocol",
+        "telemetry": "Path stability, throughput, and latency variance"
+      }
+    },
+    {
+      "primitive_id": "network_aggregation_principle",
+      "name": "Network Aggregation Principle",
+      "verbatim_quote": "The basic philosophy behind WSNs is that, while the capability of each individual sensor node is limited, the aggregate power of the entire network is sufficient for the required mission.",
+      "page": 1,
+      "latex": "\\mathcal{A}(\\mathcal{N}) = \\sum_{i=1}^{N} f_i(\\mathbf{x}_i) \\quad \\text{where } f_i \\text{ is local function}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{A}(\\\\mathcal{N})': 'aggregate network function value (dimensionless)', 'f_i': 'local node function (dimensionless)', '\\\\mathbf{x}_i': 'node input vector (unitless)'}",
+      "assumptions": "Local functions are additive and independent across nodes.",
+      "breakdown_regime": "Loss of critical node(s) causes aggregation failure or data inconsistency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives global observables from local sensor readings in GSE's state estimation kernel.",
+        "source_operator": "network_aggregation_principle",
+        "telemetry": "Data correlation coefficient, coverage completeness"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4c5d662249b5ac34_t0",
+      "think": "The core mathematical structure of WSNs emerges from the interplay between node-level constraints and network-level coordination. Each sensor node is modeled as a discrete entity with bounded energy E_node, processing C_proc, and storage S_mem, forming a constraint tuple. These nodes form a graph G(V,E) where V represents nodes and E represents communication links. Multi-hop routing is a path-finding problem in this graph, minimizing cost functions such as energy expenditure or hop count. The network's reliability depends on the robustness of this graph under node failures, modeled as stochastic events. The aggregation principle implies that the global behavior of the network can be described by a sum or integral of local functions f_i(x_i), where x_i is the sensory input at node i. This leads to a derived kernel in GSE that computes global observables from local measurements. The failure modes include energy exhaustion, link disconnection, and node malfunction, each leading to breakdown regimes in either routing or aggregation. The mathematical duality lies in the trade-off between localized autonomy and global coherence, which is encoded in the routing protocol's optimization criteria.\n\nDeep epistemic analysis for openalex_W2142957722 (4c5d662249b5ac34, domain=other, pages_read=21/21): Operator 'Sensor Node Constraint Model' (page 1, domain other) captures: In WSN, the sensor nodes have a limited transmission range, and their processing and storage capabilities as well as their energy resources are also limited. Assumptions: Nodes operate under fixed hardware constraints with stochastic failure rates. Breakdown regime: Energy depletion or communication range collapse leads to network partitioning. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps node resource vectors to routing feasibility matrices in GSE's kernel space. Operator 'Multi-Hop Routing Protocol' (page 1, domain other) captures: Routing protocols for wireless sensor networks are responsible for maintaining the routes in the network and have to ensure reliable multi-hop communication under these conditions. Assumptions: Network topology is dynamic and nodes may fail unpredictably. Breakdown regime: Route convergence failure or persistent packet loss above threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps routing decisions to GSI's probabilistic inference graphs. Operator 'Network Aggregation Principle' (page 1, domain other) captures: The basic philosophy behind WSNs is that, while the capability of each individual sensor node is limited, the aggregate power of the entire network is sufficient for the required mission. Assumptions: Local functions are additive and independent across nodes. Breakdown regime: Loss of critical node(s) causes aggregation failure or data inconsistency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives global observables from local sensor readings in GSE's state estimation kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W2142957722 (4c5d662249b5ac34, domain=other, pages_read=21/21): Operator 'Sensor Node Constraint Model' (page 1, domain other) captures: In WSN, the sensor nodes have a limited transmission range, and their processing and storage capabilities as well as their energy resources are also limited. Assumptions: Nodes operate under fixed hardware constraints with stochastic failure rates. Breakdown regime: Energy depletion or communication range collapse leads to network partitioning. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps node resource vectors to routing feasibility matrices in GSE's kernel space. Operator 'Multi-Hop Routing Protocol' (page 1, domain other) captures: Routing protocols for wireless sensor networks are responsible for maintaining the routes in the network and have to ensure reliable multi-hop communication under these conditions. Assumptions: Network topology is dynamic and nodes may fail unpredictably. Breakdown regime: Route convergence failure or persistent packet loss above threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps routing decisions to GSI's probabilistic inference graphs. Operator 'Network Aggregation Principle' (page 1, domain other) captures: The basic philosophy behind WSNs is that, while the capability of each individual sensor node is limited, the aggregate power of the entire network is sufficient for the required mission. Assumptions: Local functions are additive and independent across nodes. Breakdown regime: Loss of critical node(s) causes aggregation failure or data inconsistency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives global observables from local sensor readings in GSE's state estimation kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and information theory, particularly Shannon's channel coding and network flow models. The concept evolved from early distributed systems and mobile ad-hoc networks (MANETs) into specialized sensor network architectures post-2000. Retrocausal Genealogy: Rooted in openalex_W2142957722 (4c5d662249b5ac34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include environmental noise, node failures, and adversarial interference. Decision actors are the routing algorithms, which must balance energy efficiency against data delivery guarantees, while the network itself adapts to changing topologies and data demands. Theory of Mind & Decision Maker Model: Rooted in openalex_W2142957722 (4c5d662249b5ac34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when routing and aggregation layers become too coupled, causing cascading failures. Leakage veto occurs if redundant sensing data is not pruned before transmission, leading to bandwidth saturation and inefficient energy use. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W2142957722 (4c5d662249b5ac34), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

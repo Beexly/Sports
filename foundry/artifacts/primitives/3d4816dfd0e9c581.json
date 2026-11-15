@@ -1,0 +1,78 @@
+{
+  "book_id": "3d4816dfd0e9c581",
+  "source_status": "COMPLETE",
+  "title": "source-activation-roi",
+  "file_name": "source-activation-roi.md",
+  "sha256": "3d4816dfd0e9c581565427d6cfcc7bb068e178b32d4b35f85fae9214c393b18d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Source activation ROI as a conformal predictive measure integrating rights gating, metadata fixtures, and expert queues under integrity constraints. Universal Lens: Rooted in source-activation-roi (3d4816dfd0e9c581), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over source readiness scores and decision-card contracts using proof reports and explanation templates for probabilistic data activation. GSI Mapping: Rooted in source-activation-roi (3d4816dfd0e9c581), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps blocked sources through activation queues with fallbacks, updating product readiness states via King gap map and Claude UI contracts. GSE Mapping: Rooted in source-activation-roi (3d4816dfd0e9c581), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "source_activation_roi",
+      "name": "Source Activation Return on Investment",
+      "verbatim_quote": "# Source Activation ROI Generated in the Autonomous StatKing Integrity + Build Sprint on 2026-06-13T00:00:00Z.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ROI': 'dimensionless ratio'}",
+      "assumptions": "Data sources are categorized by activation status; only active sources contribute to ROI.",
+      "breakdown_regime": "When blocked or metadata-only sources dominate, ROI approaches zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "ROI derived from product readiness scores and activation queue throughput, mapped to GSI's Bayesian activation model.",
+        "source_operator": "source_activation_roi",
+        "telemetry": "Product readiness score delta per activated source."
+      }
+    },
+    {
+      "primitive_id": "rights_gating",
+      "name": "Rights Access Control Gate",
+      "verbatim_quote": "## Integrity rule Do not pretend blocked, metadata-only, fixture-backed, license-required, or partner-required data is active.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'boolean {0,1}'}",
+      "assumptions": "Access is binary; all blocked data is excluded from active computation.",
+      "breakdown_regime": "When G=0, data is inactive and excluded from ROI calculation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Rights gating mirrors GSI's exclusion logic for invalid data points in probabilistic models.",
+        "source_operator": "rights_gating",
+        "telemetry": "Number of blocked sources per time window."
+      }
+    },
+    {
+      "primitive_id": "product_readiness_score",
+      "name": "Product Readiness Index",
+      "verbatim_quote": "## Built now Rights gates, media metadata fixtures, expert activation queues, source activation ROI, King gap map, proof reports, explanation templates, decision-card contracts, owned-signal fixtures, product readiness scores, and Claude UI contracts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PR': 'dimensionless score ∈ [0,1]'}",
+      "assumptions": "PR is a normalized composite of activation and quality metrics.",
+      "breakdown_regime": "PR approaches 0 when no sources are activated or all are blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "PR is a scalar output from GSE's state-transition engine, used as input to GSI's Bayesian inference.",
+        "source_operator": "product_readiness_score",
+        "telemetry": "Average PR across all activated sources."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3d4816dfd0e9c581_t0",
+      "think": "The source activation ROI primitive is a derived kernel that aggregates product readiness scores and activation queue dynamics under integrity constraints. It operates as a scalar return metric where each activated source contributes proportionally to its readiness and compliance with rights gates. The system enforces a binary access model (rights gating), ensuring only valid data enters the computation. This creates a dual structure: GSE manages activation queues and state transitions, while GSI applies Bayesian inference to derive probabilistic outcomes from these structured inputs. Failure modes include blocked-source accumulation, which reduces ROI to zero, and misclassification of data types, violating the integrity rule. The system exhibits a singularity at full blockage, where ROI becomes undefined due to zero denominator in any normalization.\n\nDeep epistemic analysis for source-activation-roi (3d4816dfd0e9c581, domain=other, pages_read=1/1): Operator 'Source Activation Return on Investment' (page 1, domain other) captures: # Source Activation ROI Generated in the Autonomous StatKing Integrity + Build Sprint on 2026-06-13T00:00:00Z. Assumptions: Data sources are categorized by activation status; only active sources contribute to ROI. Breakdown regime: When blocked or metadata-only sources dominate, ROI approaches zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): ROI derived from product readiness scores and activation queue throughput, mapped to GSI's Bayesian activation model. Operator 'Rights Access Control Gate' (page 1, domain other) captures: ## Integrity rule Do not pretend blocked, metadata-only, fixture-backed, license-required, or partner-required data is active. Assumptions: Access is binary; all blocked data is excluded from active computation. Breakdown regime: When G=0, data is inactive and excluded from ROI calculation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Rights gating mirrors GSI's exclusion logic for invalid data points in probabilistic models. Operator 'Product Readiness Index' (page 1, domain other) captures: ## Built now Rights gates, media metadata fixtures, expert activation queues, source activation ROI, King gap map, proof reports, explanation templates, decision-card contracts, owned-signal fixtures, product readiness scores, and Claude UI contracts. Assumptions: PR is a normalized composite of activation and quality metrics. Breakdown regime: PR approaches 0 when no sources are activated or all are blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): PR is a scalar output from GSE's state-transition engine, used as input to GSI's Bayesian inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for source-activation-roi (3d4816dfd0e9c581, domain=other, pages_read=1/1): Operator 'Source Activation Return on Investment' (page 1, domain other) captures: # Source Activation ROI Generated in the Autonomous StatKing Integrity + Build Sprint on 2026-06-13T00:00:00Z. Assumptions: Data sources are categorized by activation status; only active sources contribute to ROI. Breakdown regime: When blocked or metadata-only sources dominate, ROI approaches zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): ROI derived from product readiness scores and activation queue throughput, mapped to GSI's Bayesian activation model. Operator 'Rights Access Control Gate' (page 1, domain other) captures: ## Integrity rule Do not pretend blocked, metadata-only, fixture-backed, license-required, or partner-required data is active. Assumptions: Access is binary; all blocked data is excluded from active computation. Breakdown regime: When G=0, data is inactive and excluded from ROI calculation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Rights gating mirrors GSI's exclusion logic for invalid data points in probabilistic models. Operator 'Product Readiness Index' (page 1, domain other) captures: ## Built now Rights gates, media metadata fixtures, expert activation queues, source activation ROI, King gap map, proof reports, explanation templates, decision-card contracts, owned-signal fixtures, product readiness scores, and Claude UI contracts. Assumptions: PR is a normalized composite of activation and quality metrics. Breakdown regime: PR approaches 0 when no sources are activated or all are blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): PR is a scalar output from GSE's state-transition engine, used as input to GSI's Bayesian inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and control systems, this framework builds upon Shannon entropy and feedback loops in data integrity protocols, tracing back to early 20th-century signal processing and modern machine learning pipelines. Retrocausal Genealogy: Rooted in source-activation-roi (3d4816dfd0e9c581), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data producers who may attempt to bypass rights gates, and system validators enforcing integrity rules. Decision actors are GSE’s activation queues and GSI’s probabilistic inference engines, both operating under adversarial constraints. Theory of Mind & Decision Maker Model: Rooted in source-activation-roi (3d4816dfd0e9c581), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that blocked sources do not influence either GSE's state transitions or GSI's probabilistic models. Leakage is prevented by isolating blocked sources into dedicated queues, maintaining orthogonal layers between activation and inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-activation-roi (3d4816dfd0e9c581), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

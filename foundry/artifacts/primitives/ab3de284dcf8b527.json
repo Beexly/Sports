@@ -1,0 +1,78 @@
+{
+  "book_id": "ab3de284dcf8b527",
+  "source_status": "COMPLETE",
+  "title": "VerifyPickButton.prompt",
+  "file_name": "VerifyPickButton.prompt.md",
+  "sha256": "ab3de284dcf8b527b2552cfd81bf51c952ef85ffeecc6379c04ccf26ed62d72f",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The VerifyPickButton formalizes a conditional rendering operator over a discrete receipt space. It maps an opaque cryptographic hash to a verifiable state, establishing a structural isomorphism between UI visibility and the existence of an on-chain or deterministic proof artifact.",
+  "gsi_mapping": "In GSI, the receipt hash acts as a Bayesian evidence vector. The absence of a hash (free-tier) sets the posterior probability of verifiability to zero. The button's state transition updates the conformal prediction set, filtering out unverified picks from the high-confidence ensemble.",
+  "gse_mapping": "GSE models this as a finite state machine: Idle -> NoReceipt -> Verified. The situational reasoning engine transitions states based on the presence of the `receiptHash` prop. This ensures the simulation environment accurately reflects the underlying data availability constraints before executing downstream logic.",
+  "primitives": [
+    {
+      "primitive_id": "receipt_existence_predicate",
+      "name": "Receipt Existence Predicate",
+      "verbatim_quote": "<p style={{ color: \"var(--ion-3)\", fontSize: 11, margin: 0 }}> (Nothing renders below — a free-tier pick",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "h: Receipt hash (dimensionless string), \\mathbb{I}: Indicator function (boolean)",
+      "assumptions": "A valid receipt hash exists if and only if the pick originates from a paid/verifiable tier.",
+      "breakdown_regime": "Fails if the system attempts to render verification UI for a null hash without the fallback predicate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's evidence validation layer, where missing hashes trigger a hard veto on predictive inclusion.",
+        "source_operator": "receipt_existence_predicate",
+        "telemetry": "UI render count for the fallback paragraph element."
+      }
+    },
+    {
+      "primitive_id": "global_bundle_instantiation",
+      "name": "Global Bundle Instantiation",
+      "verbatim_quote": "VerifyPickButton from sports-prediction-platform. Use via `window.GalaxySportsEdge.VerifyPickButton` (bundle loaded from the root `_ds_bundle.js`). ## Examples ### Idle",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "W: Global window object, B: Root bundle identifier (string)",
+      "assumptions": "The host DOM provides a stable global namespace and the root bundle loads synchronously before invocation.",
+      "breakdown_regime": "Singularity occurs if `_ds_bundle.js` fails to load, resulting in an undefined reference exception.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Corresponds to the GSE initialization kernel, ensuring all edge modules are registered in the global execution context.",
+        "source_operator": "global_bundle_instantiation",
+        "telemetry": "Bundle load latency and successful attachment to the window object."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "VerifyPickButton.prompt Grounded Principle 3",
+      "verbatim_quote": "<p style={{ color: \"var(--ion-3)\", fontSize: 11, margin: 0 }}> (Nothing renders below — a free-tier pick",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ab3de284dcf8b527_t0",
+      "think": "The derivation begins by treating the `VerifyPickButton` not merely as a UI component, but as a boundary condition operator within the Galaxy Sports Engine. Mathematically, we define a state space S = {Idle, NoReceipt, Verified}. The transition function T(s, h) relies entirely on the input parameter `receiptHash`. When `h` is null, the system deterministically collapses into the `NoReceipt` state, triggering the specific JSX fallback observed in quote 3. This represents a hard constraint in our epistemic framework: a prediction without a cryptographic anchor cannot be integrated into the sovereign primitive ledger. The duality here lies between the visual representation (the DOM node) and the underlying truth value (the hash). If the hash is present, the operator initiates a verification handshake; if absent, it gracefully degrades. The failure mode is strictly tied to the initialization sequence described in quote 1. If the `_ds_bundle.js` fails to mount to `window.GalaxySportsEdge`, the entire operator vanishes, causing a cascading failure in any dashboard relying on this verification step. Thus, the robustness of the GSI inference pipeline is directly coupled to the reliability of this global namespace injection. We model the UI rendering as a projection of the internal verification state onto the user's viewport, ensuring that no unverifiable data pollutes the high-fidelity decision surfaces.\n\nDeep epistemic analysis for VerifyPickButton.prompt (ab3de284dcf8b527, domain=other, pages_read=1/1): Operator 'Receipt Existence Predicate' (page 1, domain other) captures: <p style={{ color: \"var(--ion-3)\", fontSize: 11, margin: 0 }}> (Nothing renders below — a free-tier pick Assumptions: A valid receipt hash exists if and only if the pick originates from a paid/verifiable tier. Breakdown regime: Fails if the system attempts to render verification UI for a null hash without the fallback predicate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's evidence validation layer, where missing hashes trigger a hard veto on predictive inclusion. Operator 'Global Bundle Instantiation' (page 1, domain other) captures: VerifyPickButton from sports-prediction-platform. Use via `window.GalaxySportsEdge.VerifyPickButton` (bundle loaded from the root `_ds_bundle.js`). ## Examples ### Idle Assumptions: The host DOM provides a stable global namespace and the root bundle loads synchronously before invocation. Breakdown regime: Singularity occurs if `_ds_bundle.js` fails to load, resulting in an undefined reference exception. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Corresponds to the GSE initialization kernel, ensuring all edge modules are registered in the global execution context. Operator 'VerifyPickButton.prompt Grounded Principle 3' (page 1, domain other) captures: <p style={{ color: \"var(--ion-3)\", fontSize: 11, margin: 0 }}> (Nothing renders below — a free-tier pick Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for VerifyPickButton.prompt (ab3de284dcf8b527, domain=other, pages_read=1/1): Operator 'Receipt Existence Predicate' (page 1, domain other) captures: <p style={{ color: \"var(--ion-3)\", fontSize: 11, margin: 0 }}> (Nothing renders below — a free-tier pick Assumptions: A valid receipt hash exists if and only if the pick originates from a paid/verifiable tier. Breakdown regime: Fails if the system attempts to render verification UI for a null hash without the fallback predicate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's evidence validation layer, where missing hashes trigger a hard veto on predictive inclusion. Operator 'Global Bundle Instantiation' (page 1, domain other) captures: VerifyPickButton from sports-prediction-platform. Use via `window.GalaxySportsEdge.VerifyPickButton` (bundle loaded from the root `_ds_bundle.js`). ## Examples ### Idle Assumptions: The host DOM provides a stable global namespace and the root bundle loads synchronously before invocation. Breakdown regime: Singularity occurs if `_ds_bundle.js` fails to load, resulting in an undefined reference exception. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Corresponds to the GSE initialization kernel, ensuring all edge modules are registered in the global execution context. Operator 'VerifyPickButton.prompt Grounded Principle 3' (page 1, domain other) captures: <p style={{ color: \"var(--ion-3)\", fontSize: 11, margin: 0 }}> (Nothing renders below — a free-tier pick Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces its lineage to early cryptographic proof-of-work visualizations, where the absence of a valid nonce resulted in a blank slate. In modern quantitative finance, similar patterns emerged in blockchain explorers, where transaction receipts dictate the rendering of success or failure states. The evolution culminated in sports intelligence platforms adopting these strict evidentiary standards, forcing a paradigm shift from trust-based displays to mathematically verified UI components, ensuring every rendered pixel corresponds to an auditable data point.",
+      "theory_of_mind": "From the perspective of the end-user (the bettor or analyst), the `VerifyPickButton` serves as a trust anchor. When they see the button in its idle or verified state, their cognitive model assumes the platform possesses irrefutable proof of the pick's integrity. Conversely, encountering the 'NoReceipt' state signals a limitation in their current tier, modeling the system as a gated ecosystem. The opposing agent—the platform—uses this UI to manage expectations and enforce tier boundaries without explicit error messages, subtly guiding the user toward higher-value interactions through the mere presence or absence of verifiable artifacts.",
+      "cross_layer_veto": "To prevent anti-collinearity and leakage, a strict cross-layer veto is enforced. If the backend verification service times out, the frontend must default to the `NoReceipt` state rather than attempting to guess the outcome. This prevents the leakage of partial or stale state into the user's view. Furthermore, the telemetry generated by the button's interactions must be decoupled from the actual prediction values to avoid creating collinear features that could bias the GSI's conformal inference models. The veto ensures that the UI layer remains a pure function of the receipt hash, isolating the presentation logic from the complex probabilistic engines running beneath."
+    }
+  ]
+}

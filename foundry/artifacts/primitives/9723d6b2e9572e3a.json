@@ -1,0 +1,78 @@
+{
+  "book_id": "9723d6b2e9572e3a",
+  "source_status": "COMPLETE",
+  "title": "CLAIM_RISK_RED_FLAGS",
+  "file_name": "CLAIM_RISK_RED_FLAGS.md",
+  "sha256": "9723d6b2e9572e3a330d50990834e645f8073606acf5ae30a601110854a7865c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Risk-weighted semantic grounding via claim entropy minimization under evidence constraints. Universal Lens: Rooted in CLAIM_RISK_RED_FLAGS (9723d6b2e9572e3a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on claim likelihood using conformal predictive distributions over red-flagged terms. GSI Mapping: Rooted in CLAIM_RISK_RED_FLAGS (9723d6b2e9572e3a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions governed by claim validity thresholds; actions blocked until evidence-tie resolution. GSE Mapping: Rooted in CLAIM_RISK_RED_FLAGS (9723d6b2e9572e3a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "claim_entropy_minimization",
+      "name": "Claim Entropy Minimization",
+      "verbatim_quote": "# Claim Risk Red Flags High-risk language must be downgraded unless evidence exists: - unsupported term:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H(C)': 'Shannon entropy of claim C, dimensionless', 'E': 'Evidence set, dimensionless'}",
+      "assumptions": "Claims with high entropy are deemed risky without supporting evidence.",
+      "breakdown_regime": "When H(C) > threshold and E = ∅",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Entropy-based risk scoring maps to GSI's Bayesian uncertainty quantification framework.",
+        "source_operator": "claim_entropy_minimization",
+        "telemetry": "Red-flag term frequency vs. evidence availability ratio"
+      }
+    },
+    {
+      "primitive_id": "risk_weighted_semantic_grounding",
+      "name": "Risk-Weighted Semantic Grounding",
+      "verbatim_quote": "- unsupported term: guaranteed - unsupported term: lock - unsupported term: free money - unsupported term:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W_s': 'Semantic weight of term s, dimensionless', 'R(s)': 'Risk level of term s, dimensionless', 'E(s)': 'Evidence strength for term s, dimensionless'}",
+      "assumptions": "High-risk terms are grounded only conditionally on verified evidence.",
+      "breakdown_regime": "When R(s) > threshold and E(s) < threshold",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from claim entropy minimization; applies to specific high-risk lexicons.",
+        "source_operator": "risk_weighted_semantic_grounding",
+        "telemetry": "Term classification score based on semantic risk index"
+      }
+    },
+    {
+      "primitive_id": "evidence_tie_validation",
+      "name": "Evidence-Tie Validation",
+      "verbatim_quote": "allows these only when the line marks them historical, unverified, unsupported, blocked, false, or evidence-tied.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Validation threshold, dimensionless', 'V(C)': 'Validation status of claim C, {historical, unverified, unsupported, blocked, false, evidence-tied}', 'C': 'Claim content, dimensionless'}",
+      "assumptions": "Only claims marked as evidence-tied are allowed for further processing.",
+      "breakdown_regime": "When V(C) ∈ {historical, unverified, unsupported, blocked, false, evidence-tied} and T ≥ 0.5",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's conditional action state machine where validation gates proceed only under evidence-tie.",
+        "source_operator": "evidence_tie_validation",
+        "telemetry": "Proportion of claims passing evidence-tie filter"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9723d6b2e9572e3a_t0",
+      "think": "The core principle of claim risk red flags operates through entropy-based semantic grounding. Each unsupported term introduces a latent risk variable that increases claim entropy. When entropy exceeds a defined threshold without supporting evidence, the claim is flagged. This aligns with Bayesian inference where prior beliefs (unsupported terms) are updated with likelihood functions derived from evidence sets. The risk-weighted semantic grounding then modulates each term's contribution to overall claim entropy. Evidence-tie validation acts as a conditional gate, allowing only those claims that are explicitly marked as unverified or historically sourced. This creates a dual-layered system: first, entropy minimization filters out high-risk claims, second, validation ensures only evidence-tied claims proceed. Failure modes include false positives from overly strict entropy thresholds or false negatives from insufficient evidence tie criteria.\n\nDeep epistemic analysis for CLAIM_RISK_RED_FLAGS (9723d6b2e9572e3a, domain=other, pages_read=1/1): Operator 'Claim Entropy Minimization' (page 1, domain other) captures: # Claim Risk Red Flags High-risk language must be downgraded unless evidence exists: - unsupported term: Assumptions: Claims with high entropy are deemed risky without supporting evidence. Breakdown regime: When H(C) > threshold and E = ∅ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Entropy-based risk scoring maps to GSI's Bayesian uncertainty quantification framework. Operator 'Risk-Weighted Semantic Grounding' (page 1, domain other) captures: - unsupported term: guaranteed - unsupported term: lock - unsupported term: free money - unsupported term: Assumptions: High-risk terms are grounded only conditionally on verified evidence. Breakdown regime: When R(s) > threshold and E(s) < threshold Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from claim entropy minimization; applies to specific high-risk lexicons. Operator 'Evidence-Tie Validation' (page 1, domain other) captures: allows these only when the line marks them historical, unverified, unsupported, blocked, false, or evidence-tied. Assumptions: Only claims marked as evidence-tied are allowed for further processing. Breakdown regime: When V(C) ∈ {historical, unverified, unsupported, blocked, false, evidence-tied} and T ≥ 0.5 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's conditional action state machine where validation gates proceed only under evidence-tie. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CLAIM_RISK_RED_FLAGS (9723d6b2e9572e3a, domain=other, pages_read=1/1): Operator 'Claim Entropy Minimization' (page 1, domain other) captures: # Claim Risk Red Flags High-risk language must be downgraded unless evidence exists: - unsupported term: Assumptions: Claims with high entropy are deemed risky without supporting evidence. Breakdown regime: When H(C) > threshold and E = ∅ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Entropy-based risk scoring maps to GSI's Bayesian uncertainty quantification framework. Operator 'Risk-Weighted Semantic Grounding' (page 1, domain other) captures: - unsupported term: guaranteed - unsupported term: lock - unsupported term: free money - unsupported term: Assumptions: High-risk terms are grounded only conditionally on verified evidence. Breakdown regime: When R(s) > threshold and E(s) < threshold Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from claim entropy minimization; applies to specific high-risk lexicons. Operator 'Evidence-Tie Validation' (page 1, domain other) captures: allows these only when the line marks them historical, unverified, unsupported, blocked, false, or evidence-tied. Assumptions: Only claims marked as evidence-tied are allowed for further processing. Breakdown regime: When V(C) ∈ {historical, unverified, unsupported, blocked, false, evidence-tied} and T ≥ 0.5 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's conditional action state machine where validation gates proceed only under evidence-tie. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Shannon's information theory and Bayesian probability, extended into modern semantic risk modeling through formalized linguistic entropy and evidential validation frameworks. Retrocausal Genealogy: Rooted in CLAIM_RISK_RED_FLAGS (9723d6b2e9572e3a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CLAIM_RISK_RED_FLAGS (9723d6b2e9572e3a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit weak entropy signals or bypass evidence-tie checks. The system models adversarial intent by simulating claim inflation strategies and validating against known red-flag lexicons. Theory of Mind & Decision Maker Model: Rooted in CLAIM_RISK_RED_FLAGS (9723d6b2e9572e3a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring entropy and validation layers do not overlap in their risk metrics. Leakage occurs if evidence-tie validation fails to distinguish between historical and unsupported claims, leading to cascading risk propagation. Cross-Layer Veto & Anti-Leakage Check: Rooted in CLAIM_RISK_RED_FLAGS (9723d6b2e9572e3a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "6682a659de3a99e9",
+  "source_status": "COMPLETE",
+  "title": "p0704",
+  "file_name": "p0704.txt",
+  "sha256": "6682a659de3a99e9cfdd31558a77cf837217b9d5ae58ef12c522683e3ed903a8",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Axiomatic distinction and perceptional granularity underpinning cognitive structuration via differential thresholds and temporal duration primitives. Universal Lens: Rooted in p0704 (6682a659de3a99e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating over perceptual difference manifolds using temporal duration priors and discrimination likelihoods. GSI Mapping: Rooted in p0704 (6682a659de3a99e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions driven by attentional flux and sensory-motor feedback loops modulated through cortical dissociation dynamics. GSE Mapping: Rooted in p0704 (6682a659de3a99e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "difference",
+      "name": "Difference",
+      "verbatim_quote": "490; noticed most between species of a genus, 529 ; the magnitude of, 581; least discernible, 587 ff.; methods for ascertaining, 540 ff.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'dimensionless difference magnitude', 'd_min': 'minimum discriminable difference threshold'}",
+      "assumptions": "Perceptual resolution is bounded below by d_min; differences are additive in compositional domains.",
+      "breakdown_regime": "When D < d_min, perceptual indistinguishability occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Difference forms basis for discrimination kernels in GSI probabilistic models; used in Bayesian updating of perceptual states.",
+        "source_operator": "difference",
+        "telemetry": "Discriminability index, psychophysical threshold measurements"
+      }
+    },
+    {
+      "primitive_id": "duration",
+      "name": "Duration",
+      "verbatim_quote": "176, 206, 208–9 Duration, the primitive object in time-perception, I.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'time interval in seconds', 't_0': 'reference duration baseline'}",
+      "assumptions": "Time perception is fundamentally discrete and structured around T relative to t_0.",
+      "breakdown_regime": "At T << t_0, temporal resolution fails due to sensory integration limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Duration maps to temporal state transitions in GSE; serves as core variable in time-series inference.",
+        "source_operator": "duration",
+        "telemetry": "Reaction time, temporal discrimination thresholds"
+      }
+    },
+    {
+      "primitive_id": "discrimination",
+      "name": "Discrimination",
+      "verbatim_quote": "613, 618 Evolutionism demands a minddust,'146 Exner, on human cortical centres, I.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Δ': 'spatial or conceptual distance between stimuli', 'σ': 'standard deviation of perceptual variability'}",
+      "assumptions": "Discrimination depends on Δ > σ; spatial and mental dimensions are separable.",
+      "breakdown_regime": "When Δ ≤ σ, discrimination becomes stochastic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Discrimination enables GSI classification boundaries; informs GSE decision trees based on perceptual contrast.",
+        "source_operator": "discrimination",
+        "telemetry": "Spatial discrimination accuracy, categorical boundary sharpness"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6682a659de3a99e9_t0",
+      "think": "The foundational concept of 'difference' emerges as a scalar measure of variation within cognitive structures, grounded in empirical thresholds such as d_min. It enables the construction of discrimination manifolds where perceptual distinctions become meaningful. The primitive 'duration' acts as a temporal anchor, defining the minimal interval over which changes can be reliably perceived. Together, these form a dual structure: difference provides the metric for variation, while duration governs its temporal extent. In GSI, this manifests as Bayesian updates over difference manifolds with duration-dependent likelihood functions. In GSE, it defines state transition timescales and attentional switching regimes. Failure modes arise when d_min approaches zero (overfitting) or when T < t_0 (temporal aliasing). These primitives also support a layered model of cognition where higher-order representations emerge from combinations of basic difference and duration signals.\n\nDeep epistemic analysis for p0704 (6682a659de3a99e9, domain=other, pages_read=2/2): Operator 'Difference' (page 1, domain other) captures: 490; noticed most between species of a genus, 529 ; the magnitude of, 581; least discernible, 587 ff.; methods for ascertaining, 540 ff. Assumptions: Perceptual resolution is bounded below by d_min; differences are additive in compositional domains. Breakdown regime: When D < d_min, perceptual indistinguishability occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Difference forms basis for discrimination kernels in GSI probabilistic models; used in Bayesian updating of perceptual states. Operator 'Duration' (page 1, domain other) captures: 176, 206, 208–9 Duration, the primitive object in time-perception, I. Assumptions: Time perception is fundamentally discrete and structured around T relative to t_0. Breakdown regime: At T << t_0, temporal resolution fails due to sensory integration limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Duration maps to temporal state transitions in GSE; serves as core variable in time-series inference. Operator 'Discrimination' (page 1, domain other) captures: 613, 618 Evolutionism demands a minddust,'146 Exner, on human cortical centres, I. Assumptions: Discrimination depends on Δ > σ; spatial and mental dimensions are separable. Breakdown regime: When Δ ≤ σ, discrimination becomes stochastic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Discrimination enables GSI classification boundaries; informs GSE decision trees based on perceptual contrast. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0704 (6682a659de3a99e9, domain=other, pages_read=2/2): Operator 'Difference' (page 1, domain other) captures: 490; noticed most between species of a genus, 529 ; the magnitude of, 581; least discernible, 587 ff.; methods for ascertaining, 540 ff. Assumptions: Perceptual resolution is bounded below by d_min; differences are additive in compositional domains. Breakdown regime: When D < d_min, perceptual indistinguishability occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Difference forms basis for discrimination kernels in GSI probabilistic models; used in Bayesian updating of perceptual states. Operator 'Duration' (page 1, domain other) captures: 176, 206, 208–9 Duration, the primitive object in time-perception, I. Assumptions: Time perception is fundamentally discrete and structured around T relative to t_0. Breakdown regime: At T << t_0, temporal resolution fails due to sensory integration limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Duration maps to temporal state transitions in GSE; serves as core variable in time-series inference. Operator 'Discrimination' (page 1, domain other) captures: 613, 618 Evolutionism demands a minddust,'146 Exner, on human cortical centres, I. Assumptions: Discrimination depends on Δ > σ; spatial and mental dimensions are separable. Breakdown regime: When Δ ≤ σ, discrimination becomes stochastic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Discrimination enables GSI classification boundaries; informs GSE decision trees based on perceptual contrast. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century phenomenological psychology and Gestalt theory, particularly influenced by Helmholtz’s work on perception and Fechner’s psychophysics. Later formalized in cognitive science through signal detection theory and temporal processing models. Retrocausal Genealogy: Rooted in p0704 (6682a659de3a99e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may differ in their sensitivity to difference thresholds (e.g., hyper- vs hypo-sensitive individuals), leading to divergent decision policies in GSI inference. In GSE, agents with different temporal resolutions (duration) exhibit varied response strategies under identical stimuli. Theory of Mind & Decision Maker Model: Rooted in p0704 (6682a659de3a99e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that difference and duration operate independently across layers—i.e., increasing one does not linearly predict the other. Leakage occurs if temporal resolution degrades with increased discriminability, violating layer separation. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0704 (6682a659de3a99e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

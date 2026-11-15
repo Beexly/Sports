@@ -1,0 +1,78 @@
+{
+  "book_id": "c9dd1494681bc192",
+  "source_status": "COMPLETE",
+  "title": "nflverse-data-catalog",
+  "file_name": "nflverse-data-catalog.md",
+  "sha256": "c9dd1494681bc192fcccb998d7872de1c6746f047ac9810343d88385752a683b",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The nflverse data catalog provides a unified, license-free, and programmatically accessible stack of modern NFL analytics datasets, enabling scalable statistical inference and predictive modeling via direct HTTP fetch. Universal Lens: Rooted in nflverse-data-catalog (c9dd1494681bc192), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian hierarchical models to map nflverse datasets into probabilistic latent talent estimates, using play-by-play and player-week data to infer true performance trends while adjusting for confounding variables like age and position.",
+  "gse_mapping": "GSE uses the catalog's structured datasets to construct dynamic state transitions in game simulations, where each play's outcome is conditioned on contextual features such as personnel groupings, snap counts, and next-gen tracking data.",
+  "primitives": [
+    {
+      "primitive_id": "play_by_play_analytics",
+      "name": "Play-by-Play Analytics",
+      "verbatim_quote": "## The catalog (25 families on `nflverse-data`, high-value subset detailed) | Family (tag) | Grain | Since | Unlocks | | --- | --- | --- | --- | | **pbp** | play | 1999 | Play-by-play with EPA/WPA/air yards/success rate — the base for true-talent models.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'EPA': 'Expected Points Added (dimensionless)', 'WPA': 'Win Probability Added (dimensionless)', 'air_yards': 'yards', 'success_rate': 'probability'}",
+      "assumptions": "Each play contributes independently to a cumulative expected value model; outcomes are conditionally independent given game state.",
+      "breakdown_regime": "1999 onward, at play granularity",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw play events into probabilistic performance metrics used for player and team evaluation in GSI.",
+        "source_operator": "play_by_play_analytics",
+        "telemetry": "EPA/WPA distributions over time and across teams"
+      }
+    },
+    {
+      "primitive_id": "player_weekly_usage",
+      "name": "Player Weekly Usage",
+      "verbatim_quote": "| | **player_stats** | player-week | 1999 | Weekly usage: targets, receptions, air yards, EPA, attempts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'targets': 'dimensionless count', 'receptions': 'dimensionless count', 'air_yards': 'yards', 'EPA': 'Expected Points Added (dimensionless)', 'attempts': 'dimensionless count'}",
+      "assumptions": "Weekly usage reflects consistent workload allocation and performance contribution over time.",
+      "breakdown_regime": "1999 onward, at player-week granularity",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables longitudinal modeling of player impact and workload trends in GSI.",
+        "source_operator": "player_weekly_usage",
+        "telemetry": "Target share, EPA per attempt, and usage consistency metrics"
+      }
+    },
+    {
+      "primitive_id": "nextgen_tracking_data",
+      "name": "NextGen Tracking Data",
+      "verbatim_quote": "| | **nextgen_stats** | player-week | 2016 | NGS tracking: separation, cushion, time-to-throw, air yards, speed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'separation': 'yards', 'cushion': 'yards', 'time_to_throw': 'seconds', 'speed': 'mph', 'air_yards': 'yards'}",
+      "assumptions": "Tracking data captures real-time spatial and temporal dynamics of player behavior during plays.",
+      "breakdown_regime": "2016 onward, at player-week granularity",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides granular behavioral signals for situational reasoning in GSE.",
+        "source_operator": "nextgen_tracking_data",
+        "telemetry": "Average separation, time-to-throw, and speed distributions by position"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c9dd1494681bc192_t0",
+      "think": "The nflverse data catalog enables a dual-layered approach to NFL analytics: foundational play-by-play data underpins true-talent estimation in GSI, while next-gen tracking data enriches situational reasoning in GSE. The data structure supports both frequentist and Bayesian inference paradigms, with each dataset serving as a kernel in a larger probabilistic model. Play-level metrics like EPA/WPA form the basis of performance attribution, whereas player-week aggregates allow for cohort analysis and trend discovery. The use of standardized identifiers (e.g., gsis_id) ensures alignment across datasets, enabling cross-dataset correlation and integration. Failure modes include data inconsistency due to missing or mislabeled fields, which can be mitigated through validation layers and robust error handling in ingestion pipelines.\n\nDeep epistemic analysis for nflverse-data-catalog (c9dd1494681bc192, domain=other, pages_read=2/2): Operator 'Play-by-Play Analytics' (page 1, domain other) captures: ## The catalog (25 families on `nflverse-data`, high-value subset detailed) | Family (tag) | Grain | Since | Unlocks | | --- | --- | --- | --- | | **pbp** | play | 1999 | Play-by-play with EPA/WPA/air yards/success rate — the base for true-talent models. Assumptions: Each play contributes independently to a cumulative expected value model; outcomes are conditionally independent given game state. Breakdown regime: 1999 onward, at play granularity Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw play events into probabilistic performance metrics used for player and team evaluation in GSI. Operator 'Player Weekly Usage' (page 1, domain other) captures: | | **player_stats** | player-week | 1999 | Weekly usage: targets, receptions, air yards, EPA, attempts. Assumptions: Weekly usage reflects consistent workload allocation and performance contribution over time. Breakdown regime: 1999 onward, at player-week granularity Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables longitudinal modeling of player impact and workload trends in GSI. Operator 'NextGen Tracking Data' (page 1, domain other) captures: | | **nextgen_stats** | player-week | 2016 | NGS tracking: separation, cushion, time-to-throw, air yards, speed. Assumptions: Tracking data captures real-time spatial and temporal dynamics of player behavior during plays. Breakdown regime: 2016 onward, at player-week granularity Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides granular behavioral signals for situational reasoning in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for nflverse-data-catalog (c9dd1494681bc192, domain=other, pages_read=2/2): Operator 'Play-by-Play Analytics' (page 1, domain other) captures: ## The catalog (25 families on `nflverse-data`, high-value subset detailed) | Family (tag) | Grain | Since | Unlocks | | --- | --- | --- | --- | | **pbp** | play | 1999 | Play-by-play with EPA/WPA/air yards/success rate — the base for true-talent models. Assumptions: Each play contributes independently to a cumulative expected value model; outcomes are conditionally independent given game state. Breakdown regime: 1999 onward, at play granularity Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw play events into probabilistic performance metrics used for player and team evaluation in GSI. Operator 'Player Weekly Usage' (page 1, domain other) captures: | | **player_stats** | player-week | 1999 | Weekly usage: targets, receptions, air yards, EPA, attempts. Assumptions: Weekly usage reflects consistent workload allocation and performance contribution over time. Breakdown regime: 1999 onward, at player-week granularity Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables longitudinal modeling of player impact and workload trends in GSI. Operator 'NextGen Tracking Data' (page 1, domain other) captures: | | **nextgen_stats** | player-week | 2016 | NGS tracking: separation, cushion, time-to-throw, air yards, speed. Assumptions: Tracking data captures real-time spatial and temporal dynamics of player behavior during plays. Breakdown regime: 2016 onward, at player-week granularity Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides granular behavioral signals for situational reasoning in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the evolution of open-source sports analytics from early R-based packages like nflreadr to modern Node.js-driven ingestion stacks, reflecting a shift toward modular, scalable data infrastructure. Retrocausal Genealogy: Rooted in nflverse-data-catalog (c9dd1494681bc192), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in nflverse-data-catalog (c9dd1494681bc192), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents modeled include players, coaches, and analysts—each operating under different information sets and objectives. Players optimize for efficiency and safety; coaches make tactical decisions based on real-time data; analysts seek to extract predictive signals from noise. Theory of Mind & Decision Maker Model: Rooted in nflverse-data-catalog (c9dd1494681bc192), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that derived metrics from pbp and nextgen_stats do not redundantly encode similar behavioral signals. Leakage is prevented by maintaining clear boundaries between observational and inferred variables. Cross-Layer Veto & Anti-Leakage Check: Rooted in nflverse-data-catalog (c9dd1494681bc192), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

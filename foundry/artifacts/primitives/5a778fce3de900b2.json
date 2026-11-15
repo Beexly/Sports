@@ -1,0 +1,78 @@
+{
+  "book_id": "5a778fce3de900b2",
+  "source_status": "COMPLETE",
+  "title": "dfs-with-r-coach",
+  "file_name": "dfs-with-r-coach.md",
+  "sha256": "5a778fce3de900b2a737567af016a92c4d1dfe426840d30d073b5726a634fa46",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A modeling-first API for DFS optimization maps salary-constrained lineups to projection-weighted exposure vectors via probabilistic constraint satisfaction. Universal Lens: Rooted in dfs-with-r-coach (5a778fce3de900b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers lineup likelihoods through Bayesian belief updates on projection uncertainty and exposure caps using conformal predictive distributions. GSI Mapping: Rooted in dfs-with-r-coach (5a778fce3de900b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions lineup states by optimizing expected utility under stochastic projection models, conditioned on site-specific constraints and historical exposure data. GSE Mapping: Rooted in dfs-with-r-coach (5a778fce3de900b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "model_as_object",
+      "name": "Model-as-Object",
+      "verbatim_quote": "- **The model-as-object pattern** (`model_dk_nfl(data)` encapsulating all site/sport constraints, then `optimize_generic` against it) is cleaner than stringly-typed rule sets — a good API shape for GSE's own optimizer rebuild.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'model object, dimensionless', 'C': 'contest constraints, dimensionless', 'S': 'salary vector, USD', 'P': 'projection vector, points'}",
+      "assumptions": "Site-specific constraints are static and fully known; projections are independent random variables.",
+      "breakdown_regime": "When constraints are inconsistent or projections exceed memory limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's optimizer will encode site rules as structured objects, mirroring dfs-with-r/coach's model_dk_nfl abstraction.",
+        "source_operator": "model_as_object",
+        "telemetry": "Constraint satisfaction rate across lineup generations."
+      }
+    },
+    {
+      "primitive_id": "exposure_vector",
+      "name": "Exposure Vector",
+      "verbatim_quote": "If your projections aren't good then your optimized lineups won't be good either.\" - Then: `model <- model_dk_nfl(data)`; `optimize_generic(data, model, L = 3)`; `write_lineups(results, \"mylineups.csv\", site = \"draftkings\", sport = \"nfl\")`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'exposure vector, probability', 'L': 'number of lineups, dimensionless', 'R': 'randomness injection parameter, dimensionless'}",
+      "assumptions": "Exposure caps are deterministic thresholds; randomness is uniformly distributed over valid lineups.",
+      "breakdown_regime": "When exposure exceeds cap or randomness fails to converge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's state transition engine will derive exposure vectors from historical lineup data and current contest dynamics.",
+        "source_operator": "exposure_vector",
+        "telemetry": "Average deviation from target exposure across generated lineups."
+      }
+    },
+    {
+      "primitive_id": "projection_weighting",
+      "name": "Projection Weighting",
+      "verbatim_quote": "- **Your own `fpts_proj` column — mandatory.** The README shouts this: \"This is very important!",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'weight vector, points per dollar', 'P': 'projection vector, points', 'S': 'salary vector, USD'}",
+      "assumptions": "Projections are unbiased estimators; weighting is linear in projection value.",
+      "breakdown_regime": "When projections are systematically misaligned or absent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's scoring module will apply projection weights dynamically based on confidence intervals and variance estimates.",
+        "source_operator": "projection_weighting",
+        "telemetry": "Correlation between projected and actual lineup performance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5a778fce3de900b2_t0",
+      "think": "The dfs-with-r/coach package embodies a dual mathematical structure: a constraint satisfaction problem (CSP) over lineup configurations and a probabilistic optimization framework. The model-as-object primitive encodes site-specific constraints into a reusable structure, enabling modular composition of different contests. Exposure vectors represent stochastic policies over lineup selection, governed by probabilistic caps that prevent overfitting to prior outcomes. Projection weighting introduces a scalar field over player features, where each player's contribution to lineup value is modulated by their projected performance. These primitives form a coherent algebraic system where CSPs define feasible regions, while probabilistic methods navigate them to maximize expected utility. Failure modes include constraint inconsistency, projection bias, and exposure violation. The system's robustness hinges on the integrity of its input data and the fidelity of its probabilistic assumptions.\n\nDeep epistemic analysis for dfs-with-r-coach (5a778fce3de900b2, domain=other, pages_read=1/1): Operator 'Model-as-Object' (page 1, domain other) captures: - **The model-as-object pattern** (`model_dk_nfl(data)` encapsulating all site/sport constraints, then `optimize_generic` against it) is cleaner than stringly-typed rule sets — a good API shape for GSE's own optimizer rebuild. Assumptions: Site-specific constraints are static and fully known; projections are independent random variables. Breakdown regime: When constraints are inconsistent or projections exceed memory limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's optimizer will encode site rules as structured objects, mirroring dfs-with-r/coach's model_dk_nfl abstraction. Operator 'Exposure Vector' (page 1, domain other) captures: If your projections aren't good then your optimized lineups won't be good either.\" - Then: `model <- model_dk_nfl(data)`; `optimize_generic(data, model, L = 3)`; `write_lineups(results, \"mylineups.csv\", site = \"draftkings\", sport = \"nfl\")`. Assumptions: Exposure caps are deterministic thresholds; randomness is uniformly distributed over valid lineups. Breakdown regime: When exposure exceeds cap or randomness fails to converge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's state transition engine will derive exposure vectors from historical lineup data and current contest dynamics. Operator 'Projection Weighting' (page 1, domain other) captures: - **Your own `fpts_proj` column — mandatory.** The README shouts this: \"This is very important! Assumptions: Projections are unbiased estimators; weighting is linear in projection value. Breakdown regime: When projections are systematically misaligned or absent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's scoring module will apply projection weights dynamically based on confidence intervals and variance estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for dfs-with-r-coach (5a778fce3de900b2, domain=other, pages_read=1/1): Operator 'Model-as-Object' (page 1, domain other) captures: - **The model-as-object pattern** (`model_dk_nfl(data)` encapsulating all site/sport constraints, then `optimize_generic` against it) is cleaner than stringly-typed rule sets — a good API shape for GSE's own optimizer rebuild. Assumptions: Site-specific constraints are static and fully known; projections are independent random variables. Breakdown regime: When constraints are inconsistent or projections exceed memory limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's optimizer will encode site rules as structured objects, mirroring dfs-with-r/coach's model_dk_nfl abstraction. Operator 'Exposure Vector' (page 1, domain other) captures: If your projections aren't good then your optimized lineups won't be good either.\" - Then: `model <- model_dk_nfl(data)`; `optimize_generic(data, model, L = 3)`; `write_lineups(results, \"mylineups.csv\", site = \"draftkings\", sport = \"nfl\")`. Assumptions: Exposure caps are deterministic thresholds; randomness is uniformly distributed over valid lineups. Breakdown regime: When exposure exceeds cap or randomness fails to converge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's state transition engine will derive exposure vectors from historical lineup data and current contest dynamics. Operator 'Projection Weighting' (page 1, domain other) captures: - **Your own `fpts_proj` column — mandatory.** The README shouts this: \"This is very important! Assumptions: Projections are unbiased estimators; weighting is linear in projection value. Breakdown regime: When projections are systematically misaligned or absent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's scoring module will apply projection weights dynamically based on confidence intervals and variance estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in combinatorial optimization and statistical inference, with influences from game theory and machine learning. The model-as-object paradigm traces back to category theory and functional programming, while exposure vectors reflect stochastic control theory. Retrocausal Genealogy: Rooted in dfs-with-r-coach (5a778fce3de900b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the contest organizers who set constraints and payouts, and the competition pool whose strategies may vary. The system must account for both adversarial and cooperative behaviors in lineup construction, balancing risk and reward under uncertainty. Theory of Mind & Decision Maker Model: Rooted in dfs-with-r-coach (5a778fce3de900b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct feature spaces for projection and exposure modules. Leakage occurs when exposure caps are not properly enforced or when projections are used outside their domain of validity. Veto conditions ensure that no single module dominates the optimization process. Cross-Layer Veto & Anti-Leakage Check: Rooted in dfs-with-r-coach (5a778fce3de900b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

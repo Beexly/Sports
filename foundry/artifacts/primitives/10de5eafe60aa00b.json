@@ -1,0 +1,709 @@
+{
+  "book_id": "10de5eafe60aa00b",
+  "source_status": "COMPLETE",
+  "source_note": "Internal arxiv-deep research ledger (completed 2026-09-21) of Charles F. Manski (2021), 'Econometrics for decision making: building foundations sketched by Haavelmo and Wald', arXiv:1912.08726v4 (first public Dec 2019; Haavelmo Lecture, Univ. Oslo). The ledger reports a full sequential read of the source PDF text extract (2477 lines): sections 1-6, conclusions, references, Appendix A.1-A.3 and Tables 1A-4B. This is a legitimate internal research synthesis, not a derivative AI summary; externally attributed results are labeled as citations. Equations 1-13 and the Hodges-Lehmann predictor are transcribed in standard notation from the ledger's report of the source; the source PDF renders math as Unicode glyphs. DOCTRINE EXCLUSION: the ledger's sections 10-14 are the synthesis author's analogical GSE application to sportsbook staking, Kelly sizing, odds, and closing-line value; that betting-application layer is EXCLUDED by the Foundry zero-sportsbook doctrine. Only the source-invariant Wald/Haavelmo decision theory is extracted, with odds-free Layer-2 mappings to football play-call and selection decision-rule evaluation under calibration uncertainty. Verbatim quotes verified as exact normalized substrings of the ledger; page fields cite ledger section and line anchors.",
+  "primitives": [
+    {
+      "primitive_id": "wald_statistical_decision_function",
+      "name": "Wald statistical decision function maps data to action",
+      "verbatim_quote": "planner chooses a statistical decision function (SDF) mapping data → action",
+      "page": "Sec3 (line 14)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A statistical decision function (SDF) c(psi) maps the sample space Psi to an action in the choice set C.",
+        "SDFs are evaluated ex ante by state-dependent risk/regret across the state space S, not by fit within an assumed model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Wald SDF IS the GSE decision-rule kernel: a play-call or selection policy is a function from observed game state to an action, and it must be certified by its behavior across plausible true states rather than by its fit to the engine's own model, the Foundry's separation of a decision rule from the model that informs it.",
+        "source_operator": "wald_statistical_decision_function",
+        "telemetry": "SDF c:Psi->C; ex ante state-dependent risk/regret; evaluated over state space S."
+      }
+    },
+    {
+      "primitive_id": "model_space_vs_state_space",
+      "name": "Model space versus state space: the core evaluation distinction",
+      "verbatim_quote": "model space (distributions consistent with the assumed model) vs state space (all distributions deemed feasible",
+      "page": "Sec3 (line 14)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Model space S_m = distributions consistent with the assumed model.",
+        "State space S = all distributions deemed feasible; models may be wrong, so S can extend beyond S_m."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The model-space/state-space distinction IS the GSE calibration-veto kernel: a decision rule judged only under the engine's own probabilities lives in model space, while sovereign certification requires regret across the full state space of miscalibrated true-probability worlds, the Foundry's held-out discipline made formal.",
+        "source_operator": "model_space_vs_state_space",
+        "telemetry": "S_m model-consistent distributions; S all feasible distributions; S may strictly contain S_m."
+      }
+    },
+    {
+      "primitive_id": "as_if_optimization_critique",
+      "name": "The field's core failure: evaluating as-if optimization within model space",
+      "verbatim_quote": "and argues the field's core failure is evaluating",
+      "page": "Sec1 (line 8)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "As-if optimization = specify model, point-estimate parameters, act as if the estimate were true.",
+        "The critique: such plug-in rules are judged by performance within the model space instead of regret across the state space."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The as-if critique IS the GSE point-estimate veto: plugging the engine's point probability into a decision as if it were the truth is exactly the as-if optimization Manski condemns, so the Foundry refuses to certify a rule by its in-model performance alone.",
+        "source_operator": "as_if_optimization_critique",
+        "telemetry": "as-if = plug-in two-step; judged in model space not state space; the central failure."
+      }
+    },
+    {
+      "primitive_id": "as_if_optimization_rule",
+      "name": "As-if optimization plug-in rule (eq 9)",
+      "verbatim_quote": "specify model → point-estimate parameters → act as if the estimate were true",
+      "page": "Sec4 eq9 (line 17)",
+      "latex": "c[s(\\psi)] \\in \\arg\\max_{c\\in C} w[c, s(\\psi)]",
+      "symbol_and_unit_ledger": {
+        "c(.)": "statistical decision function [function]",
+        "s(psi)": "point estimate of the state from sample psi [state estimate]",
+        "w[c,s]": "welfare of action c in state s [utility]",
+        "C": "choice set [set]"
+      },
+      "assumptions": [
+        "The planner acts as if the estimated state s(psi) were the true state.",
+        "Model space S_m replaces the full state space S in the optimization."
+      ],
+      "breakdown_regime": "If the model is misspecified (S_m does not intersect S), the plug-in action can be arbitrarily regrettable; the rule has no worst-case guarantee.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equation 9 IS the GSE plug-in decision kernel and its warning: the engine's argmax action under its point estimate is an as-if rule, sovereign only when accompanied by a state-space regret certificate, the Foundry's requirement that every point-estimate decision carry a miscalibration bound.",
+        "source_operator": "as_if_optimization_rule",
+        "telemetry": "eq9; c[s(psi)] in argmax_c w[c,s(psi)]; model space replaces state space."
+      }
+    },
+    {
+      "primitive_id": "haavelmo_wald_lineage",
+      "name": "Haavelmo probabilistic policy structure joined to Wald decision theory",
+      "verbatim_quote": "Manski joins Haavelmo (1944, probabilistic structure for policy) with Wald",
+      "page": "Sec1 (line 8)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Haavelmo (1944): probabilistic structure for policy.",
+        "Wald (1939/1945/1950): statistical decision theory; the paper builds foundations for decision-making econometrics."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Haavelmo-Wald lineage IS a DERIVED KERNEL for GSE provenance: the decision-theoretic evaluation framework descends from a named, dated lineage, so the Foundry cites the intellectual genealogy of its evaluation operators rather than presenting them as ad-hoc inventions.",
+        "source_operator": "haavelmo_wald_lineage",
+        "telemetry": "Haavelmo 1944 probabilistic policy; Wald 1939/1945/1950 decision theory; Manski synthesis."
+      }
+    },
+    {
+      "primitive_id": "three_decision_criteria",
+      "name": "Three no-data decision criteria: subjective average, maximin, minimax regret",
+      "verbatim_quote": "Decision criteria without data: (1) max_{c∈C} ∫w(c,s)dπ (subjective average welfare); (2) max_{c∈C} min_{s∈S} w(c,s) (maximin); (3) min_{c∈C} max_{s∈S}[max_{d∈C} w(d,s)-w(c,s)] (MMR)",
+      "page": "Sec4 (line 17)",
+      "latex": "(1)\\ \\max_{c\\in C}\\int w(c,s)\\,d\\pi;\\quad (2)\\ \\max_{c\\in C}\\min_{s\\in S} w(c,s);\\quad (3)\\ \\min_{c\\in C}\\max_{s\\in S}\\left[\\max_{d\\in C} w(d,s)-w(c,s)\\right]",
+      "symbol_and_unit_ledger": {
+        "w(c,s)": "welfare of action c in state s [utility]",
+        "pi": "subjective distribution over states [probability measure]",
+        "S": "state space [set]",
+        "C": "choice set [set]",
+        "max_d w(d,s)-w(c,s)": "regret of c relative to the oracle action in state s [utility]"
+      },
+      "assumptions": [
+        "Criterion 1 maximizes subjective average welfare (Bayes).",
+        "Criterion 2 maximin maximizes the worst-case welfare; criterion 3 minimax regret minimizes the worst-case oracle gap."
+      ],
+      "breakdown_regime": "Maximin and MMR are worst-case criteria and can be excessively conservative; the subjective prior pi in criterion 1 is analyst-chosen and not certified.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The three criteria IS the GSE decision-certification spectrum: Bayes (expected welfare), maximin (worst-case welfare), and minimax regret (worst-case oracle gap) are the three sovereign lenses for scoring a play-call or selection policy, the Foundry's menu of risk attitudes for adjudicating a decision rule.",
+        "source_operator": "three_decision_criteria",
+        "telemetry": "Bayes integral w dpi; maximin min_s w; MMR min_c max_s oracle gap."
+      }
+    },
+    {
+      "primitive_id": "bayes_risk_criterion",
+      "name": "Wald criterion with data equals Bayes-risk minimization (eq 4)",
+      "verbatim_quote": "Wald's criterion (4) = minimization of Bayes risk",
+      "page": "Sec7 AppA.1 (line 26)",
+      "latex": "\\max_{c(\\cdot)} \\int E_s\\{w[c(\\psi),s]\\}\\,d\\pi",
+      "symbol_and_unit_ledger": {
+        "c(psi)": "SDF mapping sample to action [function]",
+        "E_s": "expectation under sampling distribution Q_s [expectation]",
+        "pi": "subjective prior over states [probability measure]",
+        "w": "welfare [utility]"
+      },
+      "assumptions": [
+        "Criterion 4 maximizes subjective average expected welfare over the sampling distributions.",
+        "Equivalently minimizes Bayes risk; the conditional-Bayes/Fubini equivalence holds only for unconstrained feasible SDFs."
+      ],
+      "breakdown_regime": "With constraints on the feasible SDF class the Fubini interchange can fail (Kitagawa-Tetenov, Athey-Wager counterexamples), so Bayes-risk minimization is not universally equivalent to conditional Bayes.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equation 4 IS the GSE expected-welfare kernel: a decision rule scored by prior-weighted expected welfare across sampling distributions is the Bayes lens of the Foundry's scorecard, valid only when the feasible rule class is unconstrained enough for the Fubini interchange.",
+        "source_operator": "bayes_risk_criterion",
+        "telemetry": "eq4; max integral E_s w[c(psi),s] dpi; = Bayes-risk minimization; Fubini caveat."
+      }
+    },
+    {
+      "primitive_id": "binary_choice_regret",
+      "name": "Binary-choice regret scales the welfare gap by the error probability (eqs 7-8)",
+      "verbatim_quote": "treatment choice: empirical success (ES) rule (pick treatment with best sample mean) vs MMR rules",
+      "page": "Sec4 eqs7-8 (line 17)",
+      "latex": "\\mathrm{Regret} = R_{c(\\cdot),s}\\,\\left|w(a,s)-w(b,s)\\right|",
+      "symbol_and_unit_ledger": {
+        "R_{c(.),s}": "probability the rule chooses the inferior action in state s [probability]",
+        "w(a,s),w(b,s)": "welfare of the two actions in state s [utility]",
+        "|w(a,s)-w(b,s)|": "welfare gap between actions [utility]"
+      },
+      "assumptions": [
+        "Binary choice between actions a and b.",
+        "Regret equals the error probability times the absolute welfare gap."
+      ],
+      "breakdown_regime": "When the welfare gap is zero the regret is zero regardless of error probability; when the gap is large even a small error probability is costly.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The binary-regret decomposition IS the GSE two-action veto kernel: the cost of a wrong play-call or selection equals the probability of error times the welfare gap between the two choices, the Foundry's dimensioned measure of how much a binary decision mistake actually costs.",
+        "source_operator": "binary_choice_regret",
+        "telemetry": "eqs7-8; Regret=R_{c,s}|w(a,s)-w(b,s)|; error prob x welfare gap."
+      }
+    },
+    {
+      "primitive_id": "midpoint_predictor",
+      "name": "Missing-data midpoint predictor of the identification region",
+      "verbatim_quote": "missing data: midpoint predictor of the identification region",
+      "page": "Sec4 (line 17)",
+      "latex": "\\hat{y}_{mid} = E(y\\mid\\delta=1)\\,P(\\delta=1) + \\tfrac{1}{2}\\,P(\\delta=0)",
+      "symbol_and_unit_ledger": {
+        "E(y|delta=1)": "mean outcome among observed units [outcome units]",
+        "P(delta=1)": "observability probability [probability]",
+        "P(delta=0)": "missingness probability [probability]",
+        "y_hat_mid": "midpoint prediction of the identification region [outcome units]"
+      },
+      "assumptions": [
+        "Outcomes in [0,1]; delta indicates observability.",
+        "The identification region for E(y) is bounded; the midpoint minimizes maximum squared error when all distributions are feasible."
+      ],
+      "breakdown_regime": "The midpoint is minimax only under the maximal-ignorance state space; if the analyst can bound the missing-data distribution, a different predictor may dominate.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The midpoint predictor IS the GSE missing-telemetry identification kernel: when a player's true state is partially unobserved, the sovereign prediction is the midpoint of the identification region rather than the observed-only average, the Foundry's minimax response to missing data.",
+        "source_operator": "midpoint_predictor",
+        "telemetry": "E(y|delta=1)P(delta=1)+0.5 P(delta=0); midpoint of identification region; minimax under full feasibility."
+      }
+    },
+    {
+      "primitive_id": "midpoint_max_regret",
+      "name": "Maximum squared error of the midpoint predictor",
+      "verbatim_quote": "Missing-data midpoint predictor max regret: ¼[P(δ=1)²/K + P(δ=0)²]",
+      "page": "Sec4 (line 17)",
+      "latex": "\\mathrm{MaxMSE}_{mid} = \\tfrac{1}{4}\\left[\\frac{P(\\delta=1)^2}{K} + P(\\delta=0)^2\\right]",
+      "symbol_and_unit_ledger": {
+        "P(delta=1)": "observability probability [probability]",
+        "P(delta=0)": "missingness probability [probability]",
+        "K": "number of feasible distribution cells / grid resolution [count]",
+        "MaxMSE": "maximum mean squared error [squared outcome units]"
+      },
+      "assumptions": [
+        "Outcomes in [0,1]; the bound is maximized over the feasible state space.",
+        "The missingness term P(delta=0)^2 dominates at low observability."
+      ],
+      "breakdown_regime": "This is a grid-computed maximum, hence a lower bound on the true continuous maximum; it assumes the maximal-ignorance state space.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The midpoint max-MSE formula IS the GSE missing-data risk bound: the worst-case squared error splits into an imprecision term shrinking with sample resolution and an identification term growing with missingness, the Foundry's dimensioned certificate for how much missing telemetry can hurt a prediction.",
+        "source_operator": "midpoint_max_regret",
+        "telemetry": "0.25[P(delta=1)^2/K + P(delta=0)^2]; identification term dominates low observability."
+      }
+    },
+    {
+      "primitive_id": "hodges_lehmann_mmr_predictor",
+      "name": "Hodges-Lehmann minimax-regret predictor for bounded outcomes",
+      "verbatim_quote": "Hodges-Lehmann (1950) MMR predictor for [0,1] outcomes: (μ_N√N + ½)/(√N + 1)",
+      "page": "Sec4 (line 17)",
+      "latex": "\\hat{y}_{HL} = \\frac{\\mu_N\\sqrt{N} + \\tfrac{1}{2}}{\\sqrt{N} + 1}",
+      "symbol_and_unit_ledger": {
+        "mu_N": "sample mean of N observations [outcome units]",
+        "N": "sample size [count]",
+        "y_hat_HL": "Hodges-Lehmann MMR prediction [outcome units]"
+      },
+      "assumptions": [
+        "Outcomes bounded in [0,1].",
+        "The predictor shrinks the sample mean toward 1/2 with weight governed by sqrt(N)."
+      ],
+      "breakdown_regime": "As N grows the predictor approaches the sample mean; at N=0 it returns 1/2, the maximally ignorant midpoint.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Hodges-Lehmann predictor IS the GSE shrinkage-to-ignorance kernel: a bounded-outcome prediction that shrinks toward the midpoint with a sqrt(N) weight is the Foundry's minimax-regret estimator for a player state with limited observations, balancing sample evidence against worst-case caution.",
+        "source_operator": "hodges_lehmann_mmr_predictor",
+        "telemetry": "(mu_N sqrt(N)+0.5)/(sqrt(N)+1); shrink to 0.5; N=0 gives midpoint."
+      }
+    },
+    {
+      "primitive_id": "mmr_fractional_allocation",
+      "name": "Minimax-regret fractional treatment allocation (eq 10)",
+      "verbatim_quote": "MMR fractional allocation (eq. 10): z_MMR = E[y(b)|δ(b)=1]·p + {1−E[y(a)|δ(a)=1]}(1−p)",
+      "page": "Sec4 eq10 (line 17)",
+      "latex": "z_{MMR} = E[y(b)\\mid\\delta(b)=1]\\,p + \\{1 - E[y(a)\\mid\\delta(a)=1]\\}\\,(1-p)",
+      "symbol_and_unit_ledger": {
+        "z_MMR": "fraction of population allocated to treatment a [fraction]",
+        "E[y(b)|delta(b)=1]": "observed mean outcome under treatment b [outcome units]",
+        "E[y(a)|delta(a)=1]": "observed mean outcome under treatment a [outcome units]",
+        "p": "probability of observing the relevant outcome [probability]"
+      },
+      "assumptions": [
+        "Individualistic treatment response; outcomes in [0,1].",
+        "The allocation mixes the two observed conditional means weighted by the observability probability p."
+      ],
+      "breakdown_regime": "The formula assumes the maximal-ignorance state space for the unobserved counterfactual means; tighter bounds change the allocation.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equation 10 IS the GSE fractional-allocation kernel: a minimax-regret split between two strategies under partial observation is the Foundry's pattern for allocating a resource across two play-call options when counterfactual outcomes are unidentified, rather than committing fully to the observed winner.",
+        "source_operator": "mmr_fractional_allocation",
+        "telemetry": "eq10; z_MMR mixes observed conditional means by p; fractional vs singleton."
+      }
+    },
+    {
+      "primitive_id": "fractional_vs_singleton_regret",
+      "name": "Fractional allocation regret versus deterministic-singleton regret",
+      "verbatim_quote": "max regret z_MMR(1-z_MMR) (fractional) vs min(z_MMR,1-z_MMR) (deterministic singleton)",
+      "page": "Sec4 (line 17)",
+      "latex": "\\mathrm{Regret}_{frac} = z_{MMR}(1-z_{MMR}),\\qquad \\mathrm{Regret}_{sing} = \\min(z_{MMR},\\,1-z_{MMR})",
+      "symbol_and_unit_ledger": {
+        "z_MMR": "MMR fractional allocation [fraction]",
+        "Regret_frac": "maximum regret of the fractional rule [regret units]",
+        "Regret_sing": "maximum regret of the deterministic singleton rule [regret units]"
+      },
+      "assumptions": [
+        "Fractional allocation randomizes across treatments; singleton commits to one.",
+        "The fractional rule's max regret is the variance-like z(1-z); the singleton's is min(z,1-z)."
+      ],
+      "breakdown_regime": "The singleton rule can be more regrettable than the fractional rule; committing deterministically to the observed winner is not minimax-safe.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fractional-vs-singleton regret comparison IS the GSE randomization-veto kernel: a deterministic commitment to the empirically best option carries worst-case regret min(z,1-z), while a fractional policy carries z(1-z), the Foundry's formal case for mixing strategies rather than going all-in on the observed leader.",
+        "source_operator": "fractional_vs_singleton_regret",
+        "telemetry": "Regret_frac=z(1-z); Regret_sing=min(z,1-z); singleton can dominate in regret."
+      }
+    },
+    {
+      "primitive_id": "feasible_means_interval",
+      "name": "Feasible-mean identification interval under missing data (eqs 11a-b)",
+      "verbatim_quote": "Feasible means (11a-b): E[y(a)]∈[E[y(a)|δ(a)=1](1-p), E[y(a)|δ(a)=1](1-p)+p], similarly for b. Regret of deterministic rule",
+      "page": "Sec4 eqs11a-b (line 17)",
+      "latex": "E[y(a)] \\in \\left[E[y(a)\\mid\\delta(a)=1](1-p),\\; E[y(a)\\mid\\delta(a)=1](1-p)+p\\right]",
+      "symbol_and_unit_ledger": {
+        "E[y(a)]": "unconditional mean outcome under treatment a [outcome units]",
+        "E[y(a)|delta(a)=1]": "observed conditional mean [outcome units]",
+        "p": "missingness probability [probability]"
+      },
+      "assumptions": [
+        "Outcomes in [0,1]; the unidentified counterfactual mean lies in an interval of width p.",
+        "The interval widens linearly with the missingness probability."
+      ],
+      "breakdown_regime": "At full observability (p=0) the interval collapses to the observed mean; at high missingness the mean is only weakly identified.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equations 11a-b IS the GSE partial-identification kernel: an unconditional player-state mean is bounded in an interval whose width equals the missingness probability, the Foundry's dimensioned identification region for a quantity that cannot be point-identified from incomplete telemetry.",
+        "source_operator": "feasible_means_interval",
+        "telemetry": "eqs11a-b; E[y(a)] in [m(1-p), m(1-p)+p]; interval width = missingness p."
+      }
+    },
+    {
+      "primitive_id": "empirical_success_rule",
+      "name": "Empirical success rule picks the best sample mean",
+      "verbatim_quote": "empirical success (ES) rule (pick treatment with best sample mean)",
+      "page": "Sec3 (line 14)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The ES rule chooses the treatment with the highest observed sample mean.",
+        "It is the canonical as-if optimization rule for treatment choice."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The empirical success rule IS the GSE greedy-selection kernel: picking the option with the best observed average is the as-if heuristic the Foundry must audit, because the paper shows it can select the minimax-regret-inferior option.",
+        "source_operator": "empirical_success_rule",
+        "telemetry": "ES = argmax sample mean; as-if optimization; can be MMR-inferior."
+      }
+    },
+    {
+      "primitive_id": "es_rule_max_regret",
+      "name": "Empirical success rule max regret equals max(p,1-p)",
+      "verbatim_quote": "ES rule max regret = max(p,1-p) (known-distribution case and finite-sample case coincide",
+      "page": "Sec7 fn10 (line 26)",
+      "latex": "\\mathrm{MaxRegret}_{ES} = \\max(p,\\,1-p)",
+      "symbol_and_unit_ledger": {
+        "p": "observability / state probability [probability]",
+        "MaxRegret_ES": "maximum regret of the empirical success rule [regret units]"
+      },
+      "assumptions": [
+        "The known-distribution and finite-sample max regret coincide for the ES rule.",
+        "Max regret is max(p,1-p), minimized at p=1/2 where it equals 1/2."
+      ],
+      "breakdown_regime": "The ES rule's worst-case regret is at least 1/2 and approaches 1 as p approaches 0 or 1; it is not minimax-safe.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The ES max-regret formula IS the GSE greedy-rules risk certificate: the empirical-success heuristic carries worst-case regret max(p,1-p), at least one half, the Foundry's quantified warning that selecting the observed leader is never minimax-optimal.",
+        "source_operator": "es_rule_max_regret",
+        "telemetry": "MaxRegret_ES=max(p,1-p); >=0.5; known-dist = finite-sample (fn10)."
+      }
+    },
+    {
+      "primitive_id": "utah_es_picks_inferior",
+      "name": "Utah illustration: empirical success selects the MMR-inferior treatment",
+      "verbatim_quote": "as-if optimization selects the MMR-inferior treatment. AMMR rule: max regret invariant in p",
+      "page": "Sec7 (line 26)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Utah juvenile sentencing: mandate-confinement (a) max regret 0.45 vs mandate-no-confinement (b) 0.55, so (a) minimizes max regret.",
+        "But ES picks (b) because the observed no-reoffense rate 0.41 > 0.23; as-if optimization selects the MMR-inferior treatment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Utah result IS the GSE empirical-vs-minimax divergence proof: the option with the better observed average can be the worse worst-case choice, so the Foundry's selection gate must score regret across states, not just the realized mean, before certifying a play-call or selection policy.",
+        "source_operator": "utah_es_picks_inferior",
+        "telemetry": "a max regret 0.45 < b 0.55; ES picks b (0.41>0.23); ES != MMR."
+      }
+    },
+    {
+      "primitive_id": "ammr_more_data_more_regret",
+      "name": "AMMR deterministic rule: more data can increase maximum regret",
+      "verbatim_quote": "more data makes the deterministic rule *less* randomized and *more* regrettable, approaching ½",
+      "page": "Sec7 (line 26)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "AMMR (as-if minimax regret) deterministic-singleton rule has max regret invariant in p.",
+        "Max regret rises from about 0.34 (N=25) to about 0.40 (N=100), approaching 1/2 as N grows; N=1 gives max regret 1/4."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The more-data-more-regret finding IS a DERIVED KERNEL for GSE sample-size humility: a deterministic as-if rule can become MORE regrettable as data accumulates because it commits harder to a point estimate, the Foundry's caution that more telemetry does not automatically make a greedy decision rule safer.",
+        "source_operator": "ammr_more_data_more_regret",
+        "telemetry": "AMMR max regret ~0.34 (N=25) -> ~0.40 (N=100) -> 0.5; invariant in p; N=1 gives 0.25."
+      }
+    },
+    {
+      "primitive_id": "midpoint_beats_observed_average",
+      "name": "Midpoint predictor dominates the observed-only average under full feasibility",
+      "verbatim_quote": "midpoint predictor always beats the sample-average-of-observed-outcomes predictor when all distributions are feasible",
+      "page": "Sec7 (line 26)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "When all distributions are feasible, the midpoint predictor's max MSE is about 1/4 the size at observability <=0.8 and about 1/2 at 0.9.",
+        "Tables 1A vs 2A: e.g. N=100, P(delta=1)=0.1 gives midpoint max MSE 0.1952 vs observed-average 0.7779."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The midpoint dominance result IS the GSE missing-data estimator certificate: under maximal ignorance the identification-region midpoint beats the observed-only average by 3-4x at low observability, the Foundry's rule to prefer the minimax midpoint when telemetry is sparse.",
+        "source_operator": "midpoint_beats_observed_average",
+        "telemetry": "midpoint max MSE ~0.25x at obs<=0.8; N=100 P=0.1: 0.1952 vs 0.7779."
+      }
+    },
+    {
+      "primitive_id": "identification_dominates_imprecision",
+      "name": "Identification bias dominates imprecision at low observability",
+      "verbatim_quote": "identification (bias from missing data) dominates imprecision when observability",
+      "page": "Sec7 (line 26)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "When observability < 0.7, max MSE is approximately 1/4 P(delta=0)^2, the identification term.",
+        "Bias from missing data dominates sampling imprecision in this regime."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The identification-dominance finding IS the GSE missingness-priority kernel: below roughly 0.7 observability the dominant error is identification bias, not sampling noise, so the Foundry must spend effort bounding the missing-data mechanism before collecting more samples.",
+        "source_operator": "identification_dominates_imprecision",
+        "telemetry": "obs<0.7: max MSE ~0.25 P(delta=0)^2; identification > imprecision."
+      }
+    },
+    {
+      "primitive_id": "monte_carlo_max_regret",
+      "name": "Numerical max regret via Monte Carlo over the state-space grid",
+      "verbatim_quote": "Monte Carlo over 5,000 simulated samples per state",
+      "page": "Sec2 (line 11)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Maximum regret of candidate SDFs approximated by Monte Carlo with 5000 simulated samples per state.",
+        "Maximized over discretized state-space grids; N=25-100; observability 0.1-1.0 (prediction) / p=0.5-0.9 (treatment)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Monte Carlo max-regret computation IS a DERIVED KERNEL for GSE numerical certification: worst-case regret is estimated by simulating many samples per state and maximizing over a grid, the Foundry's executable pattern for computing a decision rule's state-space regret certificate.",
+        "source_operator": "monte_carlo_max_regret",
+        "telemetry": "5000 samples/state; grid maximization; N=25-100; STATA Manski-Tabord-Meehan 2017, Litvin-Manski 2021."
+      }
+    },
+    {
+      "primitive_id": "grid_lower_bound_caveat",
+      "name": "Grid-computed max regret is a lower bound on the true maximum",
+      "verbatim_quote": "maximum regret is computed on coarse grids, hence is a",
+      "page": "Sec9 (line 32)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper's own footnote: maximum regret computed on coarse grids is a lower bound on true max regret.",
+        "The true continuous maximum may be higher than the reported grid maximum."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The grid lower-bound caveat IS a DERIVED KERNEL for GSE certificate honesty: a numerically computed worst-case regret is only a lower bound, so the Foundry must label grid-based regret certificates as such rather than claiming a true worst-case guarantee.",
+        "source_operator": "grid_lower_bound_caveat",
+        "telemetry": "coarse grid max regret <= true max regret; paper footnote; lower bound only."
+      }
+    },
+    {
+      "primitive_id": "subjective_state_space_caveat",
+      "name": "The state space is subjective; robustness can be gamed by its bounds",
+      "verbatim_quote": "the state space is subjective - MMR conclusions inherit whatever bounds the analyst imposes",
+      "page": "Sec9 (line 32)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "MMR conclusions inherit whatever bounds the analyst imposes on the state space.",
+        "Robustness can be gamed by widening or narrowing S."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The subjective-state-space caveat IS a DERIVED KERNEL for GSE bound-provenance veto: a minimax-regret certificate is only as credible as the state-space bounds behind it, so the Foundry requires every regret claim to cite and justify its miscalibration bounds rather than treating robustness as objective.",
+        "source_operator": "subjective_state_space_caveat",
+        "telemetry": "S subjectively specified; MMR inherits analyst bounds; robustness gameable."
+      }
+    },
+    {
+      "primitive_id": "mmr_conservatism_caveat",
+      "name": "Minimax regret is extremely conservative, optimizing the worst case",
+      "verbatim_quote": "minimax regret is extremely conservative (optimizes the worst case)",
+      "page": "Sec9 (line 32)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Minimax regret optimizes the worst case and is extremely conservative.",
+        "For positive-expectation decisions it systematically under-acts relative to expected-growth criteria."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The conservatism caveat IS a DERIVED KERNEL for GSE risk-appetite calibration: a pure minimax-regret rule under-acts for favorable decisions, so the Foundry uses MMR as a risk overlay or cap rather than as the sole objective, balancing worst-case caution against expected value.",
+        "source_operator": "mmr_conservatism_caveat",
+        "telemetry": "MMR worst-case; conservative; under-acts vs expected-growth; use as overlay."
+      }
+    },
+    {
+      "primitive_id": "conditional_bayes_fubini_caveat",
+      "name": "Conditional-Bayes/Fubini equivalence holds only for unconstrained SDFs",
+      "verbatim_quote": "conditional-Bayes equivalence (Fubini) holds only for unconstrained feasible SDFs",
+      "page": "Sec7 AppA.1 (line 26)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Wald's criterion 4 = Bayes-risk minimization; the conditional-Bayes equivalence via Fubini holds only for unconstrained feasible SDFs.",
+        "Kitagawa & Tetenov (2018) and Athey & Wager (2019) give counterexamples under constraints."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Fubini caveat IS a DERIVED KERNEL for GSE interchange validity: the equivalence between ex ante Bayes risk and conditional Bayes requires an unconstrained rule class, so the Foundry checks the feasibility constraints before invoking the interchange in a decision-rule proof.",
+        "source_operator": "conditional_bayes_fubini_caveat",
+        "telemetry": "Fubini equivalence only unconstrained SDFs; Kitagawa-Tetenov 2018, Athey-Wager 2019 counterexamples."
+      }
+    },
+    {
+      "primitive_id": "counterexample_citations",
+      "name": "Named counterexamples to the conditional-Bayes equivalence",
+      "verbatim_quote": "Kitagawa & Tetenov 2018, Athey & Wager 2019 counterexamples",
+      "page": "Sec7 AppA.1 (line 26)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Kitagawa & Tetenov (2018) and Athey & Wager (2019) provide counterexamples where constrained feasible SDFs break the conditional-Bayes equivalence.",
+        "These cite the limits of Wald's criterion-4 equivalence."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The named counterexamples IS a DERIVED KERNEL for GSE citation-grounded veto: the Foundry anchors the limits of its Bayes-equivalence operator to specific published counterexamples, so a proof step that invokes the interchange can be checked against the known failure cases.",
+        "source_operator": "counterexample_citations",
+        "telemetry": "Kitagawa-Tetenov 2018; Athey-Wager 2019; constrained-SDF counterexamples."
+      }
+    },
+    {
+      "primitive_id": "appendix_decision_critiques",
+      "name": "Appendix critiques: Berger 'bizarre' and Chernoff IIA against maximin/MMR",
+      "verbatim_quote": "maximin vs MMR + Chernoff IIA critique, A.3 meta-choices",
+      "page": "Sec4 header AppA.2 (line 4)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Appendix A.1: Bayes vs conditional Bayes/Fubini equivalence plus Berger's 'bizarre' critique.",
+        "Appendix A.2: maximin vs MMR plus Chernoff's IIA critique; A.3 meta-choices."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The appendix critiques IS a DERIVED KERNEL for GSE adversarial-review provenance: the decision criteria carry named published objections (Berger's bizarre critique, Chernoff's IIA critique), so the Foundry records the known attacks on each evaluation operator rather than presenting the criteria as unchallenged.",
+        "source_operator": "appendix_decision_critiques",
+        "telemetry": "Berger 1985 'bizarre'; Chernoff IIA; maximin vs MMR; meta-choices A.3."
+      }
+    },
+    {
+      "primitive_id": "box_all_models_wrong",
+      "name": "Box: model space may not intersect the state space; usefulness is welfare across S",
+      "verbatim_quote": "model space S_m may or may not intersect S",
+      "page": "Sec4 (line 17)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Box's dictum: S_m intersect S = empty means all models are wrong.",
+        "Usefulness is high expected welfare across the state space S, not membership in the model space."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Box intersection principle IS the GSE model-humility kernel: a model can be useful even when no feasible state satisfies it, judged by expected welfare across the true state space, the Foundry's license to use a calibrated-but-misspecified engine while never claiming it is literally true.",
+        "source_operator": "box_all_models_wrong",
+        "telemetry": "S_m cap S may be empty (all models wrong); usefulness = expected welfare across S."
+      }
+    },
+    {
+      "primitive_id": "utah_maximal_ignorance_caveat",
+      "name": "The Utah punchline depends on a maximal-ignorance state space, not a finding",
+      "verbatim_quote": "depends entirely on the no-knowledge-of-counterfactuals state space, which is a maximal-ignorance assumption, not a finding",
+      "page": "Sec9 (line 32)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Utah illustration's punchline (ES picks the wrong treatment) depends entirely on the no-knowledge-of-counterfactuals state space.",
+        "That state space is a maximal-ignorance assumption, not an empirical finding."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The maximal-ignorance caveat IS a DERIVED KERNEL for GSE assumption-provenance veto: the dramatic ES-vs-MMR divergence is an artifact of the maximal-ignorance state space, so the Foundry must label such divergence results as assumption-driven rather than empirical laws.",
+        "source_operator": "utah_maximal_ignorance_caveat",
+        "telemetry": "Utah punchline = maximal-ignorance assumption; not a finding; no counterfactual knowledge."
+      }
+    },
+    {
+      "primitive_id": "analogical_transfer_caveat",
+      "name": "The decision-theory transfer is analogical; the paper gives no domain-specific results",
+      "verbatim_quote": "the mapping is analogical, and the paper gives no betting-specific results",
+      "page": "Sec9 (line 32)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The source paper is general decision theory; it gives no domain-specific (betting) results.",
+        "Any transfer to a concrete application domain is analogical, not a theorem of the paper."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The analogical-transfer caveat IS a DERIVED KERNEL for GSE isomorphism honesty: applying Wald decision theory to football play-call evaluation is an explicit [ISOMORPHISM], not a result the paper proves about football, so the Foundry labels the mapping as analogical and keeps the source invariant separate from its domain binding.",
+        "source_operator": "analogical_transfer_caveat",
+        "telemetry": "transfer analogical; no domain-specific results in source; label isomorphism explicitly."
+      }
+    },
+    {
+      "primitive_id": "bounded_outcome_assumption",
+      "name": "Core assumptions: bounded outcomes, individualistic response, subjective state space",
+      "verbatim_quote": "Assumptions: outcomes in [0,1]; individualistic treatment response; state space subjectively specified",
+      "page": "Sec4 (line 17)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Outcomes bounded in [0,1].",
+        "Individualistic treatment response; state space subjectively specified (can bound nonresponse <=80%, bound distribution differences)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The assumption ledger IS the GSE dimensional-precondition kernel: bounded outcomes, individualistic response, and a subjectively specified state space are the preconditions for the minimax-regret results, so the Foundry checks these before applying any regret certificate to a football decision.",
+        "source_operator": "bounded_outcome_assumption",
+        "telemetry": "outcomes in [0,1]; individualistic response; S subjective; nonresponse bound <=80% example."
+      }
+    },
+    {
+      "primitive_id": "state_space_grid_design",
+      "name": "State-space grid design: 100 prediction / 25 treatment points per Bernoulli parameter",
+      "verbatim_quote": "grids of 100 (prediction) or 25 (treatment) values per Bernoulli parameter",
+      "page": "Sec2 (line 11)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Numerical max-regret tables use grids of 100 (prediction) or 25 (treatment) values per Bernoulli parameter.",
+        "N=25-100; the grid resolution controls the tightness of the lower-bound max regret."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The grid-design specification IS a DERIVED KERNEL for GSE certificate-resolution provenance: the number of grid points per parameter is a declared resolution choice that bounds the regret estimate, so the Foundry records the grid resolution alongside any numerical regret certificate.",
+        "source_operator": "state_space_grid_design",
+        "telemetry": "100 points prediction / 25 treatment per Bernoulli param; N=25-100; resolution controls bound."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "10de5eafe60aa00b-t1",
+      "think": "This source is an internal arxiv-deep research ledger (completed 2026-09-21) of Charles F. Manski's 'Econometrics for decision making: building foundations sketched by Haavelmo and Wald' (arXiv:1912.08726v4, first public version December 2019, Haavelmo Lecture at the University of Oslo). The ledger reports a full sequential read of the source PDF text extract, sections 1 through 6, the conclusions, references, and the Appendix including the Bayes-versus-conditional-Bayes Fubini equivalence with Berger's bizarre critique, the maximin-versus-minimax-regret discussion with Chernoff's IIA critique, meta-choices, and Tables 1A through 4B. The Foundry extracts the source-invariant decision theory only. The ledger also contains an application layer (its sections 10 through 14) that maps the theory onto sportsbook staking, Kelly sizing, odds, and closing-line value; that layer is the synthesis author's analogical GSE application and is excluded here by the Foundry's zero-sportsbook doctrine. Every Layer-2 binding below is odds-free, targeting football play-call and selection decision rules under calibration uncertainty.\n\nThe paper's central argument is a evaluation-framework revolution. Manski joins Haavelmo's 1944 probabilistic structure for policy with Wald's statistical decision theory (1939, 1945, 1950) and argues that the field's core failure is evaluating as-if optimization by performance within the model space rather than by regret across the full state space of feasible states of nature. As-if optimization means specify a model, point-estimate its parameters, and act as if the estimate were true; equation 9 formalizes it as choosing the action that maximizes welfare at the estimated state. The key distinction is model space S_m, the distributions consistent with the assumed model, versus state space S, all distributions deemed feasible, which may extend beyond S_m because models may be wrong. A statistical decision function maps the sample space to an action, and Wald's prescription is to evaluate such functions ex ante by state-dependent risk or regret across S.\n\nThe decision criteria are laid out exactly. Without data: criterion 1 maximizes subjective average welfare, the integral of w(c,s) against a subjective prior pi; criterion 2 is maximin, maximizing the worst-case welfare min over s of w(c,s); criterion 3 is minimax regret, minimizing over actions the maximum over states of the oracle gap max_d w(d,s) minus w(c,s). With data, criterion 4 maximizes the prior-weighted expected welfare and equals Bayes-risk minimization, but the conditional-Bayes equivalence via Fubini holds only for unconstrained feasible decision functions, with Kitagawa and Tetenov (2018) and Athey and Wager (2019) supplying counterexamples under constraints. For binary choice, regret equals the probability of choosing the inferior action times the absolute welfare gap, equations 7 and 8.\n\nThe paper's concrete results concern prediction under missing data and treatment choice. For prediction with outcomes in [0,1] and missingness indicator delta, the midpoint predictor of the identification region is E(y given delta=1) times P(delta=1) plus one half times P(delta=0); its maximum squared error is one quarter times [P(delta=1) squared over K plus P(delta=0) squared]. The Hodges-Lehmann (1950) minimax-regret predictor is (mu_N sqrt(N) plus one half) over (sqrt(N) plus one). For treatment choice, the minimax-regret fractional allocation, equation 10, is z_MMR equals E[y(b) given delta(b)=1] times p plus {1 minus E[y(a) given delta(a)=1]} times (1 minus p); its max regret is z_MMR(1 minus z_MMR) for the fractional rule versus min(z_MMR, 1 minus z_MMR) for the deterministic singleton. The feasible unconditional means lie in intervals of width p, equations 11a-b. The empirical success rule picks the treatment with the best sample mean and has max regret max(p, 1 minus p).\n\nThe numerical findings are sharp and carry honest caveats. The midpoint predictor always beats the observed-only average when all distributions are feasible, with max MSE about one quarter the size at observability up to 0.8; at N=100 and P(delta=1)=0.1 the midpoint max MSE is 0.1952 versus 0.7779 for the observed average. Identification bias dominates imprecision when observability is below 0.7. The Utah juvenile-sentencing illustration shows mandate-confinement has max regret 0.45 versus 0.55 for mandate-no-confinement, so confinement minimizes max regret, yet the empirical success rule picks no-confinement because the observed no-reoffense rate 0.41 exceeds 0.23: as-if optimization selects the minimax-regret-inferior treatment. The AMMR deterministic rule's max regret is invariant in p and rises from about 0.34 at N=25 to about 0.40 at N=100, approaching one half, so more data makes the deterministic rule less randomized and more regrettable. The ledger's adversarial notes are essential sovereign caveats: maximum regret is computed on coarse grids and is therefore only a lower bound on the true maximum; the state space is subjective so minimax-regret conclusions inherit the analyst's bounds and robustness can be gamed; minimax regret is extremely conservative and under-acts for positive-expectation decisions; the Utah punchline depends entirely on a maximal-ignorance state space, an assumption not a finding; and the transfer to any concrete domain is analogical, the paper giving no domain-specific results. For the Foundry this is a complete decision-rule certification stack: the Wald statistical decision function, the model-space-versus-state-space veto, the three-criteria risk spectrum, the minimax-regret certificates with their honest lower-bound and subjective-bound caveats, and the partial-identification midpoint machinery for missing telemetry, all bound odds-free to football play-call and selection policy evaluation under calibration uncertainty. The deeper sovereign lesson is that a decision rule's worth is a property of its behavior across the worlds that might actually be true, not of its agreement with the model that produced it, which is precisely the held-out discipline the Foundry enforces on every compiled operator before it may influence a live decision.",
+      "retrocausal_genealogy": "The lineage runs from Haavelmo's 1944 probabilistic structure for policy through Wald's statistical decision theory (1939, 1945, 1950) to Manski's synthesis, with the Hodges-Lehmann (1950) minimax-regret predictor and the Dominitz-Manski missing-data identification program as concrete descendants. The treatment-choice computations descend from Manski and Tabord-Meehan (2017) and Litvin and Manski (2021) STATA programs, and the Utah illustration from Manski and Nagin (1998). The conditional-Bayes equivalence and its limits are traced through Kitagawa and Tetenov (2018) and Athey and Wager (2019), with Berger's (1985) bizarre critique and Chernoff's IIA critique recorded as the named adversarial attacks on the criteria. The novel retrocausal step is the explicit prescription to evaluate a decision rule by maximum regret across a subjectively specified state space of feasible worlds rather than by optimality within an assumed model space, turning Wald's ex ante evaluation into a practical certification framework with numerical max-regret computation and honest lower-bound caveats.",
+      "theory_of_mind": "The author models several minds with care. He models the practicing econometrician's mind, diagnosing the as-if optimization habit of plugging a point estimate into a decision and acting as if it were true, and prescribing a state-space regret evaluation instead. He models the reviewer's mind by supplying exact numerical tables, Monte Carlo designs, and explicit footnotes that the grid max regret is only a lower bound, anticipating the objection that numerical worst cases are not true worst cases. He models the skeptic's mind by recording Berger's and Chernoff's critiques and the Kitagawa-Tetenov and Athey-Wager counterexamples rather than hiding the limits of his criteria. He models the over-generalizer's mind by stating that the state space is subjective, that robustness can be gamed by widening or narrowing it, that the Utah punchline is a maximal-ignorance assumption not a finding, and that the transfer to any application domain is analogical with no domain-specific results proved. The synthesis author additionally models the GSE engineer's mind, but that application layer is betting-framed and is excluded by doctrine; the Foundry preserves only the source-invariant decision theory and the honest caveats.",
+      "cross_layer_veto": "The Foundry adjudicates this source across its layers. The observation layer passes because every quantity is dimensioned (welfare in utility units, probabilities in [0,1], outcomes bounded in [0,1], regret in utility units) and the equations are transcribed exactly from the ledger's report of the source notation. The evaluation layer certifies the model-space-versus-state-space distinction as the central veto: a decision rule is sovereign only when scored by regret across feasible miscalibrated worlds, not by fit under the engine's own probabilities. The criteria layer issues the three-lens risk spectrum (Bayes, maximin, minimax regret) and the binary-regret decomposition. The certificate-honesty layer issues three vetoes: grid max regret is a lower bound, the state space is subjective and gameable, and minimax regret is conservative and should be an overlay not the sole objective. The proof-validity layer vetoes unconditional use of the Fubini interchange, citing the named counterexamples. The interpretation layer issues the analogical-transfer veto: applying this to football is an explicit isomorphism, not a theorem about football, and the Utah divergence is assumption-driven. The doctrine layer excludes the synthesis's sportsbook staking/Kelly/odds/CLV application sections entirely; every Layer-2 binding targets odds-free football play-call and selection policy evaluation under calibration uncertainty. Zero sportsbook lines, spreads, totals, or implied odds appear in any extracted primitive."
+    }
+  ],
+  "universal_lens": "Manski's framework is a universal decision-certification template: separate the model space (what the assumed model permits) from the state space (what is actually feasible), define a decision function from data to action, and certify it by worst-case regret across the state space rather than by in-model optimality. The three criteria (subjective average welfare, maximin, minimax regret) form a risk-attitude spectrum, and the missing-data midpoint machinery gives minimax predictions for partially identified quantities. The pattern generalizes to any sovereign system that must make decisions under model misspecification and incomplete observation while honestly declaring the subjectivity and lower-bound nature of its worst-case certificates.",
+  "gsi_mapping": "For the Galaxy Sports Institute the Wald statistical decision function is the canonical model of a coaching decision: a play-call or selection policy maps observed game state to an action and must be evaluated across plausible true states of the defense and of player performance, not merely by its fit to the institute's own model. The model-space-versus-state-space distinction formalizes the institute's held-out discipline, the empirical-success-versus-minimax-regret divergence warns that the empirically best-looking call can be the worst-case inferior call, and the missing-data midpoint predictor gives a principled estimate of a player state when telemetry is partially unobserved. The subjective-state-space and lower-bound caveats define exactly how the institute must declare the bounds behind any regret certificate.",
+  "gse_mapping": "For Galaxy Sports Edge this source supplies a complete odds-free decision-rule certification stack: the Wald SDF is the play-call/selection policy kernel, the model-space-versus-state-space distinction is the calibration-veto kernel, the three decision criteria are the risk-attitude spectrum, and the binary-regret decomposition is the two-action cost kernel. The minimax-regret fractional allocation and the fractional-versus-singleton regret comparison certify mixing strategies rather than committing to the observed leader; the midpoint predictor and feasible-mean intervals are the missing-telemetry partial-identification kernels. The grid lower-bound, subjective-state-space, conservatism, Fubini-counterexample, maximal-ignorance, and analogical-transfer caveats are the certificate-honesty vetoes the engine enforces. The synthesis's sportsbook staking/Kelly/odds application layer is excluded by doctrine; every binding here targets football decision-rule evaluation under calibration uncertainty with zero sportsbook content."
+}

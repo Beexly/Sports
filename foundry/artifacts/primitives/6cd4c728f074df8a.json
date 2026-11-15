@@ -1,0 +1,78 @@
+{
+  "book_id": "6cd4c728f074df8a",
+  "source_status": "COMPLETE",
+  "title": "p0143",
+  "file_name": "p0143.txt",
+  "sha256": "6cd4c728f074df8a0e8441b1a7de7ce0c4b3419fdf03b6052b31d5c9150eda62",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Field access control and penalty enforcement form a dual constraint system: spatial exclusion (side lines) and temporal penalty (15 yards), both governed by referee authority. Universal Lens: Rooted in p0143 (6cd4c728f074df8a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models field access as a probabilistic constraint network; penalty enforcement maps to posterior belief updates on team strategy given observed infractions. GSI Mapping: Rooted in p0143 (6cd4c728f074df8a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes field access rules as state transitions; penalty enforcement triggers deterministic state shifts in game progression via action-observation feedback loops. GSE Mapping: Rooted in p0143 (6cd4c728f074df8a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "field_access_constraint",
+      "name": "Field Access Constraint",
+      "verbatim_quote": "No person allowed to walk up and down on side lines.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{field}': 'dimensionless indicator function for field access', 't': 'time in seconds', 'x': 'spatial coordinate along sideline'}",
+      "assumptions": "Spatial continuity of field boundaries, discrete time steps for access control.",
+      "breakdown_regime": "x ∈ [0, L] where L is sideline length; A_{field}(x,t) = 0 implies prohibited access.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Field access control mirrors temporal constraint enforcement in game state transitions.",
+        "source_operator": "field_access_constraint",
+        "telemetry": "Observer count per unit time at sideline boundary"
+      }
+    },
+    {
+      "primitive_id": "penalty_enforcement_rule",
+      "name": "Penalty Enforcement Rule",
+      "verbatim_quote": "If the ball was In play when the offense occurred, the penaity shall be enforced frem the spot where the ball was put in play.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{penalty}': '15-yard penalty distance', 's_{inplay}': 'position vector of ball when in play', 's_{spot}': 'enforcement starting position vector'}",
+      "assumptions": "Ball position is deterministically known at infraction moment.",
+      "breakdown_regime": "s_{spot} = s_{inplay} if offense occurs during play; otherwise, default enforcement spot applies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Penalty rule derives from game state transition kernel under violation condition.",
+        "source_operator": "penalty_enforcement_rule",
+        "telemetry": "Distance between initial and final positions after penalty application"
+      }
+    },
+    {
+      "primitive_id": "offender_exclusion_protocol",
+      "name": "Offender Exclusion Protocol",
+      "verbatim_quote": "The offender shali be excluded from the neighborhood of the field of play for the remainder of the game.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{exclusion}': 'exclusion event indicator', 'T_{game}': 'total game duration in seconds', 't_{infraction}': 'instant of infraction in seconds'}",
+      "assumptions": "Exclusion is absolute and non-reversible until end of game.",
+      "breakdown_regime": "E_{exclusion}(t) = 1 for t ∈ [t_{infraction}, T_{game}]",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Exclusion protocol mirrors strategic isolation in game-theoretic agent interaction models.",
+        "source_operator": "offender_exclusion_protocol",
+        "telemetry": "Duration of exclusion period relative to total game time"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6cd4c728f074df8a_t0",
+      "think": "The three core primitives—field access control, penalty enforcement, and offender exclusion—constitute a triadic constraint system. Field access is modeled as a spatiotemporal exclusion map, where movement along sidelines is forbidden. Penalty enforcement operates as a conditional shift in game state, anchored to the ball’s last known position during play. Offender exclusion functions as a permanent strategic disruption, modeled as a binary event over time. These primitives form a dual structure: one governing real-time access dynamics and another governing post-violation state evolution. Their interplay defines a closed-loop game logic where each action triggers a measurable consequence. Failure modes include unauthorized access breaches, misapplication of penalties, and incomplete enforcement of exclusions. Each primitive exhibits a distinct regime: spatial (access), positional (penalty), and temporal (exclusion). The system's robustness depends on consistent enforcement of these regimes through referee authority.\n\nDeep epistemic analysis for p0143 (6cd4c728f074df8a, domain=other, pages_read=1/1): Operator 'Field Access Constraint' (page 1, domain other) captures: No person allowed to walk up and down on side lines. Assumptions: Spatial continuity of field boundaries, discrete time steps for access control. Breakdown regime: x ∈ [0, L] where L is sideline length; A_{field}(x,t) = 0 implies prohibited access. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Field access control mirrors temporal constraint enforcement in game state transitions. Operator 'Penalty Enforcement Rule' (page 1, domain other) captures: If the ball was In play when the offense occurred, the penaity shall be enforced frem the spot where the ball was put in play. Assumptions: Ball position is deterministically known at infraction moment. Breakdown regime: s_{spot} = s_{inplay} if offense occurs during play; otherwise, default enforcement spot applies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Penalty rule derives from game state transition kernel under violation condition. Operator 'Offender Exclusion Protocol' (page 1, domain other) captures: The offender shali be excluded from the neighborhood of the field of play for the remainder of the game. Assumptions: Exclusion is absolute and non-reversible until end of game. Breakdown regime: E_{exclusion}(t) = 1 for t ∈ [t_{infraction}, T_{game}] Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Exclusion protocol mirrors strategic isolation in game-theoretic agent interaction models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0143 (6cd4c728f074df8a, domain=other, pages_read=1/1): Operator 'Field Access Constraint' (page 1, domain other) captures: No person allowed to walk up and down on side lines. Assumptions: Spatial continuity of field boundaries, discrete time steps for access control. Breakdown regime: x ∈ [0, L] where L is sideline length; A_{field}(x,t) = 0 implies prohibited access. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Field access control mirrors temporal constraint enforcement in game state transitions. Operator 'Penalty Enforcement Rule' (page 1, domain other) captures: If the ball was In play when the offense occurred, the penaity shall be enforced frem the spot where the ball was put in play. Assumptions: Ball position is deterministically known at infraction moment. Breakdown regime: s_{spot} = s_{inplay} if offense occurs during play; otherwise, default enforcement spot applies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Penalty rule derives from game state transition kernel under violation condition. Operator 'Offender Exclusion Protocol' (page 1, domain other) captures: The offender shali be excluded from the neighborhood of the field of play for the remainder of the game. Assumptions: Exclusion is absolute and non-reversible until end of game. Breakdown regime: E_{exclusion}(t) = 1 for t ∈ [t_{infraction}, T_{game}] Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Exclusion protocol mirrors strategic isolation in game-theoretic agent interaction models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century football rulebooks, this structure evolved from static field regulations into dynamic game-state models. Influenced by mechanical systems theory and early game theory frameworks. Retrocausal Genealogy: Rooted in p0143 (6cd4c728f074df8a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0143 (6cd4c728f074df8a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams model their behavior around minimizing violations while maximizing strategic use of permitted actions. Referees act as stochastic decision-makers, balancing rule enforcement against game flow. Injury protocols introduce uncertainty, requiring adaptive response strategies from both teams and officials. Theory of Mind & Decision Maker Model: Rooted in p0143 (6cd4c728f074df8a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures field access and penalty enforcement do not overlap in logical space. Leakage vetoes prevent exclusion protocols from being bypassed through indirect field access. These conditions maintain integrity across layers of game regulation. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0143 (6cd4c728f074df8a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

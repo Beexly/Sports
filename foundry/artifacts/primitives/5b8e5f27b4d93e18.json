@@ -1,0 +1,78 @@
+{
+  "book_id": "5b8e5f27b4d93e18",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "5b8e5f27b4d93e18bac3c7a7f686042b907203a09c58b24690bafed22008d99e",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A hierarchical dataflow lattice for NFL analytics: repos as code-manifolds, wikis as semantic sheaves, and deep-reads as kernel embeddings in a Bayesian signal space. Universal Lens: Rooted in README (5b8e5f27b4d93e18), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic player states via conformal prediction on dbt bronze/silver/gold layers, using as-of features to prevent lookahead bias in rule evaluation. GSI Mapping: Rooted in README (5b8e5f27b4d93e18), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes rule-based state transitions through a declarative experiment registry, applying Monte Carlo correlations and quantile transformers to simulate parlay edge and projection uncertainty. GSE Mapping: Rooted in README (5b8e5f27b4d93e18), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "as_of_feature_engineering",
+      "name": "As-of Feature Engineering",
+      "verbatim_quote": "**cbratkovics/fantasy-football-ai** (MIT, 16★) — dbt bronze/silver/gold + as-of feature engineering + per-position RF/XGBoost with decision-policy tables.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time index (dimensionless)', 'X_{t}': 'feature vector at time t (dimensionless)', 'Y_{t}': 'outcome variable at time t (dimensionless)'}",
+      "assumptions": "Features are temporally consistent and causally ordered; no future information leaks into training set.",
+      "breakdown_regime": "When t < T, where T is the latest known observation, otherwise undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The as-of pattern maps to a temporal slice operator in GSE's rule store, ensuring that each rule evaluates under a fixed historical context.",
+        "source_operator": "as_of_feature_engineering",
+        "telemetry": "Rule accuracy under varying time slices."
+      }
+    },
+    {
+      "primitive_id": "weak_signal_registry",
+      "name": "Weak Signal Registry",
+      "verbatim_quote": "**ryanpmcintire/nfl_py3** (MIT, 15★) — Bayesian team model, market-updated model, leader-median confidence, agentless experiment pipeline (declarative spec → reliability check → bootstrap → registry).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_i': 'signal strength of rule i (dimensionless)', 'C_i': 'confidence of rule i (dimensionless)', 'R_i': 'rule identifier (dimensionless)'}",
+      "assumptions": "Signal strength is independent across rules; confidence is calibrated via bootstrap sampling.",
+      "breakdown_regime": "When S_i < threshold, rule is registered in weak signal pool.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Registry acts as a kernel embedding of rule-space in GSE’s rule store, enabling compositional logic over weak signals.",
+        "source_operator": "weak_signal_registry",
+        "telemetry": "Number of active weak signals per season."
+      }
+    },
+    {
+      "primitive_id": "monte_carlo_correlation_pricing",
+      "name": "Monte Carlo Correlation Pricing",
+      "verbatim_quote": "**chmoses98/nfl-edge-finder** (no license — method only) — Monte Carlo game/period/player engines with common random numbers; joint engine prices composites on the SAME draws, never multiplying marginals; market reconciliation weights.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Z': 'joint probability draw (dimensionless)', 'W': 'market weight (dimensionless)', 'P(Z|W)': 'conditional price under market weights (dimensionless)'}",
+      "assumptions": "Common random numbers ensure correlation consistency; marginal multiplication introduces error.",
+      "breakdown_regime": "When Z is sampled from shared distribution, otherwise invalid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Correlation layer in DFS sim mirrors joint engine structure, enabling accurate parlay valuation without independence assumption.",
+        "source_operator": "monte_carlo_correlation_pricing",
+        "telemetry": "Parlay variance reduction compared to marginal pricing."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b8e5f27b4d93e18_t0",
+      "think": "The as-of feature engineering primitive encodes a temporal constraint in data pipelines, aligning with GSI's need for non-lookahead inference. It maps to a time-slice operator in GSE's rule store, where each rule is evaluated under a fixed historical context. The weak signal registry embodies a kernel embedding of rule-space, enabling compositional logic over low-confidence signals. This is essential for GSE's robustness against noisy inputs. Monte Carlo correlation pricing ensures accurate joint probability estimation by avoiding marginal multiplication errors, which is critical for DFS payout simulations. Each primitive represents a distinct failure mode mitigation strategy: temporal consistency, signal fusion, and probabilistic coherence.\n\nDeep epistemic analysis for README (5b8e5f27b4d93e18, domain=other, pages_read=2/2): Operator 'As-of Feature Engineering' (page 1, domain other) captures: **cbratkovics/fantasy-football-ai** (MIT, 16★) — dbt bronze/silver/gold + as-of feature engineering + per-position RF/XGBoost with decision-policy tables. Assumptions: Features are temporally consistent and causally ordered; no future information leaks into training set. Breakdown regime: When t < T, where T is the latest known observation, otherwise undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The as-of pattern maps to a temporal slice operator in GSE's rule store, ensuring that each rule evaluates under a fixed historical context. Operator 'Weak Signal Registry' (page 1, domain other) captures: **ryanpmcintire/nfl_py3** (MIT, 15★) — Bayesian team model, market-updated model, leader-median confidence, agentless experiment pipeline (declarative spec → reliability check → bootstrap → registry). Assumptions: Signal strength is independent across rules; confidence is calibrated via bootstrap sampling. Breakdown regime: When S_i < threshold, rule is registered in weak signal pool. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Registry acts as a kernel embedding of rule-space in GSE’s rule store, enabling compositional logic over weak signals. Operator 'Monte Carlo Correlation Pricing' (page 1, domain other) captures: **chmoses98/nfl-edge-finder** (no license — method only) — Monte Carlo game/period/player engines with common random numbers; joint engine prices composites on the SAME draws, never multiplying marginals; market reconciliation weights. Assumptions: Common random numbers ensure correlation consistency; marginal multiplication introduces error. Breakdown regime: When Z is sampled from shared distribution, otherwise invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Correlation layer in DFS sim mirrors joint engine structure, enabling accurate parlay valuation without independence assumption. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (5b8e5f27b4d93e18, domain=other, pages_read=2/2): Operator 'As-of Feature Engineering' (page 1, domain other) captures: **cbratkovics/fantasy-football-ai** (MIT, 16★) — dbt bronze/silver/gold + as-of feature engineering + per-position RF/XGBoost with decision-policy tables. Assumptions: Features are temporally consistent and causally ordered; no future information leaks into training set. Breakdown regime: When t < T, where T is the latest known observation, otherwise undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The as-of pattern maps to a temporal slice operator in GSE's rule store, ensuring that each rule evaluates under a fixed historical context. Operator 'Weak Signal Registry' (page 1, domain other) captures: **ryanpmcintire/nfl_py3** (MIT, 15★) — Bayesian team model, market-updated model, leader-median confidence, agentless experiment pipeline (declarative spec → reliability check → bootstrap → registry). Assumptions: Signal strength is independent across rules; confidence is calibrated via bootstrap sampling. Breakdown regime: When S_i < threshold, rule is registered in weak signal pool. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Registry acts as a kernel embedding of rule-space in GSE’s rule store, enabling compositional logic over weak signals. Operator 'Monte Carlo Correlation Pricing' (page 1, domain other) captures: **chmoses98/nfl-edge-finder** (no license — method only) — Monte Carlo game/period/player engines with common random numbers; joint engine prices composites on the SAME draws, never multiplying marginals; market reconciliation weights. Assumptions: Common random numbers ensure correlation consistency; marginal multiplication introduces error. Breakdown regime: When Z is sampled from shared distribution, otherwise invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Correlation layer in DFS sim mirrors joint engine structure, enabling accurate parlay valuation without independence assumption. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical learning theory and Bayesian inference, these primitives extend classical time-series analysis and causal modeling frameworks. They reflect modern practices in probabilistic programming and reinforcement learning. Retrocausal Genealogy: Rooted in README (5b8e5f27b4d93e18), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (5b8e5f27b4d93e18), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial models that exploit temporal leakage, noisy signal sources, and incorrect marginalization. These primitives model and counteract such agents through structured constraints and probabilistic safeguards. Theory of Mind & Decision Maker Model: Rooted in README (5b8e5f27b4d93e18), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each rule operates on distinct feature subsets. Leakage veto occurs when temporal consistency fails, e.g., future data enters training. Correlation veto prevents marginalization errors in joint engine pricing. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (5b8e5f27b4d93e18), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

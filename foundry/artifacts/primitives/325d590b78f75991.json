@@ -1,0 +1,78 @@
+{
+  "book_id": "325d590b78f75991",
+  "source_status": "COMPLETE",
+  "title": "01_red_zone_xtd_share",
+  "file_name": "01_red_zone_xtd_share.md",
+  "sha256": "325d590b78f7599131de106bf709a2c2f4b00a92cf9859c89312d17bbac92bfa",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 01_red_zone_xtd_share (325d590b78f75991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 01_red_zone_xtd_share (325d590b78f75991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 01_red_zone_xtd_share (325d590b78f75991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "red_zone_expected_td_share_allowed_by_position",
+      "name": "Red-zone expected TD share allowed, by position",
+      "verbatim_quote": "**Definition.** Every red-zone opportunity a defense faced (targets: pass attempts excl.",
+      "page": 1,
+      "latex": "\\mathcal{R}_{\\text{pos}} = \\sum_{i \\in \\text{opportunities}} \\frac{r_i}{R} \\cdot p_{\\text{pos}}",
+      "symbol_and_unit_ledger": "{'r_i': 'Binary indicator (1 if TD scored on opportunity i, else 0)', 'R': 'Total red-zone opportunities faced by defense', 'p_pos': 'League red-zone TD rate for position group (e.g., QB, RB, TE, WR)'}",
+      "assumptions": "League TD rates are stable across weeks 1-7; all red-zone scoring events are accounted for without bias.",
+      "breakdown_regime": "No breakdown noted; valid for any defensive performance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Defense's expected TD allocation across ball-handling roles quantifies vulnerability heterogeneity. GSE: Maps to state transitions where opponent scoring propensities dictate defensive resource prioritization.",
+        "source_operator": "red_zone_expected_td_share_allowed_by_position",
+        "telemetry": "Observed vs. expected TD splits reveal inefficiencies in opponent exploitation patterns."
+      }
+    },
+    {
+      "primitive_id": "red_zone_td_rate_by_position",
+      "name": "Red-zone TD rate by position",
+      "verbatim_quote": "League RZ TD rates this window: OTHER 0.000, QB 0.207, RB 0.160, TE 0.363, WR 0.228.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_pos': 'Dimensionless probability (TD per red-zone opportunity)'}",
+      "assumptions": "Rates are calculated from league-wide play-by-play data within the red zone (yardline ≤ 20).",
+      "breakdown_regime": "Assumes linear scaling with opportunity count; non-linear effects may arise at extreme sample sizes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Used as prior distribution for position-specific scoring expectations. GSE: Serves as transition probability matrix element for red-zone offensive plays.",
+        "source_operator": "red_zone_td_rate_by_position",
+        "telemetry": "Track deviations between empirical opponent rates and league benchmarks to detect exploitation patterns."
+      }
+    },
+    {
+      "primitive_id": "propensity_not_results",
+      "name": "Propensity, not results",
+      "verbatim_quote": "Propensity, not results — where a defense's RZ touchdowns *should* come from, with TD variance stripped.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Eliminates short-term noise and focuses on underlying scoring mechanisms rather than realized outcomes.",
+      "breakdown_regime": "Effective when sample size is large enough for law of large numbers to apply.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Separates signal from noise in defensive efficiency metrics. GSE: Models expected state transitions independent of stochastic outcomes.",
+        "source_operator": "propensity_not_results",
+        "telemetry": "Compare expected TD shares to actual TD counts to assess consistency in defensive pressure application."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "325d590b78f75991_t0",
+      "think": "This primitive set mathematizes defensive vulnerability by decomposing red-zone scoring into role-based contributions. It isolates the 'propensity' term from observed TD outcomes, thereby stripping away variance due to small sample size or luck. The core operator \\(\\mathcal{R}_{\\text{pos}}\\) is a weighted sum of binary indicators, with weights derived from league statistics. This approach mirrors Bayesian hierarchical modeling where position-specific priors are applied to local data. The methodological innovation lies in treating each red-zone opportunity as an independent Bernoulli trial, then distributing league-level TD rates across defensive assignments. Critically, it avoids the pitfall of interpreting raw TD counts as direct measures of defensive effectiveness, which would be susceptible to regression to the mean. Instead, it provides a forward-looking metric that accounts for opponent offensive composition. In GSI, this translates to a conformal prediction framework where defensive performance is evaluated against position-specific baselines. In GSE, it informs state-transition models by assigning transition probabilities that reflect the expected contribution of different ball-handling roles to red-zone scoring.\n\nDeep epistemic analysis for 01_red_zone_xtd_share (325d590b78f75991, domain=other, pages_read=1/1): Operator 'Red-zone expected TD share allowed, by position' (page 1, domain other) captures: **Definition.** Every red-zone opportunity a defense faced (targets: pass attempts excl. Assumptions: League TD rates are stable across weeks 1-7; all red-zone scoring events are accounted for without bias. Breakdown regime: No breakdown noted; valid for any defensive performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Defense's expected TD allocation across ball-handling roles quantifies vulnerability heterogeneity. GSE: Maps to state transitions where opponent scoring propensities dictate defensive resource prioritization. Operator 'Red-zone TD rate by position' (page 1, domain other) captures: League RZ TD rates this window: OTHER 0.000, QB 0.207, RB 0.160, TE 0.363, WR 0.228. Assumptions: Rates are calculated from league-wide play-by-play data within the red zone (yardline ≤ 20). Breakdown regime: Assumes linear scaling with opportunity count; non-linear effects may arise at extreme sample sizes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Used as prior distribution for position-specific scoring expectations. GSE: Serves as transition probability matrix element for red-zone offensive plays. Operator 'Propensity, not results' (page 1, domain other) captures: Propensity, not results — where a defense's RZ touchdowns *should* come from, with TD variance stripped. Assumptions: Eliminates short-term noise and focuses on underlying scoring mechanisms rather than realized outcomes. Breakdown regime: Effective when sample size is large enough for law of large numbers to apply. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Separates signal from noise in defensive efficiency metrics. GSE: Models expected state transitions independent of stochastic outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 01_red_zone_xtd_share (325d590b78f75991, domain=other, pages_read=1/1): Operator 'Red-zone expected TD share allowed, by position' (page 1, domain other) captures: **Definition.** Every red-zone opportunity a defense faced (targets: pass attempts excl. Assumptions: League TD rates are stable across weeks 1-7; all red-zone scoring events are accounted for without bias. Breakdown regime: No breakdown noted; valid for any defensive performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Defense's expected TD allocation across ball-handling roles quantifies vulnerability heterogeneity. GSE: Maps to state transitions where opponent scoring propensities dictate defensive resource prioritization. Operator 'Red-zone TD rate by position' (page 1, domain other) captures: League RZ TD rates this window: OTHER 0.000, QB 0.207, RB 0.160, TE 0.363, WR 0.228. Assumptions: Rates are calculated from league-wide play-by-play data within the red zone (yardline ≤ 20). Breakdown regime: Assumes linear scaling with opportunity count; non-linear effects may arise at extreme sample sizes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Used as prior distribution for position-specific scoring expectations. GSE: Serves as transition probability matrix element for red-zone offensive plays. Operator 'Propensity, not results' (page 1, domain other) captures: Propensity, not results — where a defense's RZ touchdowns *should* come from, with TD variance stripped. Assumptions: Eliminates short-term noise and focuses on underlying scoring mechanisms rather than realized outcomes. Breakdown regime: Effective when sample size is large enough for law of large numbers to apply. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Separates signal from noise in defensive efficiency metrics. GSE: Models expected state transitions independent of stochastic outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The foundational idea traces back to Poisson process modeling in sports analytics (e.g., Brooks et al., 2012), later refined through Bradley-Terry scaling (Bradley & Terry, 1952) and applied to football via expected points added (EPAnet). The specific focus on role-based decomposition builds on work in player efficiency rating (PER) and advanced quarterback defense metrics (e.g., Football Outsiders' DVOA). The shift from 'results' to 'propensity' echoes causal inference techniques from Rubin's potential outcomes framework (Rubin, 1974).",
+      "theory_of_mind": "Opposing offenses act strategically, exploiting defensive weaknesses by targeting high-probability scoring roles (e.g., tight ends in the red zone). Defensive coordinators model these incentives and adjust coverage schemes accordingly. Coaches and analysts interpret \\(\\mathcal{R}_{\\text{pos}}\\) to identify which roles their defense is underperforming relative to league norms, guiding adjustments in blitz packages, coverage shells, or man-to-man assignments. Theory of Mind & Decision Maker Model: Rooted in 01_red_zone_xtd_share (325d590b78f75991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent anti-collinearity, the primitive must exclude non-red-zone plays and ensure position labels are consistent across datasets. Leakage occurs if the primitive inadvertently uses future information (e.g., opponent TD rates after week 7). Additionally, the primitive assumes independence between opportunities, which fails during sustained drives or when defenses shift strategies mid-game. Cross-Layer Veto & Anti-Leakage Check: Rooted in 01_red_zone_xtd_share (325d590b78f75991), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

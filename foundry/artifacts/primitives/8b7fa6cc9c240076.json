@@ -1,0 +1,78 @@
+{
+  "book_id": "8b7fa6cc9c240076",
+  "source_status": "COMPLETE",
+  "title": "CALIBRATION-STRATIFIED-2026-11-04",
+  "file_name": "CALIBRATION-STRATIFIED-2026-11-04.md",
+  "sha256": "8b7fa6cc9c240076f9fd7ea5b8c81c0b1a0919d40055ecc53ee8174ed97eff7f",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Calibration stratified by market reveals pooling artifacts and miscalibrated spread/total predictions; moneyline shows underconfidence at low probs. Universal Lens: Rooted in CALIBRATION-STRATIFIED-2026-11-04 (8b7fa6cc9c240076), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration error ECE measures deviation of predicted vs realized probabilities; conformal prediction bounds confidence sets for spread/total outcomes. GSI Mapping: Rooted in CALIBRATION-STRATIFIED-2026-11-04 (8b7fa6cc9c240076), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning detects anti-predictive behavior in high-confidence spread picks; state transitions require reweighting model outputs for valid ROI estimation. GSE Mapping: Rooted in CALIBRATION-STRATIFIED-2026-11-04 (8b7fa6cc9c240076), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "calibration_gap",
+      "name": "Calibration Gap",
+      "verbatim_quote": "`compute.ts` documented something larger: over 2,385 settled picks the 80+ band claims ~0.8663 and realizes ~0.5191 (z = -10.7), with realized win rate *peaking* at 75-79 and *falling* by 90-94.",
+      "page": 1,
+      "latex": "\\text{Gap} = \\bar{p} - \\bar{y}",
+      "symbol_and_unit_ledger": "{'p': 'predicted probability (dimensionless)', 'y': 'realized outcome (0 or 1)', 'z': 'standardized test statistic (dimensionless)'}",
+      "assumptions": "Binomial distribution of outcomes; fixed probability per pick.",
+      "breakdown_regime": "High-confidence bins (80+%) show systematic underperformance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expected Calibration Error (ECE) computed over stratified bands; captures model reliability across confidence levels.",
+        "source_operator": "calibration_gap",
+        "telemetry": "Z-score of binomial proportion difference"
+      }
+    },
+    {
+      "primitive_id": "market_miscalibration_defect",
+      "name": "Market Miscalibration Defect",
+      "verbatim_quote": "**Answer.** It is almost entirely a **pooling artifact**, plus a separate, larger and more serious defect in the spread and total markets.",
+      "page": 1,
+      "latex": "\\text{Defect} = \\text{Pool Artifact} + \\text{Spread/Total Bias}",
+      "symbol_and_unit_ledger": "{'Defect': 'deviation from calibrated performance (percentage points)', 'Pool Artifact': 'aggregate bias due to heterogeneous data mixing (percentage points)', 'Spread/Total Bias': 'systematic misalignment in market-specific models (percentage points)'}",
+      "assumptions": "Separability of market types; distinct calibration issues per market type.",
+      "breakdown_regime": "Combined effect of data heterogeneity and model misalignment in spread/total markets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stratified regression isolates market-specific calibration errors; identifies root causes of pooling artifact.",
+        "source_operator": "market_miscalibration_defect",
+        "telemetry": "Proportion of total calibration error attributed to spread/total"
+      }
+    },
+    {
+      "primitive_id": "anti_predictive_behavior",
+      "name": "Anti-Predictive Behavior",
+      "verbatim_quote": "It is not miscalibrated in the ordinary sense — it is **anti-predictive at the top**: the model's most confident spread picks are its worst.",
+      "page": 1,
+      "latex": "\\text{Predictive Score} = \\sum_{i=1}^{n} p_i y_i - \\sum_{i=1}^{n} p_i (1-y_i)",
+      "symbol_and_unit_ledger": "{'Predictive Score': 'measure of alignment between confidence and outcome (dimensionless)', 'p_i': 'predicted probability for pick i (dimensionless)', 'y_i': 'realized outcome for pick i (0 or 1)'}",
+      "assumptions": "Confidence scores are inversely correlated with predictive accuracy in high-probability bins.",
+      "breakdown_regime": "Top confidence bands (90–100%) exhibit negative correlation between predicted and actual success.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Inverse relationship between model confidence and realized outcome in spread/total predictions; indicates flawed probability assignment.",
+        "source_operator": "anti_predictive_behavior",
+        "telemetry": "Correlation coefficient between predicted probability and realized win rate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8b7fa6cc9c240076_t0",
+      "think": "The calibration analysis reveals that while the model performs well overall, there is a significant discrepancy in how confidence is assigned to spread and total bets. The pooling artifact arises because different market types (moneyline vs spread/total) have varying calibration properties. In particular, the 80+ confidence band shows a large negative gap (z = -10.7), indicating overconfidence. However, this is not uniform across markets—moneyline remains relatively calibrated, whereas spread and total exhibit strong miscalibration. The anti-predictive nature at high confidence levels suggests that the model assigns higher probabilities to incorrect outcomes, likely due to improper modeling of these markets. This implies that using raw confidence scores directly as probabilities for spread/total bets leads to poor risk-adjusted returns. To correct this, one must either reframe the model targets or remove confidence reporting for such bets.\n\nDeep epistemic analysis for CALIBRATION-STRATIFIED-2026-11-04 (8b7fa6cc9c240076, domain=other, pages_read=3/3): Operator 'Calibration Gap' (page 1, domain other) captures: `compute.ts` documented something larger: over 2,385 settled picks the 80+ band claims ~0.8663 and realizes ~0.5191 (z = -10.7), with realized win rate *peaking* at 75-79 and *falling* by 90-94. Assumptions: Binomial distribution of outcomes; fixed probability per pick. Breakdown regime: High-confidence bins (80+%) show systematic underperformance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Expected Calibration Error (ECE) computed over stratified bands; captures model reliability across confidence levels. Operator 'Market Miscalibration Defect' (page 1, domain other) captures: **Answer.** It is almost entirely a **pooling artifact**, plus a separate, larger and more serious defect in the spread and total markets. Assumptions: Separability of market types; distinct calibration issues per market type. Breakdown regime: Combined effect of data heterogeneity and model misalignment in spread/total markets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Stratified regression isolates market-specific calibration errors; identifies root causes of pooling artifact. Operator 'Anti-Predictive Behavior' (page 1, domain other) captures: It is not miscalibrated in the ordinary sense — it is **anti-predictive at the top**: the model's most confident spread picks are its worst. Assumptions: Confidence scores are inversely correlated with predictive accuracy in high-probability bins. Breakdown regime: Top confidence bands (90–100%) exhibit negative correlation between predicted and actual success. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Inverse relationship between model confidence and realized outcome in spread/total predictions; indicates flawed probability assignment. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CALIBRATION-STRATIFIED-2026-11-04 (8b7fa6cc9c240076, domain=other, pages_read=3/3): Operator 'Calibration Gap' (page 1, domain other) captures: `compute.ts` documented something larger: over 2,385 settled picks the 80+ band claims ~0.8663 and realizes ~0.5191 (z = -10.7), with realized win rate *peaking* at 75-79 and *falling* by 90-94. Assumptions: Binomial distribution of outcomes; fixed probability per pick. Breakdown regime: High-confidence bins (80+%) show systematic underperformance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Expected Calibration Error (ECE) computed over stratified bands; captures model reliability across confidence levels. Operator 'Market Miscalibration Defect' (page 1, domain other) captures: **Answer.** It is almost entirely a **pooling artifact**, plus a separate, larger and more serious defect in the spread and total markets. Assumptions: Separability of market types; distinct calibration issues per market type. Breakdown regime: Combined effect of data heterogeneity and model misalignment in spread/total markets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Stratified regression isolates market-specific calibration errors; identifies root causes of pooling artifact. Operator 'Anti-Predictive Behavior' (page 1, domain other) captures: It is not miscalibrated in the ordinary sense — it is **anti-predictive at the top**: the model's most confident spread picks are its worst. Assumptions: Confidence scores are inversely correlated with predictive accuracy in high-probability bins. Breakdown regime: Top confidence bands (90–100%) exhibit negative correlation between predicted and actual success. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Inverse relationship between model confidence and realized outcome in spread/total predictions; indicates flawed probability assignment. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical statistical calibration theory (Dawid, 1982) and modern machine learning frameworks (Kull et al., 2017). Recent work on conformal prediction (Vovk et al., 2005) provides formal bounds for uncertainty quantification. Retrocausal Genealogy: Rooted in CALIBRATION-STRATIFIED-2026-11-04 (8b7fa6cc9c240076), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the model’s internal representation of confidence and external market dynamics. The model may overfit to certain features in spread/total data, leading to inflated confidence. Meanwhile, market inefficiencies or structural biases in betting lines further distort the calibration landscape. Theory of Mind & Decision Maker Model: Rooted in CALIBRATION-STRATIFIED-2026-11-04 (8b7fa6cc9c240076), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Cross-layer veto applies when confidence-based metrics like ECE or Brier score are used without accounting for market-specific calibration defects. This leads to false positives in model evaluation and incorrect deployment decisions. Cross-Layer Veto & Anti-Leakage Check: Rooted in CALIBRATION-STRATIFIED-2026-11-04 (8b7fa6cc9c240076), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

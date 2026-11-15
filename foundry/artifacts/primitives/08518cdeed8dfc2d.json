@@ -1,0 +1,865 @@
+{
+  "book_id": "08518cdeed8dfc2d",
+  "source_status": "COMPLETE",
+  "source_note": "Carl Edward Rasmussen and Christopher K. I. Williams, Gaussian Processes for Machine Learning, MIT Press, 2006 (Adaptive Computation and Machine Learning series), ISBN 026218253X. Local source read in full: the extracted text file RasmussenWilliams-2006-GaussianProcessesForMachineLearning.pdf.txt (1020069 bytes, 14680 lines) derived from the publisher PDF held locally as RasmussenWilliams-2006-GaussianProcessesForMachineLearning.pdf (4052292 bytes). Text-layer identity by the gatekeeper scan method (sha256 over the decimal size string plus the full file bytes) for the extracted text: eb48eb20e29f248141b4af1533f61839721cea73f536049485c773d1e105ff0a, book_id eb48eb20e29f2481. The same computation over the PDF gives 08518cdeed8dfc2decd9d6aab4a9f8d6e50055a2c9b3eae4f28a75c015b8f80a, recorded here so either identity can be reconciled at sync. Text quality: clean born-digital text layer from the publisher PDF; prose is complete across all nine chapters and appendices A to C. Displayed mathematics is flattened by the text layer (superscripts and matrix layout linearized), so equations in this artifact are transcribed in standard notation from the numbered equations of the book, with equation numbers cited per primitive, following the fleet precedent for glyph-flattened sources. Verbatim quotes were each verified as exact substrings of the extracted text after whitespace normalization and undoing of line-break hyphenation; where the text layer interleaves margin glosses into a sentence, the quote was trimmed to the longest contiguous verbatim span. No catalog correction is needed: the authors, title, and year in the filename match the title page and copyright page of the file itself. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "gp_definition_mean_covariance",
+      "name": "Definition 2.1: a GP is a collection of random variables, any finite number of which are jointly Gaussian, completely specified by a mean function and a covariance function",
+      "verbatim_quote": "A Gaussian process is completely specified by its mean function and",
+      "latex": "f(x) \\sim \\mathcal{GP}\\left(m(x),\\, k(x, x')\\right),\\quad m(x) = \\mathbb{E}[f(x)],\\quad k(x, x') = \\mathbb{E}\\left[(f(x) - m(x))(f(x') - m(x'))\\right]",
+      "symbol_and_unit_ledger": {
+        "f(x)": "latent function value at input x [units of the target]",
+        "m(x)": "mean function [target units]",
+        "k(x, x')": "covariance function between function values at two inputs [target units squared]",
+        "x, x'": "input vectors in the index set"
+      },
+      "assumptions": [
+        "Mean function is conventionally taken as zero unless prior structure is modelled explicitly (Sec 2.7 relaxes this).",
+        "Every finite subset of function values is jointly Gaussian; no other distributional assumption is made."
+      ],
+      "breakdown_regime": "Real latent processes with heavy tails, skewness, or regime switches are not Gaussian, so the GP prior understates tail risk and can be badly calibrated out of sample.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the engine's canonical contract for any latent field: state a mean surface and a covariance structure and the object is fully defined; two subsystems that agree on mean and covariance are interchangeable in downstream reasoning.",
+        "source_operator": "gp_definition_mean_covariance",
+        "telemetry": "any paired observations (x, y) used to estimate mean and covariance structure"
+      },
+      "page": "Sec 2.2, Definition 2.1, text line 1352"
+    },
+    {
+      "primitive_id": "marginalization_consistency",
+      "name": "Consistency (marginalization) property: examining a larger set of variables never changes the distribution of a smaller subset",
+      "verbatim_quote": "In other words, examination of a larger set of variables does not change the distribution of the smaller set.",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The covariance function, evaluated entrywise, automatically fulfils the consistency requirement.",
+        "Specifying a process through its inverse covariance entries would break the property, so covariance (not precision) is the primitive object."
+      ],
+      "breakdown_regime": "Consistency is a property of the model class, not of the world; if the true process has long-range interactions the GP ignores, marginals stay self-consistent while being jointly wrong.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from gp_definition_mean_covariance: because marginals are consistent, the engine can add new inputs, games, or features to a query without invalidating earlier predictions, which is what allows incremental, resumable reasoning traces over a growing slate.",
+        "source_operator": "marginalization_consistency",
+        "telemetry": "stability checks: predictions at a fixed input before and after new data sources are added"
+      },
+      "page": "Sec 2.2, text line 1381"
+    },
+    {
+      "primitive_id": "bayesian_linear_model_posterior",
+      "name": "Weight-space view: Bayesian linear regression with a Gaussian weight prior has a Gaussian posterior over weights (eqs 2.1, 2.4, 2.8)",
+      "verbatim_quote": "The posterior in eq. (2.5) combines the likelihood and the prior, and captures everything we know about the parameters.",
+      "latex": "f(x) = x^\\top w,\\quad y = f(x) + \\varepsilon,\\quad \\varepsilon \\sim \\mathcal{N}(0, \\sigma_n^2),\\quad w \\sim \\mathcal{N}(0, \\Sigma_p),\\quad p(w \\mid X, y) = \\mathcal{N}\\left(\\bar{w} = \\sigma_n^{-2} A^{-1} X y,\\; A^{-1}\\right),\\quad A = \\sigma_n^{-2} X X^\\top + \\Sigma_p^{-1}",
+      "symbol_and_unit_ledger": {
+        "w": "weight vector [target units per input unit]",
+        "X": "D by n design matrix whose columns are the training inputs",
+        "y": "target vector [target units]",
+        "sigma_n^2": "observation noise variance [target units squared]",
+        "Sigma_p": "prior covariance of the weights",
+        "A": "posterior precision matrix"
+      },
+      "assumptions": [
+        "Additive, independent, identically distributed Gaussian noise.",
+        "The prior over weights is zero-mean Gaussian; the MAP point of this posterior equals the ridge regression solution, but the Bayesian object is the full distribution, not the point."
+      ],
+      "breakdown_regime": "Linear-in-inputs models cannot represent nonlinear structure; the posterior is exact but the model class is wrong whenever the true map is curved, which is the motivation for the feature-space and function-space extensions.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The weight-space posterior is the engine's template for any linear readout over features: prior precision plus data precision, posterior mean as a precision-weighted compromise; it is the finite-dimensional shadow of every GP update the engine performs.",
+        "source_operator": "bayesian_linear_model_posterior",
+        "telemetry": "design matrices of engineered features with target vectors; posterior covariance diagonals as per-weight confidence"
+      },
+      "page": "Sec 2.1.1, text line 1108"
+    },
+    {
+      "primitive_id": "kernel_trick_covariance_from_features",
+      "name": "Kernel trick: with basis functions phi and weight prior Sigma_p, predictions depend on features only through k(x, x') = phi(x)^T Sigma_p phi(x'), so the kernel becomes the primary object",
+      "verbatim_quote": "this often leads to considering the kernel as the object of primary interest, and its corresponding feature space as having secondary practical importance.",
+      "latex": "k(x, x') = \\phi(x)^\\top \\Sigma_p\\, \\phi(x')",
+      "symbol_and_unit_ledger": {
+        "phi(x)": "feature map from input space into an N-dimensional (possibly infinite) feature space",
+        "Sigma_p": "prior covariance over feature weights",
+        "k(x, x')": "covariance function / kernel [target units squared]"
+      },
+      "assumptions": [
+        "Basis functions are fixed, not adapted to data; adaptivity enters only through the kernel and its hyperparameters.",
+        "Sigma_p must be positive definite for the induced form to be a genuine inner product."
+      ],
+      "breakdown_regime": "If no explicit feature map exists for a chosen kernel the weight-space picture is only formal; kernels chosen purely for convenience can encode feature geometries nobody intended.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from bayesian_linear_model_posterior by the dual reformulation (eq 2.12): the engine can swap an explicit feature construction for a similarity function whenever pairwise similarity is cheaper or better understood than the features themselves.",
+        "source_operator": "kernel_trick_covariance_from_features",
+        "telemetry": "pairwise similarity scores between entities (teams, players, situations) in place of raw feature vectors"
+      },
+      "page": "Sec 2.1.2, text line 1335"
+    },
+    {
+      "primitive_id": "gp_regression_predictive_equations",
+      "name": "GP regression predictive equations: conditioning the joint Gaussian prior on noisy observations gives a Gaussian predictive distribution with mean K(X*, X)[K + sigma_n^2 I]^{-1} y and the prior covariance minus an information term (eqs 2.22 to 2.24)",
+      "verbatim_quote": "Deriving the conditional distribution corresponding to eq. (2.19) we arrive at the key predictive equations for Gaussian process regression",
+      "latex": "\\bar{f}_* = K(X_*, X)\\left[K(X, X) + \\sigma_n^2 I\\right]^{-1} y,\\qquad \\mathrm{cov}(f_*) = K(X_*, X_*) - K(X_*, X)\\left[K(X, X) + \\sigma_n^2 I\\right]^{-1} K(X, X_*)",
+      "symbol_and_unit_ledger": {
+        "K(X, X)": "n by n covariance matrix of training inputs",
+        "K(X_*, X)": "covariances between test and training inputs",
+        "K(X_*, X_*)": "prior covariance of test function values",
+        "y": "observed targets [target units]",
+        "sigma_n^2": "noise variance [target units squared]",
+        "f_*": "latent function values at test inputs"
+      },
+      "assumptions": [
+        "Joint Gaussianity of training targets and test function values under the prior.",
+        "Noise is additive Gaussian and independent of the latent function."
+      ],
+      "breakdown_regime": "Exact inference costs O(n^3) time and O(n^2) memory in the number of observations; beyond roughly ten thousand points the exact equations are impractical and Ch 8 approximations take over.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the engine's core update rule for continuous quantities: a prediction is a covariance-weighted combination of past observations, and every prediction carries its own posterior variance computed from geometry alone; downstream layers consume mean and variance, never the mean alone.",
+        "source_operator": "gp_regression_predictive_equations",
+        "telemetry": "training pairs (inputs, targets) plus test inputs; posterior predictive mean and variance per query"
+      },
+      "page": "Sec 2.2, text line 1559"
+    },
+    {
+      "primitive_id": "representer_form_predictive_mean",
+      "name": "Representer form: the predictive mean is a finite linear combination of kernel sections centred on the training points, alpha = (K + sigma_n^2 I)^{-1} y, despite the possibly infinite basis (eq 2.27)",
+      "verbatim_quote": "despite the fact that the GP can be represented in terms of a (possibly infinite) number of basis functions is one manifestation of the representer theorem",
+      "latex": "\\bar{f}(x_*) = \\sum_{i=1}^{n} \\alpha_i\\, k(x_i, x_*),\\qquad \\alpha = \\left(K + \\sigma_n^2 I\\right)^{-1} y",
+      "symbol_and_unit_ledger": {
+        "alpha_i": "dual coefficient of training point i [dimensionless weight on target units]",
+        "k(x_i, x_*)": "covariance between training input i and the test input",
+        "n": "number of training points"
+      },
+      "assumptions": [
+        "Holds for the posterior mean of a GP and, more generally, for minimizers of regularized risk in the RKHS (Sec 6.2).",
+        "Only the mean has this finite form automatically; the full posterior process does not live in the span of the kernel sections."
+      ],
+      "breakdown_regime": "The finite representation hides model mismatch: alpha can be large and cancelling when the kernel is ill-matched, producing wild interpolation between points even though each coefficient looks innocuous.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from gp_regression_predictive_equations: any engine prediction can be audited as an explicit weighted sum over historical cases, which gives the reasoning layer an attribution trail (which past observations moved this prediction, and by how much) for free.",
+        "source_operator": "representer_form_predictive_mean",
+        "telemetry": "the alpha vector per prediction; large cancelling coefficients flag unstable attributions"
+      },
+      "page": "Sec 2.2, text line 1630"
+    },
+    {
+      "primitive_id": "gaussian_noise_diagonal_covariance",
+      "name": "Noisy observations: additive iid Gaussian noise adds sigma_n^2 times the identity to the covariance of the observed targets (eq 2.20)",
+      "verbatim_quote": "It is typical for more realistic modelling situations that we do not have access to function values themselves, but only noisy versions thereof",
+      "latex": "\\mathrm{cov}(y_p, y_q) = k(x_p, x_q) + \\sigma_n^2 \\delta_{pq},\\qquad \\mathrm{cov}(y) = K(X, X) + \\sigma_n^2 I",
+      "symbol_and_unit_ledger": {
+        "y_p": "observed (noisy) target at input x_p",
+        "delta_pq": "Kronecker delta, one iff p equals q",
+        "sigma_n^2": "noise variance [target units squared]"
+      },
+      "assumptions": [
+        "Noise is independent across cases and independent of the latent function.",
+        "The Kronecker delta is on case identity, not on input value: two observations at the same input still get independent noise."
+      ],
+      "breakdown_regime": "Correlated measurement error (same instrument, same day, same source bias) violates the diagonal assumption and makes the posterior overconfident by treating shared error as independent evidence.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's observation model template: every data feed enters as latent signal plus a noise floor; feeds that share an error source must be given correlated noise or their agreement will be double-counted as independent confirmation.",
+        "source_operator": "gaussian_noise_diagonal_covariance",
+        "telemetry": "per-feed noise variance estimates; duplicate or near-duplicate observations across feeds"
+      },
+      "page": "Sec 2.2, text line 1544"
+    },
+    {
+      "primitive_id": "marginal_likelihood_closed_form",
+      "name": "Log marginal likelihood for GP regression has a closed form: a data-fit term, a log-determinant complexity term, and a normalization constant (eq 2.30)",
+      "verbatim_quote": "The term marginal likelihood refers to the marginalization over the function values f .",
+      "latex": "\\log p(y \\mid X) = -\\frac{1}{2} y^\\top \\left(K + \\sigma_n^2 I\\right)^{-1} y - \\frac{1}{2} \\log \\left| K + \\sigma_n^2 I \\right| - \\frac{n}{2} \\log 2\\pi",
+      "symbol_and_unit_ledger": {
+        "p(y|X)": "probability density of the observed targets under the model [per target unit]",
+        "K": "training covariance matrix",
+        "n": "number of observations"
+      },
+      "assumptions": [
+        "Function values are marginalized exactly because prior and likelihood are both Gaussian.",
+        "The value is a density over targets, comparable across models only for the same dataset and target scaling."
+      ],
+      "breakdown_regime": "The closed form vanishes the moment the likelihood is non-Gaussian (classification), forcing the Laplace or EP approximations of Ch 3; it is also sensitive to target preprocessing choices.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's single scalar score for an entire probabilistic model on a dataset: fit minus complexity, computed exactly; it is the natural objective for comparing kernel designs and for the hyperparameter learning of Ch 5.",
+        "source_operator": "marginal_likelihood_closed_form",
+        "telemetry": "log evidence per candidate model on identical training data"
+      },
+      "page": "Sec 2.2, text line 1732"
+    },
+    {
+      "primitive_id": "cholesky_algorithm_complexity",
+      "name": "Algorithm 2.1: practical GP regression uses the Cholesky factorization of K + sigma_n^2 I; cost is n^3/6 for the factorization and n^2/2 per triangular solve",
+      "verbatim_quote": "The computational complexity is n3 /6 for the Cholesky decomposition in line 2, and n2 /2 for solving triangular systems in line 3 and (for each test case) in line 5.",
+      "latex": "L = \\mathrm{chol}\\left(K + \\sigma_n^2 I\\right),\\qquad \\alpha = L^\\top \\backslash (L \\backslash y),\\qquad \\bar{f}_* = k_*^\\top \\alpha,\\qquad \\mathbb{V}[f_*] = k(x_*, x_*) - v^\\top v,\\quad v = L \\backslash k_*",
+      "symbol_and_unit_ledger": {
+        "L": "lower-triangular Cholesky factor of the noise-augmented covariance matrix",
+        "alpha": "dual coefficient vector",
+        "k_*": "vector of covariances between the test input and all training inputs",
+        "chol": "Cholesky decomposition"
+      },
+      "assumptions": [
+        "K + sigma_n^2 I must be numerically positive definite; a small jitter is often added in practice (App A.2).",
+        "One factorization serves all test points; per-test cost is quadratic."
+      ],
+      "breakdown_regime": "Cubic scaling is the binding constraint of the whole framework: doubling data multiplies cost by eight, which is why Ch 8 exists; nearly singular kernels (tiny noise, close duplicate inputs) break the factorization.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's compute budget law for exact probabilistic inference: problem size is capped by the cubic factorization, so data selection and slate design are resource decisions, not just statistical ones.",
+        "source_operator": "cholesky_algorithm_complexity",
+        "telemetry": "wall-clock and memory telemetry per factorization; condition number of the covariance matrix"
+      },
+      "page": "Sec 2.2, Algorithm 2.1, text line 1724"
+    },
+    {
+      "primitive_id": "decision_theory_separates_loss_from_likelihood",
+      "name": "Decision theory for regression: point predictions minimize expected loss under the predictive distribution; likelihood (training) and loss (acting) are kept separate (eqs 2.32, 2.33)",
+      "verbatim_quote": "In contrast, in the Bayesian setting there is a clear separation between the likelihood function (used for training, in addition to the prior) and the loss function.",
+      "latex": "\\tilde{R}_L(y_{\\mathrm{guess}} \\mid x_*) = \\int L(y_*, y_{\\mathrm{guess}})\\, p(y_* \\mid x_*, \\mathcal{D})\\, dy_*,\\qquad y_{\\mathrm{optimal}} = \\arg\\min_{y_{\\mathrm{guess}}} \\tilde{R}_L(y_{\\mathrm{guess}} \\mid x_*)",
+      "symbol_and_unit_ledger": {
+        "L(y_*, y_guess)": "loss incurred by guessing y_guess when the truth is y_* [cost units]",
+        "p(y_*|x_*, D)": "predictive distribution at the test input",
+        "R_L": "expected loss (risk) [cost units]"
+      },
+      "assumptions": [
+        "The predictive distribution is computed once, without reference to any loss; the loss enters only at decision time.",
+        "For absolute loss the optimal guess is the predictive median; for squared loss it is the predictive mean; they coincide for symmetric predictive distributions."
+      ],
+      "breakdown_regime": "If the stated loss does not match the real costs of the decision, the machinery still optimizes faithfully, just toward the wrong objective; asymmetric real-world costs must be encoded explicitly.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine keeps belief formation and action selection in separate layers: the reasoning layer publishes distributions, and any consumer applies its own loss; this vetoes the common failure of baking a decision threshold into the model itself.",
+        "source_operator": "decision_theory_separates_loss_from_likelihood",
+        "telemetry": "predictive distributions per query; consumer-side loss functions declared per decision type"
+      },
+      "page": "Sec 2.4, text line 1894"
+    },
+    {
+      "primitive_id": "spectral_shrinkage_of_eigencomponents",
+      "name": "Eigen-analysis of the smoother: components of y along eigenvectors with large eigenvalues (slowly varying directions) survive the noise, while oscillatory components are shrunk away as noise grows (Secs 2.6, 2.7)",
+      "verbatim_quote": "at higher noise levels only the large λ (slowly varying) components of y remain, while for smaller noise levels the more oscillatory components are also retained.",
+      "latex": "K = \\sum_{i=1}^{n} \\lambda_i\\, u_i u_i^\\top,\\qquad y = \\sum_{i=1}^{n} \\gamma_i u_i,\\qquad \\bar{\\gamma}_i = \\frac{\\lambda_i}{\\lambda_i + \\sigma_n^2}\\, \\gamma_i",
+      "symbol_and_unit_ledger": {
+        "lambda_i": "eigenvalue of the covariance matrix K for eigenvector u_i [target units squared]",
+        "gamma_i": "coefficient of the target vector along u_i",
+        "u_i": "orthonormal eigenvector of K"
+      },
+      "assumptions": [
+        "K is symmetric positive semidefinite, so eigenvalues are real and non-negative and eigenvectors are orthogonal.",
+        "For most covariance functions used in practice, larger eigenvalues attach to more slowly varying eigenvectors."
+      ],
+      "breakdown_regime": "Directions with tiny eigenvalues are effectively deleted, not merely downweighted; if the truth lives in a fast-varying direction the smoother cannot recover it at any dataset size with that kernel.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from the predictive equations in the eigenbasis of K: the engine's noise level acts as a spectral filter, which gives a precise meaning to signal versus noise separation and a diagnostic (the eigenvalue spectrum) for how many effective degrees of freedom a dataset actually supports.",
+        "source_operator": "spectral_shrinkage_of_eigencomponents",
+        "telemetry": "eigenvalue spectra of covariance matrices per dataset; effective degrees of freedom counts"
+      },
+      "page": "Sec 2.7 (eigenanalysis of Sec 2.6), text line 2176"
+    },
+    {
+      "primitive_id": "classification_latent_function_squash",
+      "name": "GP classification: place a GP prior over a latent function f and squash it through the logistic function to obtain class probabilities pi(x) = sigma(f(x)) (Sec 3.3)",
+      "verbatim_quote": "“squash” this through the logistic function to obtain a prior on π(x)",
+      "latex": "p(y = +1 \\mid x) = \\pi(x) = \\sigma(f(x)),\\qquad \\sigma(z) = \\frac{1}{1 + e^{-z}},\\qquad f \\sim \\mathcal{GP}(0, k)",
+      "symbol_and_unit_ledger": {
+        "f(x)": "latent function value (log-odds scale) [dimensionless]",
+        "pi(x)": "probability of class +1 [probability]",
+        "sigma": "logistic sigmoid",
+        "y": "class label in {+1, -1}"
+      },
+      "assumptions": [
+        "The latent process is noise-free; observation noise is represented entirely by the smooth likelihood (equivalently, a probit likelihood equals a step likelihood plus Gaussian latent noise).",
+        "Labels are conditionally independent given the latent function values."
+      ],
+      "breakdown_regime": "The squashing discards magnitude information beyond the log-odds: extremely confident latent regions saturate, and calibration of the tails depends on the link choice (logistic versus probit tails differ).",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's template for probability-valued outputs: keep an unbounded latent reasoning score, and convert to a probability only at the boundary through a fixed squashing map; internal layers reason on the latent scale where Gaussian machinery works.",
+        "source_operator": "classification_latent_function_squash",
+        "telemetry": "latent scores per case; labels; the induced probability surface over input space"
+      },
+      "page": "Sec 3.3, text line 2817"
+    },
+    {
+      "primitive_id": "laplace_approximation",
+      "name": "Laplace approximation: a second-order Taylor expansion of the log posterior around its mode gives a Gaussian posterior approximation with covariance given by the negative Hessian (eq 3.11)",
+      "verbatim_quote": "Doing a second order Taylor expansion of log p(f |X, y) around the maximum of the posterior, we obtain a Gaussian approximation",
+      "latex": "q(f \\mid X, y) = \\mathcal{N}\\left(f \\,\\middle|\\, \\hat{f},\\, A^{-1}\\right) \\propto \\exp\\left(-\\frac{1}{2} (f - \\hat{f})^\\top A (f - \\hat{f})\\right),\\qquad \\hat{f} = \\arg\\max_f p(f \\mid X, y),\\qquad A = -\\nabla\\nabla \\log p(f \\mid X, y)\\big|_{f = \\hat{f}}",
+      "symbol_and_unit_ledger": {
+        "f hat": "posterior mode of the latent vector",
+        "A": "Hessian of the negative log posterior at the mode",
+        "q": "Gaussian approximation to the posterior"
+      },
+      "assumptions": [
+        "The log posterior must be twice differentiable and have a well-defined interior mode; for log-concave likelihoods (logistic, probit) the mode is unique.",
+        "The approximation is centred at the mode, not the mean, and imposes symmetry on a generally skewed posterior."
+      ],
+      "breakdown_regime": "Skewed or multimodal posteriors are misrepresented: Laplace is exact about curvature at one point and silent about mass elsewhere, which biases predictive probabilities toward overconfidence in asymmetric cases.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's fast inference pattern for non-Gaussian evidence: locate the most probable latent state, measure local curvature, and proceed as if Gaussian; it is the fallback whenever exact conditioning is unavailable and a full sampling run is too slow.",
+        "source_operator": "laplace_approximation",
+        "telemetry": "posterior modes and Hessian-based covariances per inference task; comparisons against EP on shared cases"
+      },
+      "page": "Sec 3.4, text line 2919"
+    },
+    {
+      "primitive_id": "laplace_newton_mode_finding",
+      "name": "The Laplace mode is found by Newton's method (iteratively reweighted least squares): each step solves a weighted least-squares problem with W the negative Hessian of the log likelihood (Sec 3.4.1, eq 3.18)",
+      "verbatim_quote": "The mode-finding procedure uses the Newton iteration given in eq. (3.18),",
+      "latex": "f^{\\mathrm{new}} = \\left(K^{-1} + W\\right)^{-1} \\left( W f + \\nabla \\log p(y \\mid f) \\right),\\qquad W = -\\nabla\\nabla \\log p(y \\mid f)",
+      "symbol_and_unit_ledger": {
+        "W": "diagonal matrix of negative second derivatives of the log likelihood, one entry per case",
+        "grad log p(y|f)": "gradient of the log likelihood at the current latent vector",
+        "K^{-1}": "prior precision matrix"
+      },
+      "assumptions": [
+        "Log-concavity of the likelihood guarantees the Newton system is positive definite and the mode unique.",
+        "Each iteration costs a Cholesky factorization, O(n^3), like exact regression."
+      ],
+      "breakdown_regime": "For non-log-concave likelihoods Newton steps can diverge or land on saddle points; step-size control is then mandatory and the Gaussian reading of the result is suspect.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from laplace_approximation: the engine's iterative solver pattern for latent inference, where each case contributes a local quadratic (its W entry) and the prior couples the cases; convergence behaviour itself is telemetry about posterior geometry.",
+        "source_operator": "laplace_newton_mode_finding",
+        "telemetry": "Newton iteration counts and step sizes per inference; per-case W values showing which observations dominate curvature"
+      },
+      "page": "Sec 3.4.1, text line 3210"
+    },
+    {
+      "primitive_id": "averaged_predictive_probability",
+      "name": "Predictions average the sigmoid over the latent predictive distribution rather than plugging in the mean; for the probit link the average is analytic, and averaged versus MAP predictions share the same binary decision boundary (eq 3.25)",
+      "verbatim_quote": "Thus if we are concerned only about the most probable classification, it is not necessary to compute predictions using eq. (3.25).",
+      "latex": "\\bar{\\pi}_* \\simeq \\int \\sigma(f_*)\\, q(f_* \\mid X, y, x_*)\\, df_*,\\qquad \\text{probit: } \\bar{\\pi}_* = \\Phi\\left( \\frac{\\mu_*}{\\sqrt{1 + \\sigma_*^2}} \\right)",
+      "symbol_and_unit_ledger": {
+        "mu_*": "mean of the approximate latent predictive distribution",
+        "sigma_*^2": "its variance",
+        "Phi": "standard Gaussian cumulative distribution function",
+        "pi bar_*": "averaged predictive probability"
+      },
+      "assumptions": [
+        "The latent predictive distribution is Gaussian under the Laplace or EP approximation, with mean and variance from eqs 3.21 and 3.24.",
+        "Averaged and MAP predictions give identical binary decisions because the sigmoid minus one half is antisymmetric and the latent predictive is symmetric."
+      ],
+      "breakdown_regime": "The identity of decision boundaries does not extend to confidence: whenever a reject option or a probability threshold matters, the averaged value is required and the MAP plug-in misprices confidence.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from latent_two_step_inference: the engine reports averaged probabilities, not squashed point estimates, whenever downstream layers consume confidence; the distinction between the two is itself a calibration diagnostic.",
+        "source_operator": "averaged_predictive_probability",
+        "telemetry": "pairs of averaged and plug-in probabilities per prediction; divergence between them flags latent uncertainty"
+      },
+      "page": "Sec 3.4.2, text line 3141"
+    },
+    {
+      "primitive_id": "expectation_propagation_sites",
+      "name": "Expectation propagation: approximate each exact likelihood factor by an unnormalized Gaussian site term; the product of sites with the GP prior gives a global Gaussian posterior (eqs 3.51, 3.53)",
+      "verbatim_quote": "the likelihood, i.e. a probability distribution which normalizes over the targets yi , by an un-normalized Gaussian distribution over the latent variables fi . This is reasonable, because we are interested in how the likelihood behaves as a function of the latent fi .",
+      "latex": "p(y_i \\mid f_i) \\simeq t_i(f_i) = \\tilde{Z}_i\\, \\mathcal{N}(f_i \\mid \\tilde{\\mu}_i, \\tilde{\\sigma}_i^2),\\qquad q(f \\mid X, y) = \\frac{1}{Z_{\\mathrm{EP}}}\\, p(f \\mid X) \\prod_{i=1}^{n} t_i(f_i) = \\mathcal{N}(\\mu, \\Sigma),\\qquad \\Sigma = \\left(K^{-1} + \\tilde{\\Sigma}^{-1}\\right)^{-1}",
+      "symbol_and_unit_ledger": {
+        "t_i": "site approximation for case i",
+        "Z tilde_i, mu tilde_i, sigma tilde_i^2": "site normalization, mean, and variance parameters",
+        "Z_EP": "EP approximation to the marginal likelihood"
+      },
+      "assumptions": [
+        "Exact normalization of each likelihood over targets is deliberately abandoned in favour of Gaussian dependence on the latent variable.",
+        "Although each site is local, the posterior approximation is global because the prior couples all latent variables."
+      ],
+      "breakdown_regime": "EP can fail to converge or oscillate on some datasets, and its fixed points minimize no single global divergence; damping and iteration caps are operational necessities, not refinements.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's message-passing template for fusing many local pieces of non-Gaussian evidence into one global Gaussian belief state: each evidence source maintains a local surrogate, and the global state is the product of prior and surrogates.",
+        "source_operator": "expectation_propagation_sites",
+        "telemetry": "per-source site parameters; EP iteration counts; Z_EP as an approximate evidence score per model"
+      },
+      "page": "Sec 3.6, text lines 3655-3658"
+    },
+    {
+      "primitive_id": "ep_cavity_moment_matching",
+      "name": "EP site updates use the cavity distribution: remove one site from the posterior, combine the cavity with the exact likelihood, and moment-match the resulting marginal to set the new site (eqs 3.54 to 3.56)",
+      "verbatim_quote": "we start from some current approximate posterior, from which we leave out the current ti , giving rise to a marginal cavity distribution.",
+      "latex": "q_{-i}(f_i) = \\mathcal{N}\\left(f_i \\mid \\mu_{-i}, \\sigma_{-i}^2\\right),\\qquad \\sigma_{-i}^2 = \\left(\\sigma_i^{-2} - \\tilde{\\sigma}_i^{-2}\\right)^{-1},\\qquad \\mu_{-i} = \\sigma_{-i}^2 \\left( \\sigma_i^{-2} \\mu_i - \\tilde{\\sigma}_i^{-2} \\tilde{\\mu}_i \\right)",
+      "symbol_and_unit_ledger": {
+        "q_-i": "cavity distribution: posterior marginal with site i removed",
+        "mu_i, sigma_i^2": "current posterior marginal mean and variance for case i",
+        "mu tilde_i, sigma tilde_i^2": "site parameters being updated"
+      },
+      "assumptions": [
+        "Division of Gaussians is valid only while the cavity variance stays positive; numerical guards are part of the algorithm.",
+        "Moment matching (matching zeroth, first, and second moments of the tilted distribution) is the projection rule that defines the update."
+      ],
+      "breakdown_regime": "When one observation dominates, its cavity is nearly the prior and the update can swing the site violently; sequential updates may need many sweeps, and order effects appear in hard cases.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from expectation_propagation_sites: the cavity is a leave-one-out belief state, so the engine gets an honest measure of what each individual observation contributes, computed against everything except itself; that is the correct antidote to self-confirming evidence loops.",
+        "source_operator": "ep_cavity_moment_matching",
+        "telemetry": "cavity means and variances per observation; per-observation influence measured as posterior minus cavity shift"
+      },
+      "page": "Sec 3.6, text line 3713"
+    },
+    {
+      "primitive_id": "valid_kernel_psd_condition",
+      "name": "A kernel is a valid covariance function only if every Gram matrix it induces is positive semidefinite (eq 4.2)",
+      "verbatim_quote": "A Gram matrix corresponding to a general kernel function need not be PSD, but the Gram matrix corresponding to a covariance function is PSD.",
+      "latex": "\\iint k(x, x')\\, f(x) f(x')\\, d\\mu(x)\\, d\\mu(x') \\geq 0 \\qquad \\forall f \\in L^2(\\mathcal{X}, \\mu)",
+      "symbol_and_unit_ledger": {
+        "k(x, x')": "candidate kernel",
+        "f": "arbitrary square-integrable test function",
+        "mu": "measure on the input space"
+      },
+      "assumptions": [
+        "Symmetry k(x, x') = k(x', x) is required by the definition of covariance.",
+        "The condition must hold for every finite set of inputs, every n, and every input dimension."
+      ],
+      "breakdown_regime": "Popular-looking kernels can fail: the book notes the sigmoid kernel tanh(a + b x.x') is never positive definite and hence not a valid covariance function, however well it may perform as a heuristic similarity.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A hard admissibility gate for the engine: any proposed similarity structure must pass positive semidefiniteness before it may carry probability; similarity scores that fail are demoted to features, never to covariances.",
+        "source_operator": "valid_kernel_psd_condition",
+        "telemetry": "smallest eigenvalue of every Gram matrix the engine builds; violations logged per kernel candidate"
+      },
+      "page": "Sec 4.1, text line 5363"
+    },
+    {
+      "primitive_id": "bochner_spectral_representation",
+      "name": "Bochner's theorem: a stationary covariance function is exactly the Fourier transform of a positive finite measure; the spectral density is its power spectrum (Thm 4.1, eqs 4.5, 4.6)",
+      "verbatim_quote": "The covariance function of a stationary process can be represented as the Fourier transform of a positive finite measure.",
+      "latex": "k(\\tau) = \\int_{\\mathbb{R}^D} e^{2\\pi i s \\cdot \\tau}\\, d\\mu(s),\\qquad k(\\tau) = \\int S(s)\\, e^{2\\pi i s \\cdot \\tau}\\, ds,\\qquad S(s) = \\int k(\\tau)\\, e^{-2\\pi i s \\cdot \\tau}\\, d\\tau",
+      "symbol_and_unit_ledger": {
+        "tau = x - x'": "input displacement [input units]",
+        "s": "frequency vector [inverse input units]",
+        "mu": "positive finite spectral measure",
+        "S(s)": "spectral density (power spectrum)"
+      },
+      "assumptions": [
+        "Weak stationarity and mean-square continuity of the process.",
+        "The process variance equals the total spectral mass, k(0) = integral of S, which must be finite."
+      ],
+      "breakdown_regime": "Stationarity itself is the limitation: processes whose correlation structure changes across the input space have no single spectrum, and Bochner constructions silently impose translation invariance.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine can design covariance in the frequency domain: specifying which frequencies carry power is specifying the process; spectral inspection of a fitted kernel reveals which scales of variation the model believes exist.",
+        "source_operator": "bochner_spectral_representation",
+        "telemetry": "spectral densities of fitted kernels; frequency-band power budgets per model"
+      },
+      "page": "Sec 4.2.1, text line 5452"
+    },
+    {
+      "primitive_id": "mean_square_differentiability",
+      "name": "Mean-square differentiability of a stationary process is determined by the kernel's behaviour at the origin: the covariance of the derivative process is the mixed second derivative of k (Sec 4.1.1, eq 4.4)",
+      "verbatim_quote": "Notice that it is the properties of the kernel k around 0 that determine the smoothness properties (MS differentiability) of a stationary process.",
+      "latex": "\\mathrm{cov}\\left( \\frac{\\partial f(x)}{\\partial x_i}, \\frac{\\partial f(x')}{\\partial x_i'} \\right) = \\frac{\\partial^2 k(x, x')}{\\partial x_i\\, \\partial x_i'},\\qquad \\frac{\\partial f(x)}{\\partial x_i} = \\operatorname*{l.i.m.}_{h \\to 0} \\frac{f(x + h e_i) - f(x)}{h}",
+      "symbol_and_unit_ledger": {
+        "l.i.m.": "limit in mean square",
+        "e_i": "unit vector in direction i",
+        "k": "covariance function"
+      },
+      "assumptions": [
+        "Derivatives are limits in mean square, which is weaker than pathwise differentiability of sample functions.",
+        "Because differentiation is a linear operation, derivative observations of a GP are again jointly Gaussian with the function values."
+      ],
+      "breakdown_regime": "Mean-square smoothness does not guarantee sample-path smoothness; and a kernel that is too smooth (squared exponential: infinitely differentiable) can be an unrealistically strong prior for rough real processes.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from gp_definition_mean_covariance by linearity: the engine can ingest derivative-type evidence (rates of change, trends, sensitivities) as first-class observations of the same latent process, with covariances obtained by differentiating the kernel.",
+        "source_operator": "mean_square_differentiability",
+        "telemetry": "paired value and change observations per series; kernel derivative evaluations"
+      },
+      "page": "Sec 4.1.1, text line 5422"
+    },
+    {
+      "primitive_id": "squared_exponential_ard",
+      "name": "Squared exponential covariance with a metric matrix M: anisotropic length-scales per dimension (diagonal M) implement automatic relevance determination (eqs 2.16, 4.9, 4.22 context)",
+      "verbatim_quote": "If M is diagonal this implements the use of different length-scales on different dimensions",
+      "latex": "k(x, x') = \\sigma_f^2 \\exp\\left( -\\frac{1}{2} (x - x')^\\top M (x - x') \\right),\\qquad M = \\mathrm{diag}\\left( \\ell_1^{-2}, \\ldots, \\ell_D^{-2} \\right)",
+      "symbol_and_unit_ledger": {
+        "sigma_f^2": "signal variance [target units squared]",
+        "ell_d": "characteristic length-scale along dimension d [input units]",
+        "M": "positive semidefinite metric matrix; diagonal M gives per-dimension length-scales"
+      },
+      "assumptions": [
+        "Stationarity and isotropy in the M-metric; covariance depends only on the scaled distance between inputs.",
+        "Function values at identical inputs have covariance sigma_f^2; covariance decays monotonically with distance."
+      ],
+      "breakdown_regime": "The SE kernel implies infinitely differentiable sample functions, an unrealistically smooth prior for many real processes (Stein's critique); a single global length-scale per dimension also cannot express multi-scale structure.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ARD length-scales are the engine's learned relevance meter: a dimension whose fitted length-scale blows up is a dimension the data says is irrelevant, which gives feature pruning a probabilistic reading instead of a heuristic one.",
+        "source_operator": "squared_exponential_ard",
+        "telemetry": "fitted length-scale per input dimension per model; dimensions ranked by inverse length-scale"
+      },
+      "page": "Sec 4.2.1, text line 5909"
+    },
+    {
+      "primitive_id": "matern_covariance",
+      "name": "Matern class: the smoothness parameter nu directly controls differentiability; sample functions are k times mean-square differentiable iff nu > k (eq 4.14)",
+      "verbatim_quote": "f (x) is k-times MS differentiable if and only if ν > k.",
+      "latex": "k_{\\nu}(r) = \\sigma^2 \\frac{2^{1-\\nu}}{\\Gamma(\\nu)} \\left( \\frac{\\sqrt{2\\nu}\\, r}{\\ell} \\right)^{\\nu} K_{\\nu}\\left( \\frac{\\sqrt{2\\nu}\\, r}{\\ell} \\right),\\qquad r = |x - x'|",
+      "symbol_and_unit_ledger": {
+        "nu": "smoothness parameter [dimensionless]",
+        "K_nu": "modified Bessel function of the second kind",
+        "ell": "characteristic length-scale [input units]",
+        "sigma^2": "process variance [target units squared]"
+      },
+      "assumptions": [
+        "Special cases: nu = 1/2 gives the exponential covariance (continuous, not differentiable); nu to infinity recovers the squared exponential.",
+        "The spectral density is Student-t-like, so high-frequency power decays polynomially rather than exponentially."
+      ],
+      "breakdown_regime": "Choosing nu is choosing a roughness the data may not identify well at small n; half-integer values are used in practice mainly because they give closed forms, not because nature prefers them.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's roughness dial: Matern nu separates how wiggly a latent surface may be from how far its influence reaches (ell), so model criticism can distinguish 'wrong smoothness' from 'wrong scale', two failures the SE kernel confounds.",
+        "source_operator": "matern_covariance",
+        "telemetry": "fitted nu per latent surface; residual roughness diagnostics versus assumed nu"
+      },
+      "page": "Sec 4.2.1, text line 5647"
+    },
+    {
+      "primitive_id": "rational_quadratic_scale_mixture",
+      "name": "Rational quadratic covariance is a scale mixture: an infinite sum of squared exponentials with different length-scales, governed by alpha (eq 4.20)",
+      "verbatim_quote": "with α, ` > 0 can be seen as a scale mixture (an infinite sum) of squared",
+      "latex": "k(r) = \\sigma^2 \\left( 1 + \\frac{r^2}{2 \\alpha \\ell^2} \\right)^{-\\alpha},\\qquad r = |x - x'|",
+      "symbol_and_unit_ledger": {
+        "alpha": "scale-mixture parameter [dimensionless]; as alpha grows the kernel approaches a single SE with length-scale ell",
+        "ell": "characteristic length-scale [input units]",
+        "sigma^2": "process variance"
+      },
+      "assumptions": [
+        "Obtained by mixing SE length-scales under a Gamma prior; sums of valid covariances are valid (Sec 4.2.4).",
+        "Like the SE it is infinitely mean-square differentiable for every alpha."
+      ],
+      "breakdown_regime": "The mixture is over scales only, not over shapes: heavy polynomial tails in input space can let distant points exert surprising influence, and alpha is weakly identified when data are sparse.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from kernel construction by mixing: when the engine does not know the single right scale for a phenomenon, a scale mixture is the honest prior; it converts a brittle point choice of length-scale into an integrated distribution over scales.",
+        "source_operator": "rational_quadratic_scale_mixture",
+        "telemetry": "fitted alpha per kernel; effective length-scale distribution implied by the mixture"
+      },
+      "page": "Sec 4.2.1, text line 5785"
+    },
+    {
+      "primitive_id": "neural_network_covariance",
+      "name": "Neal's construction: a one-hidden-layer network with iid priors on weights converges to a Gaussian process as the number of hidden units tends to infinity; the erf network gives the arcsine kernel (eq 4.29)",
+      "verbatim_quote": "showing that the stochastic process will converge to a Gaussian process in the limit as NH → ∞.",
+      "latex": "k_{\\mathrm{NN}}(x, x') = \\frac{2}{\\pi} \\sin^{-1} \\left( \\frac{2\\, \\tilde{x}^\\top \\Sigma\\, \\tilde{x}'}{\\sqrt{\\left(1 + 2\\, \\tilde{x}^\\top \\Sigma\\, \\tilde{x}\\right) \\left(1 + 2\\, \\tilde{x}'^\\top \\Sigma\\, \\tilde{x}'\\right)}} \\right),\\qquad \\tilde{x} = (1, x_1, \\ldots, x_D)^\\top",
+      "symbol_and_unit_ledger": {
+        "NH": "number of hidden units",
+        "Sigma": "covariance of the input-to-hidden weight prior",
+        "x tilde": "input vector augmented with a constant 1 for the bias",
+        "erf": "error-function transfer unit"
+      },
+      "assumptions": [
+        "Hidden unit contributions are iid with finite variance, so the central limit theorem applies as NH grows.",
+        "The kernel is non-stationary: covariance depends on the magnitudes of x and x', not only their difference."
+      ],
+      "breakdown_regime": "The infinite-width limit discards exactly what finite networks are prized for, adaptive internal representations; the GP limit has fixed features and cannot learn new representations from data.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A bridge theorem for the engine: any sufficiently wide learned model has a kernel shadow, so kernel reasoning can audit or approximate the behaviour of neural components, and neural components can be read as adaptive kernels when width is finite.",
+        "source_operator": "neural_network_covariance",
+        "telemetry": "width and weight-prior scales of neural components; kernel-implied similarity versus learned representation similarity"
+      },
+      "page": "Sec 4.2.3, text line 6035"
+    },
+    {
+      "primitive_id": "kernel_construction_rules",
+      "name": "Kernel algebra: sums and products of valid covariance functions are valid covariance functions, enabling additive structure and interactions by construction (Sec 4.2.4)",
+      "verbatim_quote": "The sum of two kernels is a kernel. Proof: consider the random process",
+      "latex": "k(x, x') = k_1(x, x') + k_2(x, x'),\\qquad k(x, x') = k_1(x, x')\\, k_2(x, x')",
+      "symbol_and_unit_ledger": {
+        "k_1, k_2": "valid covariance functions",
+        "f_1, f_2": "independent random processes realizing them"
+      },
+      "assumptions": [
+        "Sum corresponds to adding independent processes (additive structure); product corresponds to interaction between the two structures.",
+        "Direct sums and tensor products extend the rules across different input subspaces, giving functional ANOVA decompositions."
+      ],
+      "breakdown_regime": "Composed kernels inherit every component's assumptions; a sum of two misspecified kernels is still misspecified, and product kernels can collapse to near-zero covariance almost everywhere in high dimensions.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from the process view of kernels: the engine builds complex latent structure compositionally, an additive trend plus a periodic term times a local term, with each piece separately inspectable, learnable, and removable; structure search becomes algebra, not architecture invention.",
+        "source_operator": "kernel_construction_rules",
+        "telemetry": "component-wise kernel decompositions per model; marginal likelihood deltas when components are added or removed"
+      },
+      "page": "Sec 4.2.4, text line 6286"
+    },
+    {
+      "primitive_id": "mercer_eigenfunction_expansion",
+      "name": "Mercer's theorem: a PSD kernel expands in eigenfunctions of its integral operator, k(x, x') = sum_i lambda_i phi_i(x) phi_i(x'), exhibiting GP regression as Bayesian linear regression in the eigenbasis (eqs 4.36, 4.37)",
+      "verbatim_quote": "It turns out that Gaussian process regression can be viewed as Bayesian linear regression with a possibly infinite number of basis functions, as discussed in chapter 2.",
+      "latex": "\\int k(x, x')\\, \\phi(x)\\, d\\mu(x) = \\lambda\\, \\phi(x'),\\qquad k(x, x') = \\sum_{i=1}^{\\infty} \\lambda_i\\, \\phi_i(x)\\, \\phi_i(x')",
+      "symbol_and_unit_ledger": {
+        "phi_i": "eigenfunction of the kernel integral operator w.r.t. measure mu",
+        "lambda_i": "eigenvalue, non-negative, ordered decreasing",
+        "mu": "measure on the input space (e.g. the input distribution)"
+      },
+      "assumptions": [
+        "Requires a finite measure space and a continuous PSD kernel; eigenfunctions are orthonormal w.r.t. mu.",
+        "Eigenvalues are non-negative precisely because the kernel is a valid covariance."
+      ],
+      "breakdown_regime": "The expansion depends on the chosen measure mu: change the input distribution and the eigenbasis changes, so 'the' features of a kernel are relative to where inputs actually live.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from the kernel definition: the engine can move between the kernel picture and an explicit spectral feature picture at will, which is what makes low-rank approximation (Ch 8) and RKHS analysis (Ch 6) the same object seen from two sides.",
+        "source_operator": "mercer_eigenfunction_expansion",
+        "telemetry": "eigenvalue decay curves per kernel and input distribution; truncation error at chosen rank"
+      },
+      "page": "Sec 4.3, text line 6351"
+    },
+    {
+      "primitive_id": "marginal_likelihood_occam_razor",
+      "name": "Automatic Occam's razor: the marginal likelihood inherently trades data fit against model complexity, favouring the least complex model that explains the data (Sec 5.2)",
+      "verbatim_quote": "It is a property of the marginal likelihood that it automatically incorporates a trade-off between model fit and model complexity.",
+      "latex": "\\log p(y \\mid X) = \\underbrace{-\\frac{1}{2} y^\\top K_y^{-1} y}_{\\text{data fit}} \\;\\underbrace{-\\frac{1}{2} \\log |K_y|}_{\\text{complexity penalty}} \\;-\\; \\frac{n}{2} \\log 2\\pi,\\qquad K_y = K + \\sigma_n^2 I",
+      "symbol_and_unit_ledger": {
+        "data fit term": "rewards agreement with observed targets [dimensionless log density]",
+        "complexity penalty term": "depends only on the covariance structure, not on the targets",
+        "K_y": "covariance of the observed targets"
+      },
+      "assumptions": [
+        "The trade-off requires no externally set penalty parameter; it follows from the normalization of the marginal likelihood as a density over datasets.",
+        "Model priors are often taken flat, in which case model probability is proportional to the marginal likelihood."
+      ],
+      "breakdown_regime": "The razor cuts toward the prior's notion of simplicity: if the prior family cannot express the truth, the marginal likelihood confidently selects the least-wrong simple model and the penalty term gives no warning.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's model-selection constitution: complexity must pay for itself in fit, automatically, in the same units as fit; this is the principled veto on ever-more-elaborate signal stacks that cannot demonstrate evidence gains.",
+        "source_operator": "marginal_likelihood_occam_razor",
+        "telemetry": "log evidence comparisons across candidate model structures on identical data; complexity penalty reported separately from fit"
+      },
+      "page": "Sec 5.2, text line 7157"
+    },
+    {
+      "primitive_id": "hyperparameter_gradient_learning",
+      "name": "Hyperparameters are learned by maximizing the log marginal likelihood with gradient methods; the gradient has a closed trace form, but the surface has multiple local optima corresponding to different interpretations of the data (Sec 5.4, eq 5.9)",
+      "verbatim_quote": "In fact, every local maximum corresponds to a particular interpretation of the data.",
+      "latex": "\\frac{\\partial}{\\partial \\theta_j} \\log p(y \\mid X, \\theta) = \\frac{1}{2}\\, \\mathrm{tr}\\left( \\left( \\alpha \\alpha^\\top - K^{-1} \\right) \\frac{\\partial K}{\\partial \\theta_j} \\right),\\qquad \\alpha = K^{-1} y",
+      "symbol_and_unit_ledger": {
+        "theta_j": "the j-th hyperparameter of the covariance function",
+        "alpha": "dual coefficients (with noise-augmented K in the regression case)",
+        "tr": "matrix trace"
+      },
+      "assumptions": [
+        "Each gradient evaluation costs O(n^3) without further structure, the same factorization as prediction.",
+        "Every local maximum corresponds to a particular interpretation of the data (for example short length-scale with low noise versus long length-scale with high noise)."
+      ],
+      "breakdown_regime": "Point-estimating hyperparameters discards their uncertainty and understates predictive variance; full Bayesian treatment (integrating over hyperparameters) is the remedy the book flags but finds expensive.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from marginal_likelihood_closed_form by differentiation: the engine tunes its own similarity structure by evidence gradients, and the trace form shows the tug of war explicitly, data term alpha alpha^T against complexity term K^{-1}.",
+        "source_operator": "hyperparameter_gradient_learning",
+        "telemetry": "hyperparameter trajectories during optimization; restarts from multiple initializations to map rival optima"
+      },
+      "page": "Sec 5.4, text line 7455"
+    },
+    {
+      "primitive_id": "rkhs_norm_smoothness",
+      "name": "The RKHS norm is a property of the kernel alone, invariant to the measure used in Mercer's theorem; finiteness of the norm imposes a smoothness condition on functions (Sec 6.1)",
+      "verbatim_quote": "However, the RKHS norm is in fact solely a property of the kernel and is invariant under this change of measure.",
+      "latex": "\\|f\\|_{\\mathcal{H}}^2 = \\langle f, f \\rangle_{\\mathcal{H}} = \\sum_{i=1}^{N} \\frac{f_i^2}{\\lambda_i},\\qquad f = \\sum_{i=1}^{N} f_i\\, \\phi_i",
+      "symbol_and_unit_ledger": {
+        "||f||_H": "reproducing kernel Hilbert space norm of f",
+        "f_i": "coefficient of f along eigenfunction phi_i",
+        "lambda_i": "kernel eigenvalue for phi_i"
+      },
+      "assumptions": [
+        "Coefficients must decay fast enough relative to the eigenvalues for the norm to be finite; this is the smoothness condition.",
+        "The reproducing property holds: inner product with the kernel section k(., x) evaluates f at x."
+      ],
+      "breakdown_regime": "The RKHS is smaller than the space the GP samples from: with infinitely many eigenfunctions, GP sample functions have infinite expected RKHS norm and lie outside H with probability one.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's function-complexity meter: the RKHS norm prices a candidate explanation in units set by the kernel's own spectrum, giving regularization, generalization analysis, and GP posterior means one shared currency.",
+        "source_operator": "rkhs_norm_smoothness",
+        "telemetry": "RKHS norms of fitted functions; norm growth as datasets and kernels change"
+      },
+      "page": "Sec 6.1, text line 8422"
+    },
+    {
+      "primitive_id": "posterior_mean_in_rkhs",
+      "name": "GP sample paths lie outside the RKHS almost surely, but the posterior mean lies inside it: averaging smooths the process into its own hypothesis space (Sec 6.1)",
+      "verbatim_quote": "However, note that although sample functions of this Gaussian process are not in H, the posterior mean after observing some data will lie in the RKHS, due to the smoothing properties of averaging.",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Follows from the representer form: the posterior mean is a finite combination of kernel sections, which are RKHS elements.",
+        "Individual posterior samples remain as rough as prior samples; only the mean is smoothed into H."
+      ],
+      "breakdown_regime": "Consumers who treat the posterior mean as a typical sample inherit a false sense of smoothness; uncertainty bands, not the mean curve, describe what the process believes functions look like.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from representer_form_predictive_mean and rkhs_norm_smoothness: the engine distinguishes the estimate (an RKHS object, regularizable and comparable) from the believed reality (rougher sample paths), which disciplines how fitted curves may be interpreted in the reasoning trail.",
+        "source_operator": "posterior_mean_in_rkhs",
+        "telemetry": "posterior mean curves with sample draws overlaid; divergence between mean smoothness and sample roughness"
+      },
+      "page": "Sec 6.1, text line 8446"
+    },
+    {
+      "primitive_id": "learning_curves_eigenvalue_rates",
+      "name": "Learning-curve theory: generalization error decays at rates governed by kernel smoothness; for Sacks-Ylvisaker order r in 1-d the noisy rate is O(n^{-(2r+1)/(2r+2)}) under optimal design (Sec 7.2)",
+      "verbatim_quote": "A plot of E g (n) against n is known as a learning curve.",
+      "latex": "\\epsilon_g(n) = O\\left( n^{-(2r+1)/(2r+2)} \\right) \\quad \\text{(noisy)},\\qquad \\epsilon_g(n) = O\\left( n^{-(2r+1)} \\right) \\quad \\text{(noise-free)}",
+      "symbol_and_unit_ledger": {
+        "epsilon_g(n)": "expected generalization error after n observations",
+        "r": "Sacks-Ylvisaker smoothness order of the covariance function",
+        "n": "number of observations"
+      },
+      "assumptions": [
+        "Rates quoted for optimal sampling of the input space in one dimension; random designs give similar rates (Sollich).",
+        "The optimal information bound comes from projections onto the first n eigenfunctions of the kernel."
+      ],
+      "breakdown_regime": "Asymptotic rates say little at the small n where most practical problems live, and the mismatched case (assumed kernel differs from the truth) can produce plateaux and other behaviours the matched theory does not predict.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's data-value law: expected error reduction per added observation is a computable function of kernel smoothness, which turns data acquisition into a priced decision rather than a hope.",
+        "source_operator": "learning_curves_eigenvalue_rates",
+        "telemetry": "empirical error versus n curves per model family; fitted decay exponents versus theoretical rates"
+      },
+      "page": "Sec 7.2, text line 10058"
+    },
+    {
+      "primitive_id": "pac_bayesian_kl_bound",
+      "name": "PAC-Bayesian analysis of GP classification: generalization is controlled by the KL divergence between posterior and prior, and for GPs this infinite-dimensional KL collapses to an n-dimensional integral over training latents (Sec 7.4, eq 7.33)",
+      "verbatim_quote": "Notice that this has reduced a rather scary infinite-dimensional integration to a more manageable n-dimensional",
+      "latex": "\\mathrm{KL}(q \\| p) = \\int q(f \\mid y) \\log \\frac{q(f \\mid y)}{p(f)}\\, df",
+      "symbol_and_unit_ledger": {
+        "q(f|y)": "approximate posterior over latent training values (Gaussian for Laplace and EP)",
+        "p(f)": "GP prior over latent training values",
+        "KL": "Kullback-Leibler divergence [nats]"
+      },
+      "assumptions": [
+        "The extension of q from training points to all inputs, q(f, f_*|y) = q(f|y) p(f_*|f), makes the test-point factors cancel in the KL.",
+        "Bounds hold with high probability over training samples for any posterior, but can be loose in practice."
+      ],
+      "breakdown_regime": "A loose bound is a weak guarantee: minimizing the bound over hyperparameters is not well justified when the slack itself depends on those hyperparameters, as the book warns.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's generalization accounting: belief movement away from the prior (KL) is the currency that bounds must charge against sample size; large KL on small data is a formal overfitting alarm, not a heuristic one.",
+        "source_operator": "pac_bayesian_kl_bound",
+        "telemetry": "KL(posterior, prior) per fitted classifier; bound values tracked alongside held-out error"
+      },
+      "page": "Sec 7.4.3, text line 10373"
+    },
+    {
+      "primitive_id": "nystrom_low_rank_approximation",
+      "name": "Nyström approximation: the Gram matrix is approximated in low rank from an m-point subset, K tilde = K_nm K_mm^{-1} K_mn, at O(m^2 n) cost (eq 8.4)",
+      "verbatim_quote": "using equations 8.2 and 8.3, which we call the Nyström approximation to K.",
+      "latex": "\\tilde{K} = K_{nm}\\, K_{mm}^{-1}\\, K_{mn}",
+      "symbol_and_unit_ledger": {
+        "K_nm": "covariances between all n points and the m subset points",
+        "K_mm": "covariance matrix of the subset",
+        "m": "subset size, much smaller than n"
+      },
+      "assumptions": [
+        "The approximation is exact on the subset block; the residual on the remaining block is the Schur complement of K_mm, which is positive semidefinite.",
+        "Eigenfunctions are approximated by extending subset eigenfunctions to all points."
+      ],
+      "breakdown_regime": "Quality hinges on the subset covering the input space; a subset that misses a region gives near-prior (uninformative) approximations there while appearing globally low-rank and cheap.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from mercer_eigenfunction_expansion applied to a subset: the engine's scaling pattern for kernel reasoning over large slates, keep a representative skeleton exact and extend it, with the Schur complement as the honest price tag of what was dropped.",
+        "source_operator": "nystrom_low_rank_approximation",
+        "telemetry": "subset coverage diagnostics; Schur complement norms per region of input space"
+      },
+      "page": "Sec 8.1, text line 10777"
+    },
+    {
+      "primitive_id": "subset_of_regressors",
+      "name": "Subset of regressors: GP regression restricted to m basis functions (kernel sections at subset points) gives closed-form predictors at O(m^2 n) cost, equivalent to exact inference under the Nyström-degenerate covariance (eqs 8.14, 8.15)",
+      "verbatim_quote": "Again using eq. (2.11) we obtain f¯SR (x∗ ) = km (x∗ )> (Kmn Knm + σn2 Kmm )−1 Kmn y, (8.14) V[fSR (x∗ )] = σn2 km (x∗ )> (Kmn Knm + σn2 Kmm )−1 km (x∗ ). (8.15)",
+      "latex": "\\bar{f}_{\\mathrm{SR}}(x_*) = k_m(x_*)^\\top \\left( K_{mn} K_{nm} + \\sigma_n^2 K_{mm} \\right)^{-1} K_{mn}\\, y,\\qquad \\mathbb{V}[f_{\\mathrm{SR}}(x_*)] = \\sigma_n^2\\, k_m(x_*)^\\top \\left( K_{mn} K_{nm} + \\sigma_n^2 K_{mm} \\right)^{-1} k_m(x_*)",
+      "symbol_and_unit_ledger": {
+        "k_m(x_*)": "vector of covariances between the test input and the m subset points",
+        "K_mn": "covariances between subset and all training points",
+        "SR": "subset of regressors"
+      },
+      "assumptions": [
+        "The degenerate prior covariance K tilde has rank m, so the process is confined to the span of m basis functions.",
+        "Under this modified model the SR predictors are the exact posterior mean and variance, and its marginal likelihood (eq 8.17) can be used to choose the subset."
+      ],
+      "breakdown_regime": "The SR predictive variance is known to be badly behaved: it can collapse toward zero away from the subset because the degenerate prior has no variance outside the basis span; later variants (DTC, FITC) exist precisely to repair this.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from nystrom_low_rank_approximation as a probabilistic model rather than a matrix shortcut: the engine treats every large-scale approximation as an explicit modified prior, so approximation error is modelled and auditable instead of hidden in numerics.",
+        "source_operator": "subset_of_regressors",
+        "telemetry": "predictive variance maps of approximate versus exact models on audit subsets; subset selection by approximate marginal likelihood"
+      },
+      "page": "Sec 8.3.1, text lines 10970-10972"
+    },
+    {
+      "primitive_id": "gaussian_conditioning_identities",
+      "name": "Appendix A Gaussian identities: marginalization drops blocks of the joint covariance, and conditioning gives the Schur-complement update that every GP formula in the book is built from (eqs A.5, A.6)",
+      "verbatim_quote": "Since conditional distributions are themselves probabilities, one can use all of the above also when further conditioning on other variables.",
+      "latex": "x \\mid y \\sim \\mathcal{N}\\left( \\mu_x + C B^{-1} (y - \\mu_y),\\; A - C B^{-1} C^\\top \\right),\\qquad \\begin{bmatrix} x \\\\ y \\end{bmatrix} \\sim \\mathcal{N}\\left( \\begin{bmatrix} \\mu_x \\\\ \\mu_y \\end{bmatrix}, \\begin{bmatrix} A & C \\\\ C^\\top & B \\end{bmatrix} \\right)",
+      "symbol_and_unit_ledger": {
+        "A": "covariance of x",
+        "B": "covariance of y",
+        "C": "cross-covariance between x and y",
+        "mu_x, mu_y": "means of x and y"
+      },
+      "assumptions": [
+        "Joint Gaussianity of (x, y) is the only assumption; all GP inference in the book is this identity applied to function values.",
+        "Conditioning is defined for events of positive probability; the Gaussian case extends it by continuity to exact observations."
+      ],
+      "breakdown_regime": "The identity is exact only under joint Gaussianity; applying the same update formulas to non-Gaussian quantities is the Laplace-style approximation move and inherits its error.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The single algebraic engine under the whole framework: the reasoning system needs exactly one update rule, condition a joint Gaussian, and every predictor, smoother, and classifier approximation in the book is that rule or a controlled approximation to it.",
+        "source_operator": "gaussian_conditioning_identities",
+        "telemetry": "block covariance assemblies per query; Schur complement magnitudes as information-gain telemetry"
+      },
+      "page": "App A.2, text line 12208"
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "08518cdeed8dfc2d-t1",
+      "think": "This book is the reference treatment of a single idea executed completely: a prior distribution placed directly on functions, specified by a mean function and a covariance function, turns supervised learning into Gaussian conditioning. Everything else in the volume is either a consequence of that move, a study of the covariance functions that carry its assumptions, a method for learning those assumptions from data, or an approximation that keeps the idea computable when exact conditioning becomes too expensive. Reading it as a reasoning system rather than as a regression technique, the load-bearing insight is that the model never commits to a finite parameterization. The weight-space view of chapter 2 shows a Bayesian linear model whose posterior is available in closed form, and then shows that the same predictor can be rewritten so that the feature map appears only inside inner products. That rewrite is the hinge of the whole book. Once predictions depend on the data only through pairwise covariances, the feature space can be infinite, the parameters can be integrated out entirely, and what remains to be designed is a single object, the covariance function, which is where all prior knowledge about smoothness, scale, periodicity, and relevance must live. The predictive equations for regression are then nothing more than the conditioning identities of appendix A applied to the joint Gaussian over training targets and test function values. The posterior mean is a linear combination of the observations with coefficients alpha, and it can equally be read as a finite expansion in kernel sections centred on the training points, which is the representer theorem appearing without ceremony. The posterior covariance is the prior covariance minus a positive term that represents information gained, and it depends only on where the inputs are, not on what the targets turned out to be. That single fact shapes the character of the method: confidence is geometric. The marginal likelihood falls out of the same calculation as a normalization constant, and chapter 5 elevates it into the central model-selection instrument, because its closed form visibly decomposes into a data-fit term and a complexity penalty that depends only on the covariance structure. The Occam argument of the book is therefore not philosophical decoration; it is a reading of one equation. Hyperparameters such as length-scales, signal variance, and noise variance are learned by climbing this evidence surface with gradients that are available in trace form, and the surface is multimodal because the data genuinely admit rival explanations, for example a wiggly signal in low noise or a smooth signal in high noise. Classification breaks the Gaussian closure, and the book is honest about the cost. A latent function is squashed through a logistic or probit link, the posterior over latents stops being Gaussian, and inference becomes approximation design. The Laplace method keeps the mode and the local curvature, found by Newton iterations that are iteratively reweighted least squares in disguise. Expectation propagation keeps something different: it approximates each likelihood factor by a Gaussian site and repeatedly removes one site, forming a cavity distribution, so that each observation is judged against the belief state formed by all the others. That cavity idea is arguably the most transferable mechanism in the book for any system that fuses evidence, because it is the correct antidote to self-confirmation. Predictions in classification must average the squashed value over the latent predictive distribution rather than squash the average, and the book is careful to show where that distinction does and does not change decisions. Chapter 4 is the design manual for the prior itself. Validity is positive semidefiniteness and nothing else; Bochner's theorem characterizes stationary kernels spectrally; differentiability of the process is read off the kernel at the origin; the Matern family turns smoothness into a parameter; the rational quadratic mixes scales; the periodic kernel is a warping; Neal's neural network kernel shows that an infinitely wide network is a Gaussian process, so kernel methods and neural methods are not rival tribes but limiting cases of one construction. Chapter 6 then performs the unification work. The reproducing kernel Hilbert space supplies the norm that makes the GP posterior mean the solution of a regularization problem, while the sample paths of the process live outside that space, a subtlety the book states plainly and that most summaries drop. Support vector machines and relevance vector machines are placed on the same map, differing in loss, sparsity, and probabilistic semantics rather than in kind. Chapter 7 asks what can be guaranteed: learning curves whose rates are governed by the eigenvalue decay of the kernel, and a PAC-Bayesian analysis in which the divergence between posterior and prior over an infinite-dimensional function collapses, remarkably, to an integral over the n training latents only. Chapter 8 confronts the cubic cost that shadows every exact formula in the book. Its mature move is to present subset-of-regressors and Nyström methods not as numerical hacks but as exact inference in a modified model with a degenerate covariance, which means approximation error is itself modelled and can be audited, and the known failure of the subset-of-regressors variance is diagnosed as a property of that modified prior. For a reasoning engine, the transferable assets are specific. First, a single update rule, Gaussian conditioning, with an explicit price in computation and an explicit statement of what was assumed. Second, evidence as a scalar with a fit-minus-complexity decomposition, so model criticism is arithmetic rather than taste. Third, hyperparameters that are interpretable physical quantities, length-scale, roughness, period, noise floor, each of which can be interrogated when a prediction looks wrong. Fourth, cavity-style leave-one-out belief states for auditing individual observations. Fifth, spectral thinking: eigenvalue decay tells you how many effective degrees of freedom a dataset supports and how fast error can fall as data grows. What the framework cannot do is equally clear. Gaussianity is a strong prior commitment; heavy tails, abrupt regime change, and heteroskedastic noise all violate the letter of the model, and the elegant variance formula will not warn you, because it never looks at the targets. The posture of the book, visible in its insistence on checking interpretations at local optima and on treating approximations as models, is the safeguard: every number the method emits is conditional on a stated prior, and the prior is a designed object that its owner must defend.",
+      "retrocausal_genealogy": "The lineage runs through several fields that discovered the same object independently. Geostatistics built it as kriging around Matheron; time-series and control theory met it as Gaussian conditioning and Kalman smoothing; spatial statistics developed the covariance-function craft that Stein later sharpened into a critique of over-smooth kernels. MacKay and Neal brought the construction into neural computation in the 1990s, Neal's infinite-width limit being the direct ancestor of the neural network kernel in chapter 4, and Williams and Rasmussen recast the regression case in the function-space form this book canonized. Wahba's spline work supplied the reproducing kernel Hilbert space connection, and the support vector literature supplied the kernel trick vocabulary. The book is a confluence document: it gathers these streams, fixes notation, and shows they were one river.",
+      "theory_of_mind": "The authors model their reader as a builder who must be able to implement everything from the page: algorithms are given in boxes with costs counted, implementation pitfalls are flagged where the mathematics hides them, and exercises extend the derivations rather than testing recall. Their model of the domain is that supervised learning is applied probability, not curve fitting; the recurring rhetorical move is to derive a method from a stated prior and a stated likelihood, then interrogate what the derivation assumed. They distrust point estimates offered without distributions, and they distrust flexibility offered without a complexity price. The reader is expected to share that distrust and to treat every modelling choice as a claim that the evidence must pay for.",
+      "cross_layer_veto": "Several results in this book veto practices that other layers of a reasoning system might otherwise adopt. The positive semidefinite condition vetoes arbitrary similarity scores from carrying probability. The predictive variance formula vetoes reading confidence off outcome surprise, because variance here is geometry, not reaction. The marginal likelihood decomposition vetoes adding model structure without an evidence gain, since complexity is charged automatically. The representer and RKHS results veto interpreting the smooth posterior mean as a typical function the process believes in. The subset-of-regressors analysis vetoes trusting predictive variances from low-rank approximations without auditing the modified prior. Each veto is a theorem-shaped constraint on layers above the inference layer."
+    }
+  ],
+  "universal_lens": "Read generally, the book is a template for reasoning under uncertainty about anything that varies over an index set: declare what similarity between situations means, in the form of a covariance; declare how observations corrupt the latent quantity, in the form of a likelihood; then let conditioning do the reasoning, and let the evidence score the declarations. The template separates the three places judgement can enter, prior structure, observation model, and decision loss, and it prices each one. Any discipline that can state its similarity structure honestly can instantiate the template, and any that cannot is shown exactly where its informality lives.",
+  "gsi_mapping": "For the Galaxy Sports Institute, the book supplies the mathematical spine for studying sport as a set of latent processes: performance surfaces over age, workload, and context; opponent-adjusted strength fields over schedules; recovery curves over time. The covariance-function craft of chapter 4 is the Institute's method for stating what a similar situation means in a checkable way, the learning-curve results price how much data a question needs before it can be answered, and the PAC-Bayesian and RKHS material gives the Institute its standards for when a claimed pattern is knowledge rather than narrative. Marginal likelihood comparisons let rival theories of the same phenomenon be scored on one scale.",
+  "gse_mapping": "For the Galaxy Sports Edge engine, Gaussian process regression and classification are the probabilistic core for continuous projections and probability outputs: latent strength and matchup functions with calibrated posterior variance, learned per-dimension length-scales that expose which inputs the data actually uses, and evidence scores that arbitrate between candidate model structures before any of them may influence a published number. Expectation propagation contributes the evidence-fusion pattern with cavity audits for individual observations; the low-rank framework of chapter 8 sets the scaling path for full slates; and the decision-theory chapter enforces the separation between the engine's predictive distributions and any downstream choice made under a stated loss."
+}

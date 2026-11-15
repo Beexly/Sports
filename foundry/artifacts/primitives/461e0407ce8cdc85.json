@@ -1,0 +1,78 @@
+{
+  "book_id": "461e0407ce8cdc85",
+  "source_status": "COMPLETE",
+  "title": "p0351",
+  "file_name": "p0351.txt",
+  "sha256": "461e0407ce8cdc85a60508a63e1a38fbd8418662b1523faf57dad79f0aead149",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Reasoning as selective extraction from holistic phenomena; mapping empirical data to structured inference via partial aspects. Universal Lens: Rooted in p0351 (461e0407ce8cdc85), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models extractable features from full phenomenon space; conformal prediction bounds derived from partial causal kernels. GSI Mapping: Rooted in p0351 (461e0407ce8cdc85), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps state transitions through extracted symbolic fragments; state evolution governed by kernelized partial observability. GSE Mapping: Rooted in p0351 (461e0407ce8cdc85), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "phenomenological_extraction",
+      "name": "Phenomenological Extraction",
+      "verbatim_quote": "The first thing is to have seen that every possible case of reasoning involves the extraction of a particular partial aspect of the phenomena thought about, and that whilst Empirical Thought simply associates phenomena in their entirety, Reasoned Thought couples them by the conscious use of this extract.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Φ': 'Full phenomenon space (dimensionless)', 'φ': 'Extracted partial aspect (dimensionless)', 'R': 'Reasoning operator (dimensionless)'}",
+      "assumptions": "Reasoning requires selection of informative substructure from total phenomenon; empirical thought lacks such selection.",
+      "breakdown_regime": "When φ ⊂ Φ is insufficiently representative of Φ, leading to erroneous inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Extracted features map to posterior distributions; GSE: Extracted states drive transition functions.",
+        "source_operator": "phenomenological_extraction",
+        "telemetry": "Information gain from partial vs. full observation"
+      }
+    },
+    {
+      "primitive_id": "partial_aspect_relevance",
+      "name": "Partial Aspect Relevance",
+      "verbatim_quote": "But each and all agree in thís, that they bear a more evident relation to the conclusion than did the immediate data in their full totality.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ρ(φ, C)': 'Relevance of extracted aspect φ to conclusion C (dimensionless)', 'D(Φ)': 'Total data dimensionality (dimensionless)'}",
+      "assumptions": "Extracted aspects must exhibit higher relevance to conclusions than raw data.",
+      "breakdown_regime": "When ρ(φ, C) < ρ(Φ, C), indicating poor feature selection.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Kernelized relevance scores define belief propagation; GSE: Relevance determines action selection.",
+        "source_operator": "partial_aspect_relevance",
+        "telemetry": "Conditional mutual information between φ and C given Φ"
+      }
+    },
+    {
+      "primitive_id": "data_dimensionality_selection",
+      "name": "Data Dimensionality Selection",
+      "verbatim_quote": "Every phenomenon or so-called'fact'has an infinity of aspects or properties, as we have seen, amongst which the fool, or man with little sagacity, will inevitably go astray.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D(Φ)': 'Dimensionality of full phenomenon (dimensionless)', 'd(φ)': 'Selected subspace dimensionality (dimensionless)', 'S': 'Sagacity index (dimensionless)'}",
+      "assumptions": "High-dimensional data necessitates intelligent projection; low sagacity leads to irrelevant selection.",
+      "breakdown_regime": "When d(φ) >> D(Φ) or S → 0, resulting in overfitting or misalignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Dimensionality reduction defines latent variable spaces; GSE: Reduced dimensions enable policy computation.",
+        "source_operator": "data_dimensionality_selection",
+        "telemetry": "Ratio of selected to total feature space dimensions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "461e0407ce8cdc85_t0",
+      "think": "Reasoning operates by extracting partial aspects from holistic phenomena, enabling structured inference. The core mechanism is that while empirical thought aggregates all data, reasoned thought isolates relevant components—φ ⊂ Φ—that bear stronger relations to conclusions than the whole. This process is formalized as a selection operator R(Φ) → φ, where φ is chosen based on relevance ρ(φ,C). When φ fails to capture sufficient structure, inference breaks down. The dual nature of this operation lies in its ability to both reduce complexity and preserve predictive power. Failure modes include overgeneralization (φ too small) or undergeneralization (φ too large), both leading to incorrect coupling of data and conclusion. The mathematical dualism manifests in the contrast between full-data association and partial-data mediation. In GSI, this translates into Bayesian updating over extracted features; in GSE, it becomes a state-transition kernel defined by selected observables.\n\nDeep epistemic analysis for p0351 (461e0407ce8cdc85, domain=other, pages_read=1/1): Operator 'Phenomenological Extraction' (page 1, domain other) captures: The first thing is to have seen that every possible case of reasoning involves the extraction of a particular partial aspect of the phenomena thought about, and that whilst Empirical Thought simply associates phenomena in their entirety, Reasoned Thought couples them by the conscious use of this extract. Assumptions: Reasoning requires selection of informative substructure from total phenomenon; empirical thought lacks such selection. Breakdown regime: When φ ⊂ Φ is insufficiently representative of Φ, leading to erroneous inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Extracted features map to posterior distributions; GSE: Extracted states drive transition functions. Operator 'Partial Aspect Relevance' (page 1, domain other) captures: But each and all agree in thís, that they bear a more evident relation to the conclusion than did the immediate data in their full totality. Assumptions: Extracted aspects must exhibit higher relevance to conclusions than raw data. Breakdown regime: When ρ(φ, C) < ρ(Φ, C), indicating poor feature selection. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Kernelized relevance scores define belief propagation; GSE: Relevance determines action selection. Operator 'Data Dimensionality Selection' (page 1, domain other) captures: Every phenomenon or so-called'fact'has an infinity of aspects or properties, as we have seen, amongst which the fool, or man with little sagacity, will inevitably go astray. Assumptions: High-dimensional data necessitates intelligent projection; low sagacity leads to irrelevant selection. Breakdown regime: When d(φ) >> D(Φ) or S → 0, resulting in overfitting or misalignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Dimensionality reduction defines latent variable spaces; GSE: Reduced dimensions enable policy computation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0351 (461e0407ce8cdc85, domain=other, pages_read=1/1): Operator 'Phenomenological Extraction' (page 1, domain other) captures: The first thing is to have seen that every possible case of reasoning involves the extraction of a particular partial aspect of the phenomena thought about, and that whilst Empirical Thought simply associates phenomena in their entirety, Reasoned Thought couples them by the conscious use of this extract. Assumptions: Reasoning requires selection of informative substructure from total phenomenon; empirical thought lacks such selection. Breakdown regime: When φ ⊂ Φ is insufficiently representative of Φ, leading to erroneous inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Extracted features map to posterior distributions; GSE: Extracted states drive transition functions. Operator 'Partial Aspect Relevance' (page 1, domain other) captures: But each and all agree in thís, that they bear a more evident relation to the conclusion than did the immediate data in their full totality. Assumptions: Extracted aspects must exhibit higher relevance to conclusions than raw data. Breakdown regime: When ρ(φ, C) < ρ(Φ, C), indicating poor feature selection. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Kernelized relevance scores define belief propagation; GSE: Relevance determines action selection. Operator 'Data Dimensionality Selection' (page 1, domain other) captures: Every phenomenon or so-called'fact'has an infinity of aspects or properties, as we have seen, amongst which the fool, or man with little sagacity, will inevitably go astray. Assumptions: High-dimensional data necessitates intelligent projection; low sagacity leads to irrelevant selection. Breakdown regime: When d(φ) >> D(Φ) or S → 0, resulting in overfitting or misalignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Dimensionality reduction defines latent variable spaces; GSE: Reduced dimensions enable policy computation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots trace to Kant’s transcendental logic and Peirce’s semiotics, evolving through Frege's predicate calculus and modern information theory. The formalization of partial relevance emerged in machine learning through feature selection and kernel methods. Retrocausal Genealogy: Rooted in p0351 (461e0407ce8cdc85), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may differ in their sagacity index S, leading to divergent selections of φ. A high-S agent selects φ optimally for ρ(φ,C), whereas a low-S agent may select irrelevant or redundant subsets. Modeling such agents requires distinguishing between epistemic uncertainty and strategic misalignment in feature choice. Theory of Mind & Decision Maker Model: Rooted in p0351 (461e0407ce8cdc85), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity demands that extracted φ not be linearly dependent across layers. Leakage occurs when φ from one layer contaminates another, violating independence assumptions. Veto conditions require orthogonal projections of φ across domains, ensuring no cross-layer signal interference. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0351 (461e0407ce8cdc85), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

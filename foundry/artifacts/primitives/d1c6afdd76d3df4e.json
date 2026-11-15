@@ -1,0 +1,905 @@
+{
+ "book_id": "d1c6afdd76d3df4e",
+ "source_status": "COMPLETE",
+ "source_note": "Roman Vershynin, High-Dimensional Probability: An Introduction with Applications in Data Science, Second Edition, Cambridge University Press, 2026. The local file (books-d-models/Vershynin-2026-HighDimensionalProbability.pdf) is the author pre-publication version dated October 23, 2026, distributed free for personal use from the author page at UC Irvine; its internal BibTeX block confirms the 2nd edition, Cambridge University Press, 2026 citation. File size 5634996 bytes; sha256 over (str(size) + file bytes) = d1c6afdd76d3df4eafc3c8f0a1261f643b5cddb0e2de15e6d9ba8eae562ce1c2, book_id d1c6afdd76d3df4e. Text layer quality: born-digital extraction, prose is clean and continuous; displayed mathematics is linearized, with norm bars, roots, and super/subscripts occasionally displaced onto adjacent lines, so quotes were chosen from prose passages and verified as contiguous substrings of the extracted text, while equations were reconstructed from the linearized displays. No catalog correction needed: filename year 2026 matches the edition. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "approximate_caratheodory_theorem",
+   "name": "Approximate Caratheodory: any point in the convex hull of a set in the unit ball is within 1/sqrt(k) of an equal-weight average of k points of the set, with k independent of dimension",
+   "verbatim_quote": "This result is surprising for two reasons: first, the number of points k does not depend on the dimension n; and second, all the convex weights are equal.",
+   "page": "Appetizer, Theorem 0.0.2 (book p. 2); text lines 289-292",
+   "latex": "\\left\\|x - \\frac{1}{k}\\sum_{j=1}^{k} x_j\\right\\|_2 \\le \\frac{1}{\\sqrt{k}}",
+   "symbol_and_unit_ledger": {
+    "x": "target point in conv(T)",
+    "x_j": "points sampled from T",
+    "k": "number of averaged points (count)",
+    "T": "set contained in the unit Euclidean ball"
+   },
+   "assumptions": [
+    "T is contained in the unit Euclidean ball",
+    "x lies in conv(T), so it is a convex combination of points of T",
+    "repetitions among the sampled points are allowed"
+   ],
+   "breakdown_regime": "Error decays only like 1/sqrt(k); for very accurate approximation the exact Caratheodory bound n+1 wins, and the result needs boundedness of T (diameter enters the constant otherwise).",
+   "domain": "convex geometry / probabilistic method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A complicated model output that is a weighted blend of many component signals can be replaced by an equal-weight average of a small subsample of components with a dimension-free error certificate; the engine can audit how many components a blended projection really needs before the blend stops changing.",
+    "source_operator": "approximate_caratheodory_theorem",
+    "telemetry": "per-game component signal vectors and their convex blend weights"
+   }
+  },
+  {
+   "primitive_id": "exponential_moment_method",
+   "name": "Exponential moment method: multiply the deviation event by a free parameter, exponentiate, apply Markov, and optimize the parameter to convert MGF control into exponential tail bounds",
+   "verbatim_quote": "The exponential moment method, used to derive the concentration inequalities in this chapter, was pioneered by S. Bernstein [38, 39, 40].",
+   "page": "Section 2.10 Notes (book p. 49); text line 2676",
+   "latex": "P\\{S_N \\ge t\\} \\le e^{-\\lambda t}\\prod_{i=1}^{N} E\\, e^{\\lambda X_i}",
+   "symbol_and_unit_ledger": {
+    "lambda": "free tilt parameter, chosen to minimize the bound",
+    "S_N": "sum of independent random variables X_i",
+    "t": "deviation threshold",
+    "E e^{lambda X_i}": "moment generating function of term i"
+   },
+   "assumptions": [
+    "the terms X_i are independent, so the MGF of the sum factorizes",
+    "the MGFs are finite for the chosen lambda",
+    "lambda is optimized after the bound is derived"
+   ],
+   "breakdown_regime": "Fails when MGFs are infinite (heavy tails such as Cauchy or Pareto); then only polynomial Markov or Chebyshev bounds survive unless the variable is truncated first.",
+   "domain": "probability: tail bounds",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the single proof engine behind every tail bound the reasoning engine uses: whenever a per-signal moment generating bound is available, the same tilt-and-optimize step produces a calibrated deviation probability for the aggregate instead of an ad hoc error bar.",
+    "source_operator": "exponential_moment_method",
+    "telemetry": "per-signal MGF estimates from historical residuals"
+   }
+  },
+  {
+   "primitive_id": "hoeffding_inequality",
+   "name": "Hoeffding inequality: sums of independent Rademacher or bounded mean-zero variables have Gaussian-type tails exp(-t^2/(2||a||_2^2)), non-asymptotically for every fixed N",
+   "verbatim_quote": "Unlike the classical limit theorems of probability theory, Hoeffding inequality is non-asymptotic in that it holds for all fixed N as opposed to N → ∞.",
+   "page": "Section 2.2, Remark 2.2.3 (book p. 29); text lines 1616-1620",
+   "latex": "P\\left\\{\\sum_{i=1}^{N} a_i X_i \\ge t\\right\\} \\le \\exp\\left(-\\frac{t^2}{2\\|a\\|_2^2}\\right)",
+   "symbol_and_unit_ledger": {
+    "a_i": "fixed weights",
+    "X_i": "independent Rademacher (or bounded mean-zero) variables",
+    "t": "deviation threshold",
+    "||a||_2": "Euclidean norm of the weight vector"
+   },
+   "assumptions": [
+    "independence of the X_i",
+    "each X_i is Rademacher, or more generally bounded and mean zero",
+    "weights a are fixed in advance, not data dependent"
+   ],
+   "breakdown_regime": "Too conservative when the summands have very unequal variances or tiny means; Chernoff and Bernstein exploit that extra structure. Dependence between terms breaks the factorization step.",
+   "domain": "probability: concentration of sums",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Baseline error bar for any weighted sum of bounded per-play or per-game signals: the engine prices the deviation of an aggregate directly from the weight vector norm, with no asymptotic sample size excuse.",
+    "source_operator": "hoeffding_inequality",
+    "telemetry": "weights assigned to bounded signals in an aggregate projection"
+   }
+  },
+  {
+   "primitive_id": "chernoff_inequality",
+   "name": "Chernoff inequality: for sums of independent Bernoulli variables the tail is Poisson-shaped, e^{-mu}(e mu/t)^t, sensitive to small means where Hoeffding is wasteful",
+   "verbatim_quote": "Hoeffding inequality (Theorem 2.2.6) does not account for small pi , yielding a Gaussian bound that is far from the true Poisson tail.",
+   "page": "Section 2.3 intro (book p. 30); text lines 1674-1680",
+   "latex": "P\\{S_N \\ge t\\} \\le e^{-\\mu}\\left(\\frac{e\\mu}{t}\\right)^t, \\quad t \\ge \\mu",
+   "symbol_and_unit_ledger": {
+    "S_N": "sum of independent Bernoulli variables",
+    "mu": "mean of S_N",
+    "t": "deviation threshold, at least mu",
+    "e": "Euler number"
+   },
+   "assumptions": [
+    "independent Bernoulli summands with parameters p_i",
+    "t is at least the mean mu",
+    "the Poisson regime: many trials with small individual probabilities"
+   ],
+   "breakdown_regime": "One-sided as stated (a matching left tail needs a separate argument); for moderate p_i near 1/2 the Gaussian Hoeffding bound can be tighter, and dependence between events voids the product form.",
+   "domain": "probability: concentration of sums",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Rare-event counting in the engine (explosive plays, turnovers, injuries in a window) should be priced with the Poisson-shaped tail that respects the small base rate, not with a symmetric Gaussian bar that overstates or understates the surprise.",
+    "source_operator": "chernoff_inequality",
+    "telemetry": "counts of rare events with estimated base rates per game window"
+   }
+  },
+  {
+   "primitive_id": "median_of_means_estimator",
+   "name": "Median-of-means estimator: splitting the sample into blocks, averaging within blocks, and taking the median gives Gaussian-strength tails 2e^{-ct^2} for any distribution with finite variance",
+   "verbatim_quote": "But surprisingly, a mean estimator exists with Gaussian tail decay that works for any distribution with finite variance!",
+   "page": "Section 2.4, before Theorem 2.4.1 (book p. 32); text lines 1838-1843",
+   "latex": "P\\left\\{|\\hat{\\mu} - \\mu| \\ge \\frac{t\\sigma}{\\sqrt{N}}\\right\\} \\le 2e^{-ct^2}",
+   "symbol_and_unit_ledger": {
+    "mu hat": "median-of-means estimator",
+    "mu": "true mean",
+    "sigma": "standard deviation of X",
+    "N": "sample size",
+    "t": "deviation in units of sigma/sqrt(N)",
+    "c": "absolute constant"
+   },
+   "assumptions": [
+    "only finite variance is assumed, no subgaussianity",
+    "samples are independent copies",
+    "the number of blocks is chosen proportional to t squared"
+   ],
+   "breakdown_regime": "Needs finite variance; with infinite variance even this fails. The estimator is not linear, so it does not compose with downstream linear algebra the way a plain mean does, and constants are worse than for the Gaussian sample mean.",
+   "domain": "statistics: robust estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Robust aggregation kernel for outlier-prone inputs: when a player or team metric is computed from heavy tailed game logs, the engine aggregates block means by median so one extreme game cannot drag the estimate the way it drags a plain average.",
+    "source_operator": "median_of_means_estimator",
+    "telemetry": "blocked game-log samples for player and team rate metrics"
+   }
+  },
+  {
+   "primitive_id": "subgaussian_equivalence",
+   "name": "Subgaussian properties are equivalent: Gaussian tail decay, sqrt(p) moment growth, a bounded MGF of X squared, and (for mean zero) a Gaussian MGF bound all describe the same class",
+   "verbatim_quote": "They all convey the same message: a given distribution is bounded by a normal distribution.",
+   "page": "Section 2.6, Proposition 2.6.1 discussion (book p. 36); text lines 1978-1982",
+   "latex": "P\\{|X| \\ge t\\} \\le 2\\exp\\left(-\\frac{t^2}{K_1^2}\\right) \\quad \\text{for all } t \\ge 0",
+   "symbol_and_unit_ledger": {
+    "X": "random variable",
+    "t": "threshold",
+    "K_1": "tail parameter, one of the equivalent constants K_i that differ by absolute factors"
+   },
+   "assumptions": [
+    "the four formulations are equivalent up to absolute constant factors in the parameters",
+    "the MGF formulation (iv) additionally requires E X = 0"
+   ],
+   "breakdown_regime": "The equivalence is about the class, not exact constants: converting between tail, moment, and MGF forms loses absolute factors, which matters in sharp finite-sample calculations.",
+   "domain": "probability: distribution classes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gives the engine four interchangeable diagnostics for one property: a signal can be certified light tailed from whichever evidence is available (empirical tail counts, moment growth, or a fitted generating bound), and the certificate is valid in all four currencies at once.",
+    "source_operator": "subgaussian_equivalence",
+    "telemetry": "empirical tail counts and moment estimates of signal residuals"
+   }
+  },
+  {
+   "primitive_id": "subgaussian_norm_psi2",
+   "name": "Subgaussian norm: ||X||_{psi_2} = inf{K > 0 : E exp(X^2/K^2) <= 2} is a norm on subgaussian variables and the working scale parameter for all later bounds",
+   "verbatim_quote": "A random variable X is called subgaussian if it satisfies any of the equivalent properties (i)-(iii) in Proposition 2.6.1.",
+   "page": "Section 2.6.1, Definition 2.6.4 (book p. 38); text lines 2103-2106",
+   "latex": "\\|X\\|_{\\psi_2} = \\inf\\left\\{K > 0 : E \\exp\\left(X^2/K^2\\right) \\le 2\\right\\}",
+   "symbol_and_unit_ledger": {
+    "||X||_{psi_2}": "subgaussian norm (same units as X)",
+    "K": "candidate scale",
+    "E exp(X^2/K^2)": "exponential moment of the squared variable"
+   },
+   "assumptions": [
+    "X satisfies one (hence all) of the equivalent properties in Proposition 2.6.1",
+    "the infimum is over K > 0"
+   ],
+   "breakdown_regime": "Infinite for non-subgaussian variables (exponential, Poisson, chi-squared, Pareto); such variables need the psi_1 scale instead. The norm is defined up to the convention in property (iii), and other conventions differ by absolute factors.",
+   "domain": "probability: distribution classes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A single scalar tail score per input signal: the engine can rank and weight signals by their psi_2 norm, and every downstream concentration bound consumes exactly this number, so tail auditing has one currency.",
+    "source_operator": "subgaussian_norm_psi2",
+    "telemetry": "estimated psi_2 norms of model input signals from residual histories"
+   }
+  },
+  {
+   "primitive_id": "subgaussian_hoeffding_inequality",
+   "name": "Subgaussian Hoeffding inequality: for independent mean-zero subgaussian terms, P{sum >= t} <= 2 exp(-c t^2 / sum ||X_i||_{psi_2}^2)",
+   "verbatim_quote": "Let X1 , . . . , XN be independent, mean-zero, subgaussian random variables.",
+   "page": "Section 2.7.1, Theorem 2.7.3 (book p. 40); text lines 2205-2208",
+   "latex": "P\\left\\{\\sum_{i=1}^{N} X_i \\ge t\\right\\} \\le 2\\exp\\left(-\\frac{c t^2}{\\sum_{i=1}^{N} \\|X_i\\|_{\\psi_2}^2}\\right)",
+   "symbol_and_unit_ledger": {
+    "X_i": "independent mean-zero subgaussian variables",
+    "t": "deviation threshold",
+    "||X_i||_{psi_2}": "subgaussian norm of term i",
+    "c": "absolute constant"
+   },
+   "assumptions": [
+    "independence and zero means",
+    "each term is subgaussian with finite psi_2 norm",
+    "Khintchine companion bounds control L_p norms of the same sums"
+   ],
+   "breakdown_regime": "If any term is merely subexponential, the Gaussian regime survives only for moderate t and Bernstein takes over; strong dependence between terms invalidates the variance proxy sum of squared norms.",
+   "domain": "probability: concentration of sums",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine default deviation bound for an aggregate of many light tailed signals: total uncertainty is the root sum of squares of the individual tail scores, which is exactly how independent evidence should accumulate.",
+    "source_operator": "subgaussian_hoeffding_inequality",
+    "telemetry": "psi_2 scores of the signals entering a projection aggregate"
+   }
+  },
+  {
+   "primitive_id": "subexponential_equivalence",
+   "name": "Subexponential properties are equivalent: exponential tail decay, linear-in-p moment growth, bounded MGF of |X|, and a Gaussian MGF bound that holds only near the origin",
+   "verbatim_quote": "Proposition 2.8.1 (Subexponential properties). Let X be a random variable. The following properties are equivalent, with the parameters Ki > 0 differing by at most an absolute constant factor.",
+   "page": "Section 2.8, Proposition 2.8.1 (book p. 44); text lines 2399-2405",
+   "latex": "P\\{|X| \\ge t\\} \\le 2\\exp\\left(-\\frac{t}{K_1}\\right) \\quad \\text{for all } t \\ge 0",
+   "symbol_and_unit_ledger": {
+    "X": "random variable",
+    "t": "threshold",
+    "K_1": "tail parameter of the subexponential class"
+   },
+   "assumptions": [
+    "equivalence of (i) to (iii) holds generally; the local MGF form (iv) needs E X = 0",
+    "parameters differ by at most absolute constant factors"
+   ],
+   "breakdown_regime": "The MGF can be infinite away from zero (an Exp(1) variable has infinite MGF for lambda >= 1), so exponential moment arguments must keep lambda small; this is the structural reason Bernstein has two regimes.",
+   "domain": "probability: distribution classes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Classifies the engine heavier tailed signals (single-play yardage, explosive outcomes) into the correct regime before any bound is applied, and warns that generating-function evidence for them is only valid near the center.",
+    "source_operator": "subexponential_equivalence",
+    "telemetry": "tail classification of per-play and per-game outcome distributions"
+   }
+  },
+  {
+   "primitive_id": "bernstein_inequality_two_tails",
+   "name": "Bernstein inequality: subexponential sums have a two-regime tail, Gaussian for moderate deviations and exponential for large ones, with the exponential part driven by the single largest psi_1 norm",
+   "verbatim_quote": "What is surprising (and amazing) is that the exponential tail in Theorem 2.9.1 is no worse than what you would get from a single term Xi - the one with the largest subexponential norm.",
+   "page": "Section 2.9, Remark 2.9.3 (book p. 48); text lines 2614-2622",
+   "latex": "P\\left\\{\\sum_{i=1}^{N} X_i \\ge t\\right\\} \\le 2\\exp\\left(-c \\min\\left\\{\\frac{t^2}{\\sum_{i=1}^{N} \\|X_i\\|_{\\psi_1}^2}, \\frac{t}{\\max_i \\|X_i\\|_{\\psi_1}}\\right\\}\\right)",
+   "symbol_and_unit_ledger": {
+    "X_i": "independent mean-zero subexponential variables",
+    "t": "deviation threshold",
+    "||X_i||_{psi_1}": "subexponential norm of term i",
+    "c": "absolute constant"
+   },
+   "assumptions": [
+    "independence and zero means",
+    "each term subexponential; the variance-sensitive bounded version (Theorem 2.9.5) instead assumes |X_i| <= K and uses the true variance sum"
+   ],
+   "breakdown_regime": "For very large deviations the bound is only exponential, so extreme aggregate outcomes are far more plausible than a Gaussian model claims; ignoring the second regime systematically underprices blowout scenarios.",
+   "domain": "probability: concentration of sums",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Error bars on aggregated projections must switch regimes: near the center use the Gaussian term driven by total variance, far out use the exponential term driven by the single most volatile component, so one explosive player caps how confident the aggregate can be.",
+    "source_operator": "bernstein_inequality_two_tails",
+    "telemetry": "psi_1 norms and variance shares of components in an aggregate"
+   }
+  },
+  {
+   "primitive_id": "concentration_of_norm_thin_shell",
+   "name": "Concentration of the norm: a random vector with independent subgaussian coordinates of unit second moment has Euclidean norm within O(K^2) of sqrt(n), the thin shell phenomenon",
+   "verbatim_quote": "Let X = (X1 , . . . , Xn ) ∈ Rn be a random vector with independent, subgaussian coordinates Xi that satisfy E Xi2 = 1.",
+   "page": "Section 3.1, Theorem 3.1.1 (book p. 60); text lines 3318-3322",
+   "latex": "P\\left\\{\\left|\\|X\\|_2 - \\sqrt{n}\\right| \\ge t\\right\\} \\le 2\\exp\\left(-\\frac{c t^2}{K^4}\\right)",
+   "symbol_and_unit_ledger": {
+    "X": "random vector in R^n",
+    "||X||_2": "Euclidean norm",
+    "n": "dimension",
+    "K": "max psi_2 norm of the coordinates",
+    "t": "deviation of the norm from sqrt(n)"
+   },
+   "assumptions": [
+    "independent subgaussian coordinates",
+    "E Xi^2 = 1 for each coordinate",
+    "proof routes through Bernstein applied to the centered squares Xi^2 - 1"
+   ],
+   "breakdown_regime": "Without independent coordinates the norm can be far smaller with high probability (Section 6.2 gives only a one-sided bound in general); the shell thickness grows like K^2, so heavy tailed coordinates thicken it.",
+   "domain": "random vectors / convex geometry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "High dimensional feature vectors of teams or players live on a thin shell: their lengths are nearly constant, so differences between them are almost purely directional, and the engine should compare directions and angles rather than raw magnitudes.",
+    "source_operator": "concentration_of_norm_thin_shell",
+    "telemetry": "norms of embedded team and player feature vectors across a season"
+   }
+  },
+  {
+   "primitive_id": "isotropic_random_vector",
+   "name": "Isotropic random vector: E XX^T = I_n, equivalently E <X, v>^2 = ||v||_2^2 for every direction v, the multivariate version of unit variance",
+   "verbatim_quote": "Since the right-hand side does not depend on the direction of v, (3.9) basically says is that isotropic distributions spread equally in all directions.",
+   "page": "Section 3.2.3, Definition 3.2.5 (book p. 63); text lines 3555-3566",
+   "latex": "E\\, X X^{T} = I_n",
+   "symbol_and_unit_ledger": {
+    "X": "random vector in R^n",
+    "E XX^T": "second moment (covariance, if centered) matrix",
+    "I_n": "identity matrix",
+    "v": "fixed direction vector"
+   },
+   "assumptions": [
+    "second moments exist",
+    "isotropy is usually paired with zero mean in applications; the definition itself is about the second moment matrix"
+   ],
+   "breakdown_regime": "Real data is anisotropic: some directions carry far more variance. The fix used throughout the book is whitening by Sigma^{-1/2}, which requires a covariance estimate good enough to invert.",
+   "domain": "random vectors / covariance structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Whitening standard for the engine feature space: after covariance normalization every direction carries unit expected energy, so no single stat dimension silently dominates distances, kernels, or similarity scores.",
+    "source_operator": "isotropic_random_vector",
+    "telemetry": "covariance matrices of feature blocks, checked for deviation from identity after whitening"
+   }
+  },
+  {
+   "primitive_id": "subgaussian_random_vector",
+   "name": "Subgaussian random vector: all one-dimensional marginals <X, v> are subgaussian, and ||X||_{psi_2} is the supremum of their norms over unit v",
+   "verbatim_quote": "A random vector X in Rn is called subgaussian if the one-dimensional marginals ⟨X, v⟩ are subgaussian random variables for all v ∈ Rn .",
+   "page": "Section 3.4, Definition 3.4.1 (book p. 73); text lines 3965-3969",
+   "latex": "\\|X\\|_{\\psi_2} = \\sup_{v \\in S^{n-1}} \\|\\langle X, v\\rangle\\|_{\\psi_2}",
+   "symbol_and_unit_ledger": {
+    "X": "random vector in R^n",
+    "<X, v>": "one-dimensional marginal in direction v",
+    "S^{n-1}": "unit sphere",
+    "||.||_{psi_2}": "scalar subgaussian norm"
+   },
+   "assumptions": [
+    "the supremum over directions must be finite",
+    "for independent subgaussian coordinates the vector norm is comparable to the largest coordinate norm (Lemma 3.4.2)"
+   ],
+   "breakdown_regime": "Checking every direction is impossible empirically; in practice it is certified for structured families (independent coordinates, uniform on the sphere, log-concave with bounded psi_2) and can fail for adversarial dependence.",
+   "domain": "random vectors / distribution classes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Reduces a multivariate tail audit to a directional one: the engine certifies a feature distribution by its worst projection, which is exactly the projection an opponent model or a downstream linear readout would see.",
+    "source_operator": "subgaussian_random_vector",
+    "telemetry": "worst-direction tail estimates from projected feature samples"
+   }
+  },
+  {
+   "primitive_id": "grothendieck_inequality",
+   "name": "Grothendieck inequality: a bilinear form bounded by 1 on all sign vectors is bounded by an absolute constant K <= 1.783 on all unit vectors in any Hilbert space, powering semidefinite relaxations",
+   "verbatim_quote": "We start with a probabilistic proof of Grothendieck inequality, a remarkable result which we will use later in the analysis of computationally hard problems.",
+   "page": "Section 3.5 intro (book p. 76); text lines 4113-4117",
+   "latex": "\\sum_{i,j} a_{ij} x_i y_j \\le 1 \\ \\forall\\, x_i, y_j \\in \\{-1, 1\\} \\;\\Longrightarrow\\; \\sum_{i,j} a_{ij} \\langle u_i, v_j \\rangle \\le K",
+   "symbol_and_unit_ledger": {
+    "a_ij": "entries of a real m by n matrix",
+    "x_i, y_j": "signs in {-1, 1}",
+    "u_i, v_j": "unit vectors in a Hilbert space",
+    "K": "Grothendieck constant, at most 1.783"
+   },
+   "assumptions": [
+    "the sign bound holds for all choices of signs",
+    "u_i and v_j are unit vectors; the homogeneous form (Remark 3.5.2) covers general vectors"
+   ],
+   "breakdown_regime": "The constant cannot be improved to 1: discrete sign optimization and its continuous relaxation genuinely differ, which is why max-cut type problems need approximation algorithms (the book gets 0.878 via this route).",
+   "domain": "convex geometry / semidefinite programming",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Licenses a relaxation move the engine uses whenever a discrete assignment problem (which unit is on the field, which scheme is called) is relaxed to continuous vectors: the relaxed optimum is within a universal factor of the true discrete optimum, so relaxation gaps are bounded, not mysterious.",
+    "source_operator": "grothendieck_inequality",
+    "telemetry": "values of discrete scheme assignments versus their continuous relaxations"
+   }
+  },
+  {
+   "primitive_id": "epsilon_nets_covering_numbers",
+   "name": "Epsilon nets and covering numbers: N(K, d, epsilon) is the smallest number of epsilon balls covering K; covering and packing numbers are equivalent up to a factor 2 in radius, and finiteness at all scales is compactness",
+   "verbatim_quote": "A subset N ⊂ K is called an ε-net of K if every point in K is within distance ε of some point of N",
+   "page": "Section 4.2, Definition 4.2.1 (book p. 109); text lines 5813-5816",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "(T, d) is a metric space and K a subset",
+    "covering numbers of the Euclidean sphere satisfy N(S^{n-1}, epsilon) <= (3/epsilon)^n type volume bounds"
+   ],
+   "breakdown_regime": "Covering numbers grow exponentially in dimension for volumetric sets, so single-scale nets are useless in high dimensions unless the set has low complexity (small width, low VC dimension, or sparsity structure); that gap is what chaining later fixes.",
+   "domain": "metric geometry / discretization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The discretization contract for any uniform guarantee in the engine: to certify a bound for every opponent look or scheme in a family, it suffices to certify it on a net and pay log of the net size in the probability budget; the net resolution is chosen from the data budget, not from taste.",
+    "source_operator": "epsilon_nets_covering_numbers",
+    "telemetry": "sizes of discretized scheme and formation families at chosen resolutions"
+   }
+  },
+  {
+   "primitive_id": "operator_norm_subgaussian_matrices",
+   "name": "Operator norm of subgaussian random matrices: ||A|| <= C K (sqrt(m) + sqrt(n) + t) with probability at least 1 - 2e^{-t^2}, proved by an epsilon net argument",
+   "verbatim_quote": "This proof is an example of an ε-net argument. We need to control ⟨Ax, y⟩ for all vectors x and y on the unit sphere.",
+   "page": "Section 4.4, Theorem 4.4.3 proof (book p. 118); text lines 6190-6193",
+   "latex": "\\|A\\| \\le C K \\left(\\sqrt{m} + \\sqrt{n} + t\\right)",
+   "symbol_and_unit_ledger": {
+    "A": "m by n random matrix with independent mean-zero subgaussian entries",
+    "||A||": "operator (spectral) norm",
+    "K": "max psi_2 norm of the entries",
+    "t": "deviation parameter, failure probability 2e^{-t^2}"
+   },
+   "assumptions": [
+    "independent, mean-zero, subgaussian entries",
+    "the net step uses covering of both spheres and a union bound; concentration at fixed x, y is subgaussian Hoeffding"
+   ],
+   "breakdown_regime": "The bound is tight in general (a single row already forces the sqrt(n) scale). Entry dependence or nonzero means shift the spectrum and need separate treatment, as in the stochastic block model analysis of Section 4.5.",
+   "domain": "random matrices",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sizes the worst-case amplification of any learned linear map in the engine (a matchup adjustment matrix, a projection head): output error scales like sqrt(rows) plus sqrt(columns) times the entry tail score, so wide matrices get wider error bars automatically.",
+    "source_operator": "operator_norm_subgaussian_matrices",
+    "telemetry": "singular value estimates of fitted linear adjustment operators"
+   }
+  },
+  {
+   "primitive_id": "two_sided_singular_value_bounds",
+   "name": "Two-sided bound (Bai-Yin type): for a tall matrix with isotropic subgaussian rows, all singular values lie in sqrt(m) plus or minus C K^2 (sqrt(n) + t), so (1/sqrt(m)) A is an approximate isometry",
+   "verbatim_quote": "Let A be an m × n random matrix with independent, mean-zero, subgaussian, isotropic rows Ai .",
+   "page": "Section 4.6, Theorem 4.6.1 (book p. 124); text lines 6483-6487",
+   "latex": "\\sqrt{m} - C K^2 \\left(\\sqrt{n} + t\\right) \\le s_n(A) \\le s_1(A) \\le \\sqrt{m} + C K^2 \\left(\\sqrt{n} + t\\right)",
+   "symbol_and_unit_ledger": {
+    "A": "m by n matrix, m rows",
+    "s_1(A), s_n(A)": "largest and smallest singular values",
+    "K": "max psi_2 norm of the rows",
+    "t": "deviation parameter"
+   },
+   "assumptions": [
+    "rows are independent, isotropic, subgaussian",
+    "the bound is meaningful when m is large relative to n; the equivalent form controls ||(1/m) A^T A - I_n||"
+   ],
+   "breakdown_regime": "When m is comparable to or smaller than n the lower bound goes negative and isometry fails; nearly square random matrices have smallest singular values close to zero and are ill conditioned.",
+   "domain": "random matrices",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tells the engine when a tall stack of observations (many games, fewer features) preserves geometry: distances between team or player profiles survive the measurement map with a computable distortion, and below the aspect ratio threshold the map must be treated as lossy.",
+    "source_operator": "two_sided_singular_value_bounds",
+    "telemetry": "aspect ratios and singular value spreads of observation matrices"
+   }
+  },
+  {
+   "primitive_id": "lipschitz_concentration_on_sphere",
+   "name": "Concentration of Lipschitz functions on the sphere: any Lipschitz f of a uniform point on the sphere is subgaussian with norm O(||f||_Lip), a consequence of isoperimetric inequalities, with no independence anywhere",
+   "verbatim_quote": "In other words, Lipschitz functions don't stretch distances too much. When ∥f ∥Lip ≤ 1, they are contractions since they can only shrink distances.",
+   "page": "Section 5.1.1, Definition 5.1.1 discussion (book p. 142); text lines 7424-7428",
+   "latex": "P\\left\\{|f(X) - E f(X)| \\ge t\\right\\} \\le 2\\exp\\left(-\\frac{c t^2}{\\|f\\|_{\\mathrm{Lip}}^2}\\right)",
+   "symbol_and_unit_ledger": {
+    "f": "Lipschitz function on the sphere of radius sqrt(n)",
+    "||f||_Lip": "Lipschitz norm (best stretching factor)",
+    "X": "uniform random point on the sphere",
+    "t": "deviation threshold"
+   },
+   "assumptions": [
+    "X is uniform on the Euclidean sphere (or Gaussian, cube, ball by the push-forward variants in Section 5.2)",
+    "f has finite Lipschitz norm in the Euclidean metric"
+   ],
+   "breakdown_regime": "Non-Lipschitz readouts (hard thresholds, argmax) are not covered directly; they must be smoothed or handled by a margin argument. The phenomenon is specific to high dimensional isoperimetric measures.",
+   "domain": "concentration of measure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any smooth readout of a high dimensional random state (a rating computed from a full play vector) inherits concentration from geometry alone: the engine can bound the readout fluctuation from its Lipschitz constant without assuming the inputs are independent.",
+    "source_operator": "lipschitz_concentration_on_sphere",
+    "telemetry": "Lipschitz constants of rating readouts with respect to play level inputs"
+   }
+  },
+  {
+   "primitive_id": "johnson_lindenstrauss_lemma",
+   "name": "Johnson-Lindenstrauss lemma: a random projection onto m >= C epsilon^{-2} log N dimensions preserves all pairwise distances among N points within factor 1 plus or minus epsilon",
+   "verbatim_quote": "The proof of Johnson-Lindenstrauss Lemma will be based on concentration of Lipschitz functions on the sphere, which we studied in Section 5.1.",
+   "page": "Section 5.3, after Theorem 5.3.1 (book p. 152); text lines 7843-7846",
+   "latex": "(1 - \\varepsilon)\\|x - y\\|_2 \\le \\|Q x - Q y\\|_2 \\le (1 + \\varepsilon)\\|x - y\\|_2",
+   "symbol_and_unit_ledger": {
+    "Q": "scaled random projection (n/m) P onto a random m-dimensional subspace",
+    "x, y": "points of the N-point set",
+    "epsilon": "distortion tolerance",
+    "m": "target dimension, at least C epsilon^{-2} log N"
+   },
+   "assumptions": [
+    "the set has N points; the bound is uniform over all pairs by a union bound",
+    "projection is onto a uniformly random subspace, or a subgaussian random matrix in the Section 9.2 version"
+   ],
+   "breakdown_regime": "The log N dependence is optimal: worst case point sets cannot be embedded into fewer dimensions with small distortion. The guarantee is for a fixed finite set, not for all vectors in the ambient space.",
+   "domain": "dimension reduction / metric geometry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Justifies the engine compressing large play or player embedding tables into small sketches for similarity search: pairwise geometry of the stored set survives with a dimension that depends only on log of the set size and the tolerated distortion.",
+    "source_operator": "johnson_lindenstrauss_lemma",
+    "telemetry": "embedding table sizes and distortion checks after random projection"
+   }
+  },
+  {
+   "primitive_id": "matrix_bernstein_inequality",
+   "name": "Matrix Bernstein inequality: sums of independent mean-zero random matrices concentrate in operator norm with the scalar Bernstein two-regime tail, with variance parameter sigma^2 = ||sum E X_i^2|| and a dimension prefactor",
+   "verbatim_quote": "We will make a matrix version of Bernstein inequality (Theorem 2.9.5) by replacing random variables Xi by random matrices and absolute value |·| by the operator norm ∥·∥.",
+   "page": "Section 5.4 intro (book p. 153); text lines 7938-7945",
+   "latex": "P\\left\\{\\left\\|\\sum_{i=1}^{N} X_i\\right\\| \\ge t\\right\\} \\le 2n \\exp\\left(-\\frac{t^2/2}{\\sigma^2 + K t/3}\\right)",
+   "symbol_and_unit_ledger": {
+    "X_i": "independent mean-zero symmetric n by n random matrices",
+    "||.||": "operator norm",
+    "sigma^2": "operator norm of the matrix variance sum E X_i^2",
+    "K": "almost sure bound on ||X_i||",
+    "t": "deviation threshold"
+   },
+   "assumptions": [
+    "independence across summands, but no independence needed within each matrix",
+    "each ||X_i|| <= K almost surely",
+    "symmetric matrices as stated; rectangular case follows by dilation"
+   ],
+   "breakdown_regime": "The prefactor 2n is the price of the trace method; for sums dominated by a few large terms the bound is loose, and unbounded summands need truncation or the subexponential matrix variants.",
+   "domain": "random matrices / matrix concentration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine error bound for accumulated matrix valued evidence (sum of per-game matchup matrices): total deviation is governed by the accumulated matrix variance, not by the number of summands, so long stretches of games tighten rather than loosen the estimate.",
+    "source_operator": "matrix_bernstein_inequality",
+    "telemetry": "per-game matrix contributions and their accumulated second moments"
+   }
+  },
+  {
+   "primitive_id": "covariance_estimation_effective_rank",
+   "name": "Covariance estimation for general distributions: the sample covariance concentrates with sample complexity governed by the effective rank r(Sigma) = tr(Sigma)/||Sigma||, costing only a log factor over the subgaussian case",
+   "verbatim_quote": "Since r ≤ n (why?), this sample size is at least as small as (5.26). It is even much smaller for approximately low-dimensional distributions that concentrate near lower-dimensional subspaces.",
+   "page": "Section 5.6, Remark 5.6.3 (book p. 164); text lines 8440-8450",
+   "latex": "E\\|\\hat{\\Sigma}_m - \\Sigma\\| \\le C\\left(\\sqrt{\\frac{K^2 r \\log n}{m}} + \\frac{K^2 r \\log n}{m}\\right)\\|\\Sigma\\|",
+   "symbol_and_unit_ledger": {
+    "Sigma hat_m": "sample covariance from m samples",
+    "Sigma": "true covariance matrix",
+    "r": "effective rank tr(Sigma)/||Sigma||",
+    "K": "norm bound parameter from assumption (5.21)",
+    "n": "ambient dimension",
+    "m": "sample size"
+   },
+   "assumptions": [
+    "boundedness in the form ||X||_2 <= K (E||X||_2^2)^{1/2} almost surely",
+    "independent samples; the proof is matrix Bernstein applied to X_i X_i^T - Sigma"
+   ],
+   "breakdown_regime": "Truly heavy tailed data violates the boundedness assumption and needs truncation or median-of-means style covariance estimators; effective rank near n removes the savings.",
+   "domain": "statistics: covariance estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sets the data budget for every covariance style adjustment in the engine (play caller tendencies, defensive scheme correlations): the required games scale with the effective rank of the behavior, so a team that effectively runs a low dimensional scheme needs far less history to model than its nominal playbook size suggests.",
+    "source_operator": "covariance_estimation_effective_rank",
+    "telemetry": "effective ranks of estimated scheme and tendency covariance matrices"
+   }
+  },
+  {
+   "primitive_id": "decoupling_inequality",
+   "name": "Decoupling: for a diagonal-free matrix A and convex F, E F(X^T A X) <= E F(4 X^T A X') with X' an independent copy, replacing a quadratic chaos by a bilinear form in independent vectors",
+   "verbatim_quote": "The benefit is that sums run over disjoint sets for i and j, so we can swap Xj with an independent copy Xj′ without changing the distribution.",
+   "page": "Section 6.1, proof idea for Theorem 6.1.1 (book p. 173); text lines 9003-9006",
+   "latex": "E\\, F(X^{T} A X) \\le E\\, F(4 X^{T} A X')",
+   "symbol_and_unit_ledger": {
+    "A": "n by n diagonal-free matrix",
+    "X": "random vector with independent mean-zero coordinates",
+    "X'": "independent copy of X",
+    "F": "convex function"
+   },
+   "assumptions": [
+    "A has zero diagonal (the diagonal part is a separate, easier sum)",
+    "coordinates of X are independent with zero mean"
+   ],
+   "breakdown_regime": "The constant 4 and the diagonal exclusion are intrinsic to the argument; dependent coordinates break the random subset swap at the heart of the proof.",
+   "domain": "probability: quadratic forms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Lets the engine analyze interaction terms (scheme against scheme, where the same unit appears on both sides) by splitting them into two independent copies, turning a self-interaction audit into a cross-interaction audit that standard concentration handles.",
+    "source_operator": "decoupling_inequality",
+    "telemetry": "interaction matrices between units with the diagonal removed"
+   }
+  },
+  {
+   "primitive_id": "hanson_wright_inequality",
+   "name": "Hanson-Wright inequality: quadratic forms X^T A X in independent subgaussian coordinates concentrate around their mean with a Bernstein-type tail set by ||A||_F and ||A||",
+   "verbatim_quote": "Let A be an n × n matrix. Let X = (X1 , . . . , Xn ) ∈ Rn be a random vector with independent, mean-zero, subgaussian coordinates.",
+   "page": "Section 6.2, Theorem 6.2.2 (book p. 176); text lines 9142-9146",
+   "latex": "P\\left\\{|X^{T} A X - E X^{T} A X| \\ge t\\right\\} \\le 2\\exp\\left(-c \\min\\left\\{\\frac{t^2}{K^4 \\|A\\|_F^2}, \\frac{t}{K^2 \\|A\\|}\\right\\}\\right)",
+   "symbol_and_unit_ledger": {
+    "A": "fixed n by n matrix",
+    "X": "vector with independent mean-zero subgaussian coordinates",
+    "||A||_F": "Frobenius norm",
+    "||A||": "operator norm",
+    "K": "max psi_2 norm of the coordinates",
+    "t": "deviation threshold"
+   },
+   "assumptions": [
+    "independent, mean-zero, subgaussian coordinates",
+    "proof combines decoupling, Gaussian replacement, and the Gaussian quadratic form MGF"
+   ],
+   "breakdown_regime": "Correlated coordinates require whitening first; if A is dominated by a few huge entries the operator norm regime takes over early and the bound is driven by a single coordinate pair.",
+   "domain": "probability: quadratic forms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Error kernel for every quadratic readout in the engine (similarity scores, energy of a game state under a learned metric, interaction totals): fluctuation is priced by the Frobenius mass for typical deviations and by the largest interaction for extreme ones.",
+    "source_operator": "hanson_wright_inequality",
+    "telemetry": "Frobenius and operator norms of interaction matrices used in readouts"
+   }
+  },
+  {
+   "primitive_id": "symmetrization_lemma",
+   "name": "Symmetrization: for independent mean-zero variables, E||sum X_i|| is within a factor 2 of E||sum epsilon_i X_i||, so arbitrary sums can be replaced by Rademacher symmetrized sums (and contraction then removes Lipschitz factors)",
+   "verbatim_quote": "This lemma lets us replace any random variables Xi by symmetric ones εi Xi .",
+   "page": "Section 6.3, after Lemma 6.3.2 (book p. 180); text line 9342",
+   "latex": "\\frac{1}{2}\\, E\\left\\|\\sum_{i=1}^{N} \\varepsilon_i X_i\\right\\| \\le E\\left\\|\\sum_{i=1}^{N} X_i\\right\\| \\le 2\\, E\\left\\|\\sum_{i=1}^{N} \\varepsilon_i X_i\\right\\|",
+   "symbol_and_unit_ledger": {
+    "X_i": "independent mean-zero random vectors in a normed space",
+    "epsilon_i": "independent Rademacher signs",
+    "||.||": "norm of the ambient space"
+   },
+   "assumptions": [
+    "independence and zero means",
+    "an independent copy of the sample exists for the ghost sample argument"
+   ],
+   "breakdown_regime": "Centered variables only: a nonzero mean must be removed first or the symmetrized sum understates the drift. The factor 2 loss is intrinsic to this route.",
+   "domain": "empirical processes / probability in Banach spaces",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine standard trick for bounding the expected worst case error of a fitted model class: replace the unknown noise by sign-flipped copies of the observed residuals, which can be simulated, and read off the complexity of the class from the symmetrized process.",
+    "source_operator": "symmetrization_lemma",
+    "telemetry": "sign-flip simulations over stored residual sets for model classes"
+   }
+  },
+  {
+   "primitive_id": "sudakov_fernique_inequality",
+   "name": "Sudakov-Fernique comparison: if a Gaussian process has smaller increments than another everywhere, its expected supremum is smaller; Slepian and Gordon extend the same comparison idea to tail probabilities and to min-max problems",
+   "verbatim_quote": "Let (Xt )t∈T and (Yt )t∈T be two mean-zero Gaussian processes.",
+   "page": "Section 7.2, Theorem 7.2.8 (book p. 204); text lines 10604-10607",
+   "latex": "E(X_t - X_s)^2 \\le E(Y_t - Y_s)^2 \\ \\forall\\, t, s \\;\\Longrightarrow\\; E \\sup_{t \\in T} X_t \\le E \\sup_{t \\in T} Y_t",
+   "symbol_and_unit_ledger": {
+    "X_t, Y_t": "mean-zero Gaussian processes on the same index set T",
+    "E(X_t - X_s)^2": "squared increment (canonical metric squared)",
+    "sup": "expected supremum over T"
+   },
+   "assumptions": [
+    "both processes are Gaussian and mean zero",
+    "increment domination holds for all pairs t, s"
+   ],
+   "breakdown_regime": "Gaussian only: the interpolation proof uses Gaussian integration by parts. Subgaussian processes are handled later by Talagrand comparison (Corollary 8.5.6), at the price of an absolute constant factor. Its min-max extension, Gordon inequality (Theorem 7.2.9), handles inf-sup problems such as smallest singular values under a reversed cross-increment condition, and is equally Gaussian specific.",
+   "domain": "Gaussian processes / comparison",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Comparison principle for the engine: to bound the expected best case score of a complicated candidate set, it suffices to dominate its pairwise increment structure by a simpler reference process whose supremum is known; complexity comparisons become geometry comparisons.",
+    "source_operator": "sudakov_fernique_inequality",
+    "telemetry": "pairwise increment (co-movement) matrices of candidate signal families"
+   }
+  },
+  {
+   "primitive_id": "sudakov_inequality",
+   "name": "Sudakov inequality: the expected supremum of a Gaussian process is at least c epsilon sqrt(log N(T, d, epsilon)) for every scale epsilon, a one-scale lower bound from packing",
+   "verbatim_quote": "Let N be a maximal ε-separated subset of T . Then N is an ε-net of T (recall Lemma 4.2.6), and thus |N | ≥ N.",
+   "page": "Section 7.4, proof of Theorem 7.4.1 (book p. 207); text lines 10790-10794",
+   "latex": "E \\sup_{t \\in T} X_t \\ge c\\, \\varepsilon \\sqrt{\\log N(T, d, \\varepsilon)}",
+   "symbol_and_unit_ledger": {
+    "X_t": "mean-zero Gaussian process",
+    "N(T, d, epsilon)": "covering number at scale epsilon in the canonical metric d",
+    "epsilon": "scale",
+    "c": "absolute constant"
+   },
+   "assumptions": [
+    "Gaussian process with its canonical metric",
+    "the separated subset is maximal, hence also a net"
+   ],
+   "breakdown_regime": "Only a lower bound and only one scale at a time: a set can have large packing at one scale yet small supremum if the scales do not align; closing this gap is exactly what generic chaining does.",
+   "domain": "Gaussian processes / metric entropy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A floor test for model class complexity in the engine: if a candidate family packs many well separated members at some resolution, any fitting procedure must expect worst case error at least the Sudakov floor, so the family is rejected or regularized before fitting.",
+    "source_operator": "sudakov_inequality",
+    "telemetry": "packing counts of candidate model families at multiple resolutions"
+   }
+  },
+  {
+   "primitive_id": "gaussian_width",
+   "name": "Gaussian width: w(T) = E sup_{x in T} <g, x> with g standard normal, the fundamental geometric size of a set for random linear measurements, invariant under convex hulls and orthogonal maps",
+   "verbatim_quote": "You can think of Gaussian width as a fundamental geometric measure of a set T ⊂ Rn , like volume or surface area.",
+   "page": "Section 7.5, Definition 7.5.1 (book p. 209); text lines 10869-10874",
+   "latex": "w(T) := E \\sup_{x \\in T} \\langle g, x \\rangle, \\quad g \\sim N(0, I_n)",
+   "symbol_and_unit_ledger": {
+    "w(T)": "Gaussian width of T (units of length)",
+    "g": "standard normal vector in R^n",
+    "<g, x>": "random linear measurement of x",
+    "T": "bounded subset of R^n"
+   },
+   "assumptions": [
+    "T is bounded, otherwise w(T) is infinite",
+    "key values: w of the Euclidean ball is about sqrt(n), w of the l1 ball is about sqrt(log n), w of a finite set is at most diam times sqrt(2 log |T|)"
+   ],
+   "breakdown_regime": "Width ignores orientation relative to a specific measurement ensemble; for non-Gaussian or structured measurements the Gaussian complexity gamma(T) or direct deviation bounds are the safer currency.",
+   "domain": "convex geometry / Gaussian processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "One-number complexity price for any structured set the engine reasons over (sparse play combinations, low rank tendency patterns): the width predicts how many random observations are needed before that structure becomes identifiable, which is the budget check run before a new signal family is admitted.",
+    "source_operator": "gaussian_width",
+    "telemetry": "Monte Carlo width estimates of structured signal families"
+   }
+  },
+  {
+   "primitive_id": "dudley_inequality",
+   "name": "Dudley inequality: the expected supremum of a process with subgaussian increments is at most C K times the entropy integral of sqrt(log N(T, d, epsilon)) over all scales",
+   "verbatim_quote": "The Dudley inequality hints that E supt∈T Xt is a multiscale quantity - to bound it, we need to look at T across all scales ε.",
+   "page": "Section 8.1, after Theorem 8.1.3 (book p. 223); text lines 11583-11586",
+   "latex": "E \\sup_{t \\in T} X_t \\le C K \\int_{0}^{\\infty} \\sqrt{\\log N(T, d, \\varepsilon)}\\, d\\varepsilon",
+   "symbol_and_unit_ledger": {
+    "X_t": "mean-zero process with subgaussian increments",
+    "K": "increment constant from ||X_t - X_s||_{psi_2} <= K d(t, s)",
+    "N(T, d, epsilon)": "covering number at scale epsilon",
+    "integral": "sum over all resolution scales"
+   },
+   "assumptions": [
+    "subgaussian increments with respect to the metric d",
+    "the entropy integral converges; chaining proof uses dyadic scales epsilon = 2^{-k}"
+   ],
+   "breakdown_regime": "Can overestimate the supremum by a logarithmic factor (the book gives an example): entropy alone cannot see how the scales interact, which is the defect generic chaining repairs.",
+   "domain": "random processes / chaining",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Multiscale error budget for uniform bounds in the engine: the cost of certifying a bound over a whole family is the sum over resolutions of the entropy at that resolution, so coarse structure is cheap and fine structure is paid for explicitly.",
+    "source_operator": "dudley_inequality",
+    "telemetry": "covering number profiles of model families across resolutions"
+   }
+  },
+  {
+   "primitive_id": "vc_dimension",
+   "name": "VC dimension: the largest cardinality of a set shattered by a Boolean function class; it controls covering numbers uniformly over all measures, N(F, L2(mu), epsilon) <= (2/epsilon)^{C vc(F)}, and the generalization gap of empirical risk minimization",
+   "verbatim_quote": "The VC dimension of F, denoted vc(F), is the largest cardinality of a subset Λ ⊆ Ω that is shattered.",
+   "page": "Section 8.3.1, Definition 8.3.1 (book p. 232); text lines 11996-12000",
+   "latex": "N(\\mathcal{F}, L_2(\\mu), \\varepsilon) \\le \\left(\\frac{2}{\\varepsilon}\\right)^{C d}, \\quad d = \\mathrm{vc}(\\mathcal{F})",
+   "symbol_and_unit_ledger": {
+    "vc(F)": "VC dimension of the class F",
+    "N(F, L2(mu), epsilon)": "covering number in the L2(mu) metric, for any probability measure mu",
+    "Lambda, Omega": "candidate shattered set and the domain",
+    "C": "absolute constant"
+   },
+   "assumptions": [
+    "F is a class of Boolean (0-1 valued) functions",
+    "finite VC dimension; Sauer-Shelah bounds the number of distinct labelings by (en/d)^d"
+   ],
+   "breakdown_regime": "Infinite VC dimension means no distribution free generalization guarantee at any sample size. VC is a worst case combinatorial measure and can be pessimistic for classes with margin or structure, where width based bounds do better.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Admission control for any rule family the engine might fit (threshold rules on signals, play classification rules): if the family can shatter large sets, no amount of historical fit certifies it, and the covering bound converts its VC count directly into the sample size a certification would need.",
+    "source_operator": "vc_dimension",
+    "telemetry": "shattering tests and labeling counts for candidate rule families"
+   }
+  },
+  {
+   "primitive_id": "generic_chaining_gamma2",
+   "name": "Generic chaining and the gamma_2 functional: replacing Dudley per-scale nets by an admissible sequence optimized jointly gives E sup X_t <= C K gamma_2(T, d), and Talagrand majorizing measure theorem shows this is sharp for Gaussian processes up to absolute constants",
+   "verbatim_quote": "Since the supremum in the γ2 functional is outside the sum, it is smaller than the Dudley sum in (8.44). That might seem like a small change, but it can make a real difference in some cases",
+   "page": "Section 8.5.2, after Definition 8.5.1 (book p. 247); text lines 12671-12676",
+   "latex": "\\gamma_2(T, d) = \\inf_{(T_k)} \\sup_{t \\in T} \\sum_{k=0}^{\\infty} 2^{k/2} d(t, T_k)",
+   "symbol_and_unit_ledger": {
+    "gamma_2(T, d)": "Talagrand gamma_2 functional of the metric space",
+    "(T_k)": "admissible sequence, |T_0| = 1 and |T_k| <= 2^{2^k}",
+    "d(t, T_k)": "distance from t to the k-th approximating set",
+    "2^{k/2}": "scale weight at level k"
+   },
+   "assumptions": [
+    "admissible sequences satisfy the cardinality growth condition (8.43)",
+    "upper bound holds for all processes with subgaussian increments; the matching lower bound is for Gaussian processes"
+   ],
+   "breakdown_regime": "Gamma_2 is usually harder to compute than covering numbers, so in practice it is bounded through width or entropy; its sharpness is a Gaussian statement, and subgaussian processes inherit only the upper bound direction.",
+   "domain": "random processes / generic chaining",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The exact price of a supremum: when the engine needs the true cost of searching over a family (best scheme, best threshold, best matchup adjustment), gamma_2 is the functional that neither overpays like Dudley nor underpays like a one-scale bound, and the majorizing measure theorem certifies that no better universal price exists.",
+    "source_operator": "generic_chaining_gamma2",
+    "telemetry": "multiscale approximation trees built over candidate families"
+   }
+  },
+  {
+   "primitive_id": "chevet_inequality",
+   "name": "Chevet inequality: for a subgaussian random matrix A, E sup_{x in T, y in S} <Ax, y> <= C K [w(T) rad(S) + w(S) rad(T)], a uniform bilinear bound priced entirely by widths and radii",
+   "verbatim_quote": "Let A be an m × n random matrix with independent, mean-zero, subgaussian rows Ai . Let T ⊂ Rn and S ⊂ Rm be arbitrary bounded sets.",
+   "page": "Section 8.6, Theorem 8.6.1 (book p. 250); text lines 12860-12866",
+   "latex": "E \\sup_{x \\in T,\\, y \\in S} \\langle A x, y \\rangle \\le C K \\left[w(T)\\, \\mathrm{rad}(S) + w(S)\\, \\mathrm{rad}(T)\\right]",
+   "symbol_and_unit_ledger": {
+    "A": "m by n matrix with independent mean-zero subgaussian rows",
+    "T, S": "arbitrary bounded sets",
+    "w(.)": "Gaussian width",
+    "rad(.)": "Euclidean radius sup ||x||_2",
+    "K": "max psi_2 norm of the rows"
+   },
+   "assumptions": [
+    "rows independent, mean zero, subgaussian; the same holds with columns in place of rows",
+    "proved by Talagrand comparison against a decoupled Gaussian process"
+   ],
+   "breakdown_regime": "Expectation bound as stated; the two-sided version in Section 9.7 is what feeds Dvoretzky-Milman. Heavy tailed rows break the subgaussian increment check at the start of the proof.",
+   "domain": "random matrices / bilinear forms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Uniform bound on any bilinear matchup score the engine computes between two structured families (offensive concepts against defensive concepts): the worst pairing is priced by the widths of the two families, so an unexpectedly extreme matchup score signals model error rather than a real edge when it exceeds the Chevet price.",
+    "source_operator": "chevet_inequality",
+    "telemetry": "width and radius estimates of the two families entering a bilinear score"
+   }
+  },
+  {
+   "primitive_id": "matrix_deviation_inequality",
+   "name": "Matrix deviation inequality: a random matrix with isotropic subgaussian rows distorts lengths uniformly over a set T by at most C K^2 gamma(T) beyond the sqrt(m) scaling",
+   "verbatim_quote": "It turns out that the maximal error is about γ(T ), the Gaussian complexity of T - a close cousin of Gaussian width from Section 7.5.3",
+   "page": "Section 9.1 intro (book p. 262); text lines 13500-13506",
+   "latex": "E \\sup_{x \\in T} \\left|\\|A x\\|_2 - \\sqrt{m}\\, \\|x\\|_2\\right| \\le C K^2 \\gamma(T)",
+   "symbol_and_unit_ledger": {
+    "A": "m by n matrix with independent isotropic subgaussian rows",
+    "gamma(T)": "Gaussian complexity E sup_{x in T} |<g, x>|",
+    "K": "max psi_2 norm of the rows",
+    "m": "number of rows (measurements)"
+   },
+   "assumptions": [
+    "rows independent, isotropic, subgaussian",
+    "derived from Talagrand comparison after checking the process ||Ax||_2 - sqrt(m)||x||_2 has subgaussian increments (Theorem 9.1.2)"
+   ],
+   "breakdown_regime": "Anisotropy must be removed by whitening with the true covariance; using an estimated covariance reintroduces the covariance estimation error of Section 9.2 on top of the deviation term.",
+   "domain": "random matrices / uniform bounds",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The master uniform check for the engine sensing layer: a measurement process (a slate of games, a tracking feed) is certified to read all states in a structured family with distortion priced by the family complexity, not by the ambient feature count.",
+    "source_operator": "matrix_deviation_inequality",
+    "telemetry": "distortion audits of measurement maps over structured state families"
+   }
+  },
+  {
+   "primitive_id": "m_star_bound_and_escape_theorem",
+   "name": "M star bound and escape theorem: the kernel of a random matrix cuts a set T in a slice of diameter at most C K^2 w(T)/sqrt(m), and misses T entirely once m >= C K^4 w(T)^2; together they price what random measurements cannot see",
+   "verbatim_quote": "Let T ⊂ Rn be a bounded set, and let A be an m × n random matrix with independent, isotropic and subgaussian rows Ai .",
+   "page": "Section 9.3, Theorem 9.3.1 (book p. 271); text lines 13922-13926",
+   "latex": "E\\, \\mathrm{diam}(T \\cap E) \\le \\frac{C K^2 w(T)}{\\sqrt{m}}, \\quad E = \\ker A",
+   "symbol_and_unit_ledger": {
+    "T": "bounded set",
+    "E = ker A": "random subspace of codimension at most m",
+    "diam": "Euclidean diameter",
+    "w(T)": "Gaussian width",
+    "K": "max psi_2 norm of the rows"
+   },
+   "assumptions": [
+    "A has independent, isotropic, subgaussian rows",
+    "escape theorem additionally needs T on the unit sphere and m at least C K^4 w(T)^2"
+   ],
+   "breakdown_regime": "If w(T) is comparable to sqrt(m) the slice bound is vacuous; sets that are too wide genuinely intersect random kernels, which is the geometric reason some structures are unidentifiable from few measurements.",
+   "domain": "convex geometry / compressed sensing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Identifiability audit for the engine: given a measurement budget m and a structured hypothesis family of width w, the M star bound states the residual ambiguity diameter after the data is collected, and the escape threshold states when the data can rule the family out entirely.",
+    "source_operator": "m_star_bound_and_escape_theorem",
+    "telemetry": "width estimates of hypothesis families versus measurement counts"
+   }
+  },
+  {
+   "primitive_id": "restricted_isometry_exact_recovery",
+   "name": "Restricted isometry property: if A acts as an approximate isometry on all s-sparse vectors and on (1+lambda)s-sparse vectors with lambda > (beta/alpha)^2, then l1 minimization exactly recovers every s-sparse signal from y = Ax",
+   "verbatim_quote": "Let's find a deterministic condition that ensures a matrix A works for sparse recovery, and prove that random matrices satisfy this condition. It is called the restricted isometry property (RIP):",
+   "page": "Section 9.5.2 intro (book p. 282); text lines 14422-14426",
+   "latex": "\\alpha \\|v\\|_2 \\le \\|A v\\|_2 \\le \\beta \\|v\\|_2 \\quad \\text{for all } s\\text{-sparse } v",
+   "symbol_and_unit_ledger": {
+    "A": "m by n measurement matrix",
+    "alpha, beta": "restricted isometry constants",
+    "s": "sparsity level (number of nonzero entries)",
+    "v": "s-sparse vector"
+   },
+   "assumptions": [
+    "RIP holds at sparsity (1 + lambda) s with lambda > (beta/alpha)^2",
+    "recovery is by the l1 minimization program (9.27); random subgaussian matrices satisfy RIP once m is of order s log(n/s), via the deviation inequality"
+   ],
+   "breakdown_regime": "RIP is sufficient, not necessary, and is NP hard to certify for a given matrix in the worst case; coherent or structured measurement matrices can fail it at sparsity levels where random ones succeed.",
+   "domain": "compressed sensing / sparse recovery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Design rule for sparse signal recovery in the engine (a play outcome explained by few active factors): recovery is trustworthy exactly when the sensing process is near isometric on sparse factor combinations, which converts a modeling hope into a checkable geometric condition on the data layout.",
+    "source_operator": "restricted_isometry_exact_recovery",
+    "telemetry": "restricted singular values over sparse factor subsets of the design"
+   }
+  },
+  {
+   "primitive_id": "dvoretzky_milman_theorem",
+   "name": "Dvoretzky-Milman theorem: a Gaussian random image A T of any bounded set is almost a Euclidean ball, trapped between balls of radii w(T) plus or minus C sqrt(m) rad(T) after convexification",
+   "verbatim_quote": "Let A be an m × n Gaussian random matrix with i.i.d. N (0, 1) entries, and T ⊂ Rn be a bounded set.",
+   "page": "Section 9.7.2, Theorem 9.7.2 (book p. 289); text lines 14707-14710",
+   "latex": "r_{-} B_2^m \\subset \\mathrm{conv}(A T) \\subset r_{+} B_2^m, \\quad r_{\\pm} = w(T) \\pm C \\sqrt{m}\\, \\mathrm{rad}(T)",
+   "symbol_and_unit_ledger": {
+    "A": "m by n Gaussian matrix",
+    "T": "bounded set in R^n",
+    "conv(AT)": "convex hull of the random image",
+    "r_-, r_+": "inner and outer radii",
+    "w(T), rad(T)": "Gaussian width and radius of T",
+    "B_2^m": "unit Euclidean ball in R^m"
+   },
+   "assumptions": [
+    "Gaussian entries for this sharp form; the proof runs through the two-sided Chevet inequality",
+    "the left inclusion needs r_- nonnegative, that is w(T) dominating sqrt(m) rad(T)"
+   ],
+   "breakdown_regime": "When rad(T) is large relative to w(T)/sqrt(m) the sandwich is loose and the image is genuinely non-Euclidean; the statement is about convex hulls, so nonconvex structure of AT itself is not described.",
+   "domain": "convex geometry / random projections",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Explains why randomly mixed feature spaces in the engine look deceptively spherical: after enough random mixing, a structured set convexifies toward a ball whose radius is its width, so downstream methods that assume isotropy work better on mixed features than on raw ones, and the theorem prices the residual anisotropy.",
+    "source_operator": "dvoretzky_milman_theorem",
+    "telemetry": "width to radius ratios of feature families before and after random mixing"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "d1c6afdd76d3df4e-t1",
+   "think": "This book is a complete operating system for reasoning about random vectors and matrices whose dimension is comparable to, or larger than, the amount of data available. Its central claim is that high dimension is not a curse to be feared but a structure to be exploited: in high dimensions random objects concentrate, almost orthogonal directions abound, and worst case behavior over huge sets can be controlled by a few geometric functionals. The appetizer makes the point immediately with the probabilistic method: Maurey empirical argument shows that convex combinations can be replaced by short equal weight averages with dimension free error, because sampling from the convex weights and computing a variance is easier than any deterministic construction. That pattern, replace a hard deterministic question by a random construction plus a concentration bound, recurs on almost every page.\n\nThe architecture is cumulative. Chapter 2 builds the scalar theory. The exponential moment method turns moment generating function control into exponential tail bounds, and the subgaussian and subexponential classes organize distributions by how their tails, moments, and generating functions grow, with the psi_2 and psi_1 norms as the working scale parameters. Hoeffding, Chernoff, and Bernstein are then not isolated facts but corollaries of one method applied at different tail scales, with Bernstein honestly splitting into a Gaussian regime for moderate deviations and an exponential regime for large ones. The median of means estimator shows the same chapter has a robustness agenda: Gaussian quality inference does not require Gaussian data, only finite variance, if the estimator is redesigned. Chapter 3 lifts the theory to vectors: the norm concentrates on a thin shell, isotropy normalizes directions, covariance and PCA are framed through quadratic forms, and subgaussian vectors are defined entirely through one dimensional projections, a reduction that recurs throughout the book. Grothendieck inequality then demonstrates that a purely deterministic statement about bilinear forms has a probabilistic proof and a semidefinite programming payoff.\n\nChapters 4 and 5 turn to matrices. The epsilon net argument is the workhorse: discretize the sphere, concentrate at each net point, and pay for the discretization with a union bound over the net. That single pattern yields operator norm bounds, two sided singular value bounds of Bai Yin type, and the identification of random tall matrices as approximate isometries. Chapter 5 removes entry independence as a crutch in two directions: Lipschitz functions of a uniform point on the sphere concentrate because of isoperimetry, giving the Johnson Lindenstrauss lemma as a corollary, and the matrix Bernstein inequality lifts the scalar two regime tail to sums of random matrices, which in turn gives covariance estimation whose sample complexity is governed by effective rank rather than ambient dimension. Chapter 6 handles dependence inside quadratic forms through decoupling, Gaussian replacement, symmetrization, and contraction, culminating in the Hanson Wright inequality, the correct Bernstein analogue for chaoses.\n\nChapters 7 and 8 study suprema of processes, the question of how large a random function can get over a whole index set. Comparison inequalities by Slepian, Sudakov Fernique, and Gordon say that a Gaussian process is controlled by the geometry of its increments; Sudakov gives a lower bound from packing at one scale; Dudley gives an upper bound by integrating entropy over all scales; and Talagrand generic chaining closes the gap, since the gamma_2 functional is, up to absolute constants, exactly the expected supremum of a Gaussian process by the majorizing measure theorem. Gaussian width becomes the book universal currency, a single number pricing how large a set is for random linear measurements, and VC theory provides the combinatorial parallel for Boolean classes.\n\nChapter 9 cashes all of this in. The matrix deviation inequality says a random matrix acts almost isometrically on a set, with error proportional to the set Gaussian complexity; the M star bound and the escape theorem translate that into what a random subspace can and cannot see; constrained recovery, the restricted isometry property, and the Dvoretzky Milman theorem then show that convex programs recover structured signals from few measurements and that random images of arbitrary sets are nearly Euclidean balls. For a reasoning engine the transferable discipline is uniformity: never trust a pointwise bound where a uniform bound is needed, always price a hypothesis class by a geometric complexity functional before looking at data, treat effective dimension rather than nominal dimension as the real degrees of freedom, and expect two regime behavior, Gaussian near the center and heavier tailed far out, whenever many weak signals are aggregated. The limits are equally instructive: constants are absolute but unspecified, isotropy and subgaussianity are modeling choices that must be verified against real data, and several sharp statements are Gaussian only, with subgaussian versions losing factors that matter at finite sample sizes.\n\nThe applications are not decoration; they are the stress tests that chose the theory. Error correcting codes come from packing numbers of the Hamming cube, spectral clustering of the stochastic block model comes from matrix Bernstein combined with Davis Kahan perturbation, matrix completion comes from decoupling and the norm bound for matrices with non independent entries, and the statistical learning material closes the loop by deriving generalization guarantees for empirical risk minimization from the same chaining machinery, with VC dimension entering through covering numbers. Three proof techniques do most of the work and deserve to be named as transferable tools: discretization by nets, comparison against a Gaussian process, and interpolation between two distributions. A reader who internalizes those three moves can reconstruct most of the results in the book and, more importantly, adapt them to new random structures. The exercises and chapter notes are part of the theory as well: they carry extensions, counterexamples, and attributions, and several headline tools, from the small ball method to Lasso guarantees, live there rather than in the main text.",
+   "retrocausal_genealogy": "The lineage is a century of probability reorganized around dimension. Bernstein created the exponential moment method in the early twentieth century, and Chernoff and Hoeffding turned it into the standard tail inequalities in the 1950s and 1960s. Grothendieck proved his inequality in 1953 in functional analysis, decades before its semidefinite programming meaning was visible. Sudakov in 1971 and Fernique in the 1970s founded the theory of Gaussian process suprema, Dudley supplied the entropy integral, and Talagrand, across the 1990s and 2000s, proved that generic chaining and majorizing measures close the problem. Dvoretzky theorem dates to 1961, with Milman 1971 proof via concentration of measure opening the asymptotic geometric analysis era. Johnson and Lindenstrauss published their lemma in 1984; the compressed sensing wave of 2006, built on Candès, Tao, and Donoho, made restricted isometry a household tool; Tropp and others then systematized matrix concentration. Vershynin book, first edition 2018 and this second edition 2026, is the synthesis that teaches these strands as one subject, and its notes carefully return each result to its source.",
+   "theory_of_mind": "The author models the reader as a working data scientist who already knows classical probability and has felt its inadequacy: fixed dimension asymptotics say little when the number of variables rivals the number of observations. His answer is a non-asymptotic, finite sample theory in which every statement carries its dimension and sample size explicitly. He believes geometry is the right language for randomness at scale, so sets, widths, nets, and spectra appear before any statistical model does. Pedagogically he front loads intuition: an appetizer before definitions, heuristics before proofs, exercises graded by coffee cups, and constants deliberately suppressed into absolute C and c so the structural picture stays visible. The preface states the prerequisites plainly: masters level probability and strong linear algebra, with measure theory explicitly not required, because the intended reader wants tools that can be used, not a second foundations course.",
+   "cross_layer_veto": "Several results in this book veto conclusions that other layers of a reasoning stack might want to draw. Concentration vetoes naive extrapolation: a bound proved for one fixed vector fails uniformly over a family unless the entropy or width of the family is paid for, so pointwise validation can never certify a searched over model. Bernstein two regimes veto Gaussian tail reasoning for aggregates with heavy tailed components: far out, the single largest term governs, and confidence must degrade accordingly. Effective rank vetoes ambient dimension in sample budgets, and VC dimension vetoes certification of any Boolean rule family that can shatter large sets, regardless of fit. The majorizing measure theorem vetoes substitute complexity measures: whatever prices Gaussian suprema must be equivalent to gamma_2. Finally, the escape theorem vetoes identifiability claims when the measurement count falls below the width squared threshold of the hypothesis family."
+  }
+ ],
+ "universal_lens": "Any system that aggregates many noisy components into a decision can be audited with this template. Identify the tail class of each component and record its psi norm. Compute the effective dimension of the configuration space rather than its nominal dimension. Discretize the space of possibilities with nets at the resolution the data budget supports, and bound the worst case deviation uniformly over that space instead of at a single point. Treat concentration as a budget with three competing expenses: accuracy, uniformity over a class, and robustness to model error. The inequalities collected here are the exchange rates among those expenses, valid far beyond the probability course they were built for.",
+ "gsi_mapping": "The Institute takes this book as core curriculum for quantitative reasoning under uncertainty. Its concentration ladder, from Markov through Bernstein to matrix Bernstein, becomes the standard error accounting method; its complexity functionals, covering numbers, Gaussian width, VC dimension, and effective rank, become the required vocabulary for proposing any estimator or rating procedure; and its uniform law mindset, that a claim is only as good as its bound over the whole class it was selected from, becomes a publication gate. Trainees should be able to state, for any method they advance, its tail assumptions, its complexity price, and its sample budget in the language of this text.",
+ "gse_mapping": "The engine takes concrete mechanisms. Psi norms become per signal tail scores stored beside every input. Effective rank sizes how much history a covariance style adjustment actually needs before it is trusted. Gaussian width style complexity pricing is applied to each family of candidate configurations the engine searches, so search breadth is paid for in the confidence budget. Bernstein two regime error bars wrap aggregated projections, with the exponential regime driven by the most volatile component. Median of means aggregation handles outlier prone inputs. Matrix deviation style uniform checks certify that a fitted projection behaves on the whole feature family it will face in production, not only on the data used to fit it."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "6fd6323063f4cb89",
+  "source_status": "COMPLETE",
+  "title": "data-source-options",
+  "file_name": "data-source-options.md",
+  "sha256": "6fd6323063f4cb898096f7d534805a67e6de11fa3bab0aa29645097e1acfd0aa",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The data ingestion architecture is modeled as a constrained optimization over a metric space of API providers. The selection criteria define a hard boundary in the feature space, where commercial viability, latency bounds, and cost constraints form an intersection of convex sets determining valid system states.",
+  "gsi_mapping": "GSI treats each approved data source as a distinct likelihood function contributing to a hierarchical Bayesian posterior over market odds. Freshness guarantees act as time-decay priors, while rate limits dictate the maximum information flow, ensuring conformal prediction intervals remain calibrated against stale or missing telemetry.",
+  "gse_mapping": "In GSE, data sources represent discrete state-transition triggers within a Markov Decision Process. The integration cost and tiering structure map to action costs, while ToS posture dictates permissible state spaces. Fallback endpoints provide robust transition probabilities when primary high-fidelity channels encounter singularities.",
+  "primitives": [
+    {
+      "primitive_id": "commercial_viability_kernel",
+      "name": "Commercial Viability Kernel",
+      "verbatim_quote": "**Public API with terms permitting commercial use** (or a paid plan that grants it).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: Terms of Service (Boolean), C: Commercial Usage Flag (Boolean)",
+      "assumptions": "Legal compliance is a binary prerequisite for system initialization; no partial credit for ambiguous ToS.",
+      "breakdown_regime": "System halts if T=0 or C=0, resulting in immediate legal singularity and operational shutdown.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the GSE legal constraint layer, acting as a hard filter before any probabilistic inference occurs.",
+        "source_operator": "commercial_viability_kernel",
+        "telemetry": "Binary pass/fail status from automated ToS parsing scripts."
+      }
+    },
+    {
+      "primitive_id": "temporal_freshness_bound",
+      "name": "Temporal Freshness Bound",
+      "verbatim_quote": "**Freshness guarantees** — we cannot publish picks against stale data (CLAUDE.md non-negotiable #5).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "\\tau: Data age (seconds), \\tau_{max}: Maximum allowable staleness (seconds)",
+      "assumptions": "Information value decays monotonically with time; beyond \\tau_{max}, the signal-to-noise ratio drops below actionable thresholds.",
+      "breakdown_regime": "If \\tau > \\tau_{max}, the inference engine must reject the input to prevent publishing degenerate picks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to the GSI time-decay prior, enforcing strict temporal boundaries on the validity of Bayesian updates.",
+        "source_operator": "temporal_freshness_bound",
+        "telemetry": "Timestamp deltas between API response generation and local ingestion."
+      }
+    },
+    {
+      "primitive_id": "rate_limit_topology",
+      "name": "Rate Limit Topology",
+      "verbatim_quote": "- **Rate limits**: 500 req/mo free; 10K/mo Starter ($30/mo); 100K/mo Standard.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "R: Request volume (requests/month), P: Cost (USD/month)",
+      "assumptions": "API throughput scales piecewise-linearly with financial investment; network congestion is inversely proportional to tier.",
+      "breakdown_regime": "Singularity occurs when R exceeds the purchased tier limit, triggering HTTP 429 throttling and data pipeline starvation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE bandwidth constraints, defining the maximum frequency of state transitions allowed by the external environment.",
+        "source_operator": "rate_limit_topology",
+        "telemetry": "Monthly request counters and HTTP 429 rejection rates."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6fd6323063f4cb89_t0",
+      "think": "The derivation of our sovereign primitives begins by treating the data ingestion ecosystem not as a mere collection of URLs, but as a high-dimensional manifold constrained by legal, temporal, and economic boundaries. The 'Commercial Viability Kernel' acts as the foundational projection operator, mapping the infinite space of potential data scrapers onto a finite, legally defensible subspace. Without this binary filter, the entire mathematical framework collapses under regulatory entropy.\n\nNext, we introduce the 'Temporal Freshness Bound'. In quantitative sports intelligence, information is inherently perishable. We model this using a decay function where the utility of an odds update approaches zero as the time delta increases. The non-negotiable nature of this bound establishes a hard cutoff—a singularity where stale data is treated as mathematically equivalent to noise, necessitating its immediate rejection from the Bayesian updater.\n\nFinally, the 'Rate Limit Topology' defines the geometric capacity of our information pipeline. By analyzing the tiered pricing structures (e.g., 500 req/mo vs 100K req/mo), we derive a piecewise-linear cost function that dictates the maximum sustainable query frequency. This topology prevents pipeline starvation during high-variance events (like launch day) and ensures that our conformal prediction intervals are built on a statistically sufficient sample size. Together, these operators form a robust, dual-layered defense against data degradation, ensuring that Galaxy Sports Edge operates strictly within the bounds of viable, fresh, and scalable information flows.\n\nDeep epistemic analysis for data-source-options (6fd6323063f4cb89, domain=other, pages_read=3/3): Operator 'Commercial Viability Kernel' (page 1, domain other) captures: **Public API with terms permitting commercial use** (or a paid plan that grants it). Assumptions: Legal compliance is a binary prerequisite for system initialization; no partial credit for ambiguous ToS. Breakdown regime: System halts if T=0 or C=0, resulting in immediate legal singularity and operational shutdown. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSE legal constraint layer, acting as a hard filter before any probabilistic inference occurs. Operator 'Temporal Freshness Bound' (page 1, domain other) captures: **Freshness guarantees** — we cannot publish picks against stale data (CLAUDE.md non-negotiable #5). Assumptions: Information value decays monotonically with time; beyond \\tau_{max}, the signal-to-noise ratio drops below actionable thresholds. Breakdown regime: If \\tau > \\tau_{max}, the inference engine must reject the input to prevent publishing degenerate picks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to the GSI time-decay prior, enforcing strict temporal boundaries on the validity of Bayesian updates. Operator 'Rate Limit Topology' (page 1, domain other) captures: - **Rate limits**: 500 req/mo free; 10K/mo Starter ($30/mo); 100K/mo Standard. Assumptions: API throughput scales piecewise-linearly with financial investment; network congestion is inversely proportional to tier. Breakdown regime: Singularity occurs when R exceeds the purchased tier limit, triggering HTTP 429 throttling and data pipeline starvation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE bandwidth constraints, defining the maximum frequency of state transitions allowed by the external environment. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for data-source-options (6fd6323063f4cb89, domain=other, pages_read=3/3): Operator 'Commercial Viability Kernel' (page 1, domain other) captures: **Public API with terms permitting commercial use** (or a paid plan that grants it). Assumptions: Legal compliance is a binary prerequisite for system initialization; no partial credit for ambiguous ToS. Breakdown regime: System halts if T=0 or C=0, resulting in immediate legal singularity and operational shutdown. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSE legal constraint layer, acting as a hard filter before any probabilistic inference occurs. Operator 'Temporal Freshness Bound' (page 1, domain other) captures: **Freshness guarantees** — we cannot publish picks against stale data (CLAUDE.md non-negotiable #5). Assumptions: Information value decays monotonically with time; beyond \\tau_{max}, the signal-to-noise ratio drops below actionable thresholds. Breakdown regime: If \\tau > \\tau_{max}, the inference engine must reject the input to prevent publishing degenerate picks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to the GSI time-decay prior, enforcing strict temporal boundaries on the validity of Bayesian updates. Operator 'Rate Limit Topology' (page 1, domain other) captures: - **Rate limits**: 500 req/mo free; 10K/mo Starter ($30/mo); 100K/mo Standard. Assumptions: API throughput scales piecewise-linearly with financial investment; network congestion is inversely proportional to tier. Breakdown regime: Singularity occurs when R exceeds the purchased tier limit, triggering HTTP 429 throttling and data pipeline starvation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE bandwidth constraints, defining the maximum frequency of state transitions allowed by the external environment. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives trace their lineage to early 20th-century information theory and Shannon's channel capacity theorem, which established that reliable communication requires strict adherence to bandwidth and noise constraints. In modern quantitative finance, this evolved into the microstructure of market data feeds, where latency arbitrage and exchange rate limits dictate algorithmic behavior. Our adaptation translates these financial engineering concepts into the domain of sports betting APIs, recognizing that odds are essentially financial instruments subject to identical topological constraints.",
+      "theory_of_mind": "We model the API providers as rational agents optimizing for server stability and revenue maximization. They intentionally impose rate limits and freshness delays to manage load and upsell higher tiers. Conversely, we, as the consuming agent, must anticipate these restrictions and construct fallback topologies (like Tier-3 ESPN endpoints) to maintain operational continuity. This adversarial yet symbiotic relationship requires us to predict provider throttling behaviors and dynamically adjust our ingestion strategies to avoid detection or penalization.",
+      "cross_layer_veto": "A critical veto condition arises if the 'Temporal Freshness Bound' conflicts with the 'Rate Limit Topology'. For instance, if achieving the required freshness demands a query frequency that exceeds the affordable rate limit, the system enters an unsolvable state. In such cases, the cross-layer veto mechanism triggers, forcing a downgrade in coverage breadth or a switch to a lower-frequency, higher-latency data source to preserve the integrity of the remaining predictions. This anti-collinearity check prevents the system from overcommitting resources to marginal markets."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "ee4c281497bdc334",
+  "source_status": "COMPLETE",
+  "title": "PERF_AUDIT",
+  "file_name": "PERF_AUDIT.md",
+  "sha256": "ee4c281497bdc33428cd17dc92f4e7a1c9ab5a0e0b5ddce3d1de407a1e5bbea8",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Unindexed Prisma queries on \\( \\mathcal{O}(10^5) \\) row tables yield \\( \\mathcal{O}(1\\text{s}) \\) I/O latency per uncached hit;\\( \\mathcal{O}(10^3) \\) public route calls amplify this to \\( \\mathcal{O}(10^3\\text{s}) \\) aggregate latency.",
+  "gsi_mapping": "Bayesian inference on \\( \\mathcal{O}(10^5) \\) row \\( \\texttt{OddsLineSnapshot} \\) table using \\( \\texttt{capturedAt} \\)-only predicates triggers full-table scans;\\( \\mathcal{O}(10^3) \\) uncached public route hits imply \\( \\mathcal{O}(10^3\\text{s}) \\) cumulative latency.",
+  "gse_mapping": "Situational reasoning identifies \\( \\texttt{findFirst} \\) on \\( \\texttt{OddsLineSnapshot} \\) with \\( \\texttt{orderBy capturedAt DESC} \\) as a \\( \\mathcal{O}(1\\text{s}) \\) I/O bottleneck;\\( \\texttt{count()} \\) on same table incurs \\( \\mathcal{O}(1\\text{s}) \\) sequential scan per hit.",
+  "primitives": [
+    {
+      "primitive_id": "unindexed_full_table_scan",
+      "name": "Unindexed Full Table Scan",
+      "verbatim_quote": "The `count()` is a sequential scan of the whole table plus a filter; the `findFirst` is a scan-and-sort.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'table size in rows', 'I': 'index coverage in columns', 'L': 'latency per query in seconds'}",
+      "assumptions": "Table \\( T \\) is \\( \\mathcal{O}(10^5) \\) rows, no index covers \\( \\texttt{capturedAt} \\) alone, and queries are executed without caching.",
+      "breakdown_regime": "When \\( I = \\emptyset \\) for \\( \\texttt{capturedAt} \\), \\( L \\propto T \\cdot \\Delta t \\) where \\( \\Delta t \\approx 0.2\\text{ms}/10k \\text{rows} \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Latency kernel \\( L(T) \\) derived from \\( \\texttt{count()} \\) and \\( \\texttt{findFirst} \\) operations on unindexed \\( \\texttt{OddsLineSnapshot} \\) table.",
+        "source_operator": "unindexed_full_table_scan",
+        "telemetry": "Query execution time and row scan count"
+      }
+    },
+    {
+      "primitive_id": "public_route_hot_path",
+      "name": "Public Route Hot Path",
+      "verbatim_quote": "repeatedly without auth, and it is also the route the founder and other agents poll to read truth, so it is simultaneously the most-called and the most abusable path.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'request rate per second', 'C': 'concurrent hits', 'L_{\\\\text{total}}': 'total latency in seconds'}",
+      "assumptions": "Route is called \\( R \\approx 10^3 \\) times/sec, \\( C \\approx 1 \\) concurrent hit, and latency \\( L \\approx 1\\text{s} \\) per hit.",
+      "breakdown_regime": "When \\( R \\cdot L \\gg 1 \\), \\( L_{\\text{total}} = R \\cdot L \\cdot C \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Total latency \\( L_{\\text{total}} \\) from \\( R \\cdot L \\cdot C \\) for public route with unindexed queries.",
+        "source_operator": "public_route_hot_path",
+        "telemetry": "Request frequency and average response time"
+      }
+    },
+    {
+      "primitive_id": "schema_indexing_defect",
+      "name": "Schema Indexing Defect",
+      "verbatim_quote": "**Why it is unindexed — measured against the schema, not assumed.** `OddsLineSnapshot` declares exactly two indexes (`schema.prisma`): ``` @@index([gameId, market, capturedAt]) @@index([phase, capturedAt]) ``` Both are **composite with `capturedAt` third**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_{\\\\text{leading}}': 'leading column of index', 'Q': 'query predicate', 'S': 'schema definition'}",
+      "assumptions": "Index \\( I_{\\text{leading}} \\) must be \\( \\texttt{capturedAt} \\) for \\( Q = \\texttt{capturedAt} \\) to be efficient.",
+      "breakdown_regime": "If \\( I_{\\text{leading}} \\neq \\texttt{capturedAt} \\), then \\( Q \\) cannot use index for range seeks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Schema indexing defect \\( S \\) maps to query inefficiency \\( Q \\) through \\( I_{\\text{leading}} \\).",
+        "source_operator": "schema_indexing_defect",
+        "telemetry": "Index coverage vs. query predicate match"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ee4c281497bdc334_t0",
+      "think": "The core issue stems from a schema-level indexing defect in \\( \\texttt{OddsLineSnapshot} \\), where no index leads with \\( \\texttt{capturedAt} \\). This forces queries like \\( \\texttt{findFirst} \\) and \\( \\texttt{count()} \\) to perform full-table scans. Each scan incurs latency \\( L \\approx 0.5\\text{s} \\) for 684k rows. When this route is public and polled \\( \\mathcal{O}(10^3) \\) times/sec, total latency \\( L_{\\text{total}} = R \\cdot L \\cdot C \\) becomes \\( \\mathcal{O}(10^3\\text{s}) \\). The \\( \\texttt{count()} \\) operation is redundant since \\( \\texttt{findFirst} \\) can suffice. A leading-column index on \\( \\texttt{capturedAt} \\) resolves the kernel issue. The \\( \\texttt{UNINDEXED-WHERE} \\) scanner correctly flags this. The route is a hot path for agents, amplifying the impact. This is a detection defect, not latency, but the latency is a symptom of a larger systemic flaw in data access patterns.\n\nDeep epistemic analysis for PERF_AUDIT (ee4c281497bdc334, domain=other, pages_read=5/5): Operator 'Unindexed Full Table Scan' (page 1, domain other) captures: The `count()` is a sequential scan of the whole table plus a filter; the `findFirst` is a scan-and-sort. Assumptions: Table \\( T \\) is \\( \\mathcal{O}(10^5) \\) rows, no index covers \\( \\texttt{capturedAt} \\) alone, and queries are executed without caching. Breakdown regime: When \\( I = \\emptyset \\) for \\( \\texttt{capturedAt} \\), \\( L \\propto T \\cdot \\Delta t \\) where \\( \\Delta t \\approx 0.2\\text{ms}/10k \\text{rows} \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Latency kernel \\( L(T) \\) derived from \\( \\texttt{count()} \\) and \\( \\texttt{findFirst} \\) operations on unindexed \\( \\texttt{OddsLineSnapshot} \\) table. Operator 'Public Route Hot Path' (page 2, domain other) captures: repeatedly without auth, and it is also the route the founder and other agents poll to read truth, so it is simultaneously the most-called and the most abusable path. Assumptions: Route is called \\( R \\approx 10^3 \\) times/sec, \\( C \\approx 1 \\) concurrent hit, and latency \\( L \\approx 1\\text{s} \\) per hit. Breakdown regime: When \\( R \\cdot L \\gg 1 \\), \\( L_{\\text{total}} = R \\cdot L \\cdot C \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Total latency \\( L_{\\text{total}} \\) from \\( R \\cdot L \\cdot C \\) for public route with unindexed queries. Operator 'Schema Indexing Defect' (page 1, domain other) captures: **Why it is unindexed — measured against the schema, not assumed.** `OddsLineSnapshot` declares exactly two indexes (`schema.prisma`): ``` @@index([gameId, market, capturedAt]) @@index([phase, capturedAt]) ``` Both are **composite with `capturedAt` third**. Assumptions: Index \\( I_{\\text{leading}} \\) must be \\( \\texttt{capturedAt} \\) for \\( Q = \\texttt{capturedAt} \\) to be efficient. Breakdown regime: If \\( I_{\\text{leading}} \\neq \\texttt{capturedAt} \\), then \\( Q \\) cannot use index for range seeks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Schema indexing defect \\( S \\) maps to query inefficiency \\( Q \\) through \\( I_{\\text{leading}} \\). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PERF_AUDIT (ee4c281497bdc334, domain=other, pages_read=5/5): Operator 'Unindexed Full Table Scan' (page 1, domain other) captures: The `count()` is a sequential scan of the whole table plus a filter; the `findFirst` is a scan-and-sort. Assumptions: Table \\( T \\) is \\( \\mathcal{O}(10^5) \\) rows, no index covers \\( \\texttt{capturedAt} \\) alone, and queries are executed without caching. Breakdown regime: When \\( I = \\emptyset \\) for \\( \\texttt{capturedAt} \\), \\( L \\propto T \\cdot \\Delta t \\) where \\( \\Delta t \\approx 0.2\\text{ms}/10k \\text{rows} \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Latency kernel \\( L(T) \\) derived from \\( \\texttt{count()} \\) and \\( \\texttt{findFirst} \\) operations on unindexed \\( \\texttt{OddsLineSnapshot} \\) table. Operator 'Public Route Hot Path' (page 2, domain other) captures: repeatedly without auth, and it is also the route the founder and other agents poll to read truth, so it is simultaneously the most-called and the most abusable path. Assumptions: Route is called \\( R \\approx 10^3 \\) times/sec, \\( C \\approx 1 \\) concurrent hit, and latency \\( L \\approx 1\\text{s} \\) per hit. Breakdown regime: When \\( R \\cdot L \\gg 1 \\), \\( L_{\\text{total}} = R \\cdot L \\cdot C \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Total latency \\( L_{\\text{total}} \\) from \\( R \\cdot L \\cdot C \\) for public route with unindexed queries. Operator 'Schema Indexing Defect' (page 1, domain other) captures: **Why it is unindexed — measured against the schema, not assumed.** `OddsLineSnapshot` declares exactly two indexes (`schema.prisma`): ``` @@index([gameId, market, capturedAt]) @@index([phase, capturedAt]) ``` Both are **composite with `capturedAt` third**. Assumptions: Index \\( I_{\\text{leading}} \\) must be \\( \\texttt{capturedAt} \\) for \\( Q = \\texttt{capturedAt} \\) to be efficient. Breakdown regime: If \\( I_{\\text{leading}} \\neq \\texttt{capturedAt} \\), then \\( Q \\) cannot use index for range seeks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Schema indexing defect \\( S \\) maps to query inefficiency \\( Q \\) through \\( I_{\\text{leading}} \\). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in database design principles from relational algebra, where missing indices lead to full-table scans. The \\( \\texttt{UNINDEXED-WHERE} \\) rule formalizes this as a known failure mode in query optimization. Retrocausal Genealogy: Rooted in PERF_AUDIT (ee4c281497bdc334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PERF_AUDIT (ee4c281497bdc334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents polling the route are modeled as \\( \\mathcal{O}(10^3) \\) concurrent entities, each contributing to a \\( \\mathcal{O}(1\\text{s}) \\) latency spike. The system’s design assumes no such load, leading to a failure mode under stress. The schema owner is the decision actor who must approve the fix. Theory of Mind & Decision Maker Model: Rooted in PERF_AUDIT (ee4c281497bdc334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity: Latency from \\( \\texttt{count()} \\) and \\( \\texttt{findFirst} \\) is orthogonal to UI rendering costs. Leakage veto: No evidence of re-rendering issues, so \\( \\texttt{memo()} \\) is irrelevant here. Cross-Layer Veto & Anti-Leakage Check: Rooted in PERF_AUDIT (ee4c281497bdc334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "a252bc03e99a6fe1",
+  "source_status": "COMPLETE",
+  "title": "1965-rcd-latent-confounders-lingam",
+  "file_name": "1965-rcd-latent-confounders-lingam.md",
+  "sha256": "a252bc03e99a6fe1bb095f57592809115139337d8bd67159336a715fed241e5e",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "RCD integrates functional causal models with non-Gaussianity to infer directed and bi-directed edges, capturing latent confounders via ancestral separation and residual independence. Universal Lens: Rooted in 1965-rcd-latent-confounders-lingam (a252bc03e99a6fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs RCD's bi-directed edge detection to flag latent confounders in probabilistic causal graphs, enabling Bayesian adjustment for unobserved variables in sports data. GSI Mapping: Rooted in 1965-rcd-latent-confounders-lingam (a252bc03e99a6fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies RCD’s ancestor extraction and direction inference to model team-season causal dynamics, using bi-directed arrows to quarantine confounded relationships in NFL data. GSE Mapping: Rooted in 1965-rcd-latent-confounders-lingam (a252bc03e99a6fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "repetitive_causal_discovery",
+      "name": "Repetitive Causal Discovery",
+      "verbatim_quote": "Method / model RCD — Repetitive Causal Discovery (three steps): 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Linear, acyclic causal models with non-Gaussian noise; latent confounders modeled via bi-directed edges.",
+      "breakdown_regime": "When residual independence fails due to strong latent confounding or non-linearity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "RCD's iterative ancestor extraction mirrors GSE's temporal state transitions, where each step removes known causes to isolate new causal directions.",
+        "source_operator": "repetitive_causal_discovery",
+        "telemetry": "F-measure for directed vs. bi-directed edge recovery."
+      }
+    },
+    {
+      "primitive_id": "darmois_skitovitch_theorem",
+      "name": "Darmois–Skitovitch Theorem",
+      "verbatim_quote": "Direction inference rests on the Darmois–Skitovitch theorem (Theorem 1): independence of two linear combinations of independent variables implies Gaussianity of shared components — so non-Gaussian residuals reveal direction.",
+      "page": 1,
+      "latex": "\\text{If } Y_1 = \\sum \\alpha_i s_i, Y_2 = \\sum \\beta_i s_i \\text{ with independent } s_i \\text{ and } Y_1 \\perp\\!\\!\\perp Y_2 \\Rightarrow \\text{all } s_j \\text{ with } \\alpha_j \\beta_j \\neq 0 \\text{ are Gaussian}",
+      "symbol_and_unit_ledger": "{'Y_1, Y_2': 'linear combinations of variables', 's_i': 'independent noise components', 'α_i, β_i': 'coefficients'}",
+      "assumptions": "Independence of linear combinations implies Gaussianity of shared components.",
+      "breakdown_regime": "Non-linear or non-Gaussian dependencies invalidate the theorem's applicability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI to detect directionality in causal structures by testing residual non-Gaussianity post-regression.",
+        "source_operator": "darmois_skitovitch_theorem",
+        "telemetry": "Shapiro–Wilk test p-values for non-Gaussianity."
+      }
+    },
+    {
+      "primitive_id": "ancestor_separation",
+      "name": "Ancestor Separation",
+      "verbatim_quote": "ancestor separation**: Lemma 4 + Theorem 2 (conditional-independence test built from unconditional tests) distinguishes direct parents from indirect ancestors.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Conditional independence tests distinguish direct from indirect causal paths.",
+      "breakdown_regime": "Failure when conditional independence tests are unreliable due to small sample size or high dimensionality.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ancestor separation in RCD parallels GSE's use of Markov blankets to isolate causal neighborhoods in state-space transitions.",
+        "source_operator": "ancestor_separation",
+        "telemetry": "Precision/recall of parent-set identification."
+      }
+    },
+    {
+      "primitive_id": "latent_confounder_detection",
+      "name": "Latent Confounder Detection",
+      "verbatim_quote": "**Latent-confounder detection**: pairs that remain correlated but whose direction cannot be identified are marked with bi-directed arrows (shared latent confounder).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Correlation without directional inference implies shared latent cause.",
+      "breakdown_regime": "When observed variables are too few or too highly intercorrelated to disambiguate confounding.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Bi-directed edges in RCD enable GSE to flag and quarantine confounded variable pairs during causal modeling.",
+        "source_operator": "latent_confounder_detection",
+        "telemetry": "Proportion of correctly flagged bi-directed edges."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a252bc03e99a6fe1_t0",
+      "think": "RCD operates by iteratively inferring causal directions among subsets of variables, removing the influence of already-identified ancestors through least-squares regression. This process leverages the Darmois–Skitovitch theorem to detect non-Gaussianity in residuals, thereby identifying causal direction. Ancestor separation refines this by distinguishing direct parents from indirect ancestors using conditional independence tests. Latent confounders are detected when correlations persist despite direction inference, represented by bi-directed edges. These primitives form a robust framework for causal discovery under linear, non-Gaussian models with latent confounders. The method avoids constraint-based approaches like FCI, which suffer from poor direction recall, and instead uses functional models exploiting non-Gaussianity. Each step is grounded in statistical independence and regression theory, ensuring interpretability and scalability. The approach is particularly suited for high-dimensional settings where traditional methods fail due to latent confounding.\n\nDeep epistemic analysis for 1965-rcd-latent-confounders-lingam (a252bc03e99a6fe1, domain=other, pages_read=4/4): Operator 'Repetitive Causal Discovery' (page 1, domain other) captures: Method / model RCD — Repetitive Causal Discovery (three steps): 1. Assumptions: Linear, acyclic causal models with non-Gaussian noise; latent confounders modeled via bi-directed edges. Breakdown regime: When residual independence fails due to strong latent confounding or non-linearity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RCD's iterative ancestor extraction mirrors GSE's temporal state transitions, where each step removes known causes to isolate new causal directions. Operator 'Darmois–Skitovitch Theorem' (page 1, domain other) captures: Direction inference rests on the Darmois–Skitovitch theorem (Theorem 1): independence of two linear combinations of independent variables implies Gaussianity of shared components — so non-Gaussian residuals reveal direction. Assumptions: Independence of linear combinations implies Gaussianity of shared components. Breakdown regime: Non-linear or non-Gaussian dependencies invalidate the theorem's applicability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to detect directionality in causal structures by testing residual non-Gaussianity post-regression. Operator 'Ancestor Separation' (page 1, domain other) captures: ancestor separation**: Lemma 4 + Theorem 2 (conditional-independence test built from unconditional tests) distinguishes direct parents from indirect ancestors. Assumptions: Conditional independence tests distinguish direct from indirect causal paths. Breakdown regime: Failure when conditional independence tests are unreliable due to small sample size or high dimensionality. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ancestor separation in RCD parallels GSE's use of Markov blankets to isolate causal neighborhoods in state-space transitions. Operator 'Latent Confounder Detection' (page 1, domain other) captures: **Latent-confounder detection**: pairs that remain correlated but whose direction cannot be identified are marked with bi-directed arrows (shared latent confounder). Assumptions: Correlation without directional inference implies shared latent cause. Breakdown regime: When observed variables are too few or too highly intercorrelated to disambiguate confounding. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bi-directed edges in RCD enable GSE to flag and quarantine confounded variable pairs during causal modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1965-rcd-latent-confounders-lingam (a252bc03e99a6fe1, domain=other, pages_read=4/4): Operator 'Repetitive Causal Discovery' (page 1, domain other) captures: Method / model RCD — Repetitive Causal Discovery (three steps): 1. Assumptions: Linear, acyclic causal models with non-Gaussian noise; latent confounders modeled via bi-directed edges. Breakdown regime: When residual independence fails due to strong latent confounding or non-linearity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RCD's iterative ancestor extraction mirrors GSE's temporal state transitions, where each step removes known causes to isolate new causal directions. Operator 'Darmois–Skitovitch Theorem' (page 1, domain other) captures: Direction inference rests on the Darmois–Skitovitch theorem (Theorem 1): independence of two linear combinations of independent variables implies Gaussianity of shared components — so non-Gaussian residuals reveal direction. Assumptions: Independence of linear combinations implies Gaussianity of shared components. Breakdown regime: Non-linear or non-Gaussian dependencies invalidate the theorem's applicability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to detect directionality in causal structures by testing residual non-Gaussianity post-regression. Operator 'Ancestor Separation' (page 1, domain other) captures: ancestor separation**: Lemma 4 + Theorem 2 (conditional-independence test built from unconditional tests) distinguishes direct parents from indirect ancestors. Assumptions: Conditional independence tests distinguish direct from indirect causal paths. Breakdown regime: Failure when conditional independence tests are unreliable due to small sample size or high dimensionality. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ancestor separation in RCD parallels GSE's use of Markov blankets to isolate causal neighborhoods in state-space transitions. Operator 'Latent Confounder Detection' (page 1, domain other) captures: **Latent-confounder detection**: pairs that remain correlated but whose direction cannot be identified are marked with bi-directed arrows (shared latent confounder). Assumptions: Correlation without directional inference implies shared latent cause. Breakdown regime: When observed variables are too few or too highly intercorrelated to disambiguate confounding. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bi-directed edges in RCD enable GSE to flag and quarantine confounded variable pairs during causal modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the LiNGAM framework and Darmois–Skitovitch theorem, RCD builds upon earlier work in functional causal modeling and non-Gaussianity-based causality. It extends prior methods by incorporating latent confounders into a structured, algorithmic pipeline. Retrocausal Genealogy: Rooted in 1965-rcd-latent-confounders-lingam (a252bc03e99a6fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data-generating processes with hidden variables and observational biases. RCD models these through bi-directed edges, while GSI and GSE must account for adversarial confounding in sports data, such as weather or officiating bias, to avoid false causal inferences. Theory of Mind & Decision Maker Model: Rooted in 1965-rcd-latent-confounders-lingam (a252bc03e99a6fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that variables in each regression step are not perfectly correlated. Leakage is mitigated by using conditional independence tests to prevent spurious causal links from being inferred due to shared latent causes. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1965-rcd-latent-confounders-lingam (a252bc03e99a6fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

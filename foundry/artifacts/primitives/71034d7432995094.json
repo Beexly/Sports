@@ -1,0 +1,323 @@
+{
+  "book_id": "71034d7432995094",
+  "source_status": "COMPLETE",
+  "title": "2605.22073v2",
+  "file_name": "2605.22073v2.pdf",
+  "sha256": "71034d7432995094dd52787746ef91966135b0989dcae113a35e48ae4f6eaca2",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 12,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "\\mathcal{M} = \\mathcal{F}_{\\text{ID}} \\oplus \\mathcal{F}_{\\text{V}} \\oplus \\mathcal{F}_{\\text{T}} \\quad \\text{with} \\quad \\mathcal{F}_{\\text{spectral}} = \\mathcal{D}_{\\text{low}} \\cup \\mathcal{D}_{\\text{high}} Spectral frequency decomposition of graph-smoothed representations reveals cross-view agreement in low frequencies and ranking signal in high frequencies, enabling dual-frequency integration for robust recommendation.",
+  "gsi_mapping": "Bayesian belief update over multimodal evidence: $ P(\\mathbf{y} | \\mathcal{D}) \\propto P(\\mathcal{D} | \\mathbf{y}) P(\\mathbf{y}) $, where $ \\mathcal{D} $ includes dual-frequency graph components. Bayesian inference over spectral bands enables conformal prediction of recommendation quality by integrating low-frequency shared structure with high-frequency ranking signals.",
+  "gse_mapping": "State transition via behavior-guided calibration: $ \\mathcal{S}_{t+1} = \\mathcal{C}_{\\text{calib}}(\\mathcal{S}_t, \\mathcal{B}_{\\text{evidence}}) $, integrating co-user overlap into candidate ranking. Situational reasoning in GSE leverages dual-frequency graph evidence to transition between global consistency and local calibration states during candidate scoring.",
+  "primitives": [
+    {
+      "primitive_id": "dfge_dual_frequency_graph_encoding",
+      "name": "Dual-Frequency Graph Encoding",
+      "verbatim_quote": "BRIDGE separates the model into three parts: DFGE decomposes graph-smoothed ID, visual, and textual channels into spectral bands; BEN converts training-only co-user overlap into signed candidate evidence; and CRI applies that evidence only inside the base top-Kcandidate set during training and inference.",
+      "page": 1,
+      "latex": "\\mathcal{F}_{\\text{spectral}}^{\\text{band}} = \\mathcal{D}_{\\text{low}} \\cup \\mathcal{D}_{\\text{high}}, \\quad \\mathcal{D}_{\\text{band}} = \\{\\mathcal{F}_{\\text{id}}, \\mathcal{F}_{\\text{v}}, \\mathcal{F}_{\\text{t}}\\}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{F}_{\\\\text{spectral}}^{\\\\text{band}}': 'dimensionless', '\\\\mathcal{D}_{\\\\text{low}}': 'frequency domain', '\\\\mathcal{D}_{\\\\text{high}}': 'frequency domain', '\\\\mathcal{F}_{\\\\text{id}}': 'dimensionless', '\\\\mathcal{F}_{\\\\text{v}}': 'dimensionless', '\\\\mathcal{F}_{\\\\text{t}}': 'dimensionless'}",
+      "assumptions": "Graph smoothing preserves low-frequency shared structure while high-frequency retains private variation.",
+      "breakdown_regime": "When alignment exceeds optimal threshold, suppression of variation occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between spectral decomposition and Bayesian evidence layers in GSI.",
+        "source_operator": "dfge_dual_frequency_graph_encoding",
+        "telemetry": "Recall@20 and NDCG@20 performance metrics."
+      }
+    },
+    {
+      "primitive_id": "ben_behavior_evidence_network",
+      "name": "Behavior Evidence Network",
+      "verbatim_quote": "Our diagnostics on Amazon Baby show that direct consistency has an effective range: moderate alignment helps, while stronger alignment suppresses recommendation-specific variation.",
+      "page": 1,
+      "latex": "\\mathcal{E}_{\\text{behavior}} = \\text{sign}(\\mathcal{O}_{\\text{co-user}}), \\quad \\mathcal{O}_{\\text{co-user}} = \\sum_{u_i, u_j \\in \\mathcal{U}} \\delta(u_i, u_j)",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{E}_{\\\\text{behavior}}': 'signed scalar', '\\\\mathcal{O}_{\\\\text{co-user}}': 'count', '\\\\delta(u_i, u_j)': 'indicator function'}",
+      "assumptions": "Co-user overlap reflects behavioral similarity and can be encoded as signed evidence.",
+      "breakdown_regime": "Failure when co-user data is sparse or misaligned with item preferences.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel derived from co-user overlap to guide candidate scoring in GSE.",
+        "source_operator": "ben_behavior_evidence_network",
+        "telemetry": "Improvement in recall and NDCG scores."
+      }
+    },
+    {
+      "primitive_id": "cri_candidate_ranking_integration",
+      "name": "Candidate Ranking Integration",
+      "verbatim_quote": "We also observe a clear spectral split: low-frequency components capture shared structure, whereas higher-frequency components retain more private ranking signal.",
+      "page": 1,
+      "latex": "\\mathcal{R}_{\\text{final}} = \\mathcal{R}_{\\text{base}} + \\alpha \\cdot \\mathcal{E}_{\\text{behavior}}, \\quad \\mathcal{R}_{\\text{base}} \\in \\mathcal{K}_{\\text{top}}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{R}_{\\\\text{final}}': 'rank score', '\\\\mathcal{R}_{\\\\text{base}}': 'rank score', '\\\\alpha': 'scalar weight', '\\\\mathcal{E}_{\\\\text{behavior}}': 'signed scalar', '\\\\mathcal{K}_{\\\\text{top}}': 'set of top-K items'}",
+      "assumptions": "Evidence application is localized to top-K candidates to reduce computational overhead.",
+      "breakdown_regime": "Performance degradation when evidence is applied beyond top-K set.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel from behavior evidence to refine ranking in GSE.",
+        "source_operator": "cri_candidate_ranking_integration",
+        "telemetry": "Precision and recall improvements in top-K ranking."
+      }
+    },
+    {
+      "primitive_id": "bridge_multimodal_fusion_framework",
+      "name": "Bridge Multimodal Fusion Framework",
+      "verbatim_quote": "Based on these findings, we propose BRIDGE, a behavior-guided residual integration framework built on dual-frequency graph evidence.",
+      "page": 1,
+      "latex": "\\mathcal{M}_{\\text{bridge}} = \\mathcal{F}_{\\text{ID}} \\oplus \\mathcal{F}_{\\text{V}} \\oplus \\mathcal{F}_{\\text{T}} \\oplus \\mathcal{E}_{\\text{behavior}} \\quad \\text{where} \\quad \\mathcal{F}_{\\text{spectral}} = \\mathcal{D}_{\\text{low}} \\cup \\mathcal{D}_{\\text{high}}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{M}_{\\\\text{bridge}}': 'multimodal representation', '\\\\mathcal{F}_{\\\\text{ID}}': 'dimensionless', '\\\\mathcal{F}_{\\\\text{V}}': 'dimensionless', '\\\\mathcal{F}_{\\\\text{T}}': 'dimensionless', '\\\\mathcal{E}_{\\\\text{behavior}}': 'signed scalar'}",
+      "assumptions": "Residual integration enhances model expressiveness without overfitting.",
+      "breakdown_regime": "Overfitting when behavior evidence dominates over base model.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's belief propagation across modalities.",
+        "source_operator": "bridge_multimodal_fusion_framework",
+        "telemetry": "Overall ranking performance improvement."
+      }
+    },
+    {
+      "primitive_id": "cross_view_consistency",
+      "name": "Cross-View Consistency Weighting",
+      "verbatim_quote": "weight of 0.3, and UI cosine improves it to 0.1024, showing that cross-view consistency can be useful.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'w_cv': 'dimensionless weight parameter for cross-view consistency'}",
+      "assumptions": "The cross-view consistency objective improves performance when appropriately weighted, but excessive weighting degrades recall.",
+      "breakdown_regime": "Recall@20 drops below baseline when w_cv exceeds 0.1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cross-view cosine similarity maps to GSI's Bayesian belief update over modal consensus.",
+        "source_operator": "cross_view_consistency",
+        "telemetry": "Recall@20 improvement with increasing w_cv up to optimal threshold."
+      }
+    },
+    {
+      "primitive_id": "spectral_frequency_band",
+      "name": "Spectral Frequency Band Partitioning",
+      "verbatim_quote": "We define these bands by ordering the singular components of graph-smoothed channel matrices; Section 5.1 gives the formal construction.",
+      "page": 4,
+      "latex": "\\text{Let } Z \\in \\mathbb{R}^{N \\times d} \\text{ be a graph-smoothed channel matrix. Then } Z = U\\Sigma V^\\top \\text{, and } V = [V_1, ..., V_M] \\text{ partitions singular vectors into frequency bands.}",
+      "symbol_and_unit_ledger": "{'Z': 'graph-smoothed channel matrix, dimension N × d', 'U, \\\\Sigma, V': 'SVD components of Z', 'V_i': 'i-th singular vector block representing frequency band'}",
+      "assumptions": "Frequency bands are ordered via SVD of graph-smoothed channel matrices.",
+      "breakdown_regime": "Band partitioning fails when graph smoothing does not preserve signal structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Spectral bands map to GSE's kernel space for modality-specific feature alignment.",
+        "source_operator": "spectral_frequency_band",
+        "telemetry": "Cross-view agreement increases with lower frequency band indices."
+      }
+    },
+    {
+      "primitive_id": "low_high_freq_agreement",
+      "name": "Low vs High Frequency Agreement",
+      "verbatim_quote": "Lowfrequency components have stronger cross-view agreement, while high-frequency components retain more ranking signal.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{low}': 'agreement measure for low-frequency components', 'A_{high}': 'agreement measure for high-frequency components'}",
+      "assumptions": "Low-frequency components encode shared structure; high-frequency ones carry local ranking evidence.",
+      "breakdown_regime": "High-frequency components lose ranking signal when cross-view agreement is weak.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Low/high frequency agreement maps to GSI's confidence-weighted evidence fusion.",
+        "source_operator": "low_high_freq_agreement",
+        "telemetry": "Ranking signal strength correlates with high-frequency component variance."
+      }
+    },
+    {
+      "primitive_id": "behavior_guided_calibration",
+      "name": "Behavior-Guided Candidate Calibration",
+      "verbatim_quote": "Co-user behavior is most useful on the sparser Amazon domains, so we use it as a local signal for candidate calibration.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'b_{u,i}': 'co-user behavior indicator for user u and item i', 'c_{u,k}': 'calibration coefficient for top-k candidates'}",
+      "assumptions": "Local co-user behavior enhances calibration in sparse domains.",
+      "breakdown_regime": "Calibration fails in dense domains due to overfitting to local signals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Co-user behavior is embedded into GSE's state transition kernel for adaptive scoring.",
+        "source_operator": "behavior_guided_calibration",
+        "telemetry": "Top-K candidate correction improves Recall@20 compared to global score correction."
+      }
+    },
+    {
+      "primitive_id": "bridge_behavior_guided_residual_integration",
+      "name": "Behavior-Guided Residual Integration",
+      "verbatim_quote": "BRIDGE: Behavior-Guided Residual Integration with Dual-Frequency Graph Evidence CIKM '26, November 7–11, 2026, Rome, Italy the frequency-organized multimodal representation, and CRI integrates BEN evidence under the same candidate scope used by inference.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'BEN': 'Behavioral Evidence Node', 'CRI': 'Candidate Residual Integrator', 'DFGE': 'Dual-Frequency Graph Encoder'}",
+      "assumptions": "Behavioral graphs are constructed solely from training data; residual integration is constrained to base candidate sets.",
+      "breakdown_regime": "When behavior evidence exceeds candidate scope, integration degrades performance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "BEN evidence maps to posterior belief update in GSI; CRI maps to conditional likelihood in GSE state transitions.",
+        "source_operator": "bridge_behavior_guided_residual_integration",
+        "telemetry": "Recall@10 and NDCG@10 metrics reflect integration fidelity."
+      }
+    },
+    {
+      "primitive_id": "dfge_dual_frequency_graph_evidence",
+      "name": "Dual-Frequency Graph Evidence",
+      "verbatim_quote": "6 Experiments 6.1 Experimental Setup We evaluate BRIDGE on Amazon Baby, Sports, and Electronics from the Amazon review benchmark [14] under the common MMRecstyle implicit-feedback split.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Frequency domain operator', 'G': 'Graph structure', 'M': 'Multimodal feature vector'}",
+      "assumptions": "Frequency components are organized into structured graph domains; evidence is encoded in both spectral and content spaces.",
+      "breakdown_regime": "Loss of frequency regularizers leads to degraded spectral coherence in graph embeddings.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "DFGE kernel encodes item graph and modality alignment; maps to GSE's dynamic policy kernel.",
+        "source_operator": "dfge_dual_frequency_graph_evidence",
+        "telemetry": "Performance drop in NDCG@10 when item graph is removed."
+      }
+    },
+    {
+      "primitive_id": "cri_candidate_residual_integrator",
+      "name": "Candidate Residual Integrator",
+      "verbatim_quote": "For each training mini-batch, the model computes the detached base topKccandidate set of each involved user and masks the behavior residual outside this set, as defined in Eq.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{res}': 'Residual behavior signal', 'C_{base}': 'Base candidate set', 'M_{batch}': 'Mini-batch modalities'}",
+      "assumptions": "Residuals are masked outside base candidate sets; behavior signals are integrated conditionally.",
+      "breakdown_regime": "Integration fails when residual extends beyond base candidate scope.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CRI maps to GSI's candidate-scoped belief propagation; GSE uses it for local policy refinement.",
+        "source_operator": "cri_candidate_residual_integrator",
+        "telemetry": "Recall@20 reflects accuracy of masked residual integration."
+      }
+    },
+    {
+      "primitive_id": "behavior_graph_construction",
+      "name": "Behavior Graph Construction",
+      "verbatim_quote": "For all three datasets, the behavior graph is constructed strictly from the training split.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G_{b}': 'Behavior graph', 'D_{train}': 'Training dataset', 'E_{co-user}': 'Co-user edge set'}",
+      "assumptions": "Behavior graph is static and derived exclusively from training data; validation/test data excluded.",
+      "breakdown_regime": "Use of validation/test data in graph construction introduces data leakage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Behavior graph kernel defines user-item interaction topology; GSE uses it for state transition modeling.",
+        "source_operator": "behavior_graph_construction",
+        "telemetry": "User degree and item popularity statistics validate graph consistency."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id",
+      "name": "Behavior-Guided Residual Integration",
+      "verbatim_quote": "The gain therefore comes from separating shared low-frequency evidence from more private higherfrequency variation; band routing and its regularizers provide a smaller complementary gain by shaping the candidate geometry used by BEN/CRI.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a two-stage recommender system where the candidate generation stage is fixed, and only the ranking stage is modified. Assumes the existence of a multimodal backbone that produces a base top-K list.",
+      "breakdown_regime": "Breaks down when the candidate universe becomes too sparse, reducing the effectiveness of higher-frequency variation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI as a Bayesian updating framework where low-frequency components serve as prior distributions and high-frequency variations act as likelihood updates. Maps to GSE as a state-transition kernel that evolves player/item states based on shared behavioral patterns.",
+        "source_operator": "w3_snake_case_id",
+        "telemetry": "Measurable improvement in Recall@K and NDCG metrics, particularly on sparse graphs."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_2",
+      "name": "Dual-Frequency Graph Evidence Decomposition",
+      "verbatim_quote": "The lowfrequency component carries the stable cross-view structure, while the higher-frequency bands capture sparse and item-specific variation.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Operates under the assumption that graph signals can be separated into intrinsic (low-frequency) and extrinsic (high-frequency) components, typically via spectral graph theory.",
+      "breakdown_regime": "Degenerates when the graph's Laplacian spectrum does not exhibit a clear separation between low and high frequencies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Establishes an isomorphism between the dual-frequency decomposition and conformal prediction intervals in GSI, where low-frequency modes correspond to robust model predictions and high-frequency modes represent uncertainty bands. In GSE, it maps to a hierarchical state-transition model where low-frequency transitions are frequent and predictable, while high-frequency transitions are rare and context-dependent.",
+        "source_operator": "w3_snake_case_id_w3_2",
+        "telemetry": "Stability of performance across varying data sparsity levels."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_3",
+      "name": "Information Bottleneck Regularization",
+      "verbatim_quote": "The IB surrogate and the frequency regularizer are both needed because they serve different roles: one controls how much each node can route into the bands, the other preserves a useful band geometry once the routing has happened.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Relies on the information bottleneck principle, approximated via a Lagrangian formulation, and assumes that the routing process can be decoupled from the geometric preservation.",
+      "breakdown_regime": "Breaks down when the trade-off parameter α becomes ill-conditioned, leading to either over-compression or information loss.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI as a posterior regularization step that enforces consistency between latent representations learned from different views. Maps to GSE as a transition kernel that balances exploration (controlled by routing) against exploitation (controlled by preserved geometry).",
+        "source_operator": "w3_snake_case_id_w3_3",
+        "telemetry": "Prevention of catastrophic forgetting in dynamic environments."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_4",
+      "name": "Band Routing and Geometry Shaping",
+      "verbatim_quote": "CIKM '26, November 7–11, 2026, Rome, Italy Li et al.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that routing decisions can be made independently of the underlying geometry and that the geometry can be preserved through appropriate regularization.",
+      "breakdown_regime": "Breaks down when the routing introduces significant distortion into the band structure, causing collapse or fragmentation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI as a kernel smoothing operation that adapts bandwidth based on routing decisions. Maps to GSE as a policy gradient step that adjusts transition probabilities to maintain desirable state clusters.",
+        "source_operator": "w3_snake_case_id_w3_4",
+        "telemetry": "Improved stability of ranking quality under non-stationary user behavior."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "71034d7432995094_t0",
+      "think": "The foundational premise of BRIDGE lies in the observation that multimodal recommendation systems benefit from structured alignment rather than uniform consistency. The paper identifies a critical trade-off: moderate alignment enhances performance, while strong alignment introduces noise that suppresses specific recommendation variation. This insight leads to a dual-frequency decomposition strategy, separating shared structure (low-frequency) from private signals (high-frequency). The proposed framework integrates this spectral separation with behavior-guided evidence through three core modules: DFGE, BEN, and CRI. DFGE performs spectral decomposition of ID, visual, and textual features. BEN encodes co-user overlap into signed behavior evidence. CRI applies this evidence within a top-K candidate set to refine rankings. This modular architecture ensures that behavior signals are localized and integrated without disrupting the base model’s integrity. Empirical validation on Amazon Baby, Sports, and Electronics datasets demonstrates significant gains in Recall@20 and NDCG@20, confirming the efficacy of the dual-frequency approach. The theoretical grounding rests on spectral graph theory and Bayesian inference principles, where the low-frequency components represent stable, shared structures and high-frequency components encode personalized, dynamic signals. The framework thus balances generalization and personalization through frequency-aware integration. Window 1 Synthesis: Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early multimodal recommender systems like VBPR and extended through graph-based models such as MMGCN and GRCN. The dual-frequency concept builds upon spectral analysis techniques in signal processing and graph neural networks. Retrocausal Genealogy (Window 1): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents in the system include users with varying levels of interaction sparsity and item sets with diverse feature richness. The framework must account for both collaborative filtering signals and content-based features while ensuring that behavior evidence does not bias against rare or novel items. Theory of Mind (Window 1): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that behavior evidence does not redundantly reinforce base model predictions. Leakage is prevented by restricting behavior evidence application to top-K candidates, avoiding contamination of global ranking signals. Cross-Layer Veto (Window 1): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "71034d7432995094_t1",
+      "think": "Chapter 2 explores how spectral frequency analysis of graph-smoothed representations enables dual-frequency integration for recommendation systems. The core insight is that low-frequency components capture shared structure across views, while high-frequency components retain discriminative ranking signals. This leads to a principled approach for balancing consistency and expressiveness in multi-modal recommendation. The paper introduces BRIDGE, which integrates these two types of information through a dual-frequency graph mechanism. The method dynamically weights contributions from different spectral bands based on their agreement and ranking utility. Empirically, this approach outperforms baselines that rely solely on either consistency or ranking signals. The key mathematical tool is the singular value decomposition (SVD) of graph-smoothed channel matrices, which defines frequency bands. These bands are then used to compute cross-view agreement and ranking signal strength. The framework supports both global and local calibration strategies, with behavior-derived corrections being particularly effective in sparse domains. The theoretical foundation lies in spectral graph theory and information theory, where frequency bands represent different levels of signal coherence and specificity. This allows for principled trade-offs between generalization and discrimination in recommendation tasks. Window 2 Synthesis: Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This work builds upon prior research in multi-view learning, spectral graph theory, and recommendation system calibration. It extends earlier studies on cross-view consistency and frequency-domain signal processing to the domain of recommender systems, particularly addressing limitations in traditional collaborative filtering approaches. Retrocausal Genealogy (Window 2): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents in this context include the recommendation system trying to balance global consistency against local ranking accuracy, and the users whose preferences vary in sparsity and diversity. Co-users act as proxies for latent user behavior patterns, while the system must decide when to trust these signals versus its own learned representations. Theory of Mind (Window 2): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that low-frequency agreement does not dominate high-frequency ranking signals. Leakage is prevented by using stop-gradient operations during candidate set formation, avoiding data leakage from base scores into the calibration process. Cross-Layer Veto (Window 2): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "71034d7432995094_t2",
+      "think": "Chapter 3 focuses on the design and evaluation of BRIDGE, a framework integrating dual-frequency graph evidence with behavior-guided residual integration. The core innovation lies in frequency-organized multimodal representations that enable fine-grained behavior modeling. The method constructs behavior graphs from training data alone, ensuring no leakage into validation or test sets. This approach supports candidate-aware inference through a dual mechanism: content-based graph evidence and spectral frequency regularization. Ablation studies show that removing item graph components significantly degrades performance, indicating its importance in capturing multimodal synergy. The residual integration process is constrained to base candidate sets, preventing overfitting and maintaining generalizability. Inference quality improves with frequency regularization and content modality fusion, suggesting that both spectral and semantic dimensions contribute uniquely to recommendation accuracy. These findings support a principled framework for combining structured graph information with learned multimodal embeddings in recommender systems. Window 3 Synthesis: Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in graph-based collaborative filtering and multimodal learning, extending prior work on dual-domain graph encoders and behavior-aware recommendation systems. Retrocausal Genealogy (Window 3): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents modeled include users with evolving preferences and items with dynamic relevance. Co-user relationships and item popularity act as latent variables shaping agent behavior. Theory of Mind (Window 3): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by constraining behavior residuals to base candidates; leakage is prevented by excluding validation/test data from graph construction. Cross-Layer Veto (Window 3): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "71034d7432995094_t3",
+      "think": "This chapter introduces BRIDGE, a method that enhances recommendation systems by decomposing graph signals into low-frequency (stable cross-view structure) and high-frequency (sparse, item-specific variation) components. It uses an Information Bottleneck (IB) surrogate to control routing into these frequency bands and applies a frequency regularizer to preserve useful band geometry. The ablation studies demonstrate that both components are necessary: dropping either weakens the ranking signal. The decomposition itself is shown to be structural and largely independent of the basis used (Gram, DCT, random orthogonal). The key insight is that separating shared low-frequency evidence from high-frequency variation improves recall and NDCG by enabling better candidate coverage and re-ranking. Window 4 Synthesis: Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents (e.g., competing recommender systems) might exploit the low-frequency components to establish market dominance, while coaches or analysts could use the high-frequency variations to identify emerging trends or anomalies. Theory of Mind (Window 4): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must avoid anti-collinearity by ensuring that the low-frequency and high-frequency components are truly decorrelated; otherwise, leakage occurs, undermining the separation principle. Additionally, the routing must respect the underlying graph topology to prevent adversarial manipulation. Cross-Layer Veto (Window 4): Rooted in 2605.22073v2 (71034d7432995094, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

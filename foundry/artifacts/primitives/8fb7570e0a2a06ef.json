@@ -1,0 +1,868 @@
+{
+ "book_id": "8fb7570e0a2a06ef",
+ "source_status": "COMPLETE",
+ "source_note": "Stephen Boyd (Stanford University) and Lieven Vandenberghe (UCLA), Convex Optimization, Cambridge University Press, first published 2004, ISBN 978-0-521-83378-3. The local file is the publisher PDF of the book (its imprint page records the seventh printing with corrections, 2009), 5,793,371 bytes, sha256 8fb7570e0a2a06effe4a79acf343439a4c102a171f80f016e824ac9245707a9a computed by the gatekeeper scan rule (sha256 over the decimal size string followed by the full file bytes); book_id is the first 16 hex characters, 8fb7570e0a2a06ef. The extracted text (36,638 lines) is a clean born-digital layer with occasional garbled math glyphs; every verbatim quote in this artifact was verified as an exact whitespace-normalized substring of that text, drawn from clean prose passages. The catalog title and authors match the file, so no catalog correction is needed. The leading hex digit 8 places this work in the sync-cloud shard of the fleet queue. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "optimization_problem_standard_form",
+   "name": "Optimization problem in standard form: minimize an objective subject to inequality and equality constraints, with optimal value p*",
+   "verbatim_quote": "A mathematical optimization problem, or just optimization problem, has the form",
+   "page": "Ch 1 §1.1, p.1 (text line ~371); restated Ch 4 §4.1, eq. (4.1)",
+   "latex": "\\minimize f_0(x) \\quad \\text{subject to} \\quad f_i(x) \\le 0,\\ i=1,\\ldots,m; \\quad h_i(x) = 0,\\ i=1,\\ldots,p",
+   "symbol_and_unit_ledger": {
+    "x in R^n": "optimization variable (the choice vector), dimensionless model units",
+    "f_0": "objective (cost) function R^n to R",
+    "f_i": "inequality constraint functions",
+    "h_i": "equality constraint functions",
+    "p*": "optimal value, infimum of f_0 over the feasible set"
+   },
+   "assumptions": [
+    "A point is feasible only if it lies in the domain D (intersection of all function domains) and satisfies every constraint.",
+    "The optimal value may be +infinity (infeasible) or -infinity (unbounded below); attainment is not guaranteed."
+   ],
+   "breakdown_regime": "The form itself is fully general, which is the problem: with arbitrary f_i and h_i the problem is usually intractable. All power comes from restricting the function classes (convexity, linearity, conic structure).",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The standard form is the engine's universal problem envelope: every projection, ranking, or resource allocation question is cast as variable, objective, constraints before any solving begins. Constraints are hard requirements (health, eligibility, market rules), the objective is the scored quantity, and p* is the certified best achievable value the rest of the pipeline reasons against.",
+    "source_operator": "optimization_problem_standard_form",
+    "telemetry": "candidate decision vectors, constraint evaluations from situational data feeds, objective scores from the projection model"
+   }
+  },
+  {
+   "primitive_id": "convex_optimization_problem",
+   "name": "Convex optimization problem: convex objective and inequality constraints, affine equality constraints; least-squares and LP are special cases",
+   "verbatim_quote": "A convex optimization problem is one in which the objective and constraint functions are convex, which means they satisfy the inequality",
+   "page": "Ch 1 §1.3, p.7 (eq. 1.8); Ch 4 §4.2.1, eq. (4.15)",
+   "latex": "f_i(\\alpha x + \\beta y) \\le \\alpha f_i(x) + \\beta f_i(y), \\quad \\alpha + \\beta = 1,\\ \\alpha,\\beta \\ge 0",
+   "symbol_and_unit_ledger": {
+    "f_i": "objective (i=0) and inequality constraint functions, all convex",
+    "alpha, beta": "convex combination weights, dimensionless, summing to 1",
+    "equality constraints": "must be affine: a_i^T x = b_i"
+   },
+   "assumptions": [
+    "Equality constraint functions must be affine, not merely convex; a convex equality constraint generally destroys convexity of the feasible set.",
+    "The definition is about the description, not just the geometry: the feasible set must be presented via convex inequalities and linear equalities (the book's abstract-form discussion, §4.2.1)."
+   ],
+   "breakdown_regime": "Fails the moment any objective or inequality constraint is nonconvex (integer choices, products of variables, rank constraints); the feasible set may still be convex geometrically while the given description is not a convex problem, and reformulation becomes the whole game.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Convexity is the engine's tractability certificate. When a subproblem (lineup construction, weight fitting, risk budgeting) is recognized in this form, the engine can promise a global optimum with a duality gap certificate instead of a heuristic answer of unknown quality, and can reject or reformulate subproblems that fall outside the form.",
+    "source_operator": "convex_optimization_problem",
+    "telemetry": "problem structure metadata: function classes of each objective and constraint in a candidate model"
+   }
+  },
+  {
+   "primitive_id": "least_squares_closed_form",
+   "name": "Least-squares problem: unconstrained sum of squared residuals, solved exactly via the normal equations",
+   "verbatim_quote": "The solution of a least-squares problem (1.4) can be reduced to solving a set of linear equations,",
+   "page": "Ch 1 §1.2.1, pp.4-5 (eq. 1.4)",
+   "latex": "(A^T A)x = A^T b, \\qquad x = (A^T A)^{-1} A^T b",
+   "symbol_and_unit_ledger": {
+    "A in R^{k x n}, k >= n": "coefficient matrix; rows a_i^T are measurement functionals",
+    "b in R^k": "observed target values",
+    "x in R^n": "unknown parameter vector",
+    "||Ax - b||_2^2": "sum of squared residuals being minimized"
+   },
+   "assumptions": [
+    "A has full column rank so A^T A is invertible; otherwise the solution is nonunique and a pseudoinverse or regularization is needed.",
+    "Cost is approximately proportional to n^2 k operations; sparsity in A can be exploited for much larger instances."
+   ],
+   "breakdown_regime": "Breaks down under rank deficiency (A^T A singular), gross outliers (squared loss is non-robust), and when the true relation is nonlinear in x; weighted and regularized variants patch the first and third issues only partially.",
+   "domain": "statistics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Least squares is the engine's baseline fitting kernel: ratings, regression adjustments, and calibration layers are least-squares fits of model outputs to observed outcomes, and the closed form means the fit is exact and reproducible, with residuals that can be audited game by game rather than trusted.",
+    "source_operator": "least_squares_closed_form",
+    "telemetry": "historical outcome vectors b, feature matrices A assembled from game logs and tracking aggregates"
+   }
+  },
+  {
+   "primitive_id": "linear_program",
+   "name": "Linear program: linear objective and linear inequality constraints; no closed form, but simplex and interior-point methods solve it reliably",
+   "verbatim_quote": "Another important class of optimization problems is linear programming, in which the objective and all constraint functions are linear:",
+   "page": "Ch 1 §1.2.2, pp.6-7 (eq. 1.5); Ch 4 §4.4.1",
+   "latex": "\\minimize c^T x \\quad \\text{subject to} \\quad a_i^T x \\le b_i,\\ i=1,\\ldots,m",
+   "symbol_and_unit_ledger": {
+    "c in R^n": "linear cost coefficient vector",
+    "a_i in R^n, b_i in R": "constraint normals and bounds",
+    "x in R^n": "decision variable"
+   },
+   "assumptions": [
+    "All functions are exactly linear (affine); any curvature must be modeled away or approximated piecewise.",
+    "Many non-obvious problems (Chebyshev approximation, piecewise-linear objectives) reduce to LP via epigraph variables, as in eq. (1.7)."
+   ],
+   "breakdown_regime": "Cannot express quadratic risk, norm balls (except polyhedral approximations), or integrality; optima occur at vertices, so solutions are extreme-point and can be sensitive to coefficient perturbations.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "LP is the engine's allocation workhorse: budget, exposure, and coverage constraints are linear, and objectives like worst-case (Chebyshev) error linearize through an epigraph variable. The vertex structure maps to corner solutions, so the engine treats LP outputs as extreme allocations and checks them against diversification rules before use.",
+    "source_operator": "linear_program",
+    "telemetry": "linear constraint coefficients from roster, budget, and eligibility data; cost vectors from projection outputs"
+   }
+  },
+  {
+   "primitive_id": "convex_sets",
+   "name": "Convex set: the segment between any two of its points lies in the set; affine sets are the equality special case",
+   "verbatim_quote": "Roughly speaking, a set is convex if every point in the set can be seen by every other point, along an unobstructed straight path between them, where unobstructed means lying in the set.",
+   "page": "Ch 2 §2.1.4, pp.23-24",
+   "latex": "\\theta x_1 + (1-\\theta) x_2 \\in C, \\quad \\forall x_1, x_2 \\in C,\\ 0 \\le \\theta \\le 1",
+   "symbol_and_unit_ledger": {
+    "C subset R^n": "the candidate feasible region",
+    "theta": "segment parameter, dimensionless in [0,1]",
+    "x_1, x_2": "arbitrary points of C"
+   },
+   "assumptions": [
+    "Convexity is preserved under intersection and affine maps, giving a calculus for building feasible sets from simple pieces (§2.3).",
+    "Convex combinations generalize to probability distributions: expectations of points in a convex set remain in the set."
+   ],
+   "breakdown_regime": "Union of convex sets is generally nonconvex; discrete sets (lineups, integer counts) are never convex, so convex methods apply only after relaxation.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Feasible sets in the engine (salary caps intersected with position and exposure constraints) are built exactly this way, as intersections of simple convex pieces. The segment property is what licenses averaging: a mixture of two feasible plans is feasible, which is the formal basis for blending model outputs and for randomized strategies.",
+    "source_operator": "convex_sets",
+    "telemetry": "constraint set definitions from league rules, roster states, and budget parameters"
+   }
+  },
+  {
+   "primitive_id": "convex_cones",
+   "name": "Cone and convex cone: closure under nonnegative scaling and conic combinations",
+   "verbatim_quote": "A set C is called a cone, or nonnegative homogeneous, if for every x ∈ C and θ ≥ 0 we have θx ∈ C.",
+   "page": "Ch 2 §2.1.5, p.25",
+   "latex": "\\theta_1 x_1 + \\theta_2 x_2 \\in C, \\quad \\forall x_1, x_2 \\in C,\\ \\theta_1, \\theta_2 \\ge 0",
+   "symbol_and_unit_ledger": {
+    "theta_1, theta_2": "nonnegative scaling coefficients, dimensionless",
+    "conic combination": "nonnegative linear combination of points of C",
+    "conic hull": "smallest convex cone containing a given set"
+   },
+   "assumptions": [
+    "A convex cone is both convex and a cone; the conic hull is the set of all conic combinations.",
+    "Cones are the domains of homogeneous structure: scaling a feasible direction stays feasible."
+   ],
+   "breakdown_regime": "A cone contains no bounded nonzero structure by itself; pairing with an affine slice is what produces usable feasible sets (this is exactly conic form in §4.6).",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cones encode direction-only constraints in the engine: exposure rays, dominance directions, and scaling-invariant limits. Because conic combinations stay inside, any nonnegative blend of admissible exposure directions is admissible, which is the algebraic reason portfolio-style aggregation of signals is safe when each signal respects the cone.",
+    "source_operator": "convex_cones",
+    "telemetry": "directional constraint data: per-unit exposure vectors, normalized signal directions"
+   }
+  },
+  {
+   "primitive_id": "positive_semidefinite_cone",
+   "name": "The positive semidefinite cone S^n_+ is a convex cone in the space of symmetric matrices",
+   "verbatim_quote": "We use the notation Sn+ to denote the set of symmetric positive semidefinite matrices:",
+   "page": "Ch 2 §2.2.5, pp.34-35",
+   "latex": "S^n_+ = \\{X \\in S^n \\mid X \\succeq 0\\}",
+   "symbol_and_unit_ledger": {
+    "S^n": "vector space of symmetric n x n matrices, dimension n(n+1)/2",
+    "X succeq 0": "X is positive semidefinite: z^T X z >= 0 for all z",
+    "S^n_{++}": "positive definite (interior) matrices"
+   },
+   "assumptions": [
+    "Convexity is visible directly: z^T(theta_1 A + theta_2 B)z >= 0 whenever A, B are PSD and the coefficients are nonnegative.",
+    "Equivalently S^n_+ is an infinite intersection of halfspaces {X : z^T X z >= 0}, one per direction z (example 2.7)."
+   ],
+   "breakdown_regime": "Dimension grows quadratically in n, so SDP-representable models get expensive fast; rank constraints on top of PSD are nonconvex and outside this cone's protection.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Covariance and information matrices in the engine must live in this cone: an estimated covariance that leaves the cone is not a covariance at all. Projecting estimates back onto S^n_+ (eigenvalue clipping) is the cone-membership repair step, and PSD orderings of information matrices are how the engine compares which data source knows more.",
+    "source_operator": "positive_semidefinite_cone",
+    "telemetry": "sample covariance matrices from play-by-play and tracking data; information matrices from fitted models"
+   }
+  },
+  {
+   "primitive_id": "generalized_inequalities",
+   "name": "Proper cones define generalized inequalities: partial orderings on R^n with the algebra of the scalar order",
+   "verbatim_quote": "A proper cone K can be used to define a generalized inequality, which is a partial ordering on Rn that has many of the properties of the standard ordering on R.",
+   "page": "Ch 2 §2.4.1, p.43",
+   "latex": "x \\preceq_K y \\iff y - x \\in K",
+   "symbol_and_unit_ledger": {
+    "K": "proper cone: convex, closed, solid (nonempty interior), pointed (contains no line)",
+    "preceq_K": "generalized (partial) order induced by K",
+    "componentwise order": "the special case K = R^n_+",
+    "matrix order": "the special case K = S^n_+: X preceq Y iff Y - X is PSD"
+   },
+   "assumptions": [
+    "Properness (all four properties) is what makes the induced relation a genuine partial ordering with useful limit behavior.",
+    "The dual cone K* = {y : y^T x >= 0 for all x in K} (§2.6) supplies the linear functionals monotone in this order."
+   ],
+   "breakdown_regime": "A partial order leaves many pairs incomparable; there is no total ranking of vectors or matrices, so scalarization (choosing weights) is an extra modeling decision that the order itself does not make for you.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Generalized inequalities are how the engine compares vector and matrix valued objects honestly: one covariance dominates another, one game state dominates another across all components. Incomparability is a first class output, not an error: when two options are incomparable under the cone order, the engine reports the trade-off instead of forcing a fake total ranking.",
+    "source_operator": "generalized_inequalities",
+    "telemetry": "vector-valued performance profiles, covariance matrices, multi-metric team ratings"
+   }
+  },
+  {
+   "primitive_id": "separating_hyperplane_theorem",
+   "name": "Separating hyperplane theorem: disjoint convex sets can be separated by an affine function; convex hulls govern separability",
+   "verbatim_quote": "The hyperplane {x | aT x = b} is called a separating hyperplane for the sets C and D, or is said to separate the sets C and D.",
+   "page": "Ch 2 §2.5.1, pp.46-47",
+   "latex": "a^T x \\le b \\ \\forall x \\in C, \\qquad a^T x \\ge b \\ \\forall x \\in D, \\quad a \\ne 0",
+   "symbol_and_unit_ledger": {
+    "a in R^n": "normal vector of the separating hyperplane",
+    "b in R": "offset",
+    "conv C": "convex hull: all convex combinations of points of C; two point sets are linearly separable iff their convex hulls are disjoint (§8.6.1)"
+   },
+   "assumptions": [
+    "C and D must be convex and disjoint; for point sets, separability of the sets is equivalent to disjointness of their convex hulls.",
+    "Strict separation needs more (e.g., closedness and positive distance); the basic theorem gives a non-strict separator."
+   ],
+   "breakdown_regime": "If the hulls touch or overlap, no separator exists and classification must go approximate (slack variables, §8.6); the theorem is existential and does not by itself give the best separator.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Separation is the engine's classification kernel and its impossibility detector: a separating hyperplane is a linear classifier, and non-existence of one (hulls intersect) is a proof that no linear rule can perfectly distinguish two classes in the chosen features, which vetoes wasted search and pushes the pipeline toward slack based approximate classifiers or richer features.",
+    "source_operator": "separating_hyperplane_theorem",
+    "telemetry": "labeled feature point clouds: team and player game states with outcome labels"
+   }
+  },
+  {
+   "primitive_id": "convex_function_definition",
+   "name": "Convex function: the chord between any two graph points lies above the graph; restriction to any line is convex",
+   "verbatim_quote": "Geometrically, this inequality means that the line segment between (x, f (x)) and (y, f (y)), which is the chord from x to y, lies above the graph of f (figure 3.1).",
+   "page": "Ch 3 §3.1.1, p.67 (eq. 3.1)",
+   "latex": "f(\\theta x + (1-\\theta) y) \\le \\theta f(x) + (1-\\theta) f(y), \\quad 0 \\le \\theta \\le 1",
+   "symbol_and_unit_ledger": {
+    "f : R^n to R": "the function under test, with convex domain",
+    "theta": "chord parameter in [0,1]",
+    "x, y": "arbitrary points of dom f"
+   },
+   "assumptions": [
+    "dom f must itself be convex; the line restriction test (g(t) = f(x + tv) convex for all lines) is the practical verification route.",
+    "Extended-value extension sets f = +infinity outside dom f, folding domain constraints into the function."
+   ],
+   "breakdown_regime": "Fails for functions with any downward-curving region (sigmoids, multimodal losses, products of variables); one bad line restriction is enough to destroy convexity and every guarantee built on it.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This inequality is the engine's definition of a well behaved loss or cost: blending two parameter settings cannot do worse than the blend of their costs, so interpolation between candidate models is safe and local search cannot be trapped. Every scoring and fitting function admitted to the certified layer must pass the line restriction test on sampled lines.",
+    "source_operator": "convex_function_definition",
+    "telemetry": "function evaluations along sampled lines through parameter space during model validation"
+   }
+  },
+  {
+   "primitive_id": "first_order_condition_global_underestimator",
+   "name": "First-order condition: a differentiable function is convex iff its first-order Taylor approximation is a global underestimator everywhere",
+   "verbatim_quote": "The inequality (3.2) states that for a convex function, the first-order Taylor approximation is in fact a global underestimator of the function.",
+   "page": "Ch 3 §3.1.3, pp.68-69 (eq. 3.2)",
+   "latex": "f(y) \\ge f(x) + \\nabla f(x)^T (y - x), \\quad \\forall x, y \\in \\mathrm{dom}\\, f",
+   "symbol_and_unit_ledger": {
+    "nabla f(x)": "gradient of f at x",
+    "f(x) + nabla f(x)^T (y - x)": "first-order Taylor approximation at x, an affine global underestimator",
+    "corollary": "nabla f(x) = 0 implies x is a global minimizer"
+   },
+   "assumptions": [
+    "Requires differentiability on an open convex domain; nondifferentiable convex functions use subgradients instead.",
+    "The condition is an if and only if: a function whose tangents ever cut above the graph is not convex."
+   ],
+   "breakdown_regime": "Only as strong as the differentiability assumption; at kinks (norms at zero, max functions) the gradient does not exist and the underestimator must be built from subgradients.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's certificate primitive: from one local evaluation (value plus gradient) it obtains a rigorous global lower bound on a convex objective. The reasoning layer uses exactly this move to bound how good any alternative can possibly be, converting local model information into global statements about unexplored options without enumerating them.",
+    "source_operator": "first_order_condition_global_underestimator",
+    "telemetry": "gradient evaluations from differentiable model components; autodiff traces over fitted parameters"
+   }
+  },
+  {
+   "primitive_id": "second_order_condition_hessian_psd",
+   "name": "Second-order condition: a twice differentiable function is convex iff its Hessian is positive semidefinite everywhere on its domain",
+   "verbatim_quote": "Then f is convex if and only if dom f is convex and its Hessian is positive semidefinite",
+   "page": "Ch 3 §3.1.4, p.71",
+   "latex": "\\nabla^2 f(x) \\succeq 0, \\quad \\forall x \\in \\mathrm{dom}\\, f",
+   "symbol_and_unit_ledger": {
+    "nabla^2 f(x) in S^n": "Hessian matrix of second derivatives at x",
+    "succeq 0": "positive semidefinite in the S^n_+ order",
+    "example": "quadratic (1/2)x^T P x + q^T x + r is convex iff P succeq 0"
+   },
+   "assumptions": [
+    "Requires twice differentiability on an open convex domain; the domain convexity requirement cannot be dropped (f(x) = 1/x^2 has f'' > 0 on a nonconvex domain and is not convex).",
+    "Strict PSD Hessian implies strict convexity, but not conversely (x^4 is strictly convex with zero second derivative at 0)."
+   ],
+   "breakdown_regime": "Checking a Hessian field pointwise is expensive in high dimensions and impossible for black box functions; in practice the engine samples Hessians or uses structural composition rules instead.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The Hessian test is the engine's automated convexity audit for parametric families: a fitted quadratic model is certified convex exactly when its matrix is PSD, and negative eigenvalues localize precisely which parameter directions break convexity, telling the modeling layer what to regularize or reparametrize.",
+    "source_operator": "second_order_condition_hessian_psd",
+    "telemetry": "Hessian matrices or Hessian-vector products from fitted model components; eigenvalue spectra"
+   }
+  },
+  {
+   "primitive_id": "epigraph_characterization",
+   "name": "Epigraph characterization: a function is convex iff its epigraph is a convex set, bridging function and set convexity",
+   "verbatim_quote": "The link between convex sets and convex functions is via the epigraph: A function is convex if and only if its epigraph is a convex set.",
+   "page": "Ch 3 §3.1.7, pp.75-76",
+   "latex": "\\mathrm{epi}\\, f = \\{(x, t) \\mid x \\in \\mathrm{dom}\\, f,\\ f(x) \\le t\\}",
+   "symbol_and_unit_ledger": {
+    "(x, t) in R^{n+1}": "point above the graph of f",
+    "t": "epigraph (slack) variable bounding f(x) from above",
+    "hypo f": "hypograph, the concave analog"
+   },
+   "assumptions": [
+    "Minimizing f(x) is equivalent to minimizing t over epi f; this single move linearizes objectives (used for Chebyshev approximation and max objectives).",
+    "Set operations on epigraphs mirror function operations: pointwise supremum corresponds to epigraph intersection."
+   ],
+   "breakdown_regime": "The epigraph adds a dimension and can hide domain pathology; for nonconvex f the epigraph is nonconvex and the bridge carries nothing.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The epigraph trick is the engine's universal reformulation move: worst-case objectives, max-of-models scores, and piecewise criteria all become linear objectives over an epigraph constraint, which is how apparently nonlinear decision criteria get admitted into LP, SOCP, and SDP solvers without approximation.",
+    "source_operator": "epigraph_characterization",
+    "telemetry": "objective rewrites logged by the modeling layer; slack variable traces from solver outputs"
+   }
+  },
+  {
+   "primitive_id": "jensens_inequality",
+   "name": "Jensen's inequality: for convex f, the function of an average is at most the average of the function; f(E x) <= E f(x)",
+   "verbatim_quote": "Thus, randomization or dithering (i.e., adding a zero mean random vector to the argument) cannot decrease the value of a convex function on average.",
+   "page": "Ch 3 §3.1.8, pp.77-78 (eq. 3.5)",
+   "latex": "f(\\mathbb{E}\\, x) \\le \\mathbb{E}\\, f(x)",
+   "symbol_and_unit_ledger": {
+    "x": "random variable (or vector) supported in dom f with probability one",
+    "E": "expectation operator",
+    "reading": "adding zero-mean noise to the argument of a convex function cannot decrease its expected value"
+   },
+   "assumptions": [
+    "The expectations must exist; the inequality reverses for concave f.",
+    "Finite form: f of any convex combination is at most the same combination of values, which is just the definition iterated."
+   ],
+   "breakdown_regime": "Requires genuine convexity over the whole support; heavy tails can make E f(x) infinite, and for nonconvex f the inequality can fail in either direction.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Jensen is the engine's uncertainty accounting rule: evaluating a convex cost at the mean projection understates the expected cost under uncertainty, by an amount that grows with spread. The reasoning layer uses the gap E f(x) - f(E x) as a priced measure of forecast uncertainty instead of pretending the mean projection is the whole story.",
+    "source_operator": "jensens_inequality",
+    "telemetry": "predictive distributions (not just point projections) for player and team outcomes; cost function evaluations over samples"
+   }
+  },
+  {
+   "primitive_id": "conjugate_function",
+   "name": "Conjugate function: f*(y) = sup_x (y^T x - f(x)) is always convex, the supremum of affine functions; dual representation of f",
+   "verbatim_quote": "We see immediately that f ∗ is a convex function, since it is the pointwise supremum of a family of convex (indeed, affine) functions of y.",
+   "page": "Ch 3 §3.3.1, pp.90-91 (eq. 3.18)",
+   "latex": "f^*(y) = \\sup_{x \\in \\mathrm{dom}\\, f} \\left( y^T x - f(x) \\right)",
+   "symbol_and_unit_ledger": {
+    "y in R^n": "slope (dual) variable; dom f* is where the supremum is finite",
+    "y^T x - f(x)": "gap between the linear function with slope y and f",
+    "examples": "conjugate of (1/2)x^T Q x is (1/2) y^T Q^{-1} y; conjugate of an indicator function is the support function"
+   },
+   "assumptions": [
+    "f* is convex whether or not f is; for closed convex f, conjugation is an involution (f** = f), so f and f* carry the same information.",
+    "Built from the pointwise supremum operation of §3.2.3: suprema of arbitrary families of convex functions are convex."
+   ],
+   "breakdown_regime": "The supremum is infinite outside dom f*, and computing conjugates analytically is only feasible for structured f; for empirical functions the conjugate must be approximated numerically.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Conjugation is the engine's change of coordinates between primal quantities and price-like dual quantities: a cost expressed per unit of outcome becomes a cost expressed per unit of slope or sensitivity. The Lagrange dual function of chapter 5 is a conjugate in disguise, so this primitive is the root of every dual bound and shadow price the engine computes.",
+    "source_operator": "conjugate_function",
+    "telemetry": "support function evaluations of feasible sets; conjugate pairs tabulated for the standard loss library"
+   }
+  },
+  {
+   "primitive_id": "quasiconvex_functions",
+   "name": "Quasiconvex functions: convex sublevel sets; value on a segment never exceeds the max of the endpoint values; solvable by bisection on feasibility",
+   "verbatim_quote": "i.e., the value of the function on a segment does not exceed the maximum of its values at the endpoints.",
+   "page": "Ch 3 §3.4.2, p.99 (eq. 3.19); optimization in §4.2.5",
+   "latex": "f(\\theta x + (1-\\theta) y) \\le \\max\\{f(x), f(y)\\}, \\quad 0 \\le \\theta \\le 1",
+   "symbol_and_unit_ledger": {
+    "sublevel set {x : f(x) <= alpha}": "convex for every alpha, the defining property",
+    "bisection": "for a trial value t, the feasibility problem f_0(x) <= t with convex constraints decides which half of the bracket contains the optimum"
+   },
+   "assumptions": [
+    "Quasiconvex optimization is solved by bisection: a sequence of convex feasibility problems, one per bracket halving (§4.2.5).",
+    "Ratios of affine functions and other fractional criteria are quasiconvex on suitable domains (examples in §3.4.1)."
+   ],
+   "breakdown_regime": "Local optima of quasiconvex problems need not be global, and there is no first-order global underestimator; the bisection wrapper is the price of admission, and each step is a full feasibility solve.",
+   "domain": "convex analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fractional metrics (rates, ratios, per-unit efficiencies) are quasiconvex rather than convex, and this primitive tells the engine the correct way to optimize them: bisect on the target value and test feasibility convexly, instead of differentiating a ratio and hoping. A failed feasibility test at value t is a proof that no decision achieves that rate.",
+    "source_operator": "quasiconvex_functions",
+    "telemetry": "ratio metrics from game data (per-play, per-possession rates); feasibility solver verdicts per bisection step"
+   }
+  },
+  {
+   "primitive_id": "local_optimum_is_global",
+   "name": "For a convex optimization problem, any locally optimal point is globally optimal",
+   "verbatim_quote": "A fundamental property of convex optimization problems is that any locally optimal point is also (globally) optimal.",
+   "page": "Ch 4 §4.2.2, p.138",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Proof idea: if a feasible y had smaller objective, the segment point near x toward y would be feasible (convex feasible set) with smaller objective (convex f_0), contradicting local optimality.",
+    "The optimal set is convex; with a strictly convex objective it contains at most one point."
+   ],
+   "breakdown_regime": "False for quasiconvex and general nonconvex problems; it is exactly the property surrendered when a model leaves the convex class, and the reason local methods for nonconvex problems need starting points and luck.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This theorem is the engine's trust anchor for every convex subproblem: a converged local solver has found the global answer, full stop, so downstream reasoning can treat solver outputs as facts rather than as samples from an unknown search. Any component that cannot offer this property is labeled heuristic in the pipeline and its outputs carry uncertainty flags.",
+    "source_operator": "local_optimum_is_global",
+    "telemetry": "solver convergence certificates and duality gaps attached to each optimization result in the pipeline"
+   }
+  },
+  {
+   "primitive_id": "socp",
+   "name": "Second-order cone program: linear objective with constraints ||A_i x + b_i||_2 <= c_i^T x + d_i; generalizes LP, QP, and QCQP",
+   "verbatim_quote": "A problem that is closely related to quadratic programming is the second-order cone program (SOCP):",
+   "page": "Ch 4 §4.4.2, pp.155-156 (eq. 4.36)",
+   "latex": "\\minimize f^T x \\quad \\text{subject to} \\quad \\|A_i x + b_i\\|_2 \\le c_i^T x + d_i,\\ i=1,\\ldots,m; \\quad Fx = g",
+   "symbol_and_unit_ledger": {
+    "A_i in R^{n_i x n}, b_i": "affine map inside the norm",
+    "c_i^T x + d_i": "affine bound on the norm (the cone's axis coordinate)",
+    "second-order cone": "{(y, t) : ||y||_2 <= t} in R^{k+1}"
+   },
+   "assumptions": [
+    "With c_i = 0 the problem is a QCQP after squaring; with A_i = 0 it reduces to LP constraints.",
+    "Robust linear constraints with ellipsoidal uncertainty and many norm minimization problems are SOCPs."
+   ],
+   "breakdown_regime": "Norms must be Euclidean (or reducible to it); polyhedral or spectral structures need LP or SDP instead, and SOCP solvers scale worse than LP solvers at very large sizes.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "SOCP is the engine's robust decision form: a constraint that must hold for all perturbations inside an ellipsoid is exactly a second-order cone constraint, so uncertainty in opponent strength or player availability becomes a cone constraint rather than a Monte Carlo afterthought, and the solution is robust by construction.",
+    "source_operator": "socp",
+    "telemetry": "ellipsoidal uncertainty sets around projections; norm-bounded error models for tracking derived features"
+   }
+  },
+  {
+   "primitive_id": "sdp_lmi",
+   "name": "Semidefinite program: linear objective subject to a linear matrix inequality; LP is the diagonal special case",
+   "verbatim_quote": "When K is Sk+ , the cone of positive semidefinite k × k matrices, the associated conic form problem is called a semidefinite program (SDP), and has the form",
+   "page": "Ch 4 §4.6.2, p.168 (eq. 4.50)",
+   "latex": "\\minimize c^T x \\quad \\text{subject to} \\quad x_1 F_1 + \\cdots + x_n F_n + G \\preceq 0, \\quad Ax = b",
+   "symbol_and_unit_ledger": {
+    "F_i, G in S^k": "symmetric matrix coefficients of the LMI",
+    "x in R^n": "scalar decision variables weighting the matrices",
+    "preceq 0": "negative semidefinite in the S^k_+ order",
+    "standard form": "minimize tr(CX) s.t. tr(A_i X) = b_i, X succeq 0 (eq. 4.51)"
+   },
+   "assumptions": [
+    "Multiple LMIs and linear constraints combine into one block diagonal LMI, so the single-LMI form loses no generality.",
+    "If all matrices are diagonal the SDP collapses to an LP."
+   ],
+   "breakdown_regime": "SDPs are the most expensive mainstream convex class: matrix variables of size k cost roughly k^2 memory and far more per iteration, so SDP formulations are reserved for problems where matrix structure is the point (covariance, stability, relaxation bounds).",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "SDP is the engine's matrix decision form: covariance shaping, minimum volume enclosing ellipsoids, and certified lower bounds for hard combinatorial problems (via SDP relaxation, as in the two way partitioning bound of §5.2.2) are all SDPs. The engine reaches for it when the object being chosen is itself a matrix, not a vector.",
+    "source_operator": "sdp_lmi",
+    "telemetry": "matrix valued decision data: covariance targets, ellipsoid parameters, Gram matrices of embeddings"
+   }
+  },
+  {
+   "primitive_id": "geometric_programming",
+   "name": "Geometric program: posynomial objective and inequality constraints, monomial equalities; becomes convex under the log change of variables",
+   "verbatim_quote": "Monomials are closed under multiplication and division. If a posynomial is multiplied by a monomial, the result is a posynomial",
+   "page": "Ch 4 §4.5.1-4.5.2, pp.160-161 (eqs. 4.41-4.43)",
+   "latex": "f(x) = c\\, x_1^{a_1} x_2^{a_2} \\cdots x_n^{a_n}, \\quad c > 0,\\ a_i \\in \\mathbb{R},\\ x \\succ 0",
+   "symbol_and_unit_ledger": {
+    "monomial": "single term c prod x_i^{a_i} with positive coefficient and real exponents",
+    "posynomial": "sum of monomials with positive coefficients",
+    "GP standard form": "minimize a posynomial s.t. posynomials <= 1 and monomials = 1; log transform y = log x makes it convex"
+   },
+   "assumptions": [
+    "All variables are implicitly positive; coefficients must be positive, which is a real modeling restriction.",
+    "The convex form is reached by the change of variables y_i = log x_i and taking logs of the objective and constraints."
+   ],
+   "breakdown_regime": "Any negative coefficient, subtraction, or nonpositive variable destroys the GP form; generalized GPs need signomial machinery that loses the convexity guarantee.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Multiplicative models are everywhere in performance reasoning (rates that multiply: efficiency times volume times context), and GP is the certificate that such models are secretly convex after a log transform. The engine fits and optimizes multiplicative factor models in log space, where they inherit global optimality, instead of fighting their nonconvex appearance in raw space.",
+    "source_operator": "geometric_programming",
+    "telemetry": "positive multiplicative features: rates, ratios, and per-unit production factors from game logs"
+   }
+  },
+  {
+   "primitive_id": "lagrangian",
+   "name": "Lagrangian: constraints enter the objective as a priced weighted sum, with multipliers lambda >= 0 and free nu",
+   "verbatim_quote": "The basic idea in Lagrangian duality is to take the constraints in (5.1) into account by augmenting the objective function with a weighted sum of the constraint functions.",
+   "page": "Ch 5 §5.1.1, p.215",
+   "latex": "L(x, \\lambda, \\nu) = f_0(x) + \\sum_{i=1}^{m} \\lambda_i f_i(x) + \\sum_{i=1}^{p} \\nu_i h_i(x)",
+   "symbol_and_unit_ledger": {
+    "lambda in R^m, lambda >= 0": "multipliers (prices) for inequality constraints",
+    "nu in R^p": "multipliers for equality constraints, unrestricted in sign",
+    "L": "Lagrangian, defined on D x R^m x R^p"
+   },
+   "assumptions": [
+    "No convexity is assumed at this stage; the construction is algebraic and applies to any standard form problem.",
+    "Sign convention: inequality multipliers are nonnegative because constraints enter as f_i(x) <= 0."
+   ],
+   "breakdown_regime": "The Lagrangian alone solves nothing; its power comes only through the dual function and duality theorems built on it.",
+   "domain": "duality",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Lagrangian is the engine's pricing mechanism for constraints: every requirement (cap space, minutes, health limits) receives a price, and the constrained problem becomes an unconstrained one in the priced objective. This is how the reasoning layer trades constraints off against each other quantitatively instead of treating them as binary vetoes.",
+    "source_operator": "lagrangian",
+    "telemetry": "constraint functions evaluated on candidate decisions; multiplier vectors returned by solvers"
+   }
+  },
+  {
+   "primitive_id": "dual_function_lower_bound",
+   "name": "Lagrange dual function: pointwise infimum of the Lagrangian, always concave, and a lower bound g(lambda, nu) <= p* for lambda >= 0",
+   "verbatim_quote": "Since the dual function is the pointwise infimum of a family of affine functions of (λ, ν), it is concave, even when the problem (5.1) is not convex.",
+   "page": "Ch 5 §5.1.2-5.1.3, pp.216-217 (eq. 5.2)",
+   "latex": "g(\\lambda, \\nu) = \\inf_{x \\in \\mathcal{D}} L(x, \\lambda, \\nu) \\le p^\\star, \\quad \\lambda \\succeq 0",
+   "symbol_and_unit_ledger": {
+    "g": "dual function R^m x R^p to R (extended valued)",
+    "p*": "primal optimal value being bounded",
+    "dual feasible": "lambda >= 0 with g(lambda, nu) > -infinity"
+   },
+   "assumptions": [
+    "The bound is vacuous when g = -infinity; nontrivial bounds require dual feasible points.",
+    "Maximizing g over dual feasible points (the Lagrange dual problem) is a convex problem even when the primal is not."
+   ],
+   "breakdown_regime": "For nonconvex problems the best dual bound can be strictly below p* (positive duality gap), so the certificate is one sided: it proves how good no solution can beat, never that a solution attains it.",
+   "domain": "duality",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The dual function is the engine's bound factory: any dual feasible point yields a rigorous bound on the best achievable objective, for convex and nonconvex problems alike. Leaderboards of candidate strategies can be pruned by dual bounds without solving the primal, and the gap between an incumbent and the best bound is an honest, computable measure of remaining doubt.",
+    "source_operator": "dual_function_lower_bound",
+    "telemetry": "dual feasible iterates from solvers; bound values logged per optimization task"
+   }
+  },
+  {
+   "primitive_id": "slaters_condition_strong_duality",
+   "name": "Slater's condition: a strictly feasible point in the relative interior guarantees strong duality d* = p* for a convex problem",
+   "verbatim_quote": "Such a point is sometimes called strictly feasible, since the inequality constraints hold with strict inequalities.",
+   "page": "Ch 5 §5.2.3, pp.226-227 (eq. 5.26)",
+   "latex": "\\exists\\, x \\in \\mathrm{relint}\\, \\mathcal{D}: \\quad f_i(x) < 0,\\ i=1,\\ldots,m, \\quad Ax = b \\ \\Longrightarrow\\ d^\\star = p^\\star",
+   "symbol_and_unit_ledger": {
+    "strictly feasible point": "satisfies all inequality constraints strictly and equalities exactly",
+    "d*": "optimal value of the Lagrange dual problem",
+    "refinement": "affine inequality constraints need only hold nonstrictly (eq. 5.27)"
+   },
+   "assumptions": [
+    "The problem must be convex for Slater's theorem; the refined condition relaxes strictness for affine constraints.",
+    "Under Slater, the dual optimum is attained whenever d* > -infinity."
+   ],
+   "breakdown_regime": "Fails when the feasible set has empty relative interior in the inequality directions (for example problems whose constraints force equalities); then strong duality can fail and KKT necessity goes with it.",
+   "domain": "duality",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Slater's condition is the engine's preflight check before trusting any dual certificate: if a strictly feasible decision exists, primal and dual values coincide and multipliers are meaningful prices. The pipeline verifies strict feasibility explicitly, and when it fails, dual outputs are downgraded from certificates to heuristics in the reasoning layer.",
+    "source_operator": "slaters_condition_strong_duality",
+    "telemetry": "strict feasibility margins (most negative constraint value) computed for each production optimization problem"
+   }
+  },
+  {
+   "primitive_id": "complementary_slackness",
+   "name": "Complementary slackness: at optimality lambda_i* f_i(x*) = 0; a multiplier is nonzero only for constraints active at the optimum",
+   "verbatim_quote": "Roughly speaking, this means the ith optimal Lagrange multiplier is zero unless the ith constraint is active at the optimum.",
+   "page": "Ch 5 §5.5.2, pp.242-243 (eq. 5.48)",
+   "latex": "\\lambda_i^\\star f_i(x^\\star) = 0, \\quad i=1,\\ldots,m",
+   "symbol_and_unit_ledger": {
+    "lambda_i*": "optimal multiplier for constraint i",
+    "f_i(x*)": "constraint slack at the optimum (<= 0); zero means active",
+    "reading": "lambda_i* > 0 implies f_i(x*) = 0; f_i(x*) < 0 implies lambda_i* = 0"
+   },
+   "assumptions": [
+    "Requires primal and dual optima attained with zero duality gap (strong duality).",
+    "Each term lambda_i* f_i(x*) is nonpositive, so the vanishing sum forces termwise vanishing."
+   ],
+   "breakdown_regime": "Without strong duality or attainment, complementary slackness can fail; it is a property of optimal pairs, not a condition checkable on arbitrary feasible points.",
+   "domain": "duality",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Complementary slackness is the engine's binding constraint detector: at an optimum, only active constraints carry prices, and slack constraints are provably irrelevant to the value. The reasoning layer uses the active set to explain decisions (which limits actually bound the outcome) and to ignore the limits that did not matter, instead of narrating every constraint.",
+    "source_operator": "complementary_slackness",
+    "telemetry": "optimal multiplier vectors and constraint slack vectors from solver outputs"
+   }
+  },
+  {
+   "primitive_id": "kkt_conditions",
+   "name": "KKT conditions: feasibility, dual feasibility, complementary slackness, and stationarity; necessary and sufficient for convex problems under Slater",
+   "verbatim_quote": "In summary, for any convex optimization problem with differentiable objective and constraint functions, any points that satisfy the KKT conditions are primal and dual optimal, and have zero duality gap.",
+   "page": "Ch 5 §5.5.3, pp.243-244 (eq. 5.49)",
+   "latex": "\\nabla f_0(x^\\star) + \\sum_{i=1}^{m} \\lambda_i^\\star \\nabla f_i(x^\\star) + \\sum_{i=1}^{p} \\nu_i^\\star \\nabla h_i(x^\\star) = 0",
+   "symbol_and_unit_ledger": {
+    "stationarity": "the displayed gradient balance at x*",
+    "primal feasibility": "f_i(x*) <= 0, h_i(x*) = 0",
+    "dual feasibility": "lambda* >= 0",
+    "complementary slackness": "lambda_i* f_i(x*) = 0"
+   },
+   "assumptions": [
+    "Differentiability of all functions is assumed; for convex problems KKT is sufficient with no qualification, and necessary under Slater's condition.",
+    "Many algorithms are, in effect, methods for solving the KKT system."
+   ],
+   "breakdown_regime": "For nonconvex problems KKT is necessary only when strong duality (or another qualification) holds, and never sufficient; nondifferentiable problems need subgradient KKT variants.",
+   "domain": "duality",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The KKT system is the engine's optimality audit: a claimed optimum ships with primal and dual points, and the four KKT residuals are computed and checked numerically. A solution that fails stationarity or complementary slackness is rejected as uncertified no matter what the solver reported, which is the concrete form of the fleet's rule that wired means verified in the artifact.",
+    "source_operator": "kkt_conditions",
+    "telemetry": "KKT residual norms (stationarity, feasibility, slackness products) computed on every certified solution"
+   }
+  },
+  {
+   "primitive_id": "sensitivity_shadow_prices",
+   "name": "Sensitivity: optimal multipliers are shadow prices; p*(u,v) >= p*(0,0) - lambda*^T u - nu*^T v bounds the cost of perturbing constraints",
+   "verbatim_quote": "The inequality (5.57), and the conclusions listed above, give a lower bound on the perturbed optimal value, but no upper bound.",
+   "page": "Ch 5 §5.6.2, pp.250-251 (eq. 5.57)",
+   "latex": "p^\\star(u, v) \\ge p^\\star(0, 0) - \\lambda^{\\star T} u - \\nu^{\\star T} v",
+   "symbol_and_unit_ledger": {
+    "u, v": "perturbations of inequality and equality right hand sides (positive u relaxes constraint i)",
+    "lambda_i*": "shadow price: guaranteed rate at which tightening constraint i raises the optimal value",
+    "p*(u, v)": "optimal value of the perturbed problem, a convex function of (u, v)"
+   },
+   "assumptions": [
+    "Strong duality with dual attainment is assumed; the inequality is global, valid for all perturbations, not just small ones.",
+    "The bound is one sided: it lower bounds the perturbed value, giving guarantees for tightening but not for loosening."
+   ],
+   "breakdown_regime": "Only a lower bound; loosening a high price constraint does not guarantee a large improvement, and if p* is nondifferentiable at 0 the multipliers give directional, not exact, rates.",
+   "domain": "duality",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shadow prices are the engine's what-if currency: the multiplier on a constraint is a certified exchange rate between relaxing that limit and improving the objective. Roster and resource questions (what is one more unit of cap, rest, or availability worth) are answered from multipliers with a global inequality behind them, not from rerunning scenarios and eyeballing differences.",
+    "source_operator": "sensitivity_shadow_prices",
+    "telemetry": "optimal dual variables per constraint; perturbation scenarios from roster and schedule changes"
+   }
+  },
+  {
+   "primitive_id": "regularized_approximation_tradeoff",
+   "name": "Regularized approximation: the bi-criterion problem of small residual versus small solution, scalarized by a penalty weight that traces the Pareto trade-off curve",
+   "verbatim_quote": "Regularization is a common scalarization method used to solve the bi-criterion problem (6.7).",
+   "page": "Ch 6 §6.3.1-6.3.2, pp.305-306 (eqs. 6.7-6.9)",
+   "latex": "\\minimize \\|Ax - b\\| + \\gamma \\|x\\|, \\quad \\gamma > 0",
+   "symbol_and_unit_ledger": {
+    "||Ax - b||": "residual (fit) objective",
+    "||x||": "solution size (complexity) objective",
+    "gamma": "scalarization weight; sweeping gamma traces the optimal trade-off curve",
+    "Pareto endpoints": "x = 0 (zero size, residual ||b||) and the minimum norm least-squares solution A^dagger b"
+   },
+   "assumptions": [
+    "Both objectives are norms (possibly different ones on R^m and R^n); the weighted sum (6.8) or squared version (6.9) recovers Pareto optimal points as the weight varies.",
+    "Interpretations: prior knowledge that ||x|| is small, cost of large design variables, or protection against model error in A."
+   ],
+   "breakdown_regime": "The trade-off curve must be explored, not assumed: a single gamma hides the exchange rate, and squared penalties bias toward dense small coefficients where the modeling goal may want sparsity instead.",
+   "domain": "statistics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The trade-off curve is the engine's model selection surface: fit versus complexity is a bi-criterion problem, and the engine reports the curve (with the exchange rate at the operating point) rather than a single tuned model. Choosing gamma is choosing where on the curve to operate, an explicit, auditable decision instead of a hidden hyperparameter accident.",
+    "source_operator": "regularized_approximation_tradeoff",
+    "telemetry": "residual norms and coefficient norms across a gamma sweep for each fitted model family"
+   }
+  },
+  {
+   "primitive_id": "l1_sparsity_heuristic",
+   "name": "Least l1-norm heuristic: minimizing ||x||_1 subject to Ax = b tends to produce sparse solutions, a convex proxy for the combinatorial sparsest solution",
+   "verbatim_quote": "Solving the least ℓ1 -norm problem, on the other hand, gives a good heuristic for finding a sparse, and small, solution of Ax = b.",
+   "page": "Ch 6 §6.3, pp.300 and 304-305",
+   "latex": "\\minimize \\|x\\|_1 \\quad \\text{subject to} \\quad Ax = b",
+   "symbol_and_unit_ledger": {
+    "||x||_1": "sum of absolute values, the convex surrogate for cardinality",
+    "cardinality baseline": "checking all sparsity patterns costs n!/(m!(n-m)!) subproblems",
+    "effect": "l1 geometry puts optima at corners, zeroing many components"
+   },
+   "assumptions": [
+    "Stated in the book as a heuristic with strong empirical behavior, not a guarantee; exact recovery needs conditions on A.",
+    "The same effect appears with l1 regularization in fitting (trade-off curve between residual and ||x||_1, §6.3)."
+   ],
+   "breakdown_regime": "Can fail to find the sparsest solution when columns of A are highly correlated; it returns a sparse and small solution, not a certified sparsest one.",
+   "domain": "statistics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sparsity is the engine's interpretability prior: an explanation with few active factors is preferred, and l1 minimization is how that preference becomes an algorithm. Feature selection for projections runs through l1 penalized fits, and the surviving nonzero coefficients are the factors the reasoning layer is allowed to narrate, which keeps explanations tied to what the fit actually used.",
+    "source_operator": "l1_sparsity_heuristic",
+    "telemetry": "coefficient paths from l1 penalized fits; counts of active features per model"
+   }
+  },
+  {
+   "primitive_id": "maximum_likelihood_estimation",
+   "name": "Maximum likelihood estimation is a convex optimization problem whenever the log-likelihood is concave and the prior constraint set is convex",
+   "verbatim_quote": "The maximum likelihood estimation problem (7.1) is a convex optimization problem if the log-likelihood function l is concave for each value of y",
+   "page": "Ch 7 §7.1, pp.351-352 (eq. 7.1)",
+   "latex": "\\hat{x}_{\\mathrm{ml}} = \\arg\\max_x \\, l(x), \\qquad l(x) = \\log p_x(y)",
+   "symbol_and_unit_ledger": {
+    "p_x(y)": "likelihood: density of the observation y under parameter x",
+    "l(x)": "log-likelihood function",
+    "C": "prior information constraint set on the parameter",
+    "Gaussian case": "linear measurements with Gaussian noise make ML coincide with least squares"
+   },
+   "assumptions": [
+    "Concavity of l holds for many standard families (exponential families, linear Gaussian models, logistic regression).",
+    "Prior constraints enter either explicitly as x in C or by assigning zero likelihood outside C."
+   ],
+   "breakdown_regime": "Mixture models and other latent variable likelihoods are not concave; then ML is a nonconvex problem and only local optima (for example via EM) are available, with no global certificate.",
+   "domain": "statistics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This primitive draws the engine's estimation boundary: when a statistical model has concave log-likelihood, parameter fitting is certified convex work (logistic style matchup models, Gaussian process style regressors), and when it does not, the fit is labeled local and its parameters carry an uncertainty warning into every downstream projection.",
+    "source_operator": "maximum_likelihood_estimation",
+    "telemetry": "observed samples y (game outcomes, play results) and parametric density families under evaluation"
+   }
+  },
+  {
+   "primitive_id": "experiment_design_relaxation",
+   "name": "Experiment design: choose measurement counts to minimize the error covariance over the PSD cone; the integer problem relaxes to a convex problem in the design weights",
+   "verbatim_quote": "The basic experiment design problem (7.23) can be a hard combinatorial problem when m, the total number of experiments, is comparable to n, since in this case the mi are all small integers.",
+   "page": "Ch 7 §7.5-7.5.1, pp.385-386 (eqs. 7.23-7.25)",
+   "latex": "\\mathcal{E} = \\frac{1}{m} \\left( \\sum_{i=1}^{p} \\lambda_i v_i v_i^T \\right)^{-1}, \\quad \\lambda \\succeq 0,\\ \\mathbf{1}^T \\lambda = 1",
+   "symbol_and_unit_ledger": {
+    "v_i in R^n": "menu of p possible measurement (test) vectors",
+    "lambda_i": "fraction of the m experiments assigned to v_i (relaxed from integer counts m_i)",
+    "E": "estimation error covariance matrix, minimized with respect to the S^n_+ order",
+    "D-optimal scalarization": "maximize log det of the information matrix (chapter 7, §7.5.2)"
+   },
+   "assumptions": [
+    "Measurement noise is independent Gaussian with zero mean and unit variance; the ML/least-squares estimator's covariance is the inverse information matrix.",
+    "Relaxation is accurate when m is large compared to n; rounding lambda back to counts perturbs each weight by at most 1/(2m)."
+   ],
+   "breakdown_regime": "When m is comparable to n the integer problem is genuinely combinatorial and the relaxed bound can mislead; the design also inherits the linear Gaussian model, so model misspecification is not priced.",
+   "domain": "experimental design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Experiment design is the engine's data acquisition planner: which games, plays, or tracking feeds to measure next is chosen to shrink the error covariance of the parameters that matter, and the PSD order on E makes 'more informative' a precise claim. The relaxation pattern (solve convex weights, then round) is the template the engine reuses for every discrete allocation problem.",
+    "source_operator": "experiment_design_relaxation",
+    "telemetry": "candidate measurement vectors (feature extractors, data feeds) and current parameter covariance estimates"
+   }
+  },
+  {
+   "primitive_id": "support_vector_classifier",
+   "name": "Support vector classifier: slack variables plus an l1 penalty turn the combinatorial misclassification count into an LP or QP heuristic with a margin trade-off",
+   "verbatim_quote": "Unfortunately, this is in general a difficult combinatorial optimization problem.",
+   "page": "Ch 8 §8.6, pp.424-427 (eqs. 8.24-8.25)",
+   "latex": "\\minimize \\mathbf{1}^T u + \\mathbf{1}^T v \\quad \\text{subject to} \\quad a^T x_i - b \\ge 1 - u_i, \\quad a^T y_i - b \\le -(1 - v_i), \\quad u, v \\succeq 0",
+   "symbol_and_unit_ledger": {
+    "a, b": "affine classifier a^T z - b",
+    "u_i, v_i": "slack variables measuring constraint violation per point",
+    "slab width": "2/||a||_2, traded against total slack in the standard SVC",
+    "separable case": "robust discrimination (8.23) maximizes the margin t with ||a||_2 <= 1, i.e., the thickest separating slab"
+   },
+   "assumptions": [
+    "Exact separation is possible iff the convex hulls of the two point sets are disjoint; otherwise approximation is mandatory.",
+    "Minimizing the sum of slacks is a convex relaxation of the misclassification count plus a penalty for points inside the slab."
+   ],
+   "breakdown_regime": "The relaxation is a heuristic: the LP can misclassify points the true combinatorial optimum would not, and linear classifiers fail outright when the classes are not even approximately linearly separable in the given features.",
+   "domain": "machine learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The SVC pattern is the engine's template for turning a counting objective (how many cases does the rule get wrong) into a tractable convex surrogate (sum of slacks), with the margin width as an explicit robustness dial. The same slack machinery prices how badly each historical case violates a candidate rule, which feeds case level review of where a model fails.",
+    "source_operator": "support_vector_classifier",
+    "telemetry": "labeled historical cases with feature vectors; slack vectors identifying the worst classified cases"
+   }
+  },
+  {
+   "primitive_id": "gradient_descent_backtracking",
+   "name": "Gradient descent with backtracking line search: guaranteed per-step decrease for strongly convex smooth objectives, with linear convergence governed by the curvature ratio M/m",
+   "verbatim_quote": "The resulting algorithm is called the gradient algorithm or gradient descent method.",
+   "page": "Ch 9 §9.3, pp.466-467 (Algorithm 9.3, eq. 9.17)",
+   "latex": "f(x^+) - p^\\star \\le f(x) - p^\\star - \\frac{1}{2M} \\|\\nabla f(x)\\|_2^2, \\qquad x^+ = x - t \\nabla f(x)",
+   "symbol_and_unit_ledger": {
+    "M": "upper curvature bound: nabla^2 f(x) preceq M I on the sublevel set",
+    "m": "strong convexity bound: m I preceq nabla^2 f(x); ratio M/m is the condition number driving the rate",
+    "t": "step size from exact or backtracking line search (parameters alpha in (0, 1/2), beta in (0,1))",
+    "stopping test": "||nabla f(x)||_2 <= eta"
+   },
+   "assumptions": [
+    "Analysis assumes strong convexity (m > 0) and a Lipschitz gradient (curvature at most M) on the initial sublevel set.",
+    "Backtracking terminates and yields a step bounded away from zero, which is what makes the decrease bound uniform."
+   ],
+   "breakdown_regime": "Convergence degrades linearly with the condition number M/m: ill conditioned problems zigzag, and without strong convexity the rate drops to sublinear; preconditioning or Newton steps are the remedies.",
+   "domain": "algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gradient descent is the engine's fallback optimizer and its conditioning diagnostic: the observed decrease rate estimates the curvature ratio of the problem, and slow zigzag progress is evidence that the parametrization (not the data) is at fault, triggering rescaling or a Newton method switch in the fitting pipeline.",
+    "source_operator": "gradient_descent_backtracking",
+    "telemetry": "per-iteration objective and gradient norm traces from model fitting runs"
+   }
+  },
+  {
+   "primitive_id": "newton_step_and_decrement",
+   "name": "Newton step and Newton decrement: the affine invariant second-order step, with lambda(x)^2/2 estimating the suboptimality gap",
+   "verbatim_quote": "An important feature of the Newton step is that it is independent of linear (or affine) changes of coordinates.",
+   "page": "Ch 9 §9.5.1, pp.485-487 (eqs. 9.29-9.30)",
+   "latex": "\\Delta x_{\\mathrm{nt}} = -\\nabla^2 f(x)^{-1} \\nabla f(x), \\qquad \\lambda(x) = \\left( \\nabla f(x)^T \\nabla^2 f(x)^{-1} \\nabla f(x) \\right)^{1/2}",
+   "symbol_and_unit_ledger": {
+    "Delta x_nt": "Newton step: steepest descent direction in the Hessian norm, and the root step of the linearized optimality condition",
+    "lambda(x)": "Newton decrement; lambda(x)^2/2 estimates f(x) - p* from the quadratic model",
+    "stopping rule": "quit when lambda(x)^2/2 <= epsilon"
+   },
+   "assumptions": [
+    "Requires a positive definite Hessian at the iterate; the pure step is used only in the quadratically convergent phase, with damping (backtracking) before that.",
+    "Affine invariance: reparametrizing by a nonsingular linear map leaves the iterates unchanged, unlike gradient descent."
+   ],
+   "breakdown_regime": "If the Hessian is indefinite (nonconvex region) the step may not be a descent direction at all; forming and factoring the Hessian costs O(n^3), prohibitive for very large dense problems.",
+   "domain": "algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The Newton decrement is the engine's self grading stopping certificate for smooth fits: it estimates the remaining optimality gap from local quantities alone, so a fit can declare itself converged to a stated tolerance without access to the true optimum. Affine invariance means the certificate survives reparametrization of the model, which gradient based tests do not.",
+    "source_operator": "newton_step_and_decrement",
+    "telemetry": "Hessian factorizations and decrement values from second-order fitting routines"
+   }
+  },
+  {
+   "primitive_id": "log_barrier_central_path",
+   "name": "Logarithmic barrier and central path: replace indicator functions of constraints by -(1/t) log(-f_i(x)) and follow the central path as t grows",
+   "verbatim_quote": "Its domain is the set of points that satisfy the inequality constraints of (11.1) strictly.",
+   "page": "Ch 11 §11.2.1-11.2.2, pp.563-565 (eqs. 11.4-11.5)",
+   "latex": "\\phi(x) = -\\sum_{i=1}^{m} \\log(-f_i(x)), \\qquad \\minimize f_0(x) + \\frac{1}{t} \\phi(x) \\ \\text{subject to} \\ Ax = b",
+   "symbol_and_unit_ledger": {
+    "phi(x)": "logarithmic barrier for the inequality constraints, defined on the strictly feasible set",
+    "t > 0": "barrier parameter; the centering solution x*(t) is within m/t of optimal",
+    "central path": "the curve {x*(t) : t > 0} converging to an optimum as t grows",
+    "dual readout": "lambda_i = -1/(t f_i(x*(t))) gives dual feasible points along the path"
+   },
+   "assumptions": [
+    "The problem must be strictly feasible (Slater) and the functions twice continuously differentiable for the Newton based centering steps.",
+    "Centering problems are solved in sequence with increasing t, each warm started from the previous center."
+   ],
+   "breakdown_regime": "As t grows the Hessian of f_0 + (1/t) phi becomes increasingly ill conditioned near the boundary; the method also cannot start from, or handle, problems with no strictly feasible point.",
+   "domain": "algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The barrier is the engine's soft-to-hard constraint mechanism: inequality limits become smooth penalties that harden as t grows, and the duality gap bound m/t prices exactly how far the current interior solution is from optimal. Any constrained fitting routine in the pipeline reports this gap, so approximate solutions carry a stated worst case error instead of silent tolerance.",
+    "source_operator": "log_barrier_central_path",
+    "telemetry": "barrier parameter schedules and gap bounds m/t from interior-point solver logs"
+   }
+  },
+  {
+   "primitive_id": "primal_dual_interior_point",
+   "name": "Primal-dual interior-point methods: Newton steps on the perturbed KKT system, updating primal and dual variables together in a single loop",
+   "verbatim_quote": "Primal-dual interior-point methods are often more efficient than the barrier method, especially when high accuracy is required, since they can exhibit better than linear convergence.",
+   "page": "Ch 11 §11.7, pp.609-610 (eq. 11.53)",
+   "latex": "r_t(x, \\lambda, \\nu) = \\begin{bmatrix} \\nabla f_0(x) + Df(x)^T \\lambda + A^T \\nu \\\\ -\\mathrm{diag}(\\lambda) f(x) - (1/t) \\mathbf{1} \\\\ Ax - b \\end{bmatrix} = 0",
+   "symbol_and_unit_ledger": {
+    "r_t": "residual of the modified (perturbed) KKT conditions",
+    "r_dual, r_pri": "dual and primal residual blocks; both are driven to zero",
+    "surrogate gap": "at a central point the duality gap equals m/t; iterates track it via -f(x)^T lambda",
+    "Df(x)": "Jacobian matrix of the constraint functions"
+   },
+   "assumptions": [
+    "Search directions come from applying Newton's method to r_t = 0 with a schedule that increases t (equivalently decreases the perturbation 1/t).",
+    "Iterates need not be feasible; primal and dual feasibility are achieved only in the limit, which is what removes the barrier method's two loop structure."
+   ],
+   "breakdown_regime": "The book presents the method without a convergence proof and notes general nonlinear primal-dual methods were still an active research area; practical implementations depend on heuristics (step size rules, predictor corrector variants) beyond the basic scheme.",
+   "domain": "algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Primal-dual residuals are the engine's solver health telemetry at scale: the three residual blocks (stationarity, perturbed slackness, feasibility) are monitored per solve, and a stalled residual pattern is diagnostic of modeling errors (bad scaling, contradictory constraints) rather than mere slowness, so solver failures route back to the modeling layer with evidence attached.",
+    "source_operator": "primal_dual_interior_point",
+    "telemetry": "primal, dual, and centrality residual norms per iteration from production solver runs"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "8fb7570e0a2a06ef-t1",
+   "think": "This book is a complete operating system for one class of questions: decisions that can be expressed as minimizing a convex function over a convex set. Its architecture is deliberate. Sets come first, then functions, then problems, then duality, then applications, then algorithms, and each layer is load bearing for the next. Convex sets supply the geometry: segments, cones, halfspaces, and the positive semidefinite cone. Convex functions are then defined so that their epigraphs are exactly those sets, which means every theorem about sets becomes a theorem about functions and every function problem can be rewritten as a set problem. Problems are classified by the structure of their descriptions, and the classification is practical rather than taxonomic: linear programs, quadratic programs, second-order cone programs, semidefinite programs, and geometric programs are the dialects that solvers actually speak. Duality is the center of gravity. The Lagrangian converts constraints into prices, the dual function converts any feasible price vector into a rigorous bound, and the KKT conditions convert optimality from a search result into a checkable certificate. The applications chapters demonstrate a repeatable craft: formulate, recognize hidden convexity, scalarize competing objectives into trade-off curves, relax combinatorial structure into convex surrogates, and only then compute. The algorithms chapters mirror the theory with a hierarchy: linear systems inside Newton steps inside barrier and primal-dual loops, each level reducing a harder problem to a sequence of easier ones, with self-concordance supplying iteration bounds that depend only weakly on problem data.\n\nThe single most important idea for a reasoning engine is the recognition thesis stated in chapter 1: the art is in formulation, and solving is close to technology once the form is right. This reverses the usual instinct to reach for a solver or a heuristic first. A system built on this book spends its intelligence budget deciding what the variables, objectives, and constraints are, verifies that the result sits inside a tractable class, and treats the solve as a commodity step whose output arrives with certificates. The second idea is that local information has global force in the convex world. A gradient at one point underestimates the function everywhere; a strictly feasible point guarantees that dual prices are exact; a separating hyperplane that fails to exist proves that no linear classifier can succeed. Each of these is a machine for turning cheap local evidence into global claims, and a reasoning engine is precisely a machine that needs to make global claims from local evidence without overclaiming. The third idea is that bounds are first class outputs. Weak duality means every problem, even a nonconvex one, comes with a computable lower bound and therefore a measurable gap; an answer without a gap is an anecdote, while an answer with a gap is a measurement.\n\nThe machinery also disciplines what an engine may say. Complementary slackness forbids crediting constraints that were not active at the solution. Sensitivity results price a constraint only in the direction the inequality supports, and stay silent in the other direction. The trade-off curve forbids pretending that fit and complexity were optimized simultaneously; one was bought with the other at a stated exchange rate. Where the book breaks is equally instructive. Convexity is destroyed by products of decisions, by integrality, by rank constraints, and by any downward curving region of a loss; outside the boundary, the same algorithms return local answers with no gap and no warning unless the system computes one. Duality can fail to close even in convex problems when strict feasibility fails. Statistical uses inherit model risk: maximum likelihood is convex only for friendly families, and an optimal experiment design is only as good as the linear Gaussian story told about the measurements. The mature posture the book teaches is therefore conditional trust: inside the verified boundary, accept results as facts; outside it, label them heuristic, compute what bounds exist, and let the gap, not the point estimate, drive the decision.\n\nA fourth idea deserves emphasis because it is the one that scales: convexity has a calculus. The book catalogs operations that preserve it: nonnegative combinations, pointwise maxima and suprema, composition with affine maps, partial minimization, perspective transforms, and conjugation. This turns recognition from an art into a procedure, because a complicated function assembled from certified pieces by certified rules is certified as a whole, and a modeling system can perform that check mechanically, rule by rule, the way a type checker validates a program. The same spirit governs the algorithms. Self-concordance, developed in chapter 9, is a property of a function that makes Newton's method behave identically regardless of how the problem happens to be scaled or parametrized, which is why interior-point methods can promise iteration counts in the tens for problems with millions of variables. The lesson generalizes beyond optimization: the right invariant, once identified, converts an empirical art into an engineering discipline with budgets. A reasoning engine that internalizes this stops asking whether a method worked on yesterday's data and starts asking which invariant the method preserves, what that invariant costs to verify, and what exactly is forfeited when the invariant fails.\n\nFor a corpus like this fleet's foundry, the book also supplies a grading rubric for other works. A paper that proposes an estimator can be asked whether its fitting problem is convex, what its dual problem says, which constraints bind at its solution, and how its trade-off curve bends. Those four questions, applied mechanically, extract most of what a reasoning engine can actually use from a new method, and they expose the difference between a method that is merely described and one that is understood well enough to be trusted with decisions.",
+   "retrocausal_genealogy": "The lineages converge from several directions. Least squares descends from the orbit fitting and geodesy problems of the early nineteenth century, where an analytic solution made estimation a technology long before electronic computing. Linear programming arrived with Dantzig's simplex method in the late 1940s, named in the book's own account of solving linear programs, and geometric programming grew out of 1960s engineering design practice, a fact the book records in its chapter notes. Convex analysis proper was assembled by Fenchel and Rockafellar in the middle of the twentieth century, duality grew out of the Karush and Kuhn-Tucker optimality conditions, and the modern era begins when interior-point methods, armed with the self-concordance theory developed in chapter 9, turned the whole class into polynomial time practice.",
+   "theory_of_mind": "The authors write for a reader who faces disguised problems, not textbook ones. Their model of the domain is that practical questions almost never announce their convexity: they arrive as worst-case errors, ratios, matrix conditions, or fitting tasks, and the skill worth teaching is recognition and reformulation. They assume the reader is an engineer or scientist who will accept mathematical machinery exactly in proportion to the decisions it improves, so every abstraction is cashed out in an application within a chapter or two. Their deepest belief, stated outright in chapter 1, inverts the usual priority: formulation is the art and solving is nearly technology, so the reader's judgment, not the algorithm, is the scarce resource being trained.",
+   "cross_layer_veto": "Convexity acts as a veto layer over every other signal. A fitting method whose loss has a nonconvex region cannot borrow the global guarantees of the convex layer, whatever its empirical record. A dual price is void when strict feasibility fails, so the duality layer can veto a shadow price that the optimization layer happily computed. A claimed optimum with a positive duality gap cannot be promoted to fact; the gap vetoes the promotion. Complementary slackness vetoes explanations that credit inactive constraints, and the separating hyperplane theorem vetoes entire families of linear classifiers when the convex hulls intersect, before any training compute is spent. Each veto is a theorem rather than a preference, which is exactly what makes the layering trustworthy."
+  }
+ ],
+ "universal_lens": "Read as a general template, the book says that any decision discipline matures when it can name its feasible set, its objective, and its prices. Convexity is the property that makes local evidence globally valid, and the search for hidden convexity is a universal move: choose coordinates, often logarithms, in which the problem's true structure is simple, reformulate until the problem enters a class with certificates, and never accept an answer whose error cannot be bounded. The pattern transfers to any field where choices are continuous, costs are bowl shaped after the right transform, and constraints can be priced: the craft is formulation, the solve is technology, and the gap between an incumbent answer and a rigorous bound is the honest measure of what remains unknown.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book is core curriculum for the science of athletic decision making under constraints. Training load, roster construction, and measurement planning are optimization problems whose feasible sets are fixed by physiology and by rules; experiment design over the positive semidefinite cone formalizes which measurements to acquire next, shadow prices value one more unit of recovery or availability, and trade-off curves replace single number targets with stated exchange rates between performance and risk. The institute takes the book's discipline as its own: claims about interventions ship with feasibility checks, active constraint lists, and optimality gaps, or they are labeled exploratory.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the book supplies the certified computation layer beneath every projection and ranking. Ratings and calibration fits run as least squares and convex likelihood problems with exact or gap certified solutions; multiplicative factor models are optimized in their geometric programming, that is log space, form; allocation questions under budget and exposure constraints are posed as linear, second-order cone, or semidefinite programs chosen by the structure of the uncertainty; and every solver output is audited against the KKT residuals before the reasoning layer may cite it. Where a question falls outside the convex boundary, the engine says so explicitly and falls back to dual bounds rather than silent heuristics."
+}

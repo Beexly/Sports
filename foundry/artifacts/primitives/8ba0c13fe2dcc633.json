@@ -1,0 +1,78 @@
+{
+  "book_id": "8ba0c13fe2dcc633",
+  "source_status": "COMPLETE",
+  "title": "x-sweep4",
+  "file_name": "x-sweep4.md",
+  "sha256": "8ba0c13fe2dcc633572beb1fb4d45edbd207a81a9656f274f7d36a1995e9642c",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sweep-4 aggregates news signals from 2026-09-19 onward using browser search and indexed sources, filtering for novel injury updates and player availability. Universal Lens: Rooted in x-sweep4 (8ba0c13fe2dcc633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian event likelihoods for player availability updated via probabilistic indexing of named accounts and injury reports, conditioned on temporal and source reliability. GSI Mapping: Rooted in x-sweep4 (8ba0c13fe2dcc633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in team lineups modeled through injury status flags (OUT/DOWN/QUESTIONABLE) and substitution logic for key positions (e.g., LB, LT, WR). GSE Mapping: Rooted in x-sweep4 (8ba0c13fe2dcc633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "player_availability_flag",
+      "name": "Player Availability Flag",
+      "verbatim_quote": "**Commanders (via commanderswire, 18 hrs old):** LB Frankie Luvu (groin strain, Week 1 vs PHI) and TE Chig Okonkwo (hamstring) officially OUT vs DAL.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{out}': 'Boolean flag indicating player is OUT (1) or not (0)', 't_{report}': 'Temporal resolution of injury report in hours'}",
+      "assumptions": "Injury status is deterministic within reporting window; no dynamic recovery modeling.",
+      "breakdown_regime": "Injury classification regime under 2026-09-19 news cutoff.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Player availability flags map to binary state transitions in GSE lineup models; GSI infers conditional probabilities from news streams.",
+        "source_operator": "player_availability_flag",
+        "telemetry": "Observed injury designation changes from named account sources."
+      }
+    },
+    {
+      "primitive_id": "team_lineup_substitution_logic",
+      "name": "Team Lineup Substitution Logic",
+      "verbatim_quote": "So, we'll definitely miss Frankie.\" LB communication falls to Sonny Styles and Leo Chenal.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{sub}(i)': 'Substitution vector for position i', 'P_{out}': 'Player OUT flag', 'S_{pos}': 'Starting roster slot for position'}",
+      "assumptions": "Substitutions follow fixed positional hierarchy; no tactical flexibility modeled.",
+      "breakdown_regime": "Lineup reconfiguration under missing player constraint.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from player availability flags; GSE computes substitution vectors based on positional dependencies.",
+        "source_operator": "team_lineup_substitution_logic",
+        "telemetry": "Computed substitution sequences for LB role in Commanders."
+      }
+    },
+    {
+      "primitive_id": "injury_status_classification",
+      "name": "Injury Status Classification",
+      "verbatim_quote": "OUT: DT Nnamdi Madubuike, ILB Teddye Buchanan (both limited all week, couldn't gain clearance), CB T.J.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_{status} \\\\in \\\\{OUT, DOUBTFUL, QUESTIONABLE\\\\}': 'Injury classification label', 't_{clearance}': 'Time to medical clearance in hours'}",
+      "assumptions": "Classification is static per reporting cycle; no probabilistic recovery timelines.",
+      "breakdown_regime": "Injury severity regime across multiple teams and positions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Injury labels map to GSI probabilistic event states; GSE uses them to compute lineup risk matrices.",
+        "source_operator": "injury_status_classification",
+        "telemetry": "Categorized injury statuses from named account crawls."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8ba0c13fe2dcc633_t0",
+      "think": "The sweep-4 process applies a temporal filter to news data post-Sweep 3, leveraging browser-based indexing to extract novel injury updates. Each player's status is encoded as a discrete flag (OUT/DOWN/QUESTIONABLE), which maps into a structured state transition system in GSE. GSI models these as Bayesian events conditioned on source credibility and recency. The failure mode arises when a player is misclassified due to delayed reporting or inconsistent naming conventions across sources. Dualities emerge between injury severity and substitution logic—e.g., an OUT player necessitates a specific substitution sequence. Temporal consistency is enforced by deduplicating against prior sweeps and applying a 2-hour crawl window. The system assumes deterministic outcomes within each reporting cycle, precluding dynamic recovery modeling.\n\nDeep epistemic analysis for x-sweep4 (8ba0c13fe2dcc633, domain=other, pages_read=3/3): Operator 'Player Availability Flag' (page 1, domain other) captures: **Commanders (via commanderswire, 18 hrs old):** LB Frankie Luvu (groin strain, Week 1 vs PHI) and TE Chig Okonkwo (hamstring) officially OUT vs DAL. Assumptions: Injury status is deterministic within reporting window; no dynamic recovery modeling. Breakdown regime: Injury classification regime under 2026-09-19 news cutoff. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Player availability flags map to binary state transitions in GSE lineup models; GSI infers conditional probabilities from news streams. Operator 'Team Lineup Substitution Logic' (page 1, domain other) captures: So, we'll definitely miss Frankie.\" LB communication falls to Sonny Styles and Leo Chenal. Assumptions: Substitutions follow fixed positional hierarchy; no tactical flexibility modeled. Breakdown regime: Lineup reconfiguration under missing player constraint. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from player availability flags; GSE computes substitution vectors based on positional dependencies. Operator 'Injury Status Classification' (page 1, domain other) captures: OUT: DT Nnamdi Madubuike, ILB Teddye Buchanan (both limited all week, couldn't gain clearance), CB T.J. Assumptions: Classification is static per reporting cycle; no probabilistic recovery timelines. Breakdown regime: Injury severity regime across multiple teams and positions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Injury labels map to GSI probabilistic event states; GSE uses them to compute lineup risk matrices. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for x-sweep4 (8ba0c13fe2dcc633, domain=other, pages_read=3/3): Operator 'Player Availability Flag' (page 1, domain other) captures: **Commanders (via commanderswire, 18 hrs old):** LB Frankie Luvu (groin strain, Week 1 vs PHI) and TE Chig Okonkwo (hamstring) officially OUT vs DAL. Assumptions: Injury status is deterministic within reporting window; no dynamic recovery modeling. Breakdown regime: Injury classification regime under 2026-09-19 news cutoff. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Player availability flags map to binary state transitions in GSE lineup models; GSI infers conditional probabilities from news streams. Operator 'Team Lineup Substitution Logic' (page 1, domain other) captures: So, we'll definitely miss Frankie.\" LB communication falls to Sonny Styles and Leo Chenal. Assumptions: Substitutions follow fixed positional hierarchy; no tactical flexibility modeled. Breakdown regime: Lineup reconfiguration under missing player constraint. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from player availability flags; GSE computes substitution vectors based on positional dependencies. Operator 'Injury Status Classification' (page 1, domain other) captures: OUT: DT Nnamdi Madubuike, ILB Teddye Buchanan (both limited all week, couldn't gain clearance), CB T.J. Assumptions: Classification is static per reporting cycle; no probabilistic recovery timelines. Breakdown regime: Injury severity regime across multiple teams and positions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Injury labels map to GSI probabilistic event states; GSE uses them to compute lineup risk matrices. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information-theoretic signal processing and temporal event modeling, tracing back to early 20th-century stochastic processes and modern Bayesian inference frameworks. Retrocausal Genealogy: Rooted in x-sweep4 (8ba0c13fe2dcc633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in x-sweep4 (8ba0c13fe2dcc633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include media sources (e.g., commanderswire) and team management (e.g., HC Quinn), whose decisions on player availability influence both GSI’s probabilistic models and GSE’s lineup computations. Theory of Mind & Decision Maker Model: Rooted in x-sweep4 (8ba0c13fe2dcc633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that GSI’s probabilistic flags do not directly correlate with GSE’s deterministic substitution rules without intermediate validation. Leakage is mitigated by restricting telemetry to only those observables explicitly tied to player status. Cross-Layer Veto & Anti-Leakage Check: Rooted in x-sweep4 (8ba0c13fe2dcc633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

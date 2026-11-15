@@ -1,0 +1,248 @@
+{
+  "book_id": "760af10970a7d3e2",
+  "source_status": "COMPLETE",
+  "title": "1947-conditional-generative-modeling-for-decision-making",
+  "file_name": "1947-conditional-generative-modeling-for-decision-making.md",
+  "sha256": "760af10970a7d3e2609559682b91e419d9ff03df5d60537fda85b7a690133d33",
+  "primary_domain": "psych",
+  "pages_total": 3,
+  "pages_read": 3,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 3,
+  "windows_extracted": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Conditional generative modeling reframes sequential decision-making as diffusion over state trajectories, bypassing value functions and dynamic programming through return-constrained latent space interpolation. Conditional generative modeling of state trajectories with return-constrained guidance enables offline policy learning through inverse dynamics and denoising diffusion.",
+  "gsi_mapping": "GSI employs Bayesian inference to update belief states using return-conditioned generative models, enabling conformal uncertainty quantification over decision outcomes. Bayesian inference over episodic returns and constraints maps to posterior belief updates on policy utility under GSI's probabilistic decision framework.",
+  "gse_mapping": "GSE utilizes state-transition kernels derived from conditional diffusion to simulate multi-step scenarios under composed constraints, supporting real-time tactical adaptation. Situation-aware state transitions are encoded via conditional trajectory generation, enabling real-time tactical reasoning and skill composition in GSE.",
+  "primitives": [
+    {
+      "primitive_id": "state_diffusion_kernel",
+      "name": "State Diffusion Kernel",
+      "verbatim_quote": "Method / model Decision Diffuser = conditional diffusion over STATE sequences only (not state-action): - x_k(τ) ≐ (s_t, s_{t+1}, ..., s_{t+H-1})_k — noisy state sequence at diffusion step k.",
+      "page": 1,
+      "latex": "x_k(\\tau) \\coloneqq (s_t, s_{t+1}, \\ldots, s_{t+H-1})_k",
+      "symbol_and_unit_ledger": "{'x_k(\\\\tau)': 'Noisy state sequence at diffusion step k, dimensionless', 's_t': 'State at time t, SI units depending on domain', 'H': 'Horizon length, dimensionless'}",
+      "assumptions": "States are smooth and differentiable; action space is discrete or high-frequency.",
+      "breakdown_regime": "When state transitions become non-smooth or discontinuous.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The state sequence diffusion maps to GSE's trajectory generation kernel, where each state transition is a probabilistic evolution conditioned on return or constraint labels.",
+        "source_operator": "state_diffusion_kernel",
+        "telemetry": "KL divergence between generated and empirical state distributions."
+      }
+    },
+    {
+      "primitive_id": "return_conditioning",
+      "name": "Return Conditioning",
+      "verbatim_quote": "- Training objective: max_θ E_{τ~D}[ log p_θ(x_0(τ) | y(τ)) ], where y(τ) is the conditioning: normalized return, a constraint label, or a skill label.",
+      "page": 1,
+      "latex": "\\mathcal{L} = \\mathbb{E}_{\\tau \\sim D}[ \\log p_\\theta(x_0(\\tau) \\mid y(\\tau)) ]",
+      "symbol_and_unit_ledger": "{'y(\\\\tau)': 'Conditioning variable (normalized return, constraint, or skill), dimensionless', 'p_\\\\theta': 'Conditional probability density, dimensionless', 'x_0(\\\\tau)': 'Initial state sequence, dimensionless'}",
+      "assumptions": "Return is scalar-valued and normalized across dataset.",
+      "breakdown_regime": "When return distribution shifts beyond training support.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Return conditioning acts as a prior over trajectories, shaping GSE's policy search by biasing toward favorable outcomes.",
+        "source_operator": "return_conditioning",
+        "telemetry": "Expected return deviation from baseline during rollout."
+      }
+    },
+    {
+      "primitive_id": "classifier_free_guidance",
+      "name": "Classifier-Free Guidance",
+      "verbatim_quote": "- Classifier-free guidance (Ho & Salimans 2022): train both conditional ε_θ(x_k, y, k) and unconditional ε_θ(x_k, ∅, k); sample with perturbed noise ε_θ(x_k,k) + ω(ε_θ(x_k,y,k) - ε_θ(x_k,k)), ω = guidance scale; plus low-temperature sampling.",
+      "page": 1,
+      "latex": "\\varepsilon_{\\theta}(x_k, k) + \\omega(\\varepsilon_{\\theta}(x_k, y, k) - \\varepsilon_{\\theta}(x_k, k))",
+      "symbol_and_unit_ledger": "{'\\\\varepsilon_{\\\\theta}': 'Noise prediction function, dimensionless', '\\\\omega': 'Guidance scale, dimensionless'}",
+      "assumptions": "Unconditional and conditional models are trained simultaneously.",
+      "breakdown_regime": "When guidance scale exceeds optimal range, leading to overfitting or instability.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Guidance modulates GSE's exploration-exploitation balance by adjusting trajectory likelihood under constraint.",
+        "source_operator": "classifier_free_guidance",
+        "telemetry": "Trajectory entropy under varying guidance scales."
+      }
+    },
+    {
+      "primitive_id": "constraint_composition",
+      "name": "Constraint Composition",
+      "verbatim_quote": "- Test-time flexibility: constraint-conditioned training on single constraints → generate trajectories satisfying COMBINED constraints at test time (illustrated: final position between two concentric circles when each dataset satisfied only one); skill-conditioned training → compose skills at test time.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Constraints are additive and composable in latent space.",
+      "breakdown_regime": "When combined constraints are mutually exclusive or infeasible.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Constraint composition mirrors GSE’s ability to merge multiple tactical rules into coherent game plans without retraining.",
+        "source_operator": "constraint_composition",
+        "telemetry": "Success rate of composite constraint satisfaction in simulation."
+      }
+    },
+    {
+      "primitive_id": "inverse_dynamics_model",
+      "name": "Inverse Dynamics Action Recovery",
+      "verbatim_quote": "Assumptions (stated): offline dataset covers useful behaviors; conditioning labels (return/constraint/skill) are available per trajectory; inverse-dynamics model can recover actions from state pairs; classifier-free guidance with low temperature approximates return maximization.",
+      "page": 2,
+      "latex": "a_t \\coloneqq f_\\phi(s_t, s_{t+1})",
+      "symbol_and_unit_ledger": "{'a_t': 'action at time t, dimensionless', 's_t': 'state at time t, state-dim vector', 'f_\\\\phi': 'learnable inverse dynamics function'}",
+      "assumptions": "State pairs are sufficient to recover actions; offline dataset contains diverse behavior.",
+      "breakdown_regime": "When state transitions are deterministic or nearly so.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Inverse dynamics model mirrors GSE's internal state transition engine by mapping state differences to action space.",
+        "source_operator": "inverse_dynamics_model",
+        "telemetry": "Reconstruction error of actions from state pairs."
+      }
+    },
+    {
+      "primitive_id": "trajectory_conditional_generation",
+      "name": "Conditional Trajectory Denoising",
+      "verbatim_quote": "Features / target Inputs: noisy state sequences x_k(τ) (2D array: state-dim × horizon).",
+      "page": 2,
+      "latex": "x_k(\\tau) \\in \\mathbb{R}^{\\text{state-dim} \\times H}",
+      "symbol_and_unit_ledger": "{'x_k(\\\\tau)': 'noisy state sequence trajectory, state-dim × horizon matrix', 'H': 'horizon length, dimensionless'}",
+      "assumptions": "Trajectories are generated conditionally on return/constraint/skill labels.",
+      "breakdown_regime": "When noise level exceeds signal strength in trajectory space.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates plausible state trajectories conditioned on high-level descriptors, enabling GSE's planning kernel.",
+        "source_operator": "trajectory_conditional_generation",
+        "telemetry": "KL divergence between generated and real trajectory distributions."
+      }
+    },
+    {
+      "primitive_id": "classifier_free_guidance_w1_3",
+      "name": "Return Maximization Approximation",
+      "verbatim_quote": "Conditioning y: normalized episodic return, constraint label, or skill label.",
+      "page": 2,
+      "latex": "\\mathbb{E}[r | \\tau] \\approx \\max_{\\tau'} \\mathbb{E}[r | \\tau']",
+      "symbol_and_unit_ledger": "{'r': 'episodic return, scalar', '\\\\tau': 'trajectory, state sequence'}",
+      "assumptions": "Low-temperature classifier-free guidance approximates optimal return.",
+      "breakdown_regime": "At high temperature, guidance becomes stochastic and ineffective.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Classifier-free guidance aligns with GSI's utility maximization principle by conditioning on return labels.",
+        "source_operator": "classifier_free_guidance_w1_3",
+        "telemetry": "Expected return of sampled trajectories under guidance."
+      }
+    },
+    {
+      "primitive_id": "offline_evaluation_framework",
+      "name": "Offline Benchmark Validation",
+      "verbatim_quote": "Validation design Offline evaluation on D4RL locomotion, Kitchen, block stacking.",
+      "page": 2,
+      "latex": "V_{\\text{offline}}(\\pi) = \\mathbb{E}_{\\tau \\sim D} [r(\\tau)]",
+      "symbol_and_unit_ledger": "{'V_{\\\\text{offline}}(\\\\pi)': 'offline value estimate of policy π, scalar', 'D': 'offline dataset, set of trajectories'}",
+      "assumptions": "Offline dataset is representative of desired behavior.",
+      "breakdown_regime": "When dataset distribution diverges from deployment environment.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides empirical validation kernel for GSE’s policy selection and GSI’s confidence calibration.",
+        "source_operator": "offline_evaluation_framework",
+        "telemetry": "Average return across benchmark tasks."
+      }
+    },
+    {
+      "primitive_id": "state_diffusion",
+      "name": "State Diffusion",
+      "verbatim_quote": "GSE implementation spec \"GSE-DecisionDiffuser\": state-only diffusion over game-state sequences (down/distance/yardline/score-diff/time per play — no play-type tokens in the diffusion target; play outcomes implied by state transitions).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Markovian state transitions, Gaussian noise assumption, stationary transition dynamics over training period.",
+      "breakdown_regime": "Collapsing diversity when conditioning strength exceeds model capacity.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The state diffusion process is mathematically equivalent to a Hidden Markov Model with continuous latent variables, but learned end-to-end from data rather than designed. In GSE, this isomorphism enables the engine to perform dynamic programming over the learned transition kernel for optimal policy extraction.",
+        "source_operator": "state_diffusion",
+        "telemetry": "Validation metrics include KL divergence between predicted and empirical state distributions, and the ability to recover optimal play-selection policies from the learned value function."
+      }
+    },
+    {
+      "primitive_id": "classifier_guidance",
+      "name": "Classifier-Free Guidance",
+      "verbatim_quote": "Train conditional + unconditional noise models on nflverse 2006–2025 games; sample with classifier-free guidance.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Existence of a well-trained classifier, sufficient data overlap between conditional and unconditional manifolds.",
+      "breakdown_regime": "Mode collapse when guidance weight becomes too large relative to noise schedule.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Classifier-free guidance can be viewed as a convex combination of two score functions: one from the unconditional model and one from the conditional model. This kernel is efficiently composable in GSE for multi-constraint scenarios, allowing linear interpolation between different stress-test conditions.",
+        "source_operator": "classifier_guidance",
+        "telemetry": "The primary verification metric is the deviation of the empirical mean from the nominal conditioning target across various guidance strengths."
+      }
+    },
+    {
+      "primitive_id": "unbiased_sampling",
+      "name": "Unbiased Sampling",
+      "verbatim_quote": "Two sampling modes: unbiased (ω=0, temp 1.0) → pricing distributions; conditional (ω>0) → exotic-prop pricing (e.g., \"P(home wins by 13+)\" via return-conditioned generation, or stress-test portfolios under \"snow game\" conditioning).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Perfect mixing of the Markov chain, ergodicity of the diffusion process.",
+      "breakdown_regime": "Degradation to deterministic rollouts when temperature approaches zero.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Unbiased sampling corresponds to the stationary distribution of the diffusion process, which is isomorphic to the Boltzmann distribution in statistical mechanics. In GSE, this allows the engine to compute fair prices for standard props by averaging over many unbiased samples, effectively performing Monte Carlo integration.",
+        "source_operator": "unbiased_sampling",
+        "telemetry": "The fairness of the pricing distribution is verified by checking whether hedging strategies based on these prices yield zero expected profit over the validation set."
+      }
+    },
+    {
+      "primitive_id": "multi_condition_composition",
+      "name": "Multi-Condition Composition",
+      "verbatim_quote": "Improvement experiment Beyond the paper: compose MULTIPLE conditions at test time (margin AND total AND weather) — the paper shows constraint composition on a toy; for GSE this enables \"snow game + divisional underdog + backup QB\" joint stress scenarios for portfolio pricing.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Linear superposition of influence from individual classifiers, independence of conditioning factors.",
+      "breakdown_regime": "Exponential increase in conditioning error variance with the number of coupled constraints.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Multiple conditions are composed by summing their respective score functions within the diffusion process. This derived kernel is particularly valuable in GSE for constructing joint stress-test scenarios, as it allows the engine to propagate uncertainty from several sources simultaneously without recomputing the entire transition matrix.",
+        "source_operator": "multi_condition_composition",
+        "telemetry": "The effectiveness of condition composition is measured by how accurately the resulting distribution matches the joint empirical distribution of the conditioned variables, typically assessed via chi-squared goodness-of-fit tests."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "760af10970a7d3e2_t0",
+      "think": "The foundational premise of conditional generative modeling for decision-making lies in treating sequential behavior as a latent process governed by return or constraint conditions. By framing decision-making through diffusion over state sequences alone, the model sidesteps traditional reinforcement learning pitfalls such as the 'deadly triad'—bootstrapping, function approximation, and non-stationarity. The core innovation resides in the use of state-only diffusion, which avoids modeling complex action spaces directly. Instead, actions emerge implicitly through inverse dynamics, though these are deemed unnecessary for GSE's pricing engine. The training objective maximizes likelihood of generating trajectories consistent with conditioning variables like returns or constraints. Classifier-free guidance enables fine-grained control over generated behavior by interpolating between conditional and unconditional samples. Crucially, this framework supports test-time composition of constraints and skills, allowing for flexible scenario planning without retraining. This aligns with GSE’s need for adaptive reasoning under evolving game states and external factors like weather or injury reports. Window 1 Synthesis: Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 3/3 pages of 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2): [state_diffusion_kernel p.1]: Method / model Decision Diffuser = conditional diffusion over STATE sequences only (not state-action): - x_k(τ) ≐ (s_t, s_{t+1}, ..., s_{t+H-1})_k — noisy state sequence at diffusion step k. (The state sequence diffusion maps to GSE's trajectory generation kernel, where each state transition is a probabilistic evolution conditioned on return or constraint labels.) [return_conditioning p.1]: - Training objective: max_θ E_{τ~D}[ log p_θ(x_0(τ) | y(τ)) ], where y(τ) is the conditioning: normalized return, a constraint label, or a skill label. (Return conditioning acts as a prior over trajectories, shaping GSE's policy search by biasing toward favorable outcomes.) [classifier_free_guidance p.1]: - Classifier-free guidance (Ho & Salimans 2022): train both conditional ε_θ(x_k, y, k) and unconditional ε_θ(x_k, ∅, k); sample with perturbed noise ε_θ(x_k,k) + ω(ε_θ(x_k,y,k) - ε_θ(x_k,k)), ω = guidance scale; plus low-temperature sampling. (Guidance modulates GSE's exploration-exploitation balance by adjusting trajectory likelihood under constraint.) [constraint_composition p.1]: - Test-time flexibility: constraint-conditioned training on single constraints → generate trajectories satisfying COMBINED constraints at test time (illustrated: final position between two concentric circles when each dataset satisfied only one); skill-conditioned training → compose skills at test time. (Constraint composition mirrors GSE’s ability to merge multiple tactical rules into coherent game plans without retraining.) [inverse_dynamics_model p.2]: Assumptions (stated): offline dataset covers useful behaviors; conditioning labels (return/constraint/skill) are available per trajectory; inverse-dynamics model can recover actions from state pairs; classifier-free guidance with low temperature approximates return maximization. (Inverse dynamics model mirrors GSE's internal state transition engine by mapping state differences to action space.) [trajectory_conditional_generation p.2]: Features / target Inputs: noisy state sequences x_k(τ) (2D array: state-dim × horizon). (Generates plausible state trajectories conditioned on high-level descriptors, enabling GSE's planning kernel.) [classifier_free_guidance_w1_3 p.2]: Conditioning y: normalized episodic return, constraint label, or skill label. (Classifier-free guidance aligns with GSI's utility maximization principle by conditioning on return labels.) [offline_evaluation_framework p.2]: Validation design Offline evaluation on D4RL locomotion, Kitchen, block stacking. (Provides empirical validation kernel for GSE’s policy selection and GSI’s confidence calibration.) [state_diffusion p.3]: GSE implementation spec \"GSE-DecisionDiffuser\": state-only diffusion over game-state sequences (down/distance/yardline/score-diff/time per play — no play-type tokens in the diffusion target; play outcomes implied by state transitions). (The state diffusion process is mathematically equivalent to a Hidden Markov Model with continuous latent variables, but learned end-to-end from data rather than designed. In GSE, this isomorphism enables the engine to perform dynamic programming over the learned transition kernel for optimal policy extraction.) [classifier_guidance p.3]: Train conditional + unconditional noise models on nflverse 2006–2025 games; sample with classifier-free guidance. (Classifier-free guidance can be viewed as a convex combination of two score functions: one from the unconditional model and one from the conditional model. This kernel is efficiently composable in GSE for multi-constraint scenarios, allowing linear interpolation between different stress-test conditions.) [unbiased_sampling p.3]: Two sampling modes: unbiased (ω=0, temp 1.0) → pricing distributions; conditional (ω>0) → exotic-prop pricing (e.g., \"P(home wins by 13+)\" via return-conditioned generation, or stress-test portfolios under \"snow game\" conditioning). (Unbiased sampling corresponds to the stationary distribution of the diffusion process, which is isomorphic to the Boltzmann distribution in statistical mechanics. In GSE, this allows the engine to compute fair prices for standard props by averaging over many unbiased samples, effectively performing Monte Carlo integration.) [multi_condition_composition p.3]: Improvement experiment Beyond the paper: compose MULTIPLE conditions at test time (margin AND total AND weather) — the paper shows constraint composition on a toy; for GSE this enables \"snow game + divisional underdog + backup QB\" joint stress scenarios for portfolio pricing. (Multiple conditions are composed by summing their respective score functions within the diffusion process. This derived kernel is particularly valuable in GSE for constructing joint stress-test scenarios, as it allows the engine to propagate uncertainty from several sources simultaneously without recomputing the entire transition matrix.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in early work on variational inference and diffusion processes, this approach builds upon advancements in conditional generative modeling and stochastic control theory from the 2010s onward. Retrocausal Genealogy (Window 1): Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents or players may be modeled as competing return-conditioned trajectories, where each agent's strategy influences the environment and thus affects the generative model's outcome distribution. Theory of Mind (Window 1): Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity requires that constraint composition does not introduce redundant or conflicting signals; leakage veto ensures that inverse dynamics do not leak information into the generative kernel, preserving its integrity for GSE applications. Cross-Layer Veto (Window 1): Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "760af10970a7d3e2_t1",
+      "think": "Chapter 2 introduces Decision Diffuser, a conditional generative model for offline reinforcement learning that extends prior work on Diffusers by incorporating return-conditioned trajectory generation. The method leverages inverse dynamics to recover actions from state transitions, enabling effective offline policy learning without online interaction. It uses a denoising diffusion process over noisy state sequences, conditioned on episodic returns, constraints, or skills. Classifier-free guidance with low temperature approximates return maximization, allowing for high-quality trajectory sampling. The approach is validated on standard offline RL benchmarks such as D4RL locomotion, Kitchen, and block stacking tasks. This formulation allows for compositional constraint satisfaction and skill transfer, distinguishing it from previous methods like Decision Transformers or Trajectory Transformers. The model's reliance on offline datasets ensures temporal consistency and avoids leakage issues, while its modular structure supports integration into broader systems like GSE for tactical reasoning and GSI for probabilistic inference. Window 2 Synthesis: Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Follows directly from 1946 Diffuser framework, extending it with explicit conditioning on return and constraint labels, and introducing a novel state-only trajectory formulation. Retrocausal Genealogy (Window 2): Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The model assumes agents can learn from static behavior datasets, and that return-constrained trajectories approximate optimal policies. It models the environment as a deterministic or near-deterministic system where actions can be recovered from state transitions. Theory of Mind (Window 2): Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by separating the role of inverse dynamics (action recovery) from trajectory generation (denoising). Leakage is mitigated by ensuring offline evaluation on held-out episodes, preventing temporal contamination. Cross-Layer Veto (Window 2): Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "760af10970a7d3e2_t2",
+      "think": "The core challenge addressed is generating high-fidelity NFL game simulations that can be conditioned on arbitrary combinations of outcome metrics (final margin, total points, etc.) without retraining. Traditional methods either rely on fixed play-type models that struggle with compositional queries or use black-box neural networks that lack interpretability. The proposed state-diffusion approach directly models the joint distribution of game-state variables (down, distance, yardline, score differential, time), treating plays as implicit consequences of state transitions rather than explicit inputs. This reduces the dimensionality of the latent space and enables efficient sampling of entire trajectories. The key innovation is the application of classifier-free guidance to steer the unconditional distribution toward conditional targets, allowing for fast, on-the-fly generation of scenarios like \"snow game with home team up by 10.\" The empirical evaluation will compare against the 1946 baseline, focusing on whether the new method achieves superior unconditional calibration while successfully inducing the desired shifts in the marginal distributions of interest. Window 3 Synthesis: Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 1947-conditional-generative-modeling-for-decision-making (760af10970a7d3e2, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This work builds upon the 1946 foundational paper on inpainting, extending its state-space representation to a stochastic dynamical system. It also draws from the 1944 Black-Scholes framework for option pricing, adapting the idea of risk-neutral valuation to sports betting markets. The use of diffusion models for generative purposes traces back to the physics literature on Langevin dynamics, while the specific architecture leverages recent advances in autoregressive language modeling for sequential data.",
+      "theory_of_mind": "Coaches and analysts operate under bounded rationality, often relying on heuristics like \"three-and-out\" or \"red-zone efficiency\" to make quick assessments. The model must account for this by capturing these higher-order patterns without forcing them explicitly into the architecture. Additionally, bookmakers set odds based on a mixture of historical frequencies and subjective judgment about future conditions; the multi-condition composition primitive aims to formalize this intuition by allowing users to specify arbitrary combinations of factors.",
+      "cross_layer_veto": "A critical anti-collinearity check involves ensuring that the state variables (e.g., down and distance) are not perfectly correlated with each other, as this would lead to singular covariance matrices in the diffusion process. Furthermore, the model must avoid leaking information about the opponent's strategy into the home team's state representation, which could happen if the dataset contains systematic biases in how teams play against different opponents. To prevent leakage, the training procedure should average over matchups rather than conditioning on specific pairings."
+    }
+  ]
+}

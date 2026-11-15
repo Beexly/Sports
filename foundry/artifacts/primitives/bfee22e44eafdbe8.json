@@ -1,0 +1,78 @@
+{
+  "book_id": "bfee22e44eafdbe8",
+  "source_status": "COMPLETE",
+  "title": "2207.11361v1",
+  "file_name": "2207.11361v1.pdf",
+  "sha256": "bfee22e44eafdbe836de2a7ba9978d7fb3cc0d7adf05a6a8960efed2f360741f",
+  "primary_domain": "other",
+  "pages_total": 30,
+  "pages_read": 29,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian ensemble of positional and performance kernels maps player features to salary via ML-derived regressions, integrating temporal evolution and transfer market dynamics. Universal Lens: Rooted in 2207.11361v1 (bfee22e44eafdbe8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers player value through conformal predictive distributions over salary proxies using Gaussian processes trained on multi-modal input features. GSI Mapping: Rooted in 2207.11361v1 (bfee22e44eafdbe8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions in player valuation by updating belief states over performance kernels under dynamic transfer and match contexts. GSE Mapping: Rooted in 2207.11361v1 (bfee22e44eafdbe8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "player_value_regression",
+      "name": "Player Value Regression",
+      "verbatim_quote": "This research investigates a new method to evaluate the value of current football players, based on establishing the machine learning models to investigate the relations among the various features of players, the salary of players, and the market value of players.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_p': 'Player value (market or salary proxy)', 'F_i': 'Feature vector of player i', 'S_p': 'Salary of player p'}",
+      "assumptions": "Linear dependence of V_p on F_i; stationarity of feature importance across time.",
+      "breakdown_regime": "When feature space becomes non-linear or when external shocks disrupt salary structures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel-based regression maps F_i to S_p using learned similarity metrics from training data.",
+        "source_operator": "player_value_regression",
+        "telemetry": "Mean squared error between predicted and actual salaries."
+      }
+    },
+    {
+      "primitive_id": "positional_data_pattern_recognition",
+      "name": "Positional Data Pattern Recognition",
+      "verbatim_quote": "Machine learning, a form of artificial intelligence (AI), uses algorithms to detect meaningful patterns and define a structure based on positional data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{ij}(t)': 'Position of player i at time t in event j', 'D_{ij}': 'Distance traveled by player i during event j', 'T_{ij}': 'Time spent in zone k during event j'}",
+      "assumptions": "Positional data is informative and temporally consistent.",
+      "breakdown_regime": "In low-data regimes or when positional behavior is highly stochastic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Spatial-temporal trajectories are isomorphic to performance kernels in latent feature space.",
+        "source_operator": "positional_data_pattern_recognition",
+        "telemetry": "Clustering coefficient of positional movement patterns."
+      }
+    },
+    {
+      "primitive_id": "salary_determinant_analysis",
+      "name": "Salary Determinant Analysis",
+      "verbatim_quote": "The motivation is to explore what are the relations between different features of football players and their salaries - how each feature affects their salaries, or which are the most important features to affect the salary?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f_k': 'k-th determinant feature', 'w_k': 'weight of feature k in salary model', 's_k': 'standardized score of f_k'}",
+      "assumptions": "Each feature contributes independently to salary; weights are static within season.",
+      "breakdown_regime": "When inter-feature correlations exceed independence assumption.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Weighted sum kernel computes marginal contribution of f_k to S_p.",
+        "source_operator": "salary_determinant_analysis",
+        "telemetry": "Shapley values of each feature in salary prediction."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "bfee22e44eafdbe8_t0",
+      "think": "The core insight is that modern football player valuation must evolve beyond traditional notational analysis to incorporate machine learning models that capture complex interactions among features such as age, position, performance metrics, and market dynamics. The derived primitives—player value regression, positional pattern recognition, and salary determinant analysis—are grounded in statistical learning theory and operationalize the abstract notion of player value into computable forms. These operators form a dual framework where positional data informs performance kernels, which in turn feed into regression models that predict salary. Failure modes arise when data sparsity undermines kernel estimation or when model assumptions break down under shifting economic conditions. The epistemic trace reveals a progression from descriptive statistics to causal modeling, with the underlying mathematical duality being between observed features and latent value structures.\n\nDeep epistemic analysis for 2207.11361v1 (bfee22e44eafdbe8, domain=other, pages_read=29/30): Operator 'Player Value Regression' (page 1, domain other) captures: This research investigates a new method to evaluate the value of current football players, based on establishing the machine learning models to investigate the relations among the various features of players, the salary of players, and the market value of players. Assumptions: Linear dependence of V_p on F_i; stationarity of feature importance across time. Breakdown regime: When feature space becomes non-linear or when external shocks disrupt salary structures. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel-based regression maps F_i to S_p using learned similarity metrics from training data. Operator 'Positional Data Pattern Recognition' (page 1, domain other) captures: Machine learning, a form of artificial intelligence (AI), uses algorithms to detect meaningful patterns and define a structure based on positional data. Assumptions: Positional data is informative and temporally consistent. Breakdown regime: In low-data regimes or when positional behavior is highly stochastic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Spatial-temporal trajectories are isomorphic to performance kernels in latent feature space. Operator 'Salary Determinant Analysis' (page 1, domain other) captures: The motivation is to explore what are the relations between different features of football players and their salaries - how each feature affects their salaries, or which are the most important features to affect the salary? Assumptions: Each feature contributes independently to salary; weights are static within season. Breakdown regime: When inter-feature correlations exceed independence assumption. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Weighted sum kernel computes marginal contribution of f_k to S_p. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2207.11361v1 (bfee22e44eafdbe8, domain=other, pages_read=29/30): Operator 'Player Value Regression' (page 1, domain other) captures: This research investigates a new method to evaluate the value of current football players, based on establishing the machine learning models to investigate the relations among the various features of players, the salary of players, and the market value of players. Assumptions: Linear dependence of V_p on F_i; stationarity of feature importance across time. Breakdown regime: When feature space becomes non-linear or when external shocks disrupt salary structures. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel-based regression maps F_i to S_p using learned similarity metrics from training data. Operator 'Positional Data Pattern Recognition' (page 1, domain other) captures: Machine learning, a form of artificial intelligence (AI), uses algorithms to detect meaningful patterns and define a structure based on positional data. Assumptions: Positional data is informative and temporally consistent. Breakdown regime: In low-data regimes or when positional behavior is highly stochastic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Spatial-temporal trajectories are isomorphic to performance kernels in latent feature space. Operator 'Salary Determinant Analysis' (page 1, domain other) captures: The motivation is to explore what are the relations between different features of football players and their salaries - how each feature affects their salaries, or which are the most important features to affect the salary? Assumptions: Each feature contributes independently to salary; weights are static within season. Breakdown regime: When inter-feature correlations exceed independence assumption. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Weighted sum kernel computes marginal contribution of f_k to S_p. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in econometric modeling of labor markets and sports analytics, extending back to early work in game theory and regression analysis. Influenced by developments in AI and machine learning since the 1990s, particularly in structured prediction and kernel methods. Retrocausal Genealogy: Rooted in 2207.11361v1 (bfee22e44eafdbe8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include clubs seeking optimal roster allocation and players aiming to maximize compensation. The model assumes rationality in both parties, though deviations due to asymmetric information or emotional bias may occur. Theory of Mind & Decision Maker Model: Rooted in 2207.11361v1 (bfee22e44eafdbe8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that features like age and physical condition do not redundantly encode similar predictive signals. Leakage veto ensures that future outcomes (e.g., next season’s salary) are not encoded in current inputs, maintaining temporal consistency. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2207.11361v1 (bfee22e44eafdbe8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

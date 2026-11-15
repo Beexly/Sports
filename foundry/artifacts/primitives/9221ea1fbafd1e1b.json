@@ -1,0 +1,78 @@
+{
+  "book_id": "9221ea1fbafd1e1b",
+  "source_status": "COMPLETE",
+  "title": "VERDICTS",
+  "file_name": "VERDICTS.md",
+  "sha256": "9221ea1fbafd1e1bc479c0cb94772db31d8b757458150d7e68dcd7e859d769a4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Three repository vetting primitives form a ternary decision space: license compliance, runtime integration, and functional fit. Each maps to a Boolean classifier in a tripartite vector space. Universal Lens: Rooted in VERDICTS (9221ea1fbafd1e1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers Bayesian posterior belief over repository adoption using license, runtime, and fit as conditionally independent features. Conformal prediction bounds uncertainty in verdicts. GSI Mapping: Rooted in VERDICTS (9221ea1fbafd1e1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions system state through a deterministic automaton: {adopt, reject, defer} based on license validity, runtime presence, and functional alignment. State changes driven by policy constraints. GSE Mapping: Rooted in VERDICTS (9221ea1fbafd1e1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "license_compliance",
+      "name": "License Compliance Classifier",
+      "verbatim_quote": "None of these three are unlicensed, so none are rejected on that rule.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'Boolean {0, 1} indicating licensed status'}",
+      "assumptions": "All repositories have explicit license metadata; no implicit 'all rights reserved' assumption applies.",
+      "breakdown_regime": "When L = 0, repository is rejected under policy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's binary classification of repository legitimacy via license metadata.",
+        "source_operator": "license_compliance",
+        "telemetry": "Repository license field from GitHub API"
+      }
+    },
+    {
+      "primitive_id": "runtime_integration",
+      "name": "Runtime Integration Validator",
+      "verbatim_quote": "## Verdicts - alibaba/open-code-review — ADOPTED as a dev-time CLI, not as a repo dependency.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Boolean {0, 1} indicating runtime inclusion'}",
+      "assumptions": "No repository ships into TypeScript routes; runtime is strictly defined.",
+      "breakdown_regime": "When R = 1, repository is flagged for integration risk.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's state transition rules for module inclusion.",
+        "source_operator": "runtime_integration",
+        "telemetry": "Dependency tree inspection via `pip show` or `npm ls`"
+      }
+    },
+    {
+      "primitive_id": "functional_fit",
+      "name": "Functional Fit Evaluator",
+      "verbatim_quote": "The only honest fits are a dev-time review CLI, an offline benchmark, or a local agent graph.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Boolean {0, 1} indicating functional alignment'}",
+      "assumptions": "Fit is determined by intended use-case (dev-time, offline, local).",
+      "breakdown_regime": "When F = 0, repository is misaligned with current workflow.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's functional role assignment in agent workflows.",
+        "source_operator": "functional_fit",
+        "telemetry": "Usage pattern analysis from CLI invocation logs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9221ea1fbafd1e1b_t0",
+      "think": "The three primitives define a ternary logical space where each repository is evaluated along license compliance (L), runtime integration (R), and functional fit (F). These form a Boolean vector (L, R, F) ∈ {0,1}³. Each dimension corresponds to a rejection criterion: L=0 implies rejection due to licensing, R=1 implies rejection due to runtime risk, and F=0 implies rejection due to misalignment. The system adopts only when all criteria are satisfied. This structure mirrors a Bayesian decision boundary in a discrete hypothesis space. Dualities emerge in that any single violation leads to rejection, while full alignment enables adoption. Failure modes include false positives from ambiguous license metadata or incorrect runtime detection. The system assumes deterministic evaluation of each feature, but real-world ambiguity may require probabilistic refinement.\n\nDeep epistemic analysis for VERDICTS (9221ea1fbafd1e1b, domain=other, pages_read=1/1): Operator 'License Compliance Classifier' (page 1, domain other) captures: None of these three are unlicensed, so none are rejected on that rule. Assumptions: All repositories have explicit license metadata; no implicit 'all rights reserved' assumption applies. Breakdown regime: When L = 0, repository is rejected under policy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's binary classification of repository legitimacy via license metadata. Operator 'Runtime Integration Validator' (page 1, domain other) captures: ## Verdicts - alibaba/open-code-review — ADOPTED as a dev-time CLI, not as a repo dependency. Assumptions: No repository ships into TypeScript routes; runtime is strictly defined. Breakdown regime: When R = 1, repository is flagged for integration risk. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's state transition rules for module inclusion. Operator 'Functional Fit Evaluator' (page 1, domain other) captures: The only honest fits are a dev-time review CLI, an offline benchmark, or a local agent graph. Assumptions: Fit is determined by intended use-case (dev-time, offline, local). Breakdown regime: When F = 0, repository is misaligned with current workflow. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's functional role assignment in agent workflows. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for VERDICTS (9221ea1fbafd1e1b, domain=other, pages_read=1/1): Operator 'License Compliance Classifier' (page 1, domain other) captures: None of these three are unlicensed, so none are rejected on that rule. Assumptions: All repositories have explicit license metadata; no implicit 'all rights reserved' assumption applies. Breakdown regime: When L = 0, repository is rejected under policy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's binary classification of repository legitimacy via license metadata. Operator 'Runtime Integration Validator' (page 1, domain other) captures: ## Verdicts - alibaba/open-code-review — ADOPTED as a dev-time CLI, not as a repo dependency. Assumptions: No repository ships into TypeScript routes; runtime is strictly defined. Breakdown regime: When R = 1, repository is flagged for integration risk. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's state transition rules for module inclusion. Operator 'Functional Fit Evaluator' (page 1, domain other) captures: The only honest fits are a dev-time review CLI, an offline benchmark, or a local agent graph. Assumptions: Fit is determined by intended use-case (dev-time, offline, local). Breakdown regime: When F = 0, repository is misaligned with current workflow. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's functional role assignment in agent workflows. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal logic systems of software vetting, tracing back to early 2000s open-source governance models and ISO/IEC 25010 software quality standards. Influenced by policy-driven decision trees in DevOps toolchains. Retrocausal Genealogy: Rooted in VERDICTS (9221ea1fbafd1e1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in VERDICTS (9221ea1fbafd1e1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include a permissive adopter who favors broad integration and a restrictive reviewer who prioritizes safety. Decision-making involves balancing utility gain against risk exposure. The system models a rational actor optimizing for long-term maintainability. Theory of Mind & Decision Maker Model: Rooted in VERDICTS (9221ea1fbafd1e1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no two primitives are redundant; e.g., license and runtime cannot both be used to justify rejection. Leakage veto prevents combining functional fit with runtime integration without explicit policy separation. Each primitive must operate independently to avoid conflating orthogonal concerns. Cross-Layer Veto & Anti-Leakage Check: Rooted in VERDICTS (9221ea1fbafd1e1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

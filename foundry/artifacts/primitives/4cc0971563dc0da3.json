@@ -1,0 +1,173 @@
+{
+  "book_id": "4cc0971563dc0da3",
+  "source_status": "COMPLETE",
+  "title": "derekrbreese-fantasy-football-mcp-public",
+  "file_name": "derekrbreese-fantasy-football-mcp-public.md",
+  "sha256": "4cc0971563dc0da3a90bda0f32d31512e11a5a6f370c935bae7ad42fb50edead",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The Model Context Protocol establishes a rigorous isomorphism between the latent vector space of an artificial intelligence agent and the discrete combinatorial state space of a fantasy football league. By decoupling the underlying data source from the model, we enforce a strict boundary condition on information flow, treating the API as a constrained manifold where read-only observables define the accessible phase space. A singleton-user execution model defines a deterministic, isolated operational manifold for fantasy football data pipelines, enabling secure, reproducible state transitions through structured input-output mappings.",
+  "gsi_mapping": "Within Galaxy Sports Intelligence, this architecture functions as a conformal prediction filter. The separation of league data from the generative model allows for the construction of calibration sets over roster configurations. We treat waiver-wire probabilities and matchup metrics as stochastic processes, applying Bayesian updating to infer true player talent distributions while strictly bounding epistemic uncertainty through isolated credential environments. GSI employs Bayesian belief updates over user-specific token namespaces to infer league dynamics; conformal prediction intervals ensure robustness against credential leakage in single-user deployments.",
+  "gse_mapping": "For Galaxy Sports Engine, the single-user constraint dictates a deterministic state-transition system. Since write actions are explicitly excluded from the tool surface, the engine operates purely in a forward-simulation regime. It calculates optimal lineup permutations based on current roster vectors, mapping situational reasoning directly onto the exposed draft and matchup matrices without altering the external database state. GSE models sequential decision-making via Markovian state transitions across leagues, where each user's session constitutes a unique trajectory in a shared but partitioned action space.",
+  "primitives": [
+    {
+      "primitive_id": "mcp_state_isolation",
+      "name": "Contextual State Isolation Operator",
+      "verbatim_quote": "It exposes league, roster, matchup, waiver-wire, draft, and lineup-analysis data to AI clients while keeping the underlying fantasy data source separate from the model.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S_f: Fantasy state space (dimensionless), V_m: Model latent space (dimensionless), E: Exposure operator mapping S_f -> V_m",
+      "assumptions": "The mapping operator E is surjective regarding informational requirements but injective regarding structural integrity; no back-propagation of writes occurs.",
+      "breakdown_regime": "Breaks down if the API introduces asynchronous state mutations that invalidate the static snapshot provided to the AI client during inference.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping of discrete roster constraints into continuous vector embeddings for LLM consumption.",
+        "source_operator": "mcp_state_isolation",
+        "telemetry": "API latency and payload size variance across different endpoint queries."
+      }
+    },
+    {
+      "primitive_id": "read_only_manifold",
+      "name": "Read-Only Manifold Constraint",
+      "verbatim_quote": "Write actions such as adding/dropping players or changing lineups are therefore not part of the tool surface.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: Tool surface set, W: Write action subset, T = T \\ W",
+      "assumptions": "The Yahoo API enforces a hard boundary on mutation operations; the system assumes a purely observational stance.",
+      "breakdown_regime": "Fails if the underlying provider grants write permissions, creating a security vulnerability in the previously defined read-only manifold.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a kernel of permissible actions restricted entirely to analytical queries and probability estimations.",
+        "source_operator": "read_only_manifold",
+        "telemetry": "Frequency of attempted write-action prompts blocked by the server schema."
+      }
+    },
+    {
+      "primitive_id": "single_user_topology",
+      "name": "Single-User Topological Boundary",
+      "verbatim_quote": "## Current status This project is built and run as a **single-user app**: you supply your own Yahoo developer credentials and tokens, and the server serves your leagues to your MCP client.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "U: User set, |U| = 1, C: Credential vector (dimensionless)",
+      "assumptions": "The system assumes a closed topological loop where authentication artifacts remain strictly local to the user's environment.",
+      "breakdown_regime": "Collapses under multi-tenant load balancing or shared credential injection, violating the isolation invariant.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps individual OAuth token states directly to isolated league graph traversals without cross-contamination.",
+        "source_operator": "single_user_topology",
+        "telemetry": "Token refresh success rates and localized environment variable resolution times."
+      }
+    },
+    {
+      "primitive_id": "auth_artifact_exclusion",
+      "name": "Authentication Artifact Exclusion Principle",
+      "verbatim_quote": "Do not commit `.env`, Yahoo token JSON files, OAuth state, refresh tokens, or other authentication artifacts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "R: Repository state, A: Set of sensitive artifacts, R ∩ A = ∅",
+      "assumptions": "Version control systems act as public broadcast channels; any intersection with secret keys compromises the entire cryptographic boundary.",
+      "breakdown_regime": "Violated upon accidental commit of .env files, leading to immediate credential leakage and unauthorized API access.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Establishes a negative constraint kernel ensuring the persistence layer remains completely decoupled from secret management.",
+        "source_operator": "auth_artifact_exclusion",
+        "telemetry": "Git hook interception counts preventing artifact commits."
+      }
+    },
+    {
+      "primitive_id": "single_user_mode_isolation",
+      "name": "User Isolation Kernel",
+      "verbatim_quote": "single-user mode is the supported way to run the app.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The system operates under a single-user assumption, ensuring exclusive access to resources and preventing concurrent state interference.",
+      "breakdown_regime": "When multi-user access is attempted, resource contention leads to undefined behavior and potential data corruption.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's user-named cache key structure and GSE's per-session state machine, enforcing logical separation between concurrent operations.",
+        "source_operator": "single_user_mode_isolation",
+        "telemetry": "Verification via process isolation metrics and token-scoped cache hit rates."
+      }
+    },
+    {
+      "primitive_id": "mcp_server_port_binding",
+      "name": "HTTP Server Port Binding Operator",
+      "verbatim_quote": "## Running the MCP server FastMCP HTTP server: ```bash python fastmcp_server.py ``` By default the server listens on port 8000 locally.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Network stack supports standard TCP/IP binding and local port allocation.",
+      "breakdown_regime": "Port conflict or privilege violation results in server startup failure or runtime crash.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's network interface abstraction; GSI uses this for remote API exposure with secure tunneling.",
+        "source_operator": "mcp_server_port_binding",
+        "telemetry": "Network port availability checks and service uptime monitoring."
+      }
+    },
+    {
+      "primitive_id": "docker_build_and_run",
+      "name": "Containerized Execution Primitive",
+      "verbatim_quote": "docker run --env-file .env -p 8080:8080 fantasy-football-mcp ``` Authentication files and token JSON files are explicitly excluded from the Docker build context.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Docker daemon is available and environment variables are correctly configured for authentication.",
+      "breakdown_regime": "Misconfigured environment or missing secrets cause runtime failure during container initialization.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Aligns with GSE’s container orchestration logic and GSI’s credential injection protocols.",
+        "source_operator": "docker_build_and_run",
+        "telemetry": "Container lifecycle events and secret mounting success rate."
+      }
+    },
+    {
+      "primitive_id": "credential_security_principle",
+      "name": "Credential Exclusion Protocol",
+      "verbatim_quote": "## Security notes Even as a single-user app, keep credentials out of the repository: - Never commit Yahoo access or refresh tokens.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Repository integrity is maintained through exclusion rules and version control policies.",
+      "breakdown_regime": "Leaked credentials result in unauthorized access and require immediate revocation and rotation.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSI's token validation layer and GSE's access control matrix; ensures secure credential handling.",
+        "source_operator": "credential_security_principle",
+        "telemetry": "Git history audit logs and credential leak detection frequency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4cc0971563dc0da3_t0",
+      "think": "The foundational doctrine of this chapter window establishes a rigorous mathematical boundary between the epistemic realm of the Large Language Model and the ontological reality of the Yahoo Fantasy Football database. By defining the system as a 'personal, single-user Model Context Protocol server,' we introduce a topological constraint that limits the state space to a singular user identity, thereby eliminating the complexities of multi-agent interference and concurrent write conflicts. The explicit exclusion of write actions—such as adding or dropping players—transforms the operational manifold from a dynamic, mutable graph into a static, read-only observable field. This is a profound shift in quantitative sports analysis: it forces the AI to operate exclusively within the domain of probabilistic inference and combinatorial optimization rather than transactional execution.\n\nFrom a Foundry Sovereign Primitive perspective, this separation creates a pristine 'Contextual State Isolation Operator.' The API acts as a projection matrix, mapping high-dimensional, messy real-world sports data (rosters, matchups, waiver wires) into clean, structured JSON payloads consumable by the model's latent space. Because the underlying data source remains separate from the model, we can apply conformal prediction techniques to the outputs, knowing that the input distribution is stable and untainted by the model's own hallucinatory feedback loops. The requirement for manual Yahoo developer approval further reinforces this boundary, acting as a hard filter on the universe of accessible leagues. Consequently, the system becomes a highly specialized analytical engine, perfectly suited for calculating expected values, identifying waiver-wire arbitrage opportunities, and simulating lineup permutations without ever risking the corruption of the actual league state. This read-only constraint is not a limitation, but a necessary axiom for building robust, mathematically sound decision-support systems in competitive environments.\n\nFull-book synthesis across 2/2 pages of derekrbreese-fantasy-football-mcp-public (4cc0971563dc0da3): [mcp_state_isolation p.1]: It exposes league, roster, matchup, waiver-wire, draft, and lineup-analysis data to AI clients while keeping the underlying fantasy data source separate from the model. (Isomorphic mapping of discrete roster constraints into continuous vector embeddings for LLM consumption.) [read_only_manifold p.1]: Write actions such as adding/dropping players or changing lineups are therefore not part of the tool surface. (Derives a kernel of permissible actions restricted entirely to analytical queries and probability estimations.) [single_user_topology p.1]: ## Current status This project is built and run as a **single-user app**: you supply your own Yahoo developer credentials and tokens, and the server serves your leagues to your MCP client. (Maps individual OAuth token states directly to isolated league graph traversals without cross-contamination.) [auth_artifact_exclusion p.1]: Do not commit `.env`, Yahoo token JSON files, OAuth state, refresh tokens, or other authentication artifacts. (Establishes a negative constraint kernel ensuring the persistence layer remains completely decoupled from secret management.) [single_user_mode_isolation p.2]: single-user mode is the supported way to run the app. (Maps to GSI's user-named cache key structure and GSE's per-session state machine, enforcing logical separation between concurrent operations.) [mcp_server_port_binding p.2]: ## Running the MCP server FastMCP HTTP server: ```bash python fastmcp_server.py ``` By default the server listens on port 8000 locally. (Derives from GSE's network interface abstraction; GSI uses this for remote API exposure with secure tunneling.) [docker_build_and_run p.2]: docker run --env-file .env -p 8080:8080 fantasy-football-mcp ``` Authentication files and token JSON files are explicitly excluded from the Docker build context. (Aligns with GSE’s container orchestration logic and GSI’s credential injection protocols.) [credential_security_principle p.2]: ## Security notes Even as a single-user app, keep credentials out of the repository: - Never commit Yahoo access or refresh tokens. (Derived from GSI's token validation layer and GSE's access control matrix; ensures secure credential handling.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of derekrbreese-fantasy-football-mcp-public (4cc0971563dc0da3): [mcp_state_isolation p.1]: It exposes league, roster, matchup, waiver-wire, draft, and lineup-analysis data to AI clients while keeping the underlying fantasy data source separate from the model. (Isomorphic mapping of discrete roster constraints into continuous vector embeddings for LLM consumption.) [read_only_manifold p.1]: Write actions such as adding/dropping players or changing lineups are therefore not part of the tool surface. (Derives a kernel of permissible actions restricted entirely to analytical queries and probability estimations.) [single_user_topology p.1]: ## Current status This project is built and run as a **single-user app**: you supply your own Yahoo developer credentials and tokens, and the server serves your leagues to your MCP client. (Maps individual OAuth token states directly to isolated league graph traversals without cross-contamination.) [auth_artifact_exclusion p.1]: Do not commit `.env`, Yahoo token JSON files, OAuth state, refresh tokens, or other authentication artifacts. (Establishes a negative constraint kernel ensuring the persistence layer remains completely decoupled from secret management.) [single_user_mode_isolation p.2]: single-user mode is the supported way to run the app. (Maps to GSI's user-named cache key structure and GSE's per-session state machine, enforcing logical separation between concurrent operations.) [mcp_server_port_binding p.2]: ## Running the MCP server FastMCP HTTP server: ```bash python fastmcp_server.py ``` By default the server listens on port 8000 locally. (Derives from GSE's network interface abstraction; GSI uses this for remote API exposure with secure tunneling.) [docker_build_and_run p.2]: docker run --env-file .env -p 8080:8080 fantasy-football-mcp ``` Authentication files and token JSON files are explicitly excluded from the Docker build context. (Aligns with GSE’s container orchestration logic and GSI’s credential injection protocols.) [credential_security_principle p.2]: ## Security notes Even as a single-user app, keep credentials out of the repository: - Never commit Yahoo access or refresh tokens. (Derived from GSI's token validation layer and GSE's access control matrix; ensures secure credential handling.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "This architectural pattern traces its lineage directly to the early days of statistical decision theory and the development of read-replicas in distributed database systems. Historically, separating analytical workloads from transactional processing (OLAP vs. OLTP) was crucial for maintaining system stability under heavy query loads. In the context of sports analytics, this mirrors the evolution from simple box-score aggregation to complex, isolated predictive modeling environments. The specific implementation via the Model Context Protocol represents a modern synthesis of these ideas, adapting decades-old database isolation principles to the unique challenges of interfacing generative AI with proprietary, rate-limited sports APIs. It acknowledges that the most powerful analytical tools are often those that observe without interfering.",
+      "theory_of_mind": "Modeling the opposing agents—the fantasy league commissioner, the rival managers, and the Yahoo platform itself—requires understanding their distinct objectives. The commissioner seeks fairness and rule enforcement; rivals seek competitive advantage through superior information processing; Yahoo seeks to protect user privacy and prevent API abuse. By adopting a strictly read-only, single-user posture, our system aligns perfectly with Yahoo's security constraints, minimizing the risk of account suspension. Furthermore, by treating recommendations separately from execution, we implicitly model the human manager as the ultimate decision node. The AI does not attempt to outmaneuver the human or bypass their agency; instead, it augments their cognitive capacity, providing deep, data-driven insights that the human can then choose to act upon. This collaborative theory of mind ensures long-term sustainability and trust within the ecosystem.",
+      "cross_layer_veto": "A critical anti-collinearity veto must be enforced between the authentication layer and the data exposure layer. If the system were to inadvertently leak OAuth state or refresh tokens into the model's context window, the entire security perimeter would collapse, allowing the AI to potentially execute unauthorized writes if the API permissions were ever expanded. Therefore, any primitive that attempts to map credential artifacts into the analytical vector space must be immediately vetoed. Additionally, we must veto any attempt to conflate the 'experimental hosted, multi-user' branch with the 'main' personal-use branch. Mixing these topologies introduces unquantified risks related to cross-tenant data leakage and race conditions. The strict separation of concerns—keeping secrets out of the repo and keeping the model out of the transactional loop—is non-negotiable for maintaining the mathematical integrity of the sovereign primitives derived from this architecture."
+    },
+    {
+      "trace_id": "4cc0971563dc0da3_t1",
+      "think": "Chapter window two establishes foundational operational principles for a fantasy football application in a single-user context. The document emphasizes secure execution via isolation mechanisms, including explicit support for single-user mode, which implies a deterministic and predictable runtime environment. This aligns with the mathematical notion of a well-defined phase space where each user's interaction maps to a unique state within a closed system. The use of HTTP servers and Docker containers introduces structured communication layers, enabling scalable yet isolated data processing pipelines. These elements form the basis for constructing a formal model of user-agent interaction, where each session corresponds to a distinct trajectory in a high-dimensional state manifold. Security considerations, particularly around credential management, reflect an understanding of information-theoretic constraints on data exposure. The exclusion of sensitive tokens from code repositories enforces a principle akin to entropy minimization in physical systems—limiting accessible information reduces system vulnerability. Thus, the chapter provides both procedural and theoretical grounding for modeling user behavior and system response in a controlled, secure setting. Window 2 Synthesis: Rooted in derekrbreese-fantasy-football-mcp-public (4cc0971563dc0da3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 2000s Unix process isolation models and modern containerization paradigms, this chapter reflects a lineage from POSIX-compliant execution environments to cloud-native deployment strategies, influenced by security frameworks like OAuth and GitOps practices. Retrocausal Genealogy (Window 2): Rooted in derekrbreese-fantasy-football-mcp-public (4cc0971563dc0da3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents operating within this framework must be modeled as rational actors with bounded knowledge and constrained access paths. Coaches and players are represented as stochastic processes governed by probabilistic utility functions, while the system acts as a deterministic filter that transforms inputs into actionable outputs based on predefined rulesets. Theory of Mind (Window 2): Rooted in derekrbreese-fantasy-football-mcp-public (4cc0971563dc0da3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced through strict separation of concerns: GSI handles inference, GSE governs reasoning, and the underlying infrastructure ensures secure execution. Leakage occurs only if cross-layer dependencies violate the principle of modular independence, such as exposing internal caches or sharing unencrypted tokens across modules. Cross-Layer Veto (Window 2): Rooted in derekrbreese-fantasy-football-mcp-public (4cc0971563dc0da3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

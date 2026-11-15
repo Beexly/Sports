@@ -1,0 +1,78 @@
+{
+  "book_id": "f4d469a85d7ab766",
+  "source_status": "COMPLETE",
+  "title": "0246-robust-draws-in-balanced-knockout-tournaments",
+  "file_name": "0246-robust-draws-in-balanced-knockout-tournaments.md",
+  "sha256": "f4d469a85d7ab7661cd8bed6a7d7287d4263bc51a81a552dcce6a8c8ce1e2979",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Tournament robustness via ε-perturbed win probability infima; multilinear sensitivity diagnostics map matchup uncertainty to futures risk. Universal Lens: Rooted in 0246-robust-draws-in-balanced-knockout-tournaments (f4d469a85d7ab766), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI adopts ε-worst drop as Bayesian risk diagnostic; computes posterior over win probs to quantify bracket sensitivity. GSI Mapping: Rooted in 0246-robust-draws-in-balanced-knockout-tournaments (f4d469a85d7ab766), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies multilinear decomposition to simulate playoff outcomes; uses sensitivity metrics to guide real-time bracket updates. GSE Mapping: Rooted in 0246-robust-draws-in-balanced-knockout-tournaments (f4d469a85d7ab766), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "epsilon_worst_drop",
+      "name": "Epsilon Worst Drop",
+      "verbatim_quote": "**Robustness definitions:** ε-perturbation set P(P,ε) = {P′ : |P′_ij - P_ij| ≤ ε ∀i≠j}; ε-guaranteed winning probability wp_ε(i*,P,σ) = inf_{P′∈P(P,ε)} wp(i*,P′,σ); ε-worst drop d_ε = wp - wp_ε (Def.",
+      "page": 1,
+      "latex": "d_\\varepsilon(i^*, P, \\sigma) = wp(i^*, P, \\sigma) - wp_\\varepsilon(i^*, P, \\sigma)",
+      "symbol_and_unit_ledger": "{'d_ε': 'dimensionless risk drop', 'wp': 'probability of winning', 'wp_ε': 'infimum over perturbed probabilities', 'P': 'pairwise matchup probability matrix', 'ε': 'perturbation magnitude'}",
+      "assumptions": "Tournament structure fixed, deterministic bracket, multilinear win probability model.",
+      "breakdown_regime": "When ε-perturbations exceed stability threshold, leading to non-monotonic behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps estimation error in pairwise matchups to worst-case loss in championship probability.",
+        "source_operator": "epsilon_worst_drop",
+        "telemetry": "Bracket sensitivity index derived from pairwise matchup variance."
+      }
+    },
+    {
+      "primitive_id": "multilinear_sensitivity_decomposition",
+      "name": "Multilinear Sensitivity Decomposition",
+      "verbatim_quote": "But the paper's sensitivity primitive — the ε-worst drop of a tournament win probability, computed exactly via the multilinear decomposition wp = α_ij·P_ij + β_ij — is a genuinely new risk diagnostic vs the map: it identifies which pairwise matchup-probability estimates a futures/bracket position is most sensitive to.",
+      "page": 1,
+      "latex": "wp = \\sum_{i<j} \\alpha_{ij} \\cdot P_{ij} + \\beta_{ij}",
+      "symbol_and_unit_ledger": "{'wp': 'win probability', 'α_ij': 'sensitivity coefficient', 'P_ij': 'matchup win probability', 'β_ij': 'offset term'}",
+      "assumptions": "Linear dependence of win probability on pairwise matchups; fixed tournament structure.",
+      "breakdown_regime": "Nonlinear regimes where α_ij changes sign or magnitude drastically.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically maps GSE's probabilistic bracket simulations to sensitivity diagnostics.",
+        "source_operator": "multilinear_sensitivity_decomposition",
+        "telemetry": "Per-matchup sensitivity score from simulation output."
+      }
+    },
+    {
+      "primitive_id": "robust_draw_classification",
+      "name": "Robust Draw Classification",
+      "verbatim_quote": "3 — a δ-suboptimal draw strictly more robust than ALL optimal draws.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'δ': 'suboptimality parameter', 'draw': 'tournament pairing configuration'}",
+      "assumptions": "Fixed tournament size, known pairwise probabilities, finite ε-range.",
+      "breakdown_regime": "When suboptimal draws yield lower ε-worst drop than optimal ones.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Classifies tournament draws based on ε-drop performance; informs GSE's dynamic bracket selection.",
+        "source_operator": "robust_draw_classification",
+        "telemetry": "Draw robustness ranking score from ε-drop minimization."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f4d469a85d7ab766_t0",
+      "think": "The ε-worst drop operator quantifies how much a tournament win probability degrades under small perturbations of matchup probabilities. It is defined as the difference between the true win probability and its infimum over all ε-perturbed matrices. This is computed using a multilinear decomposition wp = Σ α_ij·P_ij + β_ij, where α_ij captures sensitivity to P_ij. The key insight is that this diagnostic reveals which matchups most influence a team’s championship prospects. In GSE, this translates into identifying critical games whose outcome has maximal impact on futures positions. The operator is robust to noise in P_ij because it considers worst-case perturbations. However, it assumes deterministic brackets and does not account for stochasticity beyond the initial matchup model. Its failure mode occurs when the tournament structure deviates from balanced brackets or when estimation errors are not uniformly bounded.\n\nDeep epistemic analysis for 0246-robust-draws-in-balanced-knockout-tournaments (f4d469a85d7ab766, domain=other, pages_read=4/4): Operator 'Epsilon Worst Drop' (page 1, domain other) captures: **Robustness definitions:** ε-perturbation set P(P,ε) = {P′ : |P′_ij - P_ij| ≤ ε ∀i≠j}; ε-guaranteed winning probability wp_ε(i*,P,σ) = inf_{P′∈P(P,ε)} wp(i*,P′,σ); ε-worst drop d_ε = wp - wp_ε (Def. Assumptions: Tournament structure fixed, deterministic bracket, multilinear win probability model. Breakdown regime: When ε-perturbations exceed stability threshold, leading to non-monotonic behavior. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps estimation error in pairwise matchups to worst-case loss in championship probability. Operator 'Multilinear Sensitivity Decomposition' (page 1, domain other) captures: But the paper's sensitivity primitive — the ε-worst drop of a tournament win probability, computed exactly via the multilinear decomposition wp = α_ij·P_ij + β_ij — is a genuinely new risk diagnostic vs the map: it identifies which pairwise matchup-probability estimates a futures/bracket position is most sensitive to. Assumptions: Linear dependence of win probability on pairwise matchups; fixed tournament structure. Breakdown regime: Nonlinear regimes where α_ij changes sign or magnitude drastically. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps GSE's probabilistic bracket simulations to sensitivity diagnostics. Operator 'Robust Draw Classification' (page 1, domain other) captures: 3 — a δ-suboptimal draw strictly more robust than ALL optimal draws. Assumptions: Fixed tournament size, known pairwise probabilities, finite ε-range. Breakdown regime: When suboptimal draws yield lower ε-worst drop than optimal ones. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Classifies tournament draws based on ε-drop performance; informs GSE's dynamic bracket selection. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0246-robust-draws-in-balanced-knockout-tournaments (f4d469a85d7ab766, domain=other, pages_read=4/4): Operator 'Epsilon Worst Drop' (page 1, domain other) captures: **Robustness definitions:** ε-perturbation set P(P,ε) = {P′ : |P′_ij - P_ij| ≤ ε ∀i≠j}; ε-guaranteed winning probability wp_ε(i*,P,σ) = inf_{P′∈P(P,ε)} wp(i*,P′,σ); ε-worst drop d_ε = wp - wp_ε (Def. Assumptions: Tournament structure fixed, deterministic bracket, multilinear win probability model. Breakdown regime: When ε-perturbations exceed stability threshold, leading to non-monotonic behavior. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps estimation error in pairwise matchups to worst-case loss in championship probability. Operator 'Multilinear Sensitivity Decomposition' (page 1, domain other) captures: But the paper's sensitivity primitive — the ε-worst drop of a tournament win probability, computed exactly via the multilinear decomposition wp = α_ij·P_ij + β_ij — is a genuinely new risk diagnostic vs the map: it identifies which pairwise matchup-probability estimates a futures/bracket position is most sensitive to. Assumptions: Linear dependence of win probability on pairwise matchups; fixed tournament structure. Breakdown regime: Nonlinear regimes where α_ij changes sign or magnitude drastically. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps GSE's probabilistic bracket simulations to sensitivity diagnostics. Operator 'Robust Draw Classification' (page 1, domain other) captures: 3 — a δ-suboptimal draw strictly more robust than ALL optimal draws. Assumptions: Fixed tournament size, known pairwise probabilities, finite ε-range. Breakdown regime: When suboptimal draws yield lower ε-worst drop than optimal ones. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Classifies tournament draws based on ε-drop performance; informs GSE's dynamic bracket selection. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in game-theoretic tournament design and computational complexity theory, particularly the work of Aziz et al. on draw optimization and the seminal NP-hardness results for tournament fairness. Builds upon earlier CS literature on robustness in combinatorial structures. Retrocausal Genealogy: Rooted in 0246-robust-draws-in-balanced-knockout-tournaments (f4d469a85d7ab766), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversaries who manipulate matchup probabilities, and decision-makers who seek robust strategies. The model assumes rational players with bounded error models, and evaluates outcomes under worst-case perturbations. Theory of Mind & Decision Maker Model: Rooted in 0246-robust-draws-in-balanced-knockout-tournaments (f4d469a85d7ab766), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that sensitivity diagnostics do not collapse into trivial rankings. Leakage veto ensures that the ε-drop does not become dominated by trivially large or small values due to numerical instability or improper normalization. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0246-robust-draws-in-balanced-knockout-tournaments (f4d469a85d7ab766), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "report_type": "WEEK10_TNF_DESIGNATION_MERGE",
+  "generated_at_utc": "2026-11-12T22:36:54.188500+00:00",
+  "week": 10,
+  "matchup": "WAS @ NYG",
+  "espn_event_id": "401873052",
+  "sources": {
+    "nflverse": "data/nflverse/injuries_2026.csv (week 10, Wednesday practice snapshot)",
+    "espn": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873052"
+  },
+  "rows_changed": 4,
+  "decisions": [
+    {
+      "team": "NYG",
+      "player": "Malik Harrison",
+      "position_nflverse": "LB",
+      "position_espn": "LB",
+      "nflverse_report_status": "Questionable",
+      "espn_game_designation": "Questionable",
+      "applied": "Questionable",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "NYG",
+      "player": "J.J. McCarthy",
+      "position_nflverse": "QB",
+      "position_espn": "QB",
+      "nflverse_report_status": "",
+      "espn_game_designation": "Questionable",
+      "applied": "Questionable",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "NYG",
+      "player": "Cam Skattebo",
+      "position_nflverse": "RB",
+      "position_espn": "RB",
+      "nflverse_report_status": "",
+      "espn_game_designation": "Out",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "NYG",
+      "player": "Colton Hood",
+      "position_nflverse": "CB",
+      "position_espn": "CB",
+      "nflverse_report_status": "",
+      "espn_game_designation": "Out",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "WAS",
+      "player": "Lucas Patrick",
+      "position_nflverse": "C",
+      "position_espn": "G",
+      "nflverse_report_status": "Out",
+      "espn_game_designation": "Questionable",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "WAS",
+      "player": "Treylon Burks",
+      "position_nflverse": "WR",
+      "position_espn": "WR",
+      "nflverse_report_status": "",
+      "espn_game_designation": "Out",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    },
+    {
+      "team": "WAS",
+      "player": "Colson Yankoff",
+      "position_nflverse": "TE",
+      "position_espn": "TE",
+      "nflverse_report_status": "Out",
+      "espn_game_designation": "Out",
+      "applied": "Out",
+      "rule": "worst-of (Out > Doubtful > Questionable > none)"
+    }
+  ],
+  "espn_designations_without_nflverse_row": [
+    {
+      "team": "NYG",
+      "player": "Tyrone Tracy Jr.",
+      "status": "Injured Reserve"
+    },
+    {
+      "team": "WAS",
+      "player": "Dyami Brown",
+      "status": "Injured Reserve"
+    },
+    {
+      "team": "WAS",
+      "player": "Daron Payne",
+      "status": "Injured Reserve"
+    }
+  ],
+  "note": "IR is treated as Out for severity comparison but is not written as a report_status designation; the overlay consumes Out/Doubtful/Questionable only."
+}

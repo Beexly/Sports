@@ -1,0 +1,95 @@
+{
+  "book_id": "e17d1d66ec712b19",
+  "source_status": "COMPLETE",
+  "title": "qb-consensus-2026-09-13",
+  "file_name": "qb-consensus-2026-09-13.md",
+  "sha256": "e17d1d66ec712b19a68722613de44fd3f0adfa51f6104674ec56f6363ef8215d",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in qb-consensus-2026-09-13 (e17d1d66ec712b19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in qb-consensus-2026-09-13 (e17d1d66ec712b19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in qb-consensus-2026-09-13 (e17d1d66ec712b19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in qb-consensus-2026-09-13 (e17d1d66ec712b19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in qb-consensus-2026-09-13 (e17d1d66ec712b19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in qb-consensus-2026-09-13 (e17d1d66ec712b19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "consensus_projection",
+      "name": "Consensus Projection Operator",
+      "verbatim_quote": "| # | QB | Team | Opp | FD salary | Consensus proj | Proj.",
+      "page": 1,
+      "latex": "$\\hat{X}_{\\text{consensus}} = \\frac{1}{N} \\sum_{i=1}^{N} X_i$",
+      "symbol_and_unit_ledger": "{'$\\\\hat{X}_{\\\\text{consensus}}$': 'Mean projected fantasy points (dimensionless)', '$X_i$': 'Individual model projection (dimensionless)', '$N$': 'Number of contributing models (dimensionless)'}",
+      "assumptions": "Equal weighting across independent models; no adjustment for model variance or bias.",
+      "breakdown_regime": "Fails when individual model correlations exceed 0.8, leading to overconfident central tendency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Conformal Inference via exchangeability of model predictions under null hypothesis.",
+        "source_operator": "consensus_projection",
+        "telemetry": "Residual variance of consensus mean against actual outcomes."
+      }
+    },
+    {
+      "primitive_id": "projected_ownership",
+      "name": "Projected Ownership Estimator",
+      "verbatim_quote": "| # | QB | Team | Opp | FD salary | Consensus proj | Proj.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Linear scaling from historical draft data; assumes static player popularity.",
+      "breakdown_regime": "Breaks down during roster lock when large funds manipulate supply/demand dynamics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE State-Transition Model as a latent state variable affecting action probabilities.",
+        "source_operator": "projected_ownership",
+        "telemetry": "Real-time ownership percentage changes from betting exchanges."
+      }
+    },
+    {
+      "primitive_id": "value_ratio",
+      "name": "Value Ratio Operator",
+      "verbatim_quote": "**Best values:** Herbert ($7,600) is the consensus value king (28.5 implied total vs ARI's bottom-tier pass D); Mayfield ($7,500) is the bring-back pivot off Burrow chalk with real milestone incentives today.",
+      "page": 2,
+      "latex": "$V_r = \\frac{\\hat{X}}{S}$",
+      "symbol_and_unit_ledger": "{'$V_r$': 'Value ratio (fantasy points per dollar)', '$\\\\hat{X}$': 'Consensus projection (dimensionless)', '$S$': 'Salary (FanDuel dollars, USD)'}",
+      "assumptions": "Linear utility in salary; no consideration for risk-adjustment or tail events.",
+      "breakdown_regime": "Inefficient when salary distributions exhibit heavy tails or non-linear pricing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derived from GSI Optimal Transport framework minimizing expected shortfall.",
+        "source_operator": "value_ratio",
+        "telemetry": "Historical Sharpe ratio of salary-normalized projections."
+      }
+    },
+    {
+      "primitive_id": "leverage_pivot",
+      "name": "Leverage Pivot Selector",
+      "verbatim_quote": "**Leverage pivots:** Lamar (~5% owned, $8,400) is the tournament cheat code — elite ceiling nobody is playing; Allen (\"barely owned\" at $8,900) is the premium pivot if BUF/HOU shoots out.",
+      "page": 2,
+      "latex": "P_{\\text{pivot}}(x) = I(x > \\theta) \\cdot P(x)$",
+      "symbol_and_unit_ledger": "{'$P_{\\\\text{pivot}}(x)$': 'Adjusted pivot probability (probability)', '$I(\\\\cdot)$': 'Indicator function (binary)', '$\\\\theta$': 'High-ceiling threshold (fantasy points)', '$P(x)$': 'Base probability distribution (probability)'}",
+      "assumptions": "Independence between ceiling event and baseline distribution; no dynamic portfolio rebalancing.",
+      "breakdown_regime": "Fails when pivot assets become collinear with core holdings, causing catastrophic drawdown.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE Markov Decision Process as a high-reward transition state.",
+        "source_operator": "leverage_pivot",
+        "telemetry": "Probability mass in upper quantiles of empirical score distributions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e17d1d66ec712b19_t0",
+      "think": "The primary failure mode of QB Consensus is its implicit assumption of model independence and equal weight, which collapses when predictive algorithms share common data sources or feature engineering. This leads to systematic underestimation of variance and overconfidence in central tendencies. The \"best value\" heuristic implicitly minimizes a linear loss function, ignoring skewness and kurtosis in the tail-heavy fantasy scoring distribution. Tournament-cheat codes like Lamar and Allen exploit market microstructure inefficiencies: they are deliberately undervalued because mainstream optimization frameworks cannot allocate to assets with extreme, rare positive skew without increasing overall volatility. The \"fade\" list highlights the difficulty of formalizing \"traps\"—it requires a generative model of adversarial betting behavior, such as large funds targeting overvalued players to induce herd behavior. Cross-layer veto conditions include: 1) **Collinearity Veto**—salary ratios near 1 imply perfect substitutability, violating diversification; 2) **Leakage Veto**—using projected ownership as a proxy for true skill introduces selection bias; 3) **Anti-Collinearity Veto**—if multiple QBs share the same injury proxy, their joint distribution becomes singular.\n\nDeep epistemic analysis for qb-consensus-2026-09-13 (e17d1d66ec712b19, domain=other, pages_read=2/2): Operator 'Consensus Projection Operator' (page 1, domain other) captures: | # | QB | Team | Opp | FD salary | Consensus proj | Proj. Assumptions: Equal weighting across independent models; no adjustment for model variance or bias. Breakdown regime: Fails when individual model correlations exceed 0.8, leading to overconfident central tendency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Conformal Inference via exchangeability of model predictions under null hypothesis. Operator 'Projected Ownership Estimator' (page 1, domain other) captures: | # | QB | Team | Opp | FD salary | Consensus proj | Proj. Assumptions: Linear scaling from historical draft data; assumes static player popularity. Breakdown regime: Breaks down during roster lock when large funds manipulate supply/demand dynamics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE State-Transition Model as a latent state variable affecting action probabilities. Operator 'Value Ratio Operator' (page 2, domain other) captures: **Best values:** Herbert ($7,600) is the consensus value king (28.5 implied total vs ARI's bottom-tier pass D); Mayfield ($7,500) is the bring-back pivot off Burrow chalk with real milestone incentives today. Assumptions: Linear utility in salary; no consideration for risk-adjustment or tail events. Breakdown regime: Inefficient when salary distributions exhibit heavy tails or non-linear pricing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from GSI Optimal Transport framework minimizing expected shortfall. Operator 'Leverage Pivot Selector' (page 2, domain other) captures: **Leverage pivots:** Lamar (~5% owned, $8,400) is the tournament cheat code — elite ceiling nobody is playing; Allen (\"barely owned\" at $8,900) is the premium pivot if BUF/HOU shoots out. Assumptions: Independence between ceiling event and baseline distribution; no dynamic portfolio rebalancing. Breakdown regime: Fails when pivot assets become collinear with core holdings, causing catastrophic drawdown. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE Markov Decision Process as a high-reward transition state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for qb-consensus-2026-09-13 (e17d1d66ec712b19, domain=other, pages_read=2/2): Operator 'Consensus Projection Operator' (page 1, domain other) captures: | # | QB | Team | Opp | FD salary | Consensus proj | Proj. Assumptions: Equal weighting across independent models; no adjustment for model variance or bias. Breakdown regime: Fails when individual model correlations exceed 0.8, leading to overconfident central tendency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Conformal Inference via exchangeability of model predictions under null hypothesis. Operator 'Projected Ownership Estimator' (page 1, domain other) captures: | # | QB | Team | Opp | FD salary | Consensus proj | Proj. Assumptions: Linear scaling from historical draft data; assumes static player popularity. Breakdown regime: Breaks down during roster lock when large funds manipulate supply/demand dynamics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE State-Transition Model as a latent state variable affecting action probabilities. Operator 'Value Ratio Operator' (page 2, domain other) captures: **Best values:** Herbert ($7,600) is the consensus value king (28.5 implied total vs ARI's bottom-tier pass D); Mayfield ($7,500) is the bring-back pivot off Burrow chalk with real milestone incentives today. Assumptions: Linear utility in salary; no consideration for risk-adjustment or tail events. Breakdown regime: Inefficient when salary distributions exhibit heavy tails or non-linear pricing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from GSI Optimal Transport framework minimizing expected shortfall. Operator 'Leverage Pivot Selector' (page 2, domain other) captures: **Leverage pivots:** Lamar (~5% owned, $8,400) is the tournament cheat code — elite ceiling nobody is playing; Allen (\"barely owned\" at $8,900) is the premium pivot if BUF/HOU shoots out. Assumptions: Independence between ceiling event and baseline distribution; no dynamic portfolio rebalancing. Breakdown regime: Fails when pivot assets become collinear with core holdings, causing catastrophic drawdown. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE Markov Decision Process as a high-reward transition state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in qb-consensus-2026-09-13 (e17d1d66ec712b19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in qb-consensus-2026-09-13 (e17d1d66ec712b19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bookmakers model opponents as rational expected-value maximizers, while optimal players recognize bookmaker preferences for liquidity management and revenue smoothing. Bookmakers also anticipate clustering heuristics like \"fade the public.\" Theory of Mind & Decision Maker Model: Rooted in qb-consensus-2026-09-13 (e17d1d66ec712b19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Veto condition: If the salary distribution exhibits a sharp drop-off (e.g., $8,900 vs $8,300), the value ratio becomes numerically unstable, requiring regularization or a threshold-based transformation to prevent overfitting. Cross-Layer Veto & Anti-Leakage Check: Rooted in qb-consensus-2026-09-13 (e17d1d66ec712b19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

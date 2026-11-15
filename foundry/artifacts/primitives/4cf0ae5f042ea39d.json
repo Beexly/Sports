@@ -1,0 +1,78 @@
+{
+  "book_id": "4cf0ae5f042ea39d",
+  "source_status": "COMPLETE",
+  "title": "openalex_W2952964002",
+  "file_name": "openalex_W2952964002.pdf",
+  "sha256": "4cf0ae5f042ea39d4018735c386a5d8c6497886816f73b30408d965d806970e3",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Top-view video registration via synthetic edge map matching and homography optimization enables automated football analytics. Universal Lens: Rooted in openalex_W2952964002 (4cf0ae5f042ea39d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over synthetic dictionaries supports probabilistic player position estimation from broadcast footage. GSI Mapping: Rooted in openalex_W2952964002 (4cf0ae5f042ea39d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models temporal camera stabilization to maintain consistent top-view state transitions across video frames. GSE Mapping: Rooted in openalex_W2952964002 (4cf0ae5f042ea39d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "top_view_registration",
+      "name": "Top View Registration",
+      "verbatim_quote": "We formulate the registration problem as a nearest neighbour search over a synthetically generated dictionary of edge map and homography pairs.",
+      "page": 1,
+      "latex": "\\mathcal{R}(I) = \\arg\\min_{(E, H)} \\| E - \\mathcal{W}(H, I) \\|_2",
+      "symbol_and_unit_ledger": "{'I': 'Broadcast video frame (dimensionless)', 'E': 'Synthetic edge map (dimensionless)', 'H': 'Homography matrix (3x3, dimensionless)', '\\\\mathcal{W}': 'Warped image function (dimensionless)', '\\\\mathcal{R}': 'Registration function (dimensionless)'}",
+      "assumptions": "Static top-view model, known camera intrinsics, sufficient edge information in broadcast video.",
+      "breakdown_regime": "Failure when edge information is insufficient or camera motion exceeds modeled range.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps broadcast video frames to static top-view coordinates via learned edge-homography correspondence.",
+        "source_operator": "top_view_registration",
+        "telemetry": "Mean squared error between registered edge map and synthetic dictionary entry."
+      }
+    },
+    {
+      "primitive_id": "temporal_camera_stabilization",
+      "name": "Temporal Camera Stabilization",
+      "verbatim_quote": "We show that the per-frame results can be improved in videos using an optimization framework for temporal camera stabilization.",
+      "page": 1,
+      "latex": "\\mathcal{T}_{t} = \\arg\\min_{H_t} \\sum_{t'} \\| H_t - H_{t'} \\|_F^2 + \\lambda \\mathcal{L}(H_t, I_t)",
+      "symbol_and_unit_ledger": "{'H_t': 'Camera homography at time t (3x3, dimensionless)', '\\\\mathcal{T}_t': 'Temporal stabilization operator (dimensionless)', '\\\\mathcal{L}': 'Local consistency loss (dimensionless)', '\\\\lambda': 'Regularization weight (dimensionless)'}",
+      "assumptions": "Temporal coherence in camera motion, smoothness of homography evolution.",
+      "breakdown_regime": "Breaks down under rapid camera motion or abrupt viewpoint changes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Optimizes sequence of homographies to minimize temporal variation while preserving spatial alignment.",
+        "source_operator": "temporal_camera_stabilization",
+        "telemetry": "Temporal homography variance across video sequence."
+      }
+    },
+    {
+      "primitive_id": "synthetic_dictionary_generation",
+      "name": "Synthetic Dictionary Generation",
+      "verbatim_quote": "The synthetic dictionary generation allows us to exhaustively cover a wide variety of camera angles and positions and reduce this problem to a minimal per-frame edge map matching procedure.",
+      "page": 1,
+      "latex": "\\mathcal{D} = \\{ (E_i, H_i) \\}_{i=1}^{N}, \\quad E_i = \\mathcal{W}(H_i, I_{\\text{ref}})",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{D}': 'Synthetic dictionary (dimensionless)', 'E_i': 'Edge map (dimensionless)', 'H_i': 'Homography (3x3, dimensionless)', 'I_{\\\\text{ref}}': 'Reference image (dimensionless)', 'N': 'Number of entries (dimensionless)'}",
+      "assumptions": "Reference image is representative of field geometry, homography is linear.",
+      "breakdown_regime": "Degenerates if reference image lacks sufficient geometric structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates synthetic edge-map/homography pairs to enable fast lookup during registration.",
+        "source_operator": "synthetic_dictionary_generation",
+        "telemetry": "Dictionary coverage ratio of camera angle space."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4cf0ae5f042ea39d_t0",
+      "think": "The core innovation lies in replacing manual landmark annotation with automated edge-based registration. The method begins by generating a synthetic dictionary of edge maps and corresponding homographies through simulated camera motions. This dictionary is built from a reference image and warped versions to emulate diverse viewpoints. For each new broadcast frame, the system computes its edge map and performs a nearest neighbor search against the dictionary to find the best-matching homography. Temporal stabilization refines this estimate by enforcing smoothness across video frames. The registration process is formulated as a minimization problem where the objective balances fidelity to the synthetic edge map and regularization of camera motion. This approach avoids reliance on sparse point correspondences, which are often absent in broadcast video. The method's robustness stems from leveraging structured field lines rather than arbitrary visual features. Failure modes include occlusion of line markings, extreme camera motion beyond the synthetic range, and poor illumination affecting edge detection quality.\n\nDeep epistemic analysis for openalex_W2952964002 (4cf0ae5f042ea39d, domain=other, pages_read=9/9): Operator 'Top View Registration' (page 1, domain other) captures: We formulate the registration problem as a nearest neighbour search over a synthetically generated dictionary of edge map and homography pairs. Assumptions: Static top-view model, known camera intrinsics, sufficient edge information in broadcast video. Breakdown regime: Failure when edge information is insufficient or camera motion exceeds modeled range. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps broadcast video frames to static top-view coordinates via learned edge-homography correspondence. Operator 'Temporal Camera Stabilization' (page 1, domain other) captures: We show that the per-frame results can be improved in videos using an optimization framework for temporal camera stabilization. Assumptions: Temporal coherence in camera motion, smoothness of homography evolution. Breakdown regime: Breaks down under rapid camera motion or abrupt viewpoint changes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Optimizes sequence of homographies to minimize temporal variation while preserving spatial alignment. Operator 'Synthetic Dictionary Generation' (page 1, domain other) captures: The synthetic dictionary generation allows us to exhaustively cover a wide variety of camera angles and positions and reduce this problem to a minimal per-frame edge map matching procedure. Assumptions: Reference image is representative of field geometry, homography is linear. Breakdown regime: Degenerates if reference image lacks sufficient geometric structure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates synthetic edge-map/homography pairs to enable fast lookup during registration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W2952964002 (4cf0ae5f042ea39d, domain=other, pages_read=9/9): Operator 'Top View Registration' (page 1, domain other) captures: We formulate the registration problem as a nearest neighbour search over a synthetically generated dictionary of edge map and homography pairs. Assumptions: Static top-view model, known camera intrinsics, sufficient edge information in broadcast video. Breakdown regime: Failure when edge information is insufficient or camera motion exceeds modeled range. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps broadcast video frames to static top-view coordinates via learned edge-homography correspondence. Operator 'Temporal Camera Stabilization' (page 1, domain other) captures: We show that the per-frame results can be improved in videos using an optimization framework for temporal camera stabilization. Assumptions: Temporal coherence in camera motion, smoothness of homography evolution. Breakdown regime: Breaks down under rapid camera motion or abrupt viewpoint changes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Optimizes sequence of homographies to minimize temporal variation while preserving spatial alignment. Operator 'Synthetic Dictionary Generation' (page 1, domain other) captures: The synthetic dictionary generation allows us to exhaustively cover a wide variety of camera angles and positions and reduce this problem to a minimal per-frame edge map matching procedure. Assumptions: Reference image is representative of field geometry, homography is linear. Breakdown regime: Degenerates if reference image lacks sufficient geometric structure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates synthetic edge-map/homography pairs to enable fast lookup during registration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical computer vision techniques like homography estimation and feature matching. Builds upon prior work in video registration using SIFT and manual correspondences, extending to automated edge-based matching and synthetic data augmentation. Retrocausal Genealogy: Rooted in openalex_W2952964002 (4cf0ae5f042ea39d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models the interaction between broadcast camera dynamics and static field geometry. Assumes that player tracking data can be accurately projected using the computed homography, enabling downstream analytics without manual labeling. Theory of Mind & Decision Maker Model: Rooted in openalex_W2952964002 (4cf0ae5f042ea39d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents misalignment due to camera instability or incorrect edge detection. Ensures that registration does not propagate errors across frames by enforcing temporal consistency. Veto conditions include high residual error in edge matching and excessive deviation in homography norms. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W2952964002 (4cf0ae5f042ea39d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

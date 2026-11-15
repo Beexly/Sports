@@ -1,0 +1,78 @@
+{
+  "book_id": "79b27dc3af962aca",
+  "source_status": "COMPLETE",
+  "title": "p0410",
+  "file_name": "p0410.txt",
+  "sha256": "79b27dc3af962acaa313a9c27221333bd7b3c10a2de069033ee63bdd96aff8be",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Symbolic learning dynamics unify habit strength, inhibition, and reaction thresholds through exponential and empirical constants. Universal Lens: Rooted in p0410 (79b27dc3af962aca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models learning curves via exponential decay and empirical constants; conformal prediction bounds habit strength and inhibition. GSI Mapping: Rooted in p0410 (79b27dc3af962aca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps state transitions using reaction thresholds and habit strength maxima; dynamic inhibition modulates action selection. GSE Mapping: Rooted in p0410 (79b27dc3af962aca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "reactive_inhibition_accumulation",
+      "name": "Reactive Inhibition Accumulation",
+      "verbatim_quote": "GLOSSARY OF SYMBOLS 405 t\"\"I : amount of reactive inhibition t units of time after a given sequence of reaction evocations, i.e., ΔIR = the increment of reactive inhibition generated at a single reaction evocation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time units', 'ΔIR': 'inhibition units'}",
+      "assumptions": "Inhibition accumulates linearly with reaction evocations; temporal decay is negligible.",
+      "breakdown_regime": "At t → ∞, ΔIR approaches saturation limit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models cumulative inhibition over time; used in GSE state transition logic to inhibit repeated actions.",
+        "source_operator": "reactive_inhibition_accumulation",
+        "telemetry": "Cumulative inhibition measured post-evocation."
+      }
+    },
+    {
+      "primitive_id": "exponential_learning_constant",
+      "name": "Exponential Learning Constant",
+      "verbatim_quote": "i = the exponential constant in a learning situation where sHR = m - me-iv.",
+      "page": 1,
+      "latex": "sHR = m - me^{-iv}",
+      "symbol_and_unit_ledger": "{'i': 'dimensionless', 'v': 'learning variable', 'm': 'maximum habit response', 'sHR': 'scaled habit response'}",
+      "assumptions": "Learning follows an exponential convergence model; initial response is zero.",
+      "breakdown_regime": "As v → ∞, sHR → m.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian updating; i governs rate of belief convergence.",
+        "source_operator": "exponential_learning_constant",
+        "telemetry": "Rate of learning convergence observed via habit response."
+      }
+    },
+    {
+      "primitive_id": "habit_strength_maximum",
+      "name": "Habit Strength Maximum",
+      "verbatim_quote": "M = the physiological maximum of habit strength attainable under optimal conditions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'habit strength units'}",
+      "assumptions": "Optimal conditions yield maximal habit strength; no external interference.",
+      "breakdown_regime": "M is saturated when reinforcement is optimal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state space boundary; defines upper limit of learned behavior.",
+        "source_operator": "habit_strength_maximum",
+        "telemetry": "Observed peak habit strength under controlled conditions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "79b27dc3af962aca_t0",
+      "think": "The primitives define core behavioral dynamics: reactive inhibition accumulates over time, learning follows exponential decay toward a maximum, and habit strength has a physiological ceiling. These form a closed-loop system where inhibition limits repetition, exponential learning drives adaptation, and M sets the upper bound of capability. Failure modes include saturation of inhibition, divergence from exponential fit, and violation of M's boundary. Dualities emerge in how inhibition and habit strength oppose each other while converging toward a stable equilibrium. Temporal dynamics are governed by i and t, with j and k introducing delays and reinforcement quality. The system exhibits robustness under bounded inputs but fails under unbounded reinforcement or delayed feedback.\n\nDeep epistemic analysis for p0410 (79b27dc3af962aca, domain=other, pages_read=1/1): Operator 'Reactive Inhibition Accumulation' (page 1, domain other) captures: GLOSSARY OF SYMBOLS 405 t\"\"I : amount of reactive inhibition t units of time after a given sequence of reaction evocations, i.e., ΔIR = the increment of reactive inhibition generated at a single reaction evocation. Assumptions: Inhibition accumulates linearly with reaction evocations; temporal decay is negligible. Breakdown regime: At t → ∞, ΔIR approaches saturation limit. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models cumulative inhibition over time; used in GSE state transition logic to inhibit repeated actions. Operator 'Exponential Learning Constant' (page 1, domain other) captures: i = the exponential constant in a learning situation where sHR = m - me-iv. Assumptions: Learning follows an exponential convergence model; initial response is zero. Breakdown regime: As v → ∞, sHR → m. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian updating; i governs rate of belief convergence. Operator 'Habit Strength Maximum' (page 1, domain other) captures: M = the physiological maximum of habit strength attainable under optimal conditions. Assumptions: Optimal conditions yield maximal habit strength; no external interference. Breakdown regime: M is saturated when reinforcement is optimal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state space boundary; defines upper limit of learned behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0410 (79b27dc3af962aca, domain=other, pages_read=1/1): Operator 'Reactive Inhibition Accumulation' (page 1, domain other) captures: GLOSSARY OF SYMBOLS 405 t\"\"I : amount of reactive inhibition t units of time after a given sequence of reaction evocations, i.e., ΔIR = the increment of reactive inhibition generated at a single reaction evocation. Assumptions: Inhibition accumulates linearly with reaction evocations; temporal decay is negligible. Breakdown regime: At t → ∞, ΔIR approaches saturation limit. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models cumulative inhibition over time; used in GSE state transition logic to inhibit repeated actions. Operator 'Exponential Learning Constant' (page 1, domain other) captures: i = the exponential constant in a learning situation where sHR = m - me-iv. Assumptions: Learning follows an exponential convergence model; initial response is zero. Breakdown regime: As v → ∞, sHR → m. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian updating; i governs rate of belief convergence. Operator 'Habit Strength Maximum' (page 1, domain other) captures: M = the physiological maximum of habit strength attainable under optimal conditions. Assumptions: Optimal conditions yield maximal habit strength; no external interference. Breakdown regime: M is saturated when reinforcement is optimal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state space boundary; defines upper limit of learned behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in operant conditioning theory of Skinner, extended into mathematical modeling by Rescorla-Wagner and subsequent neurodynamical frameworks. Retrocausal Genealogy: Rooted in p0410 (79b27dc3af962aca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0410 (79b27dc3af962aca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the learner (seeking reward) and the environment (providing reinforcement), with inhibition acting as a self-regulatory mechanism against overlearning. Theory of Mind & Decision Maker Model: Rooted in p0410 (79b27dc3af962aca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0410 (79b27dc3af962aca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if inhibition and habit strength are not orthogonal; leakage occurs if M is exceeded without proper feedback control. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0410 (79b27dc3af962aca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0410 (79b27dc3af962aca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

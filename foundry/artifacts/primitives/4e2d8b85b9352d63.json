@@ -1,0 +1,95 @@
+{
+  "book_id": "4e2d8b85b9352d63",
+  "source_status": "COMPLETE",
+  "title": "SKILL",
+  "file_name": "SKILL.md",
+  "sha256": "4e2d8b85b9352d633acb4f14c9f59d3cfe992e0bd1ff47ac4297f7ff61445444",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in SKILL (4e2d8b85b9352d63), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in SKILL (4e2d8b85b9352d63), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in SKILL (4e2d8b85b9352d63), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in SKILL (4e2d8b85b9352d63), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in SKILL (4e2d8b85b9352d63), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in SKILL (4e2d8b85b9352d63), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "minimal_diff_principle",
+      "name": "Minimal-Diff Principle",
+      "verbatim_quote": "effort: medium allowed-tools: Read, Grep, Glob, Bash(npm run typecheck*), Bash(npm run lint*), Bash(npm run test*), Bash(npm run guardrails*), Bash(npm run guard:*), Bash(npm run agent:eval*) --# Coding agent (GSE) ## Laws 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Existing functional codebases are correct and optimal.",
+      "breakdown_regime": "Steady-state operational continuity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian posterior updating with minimal prior drift.",
+        "source_operator": "minimal_diff_principle",
+        "telemetry": "Change-set size relative to baseline codebase."
+      }
+    },
+    {
+      "primitive_id": "idempotency_reuse",
+      "name": "Idempotency Reuse Law",
+      "verbatim_quote": "Prefer minimal diffs; do not rebuild settlement/Stripe/outbox that already work.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Webhook events are uniquely identifiable and idempotent under application logic.",
+      "breakdown_regime": "Event processing determinism.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction intervals with event deduplication.",
+        "source_operator": "idempotency_reuse",
+        "telemetry": "Duplicate event count per time interval."
+      }
+    },
+    {
+      "primitive_id": "polymarket_compliance_hold",
+      "name": "Polymarket Compliance Hold",
+      "verbatim_quote": "Before editing webhooks, read the existing handler; reuse idempotency (`stripeEventId`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Regulatory constraints prevent direct integration with Polymarket APIs.",
+      "breakdown_regime": "Feature flag bypass.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Zero-Kelly fraction allocation under regulatory state variables.",
+        "source_operator": "polymarket_compliance_hold",
+        "telemetry": "Compliance violation alerts."
+      }
+    },
+    {
+      "primitive_id": "free_path_gate",
+      "name": "Free-Path Gate",
+      "verbatim_quote": "## Touchpoints - Webhook: `apps/web/app/api/webhooks/stripe/route.ts` - Settle cron: `apps/web/app/api/cron/settle-picks/route.ts` - Router: `apps/web/lib/data-sources/source-router.ts` - Outbox: existing lease + `claimVersion` only - Eval after change: `npm run agent:eval` ## Do not - Invent new locking - Soften free-path law - Wire CIR into live scoring without `CALIBRATION_ADJUSTMENTS_ENABLED`",
+      "page": 1,
+      "latex": "F_{\\text{free}} = \\mathbb{I}_{\\{k=0\\}}",
+      "symbol_and_unit_ledger": "{'k': 'API key presence indicator (binary)'}",
+      "assumptions": "Free access is contingent on the absence of paid API credentials.",
+      "breakdown_regime": "Credential-based access threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binary decision rule applied to API access parameters.",
+        "source_operator": "free_path_gate",
+        "telemetry": "API request success rate conditional on key presence."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4e2d8b85b9352d63_t0",
+      "think": "The four primitives formalize core engineering discipline in high-stakes financial systems: minimal change to preserve stability, idempotent event handling to avoid double-counting, regulatory compliance as hard constraints, and conditional resource allocation. They map directly to GSI's conformal inference framework through posterior calibration and to GSE's state-transition logic via feature-flagged execution paths. The underlying mathematics is primarily set theory and binary decision rules, with empirical verification through telemetry metrics such as duplicate event rates and compliance alert counts.\n\nDeep epistemic analysis for SKILL (4e2d8b85b9352d63, domain=other, pages_read=1/1): Operator 'Minimal-Diff Principle' (page 1, domain other) captures: effort: medium allowed-tools: Read, Grep, Glob, Bash(npm run typecheck*), Bash(npm run lint*), Bash(npm run test*), Bash(npm run guardrails*), Bash(npm run guard:*), Bash(npm run agent:eval*) --# Coding agent (GSE) ## Laws 1. Assumptions: Existing functional codebases are correct and optimal. Breakdown regime: Steady-state operational continuity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian posterior updating with minimal prior drift. Operator 'Idempotency Reuse Law' (page 1, domain other) captures: Prefer minimal diffs; do not rebuild settlement/Stripe/outbox that already work. Assumptions: Webhook events are uniquely identifiable and idempotent under application logic. Breakdown regime: Event processing determinism. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals with event deduplication. Operator 'Polymarket Compliance Hold' (page 1, domain other) captures: Before editing webhooks, read the existing handler; reuse idempotency (`stripeEventId`). Assumptions: Regulatory constraints prevent direct integration with Polymarket APIs. Breakdown regime: Feature flag bypass. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Zero-Kelly fraction allocation under regulatory state variables. Operator 'Free-Path Gate' (page 1, domain other) captures: ## Touchpoints - Webhook: `apps/web/app/api/webhooks/stripe/route.ts` - Settle cron: `apps/web/app/api/cron/settle-picks/route.ts` - Router: `apps/web/lib/data-sources/source-router.ts` - Outbox: existing lease + `claimVersion` only - Eval after change: `npm run agent:eval` ## Do not - Invent new locking - Soften free-path law - Wire CIR into live scoring without `CALIBRATION_ADJUSTMENTS_ENABLED` Assumptions: Free access is contingent on the absence of paid API credentials. Breakdown regime: Credential-based access threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary decision rule applied to API access parameters. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SKILL (4e2d8b85b9352d63, domain=other, pages_read=1/1): Operator 'Minimal-Diff Principle' (page 1, domain other) captures: effort: medium allowed-tools: Read, Grep, Glob, Bash(npm run typecheck*), Bash(npm run lint*), Bash(npm run test*), Bash(npm run guardrails*), Bash(npm run guard:*), Bash(npm run agent:eval*) --# Coding agent (GSE) ## Laws 1. Assumptions: Existing functional codebases are correct and optimal. Breakdown regime: Steady-state operational continuity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian posterior updating with minimal prior drift. Operator 'Idempotency Reuse Law' (page 1, domain other) captures: Prefer minimal diffs; do not rebuild settlement/Stripe/outbox that already work. Assumptions: Webhook events are uniquely identifiable and idempotent under application logic. Breakdown regime: Event processing determinism. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals with event deduplication. Operator 'Polymarket Compliance Hold' (page 1, domain other) captures: Before editing webhooks, read the existing handler; reuse idempotency (`stripeEventId`). Assumptions: Regulatory constraints prevent direct integration with Polymarket APIs. Breakdown regime: Feature flag bypass. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Zero-Kelly fraction allocation under regulatory state variables. Operator 'Free-Path Gate' (page 1, domain other) captures: ## Touchpoints - Webhook: `apps/web/app/api/webhooks/stripe/route.ts` - Settle cron: `apps/web/app/api/cron/settle-picks/route.ts` - Router: `apps/web/lib/data-sources/source-router.ts` - Outbox: existing lease + `claimVersion` only - Eval after change: `npm run agent:eval` ## Do not - Invent new locking - Soften free-path law - Wire CIR into live scoring without `CALIBRATION_ADJUSTMENTS_ENABLED` Assumptions: Free access is contingent on the absence of paid API credentials. Breakdown regime: Credential-based access threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary decision rule applied to API access parameters. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These principles descend from operations research and control theory, particularly the work on minimal intervention in dynamical systems and the use of idempotent semigroups in distributed computing. The free-path gate echoes economic rationales for conditional subsidies. Retrocausal Genealogy: Rooted in SKILL (4e2d8b85b9352d63), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include regulators enforcing compliance, developers seeking innovation, and users demanding free access. The primitives model their incentives by establishing clear boundaries between permitted and prohibited actions. Theory of Mind & Decision Maker Model: Rooted in SKILL (4e2d8b85b9352d63), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates in distinct architectural layers (GSI vs. GSE). Leakage vetoes arise from cross-layer dependencies; for instance, GSI's posterior updates should not directly influence GSE's state transitions without explicit API boundaries. Cross-Layer Veto & Anti-Leakage Check: Rooted in SKILL (4e2d8b85b9352d63), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

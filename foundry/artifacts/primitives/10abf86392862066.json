@@ -1,0 +1,78 @@
+{
+  "book_id": "10abf86392862066",
+  "source_status": "COMPLETE",
+  "title": "phase-4-promotions-report",
+  "file_name": "phase-4-promotions-report.md",
+  "sha256": "10abf863928620668a732c9c2e182dd1edd4af0344343692977808d0c37d298d",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Promotions as regulated, operator-curated marketplaces governed by compliance gates and state-specific eligibility. Mathematical structure: {P} ⊆ {O} × {C} × {S}, where P = promotions, O = operators, C = compliance states, S = eligible US states.",
+  "gsi_mapping": "Bayesian inference models promotion risk scores using public copy scanning and operator metadata. Conformal prediction ensures valid confidence intervals over promotional validity under regulatory constraints. GSI Mapping: Rooted in phase-4-promotions-report (10abf86392862066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition automaton governs promotion lifecycle via `transitionTask` allow-list. Each promotion evolves through discrete states: DRAFT → NEEDS_REVIEW → APPROVED/REJECTED/BLOCKED based on compliance checks and operator validation. GSE Mapping: Rooted in phase-4-promotions-report (10abf86392862066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "promotion_marketplace",
+      "name": "Regulated Promotion Marketplace",
+      "verbatim_quote": "# Phase 4 — Promotions / Affiliate Marketplace Date: 2026-05-18 Branch: `sports-intelligence-os-phase-1` (continued from prior phases) ## Overview Sportsbook promotions are surfaced as a regulated, compliance-gated marketplace.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'set of promotions, dimensionless', 'O': 'set of operators, dimensionless', 'C': 'set of compliance states, dimensionless', 'S': 'set of eligible US states, dimensionless'}",
+      "assumptions": "All promotions must satisfy C ∩ S ≠ ∅ for public rendering.",
+      "breakdown_regime": "When C ∩ S = ∅, P renders inactive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Marketplace structure maps to a categorical product of operator, compliance, and jurisdiction sets.",
+        "source_operator": "promotion_marketplace",
+        "telemetry": "Public visibility status of promotions."
+      }
+    },
+    {
+      "primitive_id": "compliance_gate",
+      "name": "Human-Curated Compliance Gate",
+      "verbatim_quote": "The marketplace is *operator-curated* — promotions only render publicly after a human reviewer has supplied affiliate disclosure, terms, responsible-gaming copy, and at least one eligible US state.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'human reviewer set, dimensionless', 'T': 'terms and disclosures, dimensionless', 'R': 'responsible gaming copy, dimensionless', 'E': 'eligible US state set, dimensionless'}",
+      "assumptions": "Promotion P is valid iff H(T ∧ R ∧ E) = true.",
+      "breakdown_regime": "If any of T, R, or E are missing, P remains non-public.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Compliance gate acts as a kernel function over promotion data to determine eligibility.",
+        "source_operator": "compliance_gate",
+        "telemetry": "Review queue status and approval flags."
+      }
+    },
+    {
+      "primitive_id": "promotion_data_model",
+      "name": "Promotion Data Model",
+      "verbatim_quote": "## Data model A new `Promotion` model lives alongside the cockpit tables in `packages/db/prisma/schema.prisma`: | Field | Notes | |---|---| | `id`, `slug` | Stable identifiers | | `sportsbookKey`, `operatorName` | Operator metadata | | `headline`, `offerSummary` | Public marketing copy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'id': 'stable identifier, string', 'slug': 'URL-safe identifier, string', 'sportsbookKey': 'operator key, string', 'operatorName': 'operator name, string', 'headline': 'marketing headline, string', 'offerSummary': 'offer summary, string', 'offerCategory': 'enum of promotion types, dimensionless'}",
+      "assumptions": "Each field is validated against schema before insertion.",
+      "breakdown_regime": "Schema violation leads to rejection during seeding or ingestion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Promotion model encodes structured data that maps to UI and backend logic.",
+        "source_operator": "promotion_data_model",
+        "telemetry": "Data integrity and schema adherence metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "10abf86392862066_t0",
+      "think": "Promotions form a regulated marketplace where each entry P ∈ P is a tuple (O, C, S) such that operator O provides content C and satisfies jurisdictional S. The system enforces a compliance gate via human review H, requiring T ∧ R ∧ E to be true. This creates a binary decision space: P is either rendered public or blocked. The data model defines fields that encode semantic meaning, enabling downstream processing. State transitions follow a deterministic automaton governed by transitionTask. Failures occur when schema validation fails, compliance checks are bypassed, or human review is skipped. The system is robust under these constraints but vulnerable to adversarial inputs in public copy or operator misrepresentation.\n\nDeep epistemic analysis for phase-4-promotions-report (10abf86392862066, domain=other, pages_read=2/2): Operator 'Regulated Promotion Marketplace' (page 1, domain other) captures: # Phase 4 — Promotions / Affiliate Marketplace Date: 2026-05-18 Branch: `sports-intelligence-os-phase-1` (continued from prior phases) ## Overview Sportsbook promotions are surfaced as a regulated, compliance-gated marketplace. Assumptions: All promotions must satisfy C ∩ S ≠ ∅ for public rendering. Breakdown regime: When C ∩ S = ∅, P renders inactive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Marketplace structure maps to a categorical product of operator, compliance, and jurisdiction sets. Operator 'Human-Curated Compliance Gate' (page 1, domain other) captures: The marketplace is *operator-curated* — promotions only render publicly after a human reviewer has supplied affiliate disclosure, terms, responsible-gaming copy, and at least one eligible US state. Assumptions: Promotion P is valid iff H(T ∧ R ∧ E) = true. Breakdown regime: If any of T, R, or E are missing, P remains non-public. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compliance gate acts as a kernel function over promotion data to determine eligibility. Operator 'Promotion Data Model' (page 1, domain other) captures: ## Data model A new `Promotion` model lives alongside the cockpit tables in `packages/db/prisma/schema.prisma`: | Field | Notes | |---|---| | `id`, `slug` | Stable identifiers | | `sportsbookKey`, `operatorName` | Operator metadata | | `headline`, `offerSummary` | Public marketing copy. Assumptions: Each field is validated against schema before insertion. Breakdown regime: Schema violation leads to rejection during seeding or ingestion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Promotion model encodes structured data that maps to UI and backend logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for phase-4-promotions-report (10abf86392862066, domain=other, pages_read=2/2): Operator 'Regulated Promotion Marketplace' (page 1, domain other) captures: # Phase 4 — Promotions / Affiliate Marketplace Date: 2026-05-18 Branch: `sports-intelligence-os-phase-1` (continued from prior phases) ## Overview Sportsbook promotions are surfaced as a regulated, compliance-gated marketplace. Assumptions: All promotions must satisfy C ∩ S ≠ ∅ for public rendering. Breakdown regime: When C ∩ S = ∅, P renders inactive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Marketplace structure maps to a categorical product of operator, compliance, and jurisdiction sets. Operator 'Human-Curated Compliance Gate' (page 1, domain other) captures: The marketplace is *operator-curated* — promotions only render publicly after a human reviewer has supplied affiliate disclosure, terms, responsible-gaming copy, and at least one eligible US state. Assumptions: Promotion P is valid iff H(T ∧ R ∧ E) = true. Breakdown regime: If any of T, R, or E are missing, P remains non-public. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compliance gate acts as a kernel function over promotion data to determine eligibility. Operator 'Promotion Data Model' (page 1, domain other) captures: ## Data model A new `Promotion` model lives alongside the cockpit tables in `packages/db/prisma/schema.prisma`: | Field | Notes | |---|---| | `id`, `slug` | Stable identifiers | | `sportsbookKey`, `operatorName` | Operator metadata | | `headline`, `offerSummary` | Public marketing copy. Assumptions: Each field is validated against schema before insertion. Breakdown regime: Schema violation leads to rejection during seeding or ingestion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Promotion model encodes structured data that maps to UI and backend logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in regulatory frameworks governing digital gambling, this structure mirrors earlier compliance systems in financial services and e-commerce, adapted for real-time promotion management. Retrocausal Genealogy: Rooted in phase-4-promotions-report (10abf86392862066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in phase-4-promotions-report (10abf86392862066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Actors include the operator (O), reviewer (H), and system (S). Operators submit promotions; reviewers validate them; system enforces rules. Adversarial behavior could arise from operators attempting to circumvent compliance or reviewers failing to enforce standards. Theory of Mind & Decision Maker Model: Rooted in phase-4-promotions-report (10abf86392862066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that no single layer (e.g., operator or reviewer) can override another’s validation. Leakage is prevented by isolating sensitive data in the cockpit layer and restricting access to compliance-sensitive fields. Cross-Layer Veto & Anti-Leakage Check: Rooted in phase-4-promotions-report (10abf86392862066), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

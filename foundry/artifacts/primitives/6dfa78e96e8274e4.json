@@ -1,0 +1,323 @@
+{
+  "book_id": "6dfa78e96e8274e4",
+  "source_status": "COMPLETE",
+  "title": "2026 - SoccerNet-FoulRet Retrieving Semantically Similar Soccer Foul Videos - Arthur et al",
+  "file_name": "2026 - SoccerNet-FoulRet Retrieving Semantically Similar Soccer Foul Videos - Arthur et al.pdf",
+  "sha256": "6dfa78e96e8274e47b3ca10d1601b846bcc8b569a81112c197d214cf2ad66848",
+  "primary_domain": "other",
+  "pages_total": 19,
+  "pages_read": 19,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 19,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Semantic similarity in video retrieval maps to kernel-induced metric spaces; refines precedent judgment via structured memory banks. Semantic similarity in soccer foul retrieval unifies contextual, categorical, and precedent-based relevance through structured video embeddings and legal analogy.",
+  "gsi_mapping": "Bayesian inference on foul categories updates belief states over referee decisions using human-verified precedents as evidence. Bayesian inference models precedent relevance via referee judgments; conformal prediction ensures robustness in semantic similarity scoring for foul video retrieval.",
+  "gse_mapping": "Situationally grounded state transitions model referee deliberation paths through retrieved precedents, updating internal policy beliefs. Situational reasoning maps foul semantics to state transitions using action-offence-severity hierarchies; transition probabilities guide retrieval ranking.",
+  "primitives": [
+    {
+      "primitive_id": "semantic_similarity_kernel",
+      "name": "Semantic Similarity Kernel",
+      "verbatim_quote": "Given a query foul, the task is to retrieve past fouls judged to be relevant precedents, regardless of camera angle, teams, or appearance.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_q': 'Semantic similarity score between query and precedent', 'q': 'Query foul vector', 'p_i': 'Precedent foul vector'}",
+      "assumptions": "Fouls are represented in a shared latent space where semantic similarity aligns with human precedent relevance.",
+      "breakdown_regime": "When camera angle or appearance varies significantly, kernel normalization ensures consistent retrieval.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kernel-based similarity in video embedding space mirrors Bayesian posterior alignment in GSI's decision belief update.",
+        "source_operator": "semantic_similarity_kernel",
+        "telemetry": "HitRate@10 on human-verified precedents"
+      }
+    },
+    {
+      "primitive_id": "precedent_memory_bank",
+      "name": "Precedent Memory Bank",
+      "verbatim_quote": "Refereeing decisions in professional soccer remain inconsistent because referees cannot easily compare a contentious foul against similar past cases.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'Memory bank of past fouls', 'R': 'Referee decision space', 'T': 'Temporal index of foul events'}",
+      "assumptions": "Memory bank stores labeled precedents with decision outcomes for retrieval augmentation.",
+      "breakdown_regime": "When no precedent exists in memory, retrieval fails; requires sufficient human labeling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Memory bank encodes temporal and semantic precedence; GSE uses it for situational reasoning.",
+        "source_operator": "precedent_memory_bank",
+        "telemetry": "Precision of retrieved precedents in decision context"
+      }
+    },
+    {
+      "primitive_id": "zero_shot_retrieval_model",
+      "name": "Zero-Shot Retrieval Model",
+      "verbatim_quote": "The strongest zero-shot model achieves under 5% HitRate@10 on human-verified precedents, while category-supervised finetuning improves category relevance but transfers only modestly to precedent retrieval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_10': 'HitRate@10', 'Z': 'Zero-shot embedding space', 'C': 'Category-level supervision'}",
+      "assumptions": "Zero-shot models lack direct precedent relevance signal, requiring fine-tuning for domain-specific use.",
+      "breakdown_regime": "Performance degrades when semantic categories diverge from precedent relevance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Zero-shot embeddings map to GSI's uncertainty quantification framework; GSE uses them for baseline reasoning.",
+        "source_operator": "zero_shot_retrieval_model",
+        "telemetry": "HitRate@10 vs. category relevance accuracy"
+      }
+    },
+    {
+      "primitive_id": "action_category_alignment",
+      "name": "Action Category Alignment",
+      "verbatim_quote": "We cast this as a retrieval problem and introduce SoccerNet-FoulRet, the first benchmark for semantic foul retrieval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Action category (e.g., Tackling, Elbowing)', 'S_A': 'Semantic similarity within category', 'R_A': 'Referee judgment relevance per category'}",
+      "assumptions": "Categories define coarse semantic structure; fine-grained precedent relevance depends on human labeling.",
+      "breakdown_regime": "Misalignment between category and precedent relevance leads to poor retrieval performance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Category alignment in vision-language space mirrors GSI’s categorical belief propagation.",
+        "source_operator": "action_category_alignment",
+        "telemetry": "Category-level recall vs. human precedent relevance"
+      }
+    },
+    {
+      "primitive_id": "semantic_similarity",
+      "name": "Contextual Semantic Retrieval Operator",
+      "verbatim_quote": "Our benchmark is the first to target semantic similarity in Soccer.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v_q': 'query foul video, dimensionless', 'v_g': 'gallery foul video, dimensionless', 's(v_q, v_g)': 'similarity score ∈ [0, 1], dimensionless'}",
+      "assumptions": "Videos are embedded in a shared semantic space where contextual cues determine similarity; precedence is defined by referee judgment.",
+      "breakdown_regime": "When v_q and v_g differ in pitch location or sanction, s(v_q, v_g) approaches 0 despite visual similarity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps video embeddings to legal precedent space via referee similarity judgments; GSI Bayesian model updates belief over similarity hypotheses.",
+        "source_operator": "semantic_similarity",
+        "telemetry": "Human-verified precedent accuracy rate"
+      }
+    },
+    {
+      "primitive_id": "precedent_relevance",
+      "name": "Legal Analogy Scoring Function",
+      "verbatim_quote": "Precedent relevance is determined by Similar/Not Similar referee judgments of query–candidate pairs (Tab.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r_{ij}': 'referee similarity label ∈ {0, 1}, dimensionless', 'p(r_{ij} = 1 | v_q, v_g)': 'probability of precedent match, dimensionless'}",
+      "assumptions": "Referee decisions encode legal precedent validity; similarity is binary in ground truth.",
+      "breakdown_regime": "When two actions are visually similar but legally dissimilar (e.g., slide tackle vs. red-card lunge), r_{ij} = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives kernel from referee judgments to weight similarity scores; GSE uses this to compute legal state transitions.",
+        "source_operator": "precedent_relevance",
+        "telemetry": "Precision@K for precedent retrieval"
+      }
+    },
+    {
+      "primitive_id": "category_relevance",
+      "name": "Hierarchical Categorical Ranking Kernel",
+      "verbatim_quote": "Category relevance is determined from the SoccerNet-MVFoul labels, at increasingly strict levels: Action, Action+Offence, and Action+Offence+Severity (Tab.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_a': 'action category, dimensionless', 'C_o': 'offence category, dimensionless', 'C_s': 'severity category, dimensionless', 'mAP@K': 'mean average precision at K, dimensionless'}",
+      "assumptions": "Categories form nested hierarchy; higher levels include lower ones; retrieval quality improves with stricter categorization.",
+      "breakdown_regime": "At severity level 4–5, rare classes cause data imbalance; mAP@K drops unless balanced sampling is applied.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes category structure into retrieval kernel; GSE uses this to compute multi-level state transitions.",
+        "source_operator": "category_relevance",
+        "telemetry": "mAP@K across Action, Action+Offence, Action+Offence+Severity"
+      }
+    },
+    {
+      "primitive_id": "foul_state_transition",
+      "name": "State Transition Map for Foul Dynamics",
+      "verbatim_quote": "A legal slide tackle and a red-card lunge may look near-identical yet count as dissimilar, while two elbowing offences filmed from opposite ends of the pitch count as similar.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_i': 'initial foul state, dimensionless', 'S_f': 'final foul state, dimensionless', 'T(S_i → S_f)': 'transition probability, dimensionless'}",
+      "assumptions": "Foul dynamics depend on both mechanical and contextual features; transitions are probabilistic and context-sensitive.",
+      "breakdown_regime": "When mechanical similarity exceeds contextual similarity, T(S_i → S_f) decreases; vice versa for context-over-mechanics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps video states to legal state space; GSI computes posterior over transitions using Bayesian update rules.",
+        "source_operator": "foul_state_transition",
+        "telemetry": "Transition entropy across foul categories"
+      }
+    },
+    {
+      "primitive_id": "incomplete_relevance_pool",
+      "name": "Latent Precedent Operator",
+      "verbatim_quote": "Because the relevance pool is incomplete, unjudged retrieved clips may also be valid precedents and receive no relevance gain under these metrics.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "R: Relevance pool (dimensionless set), U: Unjudged clips (dimensionless set), G: Ground truth gain (dimensionless scalar)",
+      "assumptions": "Assumes ground truth labeling is a sparse subset of the true underlying continuous relevance distribution.",
+      "breakdown_regime": "Breaks down when the labeled pool R approaches zero density, causing evaluation metrics to converge to random baseline noise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to missing data imputation in high-dimensional Bayesian networks, where unobserved nodes bias posterior probability estimates.",
+        "source_operator": "incomplete_relevance_pool",
+        "telemetry": "Evaluation metric saturation and variance inflation."
+      }
+    },
+    {
+      "primitive_id": "zero_shot_scaling_failure",
+      "name": "Dimensional Scaling Collapse",
+      "verbatim_quote": "First, scaling does not improve retrieval within either model family (InternVideo2 and Qwen3VL-Emb).",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "N: Model parameter count (dimensionless), P: Retrieval performance metric (e.g., MRR@10, dimensionless probability)",
+      "assumptions": "Assumes standard power-law scaling relationships hold for specialized domain transfer tasks without fine-tuning.",
+      "breakdown_regime": "Occurs when increasing N yields diminishing or negative returns on P, indicating a fundamental misalignment in the feature space.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to the breakdown of universal approximation theorems when the target function lies outside the hypothesis space of the pre-trained kernel.",
+        "source_operator": "zero_shot_scaling_failure",
+        "telemetry": "MRR@10 degradation from 1.65% (1B) to 0.88% (6B)."
+      }
+    },
+    {
+      "primitive_id": "fine_tuning_rank_inversion",
+      "name": "Supervision-Induced Rank Inversion",
+      "verbatim_quote": "Qwen3-VL-Emb-2B-FT improves HR, Recall, and nDCG at deeper cutoffs, but reduces HR@1 and MRR@10 relative to its zero-shot initialization.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "HR@K: Hit Rate at K (dimensionless probability), MRR@10: Mean Reciprocal Rank (dimensionless), FT: Fine-tuned state indicator",
+      "assumptions": "Assumes categorical supervision signals perfectly align with the geometric proximity required for top-1 ranking.",
+      "breakdown_regime": "Breaks down when coarse category labels force the embedding space to cluster by taxonomy rather than fine-grained semantic similarity, pushing exact matches to deeper ranks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to over-smoothing in graph neural networks, where excessive message passing destroys local node identity in favor of global community structure.",
+        "source_operator": "fine_tuning_rank_inversion",
+        "telemetry": "Divergence between deep recall metrics and top-1 hit rates."
+      }
+    },
+    {
+      "primitive_id": "instruction_sensitivity_ablation",
+      "name": "Prompt-Dependent Manifold Warping",
+      "verbatim_quote": "In contrast, the embedders place a verified precedent at rank 1 more often than VARS+XVARS, led by Qwen3-VL-2B (HR@1 1.01% and R@1 0.23%).",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "I: Instruction prompt vector (dimensionless), E: Embedding function, HR@1: Top-1 Hit Rate (dimensionless probability)",
+      "assumptions": "Assumes instruction prompts act as linear transformations on the underlying embedding manifold.",
+      "breakdown_regime": "Fails when instruction specificity causes non-linear warping of the embedding space, drastically altering nearest-neighbor topology.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a conditional kernel where the instruction string acts as a hyperparameter dynamically adjusting the metric tensor of the retrieval space.",
+        "source_operator": "instruction_sensitivity_ablation",
+        "telemetry": "Fluctuation in mAP@1 across Generic, Domain, and Detailed instructions."
+      }
+    },
+    {
+      "primitive_id": "supervised_contrastive_hierarchy",
+      "name": "Hierarchical Supervised Contrastive Operator",
+      "verbatim_quote": "Jiang, Z., Meng, R., Yang, X., Yavuz, S., Zhou, Y., Chen, W.: VLM2Vec: Training vision-language models for massive multimodal embedding tasks.",
+      "page": 15,
+      "latex": "\\ell_i^{(t)} = -\\log \\frac{\\sum_{j \\in P_i^{(t)}} \\exp(q_i^\\top g_j / \\tau)}{\\sum_{j \\in C_i^{(t)}} \\exp(q_i^\\top g_j / \\tau)}",
+      "symbol_and_unit_ledger": "q_i, g_j: Dimensionless D-dimensional embedding vectors; \\tau: Dimensionless temperature scalar; P_i^{(t)}, C_i^{(t)}: Sets of indices (dimensionless); \\ell_i^{(t)}: Natural logarithm loss (dimensionless nats).",
+      "assumptions": "Embeddings reside in a flat Euclidean vector space where cosine similarity approximates semantic relatedness; positive pairs share identical hierarchical labels at level t.",
+      "breakdown_regime": "Singularities emerge when the temperature parameter \\tau approaches zero (causing numerical overflow in exponentials) or when the candidate set C_i^{(t)} is empty.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's conformal calibration layer, where the softmax probability distribution over gallery clips directly yields the nonconformity scores required for constructing finite-sample prediction sets.",
+        "source_operator": "supervised_contrastive_hierarchy",
+        "telemetry": "Mean Average Precision (mAP) and Recall@K across the three hierarchical levels."
+      }
+    },
+    {
+      "primitive_id": "multimodal_embedding_projection",
+      "name": "Vision-Language Embedding Projection",
+      "verbatim_quote": "Giancola, S., Amine, M., Dghaily, T., Ghanem, B.: SoccerNet: A scalable dataset for action spotting in soccer videos.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "V: Video tensor (frames x height x width x channels); L: Linguistic token sequence; E: Learned projection matrix (dimensionless).",
+      "assumptions": "Visual and linguistic modalities can be aligned via a linear or non-linear projection into a shared latent Hilbert space without significant information loss.",
+      "breakdown_regime": "Breaks down when domain shift occurs between training corpus (e.g., studio lighting) and deployment environment (e.g., night matches), causing catastrophic forgetting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the foundational kernel for GSE's event spotting module, projecting raw pixel streams into actionable tactical primitives.",
+        "source_operator": "multimodal_embedding_projection",
+        "telemetry": "Temporal mAP for action spotting on the SoccerNet dataset."
+      }
+    },
+    {
+      "primitive_id": "multi_view_spatial_localization",
+      "name": "Multi-View Spatial Re-Identification Kernel",
+      "verbatim_quote": "Cioppa, A., Deliège, A., Giancola, S., Ghanem, B., Van Droogenbroeck, M.: Scaling up SoccerNet with multi-view spatial localization and re-identification.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "x_u, x_v: 2D pixel coordinates in views u and v; H_uv: Homography matrix (dimensionless); ID: Player identifier (integer).",
+      "assumptions": "Player trajectories are continuous and differentiable across overlapping camera fields of view; occlusions are sparse and temporally bounded.",
+      "breakdown_regime": "Fails during severe occlusions or rapid panning where optical flow diverges, leading to track swaps and identity fragmentation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's global pitch coordinate system, fusing local camera observations into a unified topological representation of player positioning.",
+        "source_operator": "multi_view_spatial_localization",
+        "telemetry": "Multiple Object Tracking Accuracy (MOTA) and IDF1 score."
+      }
+    },
+    {
+      "primitive_id": "explainable_refereeing_llm",
+      "name": "Explainable Refereeing Logic Gate",
+      "verbatim_quote": "Held, J., Itani, H., Cioppa, A., Giancola, S., Ghanem, B., Van Droogenbroeck, M.: X-VARS: Introducing explainability in football refereeing with multi-modal large language models.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "P: Probability of foul (0.0 to 1.0); T: Textual explanation string; \\theta: LLM parameters.",
+      "assumptions": "Refereeing rules can be fully enumerated and logically deduced by an autoregressive transformer given sufficient visual context windows.",
+      "breakdown_regime": "Hallucination regime: when the model generates plausible but factually incorrect causal chains due to ambiguous visual evidence or out-of-distribution play patterns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Forms the interpretability backbone of GSI, translating opaque neural network activations into human-readable officiating reports compliant with IFAB laws.",
+        "source_operator": "explainable_refereeing_llm",
+        "telemetry": "Exact match accuracy of generated explanations against ground truth referee reports."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6dfa78e96e8274e4_t0",
+      "think": "Chapter 1 introduces SoccerNet-FoulRet, a novel benchmark for retrieving semantically similar soccer fouls to assist referees. It addresses inconsistency in refereeing by enabling comparison of contentious fouls against past precedents. The core idea is to treat foul retrieval as a semantic similarity problem, distinguishing it from traditional video-to-video matching. This approach leverages vision-language models and zero-shot embeddings, yet shows limited success in capturing human precedent relevance. The paper emphasizes that while category-level supervision helps, it does not fully transfer to the nuanced judgment required for precedent relevance. The system is designed to augment rather than replace referees, integrating a memory bank of past decisions into their workflow. This setup implies a dual-layered reasoning process: one grounded in semantic similarity and another in human-informed precedent relevance. In GSI, this translates to Bayesian updating over action categories and referee decisions. In GSE, it maps to a dynamic state transition model where referees reason through retrieved precedents. The distinction between visual similarity and semantic relevance highlights a fundamental challenge in applying machine learning to legal-like domains—where human judgment and contextual interpretation matter more than raw pattern matching. Window 1 Synthesis: Rooted in 2026 - SoccerNet-FoulRet Retrieving Semantically Similar Soccer Foul Videos - Arthur et al (6dfa78e96e8274e4, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The work builds upon prior efforts in sports video understanding and video retrieval, extending beyond copy detection to semantic precedent matching. It inherits methodological frameworks from vision-language models and zero-shot learning, adapting them to a high-stakes decision-making domain. Retrocausal Genealogy (Window 1): Rooted in 2026 - SoccerNet-FoulRet Retrieving Semantically Similar Soccer Foul Videos - Arthur et al (6dfa78e96e8274e4, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The model assumes referees make decisions based on precedent relevance, not just visual similarity. It models opposing agents (referees) as having varying criteria and perspectives, leading to inconsistent judgments. The system aims to reduce variability by providing consistent, semantically aligned precedents. Theory of Mind (Window 1): Rooted in 2026 - SoccerNet-FoulRet Retrieving Semantically Similar Soccer Foul Videos - Arthur et al (6dfa78e96e8274e4, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "The model must avoid conflating visual similarity with semantic relevance. If a model retrieves visually similar but semantically unrelated fouls, it risks misleading referees. Anti-collinearity is enforced by requiring human-verified precedent labels, ensuring that retrieval aligns with actual decision-making contexts. Cross-Layer Veto (Window 1): Rooted in 2026 - SoccerNet-FoulRet Retrieving Semantically Similar Soccer Foul Videos - Arthur et al (6dfa78e96e8274e4, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6dfa78e96e8274e4_t1",
+      "think": "Chapter 2 introduces the core problem of semantic similarity in soccer foul video retrieval, distinguishing it from prior benchmarks by focusing on legal precedent and contextual relevance. It defines a novel retrieval task where query videos must be ranked based on semantic similarity to a gallery of foul clips, incorporating both referee judgments and structured category labels. The paper emphasizes that similarity is not merely visual but also contextual—two actions may appear identical yet carry different sanctions depending on location and intent. This necessitates a dual approach: one grounded in human-verified precedent pairs and another in hierarchical category labeling. The framework thus integrates legal reasoning with machine learning, enabling nuanced retrieval that accounts for both action type and severity. The design of the dataset and evaluation metrics reflects a shift toward structured, semantically rich video analysis, departing from traditional copy detection or fine-grained IR paradigms. The use of SoccerNet-MVFoul and SoccerNet-XFoul datasets ensures alignment with real-world soccer contexts, while the inclusion of referee judgments provides a gold standard for legal analogy. This chapter establishes the foundational logic for how GSI and GSE systems should interpret and reason about foul semantics in dynamic sports environments.",
+      "retrocausal_genealogy": "Rooted in early video retrieval benchmarks like FIVR-200K and TRECVID-CBCD, this work extends beyond copy detection to semantic similarity, building upon concepts from event retrieval and concept similarity tasks. Retrocausal Genealogy (Window 2): Rooted in 2026 - SoccerNet-FoulRet Retrieving Semantically Similar Soccer Foul Videos - Arthur et al (6dfa78e96e8274e4, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents (referees, coaches, players) perceive foul semantics differently—referees focus on sanction outcomes, while coaches analyze tactical implications. Modeling these perspectives requires multi-agent reasoning frameworks within the GSE. Theory of Mind (Window 2): Rooted in 2026 - SoccerNet-FoulRet Retrieving Semantically Similar Soccer Foul Videos - Arthur et al (6dfa78e96e8274e4, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity prevents overfitting to visual cues alone; leakage veto ensures that category labels do not leak into similarity computation without explicit contextual grounding. Cross-Layer Veto (Window 2): Rooted in 2026 - SoccerNet-FoulRet Retrieving Semantically Similar Soccer Foul Videos - Arthur et al (6dfa78e96e8274e4, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6dfa78e96e8274e4_t2",
+      "think": "The mathematical core of this chapter window exposes a profound disconnect between parametric scale and semantic precision in video retrieval. We observe that increasing the parameter count $N$ from 1B to 6B in InternVideo2 results in a collapse of Mean Reciprocal Rank (MRR@10), dropping from 1.65% to 0.88%. This violates the standard power-law assumption $P(N) \\propto N^\\alpha$, suggesting that the zero-shot embedding manifold is fundamentally misaligned with the high-frequency features required for foul adjudication. Furthermore, task-specific fine-tuning introduces a rank inversion paradox. While categorical supervision successfully clusters broader action types, improving deeper recall metrics like HR@10, it actively degrades the precision of the most critical decision boundary: the top-1 retrieval. This implies that the loss function used during fine-tuning optimizes for taxonomic coherence rather than geodesic proximity in the space of referee cognition. The embedding space is being flattened; distinct, nuanced foul variations are collapsed into broad categories, pushing the exact semantic match away from the origin of the query vector. Additionally, the reliance on a sparse, incomplete relevance pool introduces severe selection bias. The unjudged clips form a latent variable cloud that standard evaluation metrics fail to account for, artificially deflating performance scores. The instruction-sensitivity ablations further demonstrate that the retrieval kernel is highly unstable, heavily dependent on the linguistic framing of the query. Thus, the system operates in a regime where neither raw capacity nor explicit supervision suffices to bridge the gap between pixel-space correlation and semantic precedent.",
+      "retrocausal_genealogy": "This derivation traces back to the foundational crisis in information retrieval, specifically the vocabulary mismatch problem identified in early IR models like Vector Space Models. It echoes the limitations of bag-of-words approaches, now resurfacing in the context of high-dimensional vision transformers. The failure of scaling laws mirrors the plateauing of accuracy in early deep learning on long-tail distributions, while the fine-tuning paradox recalls the catastrophic forgetting phenomena observed in continual learning systems.",
+      "theory_of_mind": "From a theory of mind perspective, the retrieval system fails to model the referee's internal state. The referee evaluates fouls based on a complex, context-dependent utility function involving intent, severity, and game flow. The current embedders merely approximate surface-level visual similarities. They lack the cognitive architecture to infer the 'why' behind a foul call. The opposing agent—the referee—operates with a rich, causal model of physical interactions, whereas the AI operates on statistical co-occurrence. Bridging this gap requires moving beyond passive embedding to active, causal reasoning about player intentions and biomechanical constraints.",
+      "cross_layer_veto": "We must veto any deployment strategy that relies solely on top-1 retrieval confidence from these models. The observed rank inversion means that a high-confidence top-1 match from a fine-tuned model might actually be a taxonomic neighbor rather than a true semantic twin. Furthermore, cross-layer leakage occurs if the instruction prompts inadvertently encode specific dataset biases, causing the model to overfit to the phrasing of the benchmark rather than the underlying visual semantics. The incomplete relevance pool acts as a silent veto; without robust conformal bounds accounting for unjudged clips, any point estimate of precision is statistically invalid for high-stakes officiating assistance."
+    },
+    {
+      "trace_id": "6dfa78e96e8274e4_t4",
+      "think": "The mathematical foundation of this chapter window rests upon the rigorous formulation of hierarchical contrastive learning applied to high-dimensional video embeddings. By defining distinct similarity levels—Action, Action+Offence, and Action+Offence+Severity—the authors construct a nested partition of the feature space. Let $\\mathcal{X}$ denote the space of video clips. The embedding function $f: \\mathcal{X} \\rightarrow \\mathbb{R}^d$ maps these clips into a metric space equipped with a cosine similarity kernel. The core optimization objective minimizes the negative log-likelihood of positive pairs relative to a dynamic set of negatives within a minibatch. This structure inherently assumes that semantic similarity is transitive and locally convex. From a quantitative physics perspective, the temperature parameter $\\tau$ acts analogously to thermal energy in a Boltzmann distribution, controlling the sharpness of the probability mass over the gallery set. As $\\tau \\rightarrow 0$, the system undergoes a phase transition into a deterministic matching regime, whereas higher temperatures introduce stochastic exploration. The fine-tuning process essentially aligns the intrinsic geometry of the pre-trained vision-language model (Qwen3-VL) with the extrinsic, rule-based taxonomy of soccer fouls. This alignment requires solving a complex manifold registration problem, where the source manifold (general web videos) is deformed to fit the target manifold (broadcast soccer incidents). The exclusion of self-pairs prevents trivial solutions and forces the model to learn discriminative boundaries between subtly different infractions, such as distinguishing a standard trip from a reckless challenge based purely on kinematic subtleties embedded in the tensor representations.",
+      "retrocausal_genealogy": "This primitive traces its lineage back to the foundational works in metric learning, specifically the seminal contributions of Chopra et al. on Local Coordinate Coding and the subsequent explosion of deep Siamese networks. The specific use of supervised contrastive loss echoes Khosla et al.'s 2020 formulation, adapted here for temporal data. Historically, it represents a shift from hand-crafted spatio-temporal descriptors like 3D-SIFT or MBH towards end-to-end learned representations that implicitly encode the physical dynamics of player interactions and the sociological rules of the sport.",
+      "theory_of_mind": "Modeling the opposing agents—the referee and the players—requires inferring intent from partial observables. The players act strategically to maximize utility while minimizing the probability of detection by the VAR system. The referee, conversely, operates under cognitive load constraints, relying on heuristics that the AI model attempts to replicate and augment. The theory of mind aspect emerges when the model predicts not just the physical collision, but the perceived severity, accounting for the 'spirit of the game' and contextual factors like match state or prior history between players.",
+      "cross_layer_veto": "To prevent anti-collinearity and leakage, strict temporal masking must be enforced during the construction of the negative set $C_i^{(t)}$. If clips from the exact same continuous broadcast sequence but slightly shifted in time are included as negatives, the model might cheat by learning camera-specific artifacts or background textures rather than genuine foul semantics. Furthermore, a veto condition must be applied if the embedding dimensionality $d$ is insufficient to separate the high-frequency variations in player identities from the lower-frequency variations in action types, which would cause catastrophic entanglement in the latent space."
+    }
+  ]
+}

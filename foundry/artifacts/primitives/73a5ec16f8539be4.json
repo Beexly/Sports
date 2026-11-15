@@ -1,0 +1,78 @@
+{
+  "book_id": "73a5ec16f8539be4",
+  "source_status": "COMPLETE",
+  "title": "rotoviz.com",
+  "file_name": "rotoviz.com.md",
+  "sha256": "73a5ec16f8539be4e4fb9dd200879e079d8af8fe8606e4a90366247c9518e015",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'primitive_id': 'sitemap_status_analysis', 'name': 'Sitemap status analysis', 'quote_idx': 1, 'verbatim_quote': '# rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status', 'page': 1, 'latex': None, 'symbol_and_unit_ledger': None, 'assumptions': 'Assumes web crawling tools correctly identify HTTP status codes and XML sitemap formats.', 'breakdown_regime': 'Broken when server blocks crawlers, changes URL structure, or introduces authentication.', 'layer2': {'tag': 'ISOMORPHISM', 'mapping': 'Maps sitemap validation to conformal prediction intervals for website reliability.', 'source_operator': 'sitemap_status_analysis', 'telemetry': 'HTTP response codes (2xx, 4xx, 5xx) and crawl latency metrics.'}}",
+  "gsi_mapping": "{'primitive_id': 'sitemap_conformal_prediction', 'name': 'Sitemap conformal prediction', 'quote_idx': 1, 'verbatim_quote': '# rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status', 'page': 1, 'latex': None, 'symbol_and_unit_ledger': None, 'assumptions': 'Relies on exchangeability of webserver behavior across time and sitemap endpoints.', 'breakdown_regime': \"Fails when there's temporal drift in server configurations or sudden DDoS attacks.\", 'layer2': {'tag': 'DERIVED KERNEL', 'mapping': 'Applies conformal inference to predict future sitemap availability based on historical status patterns.', 'source_operator': 'sitemap_status_analysis', 'telemetry': 'Predicted probabilities of 200 OK responses and anomaly scores for unexpected status codes.'}}",
+  "gse_mapping": "{'primitive_id': 'sitemap_state_transition', 'name': 'Sitemap state transition', 'quote_idx': 1, 'verbatim_quote': '# rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status', 'page': 1, 'latex': None, 'symbol_and_unit_ledger': None, 'assumptions': 'Models server health as a Markov chain with absorbing (404/5xx) and transient states.', 'breakdown_regime': 'Breaks down when transitions depend on external events like scheduled maintenance windows.', 'layer2': {'tag': 'ISOMORPHISM', 'mapping': 'Translates sitemap health into a state-based decision process for rerouting crawls.', 'source_operator': 'sitemap_status_analysis', 'telemetry': 'Transition matrices from current status to next status and expected hitting times to 200 OK.'}}",
+  "primitives": [
+    {
+      "primitive_id": "url_discovery_count",
+      "name": "URL discovery count",
+      "verbatim_quote": "# rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes all discovered URLs are unique and independent samples of the site's surface.",
+      "breakdown_regime": "Breaks when duplicate content or infinite recursion occurs due to improper crawl depth limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps URL counts to coverage probability estimates in Bayesian nonparametric models.",
+        "source_operator": "url_discovery_count",
+        "telemetry": "Cumulative distribution function of URLs seen vs. total possible URLs."
+      }
+    },
+    {
+      "primitive_id": "sitemap_walk_count",
+      "name": "Sitemap walk count",
+      "verbatim_quote": "# rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes each sitemap contains uniformly distributed valid URLs and that walking is exhaustive.",
+      "breakdown_regime": "Fails when sitemaps are incomplete or contain dead links, leading to biased coverage estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Uses sitemap walk count as a hyperparameter in sequential Monte Carlo methods for estimating total site size.",
+        "source_operator": "sitemap_walk_count",
+        "telemetry": "Effective sample size per sitemap and variance of URL discovery rates across sitemaps."
+      }
+    },
+    {
+      "primitive_id": "http_status_code_distribution",
+      "name": "HTTP status code distribution",
+      "verbatim_quote": "# rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Treats each HTTP status code as an independent multinomial outcome with constant probability.",
+      "breakdown_regime": "Breaks when request patterns exhibit seasonality or when rate limiting causes bursty failures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents status codes as a categorical response in a Dirichlet-multinomial conjugate prior framework.",
+        "source_operator": "http_status_code_distribution",
+        "telemetry": "Posterior predictive checks on observed versus expected counts and Bayes factors for model misspecification."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "73a5ec16f8539be4_t0",
+      "think": "The sitemap analysis forms a hierarchical probabilistic model where sitemaps are clusters and individual URLs are observations. The key challenge is accounting for heterogeneity in server response times and error rates. By treating status codes as outcomes of a Bernoulli trial (reachable vs. not), we can derive uncertainty intervals using Wald-type approximations or better, Wilson score intervals. This also allows us to flag sitemaps with unusually high 404 rates as potential configuration errors or content removals.\n\nDeep epistemic analysis for rotoviz.com (73a5ec16f8539be4, domain=other, pages_read=4/4): Operator 'URL discovery count' (page 1, domain other) captures: # rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status Assumptions: Assumes all discovered URLs are unique and independent samples of the site's surface. Breakdown regime: Breaks when duplicate content or infinite recursion occurs due to improper crawl depth limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps URL counts to coverage probability estimates in Bayesian nonparametric models. Operator 'Sitemap walk count' (page 1, domain other) captures: # rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status Assumptions: Assumes each sitemap contains uniformly distributed valid URLs and that walking is exhaustive. Breakdown regime: Fails when sitemaps are incomplete or contain dead links, leading to biased coverage estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Uses sitemap walk count as a hyperparameter in sequential Monte Carlo methods for estimating total site size. Operator 'HTTP status code distribution' (page 1, domain other) captures: # rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status Assumptions: Treats each HTTP status code as an independent multinomial outcome with constant probability. Breakdown regime: Breaks when request patterns exhibit seasonality or when rate limiting causes bursty failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents status codes as a categorical response in a Dirichlet-multinomial conjugate prior framework. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for rotoviz.com (73a5ec16f8539be4, domain=other, pages_read=4/4): Operator 'URL discovery count' (page 1, domain other) captures: # rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status Assumptions: Assumes all discovered URLs are unique and independent samples of the site's surface. Breakdown regime: Breaks when duplicate content or infinite recursion occurs due to improper crawl depth limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps URL counts to coverage probability estimates in Bayesian nonparametric models. Operator 'Sitemap walk count' (page 1, domain other) captures: # rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status Assumptions: Assumes each sitemap contains uniformly distributed valid URLs and that walking is exhaustive. Breakdown regime: Fails when sitemaps are incomplete or contain dead links, leading to biased coverage estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Uses sitemap walk count as a hyperparameter in sequential Monte Carlo methods for estimating total site size. Operator 'HTTP status code distribution' (page 1, domain other) captures: # rotoviz.com Category: **advanced-data** URLs discovered: **29,612** Sitemaps walked: 40 ## Sitemaps | Sitemap | Status Assumptions: Treats each HTTP status code as an independent multinomial outcome with constant probability. Breakdown regime: Breaks when request patterns exhibit seasonality or when rate limiting causes bursty failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents status codes as a categorical response in a Dirichlet-multinomial conjugate prior framework. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical sampling theory (Horvitz-Thompson estimators) adapted to modern web-scale data; builds on work by Google on crawl budget optimization. Retrocausal Genealogy: Rooted in rotoviz.com (73a5ec16f8539be4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in rotoviz.com (73a5ec16f8539be4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include search engine bots optimizing for freshness, attackers launching denial-of-service attempts, and legitimate users accessing cached pages, all generating noisy signals that must be filtered. Theory of Mind & Decision Maker Model: Rooted in rotoviz.com (73a5ec16f8539be4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must avoid collinearity between sitemap frequency and URL popularity; leakage occurs if crawlers prioritize high-status-code URLs, inflating discovery rates. Cross-Layer Veto & Anti-Leakage Check: Rooted in rotoviz.com (73a5ec16f8539be4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in rotoviz.com (73a5ec16f8539be4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

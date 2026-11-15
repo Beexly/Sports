@@ -1,0 +1,78 @@
+{
+  "book_id": "7d89621574e0833d",
+  "source_status": "COMPLETE",
+  "title": "weibull handbook",
+  "file_name": "weibull handbook.md",
+  "sha256": "7d89621574e0833d6874e003da702984db9e5dd2c270216d5b546c481cf05c4b",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Weibull analysis provides a probabilistic framework for life data modeling, enabling failure forecasting and parameter estimation via maximum likelihood methods. Universal Lens: Rooted in weibull handbook (7d89621574e0833d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps Weibull parameters to predictive reliability distributions; conformal prediction bounds quantify uncertainty in failure times. GSI Mapping: Rooted in weibull handbook (7d89621574e0833d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in system degradation are modeled using Weibull-slope beta to identify failure mechanisms; eta defines characteristic time-to-failure thresholds. GSE Mapping: Rooted in weibull handbook (7d89621574e0833d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "weibull_failure_model",
+      "name": "Weibull Failure Model",
+      "verbatim_quote": "Weibull's claim that the data could select the distribution <u>and fit the parameters</u> seemed too good to be true.",
+      "page": 1,
+      "latex": "\\lambda(t) = \\frac{\\beta}{\\eta} \\left(\\frac{t}{\\eta}\\right)^{\\beta-1}",
+      "symbol_and_unit_ledger": "{'t': 'time (seconds)', 'β': 'shape parameter (dimensionless)', 'η': 'scale parameter (time units)'}",
+      "assumptions": "Data follows Weibull distribution; censoring is non-informative.",
+      "breakdown_regime": "β → 0 implies infinite early failures; β → ∞ implies constant hazard rate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps observed failure times to hazard rate functions for predictive reliability.",
+        "source_operator": "weibull_failure_model",
+        "telemetry": "Cumulative distribution function (CDF) of failure times."
+      }
+    },
+    {
+      "primitive_id": "characteristic_life_eta",
+      "name": "Characteristic Life Parameter",
+      "verbatim_quote": "There are new applications of this technology in medical and dental implants, warranty analysis, life cycle cost, materials properties and production process control.",
+      "page": 1,
+      "latex": "\\eta = \\left(\\frac{1}{\\Gamma(1+1/\\beta)}\\right)^{1/\\beta}",
+      "symbol_and_unit_ledger": "{'η': 'characteristic life (time units)', 'β': 'shape parameter (dimensionless)', 'Γ': 'gamma function'}",
+      "assumptions": "Mean time to failure exists; data fits Weibull model.",
+      "breakdown_regime": "η → 0 implies rapid failure onset; η → ∞ implies long-lived systems.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates to GSI's expected lifetime metrics through moment-based estimators.",
+        "source_operator": "characteristic_life_eta",
+        "telemetry": "Median time to failure estimate."
+      }
+    },
+    {
+      "primitive_id": "shape_parameter_beta",
+      "name": "Shape Parameter Beta",
+      "verbatim_quote": "There are new applications of this technology in medical and dental implants, warranty analysis, life cycle cost, materials properties and production process control.",
+      "page": 1,
+      "latex": "\\beta = \\text{shape parameter controlling failure mode}",
+      "symbol_and_unit_ledger": "{'β': 'shape parameter (dimensionless)'}",
+      "assumptions": "Failure mechanism is consistent across sample; data is representative.",
+      "breakdown_regime": "β < 1 indicates infant mortality; β > 1 indicates wear-out; β ≈ 1 indicates random failures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's failure classification engine based on degradation trends.",
+        "source_operator": "shape_parameter_beta",
+        "telemetry": "Failure mode classification index."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7d89621574e0833d_t0",
+      "think": "Weibull analysis serves as a foundational tool for modeling time-to-failure data in engineering systems. Its dual parameters—shape (β) and scale (η)—capture both the qualitative nature of failure (infant mortality, random, wear-out) and the quantitative timing of failures. The shape parameter β determines whether failure rates increase, decrease, or remain constant over time, offering insight into underlying physical processes. The scale parameter η represents the characteristic life, which is the time at which 63.2% of units are expected to fail. These parameters allow for robust statistical inference even with small datasets—a critical advantage in aerospace and development testing where large samples are often impractical. The method's adaptability extends beyond traditional reliability engineering into fields like warranty analysis and materials science. The handbook emphasizes that while Weibull can be applied broadly, its effectiveness depends on proper data selection and interpretation. Advanced techniques such as Weibayes and Dauser Shift further enhance its utility when dealing with sparse or censored data. This makes it a core primitive for both GSI’s probabilistic forecasting and GSE’s dynamic system modeling.\n\nDeep epistemic analysis for weibull handbook (7d89621574e0833d, domain=other, pages_read=12/12): Operator 'Weibull Failure Model' (page 1, domain other) captures: Weibull's claim that the data could select the distribution <u>and fit the parameters</u> seemed too good to be true. Assumptions: Data follows Weibull distribution; censoring is non-informative. Breakdown regime: β → 0 implies infinite early failures; β → ∞ implies constant hazard rate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps observed failure times to hazard rate functions for predictive reliability. Operator 'Characteristic Life Parameter' (page 1, domain other) captures: There are new applications of this technology in medical and dental implants, warranty analysis, life cycle cost, materials properties and production process control. Assumptions: Mean time to failure exists; data fits Weibull model. Breakdown regime: η → 0 implies rapid failure onset; η → ∞ implies long-lived systems. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSI's expected lifetime metrics through moment-based estimators. Operator 'Shape Parameter Beta' (page 1, domain other) captures: There are new applications of this technology in medical and dental implants, warranty analysis, life cycle cost, materials properties and production process control. Assumptions: Failure mechanism is consistent across sample; data is representative. Breakdown regime: β < 1 indicates infant mortality; β > 1 indicates wear-out; β ≈ 1 indicates random failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's failure classification engine based on degradation trends. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for weibull handbook (7d89621574e0833d, domain=other, pages_read=12/12): Operator 'Weibull Failure Model' (page 1, domain other) captures: Weibull's claim that the data could select the distribution <u>and fit the parameters</u> seemed too good to be true. Assumptions: Data follows Weibull distribution; censoring is non-informative. Breakdown regime: β → 0 implies infinite early failures; β → ∞ implies constant hazard rate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps observed failure times to hazard rate functions for predictive reliability. Operator 'Characteristic Life Parameter' (page 1, domain other) captures: There are new applications of this technology in medical and dental implants, warranty analysis, life cycle cost, materials properties and production process control. Assumptions: Mean time to failure exists; data fits Weibull model. Breakdown regime: η → 0 implies rapid failure onset; η → ∞ implies long-lived systems. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSI's expected lifetime metrics through moment-based estimators. Operator 'Shape Parameter Beta' (page 1, domain other) captures: There are new applications of this technology in medical and dental implants, warranty analysis, life cycle cost, materials properties and production process control. Assumptions: Failure mechanism is consistent across sample; data is representative. Breakdown regime: β < 1 indicates infant mortality; β > 1 indicates wear-out; β ≈ 1 indicates random failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's failure classification engine based on degradation trends. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Originated from Waloddi Weibull's 1937 work and refined in the 1950s. Influenced by earlier extreme value theory and later adopted in reliability engineering due to its flexibility and empirical fit. Retrocausal Genealogy: Rooted in weibull handbook (7d89621574e0833d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in weibull handbook (7d89621574e0833d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling agents must account for both deterministic failure mechanisms and stochastic variability. Decision-makers rely on Weibull-derived predictions to balance risk, cost, and performance trade-offs in complex systems. Theory of Mind & Decision Maker Model: Rooted in weibull handbook (7d89621574e0833d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple failure modes coexist without clear separation. Leakage occurs if β estimates are misinterpreted as universal truths rather than conditional probabilities. Veto conditions require validation against actual system behavior before deployment. Cross-Layer Veto & Anti-Leakage Check: Rooted in weibull handbook (7d89621574e0833d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

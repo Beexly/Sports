@@ -1,0 +1,78 @@
+{
+  "book_id": "5921f576a6ffb81e",
+  "source_status": "COMPLETE",
+  "title": "SPONSOR_MEDIA_KIT",
+  "file_name": "SPONSOR_MEDIA_KIT.md",
+  "sha256": "5921f576a6ffb81e5d6d2cb04cd8270ca461c1fecb20f6810d788e45837f8b76",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sponsorship packages define bounded revenue surfaces with probabilistic outcome spaces; manual review enforces latent state constraints on placement validity. Universal Lens: Rooted in SPONSOR_MEDIA_KIT (5921f576a6ffb81e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over sponsorship package likelihoods conditioned on manual review traces; conformal prediction bounds audience and ROI claims. GSI Mapping: Rooted in SPONSOR_MEDIA_KIT (5921f576a6ffb81e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in sponsor placement governed by deterministic review gates; stochastic reward functions encode win rate and profitability regimes. GSE Mapping: Rooted in SPONSOR_MEDIA_KIT (5921f576a6ffb81e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "package_boundary",
+      "name": "Package Boundary Operator",
+      "verbatim_quote": "Package Boundary Packages are founding offers and do not claim: - audience size - conversion rate",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'dimensionless package boundary indicator', 'P': 'probability measure over sponsorship outcomes'}",
+      "assumptions": "All package claims are non-binding; outcomes follow latent stochastic processes.",
+      "breakdown_regime": "When P(outcome | package) exceeds empirical confidence threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic belief update over sponsorship efficacy; GSE's state transition function over manual approval.",
+        "source_operator": "package_boundary",
+        "telemetry": "Observed sponsor outcome variance vs. claimed package metrics."
+      }
+    },
+    {
+      "primitive_id": "manual_review_gate",
+      "name": "Manual Review Gate",
+      "verbatim_quote": "- win rate - profitability - guaranteed sponsor outcomes ## Manual Review Every placement requires manual",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'binary manual approval gate', 'T': 'time delay in review process'}",
+      "assumptions": "Review process is deterministic but non-instantaneous; M ∈ {0,1}.",
+      "breakdown_regime": "When T > τ_max, placement is rejected due to latency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's placement state space constrained by GSI's temporal belief propagation.",
+        "source_operator": "manual_review_gate",
+        "telemetry": "Average time-to-approval and rejection rate per placement."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "SPONSOR_MEDIA_KIT Grounded Principle 3",
+      "verbatim_quote": "- win rate - profitability - guaranteed sponsor outcomes ## Manual Review Every placement requires manual",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5921f576a6ffb81e_t0",
+      "think": "The package boundary operator defines a probabilistic constraint set where sponsorship outcomes are not guaranteed. It maps to a Bayesian belief system in GSI where prior beliefs about ROI and audience size are updated post-manual review. The manual review gate acts as a deterministic filter that introduces a temporal lag, affecting GSE’s state transitions. This creates a dual structure: one where uncertainty is bounded by package claims, and another where temporal constraints enforce logical consistency in placement decisions. Failure modes include overconfidence in package metrics and latency-induced rejection of valid placements.\n\nDeep epistemic analysis for SPONSOR_MEDIA_KIT (5921f576a6ffb81e, domain=other, pages_read=1/1): Operator 'Package Boundary Operator' (page 1, domain other) captures: Package Boundary Packages are founding offers and do not claim: - audience size - conversion rate Assumptions: All package claims are non-binding; outcomes follow latent stochastic processes. Breakdown regime: When P(outcome | package) exceeds empirical confidence threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic belief update over sponsorship efficacy; GSE's state transition function over manual approval. Operator 'Manual Review Gate' (page 1, domain other) captures: - win rate - profitability - guaranteed sponsor outcomes ## Manual Review Every placement requires manual Assumptions: Review process is deterministic but non-instantaneous; M ∈ {0,1}. Breakdown regime: When T > τ_max, placement is rejected due to latency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's placement state space constrained by GSI's temporal belief propagation. Operator 'SPONSOR_MEDIA_KIT Grounded Principle 3' (page 1, domain other) captures: - win rate - profitability - guaranteed sponsor outcomes ## Manual Review Every placement requires manual Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SPONSOR_MEDIA_KIT (5921f576a6ffb81e, domain=other, pages_read=1/1): Operator 'Package Boundary Operator' (page 1, domain other) captures: Package Boundary Packages are founding offers and do not claim: - audience size - conversion rate Assumptions: All package claims are non-binding; outcomes follow latent stochastic processes. Breakdown regime: When P(outcome | package) exceeds empirical confidence threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic belief update over sponsorship efficacy; GSE's state transition function over manual approval. Operator 'Manual Review Gate' (page 1, domain other) captures: - win rate - profitability - guaranteed sponsor outcomes ## Manual Review Every placement requires manual Assumptions: Review process is deterministic but non-instantaneous; M ∈ {0,1}. Breakdown regime: When T > τ_max, placement is rejected due to latency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's placement state space constrained by GSI's temporal belief propagation. Operator 'SPONSOR_MEDIA_KIT Grounded Principle 3' (page 1, domain other) captures: - win rate - profitability - guaranteed sponsor outcomes ## Manual Review Every placement requires manual Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference and modern reinforcement learning frameworks, tracing back to Bayesian decision theory and information-theoretic constraints on bounded rationality. Retrocausal Genealogy: Rooted in SPONSOR_MEDIA_KIT (5921f576a6ffb81e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SPONSOR_MEDIA_KIT (5921f576a6ffb81e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include sponsors seeking guaranteed returns and platform operators managing risk exposure. Each agent models the other through probabilistic belief systems and temporal constraints. Theory of Mind & Decision Maker Model: Rooted in SPONSOR_MEDIA_KIT (5921f576a6ffb81e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in SPONSOR_MEDIA_KIT (5921f576a6ffb81e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when package claims conflict with manual review outcomes. Leakage occurs if temporal delays in review are not accounted for in GSI's belief updates, leading to spurious correlations in sponsorship efficacy. Cross-Layer Veto & Anti-Leakage Check: Rooted in SPONSOR_MEDIA_KIT (5921f576a6ffb81e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

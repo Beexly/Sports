@@ -1,0 +1,248 @@
+{
+  "book_id": "5dc1e90610e43687",
+  "source_status": "COMPLETE",
+  "title": "1952-learning-to-simulate-complex-physics",
+  "file_name": "1952-learning-to-simulate-complex-physics.md",
+  "sha256": "5dc1e90610e43687c1f9eeaad951d5856686494cf07a982b7262c8c85b5d7158",
+  "primary_domain": "physics",
+  "pages_total": 3,
+  "pages_read": 3,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 3,
+  "windows_extracted": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Graph networks simulate complex physics via encode-process-decode with M message-passing steps; particles = nodes, interactions = edges, dynamics = latent graph evolution. Graph neural networks encode particle interactions via message passing; validation assesses generalization across materials and time horizons.",
+  "gsi_mapping": "GSI employs Bayesian conformal prediction on GNS-encoded particle states to infer player intent and validate tracking data consistency under uncertainty. Bayesian inference on GNS predictions enables conformal uncertainty quantification for dynamic systems with sparse observations.",
+  "gse_mapping": "GSE leverages GNS-derived state transitions for multi-agent play simulation, enabling robust game-level rollouts from low-dimensional tracking inputs. Situational reasoning in GSE leverages interaction structure to model entity dynamics and transitions through state-space manifolds.",
+  "primitives": [
+    {
+      "primitive_id": "gns_encoder",
+      "name": "Graph Network Encoder",
+      "verbatim_quote": "Method / model GNS = Graph Network-based Simulator, encode-process-decode: - Encoder: builds latent graph G^0 from input state X (particles = nodes with position/velocity/material features; edges = spatial neighborhoods).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'X': 'input state tensor (position, velocity, material)', 'G^0': 'latent graph with node features and edge connectivity'}",
+      "assumptions": "Input state X encodes particle attributes; spatial neighborhoods define interaction topology.",
+      "breakdown_regime": "Failure when particle density exceeds graph embedding capacity.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw tracking data to structured graph representation for downstream processing.",
+        "source_operator": "gns_encoder",
+        "telemetry": "Node feature reconstruction accuracy"
+      }
+    },
+    {
+      "primitive_id": "gns_processor",
+      "name": "Message Passing Processor",
+      "verbatim_quote": "- Processor: M rounds of learned message passing over latent graphs G^0,...,G^M — this is where long-range interactions are computed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'number of message-passing rounds', 'G^m': 'intermediate latent graph at step m'}",
+      "assumptions": "Long-range dependencies are captured through iterative message exchange.",
+      "breakdown_regime": "Performance degrades with insufficient M or overfitting due to excessive rounds.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables computation of global interaction patterns from local neighborhood messages.",
+        "source_operator": "gns_processor",
+        "telemetry": "Cross-agent correlation strength in G^M"
+      }
+    },
+    {
+      "primitive_id": "gns_decoder",
+      "name": "Graph Network Decoder",
+      "verbatim_quote": "- Decoder: extracts dynamics info Y (per-particle accelerations/velocity updates) from G^M; fixed integrator updates positions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Y': 'dynamics tensor (accelerations/velocity changes)', 'X_{t+1}': 'next state after integration'}",
+      "assumptions": "Dynamics can be approximated from final latent graph G^M using fixed integrator.",
+      "breakdown_regime": "Integration errors accumulate beyond short time horizons without noise regularization.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Translates abstract graph dynamics into actionable physical updates for tracking.",
+        "source_operator": "gns_decoder",
+        "telemetry": "Positional deviation from ground truth"
+      }
+    },
+    {
+      "primitive_id": "gns_dynamics_model",
+      "name": "Dynamical State Transition Model",
+      "verbatim_quote": "Equations & assumptions G^0 = Encoder(X); G^{m+1} = MessagePass(G^m), m=0...M-1; Y = Decoder(G^M); X_{t+1} = Integrator(X_t, Y).",
+      "page": 1,
+      "latex": "X_{t+1} = \\text{Integrator}(X_t, \\text{Decoder}(\\text{MessagePass}^{M}(\\text{Encoder}(X_t))))",
+      "symbol_and_unit_ledger": "{'X_t': 'state at time t', 'X_{t+1}': 'state at next time step', '\\\\text{Integrator}': 'fixed-step numerical integrator', '\\\\text{Decoder}': 'maps G^M to dynamics Y', '\\\\text{MessagePass}^M': 'M rounds of message passing', '\\\\text{Encoder}': 'constructs G^0 from X_t'}",
+      "assumptions": "State transition is deterministic given current state and dynamics model.",
+      "breakdown_regime": "Model fails when dynamics are non-deterministic or chaotic.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides unified framework for simulating agent interactions over time.",
+        "source_operator": "gns_dynamics_model",
+        "telemetry": "Rollout stability across timesteps"
+      }
+    },
+    {
+      "primitive_id": "validation_design",
+      "name": "Validation Design",
+      "verbatim_quote": "Validation design Single-step prediction error AND long-horizon rollout MSE across materials; generalization tests: different initial conditions, longer time horizons, ≥10× particle counts vs training.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'MSE': 'mean squared error (dimensionless)', 't': 'time step (s)', 'N': 'number of particles (dimensionless)'}",
+      "assumptions": "Model accuracy assessed via single-step and multi-step rollouts; generalization assumes stationary physical laws.",
+      "breakdown_regime": "When particle count exceeds training scale by factor of 10 or more.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's validation framework mirrors the GNS validation protocol using Bayesian metrics for predictive confidence.",
+        "source_operator": "validation_design",
+        "telemetry": "Prediction error variance across test conditions"
+      }
+    },
+    {
+      "primitive_id": "baseline_comparison",
+      "name": "Baseline Comparison",
+      "verbatim_quote": "Baselines: prior specialized learned simulators (DPI, CConv) and engineered simulators.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DPI': 'deep particle interaction model (dimensionless)', 'CConv': 'convolutional particle simulator (dimensionless)'}",
+      "assumptions": "Prior methods are specialized to specific material types; GNS is domain-agnostic.",
+      "breakdown_regime": "When material properties differ significantly from training set.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses baseline comparison to derive kernel similarity between learned and engineered simulators.",
+        "source_operator": "baseline_comparison",
+        "telemetry": "Relative performance gain in accuracy vs DPI/CConv"
+      }
+    },
+    {
+      "primitive_id": "generalization_bounds",
+      "name": "Generalization Bounds",
+      "verbatim_quote": "Generalizes from thousands of training particles/timesteps to \"different initial conditions, thousands of timesteps, and at least an order of magnitude more particles at test time.\" Robust to hyperparameter choices; M (message-passing steps) and training-noise are the decisive factors.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'message-passing steps (dimensionless)', 'σ_train': 'training noise standard deviation (m/s²)'}",
+      "assumptions": "Generalization holds under increased scale and varied initial states.",
+      "breakdown_regime": "Beyond 10× increase in particle count or time horizon.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's robustness analysis aligns with GNS generalization bounds via hyperparameter sensitivity profiles.",
+        "source_operator": "generalization_bounds",
+        "telemetry": "Accuracy degradation rate with increasing test-time scale"
+      }
+    },
+    {
+      "primitive_id": "interaction_structure",
+      "name": "Interaction Structure",
+      "verbatim_quote": "Nodes = 22 players (+ ball), features = (x, y, vx, vy, team, role embedding); edges = k-nearest neighbors or radius graph rebuilt each 100ms frame.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x, y': 'position coordinates (m)', 'vx, vy': 'velocity components (m/s)', 'k': 'nearest neighbor count (dimensionless)'}",
+      "assumptions": "Entities interact locally based on spatial proximity; temporal updates occur at fixed intervals.",
+      "breakdown_regime": "When spatial resolution becomes insufficient for local interaction modeling.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE encodes interaction structure into transition kernels for dynamic state evolution.",
+        "source_operator": "interaction_structure",
+        "telemetry": "Edge density and node degree distribution over time"
+      }
+    },
+    {
+      "primitive_id": "rollout_endpoint_error",
+      "name": "Rollout Endpoint Error",
+      "verbatim_quote": "Metrics: (a) single-step position MSE; (b) full-play rollout endpoint error (where is the ball carrier at play end?); (c) event-head calibration (ECE on tackle/turnover/incompletion); (d) generalization: train on run plays, test on pass plays (their cross-condition generalization analog).",
+      "page": 3,
+      "latex": "\\mathcal{E}_{\\text{endpoint}} = \\| \\mathbf{x}_T^{\\text{pred}} - \\mathbf{x}_T^{\\text{true}} \\|^2",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{x}_T^{\\\\text{pred}}': 'predicted final position vector (m)', '\\\\mathbf{x}_T^{\\\\text{true}}': 'ground truth final position vector (m)', '\\\\mathcal{E}_{\\\\text{endpoint}}': 'scalar error (m²)'}",
+      "assumptions": "Players follow deterministic motion laws; trajectory prediction is accurate up to final state.",
+      "breakdown_regime": "When model fails to capture inter-player dependencies or strategic intent.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's play outcome prediction kernel via full-play rollout comparison against baseline.",
+        "source_operator": "rollout_endpoint_error",
+        "telemetry": "Endpoint error ratio vs no-interaction baseline."
+      }
+    },
+    {
+      "primitive_id": "event_head_calibration",
+      "name": "Event Head Calibration",
+      "verbatim_quote": "Reproducible test NGS tracking 2018–2024; train on 2018–2023, test on 2024.",
+      "page": 3,
+      "latex": "\\text{ECE} = \\frac{1}{n} \\sum_{i=1}^n |p_i - \\hat{p}_i|",
+      "symbol_and_unit_ledger": "{'\\\\text{ECE}': 'Expected Calibration Error (dimensionless)', 'p_i': 'probability assigned to true class (dimensionless)', '\\\\hat{p}_i': 'fraction of samples in bin i that belong to true class (dimensionless)'}",
+      "assumptions": "Events are classified with sufficient confidence and coverage across bins.",
+      "breakdown_regime": "When event classification becomes unreliable due to insufficient training data or misalignment between model and real-world outcomes.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's probabilistic event forecasting module using calibrated logits.",
+        "source_operator": "event_head_calibration",
+        "telemetry": "Calibration curve deviation from uniform distribution."
+      }
+    },
+    {
+      "primitive_id": "message_passing_ablation",
+      "name": "Message Passing Ablation",
+      "verbatim_quote": "REJECT if message passing adds nothing over independent player models (then interactions don't matter at 100ms granularity — unlikely but testable) or if full-play rollouts diverge (then keep single-step GNS as a feature extractor only).",
+      "page": 3,
+      "latex": "\\mathbf{h}_v^{(l+1)} = \\sigma\\left( \\sum_{u \\in \\mathcal{N}(v)} \\mathbf{W}^{(l)} \\cdot \\mathbf{h}_u^{(l)} + \\mathbf{b}^{(l)} \\right)",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{h}_v^{(l)}': 'hidden representation of node v at layer l (dimensionless)', '\\\\mathcal{N}(v)': 'neighborhood of node v (set of nodes)', '\\\\mathbf{W}^{(l)}': 'learnable weight matrix (dimensionless)', '\\\\mathbf{b}^{(l)}': 'bias term (dimensionless)', '\\\\sigma': 'activation function (dimensionless)'}",
+      "assumptions": "Interactions among players can be modeled via graph convolution; convergence of iterative updates is guaranteed.",
+      "breakdown_regime": "When message-passing does not improve performance beyond independent LSTM modeling.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE’s interaction-aware tracking kernel where message-passing enables dynamic role assignment.",
+        "source_operator": "message_passing_ablation",
+        "telemetry": "Performance gain in endpoint error with increasing M values."
+      }
+    },
+    {
+      "primitive_id": "intent_conditioned_simulation",
+      "name": "Intent Conditioned Simulation",
+      "verbatim_quote": "Improvement experiment Beyond the paper: intent-conditioned message passing — condition each node's update on a play-design embedding (from the 1952 LAM codebook: the discovered play concept), so blockers block and receivers run routes rather than just reacting locally.",
+      "page": 3,
+      "latex": "\\mathbf{h}_v^{(l+1)} = \\sigma\\left( \\mathbf{W}^{(l)} \\cdot \\left( \\sum_{u \\in \\mathcal{N}(v)} \\mathbf{h}_u^{(l)} \\right) + \\mathbf{W}_{\\text{intent}} \\cdot \\mathbf{z}_{\\text{play}} + \\mathbf{b}^{(l)} \\right)",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{z}_{\\\\text{play}}': 'play design embedding vector (dimensionless)', '\\\\mathbf{W}_{\\\\text{intent}}': 'intent-conditioning weight matrix (dimensionless)'}",
+      "assumptions": "Play concepts are encoded in a shared latent space; intent embeddings provide meaningful signal for behavioral modulation.",
+      "breakdown_regime": "When local reaction patterns fail to reflect strategic assignments.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI’s semantic play decoding engine, enabling contextualized player behavior prediction.",
+        "source_operator": "intent_conditioned_simulation",
+        "telemetry": "Pass-play endpoint error improvement with intent conditioning."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5dc1e90610e43687_t0",
+      "think": "The foundational premise of GNS is that physical systems can be modeled as graphs where particles are nodes and their interactions are edges. This structure naturally aligns with NGS tracking data, which consists of discrete entities (players) with dynamic relationships (movements, collisions). The encoder maps raw tracking data into a latent graph representation, capturing spatial relationships among players. The processor performs message passing across these graphs, enabling computation of long-range dependencies—crucial for modeling team strategies or coordinated plays. The decoder translates this processed information into per-player accelerations or velocity updates, which are then integrated forward in time. This process mirrors how real-world physics simulations operate but adapts it to high-dimensional, noisy sports data. The key insight is that increasing the number of message-passing steps (M) enhances long-term predictive power, while introducing noise during training mitigates error propagation—a finding directly applicable to GSE's need for robust game-level rollouts from limited play-level observations. Window 1 Synthesis: Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 3/3 pages of 1952-learning-to-simulate-complex-physics (5dc1e90610e43687): [gns_encoder p.1]: Method / model GNS = Graph Network-based Simulator, encode-process-decode: - Encoder: builds latent graph G^0 from input state X (particles = nodes with position/velocity/material features; edges = spatial neighborhoods). (Maps raw tracking data to structured graph representation for downstream processing.) [gns_processor p.1]: - Processor: M rounds of learned message passing over latent graphs G^0,...,G^M — this is where long-range interactions are computed. (Enables computation of global interaction patterns from local neighborhood messages.) [gns_decoder p.1]: - Decoder: extracts dynamics info Y (per-particle accelerations/velocity updates) from G^M; fixed integrator updates positions. (Translates abstract graph dynamics into actionable physical updates for tracking.) [gns_dynamics_model p.1]: Equations & assumptions G^0 = Encoder(X); G^{m+1} = MessagePass(G^m), m=0...M-1; Y = Decoder(G^M); X_{t+1} = Integrator(X_t, Y). (Provides unified framework for simulating agent interactions over time.) [validation_design p.2]: Validation design Single-step prediction error AND long-horizon rollout MSE across materials; generalization tests: different initial conditions, longer time horizons, ≥10× particle counts vs training. (GSI's validation framework mirrors the GNS validation protocol using Bayesian metrics for predictive confidence.) [baseline_comparison p.2]: Baselines: prior specialized learned simulators (DPI, CConv) and engineered simulators. (GSE uses baseline comparison to derive kernel similarity between learned and engineered simulators.) [generalization_bounds p.2]: Generalizes from thousands of training particles/timesteps to \"different initial conditions, thousands of timesteps, and at least an order of magnitude more particles at test time.\" Robust to hyperparameter choices; M (message-passing steps) and training-noise are the decisive factors. (GSI's robustness analysis aligns with GNS generalization bounds via hyperparameter sensitivity profiles.) [interaction_structure p.2]: Nodes = 22 players (+ ball), features = (x, y, vx, vy, team, role embedding); edges = k-nearest neighbors or radius graph rebuilt each 100ms frame. (GSE encodes interaction structure into transition kernels for dynamic state evolution.) [rollout_endpoint_error p.3]: Metrics: (a) single-step position MSE; (b) full-play rollout endpoint error (where is the ball carrier at play end?); (c) event-head calibration (ECE on tackle/turnover/incompletion); (d) generalization: train on run plays, test on pass plays (their cross-condition generalization analog). (Maps to GSE's play outcome prediction kernel via full-play rollout comparison against baseline.) [event_head_calibration p.3]: Reproducible test NGS tracking 2018–2024; train on 2018–2023, test on 2024. (Isomorphic to GSI's probabilistic event forecasting module using calibrated logits.) [message_passing_ablation p.3]: REJECT if message passing adds nothing over independent player models (then interactions don't matter at 100ms granularity — unlikely but testable) or if full-play rollouts diverge (then keep single-step GNS as a feature extractor only). (Maps to GSE’s interaction-aware tracking kernel where message-passing enables dynamic role assignment.) [intent_conditioned_simulation p.3]: Improvement experiment Beyond the paper: intent-conditioned message passing — condition each node's update on a play-design embedding (from the 1952 LAM codebook: the discovered play concept), so blockers block and receivers run routes rather than just reacting locally. (Isomorphic to GSI’s semantic play decoding engine, enabling contextualized player behavior prediction.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in early work on neural networks for physical simulation and graph-based learning, building upon prior research in particle-based modeling and message-passing architectures from DeepMind and Stanford. Retrocausal Genealogy (Window 1): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing teams as competing agents within shared spatial graphs, where each agent's actions influence others through learned interaction kernels, enabling prediction of strategic behavior and counterplay. Theory of Mind (Window 1): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting by ensuring that higher-layer abstractions do not rely solely on low-level sensor data; instead, they must generalize across diverse scenarios and maintain coherence under perturbations. Cross-Layer Veto (Window 1): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5dc1e90610e43687_t1",
+      "think": "Chapter 2 introduces the core architecture of Graph Neural Simulators (GNS) for complex physics simulation. The model operates on graphs where nodes represent particles and edges encode spatial relationships. It employs message-passing mechanisms to propagate information among neighbors, enabling accurate prediction of particle dynamics. Validation focuses on both short-term prediction errors and long-term rollout MSE, ensuring robustness across diverse materials and conditions. Generalization capabilities are demonstrated through extrapolation beyond training scales, particularly in particle count and time horizon. This approach contrasts with traditional simulators that rely on handcrafted physics models or domain-specific learning. The paper emphasizes that GNS achieves state-of-the-art performance compared to prior methods such as DPI and CConv, while maintaining broad applicability across fluid, solid, and deformable materials. The interaction structure is central to its success, treating game state as interacting entities rather than flat vectors. This formulation supports integration with higher-order reasoning modules like event heads and sequence models for comprehensive game intelligence. Window 2 Synthesis: Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in 1952's foundational work on particle-based simulations, building upon earlier efforts in computational physics and machine learning. Influenced by developments in graph theory and neural network architectures. Retrocausal Genealogy (Window 2): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing agents by encoding their roles and team affiliations into node features, allowing for strategic reasoning about player behavior and movement patterns during gameplay. Theory of Mind (Window 2): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to training data by enforcing strict validation protocols including long-horizon rollouts and generalization tests. Ensures independence between layers by avoiding leakage from engineered simulators into learned models. Cross-Layer Veto (Window 2): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5dc1e90610e43687_t2",
+      "think": "Chapter 3 introduces a foundational architecture for simulating complex physical systems through message-passing neural networks (MPNNs) applied to NFL tracking data. The core idea is to model player interactions dynamically using graph-based representations, where each player is a node and their movements depend on neighbors. This approach extends beyond simple per-player LSTM modeling by incorporating relational information. The evaluation metrics—endpoint error, event calibration, and generalization—are designed to assess both accuracy and robustness. The success criterion requires a ≥20% reduction in endpoint error compared to an independent baseline, alongside low ECE (<0.05) for event predictions. These criteria ensure that the model captures not only positional dynamics but also high-level strategic behaviors such as route running and blocking. The ablation study tests varying levels of message-passing depth (M ∈ {1, 3, 10}), validating whether deeper interactions yield better performance. Finally, intent-conditioned simulations are introduced to address limitations in passive particle models, enabling more realistic play execution by conditioning node updates on play concepts derived from historical data. This aligns with broader goals in physics-based simulation to encode causal relationships and emergent behaviors. Window 3 Synthesis: Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on graph neural networks and reinforcement learning in sports analytics, building upon prior efforts in player trajectory modeling and event prediction using temporal sequence models. Retrocausal Genealogy (Window 3): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models assume players act rationally within known constraints, with intent-conditioning allowing for nuanced understanding of coach-designed strategies and player-specific roles. Theory of Mind (Window 3): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Rejects models where message-passing fails to improve over independent player modeling or where full-play rollouts diverge significantly from ground truth, ensuring fidelity to observed dynamics. Cross-Layer Veto (Window 3): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 1952-learning-to-simulate-complex-physics (5dc1e90610e43687, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

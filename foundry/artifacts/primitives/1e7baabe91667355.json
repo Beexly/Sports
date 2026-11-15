@@ -1,0 +1,78 @@
+{
+  "book_id": "1e7baabe91667355",
+  "source_status": "COMPLETE",
+  "title": "narrative-cross-validation-2026-09-27",
+  "file_name": "narrative-cross-validation-2026-09-27.md",
+  "sha256": "1e7baabe916673556faa11fa1cac9105b7c410a8b4e44719e80bf1a1d8d72f79",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Dual narrative validation across snap-weighted and player-slot-weighted lanes confirms robustness of home win correlation g=0.2, with r=0.246 vs r=0.151 and slope disparity 0.83 vs 0.034 indicating lane B's superior construction.",
+  "gsi_mapping": "Bayesian cross-validation verifies narrative_contract consistency under two data paths; conformal inference supports g=0.2 scalarizer verdict via holdout r and slope thresholds. GSI Mapping: Rooted in narrative-cross-validation-2026-09-27 (1e7baabe91667355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates two data lanes (A/B) for feature validity; state transition to STORED occurs only when both lanes meet honesty criteria, with lane B canonical. GSE Mapping: Rooted in narrative-cross-validation-2026-09-27 (1e7baabe91667355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "snap_weighted_correlation",
+      "name": "Snap-Weighted Correlation",
+      "verbatim_quote": "# Cross-validation: narrative_contract clears honesty under two constructions Two agents ran the same work order on the same night.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r': 'correlation coefficient, dimensionless', 'g': 'scalarizer parameter, dimensionless'}",
+      "assumptions": "Players are attributed via snap counts; data paths are independent but converge on same outcome.",
+      "breakdown_regime": "When player presence is not reliably tracked (e.g., missing snap data).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps player participation through snap-based attribution to compute team-level performance gaps.",
+        "source_operator": "snap_weighted_correlation",
+        "telemetry": "Holdout r = 0.246"
+      }
+    },
+    {
+      "primitive_id": "player_slot_weighted_correlation",
+      "name": "Player-Slot Weighted Correlation",
+      "verbatim_quote": "Lane B is the stronger construction and its write-up is canonical.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r': 'correlation coefficient, dimensionless', 'g': 'scalarizer parameter, dimensionless'}",
+      "assumptions": "Players are attributed via actual field presence; crosswalk ensures data integrity.",
+      "breakdown_regime": "When player tracking data is complete and consistent across seasons.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to snap-weighted but uses validated crosswalk for player attribution.",
+        "source_operator": "player_slot_weighted_correlation",
+        "telemetry": "Holdout r = 0.151"
+      }
+    },
+    {
+      "primitive_id": "scalarizer_verdict",
+      "name": "Scalarizer Verdict",
+      "verbatim_quote": "Both cleared `|r| >= 0.08` and `|slope| > se` on a 2025 holdout scored by coefficients fitted on 2018-2024 only, and both produced the identical scalarizer verdict.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'g': 'scalarizer parameter, dimensionless', 'f3': 'winning term, dimensionless'}",
+      "assumptions": "Verdicts are derived from statistical consistency across multiple data paths.",
+      "breakdown_regime": "When both lanes satisfy honesty constraints and agree on outcome.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces convergence of narrative_contract across lanes via scalarization.",
+        "source_operator": "scalarizer_verdict",
+        "telemetry": "g = 0.2, f3 selected"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1e7baabe91667355_t0",
+      "think": "Two independent agents process identical work orders using distinct data pipelines—Lane A weights by snaps, Lane B by player slots. Both reach narrative_contract and pass honesty checks, yielding g=0.2 and f3 as the winning term. Their divergent r-values (0.246 vs 0.151) reflect differing attribution methods, yet both confirm a real relationship between player presence and home wins. The discrepancy in slopes (0.83 vs 0.034) indicates Lane B’s superior signal-to-noise ratio. This duality validates the robustness of the underlying model. Failure modes include inconsistent player tracking or data path divergence. The scalarizer enforces convergence, ensuring only consistent outcomes are stored.\n\nDeep epistemic analysis for narrative-cross-validation-2026-09-27 (1e7baabe91667355, domain=other, pages_read=2/2): Operator 'Snap-Weighted Correlation' (page 1, domain other) captures: # Cross-validation: narrative_contract clears honesty under two constructions Two agents ran the same work order on the same night. Assumptions: Players are attributed via snap counts; data paths are independent but converge on same outcome. Breakdown regime: When player presence is not reliably tracked (e.g., missing snap data). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps player participation through snap-based attribution to compute team-level performance gaps. Operator 'Player-Slot Weighted Correlation' (page 1, domain other) captures: Lane B is the stronger construction and its write-up is canonical. Assumptions: Players are attributed via actual field presence; crosswalk ensures data integrity. Breakdown regime: When player tracking data is complete and consistent across seasons. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to snap-weighted but uses validated crosswalk for player attribution. Operator 'Scalarizer Verdict' (page 1, domain other) captures: Both cleared `|r| >= 0.08` and `|slope| > se` on a 2025 holdout scored by coefficients fitted on 2018-2024 only, and both produced the identical scalarizer verdict. Assumptions: Verdicts are derived from statistical consistency across multiple data paths. Breakdown regime: When both lanes satisfy honesty constraints and agree on outcome. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces convergence of narrative_contract across lanes via scalarization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for narrative-cross-validation-2026-09-27 (1e7baabe91667355, domain=other, pages_read=2/2): Operator 'Snap-Weighted Correlation' (page 1, domain other) captures: # Cross-validation: narrative_contract clears honesty under two constructions Two agents ran the same work order on the same night. Assumptions: Players are attributed via snap counts; data paths are independent but converge on same outcome. Breakdown regime: When player presence is not reliably tracked (e.g., missing snap data). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps player participation through snap-based attribution to compute team-level performance gaps. Operator 'Player-Slot Weighted Correlation' (page 1, domain other) captures: Lane B is the stronger construction and its write-up is canonical. Assumptions: Players are attributed via actual field presence; crosswalk ensures data integrity. Breakdown regime: When player tracking data is complete and consistent across seasons. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to snap-weighted but uses validated crosswalk for player attribution. Operator 'Scalarizer Verdict' (page 1, domain other) captures: Both cleared `|r| >= 0.08` and `|slope| > se` on a 2025 holdout scored by coefficients fitted on 2018-2024 only, and both produced the identical scalarizer verdict. Assumptions: Verdicts are derived from statistical consistency across multiple data paths. Breakdown regime: When both lanes satisfy honesty constraints and agree on outcome. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces convergence of narrative_contract across lanes via scalarization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in statistical validation frameworks from 2018–2024, extending earlier work on crosswalk reliability and player attribution consistency. Retrocausal Genealogy: Rooted in narrative-cross-validation-2026-09-27 (1e7baabe91667355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in narrative-cross-validation-2026-09-27 (1e7baabe91667355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents operate under dual epistemic models: one prioritizing snap count fidelity, another favoring player-slot accuracy. Each agent seeks to validate the same phenomenon through different means, reflecting adversarial yet complementary reasoning. Theory of Mind & Decision Maker Model: Rooted in narrative-cross-validation-2026-09-27 (1e7baabe91667355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct data paths and sample sizes. Leakage is prevented by verifying that neither lane produces a version favoring LAC, confirming independence of feature selection. Cross-Layer Veto & Anti-Leakage Check: Rooted in narrative-cross-validation-2026-09-27 (1e7baabe91667355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "1aeb6156c0638b14",
+  "source_status": "COMPLETE",
+  "title": "p0207",
+  "file_name": "p0207.txt",
+  "sha256": "1aeb6156c0638b14f1125df5fb947c7bfe4f75604c22923dbdc27fcbc0a4bc46",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "baseball_ground_geometry",
+      "name": "Baseball Ground Geometry",
+      "verbatim_quote": "BASE-BALL—FOR THE PLAYER THE GROUND AND THE OUTFIT HILE laying out a base-ball ground is quite a task, it is not more difficult than marking tennis-courts, and the result is much more lasting.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Euclidean plane geometry, fixed rectangular grandstand/backstop, standard baseball rulebook constraints.",
+      "breakdown_regime": "Non-Euclidean curvature effects become significant on planetary scales; local flatness assumption holds for typical ballparks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Spatial layout priors for pitch tracking systems. GSE: Geometric state transitions for player positioning and defensive shifts.",
+        "source_operator": "baseball_ground_geometry",
+        "telemetry": "Pitch trajectory coordinates (x,y,z), player positions (x_i, y_i)"
+      }
+    },
+    {
+      "primitive_id": "home_plate_placement",
+      "name": "Home Plate Placement",
+      "verbatim_quote": "The back-stop is usually the front of the \"grand stand,\" or a convenient fence; and the rules provide that the back-stop must be at least ninety feet behind the home plate.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'foot': 'Unit of length equal to 0.3048 meters'}",
+      "assumptions": "Backstop is perfectly parallel to the line between first and third base; perpendicular offset is exactly 90 feet.",
+      "breakdown_regime": "Atmospheric turbulence causes pitch drift beyond approximately 60 feet; batter reaction time limits effective resolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Camera calibration for home plate zone boundaries. GSE: Pitch arrival timing states relative to batter stance.",
+        "source_operator": "home_plate_placement",
+        "telemetry": "Camera focal length, pixel coordinates of home plate edges"
+      }
+    },
+    {
+      "primitive_id": "second_base_location",
+      "name": "Second Base Location",
+      "verbatim_quote": "By fastening a tape at the home plate, and carrying it out 127 feet 4 inches in a straight line into the field, the position of the second base is found.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'foot': 'Unit of length equal to 0.3048 meters'}",
+      "assumptions": "Standard diamond shape with right angles at home and first/third bases; Pythagorean theorem holds exactly.",
+      "breakdown_regime": "Field surface irregularities cause small deviations from ideal square geometry.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Diamond geometry priors for infield coverage models. GSE: State transitions for base-running trajectories.",
+        "source_operator": "second_base_location",
+        "telemetry": "Distance measurements from home plate to second base"
+      }
+    },
+    {
+      "primitive_id": "first_third_base_locator",
+      "name": "First/Third Base Locator",
+      "verbatim_quote": "Then, seizing the line in the middle, carry it out first at one side, and then on the other, and where it is taut the locations of the first and third bases are determined.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'foot': 'Unit of length equal to 0.3048 meters'}",
+      "assumptions": "String tension is uniform along its entire length; geometric construction yields exact intersection points.",
+      "breakdown_regime": "Material elasticity causes slight variations in string length under different tensions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Trilateration algorithms for player tracking. GSE: Geometric state classification for force plays.",
+        "source_operator": "first_third_base_locator",
+        "telemetry": "String midpoint coordinates, tension force measurements"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1aeb6156c0638b14_t0",
+      "think": "This foundational geometric construction establishes the invariant 90-foot backstop offset and 127'4\" diagonal, which define the entire infield polygon. The method ensures reproducibility across any flat terrain, serving as a deterministic anchor for subsequent probabilistic telemetry (e.g., pitch deviation models). The underlying lattice structure (Z² ∩ R²) maps naturally to camera sensor grids and pitch coordinate systems, enabling conformal prediction intervals for ball location.\n\nDeep epistemic analysis for p0207 (1aeb6156c0638b14, domain=other, pages_read=1/1): Operator 'Baseball Ground Geometry' (page 1, domain other) captures: BASE-BALL—FOR THE PLAYER THE GROUND AND THE OUTFIT HILE laying out a base-ball ground is quite a task, it is not more difficult than marking tennis-courts, and the result is much more lasting. Assumptions: Euclidean plane geometry, fixed rectangular grandstand/backstop, standard baseball rulebook constraints. Breakdown regime: Non-Euclidean curvature effects become significant on planetary scales; local flatness assumption holds for typical ballparks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Spatial layout priors for pitch tracking systems. GSE: Geometric state transitions for player positioning and defensive shifts. Operator 'Home Plate Placement' (page 1, domain other) captures: The back-stop is usually the front of the \"grand stand,\" or a convenient fence; and the rules provide that the back-stop must be at least ninety feet behind the home plate. Assumptions: Backstop is perfectly parallel to the line between first and third base; perpendicular offset is exactly 90 feet. Breakdown regime: Atmospheric turbulence causes pitch drift beyond approximately 60 feet; batter reaction time limits effective resolution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Camera calibration for home plate zone boundaries. GSE: Pitch arrival timing states relative to batter stance. Operator 'Second Base Location' (page 1, domain other) captures: By fastening a tape at the home plate, and carrying it out 127 feet 4 inches in a straight line into the field, the position of the second base is found. Assumptions: Standard diamond shape with right angles at home and first/third bases; Pythagorean theorem holds exactly. Breakdown regime: Field surface irregularities cause small deviations from ideal square geometry. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Diamond geometry priors for infield coverage models. GSE: State transitions for base-running trajectories. Operator 'First/Third Base Locator' (page 1, domain other) captures: Then, seizing the line in the middle, carry it out first at one side, and then on the other, and where it is taut the locations of the first and third bases are determined. Assumptions: String tension is uniform along its entire length; geometric construction yields exact intersection points. Breakdown regime: Material elasticity causes slight variations in string length under different tensions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Trilateration algorithms for player tracking. GSE: Geometric state classification for force plays. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0207 (1aeb6156c0638b14, domain=other, pages_read=1/1): Operator 'Baseball Ground Geometry' (page 1, domain other) captures: BASE-BALL—FOR THE PLAYER THE GROUND AND THE OUTFIT HILE laying out a base-ball ground is quite a task, it is not more difficult than marking tennis-courts, and the result is much more lasting. Assumptions: Euclidean plane geometry, fixed rectangular grandstand/backstop, standard baseball rulebook constraints. Breakdown regime: Non-Euclidean curvature effects become significant on planetary scales; local flatness assumption holds for typical ballparks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Spatial layout priors for pitch tracking systems. GSE: Geometric state transitions for player positioning and defensive shifts. Operator 'Home Plate Placement' (page 1, domain other) captures: The back-stop is usually the front of the \"grand stand,\" or a convenient fence; and the rules provide that the back-stop must be at least ninety feet behind the home plate. Assumptions: Backstop is perfectly parallel to the line between first and third base; perpendicular offset is exactly 90 feet. Breakdown regime: Atmospheric turbulence causes pitch drift beyond approximately 60 feet; batter reaction time limits effective resolution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Camera calibration for home plate zone boundaries. GSE: Pitch arrival timing states relative to batter stance. Operator 'Second Base Location' (page 1, domain other) captures: By fastening a tape at the home plate, and carrying it out 127 feet 4 inches in a straight line into the field, the position of the second base is found. Assumptions: Standard diamond shape with right angles at home and first/third bases; Pythagorean theorem holds exactly. Breakdown regime: Field surface irregularities cause small deviations from ideal square geometry. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Diamond geometry priors for infield coverage models. GSE: State transitions for base-running trajectories. Operator 'First/Third Base Locator' (page 1, domain other) captures: Then, seizing the line in the middle, carry it out first at one side, and then on the other, and where it is taut the locations of the first and third bases are determined. Assumptions: String tension is uniform along its entire length; geometric construction yields exact intersection points. Breakdown regime: Material elasticity causes slight variations in string length under different tensions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Trilateration algorithms for player tracking. GSE: Geometric state classification for force plays. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Derived from ancient land surveying techniques (e.g., rope stretchers of the Nile) via modern civil engineering practices, formalized within the axiomatized framework of Hilbert's axioms for Euclidean geometry. Retrocausal Genealogy: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (pitcher/batter) operate within bounded rationality; the pitcher aims to maximize uncertainty within the strike zone while the batter seeks optimal entry angles. The umpire's probabilistic call boundary introduces additional decision noise. Theory of Mind & Decision Maker Model: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Avoids collinearity by ensuring distinct angular projections from home plate to each base; prevents leakage between infield/outfield state transitions by enforcing clear geometric boundaries. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0207 (1aeb6156c0638b14), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

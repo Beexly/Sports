@@ -1,0 +1,813 @@
+{
+  "book_id": "636fb9f30380efe6",
+  "source_status": "COMPLETE",
+  "source_note": "True source: Richard S. Sutton and Andrew G. Barto, 'Reinforcement Learning: An Introduction', second edition, The MIT Press, Cambridge, MA, 2018 (title page and Library of Congress data in the file: LCCN 2018023826, ISBN 9780262039246; copyright 2018, 2020 printing). Local file: PDF 'SuttonBarto-2018-ReinforcementLearningIntroduction.pdf', 73129769 bytes, sha256 636fb9f30380efe6211267e0258fcdd3166572296860a6d3c4064b9fd2040f5d computed exactly as the gatekeeper scan does (sha256 over str(size) encoded plus full file bytes), book_id = first 16 hex chars. Born-digital text extraction held locally (1,956,324 bytes, 27,526 lines). Text quality: prose is clean and complete; the extraction garbles Greek letters (gamma, pi, lambda render as substitute glyphs or vanish) and the ff ligature (rendered as a math symbol), so numbered equations are transcribed in standard notation from the book's definitions and equation numbers, and every verbatim quote was chosen from glyph-clean prose and verified as an exact whitespace-normalized substring of the extracted text. No sportsbook content. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "rl_trial_and_error_delayed_reward",
+      "name": "Reinforcement learning defined: trial-and-error search plus delayed reward, no supervisor naming the right action",
+      "verbatim_quote": "The learner is not told which actions to take, but instead must discover which actions yield the most reward by trying them.",
+      "page": "Ch 1, Sec 1.1 (text lines ~730-736)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The agent receives a numerical reward signal and chooses actions in a situation.",
+        "Actions can affect future situations and therefore future rewards, not only immediate reward."
+      ],
+      "breakdown_regime": "Breaks when a teacher can label correct actions directly (then supervised learning is the right frame) or when actions have no delayed consequences (then a bandit or supervised frame suffices).",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The GSE engine is exactly this learner shape: it is never told the right projection, it only observes outcomes after decisions, and credit for a call must propagate backward through the drives and decisions that caused it. Every GSE feedback loop is therefore built as trial, outcome, delayed credit, never as supervised labels on decisions.",
+        "source_operator": "rl_trial_and_error_delayed_reward",
+        "telemetry": "Post-game outcomes joined to pre-game projections, with the time lag between decision and outcome preserved."
+      }
+    },
+    {
+      "primitive_id": "sample_average_action_values",
+      "name": "Sample-average estimator: an action value is the mean of the rewards actually sampled for that action, converging to the true value by the law of large numbers",
+      "verbatim_quote": "We call this the sample-average method for estimating action values because each estimate is an average of the sample of relevant rewards.",
+      "page": "Ch 2, Sec 2.4 (text lines ~1856-1862)",
+      "latex": "Q_{n+1} = Q_n + \\frac{1}{n}\\left[ R_n - Q_n \\right]",
+      "symbol_and_unit_ledger": {
+        "Q_n": "estimated value of the action after n-1 rewards [reward units]",
+        "R_n": "the n-th reward received for the action [reward units]",
+        "1/n": "step size that shrinks as samples accumulate [dimensionless]"
+      },
+      "assumptions": [
+        "Rewards for an action are drawn from a stationary distribution.",
+        "Each estimate is an average over only the rewards of that one action."
+      ],
+      "breakdown_regime": "Fails under nonstationarity: a 1/n step size cannot track a drifting reward distribution, which is why constant step sizes replace it in changing environments.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is the engine's base rate kernel: any GSE rate (a unit's success rate, a tendency frequency) starts as a sample average over observed instances, and its trust weight is the sample count behind it, not the point estimate alone.",
+        "source_operator": "sample_average_action_values",
+        "telemetry": "Play-by-play and game logs: counts of opportunities and successes per situation, so every rate carries its n."
+      }
+    },
+    {
+      "primitive_id": "ucb_exploration",
+      "name": "Upper-confidence-bound action selection: act on estimate plus an uncertainty bonus that shrinks with the action's own sample count and grows with total elapsed trials",
+      "verbatim_quote": "Exploration is needed because there is always uncertainty about the accuracy of the action-value estimates.",
+      "page": "Ch 2, Sec 2.7 (text lines ~2280-2312)",
+      "latex": "A_t = \\arg\\max_a \\left[ Q_t(a) + c \\sqrt{\\frac{\\ln t}{N_t(a)}} \\right]",
+      "symbol_and_unit_ledger": {
+        "Q_t(a)": "current estimated value of action a [reward units]",
+        "c": "exploration coefficient, c > 0 [reward units]",
+        "t": "total time steps so far [count]",
+        "N_t(a)": "number of times action a has been selected before t [count]"
+      },
+      "assumptions": [
+        "Uncertainty in an estimate is approximated by the square root of ln t over the action's count.",
+        "All actions are selected infinitely often in the limit, so estimates converge."
+      ],
+      "breakdown_regime": "Hard to extend past bandits: nonstationarity and large state spaces with function approximation make the count-based bonus impractical, as the book itself notes.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE signal selection uses the same shape: an underexplored matchup signal with a wide confidence interval gets an explicit exploration bonus in ranking, while a heavily sampled signal is judged almost purely on its estimate. The bonus is a function of evidence count, not of enthusiasm.",
+        "source_operator": "ucb_exploration",
+        "telemetry": "Per-signal sample counts and outcome variance, so uncertainty is computed from coverage rather than asserted."
+      }
+    },
+    {
+      "primitive_id": "gradient_bandit_baseline",
+      "name": "Gradient bandit: softmax action preferences updated by reward relative to a running baseline, so a global reward shift cancels out",
+      "verbatim_quote": "If the reward is higher than the baseline, then the probability of taking At in the future is increased, and if the reward is below baseline, then the probability is decreased.",
+      "page": "Ch 2, Sec 2.10 (text lines ~2385-2392)",
+      "latex": "H_{t+1}(a) = H_t(a) + \\alpha \\left( R_t - \\bar{R}_t \\right) \\left( \\mathbf{1}_{a=A_t} - \\pi_t(a) \\right), \\qquad \\pi_t(a) = \\frac{e^{H_t(a)}}{\\sum_b e^{H_t(b)}}",
+      "symbol_and_unit_ledger": {
+        "H_t(a)": "learned preference for action a at time t [dimensionless]",
+        "alpha": "step-size parameter, alpha > 0 [dimensionless]",
+        "R_t": "reward at time t [reward units]",
+        "Rbar_t": "running average reward up to time t, the baseline [reward units]",
+        "pi_t(a)": "probability of selecting action a at time t [probability]"
+      },
+      "assumptions": [
+        "The baseline is the average of rewards received so far and does not depend on the action.",
+        "Preferences are relative: only differences between preferences affect the policy."
+      ],
+      "breakdown_regime": "Learns preferences, not values; in problems with states it must be generalized to parameterized policies, and the baseline trick alone does not handle delayed credit.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The baseline is the engine's normalization kernel: GSE never scores a performance raw, it scores performance minus the situational baseline (league average for that down, distance, and field position), so a league-wide shift in scoring cancels out of every individual grade.",
+        "source_operator": "gradient_bandit_baseline",
+        "telemetry": "Situation-conditioned league baselines joined to each observed outcome, producing above-baseline deltas."
+      }
+    },
+    {
+      "primitive_id": "markov_property_state",
+      "name": "Markov property: the state is a sufficient summary of history; the restriction is on the state representation, not on the decision process",
+      "verbatim_quote": "This is best viewed as a restriction not on the decision process, but on the state.",
+      "page": "Ch 3, Sec 3.1 (text lines ~2898-2906)",
+      "latex": "p(s', r \\mid s, a) = \\Pr\\{ S_t = s', R_t = r \\mid S_{t-1} = s, A_{t-1} = a \\}",
+      "symbol_and_unit_ledger": {
+        "p(s', r | s, a)": "probability of next state s' and reward r given state s and action a [probability]",
+        "S_t, R_t": "state and reward at time t",
+        "s, a": "the immediately preceding state and action"
+      },
+      "assumptions": [
+        "The state signal retains all aspects of past interaction that make a difference for the future.",
+        "Given the current state and action, the future is independent of earlier states and actions."
+      ],
+      "breakdown_regime": "Fails when the observation is not a sufficient statistic (partial observability); the book defers learned state construction to Chapter 17 and approximation without the property to Part II.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is GSE's state spec: the engine's game state (score, clock, down, distance, field position, timeouts, personnel) is only a valid input if it carries everything about the game's past that changes the future distribution of outcomes. Any feature that history adds beyond the state is evidence the state is under-specified, and the fix is to enrich the state, not the model.",
+        "source_operator": "markov_property_state",
+        "telemetry": "Full game-state vectors at each decision point, audited for leakage of history beyond the state."
+      }
+    },
+    {
+      "primitive_id": "reward_hypothesis",
+      "name": "The reward hypothesis: goals and purposes are formalized as maximizing the expected cumulative sum of a scalar reward signal",
+      "verbatim_quote": "That all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of a received scalar signal (called reward).",
+      "page": "Ch 3, Sec 3.2 (text lines ~3115-3135)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The objective can be expressed as a single scalar signal received each time step.",
+        "The reward defines what is to be achieved, not how; prior knowledge belongs in the initial policy or values, not in the reward."
+      ],
+      "breakdown_regime": "Fails or misleads when the designer's true objective cannot be compressed into one scalar without rewarding subgoals that the agent can achieve while failing the real goal.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI takes this as a design law for every objective it sets: an engine goal that cannot be written as one measurable scalar stream will be gamed or drift. Projection quality, calibration, and reasoning quality each get a single explicit scored stream so optimization pressure points at the real target.",
+        "source_operator": "reward_hypothesis",
+        "telemetry": "One scored outcome stream per objective, with the scoring rule fixed before results are seen."
+      }
+    },
+    {
+      "primitive_id": "discounted_return",
+      "name": "The return as discounted sum of future rewards; the discount rate sets the present value of delayed reward and keeps continuing-task returns finite",
+      "verbatim_quote": "The discount rate determines the present value of future rewards",
+      "page": "Ch 3, Sec 3.3 (text lines ~3155-3210)",
+      "latex": "G_t = \\sum_{k=0}^{\\infty} \\gamma^k R_{t+k+1}",
+      "symbol_and_unit_ledger": {
+        "G_t": "return following time t [reward units]",
+        "gamma": "discount rate, 0 <= gamma <= 1 [dimensionless]",
+        "R_{t+k+1}": "reward k+1 steps after t [reward units]"
+      },
+      "assumptions": [
+        "Rewards are bounded, so with gamma < 1 the infinite sum is finite.",
+        "Episodic tasks are the special case where episodes end in an absorbing terminal state with zero reward thereafter."
+      ],
+      "breakdown_regime": "With gamma = 0 the agent is myopic and ignores delayed consequences; with gamma = 1 in a continuing task the return can be infinite and the objective ill-defined.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The discount factor is GSE's horizon kernel: how much a drive late in a game, or a week late in a season, counts against an early one is a gamma choice, and the engine states it explicitly per task instead of letting an implicit horizon sneak in through window selection.",
+        "source_operator": "discounted_return",
+        "telemetry": "Time-stamped outcome streams with per-task horizon parameters recorded alongside every aggregate."
+      }
+    },
+    {
+      "primitive_id": "value_functions_policy_relative",
+      "name": "State and action value functions: expected return from a state, or from a state-action pair, under a named policy; values are policy-relative, not absolute",
+      "verbatim_quote": "value functions are defined with respect to particular ways of acting, called policies.",
+      "page": "Ch 3, Sec 3.5 (text lines ~3380-3445)",
+      "latex": "v_\\pi(s) = \\mathbb{E}_\\pi\\left[ G_t \\mid S_t = s \\right], \\qquad q_\\pi(s, a) = \\mathbb{E}_\\pi\\left[ G_t \\mid S_t = s, A_t = a \\right]",
+      "symbol_and_unit_ledger": {
+        "v_pi(s)": "state-value function of policy pi at s [reward units]",
+        "q_pi(s, a)": "action-value function of policy pi for taking a in s [reward units]",
+        "E_pi": "expectation under trajectories generated by policy pi",
+        "G_t": "return from time t [reward units]"
+      },
+      "assumptions": [
+        "A policy is a mapping from states to probabilities over actions.",
+        "The value of a terminal state is always zero."
+      ],
+      "breakdown_regime": "A value is meaningless without its policy: change the policy and every value changes, so values from different policies or eras are not directly comparable.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE ratings are value functions in this exact sense: a team's number is expected future performance under a stated way of playing and a stated opponent context, never an absolute grade. When the context changes, the engine re-derives the value instead of carrying the old number across.",
+        "source_operator": "value_functions_policy_relative",
+        "telemetry": "Outcome expectations conditioned on the acting policy (scheme, personnel, play-calling tendencies) recorded with each rating."
+      }
+    },
+    {
+      "primitive_id": "bellman_equation",
+      "name": "Bellman equation: a state's value equals the expected immediate reward plus the discounted value of the successor state, averaged over policy and dynamics",
+      "verbatim_quote": "It states that the value of the start state must equal the (discounted) value of the expected next state, plus the reward expected along the way.",
+      "page": "Ch 3, Sec 3.5 (text lines ~3400-3450)",
+      "latex": "v_\\pi(s) = \\sum_a \\pi(a \\mid s) \\sum_{s', r} p(s', r \\mid s, a) \\left[ r + \\gamma v_\\pi(s') \\right]",
+      "symbol_and_unit_ledger": {
+        "v_pi(s)": "value of state s under policy pi [reward units]",
+        "pi(a | s)": "probability policy pi selects action a in state s [probability]",
+        "p(s', r | s, a)": "dynamics: probability of successor state s' and reward r [probability]",
+        "r": "immediate reward [reward units]",
+        "gamma": "discount rate [dimensionless]"
+      },
+      "assumptions": [
+        "The Markov property holds, so one-step lookahead captures the whole future through the successor values.",
+        "The value function is the unique solution of its Bellman equation."
+      ],
+      "breakdown_regime": "The equation is exact only with the true dynamics and true successor values; with sampled or approximated successors it becomes an update target, not an identity, and errors compound through recursion.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every recursive GSE estimate is a Bellman decomposition: a drive value is immediate points plus the discounted value of the resulting field position and possession state, and a season value decomposes the same way. Inconsistency between a state's assigned value and its one-step decomposition is a detectable defect the engine can audit automatically.",
+        "source_operator": "bellman_equation",
+        "telemetry": "One-step transition outcomes (reward plus successor state) logged so any value estimate can be checked against its own decomposition."
+      }
+    },
+    {
+      "primitive_id": "optimal_policy_bellman_optimality",
+      "name": "Optimal policies exist for finite MDPs, share one optimal value function, and satisfy the Bellman optimality equation with a max over actions",
+      "verbatim_quote": "There is always at least one policy that is better than or equal to all other policies.",
+      "page": "Ch 3, Sec 3.6 (text lines ~3670-3685)",
+      "latex": "v_*(s) = \\max_a \\sum_{s', r} p(s', r \\mid s, a) \\left[ r + \\gamma v_*(s') \\right]",
+      "symbol_and_unit_ledger": {
+        "v_*(s)": "optimal state-value function [reward units]",
+        "max_a": "maximization over actions available in s",
+        "p(s', r | s, a)": "environment dynamics [probability]",
+        "gamma": "discount rate [dimensionless]"
+      },
+      "assumptions": [
+        "Finite state and action sets, with the MDP dynamics fixed.",
+        "Policies are partially ordered by their value functions; optimal policies are maximal elements of that order."
+      ],
+      "breakdown_regime": "Existence is guaranteed for finite MDPs; in infinite or continuous spaces an optimal policy may not be attained, and finding it is generally intractable even when it exists.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This sets GSE's ceiling logic: rankings compare policies (teams' ways of playing) by their value functions under common conditions, and an optimal-policy gap is measured as the distance between a unit's realized value and the best attainable value in the same states.",
+        "source_operator": "optimal_policy_bellman_optimality",
+        "telemetry": "State-by-state best attainable outcomes estimated from the full league sample, for gap measurement."
+      }
+    },
+    {
+      "primitive_id": "generalized_policy_iteration",
+      "name": "Generalized policy iteration: evaluation and improvement processes interact at any granularity and still converge toward optimal values and policy",
+      "verbatim_quote": "Almost all reinforcement learning methods are well described as GPI.",
+      "page": "Ch 4, Sec 4.6 (text lines ~4858-4872)",
+      "latex": "\\pi'(s) = \\arg\\max_a q_\\pi(s, a)",
+      "symbol_and_unit_ledger": {
+        "pi'(s)": "improved policy at state s",
+        "q_pi(s, a)": "action value of a in s under the current policy pi [reward units]",
+        "argmax_a": "greedy action with respect to the current action values"
+      },
+      "assumptions": [
+        "Evaluation drives the value function toward the value of the current policy.",
+        "Improvement makes the policy greedy with respect to the current value function.",
+        "Both processes keep updating all states."
+      ],
+      "breakdown_regime": "If either process stops early in the wrong way (evaluation frozen at a bad estimate, or improvement never applied), the interaction stalls away from optimality; finite-time GPI is approximate and its error depends on evaluation accuracy.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE improvement cycles are GPI loops by construction: evaluate the current projection policy against outcomes, then improve the policy greedily against the fresh evaluation, at whatever granularity the data supports (per signal, per situation, per week), without waiting for a full re-derivation.",
+        "source_operator": "generalized_policy_iteration",
+        "telemetry": "Versioned evaluation snapshots and the policy changes made against each snapshot, so the loop is auditable."
+      }
+    },
+    {
+      "primitive_id": "policy_improvement_theorem",
+      "name": "Policy improvement theorem: a policy change that is locally non-worse at every state in one-step lookahead is globally non-worse in true value",
+      "verbatim_quote": "Moreover, if there is strict inequality of (4.7) at any state, then there must be strict inequality of (4.8) at that state.",
+      "page": "Ch 4, Sec 4.2 (text lines ~4370-4385)",
+      "latex": "q_\\pi\\left(s, \\pi'(s)\\right) \\geq v_\\pi(s) \\ \\forall s \\;\\Longrightarrow\\; v_{\\pi'}(s) \\geq v_\\pi(s) \\ \\forall s",
+      "symbol_and_unit_ledger": {
+        "q_pi(s, pi'(s))": "value of following the new policy's action once, then the old policy [reward units]",
+        "v_pi(s), v_pi'(s)": "true values of old and new policies at s [reward units]"
+      },
+      "assumptions": [
+        "The comparison uses the old policy's true action values.",
+        "The changed policy differs from the old only where the one-step lookahead favors the change."
+      ],
+      "breakdown_regime": "The guarantee needs true q values; with estimated action values the improvement step can chase estimation error, which is why approximate policy iteration has an error floor set by evaluation accuracy.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE applies this as a change-acceptance rule: a model or signal change is adopted only if its one-step-ahead scored outcomes are non-worse across situations, because local non-inferiority everywhere is the condition that licenses trusting global improvement.",
+        "source_operator": "policy_improvement_theorem",
+        "telemetry": "Held-out one-step outcome scores per situation, computed before and after any engine change."
+      }
+    },
+    {
+      "primitive_id": "value_iteration",
+      "name": "Value iteration: policy evaluation truncated to one sweep and fused with improvement, obtained by turning the Bellman optimality equation into an update rule",
+      "verbatim_quote": "Note that value iteration is obtained simply by turning the Bellman optimality equation into an update rule.",
+      "page": "Ch 4, Sec 4.4 (text lines ~4687-4705)",
+      "latex": "v_{k+1}(s) = \\max_a \\mathbb{E}\\left[ R_{t+1} + \\gamma v_k(S_{t+1}) \\mid S_t = s, A_t = a \\right]",
+      "symbol_and_unit_ledger": {
+        "v_k(s)": "k-th iterate of the value estimate at s [reward units]",
+        "max_a": "greedy maximization over actions",
+        "gamma": "discount rate [dimensionless]"
+      },
+      "assumptions": [
+        "The environment model (dynamics p) is known, so expected updates are computable.",
+        "Arbitrary initialization converges to v* under the conditions that guarantee v* exists."
+      ],
+      "breakdown_regime": "Each sweep costs a full pass over all states with a model; without a model, or with a state space too large to sweep, the update must be sampled and approximated instead.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE rating updates reuse this iteration shape on real data: sweep all states (game situations), apply reward plus discounted successor value with a max or expectation over choices, and repeat until the ratings stop moving, rather than fitting a one-shot regression.",
+        "source_operator": "value_iteration",
+        "telemetry": "Full situation-state tables with transition outcomes, swept repeatedly until convergence deltas fall below a threshold."
+      }
+    },
+    {
+      "primitive_id": "monte_carlo_first_visit",
+      "name": "Monte Carlo prediction: estimate a value by averaging complete sampled returns, needing only experience, no model of the environment's dynamics",
+      "verbatim_quote": "Monte Carlo methods are ways of solving the reinforcement learning problem based on averaging sample returns.",
+      "page": "Ch 5, Sec 5.1 (text lines ~5078-5088)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Experience is divided into episodes that eventually terminate, so complete returns exist.",
+        "First-visit and every-visit variants both converge as visits to a state go to infinity."
+      ],
+      "breakdown_regime": "Cannot update until an episode ends, so it is not step-by-step online, and it does not apply directly to continuing tasks; it also cannot learn from incomplete episodes.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's ground-truth ledger is Monte Carlo: completed games give complete returns for every situation visited, and those realized averages are the reference that all bootstrapped GSE estimates must reconcile with at episode boundaries.",
+        "source_operator": "monte_carlo_first_visit",
+        "telemetry": "Completed-episode outcome records keyed by every visited situation, first visits flagged."
+      }
+    },
+    {
+      "primitive_id": "importance_sampling_offpolicy",
+      "name": "Importance sampling for off-policy evaluation: reweight returns sampled under a behavior policy by the ratio of target to behavior action probabilities; the environment dynamics cancel out of the ratio",
+      "verbatim_quote": "The importance sampling ratio ends up depending only on the two policies and the sequence, not on the MDP.",
+      "page": "Ch 5, Sec 5.5 (text lines ~5860-5875)",
+      "latex": "\\rho_{t:T-1} = \\prod_{k=t}^{T-1} \\frac{\\pi(A_k \\mid S_k)}{b(A_k \\mid S_k)}",
+      "symbol_and_unit_ledger": {
+        "rho_{t:T-1}": "importance sampling ratio over the trajectory segment [dimensionless]",
+        "pi(A_k | S_k)": "target policy's probability of the taken action [probability]",
+        "b(A_k | S_k)": "behavior policy's probability of the taken action [probability]"
+      },
+      "assumptions": [
+        "Coverage: the behavior policy must assign nonzero probability to every action the target policy might take.",
+        "The two policies' action probabilities are known or estimable along the sampled trajectory."
+      ],
+      "breakdown_regime": "Variance explodes with trajectory length because the ratio is a product over steps; weighted importance sampling trades a bias that vanishes asymptotically for far lower variance.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses ratio reweighting whenever it evaluates a counterfactual from logged data: what a different play call, scheme, or lineup would have produced is estimated by reweighting the plays that actually happened by relative likelihoods, with the variance warning attached to long horizons.",
+        "source_operator": "importance_sampling_offpolicy",
+        "telemetry": "Logged decisions with both the actual choice probabilities and the counterfactual policy's probabilities."
+      }
+    },
+    {
+      "primitive_id": "td_zero_td_error",
+      "name": "TD(0) and the TD error: update a state's estimate toward the one-step sample target, driven by the discrepancy between successive estimates",
+      "verbatim_quote": "Because TD(0) bases its update in part on an existing estimate, we say that it is a bootstrapping method, like DP.",
+      "page": "Ch 6, Sec 6.1 (text lines ~6628-6650)",
+      "latex": "V(S_t) \\leftarrow V(S_t) + \\alpha \\left[ R_{t+1} + \\gamma V(S_{t+1}) - V(S_t) \\right], \\qquad \\delta_t = R_{t+1} + \\gamma V(S_{t+1}) - V(S_t)",
+      "symbol_and_unit_ledger": {
+        "V(S_t)": "current estimate of the state's value [reward units]",
+        "alpha": "step-size parameter [dimensionless]",
+        "R_{t+1}": "observed reward after the transition [reward units]",
+        "gamma": "discount rate [dimensionless]",
+        "delta_t": "TD error, the discrepancy driving the update [reward units]"
+      },
+      "assumptions": [
+        "The target uses the current estimate of the successor value (bootstrapping) and a sampled transition (like Monte Carlo).",
+        "Step sizes satisfy stochastic approximation conditions for convergence to v_pi in the tabular case."
+      ],
+      "breakdown_regime": "The TD target is an estimate for two reasons at once (sampled expectation and estimated successor value), so its bias does not vanish at finite samples; with function approximation and off-policy data it can diverge (the deadly triad).",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The TD error is GSE's surprise signal: the gap between what the engine expected at a state and what the next state plus realized reward says it should have expected. Large signed errors are routed to review as model defects or genuine regime changes, and small errors are the routine update.",
+        "source_operator": "td_zero_td_error",
+        "telemetry": "Streaming state-value estimates paired with the next observed state and reward, per decision point."
+      }
+    },
+    {
+      "primitive_id": "sample_updates_vs_expected_updates",
+      "name": "Sample updates versus expected updates: TD and Monte Carlo back up from one sampled successor, DP from the full distribution of successors",
+      "verbatim_quote": "We refer to TD and Monte Carlo updates as sample updates because they involve looking ahead to a sample successor state",
+      "page": "Ch 6, Sec 6.1 (text lines ~6640-6660)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A sample update needs only one realized transition, not the environment's full dynamics.",
+        "An expected update needs the complete distribution over successors, which a model must supply."
+      ],
+      "breakdown_regime": "Sample updates inherit sampling variance and can be misled by rare transitions until counts accumulate; expected updates are only as good as the model that supplies the distribution.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE keeps the two update kinds labeled: estimates updated from realized plays are sample updates with variance attached, while simulator-based updates are expected updates whose quality is bounded by simulator fidelity. The engine never lets a model-based expected update masquerade as observed evidence.",
+        "source_operator": "sample_updates_vs_expected_updates",
+        "telemetry": "Provenance tag on every update: sampled from real play, or expected under a named model."
+      }
+    },
+    {
+      "primitive_id": "sarsa_onpolicy_control",
+      "name": "Sarsa: on-policy TD control that updates an action value from the actual next action taken, the state-action-reward-state-action quintuple",
+      "verbatim_quote": "This quintuple gives rise to the name Sarsa for the algorithm.",
+      "page": "Ch 6, Sec 6.4 (text lines ~7060-7066)",
+      "latex": "Q(S_t, A_t) \\leftarrow Q(S_t, A_t) + \\alpha \\left[ R_{t+1} + \\gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \\right]",
+      "symbol_and_unit_ledger": {
+        "Q(S_t, A_t)": "estimated value of the state-action pair [reward units]",
+        "A_{t+1}": "the action actually selected next under the behavior policy",
+        "alpha": "step-size parameter [dimensionless]",
+        "gamma": "discount rate [dimensionless]"
+      },
+      "assumptions": [
+        "The behavior policy is the policy being evaluated and improved (on-policy), typically epsilon-greedy over current Q.",
+        "Convergence requires the policy to become greedy in the limit with infinite exploration (GLIE)."
+      ],
+      "breakdown_regime": "Because it values the policy actually followed, including its exploration, Sarsa's learned values are conservative near hazards; it optimizes the behavior policy, not an idealized greedy one.",
+      "domain": "rl-control",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses the Sarsa distinction when grading decisions: a call is valued under the tendencies the team actually has (including its mistakes), not under an idealized version of the team, whenever the estimate is meant to predict what will happen next.",
+        "source_operator": "sarsa_onpolicy_control",
+        "telemetry": "Decision logs where the next realized decision is recorded, not just the recommended one."
+      }
+    },
+    {
+      "primitive_id": "q_learning_offpolicy_control",
+      "name": "Q-learning: off-policy TD control whose target maximizes over next actions, so the learned values approximate the optimal action values regardless of the behavior policy",
+      "verbatim_quote": "This dramatically simplifies the analysis of the algorithm and enabled early convergence proofs.",
+      "page": "Ch 6, Sec 6.5 (text lines ~7155-7175)",
+      "latex": "Q(S_t, A_t) \\leftarrow Q(S_t, A_t) + \\alpha \\left[ R_{t+1} + \\gamma \\max_a Q(S_{t+1}, a) - Q(S_t, A_t) \\right]",
+      "symbol_and_unit_ledger": {
+        "Q(S_t, A_t)": "learned action-value estimate [reward units]",
+        "max_a Q(S_{t+1}, a)": "greedy successor value under the target policy [reward units]",
+        "alpha": "step-size parameter [dimensionless]",
+        "gamma": "discount rate [dimensionless]"
+      },
+      "assumptions": [
+        "All state-action pairs continue to be visited and updated (coverage).",
+        "Step sizes satisfy the usual stochastic approximation conditions; then Q converges to q* with probability 1 in the tabular case."
+      ],
+      "breakdown_regime": "The max target imports maximization bias, and under function approximation plus off-policy training the update can diverge; convergence proofs are tabular.",
+      "domain": "rl-control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is GSE's counterfactual evaluator: the value of a situation under the best available decision, decoupled from the decision the team actually made. Pairing the Q-learning value with the Sarsa value at the same state yields the decision gap the engine reports.",
+        "source_operator": "q_learning_offpolicy_control",
+        "telemetry": "Play logs with full action sets per state, so the road not taken is in the data."
+      }
+    },
+    {
+      "primitive_id": "maximization_bias_double_learning",
+      "name": "Maximization bias: using a maximum over noisy estimates as an estimate of the maximum value is positively biased; double learning removes it by decoupling selection from evaluation",
+      "verbatim_quote": "In these algorithms, a maximum over estimated values is used implicitly as an estimate of the maximum value, which can lead to a significant positive bias.",
+      "page": "Ch 6, Sec 6.7 (text lines ~7408-7418)",
+      "latex": "Q_1(S_t, A_t) \\leftarrow Q_1(S_t, A_t) + \\alpha \\left[ R_{t+1} + \\gamma Q_2\\left(S_{t+1}, \\arg\\max_a Q_1(S_{t+1}, a)\\right) - Q_1(S_t, A_t) \\right]",
+      "symbol_and_unit_ledger": {
+        "Q_1, Q_2": "two independent action-value estimates [reward units]",
+        "argmax_a Q_1": "action selected by the first estimate",
+        "Q_2(...)": "that action evaluated by the second estimate [reward units]",
+        "gamma": "discount rate [dimensionless]"
+      },
+      "assumptions": [
+        "The two estimators are updated on different samples so their errors are independent.",
+        "Each estimator is used symmetrically, selecting for one and evaluating for the other."
+      ],
+      "breakdown_regime": "Doubling the estimators halves the data per estimator, increasing variance; the fix targets bias from maximization, not bias from bootstrapping or modeling.",
+      "domain": "rl-control",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's leaderboard hygiene rule comes from this: whenever the engine takes the best of many noisy projections (best matchup, best signal, best unit), the reported number is re-estimated on held-out data with selection and evaluation decoupled, or it is labeled optimistically biased.",
+        "source_operator": "maximization_bias_double_learning",
+        "telemetry": "Split-sample infrastructure: every max-selection is paired with an independent re-estimate."
+      }
+    },
+    {
+      "primitive_id": "n_step_returns",
+      "name": "n-step bootstrapping: returns built from n real rewards plus a bootstrapped tail, spanning the spectrum from one-step TD to full Monte Carlo",
+      "verbatim_quote": "n-step methods span a spectrum with MC methods at one end and one-step TD methods at the other.",
+      "page": "Ch 7, intro and Sec 7.1 (text lines ~7705-7725)",
+      "latex": "G_{t:t+n} = R_{t+1} + \\gamma R_{t+2} + \\cdots + \\gamma^{n-1} R_{t+n} + \\gamma^n V(S_{t+n})",
+      "symbol_and_unit_ledger": {
+        "G_{t:t+n}": "n-step return [reward units]",
+        "R_{t+k}": "the k-th realized reward after t [reward units]",
+        "V(S_{t+n})": "bootstrapped value estimate n steps ahead [reward units]",
+        "gamma": "discount rate [dimensionless]",
+        "n": "number of real rewards used before bootstrapping [count]"
+      },
+      "assumptions": [
+        "The tail beyond n steps is approximated by the current value estimate.",
+        "n = 1 recovers TD(0); n = infinity recovers Monte Carlo."
+      ],
+      "breakdown_regime": "Intermediate n trades bias (from the bootstrapped tail) against variance (from real rewards); the best n is task-dependent, and updates are delayed by n steps in the basic form.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE credit windows are n-step returns: a play's value is scored over a chosen number of subsequent real events plus the engine's value of the resulting state, and the window length is a declared parameter per signal, because one-step and full-game windows systematically disagree.",
+        "source_operator": "n_step_returns",
+        "telemetry": "Event streams long enough to form multi-step realized returns ending in a valued state."
+      }
+    },
+    {
+      "primitive_id": "dyna_integrated_planning",
+      "name": "Dyna architecture: one reinforcement learning update rule applied to both real experience and simulated experience from a learned model; learning, planning, acting, and model learning run continually",
+      "verbatim_quote": "Typically, as in Dyna-Q, the same reinforcement learning method is used both for learning from real experience and for planning from simulated experience.",
+      "page": "Ch 8, Sec 8.2 (text lines ~8710-8725)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A model learned from real experience can generate simulated transitions on demand.",
+        "Planning samples emphasize previously experienced state-action pairs (search control), where the model has information."
+      ],
+      "breakdown_regime": "Model errors become planning errors: a wrong model confidently generates wrong simulated experience, and compute spent planning is compute not spent acting or model learning.",
+      "domain": "rl-control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The GSE simulator loop is Dyna-shaped: the same projection update consumes real game outcomes and simulator-generated games, the simulator is refit from real outcomes as they arrive, and simulated volume is throttled by measured simulator fidelity rather than by appetite.",
+        "source_operator": "dyna_integrated_planning",
+        "telemetry": "Simulator transition logs with fidelity scores against held-out real games."
+      }
+    },
+    {
+      "primitive_id": "prioritized_sweeping",
+      "name": "Prioritized sweeping: order model-based updates by urgency, measured by the size of the value change an update would cause, and propagate changes backward through predecessors",
+      "verbatim_quote": "It is natural to prioritize the updates according to a measure of their urgency, and perform them in order of priority.",
+      "page": "Ch 8, Sec 8.4 (text lines ~9043-9058)",
+      "latex": "p = \\left| R + \\gamma \\max_{a'} Q(S', a') - Q(S, A) \\right|",
+      "symbol_and_unit_ledger": {
+        "p": "priority of the state-action pair, the magnitude of its pending update [reward units]",
+        "R": "modeled reward [reward units]",
+        "Q(S, A)": "current action-value estimate [reward units]",
+        "gamma": "discount rate [dimensionless]"
+      },
+      "assumptions": [
+        "A model supplies predecessor pairs so changes can be propagated backward.",
+        "Only pairs whose update would change their value nontrivially (above a small threshold) enter the queue."
+      ],
+      "breakdown_regime": "Bookkeeping costs grow with the predecessor graph, and priorities computed under a wrong model direct effort to the wrong states; in large spaces the queue itself becomes the bottleneck.",
+      "domain": "rl-control",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE update scheduling follows this priority rule: after new results land, recomputation flows first to the situations whose values moved the most, and propagates backward to everything that feeds them, instead of recomputing the whole board uniformly.",
+        "source_operator": "prioritized_sweeping",
+        "telemetry": "Dependency graph between estimates plus per-update change magnitudes to drive the queue."
+      }
+    },
+    {
+      "primitive_id": "msve_sgd_objective",
+      "name": "Prediction objective under function approximation: the mean squared value error, weighted by the on-policy state distribution, minimized by stochastic gradient descent",
+      "verbatim_quote": "SGD methods are among the most widely used of all function approximation methods and are particularly well suited to online reinforcement learning.",
+      "page": "Ch 9, Secs 9.2-9.3 (text lines ~10367-10445)",
+      "latex": "\\overline{\\mathrm{VE}}(\\mathbf{w}) = \\sum_s \\mu(s) \\left[ v_\\pi(s) - \\hat{v}(s, \\mathbf{w}) \\right]^2",
+      "symbol_and_unit_ledger": {
+        "VE(w)": "mean squared value error of the parameterized approximator [reward units squared]",
+        "mu(s)": "fraction of time spent in state s under the policy [probability]",
+        "v_pi(s)": "true value [reward units]",
+        "v-hat(s, w)": "approximate value with weight vector w [reward units]"
+      },
+      "assumptions": [
+        "The error is weighted by how often states occur under the policy, not uniformly over states.",
+        "The approximator is differentiable in its weight vector."
+      ],
+      "breakdown_regime": "The true values in the objective are unknown, so SGD must use sampled targets; with bootstrapped targets the method becomes semi-gradient and the objective actually minimized is no longer the VE.",
+      "domain": "rl-approx",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE model fitting declares its objective in this form: squared error against realized outcomes, weighted by how often each situation actually occurs in games, so rare exotic situations cannot dominate the fit at the expense of the common ones that decide most projections.",
+        "source_operator": "msve_sgd_objective",
+        "telemetry": "Situation frequency distribution over the state space, joined to outcome errors per situation."
+      }
+    },
+    {
+      "primitive_id": "semi_gradient_td",
+      "name": "Semi-gradient TD: bootstrapping methods follow only part of the gradient, ignoring the target's dependence on the weights, gaining online continual learning at the cost of weaker convergence guarantees",
+      "verbatim_quote": "They include only a part of the gradient and, accordingly, we call them semi-gradient methods.",
+      "page": "Ch 9, Sec 9.3 (text lines ~10543-10560)",
+      "latex": "\\mathbf{w}_{t+1} = \\mathbf{w}_t + \\alpha \\left[ R_{t+1} + \\gamma \\hat{v}(S_{t+1}, \\mathbf{w}_t) - \\hat{v}(S_t, \\mathbf{w}_t) \\right] \\nabla \\hat{v}(S_t, \\mathbf{w}_t)",
+      "symbol_and_unit_ledger": {
+        "w_t": "weight vector of the approximator at time t",
+        "alpha": "step-size parameter [dimensionless]",
+        "R_{t+1}": "observed reward [reward units]",
+        "v-hat(S, w)": "approximate value of state S [reward units]",
+        "grad v-hat": "gradient of the estimate with respect to the weights"
+      },
+      "assumptions": [
+        "The update target is treated as fixed when differentiating, even though it depends on the same weights.",
+        "In the linear case the method converges reliably to the TD fixed point."
+      ],
+      "breakdown_regime": "Not a true gradient descent on any fixed objective: under off-policy training with function approximation the weights can diverge, and the fixed point it finds is generally not the VE minimizer.",
+      "domain": "rl-approx",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every bootstrapped GSE estimator inherits this warning label: because its targets are built from its own current estimates, its errors are self-referential, so the engine tracks target drift over time and freezes self-training when drift accelerates.",
+        "source_operator": "semi_gradient_td",
+        "telemetry": "Time series of target values per estimate, monitored for self-referential drift."
+      }
+    },
+    {
+      "primitive_id": "deadly_triad",
+      "name": "The deadly triad: instability and divergence arise when function approximation, bootstrapping, and off-policy training are combined; any two without the third can be made stable",
+      "verbatim_quote": "Our discussion so far can be summarized by saying that the danger of instability and divergence arises whenever we combine all of the following three elements, making up what we call the deadly triad",
+      "page": "Ch 11, Sec 11.3 (text lines ~13613-13640)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Function approximation generalizes beyond observed states (it extrapolates).",
+        "Bootstrapping builds update targets from existing estimates.",
+        "Off-policy training updates on a distribution of transitions other than the target policy's.",
+        "The instability arises already in prediction, not only in control, and even with a completely known environment."
+      ],
+      "breakdown_regime": "This is the failure boundary itself: remove any one element and stability can be recovered, which is why the book's remedies (gradient-TD, emphatic methods, averagers) each attack one leg of the triad.",
+      "domain": "rl-approx",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is a hard veto in the GSE engine: any proposed estimator that combines learned generalization, self-referential targets, and data generated under a different decision policy than the one being evaluated is flagged before deployment, and it ships only with a named stabilizer or a divergence monitor with a kill threshold.",
+        "source_operator": "deadly_triad",
+        "telemetry": "Estimator design registry: for each model, which of the three elements it contains and what stabilizer covers it."
+      }
+    },
+    {
+      "primitive_id": "gradient_td_methods",
+      "name": "Gradient-TD methods: true stochastic gradient descent on the projected Bellman error, with robust convergence under off-policy training at roughly double the computation",
+      "verbatim_quote": "We seek instead an SGD method, which should be O(d) and have robust convergence properties.",
+      "page": "Ch 11, Sec 11.7 (text lines ~15059-15070)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Derived for the linear case by expanding the projected Bellman error objective in matrix terms.",
+        "A secondary weight vector estimates the correction term that semi-gradient methods omit."
+      ],
+      "breakdown_regime": "Convergence is bought with a second set of weights and roughly doubled computation; the objective minimized is the projected Bellman error, whose minimizer is the TD fixed point, not the true value function.",
+      "domain": "rl-approx",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's off-policy evaluators follow this pattern when stability matters more than speed: pay the extra estimator, follow the true gradient of a declared objective, and accept the TD fixed point knowingly rather than an unmonitored semi-gradient drift.",
+        "source_operator": "gradient_td_methods",
+        "telemetry": "Paired primary and secondary weight traces for any gradient-corrected evaluator, with objective values logged."
+      }
+    },
+    {
+      "primitive_id": "eligibility_traces_lambda",
+      "name": "Eligibility traces: a fading short-term memory vector that gives credit to recently visited states when a TD error occurs, unifying TD and Monte Carlo as one spectrum",
+      "verbatim_quote": "Eligibility traces unify and generalize TD and Monte Carlo methods.",
+      "page": "Ch 12, intro and Secs 12.1-12.2 (text lines ~15517-15535)",
+      "latex": "\\mathbf{z}_t = \\gamma \\lambda \\mathbf{z}_{t-1} + \\nabla \\hat{v}(S_t, \\mathbf{w}_t), \\qquad \\mathbf{w}_{t+1} = \\mathbf{w}_t + \\alpha \\delta_t \\mathbf{z}_t",
+      "symbol_and_unit_ledger": {
+        "z_t": "eligibility trace vector, same dimension as the weights",
+        "lambda": "trace-decay parameter, 0 <= lambda <= 1 [dimensionless]",
+        "gamma": "discount rate [dimensionless]",
+        "delta_t": "TD error at time t [reward units]",
+        "alpha": "step-size parameter [dimensionless]"
+      },
+      "assumptions": [
+        "The forward view (the lambda-return, a weighted average of n-step returns) and the backward view (the trace mechanism) implement nearly the same updates.",
+        "lambda = 0 recovers one-step TD; lambda = 1 recovers Monte Carlo-like behavior, online and on continuing tasks."
+      ],
+      "breakdown_regime": "The equivalence between forward and backward views is exact only in special cases (offline, tabular); online with function approximation the trace mechanism is an approximation, and true online methods exist to repair the gap.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE credit assignment uses trace decay as a declared parameter: when a game outcome lands, credit flows backward to the situations and decisions that led to it, fading at a rate set per signal family, instead of being dumped entirely on the final state or spread uniformly over the game.",
+        "source_operator": "eligibility_traces_lambda",
+        "telemetry": "Ordered event sequences per game with per-family decay parameters, so credit can be re-run at different decays."
+      }
+    },
+    {
+      "primitive_id": "policy_gradient_theorem",
+      "name": "Policy gradient theorem: the gradient of performance with respect to policy parameters is an expectation over states and actions that does not involve the derivative of the state distribution",
+      "verbatim_quote": "Fortunately, there is an excellent theoretical answer to this challenge in the form of the policy gradient theorem, which provides an analytic expression for the gradient of performance with respect to the policy parameter",
+      "page": "Ch 13, Sec 13.2 (text lines ~17628-17645)",
+      "latex": "\\nabla J(\\boldsymbol{\\theta}) \\propto \\sum_s \\mu(s) \\sum_a q_\\pi(s, a) \\nabla \\pi(a \\mid s, \\boldsymbol{\\theta})",
+      "symbol_and_unit_ledger": {
+        "J(theta)": "performance measure, expected return under the parameterized policy",
+        "mu(s)": "on-policy state distribution under pi [probability]",
+        "q_pi(s, a)": "action value under the current policy [reward units]",
+        "grad pi(a | s, theta)": "gradient of the action probability with respect to the policy parameters"
+      },
+      "assumptions": [
+        "The policy is parameterized and differentiable in its parameters.",
+        "States are weighted by their on-policy visitation distribution, whose derivative is not needed."
+      ],
+      "breakdown_regime": "The theorem gives the gradient's form, not a low-variance estimator of it; sampling it directly (REINFORCE) has high variance, and the result is for the policy's own distribution, so off-policy use needs correction.",
+      "domain": "rl-control",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE policy tuning (play-calling tendencies, scheme weights) is gradient-shaped by this theorem: adjust a tendency in proportion to how much better its outcomes were than the state's baseline, weighted by how often the situation actually occurs, never by how memorable the outcome was.",
+        "source_operator": "policy_gradient_theorem",
+        "telemetry": "Situation frequencies and per-action outcome advantages logged for every tunable tendency."
+      }
+    },
+    {
+      "primitive_id": "reinforce_monte_carlo_policy_gradient",
+      "name": "REINFORCE: Monte Carlo policy gradient that scales the log-policy gradient of the action actually taken by the complete sampled return",
+      "verbatim_quote": "Recall our overall strategy of stochastic gradient ascent (13.1), which requires a way to obtain samples such that the expectation of the sample gradient is proportional to the actual gradient of the performance measure as a function of the parameter.",
+      "page": "Ch 13, Sec 13.3 (text lines ~17650-17660)",
+      "latex": "\\boldsymbol{\\theta}_{t+1} = \\boldsymbol{\\theta}_t + \\alpha G_t \\nabla \\ln \\pi(A_t \\mid S_t, \\boldsymbol{\\theta}_t)",
+      "symbol_and_unit_ledger": {
+        "theta_t": "policy parameter vector at time t",
+        "G_t": "complete sampled return following the action [reward units]",
+        "grad ln pi": "score function, gradient of the log probability of the taken action",
+        "alpha": "step-size parameter [dimensionless]"
+      },
+      "assumptions": [
+        "Updates wait for the complete return, so the method is episodic in its basic form.",
+        "The sample gradient's expectation is proportional to the true performance gradient."
+      ],
+      "breakdown_regime": "High variance: the full return is a noisy multiplier, so learning is slow without a baseline or a critic; it also cannot learn from partial episodes.",
+      "domain": "rl-control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's episodic review loop is REINFORCE-shaped and labeled as such: after a completed game, tendencies that preceded good complete outcomes are strengthened in proportion to the outcome, and the known variance of that signal is why single games never move GSE tendencies by themselves.",
+        "source_operator": "reinforce_monte_carlo_policy_gradient",
+        "telemetry": "Complete-game outcomes joined to the decisions taken, with batch sizes enforced before any tendency update."
+      }
+    },
+    {
+      "primitive_id": "actor_critic_baseline",
+      "name": "Actor-critic: a learned state-value function used as baseline and, through the one-step return, as critic, cutting policy-gradient variance while keeping updates fully online",
+      "verbatim_quote": "When the state-value function is used to assess actions in this way it is called a critic, and the overall policy-gradient method is termed an actor–critic method.",
+      "page": "Ch 13, Sec 13.5 (text lines ~17905-17925)",
+      "latex": "\\boldsymbol{\\theta}_{t+1} = \\boldsymbol{\\theta}_t + \\alpha \\delta_t \\frac{\\nabla \\pi(A_t \\mid S_t, \\boldsymbol{\\theta}_t)}{\\pi(A_t \\mid S_t, \\boldsymbol{\\theta}_t)}, \\qquad \\delta_t = R_{t+1} + \\gamma \\hat{v}(S_{t+1}, \\mathbf{w}) - \\hat{v}(S_t, \\mathbf{w})",
+      "symbol_and_unit_ledger": {
+        "theta_t": "actor (policy) parameters",
+        "w": "critic (value function) weights",
+        "delta_t": "one-step TD error supplied by the critic [reward units]",
+        "pi(A_t | S_t, theta_t)": "probability of the taken action under the current policy [probability]",
+        "alpha": "step-size parameter [dimensionless]"
+      },
+      "assumptions": [
+        "The critic is learned alongside the actor, typically by semi-gradient TD.",
+        "The baseline is a function of state only, so it does not bias the gradient's expectation; the one-step return's bootstrapping introduces bias but lowers variance."
+      ],
+      "breakdown_regime": "The actor's gradient is now biased by the critic's errors, and two learning processes with different time scales can chase each other; the bias is not caused by bootstrapping alone but by the learned critic's imperfection.",
+      "domain": "rl-control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE runs actor-critic separation internally: projection tendencies (the actor) are adjusted only by a separately maintained evaluator (the critic) that scores states before and after each decision, so the part of the system that acts never grades its own homework with raw outcomes.",
+        "source_operator": "actor_critic_baseline",
+        "telemetry": "Independent critic state values stored per decision point, with actor updates derived from critic deltas."
+      }
+    },
+    {
+      "primitive_id": "average_reward_setting",
+      "name": "Average-reward setting: for continuing tasks, a policy's quality is its long-run average rate of reward, with no discounting, replacing the discounted objective where discounting is problematic",
+      "verbatim_quote": "Like the discounted setting, the average reward setting applies to continuing problems, problems for which the interaction between agent and environment goes on and on forever without termination or start states.",
+      "page": "Ch 10, Sec 10.3 (text lines ~12864-12880)",
+      "latex": "r(\\pi) = \\lim_{h \\to \\infty} \\frac{1}{h} \\sum_{t=1}^{h} \\mathbb{E}\\left[ R_t \\mid S_0, A_{0:t-1} \\sim \\pi \\right]",
+      "symbol_and_unit_ledger": {
+        "r(pi)": "average reward rate of policy pi [reward units per time step]",
+        "h": "time horizon [count]",
+        "R_t": "reward at time t [reward units]",
+        "S_0, A_{0:t-1} ~ pi": "initial state and action sequence generated by policy pi"
+      },
+      "assumptions": [
+        "The task is continuing: no termination or start states.",
+        "The agent cares as much about delayed rewards as immediate ones (no discounting).",
+        "Under ergodicity conditions the limit is independent of the start state."
+      ],
+      "breakdown_regime": "Transient behavior vanishes from the objective, so tasks where the start matters (or where episodes are the natural unit) are mis-served; values become differential values defined only up to a constant.",
+      "domain": "rl-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Season-long GSE evaluation uses the average-reward frame: a team or signal is graded on its per-game rate of value production over the whole continuing season, with differential values (performance relative to the rate) replacing absolute totals that grow with games played.",
+        "source_operator": "average_reward_setting",
+        "telemetry": "Per-game value production time series, summarized as rates with differential (rate-relative) values."
+      }
+    },
+    {
+      "primitive_id": "dopamine_reward_prediction_error",
+      "name": "Reward prediction error hypothesis: phasic dopamine activity conveys a TD-like error, the difference between an old and a new estimate of expected future reward, broadcast to target areas throughout the brain",
+      "verbatim_quote": "one of the functions of the phasic activity of dopamine-producing neurons in mammals is to deliver an error between an old and a new estimate of expected future reward to target areas throughout the brain",
+      "page": "Ch 15, Sec 15.3 (text lines ~20222-20232)",
+      "latex": "\\delta_t = R_{t+1} + \\gamma V(S_{t+1}) - V(S_t)",
+      "symbol_and_unit_ledger": {
+        "delta_t": "TD error, identified with the phasic dopamine signal [reward units]",
+        "R_{t+1}": "received reward [reward units]",
+        "V(S_t), V(S_{t+1})": "old and new estimates of expected future reward [reward units]",
+        "gamma": "discount rate [dimensionless]"
+      },
+      "assumptions": [
+        "The hypothesis is about phasic (burst) activity of dopamine-producing neurons, per Montague, Dayan, and Sejnowski (1996).",
+        "Time steps in the neural interpretation are very small, so the one-step indexing shift in the neural TD error is not critical."
+      ],
+      "breakdown_regime": "The book notes situations where dopamine responses do not fit the pure prediction-error account; it is a hypothesis about one function of the signal, not a complete theory of dopamine.",
+      "domain": "neuroscience",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI reads this as biological precedent for error-driven learning design: a single scalar surprise signal, broadcast widely, is enough to drive distributed learning. GSE mirrors the wiring by broadcasting one signed surprise number per event to all subscribed model components instead of letting each component compute its own private error.",
+        "source_operator": "dopamine_reward_prediction_error",
+        "telemetry": "One canonical signed error per event, published to all model components with the same value."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "636fb9f30380efe6-t1",
+      "think": "This book is the canonical statement of reinforcement learning as a single unified problem: an agent interacts with an environment through states, actions, and rewards, and must learn behavior that maximizes the expected discounted sum of future rewards. Its architecture is deliberate. Part I builds the tabular core in order of increasing realism. Bandits strip away states entirely so that estimation and the exploration problem can be seen in isolation. The finite MDP chapter then installs the full formalism: the dynamics function p, the Markov property as a requirement on the state rather than on the world, the reward hypothesis, the return, and value functions defined relative to a policy. The Bellman equation appears as a consistency condition, and the Bellman optimality equation plus the existence of optimal policies gives the whole field its target. Dynamic programming shows what can be computed when the model is known, and generalized policy iteration names the pattern that nearly every later algorithm instantiates: an evaluation process driving values toward the current policy's values, and an improvement process making the policy greedy against those values, interleaved at any granularity. Monte Carlo methods remove the model and replace expected updates with sample updates over complete returns, at the price of waiting for episodes to end. Temporal-difference learning is presented, accurately, as the field's central idea: it keeps Monte Carlo's model-free sampling and dynamic programming's bootstrapping, updating an estimate from another estimate plus one real reward. From that single move the control algorithms fall out. Sarsa evaluates the policy actually followed, Q-learning evaluates the greedy policy regardless of behavior, and the contrast between them is the on-policy and off-policy distinction in its purest form. Maximization bias shows that even the max operator is a statistical hazard, and double learning shows the cure is decoupling selection from evaluation. N-step returns then reveal that TD and Monte Carlo were never rivals: they are endpoints of a spectrum indexed by how many real rewards precede the bootstrapped tail, and eligibility traces supply the backward-view mechanism that walks the same spectrum with a single fading memory vector. Chapter 8 closes Part I by dissolving the line between planning and learning: both are value estimation by backed-up updates, differing only in whether experience is real or simulated by a model, and Dyna plus prioritized sweeping show how to interleave the two and how to spend update computation where value changes are largest. Part II asks what survives contact with large state spaces. Function approximation replaces tables with parameterized functions, the objective becomes the distribution-weighted mean squared value error, and stochastic gradient descent becomes the workhorse. The book is honest about the price: bootstrapping methods are only semi-gradient, they do not minimize any fixed objective, and when function approximation, bootstrapping, and off-policy training coincide, the deadly triad, divergence is possible even in prediction with a known environment. The remedies it develops, gradient-TD methods minimizing the projected Bellman error and emphatic weighting, are presented as engineering trade-offs, each buying stability with computation or with a changed objective. Part II ends by changing the object of learning itself. Policy gradient methods parameterize the policy directly, the policy gradient theorem shows the performance gradient can be estimated without differentiating the state distribution, REINFORCE instantiates it with complete returns, and actor-critic methods plug the learned value function back in as baseline and critic to control variance. Part III then grounds the formalism outside computer science: the same TD error that drives the algorithms is the leading quantitative hypothesis for phasic dopamine signaling, and the psychology chapters map model-based and model-free control onto deliberative and habitual behavior in animals. For a reasoning engine, the load-bearing lessons are four. First, every value is relative to a policy and a state representation, so any engine number that does not name its policy and its state is not yet a measurement. Second, bootstrapping is both the engine of efficiency and the main source of self-referential error, so targets built from the engine's own estimates must be monitored as first-class objects. Third, credit assignment is a parameterized spectrum, not a choice: how many real outcomes precede the bootstrapped tail, and how fast trace credit decays, are dials to set per signal family and to report alongside results. Fourth, stability is a property of combinations, not components: the deadly triad means an estimator audit must check which of the three dangerous elements a design contains and what stabilizer covers it. The book's limits are equally instructive. Its convergence results are tabular or linear, its treatment of deep function approximation is deliberately cautious, and it offers no turnkey method for learning the state representation itself, which it flags as a frontier. An engine built on this foundation inherits both the rigor and the obligation: declare your state, your policy, your objective, and your stabilizers, or the numbers do not mean what they appear to mean. Two further design threads deserve emphasis because engines routinely get them wrong. The first is estimation under drift. The bandit chapters show that the sample average, optimal for stationary problems, becomes a liability when the world changes, and that a constant step size is really an exponential recency weighting: an explicit decision about how fast old evidence should be forgotten. The gradient bandit adds the companion lesson that relative comparisons against a running baseline are invariant to global shifts in the reward level, so normalization is not cosmetic but structural. Any engine that averages history must state its forgetting rate and its baseline, or it has hidden parameters that will dominate its behavior exactly when conditions change. The second thread is the treatment of time and options. The average-reward setting shows that discounting is a modeling choice with failure modes, not a law, and that continuing problems may be better served by a rate objective with differential values. The frontiers chapter points at what the formalism still lacks: learned state representations, temporally extended actions, and reward design, each of which is a place where an engine's silent conventions do the real deciding. Finally, the book's epistemics are part of its content. Every method is introduced with the quantity it estimates, the conditions under which it converges, and a counterexample or failure mode when those conditions are violated: Baird's counterexample for off-policy approximation, the maximization bias example for greedy targets, the short corridor for policy gradient variance. That is the standard this extraction is meant to carry into the corpus. A primitive is not a slogan extracted from a famous book; it is a claim with assumptions, a regime where it breaks, and a telemetry requirement, and the corpus entries above are written to that standard throughout.",
+      "retrocausal_genealogy": "The lineage runs from Thorndike's law of effect and animal learning psychology, through Bellman's dynamic programming and Markov decision processes in the 1950s, Samuel's checkers player, and the control theory of adaptive systems. Temporal-difference learning crystallized through Sutton's work in the 1980s, drawing on the animal-learning Rescorla-Wagner model, and Q-learning arrived with Watkins in 1989. The second edition's own genealogy is explicit: the ideas were refined against neuroscience evidence in the 1990s, when the TD error was matched to dopamine neuron recordings, and against the practical demands that produced eligibility traces, Dyna, and the function approximation stability theory of the 2000s and 2010s.",
+      "theory_of_mind": "The authors model the reader as a builder who needs the problem stated exactly before algorithms make sense, so the book spends its first three chapters on definitions and notation rather than methods. Their model of the domain is that sequential decision making under uncertainty is one problem with one mathematical core, and that psychology, neuroscience, control theory, and computer science have been studying facets of the same structure. They assume intelligence is fundamentally about an agent improving behavior from evaluative feedback over time, and they write as if rigor about objectives matters more than benchmark performance, returning constantly to what quantity an algorithm actually estimates and under what conditions it provably converges.",
+      "cross_layer_veto": "Several results in this book veto designs elsewhere in an engine. The deadly triad vetoes any estimator that simultaneously generalizes with function approximation, bootstraps its targets, and trains off-policy, unless a named stabilizer is present. The policy-relativity of value functions vetoes comparing ratings computed under different policies or state representations as if they were the same quantity. Maximization bias vetoes reporting the best of many noisy estimates at face value. The Markov property vetoes blaming a model for errors that belong to an under-specified state. And the reward hypothesis vetoes objectives that cannot be written as a measurable scalar stream, because whatever is actually rewarded is what will be optimized."
+    }
+  ],
+  "universal_lens": "Any system that must act, observe outcomes, and improve without being told the right action is an instance of this template: define the state so the past is summarized, define one scalar signal that says what counts as good, estimate the long-run value of situations under the current way of acting, and improve the acting against those estimates while managing exploration, credit decay, and the stability hazards of learning from your own predictions. The template transfers intact to organizations, scientific programs, and personal skill acquisition, wherever feedback is evaluative, delayed, and entangled with the learner's own choices.",
+  "gsi_mapping": "The Institute takes the book as its foundations curriculum and its audit standard in one: the MDP formalism and reward hypothesis as the required shape of any stated objective, the deadly triad and maximization bias as standing checks on every estimator design, and the psychology and neuroscience parts as evidence that these are not mere algorithms but the best current quantitative account of how learning from reward works in brains. GSI's research program on credit assignment, state construction, and stable off-policy evaluation is a direct continuation of the frontiers this edition names.",
+  "gse_mapping": "The Edge engine is this book implemented on game telemetry: situations are states, team tendencies are policies, values are expected future scoring under a named policy, and projections are Bellman decompositions audited against realized Monte Carlo returns at game end. TD errors become the engine's surprise and review signal, n-step windows and trace decays set how credit flows to early decisions, double estimation disciplines every best-of ranking, and the deadly triad gates which estimator combinations may ship. The gain is not any single algorithm but the discipline that every number names its state, policy, objective, and stabilizer."
+}

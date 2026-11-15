@@ -1,0 +1,78 @@
+{
+  "book_id": "2ce5b96117657e4b",
+  "source_status": "COMPLETE",
+  "title": "EVENT_SOURCING_PATTERNS",
+  "file_name": "EVENT_SOURCING_PATTERNS.md",
+  "sha256": "2ce5b96117657e4bcc6262fdb1631594a5d0dcaa5df7b4d3481e75755e59ea84",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The event-sourcing pattern formalizes state as a deterministic functional over an ordered sequence of immutable facts. By enforcing strict append-only constraints and rejecting impossible transitions, the system constructs a mathematically rigorous causal manifold where all derived states are perfectly reproducible via temporal replay.",
+  "gsi_mapping": "In GSI, prediction-time features act as immutable priors locked at observation time. Settlement outcomes serve as narrowly-scoped completions rather than retroactive rewrites. This structure guarantees that Bayesian posterior updates remain fully auditable, preserving conformal calibration across historical reconstruction windows without silent data leakage.",
+  "gse_mapping": "GSE utilizes these primitives to model situational state-transitions. Game events are treated as create-only ledger entries. Replayable derivation allows the engine to reconstruct exact situational contexts from any historical point, ensuring that tactical inferences rely strictly on causally available information.",
+  "primitives": [
+    {
+      "primitive_id": "append_only_facts",
+      "name": "Immutable Fact Append Operator",
+      "verbatim_quote": "**Append-only facts.** A correction is a new fact with a later transaction time, never an UPDATE.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "t: Transaction time (ISO 8601 / SI seconds). F: Immutable fact vector.",
+      "assumptions": "Time flows monotonically; storage medium supports strict append operations without physical overwrite.",
+      "breakdown_regime": "Clock skew or retroactive database truncation breaks the monotonic ordering, rendering the causal chain unfalsifiable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to blockchain-style Merkle tree construction where each leaf is a timestamped game event.",
+        "source_operator": "append_only_facts",
+        "telemetry": "Hash-chain integrity verification rate."
+      }
+    },
+    {
+      "primitive_id": "replayable_derivation",
+      "name": "Deterministic State Replay Kernel",
+      "verbatim_quote": "The pattern, wherever it appears: **append immutable facts, derive state by replay, reject impossible facts loudly.** ## 2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S_t: System state at time t. E_{1..t}: Sequence of immutable events.",
+      "assumptions": "State transition function is purely deterministic and free of external side-effects during replay.",
+      "breakdown_regime": "Introduction of non-deterministic external dependencies (e.g., random seeds, network latency) during the fold operation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSE's situational reconstruction engine, folding event streams into current probability distributions.",
+        "source_operator": "replayable_derivation",
+        "telemetry": "Replay consistency delta between live and reconstructed states."
+      }
+    },
+    {
+      "primitive_id": "narrow_completion",
+      "name": "Narrowly-Scoped Completion Exception",
+      "verbatim_quote": "`recordPickSettlementSnapshot` later fills `settlementResult` and `settledAt` on the SAME row via `updateMany` — a one-time, narrowly-scoped *completion* (outcome arrives after prediction, there is nowhere else to put it), not a correction or a re-write of the prediction.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "P: Prediction vector (immutable). O: Outcome scalar. R: Row entity.",
+      "assumptions": "A single row entity can safely host both an immutable prior and a delayed, singular outcome realization.",
+      "breakdown_regime": "If the completion logic is abused to alter the original prediction vector P, epistemic leakage occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors the settlement phase in GSI markets where a locked market receives a final truth injection.",
+        "source_operator": "narrow_completion",
+        "telemetry": "Frequency of post-lock mutations outside the designated completion fields."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2ce5b96117657e4b_t0",
+      "think": "The provided excerpts establish a rigorous mathematical framework for handling temporal data in high-stakes environments. The core operator is the 'append-only facts' primitive, which dictates that the fundamental unit of persistence is an immutable event tagged with a monotonic transaction time. Mathematically, this transforms the database from a mutable store into a directed acyclic graph (DAG) of observations. Any correction to a previous state is not an overwrite but the introduction of a new node in the graph, preserving the history of the error itself. This leads directly to the 'replayable derivation' duality: if the base layer is strictly append-only, then the current state of the system is merely a projection—a deterministic fold operation—over the historical sequence. This ensures perfect reproducibility; given the same initial conditions and the exact sequence of events, the system must arrive at the identical state. However, reality introduces a necessary singularity: the arrival of terminal outcomes for previously open predictions. The 'narrowly-scoped completion' primitive handles this by allowing a highly constrained mutation. It permits the injection of a settlement result into an existing prediction row, explicitly categorizing this not as a correction of the prior belief, but as the closure of a temporal gap. The failure mode, explicitly warned against in the text, is the silent filtering of corrupt events or the fabrication of timestamps. If the system fails to 'reject impossible facts loudly,' the causal chain is broken, and the replayable derivation collapses into an unverifiable black box. Thus, the entire architecture relies on the strict enforcement of boundary conditions to maintain its mathematical purity.\n\nDeep epistemic analysis for EVENT_SOURCING_PATTERNS (2ce5b96117657e4b, domain=other, pages_read=3/3): Operator 'Immutable Fact Append Operator' (page 2, domain other) captures: **Append-only facts.** A correction is a new fact with a later transaction time, never an UPDATE. Assumptions: Time flows monotonically; storage medium supports strict append operations without physical overwrite. Breakdown regime: Clock skew or retroactive database truncation breaks the monotonic ordering, rendering the causal chain unfalsifiable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to blockchain-style Merkle tree construction where each leaf is a timestamped game event. Operator 'Deterministic State Replay Kernel' (page 1, domain other) captures: The pattern, wherever it appears: **append immutable facts, derive state by replay, reject impossible facts loudly.** ## 2. Assumptions: State transition function is purely deterministic and free of external side-effects during replay. Breakdown regime: Introduction of non-deterministic external dependencies (e.g., random seeds, network latency) during the fold operation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSE's situational reconstruction engine, folding event streams into current probability distributions. Operator 'Narrowly-Scoped Completion Exception' (page 2, domain other) captures: `recordPickSettlementSnapshot` later fills `settlementResult` and `settledAt` on the SAME row via `updateMany` — a one-time, narrowly-scoped *completion* (outcome arrives after prediction, there is nowhere else to put it), not a correction or a re-write of the prediction. Assumptions: A single row entity can safely host both an immutable prior and a delayed, singular outcome realization. Breakdown regime: If the completion logic is abused to alter the original prediction vector P, epistemic leakage occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors the settlement phase in GSI markets where a locked market receives a final truth injection. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for EVENT_SOURCING_PATTERNS (2ce5b96117657e4b, domain=other, pages_read=3/3): Operator 'Immutable Fact Append Operator' (page 2, domain other) captures: **Append-only facts.** A correction is a new fact with a later transaction time, never an UPDATE. Assumptions: Time flows monotonically; storage medium supports strict append operations without physical overwrite. Breakdown regime: Clock skew or retroactive database truncation breaks the monotonic ordering, rendering the causal chain unfalsifiable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to blockchain-style Merkle tree construction where each leaf is a timestamped game event. Operator 'Deterministic State Replay Kernel' (page 1, domain other) captures: The pattern, wherever it appears: **append immutable facts, derive state by replay, reject impossible facts loudly.** ## 2. Assumptions: State transition function is purely deterministic and free of external side-effects during replay. Breakdown regime: Introduction of non-deterministic external dependencies (e.g., random seeds, network latency) during the fold operation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSE's situational reconstruction engine, folding event streams into current probability distributions. Operator 'Narrowly-Scoped Completion Exception' (page 2, domain other) captures: `recordPickSettlementSnapshot` later fills `settlementResult` and `settledAt` on the SAME row via `updateMany` — a one-time, narrowly-scoped *completion* (outcome arrives after prediction, there is nowhere else to put it), not a correction or a re-write of the prediction. Assumptions: A single row entity can safely host both an immutable prior and a delayed, singular outcome realization. Breakdown regime: If the completion logic is abused to alter the original prediction vector P, epistemic leakage occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors the settlement phase in GSI markets where a locked market receives a final truth injection. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This doctrine traces its lineage to the foundational principles of Log-Structured Merge-trees and early distributed systems research emphasizing append-only logs for fault tolerance. It heavily borrows from the financial auditing concept of double-entry bookkeeping, where no entry is ever erased, only offset. In modern machine learning, it mirrors the strict separation between training data immutability and inference-time state updates, preventing data leakage and ensuring experimental reproducibility.",
+      "theory_of_mind": "From a theory of mind perspective, the system models two distinct actors: the Predictor and the Adjudicator. The Predictor operates under uncertainty, emitting immutable probability vectors locked at a specific transaction time. The Adjudicator operates ex-post, injecting ground truth via the narrow completion exception. The architecture assumes the Predictor might be fallible or even adversarial, hence the requirement to never update their original claim. Instead, the Adjudicator appends a new fact that supersedes the old in terms of resolution, while leaving the Predictor's original epistemic state fully visible for audit.",
+      "cross_layer_veto": "A critical cross-layer veto exists between the persistence layer and the application logic. The 'founder-gated' doctrine acts as a hard constraint, vetoing any attempt to use the elegance of event-sourcing as a justification for introducing new, unvetted tables. Furthermore, the veto against 'silent filtering' ensures that data quality issues (like NaN dates) do not leak into the derived state. If a corrupt event slips past the boundary, it poisons the replay kernel. Therefore, the validation layer must possess absolute authority to reject malformed inputs before they enter the immutable log, maintaining the anti-collinearity between raw ingestion and clean state derivation."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "303e2b4e913ee517",
+  "source_status": "COMPLETE",
+  "title": "1444-calibration-leverage-tradeoff-win-probability-models",
+  "file_name": "1444-calibration-leverage-tradeoff-win-probability-models.md",
+  "sha256": "303e2b4e913ee5173e2079be1b4346af379f733949e3597911737e05d47143b0",
+  "primary_domain": "math",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A dual-surface win-probability framework integrating exact martingale attribution with calibrated probabilistic reporting via Markov recursion and leverage indexing. Universal Lens: Rooted in 1444-calibration-leverage-tradeoff-win-probability-models (303e2b4e913ee517), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction and Bayesian calibration layers to validate WP outputs against empirical distributions, using marginal elimination and permutation diagnostics for robustness. GSI Mapping: Rooted in 1444-calibration-leverage-tradeoff-win-probability-models (303e2b4e913ee517), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes backward induction over acyclic state graphs to compute exact WP and leverage surfaces, enabling real-time tactical attribution and dynamic state transitions. GSE Mapping: Rooted in 1444-calibration-leverage-tradeoff-win-probability-models (303e2b4e913ee517), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "win_probability_surface",
+      "name": "Win Probability Surface",
+      "verbatim_quote": "WP for every state from one backward sweep over the acyclic transition graph — no iteration, nothing about winning fitted.",
+      "page": 1,
+      "latex": "V(s) = \\sum_{o} p_o(s) \\cdot V(s'_o)",
+      "symbol_and_unit_ledger": "{'V(s)': 'Win probability at state s, dimensionless', 'p_o(s)': 'Transition probability of outcome o from state s, dimensionless', \"s'_o\": 'Next state after outcome o, dimensionless'}",
+      "assumptions": "Markovian transitions, acyclic state graph, deterministic terminal conditions.",
+      "breakdown_regime": "When r ≤ 0 (win), w = 0 or b = 0 with r > 1 (loss), or (b = 0, r = 1) tie.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE’s exact martingale surface for WPA attribution and GSI’s calibrated surface for probabilistic reporting.",
+        "source_operator": "win_probability_surface",
+        "telemetry": "Mean signed one-ball WP change ≈ 0.00048 across 130,029 balls."
+      }
+    },
+    {
+      "primitive_id": "leverage_index",
+      "name": "Leverage Index",
+      "verbatim_quote": "2, conditional MAD of next-ball WP; baseball's leverage-index absolute-value convention).",
+      "page": 2,
+      "latex": "\\text{LI}(s) = \\sum_{o} p_o(s) |V(s'_o) - V(s)|",
+      "symbol_and_unit_ledger": "{'LI(s)': 'Leverage index at state s, dimensionless', 'V(s)': 'Win probability at state s, dimensionless', \"V(s'_o)\": 'Win probability at next state after outcome o, dimensionless'}",
+      "assumptions": "State-dependent swing computed via transition probabilities and win probability differences.",
+      "breakdown_regime": "At final overs or high-stakes moments where marginal impact is maximal.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE for identifying high-leverage plays and attributing WPA to actors.",
+        "source_operator": "leverage_index",
+        "telemetry": "Death-over mean LI = 1.59; final over LI = 2.67."
+      }
+    },
+    {
+      "primitive_id": "win_probability_added",
+      "name": "Win Probability Added",
+      "verbatim_quote": "Terminal: r≤0 win; w=0 or b=0 with r>1 loss; (b=0,r=1) tie valued 1/2.",
+      "page": 2,
+      "latex": "\\Delta V = V(s) - V(s')",
+      "symbol_and_unit_ledger": "{'ΔV': 'Change in win probability, dimensionless', 'V(s)': 'Win probability before action, dimensionless', \"V(s')\": 'Win probability after action, dimensionless'}",
+      "assumptions": "Zero-sum property holds across actions, WPA telescopes to final outcome.",
+      "breakdown_regime": "Per ball in a match, with attribution to player actions.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applied in GSE for real-time player performance attribution and GSI for downstream analytics.",
+        "source_operator": "win_probability_added",
+        "telemetry": "WPA telescopes to y - V(first ball) with machine precision."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "303e2b4e913ee517_t0",
+      "think": "The core duality lies between exact martingale win probability (V(s)) and calibrated reporting surfaces. The recursion V(s) = Σ_o p_o(s)·V(s'_o) ensures exactness but does not inherently calibrate. Calibration requires a fitted surface, e.g., logistic or XGBoost models, to align with empirical distributions. Leverage indexing (swing) measures sensitivity to outcomes, enabling attribution of impact. WPA quantifies contribution per action, enforcing zero-sum constraints. Failure modes include model drift (e.g., scoring-era shift) and misalignment between exact and calibrated surfaces. Empirical diagnostics such as permutation decomposition isolate heterogeneity from sequential dependencies. The two-surface architecture resolves this tradeoff by maintaining exactness for attribution and calibration for reporting.\n\nDeep epistemic analysis for 1444-calibration-leverage-tradeoff-win-probability-models (303e2b4e913ee517, domain=math, pages_read=4/4): Operator 'Win Probability Surface' (page 1, domain math) captures: WP for every state from one backward sweep over the acyclic transition graph — no iteration, nothing about winning fitted. Assumptions: Markovian transitions, acyclic state graph, deterministic terminal conditions. Breakdown regime: When r ≤ 0 (win), w = 0 or b = 0 with r > 1 (loss), or (b = 0, r = 1) tie. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s exact martingale surface for WPA attribution and GSI’s calibrated surface for probabilistic reporting. Operator 'Leverage Index' (page 2, domain math) captures: 2, conditional MAD of next-ball WP; baseball's leverage-index absolute-value convention). Assumptions: State-dependent swing computed via transition probabilities and win probability differences. Breakdown regime: At final overs or high-stakes moments where marginal impact is maximal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for identifying high-leverage plays and attributing WPA to actors. Operator 'Win Probability Added' (page 2, domain math) captures: Terminal: r≤0 win; w=0 or b=0 with r>1 loss; (b=0,r=1) tie valued 1/2. Assumptions: Zero-sum property holds across actions, WPA telescopes to final outcome. Breakdown regime: Per ball in a match, with attribution to player actions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applied in GSE for real-time player performance attribution and GSI for downstream analytics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1444-calibration-leverage-tradeoff-win-probability-models (303e2b4e913ee517, domain=math, pages_read=4/4): Operator 'Win Probability Surface' (page 1, domain math) captures: WP for every state from one backward sweep over the acyclic transition graph — no iteration, nothing about winning fitted. Assumptions: Markovian transitions, acyclic state graph, deterministic terminal conditions. Breakdown regime: When r ≤ 0 (win), w = 0 or b = 0 with r > 1 (loss), or (b = 0, r = 1) tie. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s exact martingale surface for WPA attribution and GSI’s calibrated surface for probabilistic reporting. Operator 'Leverage Index' (page 2, domain math) captures: 2, conditional MAD of next-ball WP; baseball's leverage-index absolute-value convention). Assumptions: State-dependent swing computed via transition probabilities and win probability differences. Breakdown regime: At final overs or high-stakes moments where marginal impact is maximal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for identifying high-leverage plays and attributing WPA to actors. Operator 'Win Probability Added' (page 2, domain math) captures: Terminal: r≤0 win; w=0 or b=0 with r>1 loss; (b=0,r=1) tie valued 1/2. Assumptions: Zero-sum property holds across actions, WPA telescopes to final outcome. Breakdown regime: Per ball in a match, with attribution to player actions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applied in GSE for real-time player performance attribution and GSI for downstream analytics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Markov decision processes and martingale theory, with extensions to sports modeling via win probability and leverage concepts from baseball and cricket. Retrocausal Genealogy: Rooted in 1444-calibration-leverage-tradeoff-win-probability-models (303e2b4e913ee517), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1444-calibration-leverage-tradeoff-win-probability-models (303e2b4e913ee517), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational actors with perfect information, yet incorporate stochasticity through transition probabilities. Decision-making is modeled via state transitions and outcome impacts, with WPA and leverage serving as proxies for strategic influence. Theory of Mind & Decision Maker Model: Rooted in 1444-calibration-leverage-tradeoff-win-probability-models (303e2b4e913ee517), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by separating exact computation (for WPA) from probabilistic fitting (for reporting). Leakage is mitigated via marginal elimination and permutation diagnostics that isolate game-level variance from momentum effects. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1444-calibration-leverage-tradeoff-win-probability-models (303e2b4e913ee517), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

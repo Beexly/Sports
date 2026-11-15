@@ -1,0 +1,78 @@
+{
+  "book_id": "0d49427d77f9befe",
+  "source_status": "COMPLETE",
+  "title": "bb4d5f238459",
+  "file_name": "bb4d5f238459.txt",
+  "sha256": "0d49427d77f9befe117aacc1150f3bebe8f7a94ca635d687abeeb66e6957267c",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Calibration maps forecast probabilities to empirical outcomes via isotonic regression, enabling probabilistic consistency in predictive models. Universal Lens: Rooted in bb4d5f238459 (0d49427d77f9befe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian calibration to refine confidence estimates into proper probabilistic forecasts, ensuring alignment between model outputs and realized binary outcomes. GSI Mapping: Rooted in bb4d5f238459 (0d49427d77f9befe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes calibrated probability states for dynamic decision-making, transitioning between belief states based on reliability curves and Brier decompositions. GSE Mapping: Rooted in bb4d5f238459 (0d49427d77f9befe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "isotonic_calibration",
+      "name": "Isotonic Calibration",
+      "verbatim_quote": "* * Contents: * - isotonicCalibration: non-parametric monotonic mapping (PAVA) — the gold * standard for recalibrating a monotone-but-miscalibrated score.",
+      "page": 1,
+      "latex": "\\hat{y} = \\text{argmin}_{\\mathbf{y}} \\sum_{i=1}^n (y_i - \\hat{y}_i)^2 \\quad \\text{s.t.} \\quad y_1 \\leq y_2 \\leq \\dots \\leq y_n",
+      "symbol_and_unit_ledger": "{'y_i': 'observed outcome in [0,1]', 'p_i': 'forecast probability in [0,1]', '\\\\hat{y}_i': 'calibrated probability'}",
+      "assumptions": "Monotonicity of forecast scores, finite sample size, binary outcomes.",
+      "breakdown_regime": "When forecast scores are non-monotonic or sample size is insufficient.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps forecast probability space to calibrated probability space via step-function transformation.",
+        "source_operator": "isotonic_calibration",
+        "telemetry": "Mean squared error between forecast and calibrated probabilities."
+      }
+    },
+    {
+      "primitive_id": "brier_decomposition",
+      "name": "Brier Score Decomposition",
+      "verbatim_quote": "* - brierDecomposition: Murphy's reliability / resolution / uncertainty split — * the rigorous way to read WHY a Brier score is what it is.",
+      "page": 1,
+      "latex": "\\text{Brier} = \\text{Reliability} - \\text{Resolution} + \\text{Uncertainty}",
+      "symbol_and_unit_ledger": "{'\\\\text{Brier}': 'dimensionless', '\\\\text{Reliability}': 'dimensionless', '\\\\text{Resolution}': 'dimensionless', '\\\\text{Uncertainty}': 'dimensionless'}",
+      "assumptions": "Binary classification, proper scoring rule application.",
+      "breakdown_regime": "When reliability exceeds resolution, indicating overconfidence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Decomposes Brier score into components reflecting forecasting accuracy, discrimination, and base rate.",
+        "source_operator": "brier_decomposition",
+        "telemetry": "Component-wise decomposition of Brier score for diagnostic analysis."
+      }
+    },
+    {
+      "primitive_id": "reliability_curve",
+      "name": "Reliability Curve",
+      "verbatim_quote": "* Pure PAVA: sort by forecast, then pool adjacent blocks that violate monotonicity * into their weighted-average outcome rate.",
+      "page": 1,
+      "latex": "\\text{Reliability}(p) = \\frac{1}{n_p} \\sum_{i: p_i = p} y_i",
+      "symbol_and_unit_ledger": "{'p': 'forecast probability in [0,1]', 'y_i': 'realized outcome in {0,1}', 'n_p': 'number of samples with forecast p'}",
+      "assumptions": "Bin-wise aggregation of forecast outcomes, sufficient sample per bin.",
+      "breakdown_regime": "Bins with zero samples or extreme imbalance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides empirical validation of forecast calibration through mean forecast vs observed rate comparison.",
+        "source_operator": "reliability_curve",
+        "telemetry": "Deviation of mean forecast from observed rate across bins."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0d49427d77f9befe_t0",
+      "think": "The core idea of isotonic calibration is to transform a sequence of forecast probabilities into a monotonically increasing calibrated probability sequence, preserving order but adjusting for miscalibration. This is achieved using Pool Adjacent Violators Algorithm (PAVA), which pools adjacent elements violating monotonicity into weighted averages. The resulting step function ensures that higher forecasts correspond to higher calibrated probabilities. Brier decomposition separates total forecast error into three components: reliability (how close forecasts are to observed rates), resolution (ability to distinguish between classes), and uncertainty (base rate of outcomes). These components provide diagnostics for improving forecast quality. Reliability curves visualize this relationship by plotting mean forecast against observed frequency within bins. Together, these primitives form a coherent framework for evaluating and refining probabilistic forecasts, ensuring they meet the standard of being both calibrated and informative.\n\nDeep epistemic analysis for bb4d5f238459 (0d49427d77f9befe, domain=other, pages_read=4/4): Operator 'Isotonic Calibration' (page 1, domain other) captures: * * Contents: * - isotonicCalibration: non-parametric monotonic mapping (PAVA) — the gold * standard for recalibrating a monotone-but-miscalibrated score. Assumptions: Monotonicity of forecast scores, finite sample size, binary outcomes. Breakdown regime: When forecast scores are non-monotonic or sample size is insufficient. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps forecast probability space to calibrated probability space via step-function transformation. Operator 'Brier Score Decomposition' (page 1, domain other) captures: * - brierDecomposition: Murphy's reliability / resolution / uncertainty split — * the rigorous way to read WHY a Brier score is what it is. Assumptions: Binary classification, proper scoring rule application. Breakdown regime: When reliability exceeds resolution, indicating overconfidence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Decomposes Brier score into components reflecting forecasting accuracy, discrimination, and base rate. Operator 'Reliability Curve' (page 1, domain other) captures: * Pure PAVA: sort by forecast, then pool adjacent blocks that violate monotonicity * into their weighted-average outcome rate. Assumptions: Bin-wise aggregation of forecast outcomes, sufficient sample per bin. Breakdown regime: Bins with zero samples or extreme imbalance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides empirical validation of forecast calibration through mean forecast vs observed rate comparison. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for bb4d5f238459 (0d49427d77f9befe, domain=other, pages_read=4/4): Operator 'Isotonic Calibration' (page 1, domain other) captures: * * Contents: * - isotonicCalibration: non-parametric monotonic mapping (PAVA) — the gold * standard for recalibrating a monotone-but-miscalibrated score. Assumptions: Monotonicity of forecast scores, finite sample size, binary outcomes. Breakdown regime: When forecast scores are non-monotonic or sample size is insufficient. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps forecast probability space to calibrated probability space via step-function transformation. Operator 'Brier Score Decomposition' (page 1, domain other) captures: * - brierDecomposition: Murphy's reliability / resolution / uncertainty split — * the rigorous way to read WHY a Brier score is what it is. Assumptions: Binary classification, proper scoring rule application. Breakdown regime: When reliability exceeds resolution, indicating overconfidence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Decomposes Brier score into components reflecting forecasting accuracy, discrimination, and base rate. Operator 'Reliability Curve' (page 1, domain other) captures: * Pure PAVA: sort by forecast, then pool adjacent blocks that violate monotonicity * into their weighted-average outcome rate. Assumptions: Bin-wise aggregation of forecast outcomes, sufficient sample per bin. Breakdown regime: Bins with zero samples or extreme imbalance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides empirical validation of forecast calibration through mean forecast vs observed rate comparison. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical calibration theory from the 1950s, refined by Murphy (1973) and extended through modern machine learning practices. PAVA originates from isotonic regression literature dating back to the 1960s. Retrocausal Genealogy: Rooted in bb4d5f238459 (0d49427d77f9befe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in bb4d5f238459 (0d49427d77f9befe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may exhibit overconfidence or underconfidence in their predictions. A calibrated system must detect such biases and adjust accordingly, distinguishing between noise and signal in forecast performance. Theory of Mind & Decision Maker Model: Rooted in bb4d5f238459 (0d49427d77f9befe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If calibration adjustments are applied without sufficient data, or if reliability curves show persistent misalignment, the system should avoid propagating unreliable probabilities into live scoring paths. Cross-Layer Veto & Anti-Leakage Check: Rooted in bb4d5f238459 (0d49427d77f9befe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in bb4d5f238459 (0d49427d77f9befe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

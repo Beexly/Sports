@@ -1,0 +1,95 @@
+{
+  "book_id": "6a474ce07d2f0ff0",
+  "source_status": "COMPLETE",
+  "title": "AWS_AMPLIFY_INVESTIGATION",
+  "file_name": "AWS_AMPLIFY_INVESTIGATION.md",
+  "sha256": "6a474ce07d2f0ff07617aeaebd5c5e81054b95db7bde9d4f14f13b415ecd5ca6",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'name': 'PreviewAppRollback', 'symbols': [{'symbol': 'P', 'unit': 'Probability'}, {'symbol': 'R', 'unit': 'Risk'}, {'symbol': 'V', 'unit': 'Value'}, {'symbol': 'T', 'unit': 'Time'}], 'equation': 'P(\\\\text{rollback successful} \\\\mid V, R, T) = f(V, R, T)', 'description': 'A universal lens quantifying the probability of safe rollback given value, risk, and time constraints.'}",
+  "gsi_mapping": "{'name': 'AdoptionDecisionProcess', 'bayesian_update': 'P(\\\\text{adoption} \\\\mid \\\\text{evidence}) \\\\propto P(\\\\text{evidence} \\\\mid \\\\text{adoption}) \\\\cdot P(\\\\text{adoption})', 'conformal_mapping': 'The decision matrix translates empirical observations into conformal predictive sets for migration risk.', 'inference_framework': 'Bayesian networks model the probabilistic dependencies between current hosting reality, cost pressure, and preview value.'}",
+  "gse_mapping": "{'name': 'PreviewSpikeWorkflow', 'situational_reasoning': 'State-transition automaton tracks the workflow: \"Draft\" → \"Test\" → \"Deploy Preview\" → \"Delete Preview\".', 'state_transition': '\\\\delta S_{\\\\text{workflow}} = \\\\{\\\\text{Draft}, \\\\text{Test}, \\\\text{Deploy Preview}, \\\\text{Delete Preview}\\\\}', 'reasoning_module': 'The system reasons about the feasibility of creating a preview app versus maintaining current production hosting.'}",
+  "primitives": [
+    {
+      "primitive_id": "amplify_ss_support",
+      "name": "AmplifySSRHostingSupport",
+      "verbatim_quote": "- Amplify supports SSR hosting for Next.js per official docs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes official AWS documentation accurately reflects current Amplify capabilities.",
+      "breakdown_regime": "Applies when SSR requirements are met; fails if unsupported frameworks are used.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the hosting support decision to a binary classification problem in GSI, where the outcome dictates whether a migration path exists.",
+        "source_operator": "amplify_ss_support",
+        "telemetry": "Measured by verifying the presence of SSR-specific configuration files in the repository."
+      }
+    },
+    {
+      "primitive_id": "edge_api_rejection",
+      "name": "EdgeApiRouteRejection",
+      "verbatim_quote": "- AWS docs note that Edge API routes are not supported by Amplify SSR hosting.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes Edge API routes are a critical SSR feature; their absence creates a hard constraint.",
+      "breakdown_regime": "Breaks down the SSR hosting model when Edge API features are required.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives a rejection kernel that filters out architectures relying on Edge APIs, aligning with GSE's state-transition logic for failed deployments.",
+        "source_operator": "edge_api_rejection",
+        "telemetry": "Monitored through API endpoint testing during the preview spike."
+      }
+    },
+    {
+      "primitive_id": "preview_rollback_guard",
+      "name": "PreviewRollbackGuard",
+      "verbatim_quote": "- Rollback: delete the preview app if one is ever created; do not alter current production host or DNS.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes rollback is idempotent and reversible; assumes current production infrastructure remains unchanged.",
+      "breakdown_regime": "Ensures zero drift between development and production environments upon cleanup.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the rollback action to a protective set in GSI, ensuring that any deployed preview does not leak into the permanent production state.",
+        "source_operator": "preview_rollback_guard",
+        "telemetry": "Validated by confirming that deletion commands only target preview-specific resources."
+      }
+    },
+    {
+      "primitive_id": "learning_artifact_tracking",
+      "name": "LearningArtifactTracking",
+      "verbatim_quote": "No-cost learning artifact: - `docs/personal/aws/AWS_LEARNING_TO_REPO_ACTIONS.md` tracks the Amplify preview mock.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that tracking artifacts are costless and sufficient for knowledge transfer.",
+      "breakdown_regime": "Operates under the regime where learning occurs without financial investment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Generates a derived kernel for continuous improvement, feeding back into the GSE workflow as new transition rules are established.",
+        "source_operator": "learning_artifact_tracking",
+        "telemetry": "Measured by the frequency of updates to the markdown file and the success rate of subsequent spikes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6a474ce07d2f0ff0_t0",
+      "think": "The investigation identifies four key sovereign primitives from the AWS Amplify documentation. These primitives form a minimal algebraic structure that captures the essential constraints and operations of the preview hosting process. Specifically, they represent the support for SSR, the rejection of certain API features, the rollback protocol, and the tracking of learning artifacts. This structure can be mapped onto a universal lens that quantifies the probability of successful rollback given risk, value, and time. In the GSI framework, these primitives enable a Bayesian decision process for adoption, while in the GSE context, they define a state-transition automaton for the preview spike workflow. The cross-layer veto condition ensures that no leakage occurs between the learning artifacts and the production environment.\n\nDeep epistemic analysis for AWS_AMPLIFY_INVESTIGATION (6a474ce07d2f0ff0, domain=other, pages_read=2/2): Operator 'AmplifySSRHostingSupport' (page 1, domain other) captures: - Amplify supports SSR hosting for Next.js per official docs. Assumptions: Assumes official AWS documentation accurately reflects current Amplify capabilities. Breakdown regime: Applies when SSR requirements are met; fails if unsupported frameworks are used. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the hosting support decision to a binary classification problem in GSI, where the outcome dictates whether a migration path exists. Operator 'EdgeApiRouteRejection' (page 1, domain other) captures: - AWS docs note that Edge API routes are not supported by Amplify SSR hosting. Assumptions: Assumes Edge API routes are a critical SSR feature; their absence creates a hard constraint. Breakdown regime: Breaks down the SSR hosting model when Edge API features are required. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives a rejection kernel that filters out architectures relying on Edge APIs, aligning with GSE's state-transition logic for failed deployments. Operator 'PreviewRollbackGuard' (page 1, domain other) captures: - Rollback: delete the preview app if one is ever created; do not alter current production host or DNS. Assumptions: Assumes rollback is idempotent and reversible; assumes current production infrastructure remains unchanged. Breakdown regime: Ensures zero drift between development and production environments upon cleanup. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the rollback action to a protective set in GSI, ensuring that any deployed preview does not leak into the permanent production state. Operator 'LearningArtifactTracking' (page 2, domain other) captures: No-cost learning artifact: - `docs/personal/aws/AWS_LEARNING_TO_REPO_ACTIONS.md` tracks the Amplify preview mock. Assumptions: Assumes that tracking artifacts are costless and sufficient for knowledge transfer. Breakdown regime: Operates under the regime where learning occurs without financial investment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Generates a derived kernel for continuous improvement, feeding back into the GSE workflow as new transition rules are established. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for AWS_AMPLIFY_INVESTIGATION (6a474ce07d2f0ff0, domain=other, pages_read=2/2): Operator 'AmplifySSRHostingSupport' (page 1, domain other) captures: - Amplify supports SSR hosting for Next.js per official docs. Assumptions: Assumes official AWS documentation accurately reflects current Amplify capabilities. Breakdown regime: Applies when SSR requirements are met; fails if unsupported frameworks are used. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the hosting support decision to a binary classification problem in GSI, where the outcome dictates whether a migration path exists. Operator 'EdgeApiRouteRejection' (page 1, domain other) captures: - AWS docs note that Edge API routes are not supported by Amplify SSR hosting. Assumptions: Assumes Edge API routes are a critical SSR feature; their absence creates a hard constraint. Breakdown regime: Breaks down the SSR hosting model when Edge API features are required. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives a rejection kernel that filters out architectures relying on Edge APIs, aligning with GSE's state-transition logic for failed deployments. Operator 'PreviewRollbackGuard' (page 1, domain other) captures: - Rollback: delete the preview app if one is ever created; do not alter current production host or DNS. Assumptions: Assumes rollback is idempotent and reversible; assumes current production infrastructure remains unchanged. Breakdown regime: Ensures zero drift between development and production environments upon cleanup. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the rollback action to a protective set in GSI, ensuring that any deployed preview does not leak into the permanent production state. Operator 'LearningArtifactTracking' (page 2, domain other) captures: No-cost learning artifact: - `docs/personal/aws/AWS_LEARNING_TO_REPO_ACTIONS.md` tracks the Amplify preview mock. Assumptions: Assumes that tracking artifacts are costless and sufficient for knowledge transfer. Breakdown regime: Operates under the regime where learning occurs without financial investment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Generates a derived kernel for continuous improvement, feeding back into the GSE workflow as new transition rules are established. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The primitives trace back to information theory and control systems, where rollback protocols were first formalized. They also draw from software engineering's version control practices and modern cloud architecture's immutable infrastructure principles. Retrocausal Genealogy: Rooted in AWS_AMPLIFY_INVESTIGATION (6a474ce07d2f0ff0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling the decision actor (the research team) reveals a preference for low-risk experimentation. The primitives reflect a cautious agent who seeks to avoid costly mistakes such as accidental DNS changes or backend migrations. Theory of Mind & Decision Maker Model: Rooted in AWS_AMPLIFY_INVESTIGATION (6a474ce07d2f0ff0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates within its own layer: the universal lens handles high-level decisions, GSI manages probabilistic evidence, and GSE governs workflow transitions. Leakage is prevented by the strict separation of preview deletion from production alterations. Cross-Layer Veto & Anti-Leakage Check: Rooted in AWS_AMPLIFY_INVESTIGATION (6a474ce07d2f0ff0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

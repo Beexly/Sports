@@ -1,0 +1,78 @@
+{
+  "book_id": "269e9bf5a10c4e48",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2003.11291v2",
+  "file_name": "arxiv_2003.11291v2.pdf",
+  "sha256": "269e9bf5a10c4e4817c13e850348c8108104792cbddb32c3c68d73f43ac66d6c",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified triplet network integrating Siamese single-object tracking and metric learning for joint motion prediction and affinity estimation. Universal Lens: Rooted in arxiv_2003.11291v2 (269e9bf5a10c4e48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over object identity states using compact discriminative features from UMA's multi-task learning framework. GSI Mapping: Rooted in arxiv_2003.11291v2 (269e9bf5a10c4e48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions via affine-invariant feature embeddings enabling robust tracking under occlusion and distractor interference. GSE Mapping: Rooted in arxiv_2003.11291v2 (269e9bf5a10c4e48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "unified_motion_affinity_model",
+      "name": "Unified Motion-Affinity Model",
+      "verbatim_quote": "In this paper, we propose a novel MOT framework that unifies object motion and affinity model into a single network, named UMA, in order to learn a compact feature that is discriminative for both object motion and affinity measure.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Objects exhibit consistent motion patterns; affinity is measurable through learned feature distances.",
+      "breakdown_regime": "When motion and affinity signals become decorrelated or when occlusions exceed model capacity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The UMA framework maps the dual tasks of motion prediction and affinity measurement onto a shared latent space via triplet loss, enabling isomorphic representation learning.",
+        "source_operator": "unified_motion_affinity_model",
+        "telemetry": "Tracking accuracy and feature discrimination score on MOT benchmarks."
+      }
+    },
+    {
+      "primitive_id": "triplet_metric_learning",
+      "name": "Triplet Metric Learning",
+      "verbatim_quote": "In particular, UMA integrates single object tracking and metric learning into a unified triplet network by means of multi-task learning.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Positive pairs (same identity) should have smaller feature distances than negative pairs (different identities).",
+      "breakdown_regime": "When intra-class variance exceeds inter-class separation in feature space.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The triplet loss induces a derived kernel in the feature space that encodes identity-aware similarity for affinity computation.",
+        "source_operator": "triplet_metric_learning",
+        "telemetry": "Mean average precision (mAP) on affinity ranking tasks."
+      }
+    },
+    {
+      "primitive_id": "end_to_end_training",
+      "name": "End-to-End Training Framework",
+      "verbatim_quote": "The proposed UMA can be easily trained end-to-end, and is elegant – requiring only one training stage.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Model parameters can be optimized jointly without cascading or alternating steps.",
+      "breakdown_regime": "When gradient flow becomes unstable or when task conflicts arise during backpropagation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "End-to-end training ensures that motion and affinity objectives are aligned through shared gradients in the unified architecture.",
+        "source_operator": "end_to_end_training",
+        "telemetry": "Training convergence speed and final validation loss."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "269e9bf5a10c4e48_t0",
+      "think": "The UMA framework addresses the inefficiency of traditional MOT pipelines where separate models handle motion and affinity. By embedding a Siamese tracker within a triplet network, it enables simultaneous optimization of both tasks. The key insight lies in leveraging metric learning to produce identity-discriminative features that serve dual roles: predicting future object locations and computing pairwise affinities. This dual-purpose feature space reduces redundancy in computation and memory usage, aligning with principles of minimal sufficient statistics. The use of batch-hard triplet loss enforces intra-class compactness and inter-class separability, enhancing robustness against distractors and occlusions. The resulting model operates under a unified architecture, simplifying training dynamics and improving generalization across MOT benchmarks.\n\nDeep epistemic analysis for arxiv_2003.11291v2 (269e9bf5a10c4e48, domain=other, pages_read=10/10): Operator 'Unified Motion-Affinity Model' (page 1, domain other) captures: In this paper, we propose a novel MOT framework that unifies object motion and affinity model into a single network, named UMA, in order to learn a compact feature that is discriminative for both object motion and affinity measure. Assumptions: Objects exhibit consistent motion patterns; affinity is measurable through learned feature distances. Breakdown regime: When motion and affinity signals become decorrelated or when occlusions exceed model capacity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The UMA framework maps the dual tasks of motion prediction and affinity measurement onto a shared latent space via triplet loss, enabling isomorphic representation learning. Operator 'Triplet Metric Learning' (page 1, domain other) captures: In particular, UMA integrates single object tracking and metric learning into a unified triplet network by means of multi-task learning. Assumptions: Positive pairs (same identity) should have smaller feature distances than negative pairs (different identities). Breakdown regime: When intra-class variance exceeds inter-class separation in feature space. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The triplet loss induces a derived kernel in the feature space that encodes identity-aware similarity for affinity computation. Operator 'End-to-End Training Framework' (page 1, domain other) captures: The proposed UMA can be easily trained end-to-end, and is elegant – requiring only one training stage. Assumptions: Model parameters can be optimized jointly without cascading or alternating steps. Breakdown regime: When gradient flow becomes unstable or when task conflicts arise during backpropagation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): End-to-end training ensures that motion and affinity objectives are aligned through shared gradients in the unified architecture. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_2003.11291v2 (269e9bf5a10c4e48, domain=other, pages_read=10/10): Operator 'Unified Motion-Affinity Model' (page 1, domain other) captures: In this paper, we propose a novel MOT framework that unifies object motion and affinity model into a single network, named UMA, in order to learn a compact feature that is discriminative for both object motion and affinity measure. Assumptions: Objects exhibit consistent motion patterns; affinity is measurable through learned feature distances. Breakdown regime: When motion and affinity signals become decorrelated or when occlusions exceed model capacity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The UMA framework maps the dual tasks of motion prediction and affinity measurement onto a shared latent space via triplet loss, enabling isomorphic representation learning. Operator 'Triplet Metric Learning' (page 1, domain other) captures: In particular, UMA integrates single object tracking and metric learning into a unified triplet network by means of multi-task learning. Assumptions: Positive pairs (same identity) should have smaller feature distances than negative pairs (different identities). Breakdown regime: When intra-class variance exceeds inter-class separation in feature space. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The triplet loss induces a derived kernel in the feature space that encodes identity-aware similarity for affinity computation. Operator 'End-to-End Training Framework' (page 1, domain other) captures: The proposed UMA can be easily trained end-to-end, and is elegant – requiring only one training stage. Assumptions: Model parameters can be optimized jointly without cascading or alternating steps. Breakdown regime: When gradient flow becomes unstable or when task conflicts arise during backpropagation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): End-to-end training ensures that motion and affinity objectives are aligned through shared gradients in the unified architecture. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical tracking-by-detection paradigms and Siamese network architectures, UMA builds upon prior work in online SOT and metric learning, extending earlier approaches by integrating them into a single coherent framework. Retrocausal Genealogy: Rooted in arxiv_2003.11291v2 (269e9bf5a10c4e48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in arxiv_2003.11291v2 (269e9bf5a10c4e48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include occluding objects and appearance-similar distractors that attempt to mislead the affinity model. The system must maintain stable identity associations despite such adversarial inputs, relying on learned discriminative features to distinguish true matches from spurious correlations. Theory of Mind & Decision Maker Model: Rooted in arxiv_2003.11291v2 (269e9bf5a10c4e48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by enforcing distinct learning paths for motion and affinity within the triplet structure. Leakage between layers is mitigated through careful architectural design and loss function formulation, preventing degradation from conflicting task signals. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_2003.11291v2 (269e9bf5a10c4e48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -135,7 +135,7 @@ export default function ResearchPortalPage(): JSX.Element {
         </div>
 
         {/* Verified On-Field Process Summary */}
-        <div className="mt-14 rounded-2xl border border-mineral/30 bg-gradient-to-br from-ion-2/30 via-ion-2 to-ion-2 p-6 sm:p-10 shadow-2xl">
+        <div className="mt-14 rounded-2xl border border-mineral/30 bg-gradient-to-br from-eclipse via-obsidian to-carbon p-6 sm:p-10 shadow-2xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-mineral/40 bg-eclipse/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-ion-1">
               Public Settlement Ledger · 2026 NFL Season
@@ -219,7 +219,7 @@ export default function ResearchPortalPage(): JSX.Element {
         </div>
 
         {/* Contact & Syndicate Inquiries */}
-        <div className="mt-16 rounded-2xl border border-verify/40/30 bg-gradient-to-r from-verify/40 via-ion-2 to-[#0c0e14] p-8 sm:p-10">
+        <div className="mt-16 rounded-2xl border border-verify/30 bg-gradient-to-r from-verify/20 via-eclipse to-[#0c0e14] p-8 sm:p-10">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-verify">

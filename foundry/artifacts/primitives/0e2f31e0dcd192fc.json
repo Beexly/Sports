@@ -1,0 +1,78 @@
+{
+  "book_id": "0e2f31e0dcd192fc",
+  "source_status": "COMPLETE",
+  "title": "source-acquisition-mesh",
+  "file_name": "source-acquisition-mesh.md",
+  "sha256": "0e2f31e0dcd192fc60d5eba69ba747b6d1230911ebd93e2061a9e24eea14f03d",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The Source Acquisition Mesh (SAM) defines a six-tiered source hierarchy with probabilistic reliability scoring, health monitoring, and adaptive retirement policies governing intelligence ingestion. Universal Lens: Rooted in source-acquisition-mesh (0e2f31e0dcd192fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian belief updating on source credibility scores, conformal prediction intervals for confidence bounds, and Markovian transition models for source tier evolution based on accuracy feedback. GSI Mapping: Rooted in source-acquisition-mesh (0e2f31e0dcd192fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies temporal logic state machines to manage source health transitions, situational awareness engines to assess evidence sufficiency, and dynamic policy graphs for pick validation against source tier constraints. GSE Mapping: Rooted in source-acquisition-mesh (0e2f31e0dcd192fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "source_reliability_score",
+      "name": "Source Reliability Score",
+      "verbatim_quote": "The quality, freshness, and reliability of that source determines what claims the system can make, at what tier, and with what confidence.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_s': 'reliability score of source s, dimensionless [0, 100]'}",
+      "assumptions": "R_s is a deterministic function of historical accuracy and freshness metrics.",
+      "breakdown_regime": "R_s < 30 triggers immediate suspension.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "R_s maps to GSI's Bayesian prior for evidence weighting and GSE's state transition thresholds.",
+        "source_operator": "source_reliability_score",
+        "telemetry": "Accuracy rate vs. settlement outcomes over 90-day window."
+      }
+    },
+    {
+      "primitive_id": "source_health_status",
+      "name": "Source Health Status",
+      "verbatim_quote": "### Tier 3 Admission (Trusted Secondary) | Criterion | Requir",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_s': 'health status of source s, categorical {HEALTHY, DEGRADED, STALE, UNAVAILABLE, SUSPENDED}'}",
+      "assumptions": "Health status evolves deterministically based on fetch success/failure counts.",
+      "breakdown_regime": "H_s = UNAVAILABLE after 6 consecutive failures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "H_s is isomorphic to GSE's operational readiness state machine and GSI's evidence validity filter.",
+        "source_operator": "source_health_status",
+        "telemetry": "Fetch latency, error frequency, and uptime duration."
+      }
+    },
+    {
+      "primitive_id": "tier_admission_policy",
+      "name": "Tier Admission Policy",
+      "verbatim_quote": "### Tier 3 Admission (Trusted Secondary) | Criterion | Requir",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_s': 'tier assignment of source s, categorical {1, 2, 3, 4, 5, 6}', 'A_s': 'admission criteria satisfaction vector for source s'}",
+      "assumptions": "Each tier T_s has fixed eligibility requirements encoded in A_s.",
+      "breakdown_regime": "T_s = 3 only if A_s meets minimum track record and access criteria.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "T_s drives GSI's hierarchical Bayesian model structure and GSE's decision tree branching logic.",
+        "source_operator": "tier_admission_policy",
+        "telemetry": "Compliance check against documented admission criteria."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0e2f31e0dcd192fc_t0",
+      "think": "The SAM operates as a layered probabilistic inference engine where each source contributes a reliability-weighted signal to downstream intelligence. The core duality lies between static source metadata (e.g., license status, update frequency) and dynamic performance indicators (accuracy, freshness). Failure modes emerge from data poisoning (unregistered sources), degradation (stale fetches), and systemic collapse (retired sources). The mesh enforces a feedback loop via settlement outcomes that recalibrate source scores, creating a self-correcting system. Each source's tier assignment acts as a conditional probability gate, filtering information flow according to its trustworthiness. The health status serves as a real-time observability layer, enabling GSE to dynamically adjust reasoning paths while GSI maintains calibrated uncertainty estimates across all tiers.\n\nDeep epistemic analysis for source-acquisition-mesh (0e2f31e0dcd192fc, domain=other, pages_read=5/5): Operator 'Source Reliability Score' (page 1, domain other) captures: The quality, freshness, and reliability of that source determines what claims the system can make, at what tier, and with what confidence. Assumptions: R_s is a deterministic function of historical accuracy and freshness metrics. Breakdown regime: R_s < 30 triggers immediate suspension. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): R_s maps to GSI's Bayesian prior for evidence weighting and GSE's state transition thresholds. Operator 'Source Health Status' (page 2, domain other) captures: ### Tier 3 Admission (Trusted Secondary) | Criterion | Requir Assumptions: Health status evolves deterministically based on fetch success/failure counts. Breakdown regime: H_s = UNAVAILABLE after 6 consecutive failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): H_s is isomorphic to GSE's operational readiness state machine and GSI's evidence validity filter. Operator 'Tier Admission Policy' (page 2, domain other) captures: ### Tier 3 Admission (Trusted Secondary) | Criterion | Requir Assumptions: Each tier T_s has fixed eligibility requirements encoded in A_s. Breakdown regime: T_s = 3 only if A_s meets minimum track record and access criteria. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): T_s drives GSI's hierarchical Bayesian model structure and GSE's decision tree branching logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for source-acquisition-mesh (0e2f31e0dcd192fc, domain=other, pages_read=5/5): Operator 'Source Reliability Score' (page 1, domain other) captures: The quality, freshness, and reliability of that source determines what claims the system can make, at what tier, and with what confidence. Assumptions: R_s is a deterministic function of historical accuracy and freshness metrics. Breakdown regime: R_s < 30 triggers immediate suspension. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): R_s maps to GSI's Bayesian prior for evidence weighting and GSE's state transition thresholds. Operator 'Source Health Status' (page 2, domain other) captures: ### Tier 3 Admission (Trusted Secondary) | Criterion | Requir Assumptions: Health status evolves deterministically based on fetch success/failure counts. Breakdown regime: H_s = UNAVAILABLE after 6 consecutive failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): H_s is isomorphic to GSE's operational readiness state machine and GSI's evidence validity filter. Operator 'Tier Admission Policy' (page 2, domain other) captures: ### Tier 3 Admission (Trusted Secondary) | Criterion | Requir Assumptions: Each tier T_s has fixed eligibility requirements encoded in A_s. Breakdown regime: T_s = 3 only if A_s meets minimum track record and access criteria. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): T_s drives GSI's hierarchical Bayesian model structure and GSE's decision tree branching logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and Bayesian networks, evolving from Shannon's communication model and Dempster-Shafer theory into modern probabilistic databases and knowledge graphs. Retrocausal Genealogy: Rooted in source-acquisition-mesh (0e2f31e0dcd192fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in source-acquisition-mesh (0e2f31e0dcd192fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial data sources seeking to manipulate outcomes, and internal system components that enforce integrity constraints. Decision actors are the intelligence consumers who must balance speed and accuracy under bounded rationality. Theory of Mind & Decision Maker Model: Rooted in source-acquisition-mesh (0e2f31e0dcd192fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no single source can dominate multiple layers simultaneously. Leakage veto prevents Tier 1 evidence from being overridden by lower-tier signals without explicit override protocols. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-acquisition-mesh (0e2f31e0dcd192fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-acquisition-mesh (0e2f31e0dcd192fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

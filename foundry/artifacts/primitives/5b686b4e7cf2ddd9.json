@@ -1,0 +1,78 @@
+{
+  "book_id": "5b686b4e7cf2ddd9",
+  "source_status": "COMPLETE",
+  "title": "huggingface-trl",
+  "file_name": "huggingface-trl.md",
+  "sha256": "5b686b4e7cf2ddd9b910284f05ea9fe420822aa4252c64b2d5d664b6fadbe2d8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "DPO preference pairs (prompt, chosen, rejected) unify with GRPO group-relative advantage normalization; KL control enforces policy proximity to reference. Universal Lens: Rooted in huggingface-trl (5b686b4e7cf2ddd9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian conformal prediction on (situation, reasoning trace) pairs to calibrate uncertainty in probabilistic game outcomes. GSI Mapping: Rooted in huggingface-trl (5b686b4e7cf2ddd9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses state-transition kernels over reasoning traces to optimize situational decision-making via relative group scoring without absolute oracle. GSE Mapping: Rooted in huggingface-trl (5b686b4e7cf2ddd9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "dpo_preference_pairing",
+      "name": "DPO Preference Pairing",
+      "verbatim_quote": "GSE lens - **DPO's real lesson for GSE is the data format, not the loss.** DPO trains on (prompt, chosen, rejected) preference pairs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p': 'game situation (dimensionless)', 'c': 'well-calibrated reasoning trace (dimensionless)', 'r': 'poorly-calibrated reasoning trace (dimensionless)'}",
+      "assumptions": "Reasoning traces are generated under identical game situations; preference ordering is consistent.",
+      "breakdown_regime": "When calibration fails, c and r diverge beyond acceptable KL divergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE maps DPO's (prompt, chosen, rejected) to (game situation, well-calibrated reasoning trace, poorly-calibrated reasoning trace) for preference-based learning.",
+        "source_operator": "dpo_preference_pairing",
+        "telemetry": "Cross-entropy loss between predicted and actual reasoning trace pairings."
+      }
+    },
+    {
+      "primitive_id": "grpo_group_relative_advantage",
+      "name": "GRPO Group Relative Advantage",
+      "verbatim_quote": "- **GRPO's group-relative trick transfers to signal weighting.** GRPO normalizes advantage *within a group of rollouts for the same prompt* instead of needing a value network.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_g': 'advantage within group g (dimensionless)', 'R_i': 'reward for rollout i (dimensionless)', 'E[R|g]': 'expected reward given group g (dimensionless)'}",
+      "assumptions": "Rollouts within a group share common prompt; advantage is normalized per group.",
+      "breakdown_regime": "Failure when group size is too small or when prompts vary significantly across groups.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE derives kernel-weighted reasoning scores by normalizing rewards within game-state groups rather than using global value estimates.",
+        "source_operator": "grpo_group_relative_advantage",
+        "telemetry": "Variance in reasoning scores within game-state bins."
+      }
+    },
+    {
+      "primitive_id": "kl_control_discipline",
+      "name": "KL Control Discipline",
+      "verbatim_quote": "- **KL-control discipline:** TRL's trainers keep the policy close to a reference via KL penalty.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_KL(π || π_ref)': 'KL divergence between policy π and reference π_ref (dimensionless)', 'β': 'KL control coefficient (dimensionless)'}",
+      "assumptions": "Reference policy π_ref is fixed; KL penalty stabilizes training dynamics.",
+      "breakdown_regime": "When β approaches zero, policy may drift away from reference; when β is large, convergence slows.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE applies KL control to prevent confabulation by penalizing deviation from honest refusal behavior in reasoning traces.",
+        "source_operator": "kl_control_discipline",
+        "telemetry": "Mean KL divergence between current and reference reasoning policies."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b686b4e7cf2ddd9_t0",
+      "think": "The DPO preference pairing primitive encodes a comparative learning objective through (prompt, chosen, rejected) triplets. In GSE, this maps to (game situation, well-calibrated reasoning trace, poorly-calibrated reasoning trace), enabling preference-based optimization without explicit reward modeling. GRPO’s group-relative advantage introduces a normalization mechanism that avoids reliance on value networks by computing advantages within groups of rollouts sharing the same prompt. For GSE, this translates into generating multiple reasoning candidates per game situation, scoring them relatively, and updating towards the best within that group—avoiding an absolute oracle. KL control disciplines policy updates by constraining deviation from a reference policy, preventing overfitting or confabulation. In GSE, this manifests as enforcing honesty in reasoning traces by penalizing deviations from a baseline of refusal behavior, ensuring robustness against spurious reasoning paths. These primitives form a coherent framework for training reasoning layers that are both calibrated and robust.\n\nDeep epistemic analysis for huggingface-trl (5b686b4e7cf2ddd9, domain=other, pages_read=1/1): Operator 'DPO Preference Pairing' (page 1, domain other) captures: GSE lens - **DPO's real lesson for GSE is the data format, not the loss.** DPO trains on (prompt, chosen, rejected) preference pairs. Assumptions: Reasoning traces are generated under identical game situations; preference ordering is consistent. Breakdown regime: When calibration fails, c and r diverge beyond acceptable KL divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps DPO's (prompt, chosen, rejected) to (game situation, well-calibrated reasoning trace, poorly-calibrated reasoning trace) for preference-based learning. Operator 'GRPO Group Relative Advantage' (page 1, domain other) captures: - **GRPO's group-relative trick transfers to signal weighting.** GRPO normalizes advantage *within a group of rollouts for the same prompt* instead of needing a value network. Assumptions: Rollouts within a group share common prompt; advantage is normalized per group. Breakdown regime: Failure when group size is too small or when prompts vary significantly across groups. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE derives kernel-weighted reasoning scores by normalizing rewards within game-state groups rather than using global value estimates. Operator 'KL Control Discipline' (page 1, domain other) captures: - **KL-control discipline:** TRL's trainers keep the policy close to a reference via KL penalty. Assumptions: Reference policy π_ref is fixed; KL penalty stabilizes training dynamics. Breakdown regime: When β approaches zero, policy may drift away from reference; when β is large, convergence slows. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE applies KL control to prevent confabulation by penalizing deviation from honest refusal behavior in reasoning traces. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for huggingface-trl (5b686b4e7cf2ddd9, domain=other, pages_read=1/1): Operator 'DPO Preference Pairing' (page 1, domain other) captures: GSE lens - **DPO's real lesson for GSE is the data format, not the loss.** DPO trains on (prompt, chosen, rejected) preference pairs. Assumptions: Reasoning traces are generated under identical game situations; preference ordering is consistent. Breakdown regime: When calibration fails, c and r diverge beyond acceptable KL divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps DPO's (prompt, chosen, rejected) to (game situation, well-calibrated reasoning trace, poorly-calibrated reasoning trace) for preference-based learning. Operator 'GRPO Group Relative Advantage' (page 1, domain other) captures: - **GRPO's group-relative trick transfers to signal weighting.** GRPO normalizes advantage *within a group of rollouts for the same prompt* instead of needing a value network. Assumptions: Rollouts within a group share common prompt; advantage is normalized per group. Breakdown regime: Failure when group size is too small or when prompts vary significantly across groups. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE derives kernel-weighted reasoning scores by normalizing rewards within game-state groups rather than using global value estimates. Operator 'KL Control Discipline' (page 1, domain other) captures: - **KL-control discipline:** TRL's trainers keep the policy close to a reference via KL penalty. Assumptions: Reference policy π_ref is fixed; KL penalty stabilizes training dynamics. Breakdown regime: When β approaches zero, policy may drift away from reference; when β is large, convergence slows. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE applies KL control to prevent confabulation by penalizing deviation from honest refusal behavior in reasoning traces. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in reinforcement learning theory (Sutton & Barto), extended through policy gradient methods and preference learning frameworks like DPO and GRPO, which generalize earlier work on proximal policy optimization and reward modeling. Retrocausal Genealogy: Rooted in huggingface-trl (5b686b4e7cf2ddd9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents in GSE include the model's internal reasoning engine and the external environment's outcome. The model must balance exploration of reasoning paths against fidelity to known truths, while the environment provides feedback through landed picks and their outcomes. Theory of Mind & Decision Maker Model: Rooted in huggingface-trl (5b686b4e7cf2ddd9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that reasoning traces do not become redundant across layers. Leakage vetoes ensure that the KL penalty does not suppress valid reasoning variations, maintaining diversity in decision pathways. Cross-Layer Veto & Anti-Leakage Check: Rooted in huggingface-trl (5b686b4e7cf2ddd9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

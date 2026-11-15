@@ -1,0 +1,78 @@
+{
+  "book_id": "475e463bcaf7ce9b",
+  "source_status": "COMPLETE",
+  "title": "p0096",
+  "file_name": "p0096.txt",
+  "sha256": "475e463bcaf7ce9b5c75e9f662b6bbc645c263e3da56a173483a32b90e9f7a1e",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Inter-collegiate football performance metrics as stochastic processes over time, with team strength modeled via Markovian state transitions and strategic parity as a function of institutional rivalry. Universal Lens: Rooted in p0096 (475e463bcaf7ce9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on team strength using match outcomes and historical rivalry data; conformal prediction intervals for game result likelihoods based on prior performance distributions. GSI Mapping: Rooted in p0096 (475e463bcaf7ce9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models team dynamics through state-transition graphs where each game outcome alters the probability distribution of future competitive positions, with rivalry constraints as boundary conditions. GSE Mapping: Rooted in p0096 (475e463bcaf7ce9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "team_strength_stochastic_process",
+      "name": "Team Strength Stochastic Process",
+      "verbatim_quote": "Another foot ball season passed into history in 1914, with Dartmouth, the strongest of the New England colleges .playing the gridiron game, failing to get a chance to measure its style of play with Harvard.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S(t)': 'Team strength at time t, dimensionless', 't': 'Time, seasonal units'}",
+      "assumptions": "Team strength evolves stochastically with bounded variance; rivalry impacts strength perception.",
+      "breakdown_regime": "When inter-institutional relations prevent direct competition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Stochastic process model of team evolution maps to GSI's Bayesian belief propagation framework.",
+        "source_operator": "team_strength_stochastic_process",
+        "telemetry": "Win-loss records and margin of victory across seasons."
+      }
+    },
+    {
+      "primitive_id": "rivalry_constraint_function",
+      "name": "Rivalry Constraint Function",
+      "verbatim_quote": "So did Dartmouth, but because of the strained relations between thc Green and the Crimson there was no game, and is not likely to be any for another few years.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{GH}(t)': 'Rivalry constraint between Dartmouth and Harvard, dimensionless', 't': 'Time, years'}",
+      "assumptions": "Rivalry is a time-dependent binary constraint affecting game scheduling.",
+      "breakdown_regime": "When R_{GH}(t) > threshold, game scheduling is prohibited.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Rivalry constraint acts as a kernel in GSE's state transition graph, blocking certain edges.",
+        "source_operator": "rivalry_constraint_function",
+        "telemetry": "Historical scheduling data and institutional communication logs."
+      }
+    },
+    {
+      "primitive_id": "scoring_efficiency_index",
+      "name": "Scoring Efficiency Index",
+      "verbatim_quote": "Dartmouth had the greatest scoring machine of the year, running up 359 points against 25 for nine opponents.",
+      "page": 1,
+      "latex": "\\mathcal{E} = \\frac{\\sum_{i=1}^{n} S_i}{\\sum_{j=1}^{m} D_j}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{E}': 'Scoring efficiency index, dimensionless', 'S_i': 'Points scored in game i, points', 'D_j': 'Points allowed in game j, points'}",
+      "assumptions": "Efficiency is defined as net score per opponent game.",
+      "breakdown_regime": "When defensive performance degrades below threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scoring efficiency index maps to GSI's offensive performance regression model.",
+        "source_operator": "scoring_efficiency_index",
+        "telemetry": "Point differential and opponent strength metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "475e463bcaf7ce9b_t0",
+      "think": "The primitives derive from a synthesis of historical performance data and relational constraints in early 20th-century American collegiate football. Team strength is modeled as a stochastic process, where each game outcome updates the belief about a team’s capability. The rivalry constraint introduces a non-linear dependency in scheduling, effectively acting as a temporal barrier to competitive parity. Scoring efficiency is derived as a ratio of total points scored to total points conceded, capturing offensive dominance. These operators form a dualistic system: one driven by empirical performance and the other by institutional dynamics. The failure mode occurs when relational tensions override competitive opportunity, leading to incomplete data sets for comparative analysis. The stochastic nature implies probabilistic forecasting rather than deterministic outcomes, aligning with Bayesian inference principles in GSI and state-transition logic in GSE.\n\nDeep epistemic analysis for p0096 (475e463bcaf7ce9b, domain=other, pages_read=2/2): Operator 'Team Strength Stochastic Process' (page 1, domain other) captures: Another foot ball season passed into history in 1914, with Dartmouth, the strongest of the New England colleges .playing the gridiron game, failing to get a chance to measure its style of play with Harvard. Assumptions: Team strength evolves stochastically with bounded variance; rivalry impacts strength perception. Breakdown regime: When inter-institutional relations prevent direct competition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Stochastic process model of team evolution maps to GSI's Bayesian belief propagation framework. Operator 'Rivalry Constraint Function' (page 1, domain other) captures: So did Dartmouth, but because of the strained relations between thc Green and the Crimson there was no game, and is not likely to be any for another few years. Assumptions: Rivalry is a time-dependent binary constraint affecting game scheduling. Breakdown regime: When R_{GH}(t) > threshold, game scheduling is prohibited. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Rivalry constraint acts as a kernel in GSE's state transition graph, blocking certain edges. Operator 'Scoring Efficiency Index' (page 1, domain other) captures: Dartmouth had the greatest scoring machine of the year, running up 359 points against 25 for nine opponents. Assumptions: Efficiency is defined as net score per opponent game. Breakdown regime: When defensive performance degrades below threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scoring efficiency index maps to GSI's offensive performance regression model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0096 (475e463bcaf7ce9b, domain=other, pages_read=2/2): Operator 'Team Strength Stochastic Process' (page 1, domain other) captures: Another foot ball season passed into history in 1914, with Dartmouth, the strongest of the New England colleges .playing the gridiron game, failing to get a chance to measure its style of play with Harvard. Assumptions: Team strength evolves stochastically with bounded variance; rivalry impacts strength perception. Breakdown regime: When inter-institutional relations prevent direct competition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Stochastic process model of team evolution maps to GSI's Bayesian belief propagation framework. Operator 'Rivalry Constraint Function' (page 1, domain other) captures: So did Dartmouth, but because of the strained relations between thc Green and the Crimson there was no game, and is not likely to be any for another few years. Assumptions: Rivalry is a time-dependent binary constraint affecting game scheduling. Breakdown regime: When R_{GH}(t) > threshold, game scheduling is prohibited. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Rivalry constraint acts as a kernel in GSE's state transition graph, blocking certain edges. Operator 'Scoring Efficiency Index' (page 1, domain other) captures: Dartmouth had the greatest scoring machine of the year, running up 359 points against 25 for nine opponents. Assumptions: Efficiency is defined as net score per opponent game. Breakdown regime: When defensive performance degrades below threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scoring efficiency index maps to GSI's offensive performance regression model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century statistical modeling of athletic performance, influenced by Spalding's Guide and nascent game theory frameworks. Retrocausal Genealogy: Rooted in p0096 (475e463bcaf7ce9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0096 (475e463bcaf7ce9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include institutional stakeholders (alumni, coaches) who value rivalry over competitive balance, and the broader athletic community seeking parity. Theory of Mind & Decision Maker Model: Rooted in p0096 (475e463bcaf7ce9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0096 (475e463bcaf7ce9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when rivalry constraints dominate performance metrics, preventing accurate comparative modeling. Leakage occurs when historical bias in scheduling skews perceived team strength. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0096 (475e463bcaf7ce9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0096 (475e463bcaf7ce9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

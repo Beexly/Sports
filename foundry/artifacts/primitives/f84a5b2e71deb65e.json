@@ -1,0 +1,78 @@
+{
+  "book_id": "f84a5b2e71deb65e",
+  "source_status": "COMPLETE",
+  "title": "CAPABILITY_RECOVERY_MATRIX",
+  "file_name": "CAPABILITY_RECOVERY_MATRIX.md",
+  "sha256": "f84a5b2e71deb65e592409188589ae2c01753fec1508cc0dc6b1bc645f8553c2",
+  "primary_domain": "physiology",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Capability recovery as a Bayesian belief update over architectural fidelity, where verified implementations supersede speculative blueprints through empirical validation. Universal Lens: Rooted in CAPABILITY_RECOVERY_MATRIX (f84a5b2e71deb65e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers system robustness via conformal predictive intervals on agent behavior, using observed telemetry to calibrate policy enforcement and detect deviation from safe defaults. GSI Mapping: Rooted in CAPABILITY_RECOVERY_MATRIX (f84a5b2e71deb65e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models agent autonomy as a Markov decision process constrained by kernel-level hooks and deterministic planners, ensuring state transitions remain within verified safety bounds. GSE Mapping: Rooted in CAPABILITY_RECOVERY_MATRIX (f84a5b2e71deb65e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "capability_recovery_matrix",
+      "name": "Capability Recovery Matrix",
+      "verbatim_quote": "# Capability Recovery Matrix **Date**: 2026-08-12 · **Method**: 4 parallel research agents, every claim checked against the live npm registry, PyPI JSON, Hugging Face, OpenRouter's API, and the repo itself.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All claims are validated through external registries and repository inspection.",
+      "breakdown_regime": "When architectural fidelity is compromised by false package names.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps blueprint architecture to actual implementation fidelity via empirical verification.",
+        "source_operator": "capability_recovery_matrix",
+        "telemetry": "Verification status of each component against live package metadata."
+      }
+    },
+    {
+      "primitive_id": "fail_open_auth",
+      "name": "Fail Open Authentication",
+      "verbatim_quote": "**\"Fail open\" on the auth library is the exact failure mode CLAUDE.md rule #3 exists to prevent.** And CI is configured never to look: `--no-audit` appears **7 times** in `.github/workflows/ci.yml`, and `.github/dependabot.yml` does not exist.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Authentication systems must enforce strict access control to prevent unauthorized execution.",
+      "breakdown_regime": "When CI configuration disables dependency auditing.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces secure authentication through CI policy enforcement and audit hooks.",
+        "source_operator": "fail_open_auth",
+        "telemetry": "Frequency of `--no-audit` flags in CI workflows and presence of dependabot config."
+      }
+    },
+    {
+      "primitive_id": "deterministic_planner_kernel",
+      "name": "Deterministic Planner Kernel",
+      "verbatim_quote": "`operating-kernel.ts` is a pure deterministic planner with no LLM in the decision path — strictly safer than an LLM \"prime agent,\" because it's testable and it cannot flip a public gate.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Decision-making without LLM introduces bounded rationality and verifiable outcomes.",
+      "breakdown_regime": "When probabilistic agents introduce unpredictable behavior in critical paths.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides a deterministic decision layer that avoids LLM-induced volatility.",
+        "source_operator": "deterministic_planner_kernel",
+        "telemetry": "Execution consistency of kernel vs. LLM-based alternatives under identical inputs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f84a5b2e71deb65e_t0",
+      "think": "The Capability Recovery Matrix operates as a structured belief update mechanism, where each component's status is assessed against empirical evidence. It distinguishes between implemented capabilities, those requiring minimal engineering, and those that are redundant or harmful. The matrix enables a dual perspective: one of architectural fidelity and another of operational risk. Fail Open Auth highlights a systemic vulnerability where CI configurations bypass necessary checks, undermining trust in the software supply chain. This failure mode is mitigated by enforcing audit policies and continuous integration integrity. The Deterministic Planner Kernel represents a core resilience primitive, offering a stable decision framework that avoids the stochasticity of large language models while maintaining functional equivalence in controlled domains. These primitives form a layered defense strategy, where each layer is validated through empirical observation and formalized through mathematical abstraction.\n\nDeep epistemic analysis for CAPABILITY_RECOVERY_MATRIX (f84a5b2e71deb65e, domain=physiology, pages_read=5/5): Operator 'Capability Recovery Matrix' (page 1, domain physiology) captures: # Capability Recovery Matrix **Date**: 2026-08-12 · **Method**: 4 parallel research agents, every claim checked against the live npm registry, PyPI JSON, Hugging Face, OpenRouter's API, and the repo itself. Assumptions: All claims are validated through external registries and repository inspection. Breakdown regime: When architectural fidelity is compromised by false package names. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps blueprint architecture to actual implementation fidelity via empirical verification. Operator 'Fail Open Authentication' (page 1, domain physiology) captures: **\"Fail open\" on the auth library is the exact failure mode CLAUDE.md rule #3 exists to prevent.** And CI is configured never to look: `--no-audit` appears **7 times** in `.github/workflows/ci.yml`, and `.github/dependabot.yml` does not exist. Assumptions: Authentication systems must enforce strict access control to prevent unauthorized execution. Breakdown regime: When CI configuration disables dependency auditing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces secure authentication through CI policy enforcement and audit hooks. Operator 'Deterministic Planner Kernel' (page 2, domain physiology) captures: `operating-kernel.ts` is a pure deterministic planner with no LLM in the decision path — strictly safer than an LLM \"prime agent,\" because it's testable and it cannot flip a public gate. Assumptions: Decision-making without LLM introduces bounded rationality and verifiable outcomes. Breakdown regime: When probabilistic agents introduce unpredictable behavior in critical paths. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides a deterministic decision layer that avoids LLM-induced volatility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CAPABILITY_RECOVERY_MATRIX (f84a5b2e71deb65e, domain=physiology, pages_read=5/5): Operator 'Capability Recovery Matrix' (page 1, domain physiology) captures: # Capability Recovery Matrix **Date**: 2026-08-12 · **Method**: 4 parallel research agents, every claim checked against the live npm registry, PyPI JSON, Hugging Face, OpenRouter's API, and the repo itself. Assumptions: All claims are validated through external registries and repository inspection. Breakdown regime: When architectural fidelity is compromised by false package names. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps blueprint architecture to actual implementation fidelity via empirical verification. Operator 'Fail Open Authentication' (page 1, domain physiology) captures: **\"Fail open\" on the auth library is the exact failure mode CLAUDE.md rule #3 exists to prevent.** And CI is configured never to look: `--no-audit` appears **7 times** in `.github/workflows/ci.yml`, and `.github/dependabot.yml` does not exist. Assumptions: Authentication systems must enforce strict access control to prevent unauthorized execution. Breakdown regime: When CI configuration disables dependency auditing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces secure authentication through CI policy enforcement and audit hooks. Operator 'Deterministic Planner Kernel' (page 2, domain physiology) captures: `operating-kernel.ts` is a pure deterministic planner with no LLM in the decision path — strictly safer than an LLM \"prime agent,\" because it's testable and it cannot flip a public gate. Assumptions: Decision-making without LLM introduces bounded rationality and verifiable outcomes. Breakdown regime: When probabilistic agents introduce unpredictable behavior in critical paths. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides a deterministic decision layer that avoids LLM-induced volatility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s software reliability theory, particularly in the evolution of CI/CD pipelines and secure coding practices. Influenced by formal methods in systems engineering and the rise of adversarial testing frameworks. Retrocausal Genealogy: Rooted in CAPABILITY_RECOVERY_MATRIX (f84a5b2e71deb65e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include speculative blueprint architects who prioritize innovation over verification, and operational defenders who emphasize stability and auditability. The conflict arises when architectural ambition outpaces implementation rigor. Theory of Mind & Decision Maker Model: Rooted in CAPABILITY_RECOVERY_MATRIX (f84a5b2e71deb65e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that high-level abstractions do not leak into lower layers without explicit validation. Leakage occurs when LLM-based agents bypass deterministic kernels, violating safety constraints. Veto conditions are triggered by any deviation from established CI policies or unverified dependency usage. Cross-Layer Veto & Anti-Leakage Check: Rooted in CAPABILITY_RECOVERY_MATRIX (f84a5b2e71deb65e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

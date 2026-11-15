@@ -1,0 +1,78 @@
+{
+  "book_id": "083367a0a0b17317",
+  "source_status": "COMPLETE",
+  "title": "prompt-index-fix-glm",
+  "file_name": "prompt-index-fix-glm.md",
+  "sha256": "083367a0a0b1731741e647f5199e658841b93b8f99d5d730278bbd1ea34a73ad",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The structural unification of a master index relies on the exact preservation of its underlying topological scoping. By treating the verification protocol as an invariant operator, we map discrete file-tree states to continuous ledger coverage, ensuring that any drift in the system is captured via strict boundary adherence.",
+  "gsi_mapping": "In GSI, the master index acts as a conformal prior over the latent space of research artifacts. We apply Bayesian updating when recounting live tree states against historical ledgers, strictly isolating stale numerical priors and patching them with newly observed empirical frequencies without altering the underlying model structure.",
+  "gse_mapping": "GSE situational reasoning maps this process to a state-transition automaton where the environment (the git worktree) undergoes stochastic deletions. The agent's policy is constrained: observe the regex boundaries, compute the delta in module counts, and execute a minimal-action patch to restore system equilibrium.",
+  "primitives": [
+    {
+      "primitive_id": "scoping_invariance",
+      "name": "Scoping Invariance Operator",
+      "verbatim_quote": "Read its method/verification section (lines 1-40) and obey exactly whatever glob root, regex, and family-scoping it defines.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "glob_root: string defining search origin; regex: pattern matching constraint; family_scoping: categorical boundary definition.",
+      "assumptions": "The original verification script or documentation accurately reflects the intended mathematical boundaries of the dataset.",
+      "breakdown_regime": "Fails if the underlying filesystem topology changes such that the original regex no longer captures the valid state space.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the definition of a measurable space in probability theory, establishing the sigma-algebra over which all subsequent counting measures are defined.",
+        "source_operator": "scoping_invariance",
+        "telemetry": "Exact match rate of the regex against the live directory tree."
+      }
+    },
+    {
+      "primitive_id": "minimal_patch_delta",
+      "name": "Minimal Patch Delta",
+      "verbatim_quote": "Prior run pre-dated <whatever deletion drifted>.\" Keep every other line byte-identical.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "delta_lines: integer count of modified lines; byte_identity: boolean constraint for unchanged regions.",
+      "assumptions": "The system can be corrected by modifying only the explicitly stale variables without introducing collateral entropy.",
+      "breakdown_regime": "Breaks down if the staleness propagates structurally, requiring a rewrite of the foundational schema rather than a localized patch.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to a sparse update kernel in state-space models, where the transition matrix is heavily diagonalized to preserve historical state integrity.",
+        "source_operator": "minimal_patch_delta",
+        "telemetry": "Diff hash comparison pre- and post-patch to verify zero collateral mutation."
+      }
+    },
+    {
+      "primitive_id": "external_script_oracle",
+      "name": "External Script Oracle",
+      "verbatim_quote": "If the index's verification script exists in the repo, run IT instead of hand-rolling.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "script_existence: boolean flag; execution_output: tuple of empirical counts.",
+      "assumptions": "The existing verification script is a ground-truth oracle that perfectly encapsulates the scoping rules.",
+      "breakdown_regime": "Singularities occur if the external script itself contains latent bugs or has drifted from the documented methodology.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents an external inference engine in GSI, bypassing local heuristic derivation in favor of executing a compiled, deterministic truth function.",
+        "source_operator": "external_script_oracle",
+        "telemetry": "Exit code and stdout/stderr logs of the executed verification script."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "083367a0a0b17317_t0",
+      "think": "The provided excerpts outline a rigorous protocol for correcting a master index within a version-controlled repository. Mathematically, this is a problem of restoring consistency between a static representation (the index) and a dynamic, stochastically altered state space (the live file tree). The core operator is 'reproduction'—specifically, reproducing the exact scoping conditions (glob roots, regex patterns) defined in the original methodology. This establishes a fixed measure space. Once the measure space is locked, the agent performs a recount, effectively calculating the current cardinality of specific subsets (code modules, unique arXiv IDs, ledger coverage). The discrepancy between the recorded numbers and the live counts represents the 'drift' or error term introduced by environmental mutations (e.g., deletions). The correction phase is governed by a strict minimization principle: patch ONLY the stale numbers while maintaining byte-identical integrity for all other lines. This ensures that the correction is a localized perturbation rather than a global re-parameterization. Furthermore, the preference for executing an existing verification script over manual derivation highlights a reliance on established, deterministic oracles to minimize epistemic uncertainty. The entire workflow forms a closed-loop control system: define boundaries, measure state, calculate delta, apply minimal corrective force, and log the temporal provenance of the update.\n\nDeep epistemic analysis for prompt-index-fix-glm (083367a0a0b17317, domain=other, pages_read=1/1): Operator 'Scoping Invariance Operator' (page 1, domain other) captures: Read its method/verification section (lines 1-40) and obey exactly whatever glob root, regex, and family-scoping it defines. Assumptions: The original verification script or documentation accurately reflects the intended mathematical boundaries of the dataset. Breakdown regime: Fails if the underlying filesystem topology changes such that the original regex no longer captures the valid state space. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the definition of a measurable space in probability theory, establishing the sigma-algebra over which all subsequent counting measures are defined. Operator 'Minimal Patch Delta' (page 1, domain other) captures: Prior run pre-dated <whatever deletion drifted>.\" Keep every other line byte-identical. Assumptions: The system can be corrected by modifying only the explicitly stale variables without introducing collateral entropy. Breakdown regime: Breaks down if the staleness propagates structurally, requiring a rewrite of the foundational schema rather than a localized patch. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to a sparse update kernel in state-space models, where the transition matrix is heavily diagonalized to preserve historical state integrity. Operator 'External Script Oracle' (page 1, domain other) captures: If the index's verification script exists in the repo, run IT instead of hand-rolling. Assumptions: The existing verification script is a ground-truth oracle that perfectly encapsulates the scoping rules. Breakdown regime: Singularities occur if the external script itself contains latent bugs or has drifted from the documented methodology. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents an external inference engine in GSI, bypassing local heuristic derivation in favor of executing a compiled, deterministic truth function. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prompt-index-fix-glm (083367a0a0b17317, domain=other, pages_read=1/1): Operator 'Scoping Invariance Operator' (page 1, domain other) captures: Read its method/verification section (lines 1-40) and obey exactly whatever glob root, regex, and family-scoping it defines. Assumptions: The original verification script or documentation accurately reflects the intended mathematical boundaries of the dataset. Breakdown regime: Fails if the underlying filesystem topology changes such that the original regex no longer captures the valid state space. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the definition of a measurable space in probability theory, establishing the sigma-algebra over which all subsequent counting measures are defined. Operator 'Minimal Patch Delta' (page 1, domain other) captures: Prior run pre-dated <whatever deletion drifted>.\" Keep every other line byte-identical. Assumptions: The system can be corrected by modifying only the explicitly stale variables without introducing collateral entropy. Breakdown regime: Breaks down if the staleness propagates structurally, requiring a rewrite of the foundational schema rather than a localized patch. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to a sparse update kernel in state-space models, where the transition matrix is heavily diagonalized to preserve historical state integrity. Operator 'External Script Oracle' (page 1, domain other) captures: If the index's verification script exists in the repo, run IT instead of hand-rolling. Assumptions: The existing verification script is a ground-truth oracle that perfectly encapsulates the scoping rules. Breakdown regime: Singularities occur if the external script itself contains latent bugs or has drifted from the documented methodology. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents an external inference engine in GSI, bypassing local heuristic derivation in favor of executing a compiled, deterministic truth function. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This protocol inherits deeply from the mathematical traditions of database normalization and distributed systems consensus algorithms. Historically, it mirrors the practices of early computational bibliometrics, where manual indices frequently diverged from physical card catalogs. The emphasis on 'byte-identical' preservation echoes the strict immutability constraints found in cryptographic hashing and blockchain ledgers, ensuring that historical audit trails remain uncompromised by present-tense corrections.",
+      "theory_of_mind": "The decision actor here is a highly disciplined quantitative researcher who anticipates adversarial entropy. They model the opposing agent not as a malicious actor, but as the chaotic nature of software development itself—where files are moved, renamed, or deleted without updating central registries. The researcher assumes that any deviation from the original scoping rules introduces subjective bias. Therefore, their strategy is to act as a passive conduit for the original author's intent, strictly adhering to the predefined regex and glob roots to avoid injecting personal heuristics into the verification process.",
+      "cross_layer_veto": "A critical veto condition arises if the 'stale numbers' cannot be isolated cleanly. If the deletion of a file causes a cascading failure in the family table row count or breaks the arxiv-deep ledger coverage logic, the minimal patch assumption collapses. In such a regime, attempting a localized fix would introduce severe leakage, corrupting the structural integrity of the index. The cross-layer veto mandates halting the patch and triggering a full re-derivation of the index schema if the delta exceeds the bounds of simple numerical substitution."
+    }
+  ]
+}

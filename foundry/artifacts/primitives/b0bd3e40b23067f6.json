@@ -1,0 +1,78 @@
+{
+  "book_id": "b0bd3e40b23067f6",
+  "source_status": "COMPLETE",
+  "title": "ODDSPAPI-DEEP-DIVE",
+  "file_name": "ODDSPAPI-DEEP-DIVE.md",
+  "sha256": "b0bd3e40b23067f6d97e338117e10aef0b33120d08c0acc19f57781972ddfe9a",
+  "primary_domain": "other",
+  "pages_total": 14,
+  "pages_read": 14,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "OddsPapi's free tier offers 250 monthly requests with full bookmaker coverage, enabling historical line reconstruction and prop market discovery without credit card requirement. Universal Lens: Rooted in ODDSPAPI-DEEP-DIVE (b0bd3e40b23067f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on historical odds using OddsPapi's free tier for NFL prop market validation and CLV reconstruction under uncertainty. GSI Mapping: Rooted in ODDSPAPI-DEEP-DIVE (b0bd3e40b23067f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine uses OddsPapi's free tier to detect bookmaker disagreement signals and schedule prop scanning around kickoff windows. GSE Mapping: Rooted in ODDSPAPI-DEEP-DIVE (b0bd3e40b23067f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "free_tier_request_limit",
+      "name": "Free Tier Request Limit",
+      "verbatim_quote": "**Per-request flat billing** (1 call = 1 request, no markets×regions multiplier), free tier **250 requests/month** with *all* bookmakers including Pinnacle and the **free/unmetered historical-odds endpoint** with full timestamped line-movement snapshots.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{\\\\text{free}}': '250 \\\\, \\\\text{requests/month}', 'B': '\\\\text{bookmakers}'}",
+      "assumptions": "All bookmakers are accessible via single endpoint; historical data retention is time-bound.",
+      "breakdown_regime": "Monthly usage threshold exceeded",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic sampling budget constraint and GSE's scheduled task scheduling logic.",
+        "source_operator": "free_tier_request_limit",
+        "telemetry": "Request count per month vs. quota"
+      }
+    },
+    {
+      "primitive_id": "historical_odds_retention_window",
+      "name": "Historical Odds Retention Window",
+      "verbatim_quote": "**Hard caveats that matter for GSE:** - **Historical retention is a rolling window, not a permanent archive.** Official docs say \"all historical odds data since January 2026 is available\" (~8–9 months), but an independent May 2026 probe measured only ~90 days.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{ret}}': '\\\\text{rolling window in days}', 'T_{\\\\text{obs}}': '\\\\text{observed retention period} \\\\approx 90 \\\\, \\\\text{days}'}",
+      "assumptions": "Data availability is bounded by operational policy rather than archival permanence.",
+      "breakdown_regime": "Time-based data expiration",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives into GSI's temporal consistency model and GSE's data freshness monitoring.",
+        "source_operator": "historical_odds_retention_window",
+        "telemetry": "Timestamp range of returned historical odds"
+      }
+    },
+    {
+      "primitive_id": "prop_market_discovery",
+      "name": "Prop Market Discovery",
+      "verbatim_quote": "**NFL is a first-class covered product**: tournamentId `31` on sportId `14`, 255 scheduled fixtures, 237 bookmakers quoting a single fixture (79 *independent* after dedupe), **21 NFL player-prop families** with 100 market families on sportId 14, documented ladder structure (one market ID per line rung).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': '\\\\text{fixtures}', 'B_{\\\\text{NFL}}': '\\\\text{bookmakers quoting NFL}', 'P_{\\\\text{prop}}': '\\\\text{player-prop families}', 'M_{\\\\text{fam}}': '\\\\text{market families}'}",
+      "assumptions": "Market ladder structure enables discrete indexing and comparison across bookmakers.",
+      "breakdown_regime": "Market family enumeration failure",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's multi-agent market discovery protocol and GSE's dynamic prop scanning scheduler.",
+        "source_operator": "prop_market_discovery",
+        "telemetry": "Number of distinct prop market IDs returned"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b0bd3e40b23067f6_t0",
+      "think": "The core insight is that OddsPapi's free tier provides a viable alternative for non-production use cases such as historical analysis and market exploration. Its 250 request limit allows for sufficient sampling of NFL props and bookmaker diversity, especially given its inclusion of major global books like Pinnacle. However, the retention window is limited to ~90 days, which constrains long-term historical modeling. The prop market structure supports discrete indexing and comparison, making it suitable for GSI's Bayesian inference and GSE's situational reasoning. The absence of WebSocket support on the free tier implies that real-time streaming must be handled through paid B2B plans, limiting immediate application in live systems. This creates a dual-mode operational framework where free tier serves exploratory tasks while paid tiers handle production workflows.\n\nDeep epistemic analysis for ODDSPAPI-DEEP-DIVE (b0bd3e40b23067f6, domain=other, pages_read=14/14): Operator 'Free Tier Request Limit' (page 1, domain other) captures: **Per-request flat billing** (1 call = 1 request, no markets×regions multiplier), free tier **250 requests/month** with *all* bookmakers including Pinnacle and the **free/unmetered historical-odds endpoint** with full timestamped line-movement snapshots. Assumptions: All bookmakers are accessible via single endpoint; historical data retention is time-bound. Breakdown regime: Monthly usage threshold exceeded Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic sampling budget constraint and GSE's scheduled task scheduling logic. Operator 'Historical Odds Retention Window' (page 1, domain other) captures: **Hard caveats that matter for GSE:** - **Historical retention is a rolling window, not a permanent archive.** Official docs say \"all historical odds data since January 2026 is available\" (~8–9 months), but an independent May 2026 probe measured only ~90 days. Assumptions: Data availability is bounded by operational policy rather than archival permanence. Breakdown regime: Time-based data expiration Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives into GSI's temporal consistency model and GSE's data freshness monitoring. Operator 'Prop Market Discovery' (page 1, domain other) captures: **NFL is a first-class covered product**: tournamentId `31` on sportId `14`, 255 scheduled fixtures, 237 bookmakers quoting a single fixture (79 *independent* after dedupe), **21 NFL player-prop families** with 100 market families on sportId 14, documented ladder structure (one market ID per line rung). Assumptions: Market ladder structure enables discrete indexing and comparison across bookmakers. Breakdown regime: Market family enumeration failure Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-agent market discovery protocol and GSE's dynamic prop scanning scheduler. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ODDSPAPI-DEEP-DIVE (b0bd3e40b23067f6, domain=other, pages_read=14/14): Operator 'Free Tier Request Limit' (page 1, domain other) captures: **Per-request flat billing** (1 call = 1 request, no markets×regions multiplier), free tier **250 requests/month** with *all* bookmakers including Pinnacle and the **free/unmetered historical-odds endpoint** with full timestamped line-movement snapshots. Assumptions: All bookmakers are accessible via single endpoint; historical data retention is time-bound. Breakdown regime: Monthly usage threshold exceeded Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic sampling budget constraint and GSE's scheduled task scheduling logic. Operator 'Historical Odds Retention Window' (page 1, domain other) captures: **Hard caveats that matter for GSE:** - **Historical retention is a rolling window, not a permanent archive.** Official docs say \"all historical odds data since January 2026 is available\" (~8–9 months), but an independent May 2026 probe measured only ~90 days. Assumptions: Data availability is bounded by operational policy rather than archival permanence. Breakdown regime: Time-based data expiration Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives into GSI's temporal consistency model and GSE's data freshness monitoring. Operator 'Prop Market Discovery' (page 1, domain other) captures: **NFL is a first-class covered product**: tournamentId `31` on sportId `14`, 255 scheduled fixtures, 237 bookmakers quoting a single fixture (79 *independent* after dedupe), **21 NFL player-prop families** with 100 market families on sportId 14, documented ladder structure (one market ID per line rung). Assumptions: Market ladder structure enables discrete indexing and comparison across bookmakers. Breakdown regime: Market family enumeration failure Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-agent market discovery protocol and GSE's dynamic prop scanning scheduler. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early 2020s sports data APIs, evolving toward modular, multi-tier architectures with increasing emphasis on historical data accessibility and cross-platform compatibility. Retrocausal Genealogy: Rooted in ODDSPAPI-DEEP-DIVE (b0bd3e40b23067f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ODDSPAPI-DEEP-DIVE (b0bd3e40b23067f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include The Odds API's established dominance in US markets and potential vendor lock-in risks from proprietary data structures. Decision actors are primarily internal engineering teams balancing cost-efficiency with data fidelity. Theory of Mind & Decision Maker Model: Rooted in ODDSPAPI-DEEP-DIVE (b0bd3e40b23067f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires avoiding direct replacement of The Odds API for live feeds due to latency and licensing concerns. Leakage vetoes apply to unauthorized redistribution of data, necessitating legal review before public deployment. Cross-Layer Veto & Anti-Leakage Check: Rooted in ODDSPAPI-DEEP-DIVE (b0bd3e40b23067f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

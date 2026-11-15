@@ -1,0 +1,470 @@
+{
+ "book_id": "130cb31e98511398",
+ "title": "Bishop 2006 — Pattern Recognition and Machine Learning",
+ "source_status": "READABLE",
+ "source_note": "Christopher M. Bishop, Pattern Recognition and Machine Learning, Springer (Information Science and Statistics), 2006. 758 PDF pages, 1.69M chars extracted. Core read: curse of dimensionality ch1.4, decision theory ch1.5 (expected loss, reject option), information theory ch1.6 (entropy, coding), Bayesian model comparison ch3.4 (evidence, Occam factor, model averaging), evidence approximation ch3.5. Printed-page provenance. Not retracted; title matches content. Zero sportsbook odds.",
+ "pages_total": 758,
+ "pages_read": 5,
+ "primitives": [
+  {
+   "primitive_id": "curse_of_dimensionality",
+   "name": "Curse of dimensionality: volume concentrates in a thin shell",
+   "verbatim_quote": "Thus, in spaces of high dimensionality, most of the volume of a sphere is concentrated in a thin shell near the surface!",
+   "page": 36,
+   "latex": "\\frac{V_D(1)-V_D(1-\\epsilon)}{V_D(1)}=1-(1-\\epsilon)^D\\to 1,\\quad V_D(r)=K_D r^D",
+   "symbol_and_unit_ledger": {
+    "D": "dimensionality [count]",
+    "epsilon": "shell thickness fraction [dimensionless]",
+    "V_D(r)": "D-sphere volume [length^D]"
+   },
+   "assumptions": [
+    "Polynomial coefficient count grows like D^M",
+    "Geometric intuition from 3D fails in high D"
+   ],
+   "breakdown_regime": "Grid/quadrature methods become exponentially unwieldy; low-dimensional intuition misleads about where the mass lives.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The football game-state space is astronomically high-dimensional, so a naive grid over formations/personnel/down-distance is hopeless. The engine must exploit structure (the ontology) rather than enumerate the space, exactly as Bishop warns that low-dimensional intuition fails.",
+    "source_operator": "curse_of_dimensionality",
+    "telemetry": "GSE telemetry: effective dimensionality of the game-state manifold; verify the engine uses structured priors, not a grid."
+   }
+  },
+  {
+   "primitive_id": "curse_mitigation",
+   "name": "Why high-dimensional prediction still works: low effective dimension + smoothness",
+   "verbatim_quote": "Successful pattern recognition techniques exploit one or both of these properties.",
+   "page": 37,
+   "latex": "\\text{real data}\\subset\\text{low-dimensional manifold},\\quad \\text{local smoothness}\\Rightarrow\\text{interpolation}",
+   "symbol_and_unit_ledger": {
+    "effective dimensionality": "intrinsic manifold dimension [count]",
+    "smoothness": "local Lipschitz regularity"
+   },
+   "assumptions": [
+    "Real data confined to a lower-effective-dimension region",
+    "Targets vary smoothly with inputs locally"
+   ],
+   "breakdown_regime": "If the data fill the full space or are nowhere smooth, neither rescue applies and prediction fails.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Football outcomes live on a low-dimensional manifold (a few degrees of freedom: score, down, distance, field position, time) embedded in a huge state space, and vary smoothly with them. This is the formal license for the ontology's structured priors and local interpolation to beat the curse.",
+    "source_operator": "curse_mitigation",
+    "telemetry": "GSE telemetry: intrinsic dimension of the situation manifold; smoothness of win-probability vs down-distance."
+   }
+  },
+  {
+   "primitive_id": "inference_vs_decision",
+   "name": "Inference and decision are separate stages",
+   "verbatim_quote": "the decision stage is generally very simple, even trivial, once we have solved the inference problem.",
+   "page": 38,
+   "latex": "p(x,t)\\ \\xrightarrow{\\text{inference}}\\ p(t\\mid x)\\ \\xrightarrow{\\text{decision}}\\ \\text{action}",
+   "symbol_and_unit_ledger": {
+    "p(x,t)": "joint distribution [probability]",
+    "p(t|x)": "posterior [probability]",
+    "action": "decision [choice]"
+   },
+   "assumptions": [
+    "Inference (learning the distribution) is the hard part",
+    "Decision is trivial once the posterior is known"
+   ],
+   "breakdown_regime": "Conflating the two stages leads to models that decide directly without a calibrated posterior, hiding their uncertainty.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine separates inference (the posterior over game outcomes from the crucible) from decision (whether to publish a pick). The pick is trivial once the posterior is calibrated; the hard, sovereign work is the inference. This is why the Foundry invests in the posterior, not in a direct pick heuristic.",
+    "source_operator": "inference_vs_decision",
+    "telemetry": "GSE telemetry: posterior calibration error vs pick decision threshold; verify the two stages are auditable separately."
+   }
+  },
+  {
+   "primitive_id": "expected_loss_rule",
+   "name": "Optimal decision minimizes expected loss under the posterior",
+   "verbatim_quote": "we seek instead to minimize the average loss, where the average is computed with respect to this distribution",
+   "page": 41,
+   "latex": "\\mathbb{E}[L]=\\sum_k\\sum_j\\int_{R_j}L_{kj}\\,p(x,C_k)\\,dx,\\quad \\text{choose }j=\\arg\\min_j\\sum_k L_{kj}\\,p(C_k\\mid x)",
+   "symbol_and_unit_ledger": {
+    "L_kj": "loss matrix element [loss units]",
+    "p(C_k|x)": "posterior class probability [dimensionless]",
+    "R_j": "decision region"
+   },
+   "assumptions": [
+    "True class unknown, expressed by the posterior",
+    "Loss matrix encodes asymmetric consequences"
+   ],
+   "breakdown_regime": "If the loss matrix is misspecified, the 'optimal' decision optimizes the wrong objective.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A GSE pick is a decision under uncertainty: the engine chooses the action minimizing expected loss under the posterior, not the action with the highest raw probability. The loss matrix is where bankroll risk and asymmetric consequences enter, downstream of the calibrated posterior.",
+    "source_operator": "expected_loss_rule",
+    "telemetry": "GSE telemetry: expected-loss surface over actions; verify the published pick is the argmin, not the argmax probability."
+   }
+  },
+  {
+   "primitive_id": "asymmetric_loss",
+   "name": "Loss is asymmetric: a missed diagnosis costs 1000x a false alarm",
+   "verbatim_quote": "there is a loss of 1000 if a patient having cancer is diagnosed as healthy.",
+   "page": 41,
+   "latex": "L=\\begin{pmatrix}0&1000\\\\1&0\\end{pmatrix}\\quad(\\text{rows: true class, cols: assigned})",
+   "symbol_and_unit_ledger": {
+    "L_kj": "loss [arbitrary loss units]",
+    "1000 vs 1": "asymmetry ratio [dimensionless]"
+   },
+   "assumptions": [
+    "Consequences of the two error types differ dramatically",
+    "Fewer costly errors preferred even at the expense of more cheap errors"
+   ],
+   "breakdown_regime": "A symmetric (0/1) loss ignores the asymmetry and can be catastrophically wrong for high-stakes decisions.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE loss matrix is asymmetric: a confident wrong pick (a 'lock' that loses) costs far more than a PASS or a small miss. This is the decision-theoretic root of the no-lock doctrine and of bankroll-aware staking: the engine must weight the costly error heavily, not treat all errors equally.",
+    "source_operator": "asymmetric_loss",
+    "telemetry": "GSE telemetry: loss-matrix asymmetry ratio; verify confident-wrong penalties dominate the expected-loss calculation."
+   }
+  },
+  {
+   "primitive_id": "reject_option",
+   "name": "The reject option: abstain on uncertain cases (the PASS doctrine)",
+   "verbatim_quote": "it will be appropriate to avoid making decisions on the difficult cases in anticipation of a lower error rate on those examples for which a classification decision is made.",
+   "page": 42,
+   "latex": "\\text{reject }x\\text{ if }\\max_k p(C_k\\mid x)\\le\\theta,\\quad \\theta\\in[1/K,1]",
+   "symbol_and_unit_ledger": {
+    "theta": "reject threshold [dimensionless]",
+    "max_k p(C_k|x)": "largest posterior [dimensionless]",
+    "K": "number of classes [count]"
+   },
+   "assumptions": [
+    "Abstention lowers error rate on the cases actually decided",
+    "theta=1 rejects all; theta<1/K rejects none"
+   ],
+   "breakdown_regime": "Setting theta too low forces decisions on ambiguous cases; too high abstains on everything.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the formal PASS / no-bet doctrine: when the largest posterior is below a threshold, the engine abstains rather than forcing a pick. A PASS on a bad board is the reject option exercised correctly, lowering the error rate on the games it actually publishes. The threshold is the conjunction gate.",
+    "source_operator": "reject_option",
+    "telemetry": "GSE telemetry: reject threshold theta; fraction of games PASSed; error rate on published vs rejected games."
+   }
+  },
+  {
+   "primitive_id": "regression_conditional_mean",
+   "name": "Optimal squared-loss predictor is the conditional mean",
+   "verbatim_quote": "which is the conditional average of t conditioned on x and is known as the regression function.",
+   "page": 47,
+   "latex": "y(x)=\\int t\\,p(t\\mid x)\\,dt=\\mathbb{E}_t[t\\mid x]",
+   "symbol_and_unit_ledger": {
+    "y(x)": "regression function / prediction [units of t]",
+    "E_t[t|x]": "conditional mean [units of t]"
+   },
+   "assumptions": [
+    "Squared loss L(t,y)=(y-t)^2",
+    "Fully flexible function class"
+   ],
+   "breakdown_regime": "For multimodal p(t|x) the conditional mean can lie in a low-probability valley; squared loss is then a poor choice.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE point prediction (expected score, expected win prob) is the conditional mean under the posterior, the optimal squared-loss predictor. But Bishop's warning matters: if the game-outcome distribution is bimodal (a shootout vs a defensive slog), the mean is a meaningless midpoint, so the engine must report the full posterior, not just the mean.",
+    "source_operator": "regression_conditional_mean",
+    "telemetry": "GSE telemetry: conditional-mean prediction vs full posterior; flag bimodal outcome distributions where the mean misleads."
+   }
+  },
+  {
+   "primitive_id": "irreducible_error",
+   "name": "Irreducible error: the noise floor no model can beat",
+   "verbatim_quote": "represents the irreducible minimum value of the loss function.",
+   "page": 47,
+   "latex": "\\mathbb{E}[L]=\\int\\{y(x)-\\mathbb{E}[t\\mid x]\\}^2p(x)\\,dx+\\int\\{\\mathbb{E}[t\\mid x]-t\\}^2p(x)\\,dx",
+   "symbol_and_unit_ledger": {
+    "first term": "reducible estimation error [loss units]",
+    "second term": "irreducible noise variance [loss units]"
+   },
+   "assumptions": [
+    "The second term is independent of the predictor y(x)",
+    "It is the intrinsic variability of the target"
+   ],
+   "breakdown_regime": "No model, however complex, can reduce the irreducible term; chasing it is overfitting noise.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Football has an irreducible noise floor (a tipped pass, a bad bounce, a referee call) that no model can predict. The engine must not claim skill below this floor, and the calibration pipeline must separate reducible estimation error from irreducible variance. This is the probabilistic root of the honest-ledger doctrine: you cannot manufacture skill the noise does not allow.",
+    "source_operator": "irreducible_error",
+    "telemetry": "GSE telemetry: irreducible variance estimate; verify reported skill exceeds the noise floor before claiming edge."
+   }
+  },
+  {
+   "primitive_id": "information_surprise",
+   "name": "Information content is the degree of surprise",
+   "verbatim_quote": "The amount of information can be viewed as the 'degree of surprise' on learning the value of x.",
+   "page": 48,
+   "latex": "h(x)=-\\log_2 p(x)\\quad[\\text{bits}]",
+   "symbol_and_unit_ledger": {
+    "h(x)": "information content [bits]",
+    "p(x)": "event probability [dimensionless]"
+   },
+   "assumptions": [
+    "Independent events add information: h(x,y)=h(x)+h(y)",
+    "Low-probability events carry high information"
+   ],
+   "breakdown_regime": "A certain event (p=1) carries zero information; the measure is undefined for p=0 in the limit sense.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE calibration-surprise metric is exactly this: a rare outcome that the engine assigned low probability carries high surprise. This unifies with Murphy's KL and the DL cross-entropy: the engine's loss on a snap is the surprise of what actually happened, and minimizing expected surprise is calibration.",
+    "source_operator": "information_surprise",
+    "telemetry": "GSE telemetry: per-snap surprise -log p(outcome); verify the engine's average surprise matches the entropy floor."
+   }
+  },
+  {
+   "primitive_id": "entropy",
+   "name": "Entropy: average information / uncertainty of a distribution",
+   "verbatim_quote": "This important quantity is called the entropy of the random variable x.",
+   "page": 49,
+   "latex": "H[x]=-\\sum_x p(x)\\log_2 p(x)\\quad[\\text{bits}];\\quad H[p]=-\\sum_i p_i\\ln p_i\\quad[\\text{nats}]",
+   "symbol_and_unit_ledger": {
+    "H[x]": "entropy [bits or nats]",
+    "p(x)": "probability [dimensionless]",
+    "0 ln 0": "defined as 0 by limit"
+   },
+   "assumptions": [
+    "Nonnegative; zero for a deterministic distribution",
+    "Maximum for the uniform distribution (H=ln M)"
+   ],
+   "breakdown_regime": "Differential entropy can be negative and is not coordinate-invariant; discrete entropy is the safe measure.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The entropy of the game-outcome posterior is the engine's honest uncertainty: a high-entropy posterior means the game is genuinely uncertain and the engine should widen its interval or PASS. The maximum-entropy principle (uniform when nothing is known) is the formal default prior when the ontology gives no information.",
+    "source_operator": "entropy",
+    "telemetry": "GSE telemetry: posterior entropy per game; verify interval width and PASS rate track the entropy."
+   }
+  },
+  {
+   "primitive_id": "noiseless_coding",
+   "name": "Shannon noiseless coding: entropy is the bit lower bound",
+   "verbatim_quote": "The noiseless coding theorem (Shannon, 1948) states that the entropy is a lower bound on the number of bits needed to transmit the state of a random variable.",
+   "page": 50,
+   "latex": "\\text{average code length}\\ge H[x],\\quad \\text{equality for optimal code}",
+   "symbol_and_unit_ledger": {
+    "H[x]": "entropy [bits]",
+    "code length": "bits per symbol [bits]"
+   },
+   "assumptions": [
+    "Prefix-free (uniquely decodable) codes",
+    "Shorter codes for more probable events"
+   ],
+   "breakdown_regime": "No lossless code can beat the entropy; claiming compression below it is impossible.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's information-budget floor: the corpus's sovereign primitives are an optimal code for football knowledge, and no representation can compress the game's uncertainty below its entropy. It is the formal reason the Foundry cannot fabricate information that the source does not contain, mirroring the zero-fabrication doctrine.",
+    "source_operator": "noiseless_coding",
+    "telemetry": "GSE telemetry: bits-per-snap vs entropy floor; verify no claimed compression below the entropy bound."
+   }
+  },
+  {
+   "primitive_id": "model_evidence",
+   "name": "Model evidence = marginal likelihood (parameters marginalized out)",
+   "verbatim_quote": "evidence is sometimes also called the marginal likelihood because it can be viewed as a likelihood function over the space of models, in which the parameters have been marginalized out.",
+   "page": 162,
+   "latex": "p(M_i\\mid D)\\propto p(M_i)\\,p(D\\mid M_i),\\quad p(D\\mid M_i)=\\int p(D\\mid w,M_i)\\,p(w\\mid M_i)\\,dw",
+   "symbol_and_unit_ledger": {
+    "p(D|M_i)": "model evidence / marginal likelihood [probability]",
+    "p(M_i)": "model prior [probability]",
+    "w": "parameters"
+   },
+   "assumptions": [
+    "Evidence is the normalizer in Bayes' theorem over parameters",
+    "Bayes factor = ratio of two model evidences"
+   ],
+   "breakdown_regime": "Evidence is undefined for an improper prior (arbitrary scaling); sensitive to prior tails.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Foundry weights each sovereign model by its evidence (how well it explains the corpus and the game with parameters marginalized), not by its best-fit likelihood. This is the Bayesian Occam razor that prevents a finely-tuned overfit model from winning, and it is why the swarm's aggregation is evidence-weighted.",
+    "source_operator": "model_evidence",
+    "telemetry": "GSE telemetry: per-model log evidence; verify aggregation weights track evidence, not peak likelihood."
+   }
+  },
+  {
+   "primitive_id": "model_averaging_multimodal",
+   "name": "Bayesian model averaging preserves multimodality",
+   "verbatim_quote": "Once we know the posterior distribution over models, the predictive distribution is given, from the sum and product rules",
+   "page": 162,
+   "latex": "p(t\\mid x,D)=\\sum_{i=1}^{L}p(t\\mid x,M_i,D)\\,p(M_i\\mid D)",
+   "symbol_and_unit_ledger": {
+    "p(t|x,D)": "model-averaged predictive [probability]",
+    "p(M_i|D)": "posterior model weight [sums to 1]"
+   },
+   "assumptions": [
+    "A mixture, not a single averaged model",
+    "Two equally-likely narrow models give a bimodal predictive, not a midpoint"
+   ],
+   "breakdown_regime": "Averaging two scripts into a single midpoint prediction is wrong; the mixture keeps both modes.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE swarm averages predictive distributions, not point predictions: if two game scripts are equally supported (a shootout and a defensive slog), the published posterior is bimodal, not a meaningless average score. This is the formal reason the engine reports the full mixture and refuses to collapse plausible scripts into one number.",
+    "source_operator": "model_averaging_multimodal",
+    "telemetry": "GSE telemetry: predictive mixture modality; verify the engine preserves multiple supported scripts rather than averaging to a midpoint."
+   }
+  },
+  {
+   "primitive_id": "model_selection",
+   "name": "Model selection is the single-best-model approximation to averaging",
+   "verbatim_quote": "A simple approximation to model averaging is to use the single most probable model alone to make predictions. This is known as model selection.",
+   "page": 162,
+   "latex": "\\text{model selection: }\\hat M=\\arg\\max_{M_i}p(M_i\\mid D),\\quad p(t\\mid x,D)\\approx p(t\\mid x,\\hat M,D)",
+   "symbol_and_unit_ledger": {
+    "M_hat": "selected model [index]",
+    "p(M_i|D)": "posterior model weight [probability]"
+   },
+   "assumptions": [
+    "Cheaper than full averaging",
+    "Discards the uncertainty over models"
+   ],
+   "breakdown_regime": "Selecting one model throws away model uncertainty and can be overconfident when several models are competitive.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine may select a single best explanation for efficiency, but must recognize this discards model uncertainty. When several primitives are competitive, full averaging (the swarm) is the honest choice; committing to one 'whale' model is the overconfident approximation Bishop warns against.",
+    "source_operator": "model_selection",
+    "telemetry": "GSE telemetry: model-weight concentration; flag overconfidence when selection is used despite competitive alternatives."
+   }
+  },
+  {
+   "primitive_id": "occam_factor",
+   "name": "Occam factor: complexity penalty grows with parameter count",
+   "verbatim_quote": "if parameters are finely tuned to the data in the posterior distribution, then the penalty term is large.",
+   "page": 163,
+   "latex": "\\ln p(D)\\simeq\\ln p(D\\mid w_{\\mathrm{MAP}})+M\\ln\\!\\frac{\\Delta w_{\\mathrm{posterior}}}{\\Delta w_{\\mathrm{prior}}}",
+   "symbol_and_unit_ledger": {
+    "M": "number of adaptive parameters [count]",
+    "Delta w_posterior/prior": "posterior/prior width ratio [dimensionless, <1]",
+    "ln p(D|w_MAP)": "best-fit log likelihood [nats]",
+    "second term": "complexity penalty [nats, negative]"
+   },
+   "assumptions": [
+    "Sharply peaked posterior, flat prior",
+    "Penalty magnitude increases as parameters are finely tuned"
+   ],
+   "breakdown_regime": "The approximation assumes a single peaked posterior; multimodal posteriors need a refined (Gaussian/Laplace) treatment.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the automatic Occam razor the Foundry uses to veto overfit models: a model that finely tunes many parameters to one game pays a large complexity penalty in its evidence. The engine cannot win by adding parameters that fit noise; the evidence penalizes fine-tuning, which is the formal anti-overfitting gate.",
+    "source_operator": "occam_factor",
+    "telemetry": "GSE telemetry: parameter count M and posterior/prior width ratio; verify the complexity penalty is applied in model scoring."
+   }
+  },
+  {
+   "primitive_id": "occam_razor_intermediate",
+   "name": "Evidence favors intermediate complexity (automatic Occam razor)",
+   "verbatim_quote": "Essentially, the simpler model cannot fit the data well, whereas the more complex model spreads its predictive probability over too broad a range of data sets and so assigns relatively small probability to any one of them.",
+   "page": 164,
+   "latex": "p(D\\mid M)\\text{ normalized over data sets}\\Rightarrow\\text{intermediate }M\\text{ maximizes evidence}",
+   "symbol_and_unit_ledger": {
+    "p(D|M)": "evidence as a normalized distribution over data sets [probability]",
+    "M": "model complexity"
+   },
+   "assumptions": [
+    "Models compared generatively over the space of possible data sets",
+    "Distributions p(D|M) are normalized"
+   ],
+   "breakdown_regime": "If the true model is outside the candidate set, the guarantee fails; the framework assumes the truth is among the models.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Foundry's model comparison favors intermediate complexity: a too-simple ontology cannot explain the game, a too-complex one spreads its probability over every possible game and explains none well. This is the sovereign reason the engine prefers a parsimonious, well-supported explanation over both a naive heuristic and an overfit kitchen-sink model.",
+    "source_operator": "occam_razor_intermediate",
+    "telemetry": "GSE telemetry: evidence vs model complexity curve; verify the selected model sits at the evidence maximum, not the likelihood maximum."
+   }
+  },
+  {
+   "primitive_id": "bayes_factor_correct_model",
+   "name": "On average the Bayes factor favors the correct model (KL)",
+   "verbatim_quote": "Thus on average the Bayes factor will always favour the correct model.",
+   "page": 164,
+   "latex": "\\int p(D\\mid M_1)\\ln\\frac{p(D\\mid M_1)}{p(D\\mid M_2)}\\,dD=D_{\\mathrm{KL}}(p(D\\mid M_1)\\parallel p(D\\mid M_2))\\ge 0",
+   "symbol_and_unit_ledger": {
+    "Bayes factor": "evidence ratio [dimensionless]",
+    "D_KL": "KL divergence [nats, >=0]"
+   },
+   "assumptions": [
+    "Truth is among the candidate models",
+    "Average taken over the true data distribution"
+   ],
+   "breakdown_regime": "For a single finite data set the Bayes factor can favor the wrong model; the guarantee is only on average.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the Foundry's long-run honesty guarantee: evidence-weighted model comparison converges to the correct explanation on average, because the expected log Bayes factor is a non-negative KL divergence. It is the same information inequality that forbids negative calibration surprise, binding the swarm's aggregation to the truth over many games.",
+    "source_operator": "bayes_factor_correct_model",
+    "telemetry": "GSE telemetry: cumulative log Bayes factor vs ground truth; verify long-run convergence to the correct model."
+   }
+  },
+  {
+   "primitive_id": "evidence_approximation",
+   "name": "Evidence approximation / empirical Bayes: fit hyperparameters by marginal likelihood",
+   "verbatim_quote": "in the machine learning literature is also called the evidence approximation (Gull, 1989; MacKay, 1992a).",
+   "page": 165,
+   "latex": "\\hat\\alpha,\\hat\\beta=\\arg\\max_{\\alpha,\\beta}p(t\\mid\\alpha,\\beta),\\quad p(t\\mid\\alpha,\\beta)=\\int p(t\\mid w,\\beta)\\,p(w\\mid\\alpha)\\,dw",
+   "symbol_and_unit_ledger": {
+    "alpha": "weight precision hyperparameter [1/w^2]",
+    "beta": "noise precision hyperparameter [1/t^2]",
+    "p(t|alpha,beta)": "marginal likelihood [probability]",
+    "alpha/beta": "analogous to a regularization parameter"
+   },
+   "assumptions": [
+    "Posterior over hyperparameters sharply peaked",
+    "Also called empirical Bayes / type-2 maximum likelihood"
+   ],
+   "breakdown_regime": "Full marginalization over hyperparameters is intractable; the approximation fixes them at their evidence-maximizing values.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine sets its regularization strength (the ontology-prior precision vs the snap-noise precision) by maximizing the marginal likelihood, not by cross-validation alone. The ratio alpha/beta is the regularization parameter, and the evidence approximation determines it from the training data alone, which is how the engine calibrates its bias-complexity tradeoff.",
+    "source_operator": "evidence_approximation",
+    "telemetry": "GSE telemetry: alpha/beta regularization ratio; verify it is evidence-maximized and matches the held-out calibration."
+   }
+  },
+  {
+   "primitive_id": "hyperparameters_no_cv",
+   "name": "Evidence framework sets hyperparameters from training data alone",
+   "verbatim_quote": "This will allow us to determine values for these hyperparameters from the training data alone, without recourse to cross-validation.",
+   "page": 165,
+   "latex": "\\hat\\alpha,\\hat\\beta\\text{ from }\\max p(t\\mid\\alpha,\\beta)\\text{ on training data}",
+   "symbol_and_unit_ledger": {
+    "alpha,beta": "hyperparameters [precision units]",
+    "p(t|alpha,beta)": "marginal likelihood [probability]"
+   },
+   "assumptions": [
+    "Evidence maximization replaces cross-validation for hyperparameter setting",
+    "Independent test set still wise for final evaluation"
+   ],
+   "breakdown_regime": "Bishop still advises keeping an independent test set; evidence maximization is not a license to skip held-out validation.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine can set its regularization from the corpus via the evidence, but Bishop's caveat is the held-out discipline: keep an independent test set for final evaluation. This reconciles the evidence approximation with the Foundry's sealed-baseline / no-fit-on-own-training rule: evidence sets the knobs, held-out data certifies the result.",
+    "source_operator": "hyperparameters_no_cv",
+    "telemetry": "GSE telemetry: evidence-set hyperparameters vs held-out performance; verify the sealed test set is never used for fitting."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "130cb31e98511398-t1",
+   "think": "Retrocausal Genealogy. Bishop's Pattern Recognition and Machine Learning is the layer that turns the Foundry's probabilistic machinery into a decision discipline, and its lineage runs backward from the GSE pick to the foundations of inference under uncertainty. The root is the separation of inference from decision (Section 1.5): probability theory quantifies uncertainty, but it is decision theory that tells us how to act on it, and the decision stage is trivial once the inference is solved. From this root grow the expected-loss rule (Eq. 1.80-1.81), the asymmetric loss matrix (the cancer example where a missed diagnosis costs 1000 times a false alarm), and the reject option (Section 1.5.3) that abstains when the largest posterior falls below a threshold. The regression analysis (Eq. 1.86-1.90) shows the optimal squared-loss predictor is the conditional mean and isolates an irreducible noise term no model can beat. Information theory (Section 1.6) supplies the surprise measure h(x)=-log p(x), the entropy H[x], and Shannon's noiseless coding theorem that entropy is the bit lower bound. The Bayesian model-comparison chapter (3.4-3.5) then supplies the evidence/marginal likelihood (Eq. 3.66-3.68), model averaging that preserves multimodality (Eq. 3.67), the Occam factor whose complexity penalty grows with parameter count (Eq. 3.70-3.72), the automatic Occam razor favoring intermediate complexity, and the evidence approximation (empirical Bayes) that sets hyperparameters from training data alone. This genealogy is retrocausal because the GSE engine's design pulls these results into being: the pick is an expected-loss decision, the PASS is the reject option, the noise floor is the irreducible error, the swarm is Bayesian model averaging, and the anti-overfitting gate is the Occam factor.\n\nRecursive Theory of Mind. The engine reasons about its own uncertainty and about the defense's uncertainty in a recursive stack that Bishop's inference/decision split makes precise. At the base the engine holds a posterior over game outcomes (inference), and only then chooses an action (decision); it must not collapse the two stages into a direct pick heuristic that hides its uncertainty. One level up, the engine holds a distribution over its own models (Bayesian model averaging), so it reasons about which explanation to trust, weighting each by its evidence rather than its best fit. The engine also models the defense as a Bayesian reasoner: the coverage call is the defense's posterior over the offense's intent, so the engine computes its posterior over the defense's posterior, a theory-of-mind recursion. The Occam factor adds recursive self-skepticism: the engine knows that finely tuning many parameters to one observed game is penalized by the evidence, so it reasons about its own tendency to overfit and prefers the parsimonious explanation. The reject option is the engine's meta-decision about when not to decide: it reasons that abstaining on ambiguous games lowers the error rate on the games it actually publishes, which is recursive calibration of its own publication policy.\n\nCross-Layer Veto Adjudication. Bishop's decision-theoretic layer supplies the vetoes that bind the stack. First, the reject-option veto: when the largest posterior is below the threshold theta, the engine PASSes rather than forcing a pick (Section 1.5.3); a PASS on a bad board is the reject option exercised correctly. Second, the asymmetric-loss veto: a confident wrong pick costs far more than a PASS, so the loss matrix must weight the costly error heavily (the cancer 1000:1 example); this is the decision-theoretic root of the no-lock doctrine. Third, the irreducible-error veto: no model can beat the noise floor (Eq. 1.90), so the engine must not claim skill below the irreducible variance; this binds the honest-ledger doctrine. Fourth, the Occam-factor veto: a model that finely tunes many parameters to one game pays a large evidence penalty (Eq. 3.72), so the engine vetoes overfit models even when their likelihood is high. Fifth, the multimodality veto: averaging two equally-supported scripts into a midpoint is wrong (Eq. 3.67), so the engine preserves the bimodal posterior rather than collapsing it. Sixth, the improper-prior veto: the evidence is undefined for an improper prior, so the engine must use proper priors. The adjudication order is fixed: abstain first (reject option), then weight the costly error (asymmetric loss), then respect the noise floor (irreducible error), then penalize complexity (Occam factor), then preserve multimodality, then require proper priors. A candidate failing any veto is PASSed, and the long-run guarantee that the Bayes factor favors the correct model (a non-negative KL) binds the whole procedure to the truth over many games.\n\nThe load-bearing isomorphism is that GSE pick publication IS Bayesian decision theory. Inference (the crucible's posterior over game outcomes) is separate from decision (the pick); the pick minimizes expected loss under an asymmetric loss matrix where a confident wrong pick is the costly error; the PASS is the reject option; the noise floor is the irreducible error no model can beat; the swarm is Bayesian model averaging that preserves multimodality and weights models by evidence; and the anti-overfitting gate is the Occam factor whose complexity penalty grows with parameter count. Bishop's information theory unifies with Murphy's KL and the DL cross-entropy: the engine's loss on a snap is the surprise of what happened, entropy is the honest uncertainty, and Shannon's coding theorem is the zero-fabrication floor. The evidence approximation sets the regularization from the corpus, but Bishop's caveat reconciles it with the held-out discipline: keep an independent test set. Bishop does not sit beside the other layers; it is the decision-theoretic discipline that turns calibrated probabilities into honest action, and it is what lets the Foundry treat a PASS as a theorem rather than a missed bet.",
+   "retrocausal_genealogy": "Retrocausal Genealogy. Bishop's Pattern Recognition and Machine Learning is the layer that turns the Foundry's probabilistic machinery into a decision discipline, and its lineage runs backward from the GSE pick to the foundations of inference under uncertainty. The root is the separation of inference from decision (Section 1.5): probability theory quantifies uncertainty, but it is decision theory that tells us how to act on it, and the decision stage is trivial once the inference is solved. From this root grow the expected-loss rule (Eq. 1.80-1.81), the asymmetric loss matrix (the cancer example where a missed diagnosis costs 1000 times a false alarm), and the reject option (Section 1.5.3) that abstains when the largest posterior falls below a threshold. The regression analysis (Eq. 1.86-1.90) shows the optimal squared-loss predictor is the conditional mean and isolates an irreducible noise term no model can beat. Information theory (Section 1.6) supplies the surprise measure h(x)=-log p(x), the entropy H[x], and Shannon's noiseless coding theorem that entropy is the bit lower bound. The Bayesian model-comparison chapter (3.4-3.5) then supplies the evidence/marginal likelihood (Eq. 3.66-3.68), model averaging that preserves multimodality (Eq. 3.67), the Occam factor whose complexity penalty grows with parameter count (Eq. 3.70-3.72), the automatic Occam razor favoring intermediate complexity, and the evidence approximation (empirical Bayes) that sets hyperparameters from training data alone. This genealogy is retrocausal because the GSE engine's design pulls these results into being: the pick is an expected-loss decision, the PASS is the reject option, the noise floor is the irreducible error, the swarm is Bayesian model averaging, and the anti-overfitting gate is the Occam factor.",
+   "theory_of_mind": "Recursive Theory of Mind. The engine reasons about its own uncertainty and about the defense's uncertainty in a recursive stack that Bishop's inference/decision split makes precise. At the base the engine holds a posterior over game outcomes (inference), and only then chooses an action (decision); it must not collapse the two stages into a direct pick heuristic that hides its uncertainty. One level up, the engine holds a distribution over its own models (Bayesian model averaging), so it reasons about which explanation to trust, weighting each by its evidence rather than its best fit. The engine also models the defense as a Bayesian reasoner: the coverage call is the defense's posterior over the offense's intent, so the engine computes its posterior over the defense's posterior, a theory-of-mind recursion. The Occam factor adds recursive self-skepticism: the engine knows that finely tuning many parameters to one observed game is penalized by the evidence, so it reasons about its own tendency to overfit and prefers the parsimonious explanation. The reject option is the engine's meta-decision about when not to decide: it reasons that abstaining on ambiguous games lowers the error rate on the games it actually publishes, which is recursive calibration of its own publication policy.",
+   "cross_layer_veto": "Cross-Layer Veto Adjudication. Bishop's decision-theoretic layer supplies the vetoes that bind the stack. First, the reject-option veto: when the largest posterior is below the threshold theta, the engine PASSes rather than forcing a pick (Section 1.5.3); a PASS on a bad board is the reject option exercised correctly. Second, the asymmetric-loss veto: a confident wrong pick costs far more than a PASS, so the loss matrix must weight the costly error heavily (the cancer 1000:1 example); this is the decision-theoretic root of the no-lock doctrine. Third, the irreducible-error veto: no model can beat the noise floor (Eq. 1.90), so the engine must not claim skill below the irreducible variance; this binds the honest-ledger doctrine. Fourth, the Occam-factor veto: a model that finely tunes many parameters to one game pays a large evidence penalty (Eq. 3.72), so the engine vetoes overfit models even when their likelihood is high. Fifth, the multimodality veto: averaging two equally-supported scripts into a midpoint is wrong (Eq. 3.67), so the engine preserves the bimodal posterior rather than collapsing it. Sixth, the improper-prior veto: the evidence is undefined for an improper prior, so the engine must use proper priors. The adjudication order is fixed: abstain first (reject option), then weight the costly error (asymmetric loss), then respect the noise floor (irreducible error), then penalize complexity (Occam factor), then preserve multimodality, then require proper priors. A candidate failing any veto is PASSed, and the long-run guarantee that the Bayes factor favors the correct model (a non-negative KL) binds the whole procedure to the truth over many games."
+  }
+ ],
+ "universal_lens": "Any predictive system that acts under uncertainty is governed by Bayesian decision theory: separate inference (learning the posterior) from decision (acting on it); choose the action minimizing expected loss under an asymmetric loss matrix; abstain via the reject option when the posterior is too uncertain; respect the irreducible noise floor; measure uncertainty by entropy and surprise by -log p; and compare models by evidence (marginal likelihood) with an automatic Occam penalty on complexity, averaging over models rather than committing to one, because the expected log Bayes factor is a non-negative KL divergence that favors the truth on average.",
+ "gsi_mapping": "For GSI, this is the epistemology of honest action under uncertainty: why a decision must minimize expected loss with an asymmetric loss matrix (the costly error dominates), why abstention (the reject option) is a valid and often optimal action, why no model can beat the irreducible noise floor, why entropy is the honest uncertainty and surprise is -log p, and why an automatic Occam penalty on complexity prevents overfitting one observation. It is the decision-theoretic discipline that turns calibrated probabilities into honest, bankroll-aware action and treats a PASS as a theorem rather than a failure.",
+ "gse_mapping": "For GSE, this is the decision-theoretic layer: the pick is an expected-loss decision under the crucible's posterior, separate from inference; the loss matrix is asymmetric (a confident wrong pick is the costly error, the no-lock doctrine); the PASS is the reject option with threshold theta as the conjunction gate; the irreducible error is the noise floor no model can beat (honest ledger); the swarm is Bayesian model averaging that preserves multimodality and weights by evidence; the Occam factor is the anti-overfitting gate; and the evidence approximation sets the regularization from the corpus while the held-out discipline certifies it on a sealed test set.",
+ "layer2_summary": "[ISOMORPHISM] GSE pick publication IS Bayesian decision theory: inference (crucible posterior) separate from decision (pick); expected loss under asymmetric loss matrix (no-lock); PASS=reject option; irreducible error=noise floor (honest ledger); swarm=Bayesian model averaging preserving multimodality, evidence-weighted; Occam factor=anti-overfitting gate; evidence approximation sets regularization, held-out discipline certifies."
+}

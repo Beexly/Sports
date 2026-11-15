@@ -1,0 +1,78 @@
+{
+  "book_id": "1af1d277efca28b6",
+  "source_status": "COMPLETE",
+  "title": "2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors",
+  "file_name": "2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors.md",
+  "sha256": "1af1d277efca28b665cc6800bbf03b8becadcd11a01d9f17df158d5c1bca87e5",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "TRAP models trail running performance via checkpoint-level predictions using ITRA data, leveraging XGBoost with lagged features for probabilistic finish time estimation. Universal Lens: Rooted in 2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors (1af1d277efca28b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to calibrate TRAP's predictive intervals against observed runner trajectories, enabling conformal uncertainty quantification for risk-aware decision-making. GSI Mapping: Rooted in 2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors (1af1d277efca28b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes TRAP's checkpoint models as state-transition kernels to simulate dynamic race scenarios, supporting real-time situational awareness and adaptive strategy generation. GSE Mapping: Rooted in 2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors (1af1d277efca28b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "checkpoint_prediction_kernel",
+      "name": "Checkpoint Prediction Kernel",
+      "verbatim_quote": "We model the runner's performance at the checkpoint level: for each station, we output a prediction both for the following station and for the end of the race in Chamonix.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_i': 'time at checkpoint i (hours)', 'p_i': 'predicted time at checkpoint i (hours)', 'r_i': \"runner's position at checkpoint i (dimensionless)\"}",
+      "assumptions": "Runner performance follows a deterministic trajectory between checkpoints with stochastic deviations.",
+      "breakdown_regime": "When checkpoint timing data is missing or inconsistent, model accuracy degrades significantly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps runner progress through checkpoints into temporal forecasts using historical ITRA data.",
+        "source_operator": "checkpoint_prediction_kernel",
+        "telemetry": "AUC score of 0.88 on LOYO CV for UTMB 2017–2018."
+      }
+    },
+    {
+      "primitive_id": "itra_data_scraping_module",
+      "name": "ITRA Data Scraping Module",
+      "verbatim_quote": "We develop **ScrapITRA** , a Python package for scraping, downloading, and formatting data of both runners and races from the website of ITRA.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_r': 'runner-level dataset (rows = runners, columns = attributes)', 'D_e': 'race-level dataset (rows = events, columns = race metadata)'}",
+      "assumptions": "ITRA data is consistent and fully accessible for all listed races.",
+      "breakdown_regime": "If ITRA API changes or becomes unavailable, module fails to retrieve updated datasets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enables GSE to access and process ITRA datasets for training and validation of TRAP models.",
+        "source_operator": "itra_data_scraping_module",
+        "telemetry": "Supports analysis of >1 million runners over 15 years."
+      }
+    },
+    {
+      "primitive_id": "dropout_analysis_model",
+      "name": "Dropout Analysis Model",
+      "verbatim_quote": "Figure: Top left: Number of runners who dropped out of the race at each checkpoint for 2017 and 2018 UTMB.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'d_i': 'number of dropouts at checkpoint i (unitless)', 't_f': 'finish time threshold (hours)', 'T_i': 'time elapsed up to checkpoint i (hours)'}",
+      "assumptions": "Dropouts occur due to fatigue or external factors, not systematic bias in data collection.",
+      "breakdown_regime": "Inconsistent reporting across years may distort dropout trends.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides empirical basis for estimating failure probability at checkpoints in TRAP models.",
+        "source_operator": "dropout_analysis_model",
+        "telemetry": "Visualized dropout patterns per checkpoint for UTMB 2017–2018."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1af1d277efca28b6_t0",
+      "think": "The TRAP framework operates under a dual modeling paradigm: it predicts both intermediate checkpoint times and final race outcomes. This dualism arises from the discrete nature of trail races where runners pass through defined geographical points. The use of XGBoost with features including checkpoint times, ITRA statistics, and lagged variables reflects a temporal convolution kernel that captures performance dynamics. The LOYO CV ensures robustness by evaluating on unseen years, mitigating overfitting risks. The model’s reliance on ITRA data implies an assumption of data integrity and completeness. Dropout analysis adds a probabilistic layer, modeling failure rates as a function of elapsed time and checkpoint progression. These primitives form a coherent mathematical structure for forecasting trail performance, grounded in empirical distributions and machine learning optimization.\n\nDeep epistemic analysis for 2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors (1af1d277efca28b6, domain=other, pages_read=2/2): Operator 'Checkpoint Prediction Kernel' (page 1, domain other) captures: We model the runner's performance at the checkpoint level: for each station, we output a prediction both for the following station and for the end of the race in Chamonix. Assumptions: Runner performance follows a deterministic trajectory between checkpoints with stochastic deviations. Breakdown regime: When checkpoint timing data is missing or inconsistent, model accuracy degrades significantly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps runner progress through checkpoints into temporal forecasts using historical ITRA data. Operator 'ITRA Data Scraping Module' (page 1, domain other) captures: We develop **ScrapITRA** , a Python package for scraping, downloading, and formatting data of both runners and races from the website of ITRA. Assumptions: ITRA data is consistent and fully accessible for all listed races. Breakdown regime: If ITRA API changes or becomes unavailable, module fails to retrieve updated datasets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE to access and process ITRA datasets for training and validation of TRAP models. Operator 'Dropout Analysis Model' (page 1, domain other) captures: Figure: Top left: Number of runners who dropped out of the race at each checkpoint for 2017 and 2018 UTMB. Assumptions: Dropouts occur due to fatigue or external factors, not systematic bias in data collection. Breakdown regime: Inconsistent reporting across years may distort dropout trends. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides empirical basis for estimating failure probability at checkpoints in TRAP models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors (1af1d277efca28b6, domain=other, pages_read=2/2): Operator 'Checkpoint Prediction Kernel' (page 1, domain other) captures: We model the runner's performance at the checkpoint level: for each station, we output a prediction both for the following station and for the end of the race in Chamonix. Assumptions: Runner performance follows a deterministic trajectory between checkpoints with stochastic deviations. Breakdown regime: When checkpoint timing data is missing or inconsistent, model accuracy degrades significantly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps runner progress through checkpoints into temporal forecasts using historical ITRA data. Operator 'ITRA Data Scraping Module' (page 1, domain other) captures: We develop **ScrapITRA** , a Python package for scraping, downloading, and formatting data of both runners and races from the website of ITRA. Assumptions: ITRA data is consistent and fully accessible for all listed races. Breakdown regime: If ITRA API changes or becomes unavailable, module fails to retrieve updated datasets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE to access and process ITRA datasets for training and validation of TRAP models. Operator 'Dropout Analysis Model' (page 1, domain other) captures: Figure: Top left: Number of runners who dropped out of the race at each checkpoint for 2017 and 2018 UTMB. Assumptions: Dropouts occur due to fatigue or external factors, not systematic bias in data collection. Breakdown regime: Inconsistent reporting across years may distort dropout trends. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides empirical basis for estimating failure probability at checkpoints in TRAP models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical learning theory and time series forecasting, with influences from sports analytics and computational epidemiology. The framework builds upon prior work in event-based modeling and survival analysis. Retrocausal Genealogy: Rooted in 2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors (1af1d277efca28b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include runners with varying physical capabilities, environmental conditions, and decision-making strategies. The model must account for heterogeneity in performance profiles while maintaining generalizability across diverse populations. Theory of Mind & Decision Maker Model: Rooted in 2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors (1af1d277efca28b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by separating temporal features (lagged times) from static ones (ITRA stats). Leakage is mitigated by ensuring no future data leaks into past predictions during training. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors (1af1d277efca28b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "67ed1b126fe896ca",
+  "source_status": "COMPLETE",
+  "title": "AWS_REPO_REALITY_MAP",
+  "file_name": "AWS_REPO_REALITY_MAP.md",
+  "sha256": "67ed1b126fe896cab7a92c4faa283fc527e42ed5a31a26a4aec8bbf84f53c76e",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "AWS repository state-space defined by additive local changes and blocked live actions; governed by owner-approval constraints. Universal Lens: Rooted in AWS_REPO_REALITY_MAP (67ed1b126fe896ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on AWS resource presence conditioned on local additions and approval states; conformal prediction of deployment readiness. GSI Mapping: Rooted in AWS_REPO_REALITY_MAP (67ed1b126fe896ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates current branch state against allowed transitions; state-transition graph constrained by approval and budget regimes. GSE Mapping: Rooted in AWS_REPO_REALITY_MAP (67ed1b126fe896ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "aws_resource_presence",
+      "name": "AWS Resource Presence Indicator",
+      "verbatim_quote": "# AWS Repo Reality Map Repo reality: - No AWS CDK app was added.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'dimensionless binary indicator (0 or 1)'}",
+      "assumptions": "Resource existence is binary and deterministic within branch context.",
+      "breakdown_regime": "R = 0 when no resource type is present.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binary state vector in GSI belief space maps to GSE resource availability graph.",
+        "source_operator": "aws_resource_presence",
+        "telemetry": "Presence/absence of CDK, CloudFormation, SageMaker, Bedrock, Clean Rooms"
+      }
+    },
+    {
+      "primitive_id": "local_addition_compliance",
+      "name": "Local Addition Compliance Check",
+      "verbatim_quote": "Local additions: - `apps/web/lib/fable/aws-gates.ts` - `apps/web/lib/fable/aws-gates.test.ts` - `infrastructure/aws/amplify/*` Design additions: - AWS docs in this folder.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'dimensionless compliance score (0 to 1)'}",
+      "assumptions": "Local additions are validated via code review and design alignment.",
+      "breakdown_regime": "L = 1 when all additions meet criteria; L < 1 otherwise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Compliance kernel in GSE state transition space derived from local fileset validation.",
+        "source_operator": "local_addition_compliance",
+        "telemetry": "Fileset integrity and documentation coverage"
+      }
+    },
+    {
+      "primitive_id": "approval_constraint",
+      "name": "Owner Approval Constraint",
+      "verbatim_quote": "Blocked next step: - Any live AWS action without owner approval, credentials, budget cap, and source rights review.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'dimensionless approval status (0 or 1)'}",
+      "assumptions": "Approval is necessary for any live AWS action.",
+      "breakdown_regime": "A = 0 blocks live action; A = 1 enables it.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Approval constraint in GSI decision space mirrors GSE access control policy.",
+        "source_operator": "approval_constraint",
+        "telemetry": "Owner approval flag and credential validity"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "67ed1b126fe896ca_t0",
+      "think": "The AWS repository state is modeled as a discrete system where each resource presence is a binary variable. The system's evolution is constrained by a set of rules: local additions must be reviewed before live actions can occur. The state vector includes presence indicators for CDK apps, CloudFormation templates, and AWS service resources. Compliance with local additions is evaluated through a kernel that checks file integrity and documentation coverage. The approval constraint acts as a gatekeeper, ensuring that any live action requires explicit authorization. These primitives form a logical lattice underpinning the repository’s operational semantics.\n\nDeep epistemic analysis for AWS_REPO_REALITY_MAP (67ed1b126fe896ca, domain=other, pages_read=1/1): Operator 'AWS Resource Presence Indicator' (page 1, domain other) captures: # AWS Repo Reality Map Repo reality: - No AWS CDK app was added. Assumptions: Resource existence is binary and deterministic within branch context. Breakdown regime: R = 0 when no resource type is present. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary state vector in GSI belief space maps to GSE resource availability graph. Operator 'Local Addition Compliance Check' (page 1, domain other) captures: Local additions: - `apps/web/lib/fable/aws-gates.ts` - `apps/web/lib/fable/aws-gates.test.ts` - `infrastructure/aws/amplify/*` Design additions: - AWS docs in this folder. Assumptions: Local additions are validated via code review and design alignment. Breakdown regime: L = 1 when all additions meet criteria; L < 1 otherwise. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compliance kernel in GSE state transition space derived from local fileset validation. Operator 'Owner Approval Constraint' (page 1, domain other) captures: Blocked next step: - Any live AWS action without owner approval, credentials, budget cap, and source rights review. Assumptions: Approval is necessary for any live AWS action. Breakdown regime: A = 0 blocks live action; A = 1 enables it. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Approval constraint in GSI decision space mirrors GSE access control policy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for AWS_REPO_REALITY_MAP (67ed1b126fe896ca, domain=other, pages_read=1/1): Operator 'AWS Resource Presence Indicator' (page 1, domain other) captures: # AWS Repo Reality Map Repo reality: - No AWS CDK app was added. Assumptions: Resource existence is binary and deterministic within branch context. Breakdown regime: R = 0 when no resource type is present. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary state vector in GSI belief space maps to GSE resource availability graph. Operator 'Local Addition Compliance Check' (page 1, domain other) captures: Local additions: - `apps/web/lib/fable/aws-gates.ts` - `apps/web/lib/fable/aws-gates.test.ts` - `infrastructure/aws/amplify/*` Design additions: - AWS docs in this folder. Assumptions: Local additions are validated via code review and design alignment. Breakdown regime: L = 1 when all additions meet criteria; L < 1 otherwise. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compliance kernel in GSE state transition space derived from local fileset validation. Operator 'Owner Approval Constraint' (page 1, domain other) captures: Blocked next step: - Any live AWS action without owner approval, credentials, budget cap, and source rights review. Assumptions: Approval is necessary for any live AWS action. Breakdown regime: A = 0 blocks live action; A = 1 enables it. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Approval constraint in GSI decision space mirrors GSE access control policy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification of software repositories and access control models from early 2000s, extended into cloud-native governance frameworks. Retrocausal Genealogy: Rooted in AWS_REPO_REALITY_MAP (67ed1b126fe896ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in AWS_REPO_REALITY_MAP (67ed1b126fe896ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include developers (local addition creators), owners (approval gatekeepers), and systems (automated compliance validators). Each agent operates under distinct information sets and incentives. Theory of Mind & Decision Maker Model: Rooted in AWS_REPO_REALITY_MAP (67ed1b126fe896ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in AWS_REPO_REALITY_MAP (67ed1b126fe896ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity between local additions and live actions prevents unauthorized deployments. Leakage vetoes occur if approval flags are bypassed or credentials are misused. Cross-Layer Veto & Anti-Leakage Check: Rooted in AWS_REPO_REALITY_MAP (67ed1b126fe896ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in AWS_REPO_REALITY_MAP (67ed1b126fe896ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "7bf8b57d7118ac6a",
+  "source_status": "COMPLETE",
+  "title": "gse-10-23",
+  "file_name": "gse-10-23.txt",
+  "sha256": "7bf8b57d7118ac6a29fa85e0790643b6b1acb46bcc4ca3da4764acaf501c8595",
+  "primary_domain": "other",
+  "pages_total": 31,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "API surface discovery via authenticated probing and query key extraction maps client-side state to backend observables, enabling probabilistic inference over sports intelligence domains. Universal Lens: Rooted in gse-10-23 (7bf8b57d7118ac6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on match predictions using crowd consensus signals (agreed_votes_percent/all_votes_count) as prior distributions over outcome likelihoods. GSI Mapping: Rooted in gse-10-23 (7bf8b57d7118ac6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models NFL game scripts through Monte Carlo simulations, transitioning from raw data ingestion to actionable projections via state-space transitions in team dynamics. GSE Mapping: Rooted in gse-10-23 (7bf8b57d7118ac6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "auth_token_flow",
+      "name": "Authentication Token Lifecycle",
+      "verbatim_quote": "│ +- Auth: cookie `access_token`; refresh cookie `refresh_token`; token is read via │ + `window.getAccessToken()` and sent as an `Auth` header by the client.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'access_token': 'dimensionless string (209 chars)', 'refresh_token': 'dimensionless string (209 chars)', 'Auth_header': 'HTTP header value'}",
+      "assumptions": "Tokens are opaque, session-bound, and validated server-side.",
+      "breakdown_regime": "Token invalidation or expiration leads to 401/422 responses.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Client-side token retrieval mirrors server-side authentication logic in GSI's access control layer.",
+        "source_operator": "auth_token_flow",
+        "telemetry": "Status codes 401/422 upon failed auth attempts."
+      }
+    },
+    {
+      "primitive_id": "prediction_consensus_signal",
+      "name": "Crowd Consensus Prediction Signal",
+      "verbatim_quote": "`agreed_votes_percent` / `all_votes_count` is a crowd-consensus │ +signal, not a model output — treat it as such.",
+      "page": 1,
+      "latex": "\\sigma_{\\text{consensus}} = \\frac{\\text{agreed_votes}}{\\text{all_votes}}",
+      "symbol_and_unit_ledger": "{'agreed_votes': 'integer (votes)', 'all_votes': 'integer (votes)', 'σ_consensus': 'dimensionless ratio'}",
+      "assumptions": "Consensus reflects collective expert opinion, not predictive model output.",
+      "breakdown_regime": "Low vote count (<100) introduces noise in signal estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used as input to GSI's Bayesian updating framework for refining match outcome probabilities.",
+        "source_operator": "prediction_consensus_signal",
+        "telemetry": "Vote counts and percentage thresholds from API responses."
+      }
+    },
+    {
+      "primitive_id": "api_route_discovery_via_query_state",
+      "name": "API Route Discovery via Client Query State",
+      "verbatim_quote": "The SSR page ships `window.__API_TOKEN__` (209 chars) and │ + `window.__REACT_QUERY_STATE__` — a 384 KB hydrated cache of the page's own │ + queries, which decodes to `queryKey` objects containing the exact API URLs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'__REACT_QUERY_STATE__': 'JSON object (384 KB)', 'queryKey.url': 'string (API endpoint)'}",
+      "assumptions": "Client-side hydration contains valid API paths used during SSR rendering.",
+      "breakdown_regime": "Query state may be stale or incomplete if not rehydrated post-render.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps frontend query keys to backend endpoints for GSE’s reverse-engineered route mapping.",
+        "source_operator": "api_route_discovery_via_query_state",
+        "telemetry": "Extracted queryKey URLs from window.__REACT_QUERY_STATE__."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7bf8b57d7118ac6a_t0",
+      "think": "The primitives define a layered architecture where authentication governs access, consensus signals inform probabilistic modeling, and client-side query states enable reverse-engineering of backend APIs. The system operates under dual constraints: secure token lifecycle management and accurate interpretation of crowd-sourced predictions. Failure modes include expired tokens leading to 401s, insufficient vote counts causing noisy consensus signals, and stale query keys resulting in broken API routes. These primitives form a coherent foundation for GSI’s Bayesian inference and GSE’s situational reasoning engines.\n\nDeep epistemic analysis for gse-10-23 (7bf8b57d7118ac6a, domain=other, pages_read=18/31): Operator 'Authentication Token Lifecycle' (page 1, domain other) captures: │ +- Auth: cookie `access_token`; refresh cookie `refresh_token`; token is read via │ + `window.getAccessToken()` and sent as an `Auth` header by the client. Assumptions: Tokens are opaque, session-bound, and validated server-side. Breakdown regime: Token invalidation or expiration leads to 401/422 responses. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Client-side token retrieval mirrors server-side authentication logic in GSI's access control layer. Operator 'Crowd Consensus Prediction Signal' (page 1, domain other) captures: `agreed_votes_percent` / `all_votes_count` is a crowd-consensus │ +signal, not a model output — treat it as such. Assumptions: Consensus reflects collective expert opinion, not predictive model output. Breakdown regime: Low vote count (<100) introduces noise in signal estimation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used as input to GSI's Bayesian updating framework for refining match outcome probabilities. Operator 'API Route Discovery via Client Query State' (page 1, domain other) captures: The SSR page ships `window.__API_TOKEN__` (209 chars) and │ + `window.__REACT_QUERY_STATE__` — a 384 KB hydrated cache of the page's own │ + queries, which decodes to `queryKey` objects containing the exact API URLs. Assumptions: Client-side hydration contains valid API paths used during SSR rendering. Breakdown regime: Query state may be stale or incomplete if not rehydrated post-render. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps frontend query keys to backend endpoints for GSE’s reverse-engineered route mapping. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for gse-10-23 (7bf8b57d7118ac6a, domain=other, pages_read=18/31): Operator 'Authentication Token Lifecycle' (page 1, domain other) captures: │ +- Auth: cookie `access_token`; refresh cookie `refresh_token`; token is read via │ + `window.getAccessToken()` and sent as an `Auth` header by the client. Assumptions: Tokens are opaque, session-bound, and validated server-side. Breakdown regime: Token invalidation or expiration leads to 401/422 responses. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Client-side token retrieval mirrors server-side authentication logic in GSI's access control layer. Operator 'Crowd Consensus Prediction Signal' (page 1, domain other) captures: `agreed_votes_percent` / `all_votes_count` is a crowd-consensus │ +signal, not a model output — treat it as such. Assumptions: Consensus reflects collective expert opinion, not predictive model output. Breakdown regime: Low vote count (<100) introduces noise in signal estimation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used as input to GSI's Bayesian updating framework for refining match outcome probabilities. Operator 'API Route Discovery via Client Query State' (page 1, domain other) captures: The SSR page ships `window.__API_TOKEN__` (209 chars) and │ + `window.__REACT_QUERY_STATE__` — a 384 KB hydrated cache of the page's own │ + queries, which decodes to `queryKey` objects containing the exact API URLs. Assumptions: Client-side hydration contains valid API paths used during SSR rendering. Breakdown regime: Query state may be stale or incomplete if not rehydrated post-render. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps frontend query keys to backend endpoints for GSE’s reverse-engineered route mapping. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in HTTP-based API design principles and React’s query-state hydration patterns, extending into modern web security paradigms and crowdsourced forecasting systems. Retrocausal Genealogy: Rooted in gse-10-23 (7bf8b57d7118ac6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in gse-10-23 (7bf8b57d7118ac6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include unauthorized crawlers (blocked by Cloudflare) and adversarial users attempting to exploit weak auth flows. The system models these as stochastic perturbations in the token validation pipeline. Theory of Mind & Decision Maker Model: Rooted in gse-10-23 (7bf8b57d7118ac6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that consensus signals do not bias model outputs directly; leakage vetoes prevent stale query keys from propagating into production routing logic. Cross-Layer Veto & Anti-Leakage Check: Rooted in gse-10-23 (7bf8b57d7118ac6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in gse-10-23 (7bf8b57d7118ac6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

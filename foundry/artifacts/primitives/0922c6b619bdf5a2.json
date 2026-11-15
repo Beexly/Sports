@@ -1,0 +1,78 @@
+{
+  "book_id": "0922c6b619bdf5a2",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "0922c6b619bdf5a27d8a8b99b139b8ac128c6823a6427d8111d2a9f670dffb5c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A structured temporal hierarchy of DFS research and optimization, mapping dated packets to kernelized slates via Bayesian inference. Universal Lens: Rooted in README (0922c6b619bdf5a2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models daily fantasy lineups as stochastic processes over player pools; employs conformal prediction for GPP strategy validation. GSI Mapping: Rooted in README (0922c6b619bdf5a2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes dynamic state transitions between optimizer slates and research packets using temporal logic and causal graph traversal. GSE Mapping: Rooted in README (0922c6b619bdf5a2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "research_packet_hierarchy",
+      "name": "Research Packet Hierarchy",
+      "verbatim_quote": "## Layout - `optimizer/ — optimizer notes (the code lives in apps/web/lib/fantasy/)` - `research/<YYYY-MM-DD>/ — dated research: weekly packets, pool notes, GPP studies, full-tables, chart-reads` ## The rule New research goes in `research/<YYYY-MM-DD>/` — dated, always.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time (days since epoch)', 'R(t)': 'research packet set at time t'}",
+      "assumptions": "Each research packet is a function of time and contains independent statistical summaries.",
+      "breakdown_regime": "When t < 0 or t > T_max, packet validity fails due to data staleness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Research packet sets form a poset under inclusion; GSE uses this lattice for causal reasoning over lineup construction.",
+        "source_operator": "research_packet_hierarchy",
+        "telemetry": "Packet freshness index (days since last update)"
+      }
+    },
+    {
+      "primitive_id": "optimizer_slate_kernel",
+      "name": "Optimizer Slate Kernel",
+      "verbatim_quote": "# DFS — Daily Fantasy Sports Everything DraftKings/FanDuel: the optimizer, slates, GPP lineup construction, pick'em wiring, weekly research packets.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'slate configuration space', 'O(S)': 'optimizer output on slate S'}",
+      "assumptions": "Optimizer operates on fixed slate constraints with bounded cardinality.",
+      "breakdown_regime": "When |S| exceeds computational limits, kernelization fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Slate configurations are embedded into a Hilbert space where O(S) maps to optimal lineup vectors via gradient descent.",
+        "source_operator": "optimizer_slate_kernel",
+        "telemetry": "Lineup entropy across slates"
+      }
+    },
+    {
+      "primitive_id": "temporal_research_rule",
+      "name": "Temporal Research Rule",
+      "verbatim_quote": "weekly packets, pool notes, GPP studies, full-tables, chart-reads` ## The rule New research goes in `research/<YYYY-MM-DD>/`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_0': 'initial timestamp', 'R_{new}(t_0)': 'newly generated research packet'}",
+      "assumptions": "All new research must be timestamped and isolated by date.",
+      "breakdown_regime": "If R_{new}(t_0) lacks timestamp, it violates causality and is rejected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Temporal research rule mirrors a discrete-time Markov chain where each packet is a state transition.",
+        "source_operator": "temporal_research_rule",
+        "telemetry": "Timestamp consistency score"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0922c6b619bdf5a2_t0",
+      "think": "The DFS ecosystem's core structure is defined by two interlocking primitives: the research packet hierarchy and the optimizer slate kernel. The former enforces a temporal lattice of knowledge, while the latter defines a constrained optimization landscape. These interact through a temporal rule that ensures all new data enters the system in a causally consistent manner. The failure mode of the hierarchy occurs when outdated or untimestamped research corrupts the lattice. The kernel breaks down when the slate size exceeds computational bounds. Dualities emerge in how these structures mirror each other: the research packet is a static snapshot of a dynamic process, while the slate is a dynamic constraint on a static set of players. The system's robustness depends on maintaining a strict separation between these layers, preventing cross-layer contamination.\n\nDeep epistemic analysis for README (0922c6b619bdf5a2, domain=other, pages_read=1/1): Operator 'Research Packet Hierarchy' (page 1, domain other) captures: ## Layout - `optimizer/ — optimizer notes (the code lives in apps/web/lib/fantasy/)` - `research/<YYYY-MM-DD>/ — dated research: weekly packets, pool notes, GPP studies, full-tables, chart-reads` ## The rule New research goes in `research/<YYYY-MM-DD>/` — dated, always. Assumptions: Each research packet is a function of time and contains independent statistical summaries. Breakdown regime: When t < 0 or t > T_max, packet validity fails due to data staleness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Research packet sets form a poset under inclusion; GSE uses this lattice for causal reasoning over lineup construction. Operator 'Optimizer Slate Kernel' (page 1, domain other) captures: # DFS — Daily Fantasy Sports Everything DraftKings/FanDuel: the optimizer, slates, GPP lineup construction, pick'em wiring, weekly research packets. Assumptions: Optimizer operates on fixed slate constraints with bounded cardinality. Breakdown regime: When |S| exceeds computational limits, kernelization fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Slate configurations are embedded into a Hilbert space where O(S) maps to optimal lineup vectors via gradient descent. Operator 'Temporal Research Rule' (page 1, domain other) captures: weekly packets, pool notes, GPP studies, full-tables, chart-reads` ## The rule New research goes in `research/<YYYY-MM-DD>/` Assumptions: All new research must be timestamped and isolated by date. Breakdown regime: If R_{new}(t_0) lacks timestamp, it violates causality and is rejected. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal research rule mirrors a discrete-time Markov chain where each packet is a state transition. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (0922c6b619bdf5a2, domain=other, pages_read=1/1): Operator 'Research Packet Hierarchy' (page 1, domain other) captures: ## Layout - `optimizer/ — optimizer notes (the code lives in apps/web/lib/fantasy/)` - `research/<YYYY-MM-DD>/ — dated research: weekly packets, pool notes, GPP studies, full-tables, chart-reads` ## The rule New research goes in `research/<YYYY-MM-DD>/` — dated, always. Assumptions: Each research packet is a function of time and contains independent statistical summaries. Breakdown regime: When t < 0 or t > T_max, packet validity fails due to data staleness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Research packet sets form a poset under inclusion; GSE uses this lattice for causal reasoning over lineup construction. Operator 'Optimizer Slate Kernel' (page 1, domain other) captures: # DFS — Daily Fantasy Sports Everything DraftKings/FanDuel: the optimizer, slates, GPP lineup construction, pick'em wiring, weekly research packets. Assumptions: Optimizer operates on fixed slate constraints with bounded cardinality. Breakdown regime: When |S| exceeds computational limits, kernelization fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Slate configurations are embedded into a Hilbert space where O(S) maps to optimal lineup vectors via gradient descent. Operator 'Temporal Research Rule' (page 1, domain other) captures: weekly packets, pool notes, GPP studies, full-tables, chart-reads` ## The rule New research goes in `research/<YYYY-MM-DD>/` Assumptions: All new research must be timestamped and isolated by date. Breakdown regime: If R_{new}(t_0) lacks timestamp, it violates causality and is rejected. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal research rule mirrors a discrete-time Markov chain where each packet is a state transition. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the formalism of temporal databases and constraint satisfaction systems, with parallels to Bayesian belief networks and causal graphs used in machine learning. Retrocausal Genealogy: Rooted in README (0922c6b619bdf5a2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (0922c6b619bdf5a2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the optimizer seeking maximum utility and the research pipeline aiming for information integrity. Their conflict arises when optimizing for short-term gains undermines long-term data quality. Theory of Mind & Decision Maker Model: Rooted in README (0922c6b619bdf5a2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that research packets do not directly influence optimizer logic without proper temporal alignment. Leakage is prevented by strict namespace isolation between `optimizer/` and `research/<YYYY-MM-DD>/`. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (0922c6b619bdf5a2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

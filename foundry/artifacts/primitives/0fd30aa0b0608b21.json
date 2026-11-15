@@ -1,0 +1,78 @@
+{
+  "book_id": "0fd30aa0b0608b21",
+  "source_status": "COMPLETE",
+  "title": "1113-going-for-goal-grounded-football",
+  "file_name": "1113-going-for-goal-grounded-football.md",
+  "sha256": "0fd30aa0b0608b21e484fb82cab57ff8be01d9f2ead4da13c5fa10e321d15f42",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Grounded football commentary as a multimodal alignment problem: video frames \\( v \\) aligned to textual commentaries \\( c \\) via retrieval \\( R(v \\to c) \\), reordering \\( O(f \\to c) \\), and moment mapping \\( M(c \\to v) \\).",
+  "gsi_mapping": "Bayesian grounding of commentary \\( c \\) to video \\( v \\) via conditional probability \\( P(c|v) \\), using retrieval metrics R@1 and MRR to infer epistemic confidence in alignment.",
+  "gse_mapping": "Situational reasoning in GSE maps video moments \\( m \\) to commentary states \\( s_c \\) through state transitions \\( T(m \\to s_c) \\), enabling dynamic commentary grounding and event tracking.",
+  "primitives": [
+    {
+      "primitive_id": "commentary_retrieval",
+      "name": "Commentary Retrieval Operator",
+      "verbatim_quote": "Method / model Four tasks: (1) commentary retrieval (given video, retrieve matching commentary); (2) frame reordering (order shuffled frames); (3) moment retrieval (given commentary, find the video moment); (4) commentary generation (BART, HERO variants, oracle KB-target).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v': 'video clip, dimensionless', 'c': 'commentary text, dimensionless', 'R(v \\\\to c)': 'retrieval function, dimensionless'}",
+      "assumptions": "Video and commentary are paired via semantic alignment; retrieval accuracy proxies grounding fidelity.",
+      "breakdown_regime": "When video content diverges from commentary semantics, retrieval fails.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Commentary retrieval \\( R(v \\to c) \\) mirrors GSI's probabilistic alignment of video features to linguistic tokens.",
+        "source_operator": "commentary_retrieval",
+        "telemetry": "R@1 score, MRR"
+      }
+    },
+    {
+      "primitive_id": "frame_reordering",
+      "name": "Frame Reordering Kernel",
+      "verbatim_quote": "Method / model Four tasks: (1) commentary retrieval (given video, retrieve matching commentary); (2) frame reordering (order shuffled frames); (3) moment retrieval (given commentary, find the video moment); (4) commentary generation (BART, HERO variants, oracle KB-target).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f': 'shuffled video frame sequence, dimensionless', 'c': 'commentary text, dimensionless', 'O(f \\\\to c)': 'reordering function, dimensionless'}",
+      "assumptions": "Frames are semantically ordered by commentary relevance; temporal consistency is assumed.",
+      "breakdown_regime": "When commentary lacks temporal markers, frame reordering fails.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Frame reordering kernel \\( O(f \\to c) \\) is derived from GSE’s temporal event graph alignment.",
+        "source_operator": "frame_reordering",
+        "telemetry": "Accuracy percentage (e.g., 91% bi-LSTM)"
+      }
+    },
+    {
+      "primitive_id": "moment_retrieval",
+      "name": "Moment Retrieval Function",
+      "verbatim_quote": "Method / model Four tasks: (1) commentary retrieval (given video, retrieve matching commentary); (2) frame reordering (order shuffled frames); (3) moment retrieval (given commentary, find the video moment); (4) commentary generation (BART, HERO variants, oracle KB-target).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'c': 'commentary text, dimensionless', 'v': 'video clip, dimensionless', 'M(c \\\\to v)': 'moment retrieval function, dimensionless'}",
+      "assumptions": "Commentary encodes spatiotemporal anchors; moment retrieval is semantically grounded.",
+      "breakdown_regime": "When commentary is ambiguous or non-specific, moment retrieval degrades.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Moment retrieval \\( M(c \\to v) \\) aligns with GSI’s event grounding via semantic anchoring.",
+        "source_operator": "moment_retrieval",
+        "telemetry": "Soft accuracy (e.g., 70.6% HERO)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0fd30aa0b0608b21_t0",
+      "think": "The primitives form a coherent multimodal grounding framework where video \\( v \\) and commentary \\( c \\) are aligned through retrieval \\( R \\), reordering \\( O \\), and moment mapping \\( M \\). These operators define a dual space: one where \\( v \\) is grounded to \\( c \\), and another where \\( c \\) is grounded to \\( v \\). The retrieval operator \\( R(v \\to c) \\) is modeled as a similarity search in a shared embedding space, with metrics like R@1 and MRR serving as proxies for grounding quality. Frame reordering \\( O(f \\to c) \\) is a permutation optimization problem, solved via learned temporal kernels such as bi-LSTM or bi-GRU. Moment retrieval \\( M(c \\to v) \\) maps semantic commentary to spatiotemporal video segments, relying on attention-based architectures like HERO. Each operator exhibits distinct failure modes: retrieval fails when semantics diverge, reordering fails without temporal cues, and moment retrieval fails with ambiguous commentary. The system is vulnerable to leakage due to preselected highlight clips and lacks full-game grounding.\n\nDeep epistemic analysis for 1113-going-for-goal-grounded-football (0fd30aa0b0608b21, domain=football, pages_read=2/2): Operator 'Commentary Retrieval Operator' (page 1, domain football) captures: Method / model Four tasks: (1) commentary retrieval (given video, retrieve matching commentary); (2) frame reordering (order shuffled frames); (3) moment retrieval (given commentary, find the video moment); (4) commentary generation (BART, HERO variants, oracle KB-target). Assumptions: Video and commentary are paired via semantic alignment; retrieval accuracy proxies grounding fidelity. Breakdown regime: When video content diverges from commentary semantics, retrieval fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Commentary retrieval \\( R(v \\to c) \\) mirrors GSI's probabilistic alignment of video features to linguistic tokens. Operator 'Frame Reordering Kernel' (page 1, domain football) captures: Method / model Four tasks: (1) commentary retrieval (given video, retrieve matching commentary); (2) frame reordering (order shuffled frames); (3) moment retrieval (given commentary, find the video moment); (4) commentary generation (BART, HERO variants, oracle KB-target). Assumptions: Frames are semantically ordered by commentary relevance; temporal consistency is assumed. Breakdown regime: When commentary lacks temporal markers, frame reordering fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Frame reordering kernel \\( O(f \\to c) \\) is derived from GSE’s temporal event graph alignment. Operator 'Moment Retrieval Function' (page 1, domain football) captures: Method / model Four tasks: (1) commentary retrieval (given video, retrieve matching commentary); (2) frame reordering (order shuffled frames); (3) moment retrieval (given commentary, find the video moment); (4) commentary generation (BART, HERO variants, oracle KB-target). Assumptions: Commentary encodes spatiotemporal anchors; moment retrieval is semantically grounded. Breakdown regime: When commentary is ambiguous or non-specific, moment retrieval degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Moment retrieval \\( M(c \\to v) \\) aligns with GSI’s event grounding via semantic anchoring. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1113-going-for-goal-grounded-football (0fd30aa0b0608b21, domain=football, pages_read=2/2): Operator 'Commentary Retrieval Operator' (page 1, domain football) captures: Method / model Four tasks: (1) commentary retrieval (given video, retrieve matching commentary); (2) frame reordering (order shuffled frames); (3) moment retrieval (given commentary, find the video moment); (4) commentary generation (BART, HERO variants, oracle KB-target). Assumptions: Video and commentary are paired via semantic alignment; retrieval accuracy proxies grounding fidelity. Breakdown regime: When video content diverges from commentary semantics, retrieval fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Commentary retrieval \\( R(v \\to c) \\) mirrors GSI's probabilistic alignment of video features to linguistic tokens. Operator 'Frame Reordering Kernel' (page 1, domain football) captures: Method / model Four tasks: (1) commentary retrieval (given video, retrieve matching commentary); (2) frame reordering (order shuffled frames); (3) moment retrieval (given commentary, find the video moment); (4) commentary generation (BART, HERO variants, oracle KB-target). Assumptions: Frames are semantically ordered by commentary relevance; temporal consistency is assumed. Breakdown regime: When commentary lacks temporal markers, frame reordering fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Frame reordering kernel \\( O(f \\to c) \\) is derived from GSE’s temporal event graph alignment. Operator 'Moment Retrieval Function' (page 1, domain football) captures: Method / model Four tasks: (1) commentary retrieval (given video, retrieve matching commentary); (2) frame reordering (order shuffled frames); (3) moment retrieval (given commentary, find the video moment); (4) commentary generation (BART, HERO variants, oracle KB-target). Assumptions: Commentary encodes spatiotemporal anchors; moment retrieval is semantically grounded. Breakdown regime: When commentary is ambiguous or non-specific, moment retrieval degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Moment retrieval \\( M(c \\to v) \\) aligns with GSI’s event grounding via semantic anchoring. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early work on video-text alignment (e.g., CLIP, ViLT) and grounded dialogue systems, this framework extends prior multimodal retrieval to sports domains with structured temporal grounding. Retrocausal Genealogy: Rooted in 1113-going-for-goal-grounded-football (0fd30aa0b0608b21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1113-going-for-goal-grounded-football (0fd30aa0b0608b21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents in this framework include commentators (encoding events), video models (capturing scenes), and retrieval systems (aligning semantics). Each agent operates under bounded rationality, with commentary serving as a noisy but structured signal for grounding. Theory of Mind & Decision Maker Model: Rooted in 1113-going-for-goal-grounded-football (0fd30aa0b0608b21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity: retrieval and moment retrieval should not be conflated; leakage occurs when models are trained on highlight-only data. Veto conditions include: (1) absence of full-game context, (2) low BLEU scores in generation, (3) discrepancy between main and appendix results. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1113-going-for-goal-grounded-football (0fd30aa0b0608b21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

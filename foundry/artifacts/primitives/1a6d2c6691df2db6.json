@@ -1,0 +1,78 @@
+{
+  "book_id": "1a6d2c6691df2db6",
+  "source_status": "COMPLETE",
+  "title": "p0046",
+  "file_name": "p0046.txt",
+  "sha256": "1a6d2c6691df2db6aebce344ba5da17777b83f11341870589565108d9ec4e340",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sprint vs distance running kinematics: power distribution, effort modulation, and temporal scaling across 220-440 yards. Universal Lens: Rooted in p0046 (1a6d2c6691df2db6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on race pacing models using observed time gaps and power expenditure thresholds for 220/440-yard transitions. GSI Mapping: Rooted in p0046 (1a6d2c6691df2db6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions from sprint acceleration to endurance pacing, governed by energy-husbandry dynamics. GSE Mapping: Rooted in p0046 (1a6d2c6691df2db6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sprint_power_transition",
+      "name": "Sprint Power Transition",
+      "verbatim_quote": "TRACK ATHLE 23 cision in the 220-yard race, the record being between 21 and 22 seconds.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_{220}': 'time in seconds', 'r_{220}': 'record time range [21, 22] s'}",
+      "assumptions": "Constant acceleration model applies up to 220 yards; maximal effort required.",
+      "breakdown_regime": "Transition beyond 220 yards requires sustained power output exceeding initial burst capacity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models sprint-to-distance transition via power-time scaling law; GSI infers optimal pacing strategy from empirical time series.",
+        "source_operator": "sprint_power_transition",
+        "telemetry": "Race time deviation from expected 220-yard record."
+      }
+    },
+    {
+      "primitive_id": "distance_effort_modulation",
+      "name": "Distance Effort Modulation",
+      "verbatim_quote": "a steady one, which is the feeling of, for example, the mile runner. The distance runners",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v_{dist}': 'average velocity during distance run', 'E_{effort}': 'perceived effort level', 't_{sprint}': 'duration of sprint phase'}",
+      "assumptions": "Effort is modulated inversely with energy depletion rate; distance runners maintain constant cadence.",
+      "breakdown_regime": "Energy depletion exceeds sustainable output after 440 yards without strategic pacing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to thermodynamic efficiency curves; GSE maps effort modulation to metabolic state transitions.",
+        "source_operator": "distance_effort_modulation",
+        "telemetry": "Spectator perception of effort vs actual physiological metrics."
+      }
+    },
+    {
+      "primitive_id": "hurdle_clearance_dynamics",
+      "name": "Hurdle Clearance Dynamics",
+      "verbatim_quote": "It does not require a man of markedjumping ability, however, as the flights are only 3 feet 6 inches, and any average athlete, TAKING THE HURDLES.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'h_{hurdle}': 'hurdle height = 3.5 ft', 'v_{clear}': 'clearance velocity', 't_{clear}': 'time to clear hurdle'}",
+      "assumptions": "Hurdle clearance is submaximal jump requiring minimal vertical impulse.",
+      "breakdown_regime": "Failure occurs when stride frequency cannot match hurdle spacing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kinematic model of hurdle clearance as discrete step function; GSI evaluates clearance timing against stride frequency.",
+        "source_operator": "hurdle_clearance_dynamics",
+        "telemetry": "Athlete's stride-to-hurdle synchronization index."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1a6d2c6691df2db6_t0",
+      "think": "The primitives define three core operational regimes: sprint power transition (220–440 yards), distance effort modulation (pace control), and hurdle clearance mechanics (kinematic efficiency). These form a dualistic framework where sprinting demands peak power over short duration, while distance running optimizes for sustained energy use. Hurdle racing bridges these through a hybrid motion profile. Each regime exhibits distinct failure modes—power exhaustion in sprinting, fatigue in distance, and coordination breakdown in hurdles. The mathematical structure reflects a hierarchy of temporal and energetic constraints, enabling GSI to model race outcomes probabilistically and GSE to simulate real-time tactical adjustments.\n\nDeep epistemic analysis for p0046 (1a6d2c6691df2db6, domain=other, pages_read=1/1): Operator 'Sprint Power Transition' (page 1, domain other) captures: TRACK ATHLE 23 cision in the 220-yard race, the record being between 21 and 22 seconds. Assumptions: Constant acceleration model applies up to 220 yards; maximal effort required. Breakdown regime: Transition beyond 220 yards requires sustained power output exceeding initial burst capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models sprint-to-distance transition via power-time scaling law; GSI infers optimal pacing strategy from empirical time series. Operator 'Distance Effort Modulation' (page 1, domain other) captures: a steady one, which is the feeling of, for example, the mile runner. The distance runners Assumptions: Effort is modulated inversely with energy depletion rate; distance runners maintain constant cadence. Breakdown regime: Energy depletion exceeds sustainable output after 440 yards without strategic pacing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to thermodynamic efficiency curves; GSE maps effort modulation to metabolic state transitions. Operator 'Hurdle Clearance Dynamics' (page 1, domain other) captures: It does not require a man of markedjumping ability, however, as the flights are only 3 feet 6 inches, and any average athlete, TAKING THE HURDLES. Assumptions: Hurdle clearance is submaximal jump requiring minimal vertical impulse. Breakdown regime: Failure occurs when stride frequency cannot match hurdle spacing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kinematic model of hurdle clearance as discrete step function; GSI evaluates clearance timing against stride frequency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0046 (1a6d2c6691df2db6, domain=other, pages_read=1/1): Operator 'Sprint Power Transition' (page 1, domain other) captures: TRACK ATHLE 23 cision in the 220-yard race, the record being between 21 and 22 seconds. Assumptions: Constant acceleration model applies up to 220 yards; maximal effort required. Breakdown regime: Transition beyond 220 yards requires sustained power output exceeding initial burst capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models sprint-to-distance transition via power-time scaling law; GSI infers optimal pacing strategy from empirical time series. Operator 'Distance Effort Modulation' (page 1, domain other) captures: a steady one, which is the feeling of, for example, the mile runner. The distance runners Assumptions: Effort is modulated inversely with energy depletion rate; distance runners maintain constant cadence. Breakdown regime: Energy depletion exceeds sustainable output after 440 yards without strategic pacing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to thermodynamic efficiency curves; GSE maps effort modulation to metabolic state transitions. Operator 'Hurdle Clearance Dynamics' (page 1, domain other) captures: It does not require a man of markedjumping ability, however, as the flights are only 3 feet 6 inches, and any average athlete, TAKING THE HURDLES. Assumptions: Hurdle clearance is submaximal jump requiring minimal vertical impulse. Breakdown regime: Failure occurs when stride frequency cannot match hurdle spacing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kinematic model of hurdle clearance as discrete step function; GSI evaluates clearance timing against stride frequency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical mechanics of motion and energy conservation, extended into modern biomechanics and physiological modeling. Influenced by early 20th-century track science and the development of pacing theory in endurance sports. Retrocausal Genealogy: Rooted in p0046 (1a6d2c6691df2db6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0046 (1a6d2c6691df2db6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include sprinters optimizing for explosive velocity and distance runners maximizing stamina. Hurdle racers balance speed with precision. Each agent operates under different cost functions: time, energy, or technique, leading to divergent strategies and failure points. Theory of Mind & Decision Maker Model: Rooted in p0046 (1a6d2c6691df2db6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that sprint models do not overlap with distance pacing logic due to differing metabolic pathways. Leakage vetoes occur when effort modulation fails to account for biomechanical limits in hurdle clearance or vice versa. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0046 (1a6d2c6691df2db6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

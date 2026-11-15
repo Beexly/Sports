@@ -1,0 +1,95 @@
+{
+  "book_id": "330c4f27dc30bc83",
+  "source_status": "COMPLETE",
+  "title": "p0147",
+  "file_name": "p0147.txt",
+  "sha256": "330c4f27dc30bc83869a9d40da2a608d65189f2512c5ec3233810a9f532734ef",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Referee authority as a decision-theoretic kernel with precedence, appeal, and reporting mechanisms; formalized as a hierarchical Bayesian inference engine over rule-space partitions. Universal Lens: Rooted in p0147 (330c4f27dc30bc83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models referee decisions as conformal predictive distributions over rule-interpretation space, conditioned on umpire penalties and cross-official testimony. GSI Mapping: Rooted in p0147 (330c4f27dc30bc83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes referee actions as state transitions in a multi-agent game graph, where rule violations trigger deterministic updates and probabilistic re-evaluations. GSE Mapping: Rooted in p0147 (330c4f27dc30bc83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "referee_decision_finality",
+      "name": "Referee Decision Finality",
+      "verbatim_quote": "The decision of the Referee upon all matters not specifically designated under the duties of other officials shall be final.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Decision space is partitioned into referee-exclusive and shared jurisdictions; referee's authority is absolute in non-shared domains.",
+      "breakdown_regime": "When referee's jurisdiction overlaps with umpire's, precedence is enforced.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Referee decision-making mirrors Bayesian posterior update over rule-space, with finality as prior override in non-designated domains.",
+        "source_operator": "referee_decision_finality",
+        "telemetry": "Frequency of referee overrides vs. umpire penalties."
+      }
+    },
+    {
+      "primitive_id": "referee_penalty_precedence",
+      "name": "Referee Penalty Precedence",
+      "verbatim_quote": "In making his decisions the Referee must recognize and allow precedence to any penalty declared by the Umpire.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Umpire's penalty declaration is a stochastic variable with higher information content than referee's local observation.",
+      "breakdown_regime": "When referee observes conflicting evidence, umpire's penalty is treated as a likelihood-weighted signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Penalty precedence is modeled as a likelihood ratio test between referee and umpire observations, with umpire's verdict as a sufficient statistic.",
+        "source_operator": "referee_penalty_precedence",
+        "telemetry": "Proportion of referee decisions overturned by umpire penalty declarations."
+      }
+    },
+    {
+      "primitive_id": "referee_appeal_mechanism",
+      "name": "Referee Appeal Mechanism",
+      "verbatim_quote": "The Referee may appeal to either of the other officials for testimony upon points within his jurisdiction.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Appeal is a structured communication protocol enabling cross-official consensus-building.",
+      "breakdown_regime": "When referee lacks sufficient data, appeal enables information fusion across official roles.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Appeal mechanism mirrors belief propagation in graphical models, where referee acts as node seeking evidence from neighbors.",
+        "source_operator": "referee_appeal_mechanism",
+        "telemetry": "Number of appeals per game and resolution rate."
+      }
+    },
+    {
+      "primitive_id": "referee_reporting_obligation",
+      "name": "Referee Reporting Obligation",
+      "verbatim_quote": "He must report to the Umpire any infringement of certain indicated sections of Rule XVII., Rule XXIII., and Rule XXIV., as well as all cases of holding or unlawful use of hands or arms which come under his observation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Reporting is a deterministic function of observed rule violation types and their categorization.",
+      "breakdown_regime": "Violation classification triggers reporting iff rule section matches specified set.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Reporting obligation is a conditional probability model P(report|violation_type), with rule sections as categorical predictors.",
+        "source_operator": "referee_reporting_obligation",
+        "telemetry": "Accuracy of reported violations against observed infractions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "330c4f27dc30bc83_t0",
+      "think": "The referee’s authority is defined through a layered decision structure: finality in non-overlapping domains, precedence in overlapping ones, and appeal for missing data. This forms a hierarchical Bayesian network where the referee acts as a top-level decision node, with the umpire and other officials as evidence-generating nodes. The system exhibits duality between local observation and global coordination, where local decisions are subject to global correction via penalty precedence. The appeal mechanism introduces a form of belief propagation, allowing the referee to resolve uncertainty through cross-official consensus. Reporting obligations ensure that rule violations are transmitted to the umpire, creating a feedback loop that maintains consistency across rule interpretations. Failure modes include misalignment of jurisdiction, delayed or absent appeals, and incomplete reporting, all of which can lead to inconsistent rule enforcement. The system is robust under normal conditions but vulnerable to adversarial behavior or miscommunication among officials.\n\nDeep epistemic analysis for p0147 (330c4f27dc30bc83, domain=other, pages_read=1/1): Operator 'Referee Decision Finality' (page 1, domain other) captures: The decision of the Referee upon all matters not specifically designated under the duties of other officials shall be final. Assumptions: Decision space is partitioned into referee-exclusive and shared jurisdictions; referee's authority is absolute in non-shared domains. Breakdown regime: When referee's jurisdiction overlaps with umpire's, precedence is enforced. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Referee decision-making mirrors Bayesian posterior update over rule-space, with finality as prior override in non-designated domains. Operator 'Referee Penalty Precedence' (page 1, domain other) captures: In making his decisions the Referee must recognize and allow precedence to any penalty declared by the Umpire. Assumptions: Umpire's penalty declaration is a stochastic variable with higher information content than referee's local observation. Breakdown regime: When referee observes conflicting evidence, umpire's penalty is treated as a likelihood-weighted signal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Penalty precedence is modeled as a likelihood ratio test between referee and umpire observations, with umpire's verdict as a sufficient statistic. Operator 'Referee Appeal Mechanism' (page 1, domain other) captures: The Referee may appeal to either of the other officials for testimony upon points within his jurisdiction. Assumptions: Appeal is a structured communication protocol enabling cross-official consensus-building. Breakdown regime: When referee lacks sufficient data, appeal enables information fusion across official roles. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Appeal mechanism mirrors belief propagation in graphical models, where referee acts as node seeking evidence from neighbors. Operator 'Referee Reporting Obligation' (page 1, domain other) captures: He must report to the Umpire any infringement of certain indicated sections of Rule XVII., Rule XXIII., and Rule XXIV., as well as all cases of holding or unlawful use of hands or arms which come under his observation. Assumptions: Reporting is a deterministic function of observed rule violation types and their categorization. Breakdown regime: Violation classification triggers reporting iff rule section matches specified set. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Reporting obligation is a conditional probability model P(report|violation_type), with rule sections as categorical predictors. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0147 (330c4f27dc30bc83, domain=other, pages_read=1/1): Operator 'Referee Decision Finality' (page 1, domain other) captures: The decision of the Referee upon all matters not specifically designated under the duties of other officials shall be final. Assumptions: Decision space is partitioned into referee-exclusive and shared jurisdictions; referee's authority is absolute in non-shared domains. Breakdown regime: When referee's jurisdiction overlaps with umpire's, precedence is enforced. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Referee decision-making mirrors Bayesian posterior update over rule-space, with finality as prior override in non-designated domains. Operator 'Referee Penalty Precedence' (page 1, domain other) captures: In making his decisions the Referee must recognize and allow precedence to any penalty declared by the Umpire. Assumptions: Umpire's penalty declaration is a stochastic variable with higher information content than referee's local observation. Breakdown regime: When referee observes conflicting evidence, umpire's penalty is treated as a likelihood-weighted signal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Penalty precedence is modeled as a likelihood ratio test between referee and umpire observations, with umpire's verdict as a sufficient statistic. Operator 'Referee Appeal Mechanism' (page 1, domain other) captures: The Referee may appeal to either of the other officials for testimony upon points within his jurisdiction. Assumptions: Appeal is a structured communication protocol enabling cross-official consensus-building. Breakdown regime: When referee lacks sufficient data, appeal enables information fusion across official roles. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Appeal mechanism mirrors belief propagation in graphical models, where referee acts as node seeking evidence from neighbors. Operator 'Referee Reporting Obligation' (page 1, domain other) captures: He must report to the Umpire any infringement of certain indicated sections of Rule XVII., Rule XXIII., and Rule XXIV., as well as all cases of holding or unlawful use of hands or arms which come under his observation. Assumptions: Reporting is a deterministic function of observed rule violation types and their categorization. Breakdown regime: Violation classification triggers reporting iff rule section matches specified set. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Reporting obligation is a conditional probability model P(report|violation_type), with rule sections as categorical predictors. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century American football rulebooks, this structure evolved from the need to formalize officiating hierarchies. Influenced by legal precedent and administrative theory, it reflects a shift toward systematic rule enforcement with clear decision boundaries. Retrocausal Genealogy: Rooted in p0147 (330c4f27dc30bc83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The referee operates as a rational agent with bounded information, balancing local perception with external validation. The umpire is a trusted oracle for penalty decisions, while other officials act as auxiliary sensors. Each role is modeled as a distinct agent with partial observability of the game state, leading to strategic interplay in decision-making. Theory of Mind & Decision Maker Model: Rooted in p0147 (330c4f27dc30bc83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that referee decisions do not simply echo umpire signals without independent evaluation. Leakage is prevented by enforcing strict reporting boundaries and limiting appeal scope to jurisdictionally relevant issues. Veto conditions arise when an official fails to provide timely testimony or when a violation is not reported, triggering a cascade of potential rule misapplication. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0147 (330c4f27dc30bc83), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

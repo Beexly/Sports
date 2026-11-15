@@ -1,0 +1,591 @@
+{
+  "book_id": "fd46bd843c84e705",
+  "source_status": "COMPLETE",
+  "source_note": "Keisuke Fujii, Machine Learning in Sports: Open Approach for Next Play Analytics, SpringerBriefs in Computer Science, Springer Nature Singapore, 2025. Open access under CC BY 4.0. DOI 10.1007/978-981-96-1445-5; print ISBN 978-981-96-1444-8, eBook ISBN 978-981-96-1445-5. Author: Graduate School of Informatics, Nagoya University, Nagoya, Japan. Supported by the Japan Science and Technology Agency and the Japan Society for the Promotion of Science. Catalog correction: the assigned task title carried the subtitle 'Identifying Potential, Predicting Performance and Developing Talent'; the book's actual subtitle is 'Open Approach for Next Play Analytics', corrected here. Local file: born-digital publisher PDF, 5,220,994 bytes, five chapters plus glossary and index, contents paginated to page 125. Extracted text: 415,025 bytes, 5,993 lines, 58,551 words; clean text layer, no OCR, with line break hyphenation artifacts, figure caption interleaving, and one prime glyph (in the C-OBSO definition) degraded to a control character. Source identity: sha256 over (str(size) encoded plus full PDF bytes) = fd46bd843c84e70582dd9698425147a787ca340f286c0a419061e3edf9225d42; book_id is the first 16 hex characters. All verbatim quotes verified as exact normalized substrings of the extracted text. The work is deliberately near equation free (its foreword notes the reader will hardly find an equation); the only formal statements are the multi-agent MDP tuple in Chapter 4 and the C-OBSO difference in Chapter 3, both transcribed with ledgers. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "learning_based_sports_analytics",
+      "name": "Learning-based sports analytics is the application of machine learning to sports data for performance and decision insight",
+      "verbatim_quote": "Learning-based sports analytics refers to the application of machine learning techniques to analyze and extract useful information from sports data, providing insights that can enhance performance and decision-making in sports",
+      "page": "Ch 1, Sec 1.1 (p. 1)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Sports data contains patterns not immediately apparent to traditional outcome and event analysis.",
+        "Large and diverse datasets plus complex algorithms are available to discover those patterns."
+      ],
+      "breakdown_regime": "Definitional primitive: it fails as a guide wherever data volume is small or movements cannot be captured, since the promised pattern discovery depends on rich location and pose data that many settings cannot supply.",
+      "domain": "sports_analytics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This definition is the engine's charter: model inputs are movement data (locations, poses, events), not just outcomes, and outputs are decision-grade evaluations of performance, tactics and strategy rather than box score summaries.",
+        "source_operator": "learning_based_sports_analytics",
+        "telemetry": "player and ball location streams, pose keypoints, event logs across invasion team sports"
+      }
+    },
+    {
+      "primitive_id": "next_play_analytics",
+      "name": "The analytic target is the next play: future moves read from current location and pose data",
+      "verbatim_quote": "In particular, this book focuses on their movements such as the next plays using their location and pose data as illustrated in Fig. 1.1",
+      "page": "Ch 1, Sec 1.1 (p. 2)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Expert coaches and players already predict future moves, evaluate motion quality and suggest improvements; the task is to digitize that implicit expert insight.",
+        "Location and pose data carry enough signal to support next play reasoning where outcome and event data do not."
+      ],
+      "breakdown_regime": "Next play prediction degrades when pose data is unavailable, which the book concedes is common: pose cannot be annotated at game level, so in most real settings only location-level next play analysis is feasible.",
+      "domain": "sports_analytics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's pre-play state estimation inherits this target directly: before each snap or possession it should hold an expectation over the next play formed from locations and body states, then grade the realized play against that expectation.",
+        "source_operator": "next_play_analytics",
+        "telemetry": "pre-play formations, player locations, pose and orientation features, down and distance or possession context"
+      }
+    },
+    {
+      "primitive_id": "six_stage_analytics_pipeline",
+      "name": "Data analytics decomposes into six stages: acquisition, preprocessing, feature engineering, model development, model evaluation, visualization",
+      "verbatim_quote": "An example of data analytics flow, including six key stages: data acquisition, data preprocessing, feature engineering, model development, model evaluation, and data visualization",
+      "page": "Ch 1, Sec 1.2, Fig 1.3 caption (p. 6)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each stage is separable and each stage's quality bounds the next; preprocessing of raw data may take longer than expected if skipped.",
+        "Domain knowledge enters through feature engineering, which can improve both interpretability and predictive performance."
+      ],
+      "breakdown_regime": "The pipeline is presented as a linear flow; in live settings the stages loop (evaluation failures force re-acquisition), and the book's own later chapters show acquisition automation is the least solved stage.",
+      "domain": "sports_analytics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The six stages are the engine's ingestion discipline: every signal family should be traceable to an acquisition source, a preprocessing step, an engineered feature, a model, an evaluation and a presentation, with gaps named rather than silently absorbed.",
+        "source_operator": "six_stage_analytics_pipeline",
+        "telemetry": "pipeline stage metadata per signal family: source, cleaning steps, feature definitions, model version, evaluation metric, output surface"
+      }
+    },
+    {
+      "primitive_id": "strategy_tactics_techniques",
+      "name": "Strategy, tactics and techniques form a three level hierarchy: long term plans, in-game action sequences, execution skills",
+      "verbatim_quote": "Strategies refer to comprehensive plans designed to achieve long-term objectives, such as changing lineups and formations in team sports",
+      "page": "Ch 1, Sec 1.2 (p. 7)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Strategies provide the framework, tactics adapt to evolving game dynamics, techniques ensure precise execution.",
+        "Team success is explained by the three components jointly, not by any one level alone."
+      ],
+      "breakdown_regime": "The hierarchy is a vocabulary, not a measurement: the book gives no operator that separates a tactical failure from a technique failure in observed data, so attribution between levels stays judgment-based.",
+      "domain": "sports_analytics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The hierarchy gives the reasoning layer three distinct attribution targets: a play can fail because the plan was wrong, the chosen sequence was wrong, or the execution was wrong, and a sound engine grades the three separately instead of collapsing them into one outcome grade.",
+        "source_operator": "strategy_tactics_techniques",
+        "telemetry": "lineup and formation choices (strategy), play calls and sequences (tactics), per-player execution quality (technique)"
+      }
+    },
+    {
+      "primitive_id": "sports_data_taxonomy",
+      "name": "Sports data splits into video, match, event, location or tracking, pose and other sensor data, each with distinct granularity and access",
+      "verbatim_quote": "If location data is collected at regular intervals, and if sampled at sufficiently short and approximately equal intervals, it is called tracking data and can also be used to compute movement speed and acceleration",
+      "page": "Ch 1, Sec 1.3.1 (pp. 8-10)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Tracking data is location data sampled at short, approximately equal intervals, which is what licenses speed and acceleration computation.",
+        "Event data gains its full value combined with tracking data; pose data is the most granular and the least available at game scale."
+      ],
+      "breakdown_regime": "Access is the binding constraint: tracking data is generally paid and restricted, pose data is not publicly available without video, and sensor data is usually unavailable in public except GPS, so the taxonomy's richest tiers are the scarcest.",
+      "domain": "data_engineering",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The taxonomy is the engine's data inventory contract: every stored signal should be typed by tier, because the tier determines what can be derived from it (speed and acceleration only from true tracking data, biomechanics only from pose) and what confidence it can carry.",
+        "source_operator": "sports_data_taxonomy",
+        "telemetry": "per-dataset tier labels, sampling intervals, spatial coordinate availability, provider and access terms"
+      }
+    },
+    {
+      "primitive_id": "markerless_tracking_systems",
+      "name": "Markerless computer vision tracking captures natural in-game movement without markers or sensors on athletes",
+      "verbatim_quote": "Advanced computer vision technologies enable the capture of motion data without the need for any markers or sensors, making them particularly useful for recording natural movements during actual gameplay",
+      "page": "Ch 1, Sec 1.3.2 (p. 10)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Marker-based optical motion capture is the accuracy reference but is costly, slow to set up and impedes natural movement.",
+        "Systems such as SportVU in basketball and TRACAB in soccer demonstrate professional grade markerless capture; OpenPose demonstrates markerless pose estimation."
+      ],
+      "breakdown_regime": "Markerless output carries noise and errors relative to motion capture ground truth, and off the shelf detectors over-detect non-athletes such as spectators and staff unless fine-tuned on sports data.",
+      "domain": "computer_vision",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Markerless capture is the engine's realistic acquisition route for games it does not control: broadcast and arena video in, trajectories out, with an explicit noise budget that downstream evaluation must respect instead of treating extracted tracks as ground truth.",
+        "source_operator": "markerless_tracking_systems",
+        "telemetry": "broadcast or arena video feeds, detector confidence scores, track continuity and identity switch rates"
+      }
+    },
+    {
+      "primitive_id": "rtk_gnss_centimeter_positioning",
+      "name": "RTK-GNSS corrects satellite positioning with a fixed base station to reach centimeter level accuracy outdoors",
+      "verbatim_quote": "This technology can achieve centimeter-level accuracy, making it highly suitable for applications that require precise tracking and positioning",
+      "page": "Ch 1, Sec 1.3.2 (p. 11)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A fixed base station provides real-time corrections to satellite positions.",
+        "Outdoor settings only; indoor venues fall back to local positioning systems, which are more accurate than GPS but more expensive."
+      ],
+      "breakdown_regime": "GNSS does not work indoors, wearable positioning carries drift and attachment costs, and centimeter accuracy is a positioning claim, not a guarantee about derived quantities under occlusion or signal loss.",
+      "domain": "computer_vision",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "For the engine this sets the accuracy ladder for any location source it ingests: centimeter class (RTK-GNSS), meter class (GPS, LPS), or vision class (tracking extraction), and spatial evaluations finer than the source's class should be refused rather than computed.",
+        "source_operator": "rtk_gnss_centimeter_positioning",
+        "telemetry": "positioning source type per dataset, reported accuracy class, venue type indoor or outdoor"
+      }
+    },
+    {
+      "primitive_id": "data_acquisition_challenges",
+      "name": "Acquisition is bounded by four standing challenges: data quality, data volume, privacy, and integration of sources",
+      "verbatim_quote": "Automatically captured data, such as that from wearable sensors and cameras, often contains noise and errors compared to ground truth data created using optical motion capture systems or manual corrections",
+      "page": "Ch 1, Sec 1.3.3 (pp. 11-12)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Data volume directly influences model choice: large datasets license deep learning, small datasets force simpler models.",
+        "Visual and pose data can identify individuals, so collection carries consent and ethics obligations; multi-source fusion needs synchronization, alignment and interpolation work."
+      ],
+      "breakdown_regime": "These are management constraints, not algorithms: the book offers no procedure that removes them, and in non-provider settings data volume is often simply limited, capping what any model can claim.",
+      "domain": "data_engineering",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Each challenge maps to an engine gate: noisy sources get error budgets, low volume sources get simpler models, identifiable data gets consent handling, and unfused sources are kept separate rather than merged into a false single truth.",
+        "source_operator": "data_acquisition_challenges",
+        "telemetry": "noise estimates per source, dataset sizes, consent status, fusion and synchronization logs"
+      }
+    },
+    {
+      "primitive_id": "forward_inverse_problems",
+      "name": "Forward analysis generates data from a model; inverse analysis estimates the model from data",
+      "verbatim_quote": "Generating data from a model is a forward problem and is referred to as forward analysis, while estimating the model from data is an inverse problem and is referred to as inverse analysis",
+      "page": "Ch 1, Sec 1.4, Fig 1.5 caption (p. 13)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Forward analysis suits simulation: predefined strategies are tested to observe their potential impact.",
+        "Inverse analysis suits post-hoc understanding: coaches and analysts recover the tactics that produced observed results."
+      ],
+      "breakdown_regime": "Neither direction validates the other by itself: the book's Chapter 4 and 5 return to the gap, inverse fits may not earn reward in simulation and forward policies may not reflect real behavior.",
+      "domain": "modeling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the engine's master switch: every component should be labeled forward or inverse, because the two directions carry different evidence. A projection is a forward claim; a tendency read from history is an inverse claim; mixing their confidence is the classic reasoning error.",
+        "source_operator": "forward_inverse_problems",
+        "telemetry": "per-model direction labels, simulation outputs versus fitted parameters, validation performed in the opposite direction"
+      }
+    },
+    {
+      "primitive_id": "three_model_families",
+      "name": "Models come in three families: mathematical (laws and equations), rule-based (human programmed rules), and machine learning (patterns learned from data)",
+      "verbatim_quote": "Models can be categorized into several types, including mathematical models, rule-based models, and machine learning models as follows",
+      "page": "Ch 1, Sec 1.4 (p. 14)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Mathematical models rest on physical laws or clear mathematical principles; rule-based models break phenomena into explicit programmed rules; machine learning models learn features and rules from data instead of receiving them.",
+        "The families are complements: the book's strongest systems (space evaluation, Shooting Payoff Computation) are hybrids across families."
+      ],
+      "breakdown_regime": "Machine learning models require large data and compute and can be opaque; rule-based models need heavy human effort per sport; mathematical models only cover what their predefined structure covers.",
+      "domain": "modeling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine should keep the three families visibly separate in its reasoning: physics and geometry claims, rule claims (down, distance, clock, eligibility) and learned pattern claims have different failure modes and different audit routes, and a published reason should say which family it came from.",
+        "source_operator": "three_model_families",
+        "telemetry": "model family tag per component, rule sets, learned model cards, mathematical model assumptions"
+      }
+    },
+    {
+      "primitive_id": "field_registration_homography",
+      "name": "Field registration estimates a homography between the 3D field plane and the image; full camera calibration maps the whole 3D world",
+      "verbatim_quote": "Sports field registration estimates a homography between the 3D sports field plane and the image, which is limited to applications within the field plane",
+      "page": "Ch 2, Sec 2.1.1 (p. 22)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Homography estimation is classically solved from field keypoints with RANSAC and direct linear transformation.",
+        "Camera calibration additionally estimates intrinsic parameters (focal length, principal point) and extrinsic parameters (rotation, translation), enabling projection of non-planar points such as goal posts."
+      ],
+      "breakdown_regime": "Homography cannot represent non-planar structure or lens distortion; broadcast footage adds partial occlusion of the court, moving cameras and zoom, which is why deep keypoint and keypoint-less methods (for example TVCalib) were developed.",
+      "domain": "computer_vision",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Registration is the coordinate contract for all spatial reasoning: any engine statement in field coordinates is only as good as the registration behind it, so spatial claims should carry the registration method and its reprojection quality with them.",
+        "source_operator": "field_registration_homography",
+        "telemetry": "homography or calibration parameters per camera view, reprojection error, visible field landmark coverage"
+      }
+    },
+    {
+      "primitive_id": "tracking_by_detection_sort",
+      "name": "Tracking by detection associates per-frame detections over time; SORT pairs Kalman filter motion prediction with Hungarian algorithm assignment",
+      "verbatim_quote": "SORT (Simple Online and Realtime Tracking) [18] have gained popularity for their speed and simplicity, which uses a combination of the Kalman filter for motion prediction and the Hungarian algorithm for data association",
+      "page": "Ch 2, Sec 2.2.2 (p. 30)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Detection comes first (background subtraction, HOG features, or deep detectors such as YOLO, RetinaNet, CenterNet); association then maintains identities across frames.",
+        "Motion-based association (SORT, ByteTrack, OC-SORT, buffered and expanded IoU variants) and appearance-based association (DeepSORT and re-identification features) are complementary."
+      ],
+      "breakdown_regime": "Sports is the hard case for association: rapid unpredictable movement, same-team visual similarity and frequent occlusion; end to end trackers that work elsewhere are not widely used in sports, partly for lack of annotation data.",
+      "domain": "computer_vision",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "For the engine this defines identity as a maintained hypothesis, not a fact: tracks are associations with failure rates, so any per-player aggregate computed from tracking should be robust to identity switches and should degrade gracefully when association confidence drops.",
+        "source_operator": "tracking_by_detection_sort",
+        "telemetry": "detection boxes and scores, tracklets, identity switch counts, occlusion frequency per sequence"
+      }
+    },
+    {
+      "primitive_id": "open_world_reidentification",
+      "name": "Player re-identification should target the open-world setting: process raw video directly, including players never seen in training data",
+      "verbatim_quote": "Consequently, the open-world setting, which involves directly processing raw images or videos, including person image extraction and feature extraction, is more suitable for real-world applications",
+      "page": "Ch 2, Sec 2.2.3 (pp. 33-34)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Closed-world re-identification assumes pre-labeled image datasets, which are costly to build from video and cannot contain every player.",
+        "Identity evidence combines jersey color and number, role, team and deep feature vectors; tracklet level aggregation and jersey number legibility filtering raise reliability."
+      ],
+      "breakdown_regime": "Jersey numbers alone fail under occlusion, camera angle and low resolution; the SoccerNet re-identification resource (340,993 thumbnails from 400 games) shows the scale of labeled data the closed-world route demands.",
+      "domain": "computer_vision",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The open-world stance maps to the engine's roster handling: players enter and leave (trades, injuries, call-ups), so identity resolution must work on entities absent from any training set, keyed by durable attributes rather than by a fixed label list.",
+        "source_operator": "open_world_reidentification",
+        "telemetry": "jersey numbers, team and role attributes, appearance embeddings, tracklet level identity votes"
+      }
+    },
+    {
+      "primitive_id": "action_spotting_vs_segmentation",
+      "name": "Action spotting pinpoints the exact time an event occurs; temporal action segmentation recovers start and end times of actions",
+      "verbatim_quote": "Action spotting focuses on pinpointing the exact time at which a particular event occurs",
+      "page": "Ch 2, Sec 2.1.1 (pp. 23-24)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Spotting suits discrete events (a pass, a jump); segmentation suits extended actions whose duration matters.",
+        "End to end spotting models such as E2E-Spot and T-DEED, which won the SoccerNet Ball Action Spotting 2024 competition, learn features and predictions jointly and outperform feature-based pipelines."
+      ],
+      "breakdown_regime": "Sports action boundaries are often not well defined, and temporal action segmentation is far less studied in sports than in kitchen or assembly tasks because sports actions are dynamic and context dependent.",
+      "domain": "computer_vision",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The distinction disciplines the engine's event layer: some events are instants (a shot release, a snap) and should be timestamped as points, while others are intervals (a drive, a press) and should be stored with extent; forcing one representation on both corrupts downstream timing analysis.",
+        "source_operator": "action_spotting_vs_segmentation",
+        "telemetry": "event timestamps, segment boundaries, spotting confidence, per-sport event definitions"
+      }
+    },
+    {
+      "primitive_id": "pose_estimation_topdown_bottomup",
+      "name": "2D pose estimation splits into top-down (detect person, then pose) and bottom-up (detect joints, then group) strategies, with 2D to 3D lifting beyond",
+      "verbatim_quote": "These top-down approaches are often more accurate than the following bottom-up approach but computationally expensive and dependent on detection quality",
+      "page": "Ch 2, Sec 2.2.5 (p. 38)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Top-down accuracy depends on the person detector (DeepPose, HRNet, ViTPose lineages); bottom-up methods (DeepCut, OpenPose part affinity fields, HigherHRNet) are more efficient and scalable but weaker at keypoint grouping.",
+        "3D pose comes from direct estimation, 2D to 3D lifting, or multi-view triangulation; unsupervised fine-tuning can use multi-view estimates as pseudo-labels for a monocular model."
+      ],
+      "breakdown_regime": "Sports pose breaks general models: fast intricate motion, contact and occlusion, identical uniforms, and biomechanists require joint center precision that current models do not consistently deliver; 3D ground truth is hard to capture on the field.",
+      "domain": "computer_vision",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pose is the engine's technique layer: orientation and body state are what separate a well executed action from a lucky outcome, so pose-derived features belong in execution grading, with the book's precision warning attached: joint level claims should never exceed the estimator's demonstrated accuracy.",
+        "source_operator": "pose_estimation_topdown_bottomup",
+        "telemetry": "2D and 3D keypoint streams, joint confidence scores, body orientation, estimator identity and benchmark error"
+      }
+    },
+    {
+      "primitive_id": "game_state_reconstruction_gs_hota",
+      "name": "Game state reconstruction integrates registration, tracking and identification into one game state, scored jointly by the GS-HOTA metric",
+      "verbatim_quote": "To measure the effectiveness of these models, the GS-HOTA (Game State Higher Order Tracking Accuracy) metric is introduced, which offers a comprehensive evaluation by considering projection accuracy, tracking accuracy, and the quality of player identification",
+      "page": "Ch 2, Sec 2.3.1 (pp. 41-42)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The SoccerNet GSR pipeline runs pitch localization and calibration, then MOT detection and tracking, then re-identification by jersey number, team and role.",
+        "A single holistic metric prevents layers from being tuned independently at the expense of the composed state."
+      ],
+      "breakdown_regime": "The composed state inherits every layer's errors; dense annotation for training and evaluation exists at this completeness essentially only for soccer through the SoccerNet community.",
+      "domain": "computer_vision",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSR is the template for the engine's state spine: one canonical game state built from layered perception, with a joint quality score. If the joint score is low, the correct behavior is to say the state is not known well enough, not to let each downstream model grade its own input.",
+        "source_operator": "game_state_reconstruction_gs_hota",
+        "telemetry": "reconstructed game states, per-layer quality metrics, joint state quality score per play or possession"
+      }
+    },
+    {
+      "primitive_id": "ball_state_recognition_3d",
+      "name": "Ball state can be recovered from monocular video: 3D trajectory reconstruction and spin estimation from a single camera",
+      "verbatim_quote": "More recently, MonoTrack [101], a new approach for reconstructing shuttle trajectories in badminton from the monocular video was proposed, addressing the unique challenges posed by the high-speed and small size of shuttlecocks",
+      "page": "Ch 2, Sec 2.3.2 (p. 42)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Ballistic structure (gravity governed flight) makes single camera 3D reconstruction identifiable for shots and shuttles.",
+        "Spin is estimated indirectly from pose and racket motion or directly from ball surface logos, patterns and event camera brightness changes."
+      ],
+      "breakdown_regime": "The ball is small, fast and frequently occluded by players; the book notes that when event data identifies the ball handler, precise ball position is often unnecessary, which bounds where this machinery earns its cost.",
+      "domain": "computer_vision",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "For the engine, ball state is the highest value per byte in the state vector: possession and trajectory anchor event meaning. The monocular result says useful ball state is recoverable from ordinary footage, so absence of a ball track is a pipeline gap to close, not a reason to reason without the ball.",
+        "source_operator": "ball_state_recognition_3d",
+        "telemetry": "ball trajectories in 3D, possession intervals, shot release and flight parameters, spin estimates"
+      }
+    },
+    {
+      "primitive_id": "expected_possession_value",
+      "name": "Expected possession value assigns each possession or attack an expected score value, generalizing scoring probability into a state value",
+      "verbatim_quote": "Based on a similar idea, the expected possession value [12, 13] have been developed to evaluate expected score values for each possession or attack, which was extended in soccer [35] and handball [73, 97]",
+      "page": "Ch 3, Sec 3.4.2 (p. 66)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A possession has a value before its outcome is known, estimable from state (locations, context) rather than from the realized result.",
+        "The same construction supports lineup analysis: combinations of players are valued by the scoring efficiency of their possessions."
+      ],
+      "breakdown_regime": "Score based evaluation is unstable where scoring is rare, above all soccer: the book warns such values are indicative references, not absolute truths, because high probability plays can still be countered by opponent strategy.",
+      "domain": "evaluation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "EPV is the engine's base value function: a state value defined before outcomes, against which actions are graded by value added. The book's instability warning becomes a calibration rule: in low scoring contexts the value must be estimated on process events (recovery, penetration, chance creation), not on goals alone.",
+        "source_operator": "expected_possession_value",
+        "telemetry": "possession segmentation, state features at possession start and each event, realized outcomes for calibration"
+      }
+    },
+    {
+      "primitive_id": "vdep_defense_valuation",
+      "name": "VDEP values defense by predicted probabilities of ball recovery and of being effectively attacked over the next five events",
+      "verbatim_quote": "Our classifiers for VDEP predict a ball recovery or an effective attack in the subsequent 5 actions or events",
+      "page": "Ch 3, Sec 3.4.2, Fig 3.2 caption (p. 67)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Defensive quality is a process property: a conceded goal does not imply poor defense if the probabilistic assessment of the actions was favorable.",
+        "The classifiers consume positions of all players and the ball, so off-ball defensive behavior enters the valuation."
+      ],
+      "breakdown_regime": "The horizon (five subsequent actions or events) and the definitions of recovery and effective attack are modeling choices; different choices give different values, and the method is demonstrated as a pilot study in soccer.",
+      "domain": "evaluation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "VDEP is the template for grading any unit whose job is prevention: value the sequence by the change in the opponent's success probability across the next few events, not by the final outcome of the sequence. That is how a defense that forces low quality attempts gets credited even when one goes in.",
+        "source_operator": "vdep_defense_valuation",
+        "telemetry": "event sequences with actor labels, all-player positions at each event, recovery and shot quality outcomes within the horizon"
+      }
+    },
+    {
+      "primitive_id": "obso_space_evaluation",
+      "name": "OBSO values space through three composed models: pitch control, a ball transition model, and a scoring model",
+      "verbatim_quote": "a score model in OBSO [127] (it consists of a pitch control model to evaluate spatial control and area dominance on the soccer pitch, a transition model to predict the ball position in the next event, and score model to represent scoring probability when a shot is performed in the area)",
+      "page": "Ch 3, Sec 3.4.3 and Fig 3.3 caption (pp. 68, 71)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pitch control rests on minimum arrival time: which player can reach each area first, classically drawn as Voronoi dominant regions and refined with velocity, acceleration and per-player kinematic models.",
+        "The framework is sport portable by modification: extended to defenders in soccer, attackers in basketball (BIMOS) and Ultimate."
+      ],
+      "breakdown_regime": "Space value is only as good as the arrival time model; purely geometric versions ignore player skill and intention, and the book notes purely data driven space evaluation exists but needs large tracking corpora.",
+      "domain": "evaluation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "OBSO's composition is the pattern for valuing anything spatial in the engine: control (who can get there first), transition (where the play goes next), and terminal value (what it is worth if it ends there) are three separate models, and a spatial claim should be decomposable into the three.",
+        "source_operator": "obso_space_evaluation",
+        "telemetry": "player positions and velocities, arrival time fields, next event locations, shot outcome models by location"
+      }
+    },
+    {
+      "primitive_id": "c_obso_counterfactual_offball",
+      "name": "C-OBSO values an off-ball player by the difference between the actual game's evaluation and the evaluation under a predicted reference trajectory",
+      "verbatim_quote": "the work of [134] in our group can evaluate sacrificed movements for teammates (for example, movements to create space) by quantifying every off-ball player’s impact on scores in terms of the difference between predicted and real player trajectory",
+      "page": "Ch 3, Sec 3.4.4 and Fig 3.3 caption (pp. 69-71)",
+      "latex": "\\mathrm{C\\text{-}OBSO}_i = V_k - V_k^{\\prime}",
+      "symbol_and_unit_ledger": {
+        "V_k": "evaluation value (potential score model including defenders) in the actual game for future on-ball player k [probability-like score value]",
+        "V_k^{\\prime}": "the same evaluation computed on the referenced or predicted trajectory produced by the Graph Variational RNN [same units as V_k]",
+        "i": "the off-ball player being evaluated [index]"
+      },
+      "assumptions": [
+        "A generative trajectory model (Graph Variational RNN) supplies a credible reference trajectory for what the player would ordinarily do.",
+        "The potential score model is the OBSO score model modified to include defenders' positions."
+      ],
+      "breakdown_regime": "The value is relative to the reference model's idea of normal: a biased or weak trajectory model manufactures or erases credit, and the prime glyph on the predicted value survives in the text extraction only as a control character, so the notation is reconstructed from the surrounding prose.",
+      "domain": "counterfactual_analysis",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is the engine's off-ball credit operator: to value a player who never touches the ball, compare the realized state value against the state value under a model generated reference in which he does the ordinary thing. The difference, not the raw state value, is his contribution, and the reference model must be named whenever the number is used.",
+        "source_operator": "c_obso_counterfactual_offball",
+        "telemetry": "actual trajectories, model generated reference trajectories, state value evaluations under both, identity of the reference model"
+      }
+    },
+    {
+      "primitive_id": "causal_inference_counterfactuals",
+      "name": "Counterfactual claims need causal machinery: propensity score matching, g-computation and individual treatment effects, not correlation",
+      "verbatim_quote": "propensity score matching to reduce selection bias by matching units with similar propensity scores",
+      "page": "Ch 3, Sec 3.5.2 (pp. 72-73)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Randomized experiments are impractical or unethical for most sports decisions, so effects must be estimated from observational data.",
+        "The propensity score is the probability of treatment assignment conditional on covariates; matching on it reduces selection bias. Dynamic settings use g-computation; multi-agent spatiotemporal settings use counterfactual recurrent networks (the group's TV-CRN) for individual treatment effect estimation."
+      ],
+      "breakdown_regime": "Static causal methods cannot estimate effects of actions in spatiotemporal multi-agent settings; the book's multi-agent extension is recent and demonstrated on specific interventions (an extra pass in a shot situation), not as a general causal engine.",
+      "domain": "causal_inference",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This sets the engine's evidence standard for any claim of the form this action caused that outcome: either an explicit causal design (matching, g-computation, a counterfactual model) or the claim is downgraded to association. Most published play grades are associations and should be labeled as such.",
+        "source_operator": "causal_inference_counterfactuals",
+        "telemetry": "covariates at decision time, treatment assignments (the action taken), outcomes, fitted propensity or counterfactual model outputs"
+      }
+    },
+    {
+      "primitive_id": "shooting_payoff_computation",
+      "name": "Shooting Payoff Computation joins a learned on-target probability (xSOT) to game theory to value shot versus pass decisions",
+      "verbatim_quote": "In soccer, our group introduced the Shooting Payoff Computation (SPC) framework [159], which uses game theory and machine learning to analyze shot-taking scenarios in football",
+      "page": "Ch 3, Sec 3.5.1 (pp. 70-71)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Shot outcomes decompose into on target, off target and blocked probabilities, plus the receiver's ball control probability for the pass option.",
+        "By developing the xSOT metric based on deep learning, the framework effectively evaluates player actions beyond just goals, allowing for detailed analysis and comparison of different shots and providing insights into optimal strategies."
+      ],
+      "breakdown_regime": "Conditioning approaches inherit training data bias and cannot capture true causal effects beyond observed correlations, a limitation the book states for this whole family of methods.",
+      "domain": "game_theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "SPC is the engine's decision template at any terminal choice point: enumerate the actor's options (shoot, pass to each teammate), attach a learned outcome distribution to each, solve the small game against the nearest defender, and grade the realized choice against the computed optimum rather than against the outcome.",
+        "source_operator": "shooting_payoff_computation",
+        "telemetry": "shooter and defender positions, outcome probabilities by option, receiver control probabilities, realized choice and outcome"
+      }
+    },
+    {
+      "primitive_id": "multi_agent_mdp",
+      "name": "A multi-agent Markov decision process is the tuple of agents, states, joint actions, transition model, joint rewards and discount factor",
+      "verbatim_quote": "A multi-agent MDP can be defined as a tuple (K , S, A, T , R, γ ), where",
+      "page": "Ch 4, Sec 4.2.1 (p. 87)",
+      "latex": "(K,\\ S,\\ A,\\ T,\\ R,\\ \\gamma)",
+      "symbol_and_unit_ledger": {
+        "K": "fixed number of agents [count]",
+        "S": "set of states s [state space]",
+        "A": "joint action set, A = [A_1, ..., A_K], with A_k the local actions of agent k [action space]",
+        "T": "transition model T(s' | s, a) : S x A x S to [0, 1] [probability]",
+        "R": "joint reward function R = [R_1, ..., R_K] : S x A to R^K [reward units]",
+        "\\gamma": "discount factor in (0, 1] [dimensionless]"
+      },
+      "assumptions": [
+        "The book assumes full observability for simplicity while noting real players do not necessarily follow an MDP.",
+        "Each agent's goal is to maximize expected total reward; the transition model gives the probability of the next state given the joint action."
+      ],
+      "breakdown_regime": "Multi-agent learning breaks the single agent case: the environment is non-stationary because every agent's policy is changing, and coordination, competition and opponent anticipation must be modeled explicitly, which the bare tuple does not do.",
+      "domain": "reinforcement_learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The tuple is the engine's simulation contract: any simulated play evaluation must declare its state, its action set per agent, its transition source (physics, learned model, or fitted data) and its reward, because an evaluation with an undeclared reward is an opinion wearing a number.",
+        "source_operator": "multi_agent_mdp",
+        "telemetry": "state snapshots, per-agent action logs, transition samples from real games, reward definitions per competition context"
+      }
+    },
+    {
+      "primitive_id": "nash_equilibrium_shot_taking",
+      "name": "Shooter versus defender shot taking is a Nash equilibrium problem: pass when the defender blocks, block when the shooter shoots",
+      "verbatim_quote": "In contrast, game theory introduces the concept of Nash equilibrium, where each player’s strategy is optimal given the strategies of all other players [39, 56]",
+      "page": "Ch 4, Sec 4.2.4 (pp. 89-90)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Players are modeled as rational payoff maximizers in the analyzed interaction; the Yeung and Fujii analysis uses the SPC payoff framework for the 1 vs 1 shot taking situation.",
+        "The equilibrium found: the shooter's optimal strategy is to pass when the defender is in a blocking position, and the defender's optimal strategy is to block the shot."
+      ],
+      "breakdown_regime": "Game theory in team sports is mostly confined to static, complete information set pieces (penalty kicks, shot selection) because full plays explode the strategy space; the book argues dynamic and extensive form analysis is needed and largely missing.",
+      "domain": "game_theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equilibrium thinking corrects one sided evaluation: a play call is not good because it worked against this opponent's actual choice, but because it is a best response to the opponent's best response. The engine should grade decisions against the equilibrium benchmark where the interaction is small enough to solve, and flag where it is not.",
+        "source_operator": "nash_equilibrium_shot_taking",
+        "telemetry": "payoff estimates for shooter and defender options, defender positioning, realized choices, repeated matchup histories"
+      }
+    },
+    {
+      "primitive_id": "tactic_ai_corner_kick_optimization",
+      "name": "TacticAI shows counterfactual set piece optimization can beat expert incumbents: its corner kick setups were preferred over existing tactics 90 percent of the time",
+      "verbatim_quote": "Validated through benchmark tasks and expert evaluations, TacticAI provides suggestions that are preferred over existing tactics 90% of the time",
+      "page": "Ch 3, Sec 3.5.1 (p. 71)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Developed with Liverpool FC experts, TacticAI combines predictive and generative components over player positioning at corner kicks.",
+        "Validation combined benchmark tasks with expert evaluation, since no ground truth exists for tactical quality."
+      ],
+      "breakdown_regime": "The 90 percent figure is an expert preference rate, not a measured goal improvement; the book's general warning for this family applies: training data bias and no true causal identification.",
+      "domain": "counterfactual_analysis",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "For the engine this is the deployment shape for set pieces and other low dimensional, repeatable situations: a generative model proposes alternatives, a predictive model scores them, and human experts audit the proposals. It also sets the honest success metric for such systems: preference and plausibility first, outcome deltas only with causal designs.",
+        "source_operator": "tactic_ai_corner_kick_optimization",
+        "telemetry": "set piece formations and outcomes, model proposed alternative formations, expert preference judgments"
+      }
+    },
+    {
+      "primitive_id": "real_to_sim_domain_adaptation",
+      "name": "Real-to-sim domain adaptation translates unknown real-world behavior into simulation, the reverse direction of robotics' sim-to-real",
+      "verbatim_quote": "In contrast, real-to-sim domain adaptation focuses on translating unknown real-world data into simulated environments",
+      "page": "Ch 5, Sec 5.2.1 (pp. 102-103)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Source dynamics in real data are unknown, so explicit transition models cannot simply be reused; the group's DQAAS method adapts demonstrations across different dynamics using dynamic time warping based action supervision.",
+        "Integration runs in four steps: data acquisition, modeling, simulation, then feedback and enhancement into the real environment; cyber-physical systems and digital twins are the neighboring concepts, judged premature for biological agents at current data fidelity."
+      ],
+      "breakdown_regime": "This is presented as a hypothesis chapter, explicitly exploratory and not yet empirically validated; high fidelity data and real-time compute for true digital twins of athletes do not yet exist in sports.",
+      "domain": "simulation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Real-to-sim is the engine's core architectural problem stated in one line: the reasoning lives on real games, but counterfactual evaluation needs a simulator, and the two must be kept in calibrated correspondence. Every simulated claim should carry which real data adapted it and how the adaptation was checked.",
+        "source_operator": "real_to_sim_domain_adaptation",
+        "telemetry": "paired real and simulated trajectories, domain gap measurements, adaptation method and its validation results"
+      }
+    },
+    {
+      "primitive_id": "open_approach_ecosystem",
+      "name": "Progress compounds under an open approach: open data, open code and transparent methods, inside an ecosystem of trustworthiness, fairness and transparency",
+      "verbatim_quote": "this book emphasizes an open approach, where the use of open data, open code, and transparent, research-based methods drive the advancements of machine learning in sports",
+      "page": "Preface (p. ix); Ch 5, Secs 5.3.3-5.4 (pp. 114-117)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Openness is how the field's exemplars grew (SoccerNet, StatsBomb and Wyscout open data, Kloppy format standardization); automated acquisition from few cameras can democratize analytics beyond well funded leagues.",
+        "Deployment principles are trustworthiness, fairness and transparency; if this technology becomes widely accessible, it has the potential to democratize sports analytics (Ch 5, Sec 5.2.3)."
+      ],
+      "breakdown_regime": "The ecosystem is aspirational: data standardization is rare outside soccer event and tracking formats, broadcasting rights costs and league restrictions actively work against openness, and pose and tracking data remain locked or nonexistent for most sports.",
+      "domain": "ecosystem",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The ecosystem chapter is the engine's operating doctrine for itself: publish methods and data provenance, standardize formats so components compose, and treat transparency as a feature that creates trust rather than as exposure. An evaluation nobody can inspect is, by this book's own standard, not yet analytics.",
+        "source_operator": "open_approach_ecosystem",
+        "telemetry": "dataset and code release status, format standards in use, method documentation, fairness and bias audit results"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fd46bd843c84e705-t1",
+      "think": "This monograph is the field map of a discipline rather than a methods text, and it should be read that way. Fujii organizes learning-based sports analytics as a chain with four links: acquire movement data automatically, model and evaluate with it, simulate agents on top of it, and feed the results back into training and tactics. Chapter 1 fixes the vocabulary. A six stage pipeline runs from acquisition through preprocessing, feature engineering, model development and evaluation to visualization. A data taxonomy separates video, match, event, tracking, pose and sensor data, with sampling regularity as the criterion that turns location data into tracking data. Three model families (mathematical, rule-based, machine learning) and the forward versus inverse problem split govern everything that follows. Chapter 2 is the sensing layer. Field registration pins video to a field model through a homography or a full camera calibration. Tracking by detection chains detectors to association algorithms such as SORT, ByteTrack and OC-SORT, with appearance features and re-identification restoring identity after occlusion, and the open-world setting named as the realistic target. Action spotting and temporal segmentation turn continuous video into events. Pose estimation lifts body joints in two and three dimensions against stated precision limits. The SoccerNet game state reconstruction stack is the proof that the layers compose, and GS-HOTA is the metric that scores the composed output instead of any single layer. Chapter 3 is the evaluation layer, built on open corpora such as the Open International Soccer Database with over 216,000 matches and the NBA SportVU trajectories at 25 frames per second. Expected possession value converts a state into an expected score. VDEP shows that defense can be valued by predicting ball recovery and being attacked over the next five events rather than by goals conceded. OBSO values space itself through a pitch control, transition and score model chain. C-OBSO crosses into counterfactual territory by valuing a player's actual trajectory against a predicted reference trajectory, which is how sacrificed off-ball movement becomes measurable at all. Counterfactual analysis then splits four ways: conditioning inside machine learning, causal inference with propensity scores and g-computation, mathematical models with predefined structure, and rule-based simulation, with the Shooting Payoff Computation and TacticAI as worked examples of learning joined to game theory. Chapter 4 replaces prediction with agency. The multi-agent Markov decision process tuple is the book's one full formalism. The inverse approach (offline reinforcement learning, Q-functions, inverse reinforcement learning, imitation) estimates value, policy and reward from real data, while the forward approach (reinforcement learning from scratch, learning from demonstration, adaptive action supervision across changed dynamics) generates behavior inside simulators such as GFootball and the RoboCup leagues. Chapter 5 is the author's hypothesis: real-to-sim domain adaptation as the bridge between the two halves, a four step loop of acquisition, modeling, simulation and feedback, near real-time defined honestly as minutes to hours, and an open ecosystem governed by trustworthiness, fairness and transparency as the deployment condition. For a reasoning engine the book contributes three things. First, an observability contract: nothing downstream is better than the game state reconstruction upstream, and every evaluation should declare which layer of the stack it consumed. Second, a valuation grammar: state values, action values, space values and counterfactual differences are four distinct objects, and confusing them is the standard category error of play evaluation. Third, the discipline's central open problem in one observation: inverse models fit real behavior but cannot prove the behavior earns reward, and forward models earn reward in simulation but cannot prove the simulation is real, so an engine that wants both to evaluate and to suggest must run both directions and report the gap between them. Where the book breaks is equally clear. It is a survey of other groups' systems, so it supplies architectures and verdicts but almost no equations, no fitted parameters and no failure tables; its evidence is citation density rather than measurement. It leans heavily on soccer and basketball, it assumes tracking quality that broadcast-only and amateur settings rarely deliver, pose data remains unusable at game scale by its own admission, and the real-to-sim bridge is a research program rather than a solved component. Read it as the map, the vocabulary and the honesty standard, not as machinery. Two further threads deserve weight because they constrain everything else. The first is labor. The book repeatedly concedes that automated acquisition is not finished: field detection, tracking and re-identification still require manual correction, pose annotation at game level is effectively impossible, and annotated data outside soccer is, in its phrase, overwhelmingly insufficient in quantity and diversity. The SoccerNet re-identification dataset alone holds 340,993 player thumbnails drawn from 400 games, which indicates the annotation scale the closed-world route consumes, and it is why the book keeps returning to active learning, semi-supervised and self-supervised methods, and transfer across leagues and sports as the only affordable path to more labels. The second thread is validation. Play evaluation has no ground truth, and the book is unusually blunt that event success probabilities measure only model accuracy, a necessary condition rather than validation, while correlation with goals, match ratings or salaries cannot certify a metric designed to capture what those numbers miss; quantitative and qualitative evaluation must be combined, with qualitative reliance minimized because of its subjectivity. Deployment gets the same treatment: practical capture setups are compromises (two fixed cameras balance manual effort against tracking difficulty), sensor pipelines carry drift, calibration and synchronization costs, referee assistance is feasible only where rules are measurable and positions accurate, and fan facing output must be curated because real-time evaluation of every player produces more information than a viewer can use. The modeling chapter of the future section adds the scaling caveat: transformer methods that follow scaling laws can predict outcomes, events and trajectories accurately if data quality and quantity suffice, but agent models cannot enumerate unobserved state and action combinations, so domain knowledge, mathematical space models and dynamic game theory must be folded in to shrink the space the data has to cover.",
+      "retrocausal_genealogy": "The lineage the book itself assembles runs from Bill James and 1970s sabermetrics through the Moneyball era and the NBA three point revolution, where a points per shot argument reorganized an entire league's shot selection. The sensing line runs from manual frame by frame digitizing, standard until roughly the 2000s, through marker based motion capture to commercial markerless systems such as SportVU and TRACAB and the SoccerNet community's open benchmarks. The modeling line descends from pedestrian trajectory prediction and the social force model, from Sutton and Barto's reinforcement learning and Nash's 1951 equilibrium concept, and from RoboCup, founded as a robot soccer initiative whose 2D simulation league shares its abstraction level with event and tracking data. Fujii's own group is a node in this genealogy: SoccerTrack, TeamTrack, VDEP, C-OBSO and the Shooting Payoff Computation are presented as continuations of the same program.",
+      "theory_of_mind": "The author models his reader as a cross-disciplinary migrant: a sports scientist who needs the machine learning map, or a computer scientist who needs the sports problem settings, and he writes so both can cross. His model of the domain is that team sports are the hardest case, since invasion games force collective, interactive movement, and that methods proven there transfer downward to individual sports. He believes expert knowledge in sports is real but trapped in implicit, unannotated form, and that the field's central task is digitizing it. He also believes an immature field compounds only in the open: open data, open code and shared benchmarks are treated not as generosity but as the mechanism by which a scattered literature becomes a discipline.",
+      "cross_layer_veto": "Several findings in this work veto claims other layers might want to make. Acquisition noise vetoes fine-grained evaluation: automatically captured data contains errors against ground truth, so valuations computed from it inherit an error floor. The absence of ground truth for play quality vetoes purely quantitative validation, since accuracy metrics are only a necessary condition and correlation with goals, ratings or salaries cannot certify a metric that aims to measure something new. The inverse and forward gap vetoes single direction confidence: a fitted policy is not thereby a rewarding policy, and a rewarding simulated policy is not thereby a real one. Privacy and consent veto unrestricted release of visual and pose data. Pose data's game level annotation limit vetoes pose conditioned tactical claims at scale. And the missing standardization of formats vetoes naive comparison of numbers produced on different providers' data."
+    }
+  ],
+  "universal_lens": "Read away from sports, the work is a template for instrumenting any skilled collective human activity: sense the participants continuously and cheaply, reconstruct a canonical state from layered perception, value states, actions and space separately, grade individuals by counterfactual difference against a modeled reference, and close the loop by feeding evaluations back into training. The same skeleton fits surgical teams, warehouse crews, traffic systems or military units: wherever experts judge performance by watching movement, and wherever the performers who never touch the focal object still shape the outcome, the acquisition to evaluation to simulation to feedback chain and its honesty constraints transfer unchanged.",
+  "gsi_mapping": "For the Galaxy Sports Institute the take is methodological. The book supplies a curriculum shaped map of an entire research field, with named open datasets and benchmarks (SoccerNet and its game state reconstruction task, SportsMOT, TeamTrack, the Open International Soccer Database) that a research program can build against without buying access. It also supplies the Institute's publication standard: forward and inverse claims labeled, causal claims held to causal designs, evaluation metrics validated by combined quantitative and qualitative routes, and negative structural facts (pose cannot be annotated at game level, tracking is paywalled) stated plainly as boundary conditions for any research agenda built on movement data.",
+  "gse_mapping": "For the Galaxy Sports Edge engine the take is architectural. The perception stack (registration, tracking, re-identification, spotting, pose) defines what a verified game state is and what its quality score means. The evaluation grammar (possession value, VDEP style prevention value, OBSO space value, C-OBSO counterfactual credit) defines four distinct numbers the reasoning layer may cite, each with its own inputs and failure modes. The agent modeling chapter defines the terms under which simulated reasoning is admissible: declared state, actions, transition source and reward. And the real-to-sim chapter names the engine's standing obligation: keep simulation calibrated against real games and publish the gap, because the credibility of every projection rests on it."
+}

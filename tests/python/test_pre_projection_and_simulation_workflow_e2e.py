@@ -20,6 +20,7 @@ import pytest
 
 from scripts.ops.gse_coach_mind_simulator import (
     compute_pre_projection_universal_and_deep_non_stationary_priors,
+    load_live_corpus_situational_conditioner,
     load_sealed_object_readonly,
     simulate_full_game,
     simulate_matchup_pbp,
@@ -213,3 +214,87 @@ def test_compile_stage1_to_stage2_simulation_priors_couples_pre_projection_prior
     assert pp["home_team"] == "BAL"
     assert pp["mega_sweep_pipeline"]["all_100_percent_models_active"] is True
     assert "simulation_trajectory_conditioners" in pp
+
+
+def test_pbp_simulator_corpus_conditioner_preserves_sealed_baseline_bit_identical(tmp_path) -> None:
+    import numpy as np
+
+    cond = load_live_corpus_situational_conditioner()
+    assert cond["sovereign_books_loaded"] >= 1064
+    assert cond["oof_n_rows"] == 4823
+    assert len(cond["six_family_priors"]) == 6
+
+    missing_cond = load_live_corpus_situational_conditioner(tmp_path / "missing_receipt.json")
+    assert missing_cond["loaded"] is False
+
+    sealed_state, expected_hash = load_sealed_object_readonly()
+    base_a = simulate_matchup_pbp(
+        "JAX",
+        "BAL",
+        [],
+        ["QB_QUESTIONABLE"],
+        sealed_state,
+        expected_hash,
+        n_sims=500,
+        seed=901,
+        return_vectors=True,
+    )
+    base_b = simulate_matchup_pbp(
+        "JAX",
+        "BAL",
+        [],
+        ["QB_QUESTIONABLE"],
+        sealed_state,
+        expected_hash,
+        n_sims=500,
+        seed=901,
+        return_vectors=True,
+        corpus_conditioner=None,
+    )
+    assert base_a["median_spread_home"] == base_b["median_spread_home"]
+    assert base_a["median_total"] == base_b["median_total"]
+    assert base_a["corpus_situational_conditioner_applied"] is False
+    assert base_a["vectors"].keys() == base_b["vectors"].keys()
+    for vec_key in base_a["vectors"]:
+        assert np.array_equal(base_a["vectors"][vec_key], base_b["vectors"][vec_key])
+
+    unloaded_run = simulate_matchup_pbp(
+        "JAX",
+        "BAL",
+        [],
+        ["QB_QUESTIONABLE"],
+        sealed_state,
+        expected_hash,
+        n_sims=200,
+        seed=901,
+        corpus_conditioner={"loaded": False, "six_family_priors": {"pressure": 0.12}},
+    )
+    assert unloaded_run["corpus_situational_conditioner_applied"] is False
+
+    bad_priors_run = simulate_matchup_pbp(
+        "JAX",
+        "BAL",
+        [],
+        ["QB_QUESTIONABLE"],
+        sealed_state,
+        expected_hash,
+        n_sims=200,
+        seed=901,
+        corpus_conditioner={"six_family_priors": {"pressure": float("nan"), "weather": True}},
+    )
+    assert bad_priors_run["corpus_situational_conditioner_applied"] is False
+
+    cond_run = simulate_matchup_pbp(
+        "JAX",
+        "BAL",
+        [],
+        ["QB_QUESTIONABLE"],
+        sealed_state,
+        expected_hash,
+        n_sims=500,
+        seed=901,
+        corpus_conditioner=cond,
+    )
+    assert cond_run["corpus_situational_conditioner_applied"] is True
+    assert cond_run["coachMindsetHash"] == expected_hash
+    assert abs(cond_run["median_spread_home"]) < 100.0

@@ -1,0 +1,95 @@
+{
+  "book_id": "4487ed7d1edb2db0",
+  "source_status": "COMPLETE",
+  "title": "p0381",
+  "file_name": "p0381.txt",
+  "sha256": "4487ed7d1edb2db0c026f5b032a6e8d7e1895e76d37e75209a55e4ca6b64831c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0381 (4487ed7d1edb2db0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0381 (4487ed7d1edb2db0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0381 (4487ed7d1edb2db0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0381 (4487ed7d1edb2db0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0381 (4487ed7d1edb2db0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0381 (4487ed7d1edb2db0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "learning_by_error_reduction",
+      "name": "Learning by Error Reduction",
+      "verbatim_quote": "Learning—the Trial and Error Doctrine 353 learning to go towards the opposite side as the animals who had shown less strong preferences (Class I).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes linear error reduction with respect to opposite-side preference.",
+      "breakdown_regime": "Breaks down when original preference strength exceeds a critical threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Bayesian updating: posterior probability shifts toward minimizing prediction error. Maps to GSE state-transition logic: action selection prioritizes paths that reduce prior errors.",
+        "source_operator": "learning_by_error_reduction",
+        "telemetry": "Measurable decrease in trial-and-error rate per session."
+      }
+    },
+    {
+      "primitive_id": "no_stamping_in_effect",
+      "name": "No Stamping-In Effect",
+      "verbatim_quote": "The originally \"more frequent taking\" of the right side or the left side (Class V) did not, as such, more strongly \"stamp in\" the taking of that side.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Habit strength depends on error feedback, not raw repetition count.",
+      "breakdown_regime": "Applies only when error signals are present; fails if repetition alone creates artificial reinforcement.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Connects to GSI conformal inference: repeated incorrect paths do not generate stable predictive intervals. Connects to GSE situational reasoning: state transitions driven by error correction rather than frequency.",
+        "source_operator": "no_stamping_in_effect",
+        "telemetry": "Habit decay rate independent of initial choice frequency."
+      }
+    },
+    {
+      "primitive_id": "easy_habit_breakdown",
+      "name": "Easy Habit Breakdown",
+      "verbatim_quote": "These animals broke down the habit, relatively, just as easily as did the animals of Class I who had had less frequency on the given side.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Breakdown time depends solely on error signal magnitude, not prior frequency.",
+      "breakdown_regime": "Holds until error signal saturates or new stable equilibrium forms.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates to GSI sequential hypothesis testing: null hypothesis rejection occurs regardless of prior data volume. Relates to GSE state-transition dynamics: system reverts to baseline behavior after sufficient negative feedback.",
+        "source_operator": "easy_habit_breakdown",
+        "telemetry": "Time to revert to baseline performance after introducing error."
+      }
+    },
+    {
+      "primitive_id": "forced_path_experiment",
+      "name": "Forced Path Experiment",
+      "verbatim_quote": "Experiments in Which the Animal Is Forced to Take What Are to Prove Later the Incorrect Paths More Frequently or More Recently than the Correct Paths, and Yet Is Not Handicapped.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Correct path efficacy is independent of forced exposure frequency.",
+      "breakdown_regime": "Error remains constant despite increased forced trials, indicating no learning.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Links to GSI risk-neutral pricing: artificially increasing exposure to wrong bets does not improve expected outcome. Links to GSE policy optimization: suboptimal trajectories do not converge faster.",
+        "source_operator": "forced_path_experiment",
+        "telemetry": "No improvement in success rate despite higher forced trial counts."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4487ed7d1edb2db0_t0",
+      "think": "The primitives describe how organisms learn to minimize errors rather than reinforce frequent actions. This leads to a unified framework where habit formation depends on error signals, not repetition counts. The 'no stamping-in effect' shows that high-frequency choices do not create stronger habits unless they also reduce error. The 'easy habit breakdown' primitive indicates that once an organism detects an error, it can quickly abandon a previously favored but incorrect path. The 'forced path experiment' demonstrates that even if an agent is compelled to follow an incorrect route repeatedly, its overall error rate does not decrease, implying that forced exposure cannot substitute for genuine problem-solving. Together, these operators form a structural model of adaptive behavior centered on error-driven learning, which can be mapped onto both GSI's sequential analysis and GSE's state-transition models.\n\nDeep epistemic analysis for p0381 (4487ed7d1edb2db0, domain=other, pages_read=1/1): Operator 'Learning by Error Reduction' (page 1, domain other) captures: Learning—the Trial and Error Doctrine 353 learning to go towards the opposite side as the animals who had shown less strong preferences (Class I). Assumptions: Assumes linear error reduction with respect to opposite-side preference. Breakdown regime: Breaks down when original preference strength exceeds a critical threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Bayesian updating: posterior probability shifts toward minimizing prediction error. Maps to GSE state-transition logic: action selection prioritizes paths that reduce prior errors. Operator 'No Stamping-In Effect' (page 1, domain other) captures: The originally \"more frequent taking\" of the right side or the left side (Class V) did not, as such, more strongly \"stamp in\" the taking of that side. Assumptions: Habit strength depends on error feedback, not raw repetition count. Breakdown regime: Applies only when error signals are present; fails if repetition alone creates artificial reinforcement. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Connects to GSI conformal inference: repeated incorrect paths do not generate stable predictive intervals. Connects to GSE situational reasoning: state transitions driven by error correction rather than frequency. Operator 'Easy Habit Breakdown' (page 1, domain other) captures: These animals broke down the habit, relatively, just as easily as did the animals of Class I who had had less frequency on the given side. Assumptions: Breakdown time depends solely on error signal magnitude, not prior frequency. Breakdown regime: Holds until error signal saturates or new stable equilibrium forms. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSI sequential hypothesis testing: null hypothesis rejection occurs regardless of prior data volume. Relates to GSE state-transition dynamics: system reverts to baseline behavior after sufficient negative feedback. Operator 'Forced Path Experiment' (page 1, domain other) captures: Experiments in Which the Animal Is Forced to Take What Are to Prove Later the Incorrect Paths More Frequently or More Recently than the Correct Paths, and Yet Is Not Handicapped. Assumptions: Correct path efficacy is independent of forced exposure frequency. Breakdown regime: Error remains constant despite increased forced trials, indicating no learning. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Links to GSI risk-neutral pricing: artificially increasing exposure to wrong bets does not improve expected outcome. Links to GSE policy optimization: suboptimal trajectories do not converge faster. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0381 (4487ed7d1edb2db0, domain=other, pages_read=1/1): Operator 'Learning by Error Reduction' (page 1, domain other) captures: Learning—the Trial and Error Doctrine 353 learning to go towards the opposite side as the animals who had shown less strong preferences (Class I). Assumptions: Assumes linear error reduction with respect to opposite-side preference. Breakdown regime: Breaks down when original preference strength exceeds a critical threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Bayesian updating: posterior probability shifts toward minimizing prediction error. Maps to GSE state-transition logic: action selection prioritizes paths that reduce prior errors. Operator 'No Stamping-In Effect' (page 1, domain other) captures: The originally \"more frequent taking\" of the right side or the left side (Class V) did not, as such, more strongly \"stamp in\" the taking of that side. Assumptions: Habit strength depends on error feedback, not raw repetition count. Breakdown regime: Applies only when error signals are present; fails if repetition alone creates artificial reinforcement. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Connects to GSI conformal inference: repeated incorrect paths do not generate stable predictive intervals. Connects to GSE situational reasoning: state transitions driven by error correction rather than frequency. Operator 'Easy Habit Breakdown' (page 1, domain other) captures: These animals broke down the habit, relatively, just as easily as did the animals of Class I who had had less frequency on the given side. Assumptions: Breakdown time depends solely on error signal magnitude, not prior frequency. Breakdown regime: Holds until error signal saturates or new stable equilibrium forms. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSI sequential hypothesis testing: null hypothesis rejection occurs regardless of prior data volume. Relates to GSE state-transition dynamics: system reverts to baseline behavior after sufficient negative feedback. Operator 'Forced Path Experiment' (page 1, domain other) captures: Experiments in Which the Animal Is Forced to Take What Are to Prove Later the Incorrect Paths More Frequently or More Recently than the Correct Paths, and Yet Is Not Handicapped. Assumptions: Correct path efficacy is independent of forced exposure frequency. Breakdown regime: Error remains constant despite increased forced trials, indicating no learning. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Links to GSI risk-neutral pricing: artificially increasing exposure to wrong bets does not improve expected outcome. Links to GSE policy optimization: suboptimal trajectories do not converge faster. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The work builds on Thorndike's Law of Effect (1898), which posited that rewarded behaviors strengthen. However, it diverges by emphasizing error minimization over reward maximization. It also connects to modern reinforcement learning theory, particularly the exploration-exploitation tradeoff, where optimal policies balance between following known good actions and exploring potentially better ones. Earlier animal learning studies by Hull (1943) focused on drive reduction, while Tolman's purposive behavior (1932) highlighted goal-directedness, precursors to the error-based approach.",
+      "theory_of_mind": "Opposing agents or decision-makers may model this behavior by assuming that an opponent prioritizes immediate error correction over maintaining established routines. For instance, a competitor might predict that an organization will abandon a frequently used strategy if it encounters persistent errors, expecting rapid adaptation rather than stubborn adherence. Similarly, a policymaker might design incentives that force incorrect paths to see whether agents can break old habits under pressure.",
+      "cross_layer_veto": "Anti-collinearity conditions require that error signals are not confounded by external factors like reward timing or task difficulty. Leakage vetoes apply when the system has multiple stable equilibria; in such cases, forcing one path may inadvertently stabilize an incorrect solution. Additionally, the primitives fail if there is hidden state information that masks true error rates, leading to misleading conclusions about habit strength or breakdown speed."
+    }
+  ]
+}

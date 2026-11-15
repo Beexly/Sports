@@ -1,0 +1,78 @@
+{
+  "book_id": "0158db2b00dc399d",
+  "source_status": "COMPLETE",
+  "title": "NOTES",
+  "file_name": "NOTES.md",
+  "sha256": "0158db2b00dc399d41f74ece04c9ccbf7641d6159791d700b33260d0e5521ecd",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Design-sync framework encodes component shape and entry constraints as a categorical fiber bundle over Next.js app space, with client-safe exports pinned in a source map. Universal Lens: Rooted in NOTES (0158db2b00dc399d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on component readiness uses pinned exports and environment shims to compute posterior confidence in UI state transitions. GSI Mapping: Rooted in NOTES (0158db2b00dc399d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine tracks component variants and styling regimes through dark-first wrappers and CSS class usage to maintain visual consistency. GSE Mapping: Rooted in NOTES (0158db2b00dc399d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "shape_and_entry_constraint",
+      "name": "Shape and Entry Constraint",
+      "verbatim_quote": "## Shape and entry - No Storybook anywhere in the repo (confirmed with the user 2026-09-09).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Repository structure is strictly Next.js application with no Storybook. Component entry point is hand-curated.",
+      "breakdown_regime": "When component is added without updating both entry.tsx and componentSrcMap, sync fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Component entry point maps to a fiber over the Next.js application space, ensuring all exports are client-safe.",
+        "source_operator": "shape_and_entry_constraint",
+        "telemetry": "Sync success rate when componentSrcMap is updated correctly."
+      }
+    },
+    {
+      "primitive_id": "client_safe_export_pinning",
+      "name": "Client-Safe Export Pinning",
+      "verbatim_quote": "Every export is pinned in `cfg.componentSrcMap`; adding a component means adding BOTH an export line in `entry.tsx` and a pin (`\"Name\": \"apps/web/components/<path>.tsx\"`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All exported components must be client-safe and presentational.",
+      "breakdown_regime": "Failure occurs if either export line or pin is missing from componentSrcMap.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Source map acts as kernel for validating component accessibility during sync.",
+        "source_operator": "client_safe_export_pinning",
+        "telemetry": "Number of valid exports vs total exports in componentSrcMap."
+      }
+    },
+    {
+      "primitive_id": "tailwind_css_compilation",
+      "name": "Tailwind CSS Compilation",
+      "verbatim_quote": "## Styling - Tailwind is compiled once per sync with `cfg.buildCmd` (Tailwind CLI, `apps/web/app/globals.css`, which `@import`s `styles/design-tokens.css` and `styles/pickpilot-kit.css`) into `.design-sync/.cache/tailwind.css` = `cfg.cssEntry`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Styling is deterministic and compiled once per sync using Tailwind CLI.",
+      "breakdown_regime": "Compilation fails if Tailwind config or dependencies change without rerunning buildCmd.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CSS compilation process mirrors component rendering pipeline for consistent styling.",
+        "source_operator": "tailwind_css_compilation",
+        "telemetry": "Cache invalidation frequency and rebuild success rate."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0158db2b00dc399d_t0",
+      "think": "The design-sync framework operates as a constrained fiber bundle over a Next.js application space, where each component must satisfy two conditions: it must be client-safe and presentational, and it must be explicitly exported in a hand-curated entry file. This ensures that only components suitable for preview environments are considered. The system enforces a dual constraint: the component must exist in the source tree and be pinned in a configuration map. When these constraints are violated, the sync process fails. The Tailwind CSS compilation step introduces another layer of determinism, ensuring that styling remains consistent across previews. The use of shims for server-side constructs like process.env and Next.js imports allows for safe execution in client contexts. These primitives form a closed-loop system where component integrity is validated at multiple levels—structural, semantic, and stylistic.\n\nDeep epistemic analysis for NOTES (0158db2b00dc399d, domain=other, pages_read=6/6): Operator 'Shape and Entry Constraint' (page 1, domain other) captures: ## Shape and entry - No Storybook anywhere in the repo (confirmed with the user 2026-09-09). Assumptions: Repository structure is strictly Next.js application with no Storybook. Component entry point is hand-curated. Breakdown regime: When component is added without updating both entry.tsx and componentSrcMap, sync fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Component entry point maps to a fiber over the Next.js application space, ensuring all exports are client-safe. Operator 'Client-Safe Export Pinning' (page 1, domain other) captures: Every export is pinned in `cfg.componentSrcMap`; adding a component means adding BOTH an export line in `entry.tsx` and a pin (`\"Name\": \"apps/web/components/<path>.tsx\"`). Assumptions: All exported components must be client-safe and presentational. Breakdown regime: Failure occurs if either export line or pin is missing from componentSrcMap. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Source map acts as kernel for validating component accessibility during sync. Operator 'Tailwind CSS Compilation' (page 1, domain other) captures: ## Styling - Tailwind is compiled once per sync with `cfg.buildCmd` (Tailwind CLI, `apps/web/app/globals.css`, which `@import`s `styles/design-tokens.css` and `styles/pickpilot-kit.css`) into `.design-sync/.cache/tailwind.css` = `cfg.cssEntry`. Assumptions: Styling is deterministic and compiled once per sync using Tailwind CLI. Breakdown regime: Compilation fails if Tailwind config or dependencies change without rerunning buildCmd. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CSS compilation process mirrors component rendering pipeline for consistent styling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NOTES (0158db2b00dc399d, domain=other, pages_read=6/6): Operator 'Shape and Entry Constraint' (page 1, domain other) captures: ## Shape and entry - No Storybook anywhere in the repo (confirmed with the user 2026-09-09). Assumptions: Repository structure is strictly Next.js application with no Storybook. Component entry point is hand-curated. Breakdown regime: When component is added without updating both entry.tsx and componentSrcMap, sync fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Component entry point maps to a fiber over the Next.js application space, ensuring all exports are client-safe. Operator 'Client-Safe Export Pinning' (page 1, domain other) captures: Every export is pinned in `cfg.componentSrcMap`; adding a component means adding BOTH an export line in `entry.tsx` and a pin (`\"Name\": \"apps/web/components/<path>.tsx\"`). Assumptions: All exported components must be client-safe and presentational. Breakdown regime: Failure occurs if either export line or pin is missing from componentSrcMap. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Source map acts as kernel for validating component accessibility during sync. Operator 'Tailwind CSS Compilation' (page 1, domain other) captures: ## Styling - Tailwind is compiled once per sync with `cfg.buildCmd` (Tailwind CLI, `apps/web/app/globals.css`, which `@import`s `styles/design-tokens.css` and `styles/pickpilot-kit.css`) into `.design-sync/.cache/tailwind.css` = `cfg.cssEntry`. Assumptions: Styling is deterministic and compiled once per sync using Tailwind CLI. Breakdown regime: Compilation fails if Tailwind config or dependencies change without rerunning buildCmd. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CSS compilation process mirrors component rendering pipeline for consistent styling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the mathematical theory of fiber bundles and category theory, this framework evolved from early design systems that required explicit component registration and validation. The concept of client-safe exports stems from the need to isolate frontend logic from backend dependencies, a principle formalized in functional programming and distributed systems theory. Retrocausal Genealogy: Rooted in NOTES (0158db2b00dc399d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include developers who may introduce new components without updating the source map, and the sync process itself, which enforces strict adherence to the defined interface. The system models these interactions through a dual constraint mechanism: one that validates component presence and another that checks export correctness. Theory of Mind & Decision Maker Model: Rooted in NOTES (0158db2b00dc399d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that server-side dependencies like auth libraries and database connectors are excluded from the preview environment. Leakage veto conditions prevent components that rely on non-client-safe features from being included in the export list, maintaining the integrity of the preview layer. Cross-Layer Veto & Anti-Leakage Check: Rooted in NOTES (0158db2b00dc399d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

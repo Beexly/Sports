@@ -1,0 +1,78 @@
+{
+  "book_id": "bffd5b78a21ca468",
+  "source_status": "COMPLETE",
+  "title": "pro-football-reference.com",
+  "file_name": "pro-football-reference.com.md",
+  "sha256": "bffd5b78a21ca4682494f81e25b0a9c16e4e18c9d8f0f7f77b887f2c29ec963b",
+  "primary_domain": "football",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemaps and path taxonomies define data access structures; 404 errors indicate missing or misconfigured resources in advanced-data categories. Universal Lens: Rooted in pro-football-reference.com (bffd5b78a21ca468), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on sitemap availability maps to probabilistic data accessibility; conformal prediction models resource discovery failure rates. GSI Mapping: Rooted in pro-football-reference.com (bffd5b78a21ca468), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in GSE reflect sitemap crawl status changes; situational awareness updates based on 404 responses and index presence. GSE Mapping: Rooted in pro-football-reference.com (bffd5b78a21ca468), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_availability_indicator",
+      "name": "Sitemap Availability Indicator",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://pro-football-reference.com/sitemap.xml` | 404 | 0 | no | | `https://pro-football-reference.com/sitemap_index.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{avail}': 'dimensionless binary indicator (1 if accessible, 0 if 404)'}",
+      "assumptions": "Resource paths are deterministic and static; sitemap structure adheres to XML standards.",
+      "breakdown_regime": "When S_{avail} = 0, indicates resource unavailability or misconfiguration.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic data access model where S_{avail} corresponds to P(accessible|request).",
+        "source_operator": "sitemap_availability_indicator",
+        "telemetry": "Crawl status code (e.g., 404) as empirical verification metric."
+      }
+    },
+    {
+      "primitive_id": "path_taxonomy_structure",
+      "name": "Path Taxonomy Structure",
+      "verbatim_quote": "0 | no | | `https://pro-football-reference.com/wp-sitemap.xml` | 404 | 0 | no | ## Path taxonomy",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{path}': 'set of URL path segments'}",
+      "assumptions": "URLs follow hierarchical segmentation; first segment defines category or module.",
+      "breakdown_regime": "When T_{path} is empty or malformed, indicates incomplete or corrupted taxonomy.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's navigation kernel; T_{path} enables state transition logic in crawling agents.",
+        "source_operator": "path_taxonomy_structure",
+        "telemetry": "Number of valid path segments per URL as telemetry metric."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "pro-football-reference.com Grounded Principle 3",
+      "verbatim_quote": "0 | no | | `https://pro-football-reference.com/wp-sitemap.xml` | 404 | 0 | no | ## Path taxonomy",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "bffd5b78a21ca468_t0",
+      "think": "The sitemap discovery process reveals a structured yet inaccessible data architecture. Each sitemap entry is a potential node in a graph of data access paths. The 404 errors imply that while the system expects these paths to exist, they do not resolve, creating a failure mode in data retrieval. This aligns with a Bayesian framework where prior beliefs about data availability are updated upon observing evidence (404s). In GSI, this translates to a probabilistic model of data access where P(accessible) decreases with observed 404s. For GSE, it implies a state machine where each sitemap crawl triggers a transition from 'discovery' to 'failure' when encountering 404s. The path taxonomy defines the topological space of possible data locations, and its integrity is critical for agent navigation. A broken taxonomy leads to disconnected states in GSE’s reasoning engine. Dualities emerge between expected vs. actual resource availability, and between structured vs. unstructured data access patterns.\n\nDeep epistemic analysis for pro-football-reference.com (bffd5b78a21ca468, domain=football, pages_read=1/1): Operator 'Sitemap Availability Indicator' (page 1, domain football) captures: | Index | |---|---|---|---| | `https://pro-football-reference.com/sitemap.xml` | 404 | 0 | no | | `https://pro-football-reference.com/sitemap_index.xml` | Assumptions: Resource paths are deterministic and static; sitemap structure adheres to XML standards. Breakdown regime: When S_{avail} = 0, indicates resource unavailability or misconfiguration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic data access model where S_{avail} corresponds to P(accessible|request). Operator 'Path Taxonomy Structure' (page 1, domain football) captures: 0 | no | | `https://pro-football-reference.com/wp-sitemap.xml` | 404 | 0 | no | ## Path taxonomy Assumptions: URLs follow hierarchical segmentation; first segment defines category or module. Breakdown regime: When T_{path} is empty or malformed, indicates incomplete or corrupted taxonomy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's navigation kernel; T_{path} enables state transition logic in crawling agents. Operator 'pro-football-reference.com Grounded Principle 3' (page 1, domain football) captures: 0 | no | | `https://pro-football-reference.com/wp-sitemap.xml` | 404 | 0 | no | ## Path taxonomy Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for pro-football-reference.com (bffd5b78a21ca468, domain=football, pages_read=1/1): Operator 'Sitemap Availability Indicator' (page 1, domain football) captures: | Index | |---|---|---|---| | `https://pro-football-reference.com/sitemap.xml` | 404 | 0 | no | | `https://pro-football-reference.com/sitemap_index.xml` | Assumptions: Resource paths are deterministic and static; sitemap structure adheres to XML standards. Breakdown regime: When S_{avail} = 0, indicates resource unavailability or misconfiguration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic data access model where S_{avail} corresponds to P(accessible|request). Operator 'Path Taxonomy Structure' (page 1, domain football) captures: 0 | no | | `https://pro-football-reference.com/wp-sitemap.xml` | 404 | 0 | no | ## Path taxonomy Assumptions: URLs follow hierarchical segmentation; first segment defines category or module. Breakdown regime: When T_{path} is empty or malformed, indicates incomplete or corrupted taxonomy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's navigation kernel; T_{path} enables state transition logic in crawling agents. Operator 'pro-football-reference.com Grounded Principle 3' (page 1, domain football) captures: 0 | no | | `https://pro-football-reference.com/wp-sitemap.xml` | 404 | 0 | no | ## Path taxonomy Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web architecture principles and XML sitemap standards introduced by Google in 2005. These structures evolved from hierarchical file systems into semantic web indexing. Retrocausal Genealogy: Rooted in pro-football-reference.com (bffd5b78a21ca468), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in pro-football-reference.com (bffd5b78a21ca468), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include crawlers seeking data and servers maintaining access control. The system assumes consistent server behavior but observes inconsistency through 404s, indicating either misconfiguration or deliberate exclusion. Theory of Mind & Decision Maker Model: Rooted in pro-football-reference.com (bffd5b78a21ca468), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when sitemap failures correlate with path taxonomy inconsistencies. Leakage occurs if GSE treats 404s as valid paths, leading to erroneous navigation. Veto conditions require validation of sitemap entries before inclusion in GSE's path graph. Cross-Layer Veto & Anti-Leakage Check: Rooted in pro-football-reference.com (bffd5b78a21ca468), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

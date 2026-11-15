@@ -1,0 +1,522 @@
+{
+  "book_id": "3578988030a30ccf",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_LIGATURE_FOLD",
+  "source_note": "Patrick Lucey, Alina Bialkowski, Peter Carr, Eric Foote & Iain Matthews (Disney Research Pittsburgh / QUT), 'Characterizing Multi-Agent Team Behavior from Partial Team Tracings: Evidence from the English Premier League', Proceedings of the Twenty-Sixth AAAI Conference on Artificial Intelligence (AAAI 2012), pp. 1387-1393. Catalog primary_domain='psych' is a tagging error: this is an AI/multi-agent tracking paper on soccer, extracted under domain 'cs'. fi/fl ligatures, en-dash and U+2212 folded; Shannon entropy (eq 1) and segment-count N=(T1-T)+1 reconstructed as labeled LaTeX. Outputs are tactical predictability measures from public Opta event data; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "soccer_no_discretized_plays",
+      "name": "Continuous low-scoring soccer has no discretized plays",
+      "verbatim_quote": "For low-scoring, continuous team sports like soccer, such analysis for multi-agent teams does not exist",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Unlike tennis (point-level) or football (discrete plays), soccer is not segmented into plans, so a plan library characterizing a team cannot be built directly."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A continuous sport needs a segmentation surrogate before plan recognition; GSE faces the same drive-segmentation problem in continuous phases.",
+        "source_operator": "soccer_no_discretized_plays",
+        "telemetry": "soccer: no discrete plan segments"
+      }
+    },
+    {
+      "primitive_id": "partial_tracings_ball_actions",
+      "name": "Only partial tracings: ball actions, not player tracking",
+      "verbatim_quote": "as player tracking data is costly and difficult to obtain, we only have partial team tracings in the form of ball actions which makes this problem even more difficult.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Full player tracking is costly/scarce; the available signal is hand-annotated ball actions (Opta), a partial observation of the 22-agent system."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reasoning about a multi-agent system from a partial observable is the same constraint GSE works under with play-by-play instead of tracking.",
+        "source_operator": "partial_tracings_ball_actions",
+        "telemetry": "partial tracing = ball actions only"
+      }
+    },
+    {
+      "primitive_id": "play_segments_representation",
+      "name": "Play-segments: ball movement over fixed time windows",
+      "verbatim_quote": "we propose a method to overcome these issues by representing team behavior via play-segments, which are spatio-temporal descriptions of ball movement over fixed windows of time.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Play-segments replace labeled plans: fixed-window spatio-temporal ball trajectories form a playbook without goal-labeled recipes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A fixed-window spatio-temporal segment is the same drive/play encoding GSE builds from event streams.",
+        "source_operator": "play_segments_representation",
+        "telemetry": "play-segment = ball path over window T"
+      }
+    },
+    {
+      "primitive_id": "entropy_maps_predictability",
+      "name": "Entropy maps measure team predictability across the field",
+      "verbatim_quote": "Using these representations we can characterize team behavior from entropy maps, which give a measure of predictability of team behaviors across the field.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Per-field-area entropy of ball movement quantifies how predictable a team is from each region."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A spatial predictability map is the same scheme-tendency surface GSE uses to locate where an opponent is predictable.",
+        "source_operator": "entropy_maps_predictability",
+        "telemetry": "entropy map = predictability per area"
+      }
+    },
+    {
+      "primitive_id": "mapr_plan_library",
+      "name": "MAPR maps behavior sequences to a plan library",
+      "verbatim_quote": "Given a sequence of observed team behaviors or activities, MAPR seeks to map these behaviors to one distinct plan within a library of plans.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Multi-agent plan recognition infers tactics from recognized plans; soccer lacks the labeled library, motivating the play-segment workaround."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Plan recognition against a library is the same intent-inference GSE performs, here adapted to an unlabeled continuous sport.",
+        "source_operator": "mapr_plan_library",
+        "telemetry": "MAPR: behaviors -> plan in library"
+      }
+    },
+    {
+      "primitive_id": "team_shared_mental_state",
+      "name": "A team is agents with shared objective and mental state",
+      "verbatim_quote": "We define a team as a set of agents having a shared objective and a shared mental state",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Cohen-Levesque 1990 definition; each soccer agent is permanently fixed to one team of 11 unless dismissed."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A shared-intention multi-agent unit is the same coordinated-team abstraction GSE models for an offense or defense.",
+        "source_operator": "team_shared_mental_state",
+        "telemetry": "team = shared objective + mental state"
+      }
+    },
+    {
+      "primitive_id": "plan_ordered_recipe",
+      "name": "A plan is an ordered behavior sequence achieving a goal",
+      "verbatim_quote": "A plan can be defined as an ordered sequence of team behaviors describing a recipe used by a team to achieve a goal",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Tactics = a group of plans pursuing a major goal (winning); soccer's continuity makes labeling such plans extremely difficult."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A goal-directed ordered recipe is the same script abstraction GSE uses for a drive's intent.",
+        "source_operator": "plan_ordered_recipe",
+        "telemetry": "plan = ordered behaviors -> goal"
+      }
+    },
+    {
+      "primitive_id": "play_segments_not_plans",
+      "name": "Play-segments are not plans (no goal recipe)",
+      "verbatim_quote": "As these segments do not describe a method of achieving a specific goal, we do not call them plans, but play-segments.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Equal temporal chunks describe behavior but not a goal-achieving method, so they are play-segments forming a playbook P={p1..pm}."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Distinguishing descriptive segments from goal-directed plans is the same epistemic separation GSE keeps between observation and intent.",
+        "source_operator": "play_segments_not_plans",
+        "telemetry": "segment != plan (no goal recipe)"
+      }
+    },
+    {
+      "primitive_id": "quantize_temporal_chunks",
+      "name": "Quantize the match into equal temporal chunks",
+      "verbatim_quote": "we quantize a match into equal temporal chunks which we use to describe team behavior.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Fixed temporal quantization circumvents the absence of natural play boundaries in continuous soccer."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Temporal quantization is the same windowing GSE applies to continuous event streams to create analyzable units.",
+        "source_operator": "quantize_temporal_chunks",
+        "telemetry": "match -> equal temporal chunks"
+      }
+    },
+    {
+      "primitive_id": "opta_f24_event_feed",
+      "name": "Opta F24: time-coded ball-action event feed",
+      "verbatim_quote": "The F24 data is a time coded feed that lists all player action events within the game with a player, team, event type, minute and second for each action.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Each event has qualifiers; the feed powers real-time visualizations (ESPN, Guardian) but had no automatic tactical-analysis system."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A time-coded event feed is the same play-by-play substrate GSE ingests, here the partial-tracing source.",
+        "source_operator": "opta_f24_event_feed",
+        "telemetry": "F24: player/team/event/min/sec"
+      }
+    },
+    {
+      "primitive_id": "epl_380_games_760k_events",
+      "name": "2010-11 EPL: 380 games, 760k+ events",
+      "verbatim_quote": "we used the 2010-2011 EPL season F24 Opta feed, which consists of 380 games and more than 760,000 events.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "20 teams, 38 games each (home and away vs every opponent); volume makes automatic analysis feasible despite partial tracings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A full-season event corpus is the same scale GSE uses to learn stable team tendencies.",
+        "source_operator": "epl_380_games_760k_events",
+        "telemetry": "380 games, >760,000 events"
+      }
+    },
+    {
+      "primitive_id": "pass_assumed_one_second",
+      "name": "Infer ball path: a pass takes one second",
+      "verbatim_quote": "As no time is given for the arrival time of the pass, we assume that the pass took one second",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "F24 gives no pass arrival time, so a one-second duration is assumed to interpolate ball position between annotated actions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Imputing missing event timing with a fixed duration is the same interpolation GSE uses to reconstruct continuous state from discrete events.",
+        "source_operator": "pass_assumed_one_second",
+        "telemetry": "pass duration assumed = 1 s"
+      }
+    },
+    {
+      "primitive_id": "dribble_straight_uniform_speed",
+      "name": "Infer dribble as straight line, uniform speed",
+      "verbatim_quote": "we assume that the ball was dribbled in a straight line and at a uniform speed.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Between annotated actions the ball is interpolated linearly at constant speed; possession persists until the next annotated action changes it."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Linear constant-speed interpolation between events is the same state-reconstruction assumption GSE makes between play-by-play ticks.",
+        "source_operator": "dribble_straight_uniform_speed",
+        "telemetry": "dribble: straight line, uniform speed"
+      }
+    },
+    {
+      "primitive_id": "field_normalized_100x100",
+      "name": "Normalize to 100x100, attacking left to right",
+      "verbatim_quote": "all data is normalized onto a field of size 100 × 100, with all positions given for teams attacking left to right.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A common coordinate frame (100x100, left-to-right attack) makes the same physical location differ relative to each team's attacking direction."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A normalized attacking-direction frame is the same field canonicalization GSE applies so tendencies are comparable across teams.",
+        "source_operator": "field_normalized_100x100",
+        "telemetry": "100x100, attack left->right"
+      }
+    },
+    {
+      "primitive_id": "possession_strings",
+      "name": "Partition tracings into possession strings",
+      "verbatim_quote": "we partition the tracings for each team into possession strings (i.e. continuous movement of the ball for a single team without turnover or stoppage)",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A possession string is continuous single-team ball movement bounded by turnover or stoppage; the unit from which segments are cut."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A possession string is the same drive unit GSE segments before windowing.",
+        "source_operator": "possession_strings",
+        "telemetry": "possession = continuous ball, no turnover"
+      }
+    },
+    {
+      "primitive_id": "sliding_window_play_segments",
+      "name": "Sliding window T cuts possessions into segments",
+      "verbatim_quote": "we apply a sliding window of length T to quantize or chunk the possessions into play-segments",
+      "page": 4,
+      "latex": "N=(T_1-T)+1",
+      "symbol_and_unit_ledger": {
+        "T": "window length (seconds)",
+        "T_1": "possession duration",
+        "N": "segments per possession"
+      },
+      "assumptions": [
+        "Possessions shorter than T are discarded; the field is quantized to an l x w grid vectorized by columns, and each timestep's quantized ball position populates the segment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A sliding-window segmentation with a discard-short rule is the same windowing GSE uses to build fixed-length play representations.",
+        "source_operator": "sliding_window_play_segments",
+        "telemetry": "N=(T1-T)+1; discard if T1<T"
+      }
+    },
+    {
+      "primitive_id": "shannon_entropy_predictability",
+      "name": "Shannon entropy measures pattern predictability",
+      "verbatim_quote": "Entropy can be viewed as a measure of uncertainty or how predictable or unpredictable a team's patterns of play is for different areas on the field.",
+      "page": 4,
+      "latex": "H(X)=-\\sum_{i=0}^{n-1}p(i)\\log p(i)",
+      "symbol_and_unit_ledger": {
+        "H": "entropy (bits if log base 2)",
+        "p(i)": "occupancy probability of destination cell"
+      },
+      "assumptions": [
+        "0 log 0 = 0; log base sets the unit; per-area entropy of where the ball travels from a start cell forms the entropy map."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Shannon entropy over destination occupancy is the same predictability measure GSE uses to score how readable a team's tendencies are.",
+        "source_operator": "shannon_entropy_predictability",
+        "telemetry": "H = -sum p log p (bits)"
+      }
+    },
+    {
+      "primitive_id": "high_entropy_more_bits",
+      "name": "High entropy = unpredictable, needs more bits",
+      "verbatim_quote": "High entropy refers to uncertainty in the input signal - we need more bits to transfer this information.",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Low entropy means a highly predictable signal transferable in fewer bits; entropy is the information cost of describing the team's behavior."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Entropy as information cost is the same coding view GSE uses: predictable schemes compress, varied schemes do not.",
+        "source_operator": "high_entropy_more_bits",
+        "telemetry": "high H = unpredictable = more bits"
+      }
+    },
+    {
+      "primitive_id": "entropy_from_start_area",
+      "name": "Entropy per area from segments starting there",
+      "verbatim_quote": "For each set of play-segments we can then form a probability distribution based on the occupancy for all the play-segments which started in that quantized area.",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Group segments by their starting quantized cell, build the destination occupancy distribution, and compute that cell's entropy."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conditioning the destination distribution on the start cell is the same conditional-tendency estimation GSE uses per field zone.",
+        "source_operator": "entropy_from_start_area",
+        "telemetry": "p(destination | start cell) -> H"
+      }
+    },
+    {
+      "primitive_id": "top5_highest_entropy",
+      "name": "Top five teams have the highest mean entropy",
+      "verbatim_quote": "the top five teams have the highest mean entropies for varying play-segment window lengths.",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Beyond the top five, ranking does not correspond to entropy; the best teams are the most varied/unpredictable ball-movers."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Elite teams are harder to predict (higher entropy); GSE reads high entropy as a richer, less-readable scheme, the same signal.",
+        "source_operator": "top5_highest_entropy",
+        "telemetry": "top 5 = highest mean entropy"
+      }
+    },
+    {
+      "primitive_id": "max_information_4_5_seconds",
+      "name": "Entropy peaks at 4-5s: the information-maximizing window",
+      "verbatim_quote": "the maximum entropy occurs around 4 to 5 seconds for all teams, which is important to note as this also means that this window of time maximizes the amount of information available.",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "T=4-5s maximizes information; longer windows separate teams more but drop information and reduce discriminative power, so T=5 is used."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Choosing the window that maximizes information rather than separation is the same feature-window selection GSE makes.",
+        "source_operator": "max_information_4_5_seconds",
+        "telemetry": "max entropy at T~4-5 s"
+      }
+    },
+    {
+      "primitive_id": "goal_area_low_entropy",
+      "name": "Goal area and corners have low entropy",
+      "verbatim_quote": "the entropy around goal area in the attacking end is low due to the amount of players that are around these areas trying to protect the goal",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Defenders crowd the goal and corners offer few options, so behavior there is predictable (low entropy); passing teams show high entropy through the center."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Crowded/option-poor zones are predictable; GSE expects low entropy near the goal, the same spatial prior.",
+        "source_operator": "goal_area_low_entropy",
+        "telemetry": "goal area/corners: low H"
+      }
+    },
+    {
+      "primitive_id": "team_id_leave_one_match_out",
+      "name": "Team ID: kNN with leave-one-match-out CV",
+      "verbatim_quote": "we used the entire 380 games of the season and used a leave-one-match-out cross validation strategy to maximize training and testing data.",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Identify the home team from its playbook; compared against 23 match statistics and their combination, with kNN classification."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Leave-one-match-out identification tests whether a representation captures a unique team style; GSE uses the same holdout discriminability test.",
+        "source_operator": "team_id_leave_one_match_out",
+        "telemetry": "kNN, leave-one-match-out, 380 games"
+      }
+    },
+    {
+      "primitive_id": "combined_features_47_percent",
+      "name": "Entropy + match stats: 47% team-ID accuracy",
+      "verbatim_quote": "Combining both information sources together greatly improves the classification accuracy again, with 47% achieved, which is very good when you consider we only have the ball movement data.",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Match stats alone 19%, entropy maps 30%, combined 47% (chance 5%); features scaled and reduced by LDA to a compact class-preserving representation, 10x8 grid, T=5."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Combining complementary signals beats either alone; GSE fuses tendency and box-score features the same way for discriminability.",
+        "source_operator": "combined_features_47_percent",
+        "telemetry": "stats 19% / entropy 30% / combined 47%"
+      }
+    },
+    {
+      "primitive_id": "similar_styles_confused",
+      "name": "Teams with similar styles get confused",
+      "verbatim_quote": "the teams that tend to get confused with each other play similar styles.",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Stoke/Bolton/Blackburn share a predictable direct style and low entropy; top teams also confuse with each other, indicating shared expansive styles."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Confusion between teams reveals style similarity; GSE reads identification confusion as scheme proximity, the same clustering signal.",
+        "source_operator": "similar_styles_confused",
+        "telemetry": "confusion = similar style"
+      }
+    },
+    {
+      "primitive_id": "style_variation_counter_attack",
+      "name": "Detect style variation: Man Utd's counter-attacking shift",
+      "verbatim_quote": "by playing a counter attacking game (e.g. be defensively compact and break quickly).",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Man Utd vs Arsenal was confused with West Ham because United abandoned its expansive style for a compact counter-attack; the entropy map deviation flags the tactical shift."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A deviation from a team's characteristic entropy map detects a tactical change; GSE uses the same style-deviation detector for game-script shifts.",
+        "source_operator": "style_variation_counter_attack",
+        "telemetry": "Man Utd -> West Ham style, won 2-0"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "teamtracings2012_trace",
+      "think": "The retrocausal genealogy of this paper is the graduation of sports AI from virtual to real-world analysis, and the specific obstacle that continuous, low-scoring soccer poses to it. Tennis systems like IBM SlamTracker build a library of a player's successful and unsuccessful plans because the game is segmented at point level, but soccer has no discretized plays, so no labeled plan library can be formed. Multi-agent plan recognition, the lineage that runs from Intille and Bobick's 1999 Bayesian-network recognition of a single football play through Li and Chellappa's offensive-play classification, Siddiquie's HoG/HoF spatio-temporal features, the Oregon State video-to-simulator work, Beetz's ASPOGAMO tracking, and Perse's basketball pattern recognition, all assume full team tracings and a plan library. Soccer offers neither: player tracking is costly and scarce, and the only abundant signal is hand-annotated ball actions from the Opta F24 feed. The authors' move is to characterize team behavior from these partial tracings without any plan library. The representation is the play-segment, a spatio-temporal description of ball movement over a fixed window of time. Because the segments do not describe a goal-achieving recipe they are deliberately not called plans. The ball's location and possession are inferred from the F24 event feed: a pass is assumed to take one second, a dribble is interpolated as a straight line at uniform speed between annotated actions, and possession persists until the next action changes it, all on a field normalized to 100 by 100 with every team attacking left to right. Tracings are partitioned into possession strings, continuous single-team ball movement bounded by turnover or stoppage, and a sliding window of length T cuts each possession into N equals T1 minus T plus one segments, discarding any possession shorter than T. The field is quantized into a grid vectorized by columns, and each timestep's quantized ball position populates the segment. The recursive theory of mind is inferring a team's tactical identity from the predictability of its ball movement. For each quantized starting area, the destination occupancy of all segments beginning there forms a probability distribution, and its Shannon entropy measures how predictable the team is from that region: high entropy means varied, unpredictable play needing more bits to describe, low entropy means a readable signal. The model reasons about the shared objective and mental state of eleven agents from a partial observable, the ball alone. The top five teams have the highest mean entropy, entropy peaks around four to five seconds which is the information-maximizing window, and the goal area and corners are low-entropy because defenders crowd them and options are few. The winger asymmetry is legible: Manchester United's entropy is heavier on the right where Nani plays, Tottenham's on the left where Bale plays. Cross-layer veto adjudication demands that the representation be both discriminative and sensitive to deviation. A team-identification task, identify the home team from its playbook using k-nearest neighbors with leave-one-match-out cross validation over all 380 games, shows match statistics alone reach only 19 percent, entropy maps 30 percent, and their combination 47 percent against a 5 percent chance baseline, with features scaled and reduced by linear discriminant analysis on a 10 by 8 grid at T equals 5. Teams that confuse with each other play similar styles, as Stoke, Bolton, and Blackburn share a predictable direct game. The deviation veto is the Manchester United versus Arsenal match, where United was confused with bottom-place West Ham because it abandoned its expansive passing style for a defensively compact counter-attack and won 2-0; the entropy-map departure from the characteristic map flags exactly this tactical shift. The implementation invariants map directly onto GSE. The play-segment encoding from partial tracings is GSE's drive-segment encoding from play-by-play when tracking is absent; the entropy map is GSE's scheme-tendency and predictability surface; and the style-variation detection is GSE's game-script deviation detector. The information-maximizing window near four to five seconds, the discard-short-possession rule, the normalized attacking-direction frame, and the discriminative gain from fusing complementary features are all transferable design choices. The outputs are tactical characterizations and predictability measures from public event data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The corpus is the 2010-2011 English Premier League season, 380 games and more than 760,000 events, with entropy computed on a 20 by 16 bin grid and identification on a 10 by 8 grid at T equals 5. The authors are honest that the tracings are ball-only with no player positions, that the one-second pass and uniform-speed dribble are interpolation assumptions, and that beyond the top five entropy does not track ranking. Future work targets goal-scoring scenarios and a tablet tool for amateur and semi-professional use. The invariant for GSE is to carry the partial-tracing play-segment representation, the per-area entropy predictability map, and the identification-plus-deviation test, while recording the ball-only observable and the timing assumptions as the binding limits on what can be inferred. This makes the method a reusable template for tactical inference whenever full player tracking is unavailable, which is the common case in GSE's public-data environment rather than a rare exception to be worked around.",
+      "retrocausal_genealogy": "The paper originates in real-world sports AI and soccer's obstacle to it: tennis (SlamTracker) builds point-level plan libraries, but continuous low-scoring soccer has no discretized plays and no labeled plan library. The MAPR lineage (Intille-Bobick 1999 football Bayesian net, Li-Chellappa play classification, Siddiquie HoG/HoF, Oregon State video-to-sim, Beetz ASPOGAMO, Perse basketball) assumes full tracings and a plan library; soccer offers only partial ball-action tracings (Opta F24). The contribution is characterizing team behavior from partial tracings with no plan library, via play-segments and entropy maps.",
+      "theory_of_mind": "The model infers a team's tactical identity from ball-movement predictability, reasoning about eleven agents' shared objective and mental state from a partial observable (the ball). Per starting area, destination occupancy gives a distribution whose Shannon entropy measures predictability: high entropy = varied/unpredictable, low = readable. Top five teams have highest entropy; entropy peaks at T~4-5s (information-maximizing); goal area/corners are low-entropy (crowded, few options); Nani/Bale winger asymmetry is legible in the maps. Play-segments (fixed-window ball paths, not goal recipes) are cut from possession strings by a sliding window.",
+      "cross_layer_veto": "The representation must be discriminative AND deviation-sensitive. Team ID (kNN, leave-one-match-out, 380 games): match stats 19%, entropy 30%, combined 47% (chance 5%), LDA-reduced on 10x8 grid T=5. Similar-style teams confuse (Stoke/Bolton/Blackburn direct). Deviation veto: Man Utd vs Arsenal confused with West Ham because United shifted to a compact counter-attack and won 2-0; the entropy-map departure flags the tactical change. Ball location inferred from F24 (pass=1s, dribble straight uniform), normalized 100x100 left-to-right; N=(T1-T)+1, discard short possessions."
+    }
+  ],
+  "universal_lens": "A continuous, low-scoring team sport with only partial ball-action tracings and no plan library is characterized by fixed-window play-segments of ball movement, whose per-field-area Shannon entropy maps quantify each team's predictability, identify its unique style, and detect tactical deviations from that style.",
+  "gsi_mapping": "GSI treats ball location as inferred from Opta F24 (pass=1s, dribble straight uniform, 100x100 left-to-right), possession strings windowed into N=(T1-T)+1 play-segments on an l x w grid, per-start-cell destination entropy H=-sum p log p (bits), team ID by kNN+LDA leave-one-match-out (stats 19% / entropy 30% / combined 47%), and style-deviation detection via entropy-map departure.",
+  "gse_mapping": "GSE lifts the partial-tracing play-segment encoding (drive segments from PBP without tracking), the per-area entropy predictability map (scheme-tendency surface), and the identification-plus-deviation test (game-script shift detector), with the information-maximizing T~4-5s window; all outputs are tactical characterizations, never sportsbook lines."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "781231e8dfc09827",
+  "source_status": "COMPLETE",
+  "title": "p0119",
+  "file_name": "p0119.txt",
+  "sha256": "781231e8dfc09827f7bba77a0b841e14a9cd9ef028a8da54e465c4357ea32090",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The spatial-temporal constraints of the neutral zone and line-of-scrimmage define a piecewise continuous phase space. Player positional shifts act as discrete state transitions, governed by strict boundary conditions that penalize premature encroachment or invalid backward momentum vectors.",
+  "gsi_mapping": "GSI models these rules as Bayesian priors over player trajectory distributions. A sudden shift in center/guard/tackle positions updates the posterior probability of specific play-action classes, while neutral zone violations represent high-variance anomalies triggering immediate penalty likelihoods.",
+  "gse_mapping": "In GSE, the field is a constrained grid automaton. The neutral zone acts as a temporal lock; state transitions (dropping back) are only valid if pre-snap coordinates satisfy the five-yard threshold, otherwise triggering a deterministic rollback of field position.",
+  "primitives": [
+    {
+      "primitive_id": "neutral_zone_encroachment",
+      "name": "Neutral Zone Encroachment Operator",
+      "verbatim_quote": "No player of either side encroach on may encroach upon the neutral zone until neutral zone.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "t: time (s), t_0: snap time (s), x_p(t): player position vector (m), Z_n: neutral zone volume (m^3)",
+      "assumptions": "Players are treated as point masses; the neutral zone is a strictly bounded geometric hyperplane.",
+      "breakdown_regime": "Violated when x_p(t) \\in Z_n for any t < t_0, resulting in a fixed scalar penalty to spatial progress.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE collision detection against static volumetric triggers prior to the global clock tick.",
+        "source_operator": "neutral_zone_encroachment",
+        "telemetry": "Pre-snap velocity vectors crossing the zero-plane."
+      }
+    },
+    {
+      "primitive_id": "lineman_backward_shift",
+      "name": "Lineman Backward Shift Constraint",
+      "verbatim_quote": "If a captain desires to shift the center, guard or tackle into the back field, he may do so after notifying the Referee; but the player so shifted shall not again return to one of the middle line positions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "\\Delta x: displacement along longitudinal axis (m), S_{mid}: set of middle line indices, p_i: player index",
+      "assumptions": "Positional roles are categorical variables; backward shifts require explicit administrative signaling.",
+      "breakdown_regime": "Singularity occurs if p_i \\notin S_{mid} attempts to re-enter S_{mid}, breaking the monotonicity of role assignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents an irreversible Markovian state transition in GSE formation matrices, altering defensive coverage probabilities in GSI.",
+        "source_operator": "lineman_backward_shift",
+        "telemetry": "Formation symmetry metrics and pre-snap alignment deltas."
+      }
+    },
+    {
+      "primitive_id": "five_yard_drop_exception",
+      "name": "Five-Yard Drop Exception Kernel",
+      "verbatim_quote": "Any one of these men may, however, be taken five yards back without consulting the Referee, and may later return again to his position.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "d: distance from line of scrimmage (m), d_{thresh}: 5 yards (approx 4.57 m)",
+      "assumptions": "Euclidean distance metric applies; the 5-yard threshold is an absolute constant.",
+      "breakdown_regime": "Fails if d < d_{thresh} at t_0 for a dropping lineman, creating an illegal formation state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Defines a reversible local perturbation in GSE state space, allowing temporary evasion of standard blocking kernels.",
+        "source_operator": "five_yard_drop_exception",
+        "telemetry": "Longitudinal depth of interior linemen at the exact moment of the snap."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "781231e8dfc09827_t0",
+      "think": "The foundational mechanics of American football can be rigorously modeled as a constrained dynamical system operating within a discrete event framework. The provided excerpts delineate the precise boundary conditions required to maintain a legal state prior to the initiation of kinetic exchange (the snap). \n\nFirst, the Neutral Zone Encroachment Operator establishes a strict topological separation between opposing agents. Mathematically, this defines a forbidden region $Z_n$ where the intersection of any player's spatial coordinates $x_p(t)$ and $Z_n$ must equal the empty set for all $t < t_0$. Violation introduces a deterministic penalty function $P(x) = -5$ yards, acting as a hard constraint on the optimization of field position.\n\nSecond, the Lineman Backward Shift Constraint and Five-Yard Drop Exception Kernel govern the permissible trajectories of interior agents. These rules introduce non-linearities into the formation matrix. A standard lineman is bound to the line of scrimmage ($y=0$). However, the exception kernel allows a temporary translation along the negative y-axis, provided the magnitude $|\\Delta y| \\ge 4.57$ meters at $t_0$. This creates a bifurcation in the state space: linemen can either remain as static blockers or transition into dynamic pass-protection/backfield interference roles, fundamentally altering the local density of the offensive front.\n\nThe duality lies in the tension between rigid structural integrity (maintaining the line) and fluid adaptability (shifting/dropping back). Failure modes emerge when agents misinterpret the timing of $t_0$, leading to false starts or illegal formations. In GSE, these are modeled as invalid state transitions that trigger immediate rollbacks, ensuring the simulation adheres strictly to the physical laws of the sport.\n\nDeep epistemic analysis for p0119 (781231e8dfc09827, domain=other, pages_read=1/1): Operator 'Neutral Zone Encroachment Operator' (page 1, domain other) captures: No player of either side encroach on may encroach upon the neutral zone until neutral zone. Assumptions: Players are treated as point masses; the neutral zone is a strictly bounded geometric hyperplane. Breakdown regime: Violated when x_p(t) \\in Z_n for any t < t_0, resulting in a fixed scalar penalty to spatial progress. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE collision detection against static volumetric triggers prior to the global clock tick. Operator 'Lineman Backward Shift Constraint' (page 1, domain other) captures: If a captain desires to shift the center, guard or tackle into the back field, he may do so after notifying the Referee; but the player so shifted shall not again return to one of the middle line positions. Assumptions: Positional roles are categorical variables; backward shifts require explicit administrative signaling. Breakdown regime: Singularity occurs if p_i \\notin S_{mid} attempts to re-enter S_{mid}, breaking the monotonicity of role assignment. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents an irreversible Markovian state transition in GSE formation matrices, altering defensive coverage probabilities in GSI. Operator 'Five-Yard Drop Exception Kernel' (page 1, domain other) captures: Any one of these men may, however, be taken five yards back without consulting the Referee, and may later return again to his position. Assumptions: Euclidean distance metric applies; the 5-yard threshold is an absolute constant. Breakdown regime: Fails if d < d_{thresh} at t_0 for a dropping lineman, creating an illegal formation state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Defines a reversible local perturbation in GSE state space, allowing temporary evasion of standard blocking kernels. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0119 (781231e8dfc09827, domain=other, pages_read=1/1): Operator 'Neutral Zone Encroachment Operator' (page 1, domain other) captures: No player of either side encroach on may encroach upon the neutral zone until neutral zone. Assumptions: Players are treated as point masses; the neutral zone is a strictly bounded geometric hyperplane. Breakdown regime: Violated when x_p(t) \\in Z_n for any t < t_0, resulting in a fixed scalar penalty to spatial progress. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE collision detection against static volumetric triggers prior to the global clock tick. Operator 'Lineman Backward Shift Constraint' (page 1, domain other) captures: If a captain desires to shift the center, guard or tackle into the back field, he may do so after notifying the Referee; but the player so shifted shall not again return to one of the middle line positions. Assumptions: Positional roles are categorical variables; backward shifts require explicit administrative signaling. Breakdown regime: Singularity occurs if p_i \\notin S_{mid} attempts to re-enter S_{mid}, breaking the monotonicity of role assignment. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents an irreversible Markovian state transition in GSE formation matrices, altering defensive coverage probabilities in GSI. Operator 'Five-Yard Drop Exception Kernel' (page 1, domain other) captures: Any one of these men may, however, be taken five yards back without consulting the Referee, and may later return again to his position. Assumptions: Euclidean distance metric applies; the 5-yard threshold is an absolute constant. Breakdown regime: Fails if d < d_{thresh} at t_0 for a dropping lineman, creating an illegal formation state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Defines a reversible local perturbation in GSE state space, allowing temporary evasion of standard blocking kernels. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives trace their lineage to early 20th-century efforts to mathematize gridiron chaos. As mass participation surged, ad-hoc officiating proved insufficient. Rule IX emerged as a formal axiomatic system, translating physical safety concerns—preventing violent collisions before the ball was live—into quantifiable spatial thresholds (yards) and temporal locks (snap). It represents the first rigorous codification of 'illegal motion' in sports physics.",
+      "theory_of_mind": "Modeling opposing agents requires inferring intent through micro-adjustments in this constrained phase space. When an offensive captain signals a shift, the defensive agents must update their internal probabilistic models of the impending play. A lineman dropping five yards back retroactively alters the perceived threat distribution, forcing defenders to recalculate gap responsibilities. This cat-and-mouse dynamic is essentially a zero-sum game of information asymmetry played out via geometric positioning.",
+      "cross_layer_veto": "To prevent collinearity and leakage between layers, we enforce strict veto conditions. If the telemetry for `neutral_zone_encroachment` registers a violation, the `five_yard_drop_exception` operator is immediately nulled; a player cannot legally drop back if they have already breached the neutral zone. Furthermore, GSI Bayesian inferences regarding play-action must be vetoed if the pre-snap formation violates the fundamental parity constraints of Rule IX, ensuring our predictive engines do not learn from physically impossible states."
+    }
+  ]
+}

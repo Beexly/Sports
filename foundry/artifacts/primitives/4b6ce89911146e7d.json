@@ -1,0 +1,78 @@
+{
+  "book_id": "4b6ce89911146e7d",
+  "source_status": "COMPLETE",
+  "title": "gate-1910-08858-2025",
+  "file_name": "gate-1910-08858-2025.md",
+  "sha256": "4b6ce89911146e7d96edcebf28528dfaa862eaeeefd505bc431eee6b24dd7b6d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A conformal predictive probability gate (ECE ≤ 0.02) fails due to 2022–2024 holdout exclusion, scoring only 2025 data. Universal Lens: Rooted in gate-1910-08858-2025 (4b6ce89911146e7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration via ECE metric on 10-bin probabilistic forecasts; 2025-only holdout violates prior-data consistency. GSI Mapping: Rooted in gate-1910-08858-2025 (4b6ce89911146e7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transition from train (pre-2025) to scored (2025) requires full temporal alignment; mismatched windows trigger failure. GSE Mapping: Rooted in gate-1910-08858-2025 (4b6ce89911146e7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "empirical_calibration_error",
+      "name": "Empirical Calibration Error",
+      "verbatim_quote": "| 0 | | ECE | 0.03668030503742398 | | Brier | 0.21200328490643128 | | Pass threshold",
+      "page": 1,
+      "latex": "\\text{ECE} = \\frac{1}{n} \\sum_{i=1}^{n} |\\hat{p}_i - \\bar{y}_i|",
+      "symbol_and_unit_ledger": "{'n': 'number of samples, dimensionless', '\\\\hat{p}_i': 'predicted probability, dimensionless', '\\\\bar{y}_i': 'observed outcome, dimensionless'}",
+      "assumptions": "Data is partitioned into bins with uniform coverage; predictions are probabilistic.",
+      "breakdown_regime": "When ECE > 0.02, model is deemed overconfident or miscalibrated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "ECE quantifies deviation between predicted and actual outcomes in probabilistic classification; used as a proxy for model reliability in GSI.",
+        "source_operator": "empirical_calibration_error",
+        "telemetry": "ECE value compared against threshold (0.02)"
+      }
+    },
+    {
+      "primitive_id": "temporal_holdout_partitioning",
+      "name": "Temporal Holdout Partitioning",
+      "verbatim_quote": "only (285 games). 2022-2024 were not moved into the holdout. | | Train | seasons strictly",
+      "page": 1,
+      "latex": "\\mathcal{T}_{\\text{train}} \\subset \\mathcal{T}_{\\text{all}}, \\quad \\mathcal{T}_{\\text{holdout}} = \\mathcal{T}_{\\text{2025}}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{T}_{\\\\text{train}}': 'training time interval, years', '\\\\mathcal{T}_{\\\\text{holdout}}': 'evaluation time interval, years', '\\\\mathcal{T}_{\\\\text{all}}': 'full time interval, years'}",
+      "assumptions": "Temporal order must be preserved; future data cannot be used for training.",
+      "breakdown_regime": "Failure occurs when non-contiguous temporal segments are used for evaluation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Temporal partitioning mirrors cross-validation structure; misalignment leads to spurious performance estimates.",
+        "source_operator": "temporal_holdout_partitioning",
+        "telemetry": "Holdout segment size and temporal continuity"
+      }
+    },
+    {
+      "primitive_id": "spread_sign_consistency",
+      "name": "Spread Sign Consistency",
+      "verbatim_quote": "moneyline matches a positive `spread_line` on 280 of 285 holdout rows. The table uses the stored",
+      "page": 1,
+      "latex": "\\text{Sign}(m_{\\text{ml}}) = -\\text{Sign}(s_{\\text{line}})",
+      "symbol_and_unit_ledger": "{'m_{\\\\text{ml}}': 'moneyline, dimensionless', 's_{\\\\text{line}}': 'spread line, dimensionless'}",
+      "assumptions": "Moneyline and spread are inversely related under standard betting conventions.",
+      "breakdown_regime": "Inconsistent sign alignment indicates data mislabeling or encoding error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cross-checking sign consistency ensures semantic integrity of input features; failure implies incorrect feature interpretation.",
+        "source_operator": "spread_sign_consistency",
+        "telemetry": "Number of mismatches out of total holdout rows"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4b6ce89911146e7d_t0",
+      "think": "The gate evaluates a probabilistic model using ECE on a 2025-only holdout, failing because ECE (0.0367) exceeds the 0.02 threshold. Temporal misalignment excludes 2022–2024 data, violating the assumption of consistent temporal coverage. The model's calibration is compromised by partial temporal scope. Additionally, the spread-line sign convention is inconsistent with moneyline signs, indicating a data encoding issue. These failures collectively imply that the model's predictive reliability is undermined by both structural and semantic flaws in the evaluation setup.\n\nDeep epistemic analysis for gate-1910-08858-2025 (4b6ce89911146e7d, domain=other, pages_read=1/1): Operator 'Empirical Calibration Error' (page 1, domain other) captures: | 0 | | ECE | 0.03668030503742398 | | Brier | 0.21200328490643128 | | Pass threshold Assumptions: Data is partitioned into bins with uniform coverage; predictions are probabilistic. Breakdown regime: When ECE > 0.02, model is deemed overconfident or miscalibrated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): ECE quantifies deviation between predicted and actual outcomes in probabilistic classification; used as a proxy for model reliability in GSI. Operator 'Temporal Holdout Partitioning' (page 1, domain other) captures: only (285 games). 2022-2024 were not moved into the holdout. | | Train | seasons strictly Assumptions: Temporal order must be preserved; future data cannot be used for training. Breakdown regime: Failure occurs when non-contiguous temporal segments are used for evaluation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal partitioning mirrors cross-validation structure; misalignment leads to spurious performance estimates. Operator 'Spread Sign Consistency' (page 1, domain other) captures: moneyline matches a positive `spread_line` on 280 of 285 holdout rows. The table uses the stored Assumptions: Moneyline and spread are inversely related under standard betting conventions. Breakdown regime: Inconsistent sign alignment indicates data mislabeling or encoding error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cross-checking sign consistency ensures semantic integrity of input features; failure implies incorrect feature interpretation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for gate-1910-08858-2025 (4b6ce89911146e7d, domain=other, pages_read=1/1): Operator 'Empirical Calibration Error' (page 1, domain other) captures: | 0 | | ECE | 0.03668030503742398 | | Brier | 0.21200328490643128 | | Pass threshold Assumptions: Data is partitioned into bins with uniform coverage; predictions are probabilistic. Breakdown regime: When ECE > 0.02, model is deemed overconfident or miscalibrated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): ECE quantifies deviation between predicted and actual outcomes in probabilistic classification; used as a proxy for model reliability in GSI. Operator 'Temporal Holdout Partitioning' (page 1, domain other) captures: only (285 games). 2022-2024 were not moved into the holdout. | | Train | seasons strictly Assumptions: Temporal order must be preserved; future data cannot be used for training. Breakdown regime: Failure occurs when non-contiguous temporal segments are used for evaluation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal partitioning mirrors cross-validation structure; misalignment leads to spurious performance estimates. Operator 'Spread Sign Consistency' (page 1, domain other) captures: moneyline matches a positive `spread_line` on 280 of 285 holdout rows. The table uses the stored Assumptions: Moneyline and spread are inversely related under standard betting conventions. Breakdown regime: Inconsistent sign alignment indicates data mislabeling or encoding error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cross-checking sign consistency ensures semantic integrity of input features; failure implies incorrect feature interpretation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical calibration theory (Neyman-Pearson, Brier score), extended through modern conformal prediction frameworks (Vovk et al., 2005) and Bayesian forecasting models. Retrocausal Genealogy: Rooted in gate-1910-08858-2025 (4b6ce89911146e7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in gate-1910-08858-2025 (4b6ce89911146e7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent behavior includes adversarial data manipulation (e.g., misaligned temporal splits) and model overconfidence (ECE > 0.02), both of which degrade trustworthiness in probabilistic inference. Theory of Mind & Decision Maker Model: Rooted in gate-1910-08858-2025 (4b6ce89911146e7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in gate-1910-08858-2025 (4b6ce89911146e7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity checks reveal that temporal misalignment and sign inconsistency create leakage between layers. Veto conditions include ECE > 0.02 and mismatched sign patterns, ensuring no false positives in model validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in gate-1910-08858-2025 (4b6ce89911146e7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

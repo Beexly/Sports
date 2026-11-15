@@ -1,0 +1,323 @@
+{
+  "book_id": "5cf76e891f2a1621",
+  "source_status": "COMPLETE",
+  "title": "2603.09896v1",
+  "file_name": "2603.09896v1.pdf",
+  "sha256": "5cf76e891f2a162190dc1fff32bfd4629f4e9ff9db6cd06c29be463c7f46bdb5",
+  "primary_domain": "other",
+  "pages_total": 32,
+  "pages_read": 32,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 32,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Spatial intelligence in sports integrates 3D perception, relational reasoning, and metric-level localization through probabilistic model alignment with human benchmarks. Multimodal sport video reasoning through calibrated geometric constraints and entity-aware captioning.",
+  "gsi_mapping": "Bayesian inference framework maps model confidence thresholds to posterior distributions over spatial tasks, enabling conformal uncertainty quantification for CourtSI-Bench metrics. Bayesian inference over annotated court and player states using conformal predictive distributions for probabilistic video understanding.",
+  "gse_mapping": "Situational reasoning engine encodes player-object relations via graph-based state transitions, supporting dynamic localization and distance estimation under language-guided constraints. Situationally grounded state transitions driven by player-entity interactions and geometric calibration in basketball video contexts.",
+  "primitives": [
+    {
+      "primitive_id": "reconstruct_sports_scenes",
+      "name": "Semi-Automatic Scene Reconstruction",
+      "verbatim_quote": "Leveraging well-defined court geometry as metric anchors, we develop a semi-automatic data engine to reconstruct sports scenes, enabling scalable curation of CourtSI.",
+      "page": 1,
+      "latex": "PnP(C_{ij}) \\rightarrow (X_i, Y_i, Z_i)",
+      "symbol_and_unit_ledger": "(X_i, Y_i, Z_i): 3D coordinates of scene elements (meters); C_{ij}: Correspondence between camera corners and court geometry; PnP: Perspective-n-Point solver.",
+      "assumptions": "Fixed court geometry, accurate camera calibration, sparse feature correspondences.",
+      "breakdown_regime": "Degeneracy when camera pose aligns with planar court structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE state-transition for tracking entities through discrete event updates, and to GSI conformal prediction intervals for uncertainty quantification of reconstructed 3D positions.",
+        "source_operator": "reconstruct_sports_scenes",
+        "telemetry": "Mean squared error of 3D landmark projection, reprojection accuracy, temporal consistency metrics."
+      }
+    },
+    {
+      "primitive_id": "counting_relations",
+      "name": "Spatial Counting & Relational Reasoning",
+      "verbatim_quote": "CourtSI contains over 1M QA pairs, organized under a holistic taxonomy that systematically covers spatial counting, distance measurement, localization, and relational reasoning, across representative net sports including badminton, tennis, and table tennis.",
+      "page": 1,
+      "latex": "R(i,j) = f(d_{ij}, \\theta_{ij})",
+      "symbol_and_unit_ledger": "d_{ij}: Euclidean distance between objects i and j (meters); \\theta_{ij}: Angular separation (radians); R: Relational predicate.",
+      "assumptions": "Euclidean metric space, rigid body assumption for players, point mass approximation for balls.",
+      "breakdown_regime": "Singularity at co-location (d_{ij} \\rightarrow 0), ambiguity in angular ordering on symmetric courts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE Markov decision processes where states encode object counts and adjacency matrices, while actions represent rule-based interventions; maps to GSI via Bayesian network factorization of joint spatial distributions.",
+        "source_operator": "counting_relations",
+        "telemetry": "Precision/recall of relational triples, F1-score on counting queries, consistency with physical rules."
+      }
+    },
+    {
+      "primitive_id": "human_ai_gap",
+      "name": "Human-AI Performance Gap",
+      "verbatim_quote": "These findings indicate that sports scenarios expose limitations in spatial intelligence capabilities captured by existing benchmarks.",
+      "page": 1,
+      "latex": "Gap = H - A",
+      "symbol_and_unit_ledger": "H: Human performance rate (binary success/failure); A: AI model accuracy (0,1); Gap: Absolute difference in performance.",
+      "assumptions": "Shared task difficulty, unbiased evaluation metrics, identical input distribution.",
+      "breakdown_regime": "Zero gap implies perfect alignment; non-zero gap indicates systematic bias or insufficient training data diversity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI hypothesis testing framework where H is the null distribution and A is the observed test statistic; maps to GSE reinforcement learning where gap represents policy improvement potential.",
+        "source_operator": "human_ai_gap",
+        "telemetry": "Statistical significance of gap via permutation tests, error analysis breakdown by query type, domain shift diagnostics."
+      }
+    },
+    {
+      "primitive_id": "spatial_aware_commentary",
+      "name": "Spatial-Aware Commentary Generation",
+      "verbatim_quote": "The adapted model also generalizes effectively to CourtSI-Ext, an evaluation set built on a similar but unseen sport, and demonstrates enhanced spatial-aware commentary generation.",
+      "page": 1,
+      "latex": "C = g(S, T, P)",
+      "symbol_and_unit_ledger": "C: Commentary string; S: Scene description (3D coordinates, trajectories); T: Temporal context; P: Player/team metadata.",
+      "assumptions": "Markovian scene evolution, independent token generation given history, linear utility function for coherence.",
+      "breakdown_regime": "Mode collapse when conditioning on rare events, incoherence in long-term trajectory predictions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE sequential decision-making where commentary is a latent signal guiding state transitions; maps to GSI via variational autoencoders encoding spatial distributions into compact representations.",
+        "source_operator": "spatial_aware_commentary",
+        "telemetry": "BLEU score for n-gram overlap, METEOR for semantic similarity, user preference surveys for narrative quality."
+      }
+    },
+    {
+      "primitive_id": "spatial_metric_alignment",
+      "name": "Spatial Metric Alignment",
+      "verbatim_quote": "The distance threshold Tis set to 15cm according to table 1.",
+      "page": 9,
+      "latex": "\\mathcal{L}_{\\text{dist}}(\\mathbf{x}_i, \\mathbf{x}_j) = \\| \\mathbf{x}_i - \\mathbf{x}_j \\|_2 \\leq T",
+      "symbol_and_unit_ledger": "{'T': '15 cm', '\\\\mathbf{x}_i, \\\\mathbf{x}_j': '3D spatial coordinates in meters'}",
+      "assumptions": "Euclidean geometry applies; objects are point-like or bounded by known dimensions.",
+      "breakdown_regime": "When \\( \\mathcal{L}_{\\text{dist}} > T \\), alignment fails due to occlusion or scale mismatch.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps 3D coordinate differences to binary proximity decisions for localization tasks.",
+        "source_operator": "spatial_metric_alignment",
+        "telemetry": "Localization accuracy (percentage of correct nearest neighbor matches)"
+      }
+    },
+    {
+      "primitive_id": "human_performance_benchmark",
+      "name": "Human Performance Benchmark",
+      "verbatim_quote": "Human evaluators achieve the strongest performance compared to all existing models across all metrics.",
+      "page": 10,
+      "latex": "\\mathcal{H}(\\cdot) = \\arg\\max_{h \\in \\mathcal{H}} \\mathbb{E}[\\mathcal{R}(h)]",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{H}': 'set of human evaluators', '\\\\mathcal{R}(h)': 'performance metric score for evaluator h'}",
+      "assumptions": "Humans perform optimally under idealized geometric cues and task familiarity.",
+      "breakdown_regime": "Performance degrades when absolute distance estimation is required without visual anchors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between human decision space and model output space via shared metric functions.",
+        "source_operator": "human_performance_benchmark",
+        "telemetry": "Average score across all CourtSI-Bench tasks normalized to 100"
+      }
+    },
+    {
+      "primitive_id": "language_guided_reasoning",
+      "name": "Language-Guided Reasoning",
+      "verbatim_quote": "The current state of spatial intelligence in sports scenarios motivates the development of more general models capable of accurate 3D perception and reasoning under flexible language instructions, thereby assisting humans in metric-level spatial understanding.",
+      "page": 10,
+      "latex": "\\mathcal{M}(Q, I) = \\arg\\max_{\\theta} P(R|Q, I, \\theta)",
+      "symbol_and_unit_ledger": "{'Q': 'natural language query', 'I': 'image input with annotations', 'R': 'reasoning result', '\\\\theta': 'model parameters'}",
+      "assumptions": "Model can parse natural language and map it to structured spatial reasoning steps.",
+      "breakdown_regime": "Failure occurs when instruction ambiguity exceeds model capacity for disambiguation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives logical chains from language to spatial inference via grounded symbolic execution.",
+        "source_operator": "language_guided_reasoning",
+        "telemetry": "Correctness rate of relational reasoning steps in CourtSI-Ext"
+      }
+    },
+    {
+      "primitive_id": "confidence_thresholding",
+      "name": "Confidence Thresholding",
+      "verbatim_quote": "The confidence thresholds span {0.5, 0.55, ..., 0.95}, consistent with VSI.",
+      "page": 9,
+      "latex": "\\mathcal{T}(p) = \\begin{cases} 1 & p \\geq t \\\\ 0 & p < t \\end{cases}",
+      "symbol_and_unit_ledger": "{'t': 'confidence threshold ∈ [0.5, 0.95]', 'p': 'prediction probability'}",
+      "assumptions": "Thresholds are calibrated to balance precision and recall in spatial reasoning.",
+      "breakdown_regime": "At low thresholds, false positives increase; at high thresholds, valid predictions may be rejected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps prediction confidence to binary accept/reject decisions for downstream reasoning modules.",
+        "source_operator": "confidence_thresholding",
+        "telemetry": "F1-score of reasoning pipeline under varying confidence levels"
+      }
+    },
+    {
+      "primitive_id": "court_calibration",
+      "name": "Court Geometry Calibration",
+      "verbatim_quote": "[44] Zeyu Xi, Ge Shi, Xuefen Li, Junchi Yan, Zun Li, Lifang Wu, Zilin Liu, and Liang Wang.",
+      "page": 17,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': '3D court box coordinates (meters)', 'K': 'Camera intrinsic matrix (dimensionless)', 'R': 'Rotation matrix (dimensionless)', 't': 'Translation vector (meters)'}",
+      "assumptions": "Real-world court dimensions known; camera parameters fixed; reprojection error minimized.",
+      "breakdown_regime": "When camera distortion exceeds 1% of image resolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Geometric projection from 3D court space to 2D image plane mirrors GSI's spatial belief propagation.",
+        "source_operator": "court_calibration",
+        "telemetry": "Reprojection consistency metric (mean squared error < 0.5 pixels)"
+      }
+    },
+    {
+      "primitive_id": "entity_captioning",
+      "name": "Entity-Aware Video Captioning",
+      "verbatim_quote": "A simple yet effective knowledge guided method for entity-aware video captioning on a basketball benchmark.",
+      "page": 17,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Entity identifier (categorical)', 'V': 'Video frame sequence (frames)', 'T': 'Temporal context window (seconds)', 'L': 'Language embedding dimensionality (dimensionless)'}",
+      "assumptions": "Entities are semantically labeled; temporal coherence preserved; language model trained on sports domain.",
+      "breakdown_regime": "When entity overlap exceeds 90% in frame sequence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Caption generation kernel derived from player trajectory and action classification in GSE.",
+        "source_operator": "entity_captioning",
+        "telemetry": "BLEU score > 0.45 on basketball benchmark"
+      }
+    },
+    {
+      "primitive_id": "player_prompting",
+      "name": "Player-Centric Prompt Generation",
+      "verbatim_quote": "Player-centric multimodal prompt generation for large language model based identity-aware basketball video captioning.",
+      "page": 17,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_i': 'Player identity vector (dimensionless)', 'M': 'Multimodal input modality (image/audio/text)', 'F': 'Prompt function (dimensionless)', 'S': 'Semantic grounding score (normalized)'}",
+      "assumptions": "Player identities are distinguishable; multimodal inputs aligned temporally; prompt function is deterministic.",
+      "breakdown_regime": "When player occlusion exceeds 50% in frame.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Prompt generation aligns with GSE’s player-state abstraction layer.",
+        "source_operator": "player_prompting",
+        "telemetry": "Identity recall rate > 0.85 across benchmark videos"
+      }
+    },
+    {
+      "primitive_id": "sports_qa_benchmark",
+      "name": "Sports QA Benchmark Construction",
+      "verbatim_quote": "Sportqa: A benchmark for sports understanding in large language models.",
+      "page": 17,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q': 'Question set (questions)', 'A': 'Answer set (answers)', 'D': 'Domain-specific dataset (videos/text)', 'R': 'Reasoning task type (categorical)'}",
+      "assumptions": "Questions are grounded in visual and textual evidence; answers are unambiguous; benchmark covers diverse sports scenarios.",
+      "breakdown_regime": "When question ambiguity exceeds 10% in dataset.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "QA kernel derived from GSI's logical inference engine and GSE's event tracking.",
+        "source_operator": "sports_qa_benchmark",
+        "telemetry": "Accuracy > 0.70 on SportQA test set"
+      }
+    },
+    {
+      "primitive_id": "camera_relative_position",
+      "name": "Camera Relative Position Operator",
+      "verbatim_quote": "Is the tennis ball/the ping pong ball/the shuttlecock currently to your left-hand side or right-hand side?",
+      "page": 25,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "High-angle camera view, planar projection, fixed camera orientation.",
+      "breakdown_regime": "Singularity at camera directly aligned with object.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI directional odds ratios; maps to GSE lateral movement states.",
+        "source_operator": "camera_relative_position",
+        "telemetry": "Pixel coordinate sign of object centroid relative to camera axis."
+      }
+    },
+    {
+      "primitive_id": "player_camera_side_classification",
+      "name": "Player-Camera Side Classification",
+      "verbatim_quote": "From the camera's perspective, which side is player on relative to the tennis ball/the ping pong ball/the shuttlecock?",
+      "page": 25,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Planar projection, camera vertical alignment, player represented as bounding box.",
+      "breakdown_regime": "Indeterminate when player overlaps with reference object.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian posterior over player-side distributions; conformal prediction intervals.",
+        "source_operator": "player_camera_side_classification",
+        "telemetry": "Signed angular displacement of player-center relative to object-camera vector."
+      }
+    },
+    {
+      "primitive_id": "pelvis_euclidean_distance",
+      "name": "Pelvis Euclidean Distance",
+      "verbatim_quote": "Measuring from the pelvis of each player, which of these players is closest to the camera?",
+      "page": 25,
+      "latex": "$d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$",
+      "symbol_and_unit_ledger": "{'d': 'Euclidean distance (meters)', 'x, y': 'Cartesian coordinates of pelvis centroids (meters)'}",
+      "assumptions": "Camera calibration known, pelvis approximated as point mass.",
+      "breakdown_regime": "Distance undefined when both points coincide.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Mahalanobis distance for multi-modal tracking; GSE state-transition threshold.",
+        "source_operator": "pelvis_euclidean_distance",
+        "telemetry": "L2-norm of pixel displacements converted via intrinsic camera matrix."
+      }
+    },
+    {
+      "primitive_id": "player_orientation_binary",
+      "name": "Player Orientation Binary",
+      "verbatim_quote": "(A)Player 1 (B)Player 2 (C)Player 4 (set options according to the situation) 2.",
+      "page": 25,
+      "latex": "O_i = \begin{cases} 1, & \\text{if } i \\text{ is on left} \\\\ 0, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'O_i': 'Binary orientation indicator (dimensionless)', 'i': 'Player index'}",
+      "assumptions": "Fixed camera frame, player represented by bounding box center.",
+      "breakdown_regime": "Ambiguity when player aligns perfectly with camera axis.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction set for player-side distribution; GSE lateral positioning flags.",
+        "source_operator": "player_orientation_binary",
+        "telemetry": "Sign of cross-product between camera-to-pelvis vector and camera-frame x-axis."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5cf76e891f2a1621_t0",
+      "think": "This chapter introduces CourtSI, a large-scale dataset for evaluating spatial intelligence in sports. The core challenge is bridging the gap between 2D image observations and 3D physical reasoning. By leveraging fixed court geometry as metric anchors, the authors develop a semi-automatic data engine that reconstructs 3D positions of players and balls. This reconstruction enables systematic evaluation of four key spatial capabilities: counting, distance measurement, localization, and relational reasoning. Empirical results on 25 VLMs reveal a significant human-AI performance gap, especially in generalizing to unseen sports. Fine-tuning improves accuracy by 23.5%, demonstrating the dataset's effectiveness in enhancing spatial-awareness. These findings highlight the inadequacy of existing benchmarks for sports scenarios and establish CourtSI as a scalable pathway for advancing VLMs in high-intensity dynamic environments. Window 1 Synthesis: Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 32/32 pages of 2603.09896v1 (5cf76e891f2a1621): [reconstruct_sports_scenes p.1]: Leveraging well-defined court geometry as metric anchors, we develop a semi-automatic data engine to reconstruct sports scenes, enabling scalable curation of CourtSI. (Maps to GSE state-transition for tracking entities through discrete event updates, and to GSI conformal prediction intervals for uncertainty quantification of reconstructed 3D positions.) [counting_relations p.1]: CourtSI contains over 1M QA pairs, organized under a holistic taxonomy that systematically covers spatial counting, distance measurement, localization, and relational reasoning, across representative net sports including badminton, tennis, and table tennis. (Maps to GSE Markov decision processes where states encode object counts and adjacency matrices, while actions represent rule-based interventions; maps to GSI via Bayesian network factorization of joint spatial distributions.) [human_ai_gap p.1]: These findings indicate that sports scenarios expose limitations in spatial intelligence capabilities captured by existing benchmarks. (Maps to GSI hypothesis testing framework where H is the null distribution and A is the observed test statistic; maps to GSE reinforcement learning where gap represents policy improvement potential.) [spatial_aware_commentary p.1]: The adapted model also generalizes effectively to CourtSI-Ext, an evaluation set built on a similar but unseen sport, and demonstrates enhanced spatial-aware commentary generation. (Maps to GSE sequential decision-making where commentary is a latent signal guiding state transitions; maps to GSI via variational autoencoders encoding spatial distributions into compact representations.) [spatial_metric_alignment p.9]: The distance threshold Tis set to 15cm according to table 1. (Maps 3D coordinate differences to binary proximity decisions for localization tasks.) [human_performance_benchmark p.10]: Human evaluators achieve the strongest performance compared to all existing models across all metrics. (Isomorphism between human decision space and model output space via shared metric functions.) [language_guided_reasoning p.10]: The current state of spatial intelligence in sports scenarios motivates the development of more general models capable of accurate 3D perception and reasoning under flexible language instructions, thereby assisting humans in metric-level spatial understanding. (Derives logical chains from language to spatial inference via grounded symbolic execution.) [confidence_thresholding p.9]: The confidence thresholds span {0.5, 0.55, ..., 0.95}, consistent with VSI. (Maps prediction confidence to binary accept/reject decisions for downstream reasoning modules.) [court_calibration p.17]: [44] Zeyu Xi, Ge Shi, Xuefen Li, Junchi Yan, Zun Li, Lifang Wu, Zilin Liu, and Liang Wang. (Geometric projection from 3D court space to 2D image plane mirrors GSI's spatial belief propagation.) [entity_captioning p.17]: A simple yet effective knowledge guided method for entity-aware video captioning on a basketball benchmark. (Caption generation kernel derived from player trajectory and action classification in GSE.) [player_prompting p.17]: Player-centric multimodal prompt generation for large language model based identity-aware basketball video captioning. (Prompt generation aligns with GSE’s player-state abstraction layer.) [sports_qa_benchmark p.17]: Sportqa: A benchmark for sports understanding in large language models. (QA kernel derived from GSI's logical inference engine and GSE's event tracking.) [camera_relative_position p.25]: Is the tennis ball/the ping pong ball/the shuttlecock currently to your left-hand side or right-hand side? (Maps to GSI directional odds ratios; maps to GSE lateral movement states.) [player_camera_side_classification p.25]: From the camera's perspective, which side is player on relative to the tennis ball/the ping pong ball/the shuttlecock? (Bayesian posterior over player-side distributions; conformal prediction intervals.) [pelvis_euclidean_distance p.25]: Measuring from the pelvis of each player, which of these players is closest to the camera? (GSI Mahalanobis distance for multi-modal tracking; GSE state-transition threshold.) [player_orientation_binary p.25]: (A)Player 1 (B)Player 2 (C)Player 4 (set options according to the situation) 2. (Conformal prediction set for player-side distribution; GSE lateral positioning flags.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "The work builds on prior efforts in VSI and spatial reasoning benchmarks but innovates by introducing sports-specific geometric constraints. It draws inspiration from computer vision techniques like PnP and multi-view geometry, adapting them for large-scale dataset curation. The use of semi-automatic pipelines echoes active learning strategies in machine learning. Retrocausal Genealogy (Window 1): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts can model opponents' spatial reasoning patterns to exploit weaknesses in positioning or movement. Players may anticipate teammates' spatial awareness to optimize passing lanes and coverage. Understanding the human-AI gap helps identify areas where technology can augment human decision-making. Theory of Mind (Window 1): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is addressed by ensuring diverse court geometries and player configurations across training samples, preventing spurious correlations. Leakage is mitigated by separating training/validation/test splits based on video identity rather than random shuffling, preserving temporal independence. Cross-Layer Veto (Window 1): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5cf76e891f2a1621_t1",
+      "think": "Chapter 2 explores the integration of 3D spatial intelligence into sports analytics through benchmark datasets such as CourtSI-Bench and CourtSI-Ext. It emphasizes that while current models show promise, especially in proprietary systems like Gemini-Pro, they still lag behind human performance in critical areas such as distance measurement and localization. The paper introduces a multi-modal evaluation framework combining visual inputs with language instructions, highlighting how models must navigate complex spatial relationships and interpret ambiguous cues. A key insight is that even with court geometry as a reference, humans struggle with absolute distance estimation—a limitation echoed in broader 3D vision domains. This underscores the need for models that not only mimic human perception but also enhance it through robust reasoning engines. The use of LLM-parsed extraction techniques suggests an evolving paradigm where large language models assist in extracting structured data from raw model outputs, bridging modalities and improving interpretability. The empirical findings suggest that while progress has been made, achieving true human-level performance remains elusive, necessitating further advancements in both perceptual fidelity and contextual reasoning. Window 2 Synthesis: Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on spatial reasoning in computer vision and extended into multimodal learning frameworks, this chapter builds upon prior research in 3D scene understanding and language grounding. Retrocausal Genealogy (Window 2): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents in this domain include both human evaluators who provide ground truth and AI models that attempt to replicate or surpass human capabilities. Coaches and analysts are modeled as external observers whose goals align with optimizing spatial interpretation accuracy. Theory of Mind (Window 2): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that spatial reasoning does not become redundant with perceptual modules. Leakage vetoes prevent information leakage from one task (e.g., counting) into another (e.g., localization), maintaining modular integrity. Cross-Layer Veto (Window 2): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5cf76e891f2a1621_t2",
+      "think": "Chapter window 3 (pages 17–24) introduces foundational components for multimodal sports intelligence systems. It emphasizes geometric calibration of court structures, entity-aware video captioning, and player-centric prompting mechanisms. These primitives form a coherent framework for integrating perception, reasoning, and language understanding in basketball video analysis. The core idea is to ground high-level semantic interpretations in low-level geometric and temporal cues. For instance, court calibration ensures that all visual annotations are consistent with real-world spatial relationships, enabling accurate tracking of player trajectories and ball motion. Entity-aware captioning builds upon this by associating actions with specific players, enhancing interpretability. Player-centric prompting further refines this by generating structured prompts tailored to individual player roles, which can be used to condition large language models for more precise narrative generation. Finally, the introduction of a sports QA benchmark underscores the importance of evaluating these systems not just on recognition tasks but also on deeper comprehension of game dynamics. This chapter thus establishes a theoretical and practical foundation for building intelligent systems capable of understanding complex sports environments through integrated sensory and linguistic processing. Window 3 Synthesis: Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in prior work on 3D scene reconstruction and multimodal video understanding, this chapter extends earlier frameworks by incorporating player identity and contextual prompting into a unified architecture. Retrocausal Genealogy (Window 3): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models must account for player intent, role-based behavior, and strategic positioning. Coaches and analysts may use these systems to simulate alternative game scenarios, while players might assess performance through automated feedback loops. Theory of Mind (Window 3): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that geometric calibration does not overly constrain language modeling, and vice versa. Leakage is mitigated by maintaining separate pipelines for perceptual and semantic layers. Cross-Layer Veto (Window 3): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5cf76e891f2a1621_t3",
+      "think": "This chapter window introduces foundational geometric queries for multi-agent tracking under high-angle projections. The core challenge is translating 2D pixel observations into robust 3D spatial relations while accounting for camera calibration errors and occlusions. The primitives establish a minimal vocabulary for describing player-ball-camera configurations: relative side (binary), Euclidean distances, and zone classifications. These operators serve as building blocks for more complex spatio-temporal reasoning, such as predicting shot trajectories or identifying offside positions. The mathematical structure relies heavily on affine transformations and projective geometry, with practical implementation requiring careful handling of singularities (e.g., when objects overlap exactly). In the context of sports intelligence, these primitives enable automated rule enforcement and tactical analysis by providing standardized metrics that can be compared across different matches and sports. Window 4 Synthesis: Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing players model their teammates and opponents using similar geometric primitives, but with imperfect information due to partial observability and noisy sensor data. Coaches use aggregated statistics derived from these primitives to formulate game strategies, creating a feedback loop where primitive-level accuracy directly impacts higher-level decisions. Theory of Mind (Window 4): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity condition: Must ensure that the camera, object, and player are not perfectly collinear to avoid division-by-zero errors in angular calculations. Leakage veto: Primitive outputs must not contain information about future states (e.g., post-shot positions) to prevent data snooping biases in training/validation splits. Cross-Layer Veto (Window 4): Rooted in 2603.09896v1 (5cf76e891f2a1621, 32/32 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

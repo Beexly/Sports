@@ -1,0 +1,78 @@
+{
+  "book_id": "a431bc4da8b5b97a",
+  "source_status": "COMPLETE",
+  "title": "dfs-signals-digest",
+  "file_name": "dfs-signals-digest.md",
+  "sha256": "a431bc4da8b5b97a29b4b8abda8e18bee7fb2c67a9c830f10844e65986b732ae",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Unified DFS contest and ownership signal processing via probabilistic slate enumeration and temporal correlation kernels. Universal Lens: Rooted in dfs-signals-digest (a431bc4da8b5b97a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on draftable player projections using historical ownership and payout structures as evidence. GSI Mapping: Rooted in dfs-signals-digest (a431bc4da8b5b97a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive lineup construction through dynamic state transitions based on contest shape and value curve points. GSE Mapping: Rooted in dfs-signals-digest (a431bc4da8b5b97a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "contest_census",
+      "name": "Contest Enumeration Kernel",
+      "verbatim_quote": "Contest census headline ```json { \"ok\": true, \"contest_rows\": 6388, \"by_game_type\": { \"Classic\": 2388, \"Showdown Captain Mode\":",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'contest_rows': 'dimensionless count', 'by_game_type': 'categorical mapping'}",
+      "assumptions": "Contest data is representative of live DraftKings offerings.",
+      "breakdown_regime": "At 6388 total contests, kernel becomes computationally intensive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps contest types to expected field sizes and payout distributions for risk-adjusted lineup selection.",
+        "source_operator": "contest_census",
+        "telemetry": "Number of contests per game type and field cap median."
+      }
+    },
+    {
+      "primitive_id": "ownership_projection",
+      "name": "Player Ownership Forecast",
+      "verbatim_quote": "Record counts - `ownership_projection`: 7 - `chalk_flag`: 16 - `leverage_spot`: 31 - `stack_correlation`: 20 - `value_curve_point`:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ownership_projection': 'dimensionless probability score', 'player_hint': 'string identifier'}",
+      "assumptions": "Projected ownership aligns with actual usage patterns.",
+      "breakdown_regime": "At 7 records, forecast may lack statistical significance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's Bayesian belief update on player participation likelihood.",
+        "source_operator": "ownership_projection",
+        "telemetry": "Projected percentage of entries containing a given player."
+      }
+    },
+    {
+      "primitive_id": "payout_structure_point",
+      "name": "Prize Pool Risk-Return Vector",
+      "verbatim_quote": "Record counts - `ownership_projection`: 7 - `chalk_flag`: 16 - `leverage_spot`: 31 - `stack_correlation`: 20 - `value_curve_point`:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'payout_structure_point': 'USD scalar', 'total': 'dimensionless count'}",
+      "assumptions": "Payouts are deterministic within contest parameters.",
+      "breakdown_regime": "At 60 payout points, vector space becomes high-dimensional.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives optimal lineup strategy by balancing entry fee against top prize in each contest.",
+        "source_operator": "payout_structure_point",
+        "telemetry": "Top prize and entry fee combinations across contests."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a431bc4da8b5b97a_t0",
+      "think": "The contest census primitive establishes a foundational kernel for DFS strategy by enumerating all active contests and categorizing them by game type. This enables GSE to compute field size expectations and optimize for variance in entry fees and prize pools. The ownership projection primitive then applies Bayesian inference to estimate player participation probabilities, which informs chalk vs. contrarian decisions. The payout structure point primitive maps these elements into a risk-return vector space, enabling GSE to select lineups that maximize utility under uncertainty. These primitives form a dual framework where contest enumeration drives strategic scope, while ownership and payout data refine tactical execution. Failure modes include overfitting to historical data or misalignment between projected and actual contest dynamics.\n\nDeep epistemic analysis for dfs-signals-digest (a431bc4da8b5b97a, domain=other, pages_read=5/5): Operator 'Contest Enumeration Kernel' (page 1, domain other) captures: Contest census headline ```json { \"ok\": true, \"contest_rows\": 6388, \"by_game_type\": { \"Classic\": 2388, \"Showdown Captain Mode\": Assumptions: Contest data is representative of live DraftKings offerings. Breakdown regime: At 6388 total contests, kernel becomes computationally intensive. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps contest types to expected field sizes and payout distributions for risk-adjusted lineup selection. Operator 'Player Ownership Forecast' (page 1, domain other) captures: Record counts - `ownership_projection`: 7 - `chalk_flag`: 16 - `leverage_spot`: 31 - `stack_correlation`: 20 - `value_curve_point`: Assumptions: Projected ownership aligns with actual usage patterns. Breakdown regime: At 7 records, forecast may lack statistical significance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's Bayesian belief update on player participation likelihood. Operator 'Prize Pool Risk-Return Vector' (page 1, domain other) captures: Record counts - `ownership_projection`: 7 - `chalk_flag`: 16 - `leverage_spot`: 31 - `stack_correlation`: 20 - `value_curve_point`: Assumptions: Payouts are deterministic within contest parameters. Breakdown regime: At 60 payout points, vector space becomes high-dimensional. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives optimal lineup strategy by balancing entry fee against top prize in each contest. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for dfs-signals-digest (a431bc4da8b5b97a, domain=other, pages_read=5/5): Operator 'Contest Enumeration Kernel' (page 1, domain other) captures: Contest census headline ```json { \"ok\": true, \"contest_rows\": 6388, \"by_game_type\": { \"Classic\": 2388, \"Showdown Captain Mode\": Assumptions: Contest data is representative of live DraftKings offerings. Breakdown regime: At 6388 total contests, kernel becomes computationally intensive. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps contest types to expected field sizes and payout distributions for risk-adjusted lineup selection. Operator 'Player Ownership Forecast' (page 1, domain other) captures: Record counts - `ownership_projection`: 7 - `chalk_flag`: 16 - `leverage_spot`: 31 - `stack_correlation`: 20 - `value_curve_point`: Assumptions: Projected ownership aligns with actual usage patterns. Breakdown regime: At 7 records, forecast may lack statistical significance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's Bayesian belief update on player participation likelihood. Operator 'Prize Pool Risk-Return Vector' (page 1, domain other) captures: Record counts - `ownership_projection`: 7 - `chalk_flag`: 16 - `leverage_spot`: 31 - `stack_correlation`: 20 - `value_curve_point`: Assumptions: Payouts are deterministic within contest parameters. Breakdown regime: At 60 payout points, vector space becomes high-dimensional. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives optimal lineup strategy by balancing entry fee against top prize in each contest. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s sports analytics frameworks, particularly those leveraging combinatorial game theory and Bayesian updating for betting markets. Retrocausal Genealogy: Rooted in dfs-signals-digest (a431bc4da8b5b97a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in dfs-signals-digest (a431bc4da8b5b97a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing agents as other DFS players who may be optimizing similarly or exploiting inefficiencies in ownership projections. Theory of Mind & Decision Maker Model: Rooted in dfs-signals-digest (a431bc4da8b5b97a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in dfs-signals-digest (a431bc4da8b5b97a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that payout structure and ownership signals do not redundantly encode similar information, preventing overfitting in GSE's decision engine. Cross-Layer Veto & Anti-Leakage Check: Rooted in dfs-signals-digest (a431bc4da8b5b97a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in dfs-signals-digest (a431bc4da8b5b97a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+ "book_id": "21544db09ed29308",
+ "source_status": "COMPLETE",
+ "pages_total": 29,
+ "pages_read": 29,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Positional scarcity gradient (role-specific marginal value decay)",
+   "verbatim_quote": "the average diﬀerence between the best and ﬁfth best players is 119 points for running backs, 77 for wide receivers, and 138 for tight ends, but only 30 for quarterbacks, 19 for kickers and 10 for defenses",
+   "page": 6,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Average season points over 2015-2020 under the common PPR scoring system (fantasypros.com); similar results reported for STD scoring. Roles: QB, RB, WR, TE, K, DS; only 32 defenses and 46 kickers exist, other roles shown to rank 60. The best-to-fifth-best gaps are 119 (RB), 77 (WR), 138 (TE) versus 30 (QB), 19 (K), 10 (DS) points; after the initial drop, RB/WR/TE decay near-linearly at about the K/DS rate, while QB decays faster than the other five roles.",
+   "breakdown_regime": "Six-season average under one scoring regime; a different scoring system or era changes the gradients. Averages hide injury and suspension risk (the paper's Elliott/Hunt bimodality cases). The gradient is an environment statistic, not a per-player prediction, and it says nothing about opponent depletion during a live draft.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one pick decision (seconds to minutes)",
+    "tau_1: one draft (hours)",
+    "tau_2: one fantasy season (weeks)",
+    "tau_3: scoring-era environment statistics (2015-2020 seasons)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Role-specific marginal value decay: define the drop in expected points between adjacent within-role ranks; draft priority should be ordered by relative decay (value over the next-best alternative at the same role), not by absolute expected points. This is the value-over-replacement kernel that justifies waiting on QB/K/DS and prioritizing scarce RB/WR/TE slots, and it binds as the resource-valuation layer of any sequential competitive allocation sim.",
+    "source_operator": "p1",
+    "telemetry": "Best-to-fifth gaps 119/77/138/30/19/10 points by role; near-linear tail decay for RB/WR/TE; faster QB decay; PPR and STD robustness noted by the authors."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Relative-value objective (win probability, not absolute points)",
+   "verbatim_quote": "the absolute number of points a team scores is not the determinant of success, although it is correlated with it. The determinant of success is the probability that a team’s score will exceed that of their opponent",
+   "page": 7,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Weekly head-to-head fantasy format where the active roster must satisfy role constraints (1 QB, 2 RB, 2 WR, 1 flex RB/WR, 1 TE, 1 K, 1 DS in the standard form). The objective is outscoring the opponent, so the joint distribution of scores matters, not just the mean; post-draft trades and pickups relax the roster-constraint assumption.",
+   "breakdown_regime": "The relative-objective logic changes optimal risk posture: maximizing expected points is not the same as maximizing win probability. In formats without head-to-head matchups (total-points leagues) the objective reverts to absolute points. Adversarial denial drafting (picking to deprive opponents) is a further extension the paper notes but does not model.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one weekly lineup decision",
+    "tau_1: one head-to-head matchup (one week)",
+    "tau_2: season-long roster construction",
+    "tau_3: league-format evolution across seasons"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The success functional is P(score_self > score_opponent), a functional of the joint score distribution rather than its mean. This is the same objective structure as win-probability-driven play calling in the 22-player Coach-Mind system and as tail-aware DFS portfolio construction: variance is a decision variable, and a lower-mean higher-variance composition can be optimal when trailing in expectation.",
+    "source_operator": "p2",
+    "telemetry": "Composition-level winning proportions in Figure 8 (eight compositions clearly above 0.50, none among the five most common); the same-team variance-stacking rationale on page 20."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Handcuffing insurance kernel and its null test",
+   "verbatim_quote": "These teams won 51.04% of their games, compared to 50.56% for the teams that had no handcuﬀ pairs. A hierarchical test of whether these winning proportions are the same or diﬀerent (Lee & Wagenmakers, 2013, Ch. 9) found a Bayes factor of 4.2 in favor of sameness, using a Gaussian eﬀect size prior on the diﬀerence between the means with mean zero and standard deviation 0.1",
+   "page": 17,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Handcuffing = drafting a star running back early plus his NFL depth-chart replacement late, as injury insurance; the replacement scores well only in the injury state. Test population: 793 teams that drafted both players of one of the 32 fantasypros 2017 handcuff pairs; hierarchical Bayesian test of two winning proportions with a Gaussian effect-size prior, mean 0, standard deviation 0.1 (Lee & Wagenmakers 2013, Ch. 9). Auto-draft selections excluded.",
+   "breakdown_regime": "Bayes factor 4.2 in favor of sameness is evidence for the null, not proof of it, and is prior-dependent. One platform (sleeper.app), one season (2017); the injury process is non-stationary across seasons. The usage test also fails: observed same-team co-draft counts mostly match chance expectations (e.g., McCoy 1338 leagues / Tolbert 8 / same-team 1 / chance 1), and the apparent excesses (Elliott-McFadden, Martin-Rodgers) violate the backup-only logic.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one late-round pick (the insurance leg)",
+    "tau_1: one draft (both legs acquired)",
+    "tau_2: injury-state realization across the season",
+    "tau_3: strategy adoption and efficacy across seasons"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "State-contingent insurance kernel: the hedge asset pays only in the injury state of the primary asset, so its draft cost must be weighed against injury probability times replacement value. The empirical verdict is a two-part test, usage (observed same-team co-draft count versus chance given league size) and efficacy (winning-proportion Bayes factor), both null here. Binds as the injury-hedge module of roster and DFS portfolio sims: do not pay for insurance the data say is unused and unproductive.",
+    "source_operator": "p3",
+    "telemetry": "51.04% versus 50.56% winning proportions, Bayes factor 4.2 for sameness; Table 2 per-pair league counts, same-team counts, and chance expectations for all 32 pairs."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Preceding-pick herding (implicit social influence in sequential choice)",
+   "verbatim_quote": "for quarterback selections in about the ﬁrst 20 draft positions, and for almost all kicker and defense selections, the conditional probability is clearly greater",
+   "page": 20,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Conditional versus unconditional role-choice probabilities by draft position, aggregated over all human (non-auto) picks in 1350 sleeper.app leagues, 2017. Serpentine consecutive selections by the same team are excluded so the effect is cross-team. RB/WR/TE show close agreement between conditional and unconditional curves (no influence).",
+   "breakdown_regime": "The influence is role- and stage-specific: early QB (about first 20 positions) and nearly all K/DS picks, not a global herding law. It does not measurably change outcomes: winning proportions 51.22% versus 50.12% for QB copying, Bayes factors for sameness 4.7 (QB), 5.7 (K), 8.8 (DS). Alternative explanation not fully excluded: teams may have planned those roles for that round anyway.",
+   "domain": "psych",
+   "timescales": [
+    "tau_0: one pick immediately after an opponent's pick",
+    "tau_1: one round of the serpentine draft",
+    "tau_2: one draft's role-order trajectory",
+    "tau_3: platform-wide behavioral regularity (2017 season)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A social-contagion term in the sequential choice kernel: P(role_t = r | previous opponent pick = r) exceeds the base rate for specific roles and stages. The paper's own application section marks this as an exploitation opening for draft optimizers that model behavior instead of assuming fixed normative strategies; it binds to any Coach-Mind opponent model as a measurable level-0/level-1 behavioral regularity.",
+    "source_operator": "p4",
+    "telemetry": "Figure 9 conditional versus unconditional choice-probability curves by role and draft position; copying versus non-copying winning proportions and Bayes factors 4.7/5.7/8.8."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Representativeness-driven roster homogeneity",
+   "verbatim_quote": "This could be interpreted as a form of the representativeness heuristic (Tversky & Kahneman, 1974), in which people judge an instance (a roster composition) that is representative of a concept (the deﬁned active roster distribution) to be a better instance",
+   "page": 16,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Interpretation offered by the authors for the observed composition homogeneity: the 27 most common compositions cover more than 95% of 15-player rosters (RB/WR merged via the flex rationale), the top three about 60%, and draft order tracks Fabiano (2017) expert advice. The active-roster role distribution is the salient concept that rosters are made to resemble.",
+   "breakdown_regime": "Representativeness is an interpretation, not an identified mechanism; top-down expert guidance is a complementary cause the authors acknowledge. The homogeneity is descriptively established for one platform and season; whether fringe compositions remain superior when opponents adapt is explicitly open. Groupthink/norm-cohesion (Janis 1971; Giardino 2017) is a further candidate cause, not a tested one.",
+   "domain": "psych",
+   "timescales": [
+    "tau_0: one composition judgment (is this roster 'good'?)",
+    "tau_1: one draft executing the representative template",
+    "tau_2: season-level composition distribution",
+    "tau_3: expert-advice ecosystem and norm persistence"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Representativeness heuristic as a constraint-misgeneralization kernel: agents judge a roster good because it resembles the active-roster requirement pattern, confusing the legality constraint with the optimality objective. Binds to Coach-Mind as a model of why human play-call and roster distributions collapse onto salient templates, and to deception detection: template-conforming behavior is predictable behavior.",
+    "source_operator": "p5",
+    "telemetry": "Figure 8 composition frequencies and winning proportions: five most common compositions all win close to 50%; eight above-0.50 compositions are fringe and emphasize RB/WR over K/DS."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Frequency-dependent optimality and the robustness criterion",
+   "verbatim_quote": "One lesson from that literature is that the eﬀectiveness of any drafting strategy depends on the strategies of other teams in the same league, and so there can never be a guaranteed optimal strategy",
+   "page": 23,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Authors' game-theoretic framing via the evolution-of-strategies literature (Axelrod & Hamilton 1981): a drafting strategy's effectiveness is a function of the other teams' strategy distribution in the same league. Two derived criteria: robustness across wide varieties of plausible opponent-strategy distributions, and stability (continued good performance if the strategy became universal).",
+   "breakdown_regime": "No guaranteed optimal strategy exists, so any single-league or single-season 'best composition' claim is overfit; the paper explicitly asks whether RB/WR-heavy fringe compositions would stay superior in leagues where every team uses them. The criterion is qualitative here: no opponent-distribution model or equilibrium computation is supplied.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: one strategy choice against tonight's league",
+    "tau_1: one season of league-level adaptation",
+    "tau_2: cross-season strategy ecology",
+    "tau_3: universalization / equilibrium stability of a strategy"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Evolutionary-game fitness kernel: strategy payoff is a functional of the population strategy distribution, so evaluation must integrate over plausible opponent distributions and test the universalized fixed point. Binds directly to the Coach-Mind meta-game (no universally optimal play-call distribution; policies must be robust and stable when adopted) and to GSE deception modeling, where an exploitable pattern's value dies once the opponent population adapts.",
+    "source_operator": "p6",
+    "telemetry": "Figure 8 fringe-versus-common composition win proportions as the empirical wedge; the authors' open stability question for RB/WR-heavy compositions under universal adoption."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Correlated-asset variance stacking (same-NFL-team roster construction)",
+   "verbatim_quote": "Drafting players from the same NFL team generally increases the variance of the points scored each week, because the performance of the players are linked. A quarterback and wide receiver both receive points, for example, if the quarterback throws a touchdown pass to the wider receiver. Increasing the variance can be a sensible approach for teams with lower expected scores than their opponents",
+   "page": 20,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Weekly fantasy points of players on the same NFL team are positively linked (a QB and his WR both score on the same touchdown pass), so concentrating a roster on one NFL team raises weekly score variance. The variance-seeking rationale applies to teams with lower expected scores than their opponents; the alternative motive is non-winning goals (fan enjoyment). NFL-team allocation uses pre-season 2017 rosters (footballdb.com).",
+   "breakdown_regime": "The empirical test finds no loyalty-driven stacking: observed distributions of same-NFL-team counts match chance base-rate distributions for all 32 teams (Figure 10), so the kernel describes a rational option that people do not exercise, not an observed behavior. Variance helps only under the relative objective and an underdog position; for a favorite it is harmful. Correlation structure changes with roster moves and byes.",
+   "domain": "math",
+   "timescales": [
+    "tau_0: one pick adding a correlated asset",
+    "tau_1: one week's joint score realization",
+    "tau_2: season variance profile of the roster",
+    "tau_3: correlation structure across NFL seasons"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Portfolio covariance kernel: roster score variance increases with within-roster performance covariance, and the optimal variance level is state-dependent (raise it when trailing in expectation, lower it when leading). This is the native form of the DFS/portfolio tail-risk bind: same-team stacks are variance instruments, and the underdog/ favorite asymmetry is the same win-probability-versus-mean tradeoff as p2.",
+    "source_operator": "p7",
+    "telemetry": "Figure 10 observed versus chance same-team count distributions for all 32 NFL teams (close agreement); the QB-to-WR touchdown linkage as the named correlation mechanism."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "Lee and Liu treat the fantasy draft as a canonical sequential competitive decision task, and the decomposition they give is the sovereign object: repeated preferential choice among uncertain-valued resources under roster constraints, plus prediction of opponents who deplete the same pool. The first component is a constrained sequential allocation problem, cousin to bandits, optimal stopping, and stochastic knapsacks; the second is adversarial theory of mind. The paper's central methodological move is to refuse the normative shortcut: prior draft-optimization work assumed fixed opponent strategies without fitting behavior, and this study measures behavior first. The environment analysis supplies the valuation kernel. Role-specific point decay is sharply heterogeneous: the best-to-fifth gap is 119 points for running backs, 77 for wide receivers, 138 for tight ends, but only 30 for quarterbacks, 19 for kickers, 10 for defenses, with near-linear tails afterward. Because the objective is the probability of outscoring an opponent rather than absolute points, the correct priority ordering follows relative decay, which is why waiting on quarterback, kicker, and defense is rational even though quarterbacks score the most absolute points. The calibration evidence bounds how much skill the task can carry: draft position correlates with realized points at r = -0.56 for running backs and -0.55 for wide receivers, -0.88 for kickers, but only -0.21 for quarterbacks, -0.17 for tight ends, and +0.22 for defenses, consistent with defense scoring being highly unpredictable. So the environment is partially knowable, and the knowable part is concentrated in the scarce roles. The measurement regime must travel with every kernel: 1350 sleeper.app leagues from the 2017 NFL season, 12,590 teams of which 11,932 are human, 188,426 human selections of which 27 percent are auto-picks and are excluded from the strategy analyses; bot teams won only 39 percent of games against 51 percent for humans, which is itself a calibration anchor. Roster sizes 14 to 20, league sizes 6 to 12, serpentine order, PPR scoring. Three breakdown regimes follow. First, single-season single-platform scope: the authors themselves flag the draft-position winning anomaly (first pick performing poorly) as too season-idiosyncratic to interpret without replication, and the same caution applies to every composition result. Second, scoring-regime dependence: the gradients are PPR averages over 2015 to 2020, and a different scoring system reweights roles. Third, the auto-pick contamination: more than a quarter of human-team selections are algorithmic, so any behavioral kernel estimated without excluding them mixes human and machine policies. The extraction therefore carries the scarcity gradient, the relative objective, and the calibration table as one interlocking valuation layer, with all three regimes declared.",
+   "retrocausal_genealogy": "The task's hidden structure was set long before the data: fantasy sport took its modern form in the 1980s and scaled with the internet, and the draft itself descends from regulated professional-sport drafts and schoolyard captain-picking, a lineage the paper traces explicitly. The normative research line it corrects runs from Brams and Straffin's 1979 game-theoretic treatment of simple drafts through stochastic dynamic programming and knapsack analogies, each inheriting the intractability Gibson and colleagues name: sequential games generalize Markov decision processes and game theory and share their fate. The behavioral gap this paper fills is the scar of that normative-only lineage: opponent models were assumed, never measured.",
+   "theory_of_mind": "The draft is a recursion of beliefs: each manager models what the next manager will take, and the serpentine structure varies how many opponent picks intervene between one's own, so the required lookahead depth differs by draft seat. The paper connects this to level-k models: if people cannot look ahead past the intervening picks, middle seats and end seats face different cognitive loads. The observed herding is the failure mode of that recursion, where instead of modeling the opponent's plan, the agent copies the opponent's last action. Expert advice models the environment but not the opponents, which is exactly the missing recursive layer.",
+   "cross_layer_veto": "Three vetoes bind. The measurement layer vetoes any behavioral claim estimated with auto-picks included, since 27 percent of human-team selections are algorithmic and would contaminate the policy mixture. The replication layer vetoes interpreting the first-pick winning anomaly or any single-season composition edge as a law; the authors themselves demand cross-season replication first. And the objective layer vetoes expected-points maximization as a stand-in for winning: because success is P(outscore), a higher-mean lower-variance roster can be the wrong call when the variance posture is wrong, so any high-EV draft recommendation must be re-scored under the joint distribution, not the mean."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The strategy-level results are mostly disciplined nulls, and the nulls are the sovereign content because each comes with an explicit test and effect-size prior. Handcuffing, the promoted injury-insurance strategy, fails both tests: usage counts of same-team co-drafts mostly sit at chance expectation given league size, and the 793 handcuffing teams won 51.04 percent against 50.56 percent for non-handcuffing teams, a Bayes factor of 4.2 for sameness under a Gaussian effect-size prior with mean zero and standard deviation 0.1. The apparent usage excesses dissolve under the backup-only logic: Elliott-McFadden and Martin-Rodgers are pairs of frequently drafted players, not insurance legs. Favorite-NFL-team stacking fails too: observed same-team count distributions match chance base rates for all 32 teams, so the correlated-asset variance instrument exists as a rational option but is not exercised, and the authors note the variance rationale is only sensible for expected-score underdogs. What does survive is implicit: the preceding-pick influence, where conditional role-choice probability exceeds the base rate for early quarterbacks and nearly all kicker and defense picks, while running back, wide receiver, and tight end choices are unaffected. Crucially this bias is performance-neutral, with Bayes factors for sameness of 4.7, 5.7, and 8.8, so it is a predictable pattern without a measurable cost, which is precisely what makes it exploitable rather than merely pathological. The composition analysis adds the representativeness interpretation: rosters are built to resemble the salient active-roster template, the five most common compositions win close to half their games, and eight fringe compositions win clearly more, all emphasizing running backs and wide receivers over kickers and defenses. The authors then impose the robustness criterion from the evolution-of-strategies literature: no strategy is guaranteed optimal because effectiveness depends on the league's strategy distribution; a good strategy must be robust across plausible opponent distributions and stable under universalization. For the GSE Coach-Mind simulation this composes into a concrete opponent-model upgrade: replace fixed normative opponent assumptions with the measured cumulative role-order distributions, add the role- and stage-specific herding term, and evaluate any policy against a distribution of opponent compositions with the universalization stability test. The paper's own application section says exactly this: the herding regularity is an opening for exploitation. For GSI the binding is structural, not physiological: sequential competitive allocation of scarce uncertain-valued resources under a legality constraint is the same task family as scarce-slot clinical scheduling, and the representativeness failure, confusing the constraint pattern with the objective, is the same failure as protocol-shaped compliance that misses the outcome target. Doctrine holds throughout: the observables here are fantasy points, draft positions, and winning proportions, never sportsbook odds, and no result is promoted to a win-rate headline; the 2017 single-season window is a cutoff to respect, and every kernel carries its Bayes prior and its replication veto.",
+   "retrocausal_genealogy": "The nulls inherit a specific history: handcuffing was promoted by 2017-era expert media and criticized by analysts for years before anyone measured it, so the strategy's face validity survived on narrative rather than evidence. The herding result descends from the social-influence and groupthink lineage the paper cites, Schobel and colleagues on sequential social influence and Janis on cohesion pressure, transplanted into a competitive rather than collaborative setting. The robustness criterion carries Axelrod and Hamilton's 1981 evolutionary lesson into drafting: strategies live or die inside a population of other strategies, a scar from decades of tournament research that single-agent optimization keeps forgetting.",
+   "theory_of_mind": "Recursive belief clash is measurable here. The expert-advice follower believes the template is optimal because it matches the active-roster concept; the fringe strategist believes the crowd's representativeness is exploitable; the herding manager does not model beliefs at all and simply copies the last pick. Under draft pressure, the comfort call is the template pick, because deviating is socially detectable, the paper notes that failing to draft a kicker or defense would quickly be flagged as unusual. The optimizer's theory of mind must therefore model two opponent classes, template-followers and copycats, and the paper's measured distributions give the mixture weights directly.",
+   "cross_layer_veto": "The Bayesian layer vetoes declaring handcuffing or copying harmful or helpful: Bayes factors of 4.2 to 8.8 for sameness support the null under the stated priors, and flipping them requires new data, not reinterpretation. The game-theoretic layer vetoes promoting any fringe composition to a recommended strategy without the universalization test, because its edge is defined against the current opponent distribution and may die when adopted. And the scope layer vetoes transporting 2017 sleeper.app kernels to other platforms, seasons, or scoring regimes without re-estimation; the authors' own replication demand on the draft-position anomaly is the template for that veto."
+  }
+ ],
+ "universal_lens": "The polymath audit lens this paper supplies is a five-step stack for any sequential competitive allocation system: measure the environment's marginal-value gradients before choosing; score decisions under the true objective (here, outscore probability, not mean); test promoted strategies with usage-versus-chance and effect-size-prior Bayes tests instead of narrative; detect implicit social-influence terms in the choice kernel; and evaluate every policy for robustness across opponent distributions and stability under universalization. Any audit skipping a step inherits the paper's documented failures.",
+ "gsi_mapping": "For GSI the bindings are structural isomorphisms. Sequential competitive allocation of scarce, uncertain-valued resources under a legality constraint is the same task family as scarce-slot clinical scheduling and triage under resource depletion. The representativeness failure, mistaking the constraint pattern for the objective, is protocol-shaped compliance that misses the outcome target. Preceding-pick herding is the adoption cascade of clinical practice choices, measurable as conditional-versus-base-rate action probabilities. The Bayes-null discipline, effect-size priors and sameness factors before claiming an intervention works, is the calibration standard for clinical telemetry studies.",
+ "gse_mapping": "For GSE the paper upgrades the Coach-Mind opponent model from assumed fixed strategies to measured behavior: cumulative role-order distributions as the opponent policy prior, a role- and stage-specific herding term as an exploitable level-0 regularity, and the scarcity gradient as the resource-valuation layer. The relative objective binds play-level decisions to outscore probability rather than expected points, and the variance-stacking kernel gives DFS portfolio tail construction its native covariance form, underdog variance-seeking included. The robustness criterion forbids any universally optimal play-call claim; deception detection uses template-conformity as predictability. No odds enter anywhere; all observables are points, positions, and outcomes."
+}

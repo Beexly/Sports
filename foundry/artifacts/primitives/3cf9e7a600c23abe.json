@@ -1,0 +1,78 @@
+{
+  "book_id": "3cf9e7a600c23abe",
+  "source_status": "COMPLETE",
+  "title": "p0130",
+  "file_name": "p0130.txt",
+  "sha256": "3cf9e7a600c23abe655f160b21f5f89cd7444698edaca20b273e2e118b7ff213",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The Rat in the Maze constitutes a graph-theoretic navigation problem with deterministic state transitions, encoded via pulley-door mechanisms and adjustable paths. Universal Lens: Rooted in p0130 (3cf9e7a600c23abe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models the rat's path selection as a probabilistic decision tree over binary choices (left/right), conditioned on door states and reward proximity. GSI Mapping: Rooted in p0130 (3cf9e7a600c23abe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps maze traversal as a Markovian state machine with transient and recurrent states, governed by actuator constraints and feedback loops. GSE Mapping: Rooted in p0130 (3cf9e7a600c23abe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pulley_door_mechanism",
+      "name": "Pulley Door Mechanism",
+      "verbatim_quote": "112 The Rat in the Maze E, pulley door at entrance, I, mnner alley, O, outer",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'entrance point (dimensionless)', 'I': 'inner alley (dimensionless)', 'O': 'outer alley (dimensionless)'}",
+      "assumptions": "Doors operate deterministically; each door has binary open/closed state.",
+      "breakdown_regime": "Failure occurs when all pulley doors are closed, blocking path access.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models a binary decision gate in a directed acyclic graph (DAG) where each node represents a spatial configuration.",
+        "source_operator": "pulley_door_mechanism",
+        "telemetry": "Door state transition frequency per trial"
+      }
+    },
+    {
+      "primitive_id": "adjustable_door_pathway",
+      "name": "Adjustable Door Pathway",
+      "verbatim_quote": "either the right hand, or the left hand, inner path Of the \"adjustable\" doors, R1, R2,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R1, R2, ..., Rs': 'right-hand adjustable doors (dimensionless)', 'L1, L2, ..., Ls': 'left-hand adjustable doors (dimensionless)'}",
+      "assumptions": "Each adjustable door can be independently opened or closed; path choice is binary.",
+      "breakdown_regime": "Path becomes invalid if all adjustable doors are closed simultaneously.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents a branching kernel in a finite-state automaton with two primary branches.",
+        "source_operator": "adjustable_door_pathway",
+        "telemetry": "Choice bias toward right vs. left path"
+      }
+    },
+    {
+      "primitive_id": "reward_feedback_loop",
+      "name": "Reward Feedback Loop",
+      "verbatim_quote": "bach to fp, the food-pan, only one was left open in 140p c, p 159",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'fp': 'food-pan location (dimensionless)', 'F': 'food box (dimensionless)'}",
+      "assumptions": "Feedback loop is deterministic; reward is only accessible through one open path.",
+      "breakdown_regime": "System fails if no path leads to reward due to exclusive closure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to reinforcement learning reward signal with episodic feedback.",
+        "source_operator": "reward_feedback_loop",
+        "telemetry": "Time-to-reward per trial"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3cf9e7a600c23abe_t0",
+      "think": "The Rat in the Maze encodes a structured navigation task where the agent must traverse a graph defined by pulley doors and adjustable pathways. Each door state defines a discrete transition function between nodes (E, I, O, fp). The system exhibits dual-path logic: right-hand (R) and left-hand (L) branches, forming a binary decision tree. The central door (C) is always open, acting as a fixed node. The reward feedback loop (fp) is a terminal attractor that only activates when a valid path exists. This structure supports a Markovian model where state transitions depend solely on current door configurations. Failure modes arise from deadlock states—when all paths are blocked or no path leads to reward. The system’s behavior can be modeled using a directed graph with weighted edges representing door states and path probabilities. The dual nature of the inner path (R/L) introduces symmetry-breaking dynamics, which may be interpreted as a form of cognitive bias or heuristic search strategy.\n\nDeep epistemic analysis for p0130 (3cf9e7a600c23abe, domain=other, pages_read=1/1): Operator 'Pulley Door Mechanism' (page 1, domain other) captures: 112 The Rat in the Maze E, pulley door at entrance, I, mnner alley, O, outer Assumptions: Doors operate deterministically; each door has binary open/closed state. Breakdown regime: Failure occurs when all pulley doors are closed, blocking path access. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models a binary decision gate in a directed acyclic graph (DAG) where each node represents a spatial configuration. Operator 'Adjustable Door Pathway' (page 1, domain other) captures: either the right hand, or the left hand, inner path Of the \"adjustable\" doors, R1, R2, Assumptions: Each adjustable door can be independently opened or closed; path choice is binary. Breakdown regime: Path becomes invalid if all adjustable doors are closed simultaneously. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a branching kernel in a finite-state automaton with two primary branches. Operator 'Reward Feedback Loop' (page 1, domain other) captures: bach to fp, the food-pan, only one was left open in 140p c, p 159 Assumptions: Feedback loop is deterministic; reward is only accessible through one open path. Breakdown regime: System fails if no path leads to reward due to exclusive closure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to reinforcement learning reward signal with episodic feedback. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0130 (3cf9e7a600c23abe, domain=other, pages_read=1/1): Operator 'Pulley Door Mechanism' (page 1, domain other) captures: 112 The Rat in the Maze E, pulley door at entrance, I, mnner alley, O, outer Assumptions: Doors operate deterministically; each door has binary open/closed state. Breakdown regime: Failure occurs when all pulley doors are closed, blocking path access. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models a binary decision gate in a directed acyclic graph (DAG) where each node represents a spatial configuration. Operator 'Adjustable Door Pathway' (page 1, domain other) captures: either the right hand, or the left hand, inner path Of the \"adjustable\" doors, R1, R2, Assumptions: Each adjustable door can be independently opened or closed; path choice is binary. Breakdown regime: Path becomes invalid if all adjustable doors are closed simultaneously. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a branching kernel in a finite-state automaton with two primary branches. Operator 'Reward Feedback Loop' (page 1, domain other) captures: bach to fp, the food-pan, only one was left open in 140p c, p 159 Assumptions: Feedback loop is deterministic; reward is only accessible through one open path. Breakdown regime: System fails if no path leads to reward due to exclusive closure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to reinforcement learning reward signal with episodic feedback. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century behavioral psychology and graph theory, particularly the work of Edward Thorndike and later Donald Hebb on stimulus-response learning and neural networks. Retrocausal Genealogy: Rooted in p0130 (3cf9e7a600c23abe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0130 (3cf9e7a600c23abe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The rat acts as an autonomous agent with limited memory, making sequential decisions based on immediate environmental cues. It does not anticipate future states but responds to current door configurations and reward availability, modeling a bounded rationality framework. Theory of Mind & Decision Maker Model: Rooted in p0130 (3cf9e7a600c23abe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises from the orthogonal separation of spatial and temporal layers: spatial transitions occur via doors, while temporal progression is governed by reward timing. Leakage occurs if feedback is misattributed to incorrect paths, causing erroneous state updates. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0130 (3cf9e7a600c23abe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

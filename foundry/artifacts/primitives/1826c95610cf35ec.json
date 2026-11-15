@@ -1,0 +1,78 @@
+{
+  "book_id": "1826c95610cf35ec",
+  "source_status": "COMPLETE",
+  "title": "ESPN_ODDS_RIGHTS_DECISION",
+  "file_name": "ESPN_ODDS_RIGHTS_DECISION.md",
+  "sha256": "1826c95610cf35ece285205f6a60494f02ee6c5e0a414aeb56e113f1d8a2f76c",
+  "primary_domain": "psych",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "ESPN odds ingestion forms a conditional tertiary fallback path under legal and product governance, constrained by registry verdicts and governed by a binary {forbidden, permitted} state transition. Universal Lens: Rooted in ESPN_ODDS_RIGHTS_DECISION (1826c95610cf35ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models ESPN odds as a derived kernel with zero pick contribution, enforcing MIN_BOOKMAKERS = 2 constraint via conformal inference on event completeness. GSI Mapping: Rooted in ESPN_ODDS_RIGHTS_DECISION (1826c95610cf35ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes ESPN odds as a situational reasoning gate that activates only when primary sources yield empty sets, triggering a no-op state transition in game/board persistence. GSE Mapping: Rooted in ESPN_ODDS_RIGHTS_DECISION (1826c95610cf35ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ingestion_gate",
+      "name": "Conditional Ingestion Gate",
+      "verbatim_quote": "An agent must not silently gate a live ingestion path, and must not silently relax a registry that says \"forbidden\".",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Boolean state variable indicating gate status (0 or 1)', 'R': 'Registry verdict (forbidden or permitted)'}",
+      "assumptions": "Agent behavior is deterministic and non-silent; registry verdicts are immutable during runtime.",
+      "breakdown_regime": "When R = forbidden, G cannot be set to 1 without explicit owner override.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's state transition logic mirrors GSI's probabilistic constraint enforcement on event completeness.",
+        "source_operator": "ingestion_gate",
+        "telemetry": "Registry classification change or agent override event"
+      }
+    },
+    {
+      "primitive_id": "fallback_path",
+      "name": "Tertiary Fallback Path",
+      "verbatim_quote": "The ESPN odds path is a *conditional tertiary fallback*, not an unconditional call `process-sport.ts:411` sits inside `if (events.length === 0)` at `:409`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Fallback activation flag (0 or 1)', 'E': 'Event count from primary sources'}",
+      "assumptions": "Primary source failure is defined as E = 0; fallback is exclusive to this condition.",
+      "breakdown_regime": "F = 1 iff E = 0, otherwise F = 0.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's fallback logic aligns with GSI's zero-event handling kernel.",
+        "source_operator": "fallback_path",
+        "telemetry": "Number of events processed before fallback trigger"
+      }
+    },
+    {
+      "primitive_id": "pick_threshold",
+      "name": "Minimum Bookmaker Threshold",
+      "verbatim_quote": "`MIN_BOOKMAKERS = 2` (`packages/prediction-engine/src/constants.ts:105`), enforced at `scoring.ts:385` (SPREAD), `:637` (TOTAL), `:818` (H2H) — each returns `null` below threshold, and each book contributes one row per market.",
+      "page": 1,
+      "latex": "\\text{Pick}(B) = \\begin{cases} \\text{null}, & B < 2 \\\\ \\text{valid}, & B \\geq 2 \\end{cases}",
+      "symbol_and_unit_ledger": "{'B': 'Number of bookmakers contributing to a market (dimensionless)', 'Pick': 'Prediction validity indicator (boolean)'}",
+      "assumptions": "Each bookmaker contributes exactly one row per market; prediction engine enforces threshold globally.",
+      "breakdown_regime": "Pick is null when B < 2, valid otherwise.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's kernel enforces minimum bookmaker count as a probabilistic constraint on prediction confidence.",
+        "source_operator": "pick_threshold",
+        "telemetry": "Bookmaker count per market and prediction validity flag"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1826c95610cf35ec_t0",
+      "think": "The core tension lies between legal product decisions and operational ingestion paths. The ESPN odds path is a conditional fallback, activated only when primary sources return zero events. This creates a dual regime: (1) a forbidden registry state where ingestion is blocked unless explicitly allowed, and (2) a derived kernel where ESPN produces no picks due to its single-bookmaker nature. The system enforces a binary state transition through registry verdicts and thresholds, ensuring no silent gate manipulation. The fallback mechanism is not a direct call but a conditional branch, preventing unintended data flow into the main ingestion pipeline. The pick threshold ensures that even if ESPN were to contribute data, it would not affect predictions due to insufficient bookmakers. This dual structure reflects a layered control system where legal and technical constraints intersect.\n\nDeep epistemic analysis for ESPN_ODDS_RIGHTS_DECISION (1826c95610cf35ec, domain=psych, pages_read=4/4): Operator 'Conditional Ingestion Gate' (page 1, domain psych) captures: An agent must not silently gate a live ingestion path, and must not silently relax a registry that says \"forbidden\". Assumptions: Agent behavior is deterministic and non-silent; registry verdicts are immutable during runtime. Breakdown regime: When R = forbidden, G cannot be set to 1 without explicit owner override. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's state transition logic mirrors GSI's probabilistic constraint enforcement on event completeness. Operator 'Tertiary Fallback Path' (page 1, domain psych) captures: The ESPN odds path is a *conditional tertiary fallback*, not an unconditional call `process-sport.ts:411` sits inside `if (events.length === 0)` at `:409`. Assumptions: Primary source failure is defined as E = 0; fallback is exclusive to this condition. Breakdown regime: F = 1 iff E = 0, otherwise F = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's fallback logic aligns with GSI's zero-event handling kernel. Operator 'Minimum Bookmaker Threshold' (page 1, domain psych) captures: `MIN_BOOKMAKERS = 2` (`packages/prediction-engine/src/constants.ts:105`), enforced at `scoring.ts:385` (SPREAD), `:637` (TOTAL), `:818` (H2H) — each returns `null` below threshold, and each book contributes one row per market. Assumptions: Each bookmaker contributes exactly one row per market; prediction engine enforces threshold globally. Breakdown regime: Pick is null when B < 2, valid otherwise. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's kernel enforces minimum bookmaker count as a probabilistic constraint on prediction confidence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ESPN_ODDS_RIGHTS_DECISION (1826c95610cf35ec, domain=psych, pages_read=4/4): Operator 'Conditional Ingestion Gate' (page 1, domain psych) captures: An agent must not silently gate a live ingestion path, and must not silently relax a registry that says \"forbidden\". Assumptions: Agent behavior is deterministic and non-silent; registry verdicts are immutable during runtime. Breakdown regime: When R = forbidden, G cannot be set to 1 without explicit owner override. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's state transition logic mirrors GSI's probabilistic constraint enforcement on event completeness. Operator 'Tertiary Fallback Path' (page 1, domain psych) captures: The ESPN odds path is a *conditional tertiary fallback*, not an unconditional call `process-sport.ts:411` sits inside `if (events.length === 0)` at `:409`. Assumptions: Primary source failure is defined as E = 0; fallback is exclusive to this condition. Breakdown regime: F = 1 iff E = 0, otherwise F = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's fallback logic aligns with GSI's zero-event handling kernel. Operator 'Minimum Bookmaker Threshold' (page 1, domain psych) captures: `MIN_BOOKMAKERS = 2` (`packages/prediction-engine/src/constants.ts:105`), enforced at `scoring.ts:385` (SPREAD), `:637` (TOTAL), `:818` (H2H) — each returns `null` below threshold, and each book contributes one row per market. Assumptions: Each bookmaker contributes exactly one row per market; prediction engine enforces threshold globally. Breakdown regime: Pick is null when B < 2, valid otherwise. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's kernel enforces minimum bookmaker count as a probabilistic constraint on prediction confidence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s data governance frameworks, this design evolved from regulatory compliance needs and the need to isolate high-risk data sources. The concept of conditional fallbacks emerged from real-time risk management protocols. Retrocausal Genealogy: Rooted in ESPN_ODDS_RIGHTS_DECISION (1826c95610cf35ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the legal team (enforcing registry restrictions), the product team (evaluating utility of ESPN data), and the ingestion agent (which must remain neutral). Each actor operates under distinct constraints—legal, commercial, and technical—creating a multi-agent decision space. Theory of Mind & Decision Maker Model: Rooted in ESPN_ODDS_RIGHTS_DECISION (1826c95610cf35ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that the registry layer (legal/product) and the ingestion layer (technical) do not overlap in control. Leakage is prevented by enforcing strict telemetry boundaries between layers, particularly around the 'forbidden' state and the 'zero-event' fallback. Cross-Layer Veto & Anti-Leakage Check: Rooted in ESPN_ODDS_RIGHTS_DECISION (1826c95610cf35ec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

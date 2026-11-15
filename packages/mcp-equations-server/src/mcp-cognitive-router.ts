@@ -13,6 +13,8 @@
  * column type. A bit is set when that family has non-zero displacement and N >= 30.
  */
 
+import { randomUUID } from "node:crypto";
+
 export const MASK_BITS = 288;
 export const MASK_WORDS = 9;
 export const SIGNAL_FAMILIES = 279;
@@ -42,7 +44,34 @@ export type Premise = {
   verificationStatus?: VerificationStatus;
   /** Set only after metric-birth-certificate out-of-sample backtest passes. */
   backtestPassed?: boolean;
+  /** Trust tier from the literature view. Absent/unknown tier weighs ZERO. */
+  verificationTier?: string | null;
+  /** 9-word context mask as stored on the premise row (null = no measured mask). */
+  contextMask?: readonly number[] | null;
 };
+
+/**
+ * Trust weights for live literature premises (WP-2 contract). These are policy
+ * weights, not measured quantities. A tier that is absent or unrecognized
+ * weighs ZERO: an untrusted premise never moves log-odds.
+ */
+export const TRUST_WEIGHTS: Readonly<Record<string, number>> = {
+  CITABLE_VERIFIED: 1.0,
+  MSVH_S1_EXACT: 1.0,
+  COMPUTED: 0.5,
+  RESEARCH_HYPOTHESIS: 0.0,
+};
+
+export function trustWeightForTier(tier: string | null | undefined): number {
+  if (tier == null) return 0;
+  const w = TRUST_WEIGHTS[tier];
+  return w === undefined ? 0 : w;
+}
+
+/** Live four-stage literature source: 1,098 premises with trust tiers. */
+export const LIVE_LITERATURE_VIEW = "lit.v_class_a_literature_premises";
+/** Legacy 120-row public view, kept for callers that still target it. */
+export const PUBLIC_LITERATURE_VIEW = "public.v_class_a_literature_premises";
 
 /** Minimal query surface so this does not pin a driver. */
 export type Queryable = {
@@ -87,6 +116,8 @@ export type RouteOptions = {
   exact?: boolean;
   stageALimit?: number;
   stageBLimit?: number;
+  /** Literature view to read. Defaults to the public view; the live route uses lit. */
+  view?: string;
 };
 
 /**
@@ -96,27 +127,35 @@ export type RouteOptions = {
  * but never equals 2, and `&&` compares whole elements. The prefilter is a word-by-word
  * bitwise AND, OR-ed across the nine words.
  *
- * Rows with a NULL/short mask are excluded by the NULL comparison, which is why the column
- * carries a CHECK on length 9 and a nine-zero default.
+ * Rows with a NULL/short mask are excluded by the NULL comparison on the public
+ * view (its column carries a CHECK on length 9 and a nine-zero default).
+ *
+ * The live lit corpus (1,098 premises) has no measured masks yet. When at least
+ * one family HAS fired, `includeUnmasked` admits its unmasked premises to Stage
+ * B's measured embedding ranking — retrieval is authorized by the firing
+ * signals and ordered by cosine similarity, never arbitrary. When NO family
+ * fires the stage still returns nothing: that is the purged backfill case.
  */
 export async function stageA(
   db: Queryable,
   mask: Uint32Array,
   limit = STAGE_A_LIMIT,
+  view: string = PUBLIC_LITERATURE_VIEW,
+  includeUnmasked = false,
 ): Promise<string[]> {
   const arr = maskToArray(mask);
   const terms = maskTerms(arr);
-  if (!terms) {
-    const res = await db.query<{ id: string }>(
-      `SELECT id FROM v_class_a_literature_premises
-       WHERE embedding IS NOT NULL LIMIT $1`,
-      [limit],
-    );
-    return res.rows.map((r) => r.id);
-  }
+  // No family fired: there is no measured context to retrieve against, so the
+  // stage returns NOTHING. The previous version backfilled with an unfiltered
+  // `SELECT id ... LIMIT` here, which moved the router on premises that no
+  // signal ever selected. Absence is absence.
+  if (!terms) return [];
+  const predicate = includeUnmasked
+    ? `((${terms.sql}) OR context_mask IS NULL)`
+    : `(${terms.sql})`;
   const res = await db.query<{ id: string }>(
-    `SELECT id FROM v_class_a_literature_premises
-     WHERE embedding IS NOT NULL AND (${terms.sql}) LIMIT $${terms.params.length + 1}`,
+    `SELECT id FROM ${view}
+     WHERE embedding IS NOT NULL AND ${predicate} LIMIT $${terms.params.length + 1}`,
     [...terms.params, limit],
   );
   return res.rows.map((r) => r.id);
@@ -158,6 +197,7 @@ export async function stageB(
   if (candidateIds.length === 0) return [];
   const ef = opts.preGame ? EF_SEARCH_PRE_GAME : EF_SEARCH_IN_PLAY;
   const limit = opts.stageBLimit ?? STAGE_B_LIMIT;
+  const view = opts.view ?? PUBLIC_LITERATURE_VIEW;
   const vec = toVectorLiteral(embedding);
 
   await db.query("BEGIN");
@@ -172,16 +212,26 @@ export async function stageB(
       premise: string;
       cluster: string;
       similarity: number;
+      verification_tier: string | null;
+      context_mask: number[] | null;
     }>(
-      `SELECT id, premise, cluster, 1 - (embedding <=> $1::vector) AS similarity
-       FROM v_class_a_literature_premises
+      `SELECT id, premise, cluster, 1 - (embedding <=> $1::vector) AS similarity,
+              verification_tier, context_mask
+       FROM ${view}
        WHERE id = ANY($2::text[]) AND embedding IS NOT NULL
        ORDER BY ${order}
        LIMIT $3`,
       [vec, [...candidateIds], limit],
     );
     await db.query("COMMIT");
-    return res.rows.map((r) => ({ ...r, similarity: Number(r.similarity) }));
+    return res.rows.map((r) => ({
+      id: r.id,
+      premise: r.premise,
+      cluster: r.cluster,
+      similarity: Number(r.similarity),
+      verificationTier: r.verification_tier,
+      contextMask: r.context_mask,
+    }));
   } catch (e) {
     await db.query("ROLLBACK");
     throw e;
@@ -196,7 +246,10 @@ export async function route(
   opts: RouteOptions = {},
 ): Promise<Premise[]> {
   const mask = buildContextMask(signals);
-  const candidates = await stageA(db, mask, opts.stageALimit ?? STAGE_A_LIMIT);
+  const view = opts.view ?? PUBLIC_LITERATURE_VIEW;
+  const candidates = await stageA(
+    db, mask, opts.stageALimit ?? STAGE_A_LIMIT, view, view === LIVE_LITERATURE_VIEW,
+  );
   return stageB(db, embedding, candidates, opts);
 }
 
@@ -364,9 +417,17 @@ export function stageD(
       p.verificationStatus === "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST" &&
       p.backtestPassed !== true;
     if (quarantined) return 0;
+    // Missing effect size => the equation contributes NOTHING. Never a default.
+    const raw = p.rawLogOddsDelta;
+    if (raw === undefined || !Number.isFinite(raw)) return 0;
+    // Trust gate: an absent or unrecognized tier weighs zero (WP-2 contract).
+    const trust = trustWeightForTier(p.verificationTier);
+    if (trust === 0) return 0;
+    // Jacobian identity: 1.0 is the no-coupling identity, not a measurement
+    // fallback — it can only scale a contribution that raw already supplies,
+    // and raw === undefined above yields exactly 0.
     const jac = p.jacobianSensitivity ?? 1.0;
-    const raw = p.rawLogOddsDelta ?? 0;
-    return raw * jac * Math.max(0, p.spectralScore);
+    return raw * jac * Math.max(0, p.spectralScore) * trust;
   });
 
   const sumSq = rawDeltas.reduce((acc, v) => acc + v * v, 0);
@@ -410,7 +471,107 @@ export function stageD(
   };
 }
 
-/** Full 4-Stage Cognitive Router (A -> B -> C -> D). */
+// ============================================================================
+// LIVE LITERATURE PERSISTENCE (lit.retrieval_event / lit.activation)
+// Every retrieval and every activation is recorded. A failed write propagates;
+// it is never silently skipped.
+// ============================================================================
+
+export interface RetrievalEventInput {
+  readonly eventKey: string;
+  readonly gameId?: string | null;
+  readonly signalKey: string;
+  readonly signalFamily?: string | null;
+  readonly signalValue?: number | null;
+  readonly queryText?: string | null;
+  readonly queryEmbedding?: readonly number[] | null;
+  readonly topK: number;
+  readonly hitCount: number;
+  readonly latencyMs?: number | null;
+  readonly usedHnsw?: boolean | null;
+}
+
+export interface ActivationInput {
+  readonly premiseId: string;
+  readonly gameId?: string | null;
+  readonly rank: number;
+  readonly similarity: number;
+  readonly activationScore: number;
+  readonly contributedProb?: number | null;
+  readonly status?: string;
+}
+
+export async function recordRetrievalEvent(
+  db: Queryable,
+  ev: RetrievalEventInput,
+): Promise<string> {
+  const res = await db.query<{ id: string }>(
+    `INSERT INTO lit.retrieval_event
+       (event_key, game_id, signal_key, signal_family, signal_value,
+        query_text, query_embedding, top_k, hit_count, latency_ms, used_hnsw)
+     VALUES ($1, $2, $3, $4, $5, $6, $7::vector, $8, $9, $10, $11)
+     RETURNING id`,
+    [
+      ev.eventKey,
+      ev.gameId ?? null,
+      ev.signalKey,
+      ev.signalFamily ?? null,
+      ev.signalValue ?? null,
+      ev.queryText ?? null,
+      ev.queryEmbedding ? toVectorLiteral(ev.queryEmbedding) : null,
+      ev.topK,
+      ev.hitCount,
+      ev.latencyMs ?? null,
+      ev.usedHnsw ?? null,
+    ],
+  );
+  const id = res.rows[0]?.id;
+  if (!id) throw new Error("lit.retrieval_event insert returned no id");
+  return id;
+}
+
+export async function recordActivations(
+  db: Queryable,
+  retrievalEventId: string,
+  activations: readonly ActivationInput[],
+): Promise<number> {
+  let written = 0;
+  for (const a of activations) {
+    await db.query(
+      `INSERT INTO lit.activation
+         (retrieval_event_id, premise_id, game_id, rank, similarity,
+          activation_score, contributed_prob, status)
+       VALUES ($1::uuid, $2::uuid, $3, $4, $5, $6, $7, $8)`,
+      [
+        retrievalEventId,
+        a.premiseId,
+        a.gameId ?? null,
+        a.rank,
+        a.similarity,
+        a.activationScore,
+        a.contributedProb ?? null,
+        a.status ?? "active",
+      ],
+    );
+    written += 1;
+  }
+  return written;
+}
+
+/**
+ * Full 4-Stage Cognitive Router (A -> B -> C -> D) over the LIVE literature
+ * view (lit.v_class_a_literature_premises, 1,098 trust-tiered premises).
+ *
+ * Contribution model: a premise's raw log-odds delta is the signed sum of the
+ * measured signal displacements whose family bits are set in that premise's
+ * stored context mask — no signal, no displacement. Stage D then weights by
+ * trust tier (CITABLE_VERIFIED / MSVH_S1_EXACT = 1.0, COMPUTED = 0.5,
+ * RESEARCH_HYPOTHESIS = 0.0, absent/unknown = 0) and clamps the total to
+ * |Δ log-odds| <= 0.35.
+ *
+ * Every call persists one lit.retrieval_event row and one lit.activation row
+ * per selected premise. Write failures throw; they are never swallowed.
+ */
 export async function routeFullFourStage(
   db: Queryable,
   signals: readonly Signal[],
@@ -419,14 +580,77 @@ export async function routeFullFourStage(
     readonly stageCLimit?: number;
     readonly clusterRedundancyGamma?: number;
     readonly tauHatCoach?: number;
+    readonly gameId?: string | null;
+    readonly queryText?: string | null;
   } = {},
-): Promise<StageDCoupledResult> {
-  const stageBResults = await route(db, signals, embedding, opts);
-  const stageCResults = stageC(stageBResults, {
+): Promise<StageDCoupledResult & { readonly retrievalEventId: string }> {
+  const startedAt = Date.now();
+  const view = opts.view ?? LIVE_LITERATURE_VIEW;
+  const stageBResults = await route(db, signals, embedding, { ...opts, view });
+
+  // Condition each retrieved premise on the measured signals that selected it.
+  // A masked premise is driven by the firing families whose bits it carries;
+  // an unmasked live-corpus premise is driven by the aggregate measured context
+  // (the sum of all firing displacements) that authorized its retrieval. Both
+  // are measured quantities — a premise with no firing context gets exactly 0.
+  const firing = signals.filter(
+    (s) => Number.isFinite(s.displacement) && Math.abs(s.displacement) > 0 && s.n >= MIN_SAMPLE,
+  );
+  const aggregateDisplacement = firing.reduce((acc, s) => acc + s.displacement, 0);
+  const conditioned = stageBResults.map((p) => {
+    const mask = p.contextMask;
+    let driving: number;
+    if (mask && mask.length === MASK_WORDS) {
+      driving = 0;
+      for (const s of firing) {
+        const word = mask[Math.floor(s.family / 32)];
+        if (word !== undefined && (word & (1 << (s.family % 32))) !== 0) {
+          driving += s.displacement;
+        }
+      }
+    } else {
+      driving = aggregateDisplacement;
+    }
+    return { ...p, rawLogOddsDelta: driving };
+  });
+
+  const stageCResults = stageC(conditioned, {
     limit: opts.stageCLimit,
     clusterRedundancyGamma: opts.clusterRedundancyGamma,
   });
-  return stageD(stageCResults, { tauHatCoach: opts.tauHatCoach });
+  const result = stageD(stageCResults, { tauHatCoach: opts.tauHatCoach });
+
+  const fired = signals.filter(
+    (s) => Number.isFinite(s.displacement) && Math.abs(s.displacement) > 0 && s.n >= MIN_SAMPLE,
+  );
+  const retrievalEventId = await recordRetrievalEvent(db, {
+    eventKey: `route4:${randomUUID()}`,
+    gameId: opts.gameId ?? null,
+    signalKey: fired.length ? fired.map((s) => `f${s.family}`).sort().join("+") : "none",
+    signalFamily: fired.length ? String(fired[0]!.family) : null,
+    signalValue: fired.length ? fired[0]!.displacement : null,
+    queryText: opts.queryText ?? null,
+    queryEmbedding: embedding,
+    topK: opts.stageBLimit ?? STAGE_B_LIMIT,
+    hitCount: stageBResults.length,
+    latencyMs: Date.now() - startedAt,
+    usedHnsw: opts.exact === false,
+  });
+  await recordActivations(
+    db,
+    retrievalEventId,
+    result.selectedPremises.map((p, i) => ({
+      premiseId: p.id,
+      gameId: opts.gameId ?? null,
+      rank: i + 1,
+      similarity: p.similarity,
+      activationScore: p.spectralScore,
+      contributedProb: p.shrunkLogOddsDelta,
+      status: p.quarantined ? "quarantined" : "active",
+    })),
+  );
+
+  return { ...result, retrievalEventId };
 }
 
 /**
@@ -483,17 +707,33 @@ export interface PreProjectionOmniscienceRouterInput {
   readonly openAlexOrthopedicSnapCap?: number;
   readonly huggingFaceAll22StanceTellScore?: number;
   readonly tauHatCoach?: number;
+  /**
+   * Measured sample size per measurement field. A displacement without a
+   * supplied N >= MIN_SAMPLE does NOT fire. The previous version invented
+   * n = 65..140 per family, making every unmeasured family look like a
+   * 65..140-sample study. N is data, not a default. Family 210's composite
+   * uses the Kaggle constituent's sample size.
+   */
+  readonly sampleSizeByField?: Readonly<
+    Partial<Record<keyof PreProjectionOmniscienceRouterInput, number>>
+  >;
 }
 
 export interface PreProjectionCognitiveRouterOutput {
   readonly routerResult: StageDCoupledResult & { readonly contextMask: Uint32Array };
   readonly injectedSignalsCount: number;
   readonly snapTransitionPriorDelta: number;
-  readonly passEfficiencyPriorDelta: number;
-  readonly pressureDisruptionHazardDelta: number;
-  readonly secondHalfTutFatigueDecayRate: number;
-  readonly gsiSnapShareCap: number;
+  /** Null when an input it needs was not supplied. Never a substituted constant. */
+  readonly passEfficiencyPriorDelta: number | null;
+  /** Null when an input it needs was not supplied. Never a substituted constant. */
+  readonly pressureDisruptionHazardDelta: number | null;
+  /** Null when an input it needs was not supplied. Never a substituted constant. */
+  readonly secondHalfTutFatigueDecayRate: number | null;
+  /** Null when an input it needs was not supplied. Never a substituted constant. */
+  readonly gsiSnapShareCap: number | null;
   readonly reverse8Step5ApiCascadeActive: true;
+  /** Families skipped because their input was absent, with the field name. */
+  readonly missingInputs: ReadonlyArray<{ family: number; field: string; reason: string }>;
 }
 
 /**
@@ -504,53 +744,107 @@ export interface PreProjectionCognitiveRouterOutput {
 export function buildUniversalAndSecondOrderCognitiveSignals(
   input: PreProjectionOmniscienceRouterInput = {},
 ): Signal[] {
-  return [
-    // Family 12: Pressure & Weakest-Link Trench Collapse
-    {
-      family: 12,
-      displacement: (input.trenchWeakLinkCollapseProb ?? 0.58) - 0.35,
-      n: 120,
-    },
-    // Family 48: QB Post-Hit Trauma Hysteresis & Clean-Pocket Clock Compression
-    {
-      family: 48,
-      displacement: input.qbTraumaCompressionSec ?? -0.26,
-      n: 85,
-    },
-    // Family 94: Causal FWL Unschemed Skill vs Scheme-Manufactured Volume
-    {
-      family: 94,
-      displacement: input.causalUnschemedEpaDelta ?? 0.14,
-      n: 140,
-    },
-    // Family 132: Coordinator Opening-15 Script Cliff & 3-Snap Tendency Trap
-    {
-      family: 132,
-      displacement: input.coordinatorScriptCliffDelta ?? -0.35,
-      n: 65,
-    },
-    // Family 176: GSI Sports Medicine & OpenAlex Orthopedic Return-to-Play Degradation
-    {
-      family: 176,
-      displacement: -(input.gsiBiomechanicalEfficiencyLossPct ?? 0.12),
-      n: 95,
-    },
-    // Family 210: Kaggle BDB Voronoi Control + arXiv Disguise KL + HF All-22 Pre-Snap Tell
-    {
-      family: 210,
-      displacement:
-        0.4 * (input.kaggleVoronoiControlAdvantage ?? 0.11) +
-        0.35 * (input.arxivOptimalTransportDisguiseKl ?? 0.18) +
-        0.25 * (input.huggingFaceAll22StanceTellScore ?? 0.15),
-      n: 110,
-    },
-    // Family 254: Referee Score-State Reflexivity & True Steam vs Head-Fake Buyback
-    {
-      family: 254,
-      displacement: (input.refereeMarketTrueSteamProb ?? 0.72) - 0.5,
-      n: 75,
-    },
-  ];
+  const signals: Signal[] = [];
+  const push = (
+    family: number,
+    field: keyof PreProjectionOmniscienceRouterInput,
+    displacement: number | undefined,
+  ): void => {
+    // A family whose input is absent is NOT emitted. The previous version
+    // substituted a hand-set default (0.58, -0.26, 0.14, -0.35, 0.12, 0.11,
+    // 0.18, 0.15, 0.72) and emitted a signal anyway, so an unmeasured family
+    // moved the router exactly as if it had been measured. Absence is now
+    // absence; `describeMissingRouterInputs` reports what was skipped.
+    if (displacement === undefined || !Number.isFinite(displacement) || displacement === 0) return;
+    // The sample size must be measured too. The old hardcoded n = 65..140
+    // constants are purged: no supplied N >= MIN_SAMPLE, no firing family.
+    const n = input.sampleSizeByField?.[field];
+    if (n === undefined || !Number.isFinite(n) || n < MIN_SAMPLE) return;
+    signals.push({ family, displacement, n });
+  };
+
+  // Family 12: Pressure & Weakest-Link Trench Collapse
+  push(
+    12,
+    "trenchWeakLinkCollapseProb",
+    input.trenchWeakLinkCollapseProb === undefined
+      ? undefined
+      : input.trenchWeakLinkCollapseProb - 0.35,
+  );
+  // Family 48: QB Post-Hit Trauma Hysteresis & Clean-Pocket Clock Compression
+  push(48, "qbTraumaCompressionSec", input.qbTraumaCompressionSec);
+  // Family 94: Causal FWL Unschemed Skill vs Scheme-Manufactured Volume
+  push(94, "causalUnschemedEpaDelta", input.causalUnschemedEpaDelta);
+  // Family 132: Coordinator Opening-15 Script Cliff & 3-Snap Tendency Trap
+  push(132, "coordinatorScriptCliffDelta", input.coordinatorScriptCliffDelta);
+  // Family 176: GSI Sports Medicine & OpenAlex Orthopedic Return-to-Play Degradation
+  push(
+    176,
+    "gsiBiomechanicalEfficiencyLossPct",
+    input.gsiBiomechanicalEfficiencyLossPct === undefined
+      ? undefined
+      : -input.gsiBiomechanicalEfficiencyLossPct,
+  );
+  // Family 210: Kaggle BDB Voronoi Control + arXiv Disguise KL + HF All-22 Pre-Snap Tell
+  // A weighted sum is only meaningful when every weight has a value. One absent
+  // term would silently renormalise the other two.
+  if (
+    input.kaggleVoronoiControlAdvantage !== undefined &&
+    input.arxivOptimalTransportDisguiseKl !== undefined &&
+    input.huggingFaceAll22StanceTellScore !== undefined
+  ) {
+    push(
+      210,
+      "kaggleVoronoiControlAdvantage",
+      0.4 * input.kaggleVoronoiControlAdvantage +
+        0.35 * input.arxivOptimalTransportDisguiseKl +
+        0.25 * input.huggingFaceAll22StanceTellScore,
+    );
+  }
+  // Family 254: Referee Score-State Reflexivity & True Steam vs Head-Fake Buyback
+  push(
+    254,
+    "refereeMarketTrueSteamProb",
+    input.refereeMarketTrueSteamProb === undefined
+      ? undefined
+      : input.refereeMarketTrueSteamProb - 0.5,
+  );
+
+  return signals;
+}
+
+/**
+ * Which router families were skipped because their input was absent, and why.
+ * This is the diagnostic that replaces the old silent defaults: the reasoning
+ * trace can say "family 12 was not computed because trenchWeakLinkCollapseProb
+ * was not supplied" instead of quietly using 0.58.
+ */
+export function describeMissingRouterInputs(
+  input: PreProjectionOmniscienceRouterInput = {},
+): Array<{ family: number; field: string; reason: string }> {
+  const out: Array<{ family: number; field: string; reason: string }> = [];
+  const need = (family: number, field: string, value: number | undefined): void => {
+    if (value === undefined || !Number.isFinite(value)) {
+      out.push({ family, field, reason: `${field} was not supplied` });
+      return;
+    }
+    const n = input.sampleSizeByField?.[field as keyof PreProjectionOmniscienceRouterInput];
+    if (n === undefined || !Number.isFinite(n)) {
+      out.push({ family, field, reason: `${field} sample size not supplied; family does not fire` });
+    } else if (n < MIN_SAMPLE) {
+      out.push({ family, field, reason: `${field} sample size ${n} below MIN_SAMPLE=${MIN_SAMPLE}; family does not fire` });
+    }
+  };
+  need(12, "trenchWeakLinkCollapseProb", input.trenchWeakLinkCollapseProb);
+  need(48, "qbTraumaCompressionSec", input.qbTraumaCompressionSec);
+  need(94, "causalUnschemedEpaDelta", input.causalUnschemedEpaDelta);
+  need(132, "coordinatorScriptCliffDelta", input.coordinatorScriptCliffDelta);
+  need(176, "gsiBiomechanicalEfficiencyLossPct", input.gsiBiomechanicalEfficiencyLossPct);
+  need(210, "kaggleVoronoiControlAdvantage", input.kaggleVoronoiControlAdvantage);
+  need(210, "arxivOptimalTransportDisguiseKl", input.arxivOptimalTransportDisguiseKl);
+  need(210, "huggingFaceAll22StanceTellScore", input.huggingFaceAll22StanceTellScore);
+  need(254, "refereeMarketTrueSteamProb", input.refereeMarketTrueSteamProb);
+  return out;
 }
 
 /**
@@ -567,27 +861,42 @@ export function routePreProjectionWithUniversalAndOmnisciencePriors(
   const omniscienceSignals = buildUniversalAndSecondOrderCognitiveSignals(input);
   const combinedSignals = [...baseSignals, ...omniscienceSignals];
   const routerResult = routeInMemoryFourStage(combinedSignals, {
-    tauHatCoach: input.tauHatCoach ?? 0.46,
+    // tauHatCoach is a router parameter, not a measurement. When it is absent
+    // it stays undefined so stageD uses its 0.42 baseline and the coach prior
+    // bonus is exactly 0 — a missing parameter never yields nonzero displacement.
+    // The substituted 0.46 default is purged.
+    tauHatCoach: input.tauHatCoach,
   });
 
   const clampedDelta = routerResult.clampedTotalLogOddsDelta;
-  const traumaSec = input.qbTraumaCompressionSec ?? -0.26;
-  const collapseProb = input.trenchWeakLinkCollapseProb ?? 0.58;
-  const gsiLoss = input.gsiBiomechanicalEfficiencyLossPct ?? 0.12;
+  const traumaSec = input.qbTraumaCompressionSec;
+  const collapseProb = input.trenchWeakLinkCollapseProb;
+  const gsiLoss = input.gsiBiomechanicalEfficiencyLossPct;
 
   const snapTransitionPriorDelta = Number((0.45 * clampedDelta).toFixed(6));
-  const passEfficiencyPriorDelta = Number(
-    (0.35 * clampedDelta + 0.15 * (input.causalUnschemedEpaDelta ?? 0.14) - 0.25 * gsiLoss).toFixed(6),
-  );
-  const pressureDisruptionHazardDelta = Number(
-    (0.22 * Math.max(0, collapseProb - 0.35) + 0.18 * Math.abs(traumaSec)).toFixed(6),
-  );
-  const secondHalfTutFatigueDecayRate = Number(
-    (0.045 + 0.06 * collapseProb + 0.04 * gsiLoss).toFixed(6),
-  );
-  const gsiSnapShareCap = Number(
-    Math.max(0.45, Math.min(1.0, input.openAlexOrthopedicSnapCap ?? 1.0 - 1.5 * gsiLoss)).toFixed(6),
-  );
+
+  // Each derived delta is computed only when every input it needs is present.
+  // An absent input yields null, not a substituted constant.
+  const passEfficiencyPriorDelta =
+    input.causalUnschemedEpaDelta === undefined || gsiLoss === undefined
+      ? null
+      : Number(
+          (0.35 * clampedDelta + 0.15 * input.causalUnschemedEpaDelta - 0.25 * gsiLoss).toFixed(6),
+        );
+  const pressureDisruptionHazardDelta =
+    collapseProb === undefined || traumaSec === undefined
+      ? null
+      : Number((0.22 * Math.max(0, collapseProb - 0.35) + 0.18 * Math.abs(traumaSec)).toFixed(6));
+  const secondHalfTutFatigueDecayRate =
+    collapseProb === undefined || gsiLoss === undefined
+      ? null
+      : Number((0.045 + 0.06 * collapseProb + 0.04 * gsiLoss).toFixed(6));
+  const gsiSnapShareCap =
+    input.openAlexOrthopedicSnapCap !== undefined
+      ? Number(Math.max(0.45, Math.min(1.0, input.openAlexOrthopedicSnapCap)).toFixed(6))
+      : gsiLoss === undefined
+        ? null
+        : Number(Math.max(0.45, Math.min(1.0, 1.0 - 1.5 * gsiLoss)).toFixed(6));
 
   return {
     routerResult,
@@ -598,6 +907,7 @@ export function routePreProjectionWithUniversalAndOmnisciencePriors(
     secondHalfTutFatigueDecayRate,
     gsiSnapShareCap,
     reverse8Step5ApiCascadeActive: true,
+    missingInputs: describeMissingRouterInputs(input),
   };
 }
 
@@ -606,8 +916,8 @@ export function routePreProjectionWithUniversalAndOmnisciencePriors(
 // ============================================================================
 
 export {
-  QuadEngineSource,
-  QuadEngineCrosswalkNode,
+  type QuadEngineSource,
+  type QuadEngineCrosswalkNode,
   buildQuadEngineCrosswalk,
   queryQuadEngineByContext,
   loadLiveQuadEngineCrosswalk,

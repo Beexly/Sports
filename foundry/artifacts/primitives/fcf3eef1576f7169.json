@@ -1,0 +1,729 @@
+{
+  "book_id": "fcf3eef1576f7169",
+  "source_status": "COMPLETE",
+  "source_note": "Institute of Medicine and National Research Council. 2014. Sports-Related Concussions in Youth: Improving the Science, Changing the Culture. Washington, DC: The National Academies Press. Editors: Robert Graham, Frederick P. Rivara, Morgan A. Ford, and Carol Mason Spicer; Committee on Sports-Related Concussions in Youth, Board on Children, Youth, and Families. ISBN-13 978-0-309-28800-2; the National Academies Press catalog page bound into the PDF lists the paperback as 2013 with 340 pages, while the copyright page and suggested citation give 2014; the report is cited as the 2014 edition. Local source is the publisher's free PDF from nap.edu (record_id=18377) at ~/workspace/full-library-2026-11-12/library/books-b-medical/GrahamEtAl-2014-SportsRelatedConcussionsInYouth.pdf, 3,889,138 bytes, sha256 fcf3eef1576f71690066e07db62db78c0dbef3a3bdabdd4af3aadf9de0f3c87e (digest over str(size) plus full file bytes), book_id fcf3eef1576f7169. Extraction text (143,743 words) is clean born-digital text with page headers and hyphenated line breaks; all verbatim quotes were verified as exact normalized substrings of the extracted text after rejoining line-break hyphenation. The work is a consensus evidence review and contains no formal equations; the only LaTeX entries reconstruct, in standard notation, two quantitative structures the text states explicitly (the per-10,000-athletic-exposure rate and the Weibull-family sigmoid injury risk curve of Figure 6-1), each flagged in its assumptions. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "concussion_definition_biomechanical",
+      "name": "Concussion defined as a brain injury induced by biomechanical forces (Zurich 2012 consensus definition adopted by the committee)",
+      "verbatim_quote": "Concussion is a brain injury and is defined as a complex pathophysiological process affecting the brain, induced by biomechanical forces",
+      "page": "Summary, printed p. 5 (also Ch. 1, p. 26)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The definition is a consensus working definition, not a measurement; no biomarker anchors it.",
+        "Concussion usually does not involve loss of consciousness and typically shows no structural change on standard imaging."
+      ],
+      "breakdown_regime": "Definition is symptom-anchored and contested: the literature confounds concussion with mild TBI, so any classifier built on literature labels inherits label noise.",
+      "domain": "clinical definition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A label definition with explicit inclusion mechanics (external force in, functional disturbance out) is the engine equivalent of an event definition: the GSE engine needs the same discipline, an operational event definition that separates the triggering input from the observed downstream state instead of naming the outcome directly.",
+        "source_operator": "concussion_definition_biomechanical",
+        "telemetry": "impact event records (head or body), observed sign and symptom onset timestamps"
+      }
+    },
+    {
+      "primitive_id": "concussion_subset_of_mtbi",
+      "name": "Concussion is a subset of mild traumatic brain injury on a mild to severe TBI spectrum, not a synonym for mTBI",
+      "verbatim_quote": "the committee has found it most useful to view concussion as a subset of mTBI",
+      "page": "Ch. 1, printed p. 27 (Figure 1-1)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "mTBI is the broader set and includes more severe injuries than concussion.",
+        "Severity grading within concussion varies by symptoms experienced, severity, and duration."
+      ],
+      "breakdown_regime": "Studies that pool concussion with all mTBI contaminate concussion-specific rates and recovery curves; subset relations must be respected when merging datasets.",
+      "domain": "clinical taxonomy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Set containment as a data hygiene rule: the engine must never train on a parent class (all head impacts, all injuries) as if it were the target subclass; every dataset join needs a subset check exactly like concussion inside mTBI inside TBI.",
+        "source_operator": "concussion_subset_of_mtbi",
+        "telemetry": "dataset provenance fields recording which severity band each record belongs to"
+      }
+    },
+    {
+      "primitive_id": "incidence_undercount_scaling",
+      "name": "National incidence is an upward scaling of loss-of-consciousness cases because only 8 to 19.2 percent of sports concussions involve loss of consciousness",
+      "verbatim_quote": "It has been estimated that as many as 1.6 million to 3.8 million sports- and recreation-related traumatic brain injuries (TBIs), including concussions and other head injuries, occur in the United States each year",
+      "page": "Summary, printed p. 2 (derivation in Ch. 1, p. 28)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Langlois and colleagues scaled roughly 300,000 TBIs involving loss of consciousness by the 8 to 19.2 percent loss-of-consciousness share (Collins et al., 2003; Schultz et al., 2004).",
+        "Many concussions go unreported, so the committee treats the range as a conservative estimate."
+      ],
+      "breakdown_regime": "The estimate inherits survey error from the 1991 National Health Interview Survey supplement and assumes the loss-of-consciousness fraction is stable across sports and ages.",
+      "domain": "epidemiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A base-rate correction kernel: when the observable marker (loss of consciousness, a reported injury, a flagged play) captures only a small known fraction of events, the engine scales the observed count by the inverse capture fraction and reports a range, never a point, exactly as this estimate is a range of 1.6 to 3.8 million.",
+        "source_operator": "incidence_undercount_scaling",
+        "telemetry": "observed event counts plus an independently estimated capture fraction with its own uncertainty"
+      }
+    },
+    {
+      "primitive_id": "athletic_exposure_rate",
+      "name": "Injury incidence is normalized per athletic exposure, one practice or competition in which an athlete participates",
+      "verbatim_quote": "the overall reported concussion rate doubled, from 1.7 to 3.4 per 10,000 athletic exposures",
+      "page": "Ch. 1, printed p. 28 (Hootman et al., 2007, NCAA, 1988-1989 to 2003-2004)",
+      "latex": "\\mathrm{Rate} = \\frac{N_{\\mathrm{concussions}}}{N_{\\mathrm{AE}}} \\times 10{,}000",
+      "symbol_and_unit_ledger": {
+        "N_{concussions}": "count of reported concussions in the observation window [count]",
+        "N_{AE}": "athletic exposures: practices plus competitions in which an athlete actively participates [count]",
+        "Rate": "reported concussions per 10,000 athletic exposures [per 10,000 AE]"
+      },
+      "assumptions": [
+        "Rates require participation denominators; emergency department counts alone cannot produce a rate.",
+        "The doubling is a reported-rate change and may reflect awareness and staffing changes, not only true incidence change."
+      ],
+      "breakdown_regime": "Rates are not comparable across systems with different exposure definitions or different case capture (trainer-reported versus emergency department).",
+      "domain": "epidemiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Exposure normalization is the engine rule that no count means anything without its opportunity denominator: per snap, per route run, per minute, per game script. The kernel also carries the report's warning that a rising reported rate can be a measurement change (more trainers added in 2005 in the Lincoln study) rather than a world change.",
+        "source_operator": "athletic_exposure_rate",
+        "telemetry": "event counts paired with exposure counts (snaps, minutes, participations) and staffing or coverage metadata"
+      }
+    },
+    {
+      "primitive_id": "culture_of_resistance",
+      "name": "A culture of resistance suppresses self-reporting and compliance: athletes rate team obligations above their own health",
+      "verbatim_quote": "In surveys, youth profess that the game and the team are more important than their individual health and that they may play through a concussion to avoid letting down their teammates",
+      "page": "Summary, printed p. 7 (Committee's Findings)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Culture is defined by the committee as the sum of beliefs and behaviors within a group.",
+        "The same resistance is reported among military personnel."
+      ],
+      "breakdown_regime": "Survey self-description may itself be biased; stated attitudes and actual reporting behavior are related but not identical quantities.",
+      "domain": "sports culture",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The reporting channel is part of the measurement instrument: in the engine, any human-fed signal (injury reports, beat writer notes, player self-descriptions) passes through an incentive filter, and this primitive is the standing reminder that the filter's direction is known (toward concealment under team pressure) even when its size is not.",
+        "source_operator": "culture_of_resistance",
+        "telemetry": "survey and interview data on reporting attitudes, plus discrepancies between observed impacts and reported symptoms"
+      }
+    },
+    {
+      "primitive_id": "athlete_underreporting",
+      "name": "Non-reporting is motivated and quantified: 41 percent did not want to leave the game, 66 percent judged the injury not serious enough",
+      "verbatim_quote": "41 percent of subjects reported not wanting to leave the game as their reason for not reporting a possible concussion",
+      "page": "Ch. 3, printed p. 100 (McCrea et al., 2004, high school football)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Reasons were not mutually exclusive; subjects selected all that applied.",
+        "A 2012 survey found a majority of high school football players said it was okay to play with a concussion despite knowing the symptoms and dangers."
+      ],
+      "breakdown_regime": "Single-sport, single-era survey data; motive shares will differ by sport, level, and era, but the existence of motivated concealment is robust across the chapter.",
+      "domain": "diagnosis behavior",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A censoring model for self-reported state: the engine should treat any self-reported availability or wellness signal as left-censored by motivation, with the censoring rate itself estimated from motive surveys, rather than treating silence as a true negative.",
+        "source_operator": "athlete_underreporting",
+        "telemetry": "motive-coded non-reporting surveys, snap counts after observed head impacts, next-day symptom reports"
+      }
+    },
+    {
+      "primitive_id": "protracted_brain_maturation",
+      "name": "The developing brain is a moving target: 90 percent of adult size by age 6, but connectivity matures into the mid-20s with prefrontal pruning last",
+      "verbatim_quote": "This pruning process occurs earlier in the auditory and visual cortex (by approximately 12 years of age), than in areas of the prefrontal cortex, which plays a role in executive functions such as problem solving and decision making (by approximately 18 years of age)",
+      "page": "Ch. 2, printed p. 57",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Synaptic pruning completes earlier in auditory and visual cortex (about age 12) than in prefrontal cortex (about age 18).",
+        "Cerebral blood flow at age 5 to 6 runs 50 to 80 percent above adult rates; the cerebral metabolic rate of glucose peaks near age 4 and plateaus at 50 to 60 micromol per minute per 100 g between ages 4 and 10."
+      ],
+      "breakdown_regime": "Adult thresholds and adult recovery curves cannot be extrapolated to youth; parameters must be age-indexed because the substrate itself is changing.",
+      "domain": "developmental neuroscience",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Nonstationary substrate rule: the engine's player models sit on athletes whose physiology is still changing with age, so any parameter estimated on adults (recovery time, tolerance, baseline cognition) must carry an age-validity band and degrade outside it, the same way this chapter refuses to extend adult biomechanics to children.",
+        "source_operator": "protracted_brain_maturation",
+        "telemetry": "age, developmental stage, baseline testing history for each athlete"
+      }
+    },
+    {
+      "primitive_id": "rotational_acceleration_dominance",
+      "name": "In non-centroidal impacts, rotational acceleration, not linear acceleration, tracks brain tissue deformation",
+      "verbatim_quote": "in the more common non-centroidal head impacts, linear and rotational accelerations are not correlated significantly, and the rotational acceleration component of the head response correlates most strongly with the average and peak brain deformations",
+      "page": "Ch. 2, printed p. 65",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Purely linear centroidal motion produces little brain motion or distortion in animal studies; rotation requires a non-centroidal force path.",
+        "Direction matters: sagittal and coronal rotations injure at lower accelerations in primate work, and internal structures such as the falx cerebri localize deformation."
+      ],
+      "breakdown_regime": "Correlation structure flips with impact geometry, so a single kinematic proxy pooled across impact types is invalid; youth direction-specific thresholds remain undefined.",
+      "domain": "biomechanics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Feature-selection kernel: the obvious measurable (linear acceleration, like total yards or headline stats) can be uncorrelated with the causal quantity (tissue strain, like per-play efficiency under specific coverage) once the geometry of the event changes. The engine must condition proxy validity on event type instead of pooling.",
+        "source_operator": "rotational_acceleration_dominance",
+        "telemetry": "impact direction and location, linear and rotational kinematics measured independently, impact classification (centroidal versus non-centroidal)"
+      }
+    },
+    {
+      "primitive_id": "tissue_specific_thresholds",
+      "name": "Injury thresholds are tissue-specific and endpoint-specific; no single threshold describes all head injuries",
+      "verbatim_quote": "it is inappropriate to rely on a single threshold for all head injuries",
+      "page": "Ch. 2, printed p. 63",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The deformation magnitude and rate that rupture a blood vessel differ from those that injure an axon; smaller deformations produce functional change, larger ones structural change.",
+        "Whether injury requires a critical proportion of the whole brain or specific locations to exceed threshold is unresolved."
+      ],
+      "breakdown_regime": "Without youth concussion-specific tissue thresholds, computational model predictions of concussion from kinematics are premature, as the chapter states directly.",
+      "domain": "biomechanics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Multi-endpoint thresholding: the engine's risk outputs should be a vector of endpoint-specific risks (miss time, recurrence, performance dip) each with its own dose curve, never one scalar danger score, because the underlying biology here refuses a single threshold for exactly the same structural reason.",
+        "source_operator": "tissue_specific_thresholds",
+        "telemetry": "endpoint-specific outcome labels linked to the same exposure records"
+      }
+    },
+    {
+      "primitive_id": "neurometabolic_cascade",
+      "name": "Impact triggers an ionic and excitotoxic cascade: indiscriminate potassium and glutamate efflux with calcium influx and mass depolarization",
+      "verbatim_quote": "show that an indiscriminate efflux of potassium and glutamate (Katayama et al., 1990) and an influx of calcium follow",
+      "page": "Ch. 2, printed p. 69 (Figure 2-2 caption)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Extracellular potassium rises up to fivefold at 1.5 minutes post injury in rodent models, resolving in about 2.5 minutes (mild) to 6 minutes (severe).",
+        "Resting membrane potential of minus 40 to minus 80 millivolts must be restored by ATP-driven pumps before cells can fire again."
+      ],
+      "breakdown_regime": "The cascade is characterized mainly in moderate to severe animal injury; its magnitude and duration after human concussion, especially in youth, are inferred, not measured.",
+      "domain": "neurochemistry",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Latent-state cascade isomorphism: a brief observable event (the hit) initiates a hidden multi-step process whose visible symptoms are late and partial readouts. Engine states that matter (fatigue accumulation, soft-tissue compromise) behave the same way: model the cascade, not the event marker.",
+        "source_operator": "neurometabolic_cascade",
+        "telemetry": "time-stamped post-event physiological series (metabolite ratios, blood flow, symptom onset times)"
+      }
+    },
+    {
+      "primitive_id": "cmrglc_depression_duration",
+      "name": "Post-injury glucose metabolic depression is a hallmark response whose duration scales with injury severity: 5, 10, or 14 days for mild, moderate, severe in the rat",
+      "verbatim_quote": "The magnitude and duration of CMRglc depression increases with the severity of the injury and correlates with behavioral dysfunction",
+      "page": "Ch. 2, printed p. 71 (Hovda et al., 1994)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An early hyperglycolysis phase (cerebral metabolic rate of glucose up 30 to 46 percent for about 30 minutes) precedes the depression, driven by the energy cost of restoring ionic homeostasis.",
+        "Human metabolic depression is estimated to run five to six times longer than in rats; younger animals recover metabolically faster than adults."
+      ],
+      "breakdown_regime": "Pediatric cerebral metabolic rates after concussion have never been measured; severity scaling in children is extrapolation from animal and adult severe-injury data.",
+      "domain": "neurochemistry",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Dose-duration kernel: recovery time is a monotone function of insult dose, with a measurable physiological state variable (metabolic rate) tracing the whole curve. The engine analog is to parameterize return-to-baseline as a dose-dependent duration with a state trace, not as a fixed days-out constant.",
+        "source_operator": "cmrglc_depression_duration",
+        "telemetry": "injury dose proxies, serial metabolic or performance measurements until baseline return"
+      }
+    },
+    {
+      "primitive_id": "axonal_transport_disruption",
+      "name": "Axonal injury is primarily a transport failure, not a shearing at impact: disrupted axonal transport produces swellings over 6 to 24 hours",
+      "verbatim_quote": "experimental studies have revealed that TBI of any severity can induce disruptions in axonal transport that cause swellings during the first 6 to 24 hours",
+      "page": "Ch. 2, printed p. 76",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Calcium entry through the compromised membrane activates proteases (calpain, calcineurin) that degrade neurofilaments and disconnect axons secondarily.",
+        "Amyloid precursor protein accumulation at transport blockages is the standard tissue marker of this injury."
+      ],
+      "breakdown_regime": "The mechanism refutes instant-damage intuition: pathology evolves for hours after the mechanical event, so assessments made at impact time systematically understate injury.",
+      "domain": "neuropathology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Delayed-manifestation isomorphism: damage processes with transport or accumulation dynamics declare themselves on a lag. In engine terms, features like cumulative workload or microtrauma should be integrated over a window with a kernel, not scored at the event instant, and early all-clear readings should be discounted.",
+        "source_operator": "axonal_transport_disruption",
+        "telemetry": "serial post-event imaging or marker measurements at hours to days, not only at event time"
+      }
+    },
+    {
+      "primitive_id": "antioxidant_immaturity",
+      "name": "The young brain mounts no compensatory antioxidant response after injury, increasing vulnerability to oxidative damage",
+      "verbatim_quote": "This lack of increase in antioxidant response in the younger brain may increase vulnerability to oxidative damage after injury",
+      "page": "Ch. 2, printed pp. 75-76",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Hydroxyl radical production rises about 60 percent within the first minute after concussive-like weight drop in adult mice; protein oxidation products peak within hours.",
+        "Neither 7-day-old nor 21-day-old mice increased superoxide dismutase or glutathione peroxidase after controlled cortical impact despite elevated lipid peroxidation markers."
+      ],
+      "breakdown_regime": "Oxidative injury after concussion specifically (as opposed to moderate to severe TBI) is unquantified in any age group; the vulnerability claim rests on defense-side evidence.",
+      "domain": "neurochemistry",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Missing-defense kernel: risk is a ratio of insult to defense capacity, and the defense term is age-dependent and can be zero-growth under load. Engine risk models should include the recovery-system capacity term explicitly instead of modeling exposure alone.",
+        "source_operator": "antioxidant_immaturity",
+        "telemetry": "age, antioxidant or recovery-capacity proxies, oxidative damage markers where available"
+      }
+    },
+    {
+      "primitive_id": "vulnerability_window_interval",
+      "name": "Cerebral vulnerability is interval-dependent: repeat injuries at short intervals compound cognitive harm, at a 1-month interval they do not",
+      "verbatim_quote": "The cumulative effect of cognitive dysfunction when injuries occur at shorter intervals suggests that the impact interval reflects the duration of cerebral vulnerability",
+      "page": "Ch. 2, printed p. 80 (Meehan et al., 2012)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Five repeat weight drop injuries in adult mice at 1-day or 7-day intervals produced cognitive impairments still present at 1 year; at 30-day intervals, no significant Morris water maze impairment.",
+        "The model produced no edema, cell loss, or axonal injury versus shams, confirming a functionally mild insult; Vagnozzi and colleagues found the greatest cumulative metabolic damage at a 3-day interval in rats."
+      ],
+      "breakdown_regime": "No biological marker of the window exists for humans, and the window's duration by age is unknown; consensus return-to-play timing is therefore not biologically anchored.",
+      "domain": "recovery science",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Interval-conditioned hazard kernel: the effect of an event depends on time since the last similar event through a vulnerability function that decays with interval. The engine should carry time-since-last-event as a first-class feature with a learned decay, for injuries, high-load games, and short-rest spots alike.",
+        "source_operator": "vulnerability_window_interval",
+        "telemetry": "event timestamps per athlete, inter-event intervals, outcome severity per event"
+      }
+    },
+    {
+      "primitive_id": "naa_recovery_biomarker",
+      "name": "N-acetylaspartate to creatine ratio tracks metabolic recovery: down 18.5 percent at day 3, normal by day 30, delayed to 45 days after a second concussion",
+      "verbatim_quote": "Three of these patients who resumed normal activities shortly thereafter sustained a second concussion, which resulted in more prolonged deficits in NAA/Cr ratios with delayed recovery at 45 days (Vagnozzi et al., 2008).",
+      "page": "Ch. 2, printed p. 80 (Vagnozzi et al., 2008, 13 concussed athletes)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Three athletes who resumed activity early sustained second concussions and showed prolonged NAA/Cr deficits with recovery delayed to 45 days.",
+        "Metabolic changes were documented in athletes with no significant neuropsychological test changes, so the marker moves independently of test scores."
+      ],
+      "breakdown_regime": "Small samples (13 athletes) and spectroscopy availability limit clinical use; the marker is a research-grade recovery clock, not a cleared diagnostic.",
+      "domain": "biomarkers",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "State-variable recovery clock: recovery is declared by a measured state returning to its own baseline, not by calendar or symptom report. The engine version is per-player baselining with return-to-baseline tests on objective series, and a rule that a second insult during the depressed window resets and lengthens the clock.",
+        "source_operator": "naa_recovery_biomarker",
+        "telemetry": "serial biomarker or objective performance series per athlete with individual baselines"
+      }
+    },
+    {
+      "primitive_id": "prior_concussion_risk",
+      "name": "Prior concussion is a dose-responsive recurrence risk: history raises subsequent concussion risk 2 to 5.8 fold",
+      "verbatim_quote": "individuals with a history of prior concussion are 2 to 5.8 times more likely to sustain a (subsequent) concussion",
+      "page": "Ch. 2, printed p. 82",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A prospective study of 2,905 college football players found a dose-response relation between number of prior concussions and incident concussion after adjustment for division, position, years played, academic year, and body mass index.",
+        "The split between brain-change vulnerability and exposure-prone playing style as the driver is unresolved."
+      ],
+      "breakdown_regime": "Self-reported concussion history is itself subject to the underreporting bias documented in Chapter 3, so the true multiplier is plausibly understated.",
+      "domain": "risk factors",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "History-conditioned hazard with dose response: event count history enters the hazard multiplicatively, and the engine must separate the two candidate mechanisms (state change in the athlete versus stable exposure propensity) because they imply different interventions and different decay behavior.",
+        "source_operator": "prior_concussion_risk",
+        "telemetry": "verified event histories, position and playing style exposure controls, recurrence timestamps"
+      }
+    },
+    {
+      "primitive_id": "sex_head_neck_biomechanics",
+      "name": "Under equal applied force, female soccer players show greater head-neck peak acceleration and angular displacement than males",
+      "verbatim_quote": "female soccer players exhibited greater head-neck segment peak acceleration and angular displacement than males did when exposed to a similar force",
+      "page": "Ch. 2, printed pp. 80-81 (Tierney et al., 2005, 2008)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Candidate mechanisms named by the committee: reduced neck musculature and larger ball-to-head size ratio in females.",
+        "Field data complicate the lab result: males experience greater average accelerations in ice hockey and boxing play, and impact mechanisms differ by sex (player contact dominates for males, surface or ball contact for females)."
+      ],
+      "breakdown_regime": "Lab loading equality does not hold on the field; sex comparisons require matched loading environments, and part of the reported-rate gap may be differential symptom reporting.",
+      "domain": "biomechanics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Same-input different-transfer-function isomorphism: identical external loads produce different internal doses across subpopulations because the transfer structure (neck strength, mass ratios) differs. Engine features should model dose received, not load applied, whenever a structural mediator is known.",
+        "source_operator": "sex_head_neck_biomechanics",
+        "telemetry": "sex, neck strength or anthropometrics, impact source classification, measured head kinematics"
+      }
+    },
+    {
+      "primitive_id": "four_domain_symptom_taxonomy",
+      "name": "Concussion presentation decomposes into four symptom domains: physical, cognitive, emotional, and sleep",
+      "verbatim_quote": "The signs and symptoms of concussion typically fall into four categories—physical, cognitive, emotional, and sleep—with patients experiencing one or more symptoms from one or more categories",
+      "page": "Ch. 3 Findings, printed p. 162 (taxonomy detailed pp. 104-105)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A revised factor structure (Kontos et al., 2012) groups symptoms as cognitive-migraine-fatigue, affective, somatic, and sleep.",
+        "Domain profiles differ by sex in some studies: females report more somatic symptoms, males more cognitive symptoms, with equal total counts."
+      ],
+      "breakdown_regime": "Symptoms are nonspecific and prevalent in uninjured youth, so domain presence alone has weak specificity; the taxonomy organizes observation, it does not diagnose.",
+      "domain": "diagnosis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Structured observation schema: a fixed multi-domain checklist converts an unstructured impression into comparable longitudinal data. The engine analog is a fixed feature schema per entity (player, team) so that change over time is measurable instead of anecdotal.",
+        "source_operator": "four_domain_symptom_taxonomy",
+        "telemetry": "per-domain symptom scores at each assessment, reporter identity (athlete, parent, clinician)"
+      }
+    },
+    {
+      "primitive_id": "multi_modal_battery",
+      "name": "A combined battery of neurocognitive testing, symptom report, and postural control is more sensitive than any single test, reaching 89 to 96 percent sensitivity",
+      "verbatim_quote": "a complete battery of tests, including assessment of neurocognitive functioning, self-reported symptom assessments, and postural control evaluation, was more sensitive to concussions than was each test individually",
+      "page": "Ch. 3, printed pp. 105-106 (Broglio et al., 2007b)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The battery still missed 4 to 11 percent of diagnosed concussions.",
+        "Different components recover at different rates, so any single channel gives an incomplete recovery picture (Ellemberg et al., 2009)."
+      ],
+      "breakdown_regime": "A reliable-change analysis (Register-Mihalik et al., 2013b) found score declines alone predicted concussion no better than chance at the individual level even though battery specificity exceeded 90 percent: group sensitivity does not license individual certainty.",
+      "domain": "diagnosis",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ensemble-with-coverage kernel: combine channels whose error modes and recovery clocks differ, and track the ensemble's miss rate explicitly. The engine should fuse independent signal families the same way and report the residual blind fraction instead of presenting the fused score as complete.",
+        "source_operator": "multi_modal_battery",
+        "telemetry": "per-channel scores with timestamps, channel-specific recovery curves, diagnosed-case miss audit"
+      }
+    },
+    {
+      "primitive_id": "structural_imaging_null",
+      "name": "Structural imaging is normally negative in concussion: CT and MRI rule out worse injury but cannot diagnose concussion",
+      "verbatim_quote": "they too are of little diagnostic value for concussions per se, because structural imaging results are normal in concussions that are uncomplicated by skull fracture or hematoma",
+      "page": "Ch. 3, printed p. 104",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "CT remains the emergency workhorse for excluding skull fracture, hemorrhage, and swelling requiring surgery, at a radiation cost that matters in youth.",
+        "Advanced modalities (diffusion tensor imaging, spectroscopy, functional MRI, PET, SPECT) show group-level changes but were not validated for clinical use at the time of the report."
+      ],
+      "breakdown_regime": "A normal scan is evidence about structural lesions only; treating it as evidence of no injury is a category error the committee explicitly warns against.",
+      "domain": "diagnosis",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Null-result semantics kernel: a negative reading from an instrument that cannot detect the target state carries no information about that state. The engine must tag every data source with what a null from it actually excludes, so absence of a flag is never silently read as absence of the condition.",
+        "source_operator": "structural_imaging_null",
+        "telemetry": "modality capability registry, imaging indication (rule-out target), result linked to the specific excluded conditions"
+      }
+    },
+    {
+      "primitive_id": "qeeg_beyond_behavior",
+      "name": "Quantitative EEG detects diverging brain dysfunction after behavior normalizes: group differences grow through day 8 while behavior differences end after day 3",
+      "verbatim_quote": "QEEG measures continued to show increasingly larger differences through day 8 even though no behavioral differences occurred after day 3",
+      "page": "Ch. 3, printed pp. 107-108 (McCrea et al., 2010)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A QEEG TBI Index predicted return to play before versus after 14 days with 80 percent accuracy in the Prichep et al. (2013) analysis, the only measure that did.",
+        "Event-related potentials likewise separate concussed from non-concussed athletes when behavior measures fail."
+      ],
+      "breakdown_regime": "Evidence covers a small set of tasks and cognitive abilities; broader task batteries are needed before the signal generalizes.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Sensitive-instrument kernel: when a coarse channel (behavior, box score, symptom report) returns to baseline, a finer channel may still show a widening gap. Engine monitoring should keep at least one high-resolution channel per critical state and let it veto premature all-clear declarations.",
+        "source_operator": "qeeg_beyond_behavior",
+        "telemetry": "high-frequency physiological or tracking series, behavioral summaries, divergence between the two over recovery time"
+      }
+    },
+    {
+      "primitive_id": "s100b_negative_prediction",
+      "name": "A normal S100B level rules out intracranial injury (100 percent accuracy in one pediatric series) even though serum biomarkers cannot yet diagnose concussion",
+      "verbatim_quote": "normal S100B levels predicted the absence of intracranial injury and skull fracture with 100 percent accuracy",
+      "page": "Ch. 3, printed p. 110 (Castellani et al., 2009, 109 children and adolescents)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "S100B is also released extracranially with exercise (marathon runners, hockey players, boxers), rises with age-varying norms, and has a short half-life, so sampling time matters.",
+        "A second pediatric study found only a 90 percent negative predictive value and included more severe injuries."
+      ],
+      "breakdown_regime": "Asymmetric evidence: the marker's validated direction is exclusion of severe pathology, not confirmation of concussion; neuron-specific enolase and cleaved tau showed no diagnostic or prognostic value for mild injury.",
+      "domain": "biomarkers",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "One-sided test kernel: some instruments are valid only as rule-outs. The engine should encode directionality of evidence per signal (rules out, rules in, both, neither) and never let a rule-out instrument's positive result masquerade as confirmation.",
+        "source_operator": "s100b_negative_prediction",
+        "telemetry": "marker values with sampling time post event, age-specific reference ranges, downstream imaging outcomes"
+      }
+    },
+    {
+      "primitive_id": "typical_recovery_window",
+      "name": "Typical recovery is fast but not uniform: 80 to 90 percent resolve within 2 weeks, neuropsychological recovery lags symptom recovery by 2 to 3 days",
+      "verbatim_quote": "In 80 to 90 percent of high-school- and college-age patients, concussion symptoms resolve within 2 weeks without any overt intervention",
+      "page": "Ch. 3, printed p. 154 (McCrea et al., 2004, 2013; McClincy et al., 2006)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Only 10 percent of 570 concussed high school and college athletes took longer than 7 days to recover in the McCrea et al. (2013) cohort.",
+        "High school athletes recover more slowly than college athletes in the first week, with memory still depressed at day 7; no recovery-time literature exists for ages 5 to 12."
+      ],
+      "breakdown_regime": "The 10 to 20 percent tail is where the clinical problem lives; mean recovery statistics conceal the tail, and symptom resolution precedes full cognitive and metabolic recovery.",
+      "domain": "recovery science",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Distribution-not-mean kernel: plan on the recovery distribution and its tail mass, with channel-specific clocks (symptoms, cognition, metabolism resolving on different schedules). The engine should quote return probabilities by day, not a single expected return date.",
+        "source_operator": "typical_recovery_window",
+        "telemetry": "per-case recovery durations by channel, age band, censoring indicators for unresolved cases"
+      }
+    },
+    {
+      "primitive_id": "graded_return_to_play",
+      "name": "Return to play is a six-stage graded protocol gated on staying asymptomatic, with regression one stage on symptom recurrence and a 24-hour retry",
+      "verbatim_quote": "If concussion symptoms reappear, the athlete should revert back to the previous asymptomatic stage and resume the progression after 24 hours",
+      "page": "Ch. 3, printed p. 159 (Table 3-8, stages detailed p. 160)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Stages run from complete rest, through light aerobic exercise below 70 percent of maximum predicted heart rate, sport-specific exercise, non-contact training, full contact practice, to game play.",
+        "Entry requires symptom-free status at rest without medication plus return to baseline or population norm on cognitive testing, judged by reliable change rather than raw scores."
+      ],
+      "breakdown_regime": "The committee notes little empirical evidence for the timing or the graded structure itself; it is consensus practice, and exertion can unmask symptoms in athletes who appear recovered (the exercise stress test).",
+      "domain": "return to play",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Staged re-entry state machine isomorphism: clearance is not binary but a ladder with explicit regression rules and dwell times. Engine availability states (out, limited, full) should follow the same machine, with failed stages sending the athlete back rather than merely delaying advancement.",
+        "source_operator": "graded_return_to_play",
+        "telemetry": "stage entry and exit timestamps, symptom status at each stage, exertion test results"
+      }
+    },
+    {
+      "primitive_id": "pcs_persistence_definition",
+      "name": "Post-concussion syndrome is the persistence of the four-domain symptom constellation beyond the usual recovery period, affecting 10 to 20 percent of cases",
+      "verbatim_quote": "In 10 to 20 percent of individuals, however, concussive symptoms persist for a number of weeks, months, or even years. These individuals may be said to be experiencing post-concussion syndrome (PCS).",
+      "page": "Ch. 4, printed p. 181",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "ICD-10 (F07.2) lists headache, dizziness, fatigue, irritability, concentration and memory difficulty, insomnia, and reduced tolerance to stress; DSM-5 folds persistent cases into neurocognitive disorder due to TBI.",
+        "The symptoms are nonspecific and common without head injury, and they overlap with psychiatric conditions."
+      ],
+      "breakdown_regime": "No agreed duration threshold or biomarker separates prolonged recovery from PCS; the category is a duration-based label on a nonspecific symptom set.",
+      "domain": "prolonged recovery",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Tail-state definition isomorphism: a distinct management regime is triggered by duration in state rather than by a different event type. The engine should likewise switch models when a case crosses a duration threshold (extended absence, recurring symptoms), because the generating process plausibly changes.",
+        "source_operator": "pcs_persistence_definition",
+        "telemetry": "symptom duration per case, domain profile over time, threshold-crossing timestamps"
+      }
+    },
+    {
+      "primitive_id": "prolonged_recovery_predictors",
+      "name": "Early features predict prolonged recovery: on-field dizziness multiplies odds 6.3 fold, and loss of consciousness, amnesia, and high initial symptom load recur across studies",
+      "verbatim_quote": "A study of high school and college athletes with concussions found that loss of consciousness, posttraumatic and retrograde amnesia, and greater symptom severity (an increase of 20 points or more on the Graded Symptom Checklist) within the first 24 hours following injury were associated with longer recoveries (7 or more days) (McCrea et al., 2013).",
+      "page": "Ch. 4, printed p. 182 (McCrea et al., 2013)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "McCrea et al. (2013): loss of consciousness odds ratio 4.2 (95 percent CI 2.1 to 8.2), retrograde amnesia 2.2, posttraumatic amnesia 1.8; a Graded Symptom Checklist rise of 20 or more points within day 1 nearly tripled prolonged-recovery risk.",
+        "Four or more presenting symptoms doubled prolonged-symptom risk in High School RIO data (Chrisman et al., 2013); symptom clusters plus neurocognitive scores together beat either alone (sensitivity 65.22 percent, specificity 80.36 percent)."
+      ],
+      "breakdown_regime": "Predictors conflict across studies: loss of consciousness predicted prolongation in McCrea but not in Chrisman or the Eisenberg emergency department cohort, where absence of loss of consciousness predicted persistence; single-study odds ratios are unstable.",
+      "domain": "prognosis",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Early-window prognostic kernel with conflict handling: features available in the first 24 to 48 hours carry real signal about trajectory class, but individual predictors flip sign across cohorts, so the engine should ensemble them, weight by cohort quality, and expose disagreement instead of hard-coding one study's odds ratios.",
+        "source_operator": "prolonged_recovery_predictors",
+        "telemetry": "first-48-hour feature set per case (presenting symptoms, on-field signs, test scores), realized recovery duration, cohort identifiers"
+      }
+    },
+    {
+      "primitive_id": "subsymptom_exercise_rehab",
+      "name": "Subsymptom-threshold aerobic exercise treats refractory post-concussion syndrome: symptom decline correlates with peak exercise heart rate in the only randomized crossover trial",
+      "verbatim_quote": "The exercise condition was associated with a reduction in symptoms of PCS, and that decline was correlated with peak exercise heart rate",
+      "page": "Ch. 4, printed p. 192 (Leddy et al., 2010, 12 adults with refractory PCS)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A companion functional MRI study found the exercise group's activation during a cognitive task normalized while the flexibility-training group's did not (Leddy et al., 2013).",
+        "This inverts the acute-phase prescription: rest early, dosed exertion late."
+      ],
+      "breakdown_regime": "Twelve adult subjects, far too small to be definitive, and no pediatric trial exists; the dose rule (exercise below the symptom-exacerbation threshold) is a protocol sketch, not a validated prescription.",
+      "domain": "rehabilitation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Phase-dependent intervention kernel: the correct action flips sign by phase (rest in the acute window, progressive load in the persistent phase). Engine policies keyed to availability or form should likewise be phase-indexed, with the phase estimated from time-in-state and response to prior load.",
+        "source_operator": "subsymptom_exercise_rehab",
+        "telemetry": "intervention type and dose per phase, symptom response per session, phase transition markers"
+      }
+    },
+    {
+      "primitive_id": "subconcussive_blood_brain_barrier",
+      "name": "Subconcussive impact load can disrupt the blood-brain barrier: only the highest-impact players showed serum S100B and S100B auto-antibodies, which predicted white matter diffusivity change",
+      "verbatim_quote": "only those players with the most subconcussive head impacts based on self-report and post-game review of the game film had detectable serum levels of S100B and elevated levels of auto-antibodies against S100B",
+      "page": "Ch. 5, printed p. 207 (Marchi et al., 2013, 67 college football players)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Post-season S100B auto-antibodies correlated with impulse control and balance problems in the imaged subset.",
+        "S100B has extracranial sources (including fat cells), which complicates attribution."
+      ],
+      "breakdown_regime": "Very small subsets (15 with paired blood samples, 10 with full imaging follow-up); preliminary evidence, and heading studies in soccer mostly find no neurocognitive effect, so subconcussive harm is impact-type dependent.",
+      "domain": "repetitive impacts",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Sub-threshold accumulation kernel: events below the named-event threshold (no diagnosed concussion) still move a physiological state variable when their count is high. The engine must integrate sub-threshold exposures (minor knocks, high-load plays, short-rest snaps) into cumulative state rather than counting only flagged events.",
+        "source_operator": "subconcussive_blood_brain_barrier",
+        "telemetry": "full impact or workload counts including sub-threshold events, barrier or tissue integrity markers, imaging change over a season"
+      }
+    },
+    {
+      "primitive_id": "depression_dose_response",
+      "name": "Depression risk rises linearly with lifetime concussion count in retired professionals: three or more concussions triple the diagnosis rate",
+      "verbatim_quote": "the authors found an increasing linear relationship between history of concussion and diagnosis of lifetime depression (p < 0.005)",
+      "page": "Ch. 5, printed p. 212 (Guskiewicz et al., 2007, more than 2,500 retired players)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Players with one or two prior concussions were 1.5 times more likely to have been diagnosed with depression; 11.1 percent of respondents reported a depression diagnosis.",
+        "The analysis controlled for age, years since retirement, years played, physical condition, and several comorbidities, but not substance abuse or psychosocial factors."
+      ],
+      "breakdown_regime": "Retrospective self-report in retirees cannot separate concussion effects from career-loss effects; suicidal behavior links are documented for TBI broadly, not established for sports concussion, and no youth data exist.",
+      "domain": "long-term outcomes",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cumulative-dose outcome kernel with long latency: exposure counts predict outcomes decades later with an approximately linear gradient. The engine's career models should carry cumulative exposure as a slow variable with its own outcome heads, distinct from acute availability.",
+        "source_operator": "depression_dose_response",
+        "telemetry": "lifetime exposure counts, long-horizon outcome follow-up, retirement and psychosocial covariates"
+      }
+    },
+    {
+      "primitive_id": "cte_tau_signature",
+      "name": "Chronic traumatic encephalopathy is defined pathologically by tau-positive neurofibrillary tangles and neuropil threads with perivascular accentuation, but its status as a unique disease entity is unresolved",
+      "verbatim_quote": "Microscopically, the consistent findings were the presence of tau-positive NFTs and neuropil threads, most prominently in frontal, parietal, and temporal neocortex",
+      "page": "Ch. 5, printed pp. 221-222 (Omalu et al., 2005, 2006; McKee et al., 2009, 2013)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "APOE e4 is preliminary evidence as a modifier: high-exposure boxers carrying e4 scored 3.9 versus 1.8 on chronic traumatic brain injury scores (Jordan et al., 1997), and e4 was overrepresented in 10 autopsy-verified CTE cases.",
+        "TDP-43 aggregates in some CTE cases link the pathology toward frontotemporal lobar degeneration and motor neuron disease spectra."
+      ],
+      "breakdown_regime": "The evidence base is case reports and case series without proper controls or universally accepted diagnostic criteria; whether CTE is one disease or a spectrum sharing tau pathology is an open question the committee refuses to close.",
+      "domain": "neurodegeneration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Unresolved-entity discipline isomorphism: the report models how to carry a high-salience hypothesis (CTE) as an explicitly unresolved entity with named evidentiary gaps instead of letting salience promote it to fact. The engine should give contested mechanisms the same status: tracked, weighted as uncertain, never silently load-bearing.",
+        "source_operator": "cte_tau_signature",
+        "telemetry": "case ascertainment method, control availability, pathology confirmation status per claimed case"
+      }
+    },
+    {
+      "primitive_id": "sigmoid_injury_risk_curve",
+      "name": "Injury risk is a sigmoid (Weibull-family cumulative) function of mechanical input, so equal input reductions buy wildly unequal risk reductions depending on position on the curve",
+      "verbatim_quote": "a given reduction in the mechanical parameter does not correspond to an equivalent reduction in injury risk due to the sigmoidal shape of the curve",
+      "page": "Ch. 6, printed pp. 243-244 (Figure 6-1)",
+      "latex": "P(\\mathrm{injury} \\mid x) = 1 - \\exp\\left(-\\left(\\frac{x}{\\lambda}\\right)^{k}\\right)",
+      "symbol_and_unit_ledger": {
+        "x": "mechanical input, e.g., head acceleration [g or rad/s^2]",
+        "P(injury | x)": "probability of concussion at input x [probability]",
+        "lambda": "scale parameter of the Weibull cumulative distribution [same units as x]",
+        "k": "shape parameter controlling steepness [dimensionless]"
+      },
+      "assumptions": [
+        "The committee's worked example: a 25 percent acceleration reduction yields roughly 10 to 5 percent risk on the flat part of the curve but 75 to 50 percent on the steep part.",
+        "Existing risk curves derive from collegiate or professional football and do not account for impact direction, concussion history, or biology; none apply directly to youth."
+      ],
+      "breakdown_regime": "Curve parameters are unestimated for youth and for rotational inputs; the shape claim is solid, the numbers are not portable.",
+      "domain": "biomechanics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Sigmoid dose-response kernel: whenever the engine maps a continuous load (impact magnitude, workload, minutes) to a probability, the mapping is a cumulative distribution shape, and marginal interventions must be evaluated at the operating point, not by linear extrapolation.",
+        "source_operator": "sigmoid_injury_risk_curve",
+        "telemetry": "paired load and outcome observations across the full load range, fitted curve family and parameters per population"
+      }
+    },
+    {
+      "primitive_id": "rotational_standards_gap",
+      "name": "Equipment standards and marketing claims outrun the science: standards ignore rotational acceleration, and slip-layer designs cut it about 34 percent in oblique impacts without a validated risk curve to price the benefit",
+      "verbatim_quote": "None of these standards incorporate a measure of rotational acceleration, nor do they include a test protocol that would probe the ability of the helmet to mitigate rotational forces that, as described above, have been shown to cause concussion.",
+      "page": "Ch. 6, printed p. 248",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Helmets do reduce other injuries (skull fracture) and should be promoted for that; bicycle helmet case-control data show 69 percent lower head and brain injury risk, a different endpoint than concussion.",
+        "Low-friction layer systems (MIPS, Suspend-Tech) reduced rotational acceleration 34 percent in oblique bicycle helmet impacts (Hansen et al., 2013); football helmets cut rotational acceleration roughly 30 percent versus a bare test headform."
+      ],
+      "breakdown_regime": "Without an age- and direction-specific injury threshold, no acceleration reduction can be converted into a concussion-risk claim; the committee holds that such marketing claims lack scientific foundation until a validated risk curve exists.",
+      "domain": "prevention engineering",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Metric-coverage kernel: a certification metric that omits the causal variable (rotation) certifies the wrong thing, and percentage improvements on a proxy cannot be priced without the dose-response curve. Engine feature audits should check that every headline metric covers the mechanism it claims to measure.",
+        "source_operator": "rotational_standards_gap",
+        "telemetry": "test protocol variable list versus causal variable list, proxy improvement percentages, availability of a validated outcome curve"
+      }
+    },
+    {
+      "primitive_id": "risk_compensation",
+      "name": "Protective equipment triggers risk compensation: athletes play harder under perceived protection, eroding the device's benefit",
+      "verbatim_quote": "two-thirds of adolescent rugby players reported increased confidence and an ability to play harder when wearing headgear",
+      "page": "Ch. 6, printed p. 255 (Finch et al., 2001; framework from Hedlund, 2000)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Hedlund's four moderators: visibility of the safety change, its effect on the person, motivation, and behavioral control.",
+        "In a recreational hockey sample, 69 percent said they could play more aggressively with facial protection (Woods et al., 2007)."
+      ],
+      "breakdown_regime": "Population-level before and after comparisons confound compensation with other behavioral change; the effect size for concussion specifically is unmeasured.",
+      "domain": "behavioral safety",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feedback-loop isomorphism: interventions on a system with an adaptive agent inside it get partially eaten by behavioral response. Any engine-driven policy output (a flagged risk, a recommended rest) should be modeled with the subject's compensating response, not as a one-way effect.",
+        "source_operator": "risk_compensation",
+        "telemetry": "pre and post intervention behavior intensity measures, perceived-risk surveys, injury rates over the same windows"
+      }
+    },
+    {
+      "primitive_id": "hit_count_threshold_gap",
+      "name": "Exposure budgeting is sound in concept and unfounded in number: no scientific basis exists for a specific impact-count or magnitude threshold per week or season",
+      "verbatim_quote": "While the concept of limiting the number of head impacts is fundamentally sound, the committee found that, based on the evidence available at this time, implementing a specific threshold for the number of impacts or the magnitude of impacts per week or per season is without scientific basis.",
+      "page": "Summary, printed p. 11",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The hit count concept is imported by analogy from pitch counts in youth baseball (Sports Legacy Institute proposal).",
+        "Organizations acted anyway on precaution: Ivy League and PAC-12 limited full-contact practices, Pop Warner followed in 2012, Texas limited school practice contact in 2013."
+      ],
+      "breakdown_regime": "A countervailing concern is recorded: delaying contact may leave athletes without tackling technique learned when skill acquisition is easiest, so the cap itself carries a hypothesized cost.",
+      "domain": "prevention policy",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cap-without-curve kernel: an exposure cap chosen without a dose-response curve is a governance placeholder, and the engine should label it as such (precautionary, uncalibrated) while collecting the exposure and outcome data that would let the cap be estimated rather than asserted.",
+        "source_operator": "hit_count_threshold_gap",
+        "telemetry": "per-athlete impact counts and magnitudes by week and season, outcomes at each exposure level, technique-training history"
+      }
+    },
+    {
+      "primitive_id": "body_checking_age_rule",
+      "name": "Rule design moves injury rates: delaying body checking protects younger players, and lowering the checking age raised checking-related concussion odds about tenfold in 10 to 11 year olds",
+      "verbatim_quote": "These findings support policies that prohibit body checking for younger ice hockey players as a means of reducing the risk of concussions and other injuries",
+      "page": "Ch. 6, printed p. 258",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "After Hockey Canada lowered the legal checking age from 11 to 9, Atom division (ages 10 and 11) emergency visits for checking-related concussion rose from 4 to 22 reported concussions, odds ratio 10.08 (95 percent CI 2.35 to 43.29) (Cusimano et al., 2011).",
+        "USA Hockey delayed legal body checking from 12 to 14 starting with the 2011-2012 season; illegal collisions were 17 percent of collisions and carried modestly higher accelerations (23 g and 1530 rad per second squared versus 21 g and 1417)."
+      ],
+      "breakdown_regime": "Rule effects are sport- and age-specific, and enforcement quality mediates them; 25 percent of high school concussions in one study were tied to illegal play, so a rule on paper is not the rule on the ice.",
+      "domain": "prevention policy",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Policy-as-intervention kernel with natural experiments: rule changes create before and after contrasts the engine can exploit for causal estimates, provided enforcement intensity is measured alongside the rule text. The same applies to league rule changes affecting player load and injury risk in the sports the engine models.",
+        "source_operator": "body_checking_age_rule",
+        "telemetry": "rule change dates by league and age band, enforcement and penalty rates, injury rates before and after"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fcf3eef1576f7169-t1",
+      "think": "The report is a consensus synthesis, not an experiment: an Institute of Medicine and National Research Council committee reviewed the entire youth concussion literature in 2013 and organized it into a layered system that runs from physics to culture. Its machinery starts with a definition problem. Concussion has no biomarker and no universally accepted definition, so the committee adopts the Zurich consensus definition (a brain injury induced by biomechanical forces) and places concussion as a subset of mild traumatic brain injury on a severity spectrum. Everything downstream inherits that label discipline: because the event cannot be measured directly, it must be inferred from a constellation of signs, symptoms, and test results, each with its own error structure. The second layer is measurement. Incidence is expressed per athletic exposure, an opportunity denominator, and the headline national estimate of 1.6 to 3.8 million annual injuries is an explicit scaling argument: only 8 to 19.2 percent of concussions involve loss of consciousness, so the visible cases are multiplied up, and the committee is candid that underreporting makes even that range conservative. Surveillance is named as infrastructure, not bookkeeping: the NCAA and high school systems cover only school athletes, leaving club sports and children under high school age uncounted, which means every rate in the report is conditioned on a coverage map. The third layer is mechanism, and it is the report's scientific core. Biomechanically, the causal variable is tissue deformation, and in the common non-centroidal impact the deformation tracks rotational acceleration, not the linear acceleration that standards and early telemetry systems measured. Thresholds are tissue-specific and endpoint-specific, so no single number separates safe from concussed. Physiologically, impact opens a neurometabolic cascade: indiscriminate potassium and glutamate release, calcium influx, an ATP-funded restoration effort, a brief glucose uptake surge, then a prolonged metabolic depression whose duration scales with injury severity, accompanied by blood flow depression that can outlast symptoms by weeks, axonal transport failure evolving over 6 to 24 hours, and oxidative damage against which the young brain mounts no compensatory antioxidant defense. Development modulates everything: flow and metabolism run far above adult values in childhood, myelination is incomplete, and maturation continues into the mid-20s, so adult parameters are invalid in youth by construction. The fourth layer is time. The cascade defines a window of vulnerability in which a second impact compounds harm, and the experiments show the window is an interval function: repeat injuries at 1-day or 7-day intervals in animals produce deficits lasting a year, at 30-day intervals they do not, and the worst metabolic cumulation sits at a 3-day interval. N-acetylaspartate ratios give the window a measurable shadow in humans, recovering by 30 days after a first concussion and 45 after a second. Recovery itself is a distribution with channel-specific clocks: symptoms resolve within 2 weeks for 80 to 90 percent, cognition lags symptoms by days, metabolism lags further, and a 10 to 20 percent tail persists into post-concussion syndrome, predictable in part from first-48-hour features such as on-field dizziness, amnesia, and symptom load. The fifth layer is intervention, and it is deliberately deflationary. Diagnosis improves by ensembling channels (symptoms, cognition, balance reach 89 to 96 percent sensitivity together) while structural imaging is correctly read as a rule-out instrument only. Management is staged: rest in the acute phase, a six-stage graded return gated on asymptomatic status, and, inverting the prescription, subsymptom-threshold exercise for the refractory tail. Prevention is audited against mechanism: helmets help against fracture, standards ignore rotation, marketing claims are void without a validated sigmoid risk curve, protective gear triggers behavioral risk compensation, exposure caps are conceptually sound but numerically unfounded, and the one intervention with hard outcome numbers is a rule change, the age of body checking. Over all of it sits the cultural layer: athletes conceal symptoms because the group's values reward concealment, so the measurement system itself is adversarial. For a reasoning engine, the transferable asset is this stack discipline: define the event operationally, normalize by exposure, model the latent cascade rather than the visible marker, make hazard a function of interval and history, read every instrument for what its null actually excludes, let dose-response be a curve evaluated at an operating point, and treat human reporting channels as biased sensors with known bias direction. The report breaks where its evidence breaks: almost nothing is measured in children under 13, animal models overshoot concussion severity, the metabolic story is extrapolated from moderate and severe injury, no threshold or biomarker is validated, and its data end in 2013. It knows all of this and says so, which is precisely why its structure, if not its numbers, is safe to build on. The diagnostic layer deserves a closer read because the report quantifies its own instruments. Symptom scales, the field's workhorse, carry sensitivity of 64 to 89 percent and specificity of 91 to 100 percent in the American Academy of Neurology guideline the committee cites, which means the primary channel misses between a tenth and a third of cases. Computerized neurocognitive batteries, adopted at scale for baseline and serial testing, show variable test-retest reliability across studies, and the report preserves the dissenting analysis (Register-Mihalik et al., 2013b) in which score declines, though highly specific, predicted concussion no better than chance at the individual level. The committee's response to this psychometric fragility is methodological rather than technological: use batteries whose components fail differently, interpret change against reliable-change intervals rather than raw scores or percentiles, collect baselines where possible, and let convergent physiology (quantitative EEG diverging through day 8, event-related potentials, metabolic ratios) audit the behavioral channels. That is an ensemble epistemology stated a decade before it became fashionable in applied modeling: no channel is trusted, channels are trusted in combination, and the residual miss rate is published rather than hidden. The same honesty governs the recommendations, which mostly fund measurement (a national surveillance system, objective diagnostic markers, longitudinal cohorts, biomechanical thresholds by age and sex) rather than declare practices, because the committee's own audit showed the evidence could not yet bear the weight of the practices everyone wanted certified.",
+      "retrocausal_genealogy": "The report's ideas descend from a traceable lineage: the Congress of Neurological Surgeons' first definition efforts in 1966; Ommaya and Gennarelli's primate rotation experiments in the 1970s, which established rotational motion as the injurious component; the fluid percussion, weight drop, and controlled cortical impact animal models that let severity be dialed; the Giza and Hovda neurometabolic cascade characterization in the 1990s and 2000s; the Vienna, Prague, and Zurich Concussion in Sport consensus conferences that standardized the definition the committee adopts; CDC Heads Up education; and the 2009 Zackery Lystedt law in Washington State, which converted the science into the education, removal, and clearance template that spread to 49 states and the District of Columbia by the time of writing.",
+      "theory_of_mind": "The committee writes for a reader it believes is acting inside a fragmented system: clinicians, parents, coaches, legislators, and equipment makers each hold one piece of the problem and a vocabulary that does not match the others'. Its model of that reader is someone who will act on whatever certainty is offered, so the report rations certainty, presenting findings as bounded claims and naming the missing evidence beside each one. It assumes the binding constraint is not a single unknown mechanism but the absence of shared definitions, shared denominators, and a culture that lets the science be used, which is why a neuroscience report ends with recommendations about surveillance systems and social norms.",
+      "cross_layer_veto": "The work vetoes several cross-layer shortcuts. Symptom resolution cannot veto the metabolic layer: blood flow and N-acetylaspartate stay depressed after symptoms clear, so a symptom-only all-clear is overruled. A negative structural scan cannot veto the clinical layer, because the instrument cannot see the injury class. A proxy improvement (lower linear acceleration) cannot veto the risk layer without the sigmoid curve and a rotational measurement. A count cap cannot veto the exposure question, because no dose-response basis exists for any specific number. And self-report cannot veto observed impact evidence, because the reporting channel is demonstrably motivated to conceal."
+    }
+  ],
+  "universal_lens": "Read as a general template, the report is a method for reasoning about any harmful event that cannot be observed directly: define it operationally, count it against an exposure denominator, correct the count for the fraction of cases the visible marker captures, model the hidden process the event triggers as a time-evolving latent state, express harm as a nonlinear dose-response curve evaluated where the system actually operates, audit every instrument for what its negative result truly excludes, and assume the humans inside the system will adapt to and game every measurement and protection you install.",
+  "gsi_mapping": "The Galaxy Sports Institute takes the report's infrastructure agenda as its own: surveillance with complete denominators and demographic fields, age-indexed parameters instead of adult extrapolations, interval and history as first-class variables in any injury or availability dataset, and explicit evidentiary status labels that separate what is measured from what is consensus and what is merely marketed. It also takes the cultural finding seriously as a research object: reporting behavior is part of the phenomenon, so studies of athletes must measure the reporting channel itself, including who conceals, why, and how education changes concealment rather than only knowledge.",
+  "gse_mapping": "The Galaxy Sports Edge engine takes the operational kernels: exposure-normalized rates for every workload and injury quantity; a vulnerability function of time since last event and cumulative event history for availability modeling; multi-channel state estimation in which no single signal (least of all self-report) can declare recovery; sigmoid dose-response curves for load-to-risk mappings, with interventions priced at the operating point; and directionality tags on every evidence source marking whether it rules in, rules out, or is silent about the state it touches. Nothing in this mapping concerns wagering; the value is entirely in state estimation, hazard timing, and measurement validity for athlete availability."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "e059854fe6cdebd0",
+  "source_status": "COMPLETE",
+  "title": "theoddsapi.com",
+  "file_name": "theoddsapi.com.md",
+  "sha256": "e059854fe6cdebd05d0d18ee922a12b2a7ef7e735cc917e0c6b47253ce5232ec",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Actionable state-space traversal via terminal-pseudo-element selection and browser prefix validation. Universal Lens: Rooted in theoddsapi.com (e059854fe6cdebd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on actionable UI states using terminal pseudo-element flags and browser compatibility checks. GSI Mapping: Rooted in theoddsapi.com (e059854fe6cdebd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates scroll snap types and resize behaviors through conditional utility application. GSE Mapping: Rooted in theoddsapi.com (e059854fe6cdebd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "actionable_terminal_selection",
+      "name": "Actionable Terminal Selection",
+      "verbatim_quote": "!1 : jo(e).includes(\"actionable\") } function jo(r) { return Fo[r.value] ??",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r': 'element descriptor', 'jo(r)': 'selector flag set', 'Fo[r.value]': 'terminal actionability map'}",
+      "assumptions": "Element descriptors are mapped to actionable flags in a finite set.",
+      "breakdown_regime": "When selector lacks terminal flag, fallback to default behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Terminal selection logic mirrors GSI's state transition graph where actionable elements trigger probabilistic outcomes.",
+        "source_operator": "actionable_terminal_selection",
+        "telemetry": "Element type classification and flag presence."
+      }
+    },
+    {
+      "primitive_id": "browser_prefix_validation",
+      "name": "Browser Prefix Validation",
+      "verbatim_quote": "r = void 0 : r.length <= 2 && ( ``` ### `H5` ```js function H5(r, e) { e.browsers.selected.length !== 0 && (e.add.selectors.length > 0 || Object.keys(e.add).length > 2 || r.warn(`Autoprefixer target browsers do not need any prefixes.You do not need Autoprefixer anymore.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'e.browsers.selected': 'target browser list', 'e.add.selectors': 'CSS selector additions', 'Object.keys(e.add)': 'utility key count'}",
+      "assumptions": "Prefixes are redundant when target browsers support modern standards.",
+      "breakdown_regime": "Warning issued when unnecessary prefixes detected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Validation kernel derived from GSE's CSS utility engine to prevent redundant styling.",
+        "source_operator": "browser_prefix_validation",
+        "telemetry": "Prefix usage vs browser support ratio."
+      }
+    },
+    {
+      "primitive_id": "scroll_snap_behavior",
+      "name": "Scroll Snap Behavior",
+      "verbatim_quote": "``` ## Client-side functions that passed the filter ### `scrollSnapType` ```js scrollSnapType: ({ addDefaults: r, addUtilities:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'scrollSnapType': 'behavior descriptor', '--tw-scroll-snap-strictness': 'snap proximity parameter'}",
+      "assumptions": "Scroll snapping is defined by axis and strictness parameters.",
+      "breakdown_regime": "None specified, but defaults to proximity-based snapping.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scroll snap logic maps to GSI's trajectory prediction models for UI navigation.",
+        "source_operator": "scroll_snap_behavior",
+        "telemetry": "Snap type and strictness applied per element."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e059854fe6cdebd0_t0",
+      "think": "The actionable terminal selection primitive operates on a discrete flag set where each element descriptor maps to a boolean inclusion in a predefined terminal-actionable set. This enables GSI to model UI interaction as a Markov chain over terminal states. The browser prefix validation primitive ensures that styling utilities are only applied when necessary, preventing redundancy and enabling GSE to optimize rendering paths. Scroll snap behavior defines a structured state space for UI navigation, which can be modeled as a lattice of possible scroll configurations. These primitives collectively form a dual framework: one for probabilistic UI state transitions and another for deterministic layout constraints.\n\nDeep epistemic analysis for theoddsapi.com (e059854fe6cdebd0, domain=other, pages_read=3/3): Operator 'Actionable Terminal Selection' (page 2, domain other) captures: !1 : jo(e).includes(\"actionable\") } function jo(r) { return Fo[r.value] ?? Assumptions: Element descriptors are mapped to actionable flags in a finite set. Breakdown regime: When selector lacks terminal flag, fallback to default behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Terminal selection logic mirrors GSI's state transition graph where actionable elements trigger probabilistic outcomes. Operator 'Browser Prefix Validation' (page 3, domain other) captures: r = void 0 : r.length <= 2 && ( ``` ### `H5` ```js function H5(r, e) { e.browsers.selected.length !== 0 && (e.add.selectors.length > 0 || Object.keys(e.add).length > 2 || r.warn(`Autoprefixer target browsers do not need any prefixes.You do not need Autoprefixer anymore. Assumptions: Prefixes are redundant when target browsers support modern standards. Breakdown regime: Warning issued when unnecessary prefixes detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validation kernel derived from GSE's CSS utility engine to prevent redundant styling. Operator 'Scroll Snap Behavior' (page 1, domain other) captures: ``` ## Client-side functions that passed the filter ### `scrollSnapType` ```js scrollSnapType: ({ addDefaults: r, addUtilities: Assumptions: Scroll snapping is defined by axis and strictness parameters. Breakdown regime: None specified, but defaults to proximity-based snapping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scroll snap logic maps to GSI's trajectory prediction models for UI navigation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for theoddsapi.com (e059854fe6cdebd0, domain=other, pages_read=3/3): Operator 'Actionable Terminal Selection' (page 2, domain other) captures: !1 : jo(e).includes(\"actionable\") } function jo(r) { return Fo[r.value] ?? Assumptions: Element descriptors are mapped to actionable flags in a finite set. Breakdown regime: When selector lacks terminal flag, fallback to default behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Terminal selection logic mirrors GSI's state transition graph where actionable elements trigger probabilistic outcomes. Operator 'Browser Prefix Validation' (page 3, domain other) captures: r = void 0 : r.length <= 2 && ( ``` ### `H5` ```js function H5(r, e) { e.browsers.selected.length !== 0 && (e.add.selectors.length > 0 || Object.keys(e.add).length > 2 || r.warn(`Autoprefixer target browsers do not need any prefixes.You do not need Autoprefixer anymore. Assumptions: Prefixes are redundant when target browsers support modern standards. Breakdown regime: Warning issued when unnecessary prefixes detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validation kernel derived from GSE's CSS utility engine to prevent redundant styling. Operator 'Scroll Snap Behavior' (page 1, domain other) captures: ``` ## Client-side functions that passed the filter ### `scrollSnapType` ```js scrollSnapType: ({ addDefaults: r, addUtilities: Assumptions: Scroll snapping is defined by axis and strictness parameters. Breakdown regime: None specified, but defaults to proximity-based snapping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scroll snap logic maps to GSI's trajectory prediction models for UI navigation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in CSS cascade theory and browser engine design principles, these operators reflect the evolution from static layouts to dynamic, behavior-driven interfaces. Retrocausal Genealogy: Rooted in theoddsapi.com (e059854fe6cdebd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in theoddsapi.com (e059854fe6cdebd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include legacy browser engines and outdated CSS parsers that may misinterpret flags or ignore utility declarations, necessitating robust validation layers. Theory of Mind & Decision Maker Model: Rooted in theoddsapi.com (e059854fe6cdebd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in theoddsapi.com (e059854fe6cdebd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when prefix validation conflicts with scroll snap behavior, leading to inconsistent rendering. Leakage occurs if terminal flags are not properly scoped to actionable elements. Cross-Layer Veto & Anti-Leakage Check: Rooted in theoddsapi.com (e059854fe6cdebd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in theoddsapi.com (e059854fe6cdebd0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

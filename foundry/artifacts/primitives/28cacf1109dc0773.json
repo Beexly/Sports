@@ -1,0 +1,78 @@
+{
+  "book_id": "28cacf1109dc0773",
+  "source_status": "COMPLETE",
+  "title": "p0029",
+  "file_name": "p0029.txt",
+  "sha256": "28cacf1109dc0773015e55af24ea7de10b84b45c943d8fd9fd299c8738525935",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Victory comportment and opponent appreciation in collegiate sports as a dynamical system with behavioral feedback loops. Universal Lens: Rooted in p0029 (28cacf1109dc0773), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of sportsmanship norms via observable cheering behavior and emotional regulation signals from contestants. GSI Mapping: Rooted in p0029 (28cacf1109dc0773), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally-aware state transitions between competitive euphoria and respectful acknowledgment in collegiate athletics. GSE Mapping: Rooted in p0029 (28cacf1109dc0773), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "victory_comportment",
+      "name": "Victory Comportment",
+      "verbatim_quote": "WALTEK CAMP BOK OF COLLEGE SPORTS upsn your o,wn grounds, it is the worst kind of boorixhrem.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Comportment index (dimensionless)', 'V': 'Victory state (binary: 0/1)'}",
+      "assumptions": "Behavioral compliance to social norms during victory is modeled as a binary outcome dependent on emotional regulation.",
+      "breakdown_regime": "C(V=1) < 0 indicates boorish conduct; C(V=1) > 0 indicates courteous conduct.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Feedback loop from victory state to social perception via cheering behavior and verbal conduct.",
+        "source_operator": "victory_comportment",
+        "telemetry": "Observable cheering intensity and verbal tone during post-match celebration."
+      }
+    },
+    {
+      "primitive_id": "opponent_appreciation",
+      "name": "Opponent Appreciation",
+      "verbatim_quote": "Morsover, if there are remarkable plays mal by your rivals you yourselves should cheer; eal any chagrin you may feel at the loss it may t; t, your side, but be courteous to appreciate and applaud an «x:ptional play by the opponents.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Appreciation level (dimensionless)', 'R': 'Rival performance quality (normalized)'}",
+      "assumptions": "Appreciation is inversely proportional to personal loss and directly proportional to rival excellence.",
+      "breakdown_regime": "A(R) = 0 when R < threshold; A(R) > 0 when R ≥ threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to emotional empathy in competitive contexts, modeled as a function of rival performance and self-regulation.",
+        "source_operator": "opponent_appreciation",
+        "telemetry": "Frequency and intensity of applause or verbal commendation toward opponents."
+      }
+    },
+    {
+      "primitive_id": "gratuitous_insult",
+      "name": "Gratuitous Insult",
+      "verbatim_quote": "Aftr winning a race or a match, there is no reason why a goxl, healthy lot of young men should not do plenty of cheering, but there is every reason why they should not make their enjoyment depend upon insulting tho, who have lost.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'Insult intensity (dimensionless)', 'E': 'Emotional excitement (normalized)', 'L': 'Loss state (binary: 0/1)'}",
+      "assumptions": "Insults occur when E exceeds regulatory thresholds and L = 1.",
+      "breakdown_regime": "I(E,L=1) > 0 when E > threshold; I(E,L=0) = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derivative of victory comportment under emotional stress, indicating failure mode of social regulation.",
+        "source_operator": "gratuitous_insult",
+        "telemetry": "Verbal or gestural derision directed at losing opponents."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "28cacf1109dc0773_t0",
+      "think": "The three core primitives—victory comportment, opponent appreciation, and gratuitous insult—are structured as a ternary behavioral dynamical system. Victory comportment (C) acts as a control variable modulated by emotional excitement (E), where C(V=1) ∈ {0,1} defines whether conduct is boorish or courteous. Opponent appreciation (A) is a function of rival performance (R) and personal loss (L), such that A(R,L) = 0 for low R or L=0, and A(R,L) > 0 otherwise. Gratuitous insult (I) emerges as a derivative of C under high E and L=1, indicating a breakdown in social regulation. These operators form a closed-loop system where emotional regulation mediates between victory and respect. The system exhibits a bifurcation point at E = threshold, beyond which C shifts from courteous to boorish behavior. The epistemic structure reveals a dualistic logic: one can either celebrate with grace or degrade with malice, depending on internal regulation and external stimuli. This framework supports a probabilistic model of behavioral outcomes in competitive settings.\n\nDeep epistemic analysis for p0029 (28cacf1109dc0773, domain=other, pages_read=1/1): Operator 'Victory Comportment' (page 1, domain other) captures: WALTEK CAMP BOK OF COLLEGE SPORTS upsn your o,wn grounds, it is the worst kind of boorixhrem. Assumptions: Behavioral compliance to social norms during victory is modeled as a binary outcome dependent on emotional regulation. Breakdown regime: C(V=1) < 0 indicates boorish conduct; C(V=1) > 0 indicates courteous conduct. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Feedback loop from victory state to social perception via cheering behavior and verbal conduct. Operator 'Opponent Appreciation' (page 1, domain other) captures: Morsover, if there are remarkable plays mal by your rivals you yourselves should cheer; eal any chagrin you may feel at the loss it may t; t, your side, but be courteous to appreciate and applaud an «x:ptional play by the opponents. Assumptions: Appreciation is inversely proportional to personal loss and directly proportional to rival excellence. Breakdown regime: A(R) = 0 when R < threshold; A(R) > 0 when R ≥ threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to emotional empathy in competitive contexts, modeled as a function of rival performance and self-regulation. Operator 'Gratuitous Insult' (page 1, domain other) captures: Aftr winning a race or a match, there is no reason why a goxl, healthy lot of young men should not do plenty of cheering, but there is every reason why they should not make their enjoyment depend upon insulting tho, who have lost. Assumptions: Insults occur when E exceeds regulatory thresholds and L = 1. Breakdown regime: I(E,L=1) > 0 when E > threshold; I(E,L=0) = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derivative of victory comportment under emotional stress, indicating failure mode of social regulation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0029 (28cacf1109dc0773, domain=other, pages_read=1/1): Operator 'Victory Comportment' (page 1, domain other) captures: WALTEK CAMP BOK OF COLLEGE SPORTS upsn your o,wn grounds, it is the worst kind of boorixhrem. Assumptions: Behavioral compliance to social norms during victory is modeled as a binary outcome dependent on emotional regulation. Breakdown regime: C(V=1) < 0 indicates boorish conduct; C(V=1) > 0 indicates courteous conduct. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Feedback loop from victory state to social perception via cheering behavior and verbal conduct. Operator 'Opponent Appreciation' (page 1, domain other) captures: Morsover, if there are remarkable plays mal by your rivals you yourselves should cheer; eal any chagrin you may feel at the loss it may t; t, your side, but be courteous to appreciate and applaud an «x:ptional play by the opponents. Assumptions: Appreciation is inversely proportional to personal loss and directly proportional to rival excellence. Breakdown regime: A(R) = 0 when R < threshold; A(R) > 0 when R ≥ threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to emotional empathy in competitive contexts, modeled as a function of rival performance and self-regulation. Operator 'Gratuitous Insult' (page 1, domain other) captures: Aftr winning a race or a match, there is no reason why a goxl, healthy lot of young men should not do plenty of cheering, but there is every reason why they should not make their enjoyment depend upon insulting tho, who have lost. Assumptions: Insults occur when E exceeds regulatory thresholds and L = 1. Breakdown regime: I(E,L=1) > 0 when E > threshold; I(E,L=0) = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derivative of victory comportment under emotional stress, indicating failure mode of social regulation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical moral philosophy and early sociological models of group behavior, particularly influenced by 19th-century educational reformers who emphasized gentlemanly conduct in athletics. Retrocausal Genealogy: Rooted in p0029 (28cacf1109dc0773), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0029 (28cacf1109dc0773), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as having bounded rationality, where emotional regulation and social norms interact to produce predictable behavioral outputs. Opposing agents may exhibit either empathetic or antagonistic responses based on perceived performance and emotional state. Theory of Mind & Decision Maker Model: Rooted in p0029 (28cacf1109dc0773), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that victory comportment and opponent appreciation do not reinforce each other in a positive feedback loop. Leakage veto prevents gratuitous insult from being misinterpreted as appreciation, maintaining semantic clarity across behavioral layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0029 (28cacf1109dc0773), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

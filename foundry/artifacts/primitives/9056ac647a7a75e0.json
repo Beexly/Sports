@@ -1,0 +1,78 @@
+{
+  "book_id": "9056ac647a7a75e0",
+  "source_status": "COMPLETE",
+  "title": "ol-drag-calibration",
+  "file_name": "ol-drag-calibration.md",
+  "sha256": "9056ac647a7a75e029671dbc3197f4ed265040ae5daf2f6891f267ebae7d646e",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Offensive line drag models team performance deviation via regression-adjusted tackle absence effects, calibrated across 1069 team-weeks. Universal Lens: Rooted in ol-drag-calibration (9056ac647a7a75e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian point estimation of tackle impact using standard error thresholds; coefficients within 1SE or positive are nullified for robust inference. GSI Mapping: Rooted in ol-drag-calibration (9056ac647a7a75e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions encode tackle availability as binary practice flags; transitions update team performance models weekly based on empirical drift. GSE Mapping: Rooted in ol-drag-calibration (9056ac647a7a75e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "offensive_line_drag",
+      "name": "Offensive Line Drag",
+      "verbatim_quote": "# Offensive line drag, fitted 1069 team-weeks in 2024 and 2025.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'drag_{ij}': 'dimensionless performance deviation for team i at week j', 'n_{\\\\text{team-weeks}}': '1069'}",
+      "assumptions": "Linear relationship between tackle absence and scoring differential; self-comparison baseline per team.",
+      "breakdown_regime": "Coefficients exceeding 7 points standard deviation are shrunk towards zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps tackle absence events to expected scoring changes via regression calibration.",
+        "source_operator": "offensive_line_drag",
+        "telemetry": "Points scored minus opponent's average allowed."
+      }
+    },
+    {
+      "primitive_id": "tackle_absence_coefficient",
+      "name": "Tackle Absence Coefficient",
+      "verbatim_quote": "tackle_out | 129 | -2.65 | 0.91 | -2.61 | -0.1132 | | tackle_dnp | 87",
+      "page": 1,
+      "latex": "\\beta_{\\text{out}} = -2.65 \\pm 0.91",
+      "symbol_and_unit_ledger": "{'\\\\beta_{\\\\text{out}}': 'expected point change due to tackle out', '\\\\sigma_{\\\\beta}': 'standard error of coefficient'}",
+      "assumptions": "Absence effect is linear and additive; modeled via regression.",
+      "breakdown_regime": "Coefficient is set to zero if within 1 SE or positive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's noise-shrinking kernel for small-effect estimates.",
+        "source_operator": "tackle_absence_coefficient",
+        "telemetry": "Observed point differential adjusted by standard error."
+      }
+    },
+    {
+      "primitive_id": "regression_shrinkage",
+      "name": "Regression Shrinkage",
+      "verbatim_quote": "A coefficient noisier than 7 points is pulled toward zero.",
+      "page": 1,
+      "latex": "\\hat{\\beta}_{\\text{shrink}} = \\begin{cases} 0 & \\text{if } |\\beta| > 7 \\\\ \\beta & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'\\\\beta': 'regression coefficient', '\\\\hat{\\\\beta}_{\\\\text{shrink}}': 'shrunk coefficient', '7': 'threshold in points'}",
+      "assumptions": "High variance estimates are unreliable and should be regularized.",
+      "breakdown_regime": "Threshold-based shrinkage applied to noisy estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transition logic applies shrinkage to reduce overfitting.",
+        "source_operator": "regression_shrinkage",
+        "telemetry": "Coefficient magnitude relative to 7-point threshold."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9056ac647a7a75e0_t0",
+      "think": "The core operator 'offensive line drag' is a regression-derived measure of how much a team's scoring deviates when key tackles are absent. It is computed as the difference between actual points scored and what that opponent typically allows. This is modeled over 1069 team-weeks, ensuring statistical robustness. The 'tackle absence coefficient' quantifies the impact of each tackle status (out, dnp, limited) on this deviation. These coefficients are subject to two forms of regularization: first, those within one standard error or positive are set to zero, reflecting Bayesian prior belief in insignificance; second, coefficients exceeding 7 points in absolute value are shrunk toward zero, mitigating noise-induced overestimation. The model assumes self-comparison (each team vs. itself), which removes confounding variables. The failure mode arises from overfitting if too many variables are included without sufficient data, or misclassification of absence tags such as pooling doubtful with out. The system is designed to be retroactively consistent, reading previous week’s results to inform current modeling.\n\nDeep epistemic analysis for ol-drag-calibration (9056ac647a7a75e0, domain=other, pages_read=1/1): Operator 'Offensive Line Drag' (page 1, domain other) captures: # Offensive line drag, fitted 1069 team-weeks in 2024 and 2025. Assumptions: Linear relationship between tackle absence and scoring differential; self-comparison baseline per team. Breakdown regime: Coefficients exceeding 7 points standard deviation are shrunk towards zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps tackle absence events to expected scoring changes via regression calibration. Operator 'Tackle Absence Coefficient' (page 1, domain other) captures: tackle_out | 129 | -2.65 | 0.91 | -2.61 | -0.1132 | | tackle_dnp | 87 Assumptions: Absence effect is linear and additive; modeled via regression. Breakdown regime: Coefficient is set to zero if within 1 SE or positive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's noise-shrinking kernel for small-effect estimates. Operator 'Regression Shrinkage' (page 1, domain other) captures: A coefficient noisier than 7 points is pulled toward zero. Assumptions: High variance estimates are unreliable and should be regularized. Breakdown regime: Threshold-based shrinkage applied to noisy estimates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition logic applies shrinkage to reduce overfitting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ol-drag-calibration (9056ac647a7a75e0, domain=other, pages_read=1/1): Operator 'Offensive Line Drag' (page 1, domain other) captures: # Offensive line drag, fitted 1069 team-weeks in 2024 and 2025. Assumptions: Linear relationship between tackle absence and scoring differential; self-comparison baseline per team. Breakdown regime: Coefficients exceeding 7 points standard deviation are shrunk towards zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps tackle absence events to expected scoring changes via regression calibration. Operator 'Tackle Absence Coefficient' (page 1, domain other) captures: tackle_out | 129 | -2.65 | 0.91 | -2.61 | -0.1132 | | tackle_dnp | 87 Assumptions: Absence effect is linear and additive; modeled via regression. Breakdown regime: Coefficient is set to zero if within 1 SE or positive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's noise-shrinking kernel for small-effect estimates. Operator 'Regression Shrinkage' (page 1, domain other) captures: A coefficient noisier than 7 points is pulled toward zero. Assumptions: High variance estimates are unreliable and should be regularized. Breakdown regime: Threshold-based shrinkage applied to noisy estimates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition logic applies shrinkage to reduce overfitting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical regression analysis and shrinkage estimators introduced by Stein and James-Stein, adapted for sports analytics to reduce variance in small-sample estimates. Retrocausal Genealogy: Rooted in ol-drag-calibration (9056ac647a7a75e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ol-drag-calibration (9056ac647a7a75e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include defensive coordinators who may adjust strategies against known tackle absences, and coaching staff who decide on practice participation. The model assumes rationality in these decisions but does not predict them directly. Theory of Mind & Decision Maker Model: Rooted in ol-drag-calibration (9056ac647a7a75e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by treating 'doubtful' and 'questionable' as equivalent to 'out', preventing redundant variables. Leakage is mitigated by ensuring only 'starting tackle practiced' is used as input, avoiding spurious correlations with injury severity or game plan. Cross-Layer Veto & Anti-Leakage Check: Rooted in ol-drag-calibration (9056ac647a7a75e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "530ed7aa8937222b",
+  "source_status": "COMPLETE",
+  "title": "lane-4-catalog-sweep",
+  "file_name": "lane-4-catalog-sweep.md",
+  "sha256": "530ed7aa8937222b1f34c41aa5f329b932f38a157fca55cfd825990fd8e7f420",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "cuOpt as a GPU-accelerated MILP solver enables deterministic DFS lineup construction via mixed-integer programming, bridging combinatorial optimization with real-time decision engines. Universal Lens: Rooted in lane-4-catalog-sweep (530ed7aa8937222b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "cuOpt's multi-objective exploration maps to GSI's conformal prediction layers, enabling robust uncertainty quantification across lineup exposure and ownership ceilings. GSI Mapping: Rooted in lane-4-catalog-sweep (530ed7aa8937222b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "cuOpt's numerical optimization formulates DFS constraints as state transitions in a stochastic policy graph, supporting dynamic slate generation under budget and correlation bounds. GSE Mapping: Rooted in lane-4-catalog-sweep (530ed7aa8937222b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "cuopt_milp_solver",
+      "name": "Mixed-Integer Linear Programming Solver",
+      "verbatim_quote": "cuOpt family — GPU optimization solvers (MILP / LP / routing) **What it is:** cuOpt is NVIDIA's GPU-accelerated decision-optimization engine with Python, C, gRPC, and REST server APIs.",
+      "page": 1,
+      "latex": "\\min_{x} c^T x \\quad \\text{s.t.} \\quad Ax \\leq b, \\; x \\in \\mathbb{Z}^n",
+      "symbol_and_unit_ledger": "{'x': 'decision vector (dimensionless)', 'c': 'cost coefficients (salary units)', 'A': 'constraint matrix (dimensionless)', 'b': 'right-hand side vector (salary units)'}",
+      "assumptions": "Linear objective and constraints; discrete player selection variables.",
+      "breakdown_regime": "Solver fails when constraint matrix exceeds GPU memory or variable count exceeds MILP limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "cuOpt's MILP formulation mirrors GSE's DFS lineup optimization as a constrained maximization problem over player sets.",
+        "source_operator": "cuopt_milp_solver",
+        "telemetry": "Lineup variance across multiple runs indicates solver convergence."
+      }
+    },
+    {
+      "primitive_id": "cuopt_routing_api",
+      "name": "Vehicle Routing API",
+      "verbatim_quote": "It supports vehicle routing (TSP/VRP/PDP), linear/quadratic programming, and mixed-integer programming (beta).",
+      "page": 1,
+      "latex": "\\min \\sum_{i,j} c_{ij} x_{ij} \\quad \\text{s.t.} \\quad \\sum_j x_{ij} = 1 \\; \\forall i",
+      "symbol_and_unit_ledger": "{'x_{ij}': 'binary assignment variable (dimensionless)', 'c_{ij}': 'cost between nodes (time/salary units)'}",
+      "assumptions": "Fixed node costs; symmetric distance matrix.",
+      "breakdown_regime": "API fails when input graph size exceeds supported VRP limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Routing kernel is abstracted into GSE’s spatial-temporal constraint layer for scheduling and resource allocation.",
+        "source_operator": "cuopt_routing_api",
+        "telemetry": "Route optimality gap measures API performance against known TSP solutions."
+      }
+    },
+    {
+      "primitive_id": "cuopt_multi_objective_exploration",
+      "name": "Multi-Objective Exploration",
+      "verbatim_quote": "cuOpt MILP replaces OR-Tools CP-SAT as a GPU-backed solver for the GSE optimizer lane — deterministic, auditable lineups, and the `cuopt-multi-objective-exploration` skill fits the multi-slate tradeoff surface (ceiling vs floor vs ownership).",
+      "page": 1,
+      "latex": "\\max_{x} f_1(x), \\; \\max_{x} f_2(x), \\; \\ldots, \\; \\max_{x} f_k(x)",
+      "symbol_and_unit_ledger": "{'f_i(x)': 'objective function (ownership/projection units)'}",
+      "assumptions": "Each objective is scalar-valued and independent.",
+      "breakdown_regime": "Exploration fails when objectives are non-monotonic or interdependent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Multi-objective exploration aligns with GSE's multi-slate optimization, where each objective corresponds to a distinct lineup strategy.",
+        "source_operator": "cuopt_multi_objective_exploration",
+        "telemetry": "Pareto front diversity reflects exploration depth across slates."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "530ed7aa8937222b_t0",
+      "think": "cuOpt's core functionality as a GPU-accelerated MILP solver directly maps to GSE's DFS lineup construction, where players are binary decision variables subject to salary and position constraints. The solver's ability to handle large-scale combinatorics in real time enables deterministic lineup generation. Its multi-objective extension supports GSI's probabilistic inference over lineup exposure and ownership, while its routing capabilities provide a derived kernel for scheduling and resource allocation in GSE's operational layer. The API structure supports integration into both GSE's state transition engine and GSI's Bayesian update framework.\n\nDeep epistemic analysis for lane-4-catalog-sweep (530ed7aa8937222b, domain=other, pages_read=4/4): Operator 'Mixed-Integer Linear Programming Solver' (page 1, domain other) captures: cuOpt family — GPU optimization solvers (MILP / LP / routing) **What it is:** cuOpt is NVIDIA's GPU-accelerated decision-optimization engine with Python, C, gRPC, and REST server APIs. Assumptions: Linear objective and constraints; discrete player selection variables. Breakdown regime: Solver fails when constraint matrix exceeds GPU memory or variable count exceeds MILP limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): cuOpt's MILP formulation mirrors GSE's DFS lineup optimization as a constrained maximization problem over player sets. Operator 'Vehicle Routing API' (page 1, domain other) captures: It supports vehicle routing (TSP/VRP/PDP), linear/quadratic programming, and mixed-integer programming (beta). Assumptions: Fixed node costs; symmetric distance matrix. Breakdown regime: API fails when input graph size exceeds supported VRP limits. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Routing kernel is abstracted into GSE’s spatial-temporal constraint layer for scheduling and resource allocation. Operator 'Multi-Objective Exploration' (page 1, domain other) captures: cuOpt MILP replaces OR-Tools CP-SAT as a GPU-backed solver for the GSE optimizer lane — deterministic, auditable lineups, and the `cuopt-multi-objective-exploration` skill fits the multi-slate tradeoff surface (ceiling vs floor vs ownership). Assumptions: Each objective is scalar-valued and independent. Breakdown regime: Exploration fails when objectives are non-monotonic or interdependent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Multi-objective exploration aligns with GSE's multi-slate optimization, where each objective corresponds to a distinct lineup strategy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for lane-4-catalog-sweep (530ed7aa8937222b, domain=other, pages_read=4/4): Operator 'Mixed-Integer Linear Programming Solver' (page 1, domain other) captures: cuOpt family — GPU optimization solvers (MILP / LP / routing) **What it is:** cuOpt is NVIDIA's GPU-accelerated decision-optimization engine with Python, C, gRPC, and REST server APIs. Assumptions: Linear objective and constraints; discrete player selection variables. Breakdown regime: Solver fails when constraint matrix exceeds GPU memory or variable count exceeds MILP limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): cuOpt's MILP formulation mirrors GSE's DFS lineup optimization as a constrained maximization problem over player sets. Operator 'Vehicle Routing API' (page 1, domain other) captures: It supports vehicle routing (TSP/VRP/PDP), linear/quadratic programming, and mixed-integer programming (beta). Assumptions: Fixed node costs; symmetric distance matrix. Breakdown regime: API fails when input graph size exceeds supported VRP limits. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Routing kernel is abstracted into GSE’s spatial-temporal constraint layer for scheduling and resource allocation. Operator 'Multi-Objective Exploration' (page 1, domain other) captures: cuOpt MILP replaces OR-Tools CP-SAT as a GPU-backed solver for the GSE optimizer lane — deterministic, auditable lineups, and the `cuopt-multi-objective-exploration` skill fits the multi-slate tradeoff surface (ceiling vs floor vs ownership). Assumptions: Each objective is scalar-valued and independent. Breakdown regime: Exploration fails when objectives are non-monotonic or interdependent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Multi-objective exploration aligns with GSE's multi-slate optimization, where each objective corresponds to a distinct lineup strategy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical operations research and integer programming theory, cuOpt extends the legacy of OR-Tools CP-SAT with GPU acceleration, enabling scalable combinatorial optimization for modern AI systems. Retrocausal Genealogy: Rooted in lane-4-catalog-sweep (530ed7aa8937222b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in lane-4-catalog-sweep (530ed7aa8937222b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the optimizer (seeking maximum projection) and the constraint system (enforcing salary and exposure caps). cuOpt balances these by solving a dual problem that minimizes deviation from optimal strategies. Theory of Mind & Decision Maker Model: Rooted in lane-4-catalog-sweep (530ed7aa8937222b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "cuOpt's routing and optimization layers must remain decoupled from GSE's video generation pipeline due to domain mismatch. Any attempt to use routing logic for video editing would violate the HARD VIDEO RULE and introduce leakage. Cross-Layer Veto & Anti-Leakage Check: Rooted in lane-4-catalog-sweep (530ed7aa8937222b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

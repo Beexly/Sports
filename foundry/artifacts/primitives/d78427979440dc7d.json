@@ -1,0 +1,803 @@
+{
+ "book_id": "d78427979440dc7d",
+ "source_status": "COMPLETE",
+ "source_note": "Daniel Jurafsky (Stanford University) and James H. Martin (University of Colorado at Boulder), Speech and Language Processing: An Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition with Language Models, third edition draft. Title page in the text: Copyright 2026, Draft of August 19, 2026. Local file: books-d-models/JurafskyMartin-2026-SpeechAndLanguageProcessing-3edDraft.pdf (the tasking named a 2023 file; the actual library file is the 2026 draft, and this correction is recorded here). Size 26,506,144 bytes; full sha256 d78427979440dc7d6e07f854a9d7d178277d1036840ac1dbd68c529868794e31; book_id is the first 16 hex of that digest over (str(size) + PDF bytes). Extracted text: 3,002,258 bytes, about 37.5k lines, generally clean prose with known extraction artifacts: margin glosses interleaved mid-sentence, occasional mid-word space breaks, embedded LaTeX source in math regions, and page headers breaking some sentences. All verbatim quotes were chosen from clean single-page prose spans and verified as contiguous substrings of the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "language_model_next_token_distribution",
+   "name": "A language model assigns a probability distribution over possible next words given a context of previous words",
+   "verbatim_quote": "A language model is a computational system that can predict the next word from previous words.",
+   "page": "Chapter 1 (Introduction), language model definition passage, Fig. 1.1",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A sequence can be scored one token at a time from left to right",
+    "The context (prefix) is treated as given and fixed when the next-token distribution is computed"
+   ],
+   "breakdown_regime": "The definition alone says nothing about how the distribution is estimated; a model can satisfy it and still be badly calibrated or trained on contaminated data",
+   "domain": "language modeling foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every forecasting problem as next-event prediction: given an ordered context of prior observations, it must emit a full probability distribution over what happens next, not a single point call. Any engine component that outputs only a label without a distribution fails this primitive and is sent back for a distributional output.",
+    "source_operator": "language_model_next_token_distribution",
+    "telemetry": "Ordered event sequences with timestamps; the empirical next-event frequencies that the predicted distributions are scored against"
+   }
+  },
+  {
+   "primitive_id": "scaling_laws_compute_optimal_frontier",
+   "name": "Scaling laws: at fixed compute C, optimal parameter count and optimal training tokens both grow as the square root of C (Hoffmann et al. 2022)",
+   "verbatim_quote": "Hoffmann et al. (2022) showed that for a fixed compute cost C the number of parameters N, and the number of training data tokens D, should go up roughly equally as a power law of C",
+   "page": "Chapter 1, scaling laws passage, Eq. (1.1)",
+   "latex": "N_{opt} \\propto C^{1/2}, \\quad D_{opt} \\propto C^{1/2}",
+   "symbol_and_unit_ledger": {
+    "N_opt": "compute-optimal number of model parameters (count)",
+    "D_opt": "compute-optimal number of training tokens (count)",
+    "C": "training compute budget (FLOPs)"
+   },
+   "assumptions": [
+    "Compute is the binding constraint and can be traded between model size and data size",
+    "The fitted power law exponents (about 1/2 and 1/2) are empirical regularities from the Hoffmann et al. 2022 fit, not theorems"
+   ],
+   "breakdown_regime": "Breaks when the data supply is exhausted or low quality, when inference cost dominates training cost, or when the regime changes (new architectures, retrieval, test-time compute) so the fitted frontier no longer applies",
+   "domain": "model scaling and resource allocation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine budgets its own growth with this frontier: when compute or ingestion capacity increases, model capacity and corpus size are scaled together rather than one being starved. It also vetoes naive bigger-is-better claims: a capacity increase without a matching data increase is predicted, by the law itself, to be compute-suboptimal.",
+    "source_operator": "scaling_laws_compute_optimal_frontier",
+    "telemetry": "Training and inference compute logs (FLOPs or GPU hours), parameter counts, corpus token counts, and measured loss at each scale"
+   }
+  },
+  {
+   "primitive_id": "data_contamination_eval_integrity",
+   "name": "Data contamination: web-trained models may absorb benchmark test items into training, so evaluation on those items overstates performance",
+   "verbatim_quote": "Since large language models train on the web, and many of these tests are on the web, models may well incorporate some MMLU questions into their training.",
+   "page": "Chapter 1, Section 1.9 (Evaluating Large Language Models)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Training corpora are web-scale and not fully auditable item by item",
+    "Benchmarks are public and therefore crawlable"
+   ],
+   "breakdown_regime": "Decontamination by string matching misses paraphrases and near duplicates; a clean overlap report does not prove a benchmark is uncontaminated",
+   "domain": "evaluation integrity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every evaluation set the engine uses gets a contamination audit before its scores are trusted: items are checked against training corpora, and any metric computed on items that leaked into training is labeled overstated and quarantined from promotion decisions. This is a standing veto on backtest and benchmark numbers alike.",
+    "source_operator": "data_contamination_eval_integrity",
+    "telemetry": "Overlap reports between evaluation items and training corpora; provenance timestamps showing whether an item existed before the training cutoff"
+   }
+  },
+  {
+   "primitive_id": "goodharts_law_proxy_metrics",
+   "name": "Goodhart's Law: when a measure becomes a target, it ceases to be a good measure",
+   "verbatim_quote": "When a measure becomes a target, it ceases to be a good measure.",
+   "page": "Chapter 1, Section 1.9 (proxy measures discussion)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The metric is a proxy for a real objective, not the objective itself",
+    "Developers have enough freedom in tuning that they can move the proxy without moving the objective"
+   ],
+   "breakdown_regime": "The law does not say which proxies will degrade or how fast; some metrics stay informative under mild optimization pressure and fail only under aggressive tuning",
+   "domain": "evaluation and incentives",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every headline metric as a proxy under Goodhart pressure: once a score is used to promote or publish, a second, independent measurement is required before the gain is believed, and sudden proxy improvements trigger an audit for what the tuning actually changed rather than a celebration.",
+    "source_operator": "goodharts_law_proxy_metrics",
+    "telemetry": "Paired proxy and held-out objective measurements over time; audit logs of what changed in the pipeline when a metric jumped"
+   }
+  },
+  {
+   "primitive_id": "bpe_byte_pair_encoding_tokenization",
+   "name": "Byte pair encoding: iteratively merge the most frequent adjacent token pair, k merges producing k novel tokens on top of the character set",
+   "verbatim_quote": "The algorithm continues to count and merge, creating new longer and longer character strings, until k merges have been done creating k novel tokens; k is thus a parameter of the algorithm.",
+   "page": "Chapter 2, Section 2.4 (BPE tokenization algorithm)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Merges are learned from a training corpus and then applied greedily in learned order at encoding time",
+    "In practice merges are not applied across word boundaries"
+   ],
+   "breakdown_regime": "Vocabulary size k is a hard tradeoff: too small fragments words into long sequences, too large wastes parameters on rare strings; a tokenizer fitted on one domain or language mis-segments another",
+   "domain": "tokenization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine applies the same merge logic to its own categorical streams: frequent co-occurring event patterns are merged into single composite tokens so the sequence model spends capacity on meaningful units instead of raw fragments. Tokenizer choice is versioned, because scores computed under different tokenizations are not comparable.",
+    "source_operator": "bpe_byte_pair_encoding_tokenization",
+    "telemetry": "Frequency counts of adjacent symbol pairs in event streams; vocabulary size and average sequence length before and after merging"
+   }
+  },
+  {
+   "primitive_id": "minimum_edit_distance_alignment",
+   "name": "Minimum edit distance: the minimum number of insertions, deletions and substitutions transforming one string into another, computed by dynamic programming and yielding an alignment",
+   "verbatim_quote": "In speech recognition, minimum edit distance alignment is used to compute the word error rate (Chapter 16).",
+   "page": "Chapter 2, Section 2.9 (Minimum Edit Distance), Eqs. (2.19)-(2.20)",
+   "latex": "\\mathrm{dist}[i][j] = \\min\\big(\\mathrm{dist}[i-1][j] + 1,\\ \\mathrm{dist}[i][j-1] + 1,\\ \\mathrm{dist}[i-1][j-1] + \\mathrm{subcost}(x_i, y_j)\\big)",
+   "symbol_and_unit_ledger": {
+    "dist[i][j]": "edit distance between the first i characters of the source and first j of the target (operation count)",
+    "subcost(x_i, y_j)": "cost of substituting character x_i by y_j; 0 if identical, typically 1 otherwise (operation count)"
+   },
+   "assumptions": [
+    "Each edit operation carries a cost, with substitution of a character for itself costing 0",
+    "The optimal alignment is recovered by backtracing the dynamic programming table"
+   ],
+   "breakdown_regime": "Unit costs treat all errors as equal, which is wrong when some substitutions are far more likely than others; weighted costs fix this only if the weights are themselves estimated well",
+   "domain": "string algorithms and alignment",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine uses edit distance as its generic sequence-divergence measure: two event sequences, two forecast trajectories, or a predicted and an observed transcript are compared by cheapest alignment, and the alignment itself (not just the count) shows exactly where they diverged.",
+    "source_operator": "minimum_edit_distance_alignment",
+    "telemetry": "Paired sequences to compare (hypothesis vs reference); substitution cost tables estimated from observed confusion rates"
+   }
+  },
+  {
+   "primitive_id": "chain_rule_sequence_probability",
+   "name": "Chain rule: the joint probability of a sequence factors into a product of conditional next-token probabilities",
+   "verbatim_quote": "The chain rule shows the link between computing the joint probability of a sequence and computing the conditional probability of a word given previous words.",
+   "page": "Chapter 3, Section 3.1, Eq. (3.4), printed p. 70",
+   "latex": "P(w_{1:n}) = \\prod_{k=1}^{n} P(w_k \\mid w_{1:k-1})",
+   "symbol_and_unit_ledger": {
+    "P(w_{1:n})": "joint probability of the token sequence w_1 to w_n (probability, unitless)",
+    "P(w_k | w_{1:k-1})": "conditional probability of token w_k given all preceding tokens (probability, unitless)",
+    "n": "sequence length (tokens)"
+   },
+   "assumptions": [
+    "The factorization is exact; no independence assumption is made at this step",
+    "Each conditional must still be estimated from data, which is where approximation enters"
+   ],
+   "breakdown_regime": "Exact conditionals on full histories are inestimable from finite data because most histories never occur; the chain rule defers, but does not solve, the sparsity problem",
+   "domain": "probability of sequences",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's scoring identity: the probability of any complete scenario is the product of its step-by-step conditional probabilities, so scenario scores decompose into per-step contributions that can be individually audited, and a scenario can be rejected by finding the single implausible step.",
+    "source_operator": "chain_rule_sequence_probability",
+    "telemetry": "Per-step conditional probabilities logged for each generated or evaluated scenario; step-level audit trails"
+   }
+  },
+  {
+   "primitive_id": "markov_ngram_approximation",
+   "name": "Markov assumption and n-gram models: approximate the full history by the last few tokens, e.g. a bigram conditions only on the preceding word",
+   "verbatim_quote": "The intuition of the n-gram model is that instead of computing the probability of a word given its entire history, we can approximate the history by just the last few words.",
+   "page": "Chapter 3, Section 3.1.1 (The Markov assumption)",
+   "latex": "P(w_n \\mid w_{1:n-1}) \\approx P(w_n \\mid w_{n-1})",
+   "symbol_and_unit_ledger": {
+    "P(w_n | w_{1:n-1})": "probability of word w_n given its entire history (probability, unitless)",
+    "P(w_n | w_{n-1})": "bigram approximation conditioning only on the immediately preceding word (probability, unitless)"
+   },
+   "assumptions": [
+    "The recent context is assumed to carry nearly all the predictive information in the full history",
+    "Counts for the shortened contexts are assumed frequent enough to estimate reliably"
+   ],
+   "breakdown_regime": "Fails on long-range dependencies: agreement, topic, and commitments made far earlier in the sequence are invisible to a short window, and the approximation error is silent rather than flagged",
+   "domain": "sequence modeling approximation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps an explicit context-window budget for every predictor: each model declares how much history it conditions on, and long-range signals must enter through a separate channel (retrieval, state features) rather than being assumed present. A short-window model is never allowed to silently stand in for a full-history judgment.",
+    "source_operator": "markov_ngram_approximation",
+    "telemetry": "Declared context length per model; accuracy sliced by distance between a cue and the event it predicts"
+   }
+  },
+  {
+   "primitive_id": "laplace_add_one_smoothing",
+   "name": "Laplace (add-one) smoothing: add one to every n-gram count before normalizing, so unseen events get small nonzero probability instead of zero",
+   "verbatim_quote": "The simplest way to do smoothing is to add one to all the n-gram counts, before we normalize them into probabilities.",
+   "page": "Chapter 3, Section 3.6.1 (Laplace Smoothing), Eq. (3.24)",
+   "latex": "P_{\\mathrm{Laplace}}(w_i \\mid w_{i-1}) = \\frac{c(w_{i-1}, w_i) + 1}{c(w_{i-1}) + V}",
+   "symbol_and_unit_ledger": {
+    "c(w_{i-1}, w_i)": "observed count of the bigram (count)",
+    "c(w_{i-1})": "observed count of the context word (count)",
+    "V": "vocabulary size (number of word types)"
+   },
+   "assumptions": [
+    "Every vocabulary item is treated as possible in every context",
+    "One pseudo-count is a prior strength choice, not a measured quantity"
+   ],
+   "breakdown_regime": "Add-one over-allocates probability mass to unseen events when the vocabulary is large, distorting the estimates for seen events; add-k, interpolation and backoff exist because Laplace performs poorly in modern models",
+   "domain": "probability estimation under sparsity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine never emits a hard zero probability for an event merely because it is absent from the training sample: every categorical estimate carries a smoothing prior, and the prior strength is a declared, tunable parameter. Zero-probability outputs are treated as defects because they make downstream products and log-scores explode.",
+    "source_operator": "laplace_add_one_smoothing",
+    "telemetry": "Count tables with zero cells flagged; the smoothing constant in force for each estimator; probability mass assigned to unseen events"
+   }
+  },
+  {
+   "primitive_id": "entropy_lower_bound_on_coding",
+   "name": "Entropy: H(X) is the expected surprisal of a random variable and a lower bound on the bits needed to encode it optimally",
+   "verbatim_quote": "One intuitive way to think about entropy is as a lower bound on the number of bits it would take to encode a certain decision or piece of information in the optimal coding scheme.",
+   "page": "Chapter 3, Section 3.7, Eq. (3.32)",
+   "latex": "H(X) = -\\sum_{x \\in \\chi} p(x) \\log_2 p(x)",
+   "symbol_and_unit_ledger": {
+    "H(X)": "entropy of random variable X (bits, with log base 2)",
+    "p(x)": "probability of outcome x (probability, unitless)",
+    "chi": "the outcome set of X"
+   },
+   "assumptions": [
+    "The probability function p is the true (or assumed true) distribution",
+    "The bound is achieved only by a code matched to that distribution"
+   ],
+   "breakdown_regime": "Entropy computed under a wrong distribution understates the real coding cost; cross-entropy, not entropy, is what a mismatched model actually pays",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Entropy is the engine's uncertainty yardstick: every predictive distribution is reported with its entropy so that a confident prediction and a diffuse one are distinguishable at a glance, and entropy changes over time expose when a domain is becoming more or less predictable.",
+    "source_operator": "entropy_lower_bound_on_coding",
+    "telemetry": "Predictive distributions per event; their entropies tracked over time and compared across domains"
+   }
+  },
+  {
+   "primitive_id": "sigmoid_logistic_function",
+   "name": "Sigmoid (logistic) function: squashes a real-valued weighted sum into (0,1) so it can be read as a probability; nearly linear near 0, saturating at the extremes",
+   "verbatim_quote": "It is nearly linear around 0 but outlier values get squashed toward 0 or 1.",
+   "page": "Chapter 4, Section 4.2, Eq. (4.4), Fig. 4.1 (printed p. 96)",
+   "latex": "\\sigma(z) = \\frac{1}{1 + \\exp(-z)}",
+   "symbol_and_unit_ledger": {
+    "z": "the logit, a real-valued weighted sum w dot x plus bias b (log-odds units)",
+    "sigma(z)": "squashed value in (0,1), read as P(y = 1 | x) (probability, unitless)"
+   },
+   "assumptions": [
+    "The input z is interpreted as a log odds, since the logit function (inverse sigmoid) is the log of the odds ratio",
+    "A probability above 0.5 is the default decision boundary for the positive class"
+   ],
+   "breakdown_regime": "Saturation kills gradients for extreme z (the vanishing gradient problem in sigmoid networks), and a 0.5 threshold is arbitrary whenever the costs of the two error types differ",
+   "domain": "classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every binary judgment in the engine passes through an explicit squashing step with a declared threshold: raw evidence scores are converted to probabilities by a fitted sigmoid, and the decision threshold is set by the cost of each error type rather than defaulting to 0.5.",
+    "source_operator": "sigmoid_logistic_function",
+    "telemetry": "Raw evidence scores with fitted sigmoid parameters; decision thresholds and the error-cost assumptions behind them"
+   }
+  },
+  {
+   "primitive_id": "softmax_distribution_over_classes",
+   "name": "Softmax: exponentiates and normalizes a vector of arbitrary scores into a probability distribution over K classes, generalizing the sigmoid",
+   "verbatim_quote": "The softmax function takes a vector z = [z1 , z2 , ..., zK ] of K arbitrary values and maps them to a probability distribution, with each value in the range [0,1], and all the values summing to 1.",
+   "page": "Chapter 4, Section 4.7.1, Eq. (4.33)",
+   "latex": "\\mathrm{softmax}(z_i) = \\frac{\\exp(z_i)}{\\sum_{j=1}^{K} \\exp(z_j)}",
+   "symbol_and_unit_ledger": {
+    "z_i": "score (logit) for class i (real number)",
+    "K": "number of classes (count)",
+    "softmax(z_i)": "probability assigned to class i (probability, unitless, sums to 1 over i)"
+   },
+   "assumptions": [
+    "Classes are mutually exclusive, so the outputs must sum to 1",
+    "Scores are defined up to an additive constant, which is removed for numerical stability in practice"
+   ],
+   "breakdown_regime": "Softmax probabilities are not calibrated by construction; a model can be confidently wrong, and temperature or other calibration must be fitted separately on held-out data",
+   "domain": "classification and probability normalization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Softmax is the engine's normalization contract for mutually exclusive outcomes: competing hypotheses receive scores, the scores are normalized into a proper distribution, and calibration is then fitted and checked separately instead of being assumed from the normalization.",
+    "source_operator": "softmax_distribution_over_classes",
+    "telemetry": "Class scores and normalized probabilities per decision; calibration curves fitted on held-out outcomes"
+   }
+  },
+  {
+   "primitive_id": "precision_recall_f_measure",
+   "name": "Precision, recall and F-measure: evaluate a detector by the fraction of its positive calls that are right and the fraction of real positives it finds, exposing useless high-accuracy classifiers",
+   "verbatim_quote": "Precision measures the percentage of the items that the system detected (i.e., the system labeled as positive) that are in fact positive (i.e., are positive according to the human gold labels).",
+   "page": "Chapter 4, Section 4.9 (Evaluation: Precision, Recall, F-measure), printed pp. 113-114",
+   "latex": "\\mathrm{Precision} = \\frac{TP}{TP + FP}, \\quad \\mathrm{Recall} = \\frac{TP}{TP + FN}, \\quad F_1 = \\frac{2PR}{P + R}",
+   "symbol_and_unit_ledger": {
+    "TP": "true positives (count)",
+    "FP": "false positives (count)",
+    "FN": "false negatives (count)",
+    "P, R": "precision and recall (fractions, unitless)"
+   },
+   "assumptions": [
+    "Gold labels exist and are trusted for the evaluation set",
+    "The positive class is the class of interest; the measures are asymmetric by design"
+   ],
+   "breakdown_regime": "Accuracy alone hides total failure on rare classes (the book's nothing-is-pie classifier scores 99.99 percent accuracy with recall 0); precision and recall can also be gamed in opposite directions, so both must be reported together",
+   "domain": "evaluation of classifiers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "No engine signal is reported by accuracy alone: every detector ships with precision and recall on a labeled set, so a signal that fires rarely but correctly is distinguishable from one that fires constantly, and a signal with zero recall is caught even when headline accuracy looks excellent.",
+    "source_operator": "precision_recall_f_measure",
+    "telemetry": "Confusion counts (TP, FP, FN, TN) per signal on labeled evaluation sets; precision and recall tracked per release"
+   }
+  },
+  {
+   "primitive_id": "cosine_similarity_embeddings",
+   "name": "Cosine similarity: similarity between vectors as the cosine of the angle between them, 1 for same direction, 0 for orthogonal, -1 for opposite",
+   "verbatim_quote": "The cosine value ranges from 1 for vectors pointing in the same direction, through 0 for orthogonal vectors, to -1 for vectors pointing in opposite directions.",
+   "page": "Chapter 5, Eq. (5.10)",
+   "latex": "\\cos(v, w) = \\frac{v \\cdot w}{|v|\\,|w|}",
+   "symbol_and_unit_ledger": {
+    "v, w": "embedding vectors being compared (dimension d)",
+    "v dot w": "dot product of the two vectors",
+    "|v|, |w|": "Euclidean lengths of the vectors"
+   },
+   "assumptions": [
+    "Direction, not magnitude, is what carries similarity; pre-normalizing to unit vectors makes the dot product equal the cosine",
+    "The embedding space is assumed to place semantically similar items at small angles"
+   ],
+   "breakdown_regime": "Cosine ignores magnitude even when magnitude carries information (such as frequency or confidence), and similarity in a poorly trained space reflects corpus artifacts rather than meaning",
+   "domain": "representation and similarity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Cosine similarity is the engine's retrieval and matching primitive: situations, documents and entities are embedded once, and nearest neighbors by cosine are the candidates every downstream reasoner starts from. The score is always reported as a ranking device, never as a probability.",
+    "source_operator": "cosine_similarity_embeddings",
+    "telemetry": "Embedding vectors for stored items; cosine-ranked neighbor lists with their scores for audit"
+   }
+  },
+  {
+   "primitive_id": "skipgram_negative_sampling_sgns",
+   "name": "Skip-gram with negative sampling (SGNS): learn embeddings by discriminating true word-context pairs from noise pairs drawn from a smoothed unigram distribution with alpha = 0.75",
+   "verbatim_quote": "In this section we introduce one method for computing embeddings: skip-gram SGNS with negative sampling, sometimes called SGNS.",
+   "page": "Chapter 5, Sections 5.5.1-5.5.2, Eqs. (5.15), (5.19)",
+   "latex": "P(+ \\mid w, c) = \\sigma(\\mathbf{c} \\cdot \\mathbf{w})",
+   "symbol_and_unit_ledger": {
+    "P(+ | w, c)": "probability that the pair (w, c) is a true corpus pair rather than a noise pair (probability, unitless)",
+    "c dot w": "dot product of context and target embedding vectors",
+    "sigma": "the sigmoid function"
+   },
+   "assumptions": [
+    "Noise pairs are drawn from the unigram distribution raised to alpha = 0.75, which boosts rare words relative to raw frequency",
+    "Two embedding matrices are learned, a target matrix W and a context matrix C"
+   ],
+   "breakdown_regime": "Static embeddings assign one vector per word type, so polysemy is collapsed; the noise distribution and window size are heuristics whose best values shift by corpus and task",
+   "domain": "representation learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine learns entity embeddings the SGNS way wherever labeled pairs are scarce: real co-occurrences are positives, sampled non-occurrences are negatives, and the sampling distribution is deliberately smoothed so rare entities get usable vectors instead of being drowned by frequent ones.",
+    "source_operator": "skipgram_negative_sampling_sgns",
+    "telemetry": "Co-occurrence counts for positive pairs; the noise distribution and its alpha; learned target and context embedding matrices"
+   }
+  },
+  {
+   "primitive_id": "xor_linear_separability_hidden_layers",
+   "name": "XOR is not linearly separable, so a single linear unit cannot compute it; layered networks with hidden units can, which is the founding argument for depth",
+   "verbatim_quote": "We say that XOR is not a linearly separable function.",
+   "page": "Chapter 6, Section 6.2 (The XOR problem)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A single unit computes a linear threshold over its inputs, i.e. one straight decision boundary",
+    "The XOR positives (01, 10) and negatives (00, 11) cannot be split by any single line"
+   ],
+   "breakdown_regime": "Linear inseparability is a statement about one unit, not about the problem being hard; two layers of ReLU units compute XOR easily, so the result argues for architecture, not for problem difficulty",
+   "domain": "neural network theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine applies the separability test before trusting any linear readout: if the target pattern is an interaction (the effect of A depends on the value of B), a linear scorer is structurally incapable of representing it, and the model must route that pattern through a nonlinear layer or an explicit interaction feature.",
+    "source_operator": "xor_linear_separability_hidden_layers",
+    "telemetry": "Interaction diagnostics on scored patterns; comparisons of linear versus layered model error on the same targets"
+   }
+  },
+  {
+   "primitive_id": "backpropagation_computation_graphs",
+   "name": "Backpropagation is backward differentiation on a computation graph: each node multiplies its upstream gradient by its local gradient and passes the result downstream via the chain rule",
+   "verbatim_quote": "A computation graph is a representation of the process of computing a mathematical expression, in which the computation is broken down into separate operations, each of which is modeled as a node in a graph.",
+   "page": "Chapter 6, Sections 6.6.2-6.6.3 (Computation Graphs), Eqs. (6.31)-(6.34)",
+   "latex": "\\frac{\\partial L}{\\partial x} = \\frac{\\partial L}{\\partial z} \\cdot \\frac{\\partial z}{\\partial x}",
+   "symbol_and_unit_ledger": {
+    "L": "loss at the graph output (loss units)",
+    "z": "an intermediate node value on the path from x to L",
+    "partial L / partial x": "gradient of the loss with respect to input or parameter x"
+   },
+   "assumptions": [
+    "Every operation in the graph is differentiable (or given a usable subgradient, as with ReLU)",
+    "Intermediate values from the forward pass are stored so local gradients can be evaluated in the backward pass"
+   ],
+   "breakdown_regime": "Deep chains of small local gradients vanish and chains of large ones explode, so credit assignment degrades with depth unless activations, initialization and normalization are chosen to keep gradients near unit scale",
+   "domain": "optimization and credit assignment",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine keeps its own reasoning as an explicit graph of intermediate quantities for the same reason: when an output is wrong, the error can be propagated back node by node to the exact intermediate judgment that caused it, instead of the whole pipeline being retrained or blamed as a unit.",
+    "source_operator": "backpropagation_computation_graphs",
+    "telemetry": "Intermediate values and local sensitivities for each stage of a prediction; error attribution reports after graded outcomes"
+   }
+  },
+  {
+   "primitive_id": "dropout_regularization",
+   "name": "Dropout: during training, randomly zero each unit's output with probability p (renormalizing the rest), which prevents co-adaptation and overfitting",
+   "verbatim_quote": "randomly dropping some units and their connections from the network during training",
+   "page": "Chapter 6, Section 6.6 (Training Neural Nets), dropout passage",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The drop probability p is a hyperparameter chosen before training",
+    "Dropout is applied during training; at inference the full network is used with the training-time renormalization convention"
+   ],
+   "breakdown_regime": "Too high a p underfits and slows training; dropout also interacts with normalization layers, and its noise is not a substitute for more data when the training set is tiny",
+   "domain": "regularization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine stress-tests its own pipelines by ablation in the dropout spirit: components are randomly removed during evaluation runs, and a conclusion that collapses when one component is dropped is flagged as fragile rather than robust, however good its full-pipeline score looks.",
+    "source_operator": "dropout_regularization",
+    "telemetry": "Ablation schedules per evaluation run; performance deltas between full and ablated configurations"
+   }
+  },
+  {
+   "primitive_id": "self_attention_scaled_dot_product",
+   "name": "Self-attention: each token's representation is a weighted sum of value vectors, with weights from scaled dot products between its query and all keys, the scaling by sqrt(d_k) keeping the softmax out of saturation",
+   "verbatim_quote": "Attention can be thought of as a way to build contextual representations of a token's meaning by attending to and integrating information from surrounding tokens, helping the model learn how tokens relate to each other over large spans.",
+   "page": "Chapter 7, Section 7.4, Eqs. (7.11)-(7.14), matrix form Eq. (7.34)",
+   "latex": "\\mathrm{head} = \\mathrm{softmax}\\!\\left(\\frac{QK^{\\top}}{\\sqrt{d_k}}\\right) V",
+   "symbol_and_unit_ledger": {
+    "Q, K, V": "query, key and value matrices projected from the inputs",
+    "d_k": "dimensionality of the key vectors (count)",
+    "head": "the attention output, a weighted sum of value vectors"
+   },
+   "assumptions": [
+    "Relevance between tokens is measured by query-key dot products",
+    "Attention weights are a softmax distribution over positions, so each output is a convex combination of values"
+   ],
+   "breakdown_regime": "Attention cost grows quadratically in sequence length; attention weights are not explanations by themselves, and a head can attend sharply to irrelevant tokens if the loss rewards it",
+   "domain": "transformer architecture",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's evidence integration follows the attention pattern literally: each candidate conclusion forms a query, each piece of evidence supplies a key and a value, and the conclusion's representation is the relevance-weighted sum of the evidence. The weights are stored, so which evidence moved a conclusion is inspectable after the fact.",
+    "source_operator": "self_attention_scaled_dot_product",
+    "telemetry": "Query, key and value projections for evidence items; stored attention weight matrices per conclusion"
+   }
+  },
+  {
+   "primitive_id": "multihead_attention_parallel_heads",
+   "name": "Multi-head attention: A attention heads run in parallel at the same depth, each with its own query, key and value projections, so different heads can model different kinds of relationships",
+   "verbatim_quote": "each with its own set of parameters that allows the head to model different aspects of the relationships among inputs.",
+   "page": "Chapter 7, Section 7.4 (Multi-head Attention), Eqs. (7.15)-(7.20)",
+   "latex": "\\mathrm{MultiHead} = \\mathrm{Concat}(\\mathrm{head}_1, \\ldots, \\mathrm{head}_A)\\, W^{O}",
+   "symbol_and_unit_ledger": {
+    "head_i": "output of attention head i, with value dimensionality d_v = d / A",
+    "A": "number of attention heads (count)",
+    "W^O": "output projection matrix mixing the concatenated heads"
+   },
+   "assumptions": [
+    "The model dimension d is split across heads, with d_k = d_v = d / A in the original design",
+    "Heads are independent until the final output projection mixes them"
+   ],
+   "breakdown_regime": "More heads do not guarantee diverse behavior; heads can collapse onto the same pattern, and head count trades against per-head dimensionality at fixed d",
+   "domain": "transformer architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine runs parallel specialized passes over the same evidence in the multi-head pattern: separate passes keyed to different relationship types (for example form, context, and matchup history) whose outputs are concatenated and mixed by a learned or fitted combiner, rather than one monolithic pass asked to notice everything.",
+    "source_operator": "multihead_attention_parallel_heads",
+    "telemetry": "Per-pass outputs and their projections; combiner weights; diversity measures across passes"
+   }
+  },
+  {
+   "primitive_id": "transformer_block_residual_stream",
+   "name": "A transformer block adds the outputs of its attention and feedforward components into a residual stream that carries the input upward, with layer normalization before each component",
+   "verbatim_quote": "The value of the stream at any layer for any input token is a vector that is the sum of the original embedding for that token and all the outputs from all the previous layers and blocks.",
+   "page": "Chapter 7, Sections 7.2 and 7.9 (Summary), printed p. 205",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Components write additively into the stream rather than replacing it, so earlier information survives unless actively overwritten",
+    "Pre-normalization (including RMSNorm in current models) stabilizes the stream's scale across depth"
+   ],
+   "breakdown_regime": "The residual stream is a shared bottleneck: everything a block knows must fit in d dimensions, and additive writes from different components can interfere destructively",
+   "domain": "transformer architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine state is kept as a residual stream: each analysis stage adds its contribution to a running state object instead of producing a fresh verdict, so later stages can see and correct earlier ones, and the final output can be decomposed into the sum of stage contributions.",
+    "source_operator": "transformer_block_residual_stream",
+    "telemetry": "The running state object after each stage; per-stage additive contributions logged for decomposition"
+   }
+  },
+  {
+   "primitive_id": "causal_masking_parallel_training",
+   "name": "Causal masking sets attention scores for future positions to negative infinity, so each position is predicted only from its past; combined with teacher forcing this lets all positions be trained in parallel",
+   "verbatim_quote": "the causal mask prevents each position from attending to its own target, allowing the output for each token to be computed separately.",
+   "page": "Chapter 7, Section 7.7 (Pretraining), printed p. 202",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "During training the correct history is always fed (teacher forcing) rather than the model's own earlier predictions",
+    "The mask is applied inside the softmax, so future positions receive exactly zero attention weight"
+   ],
+   "breakdown_regime": "Teacher forcing creates exposure bias: at generation time the model conditions on its own outputs, a distribution it never saw in training, and errors compound over long generations",
+   "domain": "transformer training",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The causal mask is the engine's anti-leakage law implemented as architecture rather than policy: when any historical case is replayed for training or evaluation, features dated after the prediction point are masked to zero weight by construction, so a backtest cannot peek at the future even if a data pipeline mislabels a timestamp.",
+    "source_operator": "causal_masking_parallel_training",
+    "telemetry": "Feature timestamps relative to prediction time; mask audits on replayed cases showing zero weight on post-cutoff features"
+   }
+  },
+  {
+   "primitive_id": "pretraining_self_supervised_cross_entropy",
+   "name": "Pretraining is self-supervised: minimize the cross-entropy loss of next-token prediction over unlabeled text, which reduces to the negative log probability of the true next token, with teacher forcing throughout",
+   "verbatim_quote": "We call such a model self-supervised because we don't have to add any special gold labels to the data; the natural sequence of words is its own supervision!",
+   "page": "Chapter 7, Section 7.7, Eqs. (7.53)-(7.55), printed p. 201",
+   "latex": "L_{CE}(\\hat{y}_t, y_t) = -\\log \\hat{y}_t[w_{t+1}]",
+   "symbol_and_unit_ledger": {
+    "y_hat_t": "model's predicted distribution over the vocabulary at position t",
+    "w_{t+1}": "the true next token in the training sequence",
+    "L_CE": "cross-entropy loss at one position (nats, with natural log)"
+   },
+   "assumptions": [
+    "The one-hot target makes all non-true tokens drop out of the loss, leaving only the log probability of the true token",
+    "Losses are averaged over all positions in a batch before the gradient step"
+   ],
+   "breakdown_regime": "Next-token loss rewards modeling surface statistics of the corpus, including its biases and errors; low pretraining loss alone does not imply factuality, instruction following, or safety, which is why post-training exists",
+   "domain": "language model training",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine pretrains its sequence models on raw event streams with the same objective: no hand labels, the next observed event is the target, and the loss is exactly the negative log probability assigned to what actually happened. Labeling effort is reserved for the post-training stages where it changes behavior.",
+    "source_operator": "pretraining_self_supervised_cross_entropy",
+    "telemetry": "Next-event log probabilities on held-out streams; average loss per position tracked across training runs"
+   }
+  },
+  {
+   "primitive_id": "perplexity_is_exponentiated_cross_entropy",
+   "name": "Perplexity is the exponent of the mean cross-entropy loss: the length-normalized inverse probability a model assigns to unseen text, so lower is better and minimizing it maximizes test-set probability",
+   "verbatim_quote": "In fact, the perplexity of a text is simply the exponent of the mean cross-entropy loss for the text.",
+   "page": "Chapter 7, Section 7.7.1, Eq. (7.57), printed p. 203",
+   "latex": "\\mathrm{Perplexity}(w_{1:T}) = P(w_{1:T})^{-1/T}",
+   "symbol_and_unit_ledger": {
+    "P(w_{1:T})": "probability the model assigns to the whole test sequence (probability, unitless)",
+    "T": "test set length (tokens)",
+    "Perplexity": "per-token inverse probability (unitless, at least 1)"
+   },
+   "assumptions": [
+    "Perplexity is computed on unseen text with a fixed tokenizer",
+    "Log base determines units: natural log gives loss in nats, log base 2 in bits"
+   ],
+   "breakdown_regime": "Perplexity is not comparable across models with different tokenizers, because the token count T changes; it also measures word prediction only, not task competence",
+   "domain": "evaluation of language models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine reports one canonical surprise score per model: the exponentiated average negative log probability on held-out sequences. Because it is a pure function of the training loss, improvements cannot be manufactured by changing the evaluation, and the tokenizer caveat is enforced by versioning the tokenizer with every reported score.",
+    "source_operator": "perplexity_is_exponentiated_cross_entropy",
+    "telemetry": "Mean cross-entropy and perplexity on fixed held-out sets, recorded with the tokenizer version used"
+   }
+  },
+  {
+   "primitive_id": "temperature_sampling",
+   "name": "Temperature sampling divides the logits by tau before the softmax: tau below 1 sharpens the distribution toward greedy decoding, tau above 1 flattens it toward uniform",
+   "verbatim_quote": "The idea of temperature sampling is to reshape the probability distribution to increase the probability of the high probability tokens and decrease the probability of the low probability tokens.",
+   "page": "Chapter 7, Section 7.6.3, Eq. (7.51), printed p. 199",
+   "latex": "y = \\mathrm{softmax}(u / \\tau)",
+   "symbol_and_unit_ledger": {
+    "u": "logit vector over the vocabulary (real numbers)",
+    "tau": "temperature parameter; tau in (0,1] sharpens, tau above 1 flattens (unitless)",
+    "y": "reshaped probability distribution the next token is sampled from"
+   },
+   "assumptions": [
+    "The underlying ranking of tokens is unchanged; only the sharpness of the distribution moves",
+    "As tau approaches 0 the output approaches greedy decoding, and as tau grows the output approaches uniform sampling"
+   ],
+   "breakdown_regime": "Temperature trades factuality for diversity blindly: it cannot tell a confidently correct token from a confidently wrong one, and low temperature amplifies whatever bias the top of the distribution already has",
+   "domain": "decoding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine exposes one explicit sharpness control wherever it samples from its own distributions: scenario generation, candidate ranking and simulation all declare their temperature, so a conservative run and an exploratory run differ by a named parameter rather than by hidden randomness settings.",
+    "source_operator": "temperature_sampling",
+    "telemetry": "Temperature settings logged per run; empirical output diversity and error rates measured at each temperature"
+   }
+  },
+  {
+   "primitive_id": "topk_topp_nucleus_sampling",
+   "name": "Top-k sampling truncates the distribution to the k most likely tokens and renormalizes; top-p (nucleus) sampling instead keeps the smallest set of tokens covering p of the probability mass, adapting the pool size to the model's confidence",
+   "verbatim_quote": "Instead of choosing the single most probable word to generate, we first truncate the distribution to the top k most likely words, renormalize to produce a legitimate probability distribution, and then randomly sample from within these k words according to their renormalized probabilities.",
+   "page": "Chapter 7, Section 7.6.4, Eq. (7.52), printed p. 200",
+   "latex": "\\sum_{w \\in V^{(p)}} P(w \\mid w_{<t}) \\geq p",
+   "symbol_and_unit_ledger": {
+    "V^(p)": "the nucleus: smallest set of tokens whose cumulative probability reaches p",
+    "P(w | w_{<t})": "model probability of token w given the generated prefix (probability, unitless)",
+    "p": "mass threshold, e.g. 0.9 (fraction)"
+   },
+   "assumptions": [
+    "Truncation happens before renormalization, so the kept tokens' relative probabilities are preserved",
+    "Top-k uses a fixed pool size while top-p adapts the pool to the shape of each distribution; the two are often combined"
+   ],
+   "breakdown_regime": "Truncation removes the tail, not errors in the head of the distribution: a confidently wrong top token is still sampled often, and a fixed k misbehaves when distributions vary in flatness across contexts",
+   "domain": "decoding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Candidate generation in the engine truncates by mass, not by fixed count: the candidate set for any decision is the smallest set of options covering a declared share of the model's probability mass, so the shortlist is short when the model is confident and long when it is not, and the threshold is a logged parameter.",
+    "source_operator": "topk_topp_nucleus_sampling",
+    "telemetry": "Candidate pool sizes per decision; the cumulative mass threshold in force; outcomes of options inside versus outside the nucleus"
+   }
+  },
+  {
+   "primitive_id": "kv_cache_inference",
+   "name": "KV cache: store each token's key and value vectors when first computed and reuse them at every later generation step instead of recomputing attention over the whole prefix",
+   "verbatim_quote": "Instead of recomputing these, whenever we compute the key and value vectors we store them in memory in a cache, and then we can just grab them from the cache when we need them.",
+   "page": "Chapter 7, Section 7.8, printed p. 204",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Keys and values for a token never change once its position is fixed, because causal masking forbids later tokens from altering earlier representations' inputs to attention",
+    "Memory is traded for compute: the cache grows linearly with sequence length"
+   ],
+   "breakdown_regime": "The cache does not reduce the quadratic attention computation itself, only the redundant recomputation; very long contexts make the cache the memory bottleneck, motivating grouped-query attention and quantization",
+   "domain": "inference efficiency",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine caches intermediate representations keyed by content: any evidence item or historical case is encoded once, and later queries reuse the stored encoding instead of recomputing it. Cache invalidation follows the same rule as the KV cache: an entry is valid exactly while its inputs cannot change.",
+    "source_operator": "kv_cache_inference",
+    "telemetry": "Cache hit rates and memory footprint per workload; recomputation counts before and after caching"
+   }
+  },
+  {
+   "primitive_id": "instruction_tuning_sft",
+   "name": "Instruction tuning (SFT): fine-tune a pretrained model on instruction and response pairs with the language modeling loss applied only to the response tokens, which teaches general instruction following, not just the trained tasks",
+   "verbatim_quote": "It involves taking a base pretrained LLM and training it to follow instructions for a range of tasks, from machine translation to meal planning, by fine-tuning it on a corpus of instructions and responses.",
+   "page": "Chapter 8, Section 8.1, Fig. 8.1, printed p. 210",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The instruction is conditioning context; gradients flow only from response tokens",
+    "Far less data than pretraining is needed: millions of examples over several epochs, a small fraction of pretraining cost"
+   ],
+   "breakdown_regime": "SFT inherits the quality ceiling and biases of its instruction data; model-generated instruction sets can amplify the teacher model's errors and style, and safety instructions must be deliberately mixed in",
+   "domain": "post-training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine components are adapted to new task formats the SFT way: a small, high-quality set of worked examples with the loss placed on the desired output behavior only, never on the prompt. Format compliance is treated as a trainable behavior separate from knowledge, so a knowledge upgrade never silently changes output format.",
+    "source_operator": "instruction_tuning_sft",
+    "telemetry": "Instruction datasets with provenance; response-only loss masks; before and after compliance rates on held-out instructions"
+   }
+  },
+  {
+   "primitive_id": "lora_low_rank_adaptation",
+   "name": "LoRA: freeze the pretrained weight matrices and train only a low-rank decomposition of the update, A (k by r) times B (r by d) with small r, then add it back at inference",
+   "verbatim_quote": "Instead of updating these layers during fine-tuning, with LoRA we freeze these layers and instead update a low-rank approximation that has fewer parameters.",
+   "page": "Chapter 8, Section 8.2 (Parameter Efficient Fine Tuning), printed pp. 213-214",
+   "latex": "\\Delta W = AB, \\quad A \\in \\mathbb{R}^{k \\times r},\\ B \\in \\mathbb{R}^{r \\times d}",
+   "symbol_and_unit_ledger": {
+    "W": "a frozen pretrained weight matrix of size k by d",
+    "Delta W": "the learned update to W, constrained to rank at most r",
+    "r": "the adapter rank, chosen much smaller than k and d (count)"
+   },
+   "assumptions": [
+    "The useful fine-tuning update is assumed to live in a low-rank subspace",
+    "The base model stays frozen, so one base can host many swappable adapters"
+   ],
+   "breakdown_regime": "If the needed adaptation is genuinely high rank (a new domain with new structure, not a style shift), a low-rank adapter underfits; rank and target-layer choices are empirical and task dependent",
+   "domain": "post-training and efficient adaptation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine adaptations are shipped as small, swappable deltas on a frozen base rather than full retrains: a new adapter is trained, evaluated against the base, and rolled back by removing the delta if it fails. Rank is the declared capacity budget for each adaptation, so an adaptation that needs more capacity must argue for it explicitly.",
+    "source_operator": "lora_low_rank_adaptation",
+    "telemetry": "Adapter ranks and parameter counts; base versus adapted scores on fixed evaluation sets; rollback events"
+   }
+  },
+  {
+   "primitive_id": "preference_alignment_reward_model",
+   "name": "Preference alignment (RLHF, DPO): train a model of human preferences over candidate responses, then fine-tune the base model against it, aligning behavior with what humans judge helpful and harmless",
+   "verbatim_quote": "a separate model is trained to decide how much a candidate response aligns with human preferences. This model is then used to fine-tune the base model.",
+   "page": "Chapter 8, introduction and Section 8.3 (preview), printed p. 210",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Human preference judgments are collectible and consistent enough to train a reward model",
+    "The preference model generalizes from judged pairs to unseen responses"
+   ],
+   "breakdown_regime": "The reward model is itself a proxy and is Goodhart-vulnerable: optimizing hard against it produces responses that please the model rather than humans, and preference data encodes the judges' biases",
+   "domain": "post-training and alignment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine separates generation from judgment exactly as preference alignment does: candidate outputs are scored by an independent judge model trained on graded historical outcomes, and generators are improved against that judge. Because the judge is a proxy, its own agreement with realized outcomes is audited on a schedule and optimization against it is capped.",
+    "source_operator": "preference_alignment_reward_model",
+    "telemetry": "Judge scores versus realized outcomes; preference pair datasets; drift audits of the judge model"
+   }
+  },
+  {
+   "primitive_id": "rlvr_verifiable_rewards",
+   "name": "Reinforcement learning with verifiable rewards (RLVR): train on tasks with a clear right answer, such as math and programming, so reward comes from checking the answer rather than from a learned preference model",
+   "verbatim_quote": "models learn to solve complex, multi-step problems by being trained on tasks like programming or math for which we have a clear right answer.",
+   "page": "Chapter 8, introduction (third post-training technique), printed p. 210",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A verifier exists that can decide correctness exactly and cheaply",
+    "The task distribution contains enough solvable-but-not-trivial problems to give a learning signal"
+   ],
+   "breakdown_regime": "RLVR only covers domains with verifiable answers; it cannot align open-ended behavior, and reward can be gamed by exploiting verifier loopholes rather than solving the task",
+   "domain": "post-training and reasoning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Wherever an engine task has a checkable answer, the engine prefers verifiable reward over judged reward: generated reasoning is scored by running the check (recompute the number, replay the case, verify the constraint), and only tasks without a verifier fall back to a judge model. Verifier loopholes found in audits are patched as defects.",
+    "source_operator": "rlvr_verifiable_rewards",
+    "telemetry": "Verifier pass rates per task family; audit findings of reward obtained without a correct solution"
+   }
+  },
+  {
+   "primitive_id": "masked_language_modeling_bert",
+   "name": "Masked language modeling: corrupt a percentage of tokens (15 percent in BERT; 80 percent replaced by [MASK], 10 percent by a random token, 10 percent left unchanged) and train the model to reconstruct them from bidirectional context",
+   "verbatim_quote": "The token is replaced with the special vocabulary token named [MASK]",
+   "page": "Chapter 9 (Masked Language Models), MLM training passage",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Corruption rates are fixed hyperparameters: 15 percent selected, split 80/10/10 in BERT",
+    "The model may use context from both sides, unlike causal language modeling"
+   ],
+   "breakdown_regime": "The [MASK] token never appears in real downstream text, which is why the 80/10/10 split exists; MLM also spends training compute on only the masked fraction of tokens per example",
+   "domain": "pretraining objectives",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine trains its encoders with masked reconstruction on historical records: fields are hidden at a declared rate and reconstructed from the remaining context, which forces representations that capture cross-field structure. The corruption schedule is logged because it changes what the representation can know.",
+    "source_operator": "masked_language_modeling_bert",
+    "telemetry": "Masking rates and corruption splits per training run; reconstruction accuracy by field type"
+   }
+  },
+  {
+   "primitive_id": "sparse_and_dense_retrieval",
+   "name": "Retrieval represents queries and documents as vectors: sparse retrieval uses count vectors weighted by tf-idf or BM25, dense retrieval uses embeddings computed from language models",
+   "verbatim_quote": "In sparse retrieval, we represent documents and queries with count vectors, weighted by tf-idf or BM25.",
+   "page": "Chapter 11, Section 11.1, printed p. 255",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Documents are treated as bags of words in the sparse vector space model",
+    "Dense retrieval assumes the embedding space places relevant documents near the query embedding"
+   ],
+   "breakdown_regime": "Sparse retrieval misses paraphrase and synonymy entirely; dense retrieval can miss exact rare terms that sparse methods nail, which is why production systems hybridize the two",
+   "domain": "information retrieval",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine retrieves prior cases in both modes and merges the results: exact-term sparse matching catches rare named entities and precise phrases, embedding search catches paraphrased situations. Neither ranking is trusted alone; disagreements between the two lists are themselves a signal about the query.",
+    "source_operator": "sparse_and_dense_retrieval",
+    "telemetry": "Sparse and dense ranked lists per query with their overlap; relevance judgments on merged results"
+   }
+  },
+  {
+   "primitive_id": "hmm_decoding_viterbi_argmax",
+   "name": "HMM decoding: choose the hidden state (tag) sequence that maximizes the posterior probability given the observations, simplified by Bayes' rule to maximizing the joint likelihood times prior",
+   "verbatim_quote": "For part-of-speech tagging, the goal of HMM decoding is to choose the tag sequence t1 . . .tn that is most probable given the observation sequence of n words w1 . . . wn",
+   "page": "Chapter 18, Eqs. (18.12)-(18.13)",
+   "latex": "\\hat{t}_{1:n} = \\arg\\max_{t_1 \\ldots t_n} P(t_1 \\ldots t_n \\mid w_1 \\ldots w_n)",
+   "symbol_and_unit_ledger": {
+    "t_hat_{1:n}": "the most probable tag sequence (sequence of hidden states)",
+    "P(t | w)": "posterior probability of the tag sequence given the observed words (probability, unitless)",
+    "w_1..w_n": "the observed word sequence"
+   },
+   "assumptions": [
+    "Transition and emission probabilities (the A and B matrices of the HMM lambda) are known or estimated",
+    "The denominator P(w) is dropped because it is constant across candidate tag sequences"
+   ],
+   "breakdown_regime": "Exact decoding is over an exponential set of sequences and only becomes tractable through dynamic programming (Viterbi); the Markov assumptions inside the HMM also cap how much context the chosen sequence can reflect",
+   "domain": "structured prediction and decoding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine decodes structured outputs by global argmax rather than greedy local choice: when a sequence of interdependent labels must be produced, the whole sequence is scored and the best joint assignment wins, with dynamic programming keeping the search tractable. Greedy per-step labeling is treated as an approximation that must justify itself against the global decoder.",
+    "source_operator": "hmm_decoding_viterbi_argmax",
+    "telemetry": "Joint sequence scores versus greedy per-step scores on labeled data; counts of sequences changed by global decoding"
+   }
+  },
+  {
+   "primitive_id": "word_error_rate_edit_distance_metric",
+   "name": "Word error rate: the minimum edit distance between the recognizer's hypothesized word string and the reference transcription, counted as substitutions plus deletions plus insertions over reference length",
+   "verbatim_quote": "word error rate is based on how much the word string returned by the recognizer (the hypothesized word string) differs from a reference transcription.",
+   "page": "Chapter 16, Section 16.6 (ASR Evaluation: Word Error Rate), printed pp. 377-378",
+   "latex": "\\mathrm{WER} = \\frac{S + D + I}{N}",
+   "symbol_and_unit_ledger": {
+    "S": "word substitutions in the optimal alignment (count)",
+    "D": "word deletions (count)",
+    "I": "word insertions (count)",
+    "N": "number of words in the reference transcription (count)"
+   },
+   "assumptions": [
+    "The reference transcription is treated as ground truth",
+    "The alignment used is the minimum edit distance alignment, computed exactly as in Chapter 2"
+   ],
+   "breakdown_regime": "WER weights every word error equally, so a wrong content word and a wrong filler count the same; it can also exceed 100 percent when insertions are numerous, and tuning to it is a textbook Goodhart risk",
+   "domain": "evaluation of sequence transducers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine scores any sequence-producing component against its reference with an edit-distance rate of this form: align first, then count substitution, deletion and insertion errors separately, because the three error types have different causes and different fixes. A single blended accuracy number is not accepted for sequence outputs.",
+    "source_operator": "word_error_rate_edit_distance_metric",
+    "telemetry": "S, D and I counts per component on reference sets; alignment samples inspected when a rate changes sharply"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "d78427979440dc7d-t1",
+   "think": "This work is the third edition draft of Jurafsky and Martin's Speech and Language Processing, the standard textbook of natural language processing, here in its August 19, 2026 draft form. Its span is the whole discipline: it begins with the classical statistical machinery of n-gram language models, logistic regression and information theory, moves through embeddings and neural networks, and then rebuilds the field around the transformer, large language model pretraining, post-training and agents, before returning to the structured tasks (parsing, information extraction, coreference, discourse) that the LLM era inherited rather than replaced. Reading it as an extraction target means treating it not as a collection of facts but as one connected argument about how to model sequences probabilistically and how to know whether the modeling worked. The argument has a spine. Chapter 3 gives the chain rule, which turns the probability of a sequence into a product of next-token conditionals, and immediately confronts the estimation problem that the rest of the book exists to solve: full histories are too sparse to count, so the Markov assumption truncates them, and smoothing redistributes probability so that unseen events are unlikely rather than impossible. Entropy and cross-entropy then supply the measuring instruments, and perplexity falls out as exponentiated cross-entropy, a single number tying training loss to test performance. Chapter 4 builds the first learnable scorer on this foundation: a weighted sum passed through a sigmoid or a softmax, trained by minimizing cross-entropy with gradient descent, where the gradient for logistic regression collapses to the elegant error term (prediction minus label) times the input. Chapter 5 replaces sparse counts with dense geometry: words become vectors, similarity becomes a cosine, and skip-gram with negative sampling shows how a discriminative trick on sampled noise can manufacture useful geometry at scale. Chapter 6 generalizes the scorer into layered networks, proves by the XOR example that depth is a representational necessity rather than a luxury, and gives the credit assignment algorithm, backpropagation as backward differentiation over a computation graph, that makes training those layers possible. Chapter 7 assembles everything into the transformer: queries, keys and values turn context mixing into a learned, content-addressable operation; multiple heads run that operation in parallel subspaces; the residual stream carries information upward while attention and feedforward components write into it; causal masking converts the architecture into an autoregressive language model and, with teacher forcing, makes training embarrassingly parallel. The same chapter closes the loop back to Chapter 3: pretraining is the chain rule objective at web scale, self-supervised because the text supplies its own targets, and perplexity reappears as the exponent of the very loss being minimized. Decoding is then treated as a separate decision layer with its own controls: greedy choice, random sampling, temperature as a sharpness dial, and top-k and top-p truncation as mass-based candidate management. Chapter 8 adds the post-training stack that turns a next-token predictor into an assistant: instruction tuning with the loss placed only on responses, LoRA as the parameter-efficient way to adapt without retraining, preference alignment through a learned reward model, and RLVR where a verifier replaces the judge. Around this spine the book keeps returning to evaluation as a discipline in its own right: precision and recall against the seduction of accuracy, data contamination against benchmark trust, Goodhart's Law against metric worship, and the tokenizer caveat against naive perplexity comparisons. For a reasoning engine, the value of the work is that it is a complete, internally consistent stack rather than a bag of techniques. It specifies how to represent (embeddings, tokenization by BPE), how to score (conditional probability, softmax normalization, cross-entropy), how to train (backpropagation, smoothing, dropout, low-rank adaptation), how to generate (masked or causal decoding with explicit temperature and truncation controls), how to retrieve (sparse and dense vectors), how to decode structure globally (Viterbi argmax over sequences), and how to evaluate without lying to yourself (held-out data, contamination audits, precision and recall, verifiable rewards where verifiers exist). Each layer's output contract is the next layer's input contract, which is exactly the property an engine needs when components are built by different people at different times. The later parts of the book then show the same machinery bending to structure. Masked language modeling reuses the transformer as an encoder by corrupting fifteen percent of tokens and reconstructing them from both-sided context. Retrieval turns embeddings into an index, with sparse tf-idf and BM25 vectors kept alongside dense ones because each catches what the other misses. Sequence labeling and parsing restore the classical dynamic programming tradition inside the neural era: an HMM's posterior over tag sequences is maximized exactly by Viterbi decoding, and speech recognition is scored by word error rate, an edit distance over words, closing a circle that opened with the string algorithms of Chapter 2. Even the pedagogy carries a design lesson: nearly every quantity in the book is first computed by hand on a tiny worked example before it is generalized, which makes each formula auditable against arithmetic a reader can check. The work also has real limits that an extraction must record. It is a draft: some historical notes are marked TBD, some sections are thinner than their third-edition ambitions, and the frontier it describes (mixture of experts, grouped-query attention, quantization) is explicitly deferred to a future version. Its mathematics is pedagogical, stated cleanly for the canonical case; production concerns like calibration under distribution shift, streaming inference economics, and adversarial robustness appear as warnings rather than as machinery. And its central object, the probability of the next token, is a modeling choice with known failure modes the book itself names: exposure bias from teacher forcing, benchmarks contaminated by the training crawl, and proxies that degrade the moment they are optimized. The honest summary is that this is the best single map of the sequence-modeling territory, drawn by cartographers who label the swamps as carefully as the roads.",
+   "retrocausal_genealogy": "The lineage runs from Shannon's information theory and the IBM and CMU speech groups of the 1970s, where Jelinek and Baker built the first n-gram language models, through Rosenfeld's maximum entropy models in the 1990s, which first married discriminative classification to language modeling. Bengio's neural language models of 2000 to 2003 added learned embeddings to that marriage; Mikolov's RNN language models and word2vec (2010 to 2013) made both practical; ELMo and then the transformer (Vaswani et al. 2017) shifted pretraining from word vectors to whole networks; GPT and BERT split the autoregressive and masked branches; and the post-training era (instruction tuning, RLHF, DPO, RLVR) grew from the recognition that the pretraining objective alone is misaligned with use. The textbook itself descends from the authors' 2000 and 2009 editions, absorbing each wave in turn.",
+   "theory_of_mind": "Jurafsky and Martin write for a reader they treat as a future builder, not a spectator: every method is presented as a probability distribution over sequences, every claim is paired with the evaluation that would expose it if it were false, and worked examples with real numbers precede the general equations. Their model of the domain is that language technology is applied probability under sparsity: data is always finite, contexts are always longer than the sample, and so the craft is the disciplined management of approximation, smoothing, and measurement. They are also explicit that the builder's responsibilities include harms: classification chapters end with harm avoidance, and evaluation chapters end with the ways metrics deceive.",
+   "cross_layer_veto": "The book's veto layer is its evaluation doctrine, and it constrains every other layer. Data contamination vetoes any benchmark number whose test items could have entered training, no matter how impressive the score. Goodhart's Law vetoes promoting a system on the same proxy it was tuned against. The tokenizer dependence of perplexity vetoes cross-model comparisons that ignore tokenization. Train, development and test discipline vetoes tuning on the test set, and precision and recall together veto any accuracy-only claim about a detector. Inside the machinery, causal masking vetoes the use of future information in any replay or backtest, functioning as an architectural constraint on all downstream signals rather than a convention they must remember to obey."
+  }
+ ],
+ "universal_lens": "Read as a general template, this work is a complete theory of learning from sequences: factor the joint probability into conditional steps, approximate the conditioning context to what the data can support, smooth so that absence of evidence is never treated as impossibility, represent items geometrically so similarity is computable, train by propagating error backward through an explicit graph of intermediate quantities, generate by sampling from a distribution whose sharpness and candidate pool are explicit controls, and evaluate with instruments designed to catch self-deception. Any domain with ordered events and scarce labels can instantiate the same skeleton.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the take is methodological: this is the reference stack for teaching and auditing sequence reasoning. Its evaluation chapters supply the institute's standards for what counts as evidence (held-out data, contamination audits, precision and recall reported together, verifiable rewards preferred over judged rewards), its scaling laws supply the resource planning model for training programs, and its historical notes supply the lineage that keeps new techniques in proportion: almost every modern method is a repair of a named failure in an older one, and the institute's curriculum can be organized exactly along those repairs.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, this work supplies load-bearing contracts rather than tips. Scoring is chain-rule factorization with per-step audit; absence of a pattern in history triggers smoothing, never a zero probability; leakage is prevented architecturally by causal masking in every replay; calibration is fitted separately from softmax normalization; retrieval runs sparse and dense in parallel; structured outputs are decoded by global argmax, not greedily; candidate sets are truncated by probability mass; adaptation ships as evaluated low-rank deltas on a frozen base; and promotion of any signal requires the book's evaluation discipline: uncontaminated held-out data, precision and recall together, and verifiable checks wherever a verifier exists."
+}

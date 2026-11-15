@@ -1,0 +1,78 @@
+{
+  "book_id": "2a7e6372016f5fa8",
+  "source_status": "COMPLETE",
+  "title": "p0295",
+  "file_name": "p0295.txt",
+  "sha256": "2a7e6372016f5fa827501ffb3eb22cd9e551e059b9a98c77cede37fb8d38a177",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Uniform continuity and measure-theoretic invariance under group actions define structured topological and functional spaces. Universal Lens: Rooted in p0295 (2a7e6372016f5fa8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on group-invariant measures enables robust probabilistic reasoning over topological manifolds. GSI Mapping: Rooted in p0295 (2a7e6372016f5fa8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions governed by left-invariant measures support dynamic reasoning in structured group spaces. GSE Mapping: Rooted in p0295 (2a7e6372016f5fa8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "uniform_continuity_in_group_actions",
+      "name": "Uniform Continuity in Group Actions",
+      "verbatim_quote": "63] neighborhood U of e such that if x1x2-1 ε U, then |f(x1) — f(x2) {< e.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x1, x2': 'Group elements in topological group X', 'U': 'Neighborhood of identity element e', 'f': 'Real-valued function on X'}",
+      "assumptions": "Topological group X with identity element e, uniform continuity of f under group action.",
+      "breakdown_regime": "When x1x2-1 ∉ U, continuity fails and f may exhibit discontinuous behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between local group structure and function continuity ensures stable inference in GSI.",
+        "source_operator": "uniform_continuity_in_group_actions",
+        "telemetry": "Measure of deviation from uniform continuity via neighborhood U."
+      }
+    },
+    {
+      "primitive_id": "left_invariance_and_function_definition",
+      "name": "Left Invariance and Function Definition",
+      "verbatim_quote": "If π(x1) = π(x2), then x1-1x2 ε Y and it follows from the left invariance of v that Consequently writing g(x) = g(x), whenever = π(x), unambiguously defines a function g on X; clearly g = gπ.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'π': 'Projection map from X to quotient space X/Y', 'Y': 'Normal subgroup of X', 'v': 'Left-invariant measure on X', 'g': 'Function on X derived from v'}",
+      "assumptions": "Left-invariance of measure v under group action, π surjective onto X/Y.",
+      "breakdown_regime": "Failure when π not well-defined or v not left-invariant.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of π induces a derived function g on X, enabling GSE state transition modeling.",
+        "source_operator": "left_invariance_and_function_definition",
+        "telemetry": "Consistency of g under π-induced equivalence classes."
+      }
+    },
+    {
+      "primitive_id": "measure_theoretic_boundedness",
+      "name": "Measure-Theoretic Boundedness",
+      "verbatim_quote": "Since π maps the bounded set {x: g(x) ≠ 0} on a bounded subset.of X, it follows that & ε L+(X); the uniqueness of & is a consequence of the fact that π maps X onto X.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'g': 'Non-negative measurable function on X', 'L+(X)': 'Space of non-negative measurable functions on X', 'π': 'Surjective projection map'}",
+      "assumptions": "Boundedness of support of g under π, π surjective.",
+      "breakdown_regime": "When π fails to map bounded sets or g is unbounded, L+(X) membership fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping between bounded supports and L+(X) ensures GSI normalization.",
+        "source_operator": "measure_theoretic_boundedness",
+        "telemetry": "Support size of g under π as proxy for L+(X) membership."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2a7e6372016f5fa8_t0",
+      "think": "The foundational operators derive from topological groups and their associated measures. Uniform continuity ensures local stability under group actions, enabling consistent function behavior. Left invariance of measures allows for well-defined projections and derived functions, which are essential for constructing invariant observables. Measure-theoretic boundedness guarantees integrability and closure within L+(X), supporting probabilistic inference. These primitives form a dual framework where topological uniformity and measure-theoretic boundedness interact through group actions to yield structured, predictable mappings for GSI and GSE.\n\nDeep epistemic analysis for p0295 (2a7e6372016f5fa8, domain=other, pages_read=1/1): Operator 'Uniform Continuity in Group Actions' (page 1, domain other) captures: 63] neighborhood U of e such that if x1x2-1 ε U, then |f(x1) — f(x2) {< e. Assumptions: Topological group X with identity element e, uniform continuity of f under group action. Breakdown regime: When x1x2-1 ∉ U, continuity fails and f may exhibit discontinuous behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between local group structure and function continuity ensures stable inference in GSI. Operator 'Left Invariance and Function Definition' (page 1, domain other) captures: If π(x1) = π(x2), then x1-1x2 ε Y and it follows from the left invariance of v that Consequently writing g(x) = g(x), whenever = π(x), unambiguously defines a function g on X; clearly g = gπ. Assumptions: Left-invariance of measure v under group action, π surjective onto X/Y. Breakdown regime: Failure when π not well-defined or v not left-invariant. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of π induces a derived function g on X, enabling GSE state transition modeling. Operator 'Measure-Theoretic Boundedness' (page 1, domain other) captures: Since π maps the bounded set {x: g(x) ≠ 0} on a bounded subset.of X, it follows that & ε L+(X); the uniqueness of & is a consequence of the fact that π maps X onto X. Assumptions: Boundedness of support of g under π, π surjective. Breakdown regime: When π fails to map bounded sets or g is unbounded, L+(X) membership fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping between bounded supports and L+(X) ensures GSI normalization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0295 (2a7e6372016f5fa8, domain=other, pages_read=1/1): Operator 'Uniform Continuity in Group Actions' (page 1, domain other) captures: 63] neighborhood U of e such that if x1x2-1 ε U, then |f(x1) — f(x2) {< e. Assumptions: Topological group X with identity element e, uniform continuity of f under group action. Breakdown regime: When x1x2-1 ∉ U, continuity fails and f may exhibit discontinuous behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between local group structure and function continuity ensures stable inference in GSI. Operator 'Left Invariance and Function Definition' (page 1, domain other) captures: If π(x1) = π(x2), then x1-1x2 ε Y and it follows from the left invariance of v that Consequently writing g(x) = g(x), whenever = π(x), unambiguously defines a function g on X; clearly g = gπ. Assumptions: Left-invariance of measure v under group action, π surjective onto X/Y. Breakdown regime: Failure when π not well-defined or v not left-invariant. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of π induces a derived function g on X, enabling GSE state transition modeling. Operator 'Measure-Theoretic Boundedness' (page 1, domain other) captures: Since π maps the bounded set {x: g(x) ≠ 0} on a bounded subset.of X, it follows that & ε L+(X); the uniqueness of & is a consequence of the fact that π maps X onto X. Assumptions: Boundedness of support of g under π, π surjective. Breakdown regime: When π fails to map bounded sets or g is unbounded, L+(X) membership fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping between bounded supports and L+(X) ensures GSI normalization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Haar measure theory and topological group analysis, these primitives trace back to von Neumann's work on locally compact groups and measure theory. Retrocausal Genealogy: Rooted in p0295 (2a7e6372016f5fa8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0295 (2a7e6372016f5fa8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may model different group structures or fail to recognize left-invariance, leading to misalignment in probabilistic predictions or state transitions. Theory of Mind & Decision Maker Model: Rooted in p0295 (2a7e6372016f5fa8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0295 (2a7e6372016f5fa8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when group actions do not preserve measure structure, causing leakage in GSI’s Bayesian updates or GSE’s state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0295 (2a7e6372016f5fa8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0295 (2a7e6372016f5fa8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

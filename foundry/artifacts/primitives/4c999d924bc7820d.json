@@ -1,0 +1,78 @@
+{
+  "book_id": "4c999d924bc7820d",
+  "source_status": "COMPLETE",
+  "title": "buried-verify",
+  "file_name": "buried-verify.md",
+  "sha256": "4c999d924bc7820d7992c2b8cb9f6fce6eade6d035c94d52dee647f9813de4ac",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian belief updating with temporal priors and evidence normalization across multi-source verification layers. Universal Lens: Rooted in buried-verify (4c999d924bc7820d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive inference to validate operational claims through embedded decision gates and probabilistic blending of prior beliefs with observed data streams. GSI Mapping: Rooted in buried-verify (4c999d924bc7820d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning via state transitions governed by rights classification and odds capture logic, enabling dynamic model reweighting under uncertainty. GSE Mapping: Rooted in buried-verify (4c999d924bc7820d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "rights_classification_gate",
+      "name": "Rights Classification Gate",
+      "verbatim_quote": "— `apps/web/lib/scraping/clearance-engine.ts:374-375`: `if (!clearance.allowed) { throw new Error(` - **motif/gse-intelligence-build-2026-10-02** — same path and lines: `if",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'clearance': 'Boolean flag indicating access authorization', 'allowed': 'Binary outcome of permission check'}",
+      "assumptions": "Access control is deterministic and binary; failure implies system halt.",
+      "breakdown_regime": "When clearance.allowed evaluates false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's decision boundary enforcement in Bayesian inference framework.",
+        "source_operator": "rights_classification_gate",
+        "telemetry": "Verification of access control integrity across main and motif branches."
+      }
+    },
+    {
+      "primitive_id": "odds_capture_governor",
+      "name": "Odds Capture Governor",
+      "verbatim_quote": "throw new Error(` ### Odds Capture Governor — FOUND in both - **main** — `packages/ingestion-pipeline/src/refresh-odds.ts:310`: `if",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'decision': 'Boolean flag determining data ingestion validity', 'allow': 'Binary outcome of policy compliance check'}",
+      "assumptions": "Policy decisions are consistent between environments; invalidity halts processing.",
+      "breakdown_regime": "When decision.allow evaluates false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enforces conditional data flow in GSE's probabilistic reasoning engine.",
+        "source_operator": "odds_capture_governor",
+        "telemetry": "Validation of policy adherence in odds processing pipelines."
+      }
+    },
+    {
+      "primitive_id": "bayesian_blend",
+      "name": "Bayesian Blend",
+      "verbatim_quote": "`forN === 0 ? priorFor : (priorFor * priorStrength + forSum) / (priorStrength + forN);` -",
+      "page": 1,
+      "latex": "\\text{priorFor} = \\begin{cases} \\text{priorFor} & \\text{if } \\text{forN} = 0 \\\\ \\frac{\\text{priorFor} \\cdot \\text{priorStrength} + \\text{forSum}}{\\text{priorStrength} + \\text{forN}} & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'priorFor': 'Prior belief estimate', 'priorStrength': 'Weight assigned to prior belief', 'forSum': 'Summed evidence from current batch', 'forN': 'Count of observations in batch'}",
+      "assumptions": "Observations are independent and identically distributed; prior strength scales linearly with evidence.",
+      "breakdown_regime": "At zero observations (initialization).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Operational kernel for recursive Bayesian updating in GSI's belief propagation layer.",
+        "source_operator": "bayesian_blend",
+        "telemetry": "Tracking convergence of posterior estimates against prior expectations."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4c999d924bc7820d_t0",
+      "think": "The three primitives form a coherent logical structure for verifying operational correctness within GSI and GSE. The 'Rights Classification Gate' enforces access control as a foundational constraint, ensuring only authorized entities can proceed. The 'Odds Capture Governor' acts as a policy filter, validating that incoming data adheres to predefined rules before integration into prediction models. The 'Bayesian Blend' enables adaptive learning by recursively updating beliefs based on new evidence while maintaining consistency with prior knowledge. These operators collectively define a closed-loop verification mechanism where each component contributes to robustness against adversarial inputs and internal inconsistencies. Dualities emerge in how these primitives interact: the gate ensures integrity, the governor governs flow, and the blend synthesizes information. Failure modes include unauthorized access bypasses, policy violations leading to data corruption, and incorrect belief updates due to misweighted priors. Each primitive must be verified independently yet coherently to ensure system-wide reliability.\n\nDeep epistemic analysis for buried-verify (4c999d924bc7820d, domain=other, pages_read=1/1): Operator 'Rights Classification Gate' (page 1, domain other) captures: — `apps/web/lib/scraping/clearance-engine.ts:374-375`: `if (!clearance.allowed) { throw new Error(` - **motif/gse-intelligence-build-2026-10-02** — same path and lines: `if Assumptions: Access control is deterministic and binary; failure implies system halt. Breakdown regime: When clearance.allowed evaluates false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's decision boundary enforcement in Bayesian inference framework. Operator 'Odds Capture Governor' (page 1, domain other) captures: throw new Error(` ### Odds Capture Governor — FOUND in both - **main** — `packages/ingestion-pipeline/src/refresh-odds.ts:310`: `if Assumptions: Policy decisions are consistent between environments; invalidity halts processing. Breakdown regime: When decision.allow evaluates false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces conditional data flow in GSE's probabilistic reasoning engine. Operator 'Bayesian Blend' (page 1, domain other) captures: `forN === 0 ? priorFor : (priorFor * priorStrength + forSum) / (priorStrength + forN);` - Assumptions: Observations are independent and identically distributed; prior strength scales linearly with evidence. Breakdown regime: At zero observations (initialization). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Operational kernel for recursive Bayesian updating in GSI's belief propagation layer. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for buried-verify (4c999d924bc7820d, domain=other, pages_read=1/1): Operator 'Rights Classification Gate' (page 1, domain other) captures: — `apps/web/lib/scraping/clearance-engine.ts:374-375`: `if (!clearance.allowed) { throw new Error(` - **motif/gse-intelligence-build-2026-10-02** — same path and lines: `if Assumptions: Access control is deterministic and binary; failure implies system halt. Breakdown regime: When clearance.allowed evaluates false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's decision boundary enforcement in Bayesian inference framework. Operator 'Odds Capture Governor' (page 1, domain other) captures: throw new Error(` ### Odds Capture Governor — FOUND in both - **main** — `packages/ingestion-pipeline/src/refresh-odds.ts:310`: `if Assumptions: Policy decisions are consistent between environments; invalidity halts processing. Breakdown regime: When decision.allow evaluates false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces conditional data flow in GSE's probabilistic reasoning engine. Operator 'Bayesian Blend' (page 1, domain other) captures: `forN === 0 ? priorFor : (priorFor * priorStrength + forSum) / (priorStrength + forN);` - Assumptions: Observations are independent and identically distributed; prior strength scales linearly with evidence. Breakdown regime: At zero observations (initialization). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Operational kernel for recursive Bayesian updating in GSI's belief propagation layer. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical Bayesian inference and access control theory, extended by modern machine learning frameworks emphasizing probabilistic reasoning and secure data handling. Retrocausal Genealogy: Rooted in buried-verify (4c999d924bc7820d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in buried-verify (4c999d924bc7820d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models competing agents such as malicious actors attempting to circumvent access controls or inject erroneous data, while also accounting for internal system dynamics like feedback loops in belief updating. Theory of Mind & Decision Maker Model: Rooted in buried-verify (4c999d924bc7820d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by enforcing orthogonal constraints: access control (gate), policy compliance (governor), and belief synthesis (blend). Leakage vetoes occur when any primitive fails to isolate its domain, causing cross-contamination of verification states. Cross-Layer Veto & Anti-Leakage Check: Rooted in buried-verify (4c999d924bc7820d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

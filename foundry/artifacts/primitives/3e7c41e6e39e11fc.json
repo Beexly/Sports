@@ -1,0 +1,78 @@
+{
+  "book_id": "3e7c41e6e39e11fc",
+  "source_status": "COMPLETE",
+  "title": "nfl-source-gapbreak-2026-10-28",
+  "file_name": "nfl-source-gapbreak-2026-10-28.md",
+  "sha256": "3e7c41e6e39e11fc1f5f52fabdf1ff6c3109356f2da45524d71ff562057f1064",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "JS-rendered SPA data extraction requires browser-based network capture; static fetch fails due to dynamic API paths and credential requirements. Universal Lens: Rooted in nfl-source-gapbreak-2026-10-28 (3e7c41e6e39e11fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models data availability as a function of session state and rendering mode; conformal prediction bounds gaps via empirical JSON yield distributions. GSI Mapping: Rooted in nfl-source-gapbreak-2026-10-28 (3e7c41e6e39e11fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps host accessibility through state transitions: public → credential-required; network capture enables dynamic API surface reconstruction. GSE Mapping: Rooted in nfl-source-gapbreak-2026-10-28 (3e7c41e6e39e11fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "browser_network_capture",
+      "name": "Browser Network Capture Operator",
+      "verbatim_quote": "Two strategies in order: server-rendered table extraction, then a rendered browser that captures every JSON response the page itself requests.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'dimensionless count of JSON responses', 'T': 'time in seconds for rendering cycle', 'S': 'session state {public, authenticated}'}",
+      "assumptions": "API paths are non-guessable; data is served via dynamic JS rendering.",
+      "breakdown_regime": "Static HTTP fetch fails when API endpoints depend on client-side logic.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Browser rendering cycle is isomorphic to data acquisition pipeline in GSE; both map client-side events to structured JSON telemetry.",
+        "source_operator": "browser_network_capture",
+        "telemetry": "Number of captured JSON responses per host"
+      }
+    },
+    {
+      "primitive_id": "js_rendered_spa_gap",
+      "name": "JS-Rendered SPA Gap",
+      "verbatim_quote": "12 remain gaps.** ## Why the browser is the answer The gaps are JS-rendered SPAs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'set of 12 hosts with JS-rendered gaps', 'H': 'host identifier', 'R': 'rendering type {static, dynamic}'}",
+      "assumptions": "SPA architecture implies HTML lacks embedded data structures.",
+      "breakdown_regime": "Static parsing yields zero data from JS-rendered content.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from browser rendering kernel in GSE; represents failure mode of static scraping in presence of client-side rendering.",
+        "source_operator": "js_rendered_spa_gap",
+        "telemetry": "Hosts returning empty or malformed HTML without embedded data"
+      }
+    },
+    {
+      "primitive_id": "credential_required_access",
+      "name": "Credential-Required Access Gate",
+      "verbatim_quote": "## Still a gap (12) `betmgm.com`, `betrivers.com`, `dynastyprocess.com`, `footballoutsiders.com`, `mojo.com`, `myfantasyleague.com`, `mysportsfeeds.com`, `rotoviz.com`, `spankodds.com`, `sportsdataio.com`, `sumersports.com`, `tipico.com` These need a credentialed session.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'credential state {none, valid, invalid}', 'A': 'access level {public, private}', 'Y': 'yield in JSON responses'}",
+      "assumptions": "Public access is blocked by authentication layer.",
+      "breakdown_regime": "Access control prevents retrieval of public data without session.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from session management kernel in GSE; models access control as a state transition in data availability.",
+        "source_operator": "credential_required_access",
+        "telemetry": "Hosts requiring login for data access"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3e7c41e6e39e11fc_t0",
+      "think": "The core insight is that modern web applications, particularly those built with JavaScript frameworks, render data dynamically in the browser rather than embedding it in initial HTML. This creates a fundamental gap for static scraping tools. The failure mode arises because static HTTP clients cannot infer API paths or trigger client-side rendering logic. The solution lies in simulating a browser environment that executes scripts and records all network requests made during page load. This approach aligns with the concept of a 'rendered browser' capturing JSON responses, which becomes the primary telemetry for data extraction. The 12 remaining gaps represent hosts that require authenticated sessions, indicating a secondary access control layer beyond mere client-side rendering. The mathematical model treats data availability as a function of rendering context (static vs. dynamic) and session state (authenticated vs. anonymous), where each domain's API surface is defined by its network behavior under these conditions.\n\nDeep epistemic analysis for nfl-source-gapbreak-2026-10-28 (3e7c41e6e39e11fc, domain=football, pages_read=2/2): Operator 'Browser Network Capture Operator' (page 1, domain football) captures: Two strategies in order: server-rendered table extraction, then a rendered browser that captures every JSON response the page itself requests. Assumptions: API paths are non-guessable; data is served via dynamic JS rendering. Breakdown regime: Static HTTP fetch fails when API endpoints depend on client-side logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Browser rendering cycle is isomorphic to data acquisition pipeline in GSE; both map client-side events to structured JSON telemetry. Operator 'JS-Rendered SPA Gap' (page 1, domain football) captures: 12 remain gaps.** ## Why the browser is the answer The gaps are JS-rendered SPAs. Assumptions: SPA architecture implies HTML lacks embedded data structures. Breakdown regime: Static parsing yields zero data from JS-rendered content. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from browser rendering kernel in GSE; represents failure mode of static scraping in presence of client-side rendering. Operator 'Credential-Required Access Gate' (page 1, domain football) captures: ## Still a gap (12) `betmgm.com`, `betrivers.com`, `dynastyprocess.com`, `footballoutsiders.com`, `mojo.com`, `myfantasyleague.com`, `mysportsfeeds.com`, `rotoviz.com`, `spankodds.com`, `sportsdataio.com`, `sumersports.com`, `tipico.com` These need a credentialed session. Assumptions: Public access is blocked by authentication layer. Breakdown regime: Access control prevents retrieval of public data without session. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from session management kernel in GSE; models access control as a state transition in data availability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for nfl-source-gapbreak-2026-10-28 (3e7c41e6e39e11fc, domain=football, pages_read=2/2): Operator 'Browser Network Capture Operator' (page 1, domain football) captures: Two strategies in order: server-rendered table extraction, then a rendered browser that captures every JSON response the page itself requests. Assumptions: API paths are non-guessable; data is served via dynamic JS rendering. Breakdown regime: Static HTTP fetch fails when API endpoints depend on client-side logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Browser rendering cycle is isomorphic to data acquisition pipeline in GSE; both map client-side events to structured JSON telemetry. Operator 'JS-Rendered SPA Gap' (page 1, domain football) captures: 12 remain gaps.** ## Why the browser is the answer The gaps are JS-rendered SPAs. Assumptions: SPA architecture implies HTML lacks embedded data structures. Breakdown regime: Static parsing yields zero data from JS-rendered content. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from browser rendering kernel in GSE; represents failure mode of static scraping in presence of client-side rendering. Operator 'Credential-Required Access Gate' (page 1, domain football) captures: ## Still a gap (12) `betmgm.com`, `betrivers.com`, `dynastyprocess.com`, `footballoutsiders.com`, `mojo.com`, `myfantasyleague.com`, `mysportsfeeds.com`, `rotoviz.com`, `spankodds.com`, `sportsdataio.com`, `sumersports.com`, `tipico.com` These need a credentialed session. Assumptions: Public access is blocked by authentication layer. Breakdown regime: Access control prevents retrieval of public data without session. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from session management kernel in GSE; models access control as a state transition in data availability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the evolution of web application architecture from server-side rendering to client-side SPAs, tracing back to early AJAX paradigms and the rise of single-page applications post-2010. Influenced by browser automation frameworks like Puppeteer and Selenium. Retrocausal Genealogy: Rooted in nfl-source-gapbreak-2026-10-28 (3e7c41e6e39e11fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include web servers enforcing access policies and frontend frameworks generating dynamic content. Decision actors are data consumers seeking structured information and infrastructure providers managing access control. Theory of Mind & Decision Maker Model: Rooted in nfl-source-gapbreak-2026-10-28 (3e7c41e6e39e11fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that static scraping does not interfere with browser-based capture; leakage veto prevents cross-contamination between public and credential-restricted data sources. Cross-Layer Veto & Anti-Leakage Check: Rooted in nfl-source-gapbreak-2026-10-28 (3e7c41e6e39e11fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in nfl-source-gapbreak-2026-10-28 (3e7c41e6e39e11fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

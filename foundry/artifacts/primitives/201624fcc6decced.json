@@ -1,0 +1,78 @@
+{
+  "book_id": "201624fcc6decced",
+  "source_status": "COMPLETE",
+  "title": "openalex_W4414972247",
+  "file_name": "openalex_W4414972247.pdf",
+  "sha256": "201624fcc6decced46b61299c01620c08d54f896c1991b43f7ba85a75c6cf638",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The ExposureEngine unifies geometric projection and classification into a single variational manifold. By mapping rotated logos to Oriented Bounding Boxes (OBB), the system minimizes perspective distortion, establishing an isomorphism between physical sponsor exposure and high-dimensional tensor states.",
+  "gsi_mapping": "GSI maps OBB detections to Bayesian posterior probabilities of brand visibility. Conformal inference bounds are applied to frame-level confidence scores, generating rigorous prediction intervals for cumulative exposure duration and on-screen coverage across dynamic broadcast conditions.",
+  "gse_mapping": "GSE models the broadcast as a continuous state-transition system. The VFL-modified YOLO head acts as a situational reasoning operator, updating the discrete state vector of active sponsors based on real-time geometric occlusions and camera angle shifts.",
+  "primitives": [
+    {
+      "primitive_id": "obb_projection_operator",
+      "name": "Oriented Geometric Projection Operator",
+      "verbatim_quote": "Our approach predicts Oriented Bounding Box (OBB) to provide a geometrically precise fit to each logo regardless of the orientation on-screen.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "OBB: 2D affine subspace (pixels); Orientation: Radians; Area: Pixels^2",
+      "assumptions": "Logos maintain local planar rigidity despite global perspective distortions in the broadcast feed.",
+      "breakdown_regime": "Severe non-linear lens distortion or extreme foreshortening where the planar assumption fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw pixel clusters to a rotation-invariant geometric state space within GSE.",
+        "source_operator": "obb_projection_operator",
+        "telemetry": "Rotated Intersection over Union (IoU)"
+      }
+    },
+    {
+      "primitive_id": "vfl_gradient_modulator",
+      "name": "Variational Focal Loss Modulator",
+      "verbatim_quote": "Our model achieves a mean Average Precision (mAP@0.5) of 0.859, with a precision of 0.96 and recall of 0.87, demonstrating robust performance in localizing logos under diverse broadcast conditions.",
+      "page": 1,
+      "latex": "L_{cls} = \\frac{1}{|A|} \\sum_{a \\in A} \\sum_{c=1}^{C} LVFL(p_{a,c}, y_{a,c}, q_{a,c})",
+      "symbol_and_unit_ledger": "L_cls: Dimensionless loss; p: Probability (0..1); y: Ground truth (0/1); q: Quality score (0..1)",
+      "assumptions": "Class distribution is highly imbalanced; bounding box quality correlates with classification confidence.",
+      "breakdown_regime": "When background noise perfectly mimics logo features, causing gradient collapse.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Functions as a conformal weight adjustment kernel in GSI, suppressing easy negatives to focus on rare sponsor appearances.",
+        "source_operator": "vfl_gradient_modulator",
+        "telemetry": "Mean Average Precision (mAP@0.5)"
+      }
+    },
+    {
+      "primitive_id": "visibility_integration_kernel",
+      "name": "Spatiotemporal Visibility Integration Kernel",
+      "verbatim_quote": "The system integrates these detections into an analytical pipeline that calculates precise visibility metrics, such as exposure duration and on-screen coverage.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Duration: Seconds; Coverage: Normalized area ratio (dimensionless)",
+      "assumptions": "Frame rate is constant; temporal continuity exists between adjacent detected frames.",
+      "breakdown_regime": "Abrupt camera cuts or complete occlusion leading to fragmented integration paths.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly computes the integral of the visibility state vector over time for GSI reporting.",
+        "source_operator": "visibility_integration_kernel",
+        "telemetry": "Total exposure seconds per sponsor"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "201624fcc6decced_t0",
+      "think": "The mathematical foundation of ExposureEngine rests on transitioning from axis-aligned Horizontal Bounding Boxes (HBB) to Oriented Bounding Boxes (OBB). In traditional computer vision, HBB introduces a volumetric error proportional to the sine of the object's rotation angle, severely degrading exposure metrics. By adopting OBB, we define a local affine transformation matrix T for each logo instance, minimizing the enclosing area A. This geometric precision is coupled with a novel classification objective. The standard Binary Cross-Entropy (BCE) is replaced by a Variational Focal Loss (VFL), expressed as L_VFL, which dynamically modulates the gradient flow based on both classification probability p and localization quality q. This dual-dependency ensures that the network focuses computational resources on hard, poorly localized examples—typical of fast-moving sports broadcasts. The resulting detection pipeline feeds into a spatiotemporal integration kernel. Here, discrete frame-level detections are aggregated into continuous visibility metrics, effectively solving a numerical integration problem over the broadcast timeline. The introduction of a language-driven agentic layer adds a semantic parsing dimension, translating low-level geometric tensors into high-level natural language reports. Failure modes emerge when perspective distortions violate the planar rigidity assumption of the logos, or when severe occlusions disrupt the temporal continuity required for accurate duration integration. Thus, the system operates as a multi-layered filter, extracting invariant brand signals from chaotic visual noise.\n\nDeep epistemic analysis for openalex_W4414972247 (201624fcc6decced, domain=other, pages_read=9/9): Operator 'Oriented Geometric Projection Operator' (page 1, domain other) captures: Our approach predicts Oriented Bounding Box (OBB) to provide a geometrically precise fit to each logo regardless of the orientation on-screen. Assumptions: Logos maintain local planar rigidity despite global perspective distortions in the broadcast feed. Breakdown regime: Severe non-linear lens distortion or extreme foreshortening where the planar assumption fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw pixel clusters to a rotation-invariant geometric state space within GSE. Operator 'Variational Focal Loss Modulator' (page 1, domain other) captures: Our model achieves a mean Average Precision (mAP@0.5) of 0.859, with a precision of 0.96 and recall of 0.87, demonstrating robust performance in localizing logos under diverse broadcast conditions. Assumptions: Class distribution is highly imbalanced; bounding box quality correlates with classification confidence. Breakdown regime: When background noise perfectly mimics logo features, causing gradient collapse. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a conformal weight adjustment kernel in GSI, suppressing easy negatives to focus on rare sponsor appearances. Operator 'Spatiotemporal Visibility Integration Kernel' (page 1, domain other) captures: The system integrates these detections into an analytical pipeline that calculates precise visibility metrics, such as exposure duration and on-screen coverage. Assumptions: Frame rate is constant; temporal continuity exists between adjacent detected frames. Breakdown regime: Abrupt camera cuts or complete occlusion leading to fragmented integration paths. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly computes the integral of the visibility state vector over time for GSI reporting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W4414972247 (201624fcc6decced, domain=other, pages_read=9/9): Operator 'Oriented Geometric Projection Operator' (page 1, domain other) captures: Our approach predicts Oriented Bounding Box (OBB) to provide a geometrically precise fit to each logo regardless of the orientation on-screen. Assumptions: Logos maintain local planar rigidity despite global perspective distortions in the broadcast feed. Breakdown regime: Severe non-linear lens distortion or extreme foreshortening where the planar assumption fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw pixel clusters to a rotation-invariant geometric state space within GSE. Operator 'Variational Focal Loss Modulator' (page 1, domain other) captures: Our model achieves a mean Average Precision (mAP@0.5) of 0.859, with a precision of 0.96 and recall of 0.87, demonstrating robust performance in localizing logos under diverse broadcast conditions. Assumptions: Class distribution is highly imbalanced; bounding box quality correlates with classification confidence. Breakdown regime: When background noise perfectly mimics logo features, causing gradient collapse. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a conformal weight adjustment kernel in GSI, suppressing easy negatives to focus on rare sponsor appearances. Operator 'Spatiotemporal Visibility Integration Kernel' (page 1, domain other) captures: The system integrates these detections into an analytical pipeline that calculates precise visibility metrics, such as exposure duration and on-screen coverage. Assumptions: Frame rate is constant; temporal continuity exists between adjacent detected frames. Breakdown regime: Abrupt camera cuts or complete occlusion leading to fragmented integration paths. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly computes the integral of the visibility state vector over time for GSI reporting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This framework evolves from classical manual annotation methods, which were inherently subjective and unscalable. It inherits the structural rigor of early CNN-based detectors like YOLO and Faster R-CNN but diverges by addressing their geometric blind spots. The shift to OBB aligns with modern rotational equivariance theories in deep learning, while the VFL adaptation borrows from focal loss mechanisms originally designed for dense object detection, repurposing them for sparse, high-value sponsor tracking.",
+      "theory_of_mind": "The primary decision actors are rights holders and broadcasters seeking to quantify Return on Investment (ROI). Their cognitive bias leans toward maximizing perceived exposure. The ExposureEngine acts as an adversarial auditor, replacing subjective human estimation with rigorous, auditable geometric measurements. The agentic layer further bridges this gap by allowing users to query the system naturally, effectively modeling the user's intent and translating complex tensor states into digestible marketing insights.",
+      "cross_layer_veto": "To prevent collinearity between geometric detection and semantic reporting, strict isolation layers are enforced. If the OBB confidence drops below a conformal threshold, the visibility integration kernel must veto the frame, preventing false positives from inflating exposure metrics. Furthermore, the language agent must not hallucinate sponsorship events; its outputs are strictly bounded by the verified telemetry from the underlying detection pipeline, ensuring zero leakage of unverified data into the final reports."
+    }
+  ]
+}

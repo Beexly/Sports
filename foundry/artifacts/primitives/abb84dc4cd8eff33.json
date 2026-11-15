@@ -1,0 +1,78 @@
+{
+  "book_id": "abb84dc4cd8eff33",
+  "source_status": "COMPLETE",
+  "title": "POLYMARKET-TREE-INSPECTION",
+  "file_name": "POLYMARKET-TREE-INSPECTION.md",
+  "sha256": "abb84dc4cd8eff33b18d65554ef7a584426106806d541ab83f793e01a4b14401",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Repository licensing and codebase structure form a categorical fiber bundle over software development lifecycle stages. Universal Lens: Rooted in POLYMARKET-TREE-INSPECTION (abb84dc4cd8eff33), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief nets model SDK licensing compliance and publish permissions as probabilistic constraints on market data integrity. GSI Mapping: Rooted in POLYMARKET-TREE-INSPECTION (abb84dc4cd8eff33), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in GSE are governed by license presence and archival status, encoding conditional execution paths for smart contracts. GSE Mapping: Rooted in POLYMARKET-TREE-INSPECTION (abb84dc4cd8eff33), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "license_compliance_kernel",
+      "name": "License Compliance Kernel",
+      "verbatim_quote": "MIT SDKs vendored into `packages/polymarket-sdks/`: ts-sdk, py-sdk, lattice-std, py-clob-client-v2, polymarket-us-python, polymarket-us-typescript, real-time-data-client, clob-client-v2, rs-clob-client-v2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'License type (MIT, LGPL, Apache)', 'S': 'SDK identifier (string)', 'V': 'Vendoring status (boolean)'}",
+      "assumptions": "All SDKs must be MIT licensed to qualify for vendoring; non-compliant SDKs are excluded.",
+      "breakdown_regime": "When V = false, the system enters a restricted mode where SDKs cannot be imported.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The kernel maps repository metadata to a binary compliance state via license validation logic.",
+        "source_operator": "license_compliance_kernel",
+        "telemetry": "Number of compliant vs non-compliant SDKs per repository."
+      }
+    },
+    {
+      "primitive_id": "publish_permission_gate",
+      "name": "Publish Permission Gate",
+      "verbatim_quote": "stays off. `polymarketPublishAllowed()` returns false. | repo | license | archived | top-level | |---|---|---|---| |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Publish permission flag (boolean)', 'R': 'Repository identifier (string)', 'L': 'License type (string)'}",
+      "assumptions": "Publish is disabled if any critical dependency lacks a valid license.",
+      "breakdown_regime": "If P = false, no new versions may be published to the registry.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from license compliance and archival status using logical conjunction.",
+        "source_operator": "publish_permission_gate",
+        "telemetry": "Boolean output of `polymarketPublishAllowed()` function."
+      }
+    },
+    {
+      "primitive_id": "archival_status_classifier",
+      "name": "Archival Status Classifier",
+      "verbatim_quote": "NONE | False | README.md, SKILL.md, authentication.md, bridge.md, ctf-operations.md, gasless.md, market-data.md, order-patterns.md, websocket.md | | agents",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Archival status (boolean)', 'R': 'Repository identifier (string)', 'T': 'Top-level files list (set)'}",
+      "assumptions": "Repositories marked as archived are considered inactive and subject to different access policies.",
+      "breakdown_regime": "When A = true, repository contents are read-only and not included in active builds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps repository metadata to an archival classification using boolean flags.",
+        "source_operator": "archival_status_classifier",
+        "telemetry": "Count of archived vs active repositories."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "abb84dc4cd8eff33_t0",
+      "think": "The primitives define a hierarchical constraint system where license compliance determines whether a repository can contribute to the ecosystem. The publish gate acts as a final arbiter, enforcing that only compliant and non-archived repositories are allowed to propagate changes. This creates a dual-layered protection mechanism against unauthorized or outdated code propagation. Failure modes include misclassification of licenses leading to accidental inclusion of incompatible code, or incorrect archival tagging causing stale dependencies to remain active. These failures manifest as runtime errors or inconsistent behavior in downstream systems relying on these repositories.\n\nDeep epistemic analysis for POLYMARKET-TREE-INSPECTION (abb84dc4cd8eff33, domain=other, pages_read=7/7): Operator 'License Compliance Kernel' (page 1, domain other) captures: MIT SDKs vendored into `packages/polymarket-sdks/`: ts-sdk, py-sdk, lattice-std, py-clob-client-v2, polymarket-us-python, polymarket-us-typescript, real-time-data-client, clob-client-v2, rs-clob-client-v2. Assumptions: All SDKs must be MIT licensed to qualify for vendoring; non-compliant SDKs are excluded. Breakdown regime: When V = false, the system enters a restricted mode where SDKs cannot be imported. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The kernel maps repository metadata to a binary compliance state via license validation logic. Operator 'Publish Permission Gate' (page 1, domain other) captures: stays off. `polymarketPublishAllowed()` returns false. | repo | license | archived | top-level | |---|---|---|---| | Assumptions: Publish is disabled if any critical dependency lacks a valid license. Breakdown regime: If P = false, no new versions may be published to the registry. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from license compliance and archival status using logical conjunction. Operator 'Archival Status Classifier' (page 1, domain other) captures: NONE | False | README.md, SKILL.md, authentication.md, bridge.md, ctf-operations.md, gasless.md, market-data.md, order-patterns.md, websocket.md | | agents Assumptions: Repositories marked as archived are considered inactive and subject to different access policies. Breakdown regime: When A = true, repository contents are read-only and not included in active builds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps repository metadata to an archival classification using boolean flags. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for POLYMARKET-TREE-INSPECTION (abb84dc4cd8eff33, domain=other, pages_read=7/7): Operator 'License Compliance Kernel' (page 1, domain other) captures: MIT SDKs vendored into `packages/polymarket-sdks/`: ts-sdk, py-sdk, lattice-std, py-clob-client-v2, polymarket-us-python, polymarket-us-typescript, real-time-data-client, clob-client-v2, rs-clob-client-v2. Assumptions: All SDKs must be MIT licensed to qualify for vendoring; non-compliant SDKs are excluded. Breakdown regime: When V = false, the system enters a restricted mode where SDKs cannot be imported. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The kernel maps repository metadata to a binary compliance state via license validation logic. Operator 'Publish Permission Gate' (page 1, domain other) captures: stays off. `polymarketPublishAllowed()` returns false. | repo | license | archived | top-level | |---|---|---|---| | Assumptions: Publish is disabled if any critical dependency lacks a valid license. Breakdown regime: If P = false, no new versions may be published to the registry. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from license compliance and archival status using logical conjunction. Operator 'Archival Status Classifier' (page 1, domain other) captures: NONE | False | README.md, SKILL.md, authentication.md, bridge.md, ctf-operations.md, gasless.md, market-data.md, order-patterns.md, websocket.md | | agents Assumptions: Repositories marked as archived are considered inactive and subject to different access policies. Breakdown regime: When A = true, repository contents are read-only and not included in active builds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps repository metadata to an archival classification using boolean flags. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This structure mirrors earlier work in software supply chain security and open-source governance models, particularly those involving license compatibility checks and version control policies established in early 2000s package managers. Retrocausal Genealogy: Rooted in POLYMARKET-TREE-INSPECTION (abb84dc4cd8eff33), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in POLYMARKET-TREE-INSPECTION (abb84dc4cd8eff33), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to exploit weak license checks or bypass archival rules to inject malicious code. The system's design assumes rational actors who respect licensing terms but also accounts for adversarial behavior through layered verification. Theory of Mind & Decision Maker Model: Rooted in POLYMARKET-TREE-INSPECTION (abb84dc4cd8eff33), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that each primitive operates independently—license validation does not directly influence archival status, preventing cascading failures. Leakage vetoes prevent cross-contamination between layers, e.g., allowing an archived repo to still affect live builds through indirect dependencies. Cross-Layer Veto & Anti-Leakage Check: Rooted in POLYMARKET-TREE-INSPECTION (abb84dc4cd8eff33), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

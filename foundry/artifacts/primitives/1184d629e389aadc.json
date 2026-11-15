@@ -1,0 +1,78 @@
+{
+  "book_id": "1184d629e389aadc",
+  "source_status": "COMPLETE",
+  "title": "ENGINE_BLUEPRINT_2026-10-27 (1)",
+  "file_name": "ENGINE_BLUEPRINT_2026-10-27 (1).md",
+  "sha256": "1184d629e389aadcc0dfc94c00e62fa514815a7ec14ae1718a8ab4523e02c1f2",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A sportsbook engine maps player ratings to fair lines via Gaussian CDFs, generating ladders through local slope estimation and vig application. Universal Lens: Rooted in ENGINE_BLUEPRINT_2026-10-27 (1) (1184d629e389aadc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers latent distributions from observed ladders using conformal predictive intervals, modeling market inefficiencies via Bayesian posterior updates on σ and μ. GSI Mapping: Rooted in ENGINE_BLUEPRINT_2026-10-27 (1) (1184d629e389aadc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE simulates state transitions in betting markets by tracking rung dynamics, vig adjustments, and risk allocation across market classes using dynamic programming. GSE Mapping: Rooted in ENGINE_BLUEPRINT_2026-10-27 (1) (1184d629e389aadc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "distribution_kernel",
+      "name": "Distribution Kernel",
+      "verbatim_quote": "--## STAGE 1 — the kernel: they publish their own sigma Fit `P(home covers x) = Φ((mu - x)/σ)` to the devigged alternate ladder.",
+      "page": 1,
+      "latex": "P(x) = \\Phi\\left(\\frac{\\mu - x}{\\sigma}\\right)",
+      "symbol_and_unit_ledger": "{'x': 'points of spread, dimensionless', 'μ': 'fair line, points', 'σ': 'standard deviation of distribution, points', 'Φ': 'standard normal cumulative distribution function'}",
+      "assumptions": "Normal distribution assumption, local linear fit to ladder, constant σ across rungs.",
+      "breakdown_regime": "When σ varies significantly or non-Gaussian tails emerge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps ratings to fair line via Gaussian CDF; GSI uses this to infer true σ and μ from observed ladders.",
+        "source_operator": "distribution_kernel",
+        "telemetry": "RMSE of local linear fit to ladder (0.005–0.024)"
+      }
+    },
+    {
+      "primitive_id": "ladder_generation",
+      "name": "Ladder Generation",
+      "verbatim_quote": "Pinnacle is not flat — it prices spreads 1.4 pp tighter than DK, and it loads the *close* game (4.23%) rather than the favourite.",
+      "page": 1,
+      "latex": "price(x) = \\text{american}\\left(\\frac{1}{\\text{CDF}(x) \\cdot (1 + \\text{hold})}\\right)",
+      "symbol_and_unit_ledger": "{'x': 'spread point level, points', 'CDF(x)': 'cumulative probability at x, dimensionless', 'hold': 'vig rate, dimensionless', 'american()': 'converts decimal to American odds format'}",
+      "assumptions": "Monotonicity enforced, CDF-derived rungs, 0.5-point grid near line.",
+      "breakdown_regime": "When rung spacing violates monotonicity or grid constraints fail.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ladder structure mirrors CDF shape; GSE models rung evolution under news/risk.",
+        "source_operator": "ladder_generation",
+        "telemetry": "Zero monotonicity violations in 3,198 samples"
+      }
+    },
+    {
+      "primitive_id": "vig_application",
+      "name": "Vig Application",
+      "verbatim_quote": "**Two different vig policies, both deliberate:** - DK: uniform rake, tilted toward the side the public takes.",
+      "page": 1,
+      "latex": "hold = \\text{vig}(\\text{public_side})",
+      "symbol_and_unit_ledger": "{'hold': 'vig rate applied, dimensionless', 'vig()': 'function mapping public bias to vig adjustment'}",
+      "assumptions": "Vig policy varies by book, tied to public sentiment or market class.",
+      "breakdown_regime": "When vig misaligns with actual risk or public behavior shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Vig policy encodes book-specific risk load; GSI models this as a latent variable in posterior inference.",
+        "source_operator": "vig_application",
+        "telemetry": "Pinnacle tightens by 1.4 pp vs DK, loading close games"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1184d629e389aadc_t0",
+      "think": "The engine operates in six stages: ratings → fair line → distribution → CDF → ladder rungs → vig application. The core kernel assumes a normal distribution, mapping spread probabilities via Φ((μ − x)/σ). This is validated by a clean local linear fit with low RMSE. Ladder generation is deterministic, enforcing monotonicity and spacing rules from the CDF. Vig application introduces asymmetry, with Pinnacle applying tighter spreads (1.4 pp) and loading close games, while DK applies uniform rake tilted toward public bias. The model’s failure mode arises when σ varies or skewness appears in tails, invalidating the normality assumption. Dualities emerge in how each book’s policy reflects distinct risk-load strategies, with Pinnacle underpricing longshots and DK balancing public sentiment.\n\nDeep epistemic analysis for ENGINE_BLUEPRINT_2026-10-27 (1) (1184d629e389aadc, domain=other, pages_read=3/3): Operator 'Distribution Kernel' (page 1, domain other) captures: --## STAGE 1 — the kernel: they publish their own sigma Fit `P(home covers x) = Φ((mu - x)/σ)` to the devigged alternate ladder. Assumptions: Normal distribution assumption, local linear fit to ladder, constant σ across rungs. Breakdown regime: When σ varies significantly or non-Gaussian tails emerge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps ratings to fair line via Gaussian CDF; GSI uses this to infer true σ and μ from observed ladders. Operator 'Ladder Generation' (page 1, domain other) captures: Pinnacle is not flat — it prices spreads 1.4 pp tighter than DK, and it loads the *close* game (4.23%) rather than the favourite. Assumptions: Monotonicity enforced, CDF-derived rungs, 0.5-point grid near line. Breakdown regime: When rung spacing violates monotonicity or grid constraints fail. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ladder structure mirrors CDF shape; GSE models rung evolution under news/risk. Operator 'Vig Application' (page 1, domain other) captures: **Two different vig policies, both deliberate:** - DK: uniform rake, tilted toward the side the public takes. Assumptions: Vig policy varies by book, tied to public sentiment or market class. Breakdown regime: When vig misaligns with actual risk or public behavior shifts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Vig policy encodes book-specific risk load; GSI models this as a latent variable in posterior inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ENGINE_BLUEPRINT_2026-10-27 (1) (1184d629e389aadc, domain=other, pages_read=3/3): Operator 'Distribution Kernel' (page 1, domain other) captures: --## STAGE 1 — the kernel: they publish their own sigma Fit `P(home covers x) = Φ((mu - x)/σ)` to the devigged alternate ladder. Assumptions: Normal distribution assumption, local linear fit to ladder, constant σ across rungs. Breakdown regime: When σ varies significantly or non-Gaussian tails emerge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps ratings to fair line via Gaussian CDF; GSI uses this to infer true σ and μ from observed ladders. Operator 'Ladder Generation' (page 1, domain other) captures: Pinnacle is not flat — it prices spreads 1.4 pp tighter than DK, and it loads the *close* game (4.23%) rather than the favourite. Assumptions: Monotonicity enforced, CDF-derived rungs, 0.5-point grid near line. Breakdown regime: When rung spacing violates monotonicity or grid constraints fail. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ladder structure mirrors CDF shape; GSE models rung evolution under news/risk. Operator 'Vig Application' (page 1, domain other) captures: **Two different vig policies, both deliberate:** - DK: uniform rake, tilted toward the side the public takes. Assumptions: Vig policy varies by book, tied to public sentiment or market class. Breakdown regime: When vig misaligns with actual risk or public behavior shifts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Vig policy encodes book-specific risk load; GSI models this as a latent variable in posterior inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical arbitrage theory and probabilistic pricing models from 2020s, evolving into conformal prediction frameworks for sportsbooks. Retrocausal Genealogy: Rooted in ENGINE_BLUEPRINT_2026-10-27 (1) (1184d629e389aadc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ENGINE_BLUEPRINT_2026-10-27 (1) (1184d629e389aadc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the book’s internal risk engine and the public’s betting behavior. Books optimize for profit while adapting to market flows, creating a feedback loop between perceived fairness and actual payouts. Theory of Mind & Decision Maker Model: Rooted in ENGINE_BLUEPRINT_2026-10-27 (1) (1184d629e389aadc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that σ and vig be independently estimable. Leakage occurs if local fits are contaminated by global variance or asymmetric risk exposure. Cross-Layer Veto & Anti-Leakage Check: Rooted in ENGINE_BLUEPRINT_2026-10-27 (1) (1184d629e389aadc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in ENGINE_BLUEPRINT_2026-10-27 (1) (1184d629e389aadc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "1fc20b8bb2ba648e",
+  "source_status": "COMPLETE",
+  "title": "2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al",
+  "file_name": "2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al.md",
+  "sha256": "1fc20b8bb2ba648e7595907d7c7e5b2210f88608a1a2eb228607df48c2217143",
+  "primary_domain": "psych",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A fusion of public basketball data into a coherent per-shot dataset enables neural shot-value estimation and real-time game-tree planning via expectimax search with branch-and-bound pruning. Universal Lens: Rooted in 2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al (1fc20b8bb2ba648e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on fused public data streams maps to calibrated probabilistic shot value estimates using ShotNet MLP, enabling opponent-aware possession planning through conformal prediction. GSI Mapping: Rooted in 2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al (1fc20b8bb2ba648e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models half-court possessions as sequential game trees; state transitions are driven by shot value expectations derived from neural embeddings and constrained by real-time search algorithms. GSE Mapping: Rooted in 2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al (1fc20b8bb2ba648e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "data_fusion_operator",
+      "name": "Data Fusion Operator",
+      "verbatim_quote": "We fuse five public sources into one per-shot dataset of 4.23M shots over 21 seasons.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Public data sources are temporally aligned and semantically consistent.",
+      "breakdown_regime": "When data sources diverge in coverage or annotation standards.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps heterogeneous public data streams (shot locations, play-by-play, matchup tracking, biometrics) into a unified latent space for shot-level modeling.",
+        "source_operator": "data_fusion_operator",
+        "telemetry": "Accuracy of fused dataset in predicting shot outcomes across seasons."
+      }
+    },
+    {
+      "primitive_id": "shot_value_estimator",
+      "name": "Shot Value Estimator",
+      "verbatim_quote": "Shot values come from ShotNet, an embedding multilayer perceptron (MLP).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "ShotNet learns spatial and temporal dependencies in shot selection.",
+      "breakdown_regime": "When shot location or context deviates significantly from training distribution.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Embedding-based MLP produces continuous shot value scores from discrete input features, enabling probabilistic decision-making.",
+        "source_operator": "shot_value_estimator",
+        "telemetry": "Calibration of predicted shot probabilities against empirical success rates."
+      }
+    },
+    {
+      "primitive_id": "possession_planner",
+      "name": "Possession Planner",
+      "verbatim_quote": "A depth-limited expectimax search then solves the offensive decision tree, with branch-and-bound pruning to keep it real time.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Offensive decisions form a sequential game tree with known branching factors and payoff structures.",
+      "breakdown_regime": "When computational limits prevent full tree exploration or when model uncertainty exceeds tolerance.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Expectimax search with pruning mirrors strategic decision-making under uncertainty, optimizing expected utility over possible shot sequences.",
+        "source_operator": "possession_planner",
+        "telemetry": "Performance gain over baseline strategies in simulated possession outcomes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1fc20b8bb2ba648e_t0",
+      "think": "The core innovation lies in combining structured public datasets—shot locations, play-by-play logs, matchup tracking, and biometric data—into a single per-shot representation. This fusion enables training a neural network (ShotNet) to estimate shot value as a function of spatial and contextual features. The resulting shot value estimates are then used within a game-tree framework where each possession is modeled as a sequence of decisions. An expectimax search algorithm evaluates potential shot paths, guided by the learned shot values and constrained by computational efficiency via branch-and-bound pruning. This architecture allows real-time decision support for offensive plays while maintaining alignment with observed professional performance metrics. Failure modes include misalignment between public data and real-world dynamics, or overfitting to specific data regimes not representative of broader tactical diversity.\n\nDeep epistemic analysis for 2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al (1fc20b8bb2ba648e, domain=psych, pages_read=1/1): Operator 'Data Fusion Operator' (page 1, domain psych) captures: We fuse five public sources into one per-shot dataset of 4.23M shots over 21 seasons. Assumptions: Public data sources are temporally aligned and semantically consistent. Breakdown regime: When data sources diverge in coverage or annotation standards. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps heterogeneous public data streams (shot locations, play-by-play, matchup tracking, biometrics) into a unified latent space for shot-level modeling. Operator 'Shot Value Estimator' (page 1, domain psych) captures: Shot values come from ShotNet, an embedding multilayer perceptron (MLP). Assumptions: ShotNet learns spatial and temporal dependencies in shot selection. Breakdown regime: When shot location or context deviates significantly from training distribution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Embedding-based MLP produces continuous shot value scores from discrete input features, enabling probabilistic decision-making. Operator 'Possession Planner' (page 1, domain psych) captures: A depth-limited expectimax search then solves the offensive decision tree, with branch-and-bound pruning to keep it real time. Assumptions: Offensive decisions form a sequential game tree with known branching factors and payoff structures. Breakdown regime: When computational limits prevent full tree exploration or when model uncertainty exceeds tolerance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Expectimax search with pruning mirrors strategic decision-making under uncertainty, optimizing expected utility over possible shot sequences. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al (1fc20b8bb2ba648e, domain=psych, pages_read=1/1): Operator 'Data Fusion Operator' (page 1, domain psych) captures: We fuse five public sources into one per-shot dataset of 4.23M shots over 21 seasons. Assumptions: Public data sources are temporally aligned and semantically consistent. Breakdown regime: When data sources diverge in coverage or annotation standards. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps heterogeneous public data streams (shot locations, play-by-play, matchup tracking, biometrics) into a unified latent space for shot-level modeling. Operator 'Shot Value Estimator' (page 1, domain psych) captures: Shot values come from ShotNet, an embedding multilayer perceptron (MLP). Assumptions: ShotNet learns spatial and temporal dependencies in shot selection. Breakdown regime: When shot location or context deviates significantly from training distribution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Embedding-based MLP produces continuous shot value scores from discrete input features, enabling probabilistic decision-making. Operator 'Possession Planner' (page 1, domain psych) captures: A depth-limited expectimax search then solves the offensive decision tree, with branch-and-bound pruning to keep it real time. Assumptions: Offensive decisions form a sequential game tree with known branching factors and payoff structures. Breakdown regime: When computational limits prevent full tree exploration or when model uncertainty exceeds tolerance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Expectimax search with pruning mirrors strategic decision-making under uncertainty, optimizing expected utility over possible shot sequences. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in game theory (expectimax), machine learning (multilayer perceptrons), and sports analytics (shot charts, player tracking). Influenced by prior work in real-time planning systems and data-driven coaching tools. Retrocausal Genealogy: Rooted in 2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al (1fc20b8bb2ba648e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opponent awareness through matchup tracking and historical play patterns, assuming adversaries act rationally to maximize their own expected utility. Decision actors are represented as stochastic policies conditioned on current game state and opponent behavior. Theory of Mind & Decision Maker Model: Rooted in 2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al (1fc20b8bb2ba648e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that each data stream contributes distinct information; leakage vetos prevent contamination of shot value estimation by confounding variables such as officiating bias or unmeasured environmental factors. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al (1fc20b8bb2ba648e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

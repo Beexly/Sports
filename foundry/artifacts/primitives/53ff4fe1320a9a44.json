@@ -1,0 +1,213 @@
+{
+ "book_id": "53ff4fe1320a9a44",
+ "source_status": "COMPLETE",
+ "pages_total": 197,
+ "pages_read": 197,
+ "extractor_model": "qwen4-max-preview (worker ext-45)",
+ "source_note": "Li Deng and Dong Yu, Deep Learning: Methods and Applications, Foundations and Trends in Signal Processing vol. 7, nos. 3-4 (2013; copyright 2014), journal pp. 197-387, DOI 10.1561/2000000039. 197 PDF pages, all read in full chunks (body PDF pp. 1-158, references PDF pp. 159-197). Page citations are 1-based PDF page numbers; printed journal page = PDF page + 190. Page-1 retraction check: none; no retraction markers anywhere; no betting/odds content; no football content (GSE mappings are architectural transfers, labeled as such). Era-bound: empirical results (Table 7.1 error rates, ImageNet 2012/2013 numbers) are 2010-2014 benchmarks, not permanent laws. Text-layer artifacts quarantined (no primitives built on them): 'hyper cycle' for 'hype cycle' (PDF pp. 20-21), reference [256] 'Playing arari' for 'Atari' (PDF p. 180), 'consine' for 'cosine' in the DSSM lead-in prose (PDF p. 124, preserved verbatim inside the p5 quote). Quotes preserve source ligatures (U+FB01/U+FB02) and hyphenation artifacts ('hid- den', 'approx- imately') exactly as whitespace-normalized. Equations transcribed from the PDF text layer with sub/superscript structure reconstructed in LaTeX and cross-checked against surrounding prose; p6's LaTeX is a labeled symbolic restatement of a printed prose procedure, and p7's RER values are labeled derived arithmetic on printed Table 7.1 pairs.",
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "RBM energy-based joint distribution (Bernoulli-Bernoulli)",
+   "verbatim_quote": "In an RBM, the joint distribution p(v, h; θ) over the visible units v and hidden units h, given the model parameters θ, is deﬁned in terms",
+   "page": 52,
+   "latex": "p(v,h;\\theta) = \\frac{\\exp(-E(v,h;\\theta))}{Z}, \\qquad E(v,h;\\theta) = -\\sum_{i=1}^{I}\\sum_{j=1}^{J} w_{ij} v_i h_j - \\sum_{i=1}^{I} b_i v_i - \\sum_{j=1}^{J} a_j h_j, \\qquad Z = \\sum_{v}\\sum_{h} \\exp(-E(v,h;\\theta))",
+   "symbol_and_unit_ledger": "v_i = visible unit state, dimensionless Bernoulli {0,1}; h_j = hidden unit state, dimensionless Bernoulli {0,1}; w_ij = symmetric visible-hidden interaction weight, dimensionless; b_i, a_j = visible/hidden bias terms, dimensionless; I, J = numbers of visible/hidden units, dimensionless counts; E = energy, dimensionless (thermal units kT=1); Z = partition function, dimensionless; p = joint probability on [0,1], dimensionless. Printed equation (PDF p. 52), transcribed from the PDF text layer with sub/superscripts reconstructed. All terms dimensionless; homogeneous.",
+   "assumptions": "Bernoulli(visible)-Bernoulli(hidden) RBM; bipartite graph with no visible-visible or hidden-hidden connections (PDF pp. 51-52). The Gaussian-visible variant replaces the visible bias term with (v_i - b_i)^2/2 and unit-variance Gaussian conditionals (PDF pp. 52-53). Printed equation, not a formalization.",
+   "breakdown_regime": "The partition function Z is a sum over exponentially many configurations and is intractable to compute exactly (PDF p. 53); any use requiring exact likelihood or exact model expectations breaks down at scale and must use CD/PCD approximations. Standard RBMs cannot represent covariance structure of continuous data (mcRBM motivation, PDF p. 29).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exact structural isomorphism to the Boltzmann-Gibbs distribution of statistical physics: the RBM is a bipartite Ising-type spin system with visible and hidden spins, energy E, and partition function Z; learning is inverse-Ising parameter estimation from sampled configurations. The same object binds any latent-state energy model of a dynamical system, including game-state models with hidden tactical variables.",
+    "source_operator": "p1",
+    "telemetry": "Learned weight matrices, hidden activation statistics, reconstruction error, free-energy estimates — all observable from training logs; no external data required."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "RBM factorized sigmoid conditionals (bipartite conditional independence)",
+   "verbatim_quote": "where wij represents the symmetric interaction term between visible unit vi and hidden unit hj, bi and aj the bias terms, and I and J are the numbers of visible and hidden units.",
+   "page": 52,
+   "latex": "p(h_j = 1 \\mid v;\\theta) = \\sigma\\!\\left(\\sum_{i=1}^{I} w_{ij} v_i + a_j\\right), \\qquad p(v_i = 1 \\mid h;\\theta) = \\sigma\\!\\left(\\sum_{j=1}^{J} w_{ij} h_j + b_i\\right), \\qquad \\sigma(x) = \\frac{1}{1 + e^{-x}}",
+   "symbol_and_unit_ledger": "sigma = logistic sigmoid, dimensionless map R -> (0,1); p(h_j=1|v), p(v_i=1|h) = conditional activation probabilities on [0,1], dimensionless; w_ij, a_j, b_i, v_i, h_j as in p1, all dimensionless; I, J dimensionless counts. Printed equations (PDF p. 52). Homogeneous.",
+   "assumptions": "Bipartite restriction (no within-layer connections) makes units within each layer conditionally independent given the other layer, so the joint conditional factorizes into per-unit sigmoids (PDF pp. 51-52). Printed equations, not a formalization.",
+   "breakdown_regime": "Factorization fails the moment within-layer connections are added (general Boltzmann machines are 'very complex to study and very slow to train', PDF p. 29); deeper DBMs lose exact tractable conditionals and need variational approximations. The Gaussian-visible variant changes the visible conditional to a Gaussian density (PDF p. 53).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The factorized conditionals are the exact block-Gibbs transition kernel of the RBM Markov chain: one alternating visible/hidden resampling step is cheap and exact, which is what makes contrastive divergence and greedy layer-wise pre-training computationally feasible. Any latent-variable simulator that needs fast conditional resampling inherits this kernel design.",
+    "source_operator": "p2",
+    "telemetry": "Gibbs chain mixing time, CD-k reconstruction error, per-unit activation rates — observable from training diagnostics."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Contrastive-divergence weight update (data minus model correlations)",
+   "verbatim_quote": "Taking the gradient of the log likelihood log p(v; θ) we can derive the update rule for the RBM weights as:",
+   "page": 53,
+   "latex": "\\Delta w_{ij} = \\mathbb{E}_{\\mathrm{data}}[v_i h_j] - \\mathbb{E}_{\\mathrm{model}}[v_i h_j]",
+   "symbol_and_unit_ledger": "Delta w_ij = weight increment, dimensionless; E_data[v_i h_j] = expectation of the visible-hidden product under the training data (with h sampled given v according to the model), dimensionless correlation; E_model[v_i h_j] = same expectation under the model distribution, dimensionless correlation. Printed update rule (PDF p. 53). Homogeneous.",
+   "assumptions": "E_model is intractable; CD-1 replaces it with one Gibbs step initialized at the data (v0 -> h0 -> v1 -> h1), CD-k with k steps (PDF pp. 53-54). Persistent CD / stochastic maximum likelihood work better when the RBM is used as a generative model (PDF p. 54). Printed equation plus printed approximation procedure.",
+   "breakdown_regime": "CD-1 is a biased approximation of the true log-likelihood gradient; the bias grows when the model distribution is far from the data or the chain mixes slowly. The source states PCD/SMC 'work better than CD when using the RBM as a generative model' (PDF p. 54) — CD is a pre-training tool, not an exact generative learner.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Positive-phase minus negative-phase correlation difference is the contrastive learning kernel: raise data correlations, suppress model-generated correlations. It is the same structural move as noise-contrastive estimation used later for language models (PDF p. 108) — learning a density by discriminating data from a contrast distribution instead of normalizing it.",
+    "source_operator": "p3",
+    "telemetry": "Weight-update trajectories, reconstruction error per CD step, monitoring of the data/model correlation gap — training-log observables."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "DSN closed-form output weights (convex subproblem constraint U = F(W))",
+   "verbatim_quote": "This provides an explicit constraint between U and W which were treated independently in the conventional backpropagation algorithm.",
+   "page": 65,
+   "latex": "U = (H H^{T})^{-1} H T^{T} = F(W), \\qquad h_i = \\sigma(W^{T} x_i), \\qquad E = \\frac{1}{2}\\sum_{i} \\|y_i - t_i\\|^{2}, \\qquad y_i = U^{T} h_i",
+   "symbol_and_unit_ledger": "U = upper-layer weight matrix, L x C, dimensionless; W = lower-layer weight matrix, D x L, dimensionless; H = hidden activation matrix [h_1..h_N], L x N, dimensionless sigmoid outputs; T = target matrix [t_1..t_N], C x N, dimensionless 0-1 coding; x_i = input feature vector, dimension D, dimensionless; y_i = module output, dimension C; E = total squared error, dimensionless; N = number of training samples, L = hidden units, C = output dimension, D = input dimension, all dimensionless counts. Printed equations (PDF pp. 64-65). Homogeneous.",
+   "assumptions": "Linear output units and sigmoidal hidden units in each DSN module; MSE criterion; H (equivalently W) held fixed when solving for U, which makes the U-subproblem convex with a closed form (PDF pp. 61-65). Bias terms implicit via augmented ones. Printed equations, not a formalization.",
+   "breakdown_regime": "The closed form requires H H^T to be invertible (ill-conditioned hidden activations break it numerically); the full network in W remains nonconvex (PDF p. 68) — the convexity is per-module, not global. K-DSN removes W-learning entirely via the kernel trick at the cost of kernel-matrix scalability (PDF pp. 68-71).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The closed form is exactly ordinary least squares: U projects the targets onto the column space of the hidden activations, an orthogonal-projection operator in feature space. The architectural invariant is 'make the top of each module linear so its subproblem is convex' — the same move as linear readouts in reservoir computing (PDF p. 90) and the basis of batch-parallel DSN training.",
+    "source_operator": "p4",
+    "telemetry": "Per-module MSE, condition number of H H^T, module count vs validation error — training-log observables."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "DSSM cosine relevance and softmax click-through likelihood",
+   "verbatim_quote": "The semantic relevance score between a query Q and a document D can then be computed as the consine distance",
+   "page": 124,
+   "latex": "R(Q,D) = \\cos(y_Q, y_D) = \\frac{y_Q^{T} y_D}{\\|y_Q\\|\\,\\|y_D\\|}, \\qquad P(D \\mid Q) = \\frac{\\exp(\\gamma R(Q,D))}{\\sum_{D' \\in \\mathcal{D}} \\exp(\\gamma R(Q,D'))}",
+   "symbol_and_unit_ledger": "y_Q, y_D = query and document concept vectors in the shared semantic space, dimensionless coordinates; R(Q,D) = cosine similarity on [-1,1], dimensionless; gamma = smoothing factor, dimensionless, 'set empirically on a held-out data set' (PDF p. 124); P(D|Q) = posterior probability on [0,1], dimensionless; D = candidate document set. Printed equations (PDF p. 124); the source prints 'consine' (typo) in the lead-in prose, preserved in the quote. Homogeneous.",
+   "assumptions": "DNN branches map query and documents into a common semantic space; training maximizes the conditional likelihood of clicked documents given queries using click-through logs as weak supervision (PDF pp. 122-125). The full candidate set is web-scale and intractable; the implementation uses the clicked document plus four randomly sampled unclicked negatives (PDF p. 125). Printed equations, not a formalization.",
+   "breakdown_regime": "The softmax denominator over all documents is intractable at web scale — negative sampling is mandatory, and the source reports no significant difference across sampling strategies (PDF p. 125). Cosine similarity discards vector magnitude; the unnormalized dot-product variant is used in DeViSE (PDF p. 143). Click labels are biased weak supervision, not ground-truth relevance.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Softmax over similarity scores is the same functional form as maximum-mutual-information sequence training in speech (the source draws the analogy explicitly, PDF p. 124) and as modern contrastive/attention scoring: a normalized exponential family over pairwise scores. Any ranking component that retrieves similar latent states — plays, formations, matchups — can instantiate this kernel with task-aligned weak supervision.",
+    "source_operator": "p5",
+    "telemetry": "Click-through logs (query, clicked doc, sampled negatives), cosine-score distributions, held-out ranking metrics — the source's own training telemetry."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Dropout regularization (random omission plus weight scaling)",
+   "verbatim_quote": "On each training instance, each hid- den unit is randomly omitted with a ﬁxed probability (e.g., p = 0.5).",
+   "page": 95,
+   "latex": "\\tilde{h} = m \\odot h, \\quad m_j \\sim \\mathrm{Bernoulli}(1-p); \\qquad W_{\\mathrm{test}} = (1-p)\\,W",
+   "symbol_and_unit_ledger": "h = hidden-unit activations, dimensionless; m = binary omission mask, dimensionless Bernoulli components; p = omission probability on [0,1], printed example p = 0.5 (PDF p. 95); W = network weights, dimensionless; (1-p) = decoding-time scaling factor, dimensionless; the alternative inverted scaling 1/(1-p) is applied during training instead (PDF p. 95). LaTeX is a faithful symbolic restatement of the printed prose procedure; the source prints no dropout equation. Homogeneous.",
+   "assumptions": "Each hidden unit is randomly omitted with fixed probability on each training instance; decoding scales weights by (1-p) (or training scales by 1/(1-p)) (PDF p. 95). Benefits: units act strongly by themselves without co-adaptation, and implicit model averaging over subnetworks; most pronounced with limited data or oversized networks (PDF pp. 95-96).",
+   "breakdown_regime": "The dropout rate must be substantially smaller for convolutional layers than for fully connected layers (PDF p. 96) — a single global rate is wrong. With abundant data and compute the regularization need shrinks (PDF p. 155). The procedure is a training-time intervention; applying the mask at test time without scaling breaks the expectation match.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Dropout is an implicit ensemble kernel: training samples thinned subnetworks and test-time scaling approximates averaging over them, while breaking co-adaptation of feature detectors. It is the regularizer of choice in the limited-data regime — exactly the regime of small-sample sports datasets — and composes with ReLU for the best printed accuracy (PDF p. 91).",
+    "source_operator": "p6",
+    "telemetry": "Validation error vs per-layer dropout rate, activation sparsity, co-adaptation diagnostics — standard training observables."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Data-scaling of the DNN advantage (relative error reduction grows with training size)",
+   "verbatim_quote": "Not only the computation scales up well (i.e., almost linearly) with the training size, but most importantly the relative error rate reduction increases substantially with increasing amounts of training data — from approx- imately 10% to 20%, and then to 30%.",
+   "page": 78,
+   "latex": "\\mathrm{RER} = \\frac{\\mathrm{ER}_{\\mathrm{GMM}} - \\mathrm{ER}_{\\mathrm{DNN}}}{\\mathrm{ER}_{\\mathrm{GMM}}}",
+   "symbol_and_unit_ledger": "ER = error rate (phone error for TIMIT, sentence error for Voice Search, word error for Switchboard), dimensionless ratio reported in %; RER = relative error reduction of DNN-HMM vs GMM-HMM, dimensionless ratio. Printed Table 7.1 pairs (PDF p. 79): TIMIT 3 h 24.8% -> 23.0%; Voice Search 24-48 h 36.2% -> 30.1%; Switchboard 309 h 23.6% -> 15.8%; Switchboard 2000 h 21.7% -> 14.6%. Derived arithmetic on those printed values: RER = 7.3%, 16.9%, 33.1%, 32.7% respectively (computed, labeled as derived). The RER definition is a standard restatement; the source prints the table and the prose trend, not this formula.",
+   "assumptions": "Context-dependent DNN-HMM vs then-state-of-the-art GMM-HMM on the same tasks; tied-triphone (senone) outputs, GMM-HMM-generated alignments, long input windows (PDF p. 78). Training data increase approximately one order of magnitude per sub-table (PDF p. 78). The prose summarizes the trend as 'approximately 10% to 20%, and then to 30%' (PDF p. 78).",
+   "breakdown_regime": "Era-bound 2010-2013 benchmark results, not a universal law: the numbers depend on the specific GMM-HMM baselines, features, and tasks printed. The trend statement is qualitative beyond the four printed points; no functional form RER(N) is printed and none may be invented. Later architectures 'produced better results than shown here' (PDF p. 78).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Empirical scaling invariant of deep discriminative models: the relative advantage over shallow generative baselines grows with training-data volume, while computation scales almost linearly (PDF p. 78). For any simulator stack choosing between shallow and deep components, this is the printed prior that data volume gates the deep model's edge — the same regime logic as the pretraining discussion (PDF p. 156).",
+    "source_operator": "p7",
+    "telemetry": "Error rate vs training-set size curves on held-out benchmarks; the source's own Table 7.1 is the calibration anchor."
+   }
+  },
+  {
+   "primitive_id": "p8",
+   "name": "Rectified linear unit activation",
+   "verbatim_quote": "ReLU refers to the units in a neural network that use the activation function of f(x) = max(0, x).",
+   "page": 90,
+   "latex": "f(x) = \\max(0, x)",
+   "symbol_and_unit_ledger": "x = pre-activation input, dimensionless; f(x) = unit output, dimensionless; gradient is 1 for x > 0 and 0 for x < 0 (piecewise linear, non-saturating on the positive side). Printed equation f(x) = max(0, x) (PDF p. 90; also printed as y = max(x, 0) on PDF p. 100 and f(x) = max(x, 0) on PDF p. 135). Homogeneous.",
+   "assumptions": "Replaces sigmoid/tanh units whose gradients are weak near saturation in both directions (PDF p. 90). First applied to speech DNNs by Jaitly and Hinton; best large-vocabulary accuracy obtained combining ReLU with dropout (PDF pp. 90-91). Printed equation, not a formalization.",
+   "breakdown_regime": "The zero gradient for x < 0 can permanently silence units ('dying' behavior is not discussed in this source — no claim made about it here); the source's own caveat is that ReLU alone is insufficient without dropout for best accuracy (PDF p. 91). p-norm units with p = 2 are reported to outperform ReLU, tanh, and maxout in the cited experiments (PDF p. 91) — ReLU is not a universal optimum.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Piecewise-linear activation kernel: sparser gradients, less diffusion of credit and blame in recurrent nets, faster training (PDF p. 100), and GPU-friendly non-saturating dynamics (PDF p. 135). It is the optimization-side complement to dropout's regularization-side kernel; together they define the trainable-large-model regime of the 2012-2014 era.",
+    "source_operator": "p8",
+    "telemetry": "Training speed, activation sparsity, gradient norms per layer — standard training observables."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The organizing invariant of this monograph is a three-way taxonomy — unsupervised/generative, supervised/discriminative, and hybrid deep networks (PDF pp. 24-26) — and the hybrid class exists for a precise, printed reason: unsupervised learning assists discrimination through exactly two channels, optimization and regularization. The optimization viewpoint is that generative pre-training supplies excellent initialization points in a highly non-convex parameter landscape; the regularization viewpoint is that it supplies a prior on the set of representable functions (PDF pp. 36-37, citing the Erhan et al. analysis). Everything technical in Chapters 4-6 is an instance of making one of those channels tractable. The RBM is the engine of the optimization channel: an energy-based joint distribution (p1) whose bipartite restriction factorizes the conditionals into per-unit sigmoids (p2), which makes block Gibbs sampling exact and cheap, which in turn makes the contrastive-divergence gradient — data correlations minus model correlations (p3) — computable at all. The partition function is intractable, so the entire generative program is an approximation program, and the source is honest about where the approximations fail: CD is a pre-training tool, and persistent CD works better when the RBM must actually generate (PDF p. 54). The DSN takes the opposite route to tractability: instead of approximating a non-convex objective, it restructures the architecture so that each module's output-weight subproblem is convex and closed-form, U = (H H^T)^{-1} H T^T (p4), an ordinary-least-squares projection that enables batch-mode, parallelizable learning; the tensor variant shifts more of the non-convex burden into the convex U-step, and the kernel variant eliminates W-learning entirely (PDF pp. 66-71). Read together, these are one recurring move: convert a non-convex learning problem into convex or tractable subproblems — greedy layer-wise pre-training, closed-form output weights, the kernel trick, and later dropout as implicit model averaging (p6). The second deep lesson is that every method's validity is regime-conditional. Pre-training is most prominent when labeled data are limited (PDF p. 154); with abundant labels, discriminative pre-training or even careful random initialization plus SGD works as well or better (PDF pp. 19, 57), and the conclusion states flatly that DBN pre-training 'appears unnecessary if enough data and computing power are used' (PDF p. 156). The macro-level evidence is the scaling table (p7): as training data grow from hours to thousands of hours, the DNN's relative error reduction over the GMM-HMM baseline grows from roughly ten to twenty to thirty percent, while computation scales almost linearly. The honest extraction therefore keeps two layers separate: the durable mathematical kernels (energy model, factorized conditionals, contrastive gradient, least-squares projection, dropout, ReLU) and the era-bound empirical claims (2010-2013 WER tables, ImageNet error rates, the pre-training debate). The kernels transfer to any latent-state modeling problem; the numbers transfer only as historical calibration anchors. A simulator stack that confuses the two — treating a 2012 benchmark as a law, or a regime-conditional trick as a universal recipe — violates the source's own most repeated warning: no single deep learning technique succeeds for all tasks (PDF p. 155).",
+   "retrocausal_genealogy": "The hidden state of 2014 deep learning was created by the optimization failures of 1980s-90s backpropagation: 'BP alone did not work well in practice then for learning networks with more than a small number of hidden layers' (PDF p. 16), and the field defected to convex shallow models 'at the cost of reduced modeling power' (PDF p. 16). The 2006 DBN papers are the scar tissue: greedy layer-wise pre-training as an empirical fix for poor local optima, later reinterpreted as regularization. A second scar is industrial path dependence: the DNN output layer was shaped into senones to fit the existing GMM-HMM decoder infrastructure and keep decoder changes minimal (PDF p. 73) — the architecture carries the history of the software it had to replace.",
+   "theory_of_mind": "The authors write for three audiences with different beliefs: the signal-processing community that abandoned neural networks, the machine-learning community that owns the theory, and industry engineers who need minimal decoder changes. The three-way taxonomy is a persuasion device — 'hybrid' gives the signal-processing reader a place to stand between pure generative and pure discriminative camps. The repeated insistence that pre-training 'appears unnecessary if enough data and computing power are used' (PDF p. 156) is the authors negotiating with their own 2009 legacy: they know the DBN story that made the field famous is being superseded by scale, and they write the correction into their own conclusion before critics do.",
+   "cross_layer_veto": "The optimization layer vetoes architectural ambition: deep generative graphical models 'are often used with inappropriate approximations in inference, learning, prediction, and topology design, all arising from inherent intractability' (PDF p. 32). The data regime vetoes pre-training: with abundant labels, discriminative pre-training or careful random initialization wins (PDF pp. 19, 57). The task layer vetoes the universal method: generative pre-training 'failed to work for some other tasks' such as language identification and speaker recognition, because the features describe variation without discriminating it (PDF p. 155). Compute vetoes width and depth: deep-and-wide networks demand GPGPU-scale resources (PDF p. 18)."
+  },
+  {
+   "trace_id": "t2",
+   "think": "Beneath the taxonomy, the monograph's unifying invariant is representation learning: the same operation — learning a hierarchy of distributed representations — recurs in every application chapter, and the printed numbers anchor it. Speech spectrograms become 312-bit binary codes through a deep autoencoder, reconstructing more faithfully than a 312-bit vector quantizer (PDF pp. 43-45); documents become 128-bit semantic hashes retrieved by Hamming distance (PDF pp. 120-121); words leave 1-of-V symbolic coding for low-dimensional continuous embeddings (PDF pp. 104, 109); queries and documents meet in a shared semantic space scored by cosine similarity (p5); images are projected into the text-embedding space for zero-shot recognition (PDF pp. 143-144). The mechanism is the distributed-representation definition in Table 3.1: many-to-many correspondence between units and concepts gives graceful degradation and generalization to new configurations (PDF p. 28). The second invariant is objective alignment. Unsupervised reconstruction is only loosely coupled to the task metric: semantic hashing does not significantly beat strong lexical IR baselines because it optimizes reconstruction rather than relevance (PDF p. 122); DSSM fixes this by training directly on the click-through likelihood (p5). The identical lesson appears in speech: frame-level cross-entropy is mismatched to sequence error rate, and full-sequence MMI training closes the gap at the price of greater overfitting risk (PDF pp. 92-93). The third invariant is the trainability kit: ReLU's non-saturating piecewise-linear dynamics (p8) plus dropout's co-adaptation breaking and implicit ensembling (p6) are what make large models trainable, especially when data are limited; the best printed results combine them (PDF p. 91). The macro consequence is the scaling observation (p7): the deep advantage grows with data volume. Multi-task and multimodal learning push representation sharing to its limit — shared hidden layers across languages let a new language be added with little target data (PDF pp. 149-151), and DeViSE reaches close to fifteen percent hit rate across thousands of labels never seen by the image model (PDF p. 143). The honest reading keeps the transferable structure (embeddings, similarity-softmax objectives, shared representations, regularization kernels) separate from the 2014 benchmark numbers, which are calibration anchors, not laws. For a sports simulation stack the transfer is architectural: retrieve similar game states by latent-vector similarity, rank candidates with a task-aligned softmax over weak labels, regularize small-sample models with dropout, and expect the deep component's edge to appear only once data volume crosses the regime boundary the source documents. Nothing in this book is about football; the mapping is machinery, not empirical sports claims, and no odds or betting content exists anywhere in the source.",
+   "retrocausal_genealogy": "The embedding lineage runs from Bengio's 2000/2003 neural language model — word vectors as 'a side product of language modeling' (PDF p. 109) — through Collobert and Weston's unified NLP architecture to Mikolov's CBOW and Skip-gram simplifications: each step removed structure (the nonlinear hidden layer, then the language-modeling objective itself) to buy scale (PDF pp. 110-111). The speech-side scar is MFCC: the cosine transform existed to decorrelate features for diagonal-covariance GMMs; once DNNs model correlation directly, that decorrelation 'becomes irrelevant' (PDF p. 74), and the field moved back toward raw spectra and then toward learned filter banks (PDF p. 75).",
+   "theory_of_mind": "The DSSM designer models the search user as a noisy labeler: a click is weak evidence of relevance, not ground truth, so the objective is a softmax over one clicked document and four randomly sampled unclicked negatives (PDF p. 125) — the designer knows the click distribution is biased and builds the estimator around that belief. The DeViSE designer models the future test distribution as containing classes never seen in training: the text branch is trained on unannotated text precisely so that unseen image labels already have embedding vectors (PDF pp. 143-144). Both are second-order design — building for the beliefs and behaviors of the data producers, not merely for the data at hand.",
+   "cross_layer_veto": "The metric layer vetoes the reconstruction objective: semantic hashing does 'not signiﬁcantly outperform strong baseline IR models' because reconstruction is loosely coupled to ranking (PDF p. 122); task-aligned click likelihood is the fix. The compute layer vetoes exact softmax at web scale: the full candidate set 'is of Web scale and thus is intractable in practice' (PDF p. 125), forcing negative sampling. The data layer vetoes unsupervised vision when labels are ample: unsupervised features 'have not been competitive with the supervised learning approach' (PDF p. 140). The modality layer vetoes naive fusion: on CUAVE, a signal-processing baseline with uncertainty compensation beat the deep multimodal model (PDF p. 147)."
+  }
+ ],
+ "universal_lens": "Audit the monograph as a 2014 snapshot: separate durable mathematical invariants (RBM energy and conditionals, contrastive gradient, closed-form least squares, cosine-softmax, dropout, ReLU) from era-bound empirical claims (WER tables, ImageNet numbers, the pre-training debate). Every printed number is a benchmark result, not a law; every architecture claim is regime-conditional on data volume, task, and compute.",
+ "gsi_mapping": "The sequence-modeling machinery maps to GSI's temporal biosignal lane: variable-length structured inputs (speech frames) are the same problem class as ECG/EMG/respiration segments, and the DNN-HMM interface pattern — static deep classifier plus dynamic sequence model (PDF pp. 58-59) — is the template for labeling physiological time series. The conclusion's biologically plausible representation discussion (PDF p. 158) is motivation only; no clinical claims are extracted from this source.",
+ "gse_mapping": "GSE's Coach-Mind stack can instantiate these kernels architecturally: DSSM-style cosine-softmax ranking for play/formation similarity retrieval, dropout for small-sample matchup robustness, RBM/DBN latent states for unsupervised game-state discovery, and the printed data-scaling observation as a prior on when deep components beat shallow baselines. The source contains no football content and no odds; the transfer is machinery, not empirical sports claims."
+}

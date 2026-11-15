@@ -1,0 +1,78 @@
+{
+  "book_id": "098d76036dcf440d",
+  "source_status": "COMPLETE",
+  "title": "JEV-MERCURY3-MIGRATION-2026-10-26",
+  "file_name": "JEV-MERCURY3-MIGRATION-2026-10-26.md",
+  "sha256": "098d76036dcf440d1fd6cfd86b0e7bf0d40e8e82f51ebbcbdc84bfdf8a353926",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Text-helper model migration from Mercury 2.5 to 3 as a temporal API transition with bounded access windows and stateful user continuity. Universal Lens: Rooted in JEV-MERCURY3-MIGRATION-2026-10-26 (098d76036dcf440d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on model availability and user access duration using temporal priors over Mercury 2.5 retirement and Mercury 3 activation. GSI Mapping: Rooted in JEV-MERCURY3-MIGRATION-2026-10-26 (098d76036dcf440d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning for Jev lane state transitions governed by API endpoint updates and runtime validation checks before final migration. GSE Mapping: Rooted in JEV-MERCURY3-MIGRATION-2026-10-26 (098d76036dcf440d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "model_retirement_window",
+      "name": "Model Retirement Access Window",
+      "verbatim_quote": "- Existing users (usage before October 19) keep access **until November 15, 2026**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_{start}': 'October 19, 2026', 't_{end}': 'November 15, 2026'}",
+      "assumptions": "User access is strictly bounded by calendar dates; no extension beyond t_end.",
+      "breakdown_regime": "t > t_{end} implies complete model unavailability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Temporal interval [t_start, t_end] maps to valid API usage window for Mercury 2.5.",
+        "source_operator": "model_retirement_window",
+        "telemetry": "User access log timestamps relative to t_start and t_end."
+      }
+    },
+    {
+      "primitive_id": "api_endpoint_transition",
+      "name": "API Endpoint Transition",
+      "verbatim_quote": "- So the migration target slug is the OpenRouter form, expected `inception/mercury-3`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_{old}': 'mercury-2.5', 'M_{new}': 'mercury-3', 'E_{target}': 'inception/mercury-3'}",
+      "assumptions": "Migration requires explicit configuration update; auto-move does not apply to non-direct-API users.",
+      "breakdown_regime": "Mismatch between E_{target} and current config leads to runtime error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Configuration update of TEXT_MODEL variable triggers kernel-level model swap.",
+        "source_operator": "api_endpoint_transition",
+        "telemetry": "Environment variable value inspection during startup."
+      }
+    },
+    {
+      "primitive_id": "migration_validation_sequence",
+      "name": "Migration Validation Sequence",
+      "verbatim_quote": "- Correct sequence when the lane reopens, or before November 15, whichever comes first: change the four lines above, then re-run the live Wikipedia test (the test that passed on the VM at setup) plus one TYPE_TEXT flight-field probe, and only then call it migrated.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{config}': 'configuration update', 'T_{test}': 'Wikipedia test', 'P_{probe}': 'TYPE_TEXT flight-field probe', 'R_{final}': 'migration confirmation'}",
+      "assumptions": "Validation must occur in strict order; partial execution invalidates migration.",
+      "breakdown_regime": "Execution of R_{final} without prior S_{config} ∪ T_{test} ∪ P_{probe} fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Sequential execution of S_{config} → T_{test} → P_{probe} → R_{final} defines migration protocol.",
+        "source_operator": "migration_validation_sequence",
+        "telemetry": "Log-based verification of step completion in chronological order."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "098d76036dcf440d_t0",
+      "think": "The migration from Mercury 2.5 to Mercury 3 represents a structured temporal transition governed by two key constraints: (1) a hard deadline for new signups (October 19, 2026) and (2) a grace period for existing users (until November 15, 2026). This creates a bounded temporal domain where model availability is a binary function of time. The API endpoint transition is a deterministic configuration shift from inception/mercury-2.5 to inception/mercury-3, requiring explicit update of environment variables. The validation sequence ensures correctness via a causal chain of actions: configuration change, test execution, and final confirmation. Failure modes include premature activation without validation, or misalignment of the model slug, which would result in runtime errors. The dual nature of this process lies in its deterministic specification (user-facing) and probabilistic risk (implementation-dependent).\n\nDeep epistemic analysis for JEV-MERCURY3-MIGRATION-2026-10-26 (098d76036dcf440d, domain=other, pages_read=1/1): Operator 'Model Retirement Access Window' (page 1, domain other) captures: - Existing users (usage before October 19) keep access **until November 15, 2026**. Assumptions: User access is strictly bounded by calendar dates; no extension beyond t_end. Breakdown regime: t > t_{end} implies complete model unavailability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal interval [t_start, t_end] maps to valid API usage window for Mercury 2.5. Operator 'API Endpoint Transition' (page 1, domain other) captures: - So the migration target slug is the OpenRouter form, expected `inception/mercury-3`. Assumptions: Migration requires explicit configuration update; auto-move does not apply to non-direct-API users. Breakdown regime: Mismatch between E_{target} and current config leads to runtime error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Configuration update of TEXT_MODEL variable triggers kernel-level model swap. Operator 'Migration Validation Sequence' (page 1, domain other) captures: - Correct sequence when the lane reopens, or before November 15, whichever comes first: change the four lines above, then re-run the live Wikipedia test (the test that passed on the VM at setup) plus one TYPE_TEXT flight-field probe, and only then call it migrated. Assumptions: Validation must occur in strict order; partial execution invalidates migration. Breakdown regime: Execution of R_{final} without prior S_{config} ∪ T_{test} ∪ P_{probe} fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Sequential execution of S_{config} → T_{test} → P_{probe} → R_{final} defines migration protocol. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for JEV-MERCURY3-MIGRATION-2026-10-26 (098d76036dcf440d, domain=other, pages_read=1/1): Operator 'Model Retirement Access Window' (page 1, domain other) captures: - Existing users (usage before October 19) keep access **until November 15, 2026**. Assumptions: User access is strictly bounded by calendar dates; no extension beyond t_end. Breakdown regime: t > t_{end} implies complete model unavailability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal interval [t_start, t_end] maps to valid API usage window for Mercury 2.5. Operator 'API Endpoint Transition' (page 1, domain other) captures: - So the migration target slug is the OpenRouter form, expected `inception/mercury-3`. Assumptions: Migration requires explicit configuration update; auto-move does not apply to non-direct-API users. Breakdown regime: Mismatch between E_{target} and current config leads to runtime error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Configuration update of TEXT_MODEL variable triggers kernel-level model swap. Operator 'Migration Validation Sequence' (page 1, domain other) captures: - Correct sequence when the lane reopens, or before November 15, whichever comes first: change the four lines above, then re-run the live Wikipedia test (the test that passed on the VM at setup) plus one TYPE_TEXT flight-field probe, and only then call it migrated. Assumptions: Validation must occur in strict order; partial execution invalidates migration. Breakdown regime: Execution of R_{final} without prior S_{config} ∪ T_{test} ∪ P_{probe} fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Sequential execution of S_{config} → T_{test} → P_{probe} → R_{final} defines migration protocol. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in software lifecycle management practices, this migration mirrors standard deprecation protocols seen in cloud-native systems and API versioning strategies from 2020s onwards. Retrocausal Genealogy: Rooted in JEV-MERCURY3-MIGRATION-2026-10-26 (098d76036dcf440d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in JEV-MERCURY3-MIGRATION-2026-10-26 (098d76036dcf440d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Actors include Inception (vendor), Garrett (local maintainer), and the Jev system itself. Inception drives the policy, Garrett enforces operational compliance, and the system must validate adherence to both. Theory of Mind & Decision Maker Model: Rooted in JEV-MERCURY3-MIGRATION-2026-10-26 (098d76036dcf440d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that configuration changes are not conflated with code modifications. Leakage occurs if benchmarking data is altered post-migration, violating the integrity of performance comparisons. Cross-Layer Veto & Anti-Leakage Check: Rooted in JEV-MERCURY3-MIGRATION-2026-10-26 (098d76036dcf440d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in JEV-MERCURY3-MIGRATION-2026-10-26 (098d76036dcf440d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

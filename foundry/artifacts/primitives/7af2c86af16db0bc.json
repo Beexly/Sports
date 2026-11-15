@@ -1,0 +1,78 @@
+{
+  "book_id": "7af2c86af16db0bc",
+  "source_status": "COMPLETE",
+  "title": "2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors",
+  "file_name": "2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors.pdf",
+  "sha256": "7af2c86af16db0bcd46b083b8b2c2bd15c0cc1dd79848e89758845e1c0a53f9b",
+  "primary_domain": "football",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Causal inference framework for fourth-down decisions in NFL using win probability deltas and propensity-score matching to isolate treatment effects. Universal Lens: Rooted in 2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors (7af2c86af16db0bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian causal models estimate expected wins lost per team via counterfactual win probability shifts; conformal prediction bounds uncertainty in strategic decisions. GSI Mapping: Rooted in 2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors (7af2c86af16db0bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine encodes 4th-down state transitions through win probability dynamics; state-space updates reflect optimal action selection under risk-adjusted utility. GSE Mapping: Rooted in 2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors (7af2c86af16db0bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "win_probability_delta",
+      "name": "Win Probability Delta",
+      "verbatim_quote": "• Change in win probability, calculated using average of two models: • Lock & Nettleton's Random Forest model.",
+      "page": 1,
+      "latex": "\\Delta WP = WP_{\\text{go}} - WP_{\\text{kick}}",
+      "symbol_and_unit_ledger": "{'WP_{\\\\text{go}}': 'dimensionless win probability when going for it', 'WP_{\\\\text{kick}}': 'dimensionless win probability when kicking'}",
+      "assumptions": "Model assumes independence of play context and deterministic outcome given strategy.",
+      "breakdown_regime": "When confounding variables exceed model capacity or data sparsity occurs.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps strategic decision impact onto probabilistic game state evolution in GSE.",
+        "source_operator": "win_probability_delta",
+        "telemetry": "Observed change in win probability post-strategy execution."
+      }
+    },
+    {
+      "primitive_id": "treatment_effect_estimand",
+      "name": "Treatment Effect Estimand",
+      "verbatim_quote": "• Number of wins is the aggregated pairwise difference in the change in win probability between \"going for it\" and \"kicking\".",
+      "page": 1,
+      "latex": "\\text{ATC}_f = \\sum_{i=1}^{n} \\left( \\Delta WP_i^{\\text{go}} - \\Delta WP_i^{\\text{kick}} \\right)",
+      "symbol_and_unit_ledger": "{'\\\\text{ATC}_f': 'Average Treatment Effect on the Treated (wins added)', '\\\\Delta WP_i^{\\\\text{go}}': 'change in win probability for going for it', '\\\\Delta WP_i^{\\\\text{kick}}': 'change in win probability for kicking'}",
+      "assumptions": "Strategic decisions are binary and outcomes measurable via win probability.",
+      "breakdown_regime": "When observed vs. counterfactual outcomes diverge beyond model fit.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically maps causal estimand to GSI Bayesian posterior over strategic gains.",
+        "source_operator": "treatment_effect_estimand",
+        "telemetry": "Aggregate wins gained by switching from conservative to optimal strategy."
+      }
+    },
+    {
+      "primitive_id": "propensity_score_matching",
+      "name": "Propensity Score Matching",
+      "verbatim_quote": "4th down outcomes are a missing data problem Before Matching: • Teams that went for it differ inherently from those that did not.",
+      "page": 1,
+      "latex": "e(x) = P(T=1 | X=x), \\quad \\text{where } T \\in \\{0,1\\}",
+      "symbol_and_unit_ledger": "{'e(x)': 'propensity score (probability of going for it)', 'X': 'vector of covariates (time, yardage, etc.)', 'T': 'binary treatment indicator (1 = go for it)'}",
+      "assumptions": "Unconfoundedness and overlap conditions hold across matched pairs.",
+      "breakdown_regime": "When baseline characteristics are not sufficiently balanced post-matching.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables causal inference in GSE by aligning strategic states before comparison.",
+        "source_operator": "propensity_score_matching",
+        "telemetry": "Balanced distribution of pre-treatment covariates between groups."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7af2c86af16db0bc_t0",
+      "think": "The core causal structure hinges on estimating the average treatment effect (ATE) of going for it versus kicking on win probability. The primitive 'win_probability_delta' quantifies immediate outcome differences, while 'treatment_effect_estimand' aggregates these into total wins lost. Propensity score matching addresses selection bias by balancing pre-treatment variables. These primitives form a dual system where GSE evaluates strategic transitions and GSI computes posterior probabilities of strategic gains. Failure modes include model misspecification, unobserved confounders, and temporal inconsistency in win probability models. The framework assumes strategic decisions are binary and outcomes are measurable via win probability, which may not capture full complexity of coaching decisions.\n\nDeep epistemic analysis for 2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors (7af2c86af16db0bc, domain=football, pages_read=1/1): Operator 'Win Probability Delta' (page 1, domain football) captures: • Change in win probability, calculated using average of two models: • Lock & Nettleton's Random Forest model. Assumptions: Model assumes independence of play context and deterministic outcome given strategy. Breakdown regime: When confounding variables exceed model capacity or data sparsity occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps strategic decision impact onto probabilistic game state evolution in GSE. Operator 'Treatment Effect Estimand' (page 1, domain football) captures: • Number of wins is the aggregated pairwise difference in the change in win probability between \"going for it\" and \"kicking\". Assumptions: Strategic decisions are binary and outcomes measurable via win probability. Breakdown regime: When observed vs. counterfactual outcomes diverge beyond model fit. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps causal estimand to GSI Bayesian posterior over strategic gains. Operator 'Propensity Score Matching' (page 1, domain football) captures: 4th down outcomes are a missing data problem Before Matching: • Teams that went for it differ inherently from those that did not. Assumptions: Unconfoundedness and overlap conditions hold across matched pairs. Breakdown regime: When baseline characteristics are not sufficiently balanced post-matching. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables causal inference in GSE by aligning strategic states before comparison. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors (7af2c86af16db0bc, domain=football, pages_read=1/1): Operator 'Win Probability Delta' (page 1, domain football) captures: • Change in win probability, calculated using average of two models: • Lock & Nettleton's Random Forest model. Assumptions: Model assumes independence of play context and deterministic outcome given strategy. Breakdown regime: When confounding variables exceed model capacity or data sparsity occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps strategic decision impact onto probabilistic game state evolution in GSE. Operator 'Treatment Effect Estimand' (page 1, domain football) captures: • Number of wins is the aggregated pairwise difference in the change in win probability between \"going for it\" and \"kicking\". Assumptions: Strategic decisions are binary and outcomes measurable via win probability. Breakdown regime: When observed vs. counterfactual outcomes diverge beyond model fit. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps causal estimand to GSI Bayesian posterior over strategic gains. Operator 'Propensity Score Matching' (page 1, domain football) captures: 4th down outcomes are a missing data problem Before Matching: • Teams that went for it differ inherently from those that did not. Assumptions: Unconfoundedness and overlap conditions hold across matched pairs. Breakdown regime: When baseline characteristics are not sufficiently balanced post-matching. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables causal inference in GSE by aligning strategic states before comparison. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Rubin causal model and Neyman–Rubin potential outcomes framework; extended by observational studies in sports analytics and machine learning techniques such as random forests. Retrocausal Genealogy: Rooted in 2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors (7af2c86af16db0bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume coaches act rationally within bounded information environments, optimizing for win probability rather than risk aversion or psychological factors. Opposing agents may deviate from rationality due to pressure or tradition. Theory of Mind & Decision Maker Model: Rooted in 2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors (7af2c86af16db0bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that propensity scores and outcome variables are independent after matching. Leakage occurs if win probability models overfit or fail to generalize across contexts. Veto conditions prevent use of primitive when data lacks sufficient variation or when strategic behavior is non-stationary. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors (7af2c86af16db0bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

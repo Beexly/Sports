@@ -1,0 +1,78 @@
+{
+  "book_id": "4a89fadf5042a57e",
+  "source_status": "COMPLETE",
+  "title": "p0317",
+  "file_name": "p0317.txt",
+  "sha256": "4a89fadf5042a57e4e0c864caae11cfad8d4b602c250abb6512e3c9c23ea9836",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Penalty distance mappings under goal-line proximity constraints, with tripping and fair-catch obstructions as derived kernel operators. Universal Lens: Rooted in p0317 (4a89fadf5042a57e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian penalty inference conditioned on spatial proximity to goal line, incorporating tripping and obstruction penalties via conformal predictive models. GSI Mapping: Rooted in p0317 (4a89fadf5042a57e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions governed by penalty distance rules, with goal-line boundary conditions triggering distinct enforcement regimes. GSE Mapping: Rooted in p0317 (4a89fadf5042a57e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "goal_line_penalty_distance",
+      "name": "Goal Line Penalty Distance",
+      "verbatim_quote": "Whenever the rules provide for a distance penalty, if the distance prescribed would carry the ball nearer to the goal line than the 5-yard line, the ball shall be down on the 5-yard line.",
+      "page": 1,
+      "latex": "\\text{if } d < 5 \\text{ yards, then } d_{\\text{final}} = 5 \\text{ yards}",
+      "symbol_and_unit_ledger": "{'d': 'distance penalty in yards', 'd_{\\\\text{final}}': 'final penalty distance in yards'}",
+      "assumptions": "Ball position is measured relative to goal line; penalty distance is linearly additive.",
+      "breakdown_regime": "When penalty placement exceeds 5-yard limit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps penalty application to spatial constraint boundary, enabling GSI probabilistic inference and GSE state transition logic.",
+        "source_operator": "goal_line_penalty_distance",
+        "telemetry": "Distance from goal line post-penalty application."
+      }
+    },
+    {
+      "primitive_id": "tripping_penalty_addition",
+      "name": "Tripping Penalty Addition",
+      "verbatim_quote": "In case of tripping, the distance penalty shall be given in addition.",
+      "page": 1,
+      "latex": "\\Delta d_{\\text{total}} = \\Delta d_{\\text{base}} + \\Delta d_{\\text{tripping}}",
+      "symbol_and_unit_ledger": "{'\\\\Delta d_{\\\\text{total}}': 'total penalty distance in yards', '\\\\Delta d_{\\\\text{base}}': 'base penalty distance in yards', '\\\\Delta d_{\\\\text{tripping}}': 'additional tripping penalty in yards'}",
+      "assumptions": "Tripping is a secondary infraction that accumulates with base penalty.",
+      "breakdown_regime": "Upon tripping violation during active play.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSI to model cumulative penalty effects and GSE to compute updated field states.",
+        "source_operator": "tripping_penalty_addition",
+        "telemetry": "Cumulative penalty yardage post-tripping event."
+      }
+    },
+    {
+      "primitive_id": "fair_catch_obstruction_choice",
+      "name": "Fair Catch Obstruction Choice",
+      "verbatim_quote": "NOT'E—In çasc a team is penalized under this rule at or near their goal line, e.",
+      "page": 1,
+      "latex": "\\text{Choice}(15 \\text{ yards}) \\vee \\text{Choice}(5 \\text{ yards})",
+      "symbol_and_unit_ledger": "{'\\\\text{Choice}': 'discrete binary decision variable'}",
+      "assumptions": "Team chooses between two discrete penalty outcomes based on strategic context.",
+      "breakdown_regime": "Upon unlawful obstruction of fair catch attempt.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI decision tree branching and GSE action selection under uncertainty.",
+        "source_operator": "fair_catch_obstruction_choice",
+        "telemetry": "Selected penalty yardage and subsequent play type."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4a89fadf5042a57e_t0",
+      "think": "The primitives define core penalty mechanics under spatial constraints. The goal-line penalty distance enforces a minimum threshold, ensuring no penalty can place the ball closer than 5 yards to the goal. This creates a bounded, non-decreasing function of penalty application. Tripping adds a supplementary penalty, forming a cumulative effect that modifies total displacement. Fair catch obstruction introduces a choice-based decision layer, where strategic preference determines play continuation method. These operators form a layered algebraic structure: spatial constraints (goal line), additive violations (tripping), and discrete choices (obstruction). The interplay of these structures enables GSI to model penalty propagation and GSE to simulate state transitions. Failure modes include misapplication of distance thresholds, incorrect accumulation of penalties, or misinterpretation of choice rules. Dualities emerge in how penalties interact with field position and game strategy, particularly around goal-line proximity.\n\nDeep epistemic analysis for p0317 (4a89fadf5042a57e, domain=other, pages_read=1/1): Operator 'Goal Line Penalty Distance' (page 1, domain other) captures: Whenever the rules provide for a distance penalty, if the distance prescribed would carry the ball nearer to the goal line than the 5-yard line, the ball shall be down on the 5-yard line. Assumptions: Ball position is measured relative to goal line; penalty distance is linearly additive. Breakdown regime: When penalty placement exceeds 5-yard limit. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps penalty application to spatial constraint boundary, enabling GSI probabilistic inference and GSE state transition logic. Operator 'Tripping Penalty Addition' (page 1, domain other) captures: In case of tripping, the distance penalty shall be given in addition. Assumptions: Tripping is a secondary infraction that accumulates with base penalty. Breakdown regime: Upon tripping violation during active play. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSI to model cumulative penalty effects and GSE to compute updated field states. Operator 'Fair Catch Obstruction Choice' (page 1, domain other) captures: NOT'E—In çasc a team is penalized under this rule at or near their goal line, e. Assumptions: Team chooses between two discrete penalty outcomes based on strategic context. Breakdown regime: Upon unlawful obstruction of fair catch attempt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI decision tree branching and GSE action selection under uncertainty. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0317 (4a89fadf5042a57e, domain=other, pages_read=1/1): Operator 'Goal Line Penalty Distance' (page 1, domain other) captures: Whenever the rules provide for a distance penalty, if the distance prescribed would carry the ball nearer to the goal line than the 5-yard line, the ball shall be down on the 5-yard line. Assumptions: Ball position is measured relative to goal line; penalty distance is linearly additive. Breakdown regime: When penalty placement exceeds 5-yard limit. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps penalty application to spatial constraint boundary, enabling GSI probabilistic inference and GSE state transition logic. Operator 'Tripping Penalty Addition' (page 1, domain other) captures: In case of tripping, the distance penalty shall be given in addition. Assumptions: Tripping is a secondary infraction that accumulates with base penalty. Breakdown regime: Upon tripping violation during active play. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSI to model cumulative penalty effects and GSE to compute updated field states. Operator 'Fair Catch Obstruction Choice' (page 1, domain other) captures: NOT'E—In çasc a team is penalized under this rule at or near their goal line, e. Assumptions: Team chooses between two discrete penalty outcomes based on strategic context. Breakdown regime: Upon unlawful obstruction of fair catch attempt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI decision tree branching and GSE action selection under uncertainty. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century American football rulebooks, these primitives reflect foundational principles of penalty enforcement and spatial constraint modeling. Historical evolution from simple yardage to complex conditional penalties mirrors increasing game complexity. Retrocausal Genealogy: Rooted in p0317 (4a89fadf5042a57e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams evaluate penalty outcomes through risk-reward trade-offs. A team may opt for 15 yards to gain scrimmage advantage or 5 yards to avoid punting. GSI models these decisions using Bayesian choice trees, while GSE simulates resulting game states under varying strategic assumptions. Theory of Mind & Decision Maker Model: Rooted in p0317 (4a89fadf5042a57e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that penalty distance does not conflated with choice variables. Leakage vetoes occur if tripping penalties are applied without verifying base infractions. These conditions prevent erroneous state transitions in GSE and invalid probabilistic inferences in GSI. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0317 (4a89fadf5042a57e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

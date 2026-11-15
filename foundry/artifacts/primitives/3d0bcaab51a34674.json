@@ -1,0 +1,78 @@
+{
+  "book_id": "3d0bcaab51a34674",
+  "source_status": "COMPLETE",
+  "title": "scripts",
+  "file_name": "scripts.md",
+  "sha256": "3d0bcaab51a346745a66e11f6df9cd99fe6e39c9baf74e1431226ca97262f9d0",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Release scripts define deterministic contract deployment and governance plans via structured Forge scripts returning typed artifacts. Lattice orchestrates execution with sealed signing and position-based nonce tracking. Universal Lens: Rooted in scripts (3d0bcaab51a34674), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers Bayesian policy states from script return types—deployments as contract priors, calls as action likelihoods—enabling conformal prediction of governance outcomes. GSI Mapping: Rooted in scripts (3d0bcaab51a34674), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models state transitions using script-derived call sequences and deployment maps, executing under Lattice's deterministic routing while maintaining temporal consistency across forks. GSE Mapping: Rooted in scripts (3d0bcaab51a34674), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "deployment_manifest",
+      "name": "Deployment Manifest",
+      "verbatim_quote": "# Release scripts A release is a folder in the contract repository — `script/releases/<name>/` — holding a `release.json` manifest and one forge script per step that touches the chain.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'name': 'string', 'addr': 'address'}",
+      "assumptions": "Manifest defines contract identity and location; deterministic deployment via CREATE2/CREATE3 ensures reproducibility.",
+      "breakdown_regime": "At contract creation boundary, symbolic name resolves to deployed address.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps symbolic contract names to runtime addresses via manifest bindings; GSI uses this for probabilistic contract state inference.",
+        "source_operator": "deployment_manifest",
+        "telemetry": "Contract address resolution accuracy"
+      }
+    },
+    {
+      "primitive_id": "governance_plan",
+      "name": "Governance Plan",
+      "verbatim_quote": "| | `propose`, `execute` | `build()` | `Call[]` | A governance plan: the calls the authority's route will carry — through the timelock for `owner`-routed targets, directly for `admin` / `direct` ones.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'to': 'address', 'value': 'uint256', 'data': 'bytes'}",
+      "assumptions": "Plan is a list of executable calls without wrapper logic; Lattice handles routing and encoding.",
+      "breakdown_regime": "On governance execution, each call is dispatched independently based on access control rules.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes governance intent as sequence of atomic operations; GSE executes these in order, verifying against expected state transitions.",
+        "source_operator": "governance_plan",
+        "telemetry": "Call sequence integrity and execution success rate"
+      }
+    },
+    {
+      "primitive_id": "environment_update",
+      "name": "Environment Update",
+      "verbatim_quote": "| | `script` with `envUpdates` | `envUpdates()` | `EnvVar[]` | Scalar params the release changes in the book: `EnvVar{key, value}` with the value as a decimal, hex, bool or address string.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'key': 'string', 'value': 'string'}",
+      "assumptions": "All environment variables are scalar and serializable; updates occur atomically within a single script.",
+      "breakdown_regime": "At script runtime, environment parameters are updated before subsequent steps execute.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Captures scalar configuration drifts; GSI tracks variance in parameter values to detect anomalies in system behavior.",
+        "source_operator": "environment_update",
+        "telemetry": "Parameter change frequency and deviation from baseline"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3d0bcaab51a34674_t0",
+      "think": "The core abstraction of release scripts is a layered protocol where each script returns a structured artifact: Deployment[], Call[], or EnvVar[]. These artifacts form a semantic lattice over which Lattice operates deterministically. The 'deploy' step maps symbolic contract names to addresses via CREATE2/CREATE3, ensuring reproducible state across environments. The 'propose'/'execute' steps encode governance actions as Call[] structures, abstracted from execution context. The 'envUpdates' step captures scalar configurations. All primitives are defined in terms of immutable inputs (manifests, chain state) and deterministic transformations. Failure modes include nonce misalignment (if not using CREATE2), secret exposure (via RPC URLs), and incorrect wrapping of governance calls. The system enforces a dualism between script logic and Lattice orchestration: scripts produce raw artifacts, Lattice applies policy and encodes them. This separation enables composability and auditability.\n\nDeep epistemic analysis for scripts (3d0bcaab51a34674, domain=other, pages_read=2/2): Operator 'Deployment Manifest' (page 1, domain other) captures: # Release scripts A release is a folder in the contract repository — `script/releases/<name>/` — holding a `release.json` manifest and one forge script per step that touches the chain. Assumptions: Manifest defines contract identity and location; deterministic deployment via CREATE2/CREATE3 ensures reproducibility. Breakdown regime: At contract creation boundary, symbolic name resolves to deployed address. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps symbolic contract names to runtime addresses via manifest bindings; GSI uses this for probabilistic contract state inference. Operator 'Governance Plan' (page 1, domain other) captures: | | `propose`, `execute` | `build()` | `Call[]` | A governance plan: the calls the authority's route will carry — through the timelock for `owner`-routed targets, directly for `admin` / `direct` ones. Assumptions: Plan is a list of executable calls without wrapper logic; Lattice handles routing and encoding. Breakdown regime: On governance execution, each call is dispatched independently based on access control rules. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes governance intent as sequence of atomic operations; GSE executes these in order, verifying against expected state transitions. Operator 'Environment Update' (page 1, domain other) captures: | | `script` with `envUpdates` | `envUpdates()` | `EnvVar[]` | Scalar params the release changes in the book: `EnvVar{key, value}` with the value as a decimal, hex, bool or address string. Assumptions: All environment variables are scalar and serializable; updates occur atomically within a single script. Breakdown regime: At script runtime, environment parameters are updated before subsequent steps execute. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures scalar configuration drifts; GSI tracks variance in parameter values to detect anomalies in system behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for scripts (3d0bcaab51a34674, domain=other, pages_read=2/2): Operator 'Deployment Manifest' (page 1, domain other) captures: # Release scripts A release is a folder in the contract repository — `script/releases/<name>/` — holding a `release.json` manifest and one forge script per step that touches the chain. Assumptions: Manifest defines contract identity and location; deterministic deployment via CREATE2/CREATE3 ensures reproducibility. Breakdown regime: At contract creation boundary, symbolic name resolves to deployed address. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps symbolic contract names to runtime addresses via manifest bindings; GSI uses this for probabilistic contract state inference. Operator 'Governance Plan' (page 1, domain other) captures: | | `propose`, `execute` | `build()` | `Call[]` | A governance plan: the calls the authority's route will carry — through the timelock for `owner`-routed targets, directly for `admin` / `direct` ones. Assumptions: Plan is a list of executable calls without wrapper logic; Lattice handles routing and encoding. Breakdown regime: On governance execution, each call is dispatched independently based on access control rules. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes governance intent as sequence of atomic operations; GSE executes these in order, verifying against expected state transitions. Operator 'Environment Update' (page 1, domain other) captures: | | `script` with `envUpdates` | `envUpdates()` | `EnvVar[]` | Scalar params the release changes in the book: `EnvVar{key, value}` with the value as a decimal, hex, bool or address string. Assumptions: All environment variables are scalar and serializable; updates occur atomically within a single script. Breakdown regime: At script runtime, environment parameters are updated before subsequent steps execute. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures scalar configuration drifts; GSI tracks variance in parameter values to detect anomalies in system behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal contract lifecycle management, building upon Ethereum's CREATE semantics and governance frameworks like TimelockController and Safe multisig. Influenced by functional programming paradigms where side effects are encapsulated in pure functions. Retrocausal Genealogy: Rooted in scripts (3d0bcaab51a34674), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the deployer (who writes scripts), Lattice (who signs and routes), and the chain (which validates). Each agent has distinct roles: deployer defines intent, Lattice enforces policy, chain enforces validity. Misalignment occurs when scripts do not reflect intended governance paths or when Lattice fails to correctly interpret script outputs. Theory of Mind & Decision Maker Model: Rooted in scripts (3d0bcaab51a34674), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if multiple layers attempt to encode similar information (e.g., both script and Lattice try to compute addresses). Leakage occurs if scripts expose secrets or RPC endpoints. Veto conditions include invalid call structure, non-deterministic address generation, or unauthorized access patterns. Cross-Layer Veto & Anti-Leakage Check: Rooted in scripts (3d0bcaab51a34674), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

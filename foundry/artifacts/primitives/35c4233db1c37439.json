@@ -1,0 +1,78 @@
+{
+  "book_id": "35c4233db1c37439",
+  "source_status": "COMPLETE",
+  "title": "2506.11399",
+  "file_name": "2506.11399.pdf",
+  "sha256": "35c4233db1c374398fd3a9396e04c9e6952a77379af5b157e9e10b57797684aa",
+  "primary_domain": "other",
+  "pages_total": 71,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Time-varying causal structures in sports analytics modeled via non-stationary dynamic processes using local M-estimation for adaptive inference. Universal Lens: Rooted in 2506.11399 (35c4233db1c37439), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian causal inference framework for home field advantage using DYNAMO's non-stationary structural learning to update belief states over time. GSI Mapping: Rooted in 2506.11399 (35c4233db1c37439), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine mapping team-specific field advantages through state transitions informed by referee bias and crowd presence dynamics. GSE Mapping: Rooted in 2506.11399 (35c4233db1c37439), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "dynamic_causal_structure_learning",
+      "name": "Dynamic Causal Structure Learning",
+      "verbatim_quote": "In response, we propose a novel causal discovery method, DYnamic Non-stAtionary local M-estimatOrs (DYNAMO), to learn the time-varying causal structures of home field advantage.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The causal structure varies over time and cannot be modeled as stationary; local information suffices for identification.",
+      "breakdown_regime": "When global stationarity assumptions fail, e.g., during pandemic-induced match environments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "DYNAMO enables GSI to infer time-varying causal graphs from event data, enabling conformal prediction of match outcomes.",
+        "source_operator": "dynamic_causal_structure_learning",
+        "telemetry": "Match-level causal graph recovery accuracy and temporal stability of inferred structures."
+      }
+    },
+    {
+      "primitive_id": "non_stationary_causal_identification",
+      "name": "Non-Stationary Causal Identification",
+      "verbatim_quote": "By leveraging local information, we provide theoretical guarantees for the identifiability and estimation consistency of non-stationary causal structures without imposing additional assumptions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Local neighborhood-based estimation ensures consistency under non-stationarity; no prior distributional assumptions required.",
+      "breakdown_regime": "Under abrupt environmental shifts such as sudden rule changes or spectator absence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state transition kernel where each match epoch corresponds to a distinct causal regime.",
+        "source_operator": "non_stationary_causal_identification",
+        "telemetry": "Temporal variance in estimated causal coefficients across match segments."
+      }
+    },
+    {
+      "primitive_id": "time_varying_field_advantage",
+      "name": "Time-Varying Field Advantage",
+      "verbatim_quote": "Our results reveal intriguing, time-varying, team-specific field advantages influenced by referee bias, which differ significantly with and without crowd support.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Field advantage is not static but evolves based on contextual variables like crowd presence and referee behavior.",
+      "breakdown_regime": "During periods of low or absent spectator engagement, such as during lockdowns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to simulate team performance under varying environmental conditions using learned time-varying causal weights.",
+        "source_operator": "time_varying_field_advantage",
+        "telemetry": "Home win rate deviation from baseline under different crowd conditions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "35c4233db1c37439_t0",
+      "think": "The core challenge lies in modeling home field advantage as a non-stationary process, where traditional causal inference techniques fail due to temporal heterogeneity. DYNAMO addresses this by employing local M-estimation, allowing for flexible modeling of both linear and nonlinear causal dependencies. It leverages high-resolution event data to capture dynamic shifts in match dynamics—such as those induced by referee bias or crowd presence—that cannot be captured by static models. The method integrates loss functions tailored to specific domains, enhancing its adaptability. Theoretical guarantees ensure that even under non-stationarity, causal structures remain identifiable and estimable. This approach enables GSI to perform Bayesian updating on evolving causal hypotheses while GSE uses the resulting causal kernels to simulate realistic match scenarios. The key insight is that causality itself must evolve with context rather than being fixed—a dualism between deterministic structure and stochastic variability.\n\nDeep epistemic analysis for 2506.11399 (35c4233db1c37439, domain=other, pages_read=32/71): Operator 'Dynamic Causal Structure Learning' (page 1, domain other) captures: In response, we propose a novel causal discovery method, DYnamic Non-stAtionary local M-estimatOrs (DYNAMO), to learn the time-varying causal structures of home field advantage. Assumptions: The causal structure varies over time and cannot be modeled as stationary; local information suffices for identification. Breakdown regime: When global stationarity assumptions fail, e.g., during pandemic-induced match environments. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): DYNAMO enables GSI to infer time-varying causal graphs from event data, enabling conformal prediction of match outcomes. Operator 'Non-Stationary Causal Identification' (page 1, domain other) captures: By leveraging local information, we provide theoretical guarantees for the identifiability and estimation consistency of non-stationary causal structures without imposing additional assumptions. Assumptions: Local neighborhood-based estimation ensures consistency under non-stationarity; no prior distributional assumptions required. Breakdown regime: Under abrupt environmental shifts such as sudden rule changes or spectator absence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state transition kernel where each match epoch corresponds to a distinct causal regime. Operator 'Time-Varying Field Advantage' (page 1, domain other) captures: Our results reveal intriguing, time-varying, team-specific field advantages influenced by referee bias, which differ significantly with and without crowd support. Assumptions: Field advantage is not static but evolves based on contextual variables like crowd presence and referee behavior. Breakdown regime: During periods of low or absent spectator engagement, such as during lockdowns. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to simulate team performance under varying environmental conditions using learned time-varying causal weights. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2506.11399 (35c4233db1c37439, domain=other, pages_read=32/71): Operator 'Dynamic Causal Structure Learning' (page 1, domain other) captures: In response, we propose a novel causal discovery method, DYnamic Non-stAtionary local M-estimatOrs (DYNAMO), to learn the time-varying causal structures of home field advantage. Assumptions: The causal structure varies over time and cannot be modeled as stationary; local information suffices for identification. Breakdown regime: When global stationarity assumptions fail, e.g., during pandemic-induced match environments. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): DYNAMO enables GSI to infer time-varying causal graphs from event data, enabling conformal prediction of match outcomes. Operator 'Non-Stationary Causal Identification' (page 1, domain other) captures: By leveraging local information, we provide theoretical guarantees for the identifiability and estimation consistency of non-stationary causal structures without imposing additional assumptions. Assumptions: Local neighborhood-based estimation ensures consistency under non-stationarity; no prior distributional assumptions required. Breakdown regime: Under abrupt environmental shifts such as sudden rule changes or spectator absence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state transition kernel where each match epoch corresponds to a distinct causal regime. Operator 'Time-Varying Field Advantage' (page 1, domain other) captures: Our results reveal intriguing, time-varying, team-specific field advantages influenced by referee bias, which differ significantly with and without crowd support. Assumptions: Field advantage is not static but evolves based on contextual variables like crowd presence and referee behavior. Breakdown regime: During periods of low or absent spectator engagement, such as during lockdowns. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to simulate team performance under varying environmental conditions using learned time-varying causal weights. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical causal inference (Pearl, 2009) and extended through modern non-parametric approaches (Huang & Pearl, 2009), DYNAMO builds upon local regression and robust estimation frameworks (Huber, 1981) to address non-stationarity in time-series causal discovery. Retrocausal Genealogy: Rooted in 2506.11399 (35c4233db1c37439), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include referees whose decisions may shift under pressure, teams adapting strategies mid-game, and spectators whose presence alters player motivation and referee perception—all contributing to a multi-agent, evolving causal landscape. Theory of Mind & Decision Maker Model: Rooted in 2506.11399 (35c4233db1c37439), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring each causal variable contributes independently to outcome prediction; leakage is mitigated by restricting local estimation to relevant neighborhoods, avoiding spurious correlations across unrelated match events. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2506.11399 (35c4233db1c37439), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

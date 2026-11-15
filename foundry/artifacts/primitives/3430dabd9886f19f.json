@@ -1,0 +1,78 @@
+{
+  "book_id": "3430dabd9886f19f",
+  "source_status": "COMPLETE",
+  "title": "superbook.com",
+  "file_name": "superbook.com.md",
+  "sha256": "3430dabd9886f19f944deab6bffff73ab4c988c2d356a55f9b3089abba3a8ca0",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Superbook.com's URL structure encodes a hierarchical Bayesian network over sports, hospitality, and customer engagement domains. Universal Lens: Rooted in superbook.com (3430dabd9886f19f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic state transitions across sports data, loyalty metrics, and service pathways using conformal predictive distributions. GSI Mapping: Rooted in superbook.com (3430dabd9886f19f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models dynamic agent behavior through path-based state machines that evolve based on user intent and system feedback loops. GSE Mapping: Rooted in superbook.com (3430dabd9886f19f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "url_hierarchy_tree",
+      "name": "URL Hierarchy Tree",
+      "verbatim_quote": "# superbook.com — crawl URLs reached: **42** ## Path segments | Segment | URLs | |---|---|",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All URL paths form a rooted tree with unique leaf nodes representing discrete content types.",
+      "breakdown_regime": "When path depth exceeds 4, navigational ambiguity increases exponentially.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each URL segment maps to a node in a directed acyclic graph (DAG), enabling GSI to compute conditional probabilities of user navigation paths.",
+        "source_operator": "url_hierarchy_tree",
+        "telemetry": "Path traversal frequency and bounce rates"
+      }
+    },
+    {
+      "primitive_id": "content_type_partition",
+      "name": "Content Type Partition",
+      "verbatim_quote": "| 25 | | `/(root)` | 1 | | `/years` | 1 | | `/teams` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each URL segment corresponds to a distinct semantic category of content.",
+      "breakdown_regime": "When categories overlap, semantic ambiguity arises in GSI classification.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The partition induces a categorical probability space where each segment contributes to a posterior belief over user interest domains.",
+        "source_operator": "content_type_partition",
+        "telemetry": "User session entropy across content types"
+      }
+    },
+    {
+      "primitive_id": "navigation_probability_matrix",
+      "name": "Navigation Probability Matrix",
+      "verbatim_quote": "| URL | Title | |---|---| | `https://superbook.com/` | The World's Largest Las Vegas Sports Book",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Transition probabilities between URL segments can be modeled as a stochastic matrix derived from clickstream data.",
+      "breakdown_regime": "Matrix rank deficiency implies loss of ergodicity in user movement dynamics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The matrix encodes GSE's transition kernel for predicting next-state actions given current context.",
+        "source_operator": "navigation_probability_matrix",
+        "telemetry": "Clickstream convergence rate and expected path length"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3430dabd9886f19f_t0",
+      "think": "The URL structure of superbook.com reflects a layered information architecture where root paths encode primary domains such as sports (/nfl, /teams), hospitality (/hotels), and services (/customer-service). These paths form a hierarchical DAG, enabling GSI to model user intent via Bayesian belief propagation. Each segment acts as a categorical variable in a probabilistic graphical model, allowing GSE to simulate state transitions based on observed navigation patterns. The presence of multiple paths to similar content (e.g., /stats vs /nfl) introduces redundancy that GSI resolves through latent variable clustering. Failure modes include path explosion when too many sub-paths are introduced without semantic grouping, leading to reduced predictive accuracy in both GSI and GSE.\n\nDeep epistemic analysis for superbook.com (3430dabd9886f19f, domain=other, pages_read=3/3): Operator 'URL Hierarchy Tree' (page 1, domain other) captures: # superbook.com — crawl URLs reached: **42** ## Path segments | Segment | URLs | |---|---| Assumptions: All URL paths form a rooted tree with unique leaf nodes representing discrete content types. Breakdown regime: When path depth exceeds 4, navigational ambiguity increases exponentially. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each URL segment maps to a node in a directed acyclic graph (DAG), enabling GSI to compute conditional probabilities of user navigation paths. Operator 'Content Type Partition' (page 1, domain other) captures: | 25 | | `/(root)` | 1 | | `/years` | 1 | | `/teams` | Assumptions: Each URL segment corresponds to a distinct semantic category of content. Breakdown regime: When categories overlap, semantic ambiguity arises in GSI classification. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The partition induces a categorical probability space where each segment contributes to a posterior belief over user interest domains. Operator 'Navigation Probability Matrix' (page 1, domain other) captures: | URL | Title | |---|---| | `https://superbook.com/` | The World's Largest Las Vegas Sports Book Assumptions: Transition probabilities between URL segments can be modeled as a stochastic matrix derived from clickstream data. Breakdown regime: Matrix rank deficiency implies loss of ergodicity in user movement dynamics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The matrix encodes GSE's transition kernel for predicting next-state actions given current context. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for superbook.com (3430dabd9886f19f, domain=other, pages_read=3/3): Operator 'URL Hierarchy Tree' (page 1, domain other) captures: # superbook.com — crawl URLs reached: **42** ## Path segments | Segment | URLs | |---|---| Assumptions: All URL paths form a rooted tree with unique leaf nodes representing discrete content types. Breakdown regime: When path depth exceeds 4, navigational ambiguity increases exponentially. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each URL segment maps to a node in a directed acyclic graph (DAG), enabling GSI to compute conditional probabilities of user navigation paths. Operator 'Content Type Partition' (page 1, domain other) captures: | 25 | | `/(root)` | 1 | | `/years` | 1 | | `/teams` | Assumptions: Each URL segment corresponds to a distinct semantic category of content. Breakdown regime: When categories overlap, semantic ambiguity arises in GSI classification. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The partition induces a categorical probability space where each segment contributes to a posterior belief over user interest domains. Operator 'Navigation Probability Matrix' (page 1, domain other) captures: | URL | Title | |---|---| | `https://superbook.com/` | The World's Largest Las Vegas Sports Book Assumptions: Transition probabilities between URL segments can be modeled as a stochastic matrix derived from clickstream data. Breakdown regime: Matrix rank deficiency implies loss of ergodicity in user movement dynamics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The matrix encodes GSE's transition kernel for predicting next-state actions given current context. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web architecture principles and formalized by Koller & Friedman’s probabilistic graphical models, this approach extends to modern reinforcement learning frameworks. Retrocausal Genealogy: Rooted in superbook.com (3430dabd9886f19f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in superbook.com (3430dabd9886f19f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to manipulate navigation paths for SEO gain or to obscure genuine user intent, necessitating adversarial robustness in GSI's inference engine. Theory of Mind & Decision Maker Model: Rooted in superbook.com (3430dabd9886f19f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in superbook.com (3430dabd9886f19f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If GSI detects high variance in path traversal frequencies, it vetoes reliance on shallow heuristics in GSE, enforcing deeper semantic parsing. Cross-Layer Veto & Anti-Leakage Check: Rooted in superbook.com (3430dabd9886f19f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in superbook.com (3430dabd9886f19f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

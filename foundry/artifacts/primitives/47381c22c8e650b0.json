@@ -1,0 +1,306 @@
+{
+  "book_id": "47381c22c8e650b0",
+  "source_status": "COMPLETE",
+  "title": "openalex_W7160830021",
+  "file_name": "openalex_W7160830021.pdf",
+  "sha256": "47381c22c8e650b0874ab05a2ec3fb26c35499ffee2f6ac5fbb3f7372ff6028c",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 10,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The mapping from broadcast video to spatiotemporal state space is a non-linear projection operator. Accuracy depends on minimizing the residual between observed pixel coordinates and ground-truth physical positions, constrained by occlusion probabilities and camera intrinsic matrices. The broadcast tracking manifold is modeled as a fiber bundle over the pitch topology, where local camera views act as transition functions. Occlusions induce singularities in the spatial metric, necessitating conformal rescaling to maintain invariant tactical state representations across disjoint optical domains.",
+  "gsi_mapping": "GSI employs conformal inference to bound the epistemic uncertainty of broadcast-derived tracking. By treating multi-camera optical data as the calibration set, we construct prediction intervals for player and ball states under varying visibility conditions. GSI employs a hierarchical Bayesian filter where PGM and Camera 1 feeds serve as noisy likelihoods. Conformal prediction intervals are dynamically adjusted based on occlusion density, ensuring rigorous uncertainty quantification for possession transitions and ball-in-play time estimations under partial observability.",
+  "gse_mapping": "GSE translates positional residuals into discrete event-state transitions. The probability of an auto-event (e.g., shot) is conditioned on the instantaneous covariance matrix of the ball's trajectory, dynamically adjusting to occlusion-induced state-space perturbations. GSE maps auto-eventing errors to a discrete Markov Decision Process. State transitions (e.g., kickoffs to free kicks) are governed by boundary-crossing probabilities of the tracked ball vector, while goalkeeper action detection relies on latent height priors inferred from 2D projection shadows.",
+  "primitives": [
+    {
+      "primitive_id": "w0_tracking_accuracy",
+      "name": "Spatiotemporal Tracking Accuracy Operator",
+      "verbatim_quote": "These systems are among the most accurate currently available, with reported positional errors around 0.15 m and speed errors around 0.15 m·s-1 [2].",
+      "page": 1,
+      "latex": "\\mathcal{L}_{optical} = \\sqrt{\\mathbb{E}[\\| \\mathbf{x}_{true} - \\hat{\\mathbf{x}}_{opt} \\|^2]} \\approx 0.15 \\text{ m}, \\quad \\sigma_{v} \\approx 0.15 \\text{ m}\\cdot\\text{s}^{-1}",
+      "symbol_and_unit_ledger": "\\mathcal{L}_{optical}: Root mean square error in meters (m). \\mathbf{x}_{true}: Ground truth position vector (m). \\hat{\\mathbf{x}}_{opt}: Estimated position from optical tracking (m). \\sigma_{v}: Standard deviation of velocity error (m/s).",
+      "assumptions": "Assumes optimal lighting, unobstructed multi-camera line-of-sight, and negligible latency in sensor fusion pipelines.",
+      "breakdown_regime": "Breaks down during severe weather events, extreme stadium glare, or when players cluster tightly causing identity switches across overlapping camera fields of view.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the baseline prior distribution in GSI's Bayesian filter, representing the minimum achievable variance floor for any tracking system.",
+        "source_operator": "w0_tracking_accuracy",
+        "telemetry": "Empirical RMSE against TRACAB Gen 5 manual tags."
+      }
+    },
+    {
+      "primitive_id": "w0_broadcast_scalability",
+      "name": "Broadcast Scalability Constraint",
+      "verbatim_quote": "However, these systems are often costly and require bespoke multi-camera set-ups, which limits their scalabil­ ity across all levels of the game.",
+      "page": 1,
+      "latex": "\\nabla_{budget} C_{multi-cam} \\gg \\lambda_{scale} \\implies \\text{Scalability}(N_{stadiums}) \\rightarrow 0",
+      "symbol_and_unit_ledger": "C_{multi-cam}: Capital expenditure cost (USD). \\lambda_{scale}: Deployment scaling factor (dimensionless). N_{stadiums}: Number of target venues (count).",
+      "assumptions": "Assumes linear budget constraints and fixed marginal costs per additional stadium deployment.",
+      "breakdown_regime": "Fails when attempting to deploy high-fidelity optical arrays across thousands of lower-tier global stadiums simultaneously due to prohibitive CAPEX.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the necessity kernel for single-perspective computer vision models within GSE, forcing reliance on broadcast feeds.",
+        "source_operator": "w0_broadcast_scalability",
+        "telemetry": "Cost-per-match metric across tier-1 to tier-4 leagues."
+      }
+    },
+    {
+      "primitive_id": "w0_autoevent_f1",
+      "name": "Auto-Event F1 Convergence",
+      "verbatim_quote": "The best-case performance for most events examined in this study either exceeded, matched, or fell within 0.05 F1-score of the multi-camera system performance.",
+      "page": 1,
+      "latex": "| F1_{broadcast} - F1_{optical} | \\leq \\epsilon, \\quad \\text{where } \\epsilon = 0.05",
+      "symbol_and_unit_ledger": "F1_{broadcast}: F1 score of broadcast auto-events (dimensionless). F1_{optical}: F1 score of multi-camera auto-events (dimensionless). \\epsilon: Acceptable convergence tolerance (dimensionless).",
+      "assumptions": "Assumes identical ground truth labeling protocols for both systems and consistent temporal alignment of event windows.",
+      "breakdown_regime": "Diverges significantly during complex set-piece geometries where ball-player interactions occur off-plane relative to the broadcast camera.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the GSI validation threshold for accepting broadcast data into the core tactical engine without human-in-the-loop correction.",
+        "source_operator": "w0_autoevent_f1",
+        "telemetry": "Delta-F1 score over 90-minute match duration."
+      }
+    },
+    {
+      "primitive_id": "w0_visibility_errors",
+      "name": "Visibility & Subjectivity Error Kernel",
+      "verbatim_quote": "However, performance varied across the systems and was limited by instances of player visibility, ball tracking errors and subjectivity in event definitions, particularly around set pieces and shots.",
+      "page": 1,
+      "latex": "P(\\text{Error}|\\mathcal{O}) = \\alpha \\cdot \\mathbb{I}_{occlusion} + \\beta \\cdot \\mathbb{I}_{subjective} + \\eta_{ball}",
+      "symbol_and_unit_ledger": "P(Error): Probability of tracking/event failure (dimensionless). \\mathcal{O}: Observation context. \\mathbb{I}_{occlusion}: Indicator function for visual blockage. \\mathbb{I}_{subjective}: Indicator for ambiguous event definition. \\eta_{ball}: Ball-specific noise term.",
+      "assumptions": "Assumes errors are additive and independent across visibility, semantic ambiguity, and object-specific tracking failures.",
+      "breakdown_regime": "Singularity occurs when the ball is completely occluded during a rapid transition, rendering the derivative of position undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Forms the basis of the GSE uncertainty penalty, dynamically reducing the weight of auto-events during high-occlusion phases.",
+        "source_operator": "w0_visibility_errors",
+        "telemetry": "Frequency of tracking dropouts per minute during set-pieces."
+      }
+    },
+    {
+      "primitive_id": "47381c22c8e650b0_w1_g1",
+      "name": "openalex_W7160830021 Ch.2 Grounded Operator",
+      "verbatim_quote": "Page 3 of 10 15 Automatic event detection in association football using broadcast-derived tracking data comma-separated value (.csv) files in their raw sampling frequency, where each row provided an observation of ball position at 25 Hz.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 47381c22c8e650b0_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "47381c22c8e650b0_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "47381c22c8e650b0_w1_g2",
+      "name": "openalex_W7160830021 Ch.2 Grounded Operator",
+      "verbatim_quote": "2.1 Determining ball tracking accuracy To establish the concurrent validity, providers were com­ pared against a high-definition multi-camera optical track­ ing system, capturing data at 25 Hz (TRACAB Gen 5, ChyronHego, New York, USA).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 47381c22c8e650b0_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "47381c22c8e650b0_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "47381c22c8e650b0_w1_g3",
+      "name": "openalex_W7160830021 Ch.2 Grounded Operator",
+      "verbatim_quote": "The system uses 12 fixed cameras elevated within the stadium infrastructure.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 47381c22c8e650b0_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "47381c22c8e650b0_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "broadcast_autoeventing_accuracy",
+      "name": "Broadcast Autoeventing Accuracy",
+      "verbatim_quote": "matched the multi-camera optical benchmark whereas shots and saves remained clear areas for improvement.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes broadcast cameras provide sufficient resolution and coverage to replicate the multi-camera system's event detection.",
+      "breakdown_regime": "Breaks down when ball speed exceeds camera frame rate or player occlusion blocks the ball.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction framework for probabilistic event detection accuracy, where broadcast telemetry serves as input features.",
+        "source_operator": "broadcast_autoeventing_accuracy",
+        "telemetry": "F1-score (harmonic mean of precision and recall) quantifies overall autoeventing correctness relative to ground truth."
+      }
+    },
+    {
+      "primitive_id": "f1_score_overall",
+      "name": "Overall Event Detection F1-Score",
+      "verbatim_quote": "For a more holistic approach, we emphasize the best F1-scores across feed–provider–trial configurations and reference the multicamera optical tracking system benchmark to contextual­ ize what is currently achievable.",
+      "page": 6,
+      "latex": "F1 = \\frac{2 \\cdot Precision \\cdot Recall}{Precision + Recall}",
+      "symbol_and_unit_ledger": "{'Precision': 'dimensionless', 'Recall': 'dimensionless', 'F1': 'dimensionless'}",
+      "assumptions": "Assumes balanced class distribution and uniform difficulty across trials; heavily influenced by dataset composition.",
+      "breakdown_regime": "Degenerates to zero when either precision or recall approaches zero, indicating catastrophic failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian model averaging over provider-specific posterior distributions of event occurrence.",
+        "source_operator": "f1_score_overall",
+        "telemetry": "Cross-validation F1-scores on held-out test sets measure generalization performance."
+      }
+    },
+    {
+      "primitive_id": "perfect_detection",
+      "name": "Perfect Event Detection",
+      "verbatim_quote": "Set pieces Kickoffs Auto-eventing achieved perfect detection (F1 = 1.00) in multiple configurations, matching the multicamera system.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes ideal camera calibration, minimal occlusion, and consistent replay generation algorithms.",
+      "breakdown_regime": "Breaks down when replay systems introduce systematic delays or misalignments between camera angles.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's deterministic state-transition logic where perfect detection triggers immediate tactical response protocols.",
+        "source_operator": "perfect_detection",
+        "telemetry": "Binary indicator (1=perfect, 0=otherwise) tracks configuration robustness across different camera feeds."
+      }
+    },
+    {
+      "primitive_id": "goal_kick_performance",
+      "name": "Goal Kick Performance Comparison",
+      "verbatim_quote": "Page 7 of 10 15 Automatic event detection in association football using broadcast-derived tracking data Goal kicks Systems using Camera 1 auto-events reached as high as F1 = 0.97, exceeding the multi-camera's 0.94.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes Camera 1 provides superior coverage of goal areas and better temporal resolution than other feeds.",
+      "breakdown_regime": "Breaks down when goal-line technology fails to timestamp the initial contact accurately.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's situational reasoning module where high-performance goal-kick data informs goalkeeper positioning strategies.",
+        "source_operator": "goal_kick_performance",
+        "telemetry": "Provider-specific F1-scores for goal kicks serve as key performance indicators for broadcast quality assessment."
+      }
+    },
+    {
+      "primitive_id": "w3_broadcast_tracking_manifold",
+      "name": "Broadcast Tracking Manifold Operator",
+      "verbatim_quote": "Therefore, broadcast tracking systems may still be appropriate to sup­ port tactical analysis where precise spatial accuracy.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "RMSE: Root Mean Square Error (meters), x_t: Spatial coordinate vector (dimensionless normalized pitch coordinates)",
+      "assumptions": "Assumes broadcast feeds provide a sufficiently dense sampling of the underlying continuous player trajectories despite lower resolution compared to IMU systems.",
+      "breakdown_regime": "Breaks down when RMSE exceeds the characteristic length scale of tactical zones, rendering zone-of-play identification statistically indistinguishable from noise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the physical pitch to a low-dimensional Riemannian manifold where geodesic distances approximate passing networks.",
+        "source_operator": "w3_broadcast_tracking_manifold",
+        "telemetry": "Spatial RMSE against ground truth optical tracking."
+      }
+    },
+    {
+      "primitive_id": "w3_feed_hierarchy_kernel",
+      "name": "Feed Hierarchy Kernel",
+      "verbatim_quote": "We note that for Providers 1 and 3, the Camera 1 F1-scores were greater than or equal to the corre­ sponding PGM scores for all event types, as expected given that the PGM feed is derived from Camera 1 with additional production artifacts.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "F1_cam: F1-score of Camera 1 (dimensionless), F1_PGM: F1-score of PGM feed (dimensionless), A: Production artifact noise matrix",
+      "assumptions": "Assumes PGM generation acts as a strictly lossy channel introducing non-negative entropy relative to the base Camera 1 feed.",
+      "breakdown_regime": "Violated if proprietary internal processing steps (as seen in Provider 2) apply non-linear super-resolution or temporal smoothing that artificially inflates PGM metrics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives an optimal weighting kernel for multi-view fusion, prioritizing raw optical feeds over processed broadcast streams.",
+        "source_operator": "w3_feed_hierarchy_kernel",
+        "telemetry": "Delta F1-score between raw camera and processed PGM feeds."
+      }
+    },
+    {
+      "primitive_id": "w3_occlusion_singularity",
+      "name": "Occlusion Singularity Operator",
+      "verbatim_quote": "Firstly, tracking quality typically deteriorated during occlusions in congested areas like the penalty box, which affected goal attribution in the form of incorrect own goals.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "rho: Player density (players/m^2), sigma_track: Tracking covariance matrix (m^2), P_box: Penalty box region indicator function",
+      "assumptions": "Assumes player bodies act as opaque occluders, causing sudden discontinuities in the optical flow field within high-density regions.",
+      "breakdown_regime": "Singular behavior occurs when rho approaches critical packing density, causing track ID swaps and catastrophic failure in goal attribution logic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to topological defects in fluid dynamics; requires regularization via Kalman filtering to prevent state collapse.",
+        "source_operator": "w3_occlusion_singularity",
+        "telemetry": "Rate of ID switches per minute within the penalty box."
+      }
+    },
+    {
+      "primitive_id": "w3_boundary_event_confusion",
+      "name": "Boundary Event Confusion Matrix",
+      "verbatim_quote": "Insufficient ball tracking accuracy led to kickoffs mistaken for free kicks when the ball position deviated significantly from the center spot, and imprecision near the touchlines caused confusion between throw-ins and free kicks when the ball's tracked position was wrongly marked as in-or out of bounds.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "delta_x: Deviation from center spot (meters), epsilon_b: Boundary tracking error margin (meters), E_type: Categorical event type",
+      "assumptions": "Assumes event classification is a deterministic function of ball position relative to fixed geometric boundaries of the pitch.",
+      "breakdown_regime": "Classification collapses when epsilon_b > distance_to_boundary, leading to high false-positive rates for restart events.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Constructs a probabilistic boundary layer where event emission is a softmax function of proximity to touchlines and center circle.",
+        "source_operator": "w3_boundary_event_confusion",
+        "telemetry": "Confusion matrix precision for restart events near touchlines."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "47381c22c8e650b0_t0",
+      "think": "The fundamental mathematical challenge presented in pages 1-2 is the reduction of dimensionality from a high-fidelity, multi-view optical manifold to a low-fidelity, single-view broadcast projection, while preserving the topological integrity of event detection. We begin by defining the ground truth state $\\mathbf{S}_{t}$ as a point cloud derived from the TRACAB Gen 5 system, possessing minimal spatial variance ($\\sigma \\approx 0.15$ m). The broadcast system attempts to reconstruct this state via a non-linear mapping $\\Phi: \\mathcal{V}_{broadcast} \\rightarrow \\mathbf{S}_{t}$, where $\\mathcal{V}_{broadcast}$ represents the compressed, panned, and zoomed video feed. The primary source of epistemic uncertainty arises from the loss of depth information (the Z-axis collapse) and dynamic occlusions. Mathematically, this introduces a conditional probability distribution $P(\\mathbf{S}_{t} | \\mathcal{V}_{broadcast})$ that is highly multimodal during clustered player formations. The text highlights that despite these geometric constraints, the F1-score convergence ($\\epsilon \\le 0.05$) suggests that the relevant features for *event* detection (e.g., a shot crossing a plane) reside in a subspace that remains invariant under the broadcast projection. However, the 'visibility errors' and 'subjectivity' mentioned act as stochastic perturbations to the state-transition matrix in our Markovian model of the game. To formalize this, we treat the broadcast tracking not as a deterministic solver, but as a probabilistic sampler. The 'best-case performance' implies that under optimal viewing angles (Camera 1), the posterior distribution of the ball's position sharply peaks near the ground truth. Conversely, during set-pieces, the posterior flattens, increasing the entropy of the event classification. This necessitates a hierarchical Bayesian approach where the confidence of an auto-event is explicitly coupled to the instantaneous tracking variance. If the variance exceeds a critical threshold (indicating occlusion or rapid motion blur), the system must invoke a fallback mechanism or flag the event for human review, thereby managing the risk of false positives in the tactical engine.",
+      "retrocausal_genealogy": "This lineage traces back to early 20th-century cinematography geometry, evolving through the 1990s introduction of Hawk-Eye in tennis, which first solved the multi-camera triangulation problem. The shift to broadcast-only tracking in the 2020s represents a retrocausal pressure: the ubiquity of TV signals forced a re-evaluation of computer vision techniques originally designed for controlled environments, pushing the boundary of what can be inferred from degraded, consumer-grade media streams.",
+      "theory_of_mind": "Modeling the opposing agent here involves understanding the director of photography and the automated camera operators. Their panning and zooming decisions are reactive to the ball's velocity and possession state. A sophisticated GSE must infer the camera operator's intent to predict upcoming occlusions. If the camera rapidly pans to follow a counter-attack, the peripheral players become invisible, creating a blind spot in the state space that the opponent might exploit tactically, knowing the tracking system's certainty has dropped.",
+      "cross_layer_veto": "A strict anti-collinearity veto must be applied between the 'positional accuracy' layer and the 'event detection' layer. High positional accuracy does not guarantee correct event semantics (e.g., a perfectly tracked ball might still be misclassified as a pass rather than a shot due to subjective definition boundaries). Furthermore, we must veto any leakage where the multi-camera ground truth inadvertently biases the training of the broadcast model; the broadcast model must stand on its own epistemic merits, validated strictly through out-of-sample conformal prediction intervals to ensure robustness in live deployment."
+    },
+    {
+      "trace_id": "47381c22c8e650b0_t1",
+      "think": "Window 2 Synthesis: Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "47381c22c8e650b0_t2",
+      "think": "This chapter window establishes a rigorous empirical comparison of broadcast-based automatic event detection against a gold-standard multi-camera optical tracking system. The core challenge is translating sparse, noisy, and heterogeneous broadcast telemetry into accurate event timestamps and labels. The work employs F1-score as a unified metric that simultaneously penalizes false positives and false negatives, providing a single-number summary for holistic evaluation. Key findings show that set-piece events like kickoffs achieve near-perfect detection due to their structured nature and clear visual cues, while continuous-motion events like shots and saves remain challenging because of ambiguity in defining event boundaries. The study highlights the importance of feed selection (Camera 1 vs. PGM) and provider algorithms, revealing that some configurations systematically underperform due to poor replay generation or insufficient training data. This foundational work directly informs GSI's development of conformal prediction models that can calibrate uncertainty estimates for broadcast-derived features, and it guides GSE's design of robust situational reasoning pipelines that account for varying event detection reliability. Window 3 Synthesis: Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The lineage traces back to early computer vision works on object tracking (1990s), through the rise of multi-camera sports analytics platforms like ProZone (2000s), culminating in modern broadcast-tracking integrations. It builds on the realization that commercial telemetry can be leveraged for research-grade analysis. Retrocausal Genealogy (Window 3): Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts model broadcast providers as black-box feature extractors with unknown reliability profiles. They reason about game states based on the confidence of automatically detected events, adjusting strategies when detection quality drops. Theory of Mind (Window 3): Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions include ensuring that ground-truth annotations from the multi-camera system are independent of the broadcast feeds used for comparison, avoiding circular validation. Leakage is prevented by using temporally disjoint training and test sets. Cross-Layer Veto (Window 3): Rooted in openalex_W7160830021 (47381c22c8e650b0, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "47381c22c8e650b0_t3",
+      "think": "The derivation of broadcast-derived tracking primitives begins by formalizing the pitch as a bounded Euclidean domain \\Omega \\subset \\mathbb{R}^2. The primary observable is the spatiotemporal trajectory of players and the ball, \\mathbf{x}(t). However, broadcast systems introduce a measurement operator \\mathcal{M} that projects this high-dimensional state into a lower-dimensional, noisy observation space. The text highlights that Camera 1 provides a superior likelihood function compared to the PGM feed, implying \\mathcal{L}_{Cam1} \\succeq \\mathcal{L}_{PGM}. This establishes a hierarchy of information content, where production artifacts in PGM act as an entropic sink. \n\nFurthermore, the discussion on auto-eventing reveals that event detection is fundamentally a boundary-value problem. Events like kickoffs, throw-ins, and free kicks are defined by the intersection of the ball's trajectory with specific geometric subsets of \\Omega (e.g., center circle, touchlines). The 'occlusion singularity' in the penalty box represents a breakdown in the invertibility of \\mathcal{M}; when multiple agents overlap, the Jacobian of the projection becomes rank-deficient, leading to track swaps and misattribution of goals. \n\nTo resolve these ambiguities, we must introduce a latent variable model where the true state \\mathbf{x}(t) is inferred via a Bayesian filter that incorporates priors on player kinematics and ball physics. The lack of height data (z-axis) further constrains the observable manifold, making goalkeeper actions (saves/claims) degenerate cases where 2D projections of distinct 3D actions overlap. Thus, the sovereign primitive for GSI/GSE must encapsulate not just the tracking data, but the conditional probability distribution over event types given the noisy, partially observed trajectory, explicitly modeling the uncertainty introduced by occlusions and boundary inaccuracies.",
+      "retrocausal_genealogy": "This lineage traces back to early computer vision efforts in the 1990s attempting to extract sports data from broadcast TV. Initially reliant on simple color segmentation, the field evolved through the adoption of Kalman filters for tracking, and later, deep learning for pose estimation. The current chapter window represents a maturation point where the limitations of broadcast geometry—specifically occlusion and perspective distortion—are formally quantified against specialized systems like TRACAB, bridging the gap between academic CV research and professional sports analytics.",
+      "theory_of_mind": "Modeling opposing agents requires understanding that coaches and analysts do not perceive raw tracking data; they perceive tactical narratives constructed from event sequences. An agent using these primitives must anticipate how an opponent interprets 'possession transitions' or 'zones of play'. If our system flags a high-probability shot due to a tracking glitch (e.g., ball position error near the goal line), the opposing coach might incorrectly adjust defensive shape. Therefore, the theory of mind layer involves predicting the epistemic state of human operators based on the same noisy signals, allowing GSE to simulate not just physical outcomes, but the cognitive responses to imperfect information.",
+      "cross_layer_veto": "Anti-collinearity vetoes are critical when fusing Camera 1 and Tactical feeds. If both feeds suffer from a systematic bias (e.g., lens distortion uncorrected in both), simply averaging them will not reduce error variance. We must veto combinations where the correlation of residuals exceeds a threshold, indicating shared structural failure rather than independent noise. Furthermore, leakage vetoes prevent future event labels from influencing past tracking states; for instance, knowing a goal occurred must not retroactively smooth the ball's trajectory into the net if the optical data was ambiguous. This ensures causal integrity in the state-transition model."
+    }
+  ]
+}

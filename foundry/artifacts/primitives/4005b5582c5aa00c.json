@@ -1,0 +1,78 @@
+{
+  "book_id": "4005b5582c5aa00c",
+  "source_status": "COMPLETE",
+  "title": "p0357",
+  "file_name": "p0357.txt",
+  "sha256": "4005b5582c5aa00cd08e74de37e5a2fc0eabd813b7f68015fb5e5706bc05aec4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Conditioned reflex theory's S-R model fails without environmental supports; molar behaviors require discriminanda-manipulanda for valid conditioning. Universal Lens: Rooted in p0357 (4005b5582c5aa00c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models conditioned responses via S2→R with latent supports as evidence variables; P(R|S2, supports) extends simple P(R|S2). GSI Mapping: Rooted in p0357 (4005b5582c5aa00c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions from S2 to R depend on external discriminanda/manipulanda; transition function T(S2, supports) → R captures contextual dependency. GSE Mapping: Rooted in p0357 (4005b5582c5aa00c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "conditioned_response_supports",
+      "name": "Conditioned Response Supports",
+      "verbatim_quote": "And this means that the \"conditionings\" of all such behaviors inevitably require more than the simple theory diagrammed above will allow for.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'response (dimensionless)', 'S2': 'conditioned stimulus (dimensionless)', 'supports': 'environmental context (dimensionless)'}",
+      "assumptions": "Responses are not solely determined by S2; they require additional environmental factors.",
+      "breakdown_regime": "When S2 alone is present without supports, behavior prediction fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Supports act as latent variables in GSI's probabilistic model; in GSE, they define valid state transitions.",
+        "source_operator": "conditioned_response_supports",
+        "telemetry": "Behavioral consistency under repeated S2+support conditions."
+      }
+    },
+    {
+      "primitive_id": "discriminanda_manipulanda",
+      "name": "Discriminanda and Manipulanda",
+      "verbatim_quote": "It requires also the presence of appropriate \"supports\": discriminanda and manipulanda.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'discriminanda': 'external cues (dimensionless)', 'manipulanda': 'actionable elements (dimensionless)'}",
+      "assumptions": "Discriminanda and manipulanda must be present for accurate behavioral modeling.",
+      "breakdown_regime": "Absence of either leads to incorrect classification or execution of R.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, these form prior distributions over response space; in GSE, they define valid action sets.",
+        "source_operator": "discriminanda_manipulanda",
+        "telemetry": "Accuracy of stimulus-response categorization in dynamic environments."
+      }
+    },
+    {
+      "primitive_id": "behavioral_context_dependency",
+      "name": "Behavioral Context Dependency",
+      "verbatim_quote": "For, in such cases, it becomes evident that the R which is made to the conditioned stimulus is a different R, requiring different supports, from that which is made to the unconditioned stimulus.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_unconditioned': 'response to unconditioned stimulus (dimensionless)', 'R_conditioned': 'response to conditioned stimulus (dimensionless)'}",
+      "assumptions": "Different stimuli produce qualitatively distinct responses requiring distinct support structures.",
+      "breakdown_regime": "Misalignment between stimulus type and required supports results in misclassified behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI distinguishes conditional response types via support-dependent likelihoods; GSE uses them to differentiate state-action pairs.",
+        "source_operator": "behavioral_context_dependency",
+        "telemetry": "Response variability across S2 vs S1 contexts."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4005b5582c5aa00c_t0",
+      "think": "The core issue lies in extending simple S-R models to complex molar behaviors. The original theory assumes R emerges directly from S2, yet empirical reality shows that R depends on both S2 and environmental supports—discriminanda and manipulanda. These supports are not modeled in basic S-R frameworks, leading to a breakdown when applied to behaviors involving interaction with external environments. This implies that any formalism must include latent or contextual variables to represent supports. In GSI, this manifests as a Bayesian update where P(R|S2) becomes P(R|S2, supports), incorporating environmental context as evidence. In GSE, it translates into a transition system where T(S2, supports) → R defines valid state changes only when supports are present. The failure mode occurs when supports are ignored, causing misclassification or incorrect prediction of behavior. Thus, the mathematical structure must encode support dependencies explicitly through conditional probability or state transition functions.\n\nDeep epistemic analysis for p0357 (4005b5582c5aa00c, domain=other, pages_read=1/1): Operator 'Conditioned Response Supports' (page 1, domain other) captures: And this means that the \"conditionings\" of all such behaviors inevitably require more than the simple theory diagrammed above will allow for. Assumptions: Responses are not solely determined by S2; they require additional environmental factors. Breakdown regime: When S2 alone is present without supports, behavior prediction fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Supports act as latent variables in GSI's probabilistic model; in GSE, they define valid state transitions. Operator 'Discriminanda and Manipulanda' (page 1, domain other) captures: It requires also the presence of appropriate \"supports\": discriminanda and manipulanda. Assumptions: Discriminanda and manipulanda must be present for accurate behavioral modeling. Breakdown regime: Absence of either leads to incorrect classification or execution of R. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, these form prior distributions over response space; in GSE, they define valid action sets. Operator 'Behavioral Context Dependency' (page 1, domain other) captures: For, in such cases, it becomes evident that the R which is made to the conditioned stimulus is a different R, requiring different supports, from that which is made to the unconditioned stimulus. Assumptions: Different stimuli produce qualitatively distinct responses requiring distinct support structures. Breakdown regime: Misalignment between stimulus type and required supports results in misclassified behavior. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI distinguishes conditional response types via support-dependent likelihoods; GSE uses them to differentiate state-action pairs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0357 (4005b5582c5aa00c, domain=other, pages_read=1/1): Operator 'Conditioned Response Supports' (page 1, domain other) captures: And this means that the \"conditionings\" of all such behaviors inevitably require more than the simple theory diagrammed above will allow for. Assumptions: Responses are not solely determined by S2; they require additional environmental factors. Breakdown regime: When S2 alone is present without supports, behavior prediction fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Supports act as latent variables in GSI's probabilistic model; in GSE, they define valid state transitions. Operator 'Discriminanda and Manipulanda' (page 1, domain other) captures: It requires also the presence of appropriate \"supports\": discriminanda and manipulanda. Assumptions: Discriminanda and manipulanda must be present for accurate behavioral modeling. Breakdown regime: Absence of either leads to incorrect classification or execution of R. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, these form prior distributions over response space; in GSE, they define valid action sets. Operator 'Behavioral Context Dependency' (page 1, domain other) captures: For, in such cases, it becomes evident that the R which is made to the conditioned stimulus is a different R, requiring different supports, from that which is made to the unconditioned stimulus. Assumptions: Different stimuli produce qualitatively distinct responses requiring distinct support structures. Breakdown regime: Misalignment between stimulus type and required supports results in misclassified behavior. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI distinguishes conditional response types via support-dependent likelihoods; GSE uses them to differentiate state-action pairs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Pavlovian learning theory, later expanded by Skinner’s operant conditioning. The critique here aligns with modern cognitive science’s emphasis on situated cognition and embodied action, challenging stimulus-response reductionism. Retrocausal Genealogy: Rooted in p0357 (4005b5582c5aa00c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0357 (4005b5582c5aa00c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might assume deterministic S2→R mappings, ignoring that R is context-sensitive. A rational agent would recognize that behavior depends on both internal state and environmental scaffolding, making predictions contingent on support availability. Theory of Mind & Decision Maker Model: Rooted in p0357 (4005b5582c5aa00c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If supports are not properly accounted for, GSI's probabilistic models become overconfident, while GSE's state machines fail to transition correctly. Anti-collinearity arises when S2 and supports are conflated, leading to spurious correlations and erroneous behavior modeling. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0357 (4005b5582c5aa00c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

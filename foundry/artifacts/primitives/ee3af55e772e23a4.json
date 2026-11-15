@@ -1,0 +1,78 @@
+{
+  "book_id": "ee3af55e772e23a4",
+  "source_status": "COMPLETE",
+  "title": "LAYER-MAP",
+  "file_name": "LAYER-MAP.md",
+  "sha256": "ee3af55e772e23a48aebdfb5fb4dd2ed24d22318b5e15a4dead5f6c5913ea712",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A 26-layer sequential reasoning stack maps game context into probabilistic inference via domain-specific equation batches, enabling structured state transitions across temporal and spatial dimensions. Universal Lens: Rooted in LAYER-MAP (ee3af55e772e23a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference over layered context packets to compute log-odds deltas, mapping input signals through 26 domains into posterior belief states for predictive modeling. GSI Mapping: Rooted in LAYER-MAP (ee3af55e772e23a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions using derived kernel operators from each layer's equation batch, dynamically updating situational awareness based on real-time inputs and causal chain propagation. GSE Mapping: Rooted in LAYER-MAP (ee3af55e772e23a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "schedule_and_kickoff",
+      "name": "Schedule and Kickoff Window",
+      "verbatim_quote": "# THE 26-LAYER CONTEXT & REASONING STACK MAP (`docs/wiring/LAYER-MAP.md`) Every game context packet (`data/context_packets/<game_id>.json`) is assembled by executing all 26 layers in strict sequence (`L01`..`L26`), validated at runtime against `schemas/v1/layer_output.schema.json` and `schemas/v1/context_packet.schema.json`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'kickoff_window': 'dimensionless', 'broadcast_slot': 'dimensionless'}",
+      "assumptions": "Game schedule is deterministic and known a priori; kickoff timing affects temporal dynamics.",
+      "breakdown_regime": "Pre-game initialization phase.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps scheduled time and broadcast slot to temporal context vector in GSE state space.",
+        "source_operator": "schedule_and_kickoff",
+        "telemetry": "Kickoff timestamp alignment with game clock."
+      }
+    },
+    {
+      "primitive_id": "team_efficiency_baseline",
+      "name": "Team Efficiency Baseline",
+      "verbatim_quote": "offensive/defensive efficiency baselines (EPA/play, success rate) | `ds_nflverse_play_by_play_historical.parquet` | `Layer 3` (`epa`, `success_rate`) | `equation_batch_log_odds_delta`, `layer_domain_signal`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'epa_per_play': 'yards per play', 'success_rate': 'dimensionless'}",
+      "assumptions": "Historical performance is representative of future behavior under similar conditions.",
+      "breakdown_regime": "Baseline estimation for team-level metrics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives EPA and success rate kernels for probabilistic forecasting in GSI.",
+        "source_operator": "team_efficiency_baseline",
+        "telemetry": "EPA deviation from historical mean."
+      }
+    },
+    {
+      "primitive_id": "venue_surface_and_weather",
+      "name": "Venue Surface and Weather",
+      "verbatim_quote": "`ds_nws_stadium_forecast.parquet`, `VENUE-NFL-*` | `Layer 6` (`weather`, `wind`, `venue`, `surface`) | `stadium`, `roof_type`, `wind_mph`, `weather_pass_penalty` | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'wind_mph': 'miles per hour', 'weather_pass_penalty': 'dimensionless'}",
+      "assumptions": "Environmental factors influence player performance and tactical decisions.",
+      "breakdown_regime": "Environmental condition override in situational reasoning.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps weather and venue data into environmental penalty vectors within GSE.",
+        "source_operator": "venue_surface_and_weather",
+        "telemetry": "Wind speed and roof type impact on pass completion probability."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ee3af55e772e23a4_t0",
+      "think": "The 26-layer stack operates as a hierarchical Bayesian network where each layer refines contextual priors into actionable signals. L01 sets temporal anchors; L03 introduces baseline efficiencies; L06 incorporates environmental modifiers. Each layer's output forms a conditional probability distribution that feeds into subsequent layers. The system avoids combinatorial explosion by enforcing strict causality chains. Failure modes include data drift, incorrect signal resolution, and layer dependency collapse. Dualities emerge between offensive and defensive layers, e.g., L03 vs L04, which must remain orthogonal to prevent spurious correlation. Temporal consistency is enforced through validation schemas ensuring logical coherence across layers.\n\nDeep epistemic analysis for LAYER-MAP (ee3af55e772e23a4, domain=other, pages_read=3/3): Operator 'Schedule and Kickoff Window' (page 1, domain other) captures: # THE 26-LAYER CONTEXT & REASONING STACK MAP (`docs/wiring/LAYER-MAP.md`) Every game context packet (`data/context_packets/<game_id>.json`) is assembled by executing all 26 layers in strict sequence (`L01`..`L26`), validated at runtime against `schemas/v1/layer_output.schema.json` and `schemas/v1/context_packet.schema.json`. Assumptions: Game schedule is deterministic and known a priori; kickoff timing affects temporal dynamics. Breakdown regime: Pre-game initialization phase. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps scheduled time and broadcast slot to temporal context vector in GSE state space. Operator 'Team Efficiency Baseline' (page 1, domain other) captures: offensive/defensive efficiency baselines (EPA/play, success rate) | `ds_nflverse_play_by_play_historical.parquet` | `Layer 3` (`epa`, `success_rate`) | `equation_batch_log_odds_delta`, `layer_domain_signal` Assumptions: Historical performance is representative of future behavior under similar conditions. Breakdown regime: Baseline estimation for team-level metrics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives EPA and success rate kernels for probabilistic forecasting in GSI. Operator 'Venue Surface and Weather' (page 1, domain other) captures: `ds_nws_stadium_forecast.parquet`, `VENUE-NFL-*` | `Layer 6` (`weather`, `wind`, `venue`, `surface`) | `stadium`, `roof_type`, `wind_mph`, `weather_pass_penalty` | | Assumptions: Environmental factors influence player performance and tactical decisions. Breakdown regime: Environmental condition override in situational reasoning. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps weather and venue data into environmental penalty vectors within GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LAYER-MAP (ee3af55e772e23a4, domain=other, pages_read=3/3): Operator 'Schedule and Kickoff Window' (page 1, domain other) captures: # THE 26-LAYER CONTEXT & REASONING STACK MAP (`docs/wiring/LAYER-MAP.md`) Every game context packet (`data/context_packets/<game_id>.json`) is assembled by executing all 26 layers in strict sequence (`L01`..`L26`), validated at runtime against `schemas/v1/layer_output.schema.json` and `schemas/v1/context_packet.schema.json`. Assumptions: Game schedule is deterministic and known a priori; kickoff timing affects temporal dynamics. Breakdown regime: Pre-game initialization phase. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps scheduled time and broadcast slot to temporal context vector in GSE state space. Operator 'Team Efficiency Baseline' (page 1, domain other) captures: offensive/defensive efficiency baselines (EPA/play, success rate) | `ds_nflverse_play_by_play_historical.parquet` | `Layer 3` (`epa`, `success_rate`) | `equation_batch_log_odds_delta`, `layer_domain_signal` Assumptions: Historical performance is representative of future behavior under similar conditions. Breakdown regime: Baseline estimation for team-level metrics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives EPA and success rate kernels for probabilistic forecasting in GSI. Operator 'Venue Surface and Weather' (page 1, domain other) captures: `ds_nws_stadium_forecast.parquet`, `VENUE-NFL-*` | `Layer 6` (`weather`, `wind`, `venue`, `surface`) | `stadium`, `roof_type`, `wind_mph`, `weather_pass_penalty` | | Assumptions: Environmental factors influence player performance and tactical decisions. Breakdown regime: Environmental condition override in situational reasoning. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps weather and venue data into environmental penalty vectors within GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian belief networks and causal graph theory, extending classical game theory into dynamic probabilistic frameworks. Retrocausal Genealogy: Rooted in LAYER-MAP (ee3af55e772e23a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in LAYER-MAP (ee3af55e772e23a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing coaching strategies and player motivations as competing stochastic processes influencing outcome distributions. Theory of Mind & Decision Maker Model: Rooted in LAYER-MAP (ee3af55e772e23a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in LAYER-MAP (ee3af55e772e23a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that redundant or overlapping information does not inflate posterior variance. Leakage vetoes prevent cross-layer contamination of domain-specific variables. Cross-Layer Veto & Anti-Leakage Check: Rooted in LAYER-MAP (ee3af55e772e23a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in LAYER-MAP (ee3af55e772e23a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

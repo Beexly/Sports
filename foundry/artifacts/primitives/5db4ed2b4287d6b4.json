@@ -1,0 +1,78 @@
+{
+  "book_id": "5db4ed2b4287d6b4",
+  "source_status": "COMPLETE",
+  "title": "OPERATING-MANUAL",
+  "file_name": "OPERATING-MANUAL.md",
+  "sha256": "5db4ed2b4287d6b46972baf50a0b44d42b15b3ae331bf38f22044e4a1157bcbd",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The Hermes operating manual defines a constrained operator algebra over discrete inference backends. The state space is partitioned by task complexity, enforcing a hierarchical fallback chain and strict exclusion of high-variance models (Gemini), establishing a robust manifold for deterministic computational routing.",
+  "gsi_mapping": "In GSI, the alias routing acts as a conformal selection mechanism. Fast inference provides rapid priors for lineup checks, while deep reasoning backends execute Bayesian calibration for +EV analysis. The fallback chain guarantees coverage under data scarcity, maintaining strict epistemic bounds.",
+  "gse_mapping": "GSE maps these primitives to situational state transitions. The 'nuclear' operator triggers only during irrecoverable edge cases, acting as a hard boundary condition. Local offline execution ensures system continuity when network connectivity fails, preserving the core game engine state.",
+  "primitives": [
+    {
+      "primitive_id": "alias_routing_operator",
+      "name": "Task-Complexity Routing Operator",
+      "verbatim_quote": "| docs, reading, small tasks | | fast | groq | llama-3.3-70b-versatile | quick headlines, lineup",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Alias: Dimensionless string identifier; Provider: Dimensionless backend enum; Model: Dimensionless architecture identifier; Task: Dimensionless categorical input.",
+      "assumptions": "Computational resources are bounded; task complexity can be discretely categorized into mutually exclusive buckets.",
+      "breakdown_regime": "Fails if an incoming query exhibits hybrid complexity spanning multiple disjoint aliases without explicit user decomposition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's dynamic compute allocation, mapping low-latency queries to lightweight stochastic gradient estimators.",
+        "source_operator": "alias_routing_operator",
+        "telemetry": "Average latency per alias bucket and token generation throughput."
+      }
+    },
+    {
+      "primitive_id": "hard_rail_exclusion",
+      "name": "Configuration Exclusion Boundary",
+      "verbatim_quote": "## Hard rails - NO config.yaml edits beyond single allowed block - NO push - NO Gemini as default.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "ConfigDelta: Dimensionless boolean constraint; PushAction: Dimensionless git operation flag; DefaultModel: Dimensionless string.",
+      "assumptions": "System stability requires strict isolation of configuration parameters from runtime perturbations.",
+      "breakdown_regime": "Violated if adversarial prompt injection forces unauthorized YAML mutations or defaults to prohibited architectures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's immutable rule engine, preventing illegal state transitions in live sportsbook environments.",
+        "source_operator": "hard_rail_exclusion",
+        "telemetry": "Frequency of rejected configuration mutations and blocked provider instantiations."
+      }
+    },
+    {
+      "primitive_id": "fallback_chain_topology",
+      "name": "Hierarchical Fallback Topology",
+      "verbatim_quote": "| local | ollama | qwen3-coder:30b | offline work | Fallback chain (Laguna → hy3:free →",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "ChainIndex: Integer ordinal position; Availability: Boolean network status; Latency: Time (ms).",
+      "assumptions": "Network availability is stochastic; local compute provides a non-zero baseline capacity.",
+      "breakdown_regime": "Total system failure occurs if all nodes in the fallback chain experience simultaneous hardware or API outages.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's multi-source odds aggregation fallback, ensuring continuous market coverage during primary feed degradation.",
+        "source_operator": "fallback_chain_topology",
+        "telemetry": "Mean time to recovery (MTTR) across chain transitions and local inference success rate."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5db4ed2b4287d6b4_t0",
+      "think": "The provided excerpts define a highly constrained operational manifold for an AI agent named Hermes. Mathematically, this can be modeled as a directed acyclic graph (DAG) where nodes represent specific inference backends (Groq, DeepSeek, Ollama) and edges represent conditional transitions based on task complexity or network availability. The 'Hard rails' act as boundary conditions, explicitly removing certain nodes (Gemini) from the active state space to prevent high-variance hallucinations. The routing logic functions as a piecewise function $f(task) \\rightarrow backend$, optimizing for either latency (fast) or depth (reason/nuclear). The fallback chain introduces a temporal redundancy layer, ensuring that if the primary node (Laguna) fails, the system deterministically cascades to secondary free-tier nodes before resorting to local offline computation. This structure minimizes the entropy of the output distribution by strictly controlling the computational substrate. The prohibition against editing `config.yaml` enforces a static topology, preventing runtime drift. In the context of quantitative sports intelligence, this mirrors the rigorous separation between rapid data ingestion (lineup checks) and deep probabilistic calibration (+EV analysis). The 'nuclear' option represents a singularity handler for critical, irreversible errors, isolating high-stakes operations from standard stochastic processes. Ultimately, the manual establishes a robust, fault-tolerant kernel that balances computational efficiency with epistemic safety.\n\nDeep epistemic analysis for OPERATING-MANUAL (5db4ed2b4287d6b4, domain=other, pages_read=1/1): Operator 'Task-Complexity Routing Operator' (page 1, domain other) captures: | docs, reading, small tasks | | fast | groq | llama-3.3-70b-versatile | quick headlines, lineup Assumptions: Computational resources are bounded; task complexity can be discretely categorized into mutually exclusive buckets. Breakdown regime: Fails if an incoming query exhibits hybrid complexity spanning multiple disjoint aliases without explicit user decomposition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's dynamic compute allocation, mapping low-latency queries to lightweight stochastic gradient estimators. Operator 'Configuration Exclusion Boundary' (page 1, domain other) captures: ## Hard rails - NO config.yaml edits beyond single allowed block - NO push - NO Gemini as default. Assumptions: System stability requires strict isolation of configuration parameters from runtime perturbations. Breakdown regime: Violated if adversarial prompt injection forces unauthorized YAML mutations or defaults to prohibited architectures. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's immutable rule engine, preventing illegal state transitions in live sportsbook environments. Operator 'Hierarchical Fallback Topology' (page 1, domain other) captures: | local | ollama | qwen3-coder:30b | offline work | Fallback chain (Laguna → hy3:free → Assumptions: Network availability is stochastic; local compute provides a non-zero baseline capacity. Breakdown regime: Total system failure occurs if all nodes in the fallback chain experience simultaneous hardware or API outages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's multi-source odds aggregation fallback, ensuring continuous market coverage during primary feed degradation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for OPERATING-MANUAL (5db4ed2b4287d6b4, domain=other, pages_read=1/1): Operator 'Task-Complexity Routing Operator' (page 1, domain other) captures: | docs, reading, small tasks | | fast | groq | llama-3.3-70b-versatile | quick headlines, lineup Assumptions: Computational resources are bounded; task complexity can be discretely categorized into mutually exclusive buckets. Breakdown regime: Fails if an incoming query exhibits hybrid complexity spanning multiple disjoint aliases without explicit user decomposition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's dynamic compute allocation, mapping low-latency queries to lightweight stochastic gradient estimators. Operator 'Configuration Exclusion Boundary' (page 1, domain other) captures: ## Hard rails - NO config.yaml edits beyond single allowed block - NO push - NO Gemini as default. Assumptions: System stability requires strict isolation of configuration parameters from runtime perturbations. Breakdown regime: Violated if adversarial prompt injection forces unauthorized YAML mutations or defaults to prohibited architectures. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's immutable rule engine, preventing illegal state transitions in live sportsbook environments. Operator 'Hierarchical Fallback Topology' (page 1, domain other) captures: | local | ollama | qwen3-coder:30b | offline work | Fallback chain (Laguna → hy3:free → Assumptions: Network availability is stochastic; local compute provides a non-zero baseline capacity. Breakdown regime: Total system failure occurs if all nodes in the fallback chain experience simultaneous hardware or API outages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's multi-source odds aggregation fallback, ensuring continuous market coverage during primary feed degradation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This operational schema inherits directly from classical fault-tolerant computing and distributed systems theory, specifically the Paxos consensus algorithms and circuit breaker patterns used in high-frequency trading. It echoes the historical shift from monolithic mainframes to microservices, but applied to cognitive labor. The strict exclusion of specific models reflects the evolution of cryptographic key management, where known-vulnerable algorithms are permanently deprecated to maintain system integrity against emerging threats.",
+      "theory_of_mind": "The operator (Garrett) models the AI not as an omniscient oracle, but as a fallible tool requiring strict guardrails. By defining 'nuclear' and 'local' states, the operator anticipates adversarial failures, such as API downtime or catastrophic hallucination. The opposing agent here is the inherent stochasticity of large language models; the manual acts as a control theory framework to suppress this noise. It assumes the model will attempt to drift toward higher-complexity, error-prone reasoning unless explicitly constrained by the alias routing and hard configuration rails.",
+      "cross_layer_veto": "A critical veto condition exists between the 'fast' inference layer and the 'calibration math' layer. If a quick headline check inadvertently triggers the deep reasoning backend, it violates the latency constraints and risks contaminating simple factual retrieval with over-parameterized speculation. Furthermore, the hard rail against Gemini acts as a cross-layer security veto, preventing any sub-process from dynamically instantiating a high-hallucination model, even if it offers superior speed. This anti-collinearity ensures that computational shortcuts never compromise the foundational truthfulness required for +EV analysis."
+    }
+  ]
+}

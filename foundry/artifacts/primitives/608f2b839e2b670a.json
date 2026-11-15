@@ -1,0 +1,78 @@
+{
+  "book_id": "608f2b839e2b670a",
+  "source_status": "COMPLETE",
+  "title": "1649-proper-scoring-rules-estimation-forecast-evaluation",
+  "file_name": "1649-proper-scoring-rules-estimation-forecast-evaluation.md",
+  "sha256": "608f2b839e2b670aae885184334e1e0cb884f55694712808cb884306d12095bb",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Proper scoring rules unify forecast evaluation and distribution estimation via Bregman divergences, with CRPS, Brier, and log scores as canonical instances of kernel and local families. Universal Lens: Rooted in 1649-proper-scoring-rules-estimation-forecast-evaluation (608f2b839e2b670a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian posterior inference to generate predictive distributions; proper scores enable conformal prediction and uncertainty quantification through minimal-score estimation and calibration. GSI Mapping: Rooted in 1649-proper-scoring-rules-estimation-forecast-evaluation (608f2b839e2b670a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses state-transition models to evolve predictive distributions over time; proper scoring rules guide policy updates and model selection based on realized outcomes and forecast accuracy. GSE Mapping: Rooted in 1649-proper-scoring-rules-estimation-forecast-evaluation (608f2b839e2b670a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "proper_scoring_rule",
+      "name": "Proper Scoring Rule",
+      "verbatim_quote": "**Proper**: S(Q, Q) ≤ S(P, Q) ∀P, Q (strict if equality ⟺ P = Q).",
+      "page": 1,
+      "latex": "S(Q, Q) \\leq S(P, Q) \\quad \\forall P, Q",
+      "symbol_and_unit_ledger": "{'S(P, y)': 'Score assigned to forecast distribution P given outcome y, dimensionless', 'P': 'Forecast distribution, probability measure', 'Q': 'True distribution, probability measure'}",
+      "assumptions": "Forecasts are full distributions; outcomes are observed; strict propriety requires Q in model class.",
+      "breakdown_regime": "When forecast distributions are degenerate or mispecified, leading to improper incentives.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bregman divergence of entropy function characterizes all regular proper scores, enabling equivalence between estimation and evaluation tasks.",
+        "source_operator": "proper_scoring_rule",
+        "telemetry": "Expected score minimization aligns with true distribution under strict propriety."
+      }
+    },
+    {
+      "primitive_id": "crps",
+      "name": "Continuous Ranked Probability Score",
+      "verbatim_quote": "Adopt CRPS as the primary proper objective for margin/total distributional forecasts, Brier/log for cover probabilities, with the paper's characterization results as the reference.",
+      "page": 1,
+      "latex": "CRPS(P, y) = \\int_{\\mathbb{R}} [F_P(t) - \\mathbb{1}_{t \\geq y}]^2 dt",
+      "symbol_and_unit_ledger": "{'P': 'Predictive distribution over outcomes', 'y': 'Realized outcome, scalar', 'F_P(t)': 'Cumulative distribution function of P at t'}",
+      "assumptions": "Distributional forecasts must be continuous; outcomes are real-valued.",
+      "breakdown_regime": "Sensitive to tail misspecification but robust to bulk errors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CRPS arises from kernel score construction using energy statistics, unifying with MMD and related metrics.",
+        "source_operator": "crps",
+        "telemetry": "Distributional forecast quality measured via integral of squared differences from empirical CDF."
+      }
+    },
+    {
+      "primitive_id": "brier_score",
+      "name": "Brier Score",
+      "verbatim_quote": "Adopt CRPS as the primary proper objective for margin/total distributional forecasts, Brier/log for cover probabilities, with the paper's characterization results as the reference.",
+      "page": 1,
+      "latex": "BS(P, y) = \\|P(y) - \\mathbb{1}_{y \\in A}\\|^2",
+      "symbol_and_unit_ledger": "{'P': 'Probability forecast for event A', 'y': 'Outcome, binary indicator', 'A': 'Event space'}",
+      "assumptions": "Binary outcomes; probabilistic forecasts must sum to one over events.",
+      "breakdown_regime": "Incentivizes sharpness and calibration in classification tasks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Brier score corresponds to squared Euclidean distance in probability simplex, linking to local scoring framework.",
+        "source_operator": "brier_score",
+        "telemetry": "Calibration and sharpness assessed via squared error between predicted and actual probabilities."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "608f2b839e2b670a_t0",
+      "think": "Proper scoring rules define a class of functions S(P, y) that penalize forecast distributions P given realized outcomes y such that truthful reporting minimizes expected score. This duality enables dual roles: evaluating forecasts via S(P, Q) = E_Y~Q[S(P, Y)] and estimating distributions by minimizing S(P, y) over data. The characterization theorem shows that every regular proper score equals a Bregman divergence of an entropy function, which provides a unified geometric interpretation. Kernel scores (like CRPS) arise from integral representations involving energy statistics, while local scores (like Brier) correspond to pointwise evaluations. These distinctions inform GSI’s use of Bayesian inference for generating predictive distributions and GSE’s dynamic evolution of those distributions through state transitions guided by score-based feedback loops.\n\nDeep epistemic analysis for 1649-proper-scoring-rules-estimation-forecast-evaluation (608f2b839e2b670a, domain=other, pages_read=3/3): Operator 'Proper Scoring Rule' (page 1, domain other) captures: **Proper**: S(Q, Q) ≤ S(P, Q) ∀P, Q (strict if equality ⟺ P = Q). Assumptions: Forecasts are full distributions; outcomes are observed; strict propriety requires Q in model class. Breakdown regime: When forecast distributions are degenerate or mispecified, leading to improper incentives. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bregman divergence of entropy function characterizes all regular proper scores, enabling equivalence between estimation and evaluation tasks. Operator 'Continuous Ranked Probability Score' (page 1, domain other) captures: Adopt CRPS as the primary proper objective for margin/total distributional forecasts, Brier/log for cover probabilities, with the paper's characterization results as the reference. Assumptions: Distributional forecasts must be continuous; outcomes are real-valued. Breakdown regime: Sensitive to tail misspecification but robust to bulk errors. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CRPS arises from kernel score construction using energy statistics, unifying with MMD and related metrics. Operator 'Brier Score' (page 1, domain other) captures: Adopt CRPS as the primary proper objective for margin/total distributional forecasts, Brier/log for cover probabilities, with the paper's characterization results as the reference. Assumptions: Binary outcomes; probabilistic forecasts must sum to one over events. Breakdown regime: Incentivizes sharpness and calibration in classification tasks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Brier score corresponds to squared Euclidean distance in probability simplex, linking to local scoring framework. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1649-proper-scoring-rules-estimation-forecast-evaluation (608f2b839e2b670a, domain=other, pages_read=3/3): Operator 'Proper Scoring Rule' (page 1, domain other) captures: **Proper**: S(Q, Q) ≤ S(P, Q) ∀P, Q (strict if equality ⟺ P = Q). Assumptions: Forecasts are full distributions; outcomes are observed; strict propriety requires Q in model class. Breakdown regime: When forecast distributions are degenerate or mispecified, leading to improper incentives. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bregman divergence of entropy function characterizes all regular proper scores, enabling equivalence between estimation and evaluation tasks. Operator 'Continuous Ranked Probability Score' (page 1, domain other) captures: Adopt CRPS as the primary proper objective for margin/total distributional forecasts, Brier/log for cover probabilities, with the paper's characterization results as the reference. Assumptions: Distributional forecasts must be continuous; outcomes are real-valued. Breakdown regime: Sensitive to tail misspecification but robust to bulk errors. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CRPS arises from kernel score construction using energy statistics, unifying with MMD and related metrics. Operator 'Brier Score' (page 1, domain other) captures: Adopt CRPS as the primary proper objective for margin/total distributional forecasts, Brier/log for cover probabilities, with the paper's characterization results as the reference. Assumptions: Binary outcomes; probabilistic forecasts must sum to one over events. Breakdown regime: Incentivizes sharpness and calibration in classification tasks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Brier score corresponds to squared Euclidean distance in probability simplex, linking to local scoring framework. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Savage's representation theorem (1951) and extended by Gneiting & Raftery (2007), who formalized proper scoring rules in forecasting contexts. Székely & Rizzo (2013) introduced energy statistics, later linked to CRPS in Waghmare & Ziegel (2025). Retrocausal Genealogy: Rooted in 1649-proper-scoring-rules-estimation-forecast-evaluation (608f2b839e2b670a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents evaluate forecasts using proper scores to ensure alignment with true beliefs. In GSI, this means validating posterior distributions against ground truth; in GSE, it means optimizing policies based on expected score improvements rather than point estimates. Theory of Mind & Decision Maker Model: Rooted in 1649-proper-scoring-rules-estimation-forecast-evaluation (608f2b839e2b670a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity between CRPS and log score prevents overfitting to either tail or body of distribution. Leakage occurs when model diagnostics fail to distinguish between calibration and discrimination, requiring cross-layer validation via Spearman rank correlation and realized utility metrics. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1649-proper-scoring-rules-estimation-forecast-evaluation (608f2b839e2b670a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

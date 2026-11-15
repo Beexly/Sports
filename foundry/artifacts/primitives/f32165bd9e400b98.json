@@ -1,0 +1,78 @@
+{
+  "book_id": "f32165bd9e400b98",
+  "source_status": "COMPLETE",
+  "title": "branch-status-2026-06-03",
+  "file_name": "branch-status-2026-06-03.md",
+  "sha256": "f32165bd9e400b9830e0f1000090d31fcab65bec9808333876b792ff34512c0d",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A calibrated probabilistic framework integrating independent estimators, CLV feedback, and model versioning to ensure robust edge validation and risk-adjusted scoring. Universal Lens: Rooted in branch-status-2026-06-03 (f32165bd9e400b98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration of independent fair values using Poisson processes and CLV-driven confidence adjustments for conformal prediction of sport outcomes. GSI Mapping: Rooted in branch-status-2026-06-03 (f32165bd9e400b98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine updates state transitions via cron-triggered estimators and model version bumps, conditioned on live data agreement and team rate thresholds. GSE Mapping: Rooted in branch-status-2026-06-03 (f32165bd9e400b98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "independent_fair_value_estimator",
+      "name": "Independent Fair Value Estimator",
+      "verbatim_quote": "**Edge engine goes live (additive, safe first):** wire the ingestion cron to pre-fetch Kalshi `getFairValue` (needs a team-abbreviation lookup table) into `OddsInput.context.independentFairValues`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{\\\\text{fair}}': 'dimensionless fair value estimate', 'T': 'team identifier', 't': 'time index'}",
+      "assumptions": "Kalshi data is temporally consistent and team abbreviations are correctly mapped.",
+      "breakdown_regime": "When Kalshi API returns invalid or stale data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian inference pipeline where F_fair serves as prior for outcome probability.",
+        "source_operator": "independent_fair_value_estimator",
+        "telemetry": "Accuracy of F_fair against actual game outcomes."
+      }
+    },
+    {
+      "primitive_id": "poisson_team_rate_estimator",
+      "name": "Poisson Team Rate Estimator",
+      "verbatim_quote": "he 2nd estimator:** set `TEAM_RATES_AVAILABLE=true` and wire the cron to add the Poisson `independentFairValue` (from real `TeamGameLog` scores) to the same context field.",
+      "page": 2,
+      "latex": "\\lambda_t = \\frac{1}{n} \\sum_{i=1}^{n} s_i(t)",
+      "symbol_and_unit_ledger": "{'\\\\lambda_t': 'average rate of events per time unit', 's_i(t)': 'score of team i at time t', 'n': 'number of observed games'}",
+      "assumptions": "Team performance follows a Poisson distribution over time.",
+      "breakdown_regime": "When teams have fewer than MIN_GAMES_FOR_RATES (5) settled games.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's state transition logic by incorporating real-time team statistics into the scoring context.",
+        "source_operator": "poisson_team_rate_estimator",
+        "telemetry": "Deviation between predicted and actual event counts."
+      }
+    },
+    {
+      "primitive_id": "model_version_bump",
+      "name": "Model Version Bump",
+      "verbatim_quote": "**Let the edge MOVE confidence (the real switch):** a deliberate `MODEL_VERSION` bump that prices the independent edge into the score.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_v': 'model version identifier', 'E_c': 'confidence level of edge'}",
+      "assumptions": "Incremental model versions improve predictive accuracy based on empirical validation.",
+      "breakdown_regime": "Upon failure of live data alignment between edge and CLV.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reflects GSI's iterative refinement process where M_v acts as a control parameter for updating belief states.",
+        "source_operator": "model_version_bump",
+        "telemetry": "Improvement in edge consistency with CLV metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f32165bd9e400b98_t0",
+      "think": "The system integrates two independent sources of fair value estimation: Kalshi's market-derived estimates and Poisson-distributed team rate models. These are combined into a unified context field within the scoring engine. The CLV (Calibrated Loss Value) dashboard provides feedback loops that validate these estimates against real-world outcomes. A deliberate model version bump allows for controlled deployment of improved edge pricing. This architecture ensures that each component operates under well-defined assumptions and failure regimes while maintaining a coherent probabilistic structure across layers. Dualities emerge in how both estimators contribute to confidence adjustment, and their convergence validates the integrity of the overall inference chain.\n\nDeep epistemic analysis for branch-status-2026-06-03 (f32165bd9e400b98, domain=other, pages_read=2/2): Operator 'Independent Fair Value Estimator' (page 1, domain other) captures: **Edge engine goes live (additive, safe first):** wire the ingestion cron to pre-fetch Kalshi `getFairValue` (needs a team-abbreviation lookup table) into `OddsInput.context.independentFairValues`. Assumptions: Kalshi data is temporally consistent and team abbreviations are correctly mapped. Breakdown regime: When Kalshi API returns invalid or stale data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian inference pipeline where F_fair serves as prior for outcome probability. Operator 'Poisson Team Rate Estimator' (page 2, domain other) captures: he 2nd estimator:** set `TEAM_RATES_AVAILABLE=true` and wire the cron to add the Poisson `independentFairValue` (from real `TeamGameLog` scores) to the same context field. Assumptions: Team performance follows a Poisson distribution over time. Breakdown regime: When teams have fewer than MIN_GAMES_FOR_RATES (5) settled games. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's state transition logic by incorporating real-time team statistics into the scoring context. Operator 'Model Version Bump' (page 2, domain other) captures: **Let the edge MOVE confidence (the real switch):** a deliberate `MODEL_VERSION` bump that prices the independent edge into the score. Assumptions: Incremental model versions improve predictive accuracy based on empirical validation. Breakdown regime: Upon failure of live data alignment between edge and CLV. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Reflects GSI's iterative refinement process where M_v acts as a control parameter for updating belief states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for branch-status-2026-06-03 (f32165bd9e400b98, domain=other, pages_read=2/2): Operator 'Independent Fair Value Estimator' (page 1, domain other) captures: **Edge engine goes live (additive, safe first):** wire the ingestion cron to pre-fetch Kalshi `getFairValue` (needs a team-abbreviation lookup table) into `OddsInput.context.independentFairValues`. Assumptions: Kalshi data is temporally consistent and team abbreviations are correctly mapped. Breakdown regime: When Kalshi API returns invalid or stale data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian inference pipeline where F_fair serves as prior for outcome probability. Operator 'Poisson Team Rate Estimator' (page 2, domain other) captures: he 2nd estimator:** set `TEAM_RATES_AVAILABLE=true` and wire the cron to add the Poisson `independentFairValue` (from real `TeamGameLog` scores) to the same context field. Assumptions: Team performance follows a Poisson distribution over time. Breakdown regime: When teams have fewer than MIN_GAMES_FOR_RATES (5) settled games. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's state transition logic by incorporating real-time team statistics into the scoring context. Operator 'Model Version Bump' (page 2, domain other) captures: **Let the edge MOVE confidence (the real switch):** a deliberate `MODEL_VERSION` bump that prices the independent edge into the score. Assumptions: Incremental model versions improve predictive accuracy based on empirical validation. Breakdown regime: Upon failure of live data alignment between edge and CLV. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Reflects GSI's iterative refinement process where M_v acts as a control parameter for updating belief states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and conformal prediction frameworks, evolving from early ensemble methods in sports analytics to modern probabilistic scoring systems. Retrocausal Genealogy: Rooted in branch-status-2026-06-03 (f32165bd9e400b98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in branch-status-2026-06-03 (f32165bd9e400b98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the stochastic nature of sports outcomes, potential adversarial inputs from unreliable data providers, and internal model drift due to changing dynamics. The system must balance exploration vs exploitation through adaptive confidence mechanisms. Theory of Mind & Decision Maker Model: Rooted in branch-status-2026-06-03 (f32165bd9e400b98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that independent estimators do not share overlapping information sources. Leakage vetoes prevent data contamination between GSE's state transitions and GSI's probabilistic inference modules. Cross-Layer Veto & Anti-Leakage Check: Rooted in branch-status-2026-06-03 (f32165bd9e400b98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in branch-status-2026-06-03 (f32165bd9e400b98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

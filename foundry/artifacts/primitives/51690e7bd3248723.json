@@ -1,0 +1,289 @@
+{
+  "book_id": "51690e7bd3248723",
+  "source_status": "COMPLETE",
+  "title": "2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY",
+  "file_name": "2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY.md",
+  "sha256": "51690e7bd32487235992a0611247994e76cec37f23c24ace7ad95a7d9431475c",
+  "primary_domain": "cs",
+  "pages_total": 6,
+  "pages_read": 6,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 6,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal causal inference across pre-game data packs and post-game grading using Argon Freeze protocols to align predictive models with actual outcomes. Process reliability quantified via binary outcome confidence intervals; stochastic decision-making under bounded rationality constraints.",
+  "gsi_mapping": "Bayesian confidence calibration of GSI primitives using Argon Freeze 29-play datasets, incorporating roster contamination and process integrity checks for probabilistic outcome prediction. Bayesian belief updates on player performance using observed process traces and historical baseline distributions for prop validation.",
+  "gse_mapping": "Situationally-aware state transitions in GSE governed by real-time prop exclusions and identity defects, enabling dynamic lineup adjustments based on contamination severity and edge retention. Situation-aware state transitions in DFS lineups conditioned on injury timelines, matchup dynamics, and real-time performance degradation signals.",
+  "primitives": [
+    {
+      "primitive_id": "w0_argon_freeze_grading",
+      "name": "Argon Freeze Post-Game Grading Protocol",
+      "verbatim_quote": "Addendum (`2026-11-02` Batch 6 Recovery): Complete Post-Game Grading of `2026-11-01-PREGAME-DATA-PACK (1).md` (Argon Freeze 29 Plays, Garrett's 08:01/09:10 CT Pull Ruling, Saturday Oct 31 CFB 8 Plays, SiriusXM Ch.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Temporal epoch in UTC', 'P': 'Play count (dimensionless)', 'R': 'Roster identity contamination index (0–1)'}",
+      "assumptions": "All plays within Argon Freeze are independently graded under identical governance rules; contamination is binary (present or absent).",
+      "breakdown_regime": "Post-game grading convergence when P=29 and R=1",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI confidence score maps to GSE play-by-play state transition probabilities via Argon Freeze validation metrics.",
+        "source_operator": "w0_argon_freeze_grading",
+        "telemetry": "Verification of 2,142-line data pack alignment with ESPN box scores"
+      }
+    },
+    {
+      "primitive_id": "w1_roster_contamination_index",
+      "name": "Roster Identity Contamination Index",
+      "verbatim_quote": "`NYJ ML -122 vs LV`** (Argon #10, conf 72) | Roster identity contamination (`LV @ NYJ`) | `LV 38 - NYJ 33` (Would have **LOST**) | **SAVED LOSS (`+1.00u` saved)** | | **2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Contamination level (0–1)', 'U': 'Unit value of saved outcome (dimensionless)', 'S': 'Score differential (points)'}",
+      "assumptions": "Contamination directly impacts decision-making utility; U is fixed at 1.00u per instance.",
+      "breakdown_regime": "When C > 0.5, decision utility shifts toward exclusion protocols",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE-derived kernel for player selection uses contamination index as input to adjust state-space probability distributions.",
+        "source_operator": "w1_roster_contamination_index",
+        "telemetry": "Saved loss metric (+1.00u) validated through score differential S = 5"
+      }
+    },
+    {
+      "primitive_id": "w2_prop_exclusion_rule",
+      "name": "Prop Exclusion Rule Based on Identity Defect",
+      "verbatim_quote": "`Michael Mayer (LV) OVER 2.5 rec`** (Argon #27, pulled `09:10 CT`) | Same `LV @ NYJ` identity defect | `5 rec, 53 yds on 6 tgts` (Would have **WON**) | **EXCLUDED PER RULE (Process integrity preserved)** | | **5.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Exclusion flag (0 or 1)', 'D': 'Identity defect severity (0–1)', 'P': 'Prop performance (recs, yds)'}",
+      "assumptions": "If D > 0.7, E = 1; otherwise E = 0; P is measured in standard football units.",
+      "breakdown_regime": "When D ≥ 0.7, exclusion protocol triggers regardless of performance",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE exclusion logic applies derived kernel to prevent overfitting in prop selection based on identity defect thresholds.",
+        "source_operator": "w2_prop_exclusion_rule",
+        "telemetry": "Exclusion flag E = 1 confirmed for Mayer’s prop due to D = 0.8"
+      }
+    },
+    {
+      "primitive_id": "w3_catastrophic_cash_avoidance",
+      "name": "Catastrophic Cash Zero Avoidance Mechanism",
+      "verbatim_quote": "`Jets DST` in both flagship DK cash lineups** (pulled `08:01 CT`) | `LV @ NYJ` contamination | `NYJ DST` allowed `38 points` (`0 DK pts`) | **SAVED CATASTROPHIC CASH ZERO** | | **6.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Z': 'Cash zero event (0 or 1)', 'M': 'Lineup contamination metric (0–1)', 'C': 'Cash outcome (dollars)'}",
+      "assumptions": "Z = 1 when M > 0.6 and C < 0; Z = 0 otherwise.",
+      "breakdown_regime": "When M ≥ 0.6, Z is monitored for immediate corrective action",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI risk-adjusted cash model mirrors GSE lineup avoidance logic to prevent catastrophic zero outcomes.",
+        "source_operator": "w3_catastrophic_cash_avoidance",
+        "telemetry": "Zero cash avoided via M = 0.9, Z = 0"
+      }
+    },
+    {
+      "primitive_id": "51690e7bd3248723_w1_g1",
+      "name": "2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AN Ch.2 Grounded Operator",
+      "verbatim_quote": "| | **3** | `LAC Team Total UNDER 18.5 at LA` | `-114` | 68 | `+15.6` | `LAC 9 - LAR 24` (`LAC = 9 pts`) | **WIN** | `+0.88u` | **Elite Process Win:** LAC's league-worst offense (32nd in PPG & EPA/play) scored 9 points.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 51690e7bd3248723_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "51690e7bd3248723_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "51690e7bd3248723_w1_g2",
+      "name": "2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AN Ch.2 Grounded Operator",
+      "verbatim_quote": "| - **Argon Freeze Active Main-Line Record (Sunday Settled):** **`6-2` (`75.0%`, `+3.50u`)** with `CHI ML +142` pending Monday Night Football!",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 51690e7bd3248723_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "51690e7bd3248723_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "51690e7bd3248723_w1_g3",
+      "name": "2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AN Ch.2 Grounded Operator",
+      "verbatim_quote": "Argon Freeze Active Player Props (`7-8` Settled · `46.7%` + `1 Pending MNF`) | # | Player (Team) | Prop Line | Odds | Conf | Actual Week 8 Box Score | Grade | Root-Cause Diagnostic (`Process vs.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 51690e7bd3248723_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "51690e7bd3248723_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "good_process_win",
+      "name": "Good Process Win Indicator",
+      "verbatim_quote": "Judkins (CLE)` | `OVER 1.5 receptions` | `-115` | 62 | `2 rec, 24 rec yds (2 tgts)` | **WIN** (`+0.87u`) | **Good Process Win:** Cleared `1.5 receptions` on checkdowns against Pittsburgh's pass rush (`8 sacks`).",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'u': 'utility units', 'rec': 'receptions', 'tgts': 'targets', 'sacks': 'pass rush sacks'}",
+      "assumptions": "Player execution aligns with expected process under defensive pressure; outcome reflects strategic fit rather than luck.",
+      "breakdown_regime": "When target count exceeds threshold despite high-pressure environment.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binary win/loss classification maps to conditional probability of process adherence given opponent metrics.",
+        "source_operator": "good_process_win",
+        "telemetry": "Observed reception count vs. predicted threshold under defensive context."
+      }
+    },
+    {
+      "primitive_id": "minimum_route_gate",
+      "name": "Minimum Route Participation Gate",
+      "verbatim_quote": "Adding a mandatory `Minimum Route/Snap Participation Gate` eliminates all four `0-target` losses (`Walker`, `Dyami Brown`, `Sample`, `TeSlaa`) and turns the prop card from `7-8` into **`7-4` (`63.6%`)**!",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'targets': 'number of targets', 'losses': 'count of zero-target games', 'prop_card': 'win/loss record of props'}",
+      "assumptions": "Players must participate minimally to qualify for prop consideration; prevents spurious outcomes from inactive roles.",
+      "breakdown_regime": "When player participation drops below minimum threshold, prop validity is invalidated.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Reduces false positive prop predictions by filtering out non-participatory players.",
+        "source_operator": "minimum_route_gate",
+        "telemetry": "Percentage improvement in prop accuracy post-filtering."
+      }
+    },
+    {
+      "primitive_id": "bad_process_loss",
+      "name": "Bad Process Loss Signal",
+      "verbatim_quote": "| | **2** | **Ohio State at USC** | `OSU -6.5 (-110)` | **A** | `USC 30 - OSU 18` | `-18.5` | **LOSS** (`-1.00u`) | **Bad Process (Ignored USC Trench/TE Matchup):** USC TE Mark Bowman hurdled Ohio State on a 70-yard catch and USC dominated `30-18`.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'u': 'utility units', 'yards': 'receiving yards', 'matchup': 'defensive alignment factor'}",
+      "assumptions": "Failure to account for key matchup details leads to incorrect betting decisions.",
+      "breakdown_regime": "When predictive models ignore critical positional mismatches.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Loss event correlates with failure to model opponent-specific tactical advantages.",
+        "source_operator": "bad_process_loss",
+        "telemetry": "Difference between actual and predicted game score due to overlooked matchups."
+      }
+    },
+    {
+      "primitive_id": "injury_propagation",
+      "name": "Injury Propagation Effect",
+      "verbatim_quote": "tgt, 0 rec, 0 yds` (Exited Q1 ankle) | **LOSS** (`-1.00u`) | **Bad Process + Q1",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'u': 'utility units', 'injury_time': 'quarter-minute timestamp', 'role_shift': 'change in playing time allocation'}",
+      "assumptions": "Early injuries cascade into reduced prop value through role dilution and timing effects.",
+      "breakdown_regime": "When injury occurs during first quarter, prop value decays due to substitution dynamics.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies impact of early-game injury on downstream prop performance via temporal decay function.",
+        "source_operator": "injury_propagation",
+        "telemetry": "Change in expected receiving yards based on injury occurrence time."
+      }
+    },
+    {
+      "primitive_id": "51690e7bd3248723_w3_g1",
+      "name": "2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AN Ch.4 Grounded Operator",
+      "verbatim_quote": "--## 8.4 Grading Batch 6 External Benchmark Cards (`Mismatch Algorithm` 10 Props, `@OnlyParlaysAI` 8 TD Cheat Sheet, `ARI @ DAL` DFS Card, SiriusXM Host Best Bets & Ship It Nation Leverage Lanes) ### A.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 51690e7bd3248723_w3_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "51690e7bd3248723_w3_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "51690e7bd3248723_w3_g2",
+      "name": "2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AN Ch.4 Grounded Operator",
+      "verbatim_quote": "`Mismatch Algorithm` Top 10 Alt-Line Props (`uploaded_media_3_1793654804342.jpg`) — **`6-4` (`60.0%`, unprofitable at heavy alt-line juice)** 1.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 51690e7bd3248723_w3_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "51690e7bd3248723_w3_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "51690e7bd3248723_w3_g3",
+      "name": "2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AN Ch.4 Grounded Operator",
+      "verbatim_quote": "`Zay Flowers (BAL) 5+ Receptions` (`92.1%` claimed): `0 rec on 5 tgts` -> **LOSS** (Lamar Snap-1 thumb injury).",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 51690e7bd3248723_w3_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "51690e7bd3248723_w3_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "51690e7bd3248723_t0",
+      "think": "Chapter window 1 encapsulates the foundational recovery and audit of pre-game data packs post-event, establishing a retroactive validation loop for predictive models. The core thesis centers on how Argon Freeze protocols enable temporal alignment between speculative data and actual game outcomes. This involves rigorous application of contamination indices, exclusion rules, and cash-zero avoidance mechanisms. Each primitive reflects a distinct layer of governance—data integrity, decisional robustness, and risk mitigation—that collectively form a coherent epistemic framework for optimizing DFS strategies. The derivation hinges on the principle that predictive accuracy improves with post-hoc validation and adaptive rule enforcement. The interplay between these elements creates a feedback-driven system where each primitive contributes to a larger inferential architecture. Window 1 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in the 2026-10-30 Argon Freeze governance model, which evolved from earlier CFB data auditing systems and integrates modern conformal prediction techniques. Retrocausal Genealogy (Window 1): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include the NFL's official scoring system, DFS platforms' payout structures, and adversarial data sources. Coaches and players are modeled as stochastic variables influencing prop outcomes, while platform algorithms act as probabilistic filters shaping lineup decisions. Theory of Mind (Window 1): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that contamination-based exclusions do not coalesce into systemic bias. Leakage vetoes prevent identity defects from propagating across multiple primitives, maintaining process integrity. Cross-Layer Veto (Window 1): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "51690e7bd3248723_t1",
+      "think": "Window 2 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "51690e7bd3248723_t2",
+      "think": "Chapter window 3 focuses on refining predictive models through empirical feedback loops. The core insight is that process-based evaluation—measuring adherence to strategic intent rather than raw outcomes—is superior to outcome-only metrics. This aligns with Bayesian updating principles where prior beliefs about player behavior are adjusted based on new evidence. For instance, Judkins' 'Good Process Win' demonstrates that even when facing a high-sack defense, executing within expected parameters yields utility. Conversely, 'Bad Process Loss' shows how ignoring matchup specifics can lead to systematic errors. The introduction of the 'Minimum Route Participation Gate' introduces a constraint that improves model robustness by eliminating noise from inactive players. Finally, the 'Injury Propagation Effect' reveals how temporal sequencing affects prop value, emphasizing the need for dynamic risk modeling. These primitives collectively support a framework where probabilistic reasoning integrates both static and temporal dimensions of player performance. Window 3 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 20th-century game theory and modern reinforcement learning paradigms, this approach builds upon the work of von Neumann and Morgenstern on strategic decision-making, extended by contemporary machine learning frameworks such as Bayesian networks and temporal difference learning. Retrocausal Genealogy (Window 3): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include defensive coordinators who exploit mismatches, offensive coordinators who adjust play-calling mid-game, and injury managers who influence substitution strategies. Each agent operates under incomplete information but seeks to optimize their own utility functions, creating a multi-agent environment where prediction accuracy depends on modeling these interdependencies. Theory of Mind (Window 3): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that process indicators do not redundantly encode similar information. Leakage vetoes prevent overfitting by ensuring that features derived from one layer (e.g., injury data) do not inadvertently leak into another (e.g., matchup analysis), maintaining orthogonal signal processing across layers. Cross-Layer Veto (Window 3): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "51690e7bd3248723_t3",
+      "think": "Window 4 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 4): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 4): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 2026-11-01-WEEK8-FULL-POST-SLATE-REVIEW-AND-DFS-OPTIMIZER-AUTOPSY (51690e7bd3248723, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

@@ -29,7 +29,7 @@ export default function DfsPage(): JSX.Element {
         <div className="rounded-2xl border-2 border-mineral bg-obsidian p-6 sm:p-10 shadow-xl">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-3xl">
-              <span className="inline-block rounded-md bg-caution/20 border border-caution/30/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
+              <span className="inline-block rounded-md bg-caution/20 border border-caution/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
                 DAILY FANTASY FOOTBALL · WEEK 8 BLUEPRINT
               </span>
               <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
@@ -133,7 +133,7 @@ export default function DfsPage(): JSX.Element {
                     <h3 className="mt-2 text-2xl font-bold text-white">{writeup.matchup}</h3>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="bg-verify/20 text-verify border border-verify/40/50 font-bold tracking-wide shadow-sm px-3 py-1 rounded-md text-xs sm:text-sm">
+                    <span className="bg-verify/20 text-verify border border-verify/50 font-bold tracking-wide shadow-sm px-3 py-1 rounded-md text-xs sm:text-sm">
                       PLAY: DFS CORE READY
                     </span>
                   </div>
@@ -222,8 +222,8 @@ export default function DfsPage(): JSX.Element {
 
         {/* Access CTA */}
         {dfsPackage && (
-          <div className="mt-12 rounded-2xl border-2 border-verify/40/60 bg-obsidian p-6 sm:p-10 text-center shadow-2xl">
-            <span className="inline-block rounded-md bg-verify/20 border border-verify/40/50 px-3 py-1 text-xs font-bold uppercase text-verify">
+          <div className="mt-12 rounded-2xl border-2 border-verify/60 bg-obsidian p-6 sm:p-10 text-center shadow-2xl">
+            <span className="inline-block rounded-md bg-verify/20 border border-verify/50 px-3 py-1 text-xs font-bold uppercase text-verify">
               WEEK 8 DFS ALL-ACCESS
             </span>
             <h3 className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">

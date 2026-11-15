@@ -154,7 +154,7 @@ export default function BenchmarksPage(): JSX.Element {
       <main id="main-content" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <header className="rounded-3xl border border-[#252833] bg-[#0E1015] p-8 shadow-2xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="rounded-full border border-verify/40/40 bg-verify/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-verify">
+            <span className="rounded-full border border-verify/40 bg-verify/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-verify">
               Benchmark &amp; Verification Dossier
             </span>
             <span className="font-mono text-xs text-[#8F8A82]">
@@ -290,7 +290,7 @@ export default function BenchmarksPage(): JSX.Element {
                     <td className="py-3 text-[#C4BFB6]">{row.mechanism}</td>
                   </tr>
                 ))}
-                <tr className="border-t-2 border-verify/40/40 bg-verify/5 font-mono">
+                <tr className="border-t-2 border-verify/40 bg-verify/5 font-mono">
                   <td className="py-4 pr-4 font-bold text-white">
                     Combined 14-Item Recorded Composite
                   </td>

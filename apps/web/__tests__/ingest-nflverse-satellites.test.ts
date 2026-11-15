@@ -22,7 +22,6 @@ vi.mock("@sports/db", () => ({
     // insert in ONE transaction, rollback on a failed insert) is proven in
     // ingestion-season-replace-atomicity.test.ts against a double that models
     // Prisma's lazy PrismaPromise semantics.
-    $transaction: (ops: readonly Promise<unknown>[]) => Promise.all(ops),
     snapCount: { deleteMany: mocks.snapDelete, createMany: mocks.snapCreate },
     injury: { deleteMany: mocks.injDelete, createMany: mocks.injCreate },
     player: { findMany: mocks.playerFindMany },

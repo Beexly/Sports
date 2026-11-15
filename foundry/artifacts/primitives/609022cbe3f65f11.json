@@ -1,0 +1,323 @@
+{
+  "book_id": "609022cbe3f65f11",
+  "source_status": "COMPLETE",
+  "title": "arxiv_1906.01760v3",
+  "file_name": "arxiv_1906.01760v3.pdf",
+  "sha256": "609022cbe3f65f115ca04cb52ef599634abac5e0de2924695a9f842e3816413f",
+  "primary_domain": "other",
+  "pages_total": 37,
+  "pages_read": 37,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 37,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Continuous-time stochastic valuation of American football outcomes via player-tracking data integration and recurrent neural network modeling. A continuous-time stochastic framework for American football valuation integrating player dynamics, play types, and real-time expectations via conditional expectations and probabilistic decision trees.",
+  "gsi_mapping": "Bayesian inference over play-state likelihoods using conformal predictive distributions derived from tracked player dynamics and ball trajectories. Bayesian inference on play-state filtrations F(Xt,i) enables dynamic updates of expected yardage E[Y∗t,i|F(Xt,i)] using conformal prediction bounds for uncertainty quantification.",
+  "gse_mapping": "Situational reasoning engine mapping real-time player positions and trajectories to dynamic expected points and win probability transitions through state-space Markov chains. Situation-aware state transitions model rushing vs. passing decisions through a decision tree with probabilistic nodes, updating internal states via ball-carrier expectation and play-type conditioning.",
+  "primitives": [
+    {
+      "primitive_id": "continuous_time_valuation_framework",
+      "name": "Continuous-Time Play Valuation Framework",
+      "verbatim_quote": "In this work, we make two main contributions: First, we introduce a general framework for continuous-time within-play valuation in the National Football League using player-tracking data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time in seconds', 'X(t)': 'player position vector in meters', 'Y(t)': 'ball position vector in meters', 'V(t)': 'velocity vector in m/s', 'E[t]': 'expected points at time t'}",
+      "assumptions": "Player and ball motion follows deterministic trajectories with stochastic perturbations; tracking data sampled at 10–25 Hz.",
+      "breakdown_regime": "At discrete play boundaries or when tracking data becomes unavailable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps tracking data to continuous-time stochastic processes via recurrent neural networks, enabling real-time E[t] estimation.",
+        "source_operator": "continuous_time_valuation_framework",
+        "telemetry": "Expected points trajectory deviation from baseline play value."
+      }
+    },
+    {
+      "primitive_id": "ball_carrier_trajectory_model",
+      "name": "Ball-Carrier Trajectory Estimator",
+      "verbatim_quote": "Second, we use a long short-term memory recurrent neural network to construct a ball-carrier model to estimate how many yards the ball-carrier is expected to gain from their current position, conditional on the locations and trajectories of the ball-carrier, their teammates and opponents.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'X_{bc}(t)': 'ball-carrier position vector in meters', 'X_{tm}(t)': 'teammate positions in meters', 'X_{op}(t)': 'opponent positions in meters', 'Y_{est}(t)': 'estimated yards gained at time t'}",
+      "assumptions": "LSTM captures temporal dependencies in player movement; teammates and opponents influence ball-carrier path via spatial proximity.",
+      "breakdown_regime": "When ball-carrier is out of bounds or tackled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates conditional density estimates of future ball-carrier positions using LSTM-based RNNs trained on tracking data.",
+        "source_operator": "ball_carrier_trajectory_model",
+        "telemetry": "Mean squared error between predicted and actual yardage gains."
+      }
+    },
+    {
+      "primitive_id": "conditional_density_estimation",
+      "name": "Conditional Density Estimation Module",
+      "verbatim_quote": "Additionally, we demonstrate an extension with conditional density estimation so that the expectation of any measure of play value can be calculated in continuous-time, which was never before possible at such a granular level.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p(Y_{est}|X_{bc}, X_{tm}, X_{op})': 'conditional probability density function', 'E[Y_{est}]': 'expected yards gained'}",
+      "assumptions": "Conditional densities are smooth functions of player states; all relevant variables are observed or inferred.",
+      "breakdown_regime": "When conditional independence assumptions fail due to hidden variables.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables calculation of expected play outcomes at any point in time using probabilistic density estimation.",
+        "source_operator": "conditional_density_estimation",
+        "telemetry": "Kullback-Leibler divergence between estimated and empirical outcome distributions."
+      }
+    },
+    {
+      "primitive_id": "modular_framework_architecture",
+      "name": "Modular Framework Architecture",
+      "verbatim_quote": "Our modular framework incorporates several modular sub-models, to easily incorporate recent work involving player tracking data in football.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{mod}': 'modular framework function', 'M_i': 'sub-model i', 'I_{data}': 'input tracking data'}",
+      "assumptions": "Each sub-model operates independently and integrates seamlessly into the larger system.",
+      "breakdown_regime": "When individual sub-models fail or produce inconsistent outputs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a multi-agent reinforcement learning architecture where each module represents a distinct policy or value estimator.",
+        "source_operator": "modular_framework_architecture",
+        "telemetry": "Aggregate performance metrics across sub-models."
+      }
+    },
+    {
+      "primitive_id": "expected_yardage_from_position",
+      "name": "Expected Yardage From Position",
+      "verbatim_quote": "Our framework for providing continuously-updating within-play valuations is organized as follows: Rushing Plays: Model the expected yards gained from the ball-carrier's current position, E[Yt,i|F(Xt,i)].",
+      "page": 11,
+      "latex": "E[Y_{t,i} \\mid F(X_{t,i})]",
+      "symbol_and_unit_ledger": "{'Y_{t,i}': 'random variable for yards gained at time t during play i (yards)', 'F(X_{t,i})': 'filtration of player positions and trajectories up to time t for play i (dimensionless)'}",
+      "assumptions": "Ball carrier's movement is modeled as a stochastic process conditioned on current field state and team context.",
+      "breakdown_regime": "When play type is known (rushing) and ball carrier is active.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's internal state estimation of ball carrier's potential progress using conditional expectation under observed dynamics.",
+        "source_operator": "expected_yardage_from_position",
+        "telemetry": "Real-time update of expected yards gained per play iteration"
+      }
+    },
+    {
+      "primitive_id": "end_of_play_yard_line",
+      "name": "End-of-Play Yard Line Estimation",
+      "verbatim_quote": "Then obtain the associated expected end-of-play yard line through linearity of expectations, E[Y ∗ t,i|F(Xt,i)] = E[Yt,i|F(Xt,i)]+ [player's current yard line].",
+      "page": 11,
+      "latex": "E[Y^*_{t,i} \\mid F(X_{t,i})] = E[Y_{t,i} \\mid F(X_{t,i})] + \\text{current yard line}",
+      "symbol_and_unit_ledger": "{'Y^*_{t,i}': 'expected end-of-play yard line at time t for play i (yards)', 'current yard line': 'starting yard line of the play (yards)'}",
+      "assumptions": "Linearity of expectation holds; current yard line is fixed and known at time t.",
+      "breakdown_regime": "Post-ball carrier model application for both run and pass scenarios.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI’s valuation function that maps current state to terminal outcome using additive expectation.",
+        "source_operator": "end_of_play_yard_line",
+        "telemetry": "Terminal yard line prediction based on cumulative expected gains"
+      }
+    },
+    {
+      "primitive_id": "decision_tree_probabilities",
+      "name": "Decision Tree Probabilities for Passing Plays",
+      "verbatim_quote": "For passing plays, each possible node on the decision tree in the framework above has two pieces of information: 1.",
+      "page": 12,
+      "latex": "P(\\text{node}) = \\prod_{k} P_k(\\text{split}_k), \\quad E[Y^*_{\\text{node}}] = \\sum_{\\text{outcomes}} P(\\text{outcome}) \\cdot E[Y_{\\text{outcome}}]",
+      "symbol_and_unit_ledger": "{'P(\\\\text{node})': 'probability of reaching a specific node in the decision tree (dimensionless)', 'P_k(\\\\text{split}_k)': 'probability of a split at step k (dimensionless)', 'E[Y^*_{\\\\text{node}}]': 'expected end-of-play yard line for a given node (yards)', 'E[Y_{\\\\text{outcome}}]': 'expected yards gained for a given outcome (yards)'}",
+      "assumptions": "Each decision split is independent and probabilistically modeled; outcomes are mutually exclusive.",
+      "breakdown_regime": "During pass plays when decision points exist (e.g., throw, scramble, sack).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to compute weighted average of possible outcomes using recursive probability propagation.",
+        "source_operator": "decision_tree_probabilities",
+        "telemetry": "Probability-weighted yardage estimates across decision paths"
+      }
+    },
+    {
+      "primitive_id": "ball_carrier_model",
+      "name": "Ball Carrier Movement Model",
+      "verbatim_quote": "These two pieces of information are easily combined across all nodes into a single estimate of the expected end-of-play yard line.",
+      "page": 12,
+      "latex": "E[Y_i \\mid F(X_{t,i})]",
+      "symbol_and_unit_ledger": "{'Y_i': 'yards gained by ball carrier in play i (yards)', 'F(X_{t,i})': 'filtration of full field state at time t for play i (dimensionless)'}",
+      "assumptions": "All 22 players' positions and movements are captured in F(Xt,i); ball carrier's motion is deterministic given environment.",
+      "breakdown_regime": "Core component for both run and pass scenarios, especially when ball carrier is active.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI’s core predictive kernel for estimating motion-based outcomes under dynamic constraints.",
+        "source_operator": "ball_carrier_model",
+        "telemetry": "Predictive estimate of ball carrier’s net yardage gain"
+      }
+    },
+    {
+      "primitive_id": "spatial_voronoi_region",
+      "name": "Spatial Voronoi Region",
+      "verbatim_quote": "For the tessellation constructed using the ball-carrier's teammates, we additionally create an indicator variable determining whether or not all edges of the ball-carrier's tessellation are shared with their teammates.",
+      "page": 19,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'voronoi_bc_area': 'm^2', 'voronoi_bc_close_adj': 'm', 'voronoi_bc_far_adj': 'm'}",
+      "assumptions": "Players are modeled as points in a 2D Euclidean plane; Voronoi regions are convex polygons; tessellation excludes teammates for adversarial analysis.",
+      "breakdown_regime": "When teammates occupy adjacent Voronoi cells, the tessellation becomes degenerate due to overlapping influence zones.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Voronoi kernel encodes local spatial dominance, enabling GSE to compute optimal escape paths and GSI to predict tackle probability via geometric entropy measures.",
+        "source_operator": "spatial_voronoi_region",
+        "telemetry": "Area ratio of ball-carrier's Voronoi cell to total field area, edge-sharing incidence rate."
+      }
+    },
+    {
+      "primitive_id": "ball_carrier_position",
+      "name": "Ball Carrier Position Vector",
+      "verbatim_quote": "Variables Description x adj Horizontal yards from ball-carrier's target endzone.",
+      "page": 19,
+      "latex": "\\vec{r}_{bc} = (x_{adj}, y_{adj})",
+      "symbol_and_unit_ledger": "{'x_adj': 'yards', 'y_adj': 'yards'}",
+      "assumptions": "Field is planar with origin at center; x_adj increases toward target endzone; y_adj positive to left, negative to right.",
+      "breakdown_regime": "Undefined when x_adj or y_adj exceed field boundaries or when ball-carrier is off-field.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Cartesian coordinate system in GSE's motion planning module; used by GSI for trajectory regression.",
+        "source_operator": "ball_carrier_position",
+        "telemetry": "Euclidean distance to goal line, angular deviation from straight path."
+      }
+    },
+    {
+      "primitive_id": "relative_player_distance",
+      "name": "Relative Player Distance",
+      "verbatim_quote": "dist to ball Euclidean distance between X closest offensive or defensive player and ball-carrier.",
+      "page": 19,
+      "latex": "d_{\\text{to ball}} = \\sqrt{(x_{\\text{closest}} - x_{bc})^2 + (y_{\\text{closest}} - y_{bc})^2}",
+      "symbol_and_unit_ledger": "{'d_to_ball': 'yards', 'x_bc': 'yards', 'y_bc': 'yards', 'x_closest': 'yards', 'y_closest': 'yards'}",
+      "assumptions": "Closest player is uniquely defined; Euclidean geometry applies; no occlusion or temporal lag in measurement.",
+      "breakdown_regime": "Undefined when multiple players share minimal distance or when player is outside field bounds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE for collision avoidance logic; GSI computes density-based risk metrics from distribution of such distances.",
+        "source_operator": "relative_player_distance",
+        "telemetry": "Minimum distance to nearest opponent, average distance to top 3 defenders."
+      }
+    },
+    {
+      "primitive_id": "directional_alignment",
+      "name": "Directional Alignment",
+      "verbatim_quote": "dir target endzone Direction player is facing with respect to the target endzone, where 0 indicates facing the endzone while positive degrees between 0 and 180 denote facing to the left while negative degrees between 0 and -180 denote facing to the right.",
+      "page": 19,
+      "latex": "\\theta = \\text{dir}_{\\text{target endzone}}",
+      "symbol_and_unit_ledger": "{'\\\\theta': 'degrees'}",
+      "assumptions": "Player orientation is measured relative to fixed endzone axis; angle wraps at ±180°.",
+      "breakdown_regime": "Ambiguous when player is directly perpendicular to endzone or when facing is undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's heading vector in navigation; GSI uses it to infer intent and predict convergence angles.",
+        "source_operator": "directional_alignment",
+        "telemetry": "Angle deviation from direct path to goal, alignment score with nearest defender."
+      }
+    },
+    {
+      "primitive_id": "continuous_time_play_value",
+      "name": "Continuous-Time Play Value",
+      "verbatim_quote": "Figure 13: Joint distribution of average yards gained above expectation per carry at handoff and one second into carry for players with at least twenty carries.",
+      "page": 29,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Y_{\\\\text{handoff}}': 'yards gained at handoff, dimensionless', 'Y_{\\\\text{1s}}': 'yards gained one second into carry, dimensionless'}",
+      "assumptions": "Play value evolves continuously; player actions influence outcome trajectory.",
+      "breakdown_regime": "When data insufficient for stable metric estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps instantaneous performance deviation to cumulative play impact via kernel smoothing of temporal features.",
+        "source_operator": "continuous_time_play_value",
+        "telemetry": "Deviation from expected yardage at multiple time instants."
+      }
+    },
+    {
+      "primitive_id": "ballcarrier_model_integration",
+      "name": "Ballcarrier Model Integration",
+      "verbatim_quote": "Each of our ballcarrier estimates are a function of all twenty-two players on the field, while the above metrics are merely attributing the observed change in value of the framelevel data to the ball carrier.",
+      "page": 28,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F(X_{t,i})': 'Feature vector at time t for player i, dimensionless', 'E[Y^*_{t,i}|F(X_{t,i})]': 'Expected end-of-play yard line, yards'}",
+      "assumptions": "All players contribute to ballcarrier outcome; linear superposition of influences.",
+      "breakdown_regime": "In presence of sparse or missing player-level data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between multi-agent feature space and single-agent prediction target.",
+        "source_operator": "ballcarrier_model_integration",
+        "telemetry": "Aggregate effect of 22-player configuration on individual performance."
+      }
+    },
+    {
+      "primitive_id": "conditional_density_estimation_w3_3",
+      "name": "Conditional Density Estimation",
+      "verbatim_quote": "Future work would consider imputing average speed levels for all ball-carriers at particular moments over the course of the run or generate the ball-carrier model without speed accounted for.",
+      "page": 28,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f(Y^*_{t,i}|F(X_{t,i}))': 'Conditional density function of final yard line given features, dimensionless', 'Y^*_{t,i}': 'End-of-play yard line, yards'}",
+      "assumptions": "Density is smooth and can be approximated by non-parametric methods.",
+      "breakdown_regime": "When parametric assumptions fail or data lacks sufficient variation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Random forest regression used to estimate full conditional density curve over yard lines.",
+        "source_operator": "conditional_density_estimation_w3_3",
+        "telemetry": "Bi-modal or multi-modal distribution of possible outcomes."
+      }
+    },
+    {
+      "primitive_id": "temporal_performance_deviation",
+      "name": "Temporal Performance Deviation",
+      "verbatim_quote": "We see Le'Veon Bell under-performed with respect to expectation at handoff but over-performed expectation at one second into the carry.",
+      "page": 28,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D(t)': 'Deviation from expectation at time t, yards', 'E[Y_{\\\\text{actual}}(t)]': 'Expected yards at time t, yards'}",
+      "assumptions": "Performance deviation is measurable and temporally localized.",
+      "breakdown_regime": "During early stages of play where initial positioning affects later outcomes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps deviation profile to strategic decision-making patterns across time.",
+        "source_operator": "temporal_performance_deviation",
+        "telemetry": "Time-series deviation from baseline performance expectations."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "609022cbe3f65f11_t0",
+      "think": "This chapter introduces a paradigm shift from discrete-time to continuous-time modeling of American football outcomes using player-tracking data. It builds upon prior work in sports analytics that relied on event-level or play-by-play data, which lacked temporal granularity. The core innovation lies in leveraging high-frequency tracking data—typically sampled at 10–25 Hz—to model the evolution of game state variables such as expected points and win probability throughout the duration of a play. This requires constructing a continuous-time valuation framework that integrates player positions, velocities, and trajectories into a coherent probabilistic model. The paper proposes a modular architecture composed of specialized sub-models including a ball-carrier trajectory estimator based on LSTM networks and a conditional density estimation module. These components allow for real-time prediction of play outcomes and enable deeper insights into how strategic decisions unfold dynamically. The theoretical foundation rests on stochastic process theory and machine learning techniques applied to structured spatiotemporal data. The implications extend beyond football to other sports with tracking capabilities, offering a unified methodology for assessing game dynamics at unprecedented resolution. Window 1 Synthesis: Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 2010s developments in sports analytics and the rise of tracking technologies. Influenced by prior work in basketball EPV modeling and event-based win probability models in football. Retrocausal Genealogy (Window 1): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opponent behavior through spatial-temporal dynamics of defensive positioning and reaction patterns, assuming rationality in pursuit of minimizing expected loss. Theory of Mind (Window 1): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting by enforcing cross-validation across multiple plays and seasons; ensures no leakage from future observations into past state estimations. Cross-Layer Veto (Window 1): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "609022cbe3f65f11_t1",
+      "think": "Chapter 2 introduces a continuous-time valuation framework for American football, focusing on modeling expected yardage and end-of-play yard lines. It begins with notation defining key variables such as time t, random yardage Y, and the filtration F(Xt,i) representing the evolving state of the field. The framework distinguishes between rushing and passing plays, applying different modeling strategies accordingly. For rushing plays, it directly estimates expected yards gained from the ball carrier's current position. For passing plays, it uses a decision tree approach to model quarterback decisions and their consequences. Each node in the tree contributes both a probability of occurrence and an expected yardage, enabling a probabilistic aggregation of outcomes. The framework emphasizes real-time updates and conditional expectations, allowing for dynamic valuation during the play. This approach aligns with modern machine learning paradigms where complex systems are decomposed into modular components—each sub-model (e.g., ball carrier, decision tree) can be trained independently yet integrated into a unified valuation system. The use of linearity of expectations simplifies computation while maintaining theoretical rigor. The framework also acknowledges limitations such as the assumption of known play type at the outset, which may not reflect modern strategic flexibility like run-pass options. Overall, this chapter establishes a foundational structure for real-time play evaluation using stochastic processes and probabilistic reasoning.",
+      "retrocausal_genealogy": "Rooted in prior work on stochastic modeling of sports dynamics (Cervone et al., 2016b), extending classical game theory frameworks into continuous-time domains with Bayesian inference. Retrocausal Genealogy (Window 2): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing agent behavior through conditional probabilities over decision trees, assuming rationality in player choices and coach strategies based on observed field states. Theory of Mind (Window 2): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting by enforcing independence among sub-models (e.g., ball carrier and decision tree) and ensuring no leakage from one domain to another (e.g., pass vs. run modeling). Cross-Layer Veto (Window 2): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "609022cbe3f65f11_t2",
+      "think": "Chapter 3 introduces a sophisticated geometric framework for analyzing football dynamics through Voronoi tessellations and spatial coordinates. The core idea is to map each player’s influence zone based on proximity to the ball-carrier, thereby creating a dynamic spatial model that evolves with play progression. This approach enables both descriptive and predictive modeling of player behavior and outcomes. The primitives derived from these tessellations—such as area, adjacency, and boundary characteristics—are essential for quantifying spatial dominance and tactical positioning. These features are then integrated into machine learning models to forecast ball-carrier trajectories and evaluate game states. The chapter emphasizes the importance of high-dimensional feature spaces and non-linear relationships, suggesting that traditional linear methods are insufficient for capturing complex interactions on the field. By leveraging Voronoi diagrams, the framework provides a robust foundation for both GSI's probabilistic inference and GSE's real-time decision-making systems. Window 3 Synthesis: Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in computational geometry and spatial statistics, this methodology builds upon earlier work in Voronoi-based motion analysis and extends it to multi-agent tactical modeling in sports domains. Retrocausal Genealogy (Window 3): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models incorporate implicit assumptions about player rationality and strategic intent, particularly in how defenders align with attackers and how ball-carriers optimize escape routes under spatial constraints. Theory of Mind (Window 3): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring Voronoi features do not redundantly encode similar positional information already captured by basic x/y coordinates. Leakage is mitigated by excluding teammate influence during adversarial tessellation computation. Cross-Layer Veto (Window 3): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "609022cbe3f65f11_t3",
+      "think": "Chapter 4 introduces a sophisticated framework for analyzing NFL running plays through continuous-time modeling and conditional density estimation. It begins by establishing a joint distribution of yardage gains relative to expectations at key moments—specifically handoff and one second into the carry—highlighting how individual players like Le'Veon Bell may deviate from predicted performance. This deviation is contextualized within broader offensive strategies involving all 22 players on the field, emphasizing that ballcarrier outcomes depend not just on the individual but also on collective behavior. The framework employs random forests for conditional density estimation, allowing for nuanced probabilistic forecasts rather than deterministic predictions. By integrating spatial and temporal tracking data, it enables dynamic assessment of play value evolution. The chapter underscores the importance of accounting for player speed and blocking configurations, acknowledging limitations due to data scarcity. Future work includes expanding this methodology to other game components such as special teams and refining models to better capture interdependencies among players. This analytical lens supports both tactical insights and predictive modeling, forming a foundational element for GSI’s probabilistic inference systems and GSE’s real-time situational awareness engines. Window 4 Synthesis: Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in prior work on NBA optical tracking and quarterback decision-making, this chapter extends those methodologies to football's unique temporal and spatial dynamics, building upon Yurko et al. (2019) and Pospisil & Lee (2018). Retrocausal Genealogy (Window 4): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models assume opposing teams optimize based on observed patterns and anticipated deviations, requiring robustness against adversarial inputs and adaptive learning mechanisms. Theory of Mind (Window 4): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that features derived from different layers (e.g., spatial vs. temporal) do not redundantly encode similar information, preventing overfitting and enhancing interpretability. Cross-Layer Veto (Window 4): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in arxiv_1906.01760v3 (609022cbe3f65f11, 37/37 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

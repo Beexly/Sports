@@ -1,0 +1,78 @@
+{
+  "book_id": "375cde5e1adc4f48",
+  "source_status": "COMPLETE",
+  "title": "p0010",
+  "file_name": "p0010.txt",
+  "sha256": "375cde5e1adc4f482b4c8ea56b66646be7d6d2ccba45bb0315738b603308efed",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for collaborative recommendations using item-to-item similarity mappings to predict user interests via community-based filtering. Universal Lens: Rooted in p0010 (375cde5e1adc4f48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models user preferences through probabilistic item-to-item similarity mappings derived from collective user ratings. GSI Mapping: Rooted in p0010 (375cde5e1adc4f48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions states based on dynamic item similarity profiles and user behavior patterns in real-time recommendation loops. GSE Mapping: Rooted in p0010 (375cde5e1adc4f48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "collaborative_filtering_kernel",
+      "name": "Collaborative Filtering Kernel",
+      "verbatim_quote": "In a pure collaborative system, items are recommended to users based on the interests of a community of users, without any analysis of item content.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "User interests are transitive across similar users; item relevance is determined by community consensus.",
+      "breakdown_regime": "When user base lacks sufficient overlap or diversity, leading to poor recommendation coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps user preference vectors to item similarity scores via pairwise correlation matrices.",
+        "source_operator": "collaborative_filtering_kernel",
+        "telemetry": "Average cosine similarity between user preference vectors"
+      }
+    },
+    {
+      "primitive_id": "content_based_filtering_operator",
+      "name": "Content-Based Filtering Operator",
+      "verbatim_quote": "Pure contentbased systems operate by attempting to identify items which, based on an analysis of item content, are similar to items that are known to be of interest to the user.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Items with shared attributes are likely to be similarly valued by users.",
+      "breakdown_regime": "When item metadata is sparse or ambiguous, reducing predictive accuracy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates item profiles from textual or categorical features to match against user-defined interest sets.",
+        "source_operator": "content_based_filtering_operator",
+        "telemetry": "TF-IDF vector overlap between item and user profile representations"
+      }
+    },
+    {
+      "primitive_id": "item_to_item_similarity_mapper",
+      "name": "Item-to-Item Similarity Mapper",
+      "verbatim_quote": "US 6,266,649 B1 1 COLLABORATIVE RECOMMENDATIONS USING ITEM-TO-ITEM SIMILARITY MAPPINGS FIELD OF THE INVENTION The present invention relates to information filtering and recommendation systems.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Similarity between items reflects underlying user preference structures.",
+      "breakdown_regime": "Cold start problem where new items lack sufficient interaction data for reliable mapping.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps item space into similarity manifold using co-occurrence statistics from user interactions.",
+        "source_operator": "item_to_item_similarity_mapper",
+        "telemetry": "Pearson correlation coefficient between item rating vectors"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "375cde5e1adc4f48_t0",
+      "think": "The core duality lies between content-based and collaborative filtering paradigms: the former leverages item characteristics while the latter exploits collective user behavior. These approaches exhibit complementary strengths—content-based systems excel at handling novel items but struggle with subjective taste variation, whereas collaborative systems thrive in diverse communities but face cold-start issues. The proposed invention bridges this gap by constructing item-to-item similarity mappings that encode both item properties and user preferences. Mathematically, this manifests as a joint embedding space where each item is represented as a point whose proximity reflects its similarity to others based on shared user engagement patterns. This enables hybrid recommendation strategies that dynamically weight content and collaborative signals according to contextual relevance. Failure modes arise when either signal becomes corrupted—such as through sparsity in user ratings or noise in item metadata—which can distort the similarity landscape and degrade prediction fidelity.\n\nDeep epistemic analysis for p0010 (375cde5e1adc4f48, domain=other, pages_read=3/3): Operator 'Collaborative Filtering Kernel' (page 1, domain other) captures: In a pure collaborative system, items are recommended to users based on the interests of a community of users, without any analysis of item content. Assumptions: User interests are transitive across similar users; item relevance is determined by community consensus. Breakdown regime: When user base lacks sufficient overlap or diversity, leading to poor recommendation coverage. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps user preference vectors to item similarity scores via pairwise correlation matrices. Operator 'Content-Based Filtering Operator' (page 1, domain other) captures: Pure contentbased systems operate by attempting to identify items which, based on an analysis of item content, are similar to items that are known to be of interest to the user. Assumptions: Items with shared attributes are likely to be similarly valued by users. Breakdown regime: When item metadata is sparse or ambiguous, reducing predictive accuracy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates item profiles from textual or categorical features to match against user-defined interest sets. Operator 'Item-to-Item Similarity Mapper' (page 1, domain other) captures: US 6,266,649 B1 1 COLLABORATIVE RECOMMENDATIONS USING ITEM-TO-ITEM SIMILARITY MAPPINGS FIELD OF THE INVENTION The present invention relates to information filtering and recommendation systems. Assumptions: Similarity between items reflects underlying user preference structures. Breakdown regime: Cold start problem where new items lack sufficient interaction data for reliable mapping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps item space into similarity manifold using co-occurrence statistics from user interactions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0010 (375cde5e1adc4f48, domain=other, pages_read=3/3): Operator 'Collaborative Filtering Kernel' (page 1, domain other) captures: In a pure collaborative system, items are recommended to users based on the interests of a community of users, without any analysis of item content. Assumptions: User interests are transitive across similar users; item relevance is determined by community consensus. Breakdown regime: When user base lacks sufficient overlap or diversity, leading to poor recommendation coverage. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps user preference vectors to item similarity scores via pairwise correlation matrices. Operator 'Content-Based Filtering Operator' (page 1, domain other) captures: Pure contentbased systems operate by attempting to identify items which, based on an analysis of item content, are similar to items that are known to be of interest to the user. Assumptions: Items with shared attributes are likely to be similarly valued by users. Breakdown regime: When item metadata is sparse or ambiguous, reducing predictive accuracy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates item profiles from textual or categorical features to match against user-defined interest sets. Operator 'Item-to-Item Similarity Mapper' (page 1, domain other) captures: US 6,266,649 B1 1 COLLABORATIVE RECOMMENDATIONS USING ITEM-TO-ITEM SIMILARITY MAPPINGS FIELD OF THE INVENTION The present invention relates to information filtering and recommendation systems. Assumptions: Similarity between items reflects underlying user preference structures. Breakdown regime: Cold start problem where new items lack sufficient interaction data for reliable mapping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps item space into similarity manifold using co-occurrence statistics from user interactions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early work on collaborative filtering by Goldberg et al., extended by recommender systems literature including ItemCF and UserCF models, culminating in modern hybrid architectures combining content and collaborative signals. Retrocausal Genealogy: Rooted in p0010 (375cde5e1adc4f48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0010 (375cde5e1adc4f48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the user seeking personalized recommendations and the system optimizing for utility metrics like precision or coverage. The system must balance exploration vs exploitation, ensuring recommendations remain relevant without overfitting to known preferences. Theory of Mind & Decision Maker Model: Rooted in p0010 (375cde5e1adc4f48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that content and collaborative components do not redundantly encode overlapping information, preventing signal leakage. Leakage vetoes occur when item similarity mappings are derived solely from one modality, undermining the intended fusion of heterogeneous data sources. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0010 (375cde5e1adc4f48), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

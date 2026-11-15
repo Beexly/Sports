@@ -1,0 +1,224 @@
+{
+ "book_id": "6d101348291a5c1f",
+ "source_status": "COMPLETE",
+ "retraction_note": "Page 1 and front matter (pp. 1-8) scanned for retraction/withdrawal/expression-of-concern/erratum markers: zero hits. O'Reilly Media first edition, released 2023-08-16, ISBN 978-1-492-09962-8. No retraction notice present; source treated as clean.",
+ "source_metadata": {
+  "title": "Football Analytics with Python & R: Learning Data Science Through the Lens of Sports",
+  "authors": [
+   "Eric A. Eager",
+   "Richard A. Erickson"
+  ],
+  "publisher": "O'Reilly Media, Inc.",
+  "year": 2023,
+  "edition": "First Edition, August 2023 (2023-08-16 first release)",
+  "isbn": "978-1-492-09962-8",
+  "file_name": "Football Analytics with Python and R_ Learning Data Science (1).pdf",
+  "sha256": "6d101348291a5c1f8385579ef6fcead391b02565a073ad7a01cb735bcb5e2580"
+ },
+ "pages_total": 488,
+ "pages_read": 488,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Metric stability as lag-1 Pearson correlation (sticky-stats reliability gate)",
+   "verbatim_quote": "we refer to the stability of an evaluation metric as the metric’s consistency over a predetermined time frame",
+   "additional_quotes": [
+    {
+     "quote": "The football industry generally uses Pearson’s correlation coefficient, or its square, the coefficient of determination, to measure stability.",
+     "page": 48
+    },
+    {
+     "quote": "a quarterback’s performance on shorter passes is twice as stable as on longer passes",
+     "page": 88
+    },
+    {
+     "quote": "A Pearson’s correlation coefficient of –1 implies a decreasing correlation and does not exist for stability",
+     "page": 88
+    }
+   ],
+   "page": 48,
+   "latex": "r_{\\mathrm{short}} = \\mathrm{cor}(\\mathrm{ypa}_{t},\\ \\mathrm{ypa}_{t-1}) = 0.438479, \\qquad r_{\\mathrm{long}} = 0.233890",
+   "symbol_and_unit_ledger": "r_short, r_long: dimensionless Pearson correlation coefficients in [-1,1], printed values pp. 87-88 (R tibble 0.234/0.438; pandas 0.233890/0.438479). cor(): R Pearson-correlation function as printed p. 86, cor(ypa, ypa_last); pandas .corr() equivalent pp. 87-88. ypa_t: passing yards per attempt in season t, units yards/attempt (yards gained per pass attempt, incompletions set to 0 yards, p. 53). t: season index in years (NFL 2016-2022). Pairing: inner join of season t with season t-1 on passer_id and pass_length_air_yards after shifting season by +1 (pp. 78-79). The book typesets no closed-form Pearson fraction; the operational definition is the printed cor() call. Qualification thresholds: n>=100 short attempts, n>=30 deep attempts (p. 78); long pass defined as air_yards>=20 yards (p. 53).",
+   "assumptions": "As printed: stability is consistency over a predetermined time frame (p. 48); the threshold for 'stable' is context- or era-specific (p. 49); aggregation at season level with minimum attempt counts (100 short / 30 deep, p. 78); passes with null air_yards (spikes, throwaways, batted balls) excluded (p. 53); incomplete passes counted as 0 yards (pp. 53-54); consecutive-season inner join so only shared years survive (p. 79); data window starts 2016, the last material rule change (kickoff touchback to the 25, p. 51).",
+   "breakdown_regime": "Small-sample trick-play outliers dominate unfiltered leaderboards (T.Kennedy 75.0 YPA on 1 attempt, pp. 73-74); deep-pass instability is partly an artifact of fewer attempts and the arbitrary 20-yard cutoff (p. 91, exercise 4); era/rule breaks (2002 expansion, 2011 CBA, 2015 extra point, 2020 pandemic, 2021 17-game season, p. 51) invalidate cross-era pooling; a correlation of -1 'does not exist for stability' (p. 88 NOTE); correlation measures repeatability, not causation or value. Pop-up seasons on unstable channels are regression candidates, not skill jumps (Matt Ryan deep YPA 17.7 -> 8.5 -> 13.5 across 2016-2018, p. 90).",
+   "domain": "math",
+   "timescales": [
+    "tau_0: single pass attempt (air yards, completion, yards gained)",
+    "tau_1: season aggregation per passer per pass-length bucket (>=100 short / >=30 deep attempts)",
+    "tau_2: consecutive-season pair joined for lag-1 correlation (65 passers, 317 rows)",
+    "tau_3: career/era stability across rule-change boundaries (2016-2022 window)"
+   ],
+   "empirical_calibration": "nflfastR/nfl_data_py play-by-play 2016-2022; 131,606 pass plays (p. 55); 317 paired passer-season-length rows, 65 unique passers (pp. 82-84); r_short=0.438479 vs r_long=0.233890 (pp. 87-88); Alex Smith led 2017 deep-YPA leaderboard (19.34) then vanished from it in 2018 (pp. 89-90).",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binds to the GSE feature-integrity gate of the 22-player dynamical system: any candidate state variable (player grade, tendency rate, matchup feature) must pass a lag-1 or split-half reliability check before it is trusted as transferable skill rather than context noise. Unstable channels are down-weighted, flagged as regression candidates, or excluded from the transition kernel; the short/deep factor-of-two gap is the template for slicing a feature by regime before trusting it.",
+    "source_operator": "p1",
+    "telemetry": "Per-feature, per-era Pearson r with attempt-count denominator logged at ingest; alert when r halves across adjacent regime slices (0.438 -> 0.234 pattern); season-pair inner-join row counts as sample-size telemetry; rule-change boundary flags on the time axis."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Expectation-residual metric construction (RYOE / CPOE / xG operator) with stability validation gate",
+   "verbatim_quote": "measuring players or teams via the residual (that is, the difference between the value expected by the model and the observed value) is a process that transcends football",
+   "additional_quotes": [
+    {
+     "quote": "Residuals are the difference between a model’s expected (or predicted) output and the observed data.",
+     "page": 109
+    },
+    {
+     "quote": "Anytime you create a new metric for player or team evaluation in football, you have to test its predictive power.",
+     "page": 115
+    },
+    {
+     "quote": "this version of RYOE per carry is slightly more stable year to year than yards per carry (because the correlation coefficient is larger)",
+     "page": 118
+    }
+   ],
+   "page": 26,
+   "latex": "\\mathrm{RYOE}_{i} = y_{i} - \\hat{y}_{i}, \\qquad \\hat{y}_{i} = 3.2188 + 0.1329\\,\\mathrm{ydstogo}_{i}",
+   "symbol_and_unit_ledger": "y_i: observed rushing yards on play i (yards). y_hat_i: model-expected rushing yards (yards). RYOE_i: rushing yards over expected, the residual (yards); dimensionally homogeneous yards - yards. ydstogo_i: yards to go for a first down or touchdown (yards). Intercept 3.2188 (yards) and slope 0.1329 (yards gained per additional yard to go, i.e. yards/yard, dimensionless ratio) are the printed OLS coefficients, p. 106 (R: 3.21876 / 0.13287, p. 108). Fit: 92,425 designed runs 2016-2022, R-squared 0.007, residual SE 6.287 yards on 92,423 df (pp. 106-108). Formula notation as printed: rushing_yards ~ 1 + ydstogo (pp. 104-105); residuals extracted via .resid / resid() (p. 109). CPOE instance: cpoe = complete_pass - exp_completion with exp_completion on the response scale (p. 176).",
+   "assumptions": "As printed: the chosen context features capture the situation that affects production (down, distance, field position, run location, score differential in the multiple-regression extension, p. 124); the linear form is 'often onerous but generally fine as a first pass' (p. 95); the player is treated as not dictating the context he is embedded in - an assumption the book itself says 'is likely violated, and repeatedly' (p. 187); designed QB runs only in the rushing data (p. 113); qualification n>50 carries for leaderboards (pp. 110-112).",
+   "breakdown_regime": "Endogeneity: the QB/runner partly creates his own context (target choice, moving defenders with eyes, sack avoidance; Burrow 51 sacks in 2021, pp. 187-188), so residuals are not pure player signal; expected completion is itself the most stable channel (r=0.473959, p. 187), meaning 'context' carries player identity. The simple linear expectation fails outside 15-95-yard runs: censoring to that band raises R-squared from ~0.01 to 0.05 and fixes the Normal Q-Q divergence (pp. 160-162). RYOE's stability gain over raw YPC is small (0.348923 vs 0.32261, pp. 116-118) and the authors state it does not settle whether running backs matter (p. 118). Volume and efficiency are negatively related because defenses key on high-volume players ('volume is earned', pp. 114-115).",
+   "domain": "math",
+   "timescales": [
+    "tau_0: single play (one run or pass, residual computed per play)",
+    "tau_1: game-level accumulation of residuals",
+    "tau_2: season leaderboard per player (>=50 carries / >=100 attempts)",
+    "tau_3: year-over-year validation of the new metric against the raw metric"
+   ],
+   "empirical_calibration": "Simple RYOE model: intercept 3.2188, slope 0.1329, R2=0.007, n=92,425 (p. 106); Jonathan Taylor 2021 +417.5 total RYOE on 332 carries, Lamar Jackson 2019 +353.7 on 135 designed runs (p. 111); stability r_RYOE=0.348923 vs r_YPC=0.32261 (pp. 116-118); CPOE r=0.464974 vs raw completion r=0.445465 (pp. 185-186).",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The operator E[y|context] -> y - E[y|context] is the generic kernel behind RYOE, CPOE, soccer xG and basketball shot quality (explicitly stated, pp. 26-27). In the GSE 22-player simulation it produces context-adjusted player grades from internal sim state (down, distance, field position, score differential, run location) and grades the residual, not the raw box score. The validation gate is part of the kernel: a new residual metric is adopted only if its lag-1 stability exceeds the raw metric's, otherwise the context - not the player - carries the signal.",
+    "source_operator": "p2",
+    "telemetry": "Paired stability comparison logged per metric (r_residual vs r_raw, e.g. 0.3489 vs 0.3226); residual mean ~ 0 sanity check per fit; endogeneity audit flag on any context feature the player can choose; R-squared and Q-Q diagnostics per regime band (the 15-95 yard censoring lesson)."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Generalized linear model with logit link for bounded binary responses (logistic completion model)",
+   "verbatim_quote": "GLMs generalize, or extend, linear models to allow for response variables that are assumed to come from a non-normal distribution (such as binary responses or counts).",
+   "additional_quotes": [
+    {
+     "quote": "a link function converts (or links) probability (a value ranging from 0 to 1) to a value ranging from −∞ to ∞",
+     "page": 170
+    },
+    {
+     "quote": "Hence a linear regression, which assumes no bounds on the response variable, is often inappropriate.",
+     "page": 169
+    },
+    {
+     "quote": "the default predictions are of log-odds (probabilities on logit scale) and type = \"response\" gives the predicted probabilities",
+     "page": 176
+    }
+   ],
+   "page": 170,
+   "latex": "\\mathrm{logit}(p) = \\ln\\!\\left(\\frac{p}{1-p}\\right) = \\beta_0 + \\beta_1\\,\\mathrm{air\\_yards}, \\qquad \\beta_0 = 1.0720,\\ \\beta_1 = -0.0573",
+   "symbol_and_unit_ledger": "p: completion probability, dimensionless in [0,1]. odds = p/(1-p): dimensionless ratio; printed operationally as R code odds = comp_pct / (1 - comp_pct) (p. 190). log_odds = log(odds): natural logarithm of odds, dimensionless (nats); printed as R code log_odds = log(odds) (p. 190). The closed-form logit equation is NOT typeset in the book; Layer-1 notation above combines the printed prose definition (p. 170) with the printed code definition (p. 190). air_yards: distance traveled by the pass from line of scrimmage to intended receiver (yards; definition p. 30). beta_0 = 1.0720 (SE 0.008): intercept on log-odds scale (dimensionless); beta_1 = -0.0573 (SE 0.001): log-odds change per additional air yard (yards^-1); printed fit summary p. 171 (R: 1.0719692 / -0.0573223, p. 172). Model: complete_pass ~ air_yards, family Binomial, link Logit, method IRLS, 5 iterations, n=131,606 passes, deviance 1.6215e+05 (p. 171). Odds-ratio scale: exp(beta_1)=0.944 per yard (p. 189); global-intercept check log_odds 0.583 <-> comp_pct 0.642 (pp. 190-191).",
+   "assumptions": "As printed: binary response modeled by a binomial distribution that does a 'good enough job' (p. 170); binomial needs one parameter (probability of success) versus the normal's two (p. 170); the link function maps [0,1] probability to (-inf, +inf) so the linear predictor is unbounded (p. 170); linear models are the Gaussian-family special case of GLMs (p. 170); dispersion parameter for binomial taken to be 1 (p. 172); air yards restricted to (0, 20] for the EDA stability of the completion curve (p. 166).",
+   "breakdown_regime": "Residual-scale trap: R predict() defaults to the link scale (log-odds); subtracting that from a 0/1 outcome is dimensionally incoherent - type='response' is required for CPOE (p. 176 WARNING). OLS on a bounded response produces predictions outside [0,1] (p. 173, logistic=False demonstration). The printed odds-ratio worked example on p. 190 is typeset-corrupted ('2.92 x 2020', 'probability ... is 85', '2 yards to go' where 20 is meant) and is refused as a calibration source; the intact code definitions on pp. 190-191 are used instead. Endogeneity: receiver separation and pressure are partly QB-controlled, so coefficients do not isolate pure QB accuracy (pp. 187-188).",
+   "domain": "math",
+   "timescales": [
+    "tau_0: single pass attempt (binary complete_pass outcome)",
+    "tau_1: drive-level sequence of pass probabilities",
+    "tau_2: season CPOE per quarterback (>=100 attempts)",
+    "tau_3: year-over-year stability of CPOE vs raw completion percentage"
+   ],
+   "empirical_calibration": "n=131,606 passes 2016-2022 (p. 171); intercept 1.0720, air_yards -0.0573, z=-91.806 (p. 171); odds ratio per air yard 0.944 [0.943, 0.945] (p. 189); passes beyond ~20 air yards have <50% completion (p. 190, figures 5-3/5-4); stability r_CPOE=0.464974, r_compl=0.445465, r_exp_completion=0.473959 (pp. 185-187).",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Bounded-event probability kernel for the 22-player simulation: every binary football event (completion, third-down conversion, catch, field-goal make) is modeled as a GLM whose link keeps simulated probabilities inside [0,1]; player grades are response-scale residuals, never link-scale subtractions. The family/link/scale triple is a hard constraint on any imported probability model in the GSE engine.",
+    "source_operator": "p3",
+    "telemetry": "Assertion that all predictions lie in [0,1]; logged residual scale (response vs link) per grade computation; IRLS iteration count and deviance per fit; coefficient SEs and odds-ratio sanity bands (0.944 per air yard as the reference slope); endogeneity flag on QB-controllable features."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Poisson count kernel and log-link Poisson regression for low-frequency discrete events",
+   "verbatim_quote": "The Poisson distribution models the likelihood of a given number of events occurring in a fixed interval of time or space.",
+   "additional_quotes": [
+    {
+     "quote": "The events occur with equal probability.",
+     "page": 205
+    },
+    {
+     "quote": "The events are independent of the time since the last event.",
+     "page": 205
+    },
+    {
+     "quote": "The Poisson distribution seems to slightly overestimate the likelihood of one touchdown pass, and as such, slightly underestimate the likelihood of zero, two, or more touchdown passes in a game.",
+     "page": 208
+    }
+   ],
+   "page": 205,
+   "latex": "P(X = x) = \\frac{e^{-\\lambda}\\lambda^{x}}{x!}, \\qquad \\ln \\lambda_{i} = \\beta_0 + \\beta_1\\,\\mathrm{pass\\_td\\_rate}_{i} + \\beta_2\\,\\mathrm{total\\_line}_{i}",
+   "symbol_and_unit_ledger": "X: number of touchdown passes thrown by a quarterback in a game (dimensionless non-negative integer count). x: realized count, x = 0,1,2,... (p. 205). lambda: average value of the population, mean event count per game (game^-1) (p. 205). e: Euler's number (dimensionless). x!: factorial, n! = n x (n-1) x ... x 2 x 1 and 0! = 1 (printed NOTE p. 205). The PMF is typeset as an equation image on p. 205; the PDF text layer is garbled ('eλλx x!'), so the fraction above was transcribed from a 150-dpi page render and visually verified. pass_td_rate_i: QB's mean touchdown passes per game over the previous two seasons (game^-1) (pp. 210, 220-221). total_line_i: market-expected total points scored in the game (points) - SPORTSBOOK-DERIVED, flagged and banned as a GSE model input under held-out-discipline; the durable kernel requires replacing it with an internal pace/efficiency total estimate. beta_0=-0.9851 (SE 0.148), beta_1=0.3066 (SE 0.029, per TD/game), beta_2=0.0196 (SE 0.003, per point): coefficients on the log-rate scale (dimensionless); printed pp. 217-218; exponentiated rate multipliers 1.358860 and 1.019791 (p. 219). Model: pass_td_y ~ pass_td_rate + total_line, family Poisson, link Log, IRLS, n=3,297 QB-weeks, deviance 3395.2 (p. 217). Tail probabilities: poisson.pmf(k, mu) and 1 - poisson.cdf(k=2, mu) (p. 222); R dpois()/ppois() (p. 223).",
+   "assumptions": "As printed, the two critical assumptions of the Poisson distribution (p. 205): (1) 'The events occur with equal probability.' (2) 'The events are independent of the time since the last event.' The book explicitly notes these are not exactly satisfied in football because a team that scores may have 'figured out' the defense (p. 205). Dispersion parameter for Poisson taken to be 1 (p. 218). Starter proxy: >=10 passing plays in a week (p. 199). pass_td_rate uses a two-season trailing window (p. 210).",
+   "breakdown_regime": "Printed fit defect: the Poisson 'slightly overestimate[s] the likelihood of one touchdown pass' and underestimates zero and two-or-more (p. 208) - the tails are mispriced; the authors recommend negative binomial or quasi-Poisson for overdispersion (p. 208). Game-state feedback violates independence (scoring changes defensive behavior, p. 205). Doctrine breakdown: total_line is a sportsbook market total; ingesting it violates the no-odds-input rule, so the GSE binding must substitute an internal total estimate. Empirical support is thin in the far tail: only 4 games with 6 TD passes in 3,965 QB-weeks (p. 202).",
+   "domain": "math",
+   "timescales": [
+    "tau_0: single pass play (a touchdown event occurs or not)",
+    "tau_1: one game (the fixed interval for the count X)",
+    "tau_2: week/season rate estimation (two-season trailing pass_td_rate)",
+    "tau_3: league-environment shifts (e.g. 2020 crowd-noise absence helping offenses, p. 209)"
+   ],
+   "empirical_calibration": "3,965 QB-weeks with >=10 pass plays, 2016-2022 (p. 203); TD count frequencies 0:902, 1:1286, 2:1050, 3:506, 4:186, 5:31, 6:4 (p. 202); mean 1.469609 TD/game (p. 203; prose rounds to 1.48); regression n=3,297 (p. 217); Mahomes Super Bowl LVII row: pass_td_rate 2.384615, total_line 51.0, exp_pass_td 2.107833 (p. 220).",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Count-process kernel for low-frequency discrete events in the internal GSE game simulation (touchdown passes, sacks, interceptions, turnovers): X ~ Poisson(lambda) with lambda driven ONLY by internal features (trailing rate, pace, efficiency, weather, roster). The book's total_line regressor is explicitly vetoed and replaced by an internal total estimate; the log-link rate-multiplier interpretation (exp(beta) per unit feature) is preserved. Overdispersion triggers a family switch to negative binomial, protecting simulated tail probabilities.",
+    "source_operator": "p4",
+    "telemetry": "Dispersion statistic var/mean per event-type per slice (flag > 1 -> negative binomial); observed-vs-expected frequency table per count (the 902/1286/1050/506/186/31/4 template); tail mass via 1-CDF logged for portfolio risk; odds-leakage scanner asserting no market-derived field enters lambda."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Scale-first principal component analysis (eigen-rotation) and k-means archetype clustering",
+   "verbatim_quote": "the process of taking a set of features that possess collinearity of some form",
+   "additional_quotes": [
+    {
+     "quote": "Scaling refers to transforming a feature, usually to have a mean of 0 and standard deviation of 1.",
+     "page": 297
+    },
+    {
+     "quote": "k-means clustering, which aims to partition a dataset into k clusters in which each observation belongs to the cluster with the nearest mean",
+     "page": 308
+    },
+    {
+     "quote": "PCA components are based on a mathematical property of matrices called eigenvalues and eigenvectors.",
+     "page": 299
+    }
+   ],
+   "page": 277,
+   "latex": "z_{j} = \\frac{x_{j} - \\bar{x}_{j}}{s_{j}}, \\qquad \\mathrm{EVR}_{k} = \\frac{\\mathrm{sdev}_{k}^{2}}{\\sum_{j=1}^{p} \\mathrm{sdev}_{j}^{2}}",
+   "symbol_and_unit_ledger": "x_j: raw combine feature j (mixed units: Ht inches, Wt pounds, 40yd seconds, Vertical inches, Bench reps, Broad Jump inches, 3Cone seconds, Shuttle seconds; pp. 279-281). x_bar_j: sample mean of feature j (same units). s_j: sample standard deviation (same units). z_j: standardized feature, dimensionless; scaling printed as Python (x - mean)/std (p. 298) and R scale() (p. 298). sdev_k: standard deviation of principal component k in standardized units; EVR_k: explained-variance ratio, dimensionless fraction summing to 1; printed as R code pca_fit_r$sdev^2 / sum(pca_fit_r$sdev^2) (p. 301) and Python explained_variance_ratio_ (pp. 294, 301). p = 8 features. PCA computed via full SVD (svd_solver='full', p. 293) / prcomp(); components are eigenvector-based with arbitrary sign (WARNING p. 299). k-means: partition into k clusters by nearest centroid (p. 308); k=6, seed 1234 (Python scipy kmeans, p. 308) / set.seed(123), iter.max=10 (R, p. 312).",
+   "assumptions": "As printed: features possess collinearity - 'predictors conceptually contain duplicative information and are numerically correlated' (p. 277); missing values imputed first by k-nearest neighbors (k=10; only players with recorded height and weight imputed, pp. 290-291); inputs scaled to mean 0, standard deviation 1 before PCA so units and magnitudes no longer matter (p. 297); PCs are linearly independent rotations ordered by variance (pp. 277, 294-296); k-means requires choosing k and a random seed, and multiple iterations (pp. 308, 312).",
+   "breakdown_regime": "Unscaled PCA is a units artifact: raw height+weight puts 99.8% of variance on PC1 (p. 294) because pounds and inches have vastly different scales (p. 297). Eigenvector signs are arbitrary - Python and R outputs are mirror images (pp. 299, 303). Python and R imputation methods give slightly different results (pp. 293, 300). Cluster IDs are seed-dependent and NOT comparable across clustering regimes (pp. 310, 314). Combine data is heavily missing (e.g. 3,126 NAs in 3Cone of 7,999 rows, p. 281) and top prospects increasingly skip testing (p. 276), so clusters describe measured players, not the full population.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: single combine measurement (one drill time / jump distance)",
+    "tau_1: one player's standardized 8-feature vector",
+    "tau_2: draft-class cohort clustering (2000-2023 pool, 7,999 players)",
+    "tau_3: positional evolution across eras (position groups change over time, p. 277)"
+   ],
+   "empirical_calibration": "7,999 combine players 2000-2023 (p. 279); raw Ht/Wt PC1 = 99.83% variance (p. 294); scaled 8-feature explained variance [5.60561713, 0.83096684, 0.62448842, 0.37527929, 0.21709371, 0.13913206, 0.12108346, 0.08633909] (p. 300), percentages [70.07, 10.39, 7.81, 4.69, 2.71, 1.74, 1.51, 1.08] (p. 301); PC1 loadings 40yd -0.709435, Wt 0.506953 (pp. 298-299); k=6 clusters recover linemen / skill / QB-heavy groups (pp. 311-314).",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Collinearity-collapse and archetype discovery for the 22-player system: before clustering players into archetypes used for matchup slicing and deception detection, redundant tracking/combine channels are standardized and rotated into independent components ordered by explained variance; cluster-conditional tendency tables then feed the Coach-Mind sim. The scale-first rule is a hard constraint: any mixed-unit feature panel must be z-scored before rotation or the highest-variance unit hijacks PC1.",
+    "source_operator": "p5",
+    "telemetry": "Explained-variance spectrum logged per fit (70.07/10.39/... template); sign-invariant component comparison across implementations; cluster stability across seeds (k=6, seeds 1234/123) and position-cluster purity tables; missingness census per channel before imputation."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "This extraction treats Eager and Erickson's Football Analytics with Python & R (O'Reilly, August 2023, 488 pages) as a methods monograph whose sovereign content is a chain of statistical kernels - stability correlation, expectation residuals, generalized linear models, Poisson count processes, and eigen-decomposition-based dimensionality reduction - each demonstrated on nflfastR play-by-play data from 2016 through 2022. The full text layer was dumped page by page (488 pages; only the cover page is empty), the front matter was scanned for retraction markers with zero hits, and every quoted sentence in this artifact was verified as an exact substring of the whitespace-normalized source before commit. The one typeset equation that matters, the Poisson probability mass function on page 205, is rendered as an image whose text layer is garbled ('eλλx x!'); I rendered the page at 150 dpi and transcribed the fraction e^{-lambda} lambda^x / x! visually rather than trusting the corrupted extraction. That decision is itself an instance of the book's own epistemology: assume your code is wrong until you have convinced yourself it is correct (page 82). The organizing invariant of the book is stability: a metric deserves trust only to the extent that it repeats across a predetermined time frame, measured by the year-over-year Pearson correlation. The empirical spine is the short-versus-deep passing split: with attempt thresholds of 100 short and 30 deep passes, lag-1 YPA correlation is 0.438479 for short passes and 0.233890 for deep passes - roughly a factor of two - across 65 qualified passers and 317 paired season rows. The book's canonical scar is Matt Ryan's deep YPA trajectory of 17.7 (MVP 2016), 8.5 (2017), 13.5 (2018): the math suggests statistical variability, not ability change, and the authors explicitly label such profiles regression candidates. I extract this as primitive p1 because it is the gate that every downstream metric must pass, and because the book is honest that the stability threshold itself is era- and context-specific rather than a universal constant. The second kernel is the expectation-residual construction: build E[y | context], then measure the player by y minus E[y | context]. The book traces this lineage honestly - Virgil Carter's 1971 expected-point paper, Carroll/Palmer/Thorn's 1988 Hidden Game of Football, Brian Burke's 2007 EPA and win-probability work, the Carnegie Mellon nflscrapR trio, then nflfastR and nfl_data_py - and notes the same operator transcends football as soccer xG and basketball shot quality. The worked simple-regression instance is rushing_yards ~ 1 + ydstogo with intercept 3.2188 and slope 0.1329 on 92,425 runs, R-squared 0.007; the residual becomes RYOE, whose year-over-year correlation (0.348923) barely beats raw yards per carry (0.32261). The honest reading, which the authors themselves state, is that this tiny stability gain does not settle whether running backs matter; it merely shows the play-context channel was real and removable. Primitive p2 carries both the operator and its validation gate: a new metric must be more stable than the raw metric it replaces, or the work was in vain. The third and fourth kernels are the GLM family. For bounded binary outcomes the book rejects OLS - completion percentage lives in [0,1] and a linear response can leave that interval - and introduces the link function that maps probability onto the whole real line, with logit as the canonical choice. The fitted complete_pass ~ air_yards model (binomial family, logit link, IRLS, 131,606 passes) gives intercept 1.0720 and air-yard coefficient -0.0573, an odds ratio of 0.944 per additional yard. CPOE is then the response-scale residual complete_pass minus exp_completion, and the book's warning that predict() defaults to the link scale is a genuine unit-integrity trap: subtracting log-odds from a 0/1 outcome is dimensionally incoherent. Stability again adjudicates: CPOE r = 0.464974 versus completion r = 0.445465, but expected completion itself is the most stable channel at r = 0.473959 - the 'context' is partly the quarterback. That endogeneity critique (the QB chooses the target, moves defenders with his eyes, and decides whether to take the sack; Burrow's 51 sacks in 2021) is the book's deepest insight and the seed of my cross-layer veto. For counts, the Poisson kernel with its two printed assumptions (equal probability; independence from time since last event) is fitted as a log-link GLM on 3,297 quarterback-weeks, and the authors honestly report the fit defect: Poisson overestimates one-TD games and underestimates the zero and two-plus tails, recommending negative binomial or quasi-Poisson for overdispersion. I also flag a doctrine conflict: the book's pass_td_rate + total_line specification ingests a sportsbook market total as a feature. Under held-out-discipline that input is banned for GSE; the durable kernel survives only with total_line replaced by an internal pace-and-efficiency total estimate. Finally, page 190's odds-ratio arithmetic is typeset-corrupted ('2.92 x 2020', 'probability ... is 85'); I refuse it as a calibration source while keeping the intact log-odds code definitions on pages 190-191. The fifth kernel is scale-first PCA plus k-means. Raw height and weight put 99.8 percent of variance on PC1 - a units artifact, not biology - so the book standardizes to mean zero, unit standard deviation before rotating; on the eight scaled combine features the explained-variance spectrum is 70.07, 10.39, 7.81, 4.69, 2.71, 1.74, 1.51, 1.08 percent, PC1 loads negatively on 40-yard dash (-0.709) and positively on weight (0.507), and k-means with six centers recovers interpretable position groups. The eigenvector sign ambiguity and seed-dependent cluster labels are printed caveats I preserve as breakdown regimes: cluster IDs are not comparable across runs, and the Python/R imputation divergence is a reproducibility warning, not a contradiction. Across all five primitives the Layer-2 bindings are explicit isomorphisms or derived kernels into the 22-player simulation with named telemetry: stability gating of features, residual grading with endogeneity audit, link-scale discipline for bounded probabilities, dispersion-checked count kernels with odds-free rates, and archetype clustering for deception detection. Nothing here fabricates a football origin for a theorem: Galton's 1877 regression-to-mean (page 94) and the eigenvalue machinery (page 299) are cited as the general mathematics they are, and the football content is the book's genuine empirical application, not a retrofitted genesis. The artifact therefore compiles into both institutes: GSE receives the simulation kernels and their vetoes; GSI receives the measurement-integrity isomorphisms for count telemetry, biomarker reliability, and mixed-unit panel orthogonalization.",
+   "retrocausal_genealogy": "The hidden state of this book was created by a specific lineage of scars. Galton's 1877 observation that extreme observations regress to the mean (page 94) is the mathematical ancestor of every stability check in the book. Tukey's exploratory data analysis program (pages 48-50) supplies the plot-before-model discipline. On the football side, Virgil Carter's 1971 operations-research paper invented the expected point (page 25); Carroll, Palmer and Thorn's 1988 Hidden Game of Football extended it; Brian Burke's 2007 EPA and win-probability models operationalized it; the CMU trio Yurko, Ventura and Horowitz built nflscrapR, Baldwin and Carl spun off nflfastR, and Cooper Adams cloned it into Python (pages 26-27). The 2020 Big Data Bowl tracking-data challenge produced RYOE (page 95), and Hermsmeyer's air-yards work produced CPOE (page 30). The empirical scars that forced the stability-first doctrine are printed: Sam Bradford's 2016 completion record built on 6.6-yard aDOT (pages 93, 165), Alex Smith's 2017 deep-YPA spike and 2018 disappearance (page 90), and Le'Veon Bell's replacement by James Conner (page 158). Each is a case where raw production misled decision-makers, and each explains why the authors gate every metric on repeatability before attribution.",
+   "theory_of_mind": "Recursive belief clash under pressure: the analytics community believes running backs are replaceable (pages 29-30, 158), while a traditionalist front office believes volume and toughness are earned signal - Gettleman's typewriter mime after the Barkley pick (page 30) is the public surface of that clash. Inside the play, the quarterback models the defense modeling him: he chooses which separation to throw into, moves safeties with his eyes (Stafford's no-look Super Bowl LVI pass, page 188), and decides whether to escape pressure or absorb the sack - Burrow led the league in YPA and completion in 2021 while taking 51 sacks (page 188). The residual-metric analyst, one level up, assumes the quarterback is a passive recipient of context; the quarterback knows he manufactures part of that context. A correct GSE model must therefore represent second-order beliefs: the defender's anticipation of the QB's manipulation, and the QB's anticipation of that anticipation, because the 'exogenous' features in any expectation model are endogenous at the level of the player being graded.",
+   "cross_layer_veto": "Cross-layer veto adjudication: (1) Psychology/endogeneity vetoes naive residual attribution - CPOE strips out context the quarterback partly creates (target choice, eye manipulation, sack avoidance, pages 187-188), so a high-EV 'buy' on a CPOE spike is vetoed unless the expectation model's features are audited for player control; expected completion being the most stable channel (r=0.473959) is the quantitative evidence. (2) Game-state feedback vetoes the Poisson independence assumption (page 205): scoring changes defensive behavior, so count kernels must carry a dispersion check and switch to negative binomial when var/mean exceeds 1, protecting the zero and two-plus tails the Poisson misprices (page 208). (3) The linear expectation is vetoed outside 15-95-yard runs by its own diagnostics (pages 160-162). (4) Doctrine vetoes the book's total_line sportsbook feature outright - no market-derived input may enter any GSE rate. (5) Source-integrity veto: the typeset-corrupted odds-ratio example on page 190 is refused as calibration data. (6) Measurement physics vetoes unscaled PCA: the 99.8 percent PC1 of raw height/weight is a units artifact, so any mixed-unit panel must be standardized before rotation."
+  }
+ ],
+ "universal_lens": "A polymath measurement-integrity lens: every metric is signal plus context plus noise, and the audit order is fixed - separate them with lag-1 stability before trusting, with expectation residuals before attributing, with link functions before bounding, with dispersion checks before counting, and with scale-first orthogonalization before clustering. The book's recurring scar (raw numbers that flatter the wrong player: Bradford's completion record, Smith's deep-YPA spike, Bell's replaceability) is the universal trigger: whenever a headline metric moves, ask which channel carried the move and whether that channel is stable across time and regimes.",
+ "gsi_mapping": "Isomorphisms into GSI's measurement domains, all labeled as derived bindings rather than claims about the book: the Poisson count kernel maps to discrete event counts in fixed physiological windows (vesicle-release events, spike counts), with the independence assumption vetoed by refractory periods exactly as game-state feedback vetoes it in football, and the var/mean dispersion diagnostic is the same overdispersion check used on clinical-telemetry burst counts. PCA's scale-first discipline is the audit rule for mixed-unit bioenergetic and axonal-shear feature panels: an unscaled high-variance channel hijacks the composite, reproducing the 99.8 percent weight-height artifact. Lag-1 stability correlation is the test-retest reliability gate a biomarker must pass before entering any clinical decision rule, and the logit link is the bounded-probability discipline for risk scores that must stay in [0,1].",
+ "gse_mapping": "For the Coach-Mind sim: gate every imported feature on lag-1 stability (p1); build context-adjusted grades as expectation residuals with the stability validation gate (p2); model binary events with logit-linked GLMs and response-scale residuals (p3); model low-frequency counts with Poisson/negative-binomial kernels whose rates come only from internal features - the book's total_line sportsbook input is explicitly banned (p4); cluster player and defensive archetypes with scale-first PCA plus k-means for deception detection and cluster-conditional tendencies (p5). DFS/portfolio tail risk: the printed Poisson defect (underestimated zero and two-plus TD tails, page 208) is the exact failure mode that burns naive count-based portfolios; the dispersion trigger and family switch are the hedge."
+}

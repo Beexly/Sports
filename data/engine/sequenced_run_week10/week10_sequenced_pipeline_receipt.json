@@ -1,0 +1,157 @@
+{
+  "schema": "gse-permanent-sequenced-pipeline-receipt-v1",
+  "season": 2026,
+  "resolved_week": 10,
+  "season_type": "REG",
+  "mode": "dry-run-audit",
+  "gate_order_executed": [
+    "Gate_0A_Live_32Team_ESPN_And_Stage0_Unification",
+    "Gate_0B_Bitemporal_CSV_And_Lessons_Learned_12Gates",
+    "Gate_1_Coaching_Weather_Circadian_FoundryRO",
+    "Gate_2_Situational_Overlay_80Rules_CognitiveRouter",
+    "Gate_3_Fence1_LineFree_Trajectory_Sim_Check",
+    "Gate_4_Conformal_Calibration_And_RLVR_Bridge",
+    "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards"
+  ],
+  "all_gates_passed": true,
+  "final_receipt_sha256": "d0364a131b0e47b085f5d6c0d3549f4f287eaaf588aa7123c020877548cdc568",
+  "gates": {
+    "Gate_0A_Live_32Team_ESPN_And_Stage0_Unification": {
+      "gate": "Gate_0A_Live_32Team_ESPN_And_Stage0_Unification",
+      "passed": true,
+      "parent_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "payload": {
+        "unified_truth_path": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\data\\engine\\week10_unified_stage0_truth.json",
+        "teams_covered": 32,
+        "events_count": 14,
+        "scoreboard_source": "live_espn_api"
+      },
+      "timestamp_utc": "2026-11-14T03:11:47.276377+00:00",
+      "receipt_sha256": "5212d33b87470503622c80b37cc67ff14a38434fc37048faff7a978e1382737d"
+    },
+    "Gate_0B_Bitemporal_CSV_And_Lessons_Learned_12Gates": {
+      "gate": "Gate_0B_Bitemporal_CSV_And_Lessons_Learned_12Gates",
+      "passed": true,
+      "parent_sha256": "5212d33b87470503622c80b37cc67ff14a38434fc37048faff7a978e1382737d",
+      "payload": {
+        "lessons_total": 12,
+        "lessons_passed": 12,
+        "failed_lessons": [],
+        "sample_bitemporal_remap": {
+          "player": "Greg Dortch",
+          "team": "ARI",
+          "earned_team": "ARI",
+          "active_week_team": "BUF",
+          "week": 10,
+          "remapped": true
+        }
+      },
+      "timestamp_utc": "2026-11-14T03:11:47.577627+00:00",
+      "receipt_sha256": "5caf1fd47edc3a593f36e2776cace72e6d6ca39b9613a26a676ebbd728643689"
+    },
+    "Gate_1_Coaching_Weather_Circadian_FoundryRO": {
+      "gate": "Gate_1_Coaching_Weather_Circadian_FoundryRO",
+      "passed": true,
+      "parent_sha256": "5caf1fd47edc3a593f36e2776cace72e6d6ca39b9613a26a676ebbd728643689",
+      "payload": {
+        "coaching_python_files_count": 59,
+        "foundry_db_readonly_ok": true,
+        "foundry_complete_books_observed": null,
+        "munich_venue_override": {
+          "matchup": "NE@DET",
+          "espn_event_id": "401873053",
+          "kickoff_utc": "2026-11-15T14:30Z",
+          "status": "STATUS_SCHEDULED",
+          "venue": "FC Bayern Munich Stadium",
+          "city": "Munich",
+          "state": null,
+          "country": "Germany",
+          "is_indoor": false,
+          "neutral_site": true,
+          "circadian_travel_hours": 6,
+          "surface": "grass"
+        },
+        "atlanta_venue_override": {
+          "matchup": "KC@ATL",
+          "espn_event_id": "401873058",
+          "kickoff_utc": "2026-11-15T18:00Z",
+          "status": "STATUS_SCHEDULED",
+          "venue": "Mercedes-Benz Stadium",
+          "city": "Atlanta",
+          "state": "GA",
+          "country": "USA",
+          "is_indoor": true,
+          "neutral_site": false,
+          "roof": "closed_roof",
+          "outdoor_weather_suppressed": true
+        }
+      },
+      "timestamp_utc": "2026-11-14T03:11:47.596895+00:00",
+      "receipt_sha256": "81fb8dce8e42725d288de8a28daa9ef40238efebff34fcdabe59cb4f536402b8"
+    },
+    "Gate_2_Situational_Overlay_80Rules_CognitiveRouter": {
+      "gate": "Gate_2_Situational_Overlay_80Rules_CognitiveRouter",
+      "passed": true,
+      "parent_sha256": "81fb8dce8e42725d288de8a28daa9ef40238efebff34fcdabe59cb4f536402b8",
+      "payload": {
+        "x_situational_80_rules_exists": true,
+        "master_situational_aggregator_exists": true,
+        "mcp_cognitive_router_exists": true
+      },
+      "timestamp_utc": "2026-11-14T03:11:47.597410+00:00",
+      "receipt_sha256": "e4cdd3b1627bc1270d1b940008bf01718de5d32c19913365235189c64e74b57b"
+    },
+    "Gate_3_Fence1_LineFree_Trajectory_Sim_Check": {
+      "gate": "Gate_3_Fence1_LineFree_Trajectory_Sim_Check",
+      "passed": true,
+      "parent_sha256": "e4cdd3b1627bc1270d1b940008bf01718de5d32c19913365235189c64e74b57b",
+      "payload": {
+        "week": 10,
+        "line_free_games_verified": 13,
+        "stage0_eligible_target_violations": 0
+      },
+      "timestamp_utc": "2026-11-14T03:11:47.600608+00:00",
+      "receipt_sha256": "1450e4c21d15ea8826fdf2567f60cbd25be7dd8f7998e184e5cbada5444e1d3e"
+    },
+    "Gate_4_Conformal_Calibration_And_RLVR_Bridge": {
+      "gate": "Gate_4_Conformal_Calibration_And_RLVR_Bridge",
+      "passed": true,
+      "parent_sha256": "1450e4c21d15ea8826fdf2567f60cbd25be7dd8f7998e184e5cbada5444e1d3e",
+      "payload": {
+        "calibration_heads_present": true,
+        "rlvr_scenarios_verified": 18,
+        "rlvr_all_passed": true,
+        "bridge_smoke_approved": true
+      },
+      "timestamp_utc": "2026-11-14T03:11:47.636241+00:00",
+      "receipt_sha256": "5d87d98971a4ae20e33a994f2689c8d9808c63215ed7f66b84d8282305c64fdc"
+    },
+    "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards": {
+      "gate": "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards",
+      "passed": true,
+      "parent_sha256": "5d87d98971a4ae20e33a994f2689c8d9808c63215ed7f66b84d8282305c64fdc",
+      "payload": {
+        "js_and_dossier_guards_executed": true,
+        "guard_runs": [
+          {
+            "command": "node scripts/trust-gate.mjs",
+            "returncode": 0,
+            "stdout_tail": "[trust-gate] OK - scanned 4785 file(s); no banned phrases.\n"
+          },
+          {
+            "command": "node apps/mobile/scripts/lint-rules.js",
+            "returncode": 0,
+            "stdout_tail": "lint-rules: 48 files scanned\ntype tokens 20 \u00b7 colour tokens 22\nviolations 0\n\n\n"
+          },
+          {
+            "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe scripts/guardrails/connected-workflow-dossier-guard.py",
+            "returncode": 0,
+            "stdout_tail": "  PASS  connected-workflow-dossier-guard \u2014 cryptographic Stage 0..5 receipt & zero-contamination verified\n"
+          }
+        ]
+      },
+      "timestamp_utc": "2026-11-14T03:12:37.587061+00:00",
+      "receipt_sha256": "d0364a131b0e47b085f5d6c0d3549f4f287eaaf588aa7123c020877548cdc568"
+    }
+  }
+}

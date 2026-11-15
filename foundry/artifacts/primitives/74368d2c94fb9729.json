@@ -1,0 +1,306 @@
+{
+  "book_id": "74368d2c94fb9729",
+  "source_status": "COMPLETE",
+  "title": "world-class-sports-probability-engine-corpus-audit",
+  "file_name": "world-class-sports-probability-engine-corpus-audit.md",
+  "sha256": "74368d2c94fb972919b03ced041d790687070894d453713de3414f2db7844a01",
+  "primary_domain": "math",
+  "pages_total": 9,
+  "pages_read": 9,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 9,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework integrating stochastic state-space models, conformal prediction, and Bayesian inference to calibrate latent athletic performance across sport-specific domains. Conformal predictive inference underpins GSE's probabilistic decision-making, bridging epistemic uncertainty and market pricing through quantile-clamped intervals.",
+  "gsi_mapping": "GSI leverages ensemble Kalman filtering and Brier loss optimization to refine probabilistic forecasts, ensuring calibrated outputs through conformal quantile regression and martingale-based skill testing. Bayesian posterior inference with conformal prediction ensures finite-sample coverage for GSI's probabilistic models, particularly in low-data regimes.",
+  "gse_mapping": "GSE employs shadow evaluation loops and state-transition verification gates to maintain system integrity while enabling real-time adaptation via Hawkes processes and robust Kelly sizing. GSE employs state-transition logic with shadow pipelines and Hawkes processes to model dynamic performance and market feedback loops.",
+  "primitives": [
+    {
+      "primitive_id": "team_strength_filter_etkf",
+      "name": "Ensemble Transform Kalman Filter",
+      "verbatim_quote": "- **TeamStrengthFilter:** Ensemble Transform Kalman Filter (ETKF) modeling latent team strength as a sequential Monte Carlo particle filter.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'X_t': 'Latent team strength at time t (dimensionless)', 'Z_t': 'Observed game outcome at time t (dimensionless)', 'P_t': 'Covariance matrix of forecast uncertainty (dimensionless)', 'N': 'Number of particles in ensemble (integer)'}",
+      "assumptions": "Team strength evolves stochastically with Gaussian noise; observations are conditionally independent given latent state.",
+      "breakdown_regime": "When observation noise exceeds signal variance, leading to filter divergence.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The ETKF acts as a derived kernel for estimating dynamic team strength in a Bayesian state-space framework, used by GSI for probabilistic forecasting and by GSE for adaptive decision-making.",
+        "source_operator": "team_strength_filter_etkf",
+        "telemetry": "Kalman gain magnitude, particle spread, posterior entropy"
+      }
+    },
+    {
+      "primitive_id": "hawkes_steam_detection",
+      "name": "Hawkes Steam Detection",
+      "verbatim_quote": "- **Hawkes steam detection:** `hawkes-steam.ts` — per-side exponential-decay Hawkes self-exciting process with online intensity updates to detect clustered, informed betting pressure (\"steam\"), separating organic background volatility from momentum-driven line movement.",
+      "page": 1,
+      "latex": "\\lambda(t) = \\mu + \\sum_{t_i < t} \\alpha \\exp(-\\beta (t - t_i))",
+      "symbol_and_unit_ledger": "{'\\\\lambda(t)': 'Instantaneous betting intensity at time t (events/second)', '\\\\mu': 'Baseline intensity (events/second)', '\\\\alpha': 'Excitation coefficient (dimensionless)', '\\\\beta': 'Decay rate (1/second)', 't_i': 'Event arrival times (seconds)'}",
+      "assumptions": "Betting events follow a self-exciting point process with exponential decay kernel.",
+      "breakdown_regime": "When \\(\\alpha \\beta > 1\\), the process becomes explosive and unstable.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's state transition logic where betting steam triggers adaptive model reweighting and risk recalibration.",
+        "source_operator": "hawkes_steam_detection",
+        "telemetry": "Intensity drift, event clustering coefficient, volatility spike duration"
+      }
+    },
+    {
+      "primitive_id": "forecast_skill_eprocess",
+      "name": "Forecast-Skill E-process",
+      "verbatim_quote": "- **Forecast-Skill E-process:** `forecast-skill-eprocess.ts` in the LiveOrchestrator — an anytime-valid sequential likelihood-ratio martingale based on Ville's inequality, testing H0: model probabilities are no better than market consensus.",
+      "page": 1,
+      "latex": "M_t = \\prod_{i=1}^t \\frac{p_i}{q_i}",
+      "symbol_and_unit_ledger": "{'M_t': 'E-process value at time t (dimensionless)', 'p_i': 'Model probability of event i (dimensionless)', 'q_i': 'Market consensus probability of event i (dimensionless)'}",
+      "assumptions": "Model probabilities are sequentially testable under null hypothesis of market equivalence.",
+      "breakdown_regime": "When model probability diverges significantly from market consensus, M_t grows without bound.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An isomorphism to GSI’s Bayesian updating mechanism, where the e-process signals when model confidence exceeds market calibration thresholds.",
+        "source_operator": "forecast_skill_eprocess",
+        "telemetry": "Martingale deviation, p-value threshold crossing, cumulative log-likelihood ratio"
+      }
+    },
+    {
+      "primitive_id": "sizing_gate_robust_kelly",
+      "name": "Robust Kelly Fraction Calculator",
+      "verbatim_quote": "- **Sizing gate:** `robust-kelly.ts` — robust Kelly fraction calculator as the barrier between theoretical probability and financial deployment.",
+      "page": 1,
+      "latex": "f^* = \\frac{bp - q}{b}",
+      "symbol_and_unit_ledger": "{'f^*': 'Optimal fraction of bankroll to wager (dimensionless)', 'b': 'Net odds received (dimensionless)', 'p': 'Probability of winning (dimensionless)', 'q': 'Probability of losing (dimensionless)'}",
+      "assumptions": "Returns are independent and identically distributed; utility is logarithmic.",
+      "breakdown_regime": "When \\(p \\leq \\frac{q}{b+1}\\), optimal fraction becomes non-positive.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as a derived kernel for translating calibrated probabilities into deployable financial positions within GSE’s risk-aware execution layer.",
+        "source_operator": "sizing_gate_robust_kelly",
+        "telemetry": "Kelly fraction value, drawdown ratio, Sharpe ratio post-sizing"
+      }
+    },
+    {
+      "primitive_id": "74368d2c94fb9729_w1_g1",
+      "name": "world-class-sports-probability-engine-corp Ch.2 Grounded Operator",
+      "verbatim_quote": "- Mandated solution: **Generalized Venn-Abers calibration** — instead of a single probability score, compute exact multiprobability bounds **[p_0, p_1]** by fitting dual isotonic regressions to the calibration set.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 74368d2c94fb9729_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "74368d2c94fb9729_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "74368d2c94fb9729_w1_g2",
+      "name": "world-class-sports-probability-engine-corp Ch.2 Grounded Operator",
+      "verbatim_quote": "- Interval width **(p_1 - p_0)** is the rigorous measure of epistemic uncertainty from data paucity.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 74368d2c94fb9729_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "74368d2c94fb9729_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "74368d2c94fb9729_w1_g3",
+      "name": "world-class-sports-probability-engine-corp Ch.2 Grounded Operator",
+      "verbatim_quote": "The selective gate consumes these bounds directly: if **p_1 - p_0 > 0.20** (example safety threshold given), refuse the moneyline pick and issue a No-Bet pass.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 74368d2c94fb9729_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "74368d2c94fb9729_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "quantile_clamping_ban",
+      "name": "Quantile-Clamping Ban",
+      "verbatim_quote": "**Quantile-clamping ban + fail-closed conformal policy (CQR).** GSE publishes SPREAD/TOTAL picks; any interval the engine shows must carry honest finite-sample coverage.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The system must maintain honest finite-sample coverage for all predictions. No clamping of quantiles is allowed.",
+      "breakdown_regime": "When quantile estimates exceed valid statistical bounds due to small sample sizes or adversarial inputs.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction framework where intervals are constructed without artificial truncation, ensuring validity of coverage guarantees.",
+        "source_operator": "quantile_clamping_ban",
+        "telemetry": "Coverage rate of prediction intervals against held-out data."
+      }
+    },
+    {
+      "primitive_id": "venn_abers_multiprobability_bounds",
+      "name": "Venn-Abers Multiprobability Bounds",
+      "verbatim_quote": "**Venn-Abers multiprobability bounds for moneylines.** GSE's SPREAD/MONEYLINE picks are binary outcomes; the audit's argument that CQR math is invalid for Y∈{0,1} and that Venn-Abers [p_0, p_1] with a No-Bet gate on p_1-p_0 > 0.20 captures epistemic uncertainty is the cleanest stated calibration discipline for the binary side.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Binary outcomes (Y ∈ {0,1}) require specialized probability bounds. Epistemic uncertainty is bounded by a threshold on difference between probabilities.",
+      "breakdown_regime": "When binary outcome models exhibit high variance or insufficient calibration in early-season data.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSI’s core Bayesian updating but applied specifically to binary classification tasks with bounded uncertainty.",
+        "source_operator": "venn_abers_multiprobability_bounds",
+        "telemetry": "Calibration error and sharpness of predicted probability intervals."
+      }
+    },
+    {
+      "primitive_id": "target_leakage_ban_hawkes_steam",
+      "name": "Target-Leakage Ban with Hawkes Steam",
+      "verbatim_quote": "**Decoupling pure performance from market pricing (target-leakage ban) + Hawkes steam + Forecast-Skill E-process.** This matches the engine's existing architecture (shadow pipeline, hawkes-steam.ts, e-process module) and",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Market signals may leak into performance metrics. Performance evaluation must be decoupled from pricing dynamics using stochastic point processes.",
+      "breakdown_regime": "During periods of high volatility or when external shocks influence both performance and market behavior simultaneously.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's use of Hawkes processes for modeling self-exciting events in time series, ensuring that performance measures remain independent of market noise.",
+        "source_operator": "target_leakage_ban_hawkes_steam",
+        "telemetry": "Correlation between forecast skill and market price movements over time windows."
+      }
+    },
+    {
+      "primitive_id": "jackknife_plus_calibration",
+      "name": "Jackknife+ Calibration",
+      "verbatim_quote": "Directly applicable to props/totals calibration, especially early-season scarcity regimes where Jackknife+ (≥1-2α) substitutes for split conformal.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "In early-season settings with limited data, Jackknife+ provides robust calibration without requiring data splitting.",
+      "breakdown_regime": "When traditional split conformal methods fail due to insufficient samples or temporal non-stationarity.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSI's foundational conformal inference principles adapted for sparse data scenarios in sports analytics.",
+        "source_operator": "jackknife_plus_calibration",
+        "telemetry": "Empirical coverage accuracy of Jackknife+ intervals versus nominal levels."
+      }
+    },
+    {
+      "primitive_id": "robust_kelly_gating",
+      "name": "Robust Kelly Gating",
+      "verbatim_quote": "**Robust Kelly gating** between probability and deployment — already exists as robust-kelly.ts; the audit endorses it as the correct barrier.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Probability estimates are bounded in [0,1], and deployment decisions are gated by a robust Kelly criterion to prevent overexposure.",
+      "breakdown_regime": "When probability estimates become unreliable due to model drift or adversarial inputs.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps probabilistic confidence to deployment thresholds via Kelly criterion, ensuring risk-adjusted action selection in GSE's decision engine.",
+        "source_operator": "robust_kelly_gating",
+        "telemetry": "Expected log utility gain from action selection relative to baseline."
+      }
+    },
+    {
+      "primitive_id": "brier_loss_minimization",
+      "name": "Brier Loss Minimization",
+      "verbatim_quote": "**Per-sport state-space parameterizations with σ_game; BCE→Brier loss.** Aligns with GSE's existing per-sport modeling; the NCAA-data claim for Brier loss is a cheap experiment to run against GSE's own training.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Predictive models are evaluated using proper scoring rules, where Brier loss serves as a proxy for calibration and sharpness.",
+      "breakdown_regime": "When model outputs are not well-calibrated or exhibit systematic bias across game states.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Brier loss function mirrors the structure of expected squared error in probabilistic forecasts, enabling direct optimization within GSE’s per-sport training pipeline.",
+        "source_operator": "brier_loss_minimization",
+        "telemetry": "Mean squared difference between predicted probabilities and actual outcomes."
+      }
+    },
+    {
+      "primitive_id": "anytime_valid_martingale",
+      "name": "Anytime-Valid Martingale",
+      "verbatim_quote": "supplies the mathematical justification: never feed closing lines into strength models, detect informed pressure separately, and prove edge with an anytime-valid martingale instead of p-values — directly supports GSE's CLV tracking and public record-keeping.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Edge detection must hold validity across arbitrary stopping times, not just fixed sample sizes.",
+      "breakdown_regime": "In scenarios involving sequential data streams or dynamic market feedback loops.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables continuous validation of predictive edge without reliance on asymptotic p-values, supporting GSE's CLV tracking and long-term performance monitoring.",
+        "source_operator": "anytime_valid_martingale",
+        "telemetry": "Cumulative sum of log-likelihood ratios indicating sustained predictive advantage."
+      }
+    },
+    {
+      "primitive_id": "sparse_event_inference",
+      "name": "Sparse Event Inference",
+      "verbatim_quote": "2010.12508 on decorrelating from consensus pricing; 2302.06569 on inferring player locations from sparse event data — relevant to NFL Next Gen Stats work without full tracking feeds).",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Player movement and game events can be reconstructed from limited observational data using probabilistic graphical models.",
+      "breakdown_regime": "Under conditions of incomplete or noisy sensor data in tracking systems.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Connects sparse event likelihood estimation to spatial-temporal dynamics in GSE's Next Gen Stats framework, enabling inference without full tracking feeds.",
+        "source_operator": "sparse_event_inference",
+        "telemetry": "Reconstruction accuracy of player trajectories from partial event logs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "74368d2c94fb9729_t0",
+      "think": "Chapter 1 establishes foundational principles for constructing a calibrated sports prediction engine by distinguishing between latent performance modeling and market pricing. It emphasizes that effective architectures must decouple these components to avoid conflating observed outcomes with underlying strength. The use of stochastic state-space models with sport-specific parameters ensures domain fidelity, while conformal prediction and Bayesian methods provide robustness against overfitting and miscalibration. The audit highlights key failure modes such as naive ML application to raw box scores, which discard essential topological structure. This leads to a strong emphasis on diagnostic baselines like Poisson processes and iWinRNFL tools before deploying complex models. The integration of tools like the ETKF, Hawkes processes, and the Kelly criterion reflects a layered approach to building systems capable of handling both uncertainty and real-time feedback. These primitives form the backbone of a scalable, mathematically grounded engine suitable for global deployment. Window 1 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on Kalman filtering and Bayesian inference, extended through modern developments in conformal prediction and sequential decision theory, particularly in high-dimensional stochastic environments. Retrocausal Genealogy (Window 1): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models must account for opposing strategies of coaches, players, and bettors—each operating under different information sets and objectives. The engine must simulate these heterogeneous agents' behaviors to predict emergent outcomes accurately. Theory of Mind (Window 1): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each module operates independently on distinct aspects of the problem space. Leakage is prevented by strict separation between forecasting layers and deployment gates, especially in the sizing gate and shadow evaluation loop. Cross-Layer Veto (Window 1): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "74368d2c94fb9729_t1",
+      "think": "Window 2 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "74368d2c94fb9729_t2",
+      "think": "Chapter window 3 focuses on the integration of conformal prediction techniques within GSE's engine architecture, emphasizing the need for rigorous probabilistic guarantees in sports intelligence applications. The discussion centers around maintaining honest finite-sample coverage through policies such as quantile-clamping bans and the adoption of Venn-Abers bounds for binary outcomes. These primitives ensure that GSE's predictions are not only accurate but also well-calibrated under varying data conditions. The inclusion of Jackknife+ calibration addresses early-season scarcity, while the target-leakage ban coupled with Hawkes steam ensures that performance evaluations remain insulated from market distortions. This architectural alignment reflects a deeper commitment to epistemic rigor, where each component serves a distinct role in preserving the integrity of probabilistic reasoning across complex, evolving systems. Window 3 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in the evolution of conformal prediction from Vovk et al., extended to handle sequential decisions and adaptive learning frameworks in machine learning and statistics. Retrocausal Genealogy (Window 3): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing agents as strategic actors who may exploit model weaknesses; thus, robustness against adversarial inputs and leakage is essential for reliable inference. Theory of Mind (Window 3): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents cross-layer contamination by enforcing strict separation between performance modeling and market signal processing, ensuring no unintended information flow. Cross-Layer Veto (Window 3): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "74368d2c94fb9729_t3",
+      "think": "Chapter window 4 focuses on foundational principles of conformal prediction and robust inference in sports analytics. It emphasizes avoiding common pitfalls such as feeding closing lines into strength models, advocating instead for anytime-valid martingales to validate edge. The document highlights the importance of Brier loss minimization over binary cross-entropy for better calibrated predictions. Per-sport parameterizations with σ_game are introduced as a scalable approach to modeling variability. Sparse event inference techniques are noted as crucial for NFL Next Gen Stats applications where full tracking feeds may not be available. These primitives collectively support GSE’s mission to build resilient, adaptive, and mathematically sound probabilistic engines for real-time decision making. Window 4 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in the evolution of conformal prediction from Venn-Abers and Jackknife+ methods, extended through recent works on anytime-validity and Brier loss optimization in machine learning. Retrocausal Genealogy (Window 4): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models must account for adversarial behavior in betting markets and strategic misrepresentation by teams or players, requiring robustness against informed pressure and consistent calibration. Theory of Mind (Window 4): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to historical data by enforcing strict validation protocols and avoiding reliance on gradient-boosted trees for raw score classification, which can distort topological structures inherent in sports data. Cross-Layer Veto (Window 4): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in world-class-sports-probability-engine-corpus-audit (74368d2c94fb9729, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

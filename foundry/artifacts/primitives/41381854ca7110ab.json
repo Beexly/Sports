@@ -1,0 +1,95 @@
+{
+  "book_id": "41381854ca7110ab",
+  "source_status": "COMPLETE",
+  "title": "p0141",
+  "file_name": "p0141.txt",
+  "sha256": "41381854ca7110ab291b6a184d0b7cdfe223815063ad71e249b5f6850eacce6e",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0141 (41381854ca7110ab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0141 (41381854ca7110ab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0141 (41381854ca7110ab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0141 (41381854ca7110ab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0141 (41381854ca7110ab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0141 (41381854ca7110ab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "spatial_hierarchies",
+      "name": "Spatial Hierarchies",
+      "verbatim_quote": "Spatial Direction and Spatial Hierarchies 123 The experiments we have in mind here are some by Yoshioka.\"2 He first ran a group of rats in the maze shown in FiGuRe 41.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Rats navigate using spatial memory and environmental cues.",
+      "breakdown_regime": "Performance degrades when maze complexity exceeds cognitive limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps spatial navigation hierarchies to state-transition graphs in GSE and multi-dimensional feature spaces in GSI.",
+        "source_operator": "spatial_hierarchies",
+        "telemetry": "Choice probability trajectories reveal hierarchical processing."
+      }
+    },
+    {
+      "primitive_id": "forced_choice",
+      "name": "Forced Choice Paradigm",
+      "verbatim_quote": "During a preliminary training period they were forced down both paths an equal number of times by shifting the \"detachable wire door\" (see Ficure) from one side to the other.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Equal exposure prevents bias in initial learning.",
+      "breakdown_regime": "Training imbalance leads to suboptimal discrimination.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives exploration-exploitation tradeoffs in GSE and empirical Bayes priors in GSI.",
+        "source_operator": "forced_choice",
+        "telemetry": "Cumulative exposure curves identify learning saturation."
+      }
+    },
+    {
+      "primitive_id": "discrimination_runs",
+      "name": "Discrimination Runs",
+      "verbatim_quote": "(The cross hatched section labeled \"bridge\" was a rise in the floor of both alleys which hid the further features of these alleys from the choice point.) During the discrimination runs, proper, the wire door was removed and the rats chose freely either path.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Choice without interference measures pure preference.",
+      "breakdown_regime": "Hidden obstacles create perceptual blind spots.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps free-choice scenarios to conformal prediction sets in GSI and optimal policy search in GSE.",
+        "source_operator": "discrimination_runs",
+        "telemetry": "Unrestricted choice reveals latent utility functions."
+      }
+    },
+    {
+      "primitive_id": "triangle_pentagon",
+      "name": "Triangle-Pentagon Discrimination",
+      "verbatim_quote": "It will be observed that the animals were offered a choice between a circumscribed triangle and an inscribed pentagon of the same length.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Equal path length controls for speed differences.",
+      "breakdown_regime": "Length mismatches introduce confounding variables.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps geometric shape discrimination to Fisher information metrics in GSI and feature extraction kernels in GSE.",
+        "source_operator": "triangle_pentagon",
+        "telemetry": "Shape-specific reaction time differentials."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "41381854ca7110ab_t0",
+      "think": "The primitive 'Spatial Hierarchies' captures how organisms process nested spatial structures. In GSI, this maps to hierarchical Bayesian models where posterior distributions over latent states incorporate topological constraints. In GSE, it corresponds to state-transition graphs with recursive partitioning of action spaces. The key failure mode occurs when the agent's internal model lacks sufficient depth to represent the true environmental hierarchy, leading to catastrophic forgetting or misclassification. Forcing equal exposure ('Forced Choice Paradigm') stabilizes initial estimates but can slow convergence if the exploration schedule is too rigid. Free-choice ('Discrimination Runs') introduces non-stationarity, requiring adaptive inference algorithms. Comparing the triangle and pentagon ('Triangle-Pentagon Discrimination') isolates geometric complexity effects; mathematically, this tests whether the VC-dimension of the hypothesis class scales linearly with feature count. Together, these primitives form a minimal testbed for studying generalization beyond i.i.d. sampling, with applications to sequential decision-making under uncertainty.\n\nDeep epistemic analysis for p0141 (41381854ca7110ab, domain=other, pages_read=1/1): Operator 'Spatial Hierarchies' (page 1, domain other) captures: Spatial Direction and Spatial Hierarchies 123 The experiments we have in mind here are some by Yoshioka.\"2 He first ran a group of rats in the maze shown in FiGuRe 41. Assumptions: Rats navigate using spatial memory and environmental cues. Breakdown regime: Performance degrades when maze complexity exceeds cognitive limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps spatial navigation hierarchies to state-transition graphs in GSE and multi-dimensional feature spaces in GSI. Operator 'Forced Choice Paradigm' (page 1, domain other) captures: During a preliminary training period they were forced down both paths an equal number of times by shifting the \"detachable wire door\" (see Ficure) from one side to the other. Assumptions: Equal exposure prevents bias in initial learning. Breakdown regime: Training imbalance leads to suboptimal discrimination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives exploration-exploitation tradeoffs in GSE and empirical Bayes priors in GSI. Operator 'Discrimination Runs' (page 1, domain other) captures: (The cross hatched section labeled \"bridge\" was a rise in the floor of both alleys which hid the further features of these alleys from the choice point.) During the discrimination runs, proper, the wire door was removed and the rats chose freely either path. Assumptions: Choice without interference measures pure preference. Breakdown regime: Hidden obstacles create perceptual blind spots. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps free-choice scenarios to conformal prediction sets in GSI and optimal policy search in GSE. Operator 'Triangle-Pentagon Discrimination' (page 1, domain other) captures: It will be observed that the animals were offered a choice between a circumscribed triangle and an inscribed pentagon of the same length. Assumptions: Equal path length controls for speed differences. Breakdown regime: Length mismatches introduce confounding variables. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps geometric shape discrimination to Fisher information metrics in GSI and feature extraction kernels in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0141 (41381854ca7110ab, domain=other, pages_read=1/1): Operator 'Spatial Hierarchies' (page 1, domain other) captures: Spatial Direction and Spatial Hierarchies 123 The experiments we have in mind here are some by Yoshioka.\"2 He first ran a group of rats in the maze shown in FiGuRe 41. Assumptions: Rats navigate using spatial memory and environmental cues. Breakdown regime: Performance degrades when maze complexity exceeds cognitive limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps spatial navigation hierarchies to state-transition graphs in GSE and multi-dimensional feature spaces in GSI. Operator 'Forced Choice Paradigm' (page 1, domain other) captures: During a preliminary training period they were forced down both paths an equal number of times by shifting the \"detachable wire door\" (see Ficure) from one side to the other. Assumptions: Equal exposure prevents bias in initial learning. Breakdown regime: Training imbalance leads to suboptimal discrimination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives exploration-exploitation tradeoffs in GSE and empirical Bayes priors in GSI. Operator 'Discrimination Runs' (page 1, domain other) captures: (The cross hatched section labeled \"bridge\" was a rise in the floor of both alleys which hid the further features of these alleys from the choice point.) During the discrimination runs, proper, the wire door was removed and the rats chose freely either path. Assumptions: Choice without interference measures pure preference. Breakdown regime: Hidden obstacles create perceptual blind spots. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps free-choice scenarios to conformal prediction sets in GSI and optimal policy search in GSE. Operator 'Triangle-Pentagon Discrimination' (page 1, domain other) captures: It will be observed that the animals were offered a choice between a circumscribed triangle and an inscribed pentagon of the same length. Assumptions: Equal path length controls for speed differences. Breakdown regime: Length mismatches introduce confounding variables. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps geometric shape discrimination to Fisher information metrics in GSI and feature extraction kernels in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0141 (41381854ca7110ab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0141 (41381854ca7110ab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might exploit spatial hierarchies by creating misleading landmarks or manipulating observation windows. A rational observer would model these strategic moves as hidden Markov processes, updating beliefs about the environment's true topology based on telemetry data. Conversely, an adversarial entity could design mazes that induce systematic biases in the agent's learned value function, causing predictable errors in long-term planning.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring that spatial features are decorrelated across layers; otherwise, gradient descent may get stuck in poor local optima. Leakage vetoes demand that training and test distributions share identical marginal statistics over relevant covariates, preventing distribution shift artifacts. These conditions ensure that the derived primitives generalize to unseen environments. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0141 (41381854ca7110ab), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

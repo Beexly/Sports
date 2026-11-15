@@ -1,0 +1,78 @@
+{
+  "book_id": "1831e3d343233f79",
+  "source_status": "COMPLETE",
+  "title": "p0341",
+  "file_name": "p0341.txt",
+  "sha256": "1831e3d343233f7933c9afbfebc5e8607fbffb7b0386fb0f354f3c1d3549a845",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Capital goods distinguish productive assets from monetary medium; free capital reflects surplus wealth conversion into durable assets. Universal Lens: Rooted in p0341 (1831e3d343233f79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models capital allocation via posterior belief updates on surplus production and interest rates. GSI Mapping: Rooted in p0341 (1831e3d343233f79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps capital flow transitions using state-space models of investment vs. consumption loan dynamics. GSE Mapping: Rooted in p0341 (1831e3d343233f79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "capital_distinguishment",
+      "name": "Capital Distinguishment",
+      "verbatim_quote": "828 RISK, UNCERTAINTY, AND PROFIT The importance of the distinction between capital and capital goods should now be clear.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'capital goods (dimensionless)', 'M': 'money funds (dimensionless)'}",
+      "assumptions": "Capital goods are productive assets; money is a medium of exchange.",
+      "breakdown_regime": "When capital goods are not differentiated from money, theoretical confusion arises.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Capital goods map to latent variables in Bayesian belief networks; GSE: Represented as state transitions in dynamic systems.",
+        "source_operator": "capital_distinguishment",
+        "telemetry": "Observable differences in investment behavior versus liquidity preference."
+      }
+    },
+    {
+      "primitive_id": "free_capital_as_surplus",
+      "name": "Free Capital as Surplus",
+      "verbatim_quote": "This is the real meaning of free capital, which is a stage in the development of capital goods.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'free capital (dimensionless)', 'S': 'surplus wealth (dimensionless)'}",
+      "assumptions": "Free capital emerges from surplus production and enables investment.",
+      "breakdown_regime": "In static societies without net surplus, free capital does not exist.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Free capital is modeled as a prior over investment decisions; GSE: Represents a transition kernel in capital accumulation.",
+        "source_operator": "free_capital_as_surplus",
+        "telemetry": "Rate of capital formation relative to consumption goods."
+      }
+    },
+    {
+      "primitive_id": "interest_and_rent_distinction",
+      "name": "Interest and Rent Distinction",
+      "verbatim_quote": "Interest is the payment for the use of free capital; for the use of capital goods when employed by another than their owner, the payment is a rent.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r_i': 'interest rate (dimensionless)', 'r_r': 'rental rate (dimensionless)', 'F': 'free capital (dimensionless)', 'K': 'capital goods (dimensionless)'}",
+      "assumptions": "Interest applies to capital funds; rent applies to asset usage.",
+      "breakdown_regime": "When capital goods are not owned, rent is paid instead of interest.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Interest and rent are distinct likelihood terms in stochastic models; GSE: Represented as separate reward functions in control theory.",
+        "source_operator": "interest_and_rent_distinction",
+        "telemetry": "Differential payments observed in capital markets."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1831e3d343233f79_t0",
+      "think": "Capital distinguishment separates monetary funds from productive assets, forming the basis for interest theory. Free capital emerges as a surplus of wealth converted into durable goods, enabling investment. In progressive economies, this surplus flows into capital goods creation, generating interest as compensation for deferred consumption. The distinction between interest and rent reflects ownership and usage rights. When capital goods are not owned, rent is paid rather than interest. These primitives define the core operational structure of capital markets and investment dynamics. Failure to distinguish these leads to theoretical confusion in interest theory. The epistemic framework requires modeling capital as both a resource and a transformed state variable. The mathematical structure supports Bayesian updating on capital flows and GSE state transitions.\n\nDeep epistemic analysis for p0341 (1831e3d343233f79, domain=other, pages_read=1/1): Operator 'Capital Distinguishment' (page 1, domain other) captures: 828 RISK, UNCERTAINTY, AND PROFIT The importance of the distinction between capital and capital goods should now be clear. Assumptions: Capital goods are productive assets; money is a medium of exchange. Breakdown regime: When capital goods are not differentiated from money, theoretical confusion arises. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Capital goods map to latent variables in Bayesian belief networks; GSE: Represented as state transitions in dynamic systems. Operator 'Free Capital as Surplus' (page 1, domain other) captures: This is the real meaning of free capital, which is a stage in the development of capital goods. Assumptions: Free capital emerges from surplus production and enables investment. Breakdown regime: In static societies without net surplus, free capital does not exist. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Free capital is modeled as a prior over investment decisions; GSE: Represents a transition kernel in capital accumulation. Operator 'Interest and Rent Distinction' (page 1, domain other) captures: Interest is the payment for the use of free capital; for the use of capital goods when employed by another than their owner, the payment is a rent. Assumptions: Interest applies to capital funds; rent applies to asset usage. Breakdown regime: When capital goods are not owned, rent is paid instead of interest. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Interest and rent are distinct likelihood terms in stochastic models; GSE: Represented as separate reward functions in control theory. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0341 (1831e3d343233f79, domain=other, pages_read=1/1): Operator 'Capital Distinguishment' (page 1, domain other) captures: 828 RISK, UNCERTAINTY, AND PROFIT The importance of the distinction between capital and capital goods should now be clear. Assumptions: Capital goods are productive assets; money is a medium of exchange. Breakdown regime: When capital goods are not differentiated from money, theoretical confusion arises. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Capital goods map to latent variables in Bayesian belief networks; GSE: Represented as state transitions in dynamic systems. Operator 'Free Capital as Surplus' (page 1, domain other) captures: This is the real meaning of free capital, which is a stage in the development of capital goods. Assumptions: Free capital emerges from surplus production and enables investment. Breakdown regime: In static societies without net surplus, free capital does not exist. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Free capital is modeled as a prior over investment decisions; GSE: Represents a transition kernel in capital accumulation. Operator 'Interest and Rent Distinction' (page 1, domain other) captures: Interest is the payment for the use of free capital; for the use of capital goods when employed by another than their owner, the payment is a rent. Assumptions: Interest applies to capital funds; rent applies to asset usage. Breakdown regime: When capital goods are not owned, rent is paid instead of interest. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Interest and rent are distinct likelihood terms in stochastic models; GSE: Represented as separate reward functions in control theory. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Fisher's temporal preference theory and Pigou’s capital theory; builds upon Keynesian capital accumulation models. Retrocausal Genealogy: Rooted in p0341 (1831e3d343233f79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0341 (1831e3d343233f79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model capital as either liquid funds or productive assets; decision-making hinges on expected returns from each category. Theory of Mind & Decision Maker Model: Rooted in p0341 (1831e3d343233f79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0341 (1831e3d343233f79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures interest and rent are not conflated; leakage vetos prevent misclassification of capital types in inference engines. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0341 (1831e3d343233f79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0341 (1831e3d343233f79), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

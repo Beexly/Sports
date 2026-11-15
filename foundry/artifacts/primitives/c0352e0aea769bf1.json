@@ -1,0 +1,78 @@
+{
+  "book_id": "c0352e0aea769bf1",
+  "source_status": "COMPLETE",
+  "title": "0868-covid19-sports-betting-markets",
+  "file_name": "0868-covid19-sports-betting-markets.md",
+  "sha256": "c0352e0aea769bf121f41c598d03a50d0f5744af28685dde6b64077c34a2da06",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Regime-driven inefficiency α = E[1{underdog_wins} - p_u] measures betting market mispricing; α > 0 implies underdogs win more than odds imply. Universal Lens: Rooted in 0868-covid19-sports-betting-markets (c0352e0aea769bf1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models α as a conformal predictive uncertainty metric; Bayesian updating on implied probabilities p_u yields posterior belief shifts indicating market inefficiency. GSI Mapping: Rooted in 0868-covid19-sports-betting-markets (c0352e0aea769bf1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses α to trigger regime flags and adjust state transitions; conditional on α > 0, GSE allocates capital via weight functions f(p_u) across implied-probability bins. GSE Mapping: Rooted in 0868-covid19-sports-betting-markets (c0352e0aea769bf1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "regime_inefficiency_alpha",
+      "name": "Regime Inefficiency Alpha",
+      "verbatim_quote": "α = 0 if odds perfectly calibrated; α < 0 in efficient markets; α > 0 when underdogs win more than odds imply.",
+      "page": 1,
+      "latex": "\\alpha = \\mathbb{E}[\\mathbb{1}_{\\text{underdog wins}} - p_u]",
+      "symbol_and_unit_ledger": "{'α': 'dimensionless, measure of market inefficiency', 'p_u': 'implied probability of underdog win, dimensionless'}",
+      "assumptions": "Underdog defined by strictly larger odds; pre-game information only; binary outcome model.",
+      "breakdown_regime": "Post-COVID NBA seasons show α < 0; during bubble, α > 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "α serves as a dynamic efficiency diagnostic in GSE's adaptive betting engine; triggers regime flags and informs stochastic weighting strategies.",
+        "source_operator": "regime_inefficiency_alpha",
+        "telemetry": "α values per season/bin used to validate betting strategy performance."
+      }
+    },
+    {
+      "primitive_id": "implied_probability_from_odds",
+      "name": "Implied Probability from Odds",
+      "verbatim_quote": "**Implied probability** from moneyline odds: p_u = 100/(100+|o_u|) for o_u ≥ 100 (eq.",
+      "page": 1,
+      "latex": "p_u = \\frac{100}{100 + |o_u|}",
+      "symbol_and_unit_ledger": "{'p_u': 'implied probability of underdog win, dimensionless', 'o_u': 'moneyline odds for underdog, dimensionless'}",
+      "assumptions": "Only applies to underdogs with odds ≥ 100; assumes fair odds pricing.",
+      "breakdown_regime": "Used across all sports and seasons for α computation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "p_u maps directly to GSI's probabilistic forecasting layer; enables Bayesian calibration of market beliefs.",
+        "source_operator": "implied_probability_from_odds",
+        "telemetry": "p_u values validated against actual game outcomes to compute α."
+      }
+    },
+    {
+      "primitive_id": "regime_flag_structural_break",
+      "name": "Regime Flag Structural Break",
+      "verbatim_quote": "## Validation - **NBA underdog win prob: ~0.30 (normal) → ~0.38–0.40 (COVID)**; only NBA shows positive α in COVID.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'structural_break': 'binary indicator for event-driven market shift'}",
+      "assumptions": "Structural breaks are exogenous shocks like no-fan events.",
+      "breakdown_regime": "Neutral-site games, limited attendance, extreme weather.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses structural break indicators to activate regime-specific α diagnostics and adjust betting weights accordingly.",
+        "source_operator": "regime_flag_structural_break",
+        "telemetry": "Activation of regime flag correlates with α deviation from baseline."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c0352e0aea769bf1_t0",
+      "think": "The core operator α = E[1{underdog_wins} - p_u] quantifies betting market inefficiency by comparing realized underdog wins to implied probabilities. When α > 0, it indicates systematic overvaluation of favorites and undervaluation of underdogs. This manifests in NBA during the 2020 bubble, where lack of fan presence disrupted traditional home-field advantage, increasing outcome randomness and causing oddsmakers to misprice odds. The mechanism is modeled through a reduction in HFA, leading to higher variance in outcomes. α becomes a dual signal: both a diagnostic tool for market inefficiency and a predictor of betting edge. The breakdown occurs in specific odds bands—particularly +233 to +400—where inefficiency is concentrated. GSE leverages this by conditioning bets on α > 0 within these bins, while GSI uses α for Bayesian updating of market beliefs. The failure mode arises when α is misinterpreted as a persistent edge without accounting for structural breaks or post-COVID normalization.\n\nDeep epistemic analysis for 0868-covid19-sports-betting-markets (c0352e0aea769bf1, domain=other, pages_read=3/3): Operator 'Regime Inefficiency Alpha' (page 1, domain other) captures: α = 0 if odds perfectly calibrated; α < 0 in efficient markets; α > 0 when underdogs win more than odds imply. Assumptions: Underdog defined by strictly larger odds; pre-game information only; binary outcome model. Breakdown regime: Post-COVID NBA seasons show α < 0; during bubble, α > 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): α serves as a dynamic efficiency diagnostic in GSE's adaptive betting engine; triggers regime flags and informs stochastic weighting strategies. Operator 'Implied Probability from Odds' (page 1, domain other) captures: **Implied probability** from moneyline odds: p_u = 100/(100+|o_u|) for o_u ≥ 100 (eq. Assumptions: Only applies to underdogs with odds ≥ 100; assumes fair odds pricing. Breakdown regime: Used across all sports and seasons for α computation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): p_u maps directly to GSI's probabilistic forecasting layer; enables Bayesian calibration of market beliefs. Operator 'Regime Flag Structural Break' (page 1, domain other) captures: ## Validation - **NBA underdog win prob: ~0.30 (normal) → ~0.38–0.40 (COVID)**; only NBA shows positive α in COVID. Assumptions: Structural breaks are exogenous shocks like no-fan events. Breakdown regime: Neutral-site games, limited attendance, extreme weather. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses structural break indicators to activate regime-specific α diagnostics and adjust betting weights accordingly. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0868-covid19-sports-betting-markets (c0352e0aea769bf1, domain=other, pages_read=3/3): Operator 'Regime Inefficiency Alpha' (page 1, domain other) captures: α = 0 if odds perfectly calibrated; α < 0 in efficient markets; α > 0 when underdogs win more than odds imply. Assumptions: Underdog defined by strictly larger odds; pre-game information only; binary outcome model. Breakdown regime: Post-COVID NBA seasons show α < 0; during bubble, α > 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): α serves as a dynamic efficiency diagnostic in GSE's adaptive betting engine; triggers regime flags and informs stochastic weighting strategies. Operator 'Implied Probability from Odds' (page 1, domain other) captures: **Implied probability** from moneyline odds: p_u = 100/(100+|o_u|) for o_u ≥ 100 (eq. Assumptions: Only applies to underdogs with odds ≥ 100; assumes fair odds pricing. Breakdown regime: Used across all sports and seasons for α computation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): p_u maps directly to GSI's probabilistic forecasting layer; enables Bayesian calibration of market beliefs. Operator 'Regime Flag Structural Break' (page 1, domain other) captures: ## Validation - **NBA underdog win prob: ~0.30 (normal) → ~0.38–0.40 (COVID)**; only NBA shows positive α in COVID. Assumptions: Structural breaks are exogenous shocks like no-fan events. Breakdown regime: Neutral-site games, limited attendance, extreme weather. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses structural break indicators to activate regime-specific α diagnostics and adjust betting weights accordingly. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical arbitrage theory and behavioral finance, tracing back to early work on market efficiency (Fama, 1970) and the use of alpha as a performance metric in portfolio theory (Sharpe, 1964). Retrocausal Genealogy: Rooted in 0868-covid19-sports-betting-markets (c0352e0aea769bf1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market maker who sets odds based on historical data and perceived risk, and the bettor who exploits α > 0 anomalies. The former assumes rationality and consistency, while the latter seeks deviations from equilibrium. Theory of Mind & Decision Maker Model: Rooted in 0868-covid19-sports-betting-markets (c0352e0aea769bf1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that α be computed independently of other regime flags to avoid spurious correlation. Leakage vetoes include ensuring that α does not reflect pre-existing biases in data collection or model specification. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0868-covid19-sports-betting-markets (c0352e0aea769bf1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

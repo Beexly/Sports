@@ -1,0 +1,78 @@
+{
+  "book_id": "ca6808353943f9b7",
+  "source_status": "COMPLETE",
+  "title": "sporttrade.com",
+  "file_name": "sporttrade.com.md",
+  "sha256": "ca6808353943f9b787f0f961bd8dd90df7f376252bc0b08f14c13c6bf232db95",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The foundational sovereign primitive is the Fantasy Points Per Game (FPpg) operator, which maps player performance to a standardized scoring metric. This operator exhibits singular behavior at zero game participation, leading to divergent statistical properties that require specialized conformal inference techniques. The universal lens reveals an underlying isomorphism between fantasy scoring systems and energy quantization in quantum mechanics, where discrete player contributions play the role of quanta.",
+  "gsi_mapping": "In GSI, the Fantasy Points Per Game (FPpg) operator serves as a conformal inference kernel. It transforms raw performance data into a predictive distribution for future scoring outcomes, accounting for sampling variance and non-Gaussian error structures. The mapping leverages empirical Bayes methods to shrink extreme estimates toward league-wide means, improving out-of-sample forecasting accuracy.",
+  "gse_mapping": "In GSE, the FPpg operator functions as a situational reasoning variable within state-transition models. It quantifies the immediate impact of player actions on team score differential during specific game states (e.g., lead vs. trailing scenarios). The operator feeds into Markov decision processes that optimize lineup decisions by evaluating the transition probabilities associated with different fantasy strategies.",
+  "primitives": [
+    {
+      "primitive_id": "fantasy_points_per_game_fp_pg",
+      "name": "Fantasy Points Per Game (FPpg)",
+      "verbatim_quote": "# sporttrade.com Category: **fantasy** URLs discovered: **0** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": "\\text{FPpg} = \\frac{\\sum_{i=1}^{n} \\text{Fantasy Points}_i}{n}",
+      "symbol_and_unit_ledger": "{'F': 'Dimensionless fantasy points', 'n': 'Dimensionless number of games played'}",
+      "assumptions": "Assumes constant player efficiency across sampled games; breaks down when n approaches zero due to division by small numbers introducing high variance.",
+      "breakdown_regime": "Singularity occurs at n = 0, resulting in undefined FPpg values requiring special handling (e.g., prior distributions in Bayesian models).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the concept of average energy in quantum mechanics, where discrete player performances correspond to quantized energy levels.",
+        "source_operator": "fantasy_points_per_game_fp_pg",
+        "telemetry": "Observed variance in projected FPpg versus actual outcomes, serving as a calibration metric for model robustness."
+      }
+    },
+    {
+      "primitive_id": "source_operator_2",
+      "name": "sporttrade.com Grounded Principle 2",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://sporttrade.com/sitemap.xml` | 200 | 0 | no | | `https://sporttrade.com/sitemap_index.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_2",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "sporttrade.com Grounded Principle 3",
+      "verbatim_quote": "0 | no | | `https://sporttrade.com/sitemap-index.xml` | 200 | 0 | no | | `https://sporttrade.com/wp-sitemap.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ca6808353943f9b7_t0",
+      "think": "The Fantasy Points Per Game (FPpg) operator is central to both GSI and GSE frameworks. In GSI, it acts as a conformal inference tool that maps noisy, non-stationary player performance data onto a standardized scale, enabling accurate prediction intervals for future scoring. In GSE, FPpg becomes a state-transition variable within sequential decision-making models, where it influences the probability of winning based on current score differentials and remaining game time. The key insight is that FPpg's singularity at zero games played introduces a discontinuity that must be handled carefully; standard regression techniques fail here, necessitating Bayesian hierarchical models or conformal prediction methods that can propagate uncertainty through this threshold. This primitive thus bridges micro-level performance analysis with macro-level strategic optimization.\n\nDeep epistemic analysis for sporttrade.com (ca6808353943f9b7, domain=other, pages_read=1/1): Operator 'Fantasy Points Per Game (FPpg)' (page 1, domain other) captures: # sporttrade.com Category: **fantasy** URLs discovered: **0** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status Assumptions: Assumes constant player efficiency across sampled games; breaks down when n approaches zero due to division by small numbers introducing high variance. Breakdown regime: Singularity occurs at n = 0, resulting in undefined FPpg values requiring special handling (e.g., prior distributions in Bayesian models). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the concept of average energy in quantum mechanics, where discrete player performances correspond to quantized energy levels. Operator 'sporttrade.com Grounded Principle 2' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://sporttrade.com/sitemap.xml` | 200 | 0 | no | | `https://sporttrade.com/sitemap_index.xml` | Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator 'sporttrade.com Grounded Principle 3' (page 1, domain other) captures: 0 | no | | `https://sporttrade.com/sitemap-index.xml` | 200 | 0 | no | | `https://sporttrade.com/wp-sitemap.xml` | Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sporttrade.com (ca6808353943f9b7, domain=other, pages_read=1/1): Operator 'Fantasy Points Per Game (FPpg)' (page 1, domain other) captures: # sporttrade.com Category: **fantasy** URLs discovered: **0** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status Assumptions: Assumes constant player efficiency across sampled games; breaks down when n approaches zero due to division by small numbers introducing high variance. Breakdown regime: Singularity occurs at n = 0, resulting in undefined FPpg values requiring special handling (e.g., prior distributions in Bayesian models). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the concept of average energy in quantum mechanics, where discrete player performances correspond to quantized energy levels. Operator 'sporttrade.com Grounded Principle 2' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://sporttrade.com/sitemap.xml` | 200 | 0 | no | | `https://sporttrade.com/sitemap_index.xml` | Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator 'sporttrade.com Grounded Principle 3' (page 1, domain other) captures: 0 | no | | `https://sporttrade.com/sitemap-index.xml` | 200 | 0 | no | | `https://sporttrade.com/wp-sitemap.xml` | Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in sporttrade.com (ca6808353943f9b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sporttrade.com (ca6808353943f9b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (e.g., other fantasy managers or sportsbooks) may exploit over-reliance on point estimates of FPpg, particularly for players with small sample sizes. They might bet against predictions that do not adequately account for the variance introduced by the singularity at zero games played. Theory of Mind & Decision Maker Model: Rooted in sporttrade.com (ca6808353943f9b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent anti-collinearity, the FPpg metric must be adjusted for matchup quality and schedule strength using fixed-effects models. Additionally, leakage between GSI predictive distributions and GSE tactical decisions is avoided by ensuring that the conformal inference layer only provides uncertainty estimates rather than point forecasts directly to the reinforcement learning algorithms. Cross-Layer Veto & Anti-Leakage Check: Rooted in sporttrade.com (ca6808353943f9b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "c2fd640867928bdb",
+  "source_status": "COMPLETE",
+  "title": "0559-convergence-rate-of-efficient-mcmc-with",
+  "file_name": "0559-convergence-rate-of-efficient-mcmc-with.md",
+  "sha256": "c2fd640867928bdb395942d8756c5944bf6145aa3b33725eca8bf3cc6d77c898",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "MCMC convergence rate duality between centered (SA) and non-centered (AA) parameterizations in hierarchical panel models, mediated by ASIS interweaving. Universal Lens: Rooted in 0559-convergence-rate-of-efficient-mcmc-with (c2fd640867928bdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian hierarchical inference for team strength models using efficient MCMC with ASIS to optimize global mean mixing and reduce autocorrelation. GSI Mapping: Rooted in 0559-convergence-rate-of-efficient-mcmc-with (c2fd640867928bdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in dynamic team strength models leverages ASIS sampler design to decouple latent effects from global parameters, enabling faster state transitions. GSE Mapping: Rooted in 0559-convergence-rate-of-efficient-mcmc-with (c2fd640867928bdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sufficient_augmentation_convergence",
+      "name": "Sufficient Augmentation Convergence Rate",
+      "verbatim_quote": "- Theorem 1: the SA and AA geometric rates satisfy (σ_ε-2T)/(σ_ε-2T + σ_α-2) + (σ_α-2)/(σ_ε-2T + σ_α-2) = 1 — i.e., if one scheme mixes well, the other necessarily mixes poorly (eq.",
+      "page": 1,
+      "latex": "\\frac{\\sigma_{\\varepsilon}^{-2} T}{\\sigma_{\\varepsilon}^{-2} T + \\sigma_{\\alpha}^{-2}} + \\frac{\\sigma_{\\alpha}^{-2}}{\\sigma_{\\varepsilon}^{-2} T + \\sigma_{\\alpha}^{-2}} = 1",
+      "symbol_and_unit_ledger": "{'σ_ε': 'standard deviation of error term, dimensionless', 'σ_α': 'standard deviation of random effect, dimensionless', 'T': 'time periods, dimensionless'}",
+      "assumptions": "Gaussian likelihood, known variances, hierarchical structure with fixed-effect intercepts.",
+      "breakdown_regime": "When σ_ε² ≈ σ_α²T, convergence rates become indistinguishable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SA convergence rate maps to GSI's Bayesian posterior estimation efficiency for global mean parameters.",
+        "source_operator": "sufficient_augmentation_convergence",
+        "telemetry": "Monte Carlo standard error (MCSE) of μ_α"
+      }
+    },
+    {
+      "primitive_id": "ancillary_augmentation_convergence",
+      "name": "Ancillary Augmentation Convergence Rate",
+      "verbatim_quote": "- Corollary 1: SA converges faster if σ_ε2 < σ_α2T; AA converges faster if σ_ε2 > σ_α2T (eq.",
+      "page": 1,
+      "latex": "SA \\text{ faster if } \\sigma_{\\varepsilon}^2 < \\sigma_{\\alpha}^2 T; \\quad AA \\text{ faster if } \\sigma_{\\varepsilon}^2 > \\sigma_{\\alpha}^2 T",
+      "symbol_and_unit_ledger": "{'σ_ε': 'standard deviation of error term, dimensionless', 'σ_α': 'standard deviation of random effect, dimensionless', 'T': 'time periods, dimensionless'}",
+      "assumptions": "Hierarchical normal model with known variance components.",
+      "breakdown_regime": "When σ_ε² = σ_α²T, convergence behavior is symmetric.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "AA convergence criterion enables GSE to select optimal parameterization based on data variance ratios.",
+        "source_operator": "ancillary_augmentation_convergence",
+        "telemetry": "Autocorrelation function (ACF) of μ_α"
+      }
+    },
+    {
+      "primitive_id": "as_is_interweaving_strategy",
+      "name": "Ancillarity-Sufficiency Interweaving Strategy",
+      "verbatim_quote": "- Theorem 2: under SA→AA and AA→SA ASIS, {μ_α^(r)} is approximately an IID sequence when τ_α2N is sufficiently large (latent effects decouple from the global mean).",
+      "page": 1,
+      "latex": "{\\mu_{\\alpha}^{(r)}} \\text{ approx IID when } \\tau_{\\alpha}^2 N \\gg 1",
+      "symbol_and_unit_ledger": "{'μ_α': 'global mean parameter, dimensionless', 'τ_α': 'prior scale for μ_α, dimensionless', 'N': 'number of groups, dimensionless'}",
+      "assumptions": "Large group count N, weak prior on global mean.",
+      "breakdown_regime": "Failure when τ_α²N is small, leading to correlated μ_α samples.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ASIS enables GSE to produce near-independent samples of global parameters for faster inference.",
+        "source_operator": "as_is_interweaving_strategy",
+        "telemetry": "Effective sample size (ESS) of μ_α"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c2fd640867928bdb_t0",
+      "think": "The core insight is that in Bayesian hierarchical panel models, two MCMC parameterizations—sufficient augmentation (SA) and ancillary augmentation (AA)—exhibit complementary convergence properties. The geometric convergence rates of these schemes sum to unity, implying a fundamental trade-off. Specifically, SA is favorable when the within-group variance (σ_ε²) is smaller than the product of between-group variance (σ_α²) and time periods (T), while AA dominates otherwise. This duality is formalized in Theorem 1. The ASIS strategy further improves mixing by alternating between SA and AA sweeps, effectively decoupling latent group effects from the global mean when the prior precision τ_α²N is large, as stated in Theorem 2. These results suggest that for GSE’s hierarchical team strength models, selecting the appropriate parameterization based on data characteristics and applying ASIS can significantly improve sampling efficiency and reduce autocorrelation in posterior estimates.\n\nDeep epistemic analysis for 0559-convergence-rate-of-efficient-mcmc-with (c2fd640867928bdb, domain=other, pages_read=4/4): Operator 'Sufficient Augmentation Convergence Rate' (page 1, domain other) captures: - Theorem 1: the SA and AA geometric rates satisfy (σ_ε-2T)/(σ_ε-2T + σ_α-2) + (σ_α-2)/(σ_ε-2T + σ_α-2) = 1 — i.e., if one scheme mixes well, the other necessarily mixes poorly (eq. Assumptions: Gaussian likelihood, known variances, hierarchical structure with fixed-effect intercepts. Breakdown regime: When σ_ε² ≈ σ_α²T, convergence rates become indistinguishable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): SA convergence rate maps to GSI's Bayesian posterior estimation efficiency for global mean parameters. Operator 'Ancillary Augmentation Convergence Rate' (page 1, domain other) captures: - Corollary 1: SA converges faster if σ_ε2 < σ_α2T; AA converges faster if σ_ε2 > σ_α2T (eq. Assumptions: Hierarchical normal model with known variance components. Breakdown regime: When σ_ε² = σ_α²T, convergence behavior is symmetric. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): AA convergence criterion enables GSE to select optimal parameterization based on data variance ratios. Operator 'Ancillarity-Sufficiency Interweaving Strategy' (page 1, domain other) captures: - Theorem 2: under SA→AA and AA→SA ASIS, {μ_α^(r)} is approximately an IID sequence when τ_α2N is sufficiently large (latent effects decouple from the global mean). Assumptions: Large group count N, weak prior on global mean. Breakdown regime: Failure when τ_α²N is small, leading to correlated μ_α samples. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ASIS enables GSE to produce near-independent samples of global parameters for faster inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0559-convergence-rate-of-efficient-mcmc-with (c2fd640867928bdb, domain=other, pages_read=4/4): Operator 'Sufficient Augmentation Convergence Rate' (page 1, domain other) captures: - Theorem 1: the SA and AA geometric rates satisfy (σ_ε-2T)/(σ_ε-2T + σ_α-2) + (σ_α-2)/(σ_ε-2T + σ_α-2) = 1 — i.e., if one scheme mixes well, the other necessarily mixes poorly (eq. Assumptions: Gaussian likelihood, known variances, hierarchical structure with fixed-effect intercepts. Breakdown regime: When σ_ε² ≈ σ_α²T, convergence rates become indistinguishable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): SA convergence rate maps to GSI's Bayesian posterior estimation efficiency for global mean parameters. Operator 'Ancillary Augmentation Convergence Rate' (page 1, domain other) captures: - Corollary 1: SA converges faster if σ_ε2 < σ_α2T; AA converges faster if σ_ε2 > σ_α2T (eq. Assumptions: Hierarchical normal model with known variance components. Breakdown regime: When σ_ε² = σ_α²T, convergence behavior is symmetric. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): AA convergence criterion enables GSE to select optimal parameterization based on data variance ratios. Operator 'Ancillarity-Sufficiency Interweaving Strategy' (page 1, domain other) captures: - Theorem 2: under SA→AA and AA→SA ASIS, {μ_α^(r)} is approximately an IID sequence when τ_α2N is sufficiently large (latent effects decouple from the global mean). Assumptions: Large group count N, weak prior on global mean. Breakdown regime: Failure when τ_α²N is small, leading to correlated μ_α samples. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ASIS enables GSE to produce near-independent samples of global parameters for faster inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early work on data augmentation (Gelfand & Smith, 1990) and extended through the ASIS framework (Yu & Meng, 2011), this line of inquiry builds upon foundational MCMC convergence theory and hierarchical modeling techniques. Retrocausal Genealogy: Rooted in 0559-convergence-rate-of-efficient-mcmc-with (c2fd640867928bdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents in this context are the two MCMC schemes (SA vs AA), each optimizing different aspects of the posterior geometry. The ASIS mechanism acts as a meta-sampler that dynamically selects the better-performing scheme, mimicking adaptive decision-making under uncertainty. Theory of Mind & Decision Maker Model: Rooted in 0559-convergence-rate-of-efficient-mcmc-with (c2fd640867928bdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the variance ratio σ_ε² / (σ_α²T) does not approach zero or infinity, ensuring both parameterizations remain informative. Leakage occurs if τ_α²N is too small, causing ASIS to fail in producing near-IID samples. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0559-convergence-rate-of-efficient-mcmc-with (c2fd640867928bdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

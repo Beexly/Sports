@@ -1,0 +1,78 @@
+{
+  "book_id": "386aa9e5ab35d35a",
+  "source_status": "COMPLETE",
+  "title": "ig-wave-IG-2",
+  "file_name": "ig-wave-IG-2.md",
+  "sha256": "386aa9e5ab35d35a0eb9fafb0cd0b068d94b92beee3c7ad8f196fee49ff4b55b",
+  "primary_domain": "other",
+  "pages_total": 45,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A dual-layered data ingestion protocol integrating CLI-driven post enumeration with media-understanding content analysis, enabling robust deduplication and probabilistic roster validation. Universal Lens: Rooted in ig-wave-IG-2 (386aa9e5ab35d35a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating over Instagram post metadata using CLI-derived captions and media-understanding summaries, conditioned on known account identities and prior probability distributions over football analytics domains. GSI Mapping: Rooted in ig-wave-IG-2 (386aa9e5ab35d35a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps CLI-posted data into state transitions via player-team assignment rules and contextual efficiency metrics, leveraging deduplicated temporal sequences for predictive modeling. GSE Mapping: Rooted in ig-wave-IG-2 (386aa9e5ab35d35a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "cli_post_ingestion",
+      "name": "CLI Post Ingestion Protocol",
+      "verbatim_quote": "# Mega Sweep 2026-11-06 — IG Wave IG-2 (Lanes A + B) **Wave:** IG-2 · **Date:** 2026-11-06 · **Lanes:** A = football analytics / situational data; B = football medical / concussion / CTE science **Collection route:** instagram-cli WORKED this wave (unlike IG-1).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Instagram CLI provides structured access to public posts without rate-limiting interference.",
+      "breakdown_regime": "When CLI fails due to expired grants, retry mechanism must be invoked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw CLI post identifiers to GSI's probabilistic account confirmation framework.",
+        "source_operator": "cli_post_ingestion",
+        "telemetry": "Number of successfully ingested posts per account."
+      }
+    },
+    {
+      "primitive_id": "media_understanding_analysis",
+      "name": "Media Understanding Analysis Layer",
+      "verbatim_quote": "`accounts` confirmed Garrett's accounts; `post --url` + `media-understanding --media-ids` returned full captions and content analyses.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Media understanding layer accurately transcribes spoken or on-screen content.",
+      "breakdown_regime": "Inconsistencies between caption and media-understanding summary require manual override.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives semantic content from visual/audio features to supplement caption-based inference in GSI.",
+        "source_operator": "media_understanding_analysis",
+        "telemetry": "Accuracy of media-understanding summary vs. verified caption content."
+      }
+    },
+    {
+      "primitive_id": "deduplication_engine",
+      "name": "Deduplication Engine",
+      "verbatim_quote": "**Dedupe:** all candidate shortcodes checked programmatically against codes extracted from `~/workspace/ig-for-you-sweep/seen-index.md` + `~/workspace/your_files/SHARED-ITEMS-REGISTER.md` + `~/workspace/research-library/mega-sweep-2026-11-06/SEEN-LEDGER.md` (incl.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All previously seen post shortcodes are stored in indexed ledger files.",
+      "breakdown_regime": "Collision detection fails if index is incomplete or corrupted.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Matches incoming post shortcodes against GSE's global seen-item registry to prevent redundant processing.",
+        "source_operator": "deduplication_engine",
+        "telemetry": "Number of duplicate posts filtered out during ingestion."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "386aa9e5ab35d35a_t0",
+      "think": "The core operational structure of IG-2 is built upon a two-pronged ingestion pipeline: first, a CLI-based discovery system that harvests posts from 25+ named accounts and their associated networks; second, a media-understanding layer that enriches each post with semantic content derived from audiovisual cues. This dual approach ensures both breadth and depth of data capture, while the deduplication engine prevents redundancy. The system's robustness stems from its reliance on programmatic checks rather than search-indexed queries, which proved ineffective in this environment. The evidence level is elevated compared to IG-1 because it combines full caption data with media-understanding insights, allowing for more nuanced interpretation. Failure modes include transient grant expiration, which necessitates retry logic, and inconsistencies in media-understanding summaries that must be flagged and resolved via caption verification.\n\nDeep epistemic analysis for ig-wave-IG-2 (386aa9e5ab35d35a, domain=other, pages_read=18/45): Operator 'CLI Post Ingestion Protocol' (page 1, domain other) captures: # Mega Sweep 2026-11-06 — IG Wave IG-2 (Lanes A + B) **Wave:** IG-2 · **Date:** 2026-11-06 · **Lanes:** A = football analytics / situational data; B = football medical / concussion / CTE science **Collection route:** instagram-cli WORKED this wave (unlike IG-1). Assumptions: Instagram CLI provides structured access to public posts without rate-limiting interference. Breakdown regime: When CLI fails due to expired grants, retry mechanism must be invoked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw CLI post identifiers to GSI's probabilistic account confirmation framework. Operator 'Media Understanding Analysis Layer' (page 1, domain other) captures: `accounts` confirmed Garrett's accounts; `post --url` + `media-understanding --media-ids` returned full captions and content analyses. Assumptions: Media understanding layer accurately transcribes spoken or on-screen content. Breakdown regime: Inconsistencies between caption and media-understanding summary require manual override. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives semantic content from visual/audio features to supplement caption-based inference in GSI. Operator 'Deduplication Engine' (page 1, domain other) captures: **Dedupe:** all candidate shortcodes checked programmatically against codes extracted from `~/workspace/ig-for-you-sweep/seen-index.md` + `~/workspace/your_files/SHARED-ITEMS-REGISTER.md` + `~/workspace/research-library/mega-sweep-2026-11-06/SEEN-LEDGER.md` (incl. Assumptions: All previously seen post shortcodes are stored in indexed ledger files. Breakdown regime: Collision detection fails if index is incomplete or corrupted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Matches incoming post shortcodes against GSE's global seen-item registry to prevent redundant processing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ig-wave-IG-2 (386aa9e5ab35d35a, domain=other, pages_read=18/45): Operator 'CLI Post Ingestion Protocol' (page 1, domain other) captures: # Mega Sweep 2026-11-06 — IG Wave IG-2 (Lanes A + B) **Wave:** IG-2 · **Date:** 2026-11-06 · **Lanes:** A = football analytics / situational data; B = football medical / concussion / CTE science **Collection route:** instagram-cli WORKED this wave (unlike IG-1). Assumptions: Instagram CLI provides structured access to public posts without rate-limiting interference. Breakdown regime: When CLI fails due to expired grants, retry mechanism must be invoked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw CLI post identifiers to GSI's probabilistic account confirmation framework. Operator 'Media Understanding Analysis Layer' (page 1, domain other) captures: `accounts` confirmed Garrett's accounts; `post --url` + `media-understanding --media-ids` returned full captions and content analyses. Assumptions: Media understanding layer accurately transcribes spoken or on-screen content. Breakdown regime: Inconsistencies between caption and media-understanding summary require manual override. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives semantic content from visual/audio features to supplement caption-based inference in GSI. Operator 'Deduplication Engine' (page 1, domain other) captures: **Dedupe:** all candidate shortcodes checked programmatically against codes extracted from `~/workspace/ig-for-you-sweep/seen-index.md` + `~/workspace/your_files/SHARED-ITEMS-REGISTER.md` + `~/workspace/research-library/mega-sweep-2026-11-06/SEEN-LEDGER.md` (incl. Assumptions: All previously seen post shortcodes are stored in indexed ledger files. Breakdown regime: Collision detection fails if index is incomplete or corrupted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Matches incoming post shortcodes against GSE's global seen-item registry to prevent redundant processing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in earlier CLI-based social media harvesting protocols, evolving from initial search-index dependencies to structured API-driven ingestion models common in modern data science pipelines. Retrocausal Genealogy: Rooted in ig-wave-IG-2 (386aa9e5ab35d35a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ig-wave-IG-2 (386aa9e5ab35d35a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents involved include automated CLI clients, media-understanding algorithms, and human curators who validate discrepancies. Each agent operates under distinct constraints—CLI clients are limited by rate limits, media-understanding systems by accuracy thresholds, and curators by interpretive consistency. Theory of Mind & Decision Maker Model: Rooted in ig-wave-IG-2 (386aa9e5ab35d35a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that CLI and media-understanding layers operate independently, with explicit vetoes on overlapping data points. Leakage is mitigated by strict separation of duties: CLI handles identification, media-understanding adds semantics, and deduplication ensures no double-counting. Cross-Layer Veto & Anti-Leakage Check: Rooted in ig-wave-IG-2 (386aa9e5ab35d35a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

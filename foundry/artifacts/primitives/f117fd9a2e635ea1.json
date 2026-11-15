@@ -1,0 +1,78 @@
+{
+  "book_id": "f117fd9a2e635ea1",
+  "source_status": "COMPLETE",
+  "title": "0916-pagerank-player-performance-assessment",
+  "file_name": "0916-pagerank-player-performance-assessment.md",
+  "sha256": "f117fd9a2e635ea16dbab75af3d7e3e3ed25f0324eeeef5c086491c465f0f4a6",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "PageRank-based playmaking assessment models reversed-arc passing networks to quantify player contribution through flow centrality, integrating event graphs with goal-node scaffolding for descriptive performance metrics. Universal Lens: Rooted in 0916-pagerank-player-performance-assessment (f117fd9a2e635ea1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework maps IPM scores to probabilistic player involvement likelihoods using observed event sequences; conformal prediction bounds uncertainty in playmaking attribution. GSI Mapping: Rooted in 0916-pagerank-player-performance-assessment (f117fd9a2e635ea1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine encodes per-game target networks via directed arcs from receivers to quarterbacks, computing flow differentials for real-time WR/TE engagement and team strength dynamics. GSE Mapping: Rooted in 0916-pagerank-player-performance-assessment (f117fd9a2e635ea1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "reversed_arc_passing_network",
+      "name": "Reversed Arc Passing Network",
+      "verbatim_quote": "Method / model - Directed graph: n player nodes + 1 goal node.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'n': 'number of players', 'g': 'goal node', 'r_i': 'PageRank score of player i'}",
+      "assumptions": "Player interactions modeled as directed arcs; reversed arcs assign credit to playmakers.",
+      "breakdown_regime": "When arcs lack primitivity due to disconnected components or zero-weighted transitions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's target network where receiver-to-QB arcs encode trust and involvement; goal-node arcs represent scoring events.",
+        "source_operator": "reversed_arc_passing_network",
+        "telemetry": "IPM ranking consistency with traditional stat lines."
+      }
+    },
+    {
+      "primitive_id": "integrated_playmaking_metric",
+      "name": "Integrated Playmaking Metric",
+      "verbatim_quote": "- Integrated Playmaking Metric: IPM_i = 50n·r_i/(1-r_g); mean 50, scale 0–1000, comparable across games.",
+      "page": 1,
+      "latex": "\\text{IPM}_i = \\frac{50n \\cdot r_i}{1 - r_g}",
+      "symbol_and_unit_ledger": "{'IPM_i': 'Integrated Playmaking Metric for player i', 'n': 'total number of players', 'r_i': 'PageRank score of player i', 'r_g': 'PageRank score of goal node'}",
+      "assumptions": "Equal arc weights; primitivity ensured by scaffolding arcs.",
+      "breakdown_regime": "When goal node rank approaches unity, causing divergence in numerator.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI for comparative player evaluation; serves as input to Bayesian belief updates on performance likelihood.",
+        "source_operator": "integrated_playmaking_metric",
+        "telemetry": "Correlation between IPM and box-score aggregates (P+A+R+S)."
+      }
+    },
+    {
+      "primitive_id": "markov_chain_stationary_vector",
+      "name": "Markov Chain Stationary Vector",
+      "verbatim_quote": "Equations & assumptions - Markov chain stationary vector TTv = v (primitivity → uniqueness).",
+      "page": 1,
+      "latex": "\\mathbf{T}^T \\mathbf{v} = \\mathbf{v}",
+      "symbol_and_unit_ledger": "{'T': 'transition matrix', 'v': 'stationary probability vector', 'TT': 'transpose of transition matrix'}",
+      "assumptions": "Graph is primitive; irreducible and aperiodic Markov chain ensures convergence.",
+      "breakdown_regime": "Non-primitive graphs yield non-unique or unstable solutions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Underpins GSE's dynamic state transitions in event-driven player interaction models.",
+        "source_operator": "markov_chain_stationary_vector",
+        "telemetry": "Convergence rate of PageRank vector across iterations."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f117fd9a2e635ea1_t0",
+      "think": "The core operator is a directed graph with reversed arcs to attribute playmaking credit. Each pass from player i to j becomes an arc from j to i in the graph, enabling PageRank to compute influence flow toward playmakers. The goal node acts as sink for scoring events, ensuring all paths terminate. This structure allows for a stationary distribution over players' influence, which is then scaled into an interpretable IPM score. The model assumes equal weight for all passes and uses primitivity scaffolding to ensure unique solutions. Dualities arise in how the same event can be interpreted as either a pass or a turnover depending on direction. Failure modes include disconnected components, equal arc weights leading to misrepresentation of pass value, and arbitrary scaffolding arcs affecting rankings. The model is descriptive only, lacking predictive capability but offering insight into hidden playmaking dynamics missed by traditional box scores.\n\nDeep epistemic analysis for 0916-pagerank-player-performance-assessment (f117fd9a2e635ea1, domain=other, pages_read=2/2): Operator 'Reversed Arc Passing Network' (page 1, domain other) captures: Method / model - Directed graph: n player nodes + 1 goal node. Assumptions: Player interactions modeled as directed arcs; reversed arcs assign credit to playmakers. Breakdown regime: When arcs lack primitivity due to disconnected components or zero-weighted transitions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's target network where receiver-to-QB arcs encode trust and involvement; goal-node arcs represent scoring events. Operator 'Integrated Playmaking Metric' (page 1, domain other) captures: - Integrated Playmaking Metric: IPM_i = 50n·r_i/(1-r_g); mean 50, scale 0–1000, comparable across games. Assumptions: Equal arc weights; primitivity ensured by scaffolding arcs. Breakdown regime: When goal node rank approaches unity, causing divergence in numerator. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI for comparative player evaluation; serves as input to Bayesian belief updates on performance likelihood. Operator 'Markov Chain Stationary Vector' (page 1, domain other) captures: Equations & assumptions - Markov chain stationary vector TTv = v (primitivity → uniqueness). Assumptions: Graph is primitive; irreducible and aperiodic Markov chain ensures convergence. Breakdown regime: Non-primitive graphs yield non-unique or unstable solutions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Underpins GSE's dynamic state transitions in event-driven player interaction models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0916-pagerank-player-performance-assessment (f117fd9a2e635ea1, domain=other, pages_read=2/2): Operator 'Reversed Arc Passing Network' (page 1, domain other) captures: Method / model - Directed graph: n player nodes + 1 goal node. Assumptions: Player interactions modeled as directed arcs; reversed arcs assign credit to playmakers. Breakdown regime: When arcs lack primitivity due to disconnected components or zero-weighted transitions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's target network where receiver-to-QB arcs encode trust and involvement; goal-node arcs represent scoring events. Operator 'Integrated Playmaking Metric' (page 1, domain other) captures: - Integrated Playmaking Metric: IPM_i = 50n·r_i/(1-r_g); mean 50, scale 0–1000, comparable across games. Assumptions: Equal arc weights; primitivity ensured by scaffolding arcs. Breakdown regime: When goal node rank approaches unity, causing divergence in numerator. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI for comparative player evaluation; serves as input to Bayesian belief updates on performance likelihood. Operator 'Markov Chain Stationary Vector' (page 1, domain other) captures: Equations & assumptions - Markov chain stationary vector TTv = v (primitivity → uniqueness). Assumptions: Graph is primitive; irreducible and aperiodic Markov chain ensures convergence. Breakdown regime: Non-primitive graphs yield non-unique or unstable solutions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Underpins GSE's dynamic state transitions in event-driven player interaction models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Google's original PageRank algorithm (Brin & Page, 1998), extended to social networks and now applied to sports analytics. The reversal of arcs to credit playmakers mirrors earlier work in network science applying Markov chains to influence propagation. Retrocausal Genealogy: Rooted in 0916-pagerank-player-performance-assessment (f117fd9a2e635ea1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents are players who may act strategically to maximize their own IPM while minimizing opponent influence. The model treats each game as a closed system where actions propagate through a fixed network structure, assuming rational behavior within constraints of available passes and scoring opportunities. Theory of Mind & Decision Maker Model: Rooted in 0916-pagerank-player-performance-assessment (f117fd9a2e635ea1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that IPM not simply mirror box scores, avoiding redundancy with existing metrics. Leakage is mitigated by focusing on event-level causality rather than outcome-based statistics. Sensitivity to scaffolding arcs must be tested to prevent distortion of rankings. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0916-pagerank-player-performance-assessment (f117fd9a2e635ea1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

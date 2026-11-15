@@ -1,0 +1,78 @@
+{
+  "book_id": "70a18e2c6ebab89a",
+  "source_status": "COMPLETE",
+  "title": "INDEX",
+  "file_name": "INDEX.md",
+  "sha256": "70a18e2c6ebab89aff57bdfc1456747061178c822929b1e628d40925ec32b41f",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The sovereign primitive is a market-neutral operator algebra. By projecting raw event data onto a subspace orthogonal to the closing line, we isolate true physical momentum from liquidity noise. This structural unification ensures that all predictive kernels remain invariant under arbitrary shifts in Vegas priors.",
+  "gsi_mapping": "GSI employs conformal inference over these de-vigged, liquidity-gated residuals. We treat the closing line as a sharp Bayesian prior; our calibration sets dynamically adjust prediction intervals based on observed market depth, guaranteeing exact coverage probabilities even when underlying betting distributions exhibit heavy-tailed volatility.",
+  "gse_mapping": "Within GSE, situational reasoning transitions are governed by spread-free Expected Points (EP) and Contextual Probability of Outscoring (CPOE). The engine rejects collinear narrative features, relying strictly on adversarially vetted state vectors to drive real-time tactical adjustments without succumbing to revenge-fade sign errors.",
+  "primitives": [
+    {
+      "primitive_id": "market_neutral_feature_projection",
+      "name": "Market-Neutral Feature Projection",
+      "verbatim_quote": "Lane 9 hard-REJECTED betting-line features in Layer 2 — wiring `wp`/`wpa` as features imports the market into the reasoning layer invisibly.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "`wp`/`wpa`: Win probability added (dimensionless, [0,1]); Layer 2: Situational reasoning state space.",
+      "assumptions": "Vegas spreads contain efficient market priors distinct from pure physical game dynamics.",
+      "breakdown_regime": "Fails if the market is entirely inefficient or if physical dynamics perfectly mirror public sentiment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to removing a known bias vector from a high-dimensional feature space before applying a non-linear kernel.",
+        "source_operator": "market_neutral_feature_projection",
+        "telemetry": "Correlation coefficient between Layer 2 features and opening/closing spreads."
+      }
+    },
+    {
+      "primitive_id": "liquidity_gated_clv_tracker",
+      "name": "Liquidity-Gated CLV Tracker",
+      "verbatim_quote": "**CLV needs a liquidity gate (Lane 20).** \"The close is sharp\" holds only where the close is a true-price reflection (liquid popular markets).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "CLV: Closing Line Value (dimensionless metric); Liquidity: Total volume traded at close (currency units).",
+      "assumptions": "High liquidity implies price discovery efficiency; thin markets reflect idiosyncratic noise rather than true probability.",
+      "breakdown_regime": "Breaks down during unprecedented global events where even liquid markets experience massive, synchronized slippage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A conditional expectation operator $E[Y|X, L > \\tau]$ that only activates the CLV kernel when observed volume $L$ exceeds threshold $\\tau$.",
+        "source_operator": "liquidity_gated_clv_tracker",
+        "telemetry": "Volume-weighted average deviation of closing lines from realized outcomes."
+      }
+    },
+    {
+      "primitive_id": "shin_devigging_pipeline",
+      "name": "Shin De-Vigging Pipeline",
+      "verbatim_quote": "**De-vigging is pipeline step 1 (Lane 7).** The de-vig method moves favorites ~1.5pp — larger than the Brier gain the lane celebrates.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "1.5pp: Percentage points shift in implied probability; Brier gain: Reduction in Brier score (dimensionless squared error).",
+      "assumptions": "Overround (vig) is a uniform tax on probabilities that must be stripped to recover the bookmaker's true belief.",
+      "breakdown_regime": "Fails if the vig is asymmetrically applied across outcomes or heavily dependent on bettor distribution rather than risk management.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A linear transformation mapping observed odds $O_{obs}$ to risk-neutral probabilities $P_{true}$ via Shin's insider-trading model assumptions.",
+        "source_operator": "shin_devigging_pipeline",
+        "telemetry": "Pre- and post-de-vig Brier score differentials against actual game outcomes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "70a18e2c6ebab89a_t0",
+      "think": "The derivation of these primitives begins with the fundamental duality between physical game states and financial market representations. Raw tracking data (xyac) and play-level metrics (EP, CPOE) exist in a physical Hilbert space, while betting lines (spreads, totals) reside in a financial measure space. A naive fusion of these spaces—such as wiring `wp`/`wpa` directly into Layer 2—creates a degenerate manifold where the model simply learns to mimic the market rather than predict the physical outcome. To resolve this, we apply a market-neutral projection, effectively Gram-Schmidt orthogonalizing our feature set against the closing line vector. However, the closing line itself is not a perfect oracle; its informational density is strictly bounded by liquidity. Hence, the liquidity-gated CLV tracker acts as a dynamic weighting function, suppressing the influence of the market prior when volume falls below a statistically significant threshold. Furthermore, before any such comparison can occur, the raw odds must undergo Shin de-vigging. This initial pipeline step strips the artificial overround, recovering the bookmaker's latent probability distribution. Only after this purification can we accurately measure the 'alpha' or residual signal our physical models provide over the market. The failure to execute these steps sequentially leads to the documented contradictions, such as the unresolved sentiment paradoxes and revenge-fade sign errors, which arise when noisy, collinear signals corrupt the core reasoning engine.\n\nDeep epistemic analysis for INDEX (70a18e2c6ebab89a, domain=other, pages_read=2/2): Operator 'Market-Neutral Feature Projection' (page 1, domain other) captures: Lane 9 hard-REJECTED betting-line features in Layer 2 — wiring `wp`/`wpa` as features imports the market into the reasoning layer invisibly. Assumptions: Vegas spreads contain efficient market priors distinct from pure physical game dynamics. Breakdown regime: Fails if the market is entirely inefficient or if physical dynamics perfectly mirror public sentiment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to removing a known bias vector from a high-dimensional feature space before applying a non-linear kernel. Operator 'Liquidity-Gated CLV Tracker' (page 2, domain other) captures: **CLV needs a liquidity gate (Lane 20).** \"The close is sharp\" holds only where the close is a true-price reflection (liquid popular markets). Assumptions: High liquidity implies price discovery efficiency; thin markets reflect idiosyncratic noise rather than true probability. Breakdown regime: Breaks down during unprecedented global events where even liquid markets experience massive, synchronized slippage. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): A conditional expectation operator $E[Y|X, L > \\tau]$ that only activates the CLV kernel when observed volume $L$ exceeds threshold $\\tau$. Operator 'Shin De-Vigging Pipeline' (page 2, domain other) captures: **De-vigging is pipeline step 1 (Lane 7).** The de-vig method moves favorites ~1.5pp — larger than the Brier gain the lane celebrates. Assumptions: Overround (vig) is a uniform tax on probabilities that must be stripped to recover the bookmaker's true belief. Breakdown regime: Fails if the vig is asymmetrically applied across outcomes or heavily dependent on bettor distribution rather than risk management. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): A linear transformation mapping observed odds $O_{obs}$ to risk-neutral probabilities $P_{true}$ via Shin's insider-trading model assumptions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for INDEX (70a18e2c6ebab89a, domain=other, pages_read=2/2): Operator 'Market-Neutral Feature Projection' (page 1, domain other) captures: Lane 9 hard-REJECTED betting-line features in Layer 2 — wiring `wp`/`wpa` as features imports the market into the reasoning layer invisibly. Assumptions: Vegas spreads contain efficient market priors distinct from pure physical game dynamics. Breakdown regime: Fails if the market is entirely inefficient or if physical dynamics perfectly mirror public sentiment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to removing a known bias vector from a high-dimensional feature space before applying a non-linear kernel. Operator 'Liquidity-Gated CLV Tracker' (page 2, domain other) captures: **CLV needs a liquidity gate (Lane 20).** \"The close is sharp\" holds only where the close is a true-price reflection (liquid popular markets). Assumptions: High liquidity implies price discovery efficiency; thin markets reflect idiosyncratic noise rather than true probability. Breakdown regime: Breaks down during unprecedented global events where even liquid markets experience massive, synchronized slippage. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): A conditional expectation operator $E[Y|X, L > \\tau]$ that only activates the CLV kernel when observed volume $L$ exceeds threshold $\\tau$. Operator 'Shin De-Vigging Pipeline' (page 2, domain other) captures: **De-vigging is pipeline step 1 (Lane 7).** The de-vig method moves favorites ~1.5pp — larger than the Brier gain the lane celebrates. Assumptions: Overround (vig) is a uniform tax on probabilities that must be stripped to recover the bookmaker's true belief. Breakdown regime: Fails if the vig is asymmetrically applied across outcomes or heavily dependent on bettor distribution rather than risk management. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): A linear transformation mapping observed odds $O_{obs}$ to risk-neutral probabilities $P_{true}$ via Shin's insider-trading model assumptions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These operators trace their lineage to the Efficient Market Hypothesis and the foundational work of Sharpe and Lintner in asset pricing, adapted for sports via the pioneering applications of Poisson processes in goal modeling. The specific use of Shin’s insider trading model to de-vig reflects a direct borrowing from quantitative finance, treating sportsbooks as continuous auction markets where informed money slowly drifts prices toward true value.",
+      "theory_of_mind": "We model two primary opposing agents: the 'Sharp' (institutional bettor/bookmaker) who sets the closing line based on aggregated information, and the 'Public' whose sentimental biases create exploitable inefficiencies. Our engine must distinguish between the Sharp's true-belief updates (captured by de-vigged, liquid closes) and the Public's noise (filtered out by market-neutral projections). Sentiment analysis attempts to quantify the Public's mind, but unless gated by residual-vs-closing-line checks, it merely reintroduces the very noise we seek to exploit.",
+      "cross_layer_veto": "A strict anti-collinearity veto is enforced at the boundary between Layer 1 (raw data/market ingestion) and Layer 2 (situational reasoning). Any feature derived from betting lines (like `wp`) is automatically flagged and blocked from entering Layer 2 unless it has been explicitly transformed into a market-neutral residual. Similarly, narrative features from Lane 19 are globally vetoed unless they pass a rigorous statistical test proving they explain variance orthogonal to the closing line. This prevents the catastrophic feedback loop where the model inadvertently optimizes for past market prices rather than future physical realities."
+    }
+  ]
+}

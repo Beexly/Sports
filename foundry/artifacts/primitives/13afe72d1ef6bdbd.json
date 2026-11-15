@@ -1,0 +1,188 @@
+{
+ "book_id": "13afe72d1ef6bdbd",
+ "source_status": "COMPLETE",
+ "pages_total": 105,
+ "pages_read": 105,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Unitarity - conservation of total probability under quantum evolution",
+   "verbatim_quote": "A unitary operation is one that preserves the total probability of all possible outcomes, ensuring that the sum of probabilities remains 1.",
+   "page": 25,
+   "latex": "\\sum_{i=1}^{2^{n}} |\\alpha_i|^{2} = 1 \\qquad U^{\\dagger}U = I",
+   "symbol_and_unit_ledger": "alpha_i: complex probability amplitude of computational basis state i (dimensionless; |alpha_i|^2 is a probability and the sum over i equals 1 - the 'sum of probabilities remains 1' printed on p. 25). n: number of qubits (count, dimensionless). U: unitary evolution operator, a 2^n x 2^n complex matrix (dimensionless). U^dagger: conjugate transpose of U (dimensionless). I: identity matrix (dimensionless). U^dagger U = I is the standard operator formalization of the printed probability-preservation statement; every term is dimensionless, so the equation is homogeneous.",
+   "assumptions": "Closed-system, linear quantum mechanics between preparation and measurement. The printed infobox (p. 25) states unitarity 'preserves the total probability of all possible outcomes' and linearity implies 'no interaction between versions' of the state. No error channels and no mid-circuit measurement in the ideal statement.",
+   "breakdown_regime": "Open-system decoherence and gate noise (the NISQ regime, pp. 19, 42) make the register's evolution effectively non-unitary: probability leaks into environmental degrees of freedom. Measurement itself is non-unitary state reduction. Applying the conservation law to a subsystem while ignoring its environment mis-normalizes the model.",
+   "domain": "physics",
+   "timescales": [
+    "tau_0: single-gate duration (~10 ns to 10 us depending on modality)",
+    "tau_1: circuit depth - sequence of gates before measurement",
+    "tau_2: coherence time T1/T2 of the physical register",
+    "tau_3: full algorithm runtime including repetition for readout statistics"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binds to the transition kernel of the 22-player football state machine: the fitted play-to-play transition matrix must be row-stochastic (each row sums to exactly 1), the real-valued shadow of unitarity. Outcome channels that leak probability mass - unmodeled sacks, scrambles, penalties, clock runoff - are the football analog of decoherence: they make the kernel sub-stochastic and silently bias every downstream EV computed from it. The invariant is a normalization constraint on any learned dynamics model, not a claim about football's physical origin.",
+    "source_operator": "p1",
+    "telemetry": "Play-by-play outcome histograms per drive state; row-sum audit of the fitted transition kernel (residual mass = missing outcome channels); calibration of sack/scramble/penalty rates by down-and-distance."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Fidelity-error-rate identity and the sequential-gate budget",
+   "verbatim_quote": "The reverse of fidelity is an error rate, i.e. the probability that a quantum operation (like gate) produces an incorrect outcome. Mathematically fidelity = 100% - error rate",
+   "page": 19,
+   "latex": "F = 1 - \\varepsilon \\qquad P_{\\mathrm{success}}(G) = (1 - \\varepsilon)^{G}",
+   "symbol_and_unit_ledger": "F: per-gate fidelity, probability of an error-free gate (dimensionless probability; printed as percent, 'fidelity = 100% - error rate', p. 19 footnote ii). epsilon: per-gate error probability (dimensionless, 0 <= epsilon <= 1). G: number of sequential gate operations (count, dimensionless). P_success(G): probability the entire G-gate sequence completes without error under independent errors (dimensionless). The identity F = 1 - epsilon is printed verbatim; the product form is the standard independent-error composition, labeled here as the derived kernel. All terms dimensionless; homogeneous.",
+   "assumptions": "Independent, identically distributed per-gate errors; no error correction (NISQ context, p. 19). The book reports best-in-class fidelity 'hovers around 99,9%' (epsilon ~ 1e-3) 'allowing for 2,000-3,000 gate operations' (p. 19): the usable depth budget is set by an acceptable cumulative success probability, not a hard cutoff.",
+   "breakdown_regime": "Correlated or coherent (systematic) errors break the product form - errors can compose amplitude-wise rather than probability-wise, so (1-epsilon)^G can badly mis-estimate true success. Error correction changes the scaling entirely (logical vs physical fidelity, p. 20). At G ~ 2000-3000 with epsilon = 1e-3 the product is ~0.135-0.050, showing the printed budget already tolerates heavy cumulative failure; quoting '99.9% fidelity' without G is misleading.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: single-gate time",
+    "tau_1: depth-G circuit execution time G * tau_gate",
+    "tau_2: coherence window limiting G before noise dominates",
+    "tau_3: repetition overhead to amplify success probability to readout confidence"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Execution-chain reliability kernel for football concepts: a k-step chain (snap, protection hold, dropback timing, read, release, catch, YAC) succeeds with probability approximately the product of per-step execution fidelities f_i. At f_i = 0.99 a 7-step chain retains ~0.93; at f_i = 0.95 it retains ~0.70 before the ball is even caught. This is a derived composition law, not a printed football equation; it binds per-step fidelity state variables into a single chain-level constraint that gates play selection.",
+    "source_operator": "p2",
+    "telemetry": "Per-step completion rates from play charting (protection hold rate, on-time throw rate, catch rate over expectation); EPA variance by concept depth; fatigue-indexed f_i drift across quarters."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Grover quadratic speedup for unstructured search",
+   "verbatim_quote": "While a classical algorithm might need to examine all items in a database to find the target, Grover’s al­ gorithm can locate it in roughly the square root of that number of steps.",
+   "page": 35,
+   "latex": "T_{\\mathrm{Grover}} = O(\\sqrt{N}) \\quad \\text{vs} \\quad T_{\\mathrm{classical}} = O(N)",
+   "symbol_and_unit_ledger": "N: number of items in the unstructured search space (count, dimensionless). T_Grover, T_classical: oracle-query / step counts (counts, dimensionless). O(.): asymptotic order notation (dimensionless). Both sides are counts, so the comparison is homogeneous. The square-root scaling is printed as 'roughly the square root of that number of steps' (p. 35); O-notation is the standard formalization.",
+   "assumptions": "Unstructured database, single marked target ('finding a single target element out of N elements', p. 30), coherent oracle access and amplitude amplification. The book classifies this as polynomial (quadratic) speedup, explicitly distinct from exponential speedup (pp. 29-30).",
+   "breakdown_regime": "Never exponential: any claim of exponential speedup for unstructured search contradicts the printed quadratic bound. Structure in the data can make classical algorithms faster than O(N), erasing the advantage; NISQ noise destroys the interference amplification relies on (pp. 35, 42); data-loading and readout overheads can consume the quadratic gain at practical N (practical vs theoretical speedup, p. 30).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: single oracle query",
+    "tau_1: ~sqrt(N) amplification iterations",
+    "tau_2: coherence budget per iteration",
+    "tau_3: end-to-end runtime including state preparation and readout"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Bounds the value of unstructured tendency search in the Coach-Mind sim: scanning N equally likely defensive looks post-snap admits at best a quadratic reduction in effective reads, never an exponential one. The binding constraint is that pre-snap structure (formation, motion, alignment symmetry) is what converts unstructured search into structured inference; a model claiming exponential read-speed advantage on unstructured looks is vetoed by this ceiling.",
+    "source_operator": "p3",
+    "telemetry": "Charted number of post-snap reads vs time-to-throw; success rate of hot reads against disguised looks; pre-snap cue information gain measured as reduction in post-snap look entropy."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Exponential growth of the classical simulation state space",
+   "verbatim_quote": "The foundational challenge is that every quantum mechanical particle added to the simulation doubles the classical computing resources required, growing exponentially.",
+   "page": 28,
+   "latex": "\\dim_{\\mathbb{C}} \\mathcal{H} = 2^{n}",
+   "symbol_and_unit_ledger": "n: number of two-level quantum particles / qubits added to the simulation (count, dimensionless). dim_C H: complex dimension of the joint Hilbert space, i.e. the number of complex amplitudes a classical simulator must store (count, dimensionless). Each amplitude is dimensionless. The doubling-per-particle law is printed verbatim (p. 28, Table 4); 2^n is its exact formalization. Homogeneous: both sides are counts.",
+   "assumptions": "Generic entangled states of n distinguishable two-level subsystems; full state-vector description; no exploitable symmetry or low-entanglement structure. The book's symmetry infobox (p. 27) is the stated escape hatch from the doubling law.",
+   "breakdown_regime": "Symmetry reduction (p. 27) and low-entanglement structure (tensor-network representable states) collapse the effective dimension, so the doubling law is a worst-case statement, not a universal lower bound. The book itself notes quantum advantage requires exploitable problem structure (p. 26); unstructured classical data does not automatically inherit exponential hardness.",
+   "domain": "physics",
+   "timescales": [
+    "tau_0: per-amplitude update cost",
+    "tau_1: state-vector memory scaling 2^n",
+    "tau_2: simulation wall-time growth per added particle",
+    "tau_3: problem-size horizon where classical simulation becomes infeasible"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The joint assignment space of 22 players (11 offensive roles against 11 defensive reactions with interaction terms) grows combinatorially; exhaustive enumeration of matchup outcomes is infeasible for the same structural reason. GSE must quotient by formation/motion symmetry and restrict to low-order interaction structure instead of brute-force enumeration - the isomorphism is about state-space explosion and its symmetry escape, not a claim that football is quantum.",
+    "source_operator": "p4",
+    "telemetry": "Raw joint-assignment count vs effective hypothesis count after formation-equivalence quotienting; coverage of the reduced space by observed play families."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Symmetry reduction of the computational state space",
+   "verbatim_quote": "For instance, a system with rotational symmetry only requires analysis of one unique orientation rather than every possible one, drastically reduc­ ing computational effort.",
+   "page": 27,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "The system genuinely possesses the symmetry (translational, rotational, or reflection, p. 27); the symmetry is exact or a controlled approximation; the reduction maps the local qubit-level description to a global symmetry-based frame without losing observables of interest.",
+   "breakdown_regime": "Broken or approximate symmetries (perturbations, boundary conditions, symmetry-breaking noise) invalidate the reduction; quotienting can discard exactly the asymmetric degrees of freedom that carry the signal (a small symmetry-breaking term that determines the answer). The book presents this as an efficiency tool for quantum-chemistry-style systems, not a universal compression guarantee.",
+   "domain": "math",
+   "timescales": [
+    "tau_0: symmetry detection / group identification",
+    "tau_1: one-time quotient construction",
+    "tau_2: per-query savings on the reduced space",
+    "tau_3: cumulative algorithmic speedup over the unreduced baseline"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived quotient kernel for the football hypothesis space: if a symmetry group G acts freely on the look/assignment space (mirror symmetry across hashes, formation equivalence under motion), the effective number of distinct hypotheses is the orbit count N_eff = N/|G|. This derived counting kernel binds the symmetry state variable to the size of the inference space and licenses collapsing mirrored looks into one class - but only after verifying the symmetry is not broken by quarterback-specific or boundary (red-zone, short-yardage) effects.",
+    "source_operator": "p5",
+    "telemetry": "Mirror-pair outcome divergence tests (do left/right hash versions of the same look produce statistically different outcomes?); orbit-count reduction ratios by formation family."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Harvest-now, decrypt-later attack (information-lifetime exposure)",
+   "verbatim_quote": "“Harvest now, decrypt later” refers to a cyberattack where encrypted data is stolen today with the intent to decrypt it later when quantum computers become powerful enough to break current encryption methods.",
+   "page": 76,
+   "latex": null,
+   "symbol_and_unit_ledger": null,
+   "assumptions": "Encrypted data retains confidentiality value over time; adversaries can record ciphertext today at low cost; future capability (a large fault-tolerant quantum computer running Shor's algorithm, pp. 75-77) can break the encryption protecting it. The book notes expert threat-timeline estimates range 'between 5 to 40 years' (p. 77).",
+   "breakdown_regime": "Data whose confidentiality value expires before the threat materializes is not exposed (the attack is value-gated, not capability-gated alone); post-quantum cryptography migrated before harvest closes the window; the threat timeline is an expert-opinion range, not a calibrated distribution, so any point estimate overstates precision.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: harvest / recording event (now)",
+    "tau_1: storage horizon of stolen ciphertext",
+    "tau_2: arrival of capable decryption (5-40 y expert range, p. 77)",
+    "tau_3: required confidentiality lifetime of the data"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Information-lifetime exposure in the GSE/GSI pipeline: proprietary tendency labels, sealed baseline hashes, and internal model artifacts recorded today can be reverse-engineered later by stronger opponent models or leaked access - the structural analog of harvest-now-decrypt-later. The binding constraint is data-classification lifetime: artifacts whose secrecy must outlive the arrival of stronger adversarial capability need protection now (internal-only doctrine, access control, no public copy), not at the moment the capability arrives.",
+    "source_operator": "p6",
+    "telemetry": "Inventory of artifact secrecy lifetimes vs observed opponent-model capability growth; access-log audits; sealed-baseline hash integrity checks."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Migration lead-time rule under capability uncertainty",
+   "verbatim_quote": "Regardless of when the threat materializes, acting now is critical. Transitioning to quan­ tum-safe encryption algorithms is a complex and time-consuming process, estimated to take 3 to 12 years, depending on the indus­ try. Additionally, you must account for how long your data needs to remain confidential.",
+   "page": 77,
+   "latex": "T_{\\mathrm{migrate}} + T_{\\mathrm{secret}} > T_{\\mathrm{threat}} \\;\\Rightarrow\\; \\text{begin transition now}",
+   "symbol_and_unit_ledger": "T_migrate: duration of the protective transition (years; printed estimate '3 to 12 years, depending on the industry', p. 77). T_secret: remaining required confidentiality lifetime of the data (years; 'how long your data needs to remain confidential', p. 77). T_threat: time until an adversary can break current protection (years; expert range 5-40 years, p. 77). All three terms are durations in years, so the inequality is dimensionally homogeneous. The inequality is the derived decision rule composing the three printed durations; the book states the components and the 'acting now is critical' conclusion in prose.",
+   "assumptions": "Worst-case additive lead times; threat arrival uncertain within a wide expert range; migration duration industry-dependent (3-12 y printed); data confidentiality lifetime known or bounded. The rule is precautionary: it acts on the overlap of windows, not on a point forecast.",
+   "breakdown_regime": "If the threat never materializes, transition cost is sunk (false-positive cost); cryptographic agility or shorter migration pipelines shrink T_migrate and can flip the decision; treating the 5-40 y expert range as a precise forecast violates the source's own uncertainty statement; threats arriving faster than the migration window's lower bound require emergency measures, not planning.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0: decision epoch (now)",
+    "tau_1: migration execution window 3-12 y",
+    "tau_2: threat arrival window 5-40 y",
+    "tau_3: data confidentiality lifetime"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Regime-shift recalibration gate for GSE: if pipeline recalibration lead time plus the remaining validity horizon of the sealed baseline is shorter than the expected arrival of a regime shift (rule change, roster turnover, scheme migration), recalibration must begin before the shift is confirmed - waiting for confirmation is vetoed when the lead-time windows overlap. This composes the book's three printed durations into a scheduling constraint on the model lifecycle; it is a derived kernel, not a printed football law.",
+    "source_operator": "p7",
+    "telemetry": "Measured recalibration pipeline duration; age and drift diagnostics of the sealed Tuesday baseline (tau=0.42, never overwritten); regime-shift indicator arrival rates."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The source invariant on page 19 is deceptively small: \"Mathematically fidelity = 100% - error rate.\" Read alone it is a definition; read against the book's own depth budget it becomes a composition law with teeth. The same page reports that best-in-class fidelity \"hovers around 99,9%, allowing for 2,000-3,000 gate operations.\" Composing independent per-gate errors gives P_success(G) = (1-epsilon)^G; at epsilon = 1e-3, G = 2000 yields about 0.135 and G = 3000 about 0.050. The printed budget therefore implicitly accepts an 86-95 percent cumulative failure rate. Usable depth is threshold-dependent, and quoting fidelity without depth is a category error. This is precisely the book's myth-table lesson (p. 8): more qubits without quality can worsen performance, because noise, not count, is the binding constraint.\n\nThe second movement is unitarity (p. 25), the conservation law that makes the composition meaningful. Probability is neither created nor destroyed inside a closed computation; it is redistributed by interference and finally read out by measurement, which selects one basis state with the encoded probabilities. The moment the register couples to the environment, probability leaks out of the modeled subsystem and the clean product law degrades. NISQ is exactly the regime where that leak dominates (p. 42), which is why the book separates theoretical speedup from practical speedup (p. 30): data loading, error correction, and readout latency are overheads that can erase an asymptotic advantage at finite scale.\n\nThe third movement is the explicit isomorphism into the 22-player system. A pass concept is a sequential chain of execution steps, each with its own fidelity: snap, protection hold, dropback timing, read progression, release, catch, yards after catch. Chain-level success probability is approximately the product of per-step fidelities - the derived kernel. The pocket is the coherence window: the quarterback must finish the computation before the environment measures him, i.e. before pressure arrives. A seven-step deep shot at per-step fidelity 0.95 retains only about 0.70 chain integrity before catch probability is even applied; at 0.99 it retains about 0.93. The same play call is therefore two different bets depending on the offensive line's fatigue state. The hidden variable is the per-step fidelity vector, not the play name.\n\nThe fourth movement is the Grover ceiling (p. 35). If the defense presents N unstructured looks, post-snap search admits at best a quadratic reduction in effective reads, never an exponential one; exponential read-speed claims are vetoed by the printed bound. What rescues the offense is pre-snap structure - formation, motion, alignment symmetry - which converts unstructured search into structured inference. That is the book's \"need for structure\" condition (p. 26) and its symmetry-reduction infobox (p. 27) transferred without alteration: symmetry lets one orientation stand for all, but only while the symmetry is unbroken.\n\nThe extraction discipline that follows is concrete. Never carry an asymptotic or clean-condition advantage into a decision without subtracting the full overhead chain, and audit probability conservation of the outcome model before trusting any EV: a kernel whose rows do not sum to one - missing sack, scramble, penalty, or clock-runoff mass - is non-unitary in the audit sense and must be repaired first. The book's own roadmap shift from qubit counts to fidelity (pp. 19, 39) is the institutional version of the same discipline: measure the binding constraint, compose it through the chain, and only then scale capacity.",
+   "retrocausal_genealogy": "The hidden state of the NISQ era was written by a marketing scar: the book's Chapter 0 documents how vendors and consultancies pushed qubit counts because counts are legible to investors while fidelity is not, and Chapter 2 records the 2024 correction toward quality metrics. That lineage - a legible proxy displacing the binding constraint - is exactly how football hidden states form. A coordinator's comfort call is rarely a fresh optimization; it is a scar from a blown lead, a fourth-down failure, or a strip-sack that installed a conservative prior. Retrocausal reading asks which past failure wrote the current prior, and whether the roster's present per-step fidelity still justifies it. The genealogy is the audit trail from present bias back to originating wound.",
+   "theory_of_mind": "Under pressure the belief recursion stacks three deep. The offensive coordinator expects the defensive coordinator to blitz from a third-down tendency; the DC knows the OC expects it and shows a simulated-pressure look to bait a hot throw into disguised coverage; the quarterback feels his internal clock - a roughly two-and-a-half-second felt deadline - racing against his read progression while modeling what the safety wants him to see. Each agent models the others' model, and the product law says the hot throw is correct only if every chain step's fidelity survives the disguise. The quick screen is the low-depth, high-fidelity chain chosen precisely because late-clock belief recursion is unreliable: comfort calls are depth minimization under theory-of-mind uncertainty.",
+   "cross_layer_veto": "Physics vetoes the high-EV call first: a seven-step shot with positive isolated EV under clean-pocket assumptions fails the chain audit when fatigue drops per-step fidelity to 0.95 - the product retains about 0.70 before catch probability, pushing composed success below the break-even line for the down and distance. The unitarity audit adds a second veto: any outcome model whose probabilities do not sum to one, because sack, scramble, penalty, or clock-runoff mass is missing, is leaking probability and its EV numbers are untrustworthy. Psychology supplies the third: a quarterback whose internal clock runs hot forces reads - the felt deadline acts as a decoherence event, collapsing the read progression into the first plausible look. All three vetoes must clear before the call is licensed."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The doubling law on page 28 is a structural theorem about when brute force dies: every quantum mechanical particle added to a simulation doubles the classical resources required, dim H = 2^n. The book's point is not hardware marketing; it is that state-space explosion is a property of the problem, not of the machine. The 22-player football system inherits the same combinatorial anatomy: joint assignments of eleven offensive roles against eleven defensive reactions, with interaction terms, explode faster than any enumeration budget. The honest consequence is that exhaustive matchup simulation is not a compute problem awaiting more GPUs; it is a state-space problem requiring structure, exactly as the book insists quantum advantage requires exploitable problem structure (p. 26).\n\nThe escape hatch is symmetry (p. 27): a rotationally symmetric system needs one orientation analyzed, not all. The derived quotient kernel N_eff = N/|G| transfers directly to tendency modeling: mirror symmetry across hashes, formation equivalence under motion, and personnel-group invariances collapse the look space into orbits. But the breakdown regime transfers too. Quotienting is licensed only while the symmetry is unbroken; red-zone boundary effects, quarterback handedness, and short-yardage priors break mirror symmetry, and a model that collapses those orbits silently deletes the signal. The audit is empirical: test mirror-pair outcome divergence before quotienting, and keep the asymmetric residual as a separate hypothesis class.\n\nThe third movement is the concentration of advantage. The book explains that quantum computing's greatest successes sit in cryptography because factoring carries hidden periodic structure that generic problems lack (p. 26). The GSE shadow is that edge concentrates where exploitable periodicity exists - tendency cycles, situational play-calling regularities - and is absent elsewhere, so model allocation should follow structure density, not data volume. The book also records the counter-innovation risk (p. 31 and endnote 12, the Ewin Tang dequantization episode): claimed quantum advantages were erased by better classical algorithms. Every edge claim must therefore be re-audited continuously against the best classical alternative, or it decays into folklore.\n\nThe fourth movement is the lead-time rule. Page 77 prints three durations: migration to quantum-safe encryption takes 3 to 12 years; expert estimates of threat arrival range between 5 and 40 years; and the data's required confidentiality lifetime must be accounted for. Composing them gives the derived gate T_migrate + T_secret > T_threat, therefore act now. The harvest-now-decrypt-later mechanism (p. 76) is what makes the rule non-trivial: exposure is created at recording time, not at decryption time. The GSE shadow is the model lifecycle: if recalibration lead time plus the sealed baseline's remaining validity horizon overlaps the expected regime-shift window, recalibration must start before the shift is confirmed. Waiting for confirmation is the exact analog of waiting to migrate until quantum computers exist - by then the harvest has already happened. The sealed Tuesday baseline (tau=0.42) is never overwritten; the rule schedules its replacement, not its mutation.\n\nThe fifth movement closes the loop with the capacity-versus-quality veto. The myth table (p. 8) and the readiness chapter (p. 39) state that adding qubits without improving quality can worsen performance, because noise scales with count. The ensemble shadow is direct: adding features, agents, or model heads without per-component fidelity control injects more noise than signal, and the fidelity-depth product law from the first trace compounds that degradation through every downstream decision. The sovereign order of operations is therefore fixed: measure per-component fidelity, compose it through the chain, audit conservation, and only then scale capacity - the same order the book's own roadmap insists on.",
+   "retrocausal_genealogy": "The lead-time rule's hidden state is the asymmetry between recording cost and decryption cost: harvest-now-decrypt-later exists because storing ciphertext is cheap today while breaking it is expensive until capability arrives. That asymmetry has a lineage - every intelligence era where collection outran analysis created the same dormant-exposure structure. In the football pipeline the originating scar is structurally identical: tendency data and sealed baselines are collected continuously, while the opponent's capability to reverse-engineer them arrives later and discontinuously. The genealogy of a regime shift - rule changes, roster turnover, scheme migration - is likewise written before it is visible. Reading backwards from future capability to today's recording decisions is what converts a passive archive into an exposure inventory.",
+   "theory_of_mind": "The strategic recursion here is institutional rather than in-play. The analyst models the opponent's modeling staff: they know we chart tendencies, so they install self-scout-breaking variation on high-frequency looks; we know they know, so we weight situational splits over raw frequencies; they anticipate that weighting and seed false tells in low-leverage situations to corrupt our situational priors. Meanwhile the coaching staff's own belief lag - comfort in last season's script - is the internal adversary. The lead-time rule is the institutional answer to this recursion: because beliefs about the opponent's next adaptation arrive with lag, recalibration must be scheduled against the expected adaptation window, not against confirmed observations. Waiting for certainty is losing the recursion by construction.",
+   "cross_layer_veto": "The combinatorial layer vetoes brute force: no enumeration of 22-player joint assignments fits any realistic compute budget, so any dossier promising exhaustive coverage is rejected at the state-space gate. The symmetry layer vetoes naive compression: quotienting mirrored looks is forbidden until mirror-pair outcome divergence is tested, because broken symmetry carries exactly the signal the quotient would delete. The decision layer vetoes waiting: when recalibration lead time plus baseline validity horizon overlaps the regime-shift window, wait-for-more-data is a dominated action - the harvest has already begun. And the quality layer vetoes scaling: adding model heads or features without per-component fidelity measurement injects noise that the chain product compounds, so capacity expansion is gated on fidelity telemetry, mirroring the book's own qubit-quality correction."
+  }
+ ],
+ "universal_lens": "The polymath audit lens this book trains is invariant-under-hype extraction: separate what is proven (asymptotic bounds, conservation laws, composition identities) from what is projected (roadmaps, expert timelines, vendor claims), then demand the breakdown regime and the full overhead accounting before any advantage claim enters a decision. Every domain - quantum, financial, physiological, tactical - repeats the same failure mode: a legible proxy metric (qubit count, win rate, model size) displaces the binding constraint (fidelity, calibration, execution reliability). The lens composes per-step reliabilities and audits probability conservation before trusting any headline number.",
+ "gsi_mapping": "For GSI's fluid/axonal-shear and bioenergetics programs the binding isomorphisms are composition and conservation. The fidelity-depth product law maps to cumulative failure risk under repeated mechanical or metabolic loads: per-rep tissue reliability compounds through a session, so high-load protocols are gated on per-rep fidelity telemetry (sprint decrement, HRV drift, impact-exposure counts), not on total volume alone. Unitarity maps to bioenergetic accounting: ATP-PCr, glycolytic, and oxidative contributions must sum to measured demand with no leaked mass. These are modeling isomorphisms for clinical telemetry design, not claims that tissue obeys quantum mechanics.",
+ "gse_mapping": "For GSE the kernels bind directly: the Grover ceiling caps unstructured tendency-search value and forces pre-snap structure exploitation in the Coach-Mind sim; symmetry quotienting compresses the look space only after mirror-divergence tests; the chain-fidelity product gates deep-shot selection on fatigue-indexed per-step execution rates; and the lead-time rule schedules sealed-baseline recalibration before regime shifts confirm. Deception modeling inherits the harvest-now structure: internal artifacts stay internal, no public copy, no odds inputs anywhere. DFS/portfolio tail risk is audited by probability conservation - every outcome channel must carry its mass before EV is trusted."
+}

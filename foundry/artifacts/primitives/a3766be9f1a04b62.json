@@ -1,0 +1,78 @@
+{
+  "book_id": "a3766be9f1a04b62",
+  "source_status": "COMPLETE",
+  "title": "1179-robust-forecast-aggregation-via-additional",
+  "file_name": "1179-robust-forecast-aggregation-via-additional.md",
+  "sha256": "a3766be9f1a04b62a7c446e2014e5d8b553490609f0797ac17390914fe3d3502",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The aggregation of partial-information forecasts is mathematically isomorphic to a constrained polynomial minimax problem. By reducing worst-case error bounds to Chebyshev equioscillation, the framework unifies query complexity and higher-order reasoning into exact phase transitions governed by the square root of the expert population.",
+  "gsi_mapping": "GSI maps difference queries to Bayesian overlap diagnostics between proprietary model ensembles. The exact minimax bound dictates the conformal prediction intervals for aggregate probabilities, while the square-root scaling law optimally allocates computational budgets across conditional probability elicitation to minimize worst-case Brier score deviations.",
+  "gse_mapping": "In GSE situational reasoning, experts represent isolated tactical sub-modules. Difference queries act as state-transition operators that resolve redundant spatial priors. The derived complexity regimes dictate when to halt recursive module interrogation during real-time game-state updates, ensuring optimal information gain per computational cycle.",
+  "primitives": [
+    {
+      "primitive_id": "partial_info_sum_target",
+      "name": "Partial-Information Target Decomposition",
+      "verbatim_quote": "Equations & assumptions - Model: n experts; signals X_S for subsets S of experts, independent, mean-zero; target Y = Σ_S X_S; expert i observes {X_S : i ∈ S} and reports E[Y | its information].",
+      "page": 1,
+      "latex": "Y = \\sum_{S} X_S",
+      "symbol_and_unit_ledger": "Y (dimensionless target sum), X_S (independent mean-zero signal components), n (integer number of experts), S (subset index)",
+      "assumptions": "Signals are independent, mean-zero, and indexed by subsets of experts.",
+      "breakdown_regime": "Fails if signals exhibit strong cross-subset correlation or non-zero means without centering.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's decomposition of game-outcome probabilities into independent tactical feature spaces observed by distinct predictive models.",
+        "source_operator": "partial_info_sum_target",
+        "telemetry": "Variance of individual model residuals on holdout sets."
+      }
+    },
+    {
+      "primitive_id": "minimax_difference_query",
+      "name": "Minimax Difference Query Operator",
+      "verbatim_quote": "- Exact minimax worst-case error with query budget d < n: 1 - d/n.",
+      "page": 1,
+      "latex": "\\mathcal{E}_{\\text{minimax}} = 1 - \\frac{d}{n}",
+      "symbol_and_unit_ledger": "\\mathcal{E}_{\\text{minimax}} (dimensionless worst-case normalized error), d (integer query budget), n (integer number of experts)",
+      "assumptions": "Unrestricted query complexity allowed; linear aggregation structure.",
+      "breakdown_regime": "Singularity occurs at d = n where error vanishes completely; invalid for d > n.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines the exact efficiency kernel for GSE's structured follow-up evaluations, proving pairwise difference queries exponentially outperform naive higher-order elicitation.",
+        "source_operator": "minimax_difference_query",
+        "telemetry": "Reduction in aggregate log-loss when injecting pairwise difference features."
+      }
+    },
+    {
+      "primitive_id": "sqrt_phase_transition",
+      "name": "Square-Root Complexity Phase Transition",
+      "verbatim_quote": "Under linear aggregation with agent/order complexity d, three regimes: d = o(√n) → error 1 - Θ(d2/n); d = Θ(√n) → limiting error strictly between 0 and 1; d = ω(√n) → upper bound decays exponentially in d.",
+      "page": 1,
+      "latex": "d = \\Theta(\\sqrt{n}) \\implies \\mathcal{E} \\in (0, 1)",
+      "symbol_and_unit_ledger": "d (integer agent/order complexity), n (integer number of experts), \\mathcal{E} (dimensionless asymptotic error)",
+      "assumptions": "Linear aggregation constraints applied to agent and order complexity.",
+      "breakdown_regime": "Phase transition boundary at d proportional to the square root of n; exponential decay requires super-square-root complexity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's computational budget allocation for diagnostic layers, establishing the precise threshold where additional conditional queries yield diminishing marginal accuracy returns.",
+        "source_operator": "sqrt_phase_transition",
+        "telemetry": "Marginal Brier score improvement per additional diagnostic query."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a3766be9f1a04b62_t0",
+      "think": "The derivation begins by modeling the collective forecast as a sum of independent latent signals, where each expert possesses partial information defined by subset membership. The core mathematical innovation lies in formulating the elicitation process as queries over a Directed Acyclic Graph (DAG) of these information sets. To optimize worst-case aggregation accuracy under a strict query budget, the authors reduce the problem to a constrained polynomial minimax optimization. This reduction elegantly leverages Chebyshev polynomials and equioscillation theorems to establish tight bounds. The introduction of 'difference queries'—asking an expert for the discrepancy between their forecast and a peer's—acts as a highly efficient operator that recovers optimal Bayesian aggregation using only n queries. This bypasses the exponential blowup typical of naive higher-order expectation elicitation. The resulting error landscape exhibits a profound phase transition tied to the square root of the expert population size. Below this threshold, error reduction scales polynomially; above it, the error bound collapses exponentially. This rigorous theoretical framework provides a complete characterization of the trade-off between query complexity, reasoning depth, and achievable robustness, offering a definitive blueprint for structuring multi-agent interrogations in high-dimensional, partially observable environments.\n\nDeep epistemic analysis for 1179-robust-forecast-aggregation-via-additional (a3766be9f1a04b62, domain=other, pages_read=3/3): Operator 'Partial-Information Target Decomposition' (page 1, domain other) captures: Equations & assumptions - Model: n experts; signals X_S for subsets S of experts, independent, mean-zero; target Y = Σ_S X_S; expert i observes {X_S : i ∈ S} and reports E[Y | its information]. Assumptions: Signals are independent, mean-zero, and indexed by subsets of experts. Breakdown regime: Fails if signals exhibit strong cross-subset correlation or non-zero means without centering. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's decomposition of game-outcome probabilities into independent tactical feature spaces observed by distinct predictive models. Operator 'Minimax Difference Query Operator' (page 1, domain other) captures: - Exact minimax worst-case error with query budget d < n: 1 - d/n. Assumptions: Unrestricted query complexity allowed; linear aggregation structure. Breakdown regime: Singularity occurs at d = n where error vanishes completely; invalid for d > n. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the exact efficiency kernel for GSE's structured follow-up evaluations, proving pairwise difference queries exponentially outperform naive higher-order elicitation. Operator 'Square-Root Complexity Phase Transition' (page 1, domain other) captures: Under linear aggregation with agent/order complexity d, three regimes: d = o(√n) → error 1 - Θ(d2/n); d = Θ(√n) → limiting error strictly between 0 and 1; d = ω(√n) → upper bound decays exponentially in d. Assumptions: Linear aggregation constraints applied to agent and order complexity. Breakdown regime: Phase transition boundary at d proportional to the square root of n; exponential decay requires super-square-root complexity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's computational budget allocation for diagnostic layers, establishing the precise threshold where additional conditional queries yield diminishing marginal accuracy returns. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1179-robust-forecast-aggregation-via-additional (a3766be9f1a04b62, domain=other, pages_read=3/3): Operator 'Partial-Information Target Decomposition' (page 1, domain other) captures: Equations & assumptions - Model: n experts; signals X_S for subsets S of experts, independent, mean-zero; target Y = Σ_S X_S; expert i observes {X_S : i ∈ S} and reports E[Y | its information]. Assumptions: Signals are independent, mean-zero, and indexed by subsets of experts. Breakdown regime: Fails if signals exhibit strong cross-subset correlation or non-zero means without centering. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's decomposition of game-outcome probabilities into independent tactical feature spaces observed by distinct predictive models. Operator 'Minimax Difference Query Operator' (page 1, domain other) captures: - Exact minimax worst-case error with query budget d < n: 1 - d/n. Assumptions: Unrestricted query complexity allowed; linear aggregation structure. Breakdown regime: Singularity occurs at d = n where error vanishes completely; invalid for d > n. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the exact efficiency kernel for GSE's structured follow-up evaluations, proving pairwise difference queries exponentially outperform naive higher-order elicitation. Operator 'Square-Root Complexity Phase Transition' (page 1, domain other) captures: Under linear aggregation with agent/order complexity d, three regimes: d = o(√n) → error 1 - Θ(d2/n); d = Θ(√n) → limiting error strictly between 0 and 1; d = ω(√n) → upper bound decays exponentially in d. Assumptions: Linear aggregation constraints applied to agent and order complexity. Breakdown regime: Phase transition boundary at d proportional to the square root of n; exponential decay requires super-square-root complexity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's computational budget allocation for diagnostic layers, establishing the precise threshold where additional conditional queries yield diminishing marginal accuracy returns. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces back to classical social choice theory and the foundational work on aggregating partial information. It heavily relies on the minimax theorem from game theory and the approximation properties of Chebyshev polynomials developed in the 19th century. The specific DAG-elicitable query formulation modernizes these concepts, bridging classical statistical decision theory with contemporary algorithmic mechanism design and multi-agent learning frameworks.",
+      "theory_of_mind": "The framework implicitly models experts as rational agents optimizing squared-error loss under bounded rationality. By introducing difference queries, the aggregator forces experts to explicitly reason about the informational overlap with their peers. This acts as a cognitive mirror, compelling agents to reveal not just their private signals, but their beliefs about the structural redundancy within the collective knowledge base, thereby aligning individual incentives with global aggregation accuracy.",
+      "cross_layer_veto": "A critical veto condition arises if the independence assumption of the latent signals is violated. If experts share correlated noise or systemic biases, the exact minimax bound of 1 - d/n degrades rapidly. Furthermore, if the cost of executing difference queries exceeds the marginal reduction in worst-case error dictated by the square-root regime, the interrogation layer introduces unnecessary latency and should be pruned to prevent overfitting to structural artifacts."
+    }
+  ]
+}

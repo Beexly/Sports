@@ -1,0 +1,858 @@
+{
+ "book_id": "709226a7be2f8de6",
+ "source_status": "COMPLETE",
+ "source_note": "True source: Andrew Gelman, John B. Carlin, Hal S. Stern, David B. Dunson, Aki Vehtari, and Donald B. Rubin, Bayesian Data Analysis, third edition, CRC Press (Chapman and Hall/CRC Texts in Statistical Science), 2013. Local file: GelmanEtAl-2013-BayesianDataAnalysis-3ed.pdf (677 pages per PDF metadata), the authors' official electronic edition marked 'for non-commercial purposes only' with errors fixed as of 20 February 2025; clean born-digital text, no OCR. Identity per gatekeeper scan: file size 55911785 bytes; sha256 over str(size) encoded plus full file bytes = 709226a7be2f8de6941cd0e18b2598c9b499a4a7de94ab750e7371f339e94051; book_id = 709226a7be2f8de6. Extraction was worked from the derived text file GelmanEtAl-2013-BayesianDataAnalysis-3ed.pdf.txt (2448163 bytes, 345170 words, 34691 lines; its own scan digest c9fcc09d5a638344d6c65ce8ab4e711364bcf9ed7603560f45678876b86c5093 is recorded here only for reconciliation). Notation note: this electronic text denotes the parameter vector by omega where many printings use theta, and renders some relations with the arrow glyph; all verbatim quotes were transcribed exactly as they appear in the extracted text, including ligatures, and verified as exact whitespace-normalized substrings. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "pages_total": 677,
+ "pages_read": 677,
+ "primitives": [
+  {
+   "primitive_id": "three_steps_bayesian_workflow",
+   "name": "Bayesian data analysis is an iterated three-step loop: build a full probability model, condition on observed data, then evaluate fit and expand the model",
+   "verbatim_quote": "The process of Bayesian data analysis can be idealized by dividing it into the following three steps:",
+   "page": "Ch 1 §1.1, book p. 3; text lines 469-486",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A joint probability distribution for all observable and unobservable quantities can be written down, consistent with subject-matter knowledge and the data collection process.",
+    "Model evaluation is part of inference, not an afterthought: step 3 feeds back into step 1 and the loop repeats."
+   ],
+   "breakdown_regime": "The loop never terminates with a certified model; it only produces a current best model. With no time or data for step 3, the workflow degenerates into conditioning on an unchecked model.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The three steps are the engine's own operating loop: specify a full generative model of a game, condition on observed evidence to obtain posterior beliefs over latent strengths, then run posterior predictive checks and expand the model where the checks fail. The isomorphism is exact because the engine, like the book's analyst, never gets to assume the first model is right.",
+    "source_operator": "three_steps_bayesian_workflow",
+    "telemetry": "Model specification artifacts, observed game data, posterior samples, and predictive check discrepancies, versioned per iteration."
+   }
+  },
+  {
+   "primitive_id": "bayes_rule_posterior_factorization",
+   "name": "Posterior density is proportional to prior times likelihood: p(ω|y) ∝ p(ω)p(y|ω), from the joint factorization p(ω, y) = p(ω)p(y|ω)",
+   "verbatim_quote": "Simply conditioning on the known value of the data y, using the basic property of conditional probability known as Bayes’ rule, yields the posterior density:",
+   "page": "Ch 1 §1.3, book p. 6-7, eqs. (1.1)-(1.2); text lines 668-690",
+   "latex": "p(\\omega|y) = \\frac{p(\\omega)p(y|\\omega)}{p(y)} \\propto p(\\omega)p(y|\\omega)",
+   "symbol_and_unit_ledger": {
+    "ω": "unobservable parameter vector [problem-specific units]",
+    "y": "observed data vector",
+    "p(ω)": "prior density over parameters",
+    "p(y|ω)": "sampling distribution / likelihood",
+    "p(y)": "marginal density of the data (normalizing constant)"
+   },
+   "assumptions": [
+    "A joint probability model for parameters and data exists before conditioning.",
+    "The normalizing constant p(y) does not depend on ω and can be dropped for inference about ω within one model."
+   ],
+   "breakdown_regime": "The identity is exact but empty without a defensible model p(ω, y); under model misspecification the posterior concentrates on the least-wrong parameter value and its intervals lose their frequency calibration.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the update kernel of the whole reasoning engine: every belief state about team and player strength is a posterior formed by multiplying a prior state by the likelihood of newly observed performance data. Sequential application across a season is just repeated use of the same factorization, with yesterday's posterior as today's prior.",
+    "source_operator": "bayes_rule_posterior_factorization",
+    "telemetry": "Prior state distributions per entity, game outcome and play-level likelihoods, timestamps ordering the updates."
+   }
+  },
+  {
+   "primitive_id": "posterior_predictive_distribution",
+   "name": "Posterior predictive distribution: predictions average conditional predictions over the posterior, p(ỹ|y) = ∫ p(ỹ|ω)p(ω|y)dω",
+   "verbatim_quote": "The second and third lines display the posterior predictive distribution as an average of conditional predictions over the posterior distribution of ω.",
+   "page": "Ch 1 §1.3, book p. 7, eq. (1.4); text lines 700-718",
+   "latex": "p(\\tilde{y}|y) = \\int p(\\tilde{y}|\\omega)p(\\omega|y)\\,d\\omega",
+   "symbol_and_unit_ledger": {
+    "ỹ": "future or unobserved observable quantity [units of the outcome]",
+    "p(ỹ|ω)": "sampling distribution of the future observable given parameters",
+    "p(ω|y)": "posterior density of parameters given observed data"
+   },
+   "assumptions": [
+    "Future observable ỹ is conditionally independent of observed y given ω.",
+    "The same data-generating process produces both y and ỹ."
+   ],
+   "breakdown_regime": "If the process drifts (rosters, rules, conditions change), averaging over a posterior fit to old data yields confident predictions for a process that no longer exists; the integral propagates parameter uncertainty but not model or regime uncertainty.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This integral is the engine's projection operator: a projected distribution over a future game's outcomes is never a plug-in at a point estimate, it is the posterior average of conditional outcome models. Uncertainty in latent strength flows through to the projection automatically, widening or narrowing it by how much evidence backs each parameter.",
+    "source_operator": "posterior_predictive_distribution",
+    "telemetry": "Posterior draws of latent parameters, the conditional outcome model, and the fixture context for the future event."
+   }
+  },
+  {
+   "primitive_id": "prior_predictive_distribution",
+   "name": "Prior predictive distribution: the model's implied distribution for observable data before data are seen, p(y) = ∫ p(ω)p(y|ω)dω, used to audit the model itself",
+   "verbatim_quote": "This is often called the marginal distribution of y, but a more informative name is the prior predictive distribution: prior because it is not conditional on a previous observation of the process, and predictive because it is the distribution for a quantity that is observable.",
+   "page": "Ch 1 §1.3, book p. 7, eq. (1.3); text lines 695-707",
+   "latex": "p(y) = \\int p(\\omega)p(y|\\omega)\\,d\\omega",
+   "symbol_and_unit_ledger": {
+    "p(y)": "prior predictive (marginal) density of observable data",
+    "p(ω)": "prior density",
+    "p(y|ω)": "sampling distribution"
+   },
+   "assumptions": [
+    "The prior and likelihood together imply a distribution over datasets that can be simulated and inspected before fitting."
+   ],
+   "breakdown_regime": "With vague or improper priors the prior predictive can put mass on absurd datasets, which is itself the diagnostic: a model whose prior predictive is unrealistic cannot be trusted before any data arrive.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Prior predictive simulation is the engine's pre-season sanity audit: simulate full seasons from the priors and model structure alone and check that simulated score distributions, margins, and totals sit in realistic ranges. A prior that implies impossible game scripts is rejected before it can contaminate a single projection.",
+    "source_operator": "prior_predictive_distribution",
+    "telemetry": "Simulated datasets drawn from the prior model, compared against historical ranges of the real observables."
+   }
+  },
+  {
+   "primitive_id": "exchangeability_and_iid_modeling",
+   "name": "Exchangeability: joint density invariant to permutations of indexes; the license for modeling units as conditionally iid given unknown parameters",
+   "verbatim_quote": "the n values yi may be regarded as exchangeable, meaning that we express uncertainty as a joint probability density p(y1 , . . . , yn ) that is invariant to permutations of the indexes.",
+   "page": "Ch 1 §1.2, book p. 5; text lines 578-586",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No information distinguishing units is carried by their indexes; anything that distinguishes them must be moved into observed covariates.",
+    "After conditioning on sufficient covariates, residual index information is negligible."
+   ],
+   "breakdown_regime": "Fails when order carries information: time trends, learning, fatigue, and matchup-specific effects all break permutation invariance. An exchangeable model applied to ordered data silently averages over structure that is actually signal.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exchangeability is the judgment that licenses pooling: games, drives, or player performances are treated as draws from a common distribution only after conditioning on the context variables that distinguish them. In the engine this is the formal checkpoint before any group of performances is averaged into a rating, and its failure list (recency, opponent, venue) is exactly the covariate set the model must carry.",
+    "source_operator": "exchangeability_and_iid_modeling",
+    "telemetry": "Unit indexes, timestamps, and candidate distinguishing covariates for every pooled observation."
+   }
+  },
+  {
+   "primitive_id": "beta_binomial_conjugacy",
+   "name": "Beta prior is conjugate to the binomial likelihood: posterior is Beta(α + y, β + n − y), with hyperparameters readable as prior successes and failures",
+   "verbatim_quote": "The property that the posterior distribution follows the same parametric form as the prior distribution is called conjugacy; the beta prior distribution is a conjugate family for the binomial likelihood.",
+   "page": "Ch 2 §2.4, book pp. 34-35; text lines 2075-2115",
+   "latex": "p(\\omega|y) = \\mathrm{Beta}(\\omega\\,|\\,\\alpha + y,\\ \\beta + n - y), \\qquad E(\\omega|y) = \\frac{\\alpha + y}{\\alpha + \\beta + n}",
+   "symbol_and_unit_ledger": {
+    "ω": "probability of success [dimensionless, 0 to 1]",
+    "y": "observed successes [count]",
+    "n": "trials [count]",
+    "α, β": "prior hyperparameters, interpretable as prior success and failure counts plus 1"
+   },
+   "assumptions": [
+    "Trials are conditionally independent Bernoulli draws with a common success probability.",
+    "Prior information can be honestly encoded as pseudo-counts in a beta distribution."
+   ],
+   "breakdown_regime": "Conjugacy is a computational convenience, not a truth: if real prior information is bimodal or the success probability varies across trials, the beta-binomial form forces a wrong shape and the closed form hides it.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every rate the engine tracks (conversion rates, success rates by situation) is a beta-binomial update at its core: a prior pseudo-count expressing baseline expectation, incremented by observed successes and trials. The closed form makes per-play updating cheap enough to run at telemetry scale, and the pseudo-count reading keeps prior strength auditable in units of games.",
+    "source_operator": "beta_binomial_conjugacy",
+    "telemetry": "Binary outcome streams with trial counts per entity and situation, plus the baseline rates used as pseudo-counts."
+   }
+  },
+  {
+   "primitive_id": "precision_weighted_posterior_compromise",
+   "name": "Normal prior plus normal data: the posterior mean is a precision-weighted compromise between prior mean and observation, μ1 = μ0 + (y − μ0)τ0²/(σ² + τ0²)",
+   "verbatim_quote": "Each formulation represents the posterior mean as a compromise between the prior mean and the observed value.",
+   "page": "Ch 2 §2.5, book pp. 40-41; text lines 2395-2412",
+   "latex": "\\mu_1 = \\mu_0 + (y - \\mu_0)\\frac{\\tau_0^2}{\\sigma^2 + \\tau_0^2}, \\qquad \\frac{1}{\\tau_1^2} = \\frac{1}{\\tau_0^2} + \\frac{1}{\\sigma^2}",
+   "symbol_and_unit_ledger": {
+    "μ0, τ0²": "prior mean and variance of the parameter [outcome units, outcome units squared]",
+    "y, σ²": "observation and its known sampling variance",
+    "μ1, τ1²": "posterior mean and variance"
+   },
+   "assumptions": [
+    "Prior and sampling distributions are both normal and the sampling variance is known.",
+    "The observation is an unbiased draw centered on the parameter."
+   ],
+   "breakdown_regime": "The weighting is only as honest as the two variances: an understated σ² (overconfident data) or an overstated τ0² (vague prior) hands control to the wrong side, and heavy-tailed reality breaks the linear compromise entirely.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the atomic rating update of the engine: a player's or team's new performance moves its latent rating toward the observation by a factor set by the ratio of prior uncertainty to measurement noise. It explains in one line why a single game barely moves a well-established rating and swings a thin-evidence one, and it is the scalar case of the Kalman-style updates the engine runs everywhere.",
+    "source_operator": "precision_weighted_posterior_compromise",
+    "telemetry": "Current rating mean and variance per entity, new performance observations with their measurement variances (sample sizes and context)."
+   }
+  },
+  {
+   "primitive_id": "jeffreys_invariant_prior",
+   "name": "Jeffreys' prior: p(ω) ∝ [J(ω)]^1/2 with J the Fisher information, constructed to be invariant under one-to-one reparameterization",
+   "verbatim_quote": "Jeﬀreys’ principle leads to defining the noninformative prior density as p(ω) ∝ [J(ω)]1/2 , where J(ω) is the Fisher information for ω:",
+   "page": "Ch 2 §2.8, book pp. 52-53, eq. (2.20); text lines 3070-3110",
+   "latex": "p(\\omega) \\propto [J(\\omega)]^{1/2}, \\qquad J(\\omega) = -E\\left[\\frac{\\partial^2 \\log p(y|\\omega)}{\\partial \\omega^2}\\right]",
+   "symbol_and_unit_ledger": {
+    "J(ω)": "Fisher information for ω [inverse parameter units squared]",
+    "p(y|ω)": "sampling density",
+    "E[·]": "expectation over the data distribution at fixed ω"
+   },
+   "assumptions": [
+    "The likelihood is regular enough that Fisher information exists and is finite.",
+    "Invariance to reparameterization is the property a default prior should have."
+   ],
+   "breakdown_regime": "In multiparameter problems Jeffreys' rule can produce marginal posteriors nobody endorses, and with improper versions the posterior itself can be improper (the Beta(0,0) case fails at y = 0 or y = n); the book itself steers large problems toward hierarchical models instead.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The invariance demand maps onto a standing engine rule: default priors and default ratings must not change their meaning when a quantity is re-expressed (per-game versus per-play, probability versus log-odds). Any engine default that flips conclusions under a change of units is a parameterization artifact, and Jeffreys' construction is the canonical way to build defaults that cannot do that.",
+    "source_operator": "jeffreys_invariant_prior",
+    "telemetry": "The likelihood's curvature (observed information) per parameter, computed from the same data streams that feed the updates."
+   }
+  },
+  {
+   "primitive_id": "weakly_informative_prior_regularization",
+   "name": "Weakly informative priors: proper priors deliberately weaker than actual knowledge, used to regularize the posterior into the range of plausible values",
+   "verbatim_quote": "We characterize a prior distribution as weakly informative if it is proper but is set up so that the information it does provide is intentionally weaker than whatever actual prior knowledge is available.",
+   "page": "Ch 2 §2.9, book p. 55; text lines 3177-3195",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The analyst knows the rough scale of plausible effects even when unwilling to commit to a full informative prior.",
+    "Regularization is a modeling choice to be disclosed, not a claim of ignorance."
+   ],
+   "breakdown_regime": "A weakly informative prior set on the wrong scale is just a wrong informative prior: too tight and it overrides real effects, too wide and it fails to rule out the absurd values it exists to exclude.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine priors on effects (home advantage, rest, weather, coaching changes) are weakly informative by design: wide enough to let a season of data dominate, tight enough to forbid physically absurd effect sizes from thin samples. The book's construction recipe, start from a flat prior and add only the information needed to keep inferences reasonable, is the exact procedure used to set those scales.",
+    "source_operator": "weakly_informative_prior_regularization",
+    "telemetry": "Historical distributions of each effect across seasons, used to set prior scales before current-season data are fitted."
+   }
+  },
+  {
+   "primitive_id": "marginalization_over_nuisance_parameters",
+   "name": "Inference for a parameter of interest averages over nuisance parameters: p(ω1|y) = ∫ p(ω1|ω2, y)p(ω2|y)dω2",
+   "verbatim_quote": "The averaging over nuisance parameters ω2 can be interpreted generally; for example, ω2 can include a discrete component representing diﬀerent possible sub-models.",
+   "page": "Ch 3 §3.1, book pp. 63-64, eq. (3.1); text lines 3579-3610",
+   "latex": "p(\\omega_1|y) = \\int p(\\omega_1|\\omega_2, y)\\,p(\\omega_2|y)\\,d\\omega_2",
+   "symbol_and_unit_ledger": {
+    "ω1": "parameter of interest",
+    "ω2": "nuisance parameter (can include a discrete sub-model index)",
+    "p(ω2|y)": "marginal posterior of the nuisance parameter, acting as mixture weights"
+   },
+   "assumptions": [
+    "The joint posterior over (ω1, ω2) is available, analytically or by simulation.",
+    "Uncertainty in ω2 is genuinely propagated rather than frozen at a point estimate."
+   ],
+   "breakdown_regime": "Marginalization is only as good as the model for ω2: a misspecified nuisance component (for example a wrong variance model) contaminates the mixture, and high-dimensional nuisance spaces make the integral the computational bottleneck.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine never reports a strength estimate conditioned on a guessed context; it marginalizes. A team's offensive rating is a mixture over uncertainty in opponent defensive strength, game script, and personnel availability, weighted by their posteriors. This is what separates an engine rating from a regression coefficient: the nuisance context is integrated out, not held fixed.",
+    "source_operator": "marginalization_over_nuisance_parameters",
+    "telemetry": "Joint posterior draws over primary and nuisance parameters (opponent strength, environment, availability states)."
+   }
+  },
+  {
+   "primitive_id": "dirichlet_multinomial_conjugacy",
+   "name": "Dirichlet prior is conjugate to the multinomial: posterior is Dirichlet(αj + yj), hyperparameters acting as prior category counts",
+   "verbatim_quote": "The conjugate prior distribution is a multivariate generalization of the beta distribution known as the Dirichlet,",
+   "page": "Ch 3 §3.4, book pp. 69-70; text lines 3904-3940",
+   "latex": "p(\\omega|\\alpha) \\propto \\prod_{j=1}^{k} \\omega_j^{\\alpha_j - 1}, \\qquad \\omega\\,|\\,y \\sim \\mathrm{Dirichlet}(\\alpha_1 + y_1, \\ldots, \\alpha_k + y_k)",
+   "symbol_and_unit_ledger": {
+    "ωj": "probability of outcome category j [dimensionless, sums to 1]",
+    "yj": "observed count in category j [count]",
+    "αj": "prior pseudo-count for category j"
+   },
+   "assumptions": [
+    "Observations are independent draws from a fixed categorical distribution.",
+    "Categories are exhaustive and mutually exclusive."
+   ],
+   "breakdown_regime": "When category probabilities drift or categories are misspecified (an outcome type missing from the list), the closed-form update confidently distributes mass over the wrong support.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Play-type and outcome-type shares in the engine (run/pass splits, target distributions, play-call tendencies by situation) are Dirichlet-multinomial states: prior pseudo-counts from league baselines updated by each observed call. The posterior over shares, not the raw frequencies, is what downstream matchup reasoning consumes, so small-sample tendencies stay honestly uncertain.",
+    "source_operator": "dirichlet_multinomial_conjugacy",
+    "telemetry": "Categorized event counts per team and situation, with league baseline shares as prior pseudo-counts."
+   }
+  },
+  {
+   "primitive_id": "laplace_approximation_and_asymptotics",
+   "name": "Normal (Laplace) approximation at the posterior mode with covariance [I(ω̂)]^-1, and its large-sample limit in which the posterior is normal with precision nJ(ω̂)",
+   "verbatim_quote": "If the posterior distribution p(ω|y) is unimodal and roughly symmetric, it can be convenient to approximate it by a normal distribution; that is, the logarithm of the posterior density is approximated by a quadratic function of ω.",
+   "page": "Ch 4 §4.1-§4.2, book pp. 83-84 and p. 93, eq. (4.2); text lines 4681-4760 and 5210-5235",
+   "latex": "p(\\omega|y) \\approx N\\!\\left(\\hat{\\omega},\\ [I(\\hat{\\omega})]^{-1}\\right), \\qquad I(\\omega) = -\\frac{\\partial^2 \\log p(\\omega|y)}{\\partial \\omega^2}, \\qquad p(\\omega|\\hat{\\omega}) \\approx N\\!\\left(\\omega\\,|\\,\\hat{\\omega},\\ (nJ(\\hat{\\omega}))^{-1}\\right)",
+   "symbol_and_unit_ledger": {
+    "ω̂": "posterior mode (equal to the MLE under a flat prior)",
+    "I(ω)": "observed information, negative Hessian of the log posterior",
+    "J(ω)": "expected Fisher information per observation",
+    "n": "sample size [count]"
+   },
+   "assumptions": [
+    "Posterior is unimodal and roughly symmetric, with the mode in the interior of the parameter space.",
+    "Sample size is large enough that higher-order Taylor terms are negligible near the mode."
+   ],
+   "breakdown_regime": "Fails for skewed, bounded, multimodal, or singular posteriors (mixtures, hierarchical variance near zero), exactly the cases modern engines live in; the book's own counterexamples chapter section shows the theorems breaking when regularity conditions fail.",
+   "domain": "bayesian-inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Laplace approximation is the engine's fast lane and its warning label at once: Gaussian approximations around fitted ratings make league-wide refits cheap, and the approximation's stated conditions define when the engine must not trust them (thin data, boundary parameters, multimodal matchup states) and must fall back to full simulation. The asymptotic result also certifies that with enough games, prior choices wash out and ratings from different reasonable priors converge.",
+    "source_operator": "laplace_approximation_and_asymptotics",
+    "telemetry": "Log-posterior Hessians at fitted modes, sample sizes per parameter, and diagnostics comparing Gaussian approximations to simulated posteriors."
+   }
+  },
+  {
+   "primitive_id": "hierarchical_partial_pooling",
+   "name": "Hierarchical model: group parameters drawn from a common population distribution, giving partial pooling between the no-pooling and complete-pooling extremes via shrinkage weights λj",
+   "verbatim_quote": "No pooling corresponds to λj ≡ 1 for all j and an infinite prior variance for the ωj ’s, and complete pooling corresponds to λj ≡ 0 for all j and a zero prior variance for the ωj ’s.",
+   "page": "Ch 5 §5.2 and §5.4, book pp. 104-105 and pp. 113-115, eqs. (5.2), (5.14); text lines 5811-5880 and 6360-6420",
+   "latex": "p(\\omega_1, \\ldots, \\omega_J\\,|\\,\\mu, \\tau) = \\prod_{j=1}^{J} N(\\omega_j\\,|\\,\\mu, \\tau^2), \\qquad \\hat{\\omega}_j = \\lambda_j \\bar{y}_j + (1 - \\lambda_j)\\bar{y}_{..}",
+   "symbol_and_unit_ledger": {
+    "ωj": "parameter of group j",
+    "μ, τ": "population mean and between-group standard deviation (hyperparameters)",
+    "λj": "shrinkage weight of group j's own data, between 0 and 1, driven by τ² relative to group j's sampling variance",
+    "ȳj, ȳ..": "group mean and grand mean of the data"
+   },
+   "assumptions": [
+    "Group parameters are exchangeable given the hyperparameters, so a common population distribution is a fair model.",
+    "The population distribution's form (here normal) is an adequate summary of between-group variation."
+   ],
+   "breakdown_regime": "With very few groups the between-group variance τ is weakly identified and prior choice dominates; with nonexchangeable groups (a group that is genuinely from another population) pooling pulls its estimate toward a mean it does not belong to. The canonical eight schools analysis (effects 28, 8, -3, 7, -1, 1, 18, 12 with standard errors 9 to 18) shows the machinery working exactly at this boundary.",
+   "domain": "hierarchical-models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Partial pooling is the engine's central estimation move: every team, player, and unit rating is a hierarchical draw shrunk toward its population (position group, league, season) by an amount the data themselves calibrate through τ. It is what stops a three-game hot streak from outranking an established body of work, and the no-pooling and complete-pooling extremes are the failure modes on either side that the engine is built to avoid.",
+    "source_operator": "hierarchical_partial_pooling",
+    "telemetry": "Grouped performance estimates with per-group sample sizes and sampling variances, across all groups in the population."
+   }
+  },
+  {
+   "primitive_id": "half_cauchy_prior_for_group_scale",
+   "name": "Weakly informative half-Cauchy prior on the group-level scale τ, with scale set above the plausible range, to tame the heavy upper tail that a flat prior leaves when the number of groups is small",
+   "verbatim_quote": "a half-Cauchy prior distribution with scale parameter A = 25 (a value chosen to be a bit higher than we expect for the standard deviation of the underlying ωj ’s in the context of this educational testing example, so that the model will constrain τ only weakly)",
+   "page": "Ch 5 §5.7, book pp. 128-131; text lines 7295-7330",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A plausible upper range for the group-level standard deviation can be named from context.",
+    "The prior should bind only in the unrealistic tail, leaving the likelihood to speak in the plausible range."
+   ],
+   "breakdown_regime": "With as few as three groups a uniform prior on τ yields a posterior with an unrealistically long right tail (underpooling); the half-Cauchy fixes the tail but its scale A is a judgment that must be defended per problem.",
+   "domain": "hierarchical-models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "New populations enter the engine constantly with few members (a rookie class, a new scheme family, a small conference). The half-Cauchy rule is the engine's default for their spread parameters: flat where the data can speak, decaying where values would imply absurd between-member variation. It is the difference between a small group being honestly uncertain and being silently unpooled.",
+    "source_operator": "half_cauchy_prior_for_group_scale",
+    "telemetry": "Between-group variance posteriors per population, group counts, and the plausible-range bounds set from historical populations."
+   }
+  },
+  {
+   "primitive_id": "posterior_predictive_checking",
+   "name": "Posterior predictive checking: simulate replicated datasets from the fitted model and compare them to the observed data under chosen test quantities; the Bayesian p-value is the tail probability of the discrepancy",
+   "verbatim_quote": "Our basic technique for checking the fit of a model to data is to draw simulated values from the joint posterior predictive distribution of replicated data and compare these samples to the observed data.",
+   "page": "Ch 6 §6.3, book pp. 143-146, eq. (6.1); text lines 7761-7890",
+   "latex": "p_B = \\Pr\\!\\left(T(y^{rep}, \\omega) \\ge T(y, \\omega)\\,\\middle|\\,y\\right), \\qquad p(y^{rep}|y) = \\int p(y^{rep}|\\omega)p(\\omega|y)\\,d\\omega",
+   "symbol_and_unit_ledger": {
+    "y rep": "replicated dataset generated under the fitted model, same size and design as y",
+    "T(y, ω)": "test quantity or discrepancy measure [units of the chosen summary]",
+    "pB": "Bayesian posterior predictive p-value [dimensionless, 0 to 1]"
+   },
+   "assumptions": [
+    "The analyst chooses test quantities aimed at the aspects of fit that matter for the decisions at hand.",
+    "Replicated data are generated at the observed design points (same covariates as y)."
+   ],
+   "breakdown_regime": "Posterior predictive p-values use the data twice and are not uniform under the model; they are conservative and can miss misfit in aspects no test quantity probes. A check that passes says nothing about the aspects nobody chose to test.",
+   "domain": "model-checking",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's falsification layer: after every fit, simulate full game slates from the posterior and compare distributions of the summaries that matter (margin distributions, totals, extreme performances, drive outcomes) against reality. Systematic gaps are routed back as model-expansion tasks. The engine's rule that a model is only as good as its replications is this section operationalized.",
+    "source_operator": "posterior_predictive_checking",
+    "telemetry": "Replicated datasets from the fitted posterior, observed datasets, and the battery of test quantities computed on both."
+   }
+  },
+  {
+   "primitive_id": "elpd_and_lppd",
+   "name": "Predictive accuracy is scored by expected log pointwise predictive density (elpd); its within-sample estimate lppd averages each point's log density over posterior draws and overestimates out-of-sample accuracy",
+   "verbatim_quote": "To compute this predictive density in practice, we can evaluate the expectation using draws from ppost (ω), the usual posterior simulations, which we label ωs , s = 1, . . . , S:",
+   "page": "Ch 7 §7.1-§7.2, book pp. 168-169, eqs. (7.4)-(7.5); text lines 8975-9010",
+   "latex": "\\mathrm{computed\\ lppd} = \\sum_{i=1}^{n} \\log\\left(\\frac{1}{S}\\sum_{s=1}^{S} p(y_i|\\omega^s)\\right)",
+   "symbol_and_unit_ledger": {
+    "lppd": "log pointwise predictive density of the observed data [log density units]",
+    "elpd": "expected log predictive density for new data from the same process",
+    "ωs": "posterior draw s of S",
+    "yi": "data point i of n"
+   },
+   "assumptions": [
+    "Data points are conditionally independent given parameters, so predictive density factorizes pointwise.",
+    "Posterior draws are numerous enough that Monte Carlo error in lppd is small next to model differences."
+   ],
+   "breakdown_regime": "lppd is optimistically biased for out-of-sample prediction precisely because the same data fit the model; the bias grows with effective model flexibility, which is why the book builds corrections (WAIC, DIC) and cross-validation on top of it.",
+   "domain": "model-comparison",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "elpd is the engine's common currency: candidate models, signal families, and feature sets are compared by expected log predictive density on held-out games, not by anecdote or by fit to the games already seen. lppd computed on training data is treated inside the engine the way the book treats it, as an upper bound that must be bias-corrected or replaced by cross-validation before any comparison is believed.",
+    "source_operator": "elpd_and_lppd",
+    "telemetry": "Pointwise log predictive densities for every observation under every candidate model, stored per game for paired comparisons."
+   }
+  },
+  {
+   "primitive_id": "waic_effective_parameters",
+   "name": "WAIC: fully Bayesian estimate of out-of-sample accuracy, elpd_WAIC = lppd − p_WAIC, with effective parameter count p_WAIC2 = Σi var_post(log p(yi|ω))",
+   "verbatim_quote": "WAIC is a more fully Bayesian approach for estimating the out-of-sample expectation (7.2), starting with the computed log pointwise posterior predictive density (7.5) and then adding a correction for eﬀective number of parameters to adjust for overfitting.",
+   "page": "Ch 7 §7.2, book pp. 173-174, eqs. (7.11)-(7.13); text lines 9224-9290",
+   "latex": "p_{WAIC\\,2} = \\sum_{i=1}^{n} \\mathrm{var}_{post}\\!\\left(\\log p(y_i|\\omega)\\right), \\qquad \\mathrm{WAIC} = -2\\,\\mathrm{lppd} + 2\\,p_{WAIC\\,2}",
+   "symbol_and_unit_ledger": {
+    "p_WAIC 2": "effective number of parameters [dimensionless count]",
+    "var_post": "variance over posterior draws",
+    "lppd": "log pointwise predictive density from eq. (7.5)"
+   },
+   "assumptions": [
+    "Data can be partitioned into conditionally independent points so the pointwise variance sum is meaningful.",
+    "Posterior draws adequately represent the posterior for every point's log density."
+   ],
+   "breakdown_regime": "The pointwise partition fails or misleads for structured data (time series, spatial, grouped observations) where leaving out one point leaks information through its neighbors; WAIC also inherits lppd's sensitivity to influential points with unstable log densities.",
+   "domain": "model-comparison",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "WAIC's effective parameter count is how the engine prices flexibility: a signal family that adds nominal parameters but is heavily pooled may cost less than one free parameter, and the variance-of-log-density formula measures exactly that cost from the posterior itself. Model promotion decisions inside the engine cite p_WAIC the way this chapter does, as the overfitting tax on every added mechanism.",
+    "source_operator": "waic_effective_parameters",
+    "telemetry": "Per-point log predictive densities across posterior draws for each candidate model, from which both lppd and the pointwise variances are computed."
+   }
+  },
+  {
+   "primitive_id": "loo_cv_and_psis",
+   "name": "Bayesian leave-one-out cross-validation estimates out-of-sample fit from n refits, lppd_loo = Σi log p_post(−i)(yi), and can be approximated from full-posterior draws by Pareto-smoothed importance sampling",
+   "verbatim_quote": "For example, LOO-CV can be eﬃciently approximated using the draws from the full posterior distribution and Pareto-smoothed importance sampling without the need to re-fit the model.",
+   "page": "Ch 7 §7.2, book pp. 175-177, eq. (7.14); text lines 9347-9425",
+   "latex": "\\mathrm{lppd}_{loo\\text{-}cv} = \\sum_{i=1}^{n} \\log p_{post(-i)}(y_i), \\qquad p_{loo} = \\mathrm{lppd} - \\mathrm{lppd}_{loo\\text{-}cv}",
+   "symbol_and_unit_ledger": {
+    "p_post(−i)(yi)": "predictive density of point i under the posterior fitted without point i",
+    "p_loo": "effective number of parameters implied by LOO",
+    "n": "number of data points [count]"
+   },
+   "assumptions": [
+    "Each left-out point is predicted from a posterior that has genuinely not seen it (or an importance-sampling approximation faithful to that refit).",
+    "Data points are exchangeable enough that leaving one out is a fair proxy for new data."
+   ],
+   "breakdown_regime": "Brute-force LOO costs n refits; the importance-sampling shortcut degrades when a single point is highly influential (its importance weights develop a heavy tail, the Pareto shape diagnostic flags it). For time-ordered data, leaving out a point is not the prediction task; forward validation is required instead.",
+   "domain": "model-comparison",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Leave-one-out is the engine's promotion gate for new signals: a candidate mechanism must improve prediction of games the fit never saw, point by point, with the Pareto-smoothed shortcut making that check affordable on every refit and its diagnostics naming the individual games where the approximation cannot be trusted. Influential-game flags from this machinery are first-class outputs, not footnotes.",
+    "source_operator": "loo_cv_and_psis",
+    "telemetry": "Full-posterior draws plus per-point log likelihoods; importance ratios per held-out point and their Pareto tail-shape estimates."
+   }
+  },
+  {
+   "primitive_id": "bayes_factor_and_its_limits",
+   "name": "Bayes factor: ratio of marginal likelihoods converting prior model odds to posterior model odds, defined only for proper marginal densities",
+   "verbatim_quote": "This fully Bayesian approach has some appeal but we generally do not recommend it because, in practice, the marginal likelihood is highly sensitive to aspects of the model that are typically assigned arbitrarily and are untestable from data.",
+   "page": "Ch 7 §7.4, book pp. 182-183, eq. (7.16); text lines 9768-9825",
+   "latex": "\\mathrm{Bayes\\ factor}(H_2; H_1) = \\frac{p(y|H_2)}{p(y|H_1)} = \\frac{\\int p(\\omega_2|H_2)p(y|\\omega_2, H_2)\\,d\\omega_2}{\\int p(\\omega_1|H_1)p(y|\\omega_1, H_1)\\,d\\omega_1}",
+   "symbol_and_unit_ledger": {
+    "H1, H2": "competing models (hypotheses)",
+    "p(y|Hi)": "marginal likelihood of the data under model i",
+    "ωi": "parameters of model i"
+   },
+   "assumptions": [
+    "Each model carries a proper prior so its marginal likelihood is a real number.",
+    "It is scientifically meaningful to place prior probabilities on the discrete model set."
+   ],
+   "breakdown_regime": "For continuous parameters the marginal likelihood is dominated by arbitrary prior tail choices (the vaguer the prior, the smaller the marginal likelihood), so Bayes factors can be made to say almost anything; the book's standing recommendation is continuous model expansion and predictive comparison instead.",
+   "domain": "model-comparison",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Bayes factor's failure mode is the engine's standing warning against discrete model verdicts: do not ask whether a signal is in or out by a marginal-likelihood ratio that swings with prior width. The engine follows the book's alternative, embedding candidate mechanisms in a continuous family with shrinkage priors and letting predictive accuracy, not model posterior probabilities, arbitrate.",
+    "source_operator": "bayes_factor_and_its_limits",
+    "telemetry": "Marginal likelihoods under stated priors (for the discrete cases where they are meaningful), plus prior-width sensitivity ranges for every reported factor."
+   }
+  },
+  {
+   "primitive_id": "ignorability_mar_distinct_parameters",
+   "name": "Ignorability: a data-collection or missingness mechanism can be ignored for Bayesian inference if the data are missing at random and the mechanism's parameters are distinct from the data model's",
+   "verbatim_quote": "Two general and simple conditions are suﬃcient to ensure ignorability of the missing data mechanism for Bayesian analysis.",
+   "page": "Ch 8 §8.2, book pp. 201-203, eq. (8.1); text lines 10587-10780",
+   "latex": "p(I|x, y, \\varphi) = p(I|x, y_{obs}, \\varphi), \\qquad p(\\varphi|x, \\omega) = p(\\varphi|x)",
+   "symbol_and_unit_ledger": {
+    "I": "inclusion/missingness indicator matrix (1 = observed)",
+    "y obs, y mis": "observed and missing components of the complete data",
+    "φ": "parameters of the data-collection process",
+    "ω": "parameters of the complete-data model",
+    "x": "fully observed covariates"
+   },
+   "assumptions": [
+    "Missing at random: given observed data and covariates, the missingness probability does not depend on the missing values themselves.",
+    "Distinctness: prior independence between the data parameters and the collection-process parameters."
+   ],
+   "breakdown_regime": "Nonignorable mechanisms (tracking data missing precisely when a player is hurt, games missing from a feed for reasons tied to their content) bias every downstream inference if ignored, and the bias is invisible in the observed data alone; sensitivity analysis over the mechanism is the only remedy.",
+   "domain": "data-collection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine data feed has a collection mechanism, and this theorem is the audit checklist for trusting it: is the absence of a record explainable by observed variables alone, and is the recording process independent of the quantities being estimated? Feeds that fail the checklist (injury-adjacent gaps in player tracking, selectively reported workouts) are modeled with an explicit missingness component instead of being silently treated as complete.",
+    "source_operator": "ignorability_mar_distinct_parameters",
+    "telemetry": "Missingness indicators per record and source, the covariates that predict missingness, and coverage logs per feed and time window."
+   }
+  },
+  {
+   "primitive_id": "bayesian_decision_analysis",
+   "name": "Bayesian decision analysis: enumerate decisions and outcomes, get the posterior predictive distribution of outcomes per decision, define utility, and choose the decision with highest posterior expected utility",
+   "verbatim_quote": "Compute the expected utility E(U (x)|d) as a function of the decision d, and choose the decision with highest expected utility.",
+   "page": "Ch 9 §9.1, book pp. 237-238; text lines 12642-12720",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Outcomes under each decision can be given a posterior distribution from the fitted model.",
+    "Preferences over outcomes, including multi-attribute tradeoffs, can be encoded in a utility function."
+   ],
+   "breakdown_regime": "Expected utility is only as good as the utility elicitation and the outcome model; where stakeholders will not state utilities, the book's own practice stops at steps 1-2 and presents expected consequences per decision rather than a forced optimum.",
+   "domain": "decision-analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's outputs terminate in decisions (publish a projection, flag a matchup, allocate confidence), and this framework is the contract for that last step: predictions must arrive as full outcome distributions per available action, and any confidence label must be derivable from an expected-utility calculation under a stated utility. It forbids the engine from hiding a decision inside a point estimate.",
+    "source_operator": "bayesian_decision_analysis",
+    "telemetry": "Posterior predictive outcome distributions per candidate decision, plus the utility parameters (risk attitude, cost asymmetries) supplied by the decision owner."
+   }
+  },
+  {
+   "primitive_id": "importance_sampling_ratios",
+   "name": "Importance sampling: expectations under an intractable posterior are computed from draws of a tractable proposal g, reweighted by importance ratios w(ω) = q(ω|y)/g(ω)",
+   "verbatim_quote": "It is generally advisable to use the same set of random draws for both the numerator and denominator of (10.3) in order to reduce the sampling error in the estimate.",
+   "page": "Ch 10 §10.4, book pp. 265-266, eqs. (10.2)-(10.4); text lines 13937-14025",
+   "latex": "w(\\omega^s) = \\frac{q(\\omega^s|y)}{g(\\omega^s)}, \\qquad E(h(\\omega)|y) \\approx \\frac{\\sum_{s=1}^{S} h(\\omega^s) w(\\omega^s)}{\\sum_{s=1}^{S} w(\\omega^s)}",
+   "symbol_and_unit_ledger": {
+    "g(ω)": "proposal density that can be sampled",
+    "q(ω|y)": "unnormalized target (posterior) density",
+    "w(ωs)": "importance ratio of draw s [dimensionless]",
+    "S": "number of proposal draws [count]"
+   },
+   "assumptions": [
+    "The proposal's support covers the target's support, with tails at least as heavy.",
+    "The variance of the importance ratios is finite, so the self-normalized estimator is stable."
+   ],
+   "breakdown_regime": "If the target has wider tails than the proposal, a few enormous ratios dominate and estimates look stable while being wrong; the effective sample size estimate from the weights is itself noisy in exactly that regime.",
+   "domain": "computation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Importance reweighting is the engine's cheap model-surgery tool: posterior draws from a fitted model are reweighted to answer what changes under a modified prior, an expanded likelihood, or a held-out observation, without a full refit. It powers the engine's sensitivity analyses and its leave-one-out machinery, and the weight-distribution diagnostics decide when the shortcut is lying and a real refit is owed.",
+    "source_operator": "importance_sampling_ratios",
+    "telemetry": "Proposal draws with their importance ratios, the ratio distribution's tail behavior, and weight-based effective sample sizes per reuse."
+   }
+  },
+  {
+   "primitive_id": "gibbs_sampler",
+   "name": "Gibbs sampler: Markov chain that cycles through parameter blocks, drawing each from its conditional distribution given the current values of all the others",
+   "verbatim_quote": "Each iteration of the Gibbs sampler cycles through the subvectors of ω, drawing each subset conditional on the value of all the others.",
+   "page": "Ch 11 §11.1, book pp. 276-277; text lines 14495-14560",
+   "latex": "\\omega_j^{t} \\sim p(\\omega_j\\,|\\,\\omega_{-j}^{\\mathrm{current}}, y)",
+   "symbol_and_unit_ledger": {
+    "ωj": "parameter block j of d blocks",
+    "ω−j current": "all other blocks at their latest values (iteration t for blocks already updated, t−1 for the rest)",
+    "t": "iteration index [count]"
+   },
+   "assumptions": [
+    "Every full conditional distribution can be sampled, directly or with an embedded step.",
+    "The conditional structure (typically from a hierarchically built model) keeps the conditionals in standard families."
+   ],
+   "breakdown_regime": "Strong posterior correlation between blocks makes the chain crawl (the bivariate normal example with correlation 0.8 already mixes slowly); reparameterization or joint updates are required when conditionals are individually narrow but jointly elongated.",
+   "domain": "computation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gibbs structure mirrors how the engine's models are built: conditionally specified layers (players given team effects, team effects given league hyperparameters) translate directly into a sampler that updates one layer at a time. The known failure mode, slow mixing under correlation, is why the engine monitors cross-layer correlation and reaches for joint gradient-based updates when layers are tightly coupled.",
+    "source_operator": "gibbs_sampler",
+    "telemetry": "Conditional posterior draws per block per iteration, block-to-block posterior correlations, and per-block effective sample sizes."
+   }
+  },
+  {
+   "primitive_id": "metropolis_hastings_algorithm",
+   "name": "Metropolis algorithm: propose from a symmetric jumping distribution and accept with probability min(r, 1), where r is the ratio of target densities; Metropolis-Hastings generalizes to asymmetric proposals",
+   "verbatim_quote": "The Metropolis algorithm is an adaptation of a random walk with an acceptance/rejection rule to converge to the specified target distribution.",
+   "page": "Ch 11 §11.2, book pp. 278-280, eq. (11.1); text lines 14566-14655",
+   "latex": "r = \\frac{p(\\omega^{*}|y)}{p(\\omega^{t-1}|y)}, \\qquad \\omega^{t} = \\begin{cases} \\omega^{*} & \\text{with probability } \\min(r, 1) \\\\ \\omega^{t-1} & \\text{otherwise} \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "ω*": "proposed value from the jumping distribution Jt(ω*|ωt−1)",
+    "r": "density ratio [dimensionless]",
+    "p(ω|y)": "target posterior density, needed only up to a constant"
+   },
+   "assumptions": [
+    "For Metropolis, the jumping distribution is symmetric: Jt(ωa|ωb) = Jt(ωb|ωa).",
+    "The chain is irreducible: the proposal can eventually reach any region of positive posterior mass."
+   ],
+   "breakdown_regime": "Random-walk proposals mix diffusively: in high dimensions or with badly scaled jumps the chain either rejects nearly everything or takes tiny steps, and the acceptance rate is the diagnostic that exposes both failures.",
+   "domain": "computation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The accept/reject ratio is the generic fallback sampler inside the engine for any conditional that lacks a closed form, and its detailed-balance argument is the template the engine uses to certify any custom transition kernel: prove the stationary distribution is the target, or the sampler does not ship. Acceptance-rate telemetry per kernel is monitored the way the chapter prescribes, as the first sign of a mis-scaled proposal.",
+    "source_operator": "metropolis_hastings_algorithm",
+    "telemetry": "Proposal draws, density ratios, acceptance rates per kernel and per parameter block, and chain trajectories."
+   }
+  },
+  {
+   "primitive_id": "split_rhat_convergence_diagnostic",
+   "name": "Potential scale reduction factor R̂: ratio of the pooled posterior scale estimate to the within-sequence scale across multiple overdispersed chains (computed on split chains); values near 1 certify mixing",
+   "verbatim_quote": "We monitor convergence of the iterative simulation by estimating the factor by which the scale of the current distribution for ψ might be reduced if the simulations were continued in the limit n → ∞.",
+   "page": "Ch 11 §11.4, book pp. 285-286, eq. (11.4); text lines 14940-15010",
+   "latex": "\\hat{R} = \\sqrt{\\frac{\\widehat{\\mathrm{var}}^{+}(\\psi|y)}{W}}",
+   "symbol_and_unit_ledger": {
+    "R̂": "estimated potential scale reduction factor [dimensionless, declines to 1]",
+    "var+ (ψ|y)": "pooled estimate of the posterior variance of scalar estimand ψ, from between- and within-sequence variance",
+    "W": "within-sequence variance",
+    "ψ": "scalar estimand being monitored"
+   },
+   "assumptions": [
+    "Multiple sequences start overdispersed relative to the target distribution.",
+    "The estimand's marginal posterior is close enough to normal for mean-and-variance monitoring, or draws are transformed (log, logit, rank) first."
+   ],
+   "breakdown_regime": "R̂ near 1 does not prove the chains found all modes; a set of chains can agree while jointly missing a region. The book's working threshold is 1.1, and extreme quantiles or multimodal marginals need additional monitoring beyond this mean-variance statistic.",
+   "domain": "computation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Split-R̂ is a hard gate in the engine's fitting pipeline: no posterior enters a projection until every monitored quantity clears the threshold across split chains, and failures route back with the offending parameters named. This converts convergence from an analyst's eyeball judgment into an auditable, per-parameter telemetry stream, which is exactly the use the chapter designs it for.",
+    "source_operator": "split_rhat_convergence_diagnostic",
+    "telemetry": "Per-parameter split-R̂ values from at least four chains started overdispersed, logged with every production fit."
+   }
+  },
+  {
+   "primitive_id": "mcmc_effective_sample_size",
+   "name": "Effective sample size for correlated simulation draws: n_eff = mn/(1 + 2Σt ρt), estimated from within- and between-sequence variograms with a truncated autocorrelation sum",
+   "verbatim_quote": "Once the simulated sequences have mixed, we can compute an approximate ‘eﬀective number of independent simulation draws’ for any estimand of interest ψ.",
+   "page": "Ch 11 §11.5, book pp. 286-288, eqs. (11.5)-(11.8); text lines 15003-15110",
+   "latex": "n_{eff} = \\frac{mn}{1 + 2\\sum_{t=1}^{\\infty} \\rho_t}",
+   "symbol_and_unit_ledger": {
+    "n eff": "effective number of independent draws [count]",
+    "m, n": "number of (split) sequences and draws per sequence [counts]",
+    "ρt": "autocorrelation of the simulation sequence at lag t [dimensionless]"
+   },
+   "assumptions": [
+    "Sequences have mixed (R̂ near 1) before effective size is interpreted.",
+    "Autocorrelation estimates are truncated at the first odd lag where successive pairs sum negative, to control noise."
+   ],
+   "breakdown_regime": "Mean-based n eff understates the draws needed for tail quantities; the book's floor rule (n eff at least 5m, about 10 independent draws per sequence) suffices for central summaries only, and heavier use demands proportionally more.",
+   "domain": "computation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine posterior ships with per-quantity effective sample sizes, and projection confidence is budgeted from them: a matchup probability whose inputs carry low n eff is labeled simulation-poor and either extended or hedged. This makes Monte Carlo error a measured, reported quantity inside the engine rather than an invisible source of jitter between refits.",
+    "source_operator": "mcmc_effective_sample_size",
+    "telemetry": "Per-estimand n eff, lag autocorrelations, chain counts and lengths, and warm-up discard fractions for each fit."
+   }
+  },
+  {
+   "primitive_id": "hamiltonian_monte_carlo",
+   "name": "Hamiltonian Monte Carlo: augment parameters with momentum variables, simulate Hamiltonian dynamics by leapfrog steps using the log-posterior gradient, and Metropolis-correct, suppressing random-walk behavior",
+   "verbatim_quote": "Hamiltonian Monte Carlo (HMC) borrows an idea from physics to suppress the local random walk behavior in the Metropolis algorithm, thus allowing it to move much more rapidly through the target distribution.",
+   "page": "Ch 12 §12.4, book pp. 300-302; text lines 15822-15930",
+   "latex": "p(\\omega, \\varphi|y) = p(\\varphi)p(\\omega|y), \\qquad \\varphi \\leftarrow \\varphi + \\frac{\\epsilon}{2}\\frac{\\partial \\log p(\\omega|y)}{\\partial \\omega}, \\qquad \\omega \\leftarrow \\omega + \\epsilon M^{-1}\\varphi",
+   "symbol_and_unit_ledger": {
+    "φ": "momentum vector, same dimension as ω",
+    "M": "mass matrix, covariance of the momentum distribution",
+    "ε": "leapfrog step size",
+    "L": "number of leapfrog steps per iteration [count]",
+    "∂ log p(ω|y)/∂ω": "gradient of the log posterior, required analytically"
+   },
+   "assumptions": [
+    "The log posterior is differentiable and its gradient can be computed accurately (analytic, checked against finite differences).",
+    "Parameters are continuous; discrete parameters must be marginalized out before HMC applies."
+   ],
+   "breakdown_regime": "Funnels and other strongly varying curvature defeat a single step size (the hierarchical variance funnel is the book's own worked difficulty in §12.5), producing divergent transitions that bias the sample unless reparameterized, for example with a non-centered form.",
+   "domain": "computation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "HMC is the engine's production sampler for its hierarchical rating models, for the reason the chapter gives: gradient-guided trajectories cross a high-dimensional posterior in a handful of steps where random walks need thousands. Divergent-transition counts are treated as model defects (usually a funnel between a group scale and its members) and trigger reparameterization, not longer runs.",
+    "source_operator": "hamiltonian_monte_carlo",
+    "telemetry": "Leapfrog trajectories, divergence counts and locations, step sizes, tree depths (in the NUTS implementation via Stan), and gradient evaluations per fit."
+   }
+  },
+  {
+   "primitive_id": "variational_bayes_kl_minimization",
+   "name": "Variational inference: approximate the posterior by the member of a tractable family g(ω|φ) minimizing KL(g||p), typically under a factorized (mean-field) class, updated coordinatewise like EM",
+   "verbatim_quote": "Variational Bayes is an algorithmic framework, similar to EM, for approximating a joint distribution.",
+   "page": "Ch 13 §13.7, book pp. 331-332, eq. (13.15); text lines 17442-17510",
+   "latex": "\\mathrm{KL}(g\\,\\|\\,p) = -E_g \\log \\frac{p(\\omega|y)}{g(\\omega)}",
+   "symbol_and_unit_ledger": {
+    "g(ω|φ)": "approximating density with variational parameters φ",
+    "p(ω|y)": "target posterior density",
+    "KL(g||p)": "Kullback-Leibler divergence from g to p [nats]",
+    "Eg": "expectation under the approximating density"
+   },
+   "assumptions": [
+    "The approximating family is rich enough for the summaries actually needed.",
+    "For the factorized class, posterior dependence between components is weak enough to sacrifice."
+   ],
+   "breakdown_regime": "KL(g||p) is mode-seeking and the factorized class cannot represent posterior correlation, so variational posteriors systematically understate uncertainty and can lock onto one mode of a multimodal target; the book positions it as an approximation to be checked, not a replacement for simulation.",
+   "domain": "computation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Variational fits are the engine's scouting tool: a fast, knowingly overconfident approximation used to screen model variants and initialize samplers, with the chapter's warning wired in as policy (no variational posterior feeds a published projection until a simulation-based fit confirms its location and spread). The KL objective also supplies the engine's language for judging any approximation: what divergence, in which direction, at what cost.",
+    "source_operator": "variational_bayes_kl_minimization",
+    "telemetry": "Variational objective (ELBO) traces, fitted variational parameters, and side-by-side comparisons against simulation-based posteriors for audited quantities."
+   }
+  },
+  {
+   "primitive_id": "cauchy_default_prior_logistic_regression",
+   "name": "Default weakly informative prior for logistic regression: independent Cauchy(0, 2.5) on coefficients of standardized inputs (Cauchy(0, 10) on the intercept), curing separation and infinite MLEs",
+   "verbatim_quote": "We assign independent Cauchy prior distributions with center 0 and scale 2.5 to each of the coeﬃcients in the logistic regression except the constant term.",
+   "page": "Ch 16 §16.3, book pp. 412-417; text lines 21607-21850",
+   "latex": "\\beta_j \\sim \\mathrm{Cauchy}(0,\\ 2.5) = t_1(0,\\ 2.5)",
+   "symbol_and_unit_ledger": {
+    "βj": "logistic regression coefficient for standardized input j [log-odds units]",
+    "Cauchy(0, 2.5)": "Student-t prior with 1 degree of freedom, center 0, scale 2.5",
+    "standardized input": "binary inputs and continuous inputs scaled to standard deviation 1 (continuous inputs rescaled to sd 0.5 in the full default recipe)"
+   },
+   "assumptions": [
+    "Inputs are standardized before the prior is applied, so the scale 2.5 has a consistent meaning across coefficients.",
+    "Effects larger than about 5 on the logit scale (a shift from probability 0.01 to 0.5 or 0.5 to 0.99) are implausible in most applications."
+   ],
+   "breakdown_regime": "Under complete separation the likelihood alone sends a coefficient to infinity; the Cauchy prior returns a finite, defensible estimate, but if a true effect is genuinely huge the prior's heavy tail, not its center, is what saves the estimate, and an unstandardized input silently changes the prior's meaning.",
+   "domain": "regression-models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's default prior for every probability model over standardized situational inputs (down, distance, field position, personnel groupings): it exists precisely because situational subsets separate constantly (a rare situation with one observed outcome), and flat priors would emit infinite or absurd effects. The standardization-first requirement is enforced in the feature pipeline, since the prior is meaningless without it.",
+    "source_operator": "cauchy_default_prior_logistic_regression",
+    "telemetry": "Standardized feature matrices, separation flags per fitted subset, and coefficient posteriors under the default prior versus flat-prior sensitivity runs."
+   }
+  },
+  {
+   "primitive_id": "t_error_robust_regression",
+   "name": "Robust regression with t-distributed errors, represented as a scale mixture of normals (yi ~ N(Xiβ, Vi), Vi ~ Inv-χ²(ν, σ²)), so outlying points earn large Vi and are automatically downweighted",
+   "verbatim_quote": "Robust error distributions, such as the t with few degrees of freedom, treat observations far from the regression line as high-variance observations, yielding results similar to those obtained by downweighting outliers.",
+   "page": "Ch 17 §17.2 and §17.5, book pp. 437 and pp. 444-445, eq. (17.1); text lines 22900-22940 and 23280-23360",
+   "latex": "y_i \\sim N(X_i\\beta,\\ V_i), \\qquad V_i \\sim \\mathrm{Inv\\text{-}}\\chi^2(\\nu,\\ \\sigma^2), \\qquad y_i \\sim t_{\\nu}(X_i\\beta,\\ \\sigma^2)\\ \\text{marginally}",
+   "symbol_and_unit_ledger": {
+    "ν": "degrees of freedom of the t error distribution [dimensionless, small = heavier tails]",
+    "Vi": "per-observation variance multiplier (latent)",
+    "σ²": "baseline error variance [outcome units squared]",
+    "Xiβ": "linear predictor for observation i"
+   },
+   "assumptions": [
+    "Outliers arise from variance inflation of individual observations rather than from a shifted mean structure.",
+    "The degrees of freedom ν is fixed a priori or given its own prior and sampled with care (its posterior can be multimodal)."
+   ],
+   "breakdown_regime": "If the apparent outliers are actually a real subpopulation or a missing covariate, t errors absorb the signal into the noise model and the regression answers the wrong question smoothly; with very low ν the posterior can have many modes and samplers get stuck.",
+   "domain": "regression-models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Player and team performance data are heavy-tailed by nature (blowouts, garbage time, weather games), and the t-error construction is how the engine keeps those observations informative without letting them drag the fit: each game's latent variance is estimated, and extreme games downweight themselves. The mixture representation matters operationally because the per-game variance draws double as an anomaly report the reasoning layer can inspect.",
+    "source_operator": "t_error_robust_regression",
+    "telemetry": "Per-observation latent variance draws, residual distributions, and the fitted degrees of freedom per model."
+   }
+  },
+  {
+   "primitive_id": "multiple_imputation",
+   "name": "Multiple imputation: draw several completed datasets from the posterior predictive distribution of the missing values, analyze each, and combine inferences so imputation uncertainty is propagated",
+   "verbatim_quote": "The key idea of multiple imputation is to create more than one set of replacements for the missing values in a dataset.",
+   "page": "Ch 18 §18.2, book pp. 451-452; text lines 23589-23660",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An explicit model for the incomplete variables (jointly with the analysis variables) generates the imputations.",
+    "The missingness mechanism is ignorable given the modeled variables, or is itself modeled."
+   ],
+   "breakdown_regime": "Single imputation (the special case with one draw) treats invented values as real and understates every standard error; multiple imputation fails when the imputation model and the analysis model are uncongenial, so the combined inference can be biased in either direction.",
+   "domain": "missing-data",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine inputs arrive incomplete (missed games, partial tracking, unreported statuses), and this is the sanctioned way to reason through the gaps: impute whole plausible completions from the model, run the full pipeline on each, and let the spread across completions widen the final uncertainty. It prohibits the two cheap alternatives the engine is tempted by, dropping incomplete records (bias) and filling point values (false precision).",
+    "source_operator": "multiple_imputation",
+    "telemetry": "Imputed dataset versions with their generating model, per-imputation analysis results, and the between-imputation variance of every reported quantity."
+   }
+  },
+  {
+   "primitive_id": "gaussian_process_regression",
+   "name": "Gaussian process prior over an unknown regression function: values at any finite point set are jointly normal with mean function m and covariance function k, e.g. the squared exponential kernel",
+   "verbatim_quote": "We write a Gaussian process as µ → GP(m, k), parametrized in terms of a mean function m and a covariance function k.",
+   "page": "Ch 21 §21.1, book pp. 501-502; text lines 25988-26080",
+   "latex": "\\mu \\sim \\mathrm{GP}(m, k), \\qquad k(x, x') = \\tau^2 \\exp\\left(-\\frac{|x - x'|^2}{2l^2}\\right)",
+   "symbol_and_unit_ledger": {
+    "μ(x)": "unknown regression function at predictor x",
+    "m(x)": "prior mean function (often a linear model Xβ)",
+    "k(x, x')": "covariance function between function values at x and x'",
+    "τ": "amplitude (marginal standard deviation) [outcome units]",
+    "l": "length scale [predictor units]"
+   },
+   "assumptions": [
+    "Smoothness of the unknown function matches the chosen covariance family; the squared exponential assumes infinitely differentiable sample paths.",
+    "A parametric mean function (linear model) carries the global structure so the process only models deviations."
+   ],
+   "breakdown_regime": "Computation scales cubically in the number of points, and a single isotropic length scale fails when the surface varies quickly in one predictor and slowly in another; sharp discontinuities (threshold effects) are smoothed away by the kernel.",
+   "domain": "nonparametric-models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Continuous response surfaces in the engine (performance as a function of rest days, temperature, altitude, drive distance, or aging curves) are Gaussian process layers centered on a parametric mean: the kernel's length scale learns how far influence extends along each axis, and the process returns a full predictive distribution at unobserved points rather than an interpolated line. The basis-expansion equivalence the chapter proves is what keeps the implementation tractable.",
+    "source_operator": "gaussian_process_regression",
+    "telemetry": "Paired predictor-outcome observations for surface fitting, fitted amplitude and length-scale hyperparameters per axis, and predictive variances across the surface grid."
+   }
+  },
+  {
+   "primitive_id": "finite_mixture_data_augmentation",
+   "name": "Finite mixture model: each observation comes from one of H components with probabilities λ, p(yi|ω, λ) = Σh λh f(yi|ωh), fitted by augmenting the data with latent component indicators zi",
+   "verbatim_quote": "It is assumed that it is not known which mixture component underlies each particular observation.",
+   "page": "Ch 22 §22.1, book pp. 519-521, eqs. (22.1)-(22.2); text lines 26963-27050",
+   "latex": "p(y_i|\\omega, \\lambda) = \\sum_{h=1}^{H} \\lambda_h f(y_i|\\omega_h), \\qquad \\sum_{h=1}^{H} \\lambda_h = 1",
+   "symbol_and_unit_ledger": {
+    "H": "number of mixture components [count]",
+    "λh": "population proportion of component h [dimensionless]",
+    "f(yi|ωh)": "component density with parameters ωh",
+    "zih": "latent indicator, 1 if unit i belongs to component h"
+   },
+   "assumptions": [
+    "The number of components H is fixed and known at fitting time (relaxed only in §22.4 and the Dirichlet process chapter).",
+    "Component membership is unobserved but each unit belongs to exactly one component."
+   ],
+   "breakdown_regime": "The likelihood is invariant to permuting component labels (label switching), so component-specific parameters are unidentified without ordering constraints or informative priors; posterior summaries that ignore switching average across labelings and can be meaningless, even though the fitted density itself is fine.",
+   "domain": "nonparametric-models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Latent-class structure is how the engine represents unobserved regimes (a team playing one of several distinct game plans, a player in one of several health or form states): components are estimated regimes, the indicators are per-game latent assignments, and the mixture weights are regime frequencies. The label-switching warning is wired into the reporting layer: regime labels are anchored by ordering constraints before any regime-specific claim is published.",
+    "source_operator": "finite_mixture_data_augmentation",
+    "telemetry": "Per-unit posterior component-membership probabilities, component parameter posteriors, and mixture weight posteriors per population."
+   }
+  },
+  {
+   "primitive_id": "dirichlet_process_prior",
+   "name": "Dirichlet process prior: a prior over probability measures P ~ DP(αP0) such that every finite partition's probabilities are Dirichlet(αP0(B1), ..., αP0(Bk)); posterior is DP(αP0 + Σ δyi), a shrinkage of the base measure toward the empirical measure",
+   "verbatim_quote": "Hence, the Dirichlet process is appealing in having a simple specification arising from a model similar to a random histogram but without the dependence on the bins,",
+   "page": "Ch 23 §23.2, book pp. 546-548, eqs. (23.1)-(23.2); text lines 28399-28505",
+   "latex": "P \\sim \\mathrm{DP}(\\alpha P_0), \\qquad E[P(B)] = P_0(B), \\qquad \\mathrm{var}(P(B)) = \\frac{P_0(B)(1 - P_0(B))}{1 + \\alpha}, \\qquad P\\,|\\,y_1, \\ldots, y_n \\sim \\mathrm{DP}\\!\\left(\\alpha P_0 + \\sum_{i=1}^{n} \\delta_{y_i}\\right)",
+   "symbol_and_unit_ledger": {
+    "P": "unknown probability measure over the sample space",
+    "P0": "base (centering) probability measure",
+    "α": "precision/concentration parameter, interpretable as a prior sample size [pseudo-count]",
+    "δyi": "point mass at observation yi",
+    "B": "any measurable subset of the sample space"
+   },
+   "assumptions": [
+    "Exchangeability of the observations drawn from P.",
+    "The base measure P0 is a defensible center (commonly a parametric model) and α honestly encodes prior confidence in it."
+   ],
+   "breakdown_regime": "Draws from a DP are discrete, so as a direct data model it cannot produce smooth densities; it also induces negative dependence between disjoint sets with no regard to their distance, which is wrong for spatial or continuous structure unless smoothed through a mixture kernel.",
+   "domain": "nonparametric-models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The DP posterior formula is the engine's template for distribution estimation under uncertainty: any empirical distribution it reports (of margins, drive outcomes, player game lines) is conceptually the α-weighted blend of a parametric base expectation and the observed empirical measure, with α stating in pseudo-games how much the base is trusted. It gives the engine a principled dial between a model's expected distribution and raw history.",
+    "source_operator": "dirichlet_process_prior",
+    "telemetry": "Empirical distributions per population, the chosen base measures, and the concentration values (effective prior sample sizes) attached to each."
+   }
+  },
+  {
+   "primitive_id": "dp_mixture_polya_urn",
+   "name": "Dirichlet process mixtures: a DP prior on the mixing measure yields an infinite mixture; marginalizing P gives the Pólya urn (Chinese restaurant) predictive rule in which new units join existing clusters in proportion to occupancy or start a new cluster in proportion to α",
+   "verbatim_quote": "A Chinese restaurant process metaphor is commonly used in describing the Polya urn scheme.",
+   "page": "Ch 23 §23.3, book pp. 549-550, eqs. (23.4)-(23.6); text lines 28568-28635",
+   "latex": "f(y|P) = \\int K(y|\\omega)\\,dP(\\omega), \\qquad p(\\omega_i|\\omega_1, \\ldots, \\omega_{i-1}) = \\frac{\\alpha}{\\alpha + i - 1}P_0(\\omega_i) + \\sum_{j=1}^{i-1} \\frac{1}{\\alpha + i - 1}\\delta_{\\omega_j}(\\omega_i)",
+   "symbol_and_unit_ledger": {
+    "K(y|ω)": "mixture kernel (component density) with parameter ω",
+    "P": "random mixing measure with DP prior",
+    "α": "concentration parameter controlling the rate of new clusters",
+    "δωj": "point mass at a previously occupied cluster's parameter",
+    "i": "index of the arriving unit [count]"
+   },
+   "assumptions": [
+    "Units are exchangeable, so the sequential urn representation is valid.",
+    "The kernel family is adequate for within-cluster variation; clusters are the atoms of the mixing measure."
+   ],
+   "breakdown_regime": "The expected number of clusters grows like α log n whether or not the world has that structure, and the rich-get-richer dynamic can strand genuinely distinct small groups inside big clusters; posterior cluster counts are prior-sensitive in a way finite mixtures with fixed H are not.",
+   "domain": "nonparametric-models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Open-ended regime discovery in the engine uses this rule: when a new pattern of play or a new player archetype appears, the model need not have a preallocated category; the Pólya urn dynamic lets evidence accumulate into existing archetypes proportionally to their occupancy while reserving probability α for a genuinely new one. It is the formal version of the engine's rule that the taxonomy of the sport is learned, not fixed in advance.",
+    "source_operator": "dp_mixture_polya_urn",
+    "telemetry": "Cluster occupancy counts over time, new-cluster creation events, and per-cluster kernel parameter posteriors for the populations under study."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "709226a7be2f8de6-t1",
+   "think": "Bayesian Data Analysis, third edition, is the closest thing applied statistics has to a complete operating system, and reading it as an engineer rather than as a student changes what stands out. The surface content is a sequence of models and algorithms, but the load-bearing structure is a discipline: every inferential claim must be produced by an explicit generative model, updated by one rule (conditioning), audited by simulation against the data it claims to explain, and revised when the audit fails. The famous three steps of Chapter 1 are not pedagogy; they are a loop invariant. Nothing in the book is allowed to exit the loop as final, and that is why the third edition can absorb forty years of methodological change without its frame cracking.\n\nThe machinery assembles in layers, and the layering is the second thing to understand. Chapters 2 through 5 build exact inference for the cases where mathematics closes: conjugate families where the posterior is arithmetic, the normal-normal compromise where the update is a precision-weighted average, and then the decisive generalization, hierarchical models, where parameters themselves get distributions and the data estimate how much pooling the population supports. This is the conceptual center of the book. Partial pooling is presented not as a technique but as the resolution of a false binary, and the shrinkage weight is derived, not chosen. Once that move is understood, most of the rest of the book is elaboration: regression chapters are hierarchical models with structured means, robust models are hierarchical models on the variance, mixture models are hierarchical models with discrete latent structure, and the Dirichlet process is the hierarchical idea pushed to infinitely many groups.\n\nComputation, Part III, is written with unusual honesty about its own epistemics. Simulation is not treated as a black box that emits answers; it comes with its own measurement theory. The potential scale reduction factor and the effective sample size are statistics about the computation itself, with thresholds and failure modes, and the variational and modal approximations are presented with their biases named. A reasoning engine that consumes posterior draws needs exactly this: not just samples, but certified samples, with the certification computed from the same multi-chain evidence an auditor would demand.\n\nThe third layer, Chapters 6 and 7, is the book's theory of self-criticism. Posterior predictive checking turns the fitted model back on the data that fit it and asks whether replications resemble reality in the aspects that matter. The model comparison machinery then makes a subtle and consequential choice: models are to be compared by expected log predictive density on unseen data, estimated by WAIC or cross-validation, and explicitly not by Bayes factors in the general case, because the marginal likelihood rewards and punishes arbitrary prior choices. Effective number of parameters, measured from the posterior's own variability, replaces nominal parameter counts. This is a complete philosophy of model selection compressed into one chapter: predictive, pointwise, and suspicious of any criterion that cannot be tied to a prediction task.\n\nThe middle parts of the book deserve the same structural reading. Part IV is not a catalog of regressions; it is the hierarchical idea absorbing structure: intercepts and slopes that vary by group, coefficients batched and pooled, generalized linear models whose link functions keep predictions on legal scales, t errors that let each observation argue for its own variance, and missing data treated as just more unobserved quantities inside the same posterior. Part V then removes the remaining finiteness assumptions one at a time: basis expansions for unknown curves, Gaussian processes for unknown functions, finite mixtures for unknown subpopulations, and the Dirichlet process for an unknown number of subpopulations. Read this way, the book's arc is a controlled demolition of every fixed-dimension assumption a naive modeler brings, each removal replaced by a prior and a computation strategy rather than by a new ad hoc method. Continuous model expansion, the doctrine named in Chapter 7, is the same move at the level of whole models: instead of choosing between a small model and a big one, embed both in a family and let a prior mediate. That doctrine, more than any single estimator, is the book's answer to model uncertainty.\n\nWhat this changes for a reasoning engine is direct. The engine's priors stop being embarrassing preliminaries and become versioned, auditable model components with scales set by the weakly informative doctrine. Its ratings become hierarchical posteriors with calibrated shrinkage rather than averages with ad hoc regression to the mean. Its model comparisons become elpd differences with standard errors instead of leaderboard anecdotes. Its data pipelines inherit the ignorability audit: before any feed is trusted, someone must argue that its missingness is explainable by observed variables, or model the mechanism. And its computation inherits the diagnostics gates: no posterior ships without split-chain agreement and effective sample sizes attached.\n\nWhere it breaks is equally instructive, and the book mostly tells you itself. The asymptotic comforts of Chapter 4 require regularity that hierarchical and mixture models routinely violate; variance parameters pile up at boundaries; the number of groups is often too small for the data to discipline the hyperprior, returning the analyst to judgment precisely where automation promised escape. Cross-validation assumes a partition of data into independent pieces that structured data refuse to provide. Computation at the frontier is honest but expensive, and every approximation in Part III trades a named bias for speed. The mature reading is that BDA3 is not a set of answers but a set of accountable defaults: each method states what it assumes, what it costs, and how it fails, which is exactly the property a reasoning engine needs from its statistical foundation.",
+   "retrocausal_genealogy": "The lineage runs from Bayes and Laplace through Jeffreys' invariance program and the mid-century decision theory of Wald and Savage, but the book's distinctive ancestry is Donald Rubin's: the potential-outcomes framing, multiple imputation, and the missing-data taxonomy all enter through his work, and the 1978 papers on Bayesian model checking seed Chapter 6. The hierarchical machinery descends from Stein's paradox and the James-Stein estimator, made Bayesian by Lindley, Smith, and Efron and Morris, then turned into a general modeling language once computation caught up. The computation chapters are a genealogy of their own: Gibbs sampling imported from statistical physics by Geman and Geman and Gelfand and Smith, Metropolis from the 1953 Los Alamos work, Hamiltonian dynamics from Duane and collaborators, and the convergence diagnostics from the authors' own 1992 paper. The third edition's additions (weakly informative priors, WAIC and cross-validation emphasis, Hamiltonian Monte Carlo and Stan) record the field's center of gravity shifting from exact analysis to simulation plus predictive evaluation.",
+   "theory_of_mind": "The authors believe the reader is a working scientist with a real problem, partial knowledge, and no patience for foundational sermons; foundational debates are explicitly deferred to the bibliographic notes in favor of pragmatic advantage. Their model of the domain is that every statistical problem is a modeling problem: the data-generating process, the collection process, and the decision context are all part of the problem statement, and an analysis that ignores any of the three is incomplete by definition. They also model themselves as fallible: the text repeatedly shows its own first-pass models failing checks and being expanded, which teaches the reader to expect the same of theirs. Underneath sits a quietly strong claim about uncertainty: that it is always representable as probability, including uncertainty about parameters, models, missing values, and future observables, and that refusing to quantify it does not remove it but merely hides it from the audit.",
+   "cross_layer_veto": "Several results in this book veto moves that other layers of a reasoning system love to make. The Bayes factor analysis vetoes discrete model selection by marginal likelihood whenever priors are arbitrary, which forbids any gate that promotes or kills a signal family on such a ratio. The ignorability conditions veto the silent use of any data feed whose collection mechanism is unexplained: if missingness plausibly depends on the missing values, no downstream layer may treat the feed as complete. The convergence diagnostics veto uncertified computation: a posterior whose chains disagree or whose effective sample size is tiny may not constrain any other layer's conclusions, however elegant the model. And posterior predictive checking holds a standing veto over the whole stack, because a model that cannot reproduce the data it was fit on loses the right to have its extrapolations consumed by any decision layer."
+  }
+ ],
+ "universal_lens": "Read domain-free, this book is a general grammar for learning from evidence under uncertainty. Specify a complete generative story for what you observe and what you cannot; update the story by the single rule of conditioning; test the story by simulating worlds from it and comparing them to the one world you have; compare rival stories only by how well they predict what they have not seen; and never let a computation report a conclusion without also reporting how much the computation itself can be trusted. The specific distributions are replaceable parts. The grammar is not: it applies unchanged to any field where models must earn their authority from data and where being wrong has a cost.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book is foundational curriculum and research method at once. It defines the institute's standard of evidence: hierarchical models for grouped performance data, predictive criteria for comparing theories, missing-data audits for every dataset, and certified computation behind every published number. Its open problems are also a research agenda, including hyperprior choice with few groups, cross-validation for structured dependent data, and scalable approximations whose biases are measured rather than assumed. Teaching this text is how the institute reproduces its own methodology, and its bibliographic notes map the primary literature each research line descends from.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, this book is the statistical constitution. Bayes' rule is the update law, hierarchical partial pooling is the rating estimator, posterior predictive simulation is the projection mechanism and the audit, elpd with WAIC and leave-one-out cross-validation is the promotion gate for every signal and model change, split-R-hat and effective sample size are the computation gates, ignorability is the data-feed admission test, and weakly informative priors are the regularization policy. Where the engine previously had habits, this book supplies derivations, thresholds, and named failure modes, which is what allows its outputs to be checked rather than merely believed."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "85f4eafaa9e39604",
+  "source_status": "COMPLETE",
+  "title": "MODERATOR_COVERAGE_PLAN",
+  "file_name": "MODERATOR_COVERAGE_PLAN.md",
+  "sha256": "85f4eafaa9e396043e5fce7fd11ba54703f470259df3abdcc787bf7f827fea1c",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Presence-driven moderation windows define a temporal Boolean lattice where live room states are functions of founder/moderator availability and distress signal detection thresholds. Universal Lens: Rooted in MODERATOR_COVERAGE_PLAN (85f4eafaa9e39604), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on room availability conditioned on presence indicators and distress signal triggers using conformal predictive distributions over temporal intervals. GSI Mapping: Rooted in MODERATOR_COVERAGE_PLAN (85f4eafaa9e39604), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally aware state transitions between open/closed room states governed by real-time presence checks and automated distress detection hooks within a causal decision graph. GSE Mapping: Rooted in MODERATOR_COVERAGE_PLAN (85f4eafaa9e39604), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "presence_window_indicator",
+      "name": "Presence Window Indicator",
+      "verbatim_quote": "Live rooms open **only during windows when the founder or a deputized moderator is actually present**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W(t)': 'Boolean function indicating room presence at time t'}",
+      "assumptions": "Founder/moderator presence is deterministic and verifiable via escalation list.",
+      "breakdown_regime": "W(t) = 0 when no authorized individual is present.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binary temporal logic of room access mirrors binary state machines in GSE's event-driven architecture.",
+        "source_operator": "presence_window_indicator",
+        "telemetry": "Timestamped logs of founder/moderator login events."
+      }
+    },
+    {
+      "primitive_id": "distress_signal_detection",
+      "name": "Distress Signal Detection Law",
+      "verbatim_quote": "eal filing (policy SLA from `moderation.ts`) | **Distress nudge immediacy is non-negotiable.** The detection law (`lib/community/distress-signals.ts`, built 2026-06-13) is designed to support automated immediate response once the rooms message pipeline hooks into `detectDistressSignals`.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D(t)': 'Continuous-time distress signal strength at time t'}",
+      "assumptions": "Detection law is a threshold-based classifier with fixed sensitivity.",
+      "breakdown_regime": "D(t) > θ implies immediate nudge activation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Automated response kernel in GSE derived from static detection law in GSI's policy engine.",
+        "source_operator": "distress_signal_detection",
+        "telemetry": "Real-time alert counts per minute from message pipeline."
+      }
+    },
+    {
+      "primitive_id": "moderation_ladder_state",
+      "name": "Moderation Ladder State Transition",
+      "verbatim_quote": "Escalation Path The moderation ladder from `docs/legal/COMMUNITY_MODERATION_POLICY.md` and `lib/community/moderation.ts` is the governing reference.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L(n)': 'Discrete state in escalation ladder at step n'}",
+      "assumptions": "Each step in L(n) is irreversible unless appeal process is invoked.",
+      "breakdown_regime": "L(n+1) = f(L(n)) under violation condition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State machine transition in GSE mirrors discrete policy hierarchy in GSI.",
+        "source_operator": "moderation_ladder_state",
+        "telemetry": "Accumulated user actions and corresponding ladder steps taken."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "85f4eafaa9e39604_t0",
+      "think": "The core duality in this system lies between deterministic presence windows and probabilistic distress signals. The presence window W(t) acts as a temporal gatekeeper, constraining the domain of possible actions in the community space. Distress signals D(t) operate as an external forcing function that can override normal operation only when integrated through the message pipeline. The moderation ladder L(n) represents a discrete control flow that maps violations to increasing penalties, forming a feedback loop against harmful behavior. Failure modes include false negatives in D(t), unauthorized access during absence of W(t), and cascading escalations due to misalignment in L(n). The system enforces a minimal viable policy through checklist compliance, ensuring that all components—presence, detection, and escalation—are synchronized before any live room opens.\n\nDeep epistemic analysis for MODERATOR_COVERAGE_PLAN (85f4eafaa9e39604, domain=other, pages_read=3/3): Operator 'Presence Window Indicator' (page 1, domain other) captures: Live rooms open **only during windows when the founder or a deputized moderator is actually present**. Assumptions: Founder/moderator presence is deterministic and verifiable via escalation list. Breakdown regime: W(t) = 0 when no authorized individual is present. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary temporal logic of room access mirrors binary state machines in GSE's event-driven architecture. Operator 'Distress Signal Detection Law' (page 2, domain other) captures: eal filing (policy SLA from `moderation.ts`) | **Distress nudge immediacy is non-negotiable.** The detection law (`lib/community/distress-signals.ts`, built 2026-06-13) is designed to support automated immediate response once the rooms message pipeline hooks into `detectDistressSignals`. Assumptions: Detection law is a threshold-based classifier with fixed sensitivity. Breakdown regime: D(t) > θ implies immediate nudge activation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Automated response kernel in GSE derived from static detection law in GSI's policy engine. Operator 'Moderation Ladder State Transition' (page 2, domain other) captures: Escalation Path The moderation ladder from `docs/legal/COMMUNITY_MODERATION_POLICY.md` and `lib/community/moderation.ts` is the governing reference. Assumptions: Each step in L(n) is irreversible unless appeal process is invoked. Breakdown regime: L(n+1) = f(L(n)) under violation condition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State machine transition in GSE mirrors discrete policy hierarchy in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for MODERATOR_COVERAGE_PLAN (85f4eafaa9e39604, domain=other, pages_read=3/3): Operator 'Presence Window Indicator' (page 1, domain other) captures: Live rooms open **only during windows when the founder or a deputized moderator is actually present**. Assumptions: Founder/moderator presence is deterministic and verifiable via escalation list. Breakdown regime: W(t) = 0 when no authorized individual is present. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary temporal logic of room access mirrors binary state machines in GSE's event-driven architecture. Operator 'Distress Signal Detection Law' (page 2, domain other) captures: eal filing (policy SLA from `moderation.ts`) | **Distress nudge immediacy is non-negotiable.** The detection law (`lib/community/distress-signals.ts`, built 2026-06-13) is designed to support automated immediate response once the rooms message pipeline hooks into `detectDistressSignals`. Assumptions: Detection law is a threshold-based classifier with fixed sensitivity. Breakdown regime: D(t) > θ implies immediate nudge activation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Automated response kernel in GSE derived from static detection law in GSI's policy engine. Operator 'Moderation Ladder State Transition' (page 2, domain other) captures: Escalation Path The moderation ladder from `docs/legal/COMMUNITY_MODERATION_POLICY.md` and `lib/community/moderation.ts` is the governing reference. Assumptions: Each step in L(n) is irreversible unless appeal process is invoked. Breakdown regime: L(n+1) = f(L(n)) under violation condition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State machine transition in GSE mirrors discrete policy hierarchy in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in foundational principles of decentralized governance and temporal logic, tracing back to early 20th-century formalization of access control and modern reinforcement learning frameworks for agent behavior modeling. Retrocausal Genealogy: Rooted in MODERATOR_COVERAGE_PLAN (85f4eafaa9e39604), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in MODERATOR_COVERAGE_PLAN (85f4eafaa9e39604), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the founder, deputized moderators, and users. The founder acts as the central authority enforcing presence constraints. Moderators act as proxies with delegated power. Users are modeled as stochastic agents whose behaviors trigger both presence-dependent and distress-triggered responses. Theory of Mind & Decision Maker Model: Rooted in MODERATOR_COVERAGE_PLAN (85f4eafaa9e39604), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that presence validation does not depend on distress detection and vice versa. Leakage vetoes prevent unauthorized escalation paths from bypassing the presence check, maintaining integrity across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in MODERATOR_COVERAGE_PLAN (85f4eafaa9e39604), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

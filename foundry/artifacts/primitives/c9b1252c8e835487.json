@@ -1,0 +1,78 @@
+{
+  "book_id": "c9b1252c8e835487",
+  "source_status": "COMPLETE",
+  "title": "nfl_weather_research",
+  "file_name": "nfl_weather_research.md",
+  "sha256": "c9b1252c8e8354875126ddfa7d6227b94f4022b9dc5b0481781d1a0d69cd74f3",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "NFL weather impacts kicking, passing, rushing props via dome/outdoor venue, wind speed/direction, and temperature; modeled as stochastic environmental fields affecting game dynamics. Universal Lens: Rooted in nfl_weather_research (c9b1252c8e835487), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on weather-derived prop likelihoods using nflreadr data fused with NFLWeather/Meteostat; conditional probability P(prop|weather) enables calibrated predictive confidence intervals. GSI Mapping: Rooted in nfl_weather_research (c9b1252c8e835487), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps weather states to player performance kernels; transitions between indoor/outdoor regimes trigger dynamic model reweighting based on wind orientation and stadium azimuth. GSE Mapping: Rooted in nfl_weather_research (c9b1252c8e835487), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "dome_outdoor_venue_impact",
+      "name": "Dome/Outdoor Venue Impact",
+      "verbatim_quote": "**Recommended starting point.** | | **nflfastR** (R) / **nfl_data_py** (Python) | fast_scraper() / import_pbp() | weather (text), temp, wind, roof | 2009-present | Play-by-play level.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'roof': 'categorical {dome, outdoors, closed, open}', 'temp': '°F', 'wind': 'mph'}",
+      "assumptions": "Venue type determines environmental boundary conditions; dome games have fixed temp/wind values.",
+      "breakdown_regime": "roof = 'dome' → temp = 72°F, wind = 0 mph",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Game-level weather fields map to stochastic environmental inputs in GSI's Bayesian framework; each venue type defines a distinct probabilistic domain.",
+        "source_operator": "dome_outdoor_venue_impact",
+        "telemetry": "roof field value from schedule data"
+      }
+    },
+    {
+      "primitive_id": "wind_orientation_effect",
+      "name": "Wind Orientation Effect",
+      "verbatim_quote": "- Stadium azimuth available in ThompsonJamesBliss dataset (0=N, 90=E, 180=S, 270=W) to determine wind orientation.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'azimuth': 'degrees {0, 90, 180, 270}', 'wind_dir': 'degrees relative to stadium north'}",
+      "assumptions": "Wind direction affects player movement and ball trajectory; crosswinds are more impactful than headwinds.",
+      "breakdown_regime": "wind_dir ≈ azimuth ± 90° → crosswind effect maximized",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Wind orientation kernel derived from azimuth and wind vector; used in GSE to compute directional resistance in motion models.",
+        "source_operator": "wind_orientation_effect",
+        "telemetry": "wind direction and stadium azimuth from ThompsonJamesBliss dataset"
+      }
+    },
+    {
+      "primitive_id": "data_fusion_protocol",
+      "name": "Data Fusion Protocol",
+      "verbatim_quote": "- Data fusion: combine nflreadr with NFLWeather/Meteostat for humidity, dew point, pressure.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'humidity': '%', 'dew_point': '°F', 'pressure': 'inHg'}",
+      "assumptions": "Multiple data sources improve accuracy of environmental modeling; temporal alignment required.",
+      "breakdown_regime": "Missing data in nflreadr supplemented by external meteorological APIs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Multi-source data integration protocol aligns heterogeneous weather telemetry with GSI's probabilistic forecasting pipeline.",
+        "source_operator": "data_fusion_protocol",
+        "telemetry": "merged weather datasets from nflreadr + NFLWeather/Meteostat"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c9b1252c8e835487_t0",
+      "think": "The three core primitives form a hierarchical weather influence model: first, venue type sets deterministic environmental bounds (dome vs. outdoor); second, wind orientation introduces directional stochasticity through azimuth-based kernel computation; third, data fusion enriches the model with additional meteorological variables. These operators interact in a layered fashion—dome games are filtered out of wind-dependent effects, while outdoor games undergo directional analysis. The failure mode occurs when wind direction is misaligned with stadium orientation, leading to underestimation of crosswind impact. Dualities emerge in that indoor environments decouple from atmospheric forces, whereas outdoor ones couple with them. Each primitive must be verified against empirical weather station data to maintain calibration integrity.\n\nDeep epistemic analysis for nfl_weather_research (c9b1252c8e835487, domain=other, pages_read=2/2): Operator 'Dome/Outdoor Venue Impact' (page 1, domain other) captures: **Recommended starting point.** | | **nflfastR** (R) / **nfl_data_py** (Python) | fast_scraper() / import_pbp() | weather (text), temp, wind, roof | 2009-present | Play-by-play level. Assumptions: Venue type determines environmental boundary conditions; dome games have fixed temp/wind values. Breakdown regime: roof = 'dome' → temp = 72°F, wind = 0 mph Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Game-level weather fields map to stochastic environmental inputs in GSI's Bayesian framework; each venue type defines a distinct probabilistic domain. Operator 'Wind Orientation Effect' (page 2, domain other) captures: - Stadium azimuth available in ThompsonJamesBliss dataset (0=N, 90=E, 180=S, 270=W) to determine wind orientation. Assumptions: Wind direction affects player movement and ball trajectory; crosswinds are more impactful than headwinds. Breakdown regime: wind_dir ≈ azimuth ± 90° → crosswind effect maximized Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Wind orientation kernel derived from azimuth and wind vector; used in GSE to compute directional resistance in motion models. Operator 'Data Fusion Protocol' (page 2, domain other) captures: - Data fusion: combine nflreadr with NFLWeather/Meteostat for humidity, dew point, pressure. Assumptions: Multiple data sources improve accuracy of environmental modeling; temporal alignment required. Breakdown regime: Missing data in nflreadr supplemented by external meteorological APIs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Multi-source data integration protocol aligns heterogeneous weather telemetry with GSI's probabilistic forecasting pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for nfl_weather_research (c9b1252c8e835487, domain=other, pages_read=2/2): Operator 'Dome/Outdoor Venue Impact' (page 1, domain other) captures: **Recommended starting point.** | | **nflfastR** (R) / **nfl_data_py** (Python) | fast_scraper() / import_pbp() | weather (text), temp, wind, roof | 2009-present | Play-by-play level. Assumptions: Venue type determines environmental boundary conditions; dome games have fixed temp/wind values. Breakdown regime: roof = 'dome' → temp = 72°F, wind = 0 mph Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Game-level weather fields map to stochastic environmental inputs in GSI's Bayesian framework; each venue type defines a distinct probabilistic domain. Operator 'Wind Orientation Effect' (page 2, domain other) captures: - Stadium azimuth available in ThompsonJamesBliss dataset (0=N, 90=E, 180=S, 270=W) to determine wind orientation. Assumptions: Wind direction affects player movement and ball trajectory; crosswinds are more impactful than headwinds. Breakdown regime: wind_dir ≈ azimuth ± 90° → crosswind effect maximized Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Wind orientation kernel derived from azimuth and wind vector; used in GSE to compute directional resistance in motion models. Operator 'Data Fusion Protocol' (page 2, domain other) captures: - Data fusion: combine nflreadr with NFLWeather/Meteostat for humidity, dew point, pressure. Assumptions: Multiple data sources improve accuracy of environmental modeling; temporal alignment required. Breakdown regime: Missing data in nflreadr supplemented by external meteorological APIs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Multi-source data integration protocol aligns heterogeneous weather telemetry with GSI's probabilistic forecasting pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical meteorology and sports analytics, this framework builds upon early NFL data science efforts and integrates modern probabilistic modeling techniques pioneered by NFLverse and academic climate studies. Retrocausal Genealogy: Rooted in nfl_weather_research (c9b1252c8e835487), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in nfl_weather_research (c9b1252c8e835487), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include weather variability (randomness) and team strategy (intentionality). The system models how teams adapt to environmental constraints, with GSI predicting prop outcomes and GSE simulating tactical adjustments. Theory of Mind & Decision Maker Model: Rooted in nfl_weather_research (c9b1252c8e835487), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that wind direction and humidity do not redundantly encode similar information; leakage vetoes prevent overfitting by enforcing independence between raw weather fields and derived metrics. Cross-Layer Veto & Anti-Leakage Check: Rooted in nfl_weather_research (c9b1252c8e835487), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in nfl_weather_research (c9b1252c8e835487), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

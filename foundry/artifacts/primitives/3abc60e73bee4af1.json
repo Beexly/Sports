@@ -1,0 +1,545 @@
+{
+  "book_id": "3abc60e73bee4af1",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_LIGATURE_FOLD",
+  "source_note": "Dutta, Yurko & Ventura (CMU / Pittsburgh Penguins), arXiv:1906.11373v3, April 2020, 'Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data'. fi/fl ligatures folded; Table 1 feature equations render garbled and the key ones (distance ratio, direction difference, variance/mean) are reconstructed as labeled LaTeX from the prose, flagged in assumptions. Mixture model and ARI reproduced as labeled LaTeX. Outputs are statistical coverage probabilities from tracking data; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "defensive_analysis_lag",
+      "name": "Defensive analysis lags offensive for lack of data",
+      "verbatim_quote": "Statistical analysis of defensive players in football has lagged behind that of offensive players, special teams, and coaching decisions, largely because data on individual defensive players has historically been lacking.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Public defensive stats are counting measures (tackles, sacks, INTs); tracking data now enables deeper analysis."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A data-poor side of the game is an opportunity gap; GSE prioritizes defensive annotations that the public record lacks.",
+        "source_operator": "defensive_analysis_lag",
+        "telemetry": "defense data-poor vs offense"
+      }
+    },
+    {
+      "primitive_id": "unsupervised_no_labels",
+      "name": "Unsupervised annotation needs no training labels",
+      "verbatim_quote": "we provide annotations for the pass coverage types of cornerbacks using unsupervised learning techniques, which require no training data.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Coverage labels are not public and human labeling is costly, so unsupervised clustering is chosen over supervised learning."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "When ground-truth labels are absent or expensive, unsupervised discovery is the same label-free annotation GSE needs for new situational concepts.",
+        "source_operator": "unsupervised_no_labels",
+        "telemetry": "no labels -> unsupervised"
+      }
+    },
+    {
+      "primitive_id": "reactive_defenders",
+      "name": "Defenders are reactive, not self-directed",
+      "verbatim_quote": "in most team sports, offensive players dictate their own movements, while defensive players typically move in reaction to offensive players.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Offense controls its movement; defense reacts. This asymmetry is the paper's central modeling insight."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reactive agents must be modeled relative to the agents they react to; GSE defensive features are relational, not absolute trajectories.",
+        "source_operator": "reactive_defenders",
+        "telemetry": "defense reacts to offense"
+      }
+    },
+    {
+      "primitive_id": "no_trajectory_clustering",
+      "name": "Cannot cluster defender trajectories directly",
+      "verbatim_quote": "Because the movements of players in defensive pass coverage are inherently reactive, we cannot simply cluster the defensive backs trajectories and expect to identify pass coverage types from the results.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Route/play clustering (Chu, Miller-Bornn) works for offense but fails for reactive defense; relational features are required."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A method valid for one agent class can be invalid for another; GSE must not transfer offensive trajectory clustering to defenders.",
+        "source_operator": "no_trajectory_clustering",
+        "telemetry": "trajectory clustering fails for defense"
+      }
+    },
+    {
+      "primitive_id": "man_coverage_def",
+      "name": "Man coverage: assigned to a specific offensive player",
+      "verbatim_quote": "In man coverage, a defensive back is assigned to defend a specific offensive player",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The DB follows his assigned receiver until the throw, head turned to the receiver, often not watching the QB or ball."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Man coverage is a hard agent-to-agent assignment; GSE encodes it as a defender-receiver pairing relation.",
+        "source_operator": "man_coverage_def",
+        "telemetry": "man = DB assigned to one receiver"
+      }
+    },
+    {
+      "primitive_id": "man_mirrors_motion",
+      "name": "Man coverage mirrors the receiver's motion",
+      "verbatim_quote": "the on-field motion of the defensive back may tend to mirror that of the offensive player that the cornerback is",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Man-coverage motion correlates with the covered player rather than following a well-defined trajectory of its own."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Motion correlation with a specific opponent is the same relational signal GSE uses to detect man assignment.",
+        "source_operator": "man_mirrors_motion",
+        "telemetry": "man motion ~ receiver motion"
+      }
+    },
+    {
+      "primitive_id": "zone_coverage_def",
+      "name": "Zone coverage: assigned a region of the field",
+      "verbatim_quote": "In zone coverage, a defensive back is assigned a zone on the field to defend.",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Linebackers and DBs partition the passing areas; the DB's eyes are on the QB and motion is less reactive to specific receivers."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Zone coverage is a spatial-responsibility assignment; GSE encodes it as a defender-to-region relation rather than a pairing.",
+        "source_operator": "zone_coverage_def",
+        "telemetry": "zone = DB assigned a region"
+      }
+    },
+    {
+      "primitive_id": "zone_eyes_qb",
+      "name": "Zone: eyes on QB, less reactive motion",
+      "verbatim_quote": "Generally, when a player is in zone coverage, their eyes are on the quarterback and their movements are less reactive to the movements of specific offensive players.",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Zone defenders watch the QB and are more static; their direction-of-motion differs from and varies more than the nearest receiver's."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gaze and motion staticity are the same zone-vs-man discriminators GSE can infer from orientation and direction features.",
+        "source_operator": "zone_eyes_qb",
+        "telemetry": "zone: watch QB, static motion"
+      }
+    },
+    {
+      "primitive_id": "hybrid_coverage",
+      "name": "Hybrid zone-to-man shift mid-play",
+      "verbatim_quote": "if a defensive back in zone coverage sees that there is only one offensive player near his zone, his responsibility shifts, so that he must now cover that single player in a way that resembles man coverage.",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A zone defender with one receiver in his zone switches to man-like coverage; assignments are dynamic, not fixed."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Coverage is a time-varying latent state, not a static label; GSE must track assignment switches within a play.",
+        "source_operator": "hybrid_coverage",
+        "telemetry": "zone -> man when one receiver enters"
+      }
+    },
+    {
+      "primitive_id": "mixture_soft_labels",
+      "name": "Mixture models give soft, uncertainty-quantified labels",
+      "verbatim_quote": "mixture models provide \"soft\" cluster assignments – i.e. probabilities of membership in each cluster – allowing us to quantify the uncertainty in each cluster assignment.",
+      "page": 4,
+      "latex": "P(G(x)=g)=\\frac{\\hat f_g(x)}{\\sum_{g'}\\hat f_{g'}(x)}",
+      "symbol_and_unit_ledger": {
+        "P(G(x)=g)": "posterior cluster-membership probability in [0,1]",
+        "f_g": "component density"
+      },
+      "assumptions": [
+        "Density-based, no heuristics; clusters characterized by mean/variance; soft labels quantify assignment uncertainty."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Probabilistic cluster membership is the same soft-label discipline GSE uses to avoid overconfident hard annotations.",
+        "source_operator": "mixture_soft_labels",
+        "telemetry": "soft labels = membership probabilities"
+      }
+    },
+    {
+      "primitive_id": "bdb_tracking_data",
+      "name": "NFL Big Data Bowl tracking, 22 players + ball at 10 Hz",
+      "verbatim_quote": "This dataset consists of game data from the first six weeks of the 2017 NFL season.",
+      "page": 7,
+      "latex": "x\\in[0,120],\\ y\\in[0,58],\\ \\theta\\in[0,360],\\ 10\\ \\text{Hz}",
+      "symbol_and_unit_ledger": {
+        "x,y": "field coordinates (yards)",
+        "theta": "direction of motion (degrees)",
+        "10 Hz": "frame rate"
+      },
+      "assumptions": [
+        "All 22 players and the ball tracked at 10 Hz from when the offense is set; speed, displacement, direction per frame."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A uniform multi-agent tracking feed is the same data substrate GSE builds its situational features on.",
+        "source_operator": "bdb_tracking_data",
+        "telemetry": "2017 weeks 1-6, 22+ball, 10 Hz"
+      }
+    },
+    {
+      "primitive_id": "orientation_missing",
+      "name": "Player orientation absent (most informative feature)",
+      "verbatim_quote": "One piece of information that is not available to us is the orientation of the defensive players on the field.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Which way a DB faces relative to his receiver would be highly informative for man vs zone, but the public data lacks it."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A missing but high-value feature is an honest data gap; GSE records orientation as a priority enrichment for teams with full data.",
+        "source_operator": "orientation_missing",
+        "telemetry": "orientation missing, high value"
+      }
+    },
+    {
+      "primitive_id": "feature_vector_counts",
+      "name": "6,712 pass plays -> 16,316 feature vectors",
+      "verbatim_quote": "There are 6,712 pass plays that we examine from the data set.",
+      "page": 7,
+      "latex": "6{,}712\\ \\text{plays}\\to 16{,}316\\ \\text{feature vectors}",
+      "symbol_and_unit_ledger": {
+        "6712": "pass plays (count)",
+        "16316": "CB-play feature vectors (count)"
+      },
+      "assumptions": [
+        "Each cornerback on each play yields feature vectors across multiple event-anchored time periods."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The unit of clustering is a defender-play (not a play), the same per-agent grain GSE uses for coverage annotation.",
+        "source_operator": "feature_vector_counts",
+        "telemetry": "6,712 plays, 16,316 vectors"
+      }
+    },
+    {
+      "primitive_id": "event_anchored_features",
+      "name": "Features at event-anchored time periods",
+      "verbatim_quote": "we design features that can be estimated at different points throughout the play that correspond to on-field events.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Features are computed at pre-snap, snap, midpoint, throw, and post-throw windows because coverage signals change over the play."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Event-anchored feature windows are the same temporal conditioning GSE uses so a representation reflects the play's phase.",
+        "source_operator": "event_anchored_features",
+        "telemetry": "features at pre-snap/snap/mid/throw"
+      }
+    },
+    {
+      "primitive_id": "ratio_feature",
+      "name": "Distance-ratio feature separates man from zone",
+      "verbatim_quote": "in man coverage we would expect the defensive back to follow the offensive player he is covering very closely, whereas in zone coverage this is not necessarily true.",
+      "page": 9,
+      "latex": "r_t=\\frac{\\|x_j-x_i\\|}{\\|x_j-x_k\\|},\\ j=\\arg\\min_{j\\in O}\\|x_j-x_i\\|,\\ k=\\arg\\min_{k\\in D}\\|x_k-x_i\\|",
+      "symbol_and_unit_ledger": {
+        "r_t": "ratio of CB-to-nearest-offense distance over teammate-to-same-offense distance (dimensionless)",
+        "i": "CB",
+        "j": "nearest offensive player",
+        "k": "nearest teammate"
+      },
+      "assumptions": [
+        "In man, the CB is much closer to his assignment than any teammate is, so the ratio is small; summarized by mean/variance and at snap/mid/throw."
+      ],
+      "breakdown_regime": "ratio undefined if teammate distance is zero; nearest-player assignment can switch mid-play",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A relative-distance ratio is the same relational discriminator GSE uses to detect a hard man assignment versus shared zone responsibility.",
+        "source_operator": "ratio_feature",
+        "telemetry": "r = d(CB,off)/d(teammate,off), small in man"
+      }
+    },
+    {
+      "primitive_id": "direction_feature",
+      "name": "Direction-of-motion difference feature",
+      "verbatim_quote": "a player in man coverage would be following their assignment around the field and would be much more \"reactive\" to the motion of the offensive player.",
+      "page": 10,
+      "latex": "\\Delta m_t=m_{j,t}-m_{i,t}",
+      "symbol_and_unit_ledger": {
+        "Delta m_t": "difference in direction of motion between CB and nearest offensive player (degrees)"
+      },
+      "assumptions": [
+        "Man: direction closely matches the assignment (small, low-variance difference); zone: differs and varies more."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Direction-of-motion coupling is the same reactive-agent signal GSE uses to distinguish man mirroring from zone staticity.",
+        "source_operator": "direction_feature",
+        "telemetry": "Delta m = m_offense - m_CB"
+      }
+    },
+    {
+      "primitive_id": "gmm_model",
+      "name": "Gaussian mixture model for coverage clusters",
+      "verbatim_quote": "Mixture modeling, or model-based clustering, is a type of clustering algorithm that fits a mixture of probability density functions to a dataset, where each density is representative of a single group or cluster.",
+      "page": 10,
+      "latex": "f(x)=\\sum_{g=1}^{G}\\pi_g\\, f_g(x\\mid\\rho_g)",
+      "symbol_and_unit_ledger": {
+        "pi_g": "mixing weight (dimensionless, sums to 1)",
+        "f_g": "Gaussian component density",
+        "rho_g": "component mean/covariance",
+        "G": "number of clusters"
+      },
+      "assumptions": [
+        "Gaussian components fit by EM (scikit-learn GaussianMixture); G selected by LOWO-CV ARI."
+      ],
+      "breakdown_regime": "Gaussian assumption; high collinearity handled by unconstrained VVV covariance",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A Gaussian mixture is the same density-based clustering kernel GSE uses to discover latent situational categories.",
+        "source_operator": "gmm_model",
+        "telemetry": "f(x) = sum pi_g f_g(x|rho_g)"
+      }
+    },
+    {
+      "primitive_id": "no_ground_truth_hennig",
+      "name": "No ground truth: evaluate the model, not labels",
+      "verbatim_quote": "clustering results should not always be evaluated against a set of ground truth labels, but by a critical evaluation of the model itself, and the features used to estimate the model.",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Hennig: 'there could be better truths than the known one'; with no coverage labels, validation is internal consistency, not label accuracy."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "When labels are absent, validate by out-of-sample structure agreement, the same label-free evaluation GSE uses for discovered concepts.",
+        "source_operator": "no_ground_truth_hennig",
+        "telemetry": "no ground truth -> internal validation"
+      }
+    },
+    {
+      "primitive_id": "lowo_cv_ari",
+      "name": "Leave-one-week-out CV with adjusted Rand index",
+      "verbatim_quote": "cross-validation (LOWO CV) to compare test set partitions from mixture models fit on training data versus test data.",
+      "page": 11,
+      "latex": "\\text{ARI}=\\frac{N(A+D)-[(A+B)(A+C)+(C+D)(B+D)]}{N^2-[(A+B)(A+C)+(C+D)(B+D)]}",
+      "symbol_and_unit_ledger": {
+        "A,B,C,D": "pair-agreement counts between train/test partitions",
+        "N": "total pairs = A+B+C+D"
+      },
+      "assumptions": [
+        "Fit GMM on train weeks and on the holdout week, compare partitions by ARI; E[ARI]=0 under random, max 1 = identical."
+      ],
+      "breakdown_regime": "ARI corrects Rand index for chance agreement; negative ARI = worse than random",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Out-of-sample partition agreement via ARI is the same clustering-stability test GSE uses to validate discovered categories.",
+        "source_operator": "lowo_cv_ari",
+        "telemetry": "LOWO CV, ARI in [-?,1], E=0 random"
+      }
+    },
+    {
+      "primitive_id": "g_star_two",
+      "name": "G*=2 clusters (ARI>0.9) matches man/zone",
+      "verbatim_quote": "This indicates that a two-cluster solution is the best fit for our data given our definition for evaluation",
+      "page": 14,
+      "latex": "G^*=\\arg\\max_G \\overline{\\text{ARI}}_G=2,\\quad \\text{ARI}>0.9",
+      "symbol_and_unit_ledger": {
+        "G*": "selected cluster count",
+        "ARI": "adjusted Rand index"
+      },
+      "assumptions": [
+        "G=2..9 tested; G=2 wins by a wide margin (ARI>0.9), matching the man/zone dichotomy; labels assigned by manual animation review."
+      ],
+      "breakdown_regime": "clusters are data-driven and unlabeled; man/zone names assigned post hoc by visual inspection",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A data-driven cluster count that recovers the known dichotomy is the same validation GSE wants from unsupervised concept discovery.",
+        "source_operator": "g_star_two",
+        "telemetry": "G*=2, ARI>0.9"
+      }
+    },
+    {
+      "primitive_id": "top_feature_dirvar",
+      "name": "Top feature: post-throw direction-of-motion variance",
+      "verbatim_quote": "the top feature is the variance in the difference of direction of motion between the player and the nearest offensive player after the ball is thrown.",
+      "page": 15,
+      "latex": "\\text{Influence}_m=\\text{ARI}_{\\text{all}}-\\text{ARI}_{(-m)}",
+      "symbol_and_unit_ledger": {
+        "Influence_m": "drop in ARI when feature m removed"
+      },
+      "assumptions": [
+        "Most top features are pre-throw; the single most influential is OFF DIR VAR after the throw; teammate-direction features add little."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Leave-one-feature-out ARI drop is the same feature-importance measure GSE uses to rank situational signals.",
+        "source_operator": "top_feature_dirvar",
+        "telemetry": "top = OFF DIR VAR post-throw"
+      }
+    },
+    {
+      "primitive_id": "vvv_covariance",
+      "name": "Unconstrained VVV covariance for collinearity",
+      "verbatim_quote": "we use an unconstrained \"VVV\" covariance structure when fitting the models",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "High feature collinearity motivates full, unconstrained per-cluster covariance (volume/shape/orientation all vary)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Allowing full covariance under collinearity is the same flexibility GSE needs when its situational features are correlated.",
+        "source_operator": "vvv_covariance",
+        "telemetry": "VVV covariance, EM, scikit-learn"
+      }
+    },
+    {
+      "primitive_id": "uncertainty_positive",
+      "name": "Uncertainty is a feature, not a bug",
+      "verbatim_quote": "This uncertainty is a positive feature of the mixture model: We should not assign hard cluster labels when it is unclear, even to the human eye, what type of coverage each player is playing.",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Ambiguous plays (e.g., a static DB near a receiver with another defender nearby) get near-50/50 probabilities rather than forced labels."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Refusing a hard label on genuine ambiguity is the same epistemic humility GSE enforces; soft probability is the honest output.",
+        "source_operator": "uncertainty_positive",
+        "telemetry": "ambiguous -> ~50/50, no hard label"
+      }
+    },
+    {
+      "primitive_id": "coverage_disguise",
+      "name": "Coverage disguise revealed over the play",
+      "verbatim_quote": "teams may try to disguise their pass coverage at the start of the play, in order to confuse the opposing quarterback.",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Press-man look pre-snap can burn into zone; the GMM's probabilities evolve from man to zone as the play develops, quantifying the disguise."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A pre-snap alignment that misrepresents the true scheme is the same deception GSE must see through by tracking post-snap evolution.",
+        "source_operator": "coverage_disguise",
+        "telemetry": "disguise: pre-snap man look -> zone"
+      }
+    },
+    {
+      "primitive_id": "motion_shape_no_signal",
+      "name": "CB trajectory shape carries no coverage signal",
+      "verbatim_quote": "we see no apparent relationship between the patterns of motion and the probability of man or zone coverage.",
+      "page": 21,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Because CB motion is reactionary, the shape of the trajectory alone does not indicate coverage; this vetoes trajectory-clustering approaches."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The absence of a trajectory-shape signal empirically confirms the reactive-defender insight; GSE must use relational, not absolute, features.",
+        "source_operator": "motion_shape_no_signal",
+        "telemetry": "trajectory shape != coverage"
+      }
+    },
+    {
+      "primitive_id": "man_more_common",
+      "name": "Man coverage more common than zone (all 32 teams)",
+      "verbatim_quote": "Overall, man coverage is used more often than zone coverage by all 32 NFL teams in this provided sample of data.",
+      "page": 25,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Tampa Bay, Chicago, Green Bay highest man rate; Washington, Buffalo, NY Giants highest zone; Bryce Callahan ~80% man led the league."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A base-rate prior on coverage tendency by team and player is the same situational prior GSE can seed its defensive model with.",
+        "source_operator": "man_more_common",
+        "telemetry": "man > zone all 32 teams"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "pass_coverage2020_trace",
+      "think": "The retrocausal genealogy of this paper is a data gap on the defensive side of the ball. Public football statistics describe offense, special teams, and coaching decisions far better than defense, because individual defensive data was historically lacking and public defensive stats are mere counting measures. NFL player tracking now makes deeper defensive analysis possible, but the event and strategy annotations are sparse and human labeling is expensive. The authors therefore choose unsupervised learning, which needs no training labels, over supervised approaches that would require ground-truth coverage tags nobody publicly has. The lineage runs through Bialkowski's soccer role features, Lucey's basketball formation analysis, Miller and Bornn's possession sketches, and Chu's receiver-route clustering, but all of those annotate offense or team-wide strategy. The gap this paper fills is individual defensive coverage. The central insight is that defenders are reactive. Offensive players dictate their own movements, so clustering their trajectories reveals routes and plays; defensive players move in reaction to the offense, so clustering their trajectories reveals nothing about coverage. The authors instead build relational features describing each cornerback relative to the nearest offensive player and to his teammates. Man coverage means a hard assignment to one receiver, so the cornerback mirrors that receiver's motion and stays much closer to him than any teammate is; zone coverage means a spatial responsibility with eyes on the quarterback, so motion is more static and less coupled to any one receiver. The distance-ratio feature and the direction-of-motion difference encode exactly this, computed at event-anchored windows, pre-snap, snap, midpoint, throw, and post-throw, because the signals change as the play develops. The recursive theory of mind is the mixture model reasoning about the defense's latent intent over time. A Gaussian mixture f(x) equals the sum of pi_g f_g(x given rho_g) assigns each cornerback-play a soft probability of man versus zone, and those probabilities evolve frame by frame. The model can watch a defense disguise its coverage, lining up in a press-man look to fool the quarterback, then burn into zone as the play develops, and it quantifies that shift probabilistically rather than committing to the pre-snap appearance. It also handles the hybrid case where a zone defender with a single receiver in his area switches to man-like coverage. The theory of mind is about what the defender is reacting to and how his assignment changes, not about a fixed label. Cross-layer veto adjudication is rigorous and label-free. With no ground truth, the authors invoke Hennig's point that there could be better truths than the known one, and validate by internal consistency instead. Leave-one-week-out cross-validation fits a GMM on the training weeks and on the holdout week, then compares the partitions with the adjusted Rand index, whose expectation is zero under random labeling and whose maximum of one means identical partitions. G equals two wins by a wide margin, ARI over 0.9, recovering the man-zone dichotomy. Feature influence is measured by the ARI drop when each feature is removed, and the top feature is the post-throw variance in the direction-of-motion difference to the nearest offensive player. A separate veto confirms the reactive insight: there is no relationship between a cornerback's trajectory shape and his coverage probability, so trajectory clustering is empirically ruled out. The implementation invariants are what GSE should lift. For reactive agents, build relational features relative to the agents they react to, not absolute trajectories; use a density-based mixture for interpretable, soft, uncertainty-quantified labels; select the cluster count and rank features by out-of-sample ARI rather than by label accuracy; and anchor features to play events. The framework generalizes beyond coverage to run-blocking, pass-rush assignments, stunts, and blitzes, because the recipe is rich relational features plus mixture modeling. The outputs are statistical coverage probabilities from tracking data; there are zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. 6,712 pass plays yield 16,316 cornerback feature vectors, tracked at 10 Hz with x in 0 to 120 and y in 0 to 58, fit with scikit-learn's EM GaussianMixture using an unconstrained VVV covariance because the features are highly collinear. The authors concede that player orientation, likely the single most informative feature, is missing from the public data, that feature correlation is not fully addressed, and that safeties need their own features. Man coverage is more common than zone for all 32 teams, with Bryce Callahan near 80% man leading the league. The invariant for GSE is to carry the relational-feature discipline for reactive agents, the soft-label humility that refuses hard labels on genuine ambiguity, and the ARI-based validation, while recording orientation as the priority data enrichment. The football context itself supplies the prior structure: Cover-n denotes n safeties in deep zone, Cover-2 is the most common scheme, Cover-4 is reserved for preventing deep passes in situations like third-and-twenty or a two-minute drill, and Cover-1 appears more in short yardage. The authors' future work points toward the same relational logic GSE wants, using one defender's coverage to inform another's, since a left cornerback in man raises the probability the right cornerback is also in man, and a Cover-2 safety shell shifts the cornerbacks toward zone, with team-specific coordinator tendencies as additional conditioning. That cross-player and cross-team coupling is the natural next layer of the situational ontology.",
+      "retrocausal_genealogy": "The paper originates in a defensive data gap: public stats describe offense far better than defense, and coverage annotations are sparse and costly to label by hand. With no ground-truth coverage tags, the authors choose unsupervised learning over supervised. The lineage runs through Bialkowski's soccer roles, Lucey's basketball formations, Miller-Bornn's possession sketches, and Chu's routes, but all annotate offense or team strategy. The gap is individual defensive coverage. The decisive conceptual move is recognizing that defenders are reactive, so the offensive trajectory-clustering recipe cannot transfer, and relational features relative to the offense are required instead.",
+      "theory_of_mind": "The mixture model reasons about the defense's latent intent over time. Soft man/zone probabilities evolve frame by frame, letting the model see through pre-snap disguise, a press-man look that burns into zone, and handle hybrid zone-to-man switches when a single receiver enters a zone. The theory of mind is about what each defender is reacting to and how his assignment changes, not a static label. Genuine ambiguity, a static DB near a receiver with another defender nearby, yields near-50/50 probabilities rather than a forced hard label, which the authors treat as a positive feature.",
+      "cross_layer_veto": "Validation is label-free and rigorous. Invoking Hennig's 'better truths than the known one,' the authors use leave-one-week-out CV comparing train/test GMM partitions by adjusted Rand index (E=0 random, max 1 identical). G=2 wins with ARI>0.9, recovering man/zone. Feature influence is the ARI drop on removal; the top feature is post-throw direction-of-motion variance to the nearest offensive player. A separate veto shows no relationship between CB trajectory shape and coverage probability, empirically ruling out trajectory clustering and confirming the reactive-defender insight."
+    }
+  ],
+  "universal_lens": "Reactive defensive agents are annotated by relational features relative to the offense they react to, clustered with a Gaussian mixture that yields soft, uncertainty-quantified man/zone probabilities evolving over the play, with cluster count and feature importance validated label-free by leave-one-week-out adjusted Rand index.",
+  "gsi_mapping": "GSI treats coverage as a latent mixture over cornerback-play relational features (distance ratio to nearest offense vs teammate, direction-of-motion difference) at event-anchored windows; f(x)=sum pi_g f_g(x|rho_g) with G*=2 (ARI>0.9) gives soft man/zone probabilities that track disguise and hybrid switches through the play.",
+  "gse_mapping": "GSE lifts the relational-feature discipline for reactive agents, the soft-label humility that refuses hard labels on ambiguity, and the ARI-based label-free validation; the resulting coverage annotations feed its defensive situational ontology and generalize to run-blocking and pass-rush schemes, with all outputs statistical probabilities, never sportsbook lines."
+}

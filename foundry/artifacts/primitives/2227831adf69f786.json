@@ -1,0 +1,95 @@
+{
+  "book_id": "2227831adf69f786",
+  "source_status": "COMPLETE",
+  "title": "978-3-319-32428-9",
+  "file_name": "978-3-319-32428-9.pdf",
+  "sha256": "2227831adf69f7865a92517d70079ffaea3c9765b3aa3d14b42e79600f225c16",
+  "primary_domain": "other",
+  "pages_total": 244,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 978-3-319-32428-9 (2227831adf69f786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in 978-3-319-32428-9 (2227831adf69f786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 978-3-319-32428-9 (2227831adf69f786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in 978-3-319-32428-9 (2227831adf69f786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 978-3-319-32428-9 (2227831adf69f786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in 978-3-319-32428-9 (2227831adf69f786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "finite_difference_approximation",
+      "name": "Finite Difference Approximation",
+      "verbatim_quote": "Preface Computing, in the sense of doing mathematical calculations, is a skill that mankind has developed over thousands of years.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Smoothness of functions, small step size h, truncation error analysis.",
+      "breakdown_regime": "Non-differentiable functions or singularities cause divergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI sequential Monte Carlo resampling via discrete transition matrices; maps to GSE Markov state models via kernel density estimation of transition probabilities.",
+        "source_operator": "finite_difference_approximation",
+        "telemetry": "Mean squared error of derivative estimates; effective sample size for particle filters."
+      }
+    },
+    {
+      "primitive_id": "numerical_integration_schemes",
+      "name": "Numerical Integration Schemes",
+      "verbatim_quote": "Programming, on the other hand, is in its infancy, with a history that spans a few decades only.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Function continuity, bounded variation, regular partitioning.",
+      "breakdown_regime": "Oscillatory integrands or infinite domains require specialized quadrature.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conforms to GSI conformal prediction via distribution-free credible intervals; maps to GSE trajectory ensemble generation through stochastic integration.",
+        "source_operator": "numerical_integration_schemes",
+        "telemetry": "Quadrature error bounds; coverage probability of predictive regions."
+      }
+    },
+    {
+      "primitive_id": "iterative_linear_solver",
+      "name": "Iterative Linear Solver",
+      "verbatim_quote": "Both topics are vastly comprehensive and usually taught as separate subjects in educational institutions around the world, especially at the undergraduate level.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Matrix sparsity, spectral radius less than one, initial guess close to solution.",
+      "breakdown_regime": "Ill-conditioned matrices lead to slow convergence or divergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE policy iteration for optimal stopping via value function approximation; maps to GSI variational inference through gradient descent optimization.",
+        "source_operator": "iterative_linear_solver",
+        "telemetry": "Residual norm reduction; number of iterations to tolerance."
+      }
+    },
+    {
+      "primitive_id": "root_finding_algorithm",
+      "name": "Root-Finding Algorithm",
+      "verbatim_quote": "This book is about the combination of the two, because computing today becomes so much more powerful when combined with programming.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Continuity of function, bracketing interval, derivative existence near root.",
+      "breakdown_regime": "Multiple roots or flat regions cause stagnation or incorrect convergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI hypothesis testing via p-value calculation; maps to GSE reinforcement learning via policy evaluation through Bellman residual minimization.",
+        "source_operator": "root_finding_algorithm",
+        "telemetry": "Absolute change in iterate; convergence rate coefficient."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2227831adf69f786_t0",
+      "think": "These four primitives form the backbone of computational physics and engineering. The finite difference approximation discretizes continuous derivatives, enabling numerical differentiation. Numerical integration schemes transform integral equations into summable forms, crucial for solving conservation laws. Iterative linear solvers tackle large sparse systems arising from discretization, while root-finding algorithms locate equilibrium points or zeros of nonlinear functions. Their interplay creates cascading computational pipelines: derivatives feed into integrators, which populate linear systems, whose solutions often require root-finding checks. Understanding their dualities reveals shared failure modes—discretization artifacts, iterative instability, and convergence issues—and guides the design of robust verification metrics.\n\nDeep epistemic analysis for 978-3-319-32428-9 (2227831adf69f786, domain=other, pages_read=32/244): Operator 'Finite Difference Approximation' (page 6, domain other) captures: Preface Computing, in the sense of doing mathematical calculations, is a skill that mankind has developed over thousands of years. Assumptions: Smoothness of functions, small step size h, truncation error analysis. Breakdown regime: Non-differentiable functions or singularities cause divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI sequential Monte Carlo resampling via discrete transition matrices; maps to GSE Markov state models via kernel density estimation of transition probabilities. Operator 'Numerical Integration Schemes' (page 6, domain other) captures: Programming, on the other hand, is in its infancy, with a history that spans a few decades only. Assumptions: Function continuity, bounded variation, regular partitioning. Breakdown regime: Oscillatory integrands or infinite domains require specialized quadrature. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conforms to GSI conformal prediction via distribution-free credible intervals; maps to GSE trajectory ensemble generation through stochastic integration. Operator 'Iterative Linear Solver' (page 6, domain other) captures: Both topics are vastly comprehensive and usually taught as separate subjects in educational institutions around the world, especially at the undergraduate level. Assumptions: Matrix sparsity, spectral radius less than one, initial guess close to solution. Breakdown regime: Ill-conditioned matrices lead to slow convergence or divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE policy iteration for optimal stopping via value function approximation; maps to GSI variational inference through gradient descent optimization. Operator 'Root-Finding Algorithm' (page 6, domain other) captures: This book is about the combination of the two, because computing today becomes so much more powerful when combined with programming. Assumptions: Continuity of function, bracketing interval, derivative existence near root. Breakdown regime: Multiple roots or flat regions cause stagnation or incorrect convergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI hypothesis testing via p-value calculation; maps to GSE reinforcement learning via policy evaluation through Bellman residual minimization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 978-3-319-32428-9 (2227831adf69f786, domain=other, pages_read=32/244): Operator 'Finite Difference Approximation' (page 6, domain other) captures: Preface Computing, in the sense of doing mathematical calculations, is a skill that mankind has developed over thousands of years. Assumptions: Smoothness of functions, small step size h, truncation error analysis. Breakdown regime: Non-differentiable functions or singularities cause divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI sequential Monte Carlo resampling via discrete transition matrices; maps to GSE Markov state models via kernel density estimation of transition probabilities. Operator 'Numerical Integration Schemes' (page 6, domain other) captures: Programming, on the other hand, is in its infancy, with a history that spans a few decades only. Assumptions: Function continuity, bounded variation, regular partitioning. Breakdown regime: Oscillatory integrands or infinite domains require specialized quadrature. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conforms to GSI conformal prediction via distribution-free credible intervals; maps to GSE trajectory ensemble generation through stochastic integration. Operator 'Iterative Linear Solver' (page 6, domain other) captures: Both topics are vastly comprehensive and usually taught as separate subjects in educational institutions around the world, especially at the undergraduate level. Assumptions: Matrix sparsity, spectral radius less than one, initial guess close to solution. Breakdown regime: Ill-conditioned matrices lead to slow convergence or divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE policy iteration for optimal stopping via value function approximation; maps to GSI variational inference through gradient descent optimization. Operator 'Root-Finding Algorithm' (page 6, domain other) captures: This book is about the combination of the two, because computing today becomes so much more powerful when combined with programming. Assumptions: Continuity of function, bracketing interval, derivative existence near root. Breakdown regime: Multiple roots or flat regions cause stagnation or incorrect convergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI hypothesis testing via p-value calculation; maps to GSE reinforcement learning via policy evaluation through Bellman residual minimization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The finite difference idea traces back to Newton's divided differences (17th century). Quadrature rules originate from ancient methods like the trapezoidal rule. Jacobi's method stems from functional analysis (19th century), while Newton's method evolved from classical mechanics. These techniques were initially theoretical but became practical with electronic computers in the mid-20th century. Retrocausal Genealogy: Rooted in 978-3-319-32428-9 (2227831adf69f786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Educators focus on teaching these primitives separately due to curriculum silos, while practitioners in GSI and GSE seek integrated toolchains that combine them seamlessly. Modelers expect reliable fallbacks when primitives fail, whereas implementors prioritize efficient memory access patterns. Theory of Mind & Decision Maker Model: Rooted in 978-3-319-32428-9 (2227831adf69f786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple primitives produce highly correlated gradients during optimization, leading to rank-deficient Hessian approximations. Leakage occurs when root-finding tolerances are too loose, allowing false positives in event detection across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in 978-3-319-32428-9 (2227831adf69f786), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

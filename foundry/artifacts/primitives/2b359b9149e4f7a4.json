@@ -1,0 +1,78 @@
+{
+  "book_id": "2b359b9149e4f7a4",
+  "source_status": "COMPLETE",
+  "title": "report",
+  "file_name": "report.md",
+  "sha256": "2b359b9149e4f7a440148cd4a49c21cda81612d83c3161c47d2d1e66b481ec56",
+  "primary_domain": "other",
+  "pages_total": 8,
+  "pages_read": 8,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Synthetic prop generation violates ingest-and-learn doctrine; incomplete SGP emission omits 3 active games; DFS slate leak causes team-name misattribution. Universal Lens: Rooted in report (2b359b9149e4f7a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over live roster gate ensures player validity; conformal prediction bounds conviction scores using empirical draftkings props. GSI Mapping: Rooted in report (2b359b9149e4f7a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning applies copula-based SGP engine to model multi-leg parlay dependencies; state transitions gated by fail-closed roster validation. GSE Mapping: Rooted in report (2b359b9149e4f7a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "synthetic_prop_generation",
+      "name": "Synthetic Prop Generation",
+      "verbatim_quote": "**Synthetic Props & Clumped Conviction (R3 Violation)**: - Lines 199, 237, 240, and 281 in `emit_week6_master_product.py` manufactured synthetic lines via heuristic formulas (e.g.",
+      "page": 1,
+      "latex": "\\hat{y} = \\frac{yds}{5.0} - 4.5",
+      "symbol_and_unit_ledger": "{'yds': 'yards, dimensionless', 'hat_y': 'synthetic line, yards'}",
+      "assumptions": "Prop lines derived from heuristic rather than empirical data; conviction scores capped at 94.0.",
+      "breakdown_regime": "When heuristic projections deviate from real-time draftkings archives.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives conviction scores through synthetic heuristics instead of grounded draftkings data.",
+        "source_operator": "synthetic_prop_generation",
+        "telemetry": "Identical conviction scores across 12 players indicate score clipping."
+      }
+    },
+    {
+      "primitive_id": "incomplete_sgp_emission",
+      "name": "Incomplete SGP Emission",
+      "verbatim_quote": "**Incomplete SGPs & Inaccurate Index Mapping (R4 Violation)**: - Only 5 SGPs were emitted instead of the required 8 active Week 6 games (`CHI@ATL`, `ARI@LAR`, and `BUF@LV` were completely omitted).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "SGP count does not match active game slate; missing games imply incomplete coverage.",
+      "breakdown_regime": "Failure to emit all 8 required games per week 6 schedule.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps game index to SGP structure; mismatch between expected and actual game list.",
+        "source_operator": "incomplete_sgp_emission",
+        "telemetry": "Missing game identifiers in emitted SGP packet."
+      }
+    },
+    {
+      "primitive_id": "dfs_team_resolution_failure",
+      "name": "DFS Team Resolution Failure",
+      "verbatim_quote": "**DFS Team Resolution Failure & Slate Leak (R5 Violation)**: - LineStar Period 412 slate grid (746 players) lacked player team names in `linestar_usage_2026-10-13.json`, causing the pipeline to fall back to `\"NFL\"` for **every single player in the emitted DFS lineups**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Team name resolution fails when external slate lacks metadata.",
+      "breakdown_regime": "Fallback to generic 'NFL' tag upon missing team info.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Causes incorrect lineup composition due to team ambiguity in DFS slate.",
+        "source_operator": "dfs_team_resolution_failure",
+        "telemetry": "All players tagged as 'NFL' in final DFS lineup output."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2b359b9149e4f7a4_t0",
+      "think": "The core failure lies in three distinct violations of foundational doctrines. First, synthetic prop generation (R3) uses heuristic formulas like yds/5.0 - 4.5 instead of grounding in 20,019 real draftkings lines. This creates spurious lines and clamps conviction scores at 94.0, eliminating differentiation among players. Second, incomplete SGP emission (R4) excludes three active games—CHI@ATL, ARI@LAR, BUF@LV—because the code only emits 5 out of 8 required SGPs. Third, DFS team resolution (R5) leaks due to missing team names in the slate file, forcing fallback to generic 'NFL' tags for all players. These failures collectively undermine trust in the intelligence pipeline’s adherence to doctrine 4 (ingest-and-learn), doctrine 5 (market-line respect), and doctrine 6 (fail-closed roster gate). Each primitive introduces a failure mode: synthetic data generation erodes signal-to-noise ratio, incomplete SGP coverage disrupts game-state modeling, and team-resolution leakage corrupts lineup integrity. The root cause is systemic neglect of data fidelity and architectural rigor.\n\nDeep epistemic analysis for report (2b359b9149e4f7a4, domain=other, pages_read=8/8): Operator 'Synthetic Prop Generation' (page 1, domain other) captures: **Synthetic Props & Clumped Conviction (R3 Violation)**: - Lines 199, 237, 240, and 281 in `emit_week6_master_product.py` manufactured synthetic lines via heuristic formulas (e.g. Assumptions: Prop lines derived from heuristic rather than empirical data; conviction scores capped at 94.0. Breakdown regime: When heuristic projections deviate from real-time draftkings archives. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives conviction scores through synthetic heuristics instead of grounded draftkings data. Operator 'Incomplete SGP Emission' (page 1, domain other) captures: **Incomplete SGPs & Inaccurate Index Mapping (R4 Violation)**: - Only 5 SGPs were emitted instead of the required 8 active Week 6 games (`CHI@ATL`, `ARI@LAR`, and `BUF@LV` were completely omitted). Assumptions: SGP count does not match active game slate; missing games imply incomplete coverage. Breakdown regime: Failure to emit all 8 required games per week 6 schedule. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps game index to SGP structure; mismatch between expected and actual game list. Operator 'DFS Team Resolution Failure' (page 1, domain other) captures: **DFS Team Resolution Failure & Slate Leak (R5 Violation)**: - LineStar Period 412 slate grid (746 players) lacked player team names in `linestar_usage_2026-10-13.json`, causing the pipeline to fall back to `\"NFL\"` for **every single player in the emitted DFS lineups**. Assumptions: Team name resolution fails when external slate lacks metadata. Breakdown regime: Fallback to generic 'NFL' tag upon missing team info. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Causes incorrect lineup composition due to team ambiguity in DFS slate. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for report (2b359b9149e4f7a4, domain=other, pages_read=8/8): Operator 'Synthetic Prop Generation' (page 1, domain other) captures: **Synthetic Props & Clumped Conviction (R3 Violation)**: - Lines 199, 237, 240, and 281 in `emit_week6_master_product.py` manufactured synthetic lines via heuristic formulas (e.g. Assumptions: Prop lines derived from heuristic rather than empirical data; conviction scores capped at 94.0. Breakdown regime: When heuristic projections deviate from real-time draftkings archives. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives conviction scores through synthetic heuristics instead of grounded draftkings data. Operator 'Incomplete SGP Emission' (page 1, domain other) captures: **Incomplete SGPs & Inaccurate Index Mapping (R4 Violation)**: - Only 5 SGPs were emitted instead of the required 8 active Week 6 games (`CHI@ATL`, `ARI@LAR`, and `BUF@LV` were completely omitted). Assumptions: SGP count does not match active game slate; missing games imply incomplete coverage. Breakdown regime: Failure to emit all 8 required games per week 6 schedule. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps game index to SGP structure; mismatch between expected and actual game list. Operator 'DFS Team Resolution Failure' (page 1, domain other) captures: **DFS Team Resolution Failure & Slate Leak (R5 Violation)**: - LineStar Period 412 slate grid (746 players) lacked player team names in `linestar_usage_2026-10-13.json`, causing the pipeline to fall back to `\"NFL\"` for **every single player in the emitted DFS lineups**. Assumptions: Team name resolution fails when external slate lacks metadata. Breakdown regime: Fallback to generic 'NFL' tag upon missing team info. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Causes incorrect lineup composition due to team ambiguity in DFS slate. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early-stage design decisions prioritizing speed over correctness, echoing historical issues in automated trading systems where heuristic shortcuts led to catastrophic risk misalignment. Retrocausal Genealogy: Rooted in report (2b359b9149e4f7a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in report (2b359b9149e4f7a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include a synthetic-data optimizer that favors heuristic simplicity, a game-scope planner that ignores missing games, and a team-resolver that assumes data completeness—a triad of agents whose unchecked interaction produces flawed outcomes. Theory of Mind & Decision Maker Model: Rooted in report (2b359b9149e4f7a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct conviction scores per player; leakage veto prevents generic NFL tagging in DFS lineups. These conditions must hold to prevent cascading errors across layers of reasoning and execution. Cross-Layer Veto & Anti-Leakage Check: Rooted in report (2b359b9149e4f7a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

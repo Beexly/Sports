@@ -1,0 +1,323 @@
+{
+  "book_id": "5c3ed52d3f3b8e51",
+  "source_status": "COMPLETE",
+  "title": "Evaluating_NHL_Goalies_Skaters_and_Teams",
+  "file_name": "Evaluating_NHL_Goalies_Skaters_and_Teams.pdf",
+  "sha256": "5c3ed52d3f3b8e51c894b7c6663ed289585dda276a17a1ab23e574a5e28fb799",
+  "primary_domain": "other",
+  "pages_total": 24,
+  "pages_read": 24,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 24,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Weighted shot models unify goal scoring and goaltending through probabilistic frameworks, enabling defense-independent performance metrics via logistic and non-parametric regressions. Statistical robustness of adjusted save percentage versus raw save percentage in NHL goaltending evaluation, accounting for rink bias and data point influence.",
+  "gsi_mapping": "Bayesian inference maps weighted shot quality to player and goalie skill using posterior distributions over expected goals and save percentages, conformally calibrated for predictive reliability. Bayesian adjustment of goalie performance metrics using weighted shot models to infer predictive reliability under away-game conditions.",
+  "gse_mapping": "Situational reasoning encodes player and goalie states via shot location, time, and defensive context; transitions governed by Markovian dynamics of shot quality and outcome probabilities. Situational state transitions in team performance analysis where adjusted save percentage and weighted shots per 60 minutes serve as core observables for dynamic modeling.",
+  "primitives": [
+    {
+      "primitive_id": "w0_snake_case_id",
+      "name": "Shot Weighting Operator",
+      "verbatim_quote": "We weight each shot based on the estimated probabilities obtained from our model, call this statistic \"weighted shots\", and use advanced statistics based on weighted shots as the basis of our evaluation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Weighted Shots (WS): Dimensionless quantity representing expected goals; Probability of a goal (p): Dimensionless; Weighted Shot = p * Shot.",
+      "assumptions": "Assumes accurate estimation of shot-specific goal probabilities via logistic regression; Independent identically distributed (IID) shot outcomes conditional on features.",
+      "breakdown_regime": "Singularity occurs when p approaches 0 or 1; Regime of interest is moderate probabilities typical of NHL shooting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian updating framework where prior belief is uniform and posterior is the estimated probability; GSI application: sequential probability assessment for player ratings.",
+        "source_operator": "w0_snake_case_id",
+        "telemetry": "Observed vs. expected goals (weighted shots) track model calibration over time."
+      }
+    },
+    {
+      "primitive_id": "w1_z_score_skater_rating",
+      "name": "Z-Score Skater Rating",
+      "verbatim_quote": "In general, statistics based on weighted shots perform well, but not better than traditional statistics.",
+      "page": 1,
+      "latex": "$Z_{skater} = \\frac{WS_{skater} - \\mu_{WS}}{\\sigma_{WS}}$",
+      "symbol_and_unit_ledger": "WS_skater: Total weighted shots contributed; μ_WS: Mean weighted shots across skaters; σ_WS: Standard deviation of weighted shots; Z-score is dimensionless.",
+      "assumptions": "Central limit theorem applies to the distribution of weighted shots; Homoscedastic variance across skaters; No omitted variable bias in shot weighting.",
+      "breakdown_regime": "Regime where sample size is large enough for CLT; Singularity at zero variance, causing undefined z-scores.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction interval for individual skater performance relative to peers; GSI mapping: percentile ranking within position-specific distributions.",
+        "source_operator": "w1_z_score_skater_rating",
+        "telemetry": "Correlation between z-scores and subsequent goal-scoring rates serves as verification metric."
+      }
+    },
+    {
+      "primitive_id": "w2_adjusted_plus_minus",
+      "name": "Adjusted Plus-Minus Model",
+      "verbatim_quote": "The results are estimates of each player's offensive and defensive contribution to his team's weighted shots during even strength, power play, and short handed situations, independent of the strength of his teammates, the strength of his opponents, and the zone in which his shifts begin.",
+      "page": 1,
+      "latex": "$WSAMP_i = \\beta_0 + \\beta_1 X_{teammates} + \\beta_2 X_{opponents} + \\beta_3 Zone + \\epsilon_i$",
+      "symbol_and_unit_ledger": "WSAMP_i: Adjusted weighted shots for player i; β_0: Intercept; β_1, β_2, β_3: Coefficients for covariates; ε_i: Error term; All coefficients represent contributions in weighted shots.",
+      "assumptions": "Linear additivity of player effects; No multicollinearity between covariates; Correct functional form; Random assignment of players to lineups.",
+      "breakdown_regime": "Collinearity regime where teammate/opponent matrices are nearly singular; Singularity when there are insufficient changes in lineup composition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian hierarchical shrinkage estimator for player effects; GSE mapping: state-transition model where states are lineup configurations and transitions are shift changes.",
+        "source_operator": "w2_adjusted_plus_minus",
+        "telemetry": "Stability of WSAMP estimates across seasons indicates robustness to noise."
+      }
+    },
+    {
+      "primitive_id": "w3_shot_quality_index",
+      "name": "Shot Quality Index",
+      "verbatim_quote": "Once the probability that a shot will be a goal is estimated, the shot can be weighted based on that probability.",
+      "page": 1,
+      "latex": "$QualityIndex = \\log\\left(\\frac{p}{1-p}\\right)$",
+      "symbol_and_unit_ledger": "p: Probability of a goal; QualityIndex: Log-odds scale ranging from -∞ to +∞; Dimensionless.",
+      "assumptions": "Logistic link function correctly specifies the relationship between features and goal probability; IID Bernoulli trials for shot outcomes.",
+      "breakdown_regime": "Regime where p is near 0 or 1 leads to extreme log-odds; Singularity at p=0 or p=1; Practical regime is typically [-4, 4].",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction set for shot difficulty; GSE mapping: situational feature vector encoding opponent goalie position and defensive structure.",
+        "source_operator": "w3_shot_quality_index",
+        "telemetry": "Average QualityIndex of shots faced correlates with save percentage, serving as an external check."
+      }
+    },
+    {
+      "primitive_id": "defense_independent_goaltender_rating",
+      "name": "Defense Independent Goaltender Rating",
+      "verbatim_quote": "He coined his metric as Defense Independent Goaltender Rating (DIGR), which, as the name suggests, gives a rating for each goalie that is independent of the quality of shots allowed by his defense.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DIGR': 'dimensionless score representing goaltender performance adjusted for shot quality', 'ExpSv%': 'expected save percentage based on shot quality', 'Sv%': 'actual save percentage', 'DiffSv%': 'difference between actual and expected save percentage'}",
+      "assumptions": "Shot quality is independent of defensive support; goalies face representative sample of shot types.",
+      "breakdown_regime": "When shot quality varies significantly across teams or periods.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "DIGR maps to GSE state transition probabilities for goalie performance under varying defensive contexts.",
+        "source_operator": "defense_independent_goaltender_rating",
+        "telemetry": "Adjusted save percentage and goals prevented relative to expectation."
+      }
+    },
+    {
+      "primitive_id": "weighted_shot_quantity_and_quality",
+      "name": "Weighted Shot Quantity and Quality",
+      "verbatim_quote": "Skater Performance First, we use weighted shots and advanced statistics based on weighted shots to quantify two components of goal scoring ability of players: generating a high quantity of high quality of shots, and capitalizing on those shots.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'EG': 'expected goals based on shot quality', 'G': 'actual goals scored', 'DiffG': 'difference between actual and expected goals', 'Sh%': 'shot percentage', 'ExpSh%': 'expected shot percentage', 'AdjSh%': 'adjusted shot percentage'}",
+      "assumptions": "Shot quality is accurately modeled by weighted shot framework; players' shooting ability is separable from team context.",
+      "breakdown_regime": "When shot selection or execution deviates from expected patterns due to situational factors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Weighted shot metrics map to GSI probabilistic forecasting of goal-scoring events.",
+        "source_operator": "weighted_shot_quantity_and_quality",
+        "telemetry": "Expected vs. actual goals, shot conversion rates, and adjusted shooting efficiency."
+      }
+    },
+    {
+      "primitive_id": "goalie_performance_adjustment",
+      "name": "Goaltender Performance Adjustment",
+      "verbatim_quote": "For example, Krzywicki used the results of his logistic regression model to analyze the performance of goalies while adjusting for the quality of their team's defense.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'GA': 'goals against', 'ExpGA': 'expected goals against', 'DiffGA': 'difference between actual and expected goals against', 'Sv%': 'save percentage', 'ExpSv%': 'expected save percentage', 'AdjSv%': 'adjusted save percentage'}",
+      "assumptions": "Team defense quality is a confounding variable; adjustment isolates goalie contribution.",
+      "breakdown_regime": "When team defense quality fluctuates significantly across seasons or matchups.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Adjustment mechanism enables GSE to simulate goalie performance under hypothetical defensive conditions.",
+        "source_operator": "goalie_performance_adjustment",
+        "telemetry": "Goals prevented above expectation and adjusted save percentage."
+      }
+    },
+    {
+      "primitive_id": "skater_shooting_ability",
+      "name": "Skater Shooting Ability",
+      "verbatim_quote": "The DiffG column, which is actual goals minus expected goals, could be interpreted as the number of goals the player scored above what was expected based on the quality of his shots.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DiffG': 'goals above expected based on shot quality', 'G': 'actual goals', 'EG': 'expected goals', 'GErr': 'goal error margin'}",
+      "assumptions": "Player shooting ability is consistent across games; shot quality reflects true skill.",
+      "breakdown_regime": "When individual player performance diverges from statistical expectations due to luck or skill.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Skater shooting ability maps to GSI’s probabilistic modeling of goal-scoring contributions.",
+        "source_operator": "skater_shooting_ability",
+        "telemetry": "Difference between actual and expected goals, indicating shooting proficiency."
+      }
+    },
+    {
+      "primitive_id": "weighted_shot_correlation",
+      "name": "Weighted Shot Correlation",
+      "verbatim_quote": "Macdonald et al./Weighted Shots 13 save percentage may not be as independent of expected save percentage as we had hoped.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SV%': 'Save percentage (dimensionless)', 'ExpSV%': 'Expected save percentage (dimensionless)'}",
+      "assumptions": "Correlation between SV% and ExpSV% is influenced by outlier data points; rink bias affects measurement consistency.",
+      "breakdown_regime": "When outlier data points significantly skew observed correlation, leading to misinterpretation of independence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The derived kernel maps raw save percentage to adjusted save percentage through regression-based correction factors, enabling GSI to compute reliable posterior distributions over goaltender skill.",
+        "source_operator": "weighted_shot_correlation",
+        "telemetry": "Correlation coefficient between actual and expected save percentages across away games."
+      }
+    },
+    {
+      "primitive_id": "adjusted_vs_raw_sv",
+      "name": "Adjusted vs Raw Save Percentage",
+      "verbatim_quote": "According to these results, adjusted save percentage could be a better predictor of save percentage than save percentage itself.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SV%_adj': 'Adjusted save percentage (dimensionless)', 'SV%': 'Raw save percentage (dimensionless)'}",
+      "assumptions": "Adjusted metrics account for variance due to luck or sample size; differences in predictive power are small but potentially meaningful.",
+      "breakdown_regime": "Small but non-negligible improvement in correlation when using adjusted save percentage over raw save percentage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic transformation from raw to adjusted save percentage allows GSE to model player and team performance with reduced noise from stochastic fluctuations.",
+        "source_operator": "adjusted_vs_raw_sv",
+        "telemetry": "Difference in correlation values between adjusted and raw save percentage metrics."
+      }
+    },
+    {
+      "primitive_id": "team_stat_reliability",
+      "name": "Team Stat Reliability",
+      "verbatim_quote": "In the left half of Figure 5, we show the reliability of various team goaltending statistics.",
+      "page": 13,
+      "latex": "\\text{Reliability} = \\frac{\\sigma^2_{\\text{true}}}{\\sigma^2_{\\text{observed}}} \\in [0,1]",
+      "symbol_and_unit_ledger": "{'\\\\sigma^2_{\\\\text{true}}': 'True variance of statistic (dimensionless)', '\\\\sigma^2_{\\\\text{observed}}': 'Observed variance of statistic (dimensionless)', '\\\\text{Reliability}': 'Reliability index (dimensionless)'}",
+      "assumptions": "Reliability increases with larger sample sizes and reduced external confounding variables such as rink bias.",
+      "breakdown_regime": "Decrease in reliability when including home games or when sample size is insufficient.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel estimation of reliability enables GSI to weight team statistics appropriately in probabilistic forecasting models.",
+        "source_operator": "team_stat_reliability",
+        "telemetry": "Coefficient of variation or Cronbach's alpha for team-level goaltending metrics."
+      }
+    },
+    {
+      "primitive_id": "weighted_shots_consistency",
+      "name": "Weighted Shots Consistency",
+      "verbatim_quote": "(Right) Correlation between team statistics in odd games and adjusted save percentage in even games.",
+      "page": 13,
+      "latex": "\\text{Consistency} = \\frac{1}{\\sigma^2_{\\text{shot}}}",
+      "symbol_and_unit_ledger": "{'\\\\sigma^2_{\\\\text{shot}}': 'Variance of shot-based metric (dimensionless)', '\\\\text{Consistency}': 'Inverse variance (dimensionless)'}",
+      "assumptions": "Shot-based metrics are inherently more stable than goal-based ones due to higher frequency and lower randomness.",
+      "breakdown_regime": "Consistency degrades when incorporating low-frequency outcomes like goals or high-variance events.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping between shot types and their temporal consistency allows GSE to select optimal input features for real-time performance modeling.",
+        "source_operator": "weighted_shots_consistency",
+        "telemetry": "Variance or standard deviation of weighted shots per 60 minutes compared to other shot-based metrics."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_1",
+      "name": "SplitHalfReliability",
+      "verbatim_quote": "(Left) Split-half reliability of various traditional and advanced per 60 minutes statistics at even strength.",
+      "page": 22,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes hockey data can be split into two independent halves without temporal autocorrelation bias.",
+      "breakdown_regime": "Breaks down when sample size is too small or splits are not truly independent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's cross-validation framework for statistical significance testing, where reliability metrics serve as conformal prediction intervals.",
+        "source_operator": "w3_snake_case_id_1",
+        "telemetry": "Observed correlation coefficients between odd and even game splits provide empirical validation for GSI's predictive accuracy models."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_2",
+      "name": "CorrelationGoalsAgainst",
+      "verbatim_quote": "(Right) Correlation between team statistics in odd games and goals against per 60 minutes in even games.",
+      "page": 22,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that team performance metrics observed in one set of games predict future performance in another set.",
+      "breakdown_regime": "Fails when there are systematic changes in team composition or coaching strategies between the two sets of games.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives GSE's situational reasoning kernel by treating past game states as covariates to predict future defensive efficiency.",
+        "source_operator": "w3_snake_case_id_2",
+        "telemetry": "The correlation values act as state-transition probabilities in a Markov chain model of team defense."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_3",
+      "name": "IndependenceAssumption",
+      "verbatim_quote": "In both cases, only data from away games was used.",
+      "page": 22,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Eliminates home advantage confounding factors by focusing exclusively on road performance.",
+      "breakdown_regime": "Breaks down if the analysis aims to generalize to all games including home contests.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's domain adaptation techniques, where independence across datasets ensures robust Bayesian inference across different venues.",
+        "source_operator": "w3_snake_case_id_3",
+        "telemetry": "The use of away games alone creates a controlled experiment, reducing variance in GSI's predictive models."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_4",
+      "name": "LogisticRegressionModel",
+      "verbatim_quote": "Applied logistic regression (Wiley Series in probability and statistics), 2 ed.",
+      "page": 23,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Models binary outcomes (shot conversion) as a linear function of predictors transformed by the logit link.",
+      "breakdown_regime": "Breaks down when linearity assumptions are violated or when there are perfect separations in the data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives GSE's classification-based state-transition logic, where the logit function maps observable features to shot success probabilities.",
+        "source_operator": "w3_snake_case_id_4",
+        "telemetry": "The predicted probabilities from this model serve as input features for GSE's reinforcement learning algorithms."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5c3ed52d3f3b8e51_t0",
+      "think": "This chapter introduces a comprehensive statistical framework for evaluating NHL performance using weighted shots. It builds upon previous work by Krzywicki, Awad, and Schuckers, extending their logistic regression models to incorporate shot angle change and employing z-score standardization for skater comparisons. The core innovation is the development of an adjusted plus-minus model using weighted shots as the outcome variable, allowing for isolation of individual player contributions while controlling for lineup and situational factors. The conclusion that weighted shots do not outperform traditional metrics suggests that existing statistics already capture much of the relevant information, implying diminishing returns from adding shot quality adjustments. This finding has implications for resource allocation in sports analytics, suggesting that simpler metrics may suffice unless specific questions require finer resolution. Window 1 Synthesis: Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 24/24 pages of Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51): [w0_snake_case_id p.1]: We weight each shot based on the estimated probabilities obtained from our model, call this statistic \"weighted shots\", and use advanced statistics based on weighted shots as the basis of our evaluation. (Bayesian updating framework where prior belief is uniform and posterior is the estimated probability; GSI application: sequential probability assessment for player ratings.) [w1_z_score_skater_rating p.1]: In general, statistics based on weighted shots perform well, but not better than traditional statistics. (Conformal prediction interval for individual skater performance relative to peers; GSI mapping: percentile ranking within position-specific distributions.) [w2_adjusted_plus_minus p.1]: The results are estimates of each player's offensive and defensive contribution to his team's weighted shots during even strength, power play, and short handed situations, independent of the strength of his teammates, the strength of his opponents, and the zone in which his shifts begin. (Bayesian hierarchical shrinkage estimator for player effects; GSE mapping: state-transition model where states are lineup configurations and transitions are shift changes.) [w3_shot_quality_index p.1]: Once the probability that a shot will be a goal is estimated, the shot can be weighted based on that probability. (Conformal prediction set for shot difficulty; GSE mapping: situational feature vector encoding opponent goalie position and defensive structure.) [defense_independent_goaltender_rating p.7]: He coined his metric as Defense Independent Goaltender Rating (DIGR), which, as the name suggests, gives a rating for each goalie that is independent of the quality of shots allowed by his defense. (DIGR maps to GSE state transition probabilities for goalie performance under varying defensive contexts.) [weighted_shot_quantity_and_quality p.7]: Skater Performance First, we use weighted shots and advanced statistics based on weighted shots to quantify two components of goal scoring ability of players: generating a high quantity of high quality of shots, and capitalizing on those shots. (Weighted shot metrics map to GSI probabilistic forecasting of goal-scoring events.) [goalie_performance_adjustment p.7]: For example, Krzywicki used the results of his logistic regression model to analyze the performance of goalies while adjusting for the quality of their team's defense. (Adjustment mechanism enables GSE to simulate goalie performance under hypothetical defensive conditions.) [skater_shooting_ability p.7]: The DiffG column, which is actual goals minus expected goals, could be interpreted as the number of goals the player scored above what was expected based on the quality of his shots. (Skater shooting ability maps to GSI’s probabilistic modeling of goal-scoring contributions.) [weighted_shot_correlation p.13]: Macdonald et al./Weighted Shots 13 save percentage may not be as independent of expected save percentage as we had hoped. (The derived kernel maps raw save percentage to adjusted save percentage through regression-based correction factors, enabling GSI to compute reliable posterior distributions over goaltender skill.) [adjusted_vs_raw_sv p.13]: According to these results, adjusted save percentage could be a better predictor of save percentage than save percentage itself. (Isomorphic transformation from raw to adjusted save percentage allows GSE to model player and team performance with reduced noise from stochastic fluctuations.) [team_stat_reliability p.13]: In the left half of Figure 5, we show the reliability of various team goaltending statistics. (Kernel estimation of reliability enables GSI to weight team statistics appropriately in probabilistic forecasting models.) [weighted_shots_consistency p.13]: (Right) Correlation between team statistics in odd games and adjusted save percentage in even games. (Isomorphic mapping between shot types and their temporal consistency allows GSE to select optimal input features for real-time performance modeling.) [w3_snake_case_id_1 p.22]: (Left) Split-half reliability of various traditional and advanced per 60 minutes statistics at even strength. (Maps to GSI's cross-validation framework for statistical significance testing, where reliability metrics serve as conformal prediction intervals.) [w3_snake_case_id_2 p.22]: (Right) Correlation between team statistics in odd games and goals against per 60 minutes in even games. (Derives GSE's situational reasoning kernel by treating past game states as covariates to predict future defensive efficiency.) [w3_snake_case_id_3 p.22]: In both cases, only data from away games was used. (Maps to GSI's domain adaptation techniques, where independence across datasets ensures robust Bayesian inference across different venues.) [w3_snake_case_id_4 p.23]: Applied logistic regression (Wiley Series in probability and statistics), 2 ed. (Derives GSE's classification-based state-transition logic, where the logit function maps observable features to shot success probabilities.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Roots in Sabermetric principles applied to hockey (Moneyball); Direct predecessors include Krzywicki's early shot quality models (2005) and Schuckers' nonparametric approach; Intersects with GSE's foundational work on state-based reasoning through the concept of situational context. Retrocausal Genealogy (Window 1): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and front office personnel likely seek actionable insights with minimal complexity; They may underestimate the predictive power of raw counts due to confirmation bias favoring sophisticated models; Players might react defensively to new metrics, viewing them as unfair penalizations. Theory of Mind (Window 1): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity condition: Must ensure that shot distance and angle are not perfectly collinear; Leakage veto: Cannot use future lineup data to predict current shot quality; Cross-layer consistency requires that GSI league-wide rankings align with GSE team-specific player evaluations. Cross-Layer Veto (Window 1): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5c3ed52d3f3b8e51_t1",
+      "think": "Chapter 2 explores the application of weighted shot models to evaluate NHL skaters, goalies, and teams. It builds upon prior work by Johns, Ryder, Krzywicki, Awad, and Schuckers, introducing novel analysis of advanced statistics' reliability and predictive power. The core idea is to disentangle player performance from contextual variables such as defensive support or shot quality. For goalies, Krzywicki's approach uses logistic regression to adjust for team defense, while Schuckers employs non-parametric regression to estimate goal probabilities directly. These methods yield metrics like DIGR and adjusted save percentages, which isolate individual performance. For skaters, the focus is on quantifying two components: shot generation and shot capitalization. The DiffG metric captures how many more goals a player scores than expected given shot quality. This chapter emphasizes 5-on-5 even strength situations, ensuring consistency in data interpretation. Tables 2 and 4 present empirical rankings of top shooters and goalies, offering concrete examples of these metrics in action. The chapter concludes by highlighting the importance of modeling shot quality rather than raw outcomes, aligning with modern analytics trends. Window 2 Synthesis: Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in early hockey analytics (Johns, Ryder) evolve into sophisticated models (Krzywicki, Awad, Schuckers) that refine shot quality estimation and isolate player contributions. Retrocausal Genealogy (Window 2): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Players and coaches may overvalue raw goal counts or save percentages; this chapter models underlying skill through weighted shot quality, suggesting that superior shooting or goaltending can be identified beyond surface-level stats. Theory of Mind (Window 2): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Metrics must avoid collinearity between shot quantity and quality; adjustments must not overfit to small samples or ignore temporal variance in player performance. Cross-Layer Veto (Window 2): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5c3ed52d3f3b8e51_t2",
+      "think": "Chapter window 3 explores the statistical validity and reliability of advanced hockey metrics, particularly focusing on save percentage and weighted shots. The authors highlight that raw save percentage may not be sufficiently independent of expected save percentage, suggesting potential issues with autocorrelation or data point influence. By removing an influential outlier, the correlation drops to near zero, implying that apparent relationships might be spurious. This finding supports the use of adjusted save percentage, which accounts for variance due to luck or sampling error. However, the gains in predictive power are modest, and the differences are not statistically significant. The study emphasizes the importance of controlling for rink bias by analyzing only away games, as home ice advantage can distort performance measures. At the team level, weighted shots are shown to be more consistent than goals, though not necessarily superior to simpler shot counts like Fenwick or Corsi. These insights inform GSI’s approach to constructing Bayesian models that incorporate uncertainty and adjust for known biases. Meanwhile, GSE uses these metrics to build dynamic state transition models that reflect evolving team performance. The chapter underscores the need for rigorous statistical validation before drawing strong conclusions from any single metric.",
+      "retrocausal_genealogy": "This work builds upon earlier studies in hockey analytics that sought to quantify goaltender performance beyond traditional save percentage. It extends prior research by introducing adjusted metrics and emphasizing the role of rink bias and data point influence in shaping correlations. Retrocausal Genealogy (Window 3): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents—coaches and analysts—may interpret adjusted save percentage differently depending on whether they prioritize short-term variance reduction or long-term predictive accuracy. Some may favor raw metrics for simplicity, while others prefer adjusted versions to mitigate noise. The chapter suggests that both approaches have merit, but neither provides a definitive edge without considering context and sample size. Theory of Mind (Window 3): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity checks reveal that adjusted save percentage does not substantially improve prediction over raw save percentage, thus preventing overfitting in GSI models. Leakage vetoes ensure that team-level metrics do not inadvertently leak information from one game type (home/away) into another, maintaining integrity of away-game-only analyses. Cross-Layer Veto (Window 3): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5c3ed52d3f3b8e51_t3",
+      "think": "This chapter window establishes foundational sovereign primitives for quantifying hockey performance through rigorous statistical methods. It introduces key concepts such as split-half reliability, cross-game correlation, and logistic regression applied to shot quality. These primitives form the bedrock for both GSI's predictive analytics and GSE's tactical decision-making systems. The work bridges theoretical statistics with practical applications, creating a unified framework that transforms raw play-by-play data into actionable intelligence for evaluating goalies, skaters, and teams. Window 4 Synthesis: Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts model opponents' tendencies probabilistically. They assume that reliable statistical patterns will persist, but also account for adaptive adjustments. For example, a coach might expect a team's Corsi differential to regress toward the mean after observing an extreme value, while simultaneously recognizing that certain players may have evolved their playing style. Theory of Mind (Window 4): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity condition: Must ensure that explanatory variables (e.g., shot distance and angle) are not perfectly multicollinear, as this would render the logistic regression coefficient estimates unstable. Leakage veto: Historical data must not contain information about future outcomes; for instance, using end-of-season standings to predict early-season performance would create lookahead bias. Cross-Layer Veto (Window 4): Rooted in Evaluating_NHL_Goalies_Skaters_and_Teams (5c3ed52d3f3b8e51, 24/24 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

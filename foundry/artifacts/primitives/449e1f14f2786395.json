@@ -1,0 +1,78 @@
+{
+  "book_id": "449e1f14f2786395",
+  "source_status": "COMPLETE",
+  "title": "debug",
+  "file_name": "debug.md",
+  "sha256": "449e1f14f278639595f87b467bf71f9f58e3d400ffbe0f68035103e36594970d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Systematic debugging as a Bayesian belief update over operational hypotheses, conditioned on telemetry and git state comparisons. Universal Lens: Rooted in debug (449e1f14f2786395), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models debug traces as conformal predictive distributions over deployment states, using \\( P(\\text{symptom} | \\text{code}) \\) to infer root causes via \\( \\text{deployment.sha} \\) vs \\( \\text{origin/main} \\). GSI Mapping: Rooted in debug (449e1f14f2786395), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions through \\( \\mathcal{F}(\\text{symptom}, \\text{tools}) \\rightarrow \\text{root-cause} \\) mappings, where \\( \\mathcal{F} \\) is a kernel of systematic reasoning over \\( \\text{git} \\) and \\( \\text{curl} \\) observables.",
+  "primitives": [
+    {
+      "primitive_id": "deployment_state_consistency_check",
+      "name": "Deployment State Consistency Check",
+      "verbatim_quote": "For production symptoms, first fetch /api/ops/public-surface-truth and compare deployment.sha to origin/main (docs/ops/DEPLOY_LAG.md).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'deployment.sha': 'dimensionless hash string', 'origin/main': 'dimensionless reference commit hash'}",
+      "assumptions": "Deployment state is deterministic and version-controlled.",
+      "breakdown_regime": "When \\( \\text{deployment.sha} \\neq \\text{origin/main} \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's \\( P(\\text{symptom} | \\text{state}) \\) matches GSE's \\( \\mathcal{F}(\\text{symptom}, \\text{git}) \\) when \\( \\text{state} = \\text{deployment.sha} \\).",
+        "source_operator": "deployment_state_consistency_check",
+        "telemetry": "API response from /api/ops/public-surface-truth"
+      }
+    },
+    {
+      "primitive_id": "systematic_root_cause_reasoning",
+      "name": "Systematic Root-Cause Reasoning",
+      "verbatim_quote": "--description: Systematic root-cause debugging argument-hint: [describe the bug] allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*),",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\text{bug}': 'dimensionless description', '\\\\text{tools}': 'set of allowed operations'}",
+      "assumptions": "Root cause can be isolated by structured hypothesis testing.",
+      "breakdown_regime": "When \\( \\text{symptom} \\) is ambiguous without tool-assisted analysis.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's \\( \\mathcal{F}(\\text{symptom}, \\text{tools}) \\) is derived from GSI's \\( \\text{ranked hypotheses} \\) via \\( \\text{evidence} \\leftarrow \\text{logs/code} \\).",
+        "source_operator": "systematic_root_cause_reasoning",
+        "telemetry": "Tool outputs from \\( \\text{grep}, \\text{git diff}, \\text{git log} \\)"
+      }
+    },
+    {
+      "primitive_id": "minimal_fix_proposal",
+      "name": "Minimal Fix Proposal",
+      "verbatim_quote": "gather evidence from code/logs for each, identify the root cause, then propose the smallest fix. Confirm",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\text{fix}': 'minimal code change', '\\\\text{confirm}': 'boolean validation signal'}",
+      "assumptions": "Fixes must be minimal and validated before application.",
+      "breakdown_regime": "When \\( \\text{root cause} \\) is identified but not yet fixed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's \\( \\text{validate} \\rightarrow \\text{action} \\) aligns with GSE's \\( \\text{apply} \\rightarrow \\text{state transition} \\).",
+        "source_operator": "minimal_fix_proposal",
+        "telemetry": "Validation result from \\( \\text{confirm} \\)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "449e1f14f2786395_t0",
+      "think": "The debugging process is modeled as a sequential Bayesian update over operational states. Let \\( S \\) denote the symptom, \\( D \\) the deployment state, and \\( T \\) the set of tools. The system computes \\( P(S|D) \\) to assess deviation from expected behavior. When \\( D \\neq \\text{origin/main} \\), a consistency check triggers. Hypotheses \\( H_i \\) are ranked based on \\( P(H_i|S,T) \\propto P(S|H_i,T)P(H_i) \\). Evidence from logs and code is gathered to compute likelihoods. The root cause is \\( H^* = \\arg\\max_{H_i} P(H_i|S,T) \\). A minimal fix \\( F \\) is proposed such that \\( \\Delta \\text{state} = \\text{apply}(F) \\) resolves \\( S \\). This process is formalized as a belief propagation in a directed acyclic graph over \\( \\{S, D, T, H_i, F\\} \\).\n\nDeep epistemic analysis for debug (449e1f14f2786395, domain=other, pages_read=1/1): Operator 'Deployment State Consistency Check' (page 1, domain other) captures: For production symptoms, first fetch /api/ops/public-surface-truth and compare deployment.sha to origin/main (docs/ops/DEPLOY_LAG.md). Assumptions: Deployment state is deterministic and version-controlled. Breakdown regime: When \\( \\text{deployment.sha} \\neq \\text{origin/main} \\) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's \\( P(\\text{symptom} | \\text{state}) \\) matches GSE's \\( \\mathcal{F}(\\text{symptom}, \\text{git}) \\) when \\( \\text{state} = \\text{deployment.sha} \\). Operator 'Systematic Root-Cause Reasoning' (page 1, domain other) captures: --description: Systematic root-cause debugging argument-hint: [describe the bug] allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Assumptions: Root cause can be isolated by structured hypothesis testing. Breakdown regime: When \\( \\text{symptom} \\) is ambiguous without tool-assisted analysis. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's \\( \\mathcal{F}(\\text{symptom}, \\text{tools}) \\) is derived from GSI's \\( \\text{ranked hypotheses} \\) via \\( \\text{evidence} \\leftarrow \\text{logs/code} \\). Operator 'Minimal Fix Proposal' (page 1, domain other) captures: gather evidence from code/logs for each, identify the root cause, then propose the smallest fix. Confirm Assumptions: Fixes must be minimal and validated before application. Breakdown regime: When \\( \\text{root cause} \\) is identified but not yet fixed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's \\( \\text{validate} \\rightarrow \\text{action} \\) aligns with GSE's \\( \\text{apply} \\rightarrow \\text{state transition} \\). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for debug (449e1f14f2786395, domain=other, pages_read=1/1): Operator 'Deployment State Consistency Check' (page 1, domain other) captures: For production symptoms, first fetch /api/ops/public-surface-truth and compare deployment.sha to origin/main (docs/ops/DEPLOY_LAG.md). Assumptions: Deployment state is deterministic and version-controlled. Breakdown regime: When \\( \\text{deployment.sha} \\neq \\text{origin/main} \\) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's \\( P(\\text{symptom} | \\text{state}) \\) matches GSE's \\( \\mathcal{F}(\\text{symptom}, \\text{git}) \\) when \\( \\text{state} = \\text{deployment.sha} \\). Operator 'Systematic Root-Cause Reasoning' (page 1, domain other) captures: --description: Systematic root-cause debugging argument-hint: [describe the bug] allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Assumptions: Root cause can be isolated by structured hypothesis testing. Breakdown regime: When \\( \\text{symptom} \\) is ambiguous without tool-assisted analysis. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's \\( \\mathcal{F}(\\text{symptom}, \\text{tools}) \\) is derived from GSI's \\( \\text{ranked hypotheses} \\) via \\( \\text{evidence} \\leftarrow \\text{logs/code} \\). Operator 'Minimal Fix Proposal' (page 1, domain other) captures: gather evidence from code/logs for each, identify the root cause, then propose the smallest fix. Confirm Assumptions: Fixes must be minimal and validated before application. Breakdown regime: When \\( \\text{root cause} \\) is identified but not yet fixed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's \\( \\text{validate} \\rightarrow \\text{action} \\) aligns with GSE's \\( \\text{apply} \\rightarrow \\text{state transition} \\). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Root-cause debugging traces back to early systems theory and control engineering, particularly Kalman filtering and fault diagnosis. The formalization of belief updates mirrors Bayesian networks introduced in Pearl's causal calculus. Retrocausal Genealogy: Rooted in debug (449e1f14f2786395), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in debug (449e1f14f2786395), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the system under test (which may exhibit latent faults) and the debugging agent (which seeks to minimize uncertainty). The debugging agent assumes rationality in both the system’s behavior and its own reasoning process. Theory of Mind & Decision Maker Model: Rooted in debug (449e1f14f2786395), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that \\( \\text{tool} \\in \\text{allowed-tools} \\) does not overlap with \\( \\text{state} \\in \\text{deployment.sha} \\). Leakage is prevented by verifying that \\( \\text{evidence} \\) from \\( \\text{logs/code} \\) is independent of \\( \\text{fix} \\) until confirmation. Cross-Layer Veto & Anti-Leakage Check: Rooted in debug (449e1f14f2786395), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

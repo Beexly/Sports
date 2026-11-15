@@ -417,7 +417,7 @@ def evaluate_onedrive_weather_edge_aerodynamics(
          and long field goals (`>= 45 yds`), circular wind-direction cosines, and Wet-Bulb Globe
          Temperature (WBGT) 2H pass-rush fatigue multiplier.
     """
-    is_indoor = bool(game_context.get("is_indoor", False))
+    is_indoor = bool(game_context.get("is_indoor", False) or game_context.get("roof_closed", False))
     lead_time_hours = float(game_context.get("forecast_lead_time_hours", 6.0))
     as_of_leak_safe = lead_time_hours >= 0.0
     if not as_of_leak_safe:

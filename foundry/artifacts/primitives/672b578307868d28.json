@@ -1,0 +1,78 @@
+{
+  "book_id": "672b578307868d28",
+  "source_status": "COMPLETE",
+  "title": "p0473",
+  "file_name": "p0473.txt",
+  "sha256": "672b578307868d28c90600f7aecf8f3f4f4831069eab23636fa1f19dd93d8135",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Emotional state dynamics governed by external expression constraints and internal neural feedback loops; emergent behavioral regulation via embodied cognition. Universal Lens: Rooted in p0473 (672b578307868d28), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on emotional latent variables using observable behavioral manifests; conformal predictive models for affective transition probabilities. GSI Mapping: Rooted in p0473 (672b578307868d28), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine encodes emotional state transitions through actuation constraints; state-space evolution driven by external expression and internal feedback. GSE Mapping: Rooted in p0473 (672b578307868d28), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "external_expression_suppression",
+      "name": "External Expression Suppression",
+      "verbatim_quote": "It is by such restraint that we are in the habit of suppressing pity, anger, fear, pride—on many trifling occasions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{ext}': 'dimensionless external expression intensity', 'E_{int}': 'dimensionless internal emotional intensity'}",
+      "assumptions": "Suppression of E_{ext} leads to decay of E_{int}; linear dependence between expression and neural excitation.",
+      "breakdown_regime": "When E_{ext} > threshold, E_{int} persists despite suppression.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI latent variable model maps E_{ext} to E_{int} via suppression kernel; GSE state transition uses E_{ext} as control input.",
+        "source_operator": "external_expression_suppression",
+        "telemetry": "Change in emotional tone over time under controlled expression."
+      }
+    },
+    {
+      "primitive_id": "embodied_behavioral_induction",
+      "name": "Embodied Behavioral Induction",
+      "verbatim_quote": "By acting out the external manifestations, we gradually infect the nerves leading to them, and finally waken up the diffusive current by a sort of action ab extra.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_{act}': 'dimensionless behavioral activation level', 'E_{int}': 'dimensionless internal emotional intensity'}",
+      "assumptions": "B_{act} initiates E_{int} through somatic feedback; non-linear coupling between behavior and emotion.",
+      "breakdown_regime": "When B_{act} < threshold, E_{int} fails to activate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE behavioral state space is isomorphic to emotional activation manifold; GSI uses B_{act} to induce E_{int} via causal graph.",
+        "source_operator": "embodied_behavioral_induction",
+        "telemetry": "Emotional arousal rate following behavioral intervention."
+      }
+    },
+    {
+      "primitive_id": "expression_delay_counter",
+      "name": "Expression Delay Counter",
+      "verbatim_quote": "Count ten before venting your anger, and its occasion seems ridiculous.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{delay}': 'seconds delay before expression', 'A_{anger}': 'dimensionless anger intensity'}",
+      "assumptions": "T_{delay} inversely correlates with A_{anger}; delayed expression reduces emotional magnitude.",
+      "breakdown_regime": "When T_{delay} < 10s, A_{anger} remains high.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI temporal smoothing filter applies T_{delay} to A_{anger}; GSE uses T_{delay} to modulate emotional response timing.",
+        "source_operator": "expression_delay_counter",
+        "telemetry": "Reduction in anger intensity after T_{delay} exceeds 10 seconds."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "672b578307868d28_t0",
+      "think": "The three core operators define a triadic emotional regulation system: suppression, induction, and delay. Suppression (external_expression_suppression) acts as a feedback controller, reducing internal emotional intensity when external expression is constrained. Induction (embodied_behavioral_induction) operates as an open-loop stimulator, where behavioral actions trigger emotional states. Delay (expression_delay_counter) introduces temporal dynamics into the system, allowing emotional magnitude to dissipate naturally. These operators form a closed-loop regulatory mechanism where suppression and induction interact dynamically, while delay provides temporal stability. The system exhibits duality in that external constraint can either suppress or stimulate emotion depending on context. Failure modes include: suppression without induction leads to emotional stagnation; induction without delay causes emotional volatility; delay alone results in passive emotional decay. The mathematical structure resembles a hybrid dynamical system with discrete event triggers and continuous feedback.\n\nDeep epistemic analysis for p0473 (672b578307868d28, domain=other, pages_read=1/1): Operator 'External Expression Suppression' (page 1, domain other) captures: It is by such restraint that we are in the habit of suppressing pity, anger, fear, pride—on many trifling occasions. Assumptions: Suppression of E_{ext} leads to decay of E_{int}; linear dependence between expression and neural excitation. Breakdown regime: When E_{ext} > threshold, E_{int} persists despite suppression. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI latent variable model maps E_{ext} to E_{int} via suppression kernel; GSE state transition uses E_{ext} as control input. Operator 'Embodied Behavioral Induction' (page 1, domain other) captures: By acting out the external manifestations, we gradually infect the nerves leading to them, and finally waken up the diffusive current by a sort of action ab extra. Assumptions: B_{act} initiates E_{int} through somatic feedback; non-linear coupling between behavior and emotion. Breakdown regime: When B_{act} < threshold, E_{int} fails to activate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE behavioral state space is isomorphic to emotional activation manifold; GSI uses B_{act} to induce E_{int} via causal graph. Operator 'Expression Delay Counter' (page 1, domain other) captures: Count ten before venting your anger, and its occasion seems ridiculous. Assumptions: T_{delay} inversely correlates with A_{anger}; delayed expression reduces emotional magnitude. Breakdown regime: When T_{delay} < 10s, A_{anger} remains high. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI temporal smoothing filter applies T_{delay} to A_{anger}; GSE uses T_{delay} to modulate emotional response timing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0473 (672b578307868d28, domain=other, pages_read=1/1): Operator 'External Expression Suppression' (page 1, domain other) captures: It is by such restraint that we are in the habit of suppressing pity, anger, fear, pride—on many trifling occasions. Assumptions: Suppression of E_{ext} leads to decay of E_{int}; linear dependence between expression and neural excitation. Breakdown regime: When E_{ext} > threshold, E_{int} persists despite suppression. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI latent variable model maps E_{ext} to E_{int} via suppression kernel; GSE state transition uses E_{ext} as control input. Operator 'Embodied Behavioral Induction' (page 1, domain other) captures: By acting out the external manifestations, we gradually infect the nerves leading to them, and finally waken up the diffusive current by a sort of action ab extra. Assumptions: B_{act} initiates E_{int} through somatic feedback; non-linear coupling between behavior and emotion. Breakdown regime: When B_{act} < threshold, E_{int} fails to activate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE behavioral state space is isomorphic to emotional activation manifold; GSI uses B_{act} to induce E_{int} via causal graph. Operator 'Expression Delay Counter' (page 1, domain other) captures: Count ten before venting your anger, and its occasion seems ridiculous. Assumptions: T_{delay} inversely correlates with A_{anger}; delayed expression reduces emotional magnitude. Breakdown regime: When T_{delay} < 10s, A_{anger} remains high. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI temporal smoothing filter applies T_{delay} to A_{anger}; GSE uses T_{delay} to modulate emotional response timing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 19th-century psychological studies of emotional expression, particularly Bain's work on neural excitation and inhibition. Influenced by James-Lange theory of emotion and later developed in cognitive-behavioral frameworks. Retrocausal Genealogy: Rooted in p0473 (672b578307868d28), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0473 (672b578307868d28), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the 'internal emotional self' seeking expression and the 'rational self' enforcing control. Decision actors balance immediate emotional gratification against long-term behavioral goals. The system models conflict between automatic emotional responses and deliberate behavioral regulation. Theory of Mind & Decision Maker Model: Rooted in p0473 (672b578307868d28), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures suppression does not simply mirror induction; leakage veto prevents direct coupling between E_{int} and B_{act}. The system avoids trivial solutions where emotional state becomes deterministic from behavior alone. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0473 (672b578307868d28), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

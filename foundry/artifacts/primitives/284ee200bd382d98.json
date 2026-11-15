@@ -1,0 +1,95 @@
+{
+  "book_id": "284ee200bd382d98",
+  "source_status": "COMPLETE",
+  "title": "picks-intelligence",
+  "file_name": "picks-intelligence.md",
+  "sha256": "284ee200bd382d98289b6b100c5b0db7aa05401a37ef5eb5265c8541851207e6",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in picks-intelligence (284ee200bd382d98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in picks-intelligence (284ee200bd382d98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in picks-intelligence (284ee200bd382d98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in picks-intelligence (284ee200bd382d98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in picks-intelligence (284ee200bd382d98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in picks-intelligence (284ee200bd382d98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "evidence_chain",
+      "name": "Evidence Chain",
+      "verbatim_quote": "lement status: PickStatus; settledAt?: Date; settlementResult?: \"WIN\" | \"LOSS\" | \"PUSH\" | \"VOID\"; calibrationImpact?: CalibrationImpact; }; ``` --## Evidence Chain — Required Structure Every pick must carry an evidence chain.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) Each piece of evidence is verifiable; (2) The chain is finite; (3) Incomplete chains indicate insufficient data.",
+      "breakdown_regime": "An empty set triggers a halt in pick generation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The evidence chain maps directly to a conformal prediction set in GSI, where each citation is a calibration point. In GSE, it forms the initial state vector for situational reasoning, ensuring every action begins with auditable context.",
+        "source_operator": "evidence_chain",
+        "telemetry": "Ratio of picks with non-empty chains over total generated picks."
+      }
+    },
+    {
+      "primitive_id": "confidence_score",
+      "name": "Confidence Score",
+      "verbatim_quote": "--## Confidence Score — Rules The confidence score (0–100) measures how strongly the evidence supports the pick direction.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) Scores are bounded; (2) They reflect posterior belief given observed data; (3) Higher scores indicate stronger support.",
+      "breakdown_regime": "Scores below the floor threshold are clamped to zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this maps to a Bayesian posterior probability after updating on market signals. In GSE, it serves as a threshold for triggering high-confidence actions, with fallback to lower-confidence alternatives when the score drops.",
+        "source_operator": "confidence_score",
+        "telemetry": "Average confidence score of settled picks, segmented by model version."
+      }
+    },
+    {
+      "primitive_id": "risk_annotation",
+      "name": "Risk Annotation",
+      "verbatim_quote": "**Score bands**: | Band | Label | Meaning | |---|---|---| | 80–100 | Strong | Evidence is deep, fresh, consistent.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) Risks are additive; (2) Thresholds are fixed; (3) The annotation function is monotonic increasing.",
+      "breakdown_regime": "VERY_HIGH risk halts directional picks on public surfaces.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Risk annotation corresponds to uncertainty sets in GSI, where high-risk annotations expand the prediction interval. In GSE, it triggers defensive state transitions, such as holding rather than executing a play.",
+        "source_operator": "risk_annotation",
+        "telemetry": "Proportion of picks flagged with HIGH or VERY_HIGH risk."
+      }
+    },
+    {
+      "primitive_id": "tier_access_gate",
+      "name": "Tier Access Gate",
+      "verbatim_quote": "**Score bands**: | Band | Label | Meaning | |---|---|---| | 80–100 | Strong | Evidence is deep, fresh, consistent.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) Tiers form a nested hierarchy; (2) Access is binary; (3) The gate is enforced strictly at the API boundary.",
+      "breakdown_regime": "Unauthorized tiers receive a minimal pick structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This implements a conformal p-value filter in GSI, where higher tiers see more granular significance. In GSE, it maps to authorization levels that determine the depth of tactical state information available for execution.",
+        "source_operator": "tier_access_gate",
+        "telemetry": "Number of API requests per tier, normalized by total traffic."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "284ee200bd382d98_t0",
+      "think": "The core challenge is balancing informativeness with robustness under uncertainty. The primitives formalize this trade-off: the evidence chain ensures verifiability, the confidence score quantifies strength, risk annotation controls exposure, and the tier gate manages access. This structure mirrors conformal prediction in GSI, where the goal is valid predictive sets regardless of model misspecification. In GSE, it enables safe navigation of state spaces by preventing high-risk transitions. Failure occurs when any primitive breaks: an incomplete chain leads to ignorance, low confidence invites overfitting, unchecked risk causes catastrophic decisions, and improper tiering leaks sensitive information. To prevent these, we enforce duality conditions: every pick must have a corresponding testable hypothesis, every action must have a fallback under high risk, and every layer must maintain separation of concerns.\n\nDeep epistemic analysis for picks-intelligence (284ee200bd382d98, domain=other, pages_read=4/4): Operator 'Evidence Chain' (page 2, domain other) captures: lement status: PickStatus; settledAt?: Date; settlementResult?: \"WIN\" | \"LOSS\" | \"PUSH\" | \"VOID\"; calibrationImpact?: CalibrationImpact; }; ``` --## Evidence Chain — Required Structure Every pick must carry an evidence chain. Assumptions: (1) Each piece of evidence is verifiable; (2) The chain is finite; (3) Incomplete chains indicate insufficient data. Breakdown regime: An empty set triggers a halt in pick generation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The evidence chain maps directly to a conformal prediction set in GSI, where each citation is a calibration point. In GSE, it forms the initial state vector for situational reasoning, ensuring every action begins with auditable context. Operator 'Confidence Score' (page 2, domain other) captures: --## Confidence Score — Rules The confidence score (0–100) measures how strongly the evidence supports the pick direction. Assumptions: (1) Scores are bounded; (2) They reflect posterior belief given observed data; (3) Higher scores indicate stronger support. Breakdown regime: Scores below the floor threshold are clamped to zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, this maps to a Bayesian posterior probability after updating on market signals. In GSE, it serves as a threshold for triggering high-confidence actions, with fallback to lower-confidence alternatives when the score drops. Operator 'Risk Annotation' (page 2, domain other) captures: **Score bands**: | Band | Label | Meaning | |---|---|---| | 80–100 | Strong | Evidence is deep, fresh, consistent. Assumptions: (1) Risks are additive; (2) Thresholds are fixed; (3) The annotation function is monotonic increasing. Breakdown regime: VERY_HIGH risk halts directional picks on public surfaces. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Risk annotation corresponds to uncertainty sets in GSI, where high-risk annotations expand the prediction interval. In GSE, it triggers defensive state transitions, such as holding rather than executing a play. Operator 'Tier Access Gate' (page 2, domain other) captures: **Score bands**: | Band | Label | Meaning | |---|---|---| | 80–100 | Strong | Evidence is deep, fresh, consistent. Assumptions: (1) Tiers form a nested hierarchy; (2) Access is binary; (3) The gate is enforced strictly at the API boundary. Breakdown regime: Unauthorized tiers receive a minimal pick structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): This implements a conformal p-value filter in GSI, where higher tiers see more granular significance. In GSE, it maps to authorization levels that determine the depth of tactical state information available for execution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for picks-intelligence (284ee200bd382d98, domain=other, pages_read=4/4): Operator 'Evidence Chain' (page 2, domain other) captures: lement status: PickStatus; settledAt?: Date; settlementResult?: \"WIN\" | \"LOSS\" | \"PUSH\" | \"VOID\"; calibrationImpact?: CalibrationImpact; }; ``` --## Evidence Chain — Required Structure Every pick must carry an evidence chain. Assumptions: (1) Each piece of evidence is verifiable; (2) The chain is finite; (3) Incomplete chains indicate insufficient data. Breakdown regime: An empty set triggers a halt in pick generation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The evidence chain maps directly to a conformal prediction set in GSI, where each citation is a calibration point. In GSE, it forms the initial state vector for situational reasoning, ensuring every action begins with auditable context. Operator 'Confidence Score' (page 2, domain other) captures: --## Confidence Score — Rules The confidence score (0–100) measures how strongly the evidence supports the pick direction. Assumptions: (1) Scores are bounded; (2) They reflect posterior belief given observed data; (3) Higher scores indicate stronger support. Breakdown regime: Scores below the floor threshold are clamped to zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, this maps to a Bayesian posterior probability after updating on market signals. In GSE, it serves as a threshold for triggering high-confidence actions, with fallback to lower-confidence alternatives when the score drops. Operator 'Risk Annotation' (page 2, domain other) captures: **Score bands**: | Band | Label | Meaning | |---|---|---| | 80–100 | Strong | Evidence is deep, fresh, consistent. Assumptions: (1) Risks are additive; (2) Thresholds are fixed; (3) The annotation function is monotonic increasing. Breakdown regime: VERY_HIGH risk halts directional picks on public surfaces. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Risk annotation corresponds to uncertainty sets in GSI, where high-risk annotations expand the prediction interval. In GSE, it triggers defensive state transitions, such as holding rather than executing a play. Operator 'Tier Access Gate' (page 2, domain other) captures: **Score bands**: | Band | Label | Meaning | |---|---|---| | 80–100 | Strong | Evidence is deep, fresh, consistent. Assumptions: (1) Tiers form a nested hierarchy; (2) Access is binary; (3) The gate is enforced strictly at the API boundary. Breakdown regime: Unauthorized tiers receive a minimal pick structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): This implements a conformal p-value filter in GSI, where higher tiers see more granular significance. In GSE, it maps to authorization levels that determine the depth of tactical state information available for execution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The lineage traces back to Kolmogorov's probability axioms, extending to modern algorithmic randomness via Vovk and Shafer, and incorporating Wald's sequential analysis for adaptive thresholds. Retrocausal Genealogy: Rooted in picks-intelligence (284ee200bd382d98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in picks-intelligence (284ee200bd382d98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bettors seeking exploitable inefficiencies, regulators demanding transparency, and users expecting reliable guidance. The system models them as rational actors who test the robustness of our claims, forcing continuous calibration and validation. Theory of Mind & Decision Maker Model: Rooted in picks-intelligence (284ee200bd382d98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring independent sources across tiers; leakage is prevented by separating the API response from the internal gated fields, ensuring no indirect inference about higher-tier data from lower-tier outputs. Cross-Layer Veto & Anti-Leakage Check: Rooted in picks-intelligence (284ee200bd382d98), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

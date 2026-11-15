@@ -1,0 +1,78 @@
+{
+  "book_id": "41280cbc7de9cecc",
+  "source_status": "COMPLETE",
+  "title": "NFL_WEEK1_DATA_2026-09-08",
+  "file_name": "NFL_WEEK1_DATA_2026-09-08.md",
+  "sha256": "41280cbc7de9cecc85155cabcb3f15a523a877195eec2d7810f0c7ba38ffa625",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Data integrity and provenance tracking across distributed NFL metadata sources using read-only API queries and static code inspection. Universal Lens: Rooted in NFL_WEEK1_DATA_2026-09-08 (41280cbc7de9cecc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on game schedule completeness using ESPN scoreboard and nflverse-data endpoints as evidence streams. GSI Mapping: Rooted in NFL_WEEK1_DATA_2026-09-08 (41280cbc7de9cecc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps NFL fixture availability to state transitions in pregame preparation pipelines via external data feeds. GSE Mapping: Rooted in NFL_WEEK1_DATA_2026-09-08 (41280cbc7de9cecc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "data_provenance_tracker",
+      "name": "Data Provenance Tracker",
+      "verbatim_quote": "Every cell below is either (a) a read-only curl of the public, explicitly-authorized `/api/ops/public-surface-truth` endpoint, (b) a read-only curl of ESPN's public scoreboard API, (c) a read-only curl of the public `nflverse-data` GitHub release assets (the same URLs `packages/data-ingestion/src/nflverse-source.ts` fetches), or (d) static code reading with file:line citations.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Data source type (API, file, code)', 'S': 'Source identifier (URL, file path, function)', 'T': 'Timestamp of access'}",
+      "assumptions": "All data sources are publicly accessible and stable during measurement window.",
+      "breakdown_regime": "When source URL changes or access fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each data source type maps to a unique telemetry channel in GSI's probabilistic model.",
+        "source_operator": "data_provenance_tracker",
+        "telemetry": "Source access success/failure flags"
+      }
+    },
+    {
+      "primitive_id": "schedule_completeness_validator",
+      "name": "Schedule Completeness Validator",
+      "verbatim_quote": "16 games total (2 already in the 72h window the truth surface reports on, 13 on the Sunday slate, 1 Monday-night closer).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Total number of scheduled games', 'W': 'Week identifier', 'T': 'Time window (UTC)'}",
+      "assumptions": "All games within time window are accounted for in ESPN scoreboard.",
+      "breakdown_regime": "Missing or duplicate game entries in scoreboard.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Game list derived from ESPN API and validated against nflverse data.",
+        "source_operator": "schedule_completeness_validator",
+        "telemetry": "Number of distinct ESPN event IDs vs expected game count"
+      }
+    },
+    {
+      "primitive_id": "metadata_consistency_checker",
+      "name": "Metadata Consistency Checker",
+      "verbatim_quote": "| zcat | wc -l`), # stats_player/stats_player_week_2026.csv, pbp/play_by_play_2026.csv, # snap_counts/snap_counts_2026.csv ``` Fetched 2026-09-09T00:04–00:20 UTC.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'File name', 'R': 'Row count', 'C': 'Checksum (optional)'}",
+      "assumptions": "CSV files are consistent with their upstream versions.",
+      "breakdown_regime": "Row count mismatch between expected and fetched CSV.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Row counts from nflverse assets correlate with internal pipeline readiness.",
+        "source_operator": "metadata_consistency_checker",
+        "telemetry": "CSV row count validation against known baseline"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "41280cbc7de9cecc_t0",
+      "think": "The primitives form a layered validation system where data provenance ensures trustworthiness of inputs, schedule completeness confirms coverage, and metadata consistency verifies integrity. Each layer operates under strict read-only constraints, preventing cascading failures from database access. The system models NFL data flow as a directed acyclic graph of sources, validating each node before propagation. Failure modes include missing ESPN events, inconsistent nflverse assets, or stale depth chart timestamps. These are mitigated by explicit checks and fallbacks in code paths. The dual nature of the system lies in its ability to validate both current and future seasons without relying on dynamic database queries.\n\nDeep epistemic analysis for NFL_WEEK1_DATA_2026-09-08 (41280cbc7de9cecc, domain=other, pages_read=6/6): Operator 'Data Provenance Tracker' (page 1, domain other) captures: Every cell below is either (a) a read-only curl of the public, explicitly-authorized `/api/ops/public-surface-truth` endpoint, (b) a read-only curl of ESPN's public scoreboard API, (c) a read-only curl of the public `nflverse-data` GitHub release assets (the same URLs `packages/data-ingestion/src/nflverse-source.ts` fetches), or (d) static code reading with file:line citations. Assumptions: All data sources are publicly accessible and stable during measurement window. Breakdown regime: When source URL changes or access fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each data source type maps to a unique telemetry channel in GSI's probabilistic model. Operator 'Schedule Completeness Validator' (page 1, domain other) captures: 16 games total (2 already in the 72h window the truth surface reports on, 13 on the Sunday slate, 1 Monday-night closer). Assumptions: All games within time window are accounted for in ESPN scoreboard. Breakdown regime: Missing or duplicate game entries in scoreboard. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Game list derived from ESPN API and validated against nflverse data. Operator 'Metadata Consistency Checker' (page 1, domain other) captures: | zcat | wc -l`), # stats_player/stats_player_week_2026.csv, pbp/play_by_play_2026.csv, # snap_counts/snap_counts_2026.csv ``` Fetched 2026-09-09T00:04–00:20 UTC. Assumptions: CSV files are consistent with their upstream versions. Breakdown regime: Row count mismatch between expected and fetched CSV. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Row counts from nflverse assets correlate with internal pipeline readiness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NFL_WEEK1_DATA_2026-09-08 (41280cbc7de9cecc, domain=other, pages_read=6/6): Operator 'Data Provenance Tracker' (page 1, domain other) captures: Every cell below is either (a) a read-only curl of the public, explicitly-authorized `/api/ops/public-surface-truth` endpoint, (b) a read-only curl of ESPN's public scoreboard API, (c) a read-only curl of the public `nflverse-data` GitHub release assets (the same URLs `packages/data-ingestion/src/nflverse-source.ts` fetches), or (d) static code reading with file:line citations. Assumptions: All data sources are publicly accessible and stable during measurement window. Breakdown regime: When source URL changes or access fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each data source type maps to a unique telemetry channel in GSI's probabilistic model. Operator 'Schedule Completeness Validator' (page 1, domain other) captures: 16 games total (2 already in the 72h window the truth surface reports on, 13 on the Sunday slate, 1 Monday-night closer). Assumptions: All games within time window are accounted for in ESPN scoreboard. Breakdown regime: Missing or duplicate game entries in scoreboard. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Game list derived from ESPN API and validated against nflverse data. Operator 'Metadata Consistency Checker' (page 1, domain other) captures: | zcat | wc -l`), # stats_player/stats_player_week_2026.csv, pbp/play_by_play_2026.csv, # snap_counts/snap_counts_2026.csv ``` Fetched 2026-09-09T00:04–00:20 UTC. Assumptions: CSV files are consistent with their upstream versions. Breakdown regime: Row count mismatch between expected and fetched CSV. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Row counts from nflverse assets correlate with internal pipeline readiness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from early 2000s data integration frameworks, adapted for real-time sports analytics with emphasis on immutable data structures. Retrocausal Genealogy: Rooted in NFL_WEEK1_DATA_2026-09-08 (41280cbc7de9cecc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in NFL_WEEK1_DATA_2026-09-08 (41280cbc7de9cecc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to introduce false positives through forged API responses or manipulate metadata. The system counters this by cross-referencing multiple independent sources and enforcing static analysis over runtime behavior. Theory of Mind & Decision Maker Model: Rooted in NFL_WEEK1_DATA_2026-09-08 (41280cbc7de9cecc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by requiring independent validation from ESPN, nflverse, and code inspection layers. Leakage is prevented by designating database access as forbidden (law 3/7), thus avoiding entanglement between internal and external systems. Cross-Layer Veto & Anti-Leakage Check: Rooted in NFL_WEEK1_DATA_2026-09-08 (41280cbc7de9cecc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

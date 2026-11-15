@@ -1,0 +1,78 @@
+{
+  "book_id": "75e65bb6c6774812",
+  "source_status": "COMPLETE",
+  "title": "opportunity-ledger",
+  "file_name": "opportunity-ledger.md",
+  "sha256": "75e65bb6c6774812210e37aa267e1b6cb39c2bc1b6549c69bf00b2692fddebfb",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Opportunity-ledger formalizes cross-domain data and design primitives as Bayesian belief updates over structured signal spaces, constrained by legal and accessibility regimes. Universal Lens: Rooted in opportunity-ledger (75e65bb6c6774812), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI maps opportunity primitives via conformal predictive distributions over narrative, geo, and temporal signals, enabling robust uncertainty quantification in real-time inference. GSI Mapping: Rooted in opportunity-ledger (75e65bb6c6774812), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes opportunity primitives into state-transition graphs over motion, visual, and interaction layers, supporting dynamic, context-aware UI evolution under precision-driven design constraints. GSE Mapping: Rooted in opportunity-ledger (75e65bb6c6774812), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "weather_signal",
+      "name": "Venue Weather Signal",
+      "verbatim_quote": "Free data sources (make the engine smarter / product richer) - **Weather:** NWS api.weather.gov (free, Tier-A, US-only) → venue weather signal.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{venue}}': '\\\\text{Temperature at venue (K)}', 'P_{\\\\text{venue}}': '\\\\text{Pressure at venue (Pa)}', 'v_{\\\\text{wind}}': '\\\\text{Wind velocity (m/s)}'}",
+      "assumptions": "Weather data is temporally synchronized with event scheduling and spatially localized to venue coordinates.",
+      "breakdown_regime": "Signal invalid when NWS API is unavailable or data exceeds 1-hour latency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Weather signal is embedded into GSI's narrative layer as a deterministic feature vector for predictive modeling.",
+        "source_operator": "weather_signal",
+        "telemetry": "Mean absolute error between predicted and observed venue temperature."
+      }
+    },
+    {
+      "primitive_id": "sentiment_narrative_layer",
+      "name": "Sentiment Narrative Layer",
+      "verbatim_quote": "- **News/sentiment (narrative layer):** **GDELT 2.0** (free, no key, tone every 15min) + Wikipedia Pageviews (attention proxy, Tier-A) + Reddit OAuth (internal only).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{tone}}': '\\\\text{Tone score (dimensionless)}', 'A_{\\\\text{wiki}}': '\\\\text{Pageview attention (normalized)}', 'R_{\\\\text{reddit}}': '\\\\text{Reddit sentiment (normalized)}'}",
+      "assumptions": "Narrative signals are aggregated into a time-series vector with 15-minute resolution.",
+      "breakdown_regime": "Signal invalid if GDELT or Wikipedia data is stale beyond 30 minutes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Narrative layer is modeled as a probabilistic mixture over topic distributions in GSI's belief space.",
+        "source_operator": "sentiment_narrative_layer",
+        "telemetry": "KL divergence between predicted and actual event outcome probabilities."
+      }
+    },
+    {
+      "primitive_id": "motion_precision",
+      "name": "Motion Precision Constraint",
+      "verbatim_quote": "- **Discipline:** motion = restrained \"lock-on\" precision (200–300ms), honor `prefers-reduced-motion`; the reticle/galaxy identity carries it.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_{\\\\text{transition}}': '\\\\text{Transition time (ms)}', 'r_{\\\\text{identity}}': '\\\\text{Reticle fidelity (dimensionless)}'}",
+      "assumptions": "Motion transitions are bounded by perceptual thresholds and user preference flags.",
+      "breakdown_regime": "Motion fails if transition time exceeds 300ms or reduced motion is enabled without fallback.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Motion constraint is encoded into GSE's UI state machine as a timing kernel for smooth interpolation.",
+        "source_operator": "motion_precision",
+        "telemetry": "Average deviation from target position during UI animation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "75e65bb6c6774812_t0",
+      "think": "The opportunity ledger defines a set of sovereign primitives that map to structured inference and design domains. Each primitive is grounded in empirical data or formalized behavior. The weather signal is a deterministic feature vector used in GSI’s predictive models. The sentiment narrative layer is a probabilistic mixture over topic distributions, enabling GSI to model uncertainty in event outcomes. Motion precision is a constraint on UI dynamics, ensuring consistency with accessibility and brand identity. These primitives form a dual structure: one for inference (GSI) and one for embodiment (GSE). Failure modes arise from data staleness, API outages, or violation of accessibility norms. The system enforces a closed-loop where each primitive feeds back into its respective domain through telemetry.\n\nDeep epistemic analysis for opportunity-ledger (75e65bb6c6774812, domain=other, pages_read=3/3): Operator 'Venue Weather Signal' (page 1, domain other) captures: Free data sources (make the engine smarter / product richer) - **Weather:** NWS api.weather.gov (free, Tier-A, US-only) → venue weather signal. Assumptions: Weather data is temporally synchronized with event scheduling and spatially localized to venue coordinates. Breakdown regime: Signal invalid when NWS API is unavailable or data exceeds 1-hour latency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Weather signal is embedded into GSI's narrative layer as a deterministic feature vector for predictive modeling. Operator 'Sentiment Narrative Layer' (page 1, domain other) captures: - **News/sentiment (narrative layer):** **GDELT 2.0** (free, no key, tone every 15min) + Wikipedia Pageviews (attention proxy, Tier-A) + Reddit OAuth (internal only). Assumptions: Narrative signals are aggregated into a time-series vector with 15-minute resolution. Breakdown regime: Signal invalid if GDELT or Wikipedia data is stale beyond 30 minutes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Narrative layer is modeled as a probabilistic mixture over topic distributions in GSI's belief space. Operator 'Motion Precision Constraint' (page 2, domain other) captures: - **Discipline:** motion = restrained \"lock-on\" precision (200–300ms), honor `prefers-reduced-motion`; the reticle/galaxy identity carries it. Assumptions: Motion transitions are bounded by perceptual thresholds and user preference flags. Breakdown regime: Motion fails if transition time exceeds 300ms or reduced motion is enabled without fallback. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Motion constraint is encoded into GSE's UI state machine as a timing kernel for smooth interpolation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for opportunity-ledger (75e65bb6c6774812, domain=other, pages_read=3/3): Operator 'Venue Weather Signal' (page 1, domain other) captures: Free data sources (make the engine smarter / product richer) - **Weather:** NWS api.weather.gov (free, Tier-A, US-only) → venue weather signal. Assumptions: Weather data is temporally synchronized with event scheduling and spatially localized to venue coordinates. Breakdown regime: Signal invalid when NWS API is unavailable or data exceeds 1-hour latency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Weather signal is embedded into GSI's narrative layer as a deterministic feature vector for predictive modeling. Operator 'Sentiment Narrative Layer' (page 1, domain other) captures: - **News/sentiment (narrative layer):** **GDELT 2.0** (free, no key, tone every 15min) + Wikipedia Pageviews (attention proxy, Tier-A) + Reddit OAuth (internal only). Assumptions: Narrative signals are aggregated into a time-series vector with 15-minute resolution. Breakdown regime: Signal invalid if GDELT or Wikipedia data is stale beyond 30 minutes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Narrative layer is modeled as a probabilistic mixture over topic distributions in GSI's belief space. Operator 'Motion Precision Constraint' (page 2, domain other) captures: - **Discipline:** motion = restrained \"lock-on\" precision (200–300ms), honor `prefers-reduced-motion`; the reticle/galaxy identity carries it. Assumptions: Motion transitions are bounded by perceptual thresholds and user preference flags. Breakdown regime: Motion fails if transition time exceeds 300ms or reduced motion is enabled without fallback. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Motion constraint is encoded into GSE's UI state machine as a timing kernel for smooth interpolation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and ergodic motion control, with influences from computational aesthetics and legal compliance frameworks. Retrocausal Genealogy: Rooted in opportunity-ledger (75e65bb6c6774812), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in opportunity-ledger (75e65bb6c6774812), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include data providers (e.g., NWS, GDELT), users (with accessibility needs), and regulatory actors (state law enforcement). Each agent has distinct utility functions and constraints. Theory of Mind & Decision Maker Model: Rooted in opportunity-ledger (75e65bb6c6774812), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in opportunity-ledger (75e65bb6c6774812), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Signals from different layers must pass mutual consistency checks. For example, a motion update cannot override a legal compliance flag, and sentiment data must align with weather and schedule signals to avoid spurious correlations. Cross-Layer Veto & Anti-Leakage Check: Rooted in opportunity-ledger (75e65bb6c6774812), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

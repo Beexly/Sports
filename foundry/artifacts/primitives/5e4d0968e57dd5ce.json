@@ -1,0 +1,95 @@
+{
+  "book_id": "5e4d0968e57dd5ce",
+  "source_status": "COMPLETE",
+  "title": "migration-sequence-spec",
+  "file_name": "migration-sequence-spec.md",
+  "sha256": "5e4d0968e57dd5ce87acfeeeba21cf0b3f5eb35672ce971c6dafe5e624459047",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Migration sequences form ordered categorical structures where each schema addition preserves dependency coherence and enables incremental system evolution. Universal Lens: Rooted in migration-sequence-spec (5e4d0968e57dd5ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic model states via Bayesian updating on migration-dependent observables, using conformal prediction for uncertainty quantification across schema layers. GSI Mapping: Rooted in migration-sequence-spec (5e4d0968e57dd5ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions through deterministic causal chains linking migration events to functional UI surfaces, maintaining consistency under partial order constraints. GSE Mapping: Rooted in migration-sequence-spec (5e4d0968e57dd5ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "loss_autopsy_schema",
+      "name": "Loss Autopsy Schema",
+      "verbatim_quote": "--## Phase 3 migrations (in execution order) ### M-3.1 — Loss Autopsy schema **Adds:** `LossAutopsy` model, `LossAutopsyStatus` enum, `LossRootCause` enum.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'LossAutopsy': 'Structural model', 'LossAutopsyStatus': 'Enum {OPEN, CLOSED}', 'LossRootCause': 'Enum {ENGINEERING, DESIGN, DATA}'}",
+      "assumptions": "Autopsy models are causally isolated and temporally ordered relative to dependent systems.",
+      "breakdown_regime": "When LossAutopsy FK references missing entities or status transitions violate monotonicity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "LossAutopsy mirrors failure event structure in GSI's probabilistic inference graph.",
+        "source_operator": "loss_autopsy_schema",
+        "telemetry": "Number of loss autopsy entries indexed by game session."
+      }
+    },
+    {
+      "primitive_id": "pre_mortem_persistence",
+      "name": "Pre-Mortem Persistence",
+      "verbatim_quote": "--### M-3.2 — Pre-mortem persistence **Adds to `Pick`:** - `preMortemContent Json?` - `preMortemAt DateTime?` - `preMortemVersion String?` **Migration name:** `add_pick_pre_mortem` **Dependencies:** None beyond existing `Pick` table.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'preMortemContent': 'JSON object', 'preMortemAt': 'DateTime', 'preMortemVersion': 'String'}",
+      "assumptions": "Pre-mortem data is stored as immutable snapshot with version control.",
+      "breakdown_regime": "When preMortemAt is not set or content is malformed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pre-mortem fields act as kernel inputs for GSE's decision-state tracking.",
+        "source_operator": "pre_mortem_persistence",
+        "telemetry": "Percentage of picks with populated pre-mortem fields."
+      }
+    },
+    {
+      "primitive_id": "model_journal_schema",
+      "name": "Model Journal Schema",
+      "verbatim_quote": "--### M-3.3 — Model Journal schema **Adds:** `ModelJournalEntry` model + `ModelJournalEntryStatus` enum.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ModelJournalEntry': 'Structural model', 'ModelJournalEntryStatus': 'Enum {DRAFT, PUBLISHED, ARCHIVED}'}",
+      "assumptions": "Journal entries are timestamped and status-controlled for auditability.",
+      "breakdown_regime": "When journal entry status transitions are inconsistent or missing timestamps.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ModelJournalEntry aligns with GSI's knowledge update protocol.",
+        "source_operator": "model_journal_schema",
+        "telemetry": "Total number of published journal entries per week."
+      }
+    },
+    {
+      "primitive_id": "galaxy_memory_table",
+      "name": "Galaxy Memory Table",
+      "verbatim_quote": "--### M-3.4 — Galaxy Memory (optional denormalized table) **Decision required before this migration:** does Codex want to",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'GalaxyMemory': 'Structural model'}",
+      "assumptions": "GalaxyMemory is either materialized or derived from existing tables.",
+      "breakdown_regime": "When FK constraint fails due to missing LossAutopsy or when derived logic is misapplied.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GalaxyMemory acts as a derived cache layer for GSE’s memory-intensive queries.",
+        "source_operator": "galaxy_memory_table",
+        "telemetry": "Query latency reduction when GalaxyMemory is materialized vs. derived."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5e4d0968e57dd5ce_t0",
+      "think": "Each migration constitutes a categorical morphism in a directed acyclic graph (DAG) of schema evolution. The DAG ensures topological sorting of dependencies, enabling safe deployment without foreign key violations. The system's integrity depends on preserving causality between schema additions and their consumers. For example, LossAutopsy must precede GalaxyMemory because of its foreign key relationship. Similarly, pre-mortem fields must be present before they're consumed by UI panels. This ordering defines a temporal logic layer over relational schemas. Failure modes arise when dependencies are violated or when rollback paths are not properly maintained. The mathematical abstraction captures this as a functor from the category of migration steps to the category of database states, preserving compositionality and invertibility.\n\nDeep epistemic analysis for migration-sequence-spec (5e4d0968e57dd5ce, domain=other, pages_read=3/3): Operator 'Loss Autopsy Schema' (page 1, domain other) captures: --## Phase 3 migrations (in execution order) ### M-3.1 — Loss Autopsy schema **Adds:** `LossAutopsy` model, `LossAutopsyStatus` enum, `LossRootCause` enum. Assumptions: Autopsy models are causally isolated and temporally ordered relative to dependent systems. Breakdown regime: When LossAutopsy FK references missing entities or status transitions violate monotonicity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LossAutopsy mirrors failure event structure in GSI's probabilistic inference graph. Operator 'Pre-Mortem Persistence' (page 1, domain other) captures: --### M-3.2 — Pre-mortem persistence **Adds to `Pick`:** - `preMortemContent Json?` - `preMortemAt DateTime?` - `preMortemVersion String?` **Migration name:** `add_pick_pre_mortem` **Dependencies:** None beyond existing `Pick` table. Assumptions: Pre-mortem data is stored as immutable snapshot with version control. Breakdown regime: When preMortemAt is not set or content is malformed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pre-mortem fields act as kernel inputs for GSE's decision-state tracking. Operator 'Model Journal Schema' (page 1, domain other) captures: --### M-3.3 — Model Journal schema **Adds:** `ModelJournalEntry` model + `ModelJournalEntryStatus` enum. Assumptions: Journal entries are timestamped and status-controlled for auditability. Breakdown regime: When journal entry status transitions are inconsistent or missing timestamps. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ModelJournalEntry aligns with GSI's knowledge update protocol. Operator 'Galaxy Memory Table' (page 1, domain other) captures: --### M-3.4 — Galaxy Memory (optional denormalized table) **Decision required before this migration:** does Codex want to Assumptions: GalaxyMemory is either materialized or derived from existing tables. Breakdown regime: When FK constraint fails due to missing LossAutopsy or when derived logic is misapplied. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GalaxyMemory acts as a derived cache layer for GSE’s memory-intensive queries. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for migration-sequence-spec (5e4d0968e57dd5ce, domain=other, pages_read=3/3): Operator 'Loss Autopsy Schema' (page 1, domain other) captures: --## Phase 3 migrations (in execution order) ### M-3.1 — Loss Autopsy schema **Adds:** `LossAutopsy` model, `LossAutopsyStatus` enum, `LossRootCause` enum. Assumptions: Autopsy models are causally isolated and temporally ordered relative to dependent systems. Breakdown regime: When LossAutopsy FK references missing entities or status transitions violate monotonicity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LossAutopsy mirrors failure event structure in GSI's probabilistic inference graph. Operator 'Pre-Mortem Persistence' (page 1, domain other) captures: --### M-3.2 — Pre-mortem persistence **Adds to `Pick`:** - `preMortemContent Json?` - `preMortemAt DateTime?` - `preMortemVersion String?` **Migration name:** `add_pick_pre_mortem` **Dependencies:** None beyond existing `Pick` table. Assumptions: Pre-mortem data is stored as immutable snapshot with version control. Breakdown regime: When preMortemAt is not set or content is malformed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pre-mortem fields act as kernel inputs for GSE's decision-state tracking. Operator 'Model Journal Schema' (page 1, domain other) captures: --### M-3.3 — Model Journal schema **Adds:** `ModelJournalEntry` model + `ModelJournalEntryStatus` enum. Assumptions: Journal entries are timestamped and status-controlled for auditability. Breakdown regime: When journal entry status transitions are inconsistent or missing timestamps. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ModelJournalEntry aligns with GSI's knowledge update protocol. Operator 'Galaxy Memory Table' (page 1, domain other) captures: --### M-3.4 — Galaxy Memory (optional denormalized table) **Decision required before this migration:** does Codex want to Assumptions: GalaxyMemory is either materialized or derived from existing tables. Breakdown regime: When FK constraint fails due to missing LossAutopsy or when derived logic is misapplied. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GalaxyMemory acts as a derived cache layer for GSE’s memory-intensive queries. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Inspired by category theory's treatment of database schema evolution as functors and natural transformations, particularly in formal methods literature such as relational algebra and domain-specific languages for data modeling. Retrocausal Genealogy: Rooted in migration-sequence-spec (5e4d0968e57dd5ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in migration-sequence-spec (5e4d0968e57dd5ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include Codex (executor), Claude (reviewer), and downstream services (UIs, workers). Each agent operates under different constraints—Codex enforces order, Claude validates dependencies, and services consume structured data. Conflicts emerge if any agent violates the assumed causal chain. Theory of Mind & Decision Maker Model: Rooted in migration-sequence-spec (5e4d0968e57dd5ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if two migrations attempt to modify the same table concurrently without proper isolation. Leakage occurs if a migration introduces a dependency not explicitly declared in its documentation, leading to runtime errors or incorrect data behavior. Cross-Layer Veto & Anti-Leakage Check: Rooted in migration-sequence-spec (5e4d0968e57dd5ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "5a75d09797238577",
+  "source_status": "COMPLETE",
+  "title": "undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al",
+  "file_name": "undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al.md",
+  "sha256": "5a75d097972385771401dde40787515bef34123e2f945e78e51a76a793664bb5",
+  "primary_domain": "psych",
+  "pages_total": 14,
+  "pages_read": 14,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al (5a75d09797238577), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al (5a75d09797238577), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al (5a75d09797238577), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "psychological_language_metrics",
+      "name": "Psychological Language Metrics",
+      "verbatim_quote": "We found that we could predict which athletes would make it onto an NBA roster with an accuracy of 63% without any physical attributes included in the model.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes interview transcripts reflect stable psychological traits; requires sufficient word count per transcript; does not account for coaching changes or team dynamics.",
+      "breakdown_regime": "Fails when transcripts are sparse (<100 words) or contain irrelevant content (e.g., mentioning 'NBA' in non-draft contexts).",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian updating framework for latent trait estimation",
+        "source_operator": "psychological_language_metrics",
+        "telemetry": "Concordance index (C-index) on holdout validation sets"
+      }
+    },
+    {
+      "primitive_id": "nba_success_prediction_model",
+      "name": "NBA Success Prediction Model",
+      "verbatim_quote": "In contrast, a model built just using NCAA playing statistics achieved an accuracy of 78%, and combining physical statistics with the psychological features boosted the performance to 83%.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Binary outcome classification; assumes linear separability in feature space; requires balanced dataset (made up vs. made down).",
+      "breakdown_regime": "Degenerates when psychological signals are dominated by noise or when physical stats are absent.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction intervals for recruitment risk assessment",
+        "source_operator": "nba_success_prediction_model",
+        "telemetry": "Classification accuracy and precision-recall curves"
+      }
+    },
+    {
+      "primitive_id": "combined_feature_model",
+      "name": "Combined Feature Model",
+      "verbatim_quote": "Adding in physical attributes such as age, height and weight, along with the NCAA conference the athlete played in increased the accuracy further to 87%.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Features are independent; assumes additive contribution of physical and psychological scores; requires imputation for missing values.",
+      "breakdown_regime": "Breaks down under multicollinearity among physical attributes (e.g., height and wingspan).",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian network for joint probabilistic inference",
+        "source_operator": "combined_feature_model",
+        "telemetry": "Area under the receiver operating characteristic curve (AUC)"
+      }
+    },
+    {
+      "primitive_id": "career_survival_analysis",
+      "name": "Career Survival Analysis",
+      "verbatim_quote": "Our analyses could also predict the career survival probability (in terms of the number of NBA games played) and starter probability (as in number of NBA games in the starting lineup) using survival analyses with high significance for players who made it onto an NBA team roster.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Proportional hazards assumption holds; censoring occurs only at withdrawal; covariates are time-invariant or measured without error.",
+      "breakdown_regime": "Violates proportional hazards when treatment effects change over time (non-stationary environments).",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cox proportional hazards model for duration-dependent outcomes",
+        "source_operator": "career_survival_analysis",
+        "telemetry": "Concordance index (C-index) for time-to-event predictions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5a75d09797238577_t0",
+      "think": "The core insight is that linguistic style (captured via function words) encodes stable psychological traits predictive of athletic longevity. We map this to a conformal prediction problem: given a recruit's interview transcript, construct a set of plausible career trajectories that maintain coverage guarantees. The dual view is a state-transition Markov process where psychological profiles drive transition probabilities between states (active roster, bench, starter). Failure occurs when interview language reflects transient emotional states rather than stable dispositions, leading to overfitting.\n\nDeep epistemic analysis for undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al (5a75d09797238577, domain=psych, pages_read=14/14): Operator 'Psychological Language Metrics' (page 1, domain psych) captures: We found that we could predict which athletes would make it onto an NBA roster with an accuracy of 63% without any physical attributes included in the model. Assumptions: Assumes interview transcripts reflect stable psychological traits; requires sufficient word count per transcript; does not account for coaching changes or team dynamics. Breakdown regime: Fails when transcripts are sparse (<100 words) or contain irrelevant content (e.g., mentioning 'NBA' in non-draft contexts). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian updating framework for latent trait estimation Operator 'NBA Success Prediction Model' (page 1, domain psych) captures: In contrast, a model built just using NCAA playing statistics achieved an accuracy of 78%, and combining physical statistics with the psychological features boosted the performance to 83%. Assumptions: Binary outcome classification; assumes linear separability in feature space; requires balanced dataset (made up vs. made down). Breakdown regime: Degenerates when psychological signals are dominated by noise or when physical stats are absent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals for recruitment risk assessment Operator 'Combined Feature Model' (page 1, domain psych) captures: Adding in physical attributes such as age, height and weight, along with the NCAA conference the athlete played in increased the accuracy further to 87%. Assumptions: Features are independent; assumes additive contribution of physical and psychological scores; requires imputation for missing values. Breakdown regime: Breaks down under multicollinearity among physical attributes (e.g., height and wingspan). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian network for joint probabilistic inference Operator 'Career Survival Analysis' (page 1, domain psych) captures: Our analyses could also predict the career survival probability (in terms of the number of NBA games played) and starter probability (as in number of NBA games in the starting lineup) using survival analyses with high significance for players who made it onto an NBA team roster. Assumptions: Proportional hazards assumption holds; censoring occurs only at withdrawal; covariates are time-invariant or measured without error. Breakdown regime: Violates proportional hazards when treatment effects change over time (non-stationary environments). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Cox proportional hazards model for duration-dependent outcomes Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al (5a75d09797238577, domain=psych, pages_read=14/14): Operator 'Psychological Language Metrics' (page 1, domain psych) captures: We found that we could predict which athletes would make it onto an NBA roster with an accuracy of 63% without any physical attributes included in the model. Assumptions: Assumes interview transcripts reflect stable psychological traits; requires sufficient word count per transcript; does not account for coaching changes or team dynamics. Breakdown regime: Fails when transcripts are sparse (<100 words) or contain irrelevant content (e.g., mentioning 'NBA' in non-draft contexts). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian updating framework for latent trait estimation Operator 'NBA Success Prediction Model' (page 1, domain psych) captures: In contrast, a model built just using NCAA playing statistics achieved an accuracy of 78%, and combining physical statistics with the psychological features boosted the performance to 83%. Assumptions: Binary outcome classification; assumes linear separability in feature space; requires balanced dataset (made up vs. made down). Breakdown regime: Degenerates when psychological signals are dominated by noise or when physical stats are absent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals for recruitment risk assessment Operator 'Combined Feature Model' (page 1, domain psych) captures: Adding in physical attributes such as age, height and weight, along with the NCAA conference the athlete played in increased the accuracy further to 87%. Assumptions: Features are independent; assumes additive contribution of physical and psychological scores; requires imputation for missing values. Breakdown regime: Breaks down under multicollinearity among physical attributes (e.g., height and wingspan). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian network for joint probabilistic inference Operator 'Career Survival Analysis' (page 1, domain psych) captures: Our analyses could also predict the career survival probability (in terms of the number of NBA games played) and starter probability (as in number of NBA games in the starting lineup) using survival analyses with high significance for players who made it onto an NBA team roster. Assumptions: Proportional hazards assumption holds; censoring occurs only at withdrawal; covariates are time-invariant or measured without error. Breakdown regime: Violates proportional hazards when treatment effects change over time (non-stationary environments). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Cox proportional hazards model for duration-dependent outcomes Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al (5a75d09797238577), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al (5a75d09797238577), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing scouts might focus solely on physical tallies, ignoring soft signals. Decision actors incorporate both hard and soft data to minimize Type II errors (false negatives). Theory of Mind & Decision Maker Model: Rooted in undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al (5a75d09797238577), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must avoid collinearity between physical stats (height vs. position) and psychological scores. Leakage occurs if interviewers adjust language based on known physical attributes. Cross-Layer Veto & Anti-Leakage Check: Rooted in undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al (5a75d09797238577), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -14,6 +14,7 @@ const nextConfig = {
   // `X-Powered-By: Next.js` header). Security hardening, P13-05.
   poweredByHeader: false,
   transpilePackages: [
+    "@sports/ai-council",
     "@sports/db",
     "@sports/types",
     "@sports/prediction-engine",

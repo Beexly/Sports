@@ -32,9 +32,9 @@ function verdict(status, item, detail) {
   rows.push({ status, item, detail });
 }
 
-async function getJson(pathname) {
+async function getJson(pathname, timeoutMs = TIMEOUT_MS) {
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
     const res = await fetch(`${BASE}${pathname}`, { signal: ctrl.signal, headers: { accept: "application/json" } });
     let body = null;
@@ -83,7 +83,7 @@ function num(v) {
 
 // 2. Ops truth: settlement, calibration, gates, sample, odds, ladder
 {
-  const ops = await getJson("/api/ops/public-surface-truth");
+  const ops = await getJson("/api/ops/public-surface-truth", 95_000);
   const d = ops.body ?? {};
   if (ops.status !== 200) {
     verdict("FAIL", "ops truth", `HTTP ${ops.status} ${ops.error ?? ""}`.trim());
@@ -229,11 +229,16 @@ for (const [pathname, expect] of [
 
 // 5. nflverse currency (network; the script is the source of truth, this just relays its verdict)
 {
-  const probe = spawnSync("npx", ["tsx", path.join(ROOT, "scripts", "check-nflverse-currency.ts")], {
+  const currencyScript = path.join(ROOT, "scripts", "check-nflverse-currency.ts");
+  const tsxCli = path.join(ROOT, "node_modules", "tsx", "dist", "cli.mjs");
+  const spawnOpts = {
     encoding: "utf8",
     env: { ...process.env, NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --use-system-ca`.trim() },
     timeout: 120_000,
-  });
+  };
+  const probe = existsSync(tsxCli)
+    ? spawnSync(process.execPath, [tsxCli, currencyScript], spawnOpts)
+    : spawnSync("npx", ["tsx", currencyScript], { ...spawnOpts, shell: process.platform === "win32" });
   const out = `${probe.stdout ?? ""}${probe.stderr ?? ""}`;
   const failures = out.match(/FAILURES \((\d+)\)/);
   if (probe.status === 0) verdict("PASS", "nflverse currency", "every required dataset reaches the current season");

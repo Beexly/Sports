@@ -1,0 +1,78 @@
+{
+  "book_id": "6dfeb82e82f2999a",
+  "source_status": "COMPLETE",
+  "title": "Ayubjon-decontam",
+  "file_name": "Ayubjon-decontam.md",
+  "sha256": "6dfeb82e82f2999abe441c91443405f091529550bb245ad4266119d2baaf2ec3",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal identity key shingling maps (game_id, feature_window) pairs to contamination gates; n-gram overlap is a legacy proxy for temporal leakage in text. Universal Lens: Rooted in Ayubjon-decontam (6dfeb82e82f2999a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian contamination probability P(leak|data) conditioned on temporal key overlap; conformal prediction bounds false positive rate for cleaned outputs. GSI Mapping: Rooted in Ayubjon-decontam (6dfeb82e82f2999a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition T_{cleaned} = f(T_{training}, T_{validation}) where contamination is detected via (game_id, feature_window) intersection. GSE Mapping: Rooted in Ayubjon-decontam (6dfeb82e82f2999a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_contamination_gate",
+      "name": "Temporal Contamination Gate",
+      "verbatim_quote": "GSE lens - **The smallest possible reference for our contamination gate.** The whole method is: shingle both sets into n-grams, intersect, report and remove.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{train}': 'training temporal dataset', 'T_{eval}': 'evaluation temporal dataset', '(g, w)': 'temporal identity key (game_id, feature_window)'}",
+      "assumptions": "Data is structured as (game_id, feature_window) tuples; contamination occurs when overlapping temporal windows exist between train and eval.",
+      "breakdown_regime": "When \\exists (g, w) \\in T_{train} \\cap T_{eval}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Temporal identity keys (game_id, feature_window) replace n-gram overlap; intersection defines contamination event.",
+        "source_operator": "temporal_contamination_gate",
+        "telemetry": "Number of dropped rows due to temporal overlap"
+      }
+    },
+    {
+      "primitive_id": "shingle_temporal_keys",
+      "name": "Shingle Temporal Keys",
+      "verbatim_quote": "GSE's version replaces text n-grams with *temporal identity keys*: (game_id, feature_window) pairs.",
+      "page": 1,
+      "latex": "\\mathcal{S}(D) = \\{(g_i, w_j)\\}_{i,j}",
+      "symbol_and_unit_ledger": "{'D': 'dataset of records', '\\\\mathcal{S}': 'shingle operator', '(g_i, w_j)': 'temporal identity key tuple'}",
+      "assumptions": "Each record has a unique game identifier and feature window timestamp.",
+      "breakdown_regime": "When D contains non-overlapping temporal windows",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Transforms raw data into temporal key space for overlap detection.",
+        "source_operator": "shingle_temporal_keys",
+        "telemetry": "Set cardinality of shingled keys"
+      }
+    },
+    {
+      "primitive_id": "contamination_report_emitter",
+      "name": "Contamination Report Emitter",
+      "verbatim_quote": "The transferable discipline is the *output contract*: the tool doesn't just warn — it **emits a cleaned dataset** plus a leak report.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'contamination report', 'D_{clean}': 'cleaned dataset'}",
+      "assumptions": "Output contract ensures deterministic cleaning and reporting.",
+      "breakdown_regime": "Upon detecting overlap, emit R and D_{clean}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Emits cleaned dataset and report; aligns with GSE's clean-state protocol.",
+        "source_operator": "contamination_report_emitter",
+        "telemetry": "Report completeness and dataset size post-cleaning"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6dfeb82e82f2999a_t0",
+      "think": "The core insight is that textual n-gram overlap fails for tabular sports data because two distinct games may legitimately share identical stat lines. The solution is to shift from content-based to temporal identity keys. This enables a precise contamination gate defined by intersection of (game_id, feature_window) pairs across datasets. The universal lens unifies this as a temporal shingle operation. GSI models contamination as a probabilistic event using Bayesian inference over temporal overlaps. GSE encodes this as a state transition function that consumes training and validation frames and outputs a cleaned frame with metadata. The failure mode arises when temporal keys are misaligned or missing, leading to false negatives. The dual nature of the system lies in its ability to both detect and act—emit cleaned data rather than merely warn.\n\nDeep epistemic analysis for Ayubjon-decontam (6dfeb82e82f2999a, domain=other, pages_read=1/1): Operator 'Temporal Contamination Gate' (page 1, domain other) captures: GSE lens - **The smallest possible reference for our contamination gate.** The whole method is: shingle both sets into n-grams, intersect, report and remove. Assumptions: Data is structured as (game_id, feature_window) tuples; contamination occurs when overlapping temporal windows exist between train and eval. Breakdown regime: When \\exists (g, w) \\in T_{train} \\cap T_{eval} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal identity keys (game_id, feature_window) replace n-gram overlap; intersection defines contamination event. Operator 'Shingle Temporal Keys' (page 1, domain other) captures: GSE's version replaces text n-grams with *temporal identity keys*: (game_id, feature_window) pairs. Assumptions: Each record has a unique game identifier and feature window timestamp. Breakdown regime: When D contains non-overlapping temporal windows Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transforms raw data into temporal key space for overlap detection. Operator 'Contamination Report Emitter' (page 1, domain other) captures: The transferable discipline is the *output contract*: the tool doesn't just warn — it **emits a cleaned dataset** plus a leak report. Assumptions: Output contract ensures deterministic cleaning and reporting. Breakdown regime: Upon detecting overlap, emit R and D_{clean} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Emits cleaned dataset and report; aligns with GSE's clean-state protocol. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Ayubjon-decontam (6dfeb82e82f2999a, domain=other, pages_read=1/1): Operator 'Temporal Contamination Gate' (page 1, domain other) captures: GSE lens - **The smallest possible reference for our contamination gate.** The whole method is: shingle both sets into n-grams, intersect, report and remove. Assumptions: Data is structured as (game_id, feature_window) tuples; contamination occurs when overlapping temporal windows exist between train and eval. Breakdown regime: When \\exists (g, w) \\in T_{train} \\cap T_{eval} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal identity keys (game_id, feature_window) replace n-gram overlap; intersection defines contamination event. Operator 'Shingle Temporal Keys' (page 1, domain other) captures: GSE's version replaces text n-grams with *temporal identity keys*: (game_id, feature_window) pairs. Assumptions: Each record has a unique game identifier and feature window timestamp. Breakdown regime: When D contains non-overlapping temporal windows Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transforms raw data into temporal key space for overlap detection. Operator 'Contamination Report Emitter' (page 1, domain other) captures: The transferable discipline is the *output contract*: the tool doesn't just warn — it **emits a cleaned dataset** plus a leak report. Assumptions: Output contract ensures deterministic cleaning and reporting. Breakdown regime: Upon detecting overlap, emit R and D_{clean} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Emits cleaned dataset and report; aligns with GSE's clean-state protocol. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in GPT-3's n-gram contamination detection, extended through temporal logic and formalized in modern ML pipelines like NeMo Curator. Retrocausal Genealogy: Rooted in Ayubjon-decontam (6dfeb82e82f2999a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Ayubjon-decontam (6dfeb82e82f2999a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent is the data leakage itself, which seeks to evade detection by mimicking legitimate patterns. The system must enforce a strong output contract to resist adversarial use. Theory of Mind & Decision Maker Model: Rooted in Ayubjon-decontam (6dfeb82e82f2999a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that temporal keys be unique per game and window; leakage veto triggers if any (g, w) pair appears in both training and validation sets. Cross-Layer Veto & Anti-Leakage Check: Rooted in Ayubjon-decontam (6dfeb82e82f2999a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in Ayubjon-decontam (6dfeb82e82f2999a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

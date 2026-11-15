@@ -1,0 +1,78 @@
+{
+  "book_id": "07a05773b507ff9f",
+  "source_status": "COMPLETE",
+  "title": "total-signal-inventory-C-corpus-family-counts",
+  "file_name": "total-signal-inventory-C-corpus-family-counts.md",
+  "sha256": "07a05773b507ff9f5857ecfc497d7538f99c8783e9e5c0e5dfc6b50252a59b6e",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Signal family classification via keyword-rule tagging of GSE-application prose, approximating paper relevance without full-content analysis. Universal Lens: Rooted in total-signal-inventory-C-corpus-family-counts (07a05773b507ff9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian family assignment based on sentence-level vocabulary matching to GSE signal lexicon, enabling probabilistic ranking of paper leverage. GSI Mapping: Rooted in total-signal-inventory-C-corpus-family-counts (07a05773b507ff9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps paper content to operational families using structured heading extraction and fallback to verdict lines for state transitions. GSE Mapping: Rooted in total-signal-inventory-C-corpus-family-counts (07a05773b507ff9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "family_tagging_approximation",
+      "name": "Family Tagging Approximation",
+      "verbatim_quote": "> **TAGGING IS APPROXIMATE.** Families come from keyword rules over note prose (title + GSE-application section + verdict line), not from reading each paper.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'signal family identifier (categorical)', 'K': 'keyword rule set (finite set)'}",
+      "assumptions": "Tagging relies on heuristic keyword matching rather than semantic parsing.",
+      "breakdown_regime": "When no GSE-application section is parsed, fallback to verdict line occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each paper's prose is mapped to a family via a fixed set of keyword rules, creating a discrete signal family assignment function F(paper) = family.",
+        "source_operator": "family_tagging_approximation",
+        "telemetry": "Parse coverage rate and number of NOT PARSED rows."
+      }
+    },
+    {
+      "primitive_id": "impact_score_crude",
+      "name": "Impact Score Crude",
+      "verbatim_quote": "`impact score` is a crude 0-6 strength score over the paper's own stated impact/priority/accuracy wording (quantified claim +3, priority/production/edge wording +2, explicit GSE action +1).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'impact score (integer, 0–6)', 'C': 'quantified claim indicator (binary)', 'P': 'priority/production/edge indicator (binary)', 'A': 'explicit GSE action indicator (binary)'}",
+      "assumptions": "Impact is assessed solely through surface-level textual indicators.",
+      "breakdown_regime": "Sentence-level matching fails when no qualifying language is present.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Impact score I = 3C + 2P + A, derived from lexical presence in GSE-application section or verdict line.",
+        "source_operator": "impact_score_crude",
+        "telemetry": "Distribution of scores across papers and proportion of high-scoring vs. low-scoring entries."
+      }
+    },
+    {
+      "primitive_id": "parse_coverage_honest_count",
+      "name": "Parse Coverage Honest Count",
+      "verbatim_quote": "They remain in the CSV with `doc_type=non-paper` so nothing is hidden.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{total}': 'total documents scanned (integer)', 'N_{paper}': 'paper notes in scope (integer)', 'N_{parsed}': 'GSE-application sections parsed (integer)', 'N_{unparsed}': 'GSE-application sections not parsed (integer)'}",
+      "assumptions": "All documents are accounted for in the CSV regardless of parse status.",
+      "breakdown_regime": "Unparsed rows do not indicate absence of GSE content but parsing failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Parse coverage is modeled as a ratio N_parsed/N_total, with N_unparsed indicating parsing gaps.",
+        "source_operator": "parse_coverage_honest_count",
+        "telemetry": "Count of parsed vs. unparsed GSE-application sections and total document scan volume."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "07a05773b507ff9f_t0",
+      "think": "The core mechanism operates through keyword-based tagging of paper prose to assign signal families. This approximation is necessary due to computational constraints and lack of full-content analysis. The impact score is a simplified heuristic that aggregates textual claims about priority or GSE relevance into a scalar. Parse coverage tracks how many documents were successfully parsed versus those that failed due to missing or unrecognized headings. These primitives form a layered system where approximate tagging enables coarse-grained ranking, while impact scoring provides a basic signal strength proxy. Failure modes include misclassification due to keyword ambiguity, false negatives from missing headings, and overconfidence in impact scores derived from weak linguistic cues.\n\nDeep epistemic analysis for total-signal-inventory-C-corpus-family-counts (07a05773b507ff9f, domain=other, pages_read=5/5): Operator 'Family Tagging Approximation' (page 1, domain other) captures: > **TAGGING IS APPROXIMATE.** Families come from keyword rules over note prose (title + GSE-application section + verdict line), not from reading each paper. Assumptions: Tagging relies on heuristic keyword matching rather than semantic parsing. Breakdown regime: When no GSE-application section is parsed, fallback to verdict line occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each paper's prose is mapped to a family via a fixed set of keyword rules, creating a discrete signal family assignment function F(paper) = family. Operator 'Impact Score Crude' (page 2, domain other) captures: `impact score` is a crude 0-6 strength score over the paper's own stated impact/priority/accuracy wording (quantified claim +3, priority/production/edge wording +2, explicit GSE action +1). Assumptions: Impact is assessed solely through surface-level textual indicators. Breakdown regime: Sentence-level matching fails when no qualifying language is present. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Impact score I = 3C + 2P + A, derived from lexical presence in GSE-application section or verdict line. Operator 'Parse Coverage Honest Count' (page 1, domain other) captures: They remain in the CSV with `doc_type=non-paper` so nothing is hidden. Assumptions: All documents are accounted for in the CSV regardless of parse status. Breakdown regime: Unparsed rows do not indicate absence of GSE content but parsing failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Parse coverage is modeled as a ratio N_parsed/N_total, with N_unparsed indicating parsing gaps. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for total-signal-inventory-C-corpus-family-counts (07a05773b507ff9f, domain=other, pages_read=5/5): Operator 'Family Tagging Approximation' (page 1, domain other) captures: > **TAGGING IS APPROXIMATE.** Families come from keyword rules over note prose (title + GSE-application section + verdict line), not from reading each paper. Assumptions: Tagging relies on heuristic keyword matching rather than semantic parsing. Breakdown regime: When no GSE-application section is parsed, fallback to verdict line occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each paper's prose is mapped to a family via a fixed set of keyword rules, creating a discrete signal family assignment function F(paper) = family. Operator 'Impact Score Crude' (page 2, domain other) captures: `impact score` is a crude 0-6 strength score over the paper's own stated impact/priority/accuracy wording (quantified claim +3, priority/production/edge wording +2, explicit GSE action +1). Assumptions: Impact is assessed solely through surface-level textual indicators. Breakdown regime: Sentence-level matching fails when no qualifying language is present. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Impact score I = 3C + 2P + A, derived from lexical presence in GSE-application section or verdict line. Operator 'Parse Coverage Honest Count' (page 1, domain other) captures: They remain in the CSV with `doc_type=non-paper` so nothing is hidden. Assumptions: All documents are accounted for in the CSV regardless of parse status. Breakdown regime: Unparsed rows do not indicate absence of GSE content but parsing failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Parse coverage is modeled as a ratio N_parsed/N_total, with N_unparsed indicating parsing gaps. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information retrieval and natural language processing traditions, particularly automated categorization systems and metadata tagging pipelines used in scientific literature management. Retrocausal Genealogy: Rooted in total-signal-inventory-C-corpus-family-counts (07a05773b507ff9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in total-signal-inventory-C-corpus-family-counts (07a05773b507ff9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents involved include the GSE system itself, which seeks to prioritize papers based on perceived leverage, and the human authors who may not align their language with GSE terminology. Theory of Mind & Decision Maker Model: Rooted in total-signal-inventory-C-corpus-family-counts (07a05773b507ff9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple primitives suggest conflicting classifications; e.g., a paper might be tagged into a family yet have zero impact score. Leakage occurs if GSE-application sections are misclassified due to heading inconsistencies or fallback logic errors. Cross-Layer Veto & Anti-Leakage Check: Rooted in total-signal-inventory-C-corpus-family-counts (07a05773b507ff9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

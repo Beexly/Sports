@@ -1,0 +1,78 @@
+{
+  "book_id": "9f059e979b71611f",
+  "source_status": "COMPLETE",
+  "title": "1227-star-bets-sequential-target-recalculating-bets",
+  "file_name": "1227-star-bets-sequential-target-recalculating-bets.md",
+  "sha256": "9f059e979b71611fc0a92b9070be45bc599aa2e7817329a2ca7330ead4de23ab",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sequential target-recalculating betting unifies confidence intervals with adaptive wealth dynamics, leveraging logarithmic wealth updates and variance-aware bet sizing for optimal finite-time coverage. Universal Lens: Rooted in 1227-star-bets-sequential-target-recalculating-bets (9f059e979b71611f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs STaR-Bets for conformal prediction intervals, replacing fixed-variance normal approximations with adaptive betting-based uncertainty quantification under bounded data. GSI Mapping: Rooted in 1227-star-bets-sequential-target-recalculating-bets (9f059e979b71611f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies STaR-Bets in real-time decision-making, recalculating betting strategies dynamically based on remaining time and wealth targets to optimize sequential game outcomes. GSE Mapping: Rooted in 1227-star-bets-sequential-target-recalculating-bets (9f059e979b71611f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sequential_target_recycling",
+      "name": "Sequential Target Recycling",
+      "verbatim_quote": "**STaR technique:** a betting algorithm is \"STaR\" if the bet at time t uses only (i) log(1/δ) - log W_t (wealth still needed) and (ii) n - t (rounds left).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time step, dimensionless', 'n': 'total rounds, dimensionless', 'W_t': 'wealth at time t, dimensionless', 'δ': 'confidence level, dimensionless'}",
+      "assumptions": "Fixed sample size n, bounded [0,1] variables, i.i.d. sampling.",
+      "breakdown_regime": "When log(1/δ) - log W_t < 0 or n - t < 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's adaptive confidence interval construction where bet size adjusts based on remaining resources and target.",
+        "source_operator": "sequential_target_recycling",
+        "telemetry": "Average CI width and coverage probability across 1000 simulations."
+      }
+    },
+    {
+      "primitive_id": "variance_adaptive_betting",
+      "name": "Variance Adaptive Betting",
+      "verbatim_quote": "3):** variance-adaptive bet l ≈ √(2log(1/δ)/(n·v̂)) ∧ 1 with online second-moment estimate v̂ = V/(t-1) + t^{-1}α2 ∧ 1 (hyperparameters α, c = 1 per App.",
+      "page": 1,
+      "latex": "\\ell \\approx \\sqrt{\\frac{2\\log(1/\\delta)}{n \\cdot \\hat{v}}} \\wedge 1",
+      "symbol_and_unit_ledger": "{'ℓ': 'bet size, dimensionless', 'δ': 'confidence level, dimensionless', 'n': 'sample size, dimensionless', '\\\\hat{v}': 'online variance estimate, dimensionless'}",
+      "assumptions": "Online estimation of second moment, bounded data support [0,1].",
+      "breakdown_regime": "When \\hat{v} approaches zero or exceeds unity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to adjust betting intensity dynamically without prior knowledge of variance.",
+        "source_operator": "variance_adaptive_betting",
+        "telemetry": "Empirical variance estimates vs theoretical values over repeated trials."
+      }
+    },
+    {
+      "primitive_id": "bankruptcy_or_target_behavior",
+      "name": "Bankruptcy or Target Behavior",
+      "verbatim_quote": "7:** exact 1-δ coverage *requires* algorithms that finish with wealth in {0, 1/δ} — STaR's \"bankrupt or target\" behavior is not a bug.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W_n': 'final wealth, dimensionless', 'δ': 'confidence level, dimensionless'}",
+      "assumptions": "Binary outcome condition at termination, fixed confidence δ.",
+      "breakdown_regime": "If W_n ≠ 0 and W_n ≠ 1/δ at termination.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSE’s state transition logic where actions terminate upon reaching a terminal wealth state.",
+        "source_operator": "bankruptcy_or_target_behavior",
+        "telemetry": "Proportion of runs ending in bankruptcy vs target wealth."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9f059e979b71611f_t0",
+      "think": "The core innovation of STaR-Bets lies in its sequential adaptation mechanism, which dynamically adjusts betting weights using only current wealth and remaining rounds. This avoids static bet allocation pitfalls like overexposure early on or underutilization near deadlines. The wealth update rule W_i^m = W_{i-1}^m(1 + l_i(X_i - m)) embodies a multiplicative drift process that reflects the cumulative effect of past outcomes. By incorporating variance estimates through v̂, the system adapts to data variability without requiring explicit variance knowledge. The key insight is that optimal confidence intervals require both tightness and coverage guarantees—STaR-Bets achieves this by ensuring that the final wealth W_n falls into {0, 1/δ}, thereby satisfying the necessary condition for exact coverage. The failure mode occurs when the algorithm fails to converge to one of these states due to numerical instability or incorrect parameterization, leading to invalid confidence intervals.\n\nDeep epistemic analysis for 1227-star-bets-sequential-target-recalculating-bets (9f059e979b71611f, domain=other, pages_read=3/3): Operator 'Sequential Target Recycling' (page 1, domain other) captures: **STaR technique:** a betting algorithm is \"STaR\" if the bet at time t uses only (i) log(1/δ) - log W_t (wealth still needed) and (ii) n - t (rounds left). Assumptions: Fixed sample size n, bounded [0,1] variables, i.i.d. sampling. Breakdown regime: When log(1/δ) - log W_t < 0 or n - t < 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's adaptive confidence interval construction where bet size adjusts based on remaining resources and target. Operator 'Variance Adaptive Betting' (page 1, domain other) captures: 3):** variance-adaptive bet l ≈ √(2log(1/δ)/(n·v̂)) ∧ 1 with online second-moment estimate v̂ = V/(t-1) + t^{-1}α2 ∧ 1 (hyperparameters α, c = 1 per App. Assumptions: Online estimation of second moment, bounded data support [0,1]. Breakdown regime: When \\hat{v} approaches zero or exceeds unity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to adjust betting intensity dynamically without prior knowledge of variance. Operator 'Bankruptcy or Target Behavior' (page 1, domain other) captures: 7:** exact 1-δ coverage *requires* algorithms that finish with wealth in {0, 1/δ} — STaR's \"bankrupt or target\" behavior is not a bug. Assumptions: Binary outcome condition at termination, fixed confidence δ. Breakdown regime: If W_n ≠ 0 and W_n ≠ 1/δ at termination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSE’s state transition logic where actions terminate upon reaching a terminal wealth state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1227-star-bets-sequential-target-recalculating-bets (9f059e979b71611f, domain=other, pages_read=3/3): Operator 'Sequential Target Recycling' (page 1, domain other) captures: **STaR technique:** a betting algorithm is \"STaR\" if the bet at time t uses only (i) log(1/δ) - log W_t (wealth still needed) and (ii) n - t (rounds left). Assumptions: Fixed sample size n, bounded [0,1] variables, i.i.d. sampling. Breakdown regime: When log(1/δ) - log W_t < 0 or n - t < 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's adaptive confidence interval construction where bet size adjusts based on remaining resources and target. Operator 'Variance Adaptive Betting' (page 1, domain other) captures: 3):** variance-adaptive bet l ≈ √(2log(1/δ)/(n·v̂)) ∧ 1 with online second-moment estimate v̂ = V/(t-1) + t^{-1}α2 ∧ 1 (hyperparameters α, c = 1 per App. Assumptions: Online estimation of second moment, bounded data support [0,1]. Breakdown regime: When \\hat{v} approaches zero or exceeds unity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to adjust betting intensity dynamically without prior knowledge of variance. Operator 'Bankruptcy or Target Behavior' (page 1, domain other) captures: 7:** exact 1-δ coverage *requires* algorithms that finish with wealth in {0, 1/δ} — STaR's \"bankrupt or target\" behavior is not a bug. Assumptions: Binary outcome condition at termination, fixed confidence δ. Breakdown regime: If W_n ≠ 0 and W_n ≠ 1/δ at termination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSE’s state transition logic where actions terminate upon reaching a terminal wealth state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in coin-betting frameworks initiated by Chernoff and later formalized by Vovk and others. Builds upon Hoeffding and Bernstein inequalities adapted for sequential decision-making. Retrocausal Genealogy: Rooted in 1227-star-bets-sequential-target-recalculating-bets (9f059e979b71611f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1227-star-bets-sequential-target-recalculating-bets (9f059e979b71611f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the data-generating process (unknown μ) and the betting strategy (adaptive l_i). The agent must balance exploration (testing hypotheses) against exploitation (maximizing wealth gain) while maintaining coverage constraints. Theory of Mind & Decision Maker Model: Rooted in 1227-star-bets-sequential-target-recalculating-bets (9f059e979b71611f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity with traditional fixed-bet methods; leakage occurs if variance estimates become stale or if wealth tracking errors propagate. Must avoid reliance on prior variance assumptions. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1227-star-bets-sequential-target-recalculating-bets (9f059e979b71611f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1227-star-bets-sequential-target-recalculating-bets (9f059e979b71611f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

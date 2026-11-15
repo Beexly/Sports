@@ -1,0 +1,95 @@
+{
+  "book_id": "acc40bb00d2dfb40",
+  "source_status": "COMPLETE",
+  "title": "3f02135b1f4e",
+  "file_name": "3f02135b1f4e.txt",
+  "sha256": "acc40bb00d2dfb405483bb3774193e5ac2e1bd58a060610afb505fed39d7931a",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Platform readiness gates define operational boundaries through boolean flags that govern system capabilities, enabling dynamic conditional logic across distributed components. Universal Lens: Rooted in 3f02135b1f4e (acc40bb00d2dfb40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference uses readiness gates as prior constraints to modulate belief updates, where each gate acts as a probabilistic filter on outcome likelihood. GSI Mapping: Rooted in 3f02135b1f4e (acc40bb00d2dfb40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning employs readiness gates as state transitions to determine valid action spaces, ensuring coherent evolution of predictive models within operational regimes. GSE Mapping: Rooted in 3f02135b1f4e (acc40bb00d2dfb40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "can_score",
+      "name": "Scoring Availability",
+      "verbatim_quote": "/** * Platform Readiness Gates * * Single source of truth for \"can this system do X right now?\" * Used across workers, API routes, and content generation to enforce * consistent operational boundaries based on PlatformConfig.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'canScore': 'boolean'}",
+      "assumptions": "Scoring is invariant to platform configuration state.",
+      "breakdown_regime": "Never fails; always enabled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as base condition for all other operations in GSI's probabilistic engine.",
+        "source_operator": "can_score",
+        "telemetry": "Engine availability status"
+      }
+    },
+    {
+      "primitive_id": "can_persist_picks",
+      "name": "Pick Persistence",
+      "verbatim_quote": "*/ readonly canScore: true; /** * Picks can always be persisted for internal validation and settlement.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'canPersistPicks': 'boolean'}",
+      "assumptions": "Persistence is required for internal validation and settlement.",
+      "breakdown_regime": "Bootstrap mode when false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables storage of picks for post-processing and historical tracking.",
+        "source_operator": "can_persist_picks",
+        "telemetry": "Storage integrity check"
+      }
+    },
+    {
+      "primitive_id": "can_persist_canonical_history",
+      "name": "Canonical History Persistence",
+      "verbatim_quote": "*/ readonly canPersistCanonicalHistory: boolean; /** * When false: ATS form, H2H form, and venue splits produce score=0 in the * prediction engine (context fields are set to null before scoring).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'canPersistCanonicalHistory': 'boolean'}",
+      "assumptions": "Historical data must be canonical to influence predictions.",
+      "breakdown_regime": "Zero-score prediction when disabled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's canonical dataset filtering mechanism.",
+        "source_operator": "can_persist_canonical_history",
+        "telemetry": "Prediction accuracy degradation"
+      }
+    },
+    {
+      "primitive_id": "can_use_derived_history",
+      "name": "Derived History Utilization",
+      "verbatim_quote": "*/ readonly canUseDerivedHistory: boolean; /** * When false: /api/picks and /api/picks/daily-slate return 503.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'canUseDerivedHistory': 'boolean'}",
+      "assumptions": "Derived history enables public API access.",
+      "breakdown_regime": "API service unavailable when disabled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reflects GSE's derived data pipeline control.",
+        "source_operator": "can_use_derived_history",
+        "telemetry": "API response code 503"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "acc40bb00d2dfb40_t0",
+      "think": "The platform readiness gates constitute a lattice of binary conditions that partition system functionality into distinct operational regimes. Each primitive defines a boundary condition under which certain subsystems may or may not engage in computation or data flow. In GSI, these gates act as constraints on Bayesian updating processes—specifically, they limit the space of allowable hypotheses by filtering out bootstrap-era data or disabling calibration adjustments. This creates a dual structure: one where the system remains logically consistent even during partial outages, and another where probabilistic reasoning is conditioned upon explicit readiness states. For example, when canPersistCanonicalHistory is false, the prediction engine defaults to zero-score outputs, effectively collapsing the posterior distribution to a degenerate point. Similarly, canUseDerivedHistory controls access to derived datasets, enforcing a separation between internal and external consumption paths. These primitives also encode temporal semantics—bootstrap mode implies historical data is not yet trustworthy for canonical use, thus preventing erroneous inferences. The failure modes arise from misalignment between feature flags and actual system readiness, leading to inconsistent behavior across services.\n\nDeep epistemic analysis for 3f02135b1f4e (acc40bb00d2dfb40, domain=other, pages_read=3/3): Operator 'Scoring Availability' (page 1, domain other) captures: /** * Platform Readiness Gates * * Single source of truth for \"can this system do X right now?\" * Used across workers, API routes, and content generation to enforce * consistent operational boundaries based on PlatformConfig. Assumptions: Scoring is invariant to platform configuration state. Breakdown regime: Never fails; always enabled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as base condition for all other operations in GSI's probabilistic engine. Operator 'Pick Persistence' (page 1, domain other) captures: */ readonly canScore: true; /** * Picks can always be persisted for internal validation and settlement. Assumptions: Persistence is required for internal validation and settlement. Breakdown regime: Bootstrap mode when false. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables storage of picks for post-processing and historical tracking. Operator 'Canonical History Persistence' (page 1, domain other) captures: */ readonly canPersistCanonicalHistory: boolean; /** * When false: ATS form, H2H form, and venue splits produce score=0 in the * prediction engine (context fields are set to null before scoring). Assumptions: Historical data must be canonical to influence predictions. Breakdown regime: Zero-score prediction when disabled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's canonical dataset filtering mechanism. Operator 'Derived History Utilization' (page 1, domain other) captures: */ readonly canUseDerivedHistory: boolean; /** * When false: /api/picks and /api/picks/daily-slate return 503. Assumptions: Derived history enables public API access. Breakdown regime: API service unavailable when disabled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Reflects GSE's derived data pipeline control. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 3f02135b1f4e (acc40bb00d2dfb40, domain=other, pages_read=3/3): Operator 'Scoring Availability' (page 1, domain other) captures: /** * Platform Readiness Gates * * Single source of truth for \"can this system do X right now?\" * Used across workers, API routes, and content generation to enforce * consistent operational boundaries based on PlatformConfig. Assumptions: Scoring is invariant to platform configuration state. Breakdown regime: Never fails; always enabled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as base condition for all other operations in GSI's probabilistic engine. Operator 'Pick Persistence' (page 1, domain other) captures: */ readonly canScore: true; /** * Picks can always be persisted for internal validation and settlement. Assumptions: Persistence is required for internal validation and settlement. Breakdown regime: Bootstrap mode when false. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables storage of picks for post-processing and historical tracking. Operator 'Canonical History Persistence' (page 1, domain other) captures: */ readonly canPersistCanonicalHistory: boolean; /** * When false: ATS form, H2H form, and venue splits produce score=0 in the * prediction engine (context fields are set to null before scoring). Assumptions: Historical data must be canonical to influence predictions. Breakdown regime: Zero-score prediction when disabled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's canonical dataset filtering mechanism. Operator 'Derived History Utilization' (page 1, domain other) captures: */ readonly canUseDerivedHistory: boolean; /** * When false: /api/picks and /api/picks/daily-slate return 503. Assumptions: Derived history enables public API access. Breakdown regime: API service unavailable when disabled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Reflects GSE's derived data pipeline control. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early software engineering practices of feature toggles and operational boundaries, evolving into modern microservices governance frameworks that prioritize resilience and controlled rollouts. Retrocausal Genealogy: Rooted in 3f02135b1f4e (acc40bb00d2dfb40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 3f02135b1f4e (acc40bb00d2dfb40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the prediction engine attempting to optimize performance against noisy inputs, and the platform itself trying to maintain consistency despite partial failures. Decision actors are defined by their adherence to readiness criteria rather than raw capability. Theory of Mind & Decision Maker Model: Rooted in 3f02135b1f4e (acc40bb00d2dfb40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that bootstrap mode does not mask feature gate closures. Leakage vetoes prevent internal validation from leaking into public APIs unless explicitly allowed. Cross-layer checks ensure that canonical history filters apply uniformly across all dependent systems. Cross-Layer Veto & Anti-Leakage Check: Rooted in 3f02135b1f4e (acc40bb00d2dfb40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

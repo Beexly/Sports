@@ -1,0 +1,78 @@
+{
+  "book_id": "e90d73d3d5d89421",
+  "source_status": "COMPLETE",
+  "title": "contest",
+  "file_name": "contest.md",
+  "sha256": "e90d73d3d5d8942180b5989b9cfa1c16387a27203d954f40d8b2bf011d0220ba",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Contest as a stochastic optimization landscape with reward shaping through usage-driven metrics and social feedback loops. Universal Lens: Rooted in contest (e90d73d3d5d89421), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over app quality using real usage data, social engagement, and creative novelty as evidence variables. GSI Mapping: Rooted in contest (e90d73d3d5d89421), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition system governed by deploy → submit → judge → announce with feedback-driven refinement of app behavior. GSE Mapping: Rooted in contest (e90d73d3d5d89421), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "prize_pool_allocation",
+      "name": "Prize Pool Allocation",
+      "verbatim_quote": "# App contest — how to enter, and how it shapes the build Higgsfield runs an app contest with a **$100,000 total prize pool**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{total}': 'USD 100,000', 'P_1': 'USD 25,000', 'P_2': 'USD 15,000', 'P_3': 'USD 10,000', 'P_h': 'USD 5,000'}",
+      "assumptions": "Fixed prize distribution across top 3 and 10 honorable mentions.",
+      "breakdown_regime": "Discrete allocation with no overlap between ranks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reward function in GSI maps contest outcomes to utility maximization over app performance metrics.",
+        "source_operator": "prize_pool_allocation",
+        "telemetry": "Total prize money distributed per rank."
+      }
+    },
+    {
+      "primitive_id": "usage_based_judgment",
+      "name": "Usage-Based Judgment",
+      "verbatim_quote": "- **Judging is mostly real usage.** Weights: **Usage generated 40%** (the primary metric — total Higgsfield generation by users inside the app), **Creativity & concept 30%**, **social engagement 15%**, **in-app gallery engagement 15%**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U': 'Total Higgsfield generation units', 'C': 'Creativity score (0–100)', 'S': 'Social engagement count', 'G': 'Gallery engagement count'}",
+      "assumptions": "Usage is the dominant factor in scoring; subjective components are weighted equally.",
+      "breakdown_regime": "Linear combination of normalized metrics with usage as primary term.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses usage data to compute posterior probability of app success.",
+        "source_operator": "usage_based_judgment",
+        "telemetry": "Normalized usage volume, creativity score, and engagement counts."
+      }
+    },
+    {
+      "primitive_id": "entry_mechanics",
+      "name": "Entry Mechanics",
+      "verbatim_quote": "## Entering — `higgsfield website contest` (it publishes for you) An app not yet on the community feed is **published automatically by the entry** — no separate `higgsfield website publish` needed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Entry event', 'P': 'Publish action', 'A': 'App listing'}",
+      "assumptions": "Entry triggers automatic publishing; no manual publish required.",
+      "breakdown_regime": "Automated workflow with conditional execution based on app status.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE models entry as a deterministic state transition from undeployed to listed.",
+        "source_operator": "entry_mechanics",
+        "telemetry": "Timestamp of entry, app listing status, and deployment readiness."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e90d73d3d5d89421_t0",
+      "think": "The contest framework defines a structured reward landscape where usage is the primary signal for quality assessment. This aligns with information-theoretic principles of entropy reduction in agent behavior. The dual nature of the contest—combining objective usage metrics with subjective creativity—mirrors a multi-objective optimization problem. Failure modes arise when apps fail to generate meaningful usage or misalign with social norms. The temporal structure introduces a dynamic constraint, requiring rapid iteration and feedback integration. The system enforces originality and platform-specific development, ensuring alignment with Higgsfield’s ecosystem. The entry mechanism automates publishing, reducing friction while maintaining quality gates through metadata and social link requirements.\n\nDeep epistemic analysis for contest (e90d73d3d5d89421, domain=other, pages_read=2/2): Operator 'Prize Pool Allocation' (page 1, domain other) captures: # App contest — how to enter, and how it shapes the build Higgsfield runs an app contest with a **$100,000 total prize pool**. Assumptions: Fixed prize distribution across top 3 and 10 honorable mentions. Breakdown regime: Discrete allocation with no overlap between ranks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Reward function in GSI maps contest outcomes to utility maximization over app performance metrics. Operator 'Usage-Based Judgment' (page 1, domain other) captures: - **Judging is mostly real usage.** Weights: **Usage generated 40%** (the primary metric — total Higgsfield generation by users inside the app), **Creativity & concept 30%**, **social engagement 15%**, **in-app gallery engagement 15%**. Assumptions: Usage is the dominant factor in scoring; subjective components are weighted equally. Breakdown regime: Linear combination of normalized metrics with usage as primary term. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI uses usage data to compute posterior probability of app success. Operator 'Entry Mechanics' (page 1, domain other) captures: ## Entering — `higgsfield website contest` (it publishes for you) An app not yet on the community feed is **published automatically by the entry** — no separate `higgsfield website publish` needed. Assumptions: Entry triggers automatic publishing; no manual publish required. Breakdown regime: Automated workflow with conditional execution based on app status. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE models entry as a deterministic state transition from undeployed to listed. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for contest (e90d73d3d5d89421, domain=other, pages_read=2/2): Operator 'Prize Pool Allocation' (page 1, domain other) captures: # App contest — how to enter, and how it shapes the build Higgsfield runs an app contest with a **$100,000 total prize pool**. Assumptions: Fixed prize distribution across top 3 and 10 honorable mentions. Breakdown regime: Discrete allocation with no overlap between ranks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Reward function in GSI maps contest outcomes to utility maximization over app performance metrics. Operator 'Usage-Based Judgment' (page 1, domain other) captures: - **Judging is mostly real usage.** Weights: **Usage generated 40%** (the primary metric — total Higgsfield generation by users inside the app), **Creativity & concept 30%**, **social engagement 15%**, **in-app gallery engagement 15%**. Assumptions: Usage is the dominant factor in scoring; subjective components are weighted equally. Breakdown regime: Linear combination of normalized metrics with usage as primary term. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI uses usage data to compute posterior probability of app success. Operator 'Entry Mechanics' (page 1, domain other) captures: ## Entering — `higgsfield website contest` (it publishes for you) An app not yet on the community feed is **published automatically by the entry** — no separate `higgsfield website publish` needed. Assumptions: Entry triggers automatic publishing; no manual publish required. Breakdown regime: Automated workflow with conditional execution based on app status. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE models entry as a deterministic state transition from undeployed to listed. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in game theory and incentive design, particularly aligned with the principles of crowdsourced innovation and reward-based learning systems pioneered in decentralized platforms. Retrocausal Genealogy: Rooted in contest (e90d73d3d5d89421), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in contest (e90d73d3d5d89421), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to game the system by inflating usage artificially or exploiting loopholes in social engagement tracking. The platform must balance openness with integrity checks. Theory of Mind & Decision Maker Model: Rooted in contest (e90d73d3d5d89421), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that usage and creativity scores do not co-vary excessively, preventing overfitting to one metric. Leakage vetoes prevent external API dependencies from undermining platform integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in contest (e90d73d3d5d89421), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in contest (e90d73d3d5d89421), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

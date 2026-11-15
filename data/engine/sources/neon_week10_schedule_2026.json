@@ -1,0 +1,24 @@
+{
+  "fetchedAt": "2026-11-13T08:51:00Z",
+  "source": "Neon Postgres read-only query via: neon psql main --project-id summer-brook-99380762 --role-name hermes_ro",
+  "query": "SELECT \"homeTeamName\",\"awayTeamName\",\"commenceTime\" FROM public.games WHERE \"sportId\"='cmpg6t7v900031heri45v3d8s' AND \"commenceTime\" >= '2026-11-13' AND \"commenceTime\" < '2026-11-19' ORDER BY \"commenceTime\"",
+  "commenceTimezone": "UTC (verified identical to ESPN scoreboard UTC timestamps in data/engine/espn_2026_week10_scoreboard.json)",
+  "rowCount": 14,
+  "games": [
+    {"homeTeamName": "New York Giants", "awayTeamName": "Washington Commanders", "commenceTime": "2026-11-13T01:15:00Z"},
+    {"homeTeamName": "Detroit Lions", "awayTeamName": "New England Patriots", "commenceTime": "2026-11-15T14:30:00Z"},
+    {"homeTeamName": "Cleveland Browns", "awayTeamName": "Houston Texans", "commenceTime": "2026-11-15T18:00:00Z"},
+    {"homeTeamName": "Green Bay Packers", "awayTeamName": "Minnesota Vikings", "commenceTime": "2026-11-15T18:00:00Z"},
+    {"homeTeamName": "Indianapolis Colts", "awayTeamName": "Miami Dolphins", "commenceTime": "2026-11-15T18:00:00Z"},
+    {"homeTeamName": "New Orleans Saints", "awayTeamName": "Carolina Panthers", "commenceTime": "2026-11-15T18:00:00Z"},
+    {"homeTeamName": "Tennessee Titans", "awayTeamName": "Jacksonville Jaguars", "commenceTime": "2026-11-15T18:00:00Z"},
+    {"homeTeamName": "Atlanta Falcons", "awayTeamName": "Kansas City Chiefs", "commenceTime": "2026-11-15T18:00:00Z"},
+    {"homeTeamName": "New York Jets", "awayTeamName": "Buffalo Bills", "commenceTime": "2026-11-15T18:00:00Z"},
+    {"homeTeamName": "Arizona Cardinals", "awayTeamName": "Los Angeles Rams", "commenceTime": "2026-11-15T21:05:00Z"},
+    {"homeTeamName": "Las Vegas Raiders", "awayTeamName": "Seattle Seahawks", "commenceTime": "2026-11-15T21:05:00Z"},
+    {"homeTeamName": "Dallas Cowboys", "awayTeamName": "San Francisco 49ers", "commenceTime": "2026-11-15T21:25:00Z"},
+    {"homeTeamName": "Cincinnati Bengals", "awayTeamName": "Pittsburgh Steelers", "commenceTime": "2026-11-16T01:20:00Z"},
+    {"homeTeamName": "Baltimore Ravens", "awayTeamName": "Los Angeles Chargers", "commenceTime": "2026-11-17T01:15:00Z"}
+  ],
+  "crossCheck": "14/14 games match data/engine/espn_2026_week10_scoreboard.json (teams and UTC commence times identical). Munich game venue per ESPN: 'FC Bayern Munich Stadium' = Allianz Arena; task directive confirms lat 48.2188 lon 11.6247."
+}

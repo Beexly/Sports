@@ -1,0 +1,78 @@
+{
+  "book_id": "b12ad19cf460c6c1",
+  "source_status": "COMPLETE",
+  "title": "RESCUE-2026-09-26-6-trust-gate-and-host-blocker",
+  "file_name": "RESCUE-2026-09-26-6-trust-gate-and-host-blocker.md",
+  "sha256": "b12ad19cf460c6c11cbf57cf6ee4b8796bd5a6f6bfa7b5bd3ee607a960aa6bf6",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Trust gate validation maps banned phrase detection to contextual exemption logic across hierarchical document layers, with recursive scan constraints. Universal Lens: Rooted in RESCUE-2026-09-26-6-trust-gate-and-host-blocker (b12ad19cf460c6c1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on phrase legitimacy uses conditional probability P(phrase|context) with prior belief over verbatim vs. synthetic claims in public copy. GSI Mapping: Rooted in RESCUE-2026-09-26-6-trust-gate-and-host-blocker (b12ad19cf460c6c1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models trust gate state transitions via recursive file tree traversal, where each node enforces local ban rules with global consistency checks. GSE Mapping: Rooted in RESCUE-2026-09-26-6-trust-gate-and-host-blocker (b12ad19cf460c6c1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "lock_proper_noun_safe_context",
+      "name": "Lock Proper Noun Safe Context Exemption",
+      "verbatim_quote": "## The fix — three narrow exemptions, shaped like the two the rule already had - `LOCK_PROPER_NOUN_SAFE_CONTEXT` blanks `Drew Lock`, `D.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Drew_Lock': 'NFL player surname, dimensionless identifier', 'contextual_exempt': 'Boolean flag indicating safe context'}",
+      "assumptions": "Proper nouns in verbatim social digests are non-threatening unless in marketing contexts.",
+      "breakdown_regime": "When `Drew Lock` appears in `AGENTS.md` without marketing framing, it is exempted.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Exemption logic mirrors existing rule structure for consistency in ban enforcement.",
+        "source_operator": "lock_proper_noun_safe_context",
+        "telemetry": "Phrase hit count in AGENTS.md after rule application"
+      }
+    },
+    {
+      "primitive_id": "is_verbatim_social_digest_line",
+      "name": "Verbatim Social Digest Line Skip",
+      "verbatim_quote": "- `isVerbatimSocialDigestLine()` skips `banned.lock` on a line carrying both an `@handle` and an ISO date — **only in the root memory docs** (`SCAN_FILES`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'@handle': 'String identifier for user handle', 'ISO_date': 'Timestamp string in ISO format', 'banned_lock': 'Boolean flag for lock phrase presence'}",
+      "assumptions": "Lines with both `@handle` and `ISO_date` are inherently non-malicious.",
+      "breakdown_regime": "Only applies within root memory documents, excluding subdirectories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from core trust gate logic to avoid false positives in social posts.",
+        "source_operator": "is_verbatim_social_digest_line",
+        "telemetry": "Number of skipped lines in root docs during scan"
+      }
+    },
+    {
+      "primitive_id": "recursive_scan_constraint",
+      "name": "Recursive Scan Constraint Failure",
+      "verbatim_quote": "## Honest status - The full-tree scan **cannot be completed on the authoring host** — the guard's recursive async walk over `apps/web` dies silently (exit 0, no output).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'scan_depth': 'Integer representing directory depth', 'exit_code': 'Integer exit code of process', 'output_status': 'Boolean indicating successful output generation'}",
+      "assumptions": "Host environment limitations prevent full recursive scan execution.",
+      "breakdown_regime": "Silent failure occurs when scanning deeper directories like `apps/web`.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents system-level limitation affecting trust gate completeness.",
+        "source_operator": "recursive_scan_constraint",
+        "telemetry": "Exit code and output presence during full-tree scan attempt"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b12ad19cf460c6c1_t0",
+      "think": "The trust gate operates as a hierarchical filter over document trees, applying bans based on context-sensitive exemptions. The core issue arises from false positives in `AGENTS.md` due to NFL surnames like `Drew Lock`. The fix introduces two new exemptions: one for proper nouns in safe contexts and another for verbatim social digest lines. These map to a derived kernel of contextual logic that avoids blanket banning while preserving intent. The recursive scan constraint reveals a systemic limitation—host environments cannot execute full scans, leading to unverified compliance. This implies a dual-mode operation: local validation with known-safe exemptions, and remote CI for complete verification. The failure mode is silent recursion termination, which must be mitigated through explicit telemetry or alternative scan strategies.\n\nDeep epistemic analysis for RESCUE-2026-09-26-6-trust-gate-and-host-blocker (b12ad19cf460c6c1, domain=other, pages_read=2/2): Operator 'Lock Proper Noun Safe Context Exemption' (page 1, domain other) captures: ## The fix — three narrow exemptions, shaped like the two the rule already had - `LOCK_PROPER_NOUN_SAFE_CONTEXT` blanks `Drew Lock`, `D. Assumptions: Proper nouns in verbatim social digests are non-threatening unless in marketing contexts. Breakdown regime: When `Drew Lock` appears in `AGENTS.md` without marketing framing, it is exempted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Exemption logic mirrors existing rule structure for consistency in ban enforcement. Operator 'Verbatim Social Digest Line Skip' (page 1, domain other) captures: - `isVerbatimSocialDigestLine()` skips `banned.lock` on a line carrying both an `@handle` and an ISO date — **only in the root memory docs** (`SCAN_FILES`). Assumptions: Lines with both `@handle` and `ISO_date` are inherently non-malicious. Breakdown regime: Only applies within root memory documents, excluding subdirectories. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from core trust gate logic to avoid false positives in social posts. Operator 'Recursive Scan Constraint Failure' (page 1, domain other) captures: ## Honest status - The full-tree scan **cannot be completed on the authoring host** — the guard's recursive async walk over `apps/web` dies silently (exit 0, no output). Assumptions: Host environment limitations prevent full recursive scan execution. Breakdown regime: Silent failure occurs when scanning deeper directories like `apps/web`. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents system-level limitation affecting trust gate completeness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RESCUE-2026-09-26-6-trust-gate-and-host-blocker (b12ad19cf460c6c1, domain=other, pages_read=2/2): Operator 'Lock Proper Noun Safe Context Exemption' (page 1, domain other) captures: ## The fix — three narrow exemptions, shaped like the two the rule already had - `LOCK_PROPER_NOUN_SAFE_CONTEXT` blanks `Drew Lock`, `D. Assumptions: Proper nouns in verbatim social digests are non-threatening unless in marketing contexts. Breakdown regime: When `Drew Lock` appears in `AGENTS.md` without marketing framing, it is exempted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Exemption logic mirrors existing rule structure for consistency in ban enforcement. Operator 'Verbatim Social Digest Line Skip' (page 1, domain other) captures: - `isVerbatimSocialDigestLine()` skips `banned.lock` on a line carrying both an `@handle` and an ISO date — **only in the root memory docs** (`SCAN_FILES`). Assumptions: Lines with both `@handle` and `ISO_date` are inherently non-malicious. Breakdown regime: Only applies within root memory documents, excluding subdirectories. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from core trust gate logic to avoid false positives in social posts. Operator 'Recursive Scan Constraint Failure' (page 1, domain other) captures: ## Honest status - The full-tree scan **cannot be completed on the authoring host** — the guard's recursive async walk over `apps/web` dies silently (exit 0, no output). Assumptions: Host environment limitations prevent full recursive scan execution. Breakdown regime: Silent failure occurs when scanning deeper directories like `apps/web`. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents system-level limitation affecting trust gate completeness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s content moderation systems using regex-based phrase filtering, evolved into context-aware semantic guards with layered exemptions. Retrocausal Genealogy: Rooted in RESCUE-2026-09-26-6-trust-gate-and-host-blocker (b12ad19cf460c6c1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in RESCUE-2026-09-26-6-trust-gate-and-host-blocker (b12ad19cf460c6c1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the automated scanner enforcing bans and the human author who intends to preserve verbatim quotes. The system must balance security with usability, avoiding over-blocking while ensuring no malicious content slips through. Theory of Mind & Decision Maker Model: Rooted in RESCUE-2026-09-26-6-trust-gate-and-host-blocker (b12ad19cf460c6c1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that exemptions in one layer don't leak into another. For example, the social digest exemption only applies to root docs, preventing misuse in `packages/`. Leakage vetoes are enforced by explicit test assertions. Cross-Layer Veto & Anti-Leakage Check: Rooted in RESCUE-2026-09-26-6-trust-gate-and-host-blocker (b12ad19cf460c6c1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

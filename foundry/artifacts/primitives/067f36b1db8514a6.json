@@ -1,0 +1,95 @@
+{
+  "book_id": "067f36b1db8514a6",
+  "source_status": "COMPLETE",
+  "title": "buildable-systems",
+  "file_name": "buildable-systems.md",
+  "sha256": "067f36b1db8514a6e1fc6ad6ec8eafbb993cc4c389e33891bdb7723ed4056a73",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in buildable-systems (067f36b1db8514a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in buildable-systems (067f36b1db8514a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in buildable-systems (067f36b1db8514a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in buildable-systems (067f36b1db8514a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in buildable-systems (067f36b1db8514a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in buildable-systems (067f36b1db8514a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "trust_signal",
+      "name": "Trust Signal Aggregator",
+      "verbatim_quote": "# c06 Buildable Systems — trust-signals Video/Social Extraction Framework **Slice:** c06 · **Date:** 2026-10-02 · Full design: `working/buildable-systems.md` (this file is the consolidated build record).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Multiple independent information sources providing binary signals about an event.",
+      "breakdown_regime": "Overconfident aggregation of noisy individual signals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal calibration framework where each source provides a p-value.",
+        "source_operator": "trust_signal",
+        "telemetry": "Agreement HHI across weighted source directions"
+      }
+    },
+    {
+      "primitive_id": "story_clustering",
+      "name": "Semantic Story Clustering",
+      "verbatim_quote": "Story clustering + quote-hash merger `clustering.py`: sklearn TF-IDF + cosine near-dup, Jaccard on normalized quotes → `story_cluster_id`; one representative per cluster into the aggregator (LEAP dependency-clustering: removing it drove ECE 0.088→0.158).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Text documents sharing semantic meaning have similar term frequency-inverse document frequency representations.",
+      "breakdown_regime": "Loss of discriminative power when clusters contain diverse claims.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's temporal state-transition merging where similar event histories are collapsed.",
+        "source_operator": "story_clustering",
+        "telemetry": "Jaccard similarity of claim vectors within clusters"
+      }
+    },
+    {
+      "primitive_id": "merger",
+      "name": "Canonical Row Merger",
+      "verbatim_quote": "`merge.py`: `quote_hash = sha1(normalize(quote_text)+speaker_id+target_id)` — same quote via TEXT+VIDEO → one canonical row: keep earliest `signal_id`, union `merged_provenance`, max `extraction_confidence`, loser gets `dedup_of`.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Identical claims across different modalities can be uniquely identified by their content and participants.",
+      "breakdown_regime": "Loss of provenance when duplicate claims are incorrectly merged.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's data fusion layer where redundant evidence is consolidated.",
+        "source_operator": "merger",
+        "telemetry": "Proportion of records with non-null `dedup_of`"
+      }
+    },
+    {
+      "primitive_id": "agreement_hhi",
+      "name": "Weighted Directional Herfindahl-Hirschman Index",
+      "verbatim_quote": "**r19 enforcement:** agreement is τ-weighted direction HHI, **never source counts**; `CLEAR` requires ≥2 story clusters (one cluster, however many quote-posts, is one voice).",
+      "page": 2,
+      "latex": "$$H = \\frac{\\sum_i w_i^2 d_i^2}{\\left(\\sum_i w_i d_i\\right)^2}$$",
+      "symbol_and_unit_ledger": "{'w_i': 'Dimensionless weight assigned to source i', 'd_i': \"Binary direction (+1/0/-1) of source i's signal\", 'H': 'Dimensionless HHI score (0 < H ≤ 1)'}",
+      "assumptions": "Sources provide independent binary directional signals with known reliability weights.",
+      "breakdown_regime": "Zero variance when all sources agree perfectly, infinite variance when sources cancel exactly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's ensemble risk scoring where HHI penalizes over-reliance on single trajectory.",
+        "source_operator": "agreement_hhi",
+        "telemetry": "Time-series HHI distribution during NFL season"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "067f36b1db8514a6_t0",
+      "think": "The core challenge is fusing heterogeneous information streams (news text, social media posts, video metadata) while avoiding overfitting to any single modality. The Trust Signal Aggregator employs tempered Bayes to combine prior domain knowledge with likelihood ratios from each source, producing calibrated posterior probabilities. This approach mirrors GSI's conformal prediction framework, where individual p-values are aggregated using a proper scoring rule. The key innovation is enforcing semantic consistency through story clustering, which reduces the effective number of independent tests and stabilizes the posterior. However, this method fails catastrophically when sources are highly correlated (e.g., multiple tweets from the same journalist), leading to overconfident estimates. To mitigate this, the system uses an HHI-based agreement metric that downweights excessive consensus, preventing the posterior from collapsing onto a single narrative. Empirically, this prevents the model from being 'tricked' by coordinated disinformation campaigns that saturate all modalities simultaneously.\n\nDeep epistemic analysis for buildable-systems (067f36b1db8514a6, domain=other, pages_read=4/4): Operator 'Trust Signal Aggregator' (page 1, domain other) captures: # c06 Buildable Systems — trust-signals Video/Social Extraction Framework **Slice:** c06 · **Date:** 2026-10-02 · Full design: `working/buildable-systems.md` (this file is the consolidated build record). Assumptions: Multiple independent information sources providing binary signals about an event. Breakdown regime: Overconfident aggregation of noisy individual signals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal calibration framework where each source provides a p-value. Operator 'Semantic Story Clustering' (page 2, domain other) captures: Story clustering + quote-hash merger `clustering.py`: sklearn TF-IDF + cosine near-dup, Jaccard on normalized quotes → `story_cluster_id`; one representative per cluster into the aggregator (LEAP dependency-clustering: removing it drove ECE 0.088→0.158). Assumptions: Text documents sharing semantic meaning have similar term frequency-inverse document frequency representations. Breakdown regime: Loss of discriminative power when clusters contain diverse claims. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's temporal state-transition merging where similar event histories are collapsed. Operator 'Canonical Row Merger' (page 2, domain other) captures: `merge.py`: `quote_hash = sha1(normalize(quote_text)+speaker_id+target_id)` — same quote via TEXT+VIDEO → one canonical row: keep earliest `signal_id`, union `merged_provenance`, max `extraction_confidence`, loser gets `dedup_of`. Assumptions: Identical claims across different modalities can be uniquely identified by their content and participants. Breakdown regime: Loss of provenance when duplicate claims are incorrectly merged. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's data fusion layer where redundant evidence is consolidated. Operator 'Weighted Directional Herfindahl-Hirschman Index' (page 2, domain other) captures: **r19 enforcement:** agreement is τ-weighted direction HHI, **never source counts**; `CLEAR` requires ≥2 story clusters (one cluster, however many quote-posts, is one voice). Assumptions: Sources provide independent binary directional signals with known reliability weights. Breakdown regime: Zero variance when all sources agree perfectly, infinite variance when sources cancel exactly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's ensemble risk scoring where HHI penalizes over-reliance on single trajectory. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for buildable-systems (067f36b1db8514a6, domain=other, pages_read=4/4): Operator 'Trust Signal Aggregator' (page 1, domain other) captures: # c06 Buildable Systems — trust-signals Video/Social Extraction Framework **Slice:** c06 · **Date:** 2026-10-02 · Full design: `working/buildable-systems.md` (this file is the consolidated build record). Assumptions: Multiple independent information sources providing binary signals about an event. Breakdown regime: Overconfident aggregation of noisy individual signals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal calibration framework where each source provides a p-value. Operator 'Semantic Story Clustering' (page 2, domain other) captures: Story clustering + quote-hash merger `clustering.py`: sklearn TF-IDF + cosine near-dup, Jaccard on normalized quotes → `story_cluster_id`; one representative per cluster into the aggregator (LEAP dependency-clustering: removing it drove ECE 0.088→0.158). Assumptions: Text documents sharing semantic meaning have similar term frequency-inverse document frequency representations. Breakdown regime: Loss of discriminative power when clusters contain diverse claims. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's temporal state-transition merging where similar event histories are collapsed. Operator 'Canonical Row Merger' (page 2, domain other) captures: `merge.py`: `quote_hash = sha1(normalize(quote_text)+speaker_id+target_id)` — same quote via TEXT+VIDEO → one canonical row: keep earliest `signal_id`, union `merged_provenance`, max `extraction_confidence`, loser gets `dedup_of`. Assumptions: Identical claims across different modalities can be uniquely identified by their content and participants. Breakdown regime: Loss of provenance when duplicate claims are incorrectly merged. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's data fusion layer where redundant evidence is consolidated. Operator 'Weighted Directional Herfindahl-Hirschman Index' (page 2, domain other) captures: **r19 enforcement:** agreement is τ-weighted direction HHI, **never source counts**; `CLEAR` requires ≥2 story clusters (one cluster, however many quote-posts, is one voice). Assumptions: Sources provide independent binary directional signals with known reliability weights. Breakdown regime: Zero variance when all sources agree perfectly, infinite variance when sources cancel exactly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's ensemble risk scoring where HHI penalizes over-reliance on single trajectory. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in buildable-systems (067f36b1db8514a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in buildable-systems (067f36b1db8514a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing actors may attempt to game the system by creating synthetic multimodal content designed to appear as novel information. They could also manipulate the citation graph to bias story clustering toward preferred narratives. The model assumes these actors lack access to the internal weightings and clustering thresholds, making it robust against targeted attacks on specific components. Theory of Mind & Decision Maker Model: Rooted in buildable-systems (067f36b1db8514a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent leakage between layers, the extractor framework strictly separates concerns: CV handles spatial data, text processors handle linguistic structure, and the merger operates on abstract claim graphs. Cross-layer dependencies would create feedback loops that amplify noise. For example, if clustering used CV-derived features, the system would become vulnerable to adversarial perturbations in the visual domain. Cross-Layer Veto & Anti-Leakage Check: Rooted in buildable-systems (067f36b1db8514a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

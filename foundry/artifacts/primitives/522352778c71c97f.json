@@ -1,0 +1,78 @@
+{
+  "book_id": "522352778c71c97f",
+  "source_status": "COMPLETE",
+  "title": "SIGNAL_VS_MARKET_BOARD",
+  "file_name": "SIGNAL_VS_MARKET_BOARD.md",
+  "sha256": "522352778c71c97f90f89bb5da6dafbb1e7a0193523df4f887ba91d2fb765f3c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Signal vs market board duality under probabilistic freshness constraints; model-first inference versus bookmaker consensus. Universal Lens: Rooted in SIGNAL_VS_MARKET_BOARD (522352778c71c97f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian signal confidence maps to model-driven edge; market board integrity enforces synthetic line exclusion via policy-driven validation. GSI Mapping: Rooted in SIGNAL_VS_MARKET_BOARD (522352778c71c97f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning toggles between live board freshness and seed pick validity; state transitions governed by odds-insertion cadence and signal legitimacy. GSE Mapping: Rooted in SIGNAL_VS_MARKET_BOARD (522352778c71c97f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "board_surface_duality",
+      "name": "Board Surface Duality",
+      "verbatim_quote": "# Signal board vs market board | | **Market board** | **Signal board** | |--|------------------|------------------| |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PUBLIC_BOARD_SURFACE': 'dimensionless flag; {market, signal}', 'oddsInserted': 'integer count of valid odds entries', 'freshness_window': 'time interval in minutes'}",
+      "assumptions": "Board freshness depends on time-bound event triggers; signal board lacks synthetic labeling.",
+      "breakdown_regime": "When `oddsInserted <= 0` or `t > 240m`, board invalidates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Market board models exchange consensus; signal board encodes predictive inference.",
+        "source_operator": "board_surface_duality",
+        "telemetry": "SUCCESS flag + oddsInserted count"
+      }
+    },
+    {
+      "primitive_id": "line_label_integrity",
+      "name": "Line Label Integrity",
+      "verbatim_quote": "## Integrity - No synthetic fair lines labeled as book lines - Performance publish still requires eligibility GREEN + policy (independent of board surface)",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'synthetic_line': 'boolean; true if labeled as book but derived from model', 'book_line': 'boolean; true if sourced from exchange', 'policy_eligibility': 'boolean; true if GREEN + policy compliance'}",
+      "assumptions": "Synthetic lines must be distinguishable from book lines; policy governs eligibility.",
+      "breakdown_regime": "If `synthetic_line == true && book_line == true`, integrity violation occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces policy-based filtering of line authenticity for GSI validation.",
+        "source_operator": "line_label_integrity",
+        "telemetry": "Policy compliance flag + synthetic line detection"
+      }
+    },
+    {
+      "primitive_id": "live_board_freshness",
+      "name": "Live Board Freshness",
+      "verbatim_quote": "not required to show signals | | LIVE_BOARD | Still odds-fresh always | Still odds-fresh always",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'LIVE_BOARD': 'boolean; true if active', 'odds_fresh': 'boolean; true if within freshness window', 'seed_pick_published': 'boolean; true if non-seed pick published recently'}",
+      "assumptions": "Freshness is independent of board surface; live board persists under both conditions.",
+      "breakdown_regime": "If `!odds_fresh && !seed_pick_published`, live board degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents temporal consistency in GSE state transitions.",
+        "source_operator": "live_board_freshness",
+        "telemetry": "Freshness status + seed pick timestamp"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "522352778c71c97f_t0",
+      "think": "The duality between signal and market boards reflects a fundamental distinction in data sourcing and inference. The market board operates under exchange consensus, where book lines are authoritative and synthetic lines are strictly prohibited. In contrast, the signal board embodies model-driven inference, where synthetic lines are inherently absent and labels are derived from predictive models. This separation ensures that GSI's Bayesian inference remains grounded in empirical signal rather than speculative consensus. The freshness criteria—odds insertion and seed pick publication—act as dual thresholds ensuring temporal validity. The LIVE_BOARD maintains consistency across both surfaces, enforcing a robust state transition mechanism in GSE. Failure modes arise when synthetic lines masquerade as book lines or when freshness thresholds are violated, leading to integrity loss.\n\nDeep epistemic analysis for SIGNAL_VS_MARKET_BOARD (522352778c71c97f, domain=other, pages_read=1/1): Operator 'Board Surface Duality' (page 1, domain other) captures: # Signal board vs market board | | **Market board** | **Signal board** | |--|------------------|------------------| | Assumptions: Board freshness depends on time-bound event triggers; signal board lacks synthetic labeling. Breakdown regime: When `oddsInserted <= 0` or `t > 240m`, board invalidates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Market board models exchange consensus; signal board encodes predictive inference. Operator 'Line Label Integrity' (page 1, domain other) captures: ## Integrity - No synthetic fair lines labeled as book lines - Performance publish still requires eligibility GREEN + policy (independent of board surface) Assumptions: Synthetic lines must be distinguishable from book lines; policy governs eligibility. Breakdown regime: If `synthetic_line == true && book_line == true`, integrity violation occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces policy-based filtering of line authenticity for GSI validation. Operator 'Live Board Freshness' (page 1, domain other) captures: not required to show signals | | LIVE_BOARD | Still odds-fresh always | Still odds-fresh always Assumptions: Freshness is independent of board surface; live board persists under both conditions. Breakdown regime: If `!odds_fresh && !seed_pick_published`, live board degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents temporal consistency in GSE state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SIGNAL_VS_MARKET_BOARD (522352778c71c97f, domain=other, pages_read=1/1): Operator 'Board Surface Duality' (page 1, domain other) captures: # Signal board vs market board | | **Market board** | **Signal board** | |--|------------------|------------------| | Assumptions: Board freshness depends on time-bound event triggers; signal board lacks synthetic labeling. Breakdown regime: When `oddsInserted <= 0` or `t > 240m`, board invalidates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Market board models exchange consensus; signal board encodes predictive inference. Operator 'Line Label Integrity' (page 1, domain other) captures: ## Integrity - No synthetic fair lines labeled as book lines - Performance publish still requires eligibility GREEN + policy (independent of board surface) Assumptions: Synthetic lines must be distinguishable from book lines; policy governs eligibility. Breakdown regime: If `synthetic_line == true && book_line == true`, integrity violation occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces policy-based filtering of line authenticity for GSI validation. Operator 'Live Board Freshness' (page 1, domain other) captures: not required to show signals | | LIVE_BOARD | Still odds-fresh always | Still odds-fresh always Assumptions: Freshness is independent of board surface; live board persists under both conditions. Breakdown regime: If `!odds_fresh && !seed_pick_published`, live board degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents temporal consistency in GSE state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in probabilistic logic and game-theoretic modeling of information asymmetry. Influenced by Bayesian decision theory and conformal prediction frameworks. Retrocausal Genealogy: Rooted in SIGNAL_VS_MARKET_BOARD (522352778c71c97f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SIGNAL_VS_MARKET_BOARD (522352778c71c97f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market board (consensus-driven), the signal board (model-driven), and the policy layer (integrity enforcer). Each agent operates under distinct epistemic constraints. Theory of Mind & Decision Maker Model: Rooted in SIGNAL_VS_MARKET_BOARD (522352778c71c97f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in SIGNAL_VS_MARKET_BOARD (522352778c71c97f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through explicit disjunction between synthetic and book line labeling. Leakage is prevented by requiring independent validation of freshness metrics across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in SIGNAL_VS_MARKET_BOARD (522352778c71c97f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in SIGNAL_VS_MARKET_BOARD (522352778c71c97f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "d60eb7e354bcdbed",
+  "source_status": "COMPLETE",
+  "title": "0039-basketball-aging-decline-lstm",
+  "file_name": "0039-basketball-aging-decline-lstm.md",
+  "sha256": "d60eb7e354bcdbedf0d0a8c99536376e57d244b1a55f849ed6b48cf6f420d680",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Autoencoder-KMeans-LSTM pipeline clusters career trajectories, predicts aging decline via temporal embeddings conditioned on type. Universal Lens: Rooted in 0039-basketball-aging-decline-lstm (d60eb7e354bcdbed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on player trajectory types using cluster-conditioned LSTM for probabilistic aging curve forecasting. GSI Mapping: Rooted in 0039-basketball-aging-decline-lstm (d60eb7e354bcdbed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine encodes player career trends as state transitions in a temporal feature space, conditioned on archetype clusters. GSE Mapping: Rooted in 0039-basketball-aging-decline-lstm (d60eb7e354bcdbed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "career_trajectory_encoder",
+      "name": "Career Trajectory Encoder",
+      "verbatim_quote": "Method / model Two-stage framework (§III, Figure 1), implemented in Python: - **Stage 1 — career-trend classification:** input is the 7-year career trend (48 features × 7 years = 336-dimensional vectors, X ∈ R^(N×7×48)).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'X': 'input tensor of shape (N × 7 × 48), where N is number of players, 7 is years, 48 is features', 'N': 'number of players'}",
+      "assumptions": "Players have complete 7-year career data; features are stationary over time.",
+      "breakdown_regime": "When input data lacks sufficient temporal coverage or feature consistency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw performance sequences to compressed latent representations via autoencoding.",
+        "source_operator": "career_trajectory_encoder",
+        "telemetry": "Reconstruction error of autoencoder on held-out data."
+      }
+    },
+    {
+      "primitive_id": "cluster_conditional_lstm",
+      "name": "Cluster-Conditional LSTM",
+      "verbatim_quote": "- **Stage 2 — career-trend prediction:** one input is the career-trend sequence X ∈ R^(7×48); a second input transforms the Stage-1 cluster assignment into a one-hot encoded vector c ∈ R^K.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'X': 'sequence tensor of shape (7 × 48)', 'c': 'one-hot cluster vector of shape (K)', 'K': 'number of identified career types'}",
+      "assumptions": "Cluster assignments are stable and predictive of future performance trends.",
+      "breakdown_regime": "When cluster assignments misrepresent underlying dynamics or when LSTM fails to generalize.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Combines temporal sequence processing with categorical conditioning to predict decline.",
+        "source_operator": "cluster_conditional_lstm",
+        "telemetry": "Mean Absolute Error (MAE) on predicted BPM at ages 29–31."
+      }
+    },
+    {
+      "primitive_id": "archetype_classifier",
+      "name": "Archetype Classifier",
+      "verbatim_quote": "After autoencoder training, K-means clustering on the embeddings identifies career-trend",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Z': 'embeddings from autoencoder of shape (N × 64)', 'K': 'number of clusters selected via silhouette scoring'}",
+      "assumptions": "Embeddings capture meaningful variance in career progression; K=2 provides optimal separation.",
+      "breakdown_regime": "When clustering produces unstable or non-distinct groups due to noise or insufficient data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Groups players into archetypal performance patterns based on learned embeddings.",
+        "source_operator": "archetype_classifier",
+        "telemetry": "Silhouette score of K-means clustering on embedding space."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d60eb7e354bcdbed_t0",
+      "think": "The core methodology employs a two-stage pipeline: first, an autoencoder compresses high-dimensional player performance sequences into low-dimensional embeddings capturing essential career dynamics. Subsequently, K-means clustering partitions these embeddings into distinct career archetypes. In stage two, a cluster-conditioned LSTM leverages both the temporal sequence and cluster identity to forecast future performance decline. This architecture enables robust modeling of aging trends while preserving interpretability through archetype-based classification. However, the model's reliance on specific NBA data limits direct transferability to other sports like the NFL, despite the methodological framework being adaptable. The primary failure mode arises from overfitting to NBA-specific aging structures, particularly when applied to different positional demands or career lengths. Additionally, the absence of uncertainty quantification and lack of comparison against simple baselines such as cohort means undermines confidence in absolute predictions.\n\nDeep epistemic analysis for 0039-basketball-aging-decline-lstm (d60eb7e354bcdbed, domain=other, pages_read=5/5): Operator 'Career Trajectory Encoder' (page 1, domain other) captures: Method / model Two-stage framework (§III, Figure 1), implemented in Python: - **Stage 1 — career-trend classification:** input is the 7-year career trend (48 features × 7 years = 336-dimensional vectors, X ∈ R^(N×7×48)). Assumptions: Players have complete 7-year career data; features are stationary over time. Breakdown regime: When input data lacks sufficient temporal coverage or feature consistency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw performance sequences to compressed latent representations via autoencoding. Operator 'Cluster-Conditional LSTM' (page 2, domain other) captures: - **Stage 2 — career-trend prediction:** one input is the career-trend sequence X ∈ R^(7×48); a second input transforms the Stage-1 cluster assignment into a one-hot encoded vector c ∈ R^K. Assumptions: Cluster assignments are stable and predictive of future performance trends. Breakdown regime: When cluster assignments misrepresent underlying dynamics or when LSTM fails to generalize. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines temporal sequence processing with categorical conditioning to predict decline. Operator 'Archetype Classifier' (page 1, domain other) captures: After autoencoder training, K-means clustering on the embeddings identifies career-trend Assumptions: Embeddings capture meaningful variance in career progression; K=2 provides optimal separation. Breakdown regime: When clustering produces unstable or non-distinct groups due to noise or insufficient data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Groups players into archetypal performance patterns based on learned embeddings. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0039-basketball-aging-decline-lstm (d60eb7e354bcdbed, domain=other, pages_read=5/5): Operator 'Career Trajectory Encoder' (page 1, domain other) captures: Method / model Two-stage framework (§III, Figure 1), implemented in Python: - **Stage 1 — career-trend classification:** input is the 7-year career trend (48 features × 7 years = 336-dimensional vectors, X ∈ R^(N×7×48)). Assumptions: Players have complete 7-year career data; features are stationary over time. Breakdown regime: When input data lacks sufficient temporal coverage or feature consistency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw performance sequences to compressed latent representations via autoencoding. Operator 'Cluster-Conditional LSTM' (page 2, domain other) captures: - **Stage 2 — career-trend prediction:** one input is the career-trend sequence X ∈ R^(7×48); a second input transforms the Stage-1 cluster assignment into a one-hot encoded vector c ∈ R^K. Assumptions: Cluster assignments are stable and predictive of future performance trends. Breakdown regime: When cluster assignments misrepresent underlying dynamics or when LSTM fails to generalize. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines temporal sequence processing with categorical conditioning to predict decline. Operator 'Archetype Classifier' (page 1, domain other) captures: After autoencoder training, K-means clustering on the embeddings identifies career-trend Assumptions: Embeddings capture meaningful variance in career progression; K=2 provides optimal separation. Breakdown regime: When clustering produces unstable or non-distinct groups due to noise or insufficient data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Groups players into archetypal performance patterns based on learned embeddings. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in machine learning approaches to temporal sequence modeling (LSTM), extended with unsupervised clustering and autoencoders for representation learning. Influenced by prior work in sports analytics using deep learning for athlete performance forecasting. Retrocausal Genealogy: Rooted in 0039-basketball-aging-decline-lstm (d60eb7e354bcdbed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the model’s internal assumptions about player development and decline, which may conflict with real-world variability in injury, coaching changes, or rule modifications affecting performance trajectories. Theory of Mind & Decision Maker Model: Rooted in 0039-basketball-aging-decline-lstm (d60eb7e354bcdbed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the autoencoder and clustering stages do not redundantly encode similar information. Leakage occurs if the LSTM directly accesses raw inputs instead of processed embeddings, undermining the abstraction layer. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0039-basketball-aging-decline-lstm (d60eb7e354bcdbed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

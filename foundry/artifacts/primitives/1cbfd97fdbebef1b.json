@@ -1,0 +1,78 @@
+{
+  "book_id": "1cbfd97fdbebef1b",
+  "source_status": "COMPLETE",
+  "title": "CONTENT_AFFILIATE_OS",
+  "file_name": "CONTENT_AFFILIATE_OS.md",
+  "sha256": "1cbfd97fdbebef1b5c1fed6cc98556f9dc5f47b17c1673ab852ae4031f146028",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Content affiliate os as a structured decision lattice with risk-scored partner states and conditional offer approval flows. Universal Lens: Rooted in CONTENT_AFFILIATE_OS (1cbfd97fdbebef1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over partner fitness and offer compliance using probabilistic risk scoring and regulatory constraint checks. GSI Mapping: Rooted in CONTENT_AFFILIATE_OS (1cbfd97fdbebef1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions through partner vetting, offer review, and disclosure validation in a deterministic yet stochastic policy space. GSE Mapping: Rooted in CONTENT_AFFILIATE_OS (1cbfd97fdbebef1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "partner_fit_scoring",
+      "name": "Partner Fit Scoring",
+      "verbatim_quote": "Flow 1. Score partner fit. 2. Review partner risk. 3. Approve partner. 4. Review offer separately.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'partner fitness score (dimensionless)', 'R': 'risk exposure level (dimensionless)'}",
+      "assumptions": "Fitness and risk are scalar metrics derived from behavioral and regulatory alignment.",
+      "breakdown_regime": "When F < threshold or R > threshold, partner rejection occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A composite kernel of regulatory and behavioral metrics used to compute a scalar fitness value for partner onboarding.",
+        "source_operator": "partner_fit_scoring",
+        "telemetry": "Partner approval rate and post-onboarding compliance metrics."
+      }
+    },
+    {
+      "primitive_id": "offer_compliance_verification",
+      "name": "Offer Compliance Verification",
+      "verbatim_quote": "- local sponsor mentions ## Not Allowed Without Review - sportsbook/DFS offer placement - deposit, contest,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'compliance status (binary: 0 or 1)', 'L': 'regulatory language flag (binary: 0 or 1)'}",
+      "assumptions": "All offers must pass a binary compliance check before surface approval.",
+      "breakdown_regime": "If C=0 or L=1, offer rejection occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a constraint satisfaction problem where each prohibited element defines a forbidden subspace in the offer design manifold.",
+        "source_operator": "offer_compliance_verification",
+        "telemetry": "Number of rejected offers per time window and flagged content count."
+      }
+    },
+    {
+      "primitive_id": "disclosure_validation",
+      "name": "Disclosure Validation",
+      "verbatim_quote": "Flow 1. Score partner fit. 2. Review partner risk. 3. Approve partner. 4. Review offer separately.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'disclosure completeness (dimensionless)', 'G': 'responsible gaming policy adherence (binary: 0 or 1)'}",
+      "assumptions": "Disclosures must be complete and policies enforced for high-risk partners.",
+      "breakdown_regime": "If D < threshold or G = 0, surface approval blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of transparency and ethical policy enforcement that determines final surface approval eligibility.",
+        "source_operator": "disclosure_validation",
+        "telemetry": "Percentage of compliant disclosures and policy violation incidents."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1cbfd97fdbebef1b_t0",
+      "think": "The Content Affiliate OS operates as a hybrid logical-state automaton governed by a sequence of deterministic steps with probabilistic risk thresholds. The core operators—partner fit scoring, offer compliance verification, and disclosure validation—are modeled as Boolean-valued functions over a multi-dimensional parameter space defined by regulatory, behavioral, and contextual constraints. Each step introduces a failure mode: partner rejection due to low fitness or high risk, offer rejection due to non-compliance, or surface approval denial due to insufficient disclosure. These operators form a directed acyclic graph of conditional dependencies, where the absence of any single node blocks downstream progression. The system's epistemic structure reflects a dual logic: one of formal compliance (verifiable via static checks), and another of dynamic risk assessment (evaluated through behavioral proxies). The failure modes are not merely logical but also semantic, involving misalignment between intended and actual content delivery. This duality implies a need for both Bayesian inference over partner behavior and conformal prediction over offer outcomes.\n\nDeep epistemic analysis for CONTENT_AFFILIATE_OS (1cbfd97fdbebef1b, domain=other, pages_read=1/1): Operator 'Partner Fit Scoring' (page 1, domain other) captures: Flow 1. Score partner fit. 2. Review partner risk. 3. Approve partner. 4. Review offer separately. Assumptions: Fitness and risk are scalar metrics derived from behavioral and regulatory alignment. Breakdown regime: When F < threshold or R > threshold, partner rejection occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): A composite kernel of regulatory and behavioral metrics used to compute a scalar fitness value for partner onboarding. Operator 'Offer Compliance Verification' (page 1, domain other) captures: - local sponsor mentions ## Not Allowed Without Review - sportsbook/DFS offer placement - deposit, contest, Assumptions: All offers must pass a binary compliance check before surface approval. Breakdown regime: If C=0 or L=1, offer rejection occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a constraint satisfaction problem where each prohibited element defines a forbidden subspace in the offer design manifold. Operator 'Disclosure Validation' (page 1, domain other) captures: Flow 1. Score partner fit. 2. Review partner risk. 3. Approve partner. 4. Review offer separately. Assumptions: Disclosures must be complete and policies enforced for high-risk partners. Breakdown regime: If D < threshold or G = 0, surface approval blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of transparency and ethical policy enforcement that determines final surface approval eligibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CONTENT_AFFILIATE_OS (1cbfd97fdbebef1b, domain=other, pages_read=1/1): Operator 'Partner Fit Scoring' (page 1, domain other) captures: Flow 1. Score partner fit. 2. Review partner risk. 3. Approve partner. 4. Review offer separately. Assumptions: Fitness and risk are scalar metrics derived from behavioral and regulatory alignment. Breakdown regime: When F < threshold or R > threshold, partner rejection occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): A composite kernel of regulatory and behavioral metrics used to compute a scalar fitness value for partner onboarding. Operator 'Offer Compliance Verification' (page 1, domain other) captures: - local sponsor mentions ## Not Allowed Without Review - sportsbook/DFS offer placement - deposit, contest, Assumptions: All offers must pass a binary compliance check before surface approval. Breakdown regime: If C=0 or L=1, offer rejection occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a constraint satisfaction problem where each prohibited element defines a forbidden subspace in the offer design manifold. Operator 'Disclosure Validation' (page 1, domain other) captures: Flow 1. Score partner fit. 2. Review partner risk. 3. Approve partner. 4. Review offer separately. Assumptions: Disclosures must be complete and policies enforced for high-risk partners. Breakdown regime: If D < threshold or G = 0, surface approval blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of transparency and ethical policy enforcement that determines final surface approval eligibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal systems theory and regulatory compliance frameworks, this structure mirrors earlier models of controlled information ecosystems such as those found in digital publishing and financial services. It inherits principles from decision theory and constraint satisfaction problems. Retrocausal Genealogy: Rooted in CONTENT_AFFILIATE_OS (1cbfd97fdbebef1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include content creators who may seek to bypass restrictions and regulators enforcing compliance. The system models these as adversarial inputs within a bounded rationality framework, where the agent's utility function includes both reward maximization and risk minimization. Theory of Mind & Decision Maker Model: Rooted in CONTENT_AFFILIATE_OS (1cbfd97fdbebef1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by enforcing orthogonal checks across partner behavior, offer content, and disclosure practices. Leakage is mitigated by requiring manual publication, preventing automated propagation of non-compliant material. Cross-Layer Veto & Anti-Leakage Check: Rooted in CONTENT_AFFILIATE_OS (1cbfd97fdbebef1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CONTENT_AFFILIATE_OS (1cbfd97fdbebef1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

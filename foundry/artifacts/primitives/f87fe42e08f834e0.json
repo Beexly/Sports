@@ -1,0 +1,78 @@
+{
+  "book_id": "f87fe42e08f834e0",
+  "source_status": "COMPLETE",
+  "title": "0371-can-geometry-save-central-views-for",
+  "file_name": "0371-can-geometry-save-central-views-for.md",
+  "sha256": "f87fe42e08f834e03e26df881fff6cd1746ff50faba23b3833a5c9139b931e0f",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Pole-polar duality underpins geometric correspondence derivation from ellipse/circle detections, enabling robust field registration via vanishing point and tangent line constructions. Universal Lens: Rooted in 0371-can-geometry-save-central-views-for (f87fe42e08f834e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration of field geometry using pole-polar correspondences enables conformal uncertainty quantification for real-time broadcast frame alignment. GSI Mapping: Rooted in 0371-can-geometry-save-central-views-for (f87fe42e08f834e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE leverages derived point correspondences to infer camera pose and field state transitions for dynamic game visualization. GSE Mapping: Rooted in 0371-can-geometry-save-central-views-for (f87fe42e08f834e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "vanishing_point_construction",
+      "name": "Vanishing Point Construction",
+      "verbatim_quote": "- **Case 1 (circle + line correspondence):** vanishing line l_vanishing = E c (Eq.",
+      "page": 1,
+      "latex": "\\mathbf{v} = \\mathbf{l}_1 \\times \\mathbf{l}_{\\text{vanishing}}, \\quad \\mathbf{l}_2 = \\mathbf{v} \\times \\mathbf{c}, \\quad \\mathbf{l}_3 = \\mathbf{E}\\mathbf{v}",
+      "symbol_and_unit_ledger": "{'l_1': 'detected line in image space (dimensionless)', 'l_vanishing': 'vanishing line (dimensionless)', 'v': 'vanishing point (dimensionless)', 'c': 'center of ellipse/circle (dimensionless)', 'l_2': 'parallel through center (dimensionless)', 'l_3': 'polar line (dimensionless)', 'E': 'fundamental matrix (dimensionless)'}",
+      "assumptions": "Ellipse is centered at c, lines are detected accurately, and projective geometry holds.",
+      "breakdown_regime": "When center c is not detectable or when only partial circle is visible.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI for probabilistic field alignment; in GSE for pose estimation during game state transition.",
+        "source_operator": "vanishing_point_construction",
+        "telemetry": "Reprojection error of derived points"
+      }
+    },
+    {
+      "primitive_id": "pole_polar_derivation",
+      "name": "Pole-Polar Derivation",
+      "verbatim_quote": "pondence):** line through point and center l_1 = x × c (Eq.",
+      "page": 2,
+      "latex": "\\mathbf{l}_1 = \\mathbf{x} \\times \\mathbf{c}, \\quad \\mathbf{v} = \\mathbf{E}\\mathbf{l}_1, \\quad \\mathbf{l}_2 = \\mathbf{v} \\times \\mathbf{c}",
+      "symbol_and_unit_ledger": "{'x': 'detected point on circle (dimensionless)', 'c': 'center of ellipse/circle (dimensionless)', 'l_1': 'line through x and c (dimensionless)', 'v': 'pole point (dimensionless)', 'E': 'fundamental matrix (dimensionless)', 'l_2': 'tangent line (dimensionless)'}",
+      "assumptions": "Point x lies on the circle, and E is known or estimable.",
+      "breakdown_regime": "When circle is not fully visible or center is unknown.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applied in GSI for keypoint annotation consistency; in GSE for generating synthetic training data.",
+        "source_operator": "pole_polar_derivation",
+        "telemetry": "Tangent line angle deviation from expected orientation"
+      }
+    },
+    {
+      "primitive_id": "concentric_circle_recovery",
+      "name": "Concentric Circle Recovery",
+      "verbatim_quote": "- Total: 8 point correspondences (plus 8 tangent lines) from a single circle + one line.",
+      "page": 2,
+      "latex": "\\mathbf{c} \\in \\text{eig}(\\mathbf{E}_2^{-1} \\mathbf{E}_1), \\quad \\mathbf{l}_{\\text{vanishing}} = \\mathbf{E}_1 \\mathbf{c} = \\lambda \\mathbf{E}_2 \\mathbf{c}",
+      "symbol_and_unit_ledger": "{'C_1, C_2': 'concentric circles (dimensionless)', 'E_1, E_2': 'fundamental matrices (dimensionless)', 'c': 'center vector (dimensionless)', 'λ': 'scalar multiplier (dimensionless)', 'l_vanishing': 'vanishing line (dimensionless)'}",
+      "assumptions": "Two concentric circles are present with known thickness, and E_1, E_2 are estimable.",
+      "breakdown_regime": "When no concentric structure exists or when circle thickness is below detection threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's multi-scale field segmentation; in GSE, supports ambiguity resolution in camera pose estimation.",
+        "source_operator": "concentric_circle_recovery",
+        "telemetry": "Eigenvalue spread of center estimate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f87fe42e08f834e0_t0",
+      "think": "The core insight is that geometric constructions based on pole-polar duality allow derivation of point correspondences from a single detected circle and one line. This is achieved by leveraging projective geometry: given a circle and a line, we compute the vanishing point of parallel lines, construct a polar line through the center, and derive intersections that yield 8 point correspondences. These are used for both calibration and keypoint annotation. The method fails when the circle is incomplete or the center is undetectable, which mirrors real-world challenges in NFL broadcast frames. The construction is robust in-domain but sensitive to out-of-domain conditions such as different stadium layouts or viewpoint changes. The geometric approach avoids reliance on learned detectors for keypoint placement, solving a chicken-and-egg problem in field registration.\n\nDeep epistemic analysis for 0371-can-geometry-save-central-views-for (f87fe42e08f834e0, domain=other, pages_read=4/4): Operator 'Vanishing Point Construction' (page 1, domain other) captures: - **Case 1 (circle + line correspondence):** vanishing line l_vanishing = E c (Eq. Assumptions: Ellipse is centered at c, lines are detected accurately, and projective geometry holds. Breakdown regime: When center c is not detectable or when only partial circle is visible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI for probabilistic field alignment; in GSE for pose estimation during game state transition. Operator 'Pole-Polar Derivation' (page 2, domain other) captures: pondence):** line through point and center l_1 = x × c (Eq. Assumptions: Point x lies on the circle, and E is known or estimable. Breakdown regime: When circle is not fully visible or center is unknown. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applied in GSI for keypoint annotation consistency; in GSE for generating synthetic training data. Operator 'Concentric Circle Recovery' (page 2, domain other) captures: - Total: 8 point correspondences (plus 8 tangent lines) from a single circle + one line. Assumptions: Two concentric circles are present with known thickness, and E_1, E_2 are estimable. Breakdown regime: When no concentric structure exists or when circle thickness is below detection threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-scale field segmentation; in GSE, supports ambiguity resolution in camera pose estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0371-can-geometry-save-central-views-for (f87fe42e08f834e0, domain=other, pages_read=4/4): Operator 'Vanishing Point Construction' (page 1, domain other) captures: - **Case 1 (circle + line correspondence):** vanishing line l_vanishing = E c (Eq. Assumptions: Ellipse is centered at c, lines are detected accurately, and projective geometry holds. Breakdown regime: When center c is not detectable or when only partial circle is visible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI for probabilistic field alignment; in GSE for pose estimation during game state transition. Operator 'Pole-Polar Derivation' (page 2, domain other) captures: pondence):** line through point and center l_1 = x × c (Eq. Assumptions: Point x lies on the circle, and E is known or estimable. Breakdown regime: When circle is not fully visible or center is unknown. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applied in GSI for keypoint annotation consistency; in GSE for generating synthetic training data. Operator 'Concentric Circle Recovery' (page 2, domain other) captures: - Total: 8 point correspondences (plus 8 tangent lines) from a single circle + one line. Assumptions: Two concentric circles are present with known thickness, and E_1, E_2 are estimable. Breakdown regime: When no concentric structure exists or when circle thickness is below detection threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-scale field segmentation; in GSE, supports ambiguity resolution in camera pose estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical projective geometry (Cayley-Klein), extended by modern computer vision techniques like fundamental matrix estimation and ellipse fitting. Influenced by earlier work in camera calibration and geometric constraints in sports field layout. Retrocausal Genealogy: Rooted in 0371-can-geometry-save-central-views-for (f87fe42e08f834e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the learned detector (which may fail in OOD scenarios) and the geometric method (which provides deterministic but limited correspondences). Decision actors are the GSI system (choosing between learned vs. geometric features) and the GSE engine (using these features for scene understanding). Theory of Mind & Decision Maker Model: Rooted in 0371-can-geometry-save-central-views-for (f87fe42e08f834e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct lines and points to form valid correspondences. Leakage occurs when geometric constraints are misapplied to non-projective scenes or when the circle is too small or distorted. Veto conditions include insufficient line visibility, lack of center detection, and absence of concentric structures. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0371-can-geometry-save-central-views-for (f87fe42e08f834e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

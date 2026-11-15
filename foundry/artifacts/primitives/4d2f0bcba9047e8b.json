@@ -1,0 +1,231 @@
+{
+  "book_id": "4d2f0bcba9047e8b",
+  "source_status": "COMPLETE",
+  "title": "0843-automatically-learning-construction-injury-precursors",
+  "file_name": "0843-automatically-learning-construction-injury-precursors.md",
+  "sha256": "4d2f0bcba9047e8b531fd787fae0f5a37b906ce1f60506d3729acf57d6886939",
+  "primary_domain": "cs",
+  "pages_total": 3,
+  "pages_read": 3,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 3,
+  "windows_extracted": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The structural unification rests on mapping heterogeneous textual manifolds to a shared predictive latent space. By treating narrative incident reports as high-dimensional point clouds, the extraction of precursors becomes an optimization over attention weights and receptive-field norms, revealing the geometric loci where environmental conditions deterministically precede catastrophic state transitions. The mapping of unstructured linguistic manifolds to discrete injury-state topologies constitutes a non-linear projection operator. By extracting receptive-field norms, we isolate the latent geometric precursors of physical attrition, establishing a rigorous isomorphism between textual embeddings and biomechanical failure probabilities.",
+  "gsi_mapping": "In GSI, we treat raw injury narratives as stochastic processes. Bayesian inference is applied to CNN gradient saliency scores, constructing conformal prediction sets for specific injury types. This allows us to quantify the epistemic uncertainty surrounding extracted precursor phrases, ensuring robust probabilistic calibration when forecasting athlete vulnerability from sparse practice logs. We construct a hierarchical Bayesian network where observed practice-participation text serves as noisy emissions from hidden physiological states. Conformal prediction intervals are applied to the posterior distributions of Sunday inactives, ensuring strictly calibrated uncertainty bounds over the extracted phrase-space features.",
+  "gse_mapping": "GSE situational reasoning maps these text-derived precursors directly onto state-transition matrices. A phrase like 'improper footing' acts as a forcing function in the Markovian evolution of a play. The model dynamically updates the probability of transitioning from a 'healthy' state to an 'injured' state based on the real-time accumulation of these linguistic risk factors. The engine models roster availability as a continuous-time Markov chain. Extracted linguistic markers act as transition-rate modulators, dynamically adjusting the probability flux between 'active', 'limited', and 'out' states based on real-time NLP telemetry from daily reports.",
+  "primitives": [
+    {
+      "primitive_id": "w0_cnn_predictive_regions",
+      "name": "CNN Predictive Region Extraction",
+      "verbatim_quote": "*Predictive regions (CNN):* inspect receptive-field embeddings just before pooling; select regions with highest-norm embeddings per report; aggregate over the training set → top n-grams per outcome level (e.g., \"trip hazard\" 78,240 mentions for access; \"not wearing\" 36,603 for rules).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Embeddings: dimensionless vector space R^d; Norms: L2 magnitude (dimensionless); n-grams: discrete linguistic tokens.",
+      "assumptions": "Assumes that the L2 norm of pre-pooling feature vectors correlates monotonically with the semantic importance of the corresponding text span for the downstream classification task.",
+      "breakdown_regime": "Breaks down when word embeddings are uniformly scaled or when global max-pooling saturates across multiple unrelated spans, causing false-positive precursor identification.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to identifying high-gradient zones in GSE's biomechanical stress tensors. Just as CNN receptive fields highlight critical text spans, biomechanical sensors highlight joints under maximum torque prior to failure.",
+        "source_operator": "w0_cnn_predictive_regions",
+        "telemetry": "Frequency count of specific n-grams aggregated across the entire training corpus for a given injury class."
+      }
+    },
+    {
+      "primitive_id": "w0_gradient_saliency",
+      "name": "Gradient Saliency Mapping",
+      "verbatim_quote": "*Word saliency (CNN):* saliency(a) = |∂CNN/∂a| at a| — one backward pass on the prediction (not the loss); ranks words by how little they'd need to change to flip the class score.",
+      "page": 1,
+      "latex": "S(a) = \\left| \\frac{\\partial f_{CNN}(A)}{\\partial a} \\right|",
+      "symbol_and_unit_ledger": "S(a): Saliency score (dimensionless); a: Input embedding vector (dimensionless); f_CNN: Neural network forward pass function; A: Document matrix.",
+      "assumptions": "Assumes local linearity of the neural network around the input data point, meaning small perturbations in the embedding space yield proportional changes in the output logits.",
+      "breakdown_regime": "Fails in highly saturated activation regimes (e.g., deep inside ReLU dead zones or softmax plateaus) where gradients vanish, rendering the saliency metric zero despite high semantic relevance.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSI's sensitivity analysis of player tracking data. It identifies the exact kinematic variables (e.g., knee valgus angle) whose marginal perturbation maximally increases the predicted probability of an ACL tear.",
+        "source_operator": "w0_gradient_saliency",
+        "telemetry": "Mean absolute gradient magnitude per token, normalized across the batch."
+      }
+    },
+    {
+      "primitive_id": "w0_han_attention",
+      "name": "Hierarchical Attention Network Weights",
+      "verbatim_quote": "- **HAN:** word-level and sentence-level bidirectional GRU encoders with self-attention at both levels; softmax.",
+      "page": 1,
+      "latex": "\\alpha_{ij} = \\frac{\\exp(h_i^T W h_j)}{\\sum_k \\exp(h_i^T W h_k)}",
+      "symbol_and_unit_ledger": "\\alpha_{ij}: Attention weight (dimensionless, sum to 1); h_i, h_j: Hidden state vectors from GRU (dimensionless); W: Learned projection matrix.",
+      "assumptions": "Assumes that the contextual dependency between words and sentences can be fully captured by a weighted sum of hidden states, where weights are derived from dot-product similarity.",
+      "breakdown_regime": "Degenerates into uniform attention distributions when the learned projection matrix W collapses to zero or when input sequences lack distinct syntactic structures.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's tactical awareness modules. Word-level attention mirrors micro-interactions (player-to-player collisions), while sentence-level attention mirrors macro-strategic shifts (formation changes) leading to systemic breakdowns.",
+        "source_operator": "w0_han_attention",
+        "telemetry": "Entropy of the attention distribution across sentence-level hidden states."
+      }
+    },
+    {
+      "primitive_id": "w0_outcome_schema",
+      "name": "Multi-Label Outcome Schema",
+      "verbatim_quote": "2,875), injury_type (contusion 4,048 / cut-puncture 3,737 / FOB 2,073 / pain 1,587), bodypart (finger 4,421 / hand 3,161 / eye 2,392 / lower extr.",
+      "page": 1,
+      "latex": "Y \\in \\mathcal{C}_{type} \\times \\mathcal{C}_{body} \\times \\mathcal{C}_{incident}",
+      "symbol_and_unit_ledger": "Y: Multi-dimensional categorical outcome vector; \\mathcal{C}: Discrete finite sets of injury classifications.",
+      "assumptions": "Assumes that injury outcomes can be cleanly decomposed into orthogonal categorical dimensions (type, body part, incident) without significant hierarchical overlap or ambiguity.",
+      "breakdown_regime": "Breaks down when injuries are compound or systemic (e.g., whiplash affecting neck and spine simultaneously), forcing arbitrary assignments that violate the orthogonality assumption.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Forms the foundational target space for GSI's multi-task learning heads. It dictates how we structure the joint probability distribution P(Injury | Context), ensuring that predictions for severity and anatomical location are coherently aligned.",
+        "source_operator": "w0_outcome_schema",
+        "telemetry": "Class imbalance ratios and mutual information between injury type and body part categories."
+      }
+    },
+    {
+      "primitive_id": "4d2f0bcba9047e8b_w1_g1",
+      "name": "0843-automatically-learning-construction-i Ch.2 Grounded Operator",
+      "verbatim_quote": "ntion weights (HAN):* word- and sentence-level attention directly highlight predictive fragments.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4d2f0bcba9047e8b_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4d2f0bcba9047e8b_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "4d2f0bcba9047e8b_w1_g2",
+      "name": "0843-automatically-learning-construction-i Ch.2 Grounded Operator",
+      "verbatim_quote": "- Predictive-region selection: argmax over receptive-field embedding norms (described procedurally, not as a numbered equation).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4d2f0bcba9047e8b_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4d2f0bcba9047e8b_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "4d2f0bcba9047e8b_w1_g3",
+      "name": "0843-automatically-learning-construction-i Ch.2 Grounded Operator",
+      "verbatim_quote": "- Assumptions: 1-max pooling's position-invariance (\"congested workspace\" matters wherever it appears); attention weights are faithful explanations; the training distribution's predictive fragments generalize as *precursors* (causal) rather than mere correlates.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4d2f0bcba9047e8b_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4d2f0bcba9047e8b_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "textual_precursor_extraction",
+      "name": "Receptive-Field Norm Extraction",
+      "verbatim_quote": "ld an NFL injury-report NLP pipeline: ingest official practice/injury reports + beat-writer text; train classifiers for (will-play / limited / out) and for performance-impact; extract predictive phrases via the paper's three methods (attention, saliency, receptive-field norms).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "Attention weights (dimensionless), Saliency gradients (dimensionless), Receptive-field norms (L2 norm, dimensionless)",
+      "assumptions": "Textual embeddings contain non-trivial signal regarding future physical states independent of explicit designations.",
+      "breakdown_regime": "Highly templated or boilerplate language where attention mechanisms saturate without isolating specific semantic precursors.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps NLP attention heads directly to GSE biomechanical stress tensors.",
+        "source_operator": "textual_precursor_extraction",
+        "telemetry": "F1 score improvement over baseline designation rules."
+      }
+    },
+    {
+      "primitive_id": "vocabulary_structuring",
+      "name": "Injury-Feature Vocabulary Mapping",
+      "verbatim_quote": "- Map mined phrases to a structured injury-feature vocabulary for the engine (body part, severity language, practice participation).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "Vocabulary categories (categorical variables), Phrase frequency counts (dimensionless)",
+      "assumptions": "Semantic clusters can be cleanly partitioned into mutually exclusive biomechanical and administrative categories.",
+      "breakdown_regime": "Ambiguous natural language lacking clear anatomical or severity qualifiers.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Transforms raw string space into a sparse feature vector for GSI state estimation.",
+        "source_operator": "vocabulary_structuring",
+        "telemetry": "Precision/Recall of automated vocabulary tagging."
+      }
+    },
+    {
+      "primitive_id": "baseline_calibration",
+      "name": "Designation-Only Baseline Metric",
+      "verbatim_quote": "Metric: F1 on inactive prediction; baseline = designation-only rules (Q→ out-rate).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "F1 score (dimensionless), Out-rate probability (dimensionless)",
+      "assumptions": "Historical designation-to-inactive conversion rates remain stationary across the evaluation window.",
+      "breakdown_regime": "Structural shifts in league-wide reporting policies altering baseline out-rates.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Establishes the null-hypothesis manifold against which all NLP-derived alpha is measured.",
+        "source_operator": "baseline_calibration",
+        "telemetry": "Baseline F1 score on hold-out test sets."
+      }
+    },
+    {
+      "primitive_id": "leakage_veto",
+      "name": "Information Leakage Verification",
+      "verbatim_quote": "Pass if text features beat the designation-only baseline by ≥3pp F1 — and separately verify mined phrases aren't just restating the designation (the paper's leakage lesson).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "Delta F1 (percentage points, dimensionless)",
+      "assumptions": "True predictive power must exist orthogonal to the explicitly stated practice status.",
+      "breakdown_regime": "When reporters explicitly copy-paste the official designation into their narrative text.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as a strict anti-collinearity filter within the GSI inference engine.",
+        "source_operator": "leakage_veto",
+        "telemetry": "Mutual information between mined phrases and explicit designations."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4d2f0bcba9047e8b_t0",
+      "think": "The fundamental mathematical doctrine underlying this chapter window is the extraction of causal precursors from high-dimensional, noisy observational data via post-hoc interpretability methods. We begin with the premise that safety incidents are not purely stochastic but are preceded by observable environmental and behavioral conditions encoded within unstructured text. The core operator here is the mapping \\Phi: \\mathcal{T} \\rightarrow \\mathcal{P}, where \\mathcal{T} represents the manifold of incident reports and \\mathcal{P} denotes the space of predictive precursors. The authors employ three distinct kernels to approximate this mapping: CNN receptive-field norms, gradient-based saliency, and hierarchical attention weights. Mathematically, these methods seek to identify the subspaces of the input embedding matrix A \\in \\mathbb{R}^{s \\times d} that exert maximal influence on the output logits. The CNN approach relies on the intuition that high-norm feature activations preceding global max-pooling correspond to semantically dense regions. Conversely, the saliency method utilizes the Jacobian of the network output with respect to the input embeddings, effectively performing a local linearization to rank token importance. The HAN architecture introduces a hierarchical prior, modeling dependencies at both word and sentence levels through bidirectional GRUs and softmax-normalized attention mechanisms. A critical doctrinal insight is the warning regarding leakage: narratives often explicitly contain the outcome, creating a spurious correlation where the model learns to predict the label from its own mention rather than true precursors. This necessitates a rigorous separation of signal and noise, framing precursor extraction not merely as feature selection, but as a constrained optimization problem aimed at isolating temporally antecedent conditions. In the context of Galaxy Sports Engine, this translates to mining practice reports for subtle linguistic markers—like 'hesitation' or 'fatigue'—that precede physical breakdown, thereby transforming qualitative observations into quantitative state-transition probabilities.\n\nFull-book synthesis across 3/3 pages of 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b): [w0_cnn_predictive_regions p.1]: *Predictive regions (CNN):* inspect receptive-field embeddings just before pooling; select regions with highest-norm embeddings per report; aggregate over the training set → top n-grams per outcome level (e.g., \"trip hazard\" 78,240 mentions for access; \"not wearing\" 36,603 for rules). (Isomorphic to identifying high-gradient zones in GSE's biomechanical stress tensors. Just as CNN receptive fields highlight critical text spans, biomechanical sensors highlight joints under maximum torque prior to failure.) [w0_gradient_saliency p.1]: *Word saliency (CNN):* saliency(a) = |∂CNN/∂a| at a| — one backward pass on the prediction (not the loss); ranks words by how little they'd need to change to flip the class score. (Maps directly to GSI's sensitivity analysis of player tracking data. It identifies the exact kinematic variables (e.g., knee valgus angle) whose marginal perturbation maximally increases the predicted probability of an ACL tear.) [w0_han_attention p.1]: - **HAN:** word-level and sentence-level bidirectional GRU encoders with self-attention at both levels; softmax. (Isomorphic to GSE's tactical awareness modules. Word-level attention mirrors micro-interactions (player-to-player collisions), while sentence-level attention mirrors macro-strategic shifts (formation changes) leading to systemic breakdowns.) [w0_outcome_schema p.1]: 2,875), injury_type (contusion 4,048 / cut-puncture 3,737 / FOB 2,073 / pain 1,587), bodypart (finger 4,421 / hand 3,161 / eye 2,392 / lower extr. (Forms the foundational target space for GSI's multi-task learning heads. It dictates how we structure the joint probability distribution P(Injury | Context), ensuring that predictions for severity and anatomical location are coherently aligned.) [4d2f0bcba9047e8b_w1_g1 p.2]: ntion weights (HAN):* word- and sentence-level attention directly highlight predictive fragments. (Binds verbatim proposition 4d2f0bcba9047e8b_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.) [4d2f0bcba9047e8b_w1_g2 p.2]: - Predictive-region selection: argmax over receptive-field embedding norms (described procedurally, not as a numbered equation). (Binds verbatim proposition 4d2f0bcba9047e8b_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.) [4d2f0bcba9047e8b_w1_g3 p.2]: - Assumptions: 1-max pooling's position-invariance (\"congested workspace\" matters wherever it appears); attention weights are faithful explanations; the training distribution's predictive fragments generalize as *precursors* (causal) rather than mere correlates. (Binds verbatim proposition 4d2f0bcba9047e8b_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.) [textual_precursor_extraction p.3]: ld an NFL injury-report NLP pipeline: ingest official practice/injury reports + beat-writer text; train classifiers for (will-play / limited / out) and for performance-impact; extract predictive phrases via the paper's three methods (attention, saliency, receptive-field norms). (Maps NLP attention heads directly to GSE biomechanical stress tensors.) [vocabulary_structuring p.3]: - Map mined phrases to a structured injury-feature vocabulary for the engine (body part, severity language, practice participation). (Transforms raw string space into a sparse feature vector for GSI state estimation.) [baseline_calibration p.3]: Metric: F1 on inactive prediction; baseline = designation-only rules (Q→ out-rate). (Establishes the null-hypothesis manifold against which all NLP-derived alpha is measured.) [leakage_veto p.3]: Pass if text features beat the designation-only baseline by ≥3pp F1 — and separately verify mined phrases aren't just restating the designation (the paper's leakage lesson). (Acts as a strict anti-collinearity filter within the GSI inference engine.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "This methodology inherits deeply from the lineage of explainable AI (XAI) and natural language processing. Historically, it traces back to the development of convolutional networks for text classification (Convolutional Neural Networks for Sentence Classification, Kim 2014) and the introduction of attention mechanisms (Neural Machine Translation by Jointly Learning to Align and Translate, Bahdanau et al. 2014). The specific application to safety engineering connects with earlier rule-based expert systems that manually coded hazard indicators. However, the shift to automatically learning these precursors as a by-product of supervised classification marks a paradigm shift from symbolic logic to subspace geometry, allowing the model to discover non-obvious, high-order interactions within massive corpora of incident reports without explicit human annotation of precursors.",
+      "theory_of_mind": "Modeling the opposing agents in this domain requires understanding the cognitive biases of the report authors. Construction workers and safety officers write incident reports under varying degrees of stress, liability concern, and fatigue. Their narratives are not objective ground truths but filtered perceptions. The 'theory of mind' component involves recognizing that certain phrases might be used defensively to obscure negligence, while others might be hyperbolic to emphasize victimhood. The model must therefore learn to look past the surface-level rhetoric to identify the underlying physical realities. For instance, a report might heavily emphasize 'slippery floor' (environmental) to downplay 'running in restricted area' (behavioral). The precursor extraction algorithms act as a counter-intelligence tool, piercing through these strategic narratives to isolate the true predictive features that drive injury outcomes, much like a defensive coordinator reading the offensive play-caller's tendencies.",
+      "cross_layer_veto": "A critical anti-collinearity and leakage veto condition arises from the temporal entanglement of cause and effect in retrospective reports. Since reports are written after the incident, the description of the injury often bleeds into the description of the cause. If the model simply attends to the phrase 'broken finger' to predict 'hand injury', it has learned a tautology, not a precursor. The cross-layer veto mechanism must actively suppress attention weights assigned to tokens that appear only in the aftermath description. This requires a strict temporal segmentation of the text or a negative constraint during the saliency calculation that penalizes gradients flowing from outcome-specific vocabulary. Without this veto, the GSE analogue would fail catastrophically, mistaking the diagnosis of a concussion in a post-game report as a predictor of the concussion itself, rather than identifying the actual helmet impact dynamics described earlier in the narrative."
+    },
+    {
+      "trace_id": "4d2f0bcba9047e8b_t1",
+      "think": "Window 2 Synthesis: Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 0843-automatically-learning-construction-injury-precursors (4d2f0bcba9047e8b, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4d2f0bcba9047e8b_t3",
+      "think": "The fundamental mathematical challenge presented in this chapter window is the isolation of true causal precursors from spurious correlations within high-dimensional textual data. We conceptualize the injury report as a stochastic process $X_t$ generating linguistic tokens. The objective is to identify a sub-manifold of these tokens that possesses non-zero mutual information with the future binary state $Y_{t+k}$ (Sunday inactive), conditional on the known intermediate state $Z_t$ (Wednesday/Friday designation). Standard NLP pipelines often fail because they maximize likelihood over the entire token space, inadvertently learning the trivial mapping $Z_t \\rightarrow Y_{t+k}$. To overcome this, we employ receptive-field norms and saliency maps not merely as interpretability tools, but as rigorous feature-selection operators. By projecting the attention weights onto a structured vocabulary—specifically separating 'practice-participation language' from 'body-part mentions'—we effectively decompose the input space into orthogonal subspaces. The hypothesis posits that the practice-participation subspace contains genuine prospective signal, whereas the body-part subspace is heavily contaminated by retrospective leakage. The validation protocol, requiring a minimum 3 percentage point F1 improvement over a designation-only baseline, acts as a statistical significance test for this orthogonality. This approach transforms qualitative sports journalism into a quantifiable tensor field, enabling the Galaxy Sports Engine to dynamically adjust player availability priors based on subtle linguistic cues rather than blunt categorical updates.",
+      "retrocausal_genealogy": "This methodology traces its lineage to early econometric attempts at parsing Federal Reserve minutes for market-moving signals, later adapted in quantitative finance for earnings call sentiment analysis. In sports analytics, it represents a paradigm shift from purely biomechanical tracking (like Next Gen Stats) to incorporating the epistemic layer of human observation. It builds upon foundational work in causal inference, specifically Pearl's do-calculus, by attempting to block backdoor paths created by explicit injury designations. The evolution from simple keyword counting to attention-based saliency reflects the broader machine learning transition from hand-crafted features to learned representations, yet retains a strict focus on interpretability required for high-stakes roster decisions.",
+      "theory_of_mind": "Modeling the opposing agents—team physicians, head coaches, and beat writers—requires understanding their strategic incentives. Physicians and coaches engage in strategic obfuscation, deliberately using vague terminology ('veteran rest', 'limited') to conceal true player availability from competitors. Beat writers, conversely, attempt to decode this obfuscation, often relying on historical context or insider leaks. Our NLP pipeline must therefore model this adversarial dynamic. When a writer uses specific severity language despite an official 'full participant' tag, it signals a breakdown in the team's coordinated narrative. By capturing these discrepancies, we infer the hidden beliefs of the coaching staff, effectively reverse-engineering their private information set regarding player health and impending inactives.",
+      "cross_layer_veto": "The most critical veto condition in this framework is the detection of data leakage, specifically when mined phrases are merely restatements of the official designation. If the attention mechanism focuses predominantly on the words 'questionable' or 'out' within the text, the model achieves high accuracy by memorizing the label rather than learning predictive precursors. This creates a false sense of security and collapses the prospective validation experiment. To enforce the cross-layer veto, we implement a strict mutual information threshold between the extracted phrase vectors and the explicit designation labels. Any feature cluster exhibiting near-perfect collinearity with the designation is immediately purged from the training set. Furthermore, we mandate temporal separation: phrases mined from Wednesday reports must predict Sunday outcomes without access to Friday updates, ensuring the model relies solely on early-stage linguistic cues and preventing look-ahead bias."
+    }
+  ]
+}

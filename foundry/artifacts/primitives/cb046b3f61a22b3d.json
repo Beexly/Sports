@@ -1,0 +1,941 @@
+{
+ "book_id": "cb046b3f61a22b3d",
+ "source_status": "COMPLETE",
+ "source_note": "Francis Bach, Learning Theory from First Principles, MIT Press, Cambridge, MA, 2024. The local file is the author's manuscript of the same work: its front matter carries a manuscript date of May 26, 2025 and a copyright notice licensed exclusively to the Massachusetts Institute of Technology, and its printed pagination runs through page 472 (References). Local PDF: Bach-2024-LearningTheoryFromFirstPrinciples.pdf, 12,490,444 bytes, in bucket books-must-have; a byte-identical second copy sits in books-d-models. Gatekeeper scan digest, sha256 of str(size) followed by the full file bytes, is cb046b3f61a22b3d35d5a72b2855eafa5cba552d621af18e96d761a07fabd2a7, giving book_id cb046b3f61a22b3d; the plain sha256 of the file bytes alone is 5e7840c545d24aaf21a1ea5fbddd76e78153de0a9a952f56810a8618a9fc9e06. Text quality: clean born-digital extraction (24,054 lines) with the usual formula-layout scrambling inside displayed equations and occasional ligature glyphs; all verbatim quotes were taken from prose passages and machine-verified as contiguous substrings of the extracted text after the verifier's normalization. No catalog correction is needed: author, title, year, and publisher match the work as published. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "hoeffding_inequality",
+   "name": "Hoeffding's inequality: the empirical mean of independent [0,1] variables deviates from its expectation by t with probability at most exp(-2nt^2)",
+   "verbatim_quote": "If Z1 , . . . , Zn are independent random variables such that Zi ∈ [0, 1] almost surely, then, for any t ⩾ 0,",
+   "page": "Chapter 1, Section 1.2.1, Proposition 1.2 (text line ~930)",
+   "latex": "P\\left(\\frac{1}{n}\\sum_{i=1}^{n} Z_i - \\frac{1}{n}\\sum_{i=1}^{n} \\mathbb{E}[Z_i] \\ge t\\right) \\le \\exp(-2nt^2)",
+   "symbol_and_unit_ledger": {
+    "Z_i": "independent random variables, each in [0,1] almost surely (dimensionless)",
+    "n": "number of observations (count)",
+    "t": "deviation threshold, t >= 0 (same units as Z_i)",
+    "exp(-2nt^2)": "upper bound on the one-sided deviation probability"
+   },
+   "assumptions": [
+    "Z_1,...,Z_n are independent",
+    "Each Z_i lies in [0,1] almost surely",
+    "No assumption on the distribution beyond boundedness"
+   ],
+   "breakdown_regime": "The bound uses only the range of the variables, not their variance, so it is loose when the variance is much smaller than the range; for heavy-tailed or unbounded variables it does not apply at all.",
+   "domain": "concentration inequalities",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any engine signal that is an average of bounded per-observation scores inherits this exact deviation budget: with n independent observations, the sampling noise of the average is on the order of 1/sqrt(n) at fixed confidence. The engine uses it to size the noise floor under every empirical rate it computes, so a difference between two candidate predictors is only treated as real when it exceeds the Hoeffding scale for the available n.",
+    "source_operator": "hoeffding_inequality",
+    "telemetry": "Per-signal observation counts n and running empirical means with their ranges, logged per prediction family."
+   }
+  },
+  {
+   "primitive_id": "mcdiarmid_inequality",
+   "name": "McDiarmid's bounded-differences inequality: a function of independent variables concentrates around its mean when changing one variable changes the value by at most c",
+   "verbatim_quote": "Given n independent random variables, it may be useful to concentrate other quantities than their average. What is needed is that the function of these random variables has \"bounded variation.\"",
+   "page": "Chapter 1, Section 1.2.2, Proposition 1.3 (text line ~1112)",
+   "latex": "P\\left(f(Z_1,\\ldots,Z_n) - \\mathbb{E}[f] \\ge t\\right) \\le 2\\exp\\left(-\\frac{2t^2}{nc^2}\\right)",
+   "symbol_and_unit_ledger": {
+    "f": "real-valued function of n independent variables with bounded differences",
+    "c": "bounded-difference constant: changing one coordinate changes f by at most c",
+    "n": "number of independent variables (count)",
+    "t": "deviation threshold (units of f)"
+   },
+   "assumptions": [
+    "Z_1,...,Z_n are independent (in any measurable spaces)",
+    "Bounded differences: replacing one coordinate changes f by at most c"
+   ],
+   "breakdown_regime": "Requires a uniform bound c on the influence of a single observation; one high-leverage observation with unbounded influence voids the bound, and dependence between observations breaks the martingale argument behind the proof.",
+   "domain": "concentration inequalities",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Whole-pipeline statistics, not just averages, get a concentration budget: a validation score, a calibration error, or an aggregate feature computed from n independent events concentrates as long as no single event can move it by more than c. The engine uses this to certify that a measured effect is not one observation in disguise, by tracking the largest single-observation influence on each aggregate it reports.",
+    "source_operator": "mcdiarmid_inequality",
+    "telemetry": "Leave-one-out influence of each observation on headline metrics, plus the observation count behind each metric."
+   }
+  },
+  {
+   "primitive_id": "bernstein_inequality",
+   "name": "Bernstein's inequality: variance-aware concentration, with a Gaussian term driven by the variance and a tail term driven by the uniform bound c",
+   "verbatim_quote": "Bernstein's inequality allows the use of variance to get a finer nonasymptotic result.",
+   "page": "Chapter 1, Section 1.2.3, Proposition 1.4 (text line ~1183)",
+   "latex": "P\\left(\\frac{1}{n}\\sum_{i=1}^{n} Z_i \\ge t\\right) \\le 2\\exp\\left(-\\frac{nt^2}{2\\sigma^2 + 2ct/3}\\right)",
+   "symbol_and_unit_ledger": {
+    "Z_i": "independent zero-mean random variables with |Z_i| <= c almost surely",
+    "sigma^2": "average variance, (1/n) sum var(Z_i)",
+    "c": "uniform bound on |Z_i|",
+    "n": "number of observations (count)",
+    "t": "deviation threshold (units of Z_i)"
+   },
+   "assumptions": [
+    "Z_1,...,Z_n are independent with zero mean",
+    "Uniform bound |Z_i| <= c almost surely",
+    "Finite variances with average sigma^2"
+   ],
+   "breakdown_regime": "It degrades to the Hoeffding scale when the variance is as large as the squared range, and the 2ct/3 term dominates for large t, so far-tail deviations are controlled only exponentially, not at the Gaussian rate.",
+   "domain": "concentration inequalities",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Where Hoeffding prices noise from the range alone, Bernstein prices it from the actual variance, which is the common case for engine signals whose outcomes are usually quiet and occasionally extreme. The reasoning layer uses the variance term to tighten confidence when a signal has been stable, and the bound term to keep the tail honest when a single observation can be extreme.",
+    "source_operator": "hoeffding_inequality",
+    "telemetry": "Running variance and running maximum absolute value for each averaged signal."
+   }
+  },
+  {
+   "primitive_id": "expected_maximum_subgaussian",
+   "name": "Expectation of the maximum: the expected maximum of n sub-Gaussian variables is at most tau sqrt(2 log n), with no independence assumption",
+   "verbatim_quote": "This logarithmic factor appears many times in this textbook and can often be traced to the expectation of a maximum and to the Gaussian decay of tail bounds.",
+   "page": "Chapter 1, Section 1.2.4, Proposition 1.5 (text line ~1310)",
+   "latex": "\\mathbb{E}\\max\\{Z_1,\\ldots,Z_n\\} \\le \\tau\\sqrt{2\\log n}",
+   "symbol_and_unit_ledger": {
+    "Z_i": "zero-mean sub-Gaussian random variables, possibly dependent",
+    "tau^2": "sub-Gaussian constant (variance proxy, squared units of Z_i)",
+    "n": "number of variables being maximized over (count)",
+    "log n": "natural logarithm; the price of searching over n candidates"
+   },
+   "assumptions": [
+    "Each Z_i is zero-mean and sub-Gaussian with constant tau^2",
+    "No independence assumption is needed"
+   ],
+   "breakdown_regime": "The bound is on the expectation, not a high-probability statement, and it is sharp only up to constants; if the variables are heavy-tailed rather than sub-Gaussian, the maximum grows much faster than sqrt(log n).",
+   "domain": "concentration / multiple comparisons",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the multiple-comparisons tax the engine must charge itself: scanning n candidate signals, matchups, or model variants and reporting the best one inflates its apparent quality by about tau sqrt(2 log n) even when nothing is real. Selection steps inside the engine carry this penalty explicitly, so the winner of a large search is discounted by the size of the search that produced it.",
+    "source_operator": "expected_maximum_subgaussian",
+    "telemetry": "Candidate counts for every selection step (features tried, variants compared, thresholds scanned), stored next to the selected value."
+   }
+  },
+  {
+   "primitive_id": "matrix_bernstein_bound",
+   "name": "Matrix Bernstein bound (Tropp 2012): the largest eigenvalue of an average of independent zero-mean symmetric random matrices concentrates with a dimension prefactor d",
+   "verbatim_quote": "Proposition 1.7 (Matrix Bernstein bound (Tropp, 2012, theorem 1.4)) Given n independent symmetric matrices Mi ∈ Rd×d",
+   "page": "Chapter 1, Section 1.2.5, Proposition 1.7 (text line ~1479)",
+   "latex": "P\\left(\\lambda_{\\max}\\left(\\frac{1}{n}\\sum_{i=1}^{n} M_i\\right) \\ge t\\right) \\le d\\cdot\\exp\\left(-\\frac{nt^2/2}{\\sigma^2 + ct/3}\\right)",
+   "symbol_and_unit_ledger": {
+    "M_i": "independent symmetric d by d random matrices with E[M_i] = 0",
+    "lambda_max": "largest eigenvalue of a symmetric matrix",
+    "c": "almost sure bound lambda_max(M_i) <= c",
+    "sigma^2": "matrix variance parameter, lambda_max of (1/n) sum E[M_i^2]",
+    "d": "matrix dimension (count)",
+    "n": "number of matrices averaged (count)",
+    "t": "deviation threshold (eigenvalue units)"
+   },
+   "assumptions": [
+    "M_i are independent and symmetric",
+    "E[M_i] = 0 and lambda_max(M_i) <= c almost surely for all i"
+   ],
+   "breakdown_regime": "The prefactor d makes the bound weak in very high dimension unless the effective rank is small, and it needs bounded eigenvalues, so heavy-tailed matrix observations fall outside it.",
+   "domain": "matrix concentration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Covariance and second-moment estimates are matrix averages, and this bound prices their spectral error: an estimated covariance between signal families is trustworthy in operator norm once n clears the level set by sigma^2, c, and the dimension. It gates when a whitening or decorrelation step in the engine is allowed to run on an estimated covariance rather than on a shrunk one.",
+    "source_operator": "bernstein_inequality",
+    "telemetry": "Empirical covariance spectra (top eigenvalues) and sample counts for each feature block."
+   }
+  },
+  {
+   "primitive_id": "bayes_predictor",
+   "name": "Bayes predictor: the expected risk is minimized pointwise, by choosing at each input x the action that minimizes the conditional expected loss",
+   "verbatim_quote": "Proposition 2.1 (Bayes predictor and Bayes risk) The expected risk is minimized at a Bayes predictor f∗ : X → Y, satisfying for all x′ ∈ X,",
+   "page": "Chapter 2, Section 2.2.2, Proposition 2.1 (text line ~1896)",
+   "latex": "f^*(x') \\in \\arg\\min_{z \\in Y} \\mathbb{E}\\left[\\ell(y, z) \\mid x = x'\\right]",
+   "symbol_and_unit_ledger": {
+    "f^*": "Bayes predictor, the pointwise optimal prediction function",
+    "ell(y, z)": "loss of predicting z when the outcome is y",
+    "x'": "a test input point",
+    "E[. | x = x']": "conditional expectation under the true data distribution",
+    "R^*": "Bayes risk, the risk of the Bayes predictor"
+   },
+   "assumptions": [
+    "The test distribution p(x, y) is fixed and the predictor is unconstrained",
+    "The conditional expected loss has a minimizer for each x'"
+   ],
+   "breakdown_regime": "The Bayes predictor is defined relative to the true distribution p, which is never known, and with a restricted function class the pointwise decoupling fails, so the formula becomes a target to approximate rather than a computable object.",
+   "domain": "decision theory foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine output is an approximation to a pointwise decision: given the full context of one event, choose the prediction that minimizes expected loss under the engine's best conditional model of the outcome. The Bayes form separates the work into estimating the conditional distribution well and then decoding the decision, which is exactly the engine's split between its probability layer and its selection layer.",
+    "source_operator": "bayes_predictor",
+    "telemetry": "Conditional outcome distributions per event context, and the loss table used at decode time."
+   }
+  },
+  {
+   "primitive_id": "no_free_lunch",
+   "name": "No free lunch (Proposition 2.2): for any algorithm and any fixed n, some distribution makes its excess risk at least 1/2, the chance level",
+   "verbatim_quote": "Proposition 2.2 shows that for any algorithm, for a fixed n, there is a data distribution that makes the algorithm useless (with a risk that is the same as the chance level).",
+   "page": "Chapter 2, Section 2.5, Proposition 2.2 (text line ~2341)",
+   "latex": "\\sup_{p \\in \\mathcal{P}} \\mathbb{E}\\left[R_p\\left(A(D_n(p))\\right) - R_p^*\\right] \\ge \\frac{1}{2}",
+   "symbol_and_unit_ledger": {
+    "A": "any learning algorithm",
+    "D_n(p)": "training sample of size n drawn from distribution p",
+    "R_p": "expected risk under distribution p",
+    "R_p^*": "Bayes risk under p",
+    "mathcal{P}": "the set of all probability distributions on X x {0, 1}"
+   },
+   "assumptions": [
+    "Binary classification with the 0-1 loss",
+    "The input space X is infinite",
+    "The supremum ranges over all distributions, with no regularity restriction"
+   ],
+   "breakdown_regime": "The statement is a worst case over adversarially chosen distributions; it does not say learning fails on structured real problems, only that every guarantee requires assumptions that restrict the distribution class.",
+   "domain": "learning theory foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's humility constraint: no signal family, however sophisticated, can be trusted uniformly across all regimes. Every performance claim inside the engine must name the regime class it was measured on, and a method that wins on one slice is assumed to have an adversarial slice until evaluation says otherwise.",
+    "source_operator": "no_free_lunch",
+    "telemetry": "Performance reported per regime slice (era, competition context, event type) rather than only pooled."
+   }
+  },
+  {
+   "primitive_id": "three_error_decomposition",
+   "name": "Three-error decomposition: excess risk splits into estimation error (finite data), approximation error (restricted class), and optimization error (imperfect fitting)",
+   "verbatim_quote": "The theoretical analysis of learning methods requires the study of typically three types of errors: the estimation error characterizes the eﬀect of having a finite number of observations, the approximation error characterizes the eﬀect of a reduced set of prediction functions; for methods based on empirical risk minimization (all in this book except local averaging techniques), the optimization error characterizes how well gradient-descent algorithms achieve a global minimum of the cost function they aim at minimizing.",
+   "page": "Conclusion (printed p. 451); decomposition first stated in Chapter 2, Section 2.3.2 and Chapter 4, Section 4.2",
+   "latex": "R(f_{\\hat\\theta}) - R^* = \\left[R(f_{\\hat\\theta}) - \\inf_{\\theta' \\in \\Theta} R(f_{\\theta'})\\right] + \\left[\\inf_{\\theta' \\in \\Theta} R(f_{\\theta'}) - R^*\\right]",
+   "symbol_and_unit_ledger": {
+    "R": "expected risk of a predictor",
+    "R^*": "Bayes risk",
+    "Theta": "parameter set of the prediction class in use",
+    "f_{hat theta}": "the learned predictor",
+    "first bracket": "estimation error of the learned predictor relative to the best in class",
+    "second bracket": "approximation error of the class; optimization error, treated separately in the book, measures failure to reach the empirical optimum"
+   },
+   "assumptions": [
+    "A fixed prediction class parameterized by Theta",
+    "Expected risk and Bayes risk are evaluated under the same distribution"
+   ],
+   "breakdown_regime": "The decomposition is an accounting identity, not a bound: the terms interact, for example when optimization error acts as regularization and reduces estimation error, as with early-stopped gradient methods, so minimizing one term in isolation can be the wrong move.",
+   "domain": "risk analysis framework",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine diagnoses every disappointing forecast with this split before changing anything: if approximation error dominates, the feature class is too poor and more data will not help; if estimation error dominates, capacity or variance control is the fix; if optimization error dominates, the fitting procedure is the fix. Misdiagnosing the term wastes an entire improvement cycle on the wrong layer.",
+    "source_operator": "three_error_decomposition",
+    "telemetry": "Train versus validation gaps, class-capacity ablations, and optimizer convergence residuals logged per model."
+   }
+  },
+  {
+   "primitive_id": "ols_closed_form_projection",
+   "name": "OLS closed form and projection geometry: theta-hat = (Phi^T Phi)^{-1} Phi^T y, and the fitted values are the orthogonal projection of y onto the column space of Phi",
+   "verbatim_quote": "Proposition 3.2 The vector of predictions Φθ̂ = Φ(Φ⊤ Φ)−1 Φ⊤ y is the orthogonal projection of y ∈ Rn onto im(Φ) ⊂ Rn , the column space of Φ.",
+   "page": "Chapter 3, Section 3.3.2, Proposition 3.2 (closed form in Proposition 3.1, text line ~2709)",
+   "latex": "\\hat\\theta = (\\Phi^\\top \\Phi)^{-1} \\Phi^\\top y, \\qquad \\Phi\\hat\\theta = \\Phi(\\Phi^\\top\\Phi)^{-1}\\Phi^\\top y",
+   "symbol_and_unit_ledger": {
+    "Phi": "design matrix, n by d, whose rows are feature vectors",
+    "y": "response vector in R^n",
+    "hat theta": "ordinary least-squares estimator",
+    "im(Phi)": "column space of Phi in R^n"
+   },
+   "assumptions": [
+    "Phi has full column rank, so Phi^T Phi is invertible",
+    "Squared loss"
+   ],
+   "breakdown_regime": "When Phi^T Phi is singular or ill-conditioned (collinear features, d close to n), the closed form is unstable or undefined and small noise is amplified into large coefficient swings.",
+   "domain": "linear regression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The projection picture is the engine's baseline geometry for every linear readout: a fitted signal is the shadow of the outcome vector on the span of the features, and anything in the orthogonal complement is unexplained by construction. Residual analysis in the engine is done in this geometry, checking whether a new feature family actually enlarges the span or only re-expresses directions already present.",
+    "source_operator": "ols_closed_form_projection",
+    "telemetry": "Design matrix rank, condition number, and residual norms for each linear model fit."
+   }
+  },
+  {
+   "primitive_id": "ols_exact_excess_risk",
+   "name": "Exact OLS risk: for a well-specified linear model with noise variance sigma^2, the expected excess risk of OLS is exactly sigma^2 d / n",
+   "verbatim_quote": "Proposition 3.5 (Risk of OLS) The excess risk of the OLS estimator equals",
+   "page": "Chapter 3, Section 3.5, Proposition 3.5 (text line ~3000)",
+   "latex": "\\mathbb{E}\\, R(\\hat\\theta) - R^* = \\frac{\\sigma^2 d}{n}",
+   "symbol_and_unit_ledger": {
+    "sigma^2": "noise variance (squared outcome units)",
+    "d": "number of features (count)",
+    "n": "number of observations (count)",
+    "R(hat theta) - R^*": "expected excess risk of OLS, the expectation taken over the noise"
+   },
+   "assumptions": [
+    "Fixed design with a well-specified linear model, so E[theta-hat] = theta^*",
+    "Homoscedastic noise with variance sigma^2",
+    "Full-rank design"
+   ],
+   "breakdown_regime": "Exactness dies with misspecification, and under random design with d close to n the risk picks up the factor E tr(Sigma Sigma-hat^{-1}) and blows up as d approaches n; the formula also presumes constant noise variance across inputs.",
+   "domain": "linear regression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's unit price for a parameter: each added feature costs sigma^2/n of expected excess risk, exactly. Feature admission decisions compare a candidate feature's measured gain against this known cost, and model size budgets are set in these units rather than by intuition about complexity.",
+    "source_operator": "ols_exact_excess_risk",
+    "telemetry": "Feature counts d, sample counts n, and residual variance estimates for every fitted model."
+   }
+  },
+  {
+   "primitive_id": "ridge_optimal_lambda",
+   "name": "Ridge tuning: the choice lambda^* = sigma sqrt(tr Sigma-hat) / (||theta^*|| sqrt(n)) removes the dimension from the bound and gives excess risk at most sigma sqrt(tr Sigma-hat) ||theta^*|| / sqrt(n)",
+   "verbatim_quote": "Based on the expression for the risk, we can tune the regularization parameter λ to obtain a potentially better bound than with the OLS (which corresponds to λ = 0 and the excess risk σ 2 d/n).",
+   "page": "Chapter 3, Section 3.6, Proposition 3.8 (text line ~3254)",
+   "latex": "\\lambda^* = \\frac{\\sigma \\sqrt{\\operatorname{tr} \\hat\\Sigma}}{\\|\\theta^*\\|_2 \\sqrt{n}}, \\qquad \\mathbb{E}\\, R(\\hat\\theta_{\\lambda^*}) - R^* \\le \\frac{\\sigma \\sqrt{\\operatorname{tr} \\hat\\Sigma}\\, \\|\\theta^*\\|_2}{\\sqrt{n}}",
+   "symbol_and_unit_ledger": {
+    "lambda^*": "optimal ridge regularization parameter",
+    "Sigma-hat": "empirical covariance, (1/n) Phi^T Phi",
+    "theta^*": "true coefficient vector",
+    "sigma": "noise standard deviation",
+    "tr": "trace, the total feature variance",
+    "n": "number of observations (count)"
+   },
+   "assumptions": [
+    "Fixed-design least squares with noise variance sigma^2",
+    "The displayed choice of lambda depends on sigma, tr Sigma-hat, and ||theta^*||"
+   ],
+   "breakdown_regime": "The optimal lambda depends on unknown quantities (sigma and ||theta^*||), so in practice it must be estimated or cross-validated; under random design with d > n, the interpolation regime needs the separate overparameterized analysis of Chapter 12.",
+   "domain": "regularized regression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Ridge is the engine's default shrinkage for correlated signal families, and this formula states the trade explicitly: what matters is the total variance tr Sigma-hat and the signal size ||theta^*||, not the raw count of features. Shrinkage strength is set from measured variance totals, and families with large total variance but weak true signal are shrunk hardest.",
+    "source_operator": "ridge_optimal_lambda",
+    "telemetry": "Trace of the empirical covariance and estimated coefficient norms per feature family."
+   }
+  },
+  {
+   "primitive_id": "classification_calibration",
+   "name": "Classification calibration (Bartlett, Jordan and McAuliffe 2006): a convex surrogate Phi is classification-calibrated if and only if it is differentiable at 0 and Phi'(0) < 0",
+   "verbatim_quote": "The surrogate function Φ is classification-calibrated if and only if Φ is differentiable at 0 and Φ′ (0) < 0.",
+   "page": "Chapter 4, Section 4.1.3, Proposition 4.1",
+   "latex": "\\Phi \\text{ is classification-calibrated} \\iff \\Phi \\text{ is differentiable at } 0 \\text{ and } \\Phi'(0) < 0",
+   "symbol_and_unit_ledger": {
+    "Phi": "convex surrogate loss, a function of the margin y f(x)",
+    "Phi'(0)": "derivative of the surrogate at zero margin",
+    "calibration": "the property that minimizing the surrogate risk recovers the Bayes classifier of the 0-1 loss"
+   },
+   "assumptions": [
+    "Phi is convex on R",
+    "Binary classification; the criterion is checked through the conditional Phi-risk"
+   ],
+   "breakdown_regime": "Calibration is a population property: it guarantees the right minimizer with infinite data and a rich class but says nothing about rates; the perceptron-style surrogate (-u)_+ fails the criterion because it is not differentiable at 0, and the calibration function (square root for the square loss, identity for the hinge loss) controls how surrogate excess converts into true excess.",
+   "domain": "surrogate losses / classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Before any surrogate objective is allowed to train an engine classifier, it must pass this check: a one-line derivative test at zero margin decides whether optimizing the surrogate can ever recover the optimal decision. The engine's loss registry records the calibration status and the calibration function of each loss, because the rate at which surrogate progress converts into decision progress differs by loss.",
+    "source_operator": "classification_calibration",
+    "telemetry": "Surrogate risk and true decision risk tracked side by side on validation data for each trained classifier."
+   }
+  },
+  {
+   "primitive_id": "rademacher_complexity_symmetrization",
+   "name": "Rademacher complexity and symmetrization: the expected uniform deviation of empirical averages from their means is at most twice the Rademacher complexity of the class",
+   "verbatim_quote": "We denote the data D = {z1 , . . . , zn }, and define the Rademacher complexity of the class of functions H from Z to R as follows:",
+   "page": "Chapter 4, Section 4.5, Equation 4.12 and Proposition 4.2 (text line ~4968)",
+   "latex": "R_n(\\mathcal{H}) = \\mathbb{E}_{\\varepsilon, D}\\left[\\sup_{h \\in \\mathcal{H}} \\frac{1}{n}\\sum_{i=1}^{n} \\varepsilon_i h(z_i)\\right], \\qquad \\mathbb{E}\\sup_{h \\in \\mathcal{H}}\\left[\\frac{1}{n}\\sum_{i=1}^{n} h(z_i) - \\mathbb{E} h(z)\\right] \\le 2 R_n(\\mathcal{H})",
+   "symbol_and_unit_ledger": {
+    "R_n(H)": "Rademacher complexity of the function class H at sample size n",
+    "varepsilon_i": "independent Rademacher variables, plus or minus 1 with equal probability",
+    "z_i": "training observations",
+    "h": "a loss or prediction function in the class",
+    "D": "the training sample"
+   },
+   "assumptions": [
+    "Observations are independent and identically distributed",
+    "The class H is fixed before seeing the data, or handled with a union bound over classes"
+   ],
+   "breakdown_regime": "The bound is in expectation and can be loose: it prices the worst function in the class and ignores the local structure near the optimum (local Rademacher analysis refines it), and it grows vacuous when the class is rich enough to fit random signs well.",
+   "domain": "uniform convergence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rademacher complexity is the engine's capacity meter: it measures how well a hypothesis family can correlate with pure noise, which is exactly the failure mode of a prediction system that searches over many patterns. Families whose noise-fitting capacity is high relative to n must show proportionally larger measured gains before their signals are promoted inside the engine.",
+    "source_operator": "rademacher_complexity_symmetrization",
+    "telemetry": "Monte Carlo noise-correlation estimates: refit each family on sign-flipped or permuted outcomes and record the best achievable fit."
+   }
+  },
+  {
+   "primitive_id": "contraction_principle",
+   "name": "Contraction principle: composing with 1-Lipschitz maps does not increase Rademacher complexity; for a G-Lipschitz loss this gives R_n(H) <= G R_n(F)",
+   "verbatim_quote": "Given any functions b, ai : Θ → R (no assumption) and ϕi : R → R any 1-Lipschitzfunctions, for i = 1, . . . , n, we have, for ε ∈ Rn , a vector of independent Rademacher random variables",
+   "page": "Chapter 4, Section 4.5.2, Proposition 4.3 (text line ~5090)",
+   "latex": "\\mathbb{E}_{\\varepsilon}\\sup_{\\theta \\in \\Theta}\\left[b(\\theta) + \\sum_{i=1}^{n} \\varepsilon_i \\phi_i(a_i(\\theta))\\right] \\le \\mathbb{E}_{\\varepsilon}\\sup_{\\theta \\in \\Theta}\\left[b(\\theta) + \\sum_{i=1}^{n} \\varepsilon_i a_i(\\theta)\\right]",
+   "symbol_and_unit_ledger": {
+    "phi_i": "1-Lipschitz real functions applied coordinatewise",
+    "a_i(theta)": "real-valued functions of the parameter",
+    "b(theta)": "a common offset function",
+    "varepsilon": "vector of independent Rademacher variables",
+    "G": "Lipschitz constant of the loss in its prediction argument, entering through Equation 4.15"
+   },
+   "assumptions": [
+    "Each phi_i is 1-Lipschitz (the vector-valued extension in Chapter 13 is with respect to the l2 norm)",
+    "No assumption on the functions a_i or b"
+   ],
+   "breakdown_regime": "Contraction controls capacity only through the Lipschitz constant; a loss with a huge or infinite Lipschitz constant (unbounded predictions, very steep surrogates) makes the transferred bound useless even when the underlying score class is simple.",
+   "domain": "uniform convergence",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine can price the capacity of a full training pipeline from the capacity of its raw score class and the Lipschitz constant of the loss alone, without re-deriving a bound for each loss. When a new loss is proposed, its Lipschitz constant becomes a required registry field, because it multiplies the capacity of everything upstream of it.",
+    "source_operator": "rademacher_complexity_symmetrization",
+    "telemetry": "Maximum absolute gradient of each loss over the observed prediction range, logged at training time."
+   }
+  },
+  {
+   "primitive_id": "fast_rates_regularized_objectives",
+   "name": "Fast rates for regularized objectives: strong convexity of the squared-norm penalty turns the estimation error of regularized ERM into a term of order 1/(lambda n)",
+   "verbatim_quote": "Assume the loss function is G-Lipschitz-continuous and convex in the second argument, with linear prediction functions x 7→ θ⊤ ϕ(x) for θ ∈ Rd , where kϕ(x)k2 ⩽ R almost surely.",
+   "page": "Chapter 4, Section 4.5.5, Proposition 4.6 (text line ~5336)",
+   "latex": "\\mathbb{E}\\, R(\\hat\\theta_\\lambda) \\le \\inf_{\\theta} \\left\\{ R(\\theta) + \\frac{\\lambda}{2}\\|\\theta\\|_2^2 \\right\\} + \\frac{24 G^2 R^2}{\\lambda n}",
+   "symbol_and_unit_ledger": {
+    "hat theta_lambda": "minimizer of the regularized empirical risk of Equation 4.17",
+    "G": "Lipschitz constant of the loss in its prediction argument",
+    "R": "almost sure bound on the feature norm ||phi(x)||",
+    "lambda": "regularization parameter",
+    "n": "number of observations (count)"
+   },
+   "assumptions": [
+    "The loss is convex and G-Lipschitz in the second argument",
+    "Linear predictions with ||phi(x)|| <= R almost surely",
+    "Squared l2 penalty, whose strong convexity drives the fast rate"
+   ],
+   "breakdown_regime": "The 1/(lambda n) gain is bought with the bias term (lambda/2)||theta||^2 inside the infimum; as lambda goes to 0 the bound returns to the slow 1/sqrt(n) world, and the statement is an expectation bound for this penalized estimator, not for constrained or early-stopped variants.",
+   "domain": "regularized ERM theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the quantitative case for penalized fitting inside the engine: a properly weighted penalty converts part of the error from the slow 1/sqrt(n) scale to the fast 1/n scale. Regularization schedules are tuned against this explicit trade, balancing the bias term against the fast-rate term instead of treating lambda as a pure black-box hyperparameter.",
+    "source_operator": "fast_rates_regularized_objectives",
+    "telemetry": "Validation risk as a function of lambda per family, with fitted values of both terms of the bound."
+   }
+  },
+  {
+   "primitive_id": "gd_smooth_strongly_convex",
+   "name": "Gradient descent on smooth strongly convex functions: with step size 1/L, the suboptimality contracts by a factor (1 - 1/kappa) per iteration",
+   "verbatim_quote": "In proposition 5.3, we show that GD converges exponentially for such smooth and strongly convex problems, thus extending the result for quadratic functions from section 5.2.1.",
+   "page": "Chapter 5, Section 5.2.4, Proposition 5.3 (text line ~6477)",
+   "latex": "F(\\theta_t) - F(\\eta^*) \\le \\left(1 - \\frac{1}{\\kappa}\\right)^t \\left(F(\\theta_0) - F(\\eta^*)\\right), \\qquad \\kappa = \\frac{L}{\\mu}",
+   "symbol_and_unit_ledger": {
+    "F": "objective function",
+    "L": "smoothness constant (Lipschitz constant of the gradient)",
+    "mu": "strong convexity constant",
+    "kappa": "condition number L/mu (dimensionless)",
+    "eta^*": "minimizer of the empirical objective",
+    "t": "iteration count"
+   },
+   "assumptions": [
+    "F is L-smooth and mu-strongly convex",
+    "Exact gradients and step size gamma = 1/L"
+   ],
+   "breakdown_regime": "Without strong convexity the rate collapses to O(1/t); with noisy gradients the contraction stalls at a noise floor; a misestimated L either diverges (step too large) or crawls (step too small).",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The condition number kappa is the engine's difficulty score for any fitting problem: it predicts, before training, how many iterations a solver needs and whether a family is worth refitting at all. Ill-conditioned families are preconditioned or reparameterized first, because no amount of solver tuning beats the (1 - 1/kappa) contraction limit by much.",
+    "source_operator": "gd_smooth_strongly_convex",
+    "telemetry": "Estimated smoothness and strong convexity constants (Hessian eigenvalue ranges) and the observed per-iteration contraction during fits."
+   }
+  },
+  {
+   "primitive_id": "nesterov_acceleration",
+   "name": "Nesterov acceleration: momentum improves the smooth convex rate to order 1/t^2 and the strongly convex contraction to (1 - 1/sqrt(kappa))^t, both optimal for first-order methods",
+   "verbatim_quote": "Nesterov acceleration (see section 5.2.5) will lead to the same convergence rates as conjugate gradient, which are then optimal (in a sense that will be defined later in this chapter and described in more detail in chapter 15).",
+   "page": "Chapter 5, Sections 5.2.1 and 5.2.5",
+   "latex": "F(\\theta_t) - F(\\eta^*) \\le \\frac{2L\\|\\theta_0 - \\eta^*\\|_2^2}{(t+1)^2}",
+   "symbol_and_unit_ledger": {
+    "L": "smoothness constant of F",
+    "theta_0": "initial iterate",
+    "eta^*": "minimizer of F",
+    "t": "iteration count",
+    "kappa = L/mu": "condition number entering the strongly convex accelerated rate (1 - 1/sqrt(kappa))^t"
+   },
+   "assumptions": [
+    "F is convex and L-smooth for the displayed rate; the accelerated contraction rate assumes mu-strong convexity in addition",
+    "First-order oracle: the method uses gradients only"
+   ],
+   "breakdown_regime": "Acceleration is fragile under gradient noise and in practice needs restarts; its optimality holds within the first-order oracle model, and the matching lower bounds of Chapter 15 are valid only for iteration counts below the dimension.",
+   "domain": "convex optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Acceleration sets the engine's compute budget expectations: for smooth fitting problems the achievable error after t solver steps scales as 1/t^2 rather than 1/t, so iteration budgets and early-stopping points are planned on the accelerated curve. A fit that misses the accelerated curve in practice is flagged as mis-specified (wrong smoothness constant, hidden nonsmoothness) rather than simply given more iterations.",
+    "source_operator": "gd_smooth_strongly_convex",
+    "telemetry": "Solver loss curves per fit, compared against the theoretical accelerated envelope."
+   }
+  },
+  {
+   "primitive_id": "sgd_generalization_bound",
+   "name": "SGD bound and single-pass generalization: averaged SGD with step (D/B)/sqrt(t) has expected suboptimality DB(2 + log t)/(2 sqrt(t)), and a single pass over data is itself a generalization bound of order 1/sqrt(n)",
+   "verbatim_quote": "In this section, we have not only seen algorithms to obtain such minimizers through gradient-based techniques, but also single-pass SGD that directly provides the same generalization bound on unseen data",
+   "page": "Chapter 5, Section 5.4, Proposition 5.7 (text line ~7196)",
+   "latex": "\\mathbb{E}\\, F(\\bar\\theta_t) - F(\\theta^*) \\le \\frac{DB(2 + \\log t)}{2\\sqrt{t}}, \\qquad \\gamma_t = \\frac{D/B}{\\sqrt{t}}",
+   "symbol_and_unit_ledger": {
+    "F": "expected objective; in the single-pass reading, the population risk",
+    "B": "bound on stochastic gradient norms (assumption H-2)",
+    "D": "bound on ||theta^* - theta_0||",
+    "bar theta_t": "averaged iterate",
+    "t": "iteration count, equal to n in the single-pass setting",
+    "H-1": "unbiased gradient assumption, E[g_t] = F'"
+   },
+   "assumptions": [
+    "F is convex and B-Lipschitz",
+    "Stochastic gradients are unbiased with norms bounded by B",
+    "A minimizer theta^* lies within distance D of the initialization"
+   ],
+   "breakdown_regime": "The 1/sqrt(t) rate with its log factor is the price of noisy gradients; without iterate averaging, or with adversarially correlated gradient noise, the bound fails, and for strongly convex problems the step schedule must switch to 1/(mu t) to obtain the faster rate of Proposition 5.8.",
+   "domain": "stochastic optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats online updating and generalization as the same problem: a single pass of SGD over historical events, with averaged iterates, carries a built-in out-of-sample guarantee of order 1/sqrt(n). Streaming refits therefore report the SGD bound alongside the fit, and iterate averaging is mandatory rather than cosmetic.",
+    "source_operator": "sgd_generalization_bound",
+    "telemetry": "Gradient norm statistics, step-size schedules, and the gap between the last iterate and the averaged iterate per online fit."
+   }
+  },
+  {
+   "primitive_id": "saga_variance_reduction",
+   "name": "SAGA variance reduction: storing past gradients gives linear convergence for finite-sum problems at O(d) cost per iteration, replacing the product n kappa by a sum",
+   "verbatim_quote": "We now present a result allowing exponential convergence with an iteration cost of O(d). The idea is to use a form of variance reduction, made possible by keeping past gradients",
+   "page": "Chapter 5, Section 5.4.4, Proposition 5.9",
+   "latex": "\\mathbb{E}\\|\\theta_t - \\eta^*\\|_2^2 \\le \\left(1 - \\min\\left\\{\\frac{1}{3n}, \\frac{3\\mu}{16R^2}\\right\\}\\right)^t \\left(1 + \\frac{n}{4}\\right)\\|\\theta_0 - \\eta^*\\|_2^2",
+   "symbol_and_unit_ledger": {
+    "n": "number of terms in the finite sum (count)",
+    "mu": "strong convexity constant of the total objective F",
+    "R": "smoothness constant of each individual term f_i",
+    "eta^*": "minimizer of the finite-sum objective",
+    "t": "iteration count"
+   },
+   "assumptions": [
+    "Finite-sum objective F = (1/n) sum f_i with each f_i smooth",
+    "F is mu-strongly convex",
+    "Step size gamma = 1/(4R^2), with a table of past gradients maintained in memory"
+   ],
+   "breakdown_regime": "The gradient table costs O(nd) memory, prohibitive for very large models; without strong convexity the linear rate is lost, and the method targets a fixed finite dataset, so it does not directly provide streaming guarantees.",
+   "domain": "stochastic optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For batch refits on a fixed historical dataset, variance reduction is the engine's way to buy deterministic-quality convergence at stochastic cost: the contraction factor shows exactly when the dataset size n, rather than the condition number, becomes the bottleneck. The engine chooses between plain SGD, averaged SGD, and SAGA-style updates by comparing these contraction factors against memory cost.",
+    "source_operator": "sgd_generalization_bound",
+    "telemetry": "Per-term gradient staleness (age of stored gradients) and observed contraction per epoch."
+   }
+  },
+  {
+   "primitive_id": "local_averaging_estimators",
+   "name": "Local averaging: partition, kernel smoothing, and k-NN estimators are linear estimators f-hat(x) = sum_i w-hat_i(x) y_i whose weights are nonnegative and sum to one, so the smoothing matrix is stochastic",
+   "verbatim_quote": "From equation (6.1), the smoothing matrix H is stochastic; that is, with nonnegative elements and rows that sum to one.",
+   "page": "Chapter 6, Section 6.2.1, Equation 6.1",
+   "latex": "\\hat f(x) = \\sum_{i=1}^{n} \\hat w_i(x)\\, y_i, \\qquad \\hat w_i(x) \\ge 0, \\quad \\sum_{i=1}^{n} \\hat w_i(x) = 1",
+   "symbol_and_unit_ledger": {
+    "hat w_i(x)": "data-dependent weight of observation i at query point x (dimensionless)",
+    "y_i": "observed responses",
+    "H": "smoothing (hat) matrix with entries H_ij = hat w_j(x_i), row-stochastic for these methods",
+    "f^*": "target regression function E[y | x]"
+   },
+   "assumptions": [
+    "Weights are nonnegative and sum to one for the three classical constructions (partition, Nadaraya-Watson, k-NN)",
+    "For the bias-variance analysis: f^* is B-Lipschitz and the noise has bounded variance (assumptions H-1 and H-2)"
+   ],
+   "breakdown_regime": "Nonnegative weights cannot cancel, so these estimators exploit at most about two derivatives of smoothness and stall at the Lipschitz rate; in dimension d the rate n^{-2/(2+d)} collapses as d grows, which is the curse of dimensionality.",
+   "domain": "nonparametric regression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Local averaging is the engine's similarity-weighted memory: a forecast for a new event is a weighted vote of historically similar events, with the weight function as the explicit definition of similarity. Because the weights are inspectable, the engine can audit exactly which past events drove a given forecast, and the stochastic-matrix structure keeps every such forecast inside the range of observed outcomes.",
+    "source_operator": "local_averaging_estimators",
+    "telemetry": "Weight distributions per forecast: effective sample size 1/sum(w_i^2), and the identities of the highest-weight historical events."
+   }
+  },
+  {
+   "primitive_id": "knn_convergence_rate",
+   "name": "k-NN convergence rate: excess risk at most sigma^2/k + 8 B^2 diam(X)^2 (2k/n)^{2/d}, optimized at k proportional to n^{2/(2+d)} and giving the Lipschitz rate n^{-2/(2+d)}",
+   "verbatim_quote": "Assume a bounded noise (assumption (H-1)), a Lipschitz-continuous target function (assumption (H-2)), and an input distribution with bounded support X. Then for the k-nearest-neighbor estimate fˆ with the ℓ∞ -norm, we have, for d ⩾ 2,",
+   "page": "Chapter 6, Section 6.3, Proposition 6.2",
+   "latex": "\\mathbb{E}\\int \\left(\\hat f(x) - f^*(x)\\right)^2 dp(x) \\le \\frac{\\sigma^2}{k} + 8 B^2 \\operatorname{diam}(\\mathcal{X})^2 \\left(\\frac{2k}{n}\\right)^{2/d}",
+   "symbol_and_unit_ledger": {
+    "k": "number of neighbors (count)",
+    "sigma^2": "noise variance bound",
+    "B": "Lipschitz constant of the target f^*",
+    "diam(X)": "diameter of the input support",
+    "d": "input dimension (count)",
+    "n": "number of observations (count)"
+   },
+   "assumptions": [
+    "Bounded noise (assumption H-1) and a B-Lipschitz target function (assumption H-2)",
+    "Input distribution with bounded support; the statement is for d >= 2 with the l-infinity norm"
+   ],
+   "breakdown_regime": "The exponent 2/d is the curse of dimensionality in closed form: in high dimension the bias term needs astronomically large n to shrink, and the bound assumes a genuinely Lipschitz target in the chosen metric, so a badly chosen distance metric voids it.",
+   "domain": "nonparametric regression",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The two terms are the engine's tuning rule for similarity-based forecasts: variance falls as 1/k while bias grows as (k/n)^{2/d}, so the neighborhood size is set by balancing measured noise against measured smoothness rather than by convention. The exponent also prices each added context dimension, warning that similarity methods degrade predictably as features are added.",
+    "source_operator": "local_averaging_estimators",
+    "telemetry": "Distance-to-kth-neighbor distributions and held-out risk as a function of k per similarity model."
+   }
+  },
+  {
+   "primitive_id": "representer_theorem",
+   "name": "Representer theorem: the solution of regularized ERM in a reproducing kernel Hilbert space lies in the span of the feature maps at the training points, theta = sum_i alpha_i phi(x_i)",
+   "verbatim_quote": "Kernels and representer theorem: Learning with infinite-dimensional linear models can be done in an amount of time that depends on the number of observations, using a positive-definite kernel function.",
+   "page": "Chapter 7, Chapter Summary and Section 7.2, Proposition 7.1",
+   "latex": "\\hat\\theta = \\sum_{i=1}^{n} \\alpha_i \\phi(x_i), \\qquad \\alpha = (K + n\\lambda I)^{-1} y \\ \\text{for kernel ridge regression}",
+   "symbol_and_unit_ledger": {
+    "phi": "feature map into the Hilbert space H",
+    "alpha_i": "dual coefficients (units of y divided by kernel scale)",
+    "K": "kernel matrix with entries K_ij = k(x_i, x_j)",
+    "lambda": "regularization parameter",
+    "n": "number of training points (count)"
+   },
+   "assumptions": [
+    "The objective is an empirical loss plus a strictly increasing function of ||theta||^2 (Kimeldorf and Wahba 1971; Schoelkopf et al. 2001)",
+    "H is a Hilbert space with feature map phi, equivalently the RKHS of the kernel"
+   ],
+   "breakdown_regime": "The theorem reduces the problem to n coefficients, but solving the kernel system costs O(n^3) exactly, forcing Nystroem or random-feature approximations at scale; it also says nothing about which kernel to choose.",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The representer form is why the engine can run infinite-dimensional similarity models at a cost set by the dataset size: every learned function is stored as weights on past events. Model artifacts are exactly these dual coefficients plus the event store, so a model can be audited event by event and updated by appending data.",
+    "source_operator": "representer_theorem",
+    "telemetry": "Dual coefficient magnitudes per training event, flagging the events that carry each model."
+   }
+  },
+  {
+   "primitive_id": "bochner_theorem",
+   "name": "Bochner's theorem: a translation-invariant kernel k(x, x') = q(x - x') is positive-definite if and only if q is the inverse Fourier transform of a nonnegative Borel measure",
+   "verbatim_quote": "Proposition 7.4 (Bochner's theorem) A translation-invariant kernel k defined as k(x, x′ ) = q(x − x′ ) is positive-definite if and only if q is the inverse Fourier transform of a nonnegative Borel measure.",
+   "page": "Chapter 7, Section 7.3.2, Proposition 7.4",
+   "latex": "\\|f\\|_{\\mathcal{H}}^2 = \\frac{1}{(2\\pi)^d} \\int \\frac{|\\hat f(\\omega)|^2}{\\hat q(\\omega)}\\, d\\omega",
+   "symbol_and_unit_ledger": {
+    "q": "kernel profile, k(x, x') = q(x - x')",
+    "hat q": "Fourier transform of q (spectral density), nonnegative by the theorem",
+    "hat f": "Fourier transform of f",
+    "omega": "frequency vector in R^d",
+    "||f||_H": "RKHS norm, penalizing frequencies where hat q is small"
+   },
+   "assumptions": [
+    "Translation invariance: the kernel depends only on x - x'",
+    "The displayed norm formula requires hat q positive on the frequencies present in f"
+   ],
+   "breakdown_regime": "Only translation-invariant kernels are covered; choosing the wrong spectrum (for example a Gaussian spectrum when the target has limited smoothness) wastes capacity across all frequencies, and spectra with zeros make the norm infinite for functions with energy there.",
+   "domain": "kernel methods / harmonic analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Bochner's theorem turns kernel design into spectrum design: the engine's similarity kernels are specified by how much each frequency of variation is trusted, and the RKHS norm formula prices a candidate function by its frequency content. Smoothness assumptions stop being vague and become an explicit spectral budget that can be compared across kernel choices.",
+    "source_operator": "bochner_theorem",
+    "telemetry": "Empirical spectra of target signals (periodogram energy by frequency band) matched against kernel spectra."
+   }
+  },
+  {
+   "primitive_id": "kernel_degrees_of_freedom",
+   "name": "Degrees of freedom: df(lambda) = tr[Sigma (Sigma + lambda I)^{-1}] is the effective number of parameters of a ridge or kernel ridge fit, a soft count of the eigenvalues larger than lambda",
+   "verbatim_quote": "the degrees of freedom provide a soft count of the number of eigenvalues that are larger than λ.",
+   "page": "Chapter 7, Section 7.6.6 (definition); quote from Chapter 3, Section 3.6",
+   "latex": "\\operatorname{df}(\\lambda) = \\operatorname{tr}\\left[\\Sigma\\left(\\Sigma + \\lambda I\\right)^{-1}\\right]",
+   "symbol_and_unit_ledger": {
+    "Sigma": "population covariance operator of the feature map",
+    "lambda": "regularization parameter (in the eigenvalue units of Sigma)",
+    "tr": "trace, the sum over eigenvalues mu_j of mu_j/(mu_j + lambda)",
+    "df": "effective parameter count (dimensionless)"
+   },
+   "assumptions": [
+    "The variance term of kernel ridge regression scales as sigma^2 df(lambda)/n",
+    "Rate calculations assume eigenvalue decay, for Sobolev order s in dimension d like m^{-2s/d}"
+   ],
+   "breakdown_regime": "df is a variance-side measure only: two fits with equal df can have very different bias, and when the spectrum decays slowly, df grows almost linearly in 1/lambda and the resulting rates degrade.",
+   "domain": "kernel methods / model complexity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine budgets model complexity in degrees of freedom rather than raw parameter counts, because df is comparable across a kernel machine, a ridge fit, and a smoother. Regularization paths are reported as risk versus df curves, which lets unlike model families compete on a single axis.",
+    "source_operator": "kernel_degrees_of_freedom",
+    "telemetry": "Eigenvalue spectra of kernel and covariance matrices, and df evaluated along each regularization path."
+   }
+  },
+  {
+   "primitive_id": "lasso_restricted_eigenvalue",
+   "name": "Lasso fast rate under the restricted eigenvalue property: on the cone ||Delta_{A^c}||_1 <= 3||Delta_A||_1, restricted strong convexity gives the l0 rate sigma^2 k log d / n with a polynomial-time algorithm (Proposition 8.4)",
+   "verbatim_quote": "The most direct condition is the so-called restricted eigenvalue property (REP), which is exactly equation (8.8) with the supremum taken over the unknown set A of a cardinality less than k,",
+   "page": "Chapter 8, Sections 8.3.4 and 8.3.5, Proposition 8.4 and Equation 8.9",
+   "latex": "\\frac{1}{n}\\|\\Phi\\Delta\\|_2^2 \\ge \\kappa \\|\\Delta_A\\|_2^2 \\quad \\text{for all } \\Delta \\text{ with } \\|\\Delta_{A^c}\\|_1 \\le 3\\|\\Delta_A\\|_1",
+   "symbol_and_unit_ledger": {
+    "Delta": "error vector theta-hat minus theta^*",
+    "A": "support of the true sparse vector, of size k",
+    "kappa": "restricted eigenvalue constant",
+    "Sigma-hat infinity norm": "largest absolute entry of the empirical covariance, entering the Proposition 8.4 rate",
+    "d": "ambient dimension (count)",
+    "sigma^2": "noise variance"
+   },
+   "assumptions": [
+    "The true vector is k-sparse with support A",
+    "The design satisfies the restricted eigenvalue property with constant kappa > 0 on the cone",
+    "lambda is chosen on the order of sigma sqrt(||Sigma-hat||_infinity log d / n), which controls ||Phi^T epsilon||_infinity with high probability"
+   ],
+   "breakdown_regime": "REP is unverifiable in practice and fails for duplicated or highly correlated features (two equal features violate every condition in the Section 8.3.5 zoo); when kappa is tiny the bound is vacuous even though the Lasso may still behave well empirically.",
+   "domain": "sparse recovery / high-dimensional statistics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sparse selection in the engine is justified only when the design is restricted-strongly-convex on the error cone: correlated duplicate signals destroy the guarantee even when cross-validation looks fine. The engine therefore clusters near-duplicate signals before sparse selection and reports cone-condition diagnostics, treating support-recovery claims as void where features are collinear.",
+    "source_operator": "lasso_restricted_eigenvalue",
+    "telemetry": "Pairwise and group correlations among candidate features, plus smallest eigenvalues of Gram matrices restricted to selected supports."
+   }
+  },
+  {
+   "primitive_id": "variation_norm_neural_networks",
+   "name": "Variation norm: two-layer networks with bounded l1 output weights form the Banach space F1 with norm gamma_1(f) = inf integral |d nu|, and the estimation error depends on gamma_1, not on the number of neurons (Proposition 9.1)",
+   "verbatim_quote": "We then obtain a Banach space F1 of functions (the proof of completeness is left as a technical exercise), with a norm γ1 that is often referred to as the \"variation norm\" (Kurková and Sanguineti, 2001). This characterizes the set of functions that can be asymptotically reached by neural networks with a bounded ℓ1 -norm of output weights, regardless of the number of neurons.",
+   "page": "Chapter 9, Sections 9.2.3 and 9.3.2, Proposition 9.2",
+   "latex": "f(x) = \\int (w^\\top x + b)_+ \\, d\\nu(w, b), \\qquad \\gamma_1(f) = \\inf \\int |d\\nu(w, b)|",
+   "symbol_and_unit_ledger": {
+    "nu": "signed measure on the neuron parameter space (w, b)",
+    "(.)_+": "ReLU activation",
+    "gamma_1(f)": "variation norm of f",
+    "F1": "the space of functions with finite variation norm",
+    "D": "bound on ||eta||_1 for finite networks in the estimation bound 16 G D R / sqrt(n)"
+   },
+   "assumptions": [
+    "Input weights range over a compact set, normalized so that ||w||^2 + b^2/R^2 = 1",
+    "The estimation bound assumes a G-Lipschitz loss and inputs in a ball of radius R"
+   ],
+   "breakdown_regime": "Finite gamma_1 is a real restriction: the space excludes some rough targets, the norm can be enormous for targets with high-frequency content (Barron-type bounds scale with a Fourier moment), and the Frank-Wolfe training oracle for the infinite-width problem has no known polynomial-time implementation.",
+   "domain": "neural network theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's answer to parameter counting for neural models: capacity is the variation norm of the learned function, so a wide network with small total output weight is a simple model and a narrow one with huge weights is a complex one. Neural components are regularized and compared by gamma_1-style weight budgets, and their estimation error is quoted on the 1/sqrt(n) scale with the norm, independent of width.",
+    "source_operator": "variation_norm_neural_networks",
+    "telemetry": "l1 norms of output layers and path norms of trained networks, tracked per model version."
+   }
+  },
+  {
+   "primitive_id": "ucb_bandit_algorithm",
+   "name": "UCB algorithm: select the arm with the largest upper confidence bound mu-hat + nu, with nu_t = sqrt(2 rho sigma^2 log(t+1) / n_t), giving gap-dependent regret sum_i Delta(i) (1 + (sigma^2/Delta(i)^2)(24 log t + 8))",
+   "verbatim_quote": "We consider the classical \"upper confidence bound (UCB)\" algorithm (Auer, Cesa-Bianchi, and Fischer, 2002), whose principle is simple.",
+   "page": "Chapter 11, Section 11.3.3 (printed pp. 335-336)",
+   "latex": "\\nu_t^{(i)} = \\sqrt{\\frac{2\\rho\\sigma^2 \\log(t+1)}{n_t^{(i)}}}, \\qquad R_t \\le \\sum_{i \\ne i^*} \\Delta(i)\\left(1 + \\frac{\\sigma^2}{\\Delta(i)^2}\\left(24\\log t + 8\\right)\\right)",
+   "symbol_and_unit_ledger": {
+    "mu-hat_t^{(i)}": "empirical mean reward of arm i at time t",
+    "nu_t^{(i)}": "confidence bonus of arm i",
+    "n_t^{(i)}": "number of pulls of arm i up to time t (count)",
+    "Delta(i)": "suboptimality gap of arm i",
+    "rho": "constant, set to 3 in the book's analysis",
+    "sigma^2": "sub-Gaussian variance proxy of the rewards",
+    "R_t": "cumulative regret at time t"
+   },
+   "assumptions": [
+    "Rewards are sub-Gaussian with known variance proxy sigma^2",
+    "The environment is stochastic with independent arms, not adversarial"
+   ],
+   "breakdown_regime": "The gap-dependent bound needs meaningful, stationary gaps; with drifting rewards or adversarial corruption, optimism is exploited and regret can become linear, and the gap-free bound still carries the sqrt(k t log t) scale.",
+   "domain": "sequential decision making / bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "UCB is the engine's exploration policy for allocating evaluation budget across candidate signals: each candidate is an arm, its measured quality is mu-hat, and the bonus nu prices its uncertainty from its pull count and variance. Allocation follows the bound, so untested candidates are explored at exactly the rate their uncertainty justifies, and the regret formula caps the total cost of exploration.",
+    "source_operator": "ucb_bandit_algorithm",
+    "telemetry": "Per-candidate evaluation counts, empirical means, and variances, updated after each evaluation batch."
+   }
+  },
+  {
+   "primitive_id": "implicit_bias_minimum_norm",
+   "name": "Implicit bias of gradient descent: on underdetermined least squares started at zero, GD stays in the row space and converges to the minimum-l2-norm interpolator X^T (X X^T)^{-1} y",
+   "verbatim_quote": "Implicit regularization of GD: For linear models, when there are several minimizers (typically for overparameterized models), GD techniques tend to converge to the one with a minimum Euclidean norm.",
+   "page": "Chapter 12, Chapter Summary and Section 12.1.1",
+   "latex": "\\hat\\theta = X^\\top (X X^\\top)^{-1} y",
+   "symbol_and_unit_ledger": {
+    "X": "design matrix, n by d, with d > n in the overparameterized case",
+    "y": "response vector",
+    "hat theta": "the minimum-l2-norm vector interpolating y = X theta",
+    "row space": "span of the rows of X, which contains every GD iterate from a zero initialization"
+   },
+   "assumptions": [
+    "Gradient descent or gradient flow on the unregularized least-squares objective",
+    "Initialization at theta_0 = 0 (or in the row space)",
+    "The system X theta = y is consistent"
+   ],
+   "breakdown_regime": "The bias is initialization- and algorithm-dependent: structured or nonzero initializations select different interpolators, stochastic noise changes the selection, and for classification the analogous maximum-margin direction converges only at the slow O(1/log t) rate.",
+   "domain": "overparameterized models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the engine fits an underdetermined model, the optimizer is part of the model: gradient descent silently chooses the minimum-norm interpolator among all perfect fits. The engine therefore records initialization and optimizer as model metadata, because two fits with identical training loss are different predictors, and the min-norm choice is the explicit prior being trusted.",
+    "source_operator": "implicit_bias_minimum_norm",
+    "telemetry": "Coefficient norms of fitted models, distance of iterates from the row space, and initialization records per fit."
+   }
+  },
+  {
+   "primitive_id": "double_descent",
+   "name": "Double descent: the min-norm interpolator's expected excess risk blows up at d near n and descends again for d > n, with exact Gaussian-design formulas on both sides of the peak",
+   "verbatim_quote": "Double descent: For unregularized models learned with gradient descent techniques, as the number of parameters grows, the performance can exhibit a second descent after the testing error blows up, when the number of parameters goes beyond the number of observations.",
+   "page": "Chapter 12, Chapter Summary and Section 12.2, Equations 12.17 and 12.18",
+   "latex": "\\mathbb{E}\\, R(\\hat\\theta) - R^* = \\sigma^2 \\frac{n}{d - n - 1} + \\|\\theta^*\\|_2^2 \\frac{d - n}{d} \\quad (d \\ge n + 2); \\qquad \\sigma^2 \\frac{d}{n - d - 1} \\quad (d \\le n - 2)",
+   "symbol_and_unit_ledger": {
+    "d": "number of parameters or random features (count)",
+    "n": "number of observations (count)",
+    "sigma^2": "noise variance",
+    "theta^*": "true coefficient vector",
+    "second formula": "for d <= n - 2 the display gives the variance term of the OLS risk; for d >= n + 2 both a variance term and the bias term ||theta^*||^2 (d - n)/d appear"
+   },
+   "assumptions": [
+    "Gaussian design with isotropic covariance",
+    "Minimum-l2-norm interpolator, the ridgeless limit",
+    "Well-specified linear model for the displayed formulas"
+   ],
+   "breakdown_regime": "The formulas are exact only for Gaussian isotropic designs; anisotropic covariance changes the curve, and optimally tuned ridge regularization removes the peak entirely, so the phenomenon is a property of the unregularized interpolator, not of large models as such.",
+   "domain": "overparameterized models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The curve warns the engine that risk is not monotone in model size: the most dangerous capacity is d near n, exactly where classical intuition says the fit is richest relative to the data. Capacity decisions deliberately avoid the interpolation peak, either staying clearly below it with regularization or going clearly past it, and the exact formulas size the expected penalty for sitting at the peak.",
+    "source_operator": "double_descent",
+    "telemetry": "Ratios d/n for every model, with validation risk plotted across capacity sweeps to locate the peak empirically."
+   }
+  },
+  {
+   "primitive_id": "self_loss_embedding",
+   "name": "Structure encoding loss functions (SELF): a loss decomposes as l(y, z) = c + <chi(z), psi(y)> through two embeddings of the label space into one Hilbert space",
+   "verbatim_quote": "we will assume that we have two embeddings of the label space Y into the same Hilbert space H; that is, two maps χ, ψ : Y → H and a constant c ∈ R, such that ∀(y, z) ∈ Y × Y, ℓ(y, z) = c + hχ(z), ψ(y)i. (13.5) This assumption is called \"structure encoding loss function (SELF)\" (Ciliberto et al., 2016, 2020).",
+   "page": "Chapter 13, Section 13.2.2, Equation 13.5 (printed p. 390)",
+   "latex": "\\ell(y, z) = c + \\langle \\chi(z), \\psi(y) \\rangle \\quad \\text{for all } (y, z) \\in Y \\times Y",
+   "symbol_and_unit_ledger": {
+    "chi, psi": "two embeddings of the label space Y into the Hilbert space H",
+    "c": "constant offset of the decomposition",
+    "R_l": "sup over z of ||chi(z)||, the scale constant entering the calibration bounds",
+    "H": "the shared embedding space, finite-dimensional with dimension k for the classical examples"
+   },
+   "assumptions": [
+    "The loss admits an exact SELF decomposition; implicit decompositions exist under general conditions (Ciliberto et al. 2016, 2020)",
+    "Prediction proceeds by estimating E[psi(y) | x] and decoding by the argmin over z of <chi(z), .>"
+   ],
+   "breakdown_regime": "Not every criterion fits the framework: AUC-style U-statistics and asymmetric scores need extensions, and the decomposition is not unique, with different embeddings giving different values of R_l and hence different quality of the downstream bounds.",
+   "domain": "structured prediction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "SELF is the engine's template for multi-part outcomes: a complex prediction target, such as a full slate of related results, is embedded once, the engine regresses the conditional mean of the embedding, and decoding is a separate explicit step. This separation lets one learned representation serve many different losses by swapping the chi side at decode time.",
+    "source_operator": "self_loss_embedding",
+    "telemetry": "Embedding norms ||chi(z)|| and ||psi(y)|| over the outcome space, and decode-time argmin margins."
+   }
+  },
+  {
+   "primitive_id": "quadratic_surrogate_calibration",
+   "name": "Quadratic surrogate calibration for structured prediction: with the square surrogate on psi(y), the decoded excess risk is at most 2 R_l sqrt(R_S(g) - R_S^*)",
+   "verbatim_quote": "which is precisely a calibration function result. A key feature of this result is that the constant Rℓ typically does not explode, even for sets Y with large cardinality",
+   "page": "Chapter 13, Section 13.4.2, Equation 13.9 (printed p. 395)",
+   "latex": "R(\\operatorname{dec} \\circ g) - R^* \\le 2 R_\\ell \\sqrt{R_S(g) - R_S^*}, \\qquad R_S(g) - R_S^* = \\mathbb{E}\\left\\| g(x) - \\mathbb{E}[\\psi(y) \\mid x] \\right\\|^2",
+   "symbol_and_unit_ledger": {
+    "S": "quadratic surrogate S(y, g(x)) = ||psi(y) - g(x)||^2",
+    "dec": "decoding function dec(s) = argmin over z of <chi(z), s>",
+    "R_l": "sup over z of ||chi(z)||",
+    "g": "learned score function into H",
+    "R_S": "expected surrogate risk, whose minimizer is g^*(x) = E[psi(y) | x]"
+   },
+   "assumptions": [
+    "A SELF decomposition of the loss (Equation 13.5)",
+    "The decoder uses the exact argmin over Y, or a controlled approximation of it",
+    "The population surrogate minimizer is the conditional expectation of psi(y)"
+   ],
+   "breakdown_regime": "The square-root calibration is lossy: surrogate progress converts into true progress at a square-root rate, and when the decoding argmin is computationally hard (as for general permutations) the decoder's approximation error enters outside this bound.",
+   "domain": "structured prediction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This bound is the contract for the engine's structured outputs: least-squares training on embeddings is certified for the true discrete loss, with the constant 2 R_l and a square root as the price. It tells the engine how accurate the embedding regression must be to reach a target decision quality, and it explains why margin-style surrogates with linear calibration are preferred when they are available.",
+    "source_operator": "self_loss_embedding",
+    "telemetry": "Surrogate risk on validation data and the decoded true loss, with their empirical ratio tracked against the 2 R_l sqrt(.) curve."
+   }
+  },
+  {
+   "primitive_id": "mmse_versus_map",
+   "name": "MMSE versus MAP (Tweedie formula): the posterior mean is y + sigma^2 grad log p(y), it differs from the MAP estimate except for Gaussian priors, and the Lasso as MAP of a Laplace prior is not adapted to Laplace-sampled signals",
+   "verbatim_quote": "MMSE (y) = E θ|y , assuming that θ is sampled according to q(θ) and y follows the model in equation (14.2). Here, MMSE stands for \"minimum mean square error.\"",
+   "page": "Chapter 14, Section 14.1.4, Equation 14.3 (printed p. 414)",
+   "latex": "\\hat\\theta_{\\mathrm{MMSE}}(y) = y + \\sigma^2 \\nabla \\log p(y)",
+   "symbol_and_unit_ledger": {
+    "y": "noisy observation, y = theta + epsilon",
+    "sigma^2": "known Gaussian noise variance",
+    "p(y)": "marginal density of the observation under the prior",
+    "grad log p(y)": "score of the marginal density",
+    "theta-hat MAP": "posterior mode, argmax over theta of q(theta) p(y | theta)"
+   },
+   "assumptions": [
+    "Additive Gaussian noise model with known sigma^2",
+    "A prior density q(theta) exists; the comparison is made under the square-loss criterion"
+   ],
+   "breakdown_regime": "The identity is specific to Gaussian noise (other noise models have their own versions); MAP and MMSE coincide essentially only in the Gaussian case, and justifying an estimator by a prior it does not match, as with the Laplace prior versus spike-and-slab truth, gives qualitatively wrong shrinkage.",
+   "domain": "Bayesian estimation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's Bayesian components report posterior means for square-loss decisions, not posterior modes, and this result is the reason: the mode answers a different question and, for sparse priors, thresholds where the mean shrinks smoothly. It also supplies the empirical-Bayes route: the posterior mean is computable from the marginal density of the data alone, which the engine can estimate directly.",
+    "source_operator": "mmse_versus_map",
+    "telemetry": "Marginal density estimates of observed signals, and the divergence between posterior mean and posterior mode per estimate."
+   }
+  },
+  {
+   "primitive_id": "pac_bayes_gibbs_posterior",
+   "name": "PAC-Bayes bound: for any data-dependent distribution rho over parameters, the rho-averaged risk is at most the rho-averaged empirical risk plus KL(rho || q)/s plus s l_inf^2/(8n), and the bound is minimized by the Gibbs posterior proportional to exp(-s R-hat)",
+   "verbatim_quote": "The bound can be empirically computed for any ρ and minimized, with the optimal b distribution being proportional to exp(−sR(θ))dq(θ), which is often called the \"Gibbs posterior distribution.\"",
+   "page": "Chapter 14, Section 14.4.2, Equation 14.6 (printed pp. 424-425)",
+   "latex": "\\mathbb{E}\\int R(\\theta)\\, d\\hat\\rho_s(\\theta) \\le \\inf_{\\rho} \\left\\{ \\int \\hat R(\\theta)\\, d\\rho(\\theta) + \\frac{D(\\rho \\| q)}{s} + \\frac{s \\ell_\\infty^2}{8n} \\right\\}",
+   "symbol_and_unit_ledger": {
+    "rho": "any probability distribution over parameters, possibly data-dependent",
+    "q": "fixed prior distribution, chosen before seeing the data",
+    "D(rho || q)": "Kullback-Leibler divergence between rho and q",
+    "s": "inverse temperature; the choice s = n recovers the Bayesian posterior",
+    "l_inf": "almost sure bound on the loss",
+    "n": "number of observations (count)"
+   },
+   "assumptions": [
+    "The loss is bounded in [0, l_inf] almost surely for all theta",
+    "The prior q is fixed independently of the training data"
+   ],
+   "breakdown_regime": "The bound prices distributions over models rather than single models, and it can be loose when the KL term is large; for unbounded losses the Hoeffding-style step in the proof fails and variance-aware variants are needed.",
+   "domain": "Bayesian generalization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "PAC-Bayes is the engine's license to average models instead of selecting one: an ensemble weighted by a Gibbs distribution carries a guarantee in which the cost of the ensemble is its KL distance from the prior. Model averaging is therefore done with explicit temperature control, and the bound is computed, not merely cited, when an aggregated predictor is promoted.",
+    "source_operator": "pac_bayes_gibbs_posterior",
+    "telemetry": "KL divergence between deployed ensemble weights and the reference prior, plus the empirical risk of the mixture."
+   }
+  },
+  {
+   "primitive_id": "fano_inequality",
+   "name": "Fano's inequality: the probability of misidentifying a finite-alphabet random variable is at least (H(y | y-hat) - log 2) / log |Y|",
+   "verbatim_quote": "the main idea is that if y remains very uncertain given ŷ (i.e., H(y|ŷ) is large), then the probability that they are equal cannot be too large.",
+   "page": "Chapter 15, Section 15.1.3, Proposition 15.1 (printed p. 432)",
+   "latex": "P(\\hat y \\ne y) \\ge \\frac{H(y \\mid \\hat y) - \\log 2}{\\log |Y|}",
+   "symbol_and_unit_ledger": {
+    "H(y | y-hat)": "conditional entropy of y given the estimate, in nats (natural logarithm, as used throughout the book)",
+    "|Y|": "size of the finite alphabet of y",
+    "y-hat": "any estimate of y; in the full version of Proposition 15.2, y, the data, and y-hat form a Markov chain",
+    "log 2": "maximal entropy of the error indicator, the subtracted slack"
+   },
+   "assumptions": [
+    "y and y-hat take values in the same finite set Y",
+    "For the full version, the estimate depends on y only through the observed data (Markov chain)"
+   ],
+   "breakdown_regime": "Fano gives a floor, not an achievable rate: the bound is vacuous when H(y | y-hat) is below log 2, and the log |Y| denominator weakens it for large alphabets, where bounds built from pairwise KL divergences between specific hypotheses are sharper.",
+   "domain": "information-theoretic lower bounds",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fano converts the engine's identification problems into information budgets: distinguishing M candidate explanations from data requires the data to carry enough mutual information about the candidate index, full stop. Before running an expensive model-selection search, the engine checks the information budget implied by the noise level, and treats selections that exceed it as unidentifiable rather than merely uncertain.",
+    "source_operator": "fano_inequality",
+    "telemetry": "Mutual information estimates between candidate labels and observed data features, per selection problem."
+   }
+  },
+  {
+   "primitive_id": "sgd_minimax_lower_bound",
+   "name": "SGD minimax lower bound (Agarwal et al. 2012): no algorithm using unbiased stochastic gradients bounded by B can beat order BD/sqrt(t) on convex B-Lipschitz functions over a set of diameter D, so SGD is optimal up to constants",
+   "verbatim_quote": "We now prove a matching lower bound by exhibiting a set of functions that will make any algorithm have at most this desired performance.",
+   "page": "Chapter 15, Section 15.3 (printed pp. 447-449)",
+   "latex": "\\varepsilon_t(\\mathcal{A}, \\mathcal{F}) \\ge \\frac{1}{1024}\\, \\frac{BD}{\\sqrt{t}}",
+   "symbol_and_unit_ledger": {
+    "varepsilon_t": "minimax expected optimization error after t iterations",
+    "B": "Lipschitz constant and bound on stochastic gradient norms",
+    "D": "diameter of the feasible set",
+    "t": "number of stochastic gradient evaluations (count)",
+    "A, F": "the class of algorithms using the stochastic oracle, and the class of convex B-Lipschitz functions"
+   },
+   "assumptions": [
+    "Convex B-Lipschitz functions on the Euclidean ball of diameter D",
+    "Access only through independent unbiased gradient estimates with norm at most B",
+    "The proof's construction needs dimension and horizon large enough (d >= 32 log 2 and t >= d/16)"
+   ],
+   "breakdown_regime": "Optimality is relative to the stated oracle and function class: variance reduction, finite-sum structure, smoothness, or strong convexity all change the achievable rate, so the bound does not cap methods that exploit extra structure.",
+   "domain": "stochastic optimization lower bounds",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This closes the loop on the engine's online learners: their 1/sqrt(t) error is not an implementation weakness but an information limit of the oracle itself. Compute planning therefore buys error reduction only through more data, variance reduction, or added structure, never through solver cleverness alone.",
+    "source_operator": "sgd_generalization_bound",
+    "telemetry": "Observed online error curves plotted against the BD/sqrt(t) floor for each streaming model."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "cb046b3f61a22b3d-t1",
+   "think": "This book is a complete operating system for reasoning about prediction from data, built in a deliberate order. It starts from decision theory: a loss, a risk, and the Bayes predictor that minimizes the conditional expected loss pointwise, which defines the target every later method is chasing. It then installs the measuring instruments before any algorithm: the concentration inequalities (Hoeffding, McDiarmid, Bernstein, the maximal inequality, and the matrix Bernstein bound), which price how far empirical quantities can sit from their expectations. Only then does it fit its first model, least squares, where everything is exact: the closed form, the projection geometry, the bias-variance split, and the exact risk sigma squared times d over n. Ridge regression follows as the first lesson that a biased estimator with a tuned penalty beats the unbiased one, with the optimal penalty showing that trace and signal norm, not raw dimension, are the real currency. The middle of the book generalizes along two axes. The first axis is capacity: empirical risk minimization over general classes, where the excess risk splits into estimation and approximation error, convex surrogates are admitted only after a calibration check, and Rademacher complexity, through symmetrization and contraction, becomes the universal meter of how well a class can fit noise. Fast rates show what structure buys: strong convexity of the penalty converts part of the error to the 1 over n scale. The second axis is computation: gradient descent, Nesterov acceleration, and stochastic methods are analyzed as estimators in their own right, so optimization error joins the accounting, and single-pass SGD collapses the distinction between fitting and generalizing. Averaging, adaptive preconditioning, and variance reduction appear as controlled modifications of one recursion, each with its exact price in rate and memory. Two design decisions give the book its unusual coherence. First, everything is nonasymptotic: bounds hold for the actual n and t in front of the reader, with constants written out, so one rate can be compared against a competing rate term by term rather than in asymptotic shorthand. Second, each method is introduced in the simplest design that still shows the phenomenon (fixed design before random design, finite classes before infinite ones, least squares before general losses), so the reader can see exactly which assumption each complication is paying for. The summary table of optimization rates in Chapter 5 is the emblem: one grid of problem class against oracle type, every cell filled by a result proved in the chapter, and Chapter 15 later fills the matching lower-bound grid. The nonparametric chapters set the limits of local methods: local averaging is a weighted memory whose bias-variance trade is explicit and whose rate exposes the curse of dimensionality in the exponent 2 over d. Kernel methods escape finite dimension through the representer theorem and Bochner's spectral characterization, with degrees of freedom replacing parameter count, and they adapt to unknown smoothness in a way local averaging provably cannot. Sparsity receives the same treatment: the l0 price sigma squared k log(d over k) is derived first, and then the Lasso is shown to match it exactly when the design satisfies a restricted eigenvalue condition on a cone, with the condition itself honestly flagged as unverifiable in practice. Neural networks are not treated as magic: the variation norm defines the actual function space of two-layer networks, the estimation error depends on that norm and not on the neuron count, and linear latent structure explains precisely where networks beat kernels. The later chapters widen the input-output contract. Ensembles and boosting are greedy approximation in function space with variation-norm control. Online learning and bandits replace the i.i.d. contract with regret, and UCB prices exploration explicitly through its confidence bonus. Overparameterized models overturn the classical picture: gradient descent carries an implicit bias toward the minimum-norm interpolator, the risk curve descends twice, and optimally tuned ridge quietly removes the pathology. Structured prediction generalizes the output space through the SELF embedding, with calibration functions certifying surrogate training for discrete losses. Probabilistic methods separate what a prior justifies (posterior means, the MMSE, Tweedie's formula) from what it does not (MAP estimation justified by a mismatched prior), and PAC-Bayes turns Bayesian averaging into a bound with a KL price tag. The book closes by proving its own limits: Fano-based minimax lower bounds match the regression and sparsity rates, hard-instance constructions match the optimization rates, and the SGD lower bound matches the algorithm, so the reader knows which gaps are engineering and which are information. The online chapters deserve separate emphasis, because they change the contract rather than the rate: regret replaces risk, an adversary replaces the distribution, and yet the same SGD recursion, read through online-to-batch conversion, returns the generalization bounds of the batch chapters, while mirror descent shows that the geometry of the parameter space (Euclidean, entropic, or nuclear-norm) is itself a modeling choice with measurable consequences. Zeroth-order optimization makes the complementary point about information access: smoothing a function buys gradient estimates at a dimension-dependent price, which quantifies exactly what derivative information is worth. For a reasoning engine, the transferable core is the discipline of the accounting. Every number such an engine reports should carry its error budget: which term dominates among estimation, approximation, and optimization; which capacity meter was charged (Rademacher complexity, degrees of freedom, variation norm, or a parameter count priced at sigma squared over n); what selection tax was paid for searching over candidates; and what lower bound says the residual gap cannot be closed by tuning alone. The book also teaches where its own tools stop: i.i.d. sampling, worst-case problem classes, unverifiable design conditions, and constants too loose for literal operational use. Its rates are therefore best used as scaling laws, sanity checks, and veto rules inside the engine, not as literal forecasts of error.",
+   "retrocausal_genealogy": "The lineage runs from Gauss and Legendre's least squares through Wald's decision theory and the Vapnik-Chervonenkis uniform convergence program, which the Ledoux-Talagrand contraction inequality turned into the Rademacher machinery used throughout the book. Bartlett, Jordan and McAuliffe (2006) supplied the calibration criterion for convex surrogates; Tropp (2012) the matrix concentration bounds; Donoho and Johnstone the minimax viewpoint that Chapter 15 converts into Fano-based lower bounds. Barron's 1993 function spaces became the variation-norm theory developed by Bach and Chizat; Ciliberto, Rosasco and Rudi (2016, 2020) built the SELF framework for structured prediction; Catoni's PAC-Bayesian analysis and the oracle lower bounds of Agarwal et al. (2012) close the loop. The synthesis is distinctly of the French probability school: nonasymptotic, constant-aware, and suspicious of asymptotic reassurance.",
+   "theory_of_mind": "Bach believes the reader wants the simplest argument that still yields the exact rate, and he writes for someone with real linear algebra and probability who distrusts method-first presentations. His model of the field is that machine learning is applied decision theory: an algorithm is an estimator, an estimator answers to a risk, and a risk claim without its assumptions and its regime is marketing. He consistently chooses the weaker sufficient assumption over the prettier one, presents fixed design before random design and finite classes before infinite ones, and marks hard proofs and unverifiable conditions honestly instead of hiding them. The intended reader is being trained to audit claims, not to admire techniques.",
+   "cross_layer_veto": "The book arms several hard vetoes that override optimistic conclusions drawn at higher layers. No free lunch vetoes any universal performance claim that does not name its distribution class. Fano's inequality and the SGD lower bound veto roadmap promises that exceed the information budget of the data or of the oracle. The calibration criterion vetoes surrogate objectives whose minimizer is not the Bayes decision, whatever their training loss does. The restricted eigenvalue discussion vetoes support-recovery claims on collinear designs. Concentration inequalities veto reading a deviation inside the noise scale as a discovery, and the expectation-of-the-maximum bound vetoes unpenalized winner selection after large searches. In each case, a lower layer of the theory can strike down a conclusion produced by a higher layer."
+  }
+ ],
+ "universal_lens": "Read as a general template, the book says that any system predicting under uncertainty should (1) name its loss and its optimal decision under full information, (2) decompose its error into what the model class cannot express, what finite data cannot pin down, and what imperfect computation leaves behind, (3) measure capacity by how well the system can fit pure noise, (4) charge a selection tax proportional to the logarithm of the number of alternatives searched, (5) certify every surrogate objective by whether its optimum coincides with the true objective's optimum, and (6) prove a lower bound before believing an upper one. This template transfers intact to forecasting, control, experimental design, and any engineered reasoning under noise.",
+ "gsi_mapping": "The Galaxy Sports Institute takes this book as core curriculum and as a research standard. Curriculum: concentration before models, calibration checks before surrogate objectives, capacity accounting before capacity claims, and lower bounds before roadmaps. Research standard: every internal method proposal must state its assumptions in the book's form (what is bounded, what is independent, what is smooth), quote its rate together with the regime in which it holds, and name the matching lower bound or explain its absence. The Institute's evaluation protocols adopt the three-error decomposition as the required format for post-mortems, the degrees-of-freedom axis for comparing unlike model families, and the PAC-Bayes bound as the certification format for any averaged or ensembled predictor it publishes.",
+ "gse_mapping": "The Galaxy Sports Edge reasoning engine takes operational rules from this book, not slogans. Each signal family carries a noise budget from Bernstein's inequality computed from its measured variance and range. Every selection step pays the expectation-of-the-maximum tax in the logarithm of its candidate count. Capacity is metered through Rademacher estimates, degrees of freedom, and variation-norm budgets, and feature admission is priced at sigma squared over n per parameter. Online updates run averaged SGD with the 1/sqrt(n) guarantee reported next to the fit, exploration across candidate signals follows the UCB allocation, structured multi-part outputs use the SELF embedding with quadratic-surrogate calibration, and a veto layer (no free lunch, Fano budgets, calibration failures, collinearity checks) can strike any signal before it reaches a published projection."
+}

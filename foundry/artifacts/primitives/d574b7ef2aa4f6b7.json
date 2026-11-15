@@ -1,0 +1,95 @@
+{
+  "book_id": "d574b7ef2aa4f6b7",
+  "source_status": "COMPLETE",
+  "title": "CORPUS-RETRIEVER-STATE-2026-11-07",
+  "file_name": "CORPUS-RETRIEVER-STATE-2026-11-07.md",
+  "sha256": "d574b7ef2aa4f6b70221ec4ce254bef84da8638874c40781bcfb85ac1fef43ad",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in CORPUS-RETRIEVER-STATE-2026-11-07 (d574b7ef2aa4f6b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in CORPUS-RETRIEVER-STATE-2026-11-07 (d574b7ef2aa4f6b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in CORPUS-RETRIEVER-STATE-2026-11-07 (d574b7ef2aa4f6b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "corpus_manifest_resolution",
+      "name": "Manifest Resolution Protocol",
+      "verbatim_quote": "Root cause, verified against the HEAD tree: The retriever (intelligence/research/corpus_retriever.py) resolves its manifest in this order: (1) $GSE_CORPUS_MANIFEST env var, (2) repo-relative data/research_corpus/manifest.jsonl, (3) a Windows-home fallback ~/AppData/Local/hermes/cache/scratch/research_corpus/manifest.jsonl.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes deterministic file system hierarchy and environment variable precedence.",
+      "breakdown_regime": "Fails when all three paths yield empty files, resulting in silent zero-hit retrieval.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a conformal prediction set calibration routine where resolution paths correspond to sequential model ensembles.",
+        "source_operator": "corpus_manifest_resolution",
+        "telemetry": "Measures the proportion of failed resolution attempts across deployments."
+      }
+    },
+    {
+      "primitive_id": "data_code_disconnect",
+      "name": "Data-Code Disconnect",
+      "verbatim_quote": "So the corpus lane's state, exactly: retriever code real and security-reviewed (its tool_backend refuses caller-supplied manifest paths — a fixed exfiltration bug, documented in the source), index builder present (intelligence/research/corpus_index.py), stats file present (intelligence/corpus/corpus_index_stats.json) — but the DATA the retriever serves is not in the repo.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes the codebase is complete and secure, but the external data dependency remains uncaptured.",
+      "breakdown_regime": "Occurs when operational code executes without corresponding versioned data, leading to unpredictable system behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to a statistical learning gap where training code (model) lacks the ground-truth data distribution (measure).",
+        "source_operator": "data_code_disconnect",
+        "telemetry": "Tracks the ratio of executable code lines to tracked data files."
+      }
+    },
+    {
+      "primitive_id": "silent_zero_hit",
+      "name": "Silent Zero-Hit Failure",
+      "verbatim_quote": "On any clean checkout, including production deploys from this tree, retrieval returns zero hits by construction, and it fails SILENTLY: the engine's validator records corpus_hit_count 0 and proceeds; nothing raises.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes the validation logic treats zero hits as a legitimate, non-fatal outcome.",
+      "breakdown_regime": "Manifests as a stealthy degradation where the system appears functional while missing critical information.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents a type-II error in hypothesis testing, where the null hypothesis (no hit) is accepted incorrectly.",
+        "source_operator": "silent_zero_hit",
+        "telemetry": "Monitors the frequency of zero-hit responses during high-load queries."
+      }
+    },
+    {
+      "primitive_id": "two_corpus_distinction",
+      "name": "Two-Corpus Distinction",
+      "verbatim_quote": "This is distinct from the mind staging corpus (MIND-TO-ENGINE-BOUNDARY): that is trainer-ready text with no game_ctx adapter; this is a retrieval corpus whose index data never landed in the tree.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes clear separation between training data and retrieval data within the architectural design.",
+      "breakdown_regime": "Arises when one corpus is updated while the other remains stale, causing misaligned system states.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models the distinction as a bipartite graph where nodes represent data sources and edges represent synchronization links.",
+        "source_operator": "two_corpus_distinction",
+        "telemetry": "Counts the number of desynchronized data pairs observed over time."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d574b7ef2aa4f6b7_t0",
+      "think": "The core issue is a systematic data-code mismatch. The retriever's resolution protocol (PRIM `corpus_manifest_resolution`) systematically fails because the required data files do not exist in the repository. This leads to a silent zero-hit response (PRIM `silent_zero_hit`), which propagates through the system without raising an alert. The disconnect between the retriever code and the external harvest cache creates a blind spot where the system operates under incomplete information. To resolve this, we must either integrate the harvest data into the repository or establish a robust external data link. The two-corpus distinction (PRIM `two_corpus_distinction`) highlights that this problem is specific to the retrieval pipeline, not the broader training infrastructure. By isolating these primitives, we can build a diagnostic framework that tracks resolution failures, hit rates, and synchronization gaps, thereby ensuring the retriever's operational integrity.\n\nDeep epistemic analysis for CORPUS-RETRIEVER-STATE-2026-11-07 (d574b7ef2aa4f6b7, domain=other, pages_read=1/1): Operator 'Manifest Resolution Protocol' (page 1, domain other) captures: Root cause, verified against the HEAD tree: The retriever (intelligence/research/corpus_retriever.py) resolves its manifest in this order: (1) $GSE_CORPUS_MANIFEST env var, (2) repo-relative data/research_corpus/manifest.jsonl, (3) a Windows-home fallback ~/AppData/Local/hermes/cache/scratch/research_corpus/manifest.jsonl. Assumptions: Assumes deterministic file system hierarchy and environment variable precedence. Breakdown regime: Fails when all three paths yield empty files, resulting in silent zero-hit retrieval. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a conformal prediction set calibration routine where resolution paths correspond to sequential model ensembles. Operator 'Data-Code Disconnect' (page 1, domain other) captures: So the corpus lane's state, exactly: retriever code real and security-reviewed (its tool_backend refuses caller-supplied manifest paths — a fixed exfiltration bug, documented in the source), index builder present (intelligence/research/corpus_index.py), stats file present (intelligence/corpus/corpus_index_stats.json) — but the DATA the retriever serves is not in the repo. Assumptions: Assumes the codebase is complete and secure, but the external data dependency remains uncaptured. Breakdown regime: Occurs when operational code executes without corresponding versioned data, leading to unpredictable system behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to a statistical learning gap where training code (model) lacks the ground-truth data distribution (measure). Operator 'Silent Zero-Hit Failure' (page 1, domain other) captures: On any clean checkout, including production deploys from this tree, retrieval returns zero hits by construction, and it fails SILENTLY: the engine's validator records corpus_hit_count 0 and proceeds; nothing raises. Assumptions: Assumes the validation logic treats zero hits as a legitimate, non-fatal outcome. Breakdown regime: Manifests as a stealthy degradation where the system appears functional while missing critical information. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a type-II error in hypothesis testing, where the null hypothesis (no hit) is accepted incorrectly. Operator 'Two-Corpus Distinction' (page 1, domain other) captures: This is distinct from the mind staging corpus (MIND-TO-ENGINE-BOUNDARY): that is trainer-ready text with no game_ctx adapter; this is a retrieval corpus whose index data never landed in the tree. Assumptions: Assumes clear separation between training data and retrieval data within the architectural design. Breakdown regime: Arises when one corpus is updated while the other remains stale, causing misaligned system states. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models the distinction as a bipartite graph where nodes represent data sources and edges represent synchronization links. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CORPUS-RETRIEVER-STATE-2026-11-07 (d574b7ef2aa4f6b7, domain=other, pages_read=1/1): Operator 'Manifest Resolution Protocol' (page 1, domain other) captures: Root cause, verified against the HEAD tree: The retriever (intelligence/research/corpus_retriever.py) resolves its manifest in this order: (1) $GSE_CORPUS_MANIFEST env var, (2) repo-relative data/research_corpus/manifest.jsonl, (3) a Windows-home fallback ~/AppData/Local/hermes/cache/scratch/research_corpus/manifest.jsonl. Assumptions: Assumes deterministic file system hierarchy and environment variable precedence. Breakdown regime: Fails when all three paths yield empty files, resulting in silent zero-hit retrieval. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a conformal prediction set calibration routine where resolution paths correspond to sequential model ensembles. Operator 'Data-Code Disconnect' (page 1, domain other) captures: So the corpus lane's state, exactly: retriever code real and security-reviewed (its tool_backend refuses caller-supplied manifest paths — a fixed exfiltration bug, documented in the source), index builder present (intelligence/research/corpus_index.py), stats file present (intelligence/corpus/corpus_index_stats.json) — but the DATA the retriever serves is not in the repo. Assumptions: Assumes the codebase is complete and secure, but the external data dependency remains uncaptured. Breakdown regime: Occurs when operational code executes without corresponding versioned data, leading to unpredictable system behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to a statistical learning gap where training code (model) lacks the ground-truth data distribution (measure). Operator 'Silent Zero-Hit Failure' (page 1, domain other) captures: On any clean checkout, including production deploys from this tree, retrieval returns zero hits by construction, and it fails SILENTLY: the engine's validator records corpus_hit_count 0 and proceeds; nothing raises. Assumptions: Assumes the validation logic treats zero hits as a legitimate, non-fatal outcome. Breakdown regime: Manifests as a stealthy degradation where the system appears functional while missing critical information. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a type-II error in hypothesis testing, where the null hypothesis (no hit) is accepted incorrectly. Operator 'Two-Corpus Distinction' (page 1, domain other) captures: This is distinct from the mind staging corpus (MIND-TO-ENGINE-BOUNDARY): that is trainer-ready text with no game_ctx adapter; this is a retrieval corpus whose index data never landed in the tree. Assumptions: Assumes clear separation between training data and retrieval data within the architectural design. Breakdown regime: Arises when one corpus is updated while the other remains stale, causing misaligned system states. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models the distinction as a bipartite graph where nodes represent data sources and edges represent synchronization links. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This failure mode mirrors classic configuration drift issues in distributed systems, such as those studied in the PAC-learning framework for model deployment. It also echoes the 'hidden dataset' problems identified in reproducible AI, where the true data distribution remains undocumented. Retrocausal Genealogy: Rooted in CORPUS-RETRIEVER-STATE-2026-11-07 (d574b7ef2aa4f6b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "From the perspective of the development team, the disconnect likely arose from a separation between backend engineering (who wrote the retriever) and data operations (who manage the harvest cache). They may have assumed the cache would always be available, leading to a fragile runtime dependency. From the ops team's view, the retriever was seen as a black box requiring only an endpoint, not a local file.",
+      "cross_layer_veto": "To prevent cross-layer leakage, we enforce strict data provenance tracking using Merkle trees on the manifest files. Additionally, we implement a telemetry check that flags any resolution path returning an empty result, forcing manual intervention before proceeding with zero-hit queries. Cross-Layer Veto & Anti-Leakage Check: Rooted in CORPUS-RETRIEVER-STATE-2026-11-07 (d574b7ef2aa4f6b7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

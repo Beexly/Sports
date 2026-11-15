@@ -1,0 +1,78 @@
+{
+  "book_id": "1b5e94a4dc3ad3e5",
+  "source_status": "COMPLETE",
+  "title": "verified-claims",
+  "file_name": "verified-claims.md",
+  "sha256": "1b5e94a4dc3ad3e5e4c5ff88b92db5a785f5e566d565d699a9683b61420c67e1",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Time-varying edge decay (TAE) θ = -0.62 models declining predictive power; decorrelation γ = 0.4 optimizes portfolio returns; calibration selects ROI-maximizing strategies over accuracy. Universal Lens: Rooted in verified-claims (1b5e94a4dc3ad3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian hierarchical models encode TAE via posterior HPD intervals; conformal prediction frameworks apply decorrelation γ for uncertainty quantification; calibration metrics guide ROI selection through empirical risk minimization. GSI Mapping: Rooted in verified-claims (1b5e94a4dc3ad3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions driven by TAE decay inform dynamic strategy adjustment; portfolio weights updated using γ-derived profit expectations; agent decisions guided by calibrated ROI thresholds rather than raw accuracy. GSE Mapping: Rooted in verified-claims (1b5e94a4dc3ad3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "time_varying_edge_decay",
+      "name": "Time-Varying Edge Decay",
+      "verbatim_quote": "CITED — carry forward ### Time-varying edge decay (TAE) - **θ = -0.62, 95% HPD (-1.08, -0.17)** — cited in `c07d-d01` (brief 0602).",
+      "page": 1,
+      "latex": "\\theta = -0.62, \\text{95\\% HPD } (-1.08, -0.17)",
+      "symbol_and_unit_ledger": "{'θ': 'dimensionless decay rate'}",
+      "assumptions": "Predictive edge decays exponentially over time; model assumes stationary data environment.",
+      "breakdown_regime": "θ < -1.08 or θ > -0.17 indicates unreliable edge estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes temporal degradation of signal-to-noise ratio in sequential decision-making contexts.",
+        "source_operator": "time_varying_edge_decay",
+        "telemetry": "Posterior credible interval width of θ estimates."
+      }
+    },
+    {
+      "primitive_id": "decorrelation_portfolio_construction",
+      "name": "Decorrelation Portfolio Construction",
+      "verbatim_quote": "### Decorrelation / portfolio construction - **γ = 0.4 → profit 1.74 ± 0.14 at accuracy 67.15 vs book 69 ± 2.5** — cited (0174).",
+      "page": 1,
+      "latex": "\\gamma = 0.4 \\rightarrow \\text{profit } 1.74 \\pm 0.14 \\text{ at accuracy } 67.15 \\text{ vs book } 69 \\pm 2.5",
+      "symbol_and_unit_ledger": "{'γ': 'decorrelation coefficient (dimensionless)', 'profit': 'percentage return (%)', 'accuracy': 'percentage correct (%)'}",
+      "assumptions": "Portfolio diversification reduces correlation between assets; performance measured via Sharpe-like ratios.",
+      "breakdown_regime": "γ ≤ 0 or γ ≥ 1 implies ineffective or over-diversified portfolios.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's multi-agent reinforcement learning framework where γ determines policy entropy and reward stability.",
+        "source_operator": "decorrelation_portfolio_construction",
+        "telemetry": "Sharpe ratio of portfolio returns adjusted for γ."
+      }
+    },
+    {
+      "primitive_id": "calibration_vs_accuracy_selection",
+      "name": "Calibration vs Accuracy Selection",
+      "verbatim_quote": "### Calibration-vs-accuracy selection - **Calibration-selected +34.69% ROI vs accuracy-selected -35.17% ROI** — cited (0290).",
+      "page": 1,
+      "latex": "\\text{Calibration-selected } +34.69\\% \\text{ ROI vs accuracy-selected } -35.17\\% \\text{ ROI}",
+      "symbol_and_unit_ledger": "{'ROI': 'return on investment (%)'}",
+      "assumptions": "Calibrated models yield better long-term financial outcomes than accuracy-focused ones.",
+      "breakdown_regime": "ROI difference exceeds ±50% signals model misalignment or data drift.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents GSI’s preference for probabilistic consistency over point estimate precision in forecasting.",
+        "source_operator": "calibration_vs_accuracy_selection",
+        "telemetry": "Difference in cumulative ROI between calibration-based and accuracy-based strategies."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1b5e94a4dc3ad3e5_t0",
+      "think": "TAE models predictive edge decay using exponential decay parameter θ, which must be estimated within its 95% HPD range. This enables GSI to dynamically adjust belief confidence over time. Decorrelation γ optimizes portfolio construction by balancing risk and return, with γ = 0.4 yielding stable profits under observed accuracy constraints. Calibration-based selection outperforms accuracy-based selection due to superior long-run consistency in ROI generation. These primitives form a coherent inference kernel for adaptive strategic planning across uncertain domains.\n\nDeep epistemic analysis for verified-claims (1b5e94a4dc3ad3e5, domain=other, pages_read=2/2): Operator 'Time-Varying Edge Decay' (page 1, domain other) captures: CITED — carry forward ### Time-varying edge decay (TAE) - **θ = -0.62, 95% HPD (-1.08, -0.17)** — cited in `c07d-d01` (brief 0602). Assumptions: Predictive edge decays exponentially over time; model assumes stationary data environment. Breakdown regime: θ < -1.08 or θ > -0.17 indicates unreliable edge estimation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes temporal degradation of signal-to-noise ratio in sequential decision-making contexts. Operator 'Decorrelation Portfolio Construction' (page 1, domain other) captures: ### Decorrelation / portfolio construction - **γ = 0.4 → profit 1.74 ± 0.14 at accuracy 67.15 vs book 69 ± 2.5** — cited (0174). Assumptions: Portfolio diversification reduces correlation between assets; performance measured via Sharpe-like ratios. Breakdown regime: γ ≤ 0 or γ ≥ 1 implies ineffective or over-diversified portfolios. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's multi-agent reinforcement learning framework where γ determines policy entropy and reward stability. Operator 'Calibration vs Accuracy Selection' (page 1, domain other) captures: ### Calibration-vs-accuracy selection - **Calibration-selected +34.69% ROI vs accuracy-selected -35.17% ROI** — cited (0290). Assumptions: Calibrated models yield better long-term financial outcomes than accuracy-focused ones. Breakdown regime: ROI difference exceeds ±50% signals model misalignment or data drift. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents GSI’s preference for probabilistic consistency over point estimate precision in forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for verified-claims (1b5e94a4dc3ad3e5, domain=other, pages_read=2/2): Operator 'Time-Varying Edge Decay' (page 1, domain other) captures: CITED — carry forward ### Time-varying edge decay (TAE) - **θ = -0.62, 95% HPD (-1.08, -0.17)** — cited in `c07d-d01` (brief 0602). Assumptions: Predictive edge decays exponentially over time; model assumes stationary data environment. Breakdown regime: θ < -1.08 or θ > -0.17 indicates unreliable edge estimation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes temporal degradation of signal-to-noise ratio in sequential decision-making contexts. Operator 'Decorrelation Portfolio Construction' (page 1, domain other) captures: ### Decorrelation / portfolio construction - **γ = 0.4 → profit 1.74 ± 0.14 at accuracy 67.15 vs book 69 ± 2.5** — cited (0174). Assumptions: Portfolio diversification reduces correlation between assets; performance measured via Sharpe-like ratios. Breakdown regime: γ ≤ 0 or γ ≥ 1 implies ineffective or over-diversified portfolios. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's multi-agent reinforcement learning framework where γ determines policy entropy and reward stability. Operator 'Calibration vs Accuracy Selection' (page 1, domain other) captures: ### Calibration-vs-accuracy selection - **Calibration-selected +34.69% ROI vs accuracy-selected -35.17% ROI** — cited (0290). Assumptions: Calibrated models yield better long-term financial outcomes than accuracy-focused ones. Breakdown regime: ROI difference exceeds ±50% signals model misalignment or data drift. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents GSI’s preference for probabilistic consistency over point estimate precision in forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and information geometry, these primitives extend classical statistical learning into dynamic environments with temporal dependencies and multi-objective optimization. Retrocausal Genealogy: Rooted in verified-claims (1b5e94a4dc3ad3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in verified-claims (1b5e94a4dc3ad3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may prioritize either short-term accuracy or long-term calibration, leading to divergent strategies. The system models both perspectives to simulate competitive behavior and optimize collective outcomes. Theory of Mind & Decision Maker Model: Rooted in verified-claims (1b5e94a4dc3ad3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that TAE and decorrelation operate independently; leakage occurs when γ influences θ estimation. Veto conditions ensure that each primitive maintains distinct functional roles without cross-contamination. Cross-Layer Veto & Anti-Leakage Check: Rooted in verified-claims (1b5e94a4dc3ad3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in verified-claims (1b5e94a4dc3ad3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

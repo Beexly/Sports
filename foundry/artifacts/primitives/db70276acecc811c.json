@@ -1,0 +1,78 @@
+{
+  "book_id": "db70276acecc811c",
+  "source_status": "COMPLETE",
+  "title": "1614-performance-of-betting-lines-predicting-nfl-games",
+  "file_name": "1614-performance-of-betting-lines-predicting-nfl-games.md",
+  "sha256": "db70276acecc811c03c163ed88664849bdb2b4232044636eec2b66cd2843a7f6",
+  "primary_domain": "football",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Betting line spreads map to normal-distributed win probabilities via Φ(p/13.588), enabling Monte Carlo season simulation and ATS edge validation. Universal Lens: Rooted in 1614-performance-of-betting-lines-predicting-nfl-games (db70276acecc811c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction to calibrate spread-implied probabilities using the 13.588 σ baseline, treating line movement as a stochastic process for Bayesian updating of game outcome uncertainty. GSI Mapping: Rooted in 1614-performance-of-betting-lines-predicting-nfl-games (db70276acecc811c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses the spread→probability map as a foundational kernel for real-time state transitions in game simulations, incorporating line movement priors to detect anomalous steam and adjust win probability estimates dynamically.",
+  "primitives": [
+    {
+      "primitive_id": "spread_to_win_probability",
+      "name": "Spread-to-Win Probability Mapping",
+      "verbatim_quote": "- Win probability via normal CDF: Pr(F>U|P=p) = Φ(p/13.588) (Eq.",
+      "page": 1,
+      "latex": "Pr(F>U|P=p) = \\Phi\\left(\\frac{p}{13.588}\\right)",
+      "symbol_and_unit_ledger": "{'p': 'spread value in points', 'Φ': 'standard normal cumulative distribution function', '13.588': 'scale parameter in points'}",
+      "assumptions": "Game outcomes follow normal distribution; spread reflects true margin; independence across games.",
+      "breakdown_regime": "When p approaches ±∞, Pr → 0 or 1 respectively.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps betting line spread to win probability for Monte Carlo simulation and real-time inference in GSE.",
+        "source_operator": "spread_to_win_probability",
+        "telemetry": "Brier score of predicted vs. actual game outcomes."
+      }
+    },
+    {
+      "primitive_id": "line_difference_metric",
+      "name": "Line Difference Metric",
+      "verbatim_quote": "Method / model - Line Difference: LD = (FavoriteScore - UnderdogScore) - |ClosingLine| (Eq.",
+      "page": 1,
+      "latex": "LD = (F_S - U_S) - |CL|",
+      "symbol_and_unit_ledger": "{'LD': 'line difference in points', 'F_S': 'favorite team score', 'U_S': 'underdog team score', 'CL': 'closing line in points'}",
+      "assumptions": "Actual margin reflects true game strength; closing line represents market consensus.",
+      "breakdown_regime": "When LD ≈ 0, line accurately predicts outcome.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to residual error in regression of actual margin against implied spread.",
+        "source_operator": "line_difference_metric",
+        "telemetry": "Distribution of LD across 2,560 games for calibration of spread accuracy."
+      }
+    },
+    {
+      "primitive_id": "home_underdog_edge",
+      "name": "Home-Underdog ATS Edge",
+      "verbatim_quote": "- Line movement analysis: distribution of open→close moves; by-week movement rates; opening vs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Home team underdogs perform better than neutral expectation due to crowd support or strategic bias.",
+      "breakdown_regime": "Edge diminishes with increased sample size and market efficiency.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as a prior in Bayesian calibration of ATS predictions; not a direct model input.",
+        "source_operator": "home_underdog_edge",
+        "telemetry": "ATS win rate over time series for validation of edge decay hypothesis."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "db70276acecc811c_t0",
+      "think": "The core insight of the paper is that betting lines encode collective intelligence about game outcomes through a probabilistic lens. The normal approximation Pr(F>U|P=p) = Φ(p/13.588) provides a clean baseline for converting spreads into win probabilities. This mapping is grounded in the assumption that game margins are normally distributed around the spread, with σ = 13.588. The Line Difference (LD) metric evaluates how well the line predicts actual outcomes. The home-underdog ATS edge is treated as a dated empirical observation rather than a predictive kernel. These primitives form a dual structure: one for static probability estimation and another for dynamic validation. Failures arise when game outcomes deviate significantly from normality or when line movement is driven by non-fundamental factors like betting volume or public sentiment. The model assumes independence between games, which may fail during correlated events such as injuries or weather impacts.\n\nDeep epistemic analysis for 1614-performance-of-betting-lines-predicting-nfl-games (db70276acecc811c, domain=football, pages_read=4/4): Operator 'Spread-to-Win Probability Mapping' (page 1, domain football) captures: - Win probability via normal CDF: Pr(F>U|P=p) = Φ(p/13.588) (Eq. Assumptions: Game outcomes follow normal distribution; spread reflects true margin; independence across games. Breakdown regime: When p approaches ±∞, Pr → 0 or 1 respectively. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps betting line spread to win probability for Monte Carlo simulation and real-time inference in GSE. Operator 'Line Difference Metric' (page 1, domain football) captures: Method / model - Line Difference: LD = (FavoriteScore - UnderdogScore) - |ClosingLine| (Eq. Assumptions: Actual margin reflects true game strength; closing line represents market consensus. Breakdown regime: When LD ≈ 0, line accurately predicts outcome. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to residual error in regression of actual margin against implied spread. Operator 'Home-Underdog ATS Edge' (page 1, domain football) captures: - Line movement analysis: distribution of open→close moves; by-week movement rates; opening vs. Assumptions: Home team underdogs perform better than neutral expectation due to crowd support or strategic bias. Breakdown regime: Edge diminishes with increased sample size and market efficiency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as a prior in Bayesian calibration of ATS predictions; not a direct model input. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1614-performance-of-betting-lines-predicting-nfl-games (db70276acecc811c, domain=football, pages_read=4/4): Operator 'Spread-to-Win Probability Mapping' (page 1, domain football) captures: - Win probability via normal CDF: Pr(F>U|P=p) = Φ(p/13.588) (Eq. Assumptions: Game outcomes follow normal distribution; spread reflects true margin; independence across games. Breakdown regime: When p approaches ±∞, Pr → 0 or 1 respectively. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps betting line spread to win probability for Monte Carlo simulation and real-time inference in GSE. Operator 'Line Difference Metric' (page 1, domain football) captures: Method / model - Line Difference: LD = (FavoriteScore - UnderdogScore) - |ClosingLine| (Eq. Assumptions: Actual margin reflects true game strength; closing line represents market consensus. Breakdown regime: When LD ≈ 0, line accurately predicts outcome. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to residual error in regression of actual margin against implied spread. Operator 'Home-Underdog ATS Edge' (page 1, domain football) captures: - Line movement analysis: distribution of open→close moves; by-week movement rates; opening vs. Assumptions: Home team underdogs perform better than neutral expectation due to crowd support or strategic bias. Breakdown regime: Edge diminishes with increased sample size and market efficiency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as a prior in Bayesian calibration of ATS predictions; not a direct model input. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This work builds upon earlier models like Stern (1991) that also mapped spreads to probabilities. It extends the framework by introducing empirical calibration over a large dataset and applying it to seasonal simulations, establishing a bridge between microstructure and macro-level forecasting. Retrocausal Genealogy: Rooted in 1614-performance-of-betting-lines-predicting-nfl-games (db70276acecc811c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bookmakers who set lines based on risk and liquidity, gamblers who react to perceived inefficiencies, and teams who adjust strategies based on line movements. Each agent contributes to the emergent spread, which must be interpreted through the lens of collective rationality. Theory of Mind & Decision Maker Model: Rooted in 1614-performance-of-betting-lines-predicting-nfl-games (db70276acecc811c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that line movement and spread alone do not fully explain variance in outcomes. Leakage occurs if the same signal is encoded multiple times (e.g., spread and movement both capturing market sentiment). The model vetoes reliance on outdated edge assumptions like home-underdog performance without revalidation. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1614-performance-of-betting-lines-predicting-nfl-games (db70276acecc811c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

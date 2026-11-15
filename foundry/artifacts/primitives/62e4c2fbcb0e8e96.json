@@ -1,0 +1,95 @@
+{
+  "book_id": "62e4c2fbcb0e8e96",
+  "source_status": "COMPLETE",
+  "title": "p0331",
+  "file_name": "p0331.txt",
+  "sha256": "62e4c2fbcb0e8e96038af2b6ef15358c45e98c4fc102696d7ccacff3cdc0d6a1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "nvidia-nemotron-550b:nvidia/nemotron-3-ultra-550b-a55b",
+  "ocr_rescued": false,
+  "universal_lens": "Will and belief form a physiological isomorphism: a single operator Ψ mapping (object, self) → relation, with indeterminacy σ coupling volitional and doxastic degrees of freedom. Habit-emotion knitting H acts as a low-pass filter converting instantaneous conversions C into stable attractors.",
+  "gsi_mapping": "GSI treats Ψ as a conformal predictor: belief-state b_t = Ψ(o_t, s_t) + ε_t where ε_t ∼ N(0, σ²) shares volatility with volition v_t. Calibration requires σ(b) = σ(v) and non-conformity scores invariant under H-filtering of conversion events C.",
+  "gse_mapping": "GSE models Ψ as a state-transition kernel: s_{t+1} = Φ(s_t, o_t; θ) where θ encodes physiological constraints. Instantaneous conversions C are Poisson jumps with rate λ; habit H integrates jumps into persistent policy π. Breakdown when λ ≫ 1/τ_H (conversion rate exceeds habit time-constant).",
+  "primitives": [
+    {
+      "primitive_id": "will_belief_isomorphism",
+      "name": "Will-Belief Isomorphism Operator",
+      "verbatim_quote": "Will and Belief, in short, meaning a certain relation between objects and the Self, are two names for one and the same PsYcHOLoGICAL phenomenon.",
+      "page": 1,
+      "latex": "\\Psi: \\mathcal{O} \\times \\mathcal{S} \\to \\mathcal{R}, \\quad \\Psi(o,s) = \\langle o, s \\rangle_{\\mathcal{H}}",
+      "symbol_and_unit_ledger": "Ψ: isomorphism operator (dimensionless); O: object space (dimensionless); S: self-state space (dimensionless); R: relation space (dimensionless); H: Hilbert space of physiological states (dimensionless)",
+      "assumptions": "Physiological substrate H is shared; mapping is bijective on support; no exogenous psychological primitives.",
+      "breakdown_regime": "When physiological coupling γ → 0 (decoupled will/belief pathways) or when |O|, |S| → ∞ (combinatorial explosion).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Ψ defines joint conformal region C_α = {(b,v): |b - v| ≤ q_α(σ)}. GSE: Ψ is transition kernel Φ(s'|s,o) = δ(s' - Ψ(o,s)).",
+        "source_operator": "will_belief_isomorphism",
+        "telemetry": "Cross-correlation ρ(b_t, v_t) → 1; conformal coverage 1-α; transition entropy H[Φ] minimized."
+      }
+    },
+    {
+      "primitive_id": "physiological_grounding",
+      "name": "Physiological Grounding Operator",
+      "verbatim_quote": "Its roots, however, do not lie in psychology, but in physiology; as the chapter on Volition will abundantly make plain.",
+      "page": 1,
+      "latex": "\\Gamma: \\mathcal{P} \\to \\mathcal{H}, \\quad \\Gamma(p) = \\text{phys}(p) \\quad \\text{s.t.} \\quad \\partial_t \\Gamma = \\mathcal{L}_{\\text{phys}} \\Gamma",
+      "symbol_and_unit_ledger": "Γ: grounding operator (dimensionless); P: psychological phenomenon space (dimensionless); H: physiological state space (dimensionless); L_phys: physiological Liouvillian (s⁻¹)",
+      "assumptions": "Psychology supervenes on physiology; Liouvillian L_phys generates deterministic flow; no downward causation.",
+      "breakdown_regime": "When τ_psych ≪ τ_phys (psychological timescales faster than physiological) or when L_phys has degenerate spectrum.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Γ induces prior p(θ|phys) for conformal calibration. GSE: Γ defines state-space embedding φ: S → H with metric g_ij = ∂_i Γ^k ∂_j Γ^k.",
+        "source_operator": "physiological_grounding",
+        "telemetry": "Prior predictive checks; embedding distortion ‖g - g_true‖_F; Lyapunov exponents of L_phys."
+      }
+    },
+    {
+      "primitive_id": "indeterminacy_coupling",
+      "name": "Indeterminacy Coupling",
+      "verbatim_quote": "If our wills are indeterminate, so must our beliefs be, etc.",
+      "page": 1,
+      "latex": "\\sigma_W = \\sigma_B \\equiv \\sigma, \\quad \\text{Cov}(W_t, B_t) = \\sigma^2 \\rho_{WB}",
+      "symbol_and_unit_ledger": "σ_W: volitional indeterminacy (dimensionless); σ_B: doxastic indeterminacy (dimensionless); ρ_WB: coupling correlation (dimensionless, [-1,1])",
+      "assumptions": "Shared noise source; equal marginal variances; stationary coupling.",
+      "breakdown_regime": "When ρ_WB → 0 (decoupled noise) or σ → ∞ (unbounded indeterminacy).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Shared σ defines joint prediction interval width. GSE: σ sets exploration temperature in policy π(a|s) ∝ exp(Q/σ).",
+        "source_operator": "indeterminacy_coupling",
+        "telemetry": "Empirical σ_W, σ_B, ρ_WB; prediction interval coverage; policy entropy H[π]."
+      }
+    },
+    {
+      "primitive_id": "conversion_dynamics",
+      "name": "Conversion Dynamics",
+      "verbatim_quote": "Nature sometimes, and indeed not very infrequently, produces instantaneous conversions for us.",
+      "page": 1,
+      "latex": "C_t \\sim \\text{Poisson}(\\lambda), \\quad \\Delta b = \\kappa \\cdot \\mathbb{1}_{C_t=1}, \\quad H_t = \\int_0^t e^{-(t-\\tau)/\\tau_H} \\Delta b_\\tau d\\tau",
+      "symbol_and_unit_ledger": "C_t: conversion event count (dimensionless); λ: conversion rate (s⁻¹); κ: belief jump magnitude (dimensionless); H_t: habit-emotion state (dimensionless); τ_H: habit time-constant (s)",
+      "assumptions": "Conversions are exogenous Poisson jumps; habit integrates jumps exponentially; κ constant.",
+      "breakdown_regime": "When λ τ_H ≫ 1 (conversions faster than habit integration) or κ → 0 (vanishing jump impact).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: C_t are non-conformity spikes; H_t defines adaptive calibration window. GSE: C_t trigger policy reset; H_t is eligibility trace.",
+        "source_operator": "conversion_dynamics",
+        "telemetry": "Jump detection F1-score; habit time-constant τ_H estimate; policy regret after conversion."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "62e4c2fbcb0e8e96_t0",
+      "think": "The text establishes a physiological isomorphism Ψ between will and belief (quotes 1-4). This is formalized as a shared operator on object-self pairs with identical indeterminacy σ (quote 5). The first act of free will is believing in free will (quote 6), a fixed-point condition Ψ(o_fw, s) = s. Belief as emotional reaction (quote 7) suggests Ψ is nonlinear: Ψ(o,s) = σ(⟨o,s⟩_H + η) where η ∼ N(0,σ²). Instantaneous conversions (quotes 8-12) are Poisson jumps C_t with rate λ, producing belief updates Δb = κ that bypass volition. Habit-emotion knitting (quote 13) is a low-pass filter H_t = ∫ e^{-(t-τ)/τ_H} Δb_τ dτ converting jumps into stable attractors. Breakdown occurs when λτ_H ≫ 1 (conversions overwhelm habit) or γ → 0 (physiological decoupling). The GSE mapping uses Ψ as transition kernel Φ; GSI uses shared σ for joint conformal prediction. Cross-layer veto requires ρ_WB > 0.5 and λτ_H < 0.1 to prevent leakage between volitional and doxastic channels.\n\nDeep epistemic analysis for p0331 (62e4c2fbcb0e8e96, domain=other, pages_read=1/1): Operator 'Will-Belief Isomorphism Operator' (page 1, domain other) captures: Will and Belief, in short, meaning a certain relation between objects and the Self, are two names for one and the same PsYcHOLoGICAL phenomenon. Assumptions: Physiological substrate H is shared; mapping is bijective on support; no exogenous psychological primitives. Breakdown regime: When physiological coupling γ → 0 (decoupled will/belief pathways) or when |O|, |S| → ∞ (combinatorial explosion). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Ψ defines joint conformal region C_α = {(b,v): |b - v| ≤ q_α(σ)}. GSE: Ψ is transition kernel Φ(s'|s,o) = δ(s' - Ψ(o,s)). Operator 'Physiological Grounding Operator' (page 1, domain other) captures: Its roots, however, do not lie in psychology, but in physiology; as the chapter on Volition will abundantly make plain. Assumptions: Psychology supervenes on physiology; Liouvillian L_phys generates deterministic flow; no downward causation. Breakdown regime: When τ_psych ≪ τ_phys (psychological timescales faster than physiological) or when L_phys has degenerate spectrum. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Γ induces prior p(θ|phys) for conformal calibration. GSE: Γ defines state-space embedding φ: S → H with metric g_ij = ∂_i Γ^k ∂_j Γ^k. Operator 'Indeterminacy Coupling' (page 1, domain other) captures: If our wills are indeterminate, so must our beliefs be, etc. Assumptions: Shared noise source; equal marginal variances; stationary coupling. Breakdown regime: When ρ_WB → 0 (decoupled noise) or σ → ∞ (unbounded indeterminacy). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Shared σ defines joint prediction interval width. GSE: σ sets exploration temperature in policy π(a|s) ∝ exp(Q/σ). Operator 'Conversion Dynamics' (page 1, domain other) captures: Nature sometimes, and indeed not very infrequently, produces instantaneous conversions for us. Assumptions: Conversions are exogenous Poisson jumps; habit integrates jumps exponentially; κ constant. Breakdown regime: When λ τ_H ≫ 1 (conversions faster than habit integration) or κ → 0 (vanishing jump impact). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: C_t are non-conformity spikes; H_t defines adaptive calibration window. GSE: C_t trigger policy reset; H_t is eligibility trace. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0331 (62e4c2fbcb0e8e96, domain=other, pages_read=1/1): Operator 'Will-Belief Isomorphism Operator' (page 1, domain other) captures: Will and Belief, in short, meaning a certain relation between objects and the Self, are two names for one and the same PsYcHOLoGICAL phenomenon. Assumptions: Physiological substrate H is shared; mapping is bijective on support; no exogenous psychological primitives. Breakdown regime: When physiological coupling γ → 0 (decoupled will/belief pathways) or when |O|, |S| → ∞ (combinatorial explosion). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Ψ defines joint conformal region C_α = {(b,v): |b - v| ≤ q_α(σ)}. GSE: Ψ is transition kernel Φ(s'|s,o) = δ(s' - Ψ(o,s)). Operator 'Physiological Grounding Operator' (page 1, domain other) captures: Its roots, however, do not lie in psychology, but in physiology; as the chapter on Volition will abundantly make plain. Assumptions: Psychology supervenes on physiology; Liouvillian L_phys generates deterministic flow; no downward causation. Breakdown regime: When τ_psych ≪ τ_phys (psychological timescales faster than physiological) or when L_phys has degenerate spectrum. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Γ induces prior p(θ|phys) for conformal calibration. GSE: Γ defines state-space embedding φ: S → H with metric g_ij = ∂_i Γ^k ∂_j Γ^k. Operator 'Indeterminacy Coupling' (page 1, domain other) captures: If our wills are indeterminate, so must our beliefs be, etc. Assumptions: Shared noise source; equal marginal variances; stationary coupling. Breakdown regime: When ρ_WB → 0 (decoupled noise) or σ → ∞ (unbounded indeterminacy). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Shared σ defines joint prediction interval width. GSE: σ sets exploration temperature in policy π(a|s) ∝ exp(Q/σ). Operator 'Conversion Dynamics' (page 1, domain other) captures: Nature sometimes, and indeed not very infrequently, produces instantaneous conversions for us. Assumptions: Conversions are exogenous Poisson jumps; habit integrates jumps exponentially; κ constant. Breakdown regime: When λ τ_H ≫ 1 (conversions faster than habit integration) or κ → 0 (vanishing jump impact). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: C_t are non-conformity spikes; H_t defines adaptive calibration window. GSE: C_t trigger policy reset; H_t is eligibility trace. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "James' radical empiricism (1890) → physiological psychology (Wundt, Helmholtz) → cybernetic isomorphism (Wiener, 1948) → predictive processing (Friston, 2010) → conformal prediction (Vovk et al., 2005) → sovereign primitives (this work). Retrocausal Genealogy: Rooted in p0331 (62e4c2fbcb0e8e96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0331 (62e4c2fbcb0e8e96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models belief as voluntary (high ρ_WB) vs. involuntary (low ρ_WB). Voluntary model expects Ψ controllable; involuntary model expects Poisson conversions C_t. Nash equilibrium: agent invests in habit H_t to reduce conversion surprise, adversary times conversions at λ ≈ 1/τ_H. Theory of Mind & Decision Maker Model: Rooted in p0331 (62e4c2fbcb0e8e96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity: ‖∇_s Ψ - ∇_o Ψ‖ > ε prevents object-self confusion. Leakage veto: I(W;B|H) < δ ensures habit screens volition-belief mutual information. Physiological veto: γ > γ_min maintains Γ injectivity. Conversion veto: λτ_H < 0.1 prevents habit saturation. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0331 (62e4c2fbcb0e8e96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

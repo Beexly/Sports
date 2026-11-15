@@ -1,0 +1,78 @@
+{
+  "book_id": "314cdce64a7822de",
+  "source_status": "COMPLETE",
+  "title": "2022 - Zero Running Backs or Zero Points An Analysis on the Optimal Fantasy Football Draft Strategy - Heller et al",
+  "file_name": "2022 - Zero Running Backs or Zero Points An Analysis on the Optimal Fantasy Football Draft Strategy - Heller et al.md",
+  "sha256": "314cdce64a7822de4b6b6bd36c37e3c879a002106e8e74a1098de87e31167d5b",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A probabilistic draft simulation framework integrating ADP, variance, and positional value to optimize fantasy football strategy through repeated stochastic sampling. Universal Lens: Rooted in 2022 - Zero Running Backs or Zero Points An Analysis on the Optimal Fantasy Football Draft Strategy - Heller et al (314cdce64a7822de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models draft position uncertainty using ADP and SD distributions, generating posterior belief states over player value for dynamic roster construction. GSI Mapping: Rooted in 2022 - Zero Running Backs or Zero Points An Analysis on the Optimal Fantasy Football Draft Strategy - Heller et al (314cdce64a7822de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine simulates 12-team snake drafts across 14 rounds with 100 repetitions per year, enabling state transitions based on positional rankings and fantasy point projections. GSE Mapping: Rooted in 2022 - Zero Running Backs or Zero Points An Analysis on the Optimal Fantasy Football Draft Strategy - Heller et al (314cdce64a7822de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "draft_position_generator",
+      "name": "Draft Position Generator",
+      "verbatim_quote": "erent position groups RB WR TE QB DEF STANDARDIZED FPT BY POS, GROUPED BY YEAR ## MODEL PROCESS ADP (acting as the mean) and SD are used to generate a random draft position.",
+      "page": 2,
+      "latex": "\\text{Draft Position} \\sim \\mathcal{N}(\\text{ADP}, \\sigma^2)",
+      "symbol_and_unit_ledger": "{'ADP': 'Average Draft Position (dimensionless)', 'σ': 'Standard Deviation of Draft Position (dimensionless)', '\\\\mathcal{N}': 'Normal distribution (dimensionless)'}",
+      "assumptions": "Draft positions follow normal distribution around ADP with known variance.",
+      "breakdown_regime": "When ADP is undefined or SD approaches zero.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates stochastic draft order from historical ADP and SD statistics, enabling simulation of draft outcomes under uncertainty.",
+        "source_operator": "draft_position_generator",
+        "telemetry": "Simulated draft order consistency against actual draft data."
+      }
+    },
+    {
+      "primitive_id": "fantasy_point_ranker",
+      "name": "Fantasy Point Ranker",
+      "verbatim_quote": "SIM Each team's players are sorted and ranked by POS and Fantasy Points.",
+      "page": 2,
+      "latex": "\\text{Rank}_i = \\text{argmax}_{j} \\left( \\text{FPT}_{ij} \\right), \\quad i \\in \\text{Position}",
+      "symbol_and_unit_ledger": "{'\\\\text{FPT}_{ij}': 'Fantasy Points for player j in position i (points)', '\\\\text{Rank}_i': 'Rank of player within position i (dimensionless)'}",
+      "assumptions": "Player performance is predictable and ranked by projected fantasy points.",
+      "breakdown_regime": "When FPT data is unavailable or inconsistent.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw fantasy point data to ordinal rank structure, enabling comparative evaluation of player value across positions.",
+        "source_operator": "fantasy_point_ranker",
+        "telemetry": "Rank stability across simulations and correlation with actual performance."
+      }
+    },
+    {
+      "primitive_id": "draft_simulation_engine",
+      "name": "Draft Simulation Engine",
+      "verbatim_quote": "DRAFT According to various \"limits,\" all 12 team draft 14 players in a snake draft.",
+      "page": 2,
+      "latex": "\\text{Sim}_{t} = \\text{Sim}_{t-1} + \\Delta \\text{Draft} \\left( \\text{ADP}, \\text{SD}, \\text{FPT} \\right)",
+      "symbol_and_unit_ledger": "{'\\\\text{Sim}_{t}': 'Simulation state at time t (dimensionless)', '\\\\Delta \\\\text{Draft}': 'Draft update function (dimensionless)', '\\\\text{ADP}, \\\\text{SD}, \\\\text{FPT}': 'Input parameters (dimensionless or points)'}",
+      "assumptions": "Simulations are independent and identically distributed over time.",
+      "breakdown_regime": "When simulation convergence fails or input data is stale.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Iteratively executes draft strategies across multiple years and positions, capturing emergent patterns in draft behavior.",
+        "source_operator": "draft_simulation_engine",
+        "telemetry": "Number of simulations achieving target draft outcomes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "314cdce64a7822de_t0",
+      "think": "The core methodology employs a probabilistic simulation engine to evaluate draft strategies by modeling draft positions as normally distributed around ADP with standard deviation SD. Players are ranked by projected fantasy points (FPT) within each position group. The simulation iterates over 100 repetitions per year across 10 years, producing 2.016 million total draft picks. This approach enables comparison between standard drafting and zero-running back strategies by quantifying expected value under uncertainty. The framework assumes stable player performance and draft behavior, with failure modes including data staleness, non-normality of draft distributions, and misalignment between projected and actual FPT. The model's dual nature lies in its ability to simulate both individual pick outcomes and aggregate strategic effectiveness.\n\nDeep epistemic analysis for 2022 - Zero Running Backs or Zero Points An Analysis on the Optimal Fantasy Football Draft Strategy - Heller et al (314cdce64a7822de, domain=football, pages_read=2/2): Operator 'Draft Position Generator' (page 2, domain football) captures: erent position groups RB WR TE QB DEF STANDARDIZED FPT BY POS, GROUPED BY YEAR ## MODEL PROCESS ADP (acting as the mean) and SD are used to generate a random draft position. Assumptions: Draft positions follow normal distribution around ADP with known variance. Breakdown regime: When ADP is undefined or SD approaches zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates stochastic draft order from historical ADP and SD statistics, enabling simulation of draft outcomes under uncertainty. Operator 'Fantasy Point Ranker' (page 2, domain football) captures: SIM Each team's players are sorted and ranked by POS and Fantasy Points. Assumptions: Player performance is predictable and ranked by projected fantasy points. Breakdown regime: When FPT data is unavailable or inconsistent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw fantasy point data to ordinal rank structure, enabling comparative evaluation of player value across positions. Operator 'Draft Simulation Engine' (page 2, domain football) captures: DRAFT According to various \"limits,\" all 12 team draft 14 players in a snake draft. Assumptions: Simulations are independent and identically distributed over time. Breakdown regime: When simulation convergence fails or input data is stale. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Iteratively executes draft strategies across multiple years and positions, capturing emergent patterns in draft behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2022 - Zero Running Backs or Zero Points An Analysis on the Optimal Fantasy Football Draft Strategy - Heller et al (314cdce64a7822de, domain=football, pages_read=2/2): Operator 'Draft Position Generator' (page 2, domain football) captures: erent position groups RB WR TE QB DEF STANDARDIZED FPT BY POS, GROUPED BY YEAR ## MODEL PROCESS ADP (acting as the mean) and SD are used to generate a random draft position. Assumptions: Draft positions follow normal distribution around ADP with known variance. Breakdown regime: When ADP is undefined or SD approaches zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates stochastic draft order from historical ADP and SD statistics, enabling simulation of draft outcomes under uncertainty. Operator 'Fantasy Point Ranker' (page 2, domain football) captures: SIM Each team's players are sorted and ranked by POS and Fantasy Points. Assumptions: Player performance is predictable and ranked by projected fantasy points. Breakdown regime: When FPT data is unavailable or inconsistent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw fantasy point data to ordinal rank structure, enabling comparative evaluation of player value across positions. Operator 'Draft Simulation Engine' (page 2, domain football) captures: DRAFT According to various \"limits,\" all 12 team draft 14 players in a snake draft. Assumptions: Simulations are independent and identically distributed over time. Breakdown regime: When simulation convergence fails or input data is stale. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Iteratively executes draft strategies across multiple years and positions, capturing emergent patterns in draft behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century statistical inference and Monte Carlo methods, extended into modern sports analytics through Bayesian modeling and ensemble forecasting techniques pioneered in financial and predictive domains. Retrocausal Genealogy: Rooted in 2022 - Zero Running Backs or Zero Points An Analysis on the Optimal Fantasy Football Draft Strategy - Heller et al (314cdce64a7822de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing agents as teams with bounded rationality, each optimizing for expected fantasy points while navigating imperfect information about draft order and player value. Assumes agents act independently but respond to shared market dynamics. Theory of Mind & Decision Maker Model: Rooted in 2022 - Zero Running Backs or Zero Points An Analysis on the Optimal Fantasy Football Draft Strategy - Heller et al (314cdce64a7822de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents collinearity between ADP and FPT by ensuring distinct information sources. Veto conditions include data inconsistency, temporal drift in player value, and failure of normality assumptions in draft position generation. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2022 - Zero Running Backs or Zero Points An Analysis on the Optimal Fantasy Football Draft Strategy - Heller et al (314cdce64a7822de), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

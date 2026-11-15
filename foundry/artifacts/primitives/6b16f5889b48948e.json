@@ -1,0 +1,78 @@
+{
+  "book_id": "6b16f5889b48948e",
+  "source_status": "COMPLETE",
+  "title": "numberfire.com",
+  "file_name": "numberfire.com.md",
+  "sha256": "6b16f5889b48948e5be95251b2afac4246eac8e514ff2537b36059f31eac929d",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "URL path segmentation and page hierarchy define a hierarchical Bayesian network over sports domains, with root nodes representing sport categories and leaf nodes encoding specific analytical content. Universal Lens: Rooted in numberfire.com (6b16f5889b48948e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models domain-specific predictive distributions using conformal prediction on path-based feature vectors derived from crawl data, enabling robust uncertainty quantification across sports categories. GSI Mapping: Rooted in numberfire.com (6b16f5889b48948e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes state transitions between sports domains via Markovian path traversal, where each URL segment represents a probabilistic action in a decision lattice governing content navigation and analysis routing. GSE Mapping: Rooted in numberfire.com (6b16f5889b48948e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "url_path_hierarchy",
+      "name": "Hierarchical URL Path Operator",
+      "verbatim_quote": "# numberfire.com — crawl URLs reached: **393** ## Path segments | Segment | URLs | |---|---|",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Path segment identifier (dimensionless)', 'N(P)': 'Number of URLs under path P (count)'}",
+      "assumptions": "Each path segment maps to a unique content category with fixed cardinality.",
+      "breakdown_regime": "When N(P) approaches zero, path becomes obsolete or deprecated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "URL paths form a directed acyclic graph (DAG) isomorphic to a Bayesian belief network over sports domains.",
+        "source_operator": "url_path_hierarchy",
+        "telemetry": "Crawl frequency and URL count per segment"
+      }
+    },
+    {
+      "primitive_id": "content_category_distribution",
+      "name": "Content Category Distribution Kernel",
+      "verbatim_quote": "| 193 | | `/nfl` | 40 | | `/nba` | 25 | | `/mlb` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_i': 'Sport category i (dimensionless)', 'P(C_i)': 'Probability of category i (unitless)', 'N(C_i)': 'Number of pages in category i (count)'}",
+      "assumptions": "Categories are mutually exclusive and collectively exhaustive.",
+      "breakdown_regime": "When P(C_i) < 1e-6, category is underrepresented or irrelevant.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Distribution of pages across categories defines a categorical probability distribution used in GSI's prior modeling.",
+        "source_operator": "content_category_distribution",
+        "telemetry": "Page counts per category normalized to sum to unity"
+      }
+    },
+    {
+      "primitive_id": "analytical_content_index",
+      "name": "Analytical Content Indexer",
+      "verbatim_quote": "DFS News with Analysis | FanDuel Research | | `https://numberfire.com/nfl/` | NFL Picks, Odds &amp; Predictions",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_j': 'Analytical content type j (dimensionless)', 'T(A_j)': 'Title tag of A_j (text)', 'U_j': 'URL associated with A_j (dimensionless)'}",
+      "assumptions": "Each URL corresponds to a distinct analytical function or dataset.",
+      "breakdown_regime": "When T(A_j) lacks semantic clarity, indexer fails to map to GSE.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "URL titles encode analytical intent; indexed as a structured knowledge base for GSI inference.",
+        "source_operator": "analytical_content_index",
+        "telemetry": "Semantic coherence score of title tags"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6b16f5889b48948e_t0",
+      "think": "The URL structure of numberfire.com reflects a hierarchical Bayesian model where each path segment encodes a conditional probability over content types. The DAG formed by these paths allows GSI to compute posterior beliefs about user intent based on navigation history. Each node's out-degree determines its influence in the belief propagation process. The root node (root) acts as a prior over all sports, while leaf nodes represent specialized predictions or news. This structure enables GSE to perform dynamic routing through content layers, optimizing for relevance and minimizing information entropy during state transitions. Failure modes include dangling paths or misclassified categories, which can lead to incorrect posterior updates in GSI and suboptimal navigation in GSE.\n\nDeep epistemic analysis for numberfire.com (6b16f5889b48948e, domain=other, pages_read=6/6): Operator 'Hierarchical URL Path Operator' (page 1, domain other) captures: # numberfire.com — crawl URLs reached: **393** ## Path segments | Segment | URLs | |---|---| Assumptions: Each path segment maps to a unique content category with fixed cardinality. Breakdown regime: When N(P) approaches zero, path becomes obsolete or deprecated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL paths form a directed acyclic graph (DAG) isomorphic to a Bayesian belief network over sports domains. Operator 'Content Category Distribution Kernel' (page 1, domain other) captures: | 193 | | `/nfl` | 40 | | `/nba` | 25 | | `/mlb` | Assumptions: Categories are mutually exclusive and collectively exhaustive. Breakdown regime: When P(C_i) < 1e-6, category is underrepresented or irrelevant. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Distribution of pages across categories defines a categorical probability distribution used in GSI's prior modeling. Operator 'Analytical Content Indexer' (page 1, domain other) captures: DFS News with Analysis | FanDuel Research | | `https://numberfire.com/nfl/` | NFL Picks, Odds &amp; Predictions Assumptions: Each URL corresponds to a distinct analytical function or dataset. Breakdown regime: When T(A_j) lacks semantic clarity, indexer fails to map to GSE. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL titles encode analytical intent; indexed as a structured knowledge base for GSI inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for numberfire.com (6b16f5889b48948e, domain=other, pages_read=6/6): Operator 'Hierarchical URL Path Operator' (page 1, domain other) captures: # numberfire.com — crawl URLs reached: **393** ## Path segments | Segment | URLs | |---|---| Assumptions: Each path segment maps to a unique content category with fixed cardinality. Breakdown regime: When N(P) approaches zero, path becomes obsolete or deprecated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL paths form a directed acyclic graph (DAG) isomorphic to a Bayesian belief network over sports domains. Operator 'Content Category Distribution Kernel' (page 1, domain other) captures: | 193 | | `/nfl` | 40 | | `/nba` | 25 | | `/mlb` | Assumptions: Categories are mutually exclusive and collectively exhaustive. Breakdown regime: When P(C_i) < 1e-6, category is underrepresented or irrelevant. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Distribution of pages across categories defines a categorical probability distribution used in GSI's prior modeling. Operator 'Analytical Content Indexer' (page 1, domain other) captures: DFS News with Analysis | FanDuel Research | | `https://numberfire.com/nfl/` | NFL Picks, Odds &amp; Predictions Assumptions: Each URL corresponds to a distinct analytical function or dataset. Breakdown regime: When T(A_j) lacks semantic clarity, indexer fails to map to GSE. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL titles encode analytical intent; indexed as a structured knowledge base for GSI inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and Bayesian networks, this approach builds upon early work in information retrieval and probabilistic reasoning systems such as those developed by Pearl and Judea. Retrocausal Genealogy: Rooted in numberfire.com (6b16f5889b48948e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in numberfire.com (6b16f5889b48948e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to manipulate content categorization to skew predictions or evade detection. GSI must account for adversarial reclassification strategies that exploit path ambiguity or temporal shifts in content. Theory of Mind & Decision Maker Model: Rooted in numberfire.com (6b16f5889b48948e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that path segments do not redundantly encode similar analytical functions. Leakage occurs when a single path contributes to multiple incompatible models, violating independence assumptions in both GSI and GSE. Cross-Layer Veto & Anti-Leakage Check: Rooted in numberfire.com (6b16f5889b48948e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

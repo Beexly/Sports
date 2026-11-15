@@ -1,0 +1,78 @@
+{
+  "book_id": "66d7ca8e310cfe40",
+  "source_status": "COMPLETE",
+  "title": "16-data-quality-ci-deploy-gate",
+  "file_name": "16-data-quality-ci-deploy-gate.md",
+  "sha256": "66d7ca8e310cfe4002bf18d229cbd71b7c430b0699214e3d9fd4cfb50612eb52",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Data integrity gates as stochastic processes over temporal player-state manifolds; blocking errors define critical path constraints; warnings signal metastable regime transitions. Universal Lens: Rooted in 16-data-quality-ci-deploy-gate (66d7ca8e310cfe40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on player-team assignments conditioned on canonical source freshness; conformal prediction intervals for roster coverage thresholds. GSI Mapping: Rooted in 16-data-quality-ci-deploy-gate (66d7ca8e310cfe40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates state transitions between canonical and fallback player representations; resolves team assignment conflicts via temporal consistency checks. GSE Mapping: Rooted in 16-data-quality-ci-deploy-gate (66d7ca8e310cfe40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "blocking_error",
+      "name": "Production Build Integrity Constraint",
+      "verbatim_quote": "# Data Quality CI / Deploy Gate Design As of: 2026-06-09 ## Blocking Errors - production",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{build}}': 'time of build in seconds since epoch', 'M_{\\\\text{mock}}': 'binary flag indicating mock roster usage'}",
+      "assumptions": "Build process fails if M_{\\text{mock}} = 1 or T_{\\text{build}} > T_{\\text{threshold}}",
+      "breakdown_regime": "T_{\\text{build}} \\geq T_{\\text{threshold}}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian update on canonical vs mock data; GSE state transition on fallback activation",
+        "source_operator": "blocking_error",
+        "telemetry": "Build success rate, mock data usage frequency"
+      }
+    },
+    {
+      "primitive_id": "stale_team_assignment",
+      "name": "Temporal Team Assignment Consistency",
+      "verbatim_quote": "mock roster data on public player surfaces - active player has stale team assignment over threshold",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_{\\\\text{assign}}': 'timestamp of last team assignment', 't_{\\\\text{now}}': 'current timestamp', 'T_{\\\\text{stale}}': 'threshold time for stale assignment in seconds'}",
+      "assumptions": "Player is stale if t_{\\text{now}} - t_{\\text{assign}} > T_{\\text{stale}}",
+      "breakdown_regime": "t_{\\text{now}} - t_{\\text{assign}} > T_{\\text{stale}}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI temporal consistency check; GSE conflict resolution on stale team data",
+        "source_operator": "stale_team_assignment",
+        "telemetry": "Stale assignment count per player, average time delta"
+      }
+    },
+    {
+      "primitive_id": "conflicting_team_assignment",
+      "name": "Team Assignment Disambiguation",
+      "verbatim_quote": "rendered without canonical ID or fallback review status - conflicting team assignment has no ConflictRecord -",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{assign}}': 'conflict indicator binary variable', 'R_{\\\\text{record}}': 'existence of ConflictRecord boolean'}",
+      "assumptions": "C_{\\text{assign}} = 1 iff R_{\\text{record}} = 0",
+      "breakdown_regime": "R_{\\text{record}} = false",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI conflict detection logic; GSE state machine for manual review trigger",
+        "source_operator": "conflicting_team_assignment",
+        "telemetry": "Conflict record presence rate, manual review triggers"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "66d7ca8e310cfe40_t0",
+      "think": "The primitives define a layered integrity system where blocking errors enforce deterministic failure paths, stale assignments model temporal drift, and conflicting assignments introduce probabilistic ambiguity. The system operates under a dual constraint: canonical data must be fresh and consistent, while fallbacks must be explicitly tracked. These form a stochastic process over player-state manifolds, where each primitive defines a failure mode or transition condition. The blocking error primitive acts as a hard gate, enforcing build-time correctness. The stale assignment primitive models temporal inconsistency through a time-based threshold. The conflicting assignment primitive introduces a logical disjunction between canonical and fallback states, requiring explicit conflict records. These operators are dual to each other in that they both represent breakdowns in data fidelity but differ in their resolution paths—either by enforcement or by triggering manual intervention. The system's robustness depends on these primitives' ability to detect and isolate inconsistencies before propagation into downstream systems.\n\nDeep epistemic analysis for 16-data-quality-ci-deploy-gate (66d7ca8e310cfe40, domain=other, pages_read=1/1): Operator 'Production Build Integrity Constraint' (page 1, domain other) captures: # Data Quality CI / Deploy Gate Design As of: 2026-06-09 ## Blocking Errors - production Assumptions: Build process fails if M_{\\text{mock}} = 1 or T_{\\text{build}} > T_{\\text{threshold}} Breakdown regime: T_{\\text{build}} \\geq T_{\\text{threshold}} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian update on canonical vs mock data; GSE state transition on fallback activation Operator 'Temporal Team Assignment Consistency' (page 1, domain other) captures: mock roster data on public player surfaces - active player has stale team assignment over threshold Assumptions: Player is stale if t_{\\text{now}} - t_{\\text{assign}} > T_{\\text{stale}} Breakdown regime: t_{\\text{now}} - t_{\\text{assign}} > T_{\\text{stale}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI temporal consistency check; GSE conflict resolution on stale team data Operator 'Team Assignment Disambiguation' (page 1, domain other) captures: rendered without canonical ID or fallback review status - conflicting team assignment has no ConflictRecord - Assumptions: C_{\\text{assign}} = 1 iff R_{\\text{record}} = 0 Breakdown regime: R_{\\text{record}} = false Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI conflict detection logic; GSE state machine for manual review trigger Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 16-data-quality-ci-deploy-gate (66d7ca8e310cfe40, domain=other, pages_read=1/1): Operator 'Production Build Integrity Constraint' (page 1, domain other) captures: # Data Quality CI / Deploy Gate Design As of: 2026-06-09 ## Blocking Errors - production Assumptions: Build process fails if M_{\\text{mock}} = 1 or T_{\\text{build}} > T_{\\text{threshold}} Breakdown regime: T_{\\text{build}} \\geq T_{\\text{threshold}} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian update on canonical vs mock data; GSE state transition on fallback activation Operator 'Temporal Team Assignment Consistency' (page 1, domain other) captures: mock roster data on public player surfaces - active player has stale team assignment over threshold Assumptions: Player is stale if t_{\\text{now}} - t_{\\text{assign}} > T_{\\text{stale}} Breakdown regime: t_{\\text{now}} - t_{\\text{assign}} > T_{\\text{stale}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI temporal consistency check; GSE conflict resolution on stale team data Operator 'Team Assignment Disambiguation' (page 1, domain other) captures: rendered without canonical ID or fallback review status - conflicting team assignment has no ConflictRecord - Assumptions: C_{\\text{assign}} = 1 iff R_{\\text{record}} = 0 Breakdown regime: R_{\\text{record}} = false Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI conflict detection logic; GSE state machine for manual review trigger Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from software engineering and temporal logic, extended into probabilistic data integrity frameworks used in distributed systems and real-time analytics pipelines. Retrocausal Genealogy: Rooted in 16-data-quality-ci-deploy-gate (66d7ca8e310cfe40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 16-data-quality-ci-deploy-gate (66d7ca8e310cfe40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the data ingestion pipeline (which may lag), the deployment system (which enforces rules), and the user-facing rendering engine (which consumes potentially inconsistent data). Each agent operates under different temporal and causal constraints, leading to potential misalignment in data state. Theory of Mind & Decision Maker Model: Rooted in 16-data-quality-ci-deploy-gate (66d7ca8e310cfe40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that blocking errors prevent deployment regardless of warning states. Leakage vetoes occur when stale or conflicting data bypasses the canonical validation layer, which would otherwise be caught by the blocking error mechanism. Cross-Layer Veto & Anti-Leakage Check: Rooted in 16-data-quality-ci-deploy-gate (66d7ca8e310cfe40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

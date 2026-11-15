@@ -47,6 +47,15 @@ import {
   evaluateUnifiedQuantitativeArchitectureOverlay,
   type UnifiedArchitectureOverlayReceipt,
 } from "./unified-quantitative-nfl-architecture.js";
+import {
+  evaluateFoundryCorpusSituationalPriors,
+  type FoundryCorpusSituationalReceipt,
+} from "./foundry-corpus-situational-priors.js";
+import {
+  SHRINK_PSEUDOCOUNT,
+  shrinkTowardBaseline,
+  type ShrunkEstimate,
+} from "./morning-sweep-2026-11-14-signals.js";
 
 /**
  * Exhaustive manifest of every non-test module in `src/expected-metrics/` and `src/nfl/`.
@@ -119,7 +128,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "expected-metrics/win-probability.ts",
   "expected-metrics/wr-depth-after-leader.ts",
   "expected-metrics/yoy-persistence.ts",
-  // src/nfl/ (69 modules including this bridge)
+  // src/nfl/ (70 modules including this bridge)
   "nfl/all-in-one-research-signals.ts",
   "nfl/ats-ablation-harness.ts",
   "nfl/belichick-ten-metrics.ts",
@@ -133,9 +142,11 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/expected-completion.ts",
   "nfl/expected-yac.ts",
   "nfl/exploit-finder.ts",
+  "nfl/foundry-corpus-situational-priors.ts",
   "nfl/fourth-down-aggression.ts",
   "nfl/fourth-down-grader.ts",
   "nfl/generalized-poisson.ts",
+  "nfl/gse_belichick_omni_causal_world_model.ts",
   "nfl/ig-consolidated-conformal-and-kats-signals.ts",
   "nfl/key-number-mass.ts",
   "nfl/killed-claims.ts",
@@ -149,6 +160,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/metric-core.ts",
   "nfl/metric-drift.ts",
   "nfl/metric-validation.ts",
+  "nfl/morning-sweep-2026-11-14-signals.ts",
   "nfl/ngs-adjacent-metrics.ts",
   "nfl/ngs-contextual-reconstructed.ts",
   "nfl/no-bet-gate.ts",
@@ -184,6 +196,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/teb-avalanche-braid-overlay.ts",
   "nfl/unified-corpus-and-gsi-wiring-bridge.ts",
   "nfl/unified-quantitative-nfl-architecture.ts",
+  "nfl/unified-quantitative-nfl-homography-and-crps.ts",
   "nfl/universal-handoff-warehouse-priors.ts",
   "nfl/verify-nfl-injury-evidence.ts",
   "nfl/wave13-sheaf-navier-stokes-phase-transition.ts",
@@ -251,6 +264,8 @@ export interface ZeroOrphanOverlayResult {
   readonly roleIsomorphismRealloc: ReturnType<typeof evaluateLbVoidTeRbVsSlotAbsorption>;
   readonly fourMinuteMeasuredRunRate: number;
   readonly unifiedArchitectureReceipt: UnifiedArchitectureOverlayReceipt;
+  readonly foundryCorpusPriorsReceipt: FoundryCorpusSituationalReceipt;
+  readonly morningSweepSampleShrinkageReceipt: ShrunkEstimate;
   readonly familyAdjustments: {
     readonly pressure: number;
     readonly coveragePersonnel: number;
@@ -445,6 +460,20 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
     recent72hSubconcussiveHits: input.recent72hSubconcussiveHits ?? 14,
   });
 
+  const foundryCorpusPriorsReceipt = evaluateFoundryCorpusSituationalPriors({
+    pressureSignalZ: (input.projectedPressureRate ?? 0.33) - 0.33,
+    restFatigueZ: ((input.restDaysOffense ?? 6) - (input.restDaysDefense ?? 6)) * 0.25,
+    coverageMismatchZ: (input.defZoneRate - 0.5) * 0.5,
+    qbScriptStabilityZ: input.underCenterEpa - input.shotgunEpa,
+    observedSampleSizeN: Math.max(12, input.cleanAttempts + input.pressuredAttempts),
+  });
+  const morningSweepSampleShrinkageReceipt = shrinkTowardBaseline(
+    input.wrTargetSuccessRate,
+    Math.max(0, input.cleanAttempts),
+    0.50,
+    SHRINK_PSEUDOCOUNT,
+  );
+
   // Compute bounded family probability deltas
   const pressureDelta = Number(
     Math.max(
@@ -454,7 +483,8 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
         (0.15 - w1.cleanBadThrowRate) * 0.15 -
           w9w10 * 0.05 -
           (batch3HydrodynamicTrench.fokkerPlanckFirstPassageSackHazard - 0.25) * 0.02 +
-          wave13Receipt.wave13LogOddsModulation * 0.10,
+          wave13Receipt.wave13LogOddsModulation * 0.10 +
+          foundryCorpusPriorsReceipt.familyProbModulations.pressure * 0.05,
       ),
     ).toFixed(4),
   );
@@ -465,7 +495,8 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
         0.04,
         (w8 - 0.12) * 0.12 +
           f2 * 0.08 +
-          (roleIsomorphismRealloc.targetShare.TE1 + roleIsomorphismRealloc.targetShare.RB - 0.50) * 0.05,
+          (roleIsomorphismRealloc.targetShare.TE1 + roleIsomorphismRealloc.targetShare.RB - 0.50) * 0.05 +
+          foundryCorpusPriorsReceipt.familyProbModulations.coveragePersonnel * 0.05,
       ),
     ).toFixed(4),
   );
@@ -480,7 +511,8 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
           (w3.independentCreationShare - 0.35) * 0.05 +
           batch4NeuroCollisionLoad.processingSpeedLogitPenalty * 0.15 +
           textbookAlgorithmsReceipt.combinedStage2LogOddsDelta * 0.12 +
-          unifiedArchitectureReceipt.combinedArchitectureLogOddsDelta * 0.20,
+          unifiedArchitectureReceipt.combinedArchitectureLogOddsDelta * 0.20 +
+          foundryCorpusPriorsReceipt.familyProbModulations.qbSkillScript * 0.05,
       ),
     ).toFixed(4),
   );
@@ -491,7 +523,8 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
         0.03,
         w13 * 0.05 +
           batch3CircadianPenalty.circadianPhasePenaltyEpa * 0.25 +
-          batch3DriveFatigueDecay.fatigueSuccessRateAllowanceDelta * 0.15,
+          batch3DriveFatigueDecay.fatigueSuccessRateAllowanceDelta * 0.15 +
+          foundryCorpusPriorsReceipt.familyProbModulations.restFatigue * 0.05,
       ),
     ).toFixed(4),
   );
@@ -520,6 +553,8 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
     roleIsomorphismRealloc,
     fourMinuteMeasuredRunRate,
     unifiedArchitectureReceipt,
+    foundryCorpusPriorsReceipt,
+    morningSweepSampleShrinkageReceipt,
     familyAdjustments: {
       pressure: pressureDelta,
       coveragePersonnel: coveragePersonnelDelta,

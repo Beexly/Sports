@@ -1,0 +1,78 @@
+{
+  "book_id": "0b48e4a3c0048ad4",
+  "source_status": "COMPLETE",
+  "title": "CALIBRATION_PIPELINE",
+  "file_name": "CALIBRATION_PIPELINE.md",
+  "sha256": "0b48e4a3c0048ad4041593785a492136f88ba81e418ed3bfaa42f7d137ec5929",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Calibration pipelines map settled picks to honest probabilities via CIR or PAVA, enabling Kelly-stake sizing while avoiding overfitting through hold-out splits and CLV deflation. Universal Lens: Rooted in CALIBRATION_PIPELINE (0b48e4a3c0048ad4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction and isotonic regression to produce calibrated confidence intervals for pick quality, integrating CLV-based edge correction into Bayesian belief updates. GSI Mapping: Rooted in CALIBRATION_PIPELINE (0b48e4a3c0048ad4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning to transition from raw predictions to actionable stakes using Kelly criterion with portfolio-level risk adjustment and correlation-aware deflation. GSE Mapping: Rooted in CALIBRATION_PIPELINE (0b48e4a3c0048ad4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "centered_isotonic_calibration",
+      "name": "Centered Isotonic Regression",
+      "verbatim_quote": "Prefer CIR when stakes/ranks matter; PAVA OK if only bin ECE.",
+      "page": 1,
+      "latex": "\\hat{p}_{\\text{calib}} = \\text{CIR}(\\hat{p}_{\\text{raw}}, y_{\\text{train}})",
+      "symbol_and_unit_ledger": "{'\\\\hat{p}_{\\\\text{raw}}': 'raw prediction probability, dimensionless', 'y_{\\\\text{train}}': 'true outcomes in training set, binary {0,1}', '\\\\hat{p}_{\\\\text{calib}}': 'calibrated probability, dimensionless'}",
+      "assumptions": "Monotonicity of prediction ranking must hold across training data.",
+      "breakdown_regime": "When prediction ranking fails due to label noise or miscalibration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CIR maps raw probabilistic forecasts to calibrated ones preserving rank order, enabling accurate EV estimation for Kelly sizing.",
+        "source_operator": "centered_isotonic_calibration",
+        "telemetry": "Reliability diagrams and ECE score on hold-out set."
+      }
+    },
+    {
+      "primitive_id": "kelly_stake_sizing",
+      "name": "Fractional Kelly Stake Sizing",
+      "verbatim_quote": "Portfolio path: James–Stein edge shrink + correlation haircut + CLV deflator — do not invert Σ for Markowitz-style sizing.",
+      "page": 1,
+      "latex": "s_i = \\frac{\\mathbb{E}[r_i] - r_f}{\\sigma_i^2} \\cdot \\kappa",
+      "symbol_and_unit_ledger": "{'s_i': 'stake fraction for bet i, dimensionless', '\\\\mathbb{E}[r_i]': 'expected return of bet i, dimensionless', 'r_f': 'risk-free rate, dimensionless', '\\\\sigma_i^2': 'variance of bet i, dimensionless', '\\\\kappa': 'fractional Kelly parameter, dimensionless'}",
+      "assumptions": "Returns follow Gaussian distribution; Kelly parameter is bounded.",
+      "breakdown_regime": "When variance estimates are unstable or returns are non-Gaussian.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kelly sizing derives optimal stake fractions based on edge and volatility, adjusted by CLV deflator to prevent overexposure.",
+        "source_operator": "kelly_stake_sizing",
+        "telemetry": "Sharpe ratio and drawdown profile of portfolio over time."
+      }
+    },
+    {
+      "primitive_id": "clv_deflator_gate",
+      "name": "CLV Deflator Gate",
+      "verbatim_quote": "Do not report sizing as CLV; CLV is pick-quality, not stake performance.",
+      "page": 1,
+      "latex": "d_{\\text{CLV}} = \\max\\left(0, \\frac{\\text{min}(\\text{settledCount}, N_{\\text{floor}})}{N_{\\text{floor}}} \\right)",
+      "symbol_and_unit_ledger": "{'d_{\\\\text{CLV}}': 'deflator multiplier, dimensionless', '\\\\text{settledCount}': 'number of settled picks, integer', 'N_{\\\\text{floor}}': 'minimum sample threshold, integer'}",
+      "assumptions": "Initial picks have low-quality estimates; deflator scales with evidence accumulation.",
+      "breakdown_regime": "When sample size insufficient to stabilize CLV estimate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CLV deflator gates stake application until sufficient settled picks accumulate, preventing premature exposure.",
+        "source_operator": "clv_deflator_gate",
+        "telemetry": "Cumulative CLV stability and stake zeroing events."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0b48e4a3c0048ad4_t0",
+      "think": "The calibration pipeline begins with exporting settled picks containing CLV fields, followed by Shin de-vig to correct for market vigorish. A time-ordered hold-out split ensures no leakage during training. Centered Isotonic Regression (CIR) is preferred over PAVA because it maintains ranking integrity crucial for stake decisions. The calibrated probabilities are then used in Kelly-based sizing where edge shrinkage and correlation adjustments prevent overfitting. The CLV deflator gates stake application until enough settled picks provide stable estimates. This process avoids inversion of covariance matrices typical in Markowitz optimization, instead relying on empirical edge and volatility. The entire system is validated offline using synthetic datasets before deployment.\n\nDeep epistemic analysis for CALIBRATION_PIPELINE (0b48e4a3c0048ad4, domain=other, pages_read=2/2): Operator 'Centered Isotonic Regression' (page 1, domain other) captures: Prefer CIR when stakes/ranks matter; PAVA OK if only bin ECE. Assumptions: Monotonicity of prediction ranking must hold across training data. Breakdown regime: When prediction ranking fails due to label noise or miscalibration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CIR maps raw probabilistic forecasts to calibrated ones preserving rank order, enabling accurate EV estimation for Kelly sizing. Operator 'Fractional Kelly Stake Sizing' (page 1, domain other) captures: Portfolio path: James–Stein edge shrink + correlation haircut + CLV deflator — do not invert Σ for Markowitz-style sizing. Assumptions: Returns follow Gaussian distribution; Kelly parameter is bounded. Breakdown regime: When variance estimates are unstable or returns are non-Gaussian. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kelly sizing derives optimal stake fractions based on edge and volatility, adjusted by CLV deflator to prevent overexposure. Operator 'CLV Deflator Gate' (page 1, domain other) captures: Do not report sizing as CLV; CLV is pick-quality, not stake performance. Assumptions: Initial picks have low-quality estimates; deflator scales with evidence accumulation. Breakdown regime: When sample size insufficient to stabilize CLV estimate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CLV deflator gates stake application until sufficient settled picks accumulate, preventing premature exposure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CALIBRATION_PIPELINE (0b48e4a3c0048ad4, domain=other, pages_read=2/2): Operator 'Centered Isotonic Regression' (page 1, domain other) captures: Prefer CIR when stakes/ranks matter; PAVA OK if only bin ECE. Assumptions: Monotonicity of prediction ranking must hold across training data. Breakdown regime: When prediction ranking fails due to label noise or miscalibration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CIR maps raw probabilistic forecasts to calibrated ones preserving rank order, enabling accurate EV estimation for Kelly sizing. Operator 'Fractional Kelly Stake Sizing' (page 1, domain other) captures: Portfolio path: James–Stein edge shrink + correlation haircut + CLV deflator — do not invert Σ for Markowitz-style sizing. Assumptions: Returns follow Gaussian distribution; Kelly parameter is bounded. Breakdown regime: When variance estimates are unstable or returns are non-Gaussian. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kelly sizing derives optimal stake fractions based on edge and volatility, adjusted by CLV deflator to prevent overexposure. Operator 'CLV Deflator Gate' (page 1, domain other) captures: Do not report sizing as CLV; CLV is pick-quality, not stake performance. Assumptions: Initial picks have low-quality estimates; deflator scales with evidence accumulation. Breakdown regime: When sample size insufficient to stabilize CLV estimate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CLV deflator gates stake application until sufficient settled picks accumulate, preventing premature exposure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical calibration theory (Neyman-Pearson), extended through isotonic regression (Barlow et al., 1972) and Kelly criterion (Kelly, 1956), adapted for modern machine learning environments. Retrocausal Genealogy: Rooted in CALIBRATION_PIPELINE (0b48e4a3c0048ad4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CALIBRATION_PIPELINE (0b48e4a3c0048ad4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include noisy predictors who may overfit, and risk-sensitive traders who require calibrated confidence. The system models both by enforcing consistency between prediction quality and stake allocation. Theory of Mind & Decision Maker Model: Rooted in CALIBRATION_PIPELINE (0b48e4a3c0048ad4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each primitive operates independently—CIR preserves ranking, Kelly uses calibrated inputs, and CLV deflator prevents early exposure. Leakage is mitigated by strict temporal separation of train/test splits and avoiding inverse covariance matrix operations. Cross-Layer Veto & Anti-Leakage Check: Rooted in CALIBRATION_PIPELINE (0b48e4a3c0048ad4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

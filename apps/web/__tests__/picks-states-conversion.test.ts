@@ -32,15 +32,15 @@ describe("/picks - static sealed rendering has no runtime-fetch states to regres
     expect(pageSrc).not.toMatch(/\bfetch\(/);
   });
 
-  it("mounts no hardcoded pick fixtures - cards render only from the sealed card", () => {
+  it("mounts no hardcoded pick fixtures - cards render only from the doctrine board loader", () => {
     expect(pageSrc).not.toMatch(/picks\s*=\s*\[\s*\{/);
-    expect(pageSrc).toMatch(/card\.main\.filter/);
-    expect(pageSrc).toMatch(/<SealedTable rows=\{locked\}(?: freeLimit=\{\d+\})? \/>/);
+    expect(pageSrc).toMatch(/loadDoctrineBoard/);
+    expect(pageSrc).toMatch(/<DoctrineBoardView board=\{board\} \/>/);
   });
 
   it("keeps the conversion path to the paid storefront", () => {
     expect(pageSrc).toMatch(/href="\/packages"/);
-    expect(pageSrc).toMatch(/Galaxy Picks packs/);
+    expect(pageSrc).toMatch(/Plans and packs/);
   });
 
   it("keeps the secondary door to the props watchlist", () => {

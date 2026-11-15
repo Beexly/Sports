@@ -1,0 +1,78 @@
+{
+  "book_id": "81b2606afae54870",
+  "source_status": "COMPLETE",
+  "title": "teamrankings.com",
+  "file_name": "teamrankings.com.md",
+  "sha256": "81b2606afae54870fb665a3ec60c03f6394cf9e0f6be11646a78e0e4dc6fffe6",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal week-year mapping via modular arithmetic and locale-dependent day-of-week offsets. Universal Lens: Rooted in teamrankings.com (81b2606afae54870), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian temporal alignment using week-year epochs with locale-specific DoW/Doy offsets for probabilistic event inference. GSI Mapping: Rooted in teamrankings.com (81b2606afae54870), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine employs week-year transition logic to update state transitions based on modular calendar arithmetic. GSE Mapping: Rooted in teamrankings.com (81b2606afae54870), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "week_year_modular",
+      "name": "Week-Year Modular Arithmetic",
+      "verbatim_quote": "b : this.add(7 * (a - b), \"d\") } function Ca(a) { var b = wa(this, 1, 4).week; return null == a ?",
+      "page": 3,
+      "latex": "\\text{week} = \\text{wa}(\\text{year}, \\text{dow}, \\text{doy})",
+      "symbol_and_unit_ledger": "{'week': 'dimensionless', 'year': 'dimensionless', 'dow': 'integer in [0,6]', 'doy': 'integer in [0,6]'}",
+      "assumptions": "Calendar year spans 365 or 366 days, week begins at DoW offset, DoY defines year start.",
+      "breakdown_regime": "When year transitions occur, modular arithmetic shifts week count by 1 or 2 depending on leap year.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps temporal coordinates to discrete week-year bins for event clustering and forecasting.",
+        "source_operator": "week_year_modular",
+        "telemetry": "Weekly event density and temporal coherence metrics"
+      }
+    },
+    {
+      "primitive_id": "dow_doy_offset",
+      "name": "Day-of-Week and Day-of-Year Offset",
+      "verbatim_quote": "null : a } functio ``` ### `ya` ```js function ya(a) { return wa(a, this._week.dow, this._week.doy).week } function za() { return this._week.dow } function Aa() { return this._week.doy } function Ba(a) { var b = this.localeData().week(this); return null == a ?",
+      "page": 2,
+      "latex": "\\text{dow} \\in [0,6], \\quad \\text{doy} \\in [0,6]",
+      "symbol_and_unit_ledger": "{'dow': 'integer in [0,6]', 'doy': 'integer in [0,6]'}",
+      "assumptions": "Week starts on Sunday (dow=0), year starts on DoY offset.",
+      "breakdown_regime": "Invalid when dow/doy values exceed [0,6] range or are non-integral.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes temporal origin shift for consistent week calculation across locales.",
+        "source_operator": "dow_doy_offset",
+        "telemetry": "Locale consistency check and epoch alignment error"
+      }
+    },
+    {
+      "primitive_id": "week_transition_logic",
+      "name": "Week Transition Logic",
+      "verbatim_quote": "b : this.add(7 * (a - b), \"d\") } function Ca(a) { var b = wa(this, 1, 4).week; return null == a ?",
+      "page": 2,
+      "latex": "\\text{new\\_week} = \\text{old\\_week} + 7 \\cdot (a - b)",
+      "symbol_and_unit_ledger": "{'a': 'target week number', 'b': 'current week number', 'new_week': 'dimensionless', 'old_week': 'dimensionless'}",
+      "assumptions": "Weeks are 7-day intervals, transition is linear in time.",
+      "breakdown_regime": "Fails when target week exceeds valid calendar bounds or is not numeric.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables dynamic adjustment of temporal states during event propagation.",
+        "source_operator": "week_transition_logic",
+        "telemetry": "State transition latency and convergence rate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "81b2606afae54870_t0",
+      "think": "The primitives derive from JavaScript calendar manipulation logic, where temporal units are mapped through modular arithmetic. The core insight is that week-year coordination depends on two parameters: day-of-week (dow) and day-of-year (doy) offsets. These define a local calendar epoch, enabling consistent week counting. The week transition logic uses additive shifts of 7 days per week, maintaining temporal coherence. Failure modes arise from invalid inputs or boundary conditions at year transitions. The mathematical structure mirrors discrete-time systems with periodicity, where each week is an orbit under a 7-day group action. This supports both Bayesian inference over temporal events and state transitions in GSE.\n\nDeep epistemic analysis for teamrankings.com (81b2606afae54870, domain=other, pages_read=7/7): Operator 'Week-Year Modular Arithmetic' (page 3, domain other) captures: b : this.add(7 * (a - b), \"d\") } function Ca(a) { var b = wa(this, 1, 4).week; return null == a ? Assumptions: Calendar year spans 365 or 366 days, week begins at DoW offset, DoY defines year start. Breakdown regime: When year transitions occur, modular arithmetic shifts week count by 1 or 2 depending on leap year. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps temporal coordinates to discrete week-year bins for event clustering and forecasting. Operator 'Day-of-Week and Day-of-Year Offset' (page 2, domain other) captures: null : a } functio ``` ### `ya` ```js function ya(a) { return wa(a, this._week.dow, this._week.doy).week } function za() { return this._week.dow } function Aa() { return this._week.doy } function Ba(a) { var b = this.localeData().week(this); return null == a ? Assumptions: Week starts on Sunday (dow=0), year starts on DoY offset. Breakdown regime: Invalid when dow/doy values exceed [0,6] range or are non-integral. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes temporal origin shift for consistent week calculation across locales. Operator 'Week Transition Logic' (page 2, domain other) captures: b : this.add(7 * (a - b), \"d\") } function Ca(a) { var b = wa(this, 1, 4).week; return null == a ? Assumptions: Weeks are 7-day intervals, transition is linear in time. Breakdown regime: Fails when target week exceeds valid calendar bounds or is not numeric. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables dynamic adjustment of temporal states during event propagation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for teamrankings.com (81b2606afae54870, domain=other, pages_read=7/7): Operator 'Week-Year Modular Arithmetic' (page 3, domain other) captures: b : this.add(7 * (a - b), \"d\") } function Ca(a) { var b = wa(this, 1, 4).week; return null == a ? Assumptions: Calendar year spans 365 or 366 days, week begins at DoW offset, DoY defines year start. Breakdown regime: When year transitions occur, modular arithmetic shifts week count by 1 or 2 depending on leap year. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps temporal coordinates to discrete week-year bins for event clustering and forecasting. Operator 'Day-of-Week and Day-of-Year Offset' (page 2, domain other) captures: null : a } functio ``` ### `ya` ```js function ya(a) { return wa(a, this._week.dow, this._week.doy).week } function za() { return this._week.dow } function Aa() { return this._week.doy } function Ba(a) { var b = this.localeData().week(this); return null == a ? Assumptions: Week starts on Sunday (dow=0), year starts on DoY offset. Breakdown regime: Invalid when dow/doy values exceed [0,6] range or are non-integral. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes temporal origin shift for consistent week calculation across locales. Operator 'Week Transition Logic' (page 2, domain other) captures: b : this.add(7 * (a - b), \"d\") } function Ca(a) { var b = wa(this, 1, 4).week; return null == a ? Assumptions: Weeks are 7-day intervals, transition is linear in time. Breakdown regime: Fails when target week exceeds valid calendar bounds or is not numeric. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables dynamic adjustment of temporal states during event propagation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Julian day calculations and ISO 8601 standardization. Influenced by early Unix timekeeping and Gregorian calendar reform. Modernized via JavaScript date libraries and locale-aware APIs. Retrocausal Genealogy: Rooted in teamrankings.com (81b2606afae54870), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in teamrankings.com (81b2606afae54870), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents must model temporal drift due to varying week-starts and leap years. Decision-making involves predicting week boundaries and aligning event sequences accordingly. Theory of Mind & Decision Maker Model: Rooted in teamrankings.com (81b2606afae54870), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in teamrankings.com (81b2606afae54870), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if multiple temporal primitives share identical parameters. Leakage occurs when week transitions do not respect locale-specific dow/doy, causing misalignment in event clustering. Cross-Layer Veto & Anti-Leakage Check: Rooted in teamrankings.com (81b2606afae54870), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in teamrankings.com (81b2606afae54870), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

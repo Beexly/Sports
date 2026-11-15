@@ -1,0 +1,260 @@
+{
+  "book_id": "238bb03f7c401b23",
+  "shard": "2",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_SLIDE_DECK_QUALITATIVE_PRINTED_FORMULA",
+  "source_note": "Whitney-Epstein, Hubbard, Dodson, Deflorio & Sissman, 'Optimizing Lead Distance', Wharton Sports Analytics Journal 2025, 25-slide presentation. Baseball base-stealing decision optimization: optimal lead from 1B when intending to steal 2nd, maximizing xRuns for base state 1-- via the printed linear-weight formula xRuns = 0.2*SB - 0.45*CS - 0.45*PK (Baseball Savant 2024 weights). A GLM on lead distance, pitcher Threat (Net Bases Prevented/100 IP), catcher pop time, and runner sprint speed outputs SB/CS/PK probabilities feeding xRuns; per-pitch only lead is controllable so the search holds other inputs constant and yields a per-situation optimum. Worked examples (Wheeler/Marchan/Ohtani -> 13.6 ft; Skenes/Crow-Armstrong/Grandal). Takeaway: leads typically too short, one more shuffle ~ +0.02 runs. Confounds: fear of basepath out, situational-vs-linear weights, new 3-pickoff rule. Extracted faithfully as a presentation artifact (not a derivative summary). Several result/player/team-evaluation slides (4, 11, 13, 17-20) are image-only figures whose numeric detail is not text-extractable and is deferred to the rendered slides; the GLM link/coefficients are prose-described, not printed, so the probability pipeline is reconstructed conceptually. The xRuns linear-weight formula is printed cleanly and used verbatim as LaTeX. Domain cs (sports decision optimization) matches catalog; baseball, not football. The linear-weight run-value objective, probability-to-value pipeline, ceteris-paribus marginal optimization, per-situation optimum, and behavioral/rule-change confounds are sport-agnostic and directly isomorphic to GSE's decision-optimization layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "research_question_optimal_lead",
+      "name": "Research question: optimal lead from 1B when intending to steal 2nd",
+      "verbatim_quote": "If a runner on 1B intends to steal 2nd, what is the optimal* lead from first base?",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The deck (Whitney-Epstein, Hubbard, Dodson, Deflorio, Sissman; Wharton 2025) asks: if a runner on first base intends to steal second, what is the optimal lead from first base, where optimal maximizes expected runs for the base state; the three relevant outcomes are lead distance, caught stealing, and pickoff.",
+        "Slide-deck presentation; several result/evaluation slides (4, 11, 13, 17-20) are image-only figures whose numeric detail is not extractable as text and is deferred to the rendered slides."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The optimal-lead question is the same marginal-decision optimization GSE poses for any controllable action under a run-value objective.",
+        "source_operator": "research_question_optimal_lead",
+        "telemetry": "optimal lead from 1B intending steal 2nd; maximize xRuns; outcomes SB/CS/PK"
+      }
+    },
+    {
+      "primitive_id": "xruns_maximize_base_state",
+      "name": "Optimality = maximize xRuns (Expected Runs) for base state 1-- (2024)",
+      "verbatim_quote": "*maximizes xRuns (Expected Runs) for base state 1 - - (2024)",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Optimal is defined as maximizing xRuns (Expected Runs) for the base state 1-- (runner on first only), using 2024 linear weights; the objective is a base-state-specific expected-run value rather than raw stolen-base success rate."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Base-state expected-runs maximization is the same state-conditioned objective GSE optimizes instead of a naive success rate.",
+        "source_operator": "xruns_maximize_base_state",
+        "telemetry": "optimal = max xRuns for base state 1-- (2024 weights); not raw SB%"
+      }
+    },
+    {
+      "primitive_id": "xruns_linear_weight_formula",
+      "name": "xRuns = 0.2*SB - 0.45*CS - 0.45*PK (Baseball Savant linear weights)",
+      "verbatim_quote": "The Formula: xRuns = 0.2 x SB - 0.45 x CS - 0.45 x PK Linear Weights Per Baseball Savant +0.2 xRuns -0.45 xRuns",
+      "page": 6,
+      "latex": "xRuns = 0.2\\,SB - 0.45\\,CS - 0.45\\,PK",
+      "symbol_and_unit_ledger": {
+        "SB": "stolen base indicator/count [dimensionless]",
+        "CS": "caught stealing indicator/count [dimensionless]",
+        "PK": "pickoff (caught) indicator/count [dimensionless]",
+        "0.2": "linear weight of a stolen base [runs]",
+        "-0.45": "linear weight of caught stealing / pickoff [runs]",
+        "xRuns": "expected run value of the attempt [runs]"
+      },
+      "assumptions": [
+        "The expected-run value of a steal attempt is the linear-weight sum xRuns = 0.2*SB - 0.45*CS - 0.45*PK, with linear weights per Baseball Savant: a stolen base adds +0.2 xRuns while a caught stealing or pickoff each subtract 0.45 xRuns; the formula is printed cleanly on slide 6 and used directly.",
+        "The 0.2/-0.45 coefficients are 2024 Baseball Savant linear weights for the 1-- base state; they are situational constants, not universal."
+      ],
+      "breakdown_regime": "2024 Baseball Savant linear weights for base state 1--; situational constants",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The linear-weight expected-run objective is literally GSE's run-value weighting of discrete outcomes.",
+        "source_operator": "xruns_linear_weight_formula",
+        "telemetry": "xRuns=0.2*SB-0.45*CS-0.45*PK; Savant linear weights; SB +0.2, CS/PK -0.45"
+      }
+    },
+    {
+      "primitive_id": "three_input_factors",
+      "name": "Three inputs: runner sprint speed, pitcher Threat, catcher pop time",
+      "verbatim_quote": "Runner: sprint speed Pitcher: Threat Catcher: pop time",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model's three input factors are the runner's sprint speed, the pitcher's Threat, and the catcher's pop time; these characterize the steal attempt alongside the controllable lead distance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The runner/pitcher/catcher factor triple is the same matchup-feature decomposition GSE uses for a steal attempt.",
+        "source_operator": "three_input_factors",
+        "telemetry": "inputs: runner sprint speed, pitcher Threat, catcher pop time"
+      }
+    },
+    {
+      "primitive_id": "pitcher_threat_net_bases",
+      "name": "Pitcher Threat = Net Bases Prevented per 100 Innings Pitched",
+      "verbatim_quote": "Net Bases Prevented 100 Innings Pitched Pitcher Threat",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pitcher Threat is quantified as Net Bases Prevented per 100 Innings Pitched, a rate statistic measuring how effectively a pitcher suppresses the running game; higher Threat means a more dangerous pitcher to run against."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The per-100-innings net-bases-prevented rate is the same normalized pitcher run-suppression metric GSE tracks.",
+        "source_operator": "pitcher_threat_net_bases",
+        "telemetry": "Pitcher Threat = Net Bases Prevented / 100 IP; running-game suppression rate"
+      }
+    },
+    {
+      "primitive_id": "glm_probabilities_to_xruns",
+      "name": "GLM maps inputs to SB/CS/PK probabilities, then to xRuns",
+      "verbatim_quote": "Probabilities Stolen Base Caught Pickoff xRuns For one pitch, only lead distance can be controlled…",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The approach is a GLM taking lead distance, Threat, catcher pop time, and runner speed as inputs and outputting probabilities of stolen base, caught stealing, and pickoff, which feed the xRuns linear-weight formula; for a single pitch only lead distance is controllable, so the other inputs are held fixed.",
+        "The GLM specification (link, exact coefficients) is not printed as an equation on the slides; it is described in prose and the probability-to-xRuns pipeline is reconstructed conceptually."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The probability-model-then-linear-weight pipeline is the same outcome-probability-to-value chain GSE uses for decision scoring.",
+        "source_operator": "glm_probabilities_to_xruns",
+        "telemetry": "GLM(lead,Threat,pop,speed)->P(SB),P(CS),P(PK)->xRuns; only lead controllable per pitch"
+      }
+    },
+    {
+      "primitive_id": "hold_constant_situation_optimal",
+      "name": "Hold everything else constant, find optimal; each situation has its own optimum",
+      "verbatim_quote": "hold everything else constant, find optimal Each situation: Own optimal value!",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The optimization holds Threat, pop time, and runner speed constant and varies lead distance to find the xRuns-maximizing lead; each situation (pitcher/catcher/runner combination) has its own optimal lead value, so the optimum is situation-specific rather than a single league-wide number."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The ceteris-paribus marginal optimization is literally GSE's hold-other-inputs-fixed decision search.",
+        "source_operator": "hold_constant_situation_optimal",
+        "telemetry": "hold Threat/pop/speed constant; argmax_lead xRuns; per-situation optimum"
+      }
+    },
+    {
+      "primitive_id": "example_wheeler_marchan_ohtani",
+      "name": "Worked example: Wheeler 1.803 Threat, Marchan 1.87 pop, Ohtani 28.1 speed -> 13.6 ft optimal",
+      "verbatim_quote": "Threat 1.803 Wheeler Pop time 1.87 Marchán Sprint speed 28.1 Ohtani lead 13.6 optimal",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A worked example uses pitcher Zack Wheeler (Threat 1.803), catcher Rafael Marchan (pop time 1.87 s), and runner Shohei Ohtani (sprint speed 28.1 ft/s), yielding an optimal lead of 13.6 ft; the deck contrasts actual versus optimal leads (e.g., 11.5 ft actual vs 10.6 ft optimal; 11.2 ft actual vs 14.5 ft optimal) on image slides."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The matchup-specific optimal-lead computation is the same concrete decision output GSE produces per situation.",
+        "source_operator": "example_wheeler_marchan_ohtani",
+        "telemetry": "Wheeler 1.803/Marchan 1.87/Ohtani 28.1 -> 13.6 ft optimal; actual-vs-optimal lead slides"
+      }
+    },
+    {
+      "primitive_id": "example_skenes_crow_armstrong_grandal",
+      "name": "Second example: Skenes 4.03 Threat, Crow-Armstrong 30 ft/s, Grandal 2.09 pop",
+      "verbatim_quote": "Pitcher: Paul Skenes 4.03 threat Runner: Pete Crow-Armstrong 30 ft/s sprint speed Catcher: Yasmani Grandal 2.09 s pop time",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A second example pairs pitcher Paul Skenes (Threat 4.03, a high-threat pitcher), runner Pete Crow-Armstrong (sprint speed 30 ft/s, an elite runner), and catcher Yasmani Grandal (pop time 2.09 s, a slower pop), illustrating how a high-threat pitcher and slow catcher push the optimal lead in opposite directions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The high-threat-pitcher vs elite-runner contrast is the same opposing-force decision tension GSE resolves.",
+        "source_operator": "example_skenes_crow_armstrong_grandal",
+        "telemetry": "Skenes 4.03 threat / Crow-Armstrong 30 ft/s / Grandal 2.09 pop; opposing forces on optimal lead"
+      }
+    },
+    {
+      "primitive_id": "takeaway_one_shuffle_plus_002",
+      "name": "Takeaway: one more shuffle ~ +0.02 runs; leads are typically too short",
+      "verbatim_quote": "Optimizing lead distance: Just 1 more shuffle -> +0.02 runs Leads are typically too short",
+      "page": 21,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The headline takeaway is that optimizing lead distance, just one more shuffle, is worth about +0.02 runs, and that leads are typically too short; the deck evaluates players and teams on image slides and samples expected runs over 100 pitches.",
+        "The +0.02 runs per shuffle and the player/team evaluation charts are presented on slides; the precise per-player values are in image figures not extractable as text."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The marginal-run-value-of-a-shuffle is the same small-edge quantification GSE surfaces as an actionable inefficiency.",
+        "source_operator": "takeaway_one_shuffle_plus_002",
+        "telemetry": "1 more shuffle ~ +0.02 runs; leads typically too short; 100-pitch xRuns sample"
+      }
+    },
+    {
+      "primitive_id": "fear_of_out_confounding",
+      "name": "Confounding factor: players' fear of making an out on the basepath",
+      "verbatim_quote": "Players' fear of making an out on basepath",
+      "page": 22,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A confounding factor is players' fear of making an out on the basepath, a behavioral reluctance that may keep leads shorter than the xRuns-optimal value even when a longer lead is mathematically better; this is a psychological constraint on the realized decision."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fear-of-out behavioral constraint is the same risk-aversion gap between optimal and realized decisions GSE flags.",
+        "source_operator": "fear_of_out_confounding",
+        "telemetry": "fear of basepath out -> leads shorter than optimal; behavioral constraint"
+      }
+    },
+    {
+      "primitive_id": "situational_vs_linear_and_pickoff_rule",
+      "name": "Confounds: situational vs linear weights; new 3-pickoff rule",
+      "verbatim_quote": "Game Situation (Situational vs linear weights) New rule: 3 pickoffs",
+      "page": 22,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Two further confounds are game situation (situational versus linear weights, since the 0.2/-0.45 weights are average rather than situation-specific) and the new rule limiting pitchers to 3 pickoffs, which changes the pickoff risk term and thus the optimal lead; data sources are Baseball Savant basestealing-run-value and pitcher-running-game leaderboards."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The situational-weight and rule-change caveats are the same context-dependence and regime-shift vetoes GSE applies to a static objective.",
+        "source_operator": "situational_vs_linear_and_pickoff_rule",
+        "telemetry": "situational vs linear weights; new 3-pickoff rule changes PK risk; Savant leaderboards"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "leaddistance2025_trace",
+      "think": "The retrocausal genealogy of this deck is the application of linear-weight expected-run valuation to a single controllable baseball decision, the runner's lead off first base. Jack Whitney-Epstein, Jackson Hubbard, Lila Dodson, William Deflorio, and Zach Sissman, presenting at Wharton in 2025, pose a sharply scoped question: if a runner on first intends to steal second, what is the optimal lead, where optimal means maximizing expected runs for the base state with a runner on first only, using 2024 weights. The deck sits in the lineage of Baseball Savant's linear-weight run valuation and the broader expected-points tradition, translating a run-value objective into a concrete marginal decision. The three outcomes that matter are the stolen base, the caught stealing, and the pickoff, and the value of an attempt is the linear-weight sum xRuns equals 0.2 times stolen bases minus 0.45 times caught stealings minus 0.45 times pickoffs, so a steal adds a fifth of a run while either out subtracts nearly half a run. The recursive theory of mind is the probability-to-value optimization pipeline. A generalized linear model takes four inputs, the lead distance, the pitcher's Threat, the catcher's pop time, and the runner's sprint speed, and outputs the probabilities of a stolen base, a caught stealing, and a pickoff, which then feed the xRuns formula. Pitcher Threat is itself a rate statistic, net bases prevented per 100 innings pitched, measuring how well a pitcher suppresses the running game. The crucial modeling move is that for a single pitch only the lead distance is controllable, so the optimization holds Threat, pop time, and runner speed constant and searches over lead distance for the xRuns-maximizing value, and each pitcher-catcher-runner situation has its own optimum rather than a single league-wide number. Cross-layer veto adjudication is the gap between the mathematical optimum and the realized decision, and the caveats on the objective itself. The worked examples make the situation-dependence concrete: Wheeler at 1.803 Threat, Marchan at 1.87 seconds pop time, and Ohtani at 28.1 feet per second sprint speed yield an optimal lead of 13.6 feet, while a second example pairs the high-threat Skenes at 4.03 with the elite runner Crow-Armstrong at 30 feet per second and the slow-pop Grandal at 2.09 seconds, showing opposing forces on the optimal lead. The headline result is that leads are typically too short and that just one more shuffle is worth about plus 0.02 runs. But the deck honestly flags confounds: players' fear of making an out on the basepath keeps leads shorter than optimal, the linear weights are averages rather than situation-specific values, and the new rule limiting pitchers to three pickoffs changes the pickoff risk term. The implementation invariants map directly onto GSE. The linear-weight expected-run objective is GSE's run-value weighting of discrete outcomes; the GLM probability pipeline feeding that objective is GSE's outcome-probability-to-value chain; the hold-everything-else-constant marginal search is GSE's ceteris-paribus decision optimization; and the per-situation optimum is GSE's refusal to apply a single universal threshold. The fear-of-out confound is GSE's risk-aversion gap between optimal and realized behavior, and the situational-versus-linear-weights and three-pickoff-rule caveats are GSE's context-dependence and regime-shift vetoes. The outputs are expected-run values and optimal lead distances from public Baseball Savant data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The extraction caveat is that this is a slide deck, not a paper: several result and player/team-evaluation slides are image-only figures whose numeric detail cannot be extracted as text, and the GLM's exact link and coefficients are described in prose rather than printed as an equation, so the probability pipeline is reconstructed conceptually and the printed xRuns formula is the one verbatim equation. The invariant for GSE is to carry the linear-weight objective, the probability-to-value pipeline, and the per-situation marginal optimization while recording the image-figure limitation, the behavioral fear confound, and the rule-change regime shift before any quantitative reuse, treating the too-short-lead finding as a quantified inefficiency rather than a settled universal constant. The structure of the linear weights themselves carries a sovereign lesson for GSE. The asymmetry between the plus 0.2 for a stolen base and the minus 0.45 for either out means an out on the basepath costs more than twice what a successful steal gains, which is why the objective punishes caught stealings and pickoffs so heavily and why a merely average success rate is not enough to justify a attempt. A direct algebraic consequence of the printed formula, derived here rather than printed on the slides, is that the break-even success probability solves 0.2 p minus 0.45 times one minus p equals zero, giving p equals 0.45 over 0.65, about 0.692, so a runner must expect to succeed roughly sixty-nine percent of the time before the attempt is run-neutral. The lead-distance tradeoff is the mechanical heart of the optimization: a longer lead shortens the distance to second and raises the stolen-base probability, but it also enlarges the area the pitcher can pick off into and raises the pickoff probability, so the optimum balances these opposing marginal effects. The player and team evaluation slides then aggregate these per-pitch optimal-versus-actual gaps into a measure of how much run value a runner or a team leaves on the basepaths, which is the same realized-versus-optimal decision audit GSE runs on its own outputs.",
+      "retrocausal_genealogy": "Linear-weight expected-run valuation applied to one controllable baseball decision: the runner's lead off 1B. Whitney-Epstein, Hubbard, Dodson, Deflorio, Sissman; Wharton 2025 slide deck. Question: optimal lead from 1B intending to steal 2nd, maximizing xRuns for base state 1-- (2024 weights). Lineage: Baseball Savant linear weights + expected-points tradition. Outcomes SB/CS/PK; xRuns=0.2*SB-0.45*CS-0.45*PK (SB +0.2, CS/PK -0.45 runs). Inputs: lead distance, pitcher Threat (Net Bases Prevented/100 IP), catcher pop time, runner sprint speed. Image-only result/evaluation slides flagged; GLM prose-described, xRuns formula the one printed equation.",
+      "theory_of_mind": "GLM(lead, Threat, pop time, sprint speed) -> P(SB), P(CS), P(PK) -> xRuns linear weights. Per pitch only lead controllable: hold Threat/pop/speed constant, argmax over lead; each situation own optimum. Threat = Net Bases Prevented per 100 IP. Worked examples: Wheeler 1.803/Marchan 1.87/Ohtani 28.1 -> 13.6 ft optimal; Skenes 4.03/Crow-Armstrong 30 ft/s/Grandal 2.09 (opposing forces). Actual-vs-optimal leads (11.5 vs 10.6; 11.2 vs 14.5 ft) on image slides. 100-pitch xRuns sample; player/team evaluation image slides. Data: Savant basestealing-run-value + pitcher-running-game leaderboards.",
+      "cross_layer_veto": "Takeaway: leads typically too short; 1 more shuffle ~ +0.02 runs. Confounds: players' fear of basepath out (behavioral risk-aversion keeps leads short); situational vs linear weights (0.2/-0.45 are averages not situation-specific); new 3-pickoff rule changes PK risk term (regime shift). Slide-deck limitation: result/evaluation figures image-only; GLM link/coefficients not printed (prose). GSE lifts linear-weight objective + probability-to-value pipeline + per-situation marginal optimization; records fear confound + rule-change + image-figure limits. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A Wharton slide deck optimizes a baseball runner's lead off first base by maximizing the linear-weight expected-run value xRuns = 0.2*SB - 0.45*CS - 0.45*PK for the runner-on-first base state, using a GLM that maps lead distance, pitcher Threat (net bases prevented per 100 innings), catcher pop time, and runner sprint speed to stolen-base/caught-stealing/pickoff probabilities; holding the non-controllable inputs fixed yields a per-situation optimal lead, with the headline finding that leads are typically too short and one more shuffle is worth about +0.02 runs, tempered by fear-of-out, situational-weight, and three-pickoff-rule confounds.",
+  "gsi_mapping": "GSI treats research question optimal lead from 1B (steal 2nd, max xRuns base state 1--, 2024); xRuns=0.2*SB-0.45*CS-0.45*PK (Savant linear weights, printed verbatim); GLM(lead,Threat,pop,speed)->P(SB/CS/PK)->xRuns; Threat=Net Bases Prevented/100 IP; per-pitch only lead controllable -> hold-constant argmax, per-situation optimum; examples Wheeler 1.803/Marchan 1.87/Ohtani 28.1->13.6 ft, Skenes 4.03/Crow-Armstrong 30/Grandal 2.09; actual-vs-optimal 11.5/10.6 & 11.2/14.5 ft (image slides); takeaway 1 shuffle ~+0.02 runs, leads too short; confounds fear-of-out, situational-vs-linear weights, 3-pickoff rule; Savant basestealing-run-value + pitcher-running-game sources; image-only result/evaluation figures flagged.",
+  "gse_mapping": "GSE lifts the linear-weight expected-run objective, the GLM probability-to-value pipeline, the ceteris-paribus marginal optimization over the single controllable input, and the per-situation optimum as its decision-optimization layer; treats the fear-of-basepath-out as the risk-aversion gap between optimal and realized behavior and the situational-weight and three-pickoff-rule caveats as context-dependence and regime-shift vetoes; records the slide-deck image-figure limitation and prose-only GLM specification as honest extraction limits; all outputs are expected-run values and optimal lead distances from public Baseball Savant data, never sportsbook lines, and the too-short-lead finding is a quantified inefficiency rather than a universal constant."
+}

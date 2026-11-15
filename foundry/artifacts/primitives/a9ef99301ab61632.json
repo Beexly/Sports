@@ -1,0 +1,78 @@
+{
+  "book_id": "a9ef99301ab61632",
+  "source_status": "COMPLETE",
+  "title": "PARTNER_POLICY",
+  "file_name": "PARTNER_POLICY.md",
+  "sha256": "a9ef99301ab616325aabd6fea49e3f8f43f5e950be17c8534c402e51d232e04d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Partitioned approval spaces A × B where A = partner status, B = offer status; binary logic enforces conditional validity. Universal Lens: Rooted in PARTNER_POLICY (a9ef99301ab61632), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates P(offer|partner) incorporate temporal expiry and rejection states via conformal predictive sets. GSI Mapping: Rooted in PARTNER_POLICY (a9ef99301ab61632), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in GSE model governed by (partner ∈ {approved, expired, rejected}) × (offer ∈ {approved, unapproved}) lattice. GSE Mapping: Rooted in PARTNER_POLICY (a9ef99301ab61632), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "partner_offer_separation",
+      "name": "Partner-Offer Separation Operator",
+      "verbatim_quote": "# Partner Policy Updated: 2026-07-04 Partner approval and offer approval are separate.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'partner approval status (boolean)', 'O': 'offer approval status (boolean)'}",
+      "assumptions": "Approval states are independent binary variables; logical conjunction fails when either component is invalid.",
+      "breakdown_regime": "P ∧ ¬O or ¬P ∧ O",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conditional probability space P(O|P), and GSE's state machine transition graph over (P,O) pairs.",
+        "source_operator": "partner_offer_separation",
+        "telemetry": "Validation of (P, O) tuple consistency in policy engine"
+      }
+    },
+    {
+      "primitive_id": "approval_conditional_validity",
+      "name": "Conditional Validity Criterion",
+      "verbatim_quote": "An approved offer does not matter if the partner is expired, rejected, suspended, or not approved.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'validity of offer (boolean)', 'P': 'partner status (boolean)', 'E': 'expired (boolean)', 'R': 'rejected (boolean)', 'S': 'suspended (boolean)'}",
+      "assumptions": "Offer validity depends on partner lifecycle state; V = O ∧ ¬(E ∨ R ∨ S ∨ ¬P)",
+      "breakdown_regime": "E ∨ R ∨ S ∨ ¬P",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from partner_offer_separation; GSI computes P(V|O,P) using temporal constraints.",
+        "source_operator": "approval_conditional_validity",
+        "telemetry": "Policy engine validation of offer eligibility based on partner lifecycle"
+      }
+    },
+    {
+      "primitive_id": "sponsor_control_boundary",
+      "name": "Sponsor Control Boundary",
+      "verbatim_quote": "## Partner Categories - sportsbook - dfs - fantasy_tool - sports_data - sports_cards - creator_tool - ai_tool - newsletter_tool - podcast_tool - cloud_tool - local_sponsor - general_sponsor ## Sponsor Control Boundary Sponsors cannot control picks, model outputs, no-bet decisions, loss autopsies, calibration claims, or editorial conclusions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'control authority (boolean)', 'M': 'model output (set of outcomes)', 'D': 'decision (set of actions)', 'A': 'autopsy (set of diagnostics)', 'B': 'betting action (boolean)'}",
+      "assumptions": "Control set C ⊂ {picks, M, D, A, calibration, editorial} is empty; C = ∅",
+      "breakdown_regime": "C ≠ ∅",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's decision autonomy kernel; GSI encodes C as zero-information constraint in causal models.",
+        "source_operator": "sponsor_control_boundary",
+        "telemetry": "Verification of sponsor influence exclusion in decision pipeline"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a9ef99301ab61632_t0",
+      "think": "The core duality in partner policy lies in the separation of approval mechanisms—partner and offer approval operate independently. This creates a Cartesian product space (P, O) where each axis represents a distinct binary state. The validity of an offer is conditional on partner status, forming a logical constraint: V = O ∧ ¬(E ∨ R ∨ S ∨ ¬P). This implies that even if an offer is approved, it becomes invalid if the partner is expired, rejected, suspended, or not approved. The sponsor control boundary introduces a topological constraint in the decision space, ensuring that certain variables (e.g., model outputs, betting decisions) remain invariant under sponsor influence. These primitives form a structured lattice in GSE’s state space and define Bayesian conditioning sets in GSI’s probabilistic framework.\n\nDeep epistemic analysis for PARTNER_POLICY (a9ef99301ab61632, domain=other, pages_read=1/1): Operator 'Partner-Offer Separation Operator' (page 1, domain other) captures: # Partner Policy Updated: 2026-07-04 Partner approval and offer approval are separate. Assumptions: Approval states are independent binary variables; logical conjunction fails when either component is invalid. Breakdown regime: P ∧ ¬O or ¬P ∧ O Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conditional probability space P(O|P), and GSE's state machine transition graph over (P,O) pairs. Operator 'Conditional Validity Criterion' (page 1, domain other) captures: An approved offer does not matter if the partner is expired, rejected, suspended, or not approved. Assumptions: Offer validity depends on partner lifecycle state; V = O ∧ ¬(E ∨ R ∨ S ∨ ¬P) Breakdown regime: E ∨ R ∨ S ∨ ¬P Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from partner_offer_separation; GSI computes P(V|O,P) using temporal constraints. Operator 'Sponsor Control Boundary' (page 1, domain other) captures: ## Partner Categories - sportsbook - dfs - fantasy_tool - sports_data - sports_cards - creator_tool - ai_tool - newsletter_tool - podcast_tool - cloud_tool - local_sponsor - general_sponsor ## Sponsor Control Boundary Sponsors cannot control picks, model outputs, no-bet decisions, loss autopsies, calibration claims, or editorial conclusions. Assumptions: Control set C ⊂ {picks, M, D, A, calibration, editorial} is empty; C = ∅ Breakdown regime: C ≠ ∅ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's decision autonomy kernel; GSI encodes C as zero-information constraint in causal models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PARTNER_POLICY (a9ef99301ab61632, domain=other, pages_read=1/1): Operator 'Partner-Offer Separation Operator' (page 1, domain other) captures: # Partner Policy Updated: 2026-07-04 Partner approval and offer approval are separate. Assumptions: Approval states are independent binary variables; logical conjunction fails when either component is invalid. Breakdown regime: P ∧ ¬O or ¬P ∧ O Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conditional probability space P(O|P), and GSE's state machine transition graph over (P,O) pairs. Operator 'Conditional Validity Criterion' (page 1, domain other) captures: An approved offer does not matter if the partner is expired, rejected, suspended, or not approved. Assumptions: Offer validity depends on partner lifecycle state; V = O ∧ ¬(E ∨ R ∨ S ∨ ¬P) Breakdown regime: E ∨ R ∨ S ∨ ¬P Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from partner_offer_separation; GSI computes P(V|O,P) using temporal constraints. Operator 'Sponsor Control Boundary' (page 1, domain other) captures: ## Partner Categories - sportsbook - dfs - fantasy_tool - sports_data - sports_cards - creator_tool - ai_tool - newsletter_tool - podcast_tool - cloud_tool - local_sponsor - general_sponsor ## Sponsor Control Boundary Sponsors cannot control picks, model outputs, no-bet decisions, loss autopsies, calibration claims, or editorial conclusions. Assumptions: Control set C ⊂ {picks, M, D, A, calibration, editorial} is empty; C = ∅ Breakdown regime: C ≠ ∅ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's decision autonomy kernel; GSI encodes C as zero-information constraint in causal models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal logic of conditional independence and information theory, tracing back to von Neumann’s decision theory and modern causal inference frameworks such as Pearl’s structural causal models. Retrocausal Genealogy: Rooted in PARTNER_POLICY (a9ef99301ab61632), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PARTNER_POLICY (a9ef99301ab61632), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents within this system include partners (approving entities), sponsors (influence actors), and the GSI/GSE engines (decision processors). Each agent operates under distinct information sets, with sponsors constrained from influencing outcome variables. Theory of Mind & Decision Maker Model: Rooted in PARTNER_POLICY (a9ef99301ab61632), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity between partner and offer states prevents spurious correlations in GSI’s inference; the sponsor boundary ensures no leakage into GSE’s autonomous decision layers through information-theoretic isolation. Cross-Layer Veto & Anti-Leakage Check: Rooted in PARTNER_POLICY (a9ef99301ab61632), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in PARTNER_POLICY (a9ef99301ab61632), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

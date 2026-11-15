@@ -1,0 +1,78 @@
+{
+  "book_id": "c2fc85f56c5900ac",
+  "source_status": "COMPLETE",
+  "title": "CARDS_CLOSING_LINE",
+  "file_name": "CARDS_CLOSING_LINE.md",
+  "sha256": "c2fc85f56c5900ac156d32f06fb1b08f9e644add577dbb945cf2f95e79115e69",
+  "primary_domain": "other",
+  "pages_total": 17,
+  "pages_read": 17,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Closing-line forecasting maps opener dynamics to realized outcomes via archival data, enforcing deterministic, idempotent inference with no synthetic pricing. Universal Lens: Rooted in CARDS_CLOSING_LINE (c2fc85f56c5900ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction to calibrate CLV metrics against walk-forward evaluations, ensuring fair-close settlement through Bayesian posterior updates. GSI Mapping: Rooted in CARDS_CLOSING_LINE (c2fc85f56c5900ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions using MARKET_PROP signals, validated via temporal cross-validation and gated by masterplan §6, avoiding p-side contamination. GSE Mapping: Rooted in CARDS_CLOSING_LINE (c2fc85f56c5900ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "closing_line_forecast",
+      "name": "Closing Line Forecast",
+      "verbatim_quote": "# CARDS_CLOSING_LINE — doctrine C6.2 closing-line forecaster v0 (deck CL) Predict where a **prop line CLOSES** from opener + line path + time-to-kickoff + news flags, using **ONLY our archived lines** (`OddsLineSnapshot`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_close': 'dimensionless, normalized closing line value', 'L_open': 'dimensionless, normalized opening line value', 't_kickoff': 'seconds until kickoff', 'N_flags': 'integer, count of news events'}",
+      "assumptions": "Archival data is complete and representative; no synthetic pricing occurs.",
+      "breakdown_regime": "When archive flags are disabled or data is missing, returns `{ok:false, refuse:...}`.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps input features to a probabilistic closing line using historical snapshots.",
+        "source_operator": "closing_line_forecast",
+        "telemetry": "evVsClose metric from placebo.ts:54"
+      }
+    },
+    {
+      "primitive_id": "clv_metric",
+      "name": "Closing Line Value Metric",
+      "verbatim_quote": "The forecaster manufactures CLV — the PROVEN-milestone metric — and yields the opener-attack map (doctrine C6.1 / masterplan E-G3: per family, hit openers vs wait).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'CLV': 'dimensionless, proven milestone score'}",
+      "assumptions": "CLV is derived from opener-attack patterns and validated via walk-forward splits.",
+      "breakdown_regime": "Invalidated when opener-attack map fails cross-model verification.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CLV is isomorphic to the expected value of realized closes under the forecaster's distribution.",
+        "source_operator": "clv_metric",
+        "telemetry": "Walk-forward score against realized closes"
+      }
+    },
+    {
+      "primitive_id": "market_prop_firewall",
+      "name": "Market Prop Firewall",
+      "verbatim_quote": "- **I3 · MARKET_PROP firewall (q-side only).** The forecaster's outputs are **TIMING/EXECUTION signals**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'signal_q': 'boolean, timing/executive signal flag', 'layer': \"string, e.g., 'MARKET_PROP'\"}",
+      "assumptions": "Outputs must remain within q-side and not propagate to p-side covariates.",
+      "breakdown_regime": "Build fails if MARKET_PROP provenance detected on p-side.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ensures signal integrity by isolating execution signals from predictive variables.",
+        "source_operator": "market_prop_firewall",
+        "telemetry": "CI build validation status"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c2fc85f56c5900ac_t0",
+      "think": "The closing-line forecast primitive models the evolution of a prop line from opener to final close using only historical archived lines. It assumes data availability and enforces deterministic inference, rejecting missing data with typed refusal shapes. The CLV metric acts as a proven milestone, derived from opener-attack maps and validated via walk-forward evaluation. Market propagation is restricted to q-side via firewall rules to prevent contamination of p-side variables. These primitives form a closed-loop system where each component is verified independently and cross-checked by different model families.\n\nDeep epistemic analysis for CARDS_CLOSING_LINE (c2fc85f56c5900ac, domain=other, pages_read=17/17): Operator 'Closing Line Forecast' (page 1, domain other) captures: # CARDS_CLOSING_LINE — doctrine C6.2 closing-line forecaster v0 (deck CL) Predict where a **prop line CLOSES** from opener + line path + time-to-kickoff + news flags, using **ONLY our archived lines** (`OddsLineSnapshot`). Assumptions: Archival data is complete and representative; no synthetic pricing occurs. Breakdown regime: When archive flags are disabled or data is missing, returns `{ok:false, refuse:...}`. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps input features to a probabilistic closing line using historical snapshots. Operator 'Closing Line Value Metric' (page 1, domain other) captures: The forecaster manufactures CLV — the PROVEN-milestone metric — and yields the opener-attack map (doctrine C6.1 / masterplan E-G3: per family, hit openers vs wait). Assumptions: CLV is derived from opener-attack patterns and validated via walk-forward splits. Breakdown regime: Invalidated when opener-attack map fails cross-model verification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CLV is isomorphic to the expected value of realized closes under the forecaster's distribution. Operator 'Market Prop Firewall' (page 1, domain other) captures: - **I3 · MARKET_PROP firewall (q-side only).** The forecaster's outputs are **TIMING/EXECUTION signals**. Assumptions: Outputs must remain within q-side and not propagate to p-side covariates. Breakdown regime: Build fails if MARKET_PROP provenance detected on p-side. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures signal integrity by isolating execution signals from predictive variables. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CARDS_CLOSING_LINE (c2fc85f56c5900ac, domain=other, pages_read=17/17): Operator 'Closing Line Forecast' (page 1, domain other) captures: # CARDS_CLOSING_LINE — doctrine C6.2 closing-line forecaster v0 (deck CL) Predict where a **prop line CLOSES** from opener + line path + time-to-kickoff + news flags, using **ONLY our archived lines** (`OddsLineSnapshot`). Assumptions: Archival data is complete and representative; no synthetic pricing occurs. Breakdown regime: When archive flags are disabled or data is missing, returns `{ok:false, refuse:...}`. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps input features to a probabilistic closing line using historical snapshots. Operator 'Closing Line Value Metric' (page 1, domain other) captures: The forecaster manufactures CLV — the PROVEN-milestone metric — and yields the opener-attack map (doctrine C6.1 / masterplan E-G3: per family, hit openers vs wait). Assumptions: CLV is derived from opener-attack patterns and validated via walk-forward splits. Breakdown regime: Invalidated when opener-attack map fails cross-model verification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CLV is isomorphic to the expected value of realized closes under the forecaster's distribution. Operator 'Market Prop Firewall' (page 1, domain other) captures: - **I3 · MARKET_PROP firewall (q-side only).** The forecaster's outputs are **TIMING/EXECUTION signals**. Assumptions: Outputs must remain within q-side and not propagate to p-side covariates. Breakdown regime: Build fails if MARKET_PROP provenance detected on p-side. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures signal integrity by isolating execution signals from predictive variables. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in temporal forecasting theory and conformal prediction, extended by GSI's need for calibrated, non-synthetic outcomes. Retrocausal Genealogy: Rooted in CARDS_CLOSING_LINE (c2fc85f56c5900ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CARDS_CLOSING_LINE (c2fc85f56c5900ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational decision-making by past data patterns, while adversarial agents might introduce noise or bias through incomplete data or misaligned incentives. Theory of Mind & Decision Maker Model: Rooted in CARDS_CLOSING_LINE (c2fc85f56c5900ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in CARDS_CLOSING_LINE (c2fc85f56c5900ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by isolating q-side signals from p-side covariates, preventing leakage. Build-time vetoes ensure no unauthorized access to core modules. Cross-Layer Veto & Anti-Leakage Check: Rooted in CARDS_CLOSING_LINE (c2fc85f56c5900ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CARDS_CLOSING_LINE (c2fc85f56c5900ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

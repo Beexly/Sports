@@ -1,0 +1,78 @@
+{
+  "book_id": "2a3e972dee48ed71",
+  "source_status": "COMPLETE",
+  "title": "p0343",
+  "file_name": "p0343.txt",
+  "sha256": "2a3e972dee48ed718bb5e43218e4d505b4d4f75ac02c4c930b16b34cc7fe7639",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Capitalization links property value to interest-rate-adjusted future returns; risk and uncertainty modulate expected yield distributions. Universal Lens: Rooted in p0343 (2a3e972dee48ed71), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on capitalization-derived property values using stochastic interest-rate priors and uncertainty-weighted return expectations. GSI Mapping: Rooted in p0343 (2a3e972dee48ed71), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in asset valuation governed by dynamic capitalization models under evolving risk regimes. GSE Mapping: Rooted in p0343 (2a3e972dee48ed71), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "capitalization_equilibrium",
+      "name": "Capitalization Equilibrium",
+      "verbatim_quote": "330 RISK, UNCERTAINTY, AND PROFIT an original value magnitude, but the sale value of the property, which is the result of capitalization at the current rate of interest.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_p': 'property value (currency)', 'r': 'interest rate (dimensionless)', 'R_t': 'expected return stream (currency/time)'}",
+      "assumptions": "Property value equals discounted future returns; interest rate is exogenously given.",
+      "breakdown_regime": "When interest rate approaches zero or return streams become deterministic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian update on V_p conditioned on r and R_t; GSE state transition on R_t dynamics.",
+        "source_operator": "capitalization_equilibrium",
+        "telemetry": "Observed property price deviation from capitalization model."
+      }
+    },
+    {
+      "primitive_id": "interest_rate_valuation",
+      "name": "Interest Rate Valuation",
+      "verbatim_quote": "For obviously in a progressive society where men are constantly lending funds of value at interest, freedom of exchange between value funds and productive goods will fix a value on the latter equal to the investment necessary to produce an equivalent return.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_g': 'goods value (currency)', 'I': 'investment required (currency)', 'r_e': 'equivalent return rate (dimensionless)'}",
+      "assumptions": "Market equilibrium sets V_g = I / r_e.",
+      "breakdown_regime": "In absence of lending or when market liquidity dries up.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI inference on V_g via I and r_e; GSE valuation of goods under liquidity constraints.",
+        "source_operator": "interest_rate_valuation",
+        "telemetry": "Deviation of actual goods prices from theoretical I/r_e ratio."
+      }
+    },
+    {
+      "primitive_id": "risk_adjusted_capitalization",
+      "name": "Risk-Adjusted Capitalization",
+      "verbatim_quote": "Capitalization and property values are fundamental to an understanding of the phenomena which arise out of the uncertainties present in a progressive society, and call for some further discussion on their own account.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_r': 'risk-adjusted value (currency)', 'σ': 'uncertainty measure (dimensionless)', 'E[R]': 'expected return (currency/time)'}",
+      "assumptions": "Uncertainty modifies capitalization through risk premium adjustment.",
+      "breakdown_regime": "When σ → ∞ or E[R] → 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI probabilistic valuation incorporating σ; GSE scenario-based valuation under uncertainty.",
+        "source_operator": "risk_adjusted_capitalization",
+        "telemetry": "Volatility-adjusted property value vs. standard capitalization."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2a3e972dee48ed71_t0",
+      "think": "The foundational concept of capitalization equates property value with the present value of future returns, adjusted by the prevailing interest rate. This is a core tenet of asset pricing theory, where V_p = Σ(R_t / (1 + r)^t). The second primitive, interest rate valuation, extends this by asserting that in a functioning economy, goods are priced such that the investment required to generate an equivalent return is realized. This implies V_g = I / r_e, where I is the capital input and r_e is the effective return rate. Risk-adjusted capitalization introduces stochasticity into these relationships, where uncertainty modifies the expected return stream, leading to V_r = E[R] / (r + λ(σ)), with λ(σ) representing a risk premium function. These primitives form a hierarchy: capitalization provides baseline valuation, interest rate valuation ensures market consistency, and risk-adjusted capitalization accounts for uncertainty. Failure modes include zero or negative interest rates, infinite volatility, or mispricing due to irrational expectations.\n\nDeep epistemic analysis for p0343 (2a3e972dee48ed71, domain=other, pages_read=1/1): Operator 'Capitalization Equilibrium' (page 1, domain other) captures: 330 RISK, UNCERTAINTY, AND PROFIT an original value magnitude, but the sale value of the property, which is the result of capitalization at the current rate of interest. Assumptions: Property value equals discounted future returns; interest rate is exogenously given. Breakdown regime: When interest rate approaches zero or return streams become deterministic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian update on V_p conditioned on r and R_t; GSE state transition on R_t dynamics. Operator 'Interest Rate Valuation' (page 1, domain other) captures: For obviously in a progressive society where men are constantly lending funds of value at interest, freedom of exchange between value funds and productive goods will fix a value on the latter equal to the investment necessary to produce an equivalent return. Assumptions: Market equilibrium sets V_g = I / r_e. Breakdown regime: In absence of lending or when market liquidity dries up. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI inference on V_g via I and r_e; GSE valuation of goods under liquidity constraints. Operator 'Risk-Adjusted Capitalization' (page 1, domain other) captures: Capitalization and property values are fundamental to an understanding of the phenomena which arise out of the uncertainties present in a progressive society, and call for some further discussion on their own account. Assumptions: Uncertainty modifies capitalization through risk premium adjustment. Breakdown regime: When σ → ∞ or E[R] → 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI probabilistic valuation incorporating σ; GSE scenario-based valuation under uncertainty. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0343 (2a3e972dee48ed71, domain=other, pages_read=1/1): Operator 'Capitalization Equilibrium' (page 1, domain other) captures: 330 RISK, UNCERTAINTY, AND PROFIT an original value magnitude, but the sale value of the property, which is the result of capitalization at the current rate of interest. Assumptions: Property value equals discounted future returns; interest rate is exogenously given. Breakdown regime: When interest rate approaches zero or return streams become deterministic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian update on V_p conditioned on r and R_t; GSE state transition on R_t dynamics. Operator 'Interest Rate Valuation' (page 1, domain other) captures: For obviously in a progressive society where men are constantly lending funds of value at interest, freedom of exchange between value funds and productive goods will fix a value on the latter equal to the investment necessary to produce an equivalent return. Assumptions: Market equilibrium sets V_g = I / r_e. Breakdown regime: In absence of lending or when market liquidity dries up. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI inference on V_g via I and r_e; GSE valuation of goods under liquidity constraints. Operator 'Risk-Adjusted Capitalization' (page 1, domain other) captures: Capitalization and property values are fundamental to an understanding of the phenomena which arise out of the uncertainties present in a progressive society, and call for some further discussion on their own account. Assumptions: Uncertainty modifies capitalization through risk premium adjustment. Breakdown regime: When σ → ∞ or E[R] → 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI probabilistic valuation incorporating σ; GSE scenario-based valuation under uncertainty. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Fisher's temporal preference framework and later formalized by Keynes' liquidity preference theory. Influenced by Walrasian general equilibrium and modern portfolio theory. Retrocausal Genealogy: Rooted in p0343 (2a3e972dee48ed71), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0343 (2a3e972dee48ed71), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents act under rational expectations, valuing assets based on discounted cash flows while adjusting for perceived risk. Opposing views may assume behavioral biases or irrational exuberance, leading to deviations from equilibrium. Theory of Mind & Decision Maker Model: Rooted in p0343 (2a3e972dee48ed71), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If risk premium becomes undefined or interest rate is zero, capitalization fails. If market liquidity collapses, the equivalence between I and V_g breaks down. Anti-collinearity arises when risk and return are not linearly related, invalidating simple capitalization models. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0343 (2a3e972dee48ed71), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

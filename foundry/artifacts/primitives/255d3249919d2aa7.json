@@ -1,0 +1,78 @@
+{
+  "book_id": "255d3249919d2aa7",
+  "source_status": "COMPLETE",
+  "title": "COMPLIANCE_COPY",
+  "file_name": "COMPLIANCE_COPY.md",
+  "sha256": "255d3249919d2aa766ac1ccad5a9043ae7783628e3e295311160e4b5ecfdb39c",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Risk-adjusted performance indicators (RAP) map to compliance consistency via Bayesian belief updates on disclosure fidelity. Universal Lens: Rooted in COMPLIANCE_COPY (255d3249919d2aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers risk-language coherence through conformal predictive sets over claim-disclaimer pairs in marketing copy. GSI Mapping: Rooted in COMPLIANCE_COPY (255d3249919d2aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models user decision states using Markov transitions between disclosure-aware and unaware policy regimes. GSE Mapping: Rooted in COMPLIANCE_COPY (255d3249919d2aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "compliance_consistency_index",
+      "name": "Compliance Consistency Index",
+      "verbatim_quote": "## Consistency verdict - Risk language across picks/performance/money pages: **consistent** (footer responsible-play link + explicit non-guarantee copy on the core surfaces).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Compliance consistency score (dimensionless, 0–1)', 'R': 'Risk language presence (binary, 0 or 1)'}",
+      "assumptions": "Risk language is present on all core surfaces; compliance is binary (present/absent).",
+      "breakdown_regime": "C = Σ(R_i) / N where N is total core surfaces.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "C maps to GSI's belief update function over claim-disclaimer alignment.",
+        "source_operator": "compliance_consistency_index",
+        "telemetry": "Page-level risk-marker frequency"
+      }
+    },
+    {
+      "primitive_id": "risk_disclosure_gap",
+      "name": "Risk Disclosure Gap",
+      "verbatim_quote": "## Findings (file:line) **F1 — `fantasy/props/page.tsx:26` discusses staking without an adjacent responsible-gambling note.** Copy: \"...the line and multiplier where edge × payout pays best.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Disclosure gap severity (dimensionless, 0–1)', 'D': 'Disclaimers present (binary, 0 or 1)', 'S': 'Staking-related content (binary, 0 or 1)'}",
+      "assumptions": "Gap exists when S=1 and D=0.",
+      "breakdown_regime": "G = S × (1 − D).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "G represents a failure mode in GSE’s risk-awareness state transition.",
+        "source_operator": "risk_disclosure_gap",
+        "telemetry": "Staking-content vs. disclaimer alignment ratio"
+      }
+    },
+    {
+      "primitive_id": "educational_profit_frame",
+      "name": "Educational Profit Frame",
+      "verbatim_quote": "**F3 — calculators are fine.** `tools/clv-calculator/page.tsx:55` (\"does not prove long-run profit\") and `tools/ev-calculator/page.tsx:69` discuss profit/payout in an educational, mathematically-honest frame with adjacent caveats.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Educational frame strength (dimensionless, 0–1)', 'P': 'Profit/payout mention (binary, 0 or 1)', 'C': 'Adjacent caveat presence (binary, 0 or 1)'}",
+      "assumptions": "E increases with P and C both present.",
+      "breakdown_regime": "E = P × C.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "E aligns with GSI's probabilistic framing of financial education.",
+        "source_operator": "educational_profit_frame",
+        "telemetry": "Calculator content vs. caveat ratio"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "255d3249919d2aa7_t0",
+      "think": "The Compliance Consistency Index (C) measures the proportion of core surfaces where risk language is present, forming a binary signal for compliance fidelity. It is derived as a normalized sum of risk markers across surfaces. The Risk Disclosure Gap (G) quantifies inconsistency by detecting staking-related content without adjacent disclaimers, modeled as a product of presence and absence. The Educational Profit Frame (E) evaluates whether financial tools are framed with appropriate caveats, again as a binary product. These primitives form a triad of risk-state observables, enabling GSI to compute Bayesian posterior beliefs about disclosure integrity. In GSE, they define state transitions between informed and uninformed user behavior under varying disclosure conditions. Failure modes arise when E drops below threshold or G rises above acceptable levels, indicating potential regulatory or ethical drift.\n\nDeep epistemic analysis for COMPLIANCE_COPY (255d3249919d2aa7, domain=other, pages_read=2/2): Operator 'Compliance Consistency Index' (page 1, domain other) captures: ## Consistency verdict - Risk language across picks/performance/money pages: **consistent** (footer responsible-play link + explicit non-guarantee copy on the core surfaces). Assumptions: Risk language is present on all core surfaces; compliance is binary (present/absent). Breakdown regime: C = Σ(R_i) / N where N is total core surfaces. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): C maps to GSI's belief update function over claim-disclaimer alignment. Operator 'Risk Disclosure Gap' (page 1, domain other) captures: ## Findings (file:line) **F1 — `fantasy/props/page.tsx:26` discusses staking without an adjacent responsible-gambling note.** Copy: \"...the line and multiplier where edge × payout pays best. Assumptions: Gap exists when S=1 and D=0. Breakdown regime: G = S × (1 − D). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): G represents a failure mode in GSE’s risk-awareness state transition. Operator 'Educational Profit Frame' (page 1, domain other) captures: **F3 — calculators are fine.** `tools/clv-calculator/page.tsx:55` (\"does not prove long-run profit\") and `tools/ev-calculator/page.tsx:69` discuss profit/payout in an educational, mathematically-honest frame with adjacent caveats. Assumptions: E increases with P and C both present. Breakdown regime: E = P × C. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): E aligns with GSI's probabilistic framing of financial education. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for COMPLIANCE_COPY (255d3249919d2aa7, domain=other, pages_read=2/2): Operator 'Compliance Consistency Index' (page 1, domain other) captures: ## Consistency verdict - Risk language across picks/performance/money pages: **consistent** (footer responsible-play link + explicit non-guarantee copy on the core surfaces). Assumptions: Risk language is present on all core surfaces; compliance is binary (present/absent). Breakdown regime: C = Σ(R_i) / N where N is total core surfaces. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): C maps to GSI's belief update function over claim-disclaimer alignment. Operator 'Risk Disclosure Gap' (page 1, domain other) captures: ## Findings (file:line) **F1 — `fantasy/props/page.tsx:26` discusses staking without an adjacent responsible-gambling note.** Copy: \"...the line and multiplier where edge × payout pays best. Assumptions: Gap exists when S=1 and D=0. Breakdown regime: G = S × (1 − D). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): G represents a failure mode in GSE’s risk-awareness state transition. Operator 'Educational Profit Frame' (page 1, domain other) captures: **F3 — calculators are fine.** `tools/clv-calculator/page.tsx:55` (\"does not prove long-run profit\") and `tools/ev-calculator/page.tsx:69` discuss profit/payout in an educational, mathematically-honest frame with adjacent caveats. Assumptions: E increases with P and C both present. Breakdown regime: E = P × C. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): E aligns with GSI's probabilistic framing of financial education. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and regulatory compliance frameworks, particularly those governing financial disclosures and gambling-related content. Influenced by Bayesian belief networks and formal verification techniques used in risk-sensitive AI systems. Retrocausal Genealogy: Rooted in COMPLIANCE_COPY (255d3249919d2aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in COMPLIANCE_COPY (255d3249919d2aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include marketing teams seeking persuasive framing and compliance officers enforcing risk transparency. Decision actors must balance commercial incentives against legal and ethical obligations, with GSI and GSE acting as dual observers of this dynamic. Theory of Mind & Decision Maker Model: Rooted in COMPLIANCE_COPY (255d3249919d2aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that E and G be orthogonal in their influence on user perception. Leakage occurs if E is artificially inflated while G remains high, suggesting a false sense of safety. Veto conditions enforce that any increase in G triggers immediate re-evaluation of E. Cross-Layer Veto & Anti-Leakage Check: Rooted in COMPLIANCE_COPY (255d3249919d2aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

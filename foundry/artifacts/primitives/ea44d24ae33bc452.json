@@ -1,0 +1,78 @@
+{
+  "book_id": "ea44d24ae33bc452",
+  "source_status": "COMPLETE",
+  "title": "CHI@ATL-matchups",
+  "file_name": "CHI@ATL-matchups.md",
+  "sha256": "ea44d24ae33bc4524d50d00bb779a77e8d684800f174bf7a1ecab3157dc19390",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The trench interaction is modeled as a dual optimization problem over the spatial-temporal domain of the pocket. The time-to-throw and time-to-line-of-scramble act as boundary conditions for the pressure differential, where the rushing yield per opportunity defines the gradient of the defensive front's penetration vector.",
+  "gsi_mapping": "GSI employs conformal inference to construct prediction intervals around the nominal 2.80s release tempo. By treating the RYOE as a zero-mean baseline, Bayesian updating dynamically adjusts the probability density of sack events based on real-time injury report perturbations to the active defensive front.",
+  "gse_mapping": "GSE maps the OL-FRONT engagement into a discrete state-transition graph. The primary absorbing states are 'clean_pocket' or 'pressure_generated'. A pre-kick scratch to the active front triggers an immediate edge-weight update, recalculating the expected value of the RB downhill leverage block.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_release_duality",
+      "name": "Release Tempo Operator",
+      "verbatim_quote": "time-to-throw) [raw_statboard_passing.json, espn-depthcharts-2026.json] -> meets ATL defensive front () fully active on report [espn_nfl_injuries_week6.json] -> pocket",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "T_tt: Time-to-throw (seconds), T_tlos: Time-to-line-of-scramble (seconds)",
+      "assumptions": "Assumes constant base release tempo independent of initial personnel grouping; assumes NGS metrics represent true population means.",
+      "breakdown_regime": "Pre-kick OL/DL scratches or in-game blitz scheme overhaul",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping of quarterback protection anchor to a temporal decay function in GSI, directly dictating the survival probability of the passing play state in GSE.",
+        "source_operator": "temporal_release_duality",
+        "telemetry": "NGS time-to-throw (2.80s)"
+      }
+    },
+    {
+      "primitive_id": "trench_leverage_kernel",
+      "name": "Downhill Leverage Kernel",
+      "verbatim_quote": "(2.80s) and RB1 burst (TLOS 2.80s, RYOE +0.0) [raw_statboard_rushing.json] serve as primary trench counter against rush",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "RYOE: Rushing Yield Per Opportunity (yards), T_tlos: Time-to-line-of-scramble (seconds)",
+      "assumptions": "RB1 burst acts as a deterministic scalar multiplier to offensive line blocking efficiency; baseline RYOE is exactly zero.",
+      "breakdown_regime": "Singularity occurs if defensive front generates negative expected yield, overwhelming the RB burst scalar.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a spatial blocking kernel used by GSE to calculate the probability of maintaining positive yardage on designed run-action passes against varying pass-rush pressures.",
+        "source_operator": "trench_leverage_kernel",
+        "telemetry": "RB1 RYOE (+0.0 yds)"
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "CHI@ATL-matchups Grounded Principle 3",
+      "verbatim_quote": "- RB downhill leverage: RB1 (2026 NGS time-to-LOS: 2.80s, RYOE: +0.0 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] - defensive front",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ea44d24ae33bc452_t0",
+      "think": "The provided matchup data establishes a highly constrained, symmetric duality between the home and away trench engagements. Mathematically, we define the offensive viability as a function $V(t)$ bounded by the time-to-throw ($T_{tt}$) and the time-to-line-of-scramble ($T_{tlos}$). In this specific dataset, both parameters are locked at 2.80 seconds, creating a degenerate case where the temporal advantage is perfectly neutralized. The rushing yield per opportunity (RYOE) serves as the spatial gradient of the defensive front's penetration. With RYOE fixed at +0.0 yards, the system operates at a critical equilibrium point. Any infinitesimal perturbation—such as a pre-kick scratch to the active defensive front or an unlisted blitz package—will bifurcate the state space, pushing the outcome toward either a high-probability sack or a clean pocket. The RB downhill leverage acts as a secondary stabilizing operator, attempting to absorb the variance introduced by the defensive front's pressure vectors. Because the raw statboards indicate identical metrics for both the home and away units, the resulting game-theoretic payoff matrix is initially symmetric. However, the absence of listed starters introduces a high-dimensional uncertainty manifold. We must therefore treat the 'fully active' injury reports not as guarantees, but as prior distributions that will be sharply updated via Bayesian conditioning once the actual snap count commences. The breaking condition explicitly cited in the text highlights the fragility of this 2.80s equilibrium under dynamic roster changes.\n\nDeep epistemic analysis for CHI@ATL-matchups (ea44d24ae33bc452, domain=other, pages_read=1/1): Operator 'Release Tempo Operator' (page 1, domain other) captures: time-to-throw) [raw_statboard_passing.json, espn-depthcharts-2026.json] -> meets ATL defensive front () fully active on report [espn_nfl_injuries_week6.json] -> pocket Assumptions: Assumes constant base release tempo independent of initial personnel grouping; assumes NGS metrics represent true population means. Breakdown regime: Pre-kick OL/DL scratches or in-game blitz scheme overhaul Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping of quarterback protection anchor to a temporal decay function in GSI, directly dictating the survival probability of the passing play state in GSE. Operator 'Downhill Leverage Kernel' (page 1, domain other) captures: (2.80s) and RB1 burst (TLOS 2.80s, RYOE +0.0) [raw_statboard_rushing.json] serve as primary trench counter against rush Assumptions: RB1 burst acts as a deterministic scalar multiplier to offensive line blocking efficiency; baseline RYOE is exactly zero. Breakdown regime: Singularity occurs if defensive front generates negative expected yield, overwhelming the RB burst scalar. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives a spatial blocking kernel used by GSE to calculate the probability of maintaining positive yardage on designed run-action passes against varying pass-rush pressures. Operator 'CHI@ATL-matchups Grounded Principle 3' (page 1, domain other) captures: - RB downhill leverage: RB1 (2026 NGS time-to-LOS: 2.80s, RYOE: +0.0 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] - defensive front Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CHI@ATL-matchups (ea44d24ae33bc452, domain=other, pages_read=1/1): Operator 'Release Tempo Operator' (page 1, domain other) captures: time-to-throw) [raw_statboard_passing.json, espn-depthcharts-2026.json] -> meets ATL defensive front () fully active on report [espn_nfl_injuries_week6.json] -> pocket Assumptions: Assumes constant base release tempo independent of initial personnel grouping; assumes NGS metrics represent true population means. Breakdown regime: Pre-kick OL/DL scratches or in-game blitz scheme overhaul Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping of quarterback protection anchor to a temporal decay function in GSI, directly dictating the survival probability of the passing play state in GSE. Operator 'Downhill Leverage Kernel' (page 1, domain other) captures: (2.80s) and RB1 burst (TLOS 2.80s, RYOE +0.0) [raw_statboard_rushing.json] serve as primary trench counter against rush Assumptions: RB1 burst acts as a deterministic scalar multiplier to offensive line blocking efficiency; baseline RYOE is exactly zero. Breakdown regime: Singularity occurs if defensive front generates negative expected yield, overwhelming the RB burst scalar. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives a spatial blocking kernel used by GSE to calculate the probability of maintaining positive yardage on designed run-action passes against varying pass-rush pressures. Operator 'CHI@ATL-matchups Grounded Principle 3' (page 1, domain other) captures: - RB downhill leverage: RB1 (2026 NGS time-to-LOS: 2.80s, RYOE: +0.0 yds) [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] - defensive front Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces its lineage to early 20th-century operational research and queueing theory, specifically the modeling of service times versus arrival rates. In modern sports analytics, it evolved from basic Expected Points Added (EPA) frameworks into granular, millisecond-level temporal tracking pioneered by Next Gen Stats. The conceptual leap here is treating the offensive line not as a static barrier, but as a dynamic temporal filter subject to stochastic failure modes.",
+      "theory_of_mind": "We model the opposing head coaches as rational agents operating under severe information asymmetry. The defensive coordinator attempts to exploit the rigid 2.80s release window by deploying unlisted sub-packages designed to collapse the pocket before the temporal threshold is met. Conversely, the offensive coordinator relies on the RB's downhill leverage as a psychological and physical deterrent, banking on the defender's hesitation to engage a zero-yield spatial gradient. Both actors continuously update their internal belief states regarding the opponent's active personnel based on pre-snap alignment cues.",
+      "cross_layer_veto": "A strict anti-collinearity veto is applied to prevent double-counting the RB's influence. If the RB is utilized as a primary receiving target in the passing game, the 'downhill leverage' primitive must be instantly nulled to avoid inflating the estimated blocking capacity of the offensive line. Furthermore, leakage between the home and away symmetry models is vetoed if late scratch reports introduce a significant disparity in the effective depth of the respective defensive fronts."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "0264f727bfce3714",
+  "source_status": "COMPLETE",
+  "title": "JYNX_FAILOVER_AND_MODEL_MAPS",
+  "file_name": "JYNX_FAILOVER_AND_MODEL_MAPS.md",
+  "sha256": "0264f727bfce371473f1addf255f6f9163543a2fcc4027eb103fa03c807e98ff",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Jynx failover maps model identities to cloud providers via structured JSON, enabling probabilistic routing and error-handled transitions across anthropic, cerebras, and openai-compatible tiers. Universal Lens: Rooted in JYNX_FAILOVER_AND_MODEL_MAPS (0264f727bfce3714), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers provider reliability and cost-efficiency through Bayesian belief updates on mapped model identifiers, using cloud credit stacks as evidence for posterior inference over service tiers. GSI Mapping: Rooted in JYNX_FAILOVER_AND_MODEL_MAPS (0264f727bfce3714), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions between free-lane, cloud-credit, and cash modes based on error signals and configured attempt orders, maintaining deterministic model-to-host mappings for coherent reasoning. GSE Mapping: Rooted in JYNX_FAILOVER_AND_MODEL_MAPS (0264f727bfce3714), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "cloud_model_map",
+      "name": "Cloud Model Identity Mapping",
+      "verbatim_quote": "Maps are JSON objects: ```json { \"claude-sonnet-4-6\": \"<host-specific-id>\", \"claude-haiku-4-5-20251001\": \"<host-specific-id>\", \"claude-opus-4-8\": \"<host-specific-id>\" } ``` ### Rules 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'modelName': 'string, exact Anthropic model ID', 'hostId': 'string, cloud-specific identifier'}",
+      "assumptions": "Each model must map to a unique host ID per cloud; missing keys trigger ConfigError.",
+      "breakdown_regime": "ConfigError when key missing or malformed JSON.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Model identity is isomorphic to host-specific identifiers under cloud provider constraints.",
+        "source_operator": "cloud_model_map",
+        "telemetry": "Ledger records hostId post-call instead of raw model name."
+      }
+    },
+    {
+      "primitive_id": "failover_attempt_order",
+      "name": "Hierarchical Cloud Attempt Sequence",
+      "verbatim_quote": "Failover logic (end-to-end) ``` jynxComplete / content path │ ├─ FREE (content|brief + env) │ Cerebras → secondary free OpenAI-compat │ hop only on CerebrasMessagesError | OpenAiCompatError │ ├─ CLOUD CREDITS (callClaude) │ cloudAttemptOrder: e.g.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'attemptOrder': 'list of strings, ordered cloud provider names', 'errorType': 'enum, one of MessagesError, ConfigError'}",
+      "assumptions": "Failure triggers hop to next cloud in sequence; all tiers require full key coverage.",
+      "breakdown_regime": "Hop occurs on *MessagesError or *ConfigError.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from environment config and error handling rules; defines kernel of routing policy.",
+        "source_operator": "failover_attempt_order",
+        "telemetry": "creditStack.jynx.attemptOrder shows active cloud sequence."
+      }
+    },
+    {
+      "primitive_id": "free_lane_activation",
+      "name": "Content Lane Prioritization",
+      "verbatim_quote": "bedrock → azure → vertex │ hop only on *MessagesError | *ConfigError │ └─ CASH Anthropic (callClaudeMessages) ``` Studio / journal / model-court skip free-lane → start at clouds.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'freeLaneEnabled': 'boolean, controls whether content path uses free lane', 'mode': \"enum, 'auto' or 'anthropic'\"}",
+      "assumptions": "Free lane bypasses cloud credits unless explicitly enabled.",
+      "breakdown_regime": "Mode unset or 'anthropic' disables free lane entirely.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Determines initial routing mode based on operational context and override flags.",
+        "source_operator": "free_lane_activation",
+        "telemetry": "CONTENT_FREE_LANE_ENABLED flag governs activation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0264f727bfce3714_t0",
+      "think": "The Jynx system implements a hierarchical, probabilistic routing mechanism where model identity is mapped to specific cloud providers via JSON configurations. This enables a layered failover strategy: content-first free-lane (Cerebras/OpenAI), followed by cloud credit attempts (Bedrock/Azure/Vertex), and finally fallback to direct Anthropic cash calls. Each layer has defined error conditions that trigger transitions. The system assumes full key coverage across all intended clouds and models, with missing keys causing ConfigError. The mapping ensures that ledger entries record host-specific IDs rather than raw model names, supporting downstream analytics and cost attribution. The attempt order is derived from environment variables and enforced through runtime checks, forming a robust kernel of service resilience.\n\nDeep epistemic analysis for JYNX_FAILOVER_AND_MODEL_MAPS (0264f727bfce3714, domain=other, pages_read=2/2): Operator 'Cloud Model Identity Mapping' (page 1, domain other) captures: Maps are JSON objects: ```json { \"claude-sonnet-4-6\": \"<host-specific-id>\", \"claude-haiku-4-5-20251001\": \"<host-specific-id>\", \"claude-opus-4-8\": \"<host-specific-id>\" } ``` ### Rules 1. Assumptions: Each model must map to a unique host ID per cloud; missing keys trigger ConfigError. Breakdown regime: ConfigError when key missing or malformed JSON. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Model identity is isomorphic to host-specific identifiers under cloud provider constraints. Operator 'Hierarchical Cloud Attempt Sequence' (page 1, domain other) captures: Failover logic (end-to-end) ``` jynxComplete / content path │ ├─ FREE (content|brief + env) │ Cerebras → secondary free OpenAI-compat │ hop only on CerebrasMessagesError | OpenAiCompatError │ ├─ CLOUD CREDITS (callClaude) │ cloudAttemptOrder: e.g. Assumptions: Failure triggers hop to next cloud in sequence; all tiers require full key coverage. Breakdown regime: Hop occurs on *MessagesError or *ConfigError. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from environment config and error handling rules; defines kernel of routing policy. Operator 'Content Lane Prioritization' (page 1, domain other) captures: bedrock → azure → vertex │ hop only on *MessagesError | *ConfigError │ └─ CASH Anthropic (callClaudeMessages) ``` Studio / journal / model-court skip free-lane → start at clouds. Assumptions: Free lane bypasses cloud credits unless explicitly enabled. Breakdown regime: Mode unset or 'anthropic' disables free lane entirely. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Determines initial routing mode based on operational context and override flags. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for JYNX_FAILOVER_AND_MODEL_MAPS (0264f727bfce3714, domain=other, pages_read=2/2): Operator 'Cloud Model Identity Mapping' (page 1, domain other) captures: Maps are JSON objects: ```json { \"claude-sonnet-4-6\": \"<host-specific-id>\", \"claude-haiku-4-5-20251001\": \"<host-specific-id>\", \"claude-opus-4-8\": \"<host-specific-id>\" } ``` ### Rules 1. Assumptions: Each model must map to a unique host ID per cloud; missing keys trigger ConfigError. Breakdown regime: ConfigError when key missing or malformed JSON. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Model identity is isomorphic to host-specific identifiers under cloud provider constraints. Operator 'Hierarchical Cloud Attempt Sequence' (page 1, domain other) captures: Failover logic (end-to-end) ``` jynxComplete / content path │ ├─ FREE (content|brief + env) │ Cerebras → secondary free OpenAI-compat │ hop only on CerebrasMessagesError | OpenAiCompatError │ ├─ CLOUD CREDITS (callClaude) │ cloudAttemptOrder: e.g. Assumptions: Failure triggers hop to next cloud in sequence; all tiers require full key coverage. Breakdown regime: Hop occurs on *MessagesError or *ConfigError. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from environment config and error handling rules; defines kernel of routing policy. Operator 'Content Lane Prioritization' (page 1, domain other) captures: bedrock → azure → vertex │ hop only on *MessagesError | *ConfigError │ └─ CASH Anthropic (callClaudeMessages) ``` Studio / journal / model-court skip free-lane → start at clouds. Assumptions: Free lane bypasses cloud credits unless explicitly enabled. Breakdown regime: Mode unset or 'anthropic' disables free lane entirely. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Determines initial routing mode based on operational context and override flags. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s multi-cloud orchestration paradigms, particularly influenced by AWS Bedrock and Azure AI Gateway designs, evolving into modular, error-tolerant AI service abstraction layers. Retrocausal Genealogy: Rooted in JYNX_FAILOVER_AND_MODEL_MAPS (0264f727bfce3714), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in JYNX_FAILOVER_AND_MODEL_MAPS (0264f727bfce3714), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the user (requester), the system (Jynx router), and external services (Anthropic, Bedrock, etc.). The system models agent behavior as stochastic processes governed by error likelihood and resource availability, optimizing for throughput and cost efficiency. Theory of Mind & Decision Maker Model: Rooted in JYNX_FAILOVER_AND_MODEL_MAPS (0264f727bfce3714), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises from distinct failure modes per layer—messages errors in one tier do not propagate to others without explicit configuration. Leakage is mitigated by strict mapping enforcement and telemetry-driven validation of each transition point. Cross-Layer Veto & Anti-Leakage Check: Rooted in JYNX_FAILOVER_AND_MODEL_MAPS (0264f727bfce3714), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

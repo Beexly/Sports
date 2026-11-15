@@ -1,0 +1,78 @@
+{
+  "book_id": "6346f0592531d3ee",
+  "source_status": "COMPLETE",
+  "title": "APPLY_INSTRUCTIONS",
+  "file_name": "APPLY_INSTRUCTIONS.md",
+  "sha256": "6346f0592531d3ee7745798770a36a746e7f3ec82463acfa2bfee703d01f28d9",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Agent OS runtime visibility maps local commit state to patchable artifacts via git SHA reconciliation and operational kernel alignment. Universal Lens: Rooted in APPLY_INSTRUCTIONS (6346f0592531d3ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on agent runtime visibility employs conformal predictive distributions over local commit states, conditioning on patch availability and remote sync status. GSI Mapping: Rooted in APPLY_INSTRUCTIONS (6346f0592531d3ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine updates state transitions based on runtime artifact presence, triggering cockpit panel reconfiguration when SHA mismatch occurs. GSE Mapping: Rooted in APPLY_INSTRUCTIONS (6346f0592531d3ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "visibility_status_reconciliation",
+      "name": "Visibility Status Reconciliation",
+      "verbatim_quote": "# Apply Instructions — Agent OS Runtime Visibility Patch ## Visibility status - Requested missing SHA: `0679aa3` - Local result: `0679aa3` does **not** exist in this Codex worktree.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Git repository integrity is assumed; SHA existence is binary.",
+      "breakdown_regime": "When requested SHA is absent from local worktree.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps local Git commit state to patch readiness using SHA-based identity verification.",
+        "source_operator": "visibility_status_reconciliation",
+        "telemetry": "SHA existence check result"
+      }
+    },
+    {
+      "primitive_id": "agent_os_runtime_commit",
+      "name": "Agent OS Runtime Commit Artifact",
+      "verbatim_quote": "- Local commit containing the Agent OS runtime / cockpit panel work: `3bfc262` (`Implement Agent OS spine, workflow/runtime, cockpit operating map, and remove Google Fonts build dependency`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Commit `3bfc262` encapsulates all relevant runtime logic.",
+      "breakdown_regime": "Upon patch export due to missing SHA.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives operational kernel from commit metadata for runtime artifact validation.",
+        "source_operator": "agent_os_runtime_commit",
+        "telemetry": "Commit hash and associated changeset"
+      }
+    },
+    {
+      "primitive_id": "patch_export_condition",
+      "name": "Patch Export Condition",
+      "verbatim_quote": "- Because no GitHub remote is configured and `0679aa3` is not local, this patch exports the available local commit `3bfc262` for Claude/Garrett to apply or review.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "No remote configuration implies manual patch handoff.",
+      "breakdown_regime": "When remote sync fails and target SHA is unavailable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps repository sync state to patch export policy via conditional logic.",
+        "source_operator": "patch_export_condition",
+        "telemetry": "Remote config status and SHA availability"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6346f0592531d3ee_t0",
+      "think": "The system models visibility through a binary Git SHA existence check. When the requested SHA is absent, it triggers a fallback mechanism that exports the most recent known valid commit. This process aligns with a state transition model where repository integrity determines patch availability. The failure mode arises from sync misalignment between local and remote repositories, leading to an implicit trust in local artifacts. The dual nature of this operation lies in its deterministic patch selection and probabilistic remote synchronization failure. The kernel abstraction is a Git-based artifact resolver, where each commit represents a stable runtime state. Observability is achieved through SHA verification and commit metadata inspection.\n\nDeep epistemic analysis for APPLY_INSTRUCTIONS (6346f0592531d3ee, domain=other, pages_read=1/1): Operator 'Visibility Status Reconciliation' (page 1, domain other) captures: # Apply Instructions — Agent OS Runtime Visibility Patch ## Visibility status - Requested missing SHA: `0679aa3` - Local result: `0679aa3` does **not** exist in this Codex worktree. Assumptions: Git repository integrity is assumed; SHA existence is binary. Breakdown regime: When requested SHA is absent from local worktree. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps local Git commit state to patch readiness using SHA-based identity verification. Operator 'Agent OS Runtime Commit Artifact' (page 1, domain other) captures: - Local commit containing the Agent OS runtime / cockpit panel work: `3bfc262` (`Implement Agent OS spine, workflow/runtime, cockpit operating map, and remove Google Fonts build dependency`). Assumptions: Commit `3bfc262` encapsulates all relevant runtime logic. Breakdown regime: Upon patch export due to missing SHA. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives operational kernel from commit metadata for runtime artifact validation. Operator 'Patch Export Condition' (page 1, domain other) captures: - Because no GitHub remote is configured and `0679aa3` is not local, this patch exports the available local commit `3bfc262` for Claude/Garrett to apply or review. Assumptions: No remote configuration implies manual patch handoff. Breakdown regime: When remote sync fails and target SHA is unavailable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps repository sync state to patch export policy via conditional logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for APPLY_INSTRUCTIONS (6346f0592531d3ee, domain=other, pages_read=1/1): Operator 'Visibility Status Reconciliation' (page 1, domain other) captures: # Apply Instructions — Agent OS Runtime Visibility Patch ## Visibility status - Requested missing SHA: `0679aa3` - Local result: `0679aa3` does **not** exist in this Codex worktree. Assumptions: Git repository integrity is assumed; SHA existence is binary. Breakdown regime: When requested SHA is absent from local worktree. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps local Git commit state to patch readiness using SHA-based identity verification. Operator 'Agent OS Runtime Commit Artifact' (page 1, domain other) captures: - Local commit containing the Agent OS runtime / cockpit panel work: `3bfc262` (`Implement Agent OS spine, workflow/runtime, cockpit operating map, and remove Google Fonts build dependency`). Assumptions: Commit `3bfc262` encapsulates all relevant runtime logic. Breakdown regime: Upon patch export due to missing SHA. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives operational kernel from commit metadata for runtime artifact validation. Operator 'Patch Export Condition' (page 1, domain other) captures: - Because no GitHub remote is configured and `0679aa3` is not local, this patch exports the available local commit `3bfc262` for Claude/Garrett to apply or review. Assumptions: No remote configuration implies manual patch handoff. Breakdown regime: When remote sync fails and target SHA is unavailable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps repository sync state to patch export policy via conditional logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Git's distributed version control paradigm, extended by modern CI/CD pipelines that rely on deterministic artifact resolution and patch propagation. Retrocausal Genealogy: Rooted in APPLY_INSTRUCTIONS (6346f0592531d3ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in APPLY_INSTRUCTIONS (6346f0592531d3ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include a remote sync daemon expecting SHA consistency or a local developer asserting runtime validity. Decision actors evaluate patch readiness based on repository state rather than external consensus. Theory of Mind & Decision Maker Model: Rooted in APPLY_INSTRUCTIONS (6346f0592531d3ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring SHA-based identity does not leak into higher-level runtime logic. Leakage vetoes occur if patch content conflicts with expected agent behavior or introduces unverified dependencies. Cross-Layer Veto & Anti-Leakage Check: Rooted in APPLY_INSTRUCTIONS (6346f0592531d3ee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

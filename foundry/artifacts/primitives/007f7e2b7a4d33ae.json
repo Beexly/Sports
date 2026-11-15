@@ -1,0 +1,78 @@
+{
+  "book_id": "007f7e2b7a4d33ae",
+  "source_status": "COMPLETE",
+  "title": "no-claim-rules",
+  "file_name": "no-claim-rules.md",
+  "sha256": "007f7e2b7a4d33aefa9886112c665e6b8fd70e340bb587a77198a14e36025cdd",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "No-claim constraints define a Bayesian risk manifold where performance metrics are projected onto decision-quality observables, enforcing a conformal inference boundary on predictive claims. Universal Lens: Rooted in no-claim-rules (007f7e2b7a4d33ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI maps banned claims to a likelihood exclusion zone in posterior belief space, using conformal prediction to bound error rates and maintain epistemic humility in model outputs. GSI Mapping: Rooted in no-claim-rules (007f7e2b7a4d33ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes allowed positioning as a Markov decision process with transparency and educational framing as reward functions, transitioning states via review cadence and stake discipline. GSE Mapping: Rooted in no-claim-rules (007f7e2b7a4d33ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "banned_claim_exclusion",
+      "name": "Banned Claim Exclusion Zone",
+      "verbatim_quote": "﻿# No-Claim Rules ## Banned claims - No win-rate claims - No ROI claims - No",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Claim type (dimensionless)', 'Z': 'Exclusion zone indicator (0 or 1)'}",
+      "assumptions": "Claims are classified into performance vs. process categories; exclusion applies when C ∈ {win-rate, ROI, edge}.",
+      "breakdown_regime": "When Z = 1, all performance-based claims are invalid under current backtest state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Banned claims map to forbidden regions in GSI's posterior belief space, where likelihood ratios exceed threshold bounds.",
+        "source_operator": "banned_claim_exclusion",
+        "telemetry": "Verification of claim categorization against backtest truth."
+      }
+    },
+    {
+      "primitive_id": "allowed_positioning_frame",
+      "name": "Allowed Positioning Frame",
+      "verbatim_quote": "this current backtest state ## Allowed positioning - Process rigor and decision quality framing - Transparency",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Positioning frame (dimensionless)', 'R': 'Decision quality metric (unitless)', 'T': 'Transparency index (0–1)'}",
+      "assumptions": "Process-oriented framing is valid when F = f(R, T), where R and T are non-negative.",
+      "breakdown_regime": "When F > 0, claims are considered acceptable under educational or transparency framing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Allowed positioning defines a kernel in GSE's state transition space, where decision quality drives policy evolution.",
+        "source_operator": "allowed_positioning_frame",
+        "telemetry": "Tracking of framing consistency in communication channels."
+      }
+    },
+    {
+      "primitive_id": "disclaimer_inclusion",
+      "name": "Disclaimer Inclusion Protocol",
+      "verbatim_quote": "\"No performance guarantee\" - \"Backtest truth currently does not show model edge over naive baseline\" -",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Disclaimers included (boolean vector)', 'B': 'Backtest truth (scalar)', 'E': 'Model edge (scalar)'}",
+      "assumptions": "All communications must satisfy D ⊃ {No performance guarantee, Backtest truth, No profit promise}.",
+      "breakdown_regime": "If ¬(D ⊇ required_disclaimers), then communication is flagged for review.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Disclaimers act as probabilistic constraints in GSI’s epistemic confidence layer, bounding model overconfidence.",
+        "source_operator": "disclaimer_inclusion",
+        "telemetry": "Automated check of disclaimer completeness in all outbound messages."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "007f7e2b7a4d33ae_t0",
+      "think": "The no-claim rules establish a dual mathematical structure: a forbidden region in claim space (banned claims) and an allowed region defined by process framing. This mirrors Bayesian inference where prior beliefs are constrained by evidence. The exclusion zone enforces a likelihood boundary such that any claim exceeding it is invalid. The allowed frame operates through a kernel function that maps decision quality and transparency into a valid claim space. Disclaimers function as probabilistic constraints, ensuring that model confidence does not exceed empirical support. Failure modes arise when claims slip into excluded zones or when disclaimers are omitted, leading to epistemic overreach. These primitives form a closed-loop system where GSI's posterior belief updates are bounded by GSE's decision transitions, maintaining alignment between inference and action.\n\nDeep epistemic analysis for no-claim-rules (007f7e2b7a4d33ae, domain=other, pages_read=1/1): Operator 'Banned Claim Exclusion Zone' (page 1, domain other) captures: ﻿# No-Claim Rules ## Banned claims - No win-rate claims - No ROI claims - No Assumptions: Claims are classified into performance vs. process categories; exclusion applies when C ∈ {win-rate, ROI, edge}. Breakdown regime: When Z = 1, all performance-based claims are invalid under current backtest state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Banned claims map to forbidden regions in GSI's posterior belief space, where likelihood ratios exceed threshold bounds. Operator 'Allowed Positioning Frame' (page 1, domain other) captures: this current backtest state ## Allowed positioning - Process rigor and decision quality framing - Transparency Assumptions: Process-oriented framing is valid when F = f(R, T), where R and T are non-negative. Breakdown regime: When F > 0, claims are considered acceptable under educational or transparency framing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Allowed positioning defines a kernel in GSE's state transition space, where decision quality drives policy evolution. Operator 'Disclaimer Inclusion Protocol' (page 1, domain other) captures: \"No performance guarantee\" - \"Backtest truth currently does not show model edge over naive baseline\" - Assumptions: All communications must satisfy D ⊃ {No performance guarantee, Backtest truth, No profit promise}. Breakdown regime: If ¬(D ⊇ required_disclaimers), then communication is flagged for review. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Disclaimers act as probabilistic constraints in GSI’s epistemic confidence layer, bounding model overconfidence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for no-claim-rules (007f7e2b7a4d33ae, domain=other, pages_read=1/1): Operator 'Banned Claim Exclusion Zone' (page 1, domain other) captures: ﻿# No-Claim Rules ## Banned claims - No win-rate claims - No ROI claims - No Assumptions: Claims are classified into performance vs. process categories; exclusion applies when C ∈ {win-rate, ROI, edge}. Breakdown regime: When Z = 1, all performance-based claims are invalid under current backtest state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Banned claims map to forbidden regions in GSI's posterior belief space, where likelihood ratios exceed threshold bounds. Operator 'Allowed Positioning Frame' (page 1, domain other) captures: this current backtest state ## Allowed positioning - Process rigor and decision quality framing - Transparency Assumptions: Process-oriented framing is valid when F = f(R, T), where R and T are non-negative. Breakdown regime: When F > 0, claims are considered acceptable under educational or transparency framing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Allowed positioning defines a kernel in GSE's state transition space, where decision quality drives policy evolution. Operator 'Disclaimer Inclusion Protocol' (page 1, domain other) captures: \"No performance guarantee\" - \"Backtest truth currently does not show model edge over naive baseline\" - Assumptions: All communications must satisfy D ⊃ {No performance guarantee, Backtest truth, No profit promise}. Breakdown regime: If ¬(D ⊇ required_disclaimers), then communication is flagged for review. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Disclaimers act as probabilistic constraints in GSI’s epistemic confidence layer, bounding model overconfidence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian epistemology and conformal prediction theory, these rules echo earlier work on probabilistic risk bounds and decision-theoretic framing in machine learning ethics. Retrocausal Genealogy: Rooted in no-claim-rules (007f7e2b7a4d33ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in no-claim-rules (007f7e2b7a4d33ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit loopholes in claim framing or bypass disclaimer protocols. The system models adversarial intent through constraint violations and enforces compliance via owner gates and review checks. Theory of Mind & Decision Maker Model: Rooted in no-claim-rules (007f7e2b7a4d33ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring no overlap between banned claims and allowed frames. Leakage is prevented by requiring explicit owner approval for external sends and excluding auto-publish paths. Cross-Layer Veto & Anti-Leakage Check: Rooted in no-claim-rules (007f7e2b7a4d33ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in no-claim-rules (007f7e2b7a4d33ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

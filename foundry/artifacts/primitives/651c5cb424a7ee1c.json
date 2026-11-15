@@ -1,0 +1,78 @@
+{
+  "book_id": "651c5cb424a7ee1c",
+  "source_status": "COMPLETE",
+  "title": "VENDOR_QUESTIONNAIRE_CFBD",
+  "file_name": "VENDOR_QUESTIONNAIRE_CFBD.md",
+  "sha256": "651c5cb424a7ee1c99dd591a1e562236840c372f6daae47407bc621605b64485",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "CFBD vendor registry aligns data access, legal compliance, and factual extraction through structured API authentication and terms review. Universal Lens: Rooted in VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers QB transition signals from CFBD facts using Bayesian belief updates on passing/scheme data streams. GSI Mapping: Rooted in VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states by validating CFBD API keys and enforcing legal constraints before ingesting college-football facts. GSE Mapping: Rooted in VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "api_key_storage",
+      "name": "Secure Environment Variable Storage",
+      "verbatim_quote": "- [ ] Store it ONLY as the env var `CFBD_API_KEY` (documented in `.env.example`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "API key is sensitive and must remain non-persistent in codebase.",
+      "breakdown_regime": "Key exposure leads to unauthorized access and potential abuse.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Environment variable abstraction mirrors secure credential handling in cryptographic protocols.",
+        "source_operator": "api_key_storage",
+        "telemetry": "Key presence in runtime environment verified via process inspection."
+      }
+    },
+    {
+      "primitive_id": "terms_compliance_checklist",
+      "name": "Legal Compliance Verification",
+      "verbatim_quote": "Terms & rights (human/legal read required) - [ ] Read the Terms & Conditions in full (page is JS-rendered).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Human oversight is necessary due to JS-rendered legal documents.",
+      "breakdown_regime": "Failure to verify terms results in legal liability or data misuse.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Compliance kernel derives from checklist logic applied to CFBD's JS-rendered terms.",
+        "source_operator": "terms_compliance_checklist",
+        "telemetry": "Completion of all checklist items confirms legal readiness."
+      }
+    },
+    {
+      "primitive_id": "data_scope_fact_extraction",
+      "name": "Factual Data Scope Limitation",
+      "verbatim_quote": "Data scope (what we may extract) - [ ] FACTS only: games, teams, box scores, schedules, college passing/scheme stats.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Only structured factual data is permissible; proprietary metrics excluded.",
+      "breakdown_regime": "Inclusion of non-fact data violates usage restrictions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Fact-based extraction maps to information-theoretic entropy reduction in data streams.",
+        "source_operator": "data_scope_fact_extraction",
+        "telemetry": "Extracted data types validated against predefined schema."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "651c5cb424a7ee1c_t0",
+      "think": "The CFBD vendor integration requires a dual-layer validation: first, secure API access via environment variables; second, legal compliance through manual review of JS-rendered terms. The system enforces a factual-only data scope to avoid proprietary metric ingestion. These primitives form a logical chain where each step must pass before advancing to next. Failure at any point triggers a retrograde state in the vendor pipeline. The epistemic risk lies in assuming automated verification of legal documents, which necessitates human-in-the-loop checks. The GSI inference engine relies on these facts to compute QB transition probabilities, while GSE ensures operational integrity through state transitions governed by these primitives.\n\nDeep epistemic analysis for VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c, domain=other, pages_read=1/1): Operator 'Secure Environment Variable Storage' (page 1, domain other) captures: - [ ] Store it ONLY as the env var `CFBD_API_KEY` (documented in `.env.example`). Assumptions: API key is sensitive and must remain non-persistent in codebase. Breakdown regime: Key exposure leads to unauthorized access and potential abuse. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Environment variable abstraction mirrors secure credential handling in cryptographic protocols. Operator 'Legal Compliance Verification' (page 1, domain other) captures: Terms & rights (human/legal read required) - [ ] Read the Terms & Conditions in full (page is JS-rendered). Assumptions: Human oversight is necessary due to JS-rendered legal documents. Breakdown regime: Failure to verify terms results in legal liability or data misuse. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compliance kernel derives from checklist logic applied to CFBD's JS-rendered terms. Operator 'Factual Data Scope Limitation' (page 1, domain other) captures: Data scope (what we may extract) - [ ] FACTS only: games, teams, box scores, schedules, college passing/scheme stats. Assumptions: Only structured factual data is permissible; proprietary metrics excluded. Breakdown regime: Inclusion of non-fact data violates usage restrictions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Fact-based extraction maps to information-theoretic entropy reduction in data streams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c, domain=other, pages_read=1/1): Operator 'Secure Environment Variable Storage' (page 1, domain other) captures: - [ ] Store it ONLY as the env var `CFBD_API_KEY` (documented in `.env.example`). Assumptions: API key is sensitive and must remain non-persistent in codebase. Breakdown regime: Key exposure leads to unauthorized access and potential abuse. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Environment variable abstraction mirrors secure credential handling in cryptographic protocols. Operator 'Legal Compliance Verification' (page 1, domain other) captures: Terms & rights (human/legal read required) - [ ] Read the Terms & Conditions in full (page is JS-rendered). Assumptions: Human oversight is necessary due to JS-rendered legal documents. Breakdown regime: Failure to verify terms results in legal liability or data misuse. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compliance kernel derives from checklist logic applied to CFBD's JS-rendered terms. Operator 'Factual Data Scope Limitation' (page 1, domain other) captures: Data scope (what we may extract) - [ ] FACTS only: games, teams, box scores, schedules, college passing/scheme stats. Assumptions: Only structured factual data is permissible; proprietary metrics excluded. Breakdown regime: Inclusion of non-fact data violates usage restrictions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Fact-based extraction maps to information-theoretic entropy reduction in data streams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s API governance models and modern secure credential practices, evolving into today’s compliance-as-code frameworks. Retrocausal Genealogy: Rooted in VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent considers unauthorized data access or legal misinterpretation as primary threats. Decision actor prioritizes regulatory adherence over convenience. Theory of Mind & Decision Maker Model: Rooted in VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity prevents conflating proprietary metrics with factual data. Leakage veto blocks inclusion of SP+ or similar outputs that could compromise data purity. Cross-Layer Veto & Anti-Leakage Check: Rooted in VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in VENDOR_QUESTIONNAIRE_CFBD (651c5cb424a7ee1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

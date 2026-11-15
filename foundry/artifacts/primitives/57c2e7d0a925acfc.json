@@ -1,0 +1,78 @@
+{
+  "book_id": "57c2e7d0a925acfc",
+  "source_status": "COMPLETE",
+  "title": "HANDOFF-SOURCES",
+  "file_name": "HANDOFF-SOURCES.md",
+  "sha256": "57c2e7d0a925acfc04917b1ed2bdea00d7b69a47ed72c835baa3f7a5d0e98662",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The coach trail (L0/L1/L2) encodes decision-relevant factors as a structured reasoning path, with L2 shadow data acting as a latent variable in probabilistic inference. Universal Lens: Rooted in HANDOFF-SOURCES (57c2e7d0a925acfc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference models the coach trail as a conditional probability distribution over player roles, using L2 shadow data as a derived kernel for uncertainty quantification. GSI Mapping: Rooted in HANDOFF-SOURCES (57c2e7d0a925acfc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning uses the coach trail to transition between states of play, where L2 shadow data acts as a dynamic constraint in state-space navigation. GSE Mapping: Rooted in HANDOFF-SOURCES (57c2e7d0a925acfc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "coach_trail_l0_l1_l2",
+      "name": "Coach Trail Layered Reasoning Path",
+      "verbatim_quote": "Where the work stands Reasoning path: the coach trail (L0 usage / L1 health / L2 shadow) is wired into the published reasoning string at all three scoring sites and leads the trail ahead of every market clause.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L0': 'dimensionless usage index', 'L1': 'dimensionless health score', 'L2': 'dimensionless shadow rate'}",
+      "assumptions": "The trail is deterministic within a scoring site and provides a fixed sequence of logical dependencies.",
+      "breakdown_regime": "At scoring site boundaries, the trail becomes a singular point in decision space.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "L2 shadow rate serves as a proxy for player-specific risk in probabilistic decision-making.",
+        "source_operator": "coach_trail_l0_l1_l2",
+        "telemetry": "Snap count and coverage distribution from FTN shadow matrix."
+      }
+    },
+    {
+      "primitive_id": "ftn_shadow_matrix_api",
+      "name": "Fantasy Team Network Shadow Matrix API",
+      "verbatim_quote": "**FTN shadow matrix — API fully mapped this session, auth is the only barrier.** The page is WordPress with a client app; the data service is `api.ftnfantasy.com`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'cbName': 'string identifier', 'opposingWR': 'dimensionless', 'shadowRate_last3': 'probability', 'snapCount_shadowed': 'count', 'MU': 'unitless score (0–100)'}",
+      "assumptions": "API access is restricted via authentication and requires valid session tokens.",
+      "breakdown_regime": "When authentication fails, the API returns a 401 error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "FTN shadow matrix maps to GSE's player role transition model through MU and shadowRate.",
+        "source_operator": "ftn_shadow_matrix_api",
+        "telemetry": "Token-based access logs and response headers from api.ftnfantasy.com."
+      }
+    },
+    {
+      "primitive_id": "snap_count_and_coverage_distribution",
+      "name": "Player Snap Count and Coverage Distribution",
+      "verbatim_quote": "That single absence walls snap share, route participation, primary alignment, personnel frequency, defense personnel faced, coverage distribution and route concepts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'snap_share': 'fraction of total snaps', 'route_participation': 'binary indicator', 'primary_alignment': 'dimensionless', 'personnel_frequency': 'frequency per game', 'defense_personnel_faced': 'count', 'coverage_distribution': 'probability density function'}",
+      "assumptions": "Coverage distribution is a sufficient statistic for defensive strategy modeling.",
+      "breakdown_regime": "When coverage data is missing, the model defaults to average distribution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Snap count and coverage form a basis for GSI's player impact factor estimation.",
+        "source_operator": "snap_count_and_coverage_distribution",
+        "telemetry": "Data from NFLverse and FTN shadow matrix."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "57c2e7d0a925acfc_t0",
+      "think": "The coach trail encodes a hierarchical structure of decision variables (L0-L2) that map to probabilistic inference in GSI and state transitions in GSE. The L2 shadow layer is a derived kernel that captures player-specific risk dynamics. The FTN shadow matrix API provides empirical telemetry for this kernel, enabling real-time updates. The absence of 2026 data introduces a singularity in the reasoning chain, requiring interpolation or default assumptions. The failure mode occurs when concurrent writes truncate core logic files, breaking the integrity of the reasoning path.\n\nDeep epistemic analysis for HANDOFF-SOURCES (57c2e7d0a925acfc, domain=other, pages_read=2/2): Operator 'Coach Trail Layered Reasoning Path' (page 1, domain other) captures: Where the work stands Reasoning path: the coach trail (L0 usage / L1 health / L2 shadow) is wired into the published reasoning string at all three scoring sites and leads the trail ahead of every market clause. Assumptions: The trail is deterministic within a scoring site and provides a fixed sequence of logical dependencies. Breakdown regime: At scoring site boundaries, the trail becomes a singular point in decision space. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L2 shadow rate serves as a proxy for player-specific risk in probabilistic decision-making. Operator 'Fantasy Team Network Shadow Matrix API' (page 1, domain other) captures: **FTN shadow matrix — API fully mapped this session, auth is the only barrier.** The page is WordPress with a client app; the data service is `api.ftnfantasy.com`. Assumptions: API access is restricted via authentication and requires valid session tokens. Breakdown regime: When authentication fails, the API returns a 401 error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): FTN shadow matrix maps to GSE's player role transition model through MU and shadowRate. Operator 'Player Snap Count and Coverage Distribution' (page 1, domain other) captures: That single absence walls snap share, route participation, primary alignment, personnel frequency, defense personnel faced, coverage distribution and route concepts. Assumptions: Coverage distribution is a sufficient statistic for defensive strategy modeling. Breakdown regime: When coverage data is missing, the model defaults to average distribution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Snap count and coverage form a basis for GSI's player impact factor estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for HANDOFF-SOURCES (57c2e7d0a925acfc, domain=other, pages_read=2/2): Operator 'Coach Trail Layered Reasoning Path' (page 1, domain other) captures: Where the work stands Reasoning path: the coach trail (L0 usage / L1 health / L2 shadow) is wired into the published reasoning string at all three scoring sites and leads the trail ahead of every market clause. Assumptions: The trail is deterministic within a scoring site and provides a fixed sequence of logical dependencies. Breakdown regime: At scoring site boundaries, the trail becomes a singular point in decision space. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L2 shadow rate serves as a proxy for player-specific risk in probabilistic decision-making. Operator 'Fantasy Team Network Shadow Matrix API' (page 1, domain other) captures: **FTN shadow matrix — API fully mapped this session, auth is the only barrier.** The page is WordPress with a client app; the data service is `api.ftnfantasy.com`. Assumptions: API access is restricted via authentication and requires valid session tokens. Breakdown regime: When authentication fails, the API returns a 401 error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): FTN shadow matrix maps to GSE's player role transition model through MU and shadowRate. Operator 'Player Snap Count and Coverage Distribution' (page 1, domain other) captures: That single absence walls snap share, route participation, primary alignment, personnel frequency, defense personnel faced, coverage distribution and route concepts. Assumptions: Coverage distribution is a sufficient statistic for defensive strategy modeling. Breakdown regime: When coverage data is missing, the model defaults to average distribution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Snap count and coverage form a basis for GSI's player impact factor estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian belief networks and Markov decision processes, extended by modern reinforcement learning frameworks for sports analytics. Retrocausal Genealogy: Rooted in HANDOFF-SOURCES (57c2e7d0a925acfc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in HANDOFF-SOURCES (57c2e7d0a925acfc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (coaches) use similar reasoning paths but with different priors, leading to divergent decisions under identical conditions. Theory of Mind & Decision Maker Model: Rooted in HANDOFF-SOURCES (57c2e7d0a925acfc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in HANDOFF-SOURCES (57c2e7d0a925acfc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If L2 shadow data is inconsistent with L0/L1 signals, the system vetoes the decision path to prevent spurious inferences. Leakage occurs when L2 data is misattributed to other layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in HANDOFF-SOURCES (57c2e7d0a925acfc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,641 @@
+{
+  "book_id": "1c8f0d087d5d4fed",
+  "shard": "1",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_FUZZY_DSS_CLEAN_OCR_PRINTED_MEMBERSHIP",
+  "source_note": "Farias, 'AI-Assisted Substitution Decisions: A Fuzzy Logic Approach to Real-Time Game Management', October 2025 (Pedro Passos Farias, Institute of Computing, Universidade Federal Fluminense, Brazil), 22 pages. A scikit-fuzzy Mamdani decision-support system computing soccer substitution priority [0,10] from four inputs (playerankScore performance, minutesPlayed fatigue, fractional age, TemCartaoAmarelo yellow-card risk) on the Pappalardo 2020 Soccer match event dataset (46,897 player-match instances), with 17 Guardiola-inspired rules (AND=min), trimf/trapmf/gaussmf membership functions whose exact parameters are printed cleanly, centroid defuzzification, and a hybrid post-inference crisp contextual logic modulating risk by position (CB floor 8.0, MF floor 7.5, FW maintained). Validation is explicitly logical-consistency, not predictive accuracy (no ideal-priority ground truth); four scenarios plus an aggregate analysis revealing substituted players have slightly LOWER priority (final-state minutes-played confound) and that coaches prioritize tactical context over individual metrics. Extracted faithfully (not a derivative summary); the author discloses generative-AI writing assistance under full human supervision. Membership-function parameters and the xRuns-style priority formula are printed and used verbatim; the trimf/gaussmf functional forms and centroid integral are standard definitions reconstructed in labeled LaTeX and flagged. Domain psych (catalog) — the paper is sports AI/decision-support; soccer, not football. The multi-factor priority composite, validated-metric adoption, position-modulated risk, Mamdani-centroid aggregation, expert-rule encoding, input-independence guard, no-ground-truth validation, and final-state temporal confound are sport-agnostic and directly isomorphic to GSE's decision-support and situational-overlay layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "intuition_driven_substitutions",
+      "name": "Top clubs still make critical substitution decisions largely on intuition",
+      "verbatim_quote": "top soccer clubs still make critical substitution decisions based largely on intuition",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Despite millions on the line every match, top soccer clubs still make critical substitution decisions based largely on intuition and limited visible cues; the paper introduces an AI decision-support system to bring data-driven rigor to this crucial tactical moment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The intuition-gap is the same unstructured-decision opportunity GSE targets with a quantitative priority index.",
+        "source_operator": "intuition_driven_substitutions",
+        "telemetry": "substitutions still intuition-driven despite financial stakes; DSS motivation"
+      }
+    },
+    {
+      "primitive_id": "fuzzy_models_expert_knowledge",
+      "name": "Fuzzy logic models expert coaching knowledge for real-time substitution priority",
+      "verbatim_quote": "Using fuzzy logic to model expert coaching knowledge, our system provides real-time substitution priorities",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fuzzy logic models expert coaching knowledge (a coach's rules) and handles vague linguistic concepts such as high age, low performance, or medium fatigue, providing real-time substitution priorities by integrating validated performance (playerankScore), fatigue (minutesPlayed), age, and disciplinary risk (TemCartaoAmarelo)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Fuzzy encoding of expert linguistic rules is the same coach-knowledge formalization GSE uses for its reasoning overlay.",
+        "source_operator": "fuzzy_models_expert_knowledge",
+        "telemetry": "fuzzy logic = expert coaching rules; linguistic high/low/medium; real-time priority"
+      }
+    },
+    {
+      "primitive_id": "four_inputs_priority_output",
+      "name": "Four inputs (performance, fatigue, age, risk) -> fuzzy Substitution Priority",
+      "verbatim_quote": "The system uses four inputs (performance, fatigue, age, and disciplinary risk) to generate a fuzzy output (Substitution Priority)",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The DSS uses four inputs (performance, fatigue, age, disciplinary risk) to generate a fuzzy output, Substitution Priority, a quantitative tool assisting coaching staff with one of their most critical real-time decisions; tactical variables are gradual rather than binary."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The four-factor priority composite is the same multi-input decision index GSE computes.",
+        "source_operator": "four_inputs_priority_output",
+        "telemetry": "4 inputs (perf/fatigue/age/risk) -> Substitution Priority [0,10]; gradual not binary"
+      }
+    },
+    {
+      "primitive_id": "playerank_adopted_avoid_subjectivity",
+      "name": "Adopt validated playerankScore rather than invent a new metric",
+      "verbatim_quote": "we adopt the playerankScore as the basis for our main performance input, avoiding the subjectivity of creating a new metric",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The system adopts the playerankScore as the main performance input rather than modeling performance from raw events, avoiding the subjectivity of creating a new metric and relying on an already validated, academically robust representation of a player's match performance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Adopting a validated metric over inventing one is the same proven-input preference GSE enforces.",
+        "source_operator": "playerank_adopted_avoid_subjectivity",
+        "telemetry": "adopt playerankScore (validated); avoid new-metric subjectivity"
+      }
+    },
+    {
+      "primitive_id": "playerank_validated_vs_scouts",
+      "name": "PlayeRank: multidimensional role-aware metric validated vs professional scouts",
+      "verbatim_quote": "a multidimensional and role-aware evaluation metric, academically validated against professional scout assessments",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The PlayeRank framework (Pappalardo et al. 2019, ACM TIST) defines a multidimensional, role-aware evaluation metric derived from millions of game events and academically validated against professional scout assessments, addressing the absence of a universally accepted performance metric."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The scout-validated role-aware metric is the same externally-grounded player rating GSE prefers.",
+        "source_operator": "playerank_validated_vs_scouts",
+        "telemetry": "PlayeRank (Pappalardo 2019 TIST); multidimensional role-aware; validated vs scouts"
+      }
+    },
+    {
+      "primitive_id": "dataset_27_tables_7_comps",
+      "name": "Soccer match event dataset: 27 CSV tables, 7 competitions, 5 categories",
+      "verbatim_quote": "which comprises 27 interrelated CSV tables. They cover seven main competitions",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Soccer match event dataset (Pappalardo 2020, Kaggle/Figshare) comprises 27 interrelated CSV tables covering seven competitions, grouped into Match Data, Event Data, Entity Data, Performance Metrics (playerank.csv), and Dictionaries (tags2name, eventid2name); 16 relevant files are consolidated."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The multi-table event-data consolidation is the same player-match instance construction GSE uses.",
+        "source_operator": "dataset_27_tables_7_comps",
+        "telemetry": "Pappalardo 2020 dataset; 27 CSV/7 comps/5 categories; 16 files consolidated"
+      }
+    },
+    {
+      "primitive_id": "dataset_46897_instances",
+      "name": "Final consolidated dataset: 46,897 player-match instances",
+      "verbatim_quote": "This process resulted in a final clean and validated dataset of 46,897 instances",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pre-processing consolidates playerank.csv (performance, minutes, roleCluster), a computed age feature, and a yellow-card risk feature into one row per player-match, removing rows missing birthDate or date, yielding a final clean validated dataset of 46,897 instances."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The 46,897-instance player-match table is the same unit-of-analysis GSE builds for player models.",
+        "source_operator": "dataset_46897_instances",
+        "telemetry": "46,897 player-match instances; one row per player-match; missing birthDate/date dropped"
+      }
+    },
+    {
+      "primitive_id": "age_fractional_at_match",
+      "name": "Age computed in fractional years at the exact match moment",
+      "verbatim_quote": "The age was then calculated in fractional years at the exact moment of the match",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The IdadeDoJogador age feature is created by joining birthDate from players.csv with the match date from the concatenated matches files, computing age in fractional years at the exact moment of the match rather than a coarse season-level age."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The match-moment fractional age is the same precise temporal feature engineering GSE applies.",
+        "source_operator": "age_fractional_at_match",
+        "telemetry": "age = fractional years at match moment (birthDate join match date)"
+      }
+    },
+    {
+      "primitive_id": "yellow_card_tag_1702",
+      "name": "Risk feature: boolean yellow-card indicator from event tag 1702",
+      "verbatim_quote": "filtered all events that contained the tag 1702",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The TemCartaoAmarelo risk feature is built by filtering the concatenated events files for tag 1702 (identified via tags2name.csv as yellow card) and creating a boolean indicator for each (matchId, playerId) pair that received a card."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The event-tag-derived binary risk indicator is the same disciplinary-feature extraction GSE uses.",
+        "source_operator": "yellow_card_tag_1702",
+        "telemetry": "TemCartaoAmarelo = boolean tag 1702 (yellow card) per (matchId, playerId)"
+      }
+    },
+    {
+      "primitive_id": "playerank_universe_neg0119_0173",
+      "name": "Performance universe [-0.119, 0.173], standardized around zero",
+      "verbatim_quote": "the observed universe of discourse ranges from -0.119 (very low performance) to 0.173 (elite performance)",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The playerankScore universe of discourse ranges from -0.119 (very low) to 0.173 (elite), with mean 0.007 and median 0.004 near zero because the raw scores are standardized around zero; this suits fuzzy logic with Low (negative), Medium (near zero), and High (positive) sets."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The zero-centered performance universe is the same standardized-input fuzzification GSE uses.",
+        "source_operator": "playerank_universe_neg0119_0173",
+        "telemetry": "playerankScore universe [-0.119, 0.173]; mean .007/median .004; Low/Med/High around 0"
+      }
+    },
+    {
+      "primitive_id": "minutes_negative_skew_median90",
+      "name": "Fatigue universe 1-120 min, skewness -1.40, median 90",
+      "verbatim_quote": "The distribution shows strong negative skewness (skewness of -1.40), with the median at 90 minutes",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The minutesPlayed fatigue universe ranges from 1 to 120 minutes (extra time) with strong negative skewness (-1.40) and median 90 minutes, reflecting that most players complete the match."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The skewed minutes distribution is the same fatigue-proxy characterization GSE records.",
+        "source_operator": "minutes_negative_skew_median90",
+        "telemetry": "minutesPlayed [1,120]; skewness -1.40; median 90"
+      }
+    },
+    {
+      "primitive_id": "full90_59pct",
+      "name": "59.3% of instances (n=27,828) played the full 90 minutes",
+      "verbatim_quote": "59.3% of the instances (n=27,828) represent players who played the full 90 minutes",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "59.3% of instances (n=27,828) represent players who played the full 90 minutes, a concentration that later inflates fatigue-driven priority and confounds the substituted-versus-not comparison."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The full-match concentration is the same sampling skew GSE flags in fatigue proxies.",
+        "source_operator": "full90_59pct",
+        "telemetry": "59.3% (n=27,828) full 90 min; concentrates High Fatigue rules"
+      }
+    },
+    {
+      "primitive_id": "age_normal_mean2668",
+      "name": "Age normal: mean 26.68, median 26.51, range 15.89-41.37 -> Young/Peak/Veteran",
+      "verbatim_quote": "Age presents a normal distribution, with the mean (26.68 years) and median (26.51 years) being almost identical",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Age is normally distributed with mean 26.68 and median 26.51 years nearly identical, universe 15.89 to 41.37 years, supporting three balanced fuzzy sets Young, Peak (centered on the mean), and Veteran."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The symmetric age distribution is the same balanced three-set fuzzification GSE uses.",
+        "source_operator": "age_normal_mean2668",
+        "telemetry": "age normal mean 26.68/median 26.51; [15.89,41.37]; Young/Peak/Veteran"
+      }
+    },
+    {
+      "primitive_id": "risk_position_dependent",
+      "name": "Central premise: yellow-card risk is position-dependent",
+      "verbatim_quote": "The central premise is that the risk of a yellow card is position-dependent",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The central premise is that yellow-card risk is position-dependent, validated by the EDA, justifying contextual rules where the roleCluster variable modulates the importance of the TemCartaoAmarelo input."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Position-dependent risk is the same situational risk modulation GSE applies by role.",
+        "source_operator": "risk_position_dependent",
+        "telemetry": "yellow-card risk position-dependent; roleCluster modulates risk importance"
+      }
+    },
+    {
+      "primitive_id": "defenders_higher_card_risk",
+      "name": "Defenders/central MF higher card risk (CB ~19%, MF 17.3%) vs forwards (~10-11%)",
+      "verbatim_quote": "Defensive positions (right CB 19.1%; left CB 18.5%) and central midfielders (central MF 17.3%) show a statistically higher risk",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Defensive positions (right CB 19.1%, left CB 18.5%) and central midfielders (17.3%) show statistically higher yellow-card risk, while attacking positions (central FW 11.1%, right FW 10.3%) show significantly lower risk; 15.34% of all instances (n=7,194) involve a card."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The position-stratified card rates are the same role-conditioned risk prior GSE estimates.",
+        "source_operator": "defenders_higher_card_risk",
+        "telemetry": "CB 19.1/18.5%, central MF 17.3% vs FW 11.1/10.3%; overall 15.34% (n=7,194)"
+      }
+    },
+    {
+      "primitive_id": "inputs_independent_weak_corr",
+      "name": "Four inputs largely independent: all Spearman correlations below |0.2|",
+      "verbatim_quote": "the four input variables are, for the most part, independent. All correlations are weak (below |0.2|)",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Spearman correlation matrix shows the four inputs are largely independent, all correlations weak (below |0.2|, later stated < |0.18|), indicating informational independence so each contributes distinct signal to the priority."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The input-independence check is the same multicollinearity guard GSE runs before combining factors.",
+        "source_operator": "inputs_independent_weak_corr",
+        "telemetry": "Spearman all |r|<0.2 (<0.18); inputs informationally independent"
+      }
+    },
+    {
+      "primitive_id": "card_performance_neg_corr",
+      "name": "Strongest correlation: card vs performance -0.179 (card associated with drop)",
+      "verbatim_quote": "The strongest negative correlation is between TemCartaoAmarelo and playerankScore (-0.179)",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The strongest negative correlation is between TemCartaoAmarelo and playerankScore (-0.179), suggesting receiving a card is associated with a drop in performance; Table 2 confirms average playerankScore is consistently lower for carded players across common positions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The card-performance association is the same disciplinary-performance link GSE notes.",
+        "source_operator": "card_performance_neg_corr",
+        "telemetry": "corr(card, playerankScore) = -0.179; carded players lower avg score (Table 2)"
+      }
+    },
+    {
+      "primitive_id": "mamdani_centroid_scikit",
+      "name": "scikit-fuzzy Mamdani inference + Centroid defuzzification",
+      "verbatim_quote": "following the standard Mamdani architecture for fuzzy inference and the Centroid method for defuzzification",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The system is implemented in Python's scikit-fuzzy library following the standard Mamdani architecture for fuzzy inference and the Centroid method for defuzzification; four antecedents and one consequent (Substitution Priority)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Mamdani-plus-centroid pipeline is the same fuzzy-aggregation-to-crisp-score GSE uses.",
+        "source_operator": "mamdani_centroid_scikit",
+        "telemetry": "scikit-fuzzy; Mamdani inference; Centroid defuzzification; 4 antecedents/1 consequent"
+      }
+    },
+    {
+      "primitive_id": "universe_5pct_margin",
+      "name": "Universes set from EDA min/max with a 5% margin for unseen values",
+      "verbatim_quote": "with a 5% margin to ensure the model can accommodate values more extraordinary than those recorded in the dataset",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The universes of discourse are defined from the EDA minimum and maximum with a 5% margin so the model can accommodate values more extreme than those recorded: Performance [-0.134, 0.188], Fatigue [0, 126], Age [14.6, 42.7], Risk [0, 1], Priority [0, 10]."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The margin-padded universe is the same out-of-range robustness GSE builds into fuzzification.",
+        "source_operator": "universe_5pct_margin",
+        "telemetry": "EDA min/max + 5% margin; Perf [-.134,.188]/Fatigue [0,126]/Age [14.6,42.7]/Risk [0,1]/Priority [0,10]"
+      }
+    },
+    {
+      "primitive_id": "membership_trimf_trapmf_gaussmf",
+      "name": "Membership functions: trimf/trapmf (continuous), gaussmf (binary Risk); exact params",
+      "verbatim_quote": "The membership functions were designed using triangular (trimf) and trapezoidal (trapmf) functions for the continuous variables, and narrow Gaussian functions (gaussmf) for the binary variable Risk",
+      "page": 12,
+      "latex": "\\mathrm{trimf}(x;[a,b,c])=\\max\\!\\left(\\min\\!\\left(\\frac{x-a}{b-a},\\frac{c-x}{c-b}\\right),0\\right);\\quad \\mathrm{gaussmf}(x;\\mu,\\sigma)=e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}",
+      "symbol_and_unit_ledger": {
+        "x": "input value in its universe of discourse",
+        "a,b,c": "triangular membership breakpoints [input units]",
+        "mu": "Gaussian center (0 NoRisk, 1 WithRisk) [dimensionless]",
+        "sigma": "Gaussian width (0.1) [dimensionless]",
+        "trimf/trapmf/gaussmf": "membership degree in [0,1]"
+      },
+      "assumptions": [
+        "Membership functions use triangular (trimf) and trapezoidal (trapmf) for continuous variables and narrow Gaussian (gaussmf) for binary Risk, reflecting the EDA distributions: Performance Low trapmf([-0.134,-0.134,-0.03,0.004])/Medium trimf([-0.03,0.004,0.04])/High trapmf([0.004,0.04,0.188,0.188]); Fatigue Low trapmf([0,0,40,70])/Medium trimf([40,70,95])/High trapmf([70,95,126,126]); Age Young trapmf([14.6,14.6,22,27])/Peak trimf([22,27,32])/Veteran trapmf([27,32,42.7,42.7]); Risk NoRisk gaussmf(0,0.1)/WithRisk gaussmf(1,0.1); Priority Low trimf([0,0,5])/Medium trimf([0,5,10])/High trimf([5,10,10]). The narrow Medium performance set reflects high kurtosis; the parameters are printed cleanly and used directly.",
+        "Membership parameters are printed verbatim on pages 12-13; the trimf/trapmf/gaussmf functional forms are standard scikit-fuzzy definitions reconstructed in labeled LaTeX."
+      ],
+      "breakdown_regime": "Standard scikit-fuzzy membership forms; parameters printed verbatim pp12-13",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The distribution-shaped membership functions are the same data-grounded fuzzification GSE uses.",
+        "source_operator": "membership_trimf_trapmf_gaussmf",
+        "telemetry": "trimf/trapmf continuous, gaussmf binary; exact params printed; narrow Medium = high kurtosis"
+      }
+    },
+    {
+      "primitive_id": "seventeen_base_rules",
+      "name": "17 base fuzzy rules (A high / B low / M medium / R risk), Guardiola-inspired",
+      "verbatim_quote": "A set of 17 base rules was defined",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The knowledge base combines domain knowledge inspired mainly by coach Josep Guardiola's statements with EDA validations, defining 17 base rules: A1-A5 (High priority), B1-B4 (Low), M1-M4 (Medium), R1-R4 (risk-driven); e.g., A1 IF Performance Low AND Fatigue High THEN Priority High; B1 IF Performance High AND Fatigue Low AND Risk NoRisk THEN Priority Low."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The expert-inspired rule base is the same coach-reasoning rule set GSE encodes.",
+        "source_operator": "seventeen_base_rules",
+        "telemetry": "17 rules: A1-A5 high/B1-B4 low/M1-M4 med/R1-R4 risk; Guardiola + EDA"
+      }
+    },
+    {
+      "primitive_id": "and_minimum_operator",
+      "name": "AND = minimum operator combines antecedents",
+      "verbatim_quote": "using the AND (minimum) operator to combine antecedents",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The rule base uses the AND (minimum) operator to combine antecedents, the standard Mamdani t-norm; rule R1 also uses OR (maximum) within its fatigue condition."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The min t-norm is the same fuzzy conjunction GSE uses in rule activation.",
+        "source_operator": "and_minimum_operator",
+        "telemetry": "AND = min t-norm; OR = max (R1 fatigue); Mamdani"
+      }
+    },
+    {
+      "primitive_id": "post_inference_contextual_logic",
+      "name": "Hybrid: base fuzzy priority then crisp post-inference contextual adjustment",
+      "verbatim_quote": "a post-inference contextual logic was implemented. The system first calculates a base priority using the 17 fuzzy rules",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because roleCluster is categorical (not fuzzy), a post-inference contextual logic is implemented: the system first computes a base priority from the 17 fuzzy rules, then an external function (calcular_prioridade_contextual) evaluates position and risk to adjust the final priority, a hybrid of fuzzy inference with crisp contextual rules essential for the domain."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fuzzy-plus-crisp hybrid is the same neural-symbolic overlay GSE uses for categorical context.",
+        "source_operator": "post_inference_contextual_logic",
+        "telemetry": "base fuzzy priority -> crisp contextual fn (calcular_prioridade_contextual); roleCluster not fuzzy"
+      }
+    },
+    {
+      "primitive_id": "defender_cb_min_8",
+      "name": "Contextual floors: CB+high risk -> min 8.0; MF+risk+tired -> min 7.5; FW maintained",
+      "verbatim_quote": "If the player is a Defender ('CB') and the risk is high, the final priority is adjusted to a high minimum value (e.g., 8.0)",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The contextual function sets a high minimum priority of 8.0 for a Defender (CB) with high risk, a medium-high minimum of 7.5 for a Midfielder (MF) with high risk and Medium/High fatigue, and generally maintains the base priority (Medium) for a Forward (FW) with high risk, possibly limiting it if performance is high."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The position-specific priority floors are the same role-conditioned veto thresholds GSE applies.",
+        "source_operator": "defender_cb_min_8",
+        "telemetry": "CB+risk -> min 8.0; MF+risk+tired -> min 7.5; FW+risk -> base (Medium), limit if high perf"
+      }
+    },
+    {
+      "primitive_id": "centroid_center_of_mass",
+      "name": "Centroid defuzzification = center of mass of aggregated output membership",
+      "verbatim_quote": "calculates the center of mass of the area under the curve of the resulting membership function",
+      "page": 14,
+      "latex": "Priority^{*} = \\frac{\\int_{0}^{10} z\\,\\mu_{agg}(z)\\,dz}{\\int_{0}^{10} \\mu_{agg}(z)\\,dz}",
+      "symbol_and_unit_ledger": {
+        "z": "candidate priority value in [0,10]",
+        "mu_agg(z)": "aggregated output membership degree (max of rule activations) [0,1]",
+        "Priority*": "defuzzified crisp substitution priority [0,10]"
+      },
+      "assumptions": [
+        "Mamdani inference aggregates each rule's activation using OR (maximum) into a resulting output membership function for Priority; the Centroid method converts this aggregated fuzzy function to a crisp value by calculating the center of mass of the area under the curve, on a 0-to-10 scale representing Substitution Priority. The centroid formula is standard and reconstructed here.",
+        "The centroid integral is the standard Mamdani defuzzification formula, reconstructed in labeled LaTeX; the prose describes it as center of mass."
+      ],
+      "breakdown_regime": "Standard Mamdani centroid defuzzification; reconstructed from prose 'center of mass'",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The centroid aggregation is the same fuzzy-to-crisp priority computation GSE uses.",
+        "source_operator": "centroid_center_of_mass",
+        "telemetry": "OR=max aggregate rule activations; Centroid = center of mass -> crisp Priority [0,10]"
+      }
+    },
+    {
+      "primitive_id": "validation_no_ground_truth",
+      "name": "Validation = logical consistency, NOT predictive accuracy (no ideal-priority ground truth)",
+      "verbatim_quote": "The goal of the validation is not to measure predictive accuracy against actual substitutions",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The validation goal is not to measure predictive accuracy against actual substitutions, since there is no ground truth for ideal priority, but to verify the system produces outputs logically consistent with the inputs, fuzzy rules, and contextual logic, applied to four representative scenarios; Priority is interpreted Low (~0-3.5), Medium (~3.5-6.5), High (~6.5-10)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The no-ground-truth logical-consistency validation is the same honest evaluation discipline GSE applies when no label exists.",
+        "source_operator": "validation_no_ground_truth",
+        "telemetry": "validate logical consistency not predictive accuracy; no ideal-priority ground truth; 4 scenarios; Low 0-3.5/Med 3.5-6.5/High 6.5-10"
+      }
+    },
+    {
+      "primitive_id": "scenario2_defender_priority8",
+      "name": "Scenario 2: veteran carded defender -> Priority 8.00 via contextual CB floor",
+      "verbatim_quote": "the contextual function, by identifying that the player is a defender ('CB') with risk, applied a minimum adjustment, raising the final priority to 8.00",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Scenario 2 evaluates a veteran (34) right CB at 85 minutes (High fatigue), average performance (0.001, Medium), with a yellow card; base rules A3/A4/R1/R3 activate and the contextual CB-with-risk floor raises the final priority to 8.00, reflecting the high tactical risk of a carded, tired defender late in the game."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The defender-risk escalation is the same high-stakes positional veto GSE escalates.",
+        "source_operator": "scenario2_defender_priority8",
+        "telemetry": "veteran 34 right CB, 85 min, perf .001, card -> Priority 8.00 (CB floor; A3/A4/R1/R3)"
+      }
+    },
+    {
+      "primitive_id": "scenario4_balances_conflicting",
+      "name": "Scenario 4: decisive carded forward -> Priority 6.00 (balances risk vs performance)",
+      "verbatim_quote": "The system demonstrates the ability to balance conflicting factors",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Scenario 4 evaluates a peak-age (25) central FW with excellent performance (0.08, High), 80 minutes (Medium/High fatigue), and a yellow card; risk rules R1/R3/R4 push priority up while B4/M4 (high performance) exert an opposing force, and the FW contextual logic limits the final priority to 6.00, keeping a decisive player on the field — the system balances conflicting factors."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The risk-versus-performance tradeoff is the same keep-the-decisive-player tension GSE adjudicates.",
+        "source_operator": "scenario4_balances_conflicting",
+        "telemetry": "peak 25 FW, perf .08 High, 80 min, card -> Priority 6.00; R1/R3/R4 up vs B4/M4 down; FW limit"
+      }
+    },
+    {
+      "primitive_id": "substituted_lower_priority",
+      "name": "Counterintuitive: substituted players have slightly LOWER priority (4.48 vs 4.68)",
+      "verbatim_quote": "both the mean (4.48 vs 4.68) and median (4.74 vs 5.00)",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Applied to all 46,897 instances, the priority histogram concentrates in 4-6 (Medium); contrary to expectation, substituted players (n=10,977) have slightly lower mean (4.48 vs 4.68) and median (4.74 vs 5.00) priority than non-substituted (n=35,920), reflecting fatigue, the metric's contextual nature, and tactical factors not captured by individual-condition variables."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The counterintuitive priority-substitution gap is the same model-vs-realized-decision divergence GSE investigates.",
+        "source_operator": "substituted_lower_priority",
+        "telemetry": "substituted n=10,977 mean 4.48/median 4.74 vs not n=35,920 mean 4.68/median 5.00; histogram 4-6"
+      }
+    },
+    {
+      "primitive_id": "final_state_minutes_confound",
+      "name": "Final-state comparison confounded by minutes played; in-game analysis needed",
+      "verbatim_quote": "a direct comparison of final scores may be distorted by differences in minutes played",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The analysis uses players' final state, not in-game state: the Not Substituted group mostly completed 90+ minutes (maximizing minutesPlayed and fatigue), while the Substituted group often left earlier (e.g., 70 minutes), so a direct comparison of final scores is distorted by minutes-played differences; an in-game analysis at the exact substitution moment would be needed to evaluate predictive accuracy, outside the current scope."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The final-state-vs-in-game confound is literally GSE's temporal-alignment veto on outcome comparisons.",
+        "source_operator": "final_state_minutes_confound",
+        "telemetry": "final-state not in-game; Not Sub = 90+ max fatigue, Sub left ~70; minutes confound; in-game needed"
+      }
+    },
+    {
+      "primitive_id": "tactical_over_individual",
+      "name": "Coaches prioritize tactical schemes/game-context over isolated individual metrics",
+      "verbatim_quote": "coaches prioritize tactical schemes and game-context factors over isolated individual metrics",
+      "page": 19,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Substituted players show lower priority dispersion (std 1.48) than non-substituted (2.12), suggesting the system consistently identifies individual-condition substitutions while higher dispersion among non-substituted (some high-priority players stayed) indicates tactical and game-context factors overrode the model; coaches prioritize tactical schemes and game-context over isolated individual metrics, so results must be read within game context."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The tactical-over-individual finding is the same team-context-dominates-player-metric insight GSE holds.",
+        "source_operator": "tactical_over_individual",
+        "telemetry": "Sub std 1.48 < Not 2.12; high-priority stayers -> tactical override; context > individual metric"
+      }
+    },
+    {
+      "primitive_id": "gps_fatigue_future",
+      "name": "Future: GPS for direct fatigue (vs minutesPlayed proxy) + game-context variables",
+      "verbatim_quote": "The integration of more granular data, such as Global Positioning System metrics for a more direct assessment of fatigue instead of the minutesPlayed proxy",
+      "page": 20,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Future extensions include integrating GPS metrics for a more direct fatigue assessment instead of the minutesPlayed proxy, incorporating game-context variables (score, remaining time, current strategy), and calibrating membership functions and the rule base through iterative coach/analyst feedback; the scikit-fuzzy source code and benchmark dataset are public on GitHub."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The proxy-to-direct-measurement upgrade is the same fatigue-signal refinement GSE prioritizes.",
+        "source_operator": "gps_fatigue_future",
+        "telemetry": "future: GPS direct fatigue (vs minutes proxy), game context (score/time/strategy), coach-feedback calibration; code public"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fuzzysub2025_trace",
+      "think": "The retrocausal genealogy of this paper is the formalization of a coach's substitution intuition into a fuzzy decision-support system. Pedro Passos Farias, at the Institute of Computing of the Universidade Federal Fluminense, writing in October 2025, observes that despite enormous financial stakes, top soccer clubs still make critical substitution decisions largely on intuition, and that the relevant variables, a player looks tired, performance has dropped, the risk of expulsion is high, are gradual rather than binary. The paper sits at the intersection of two literatures: the PlayeRank framework of Pappalardo and collaborators, a multidimensional role-aware performance metric validated against professional scouts, and the fuzzy-control tradition exemplified by Huarachi-Macuri's LACCEI 2023 player-evaluation system and Marliere's 2017 robot-soccer tactical arbiter. The identified gap is that no prior system integrates a validated performance metric with fatigue and disciplinary risk for the specific decision of substitution priority. The recursive theory of mind is the data-grounded fuzzy control system. The Soccer match event dataset of Pappalardo 2020, twenty-seven CSV tables across seven competitions, is consolidated into 46,897 player-match instances with four inputs: playerankScore for performance, minutesPlayed for fatigue, fractional age at the match moment, and a boolean yellow-card indicator derived from event tag 1702. The exploratory analysis defines the universes of discourse, performance from minus 0.119 to 0.173 standardized around zero, minutes from 1 to 120 with negative skew and median 90, age normally distributed around 26.7, and a 15.34 percent card prevalence, and validates two hypotheses: that card risk is position-dependent, with defenders near 19 percent versus forwards near 10 to 11 percent, and that the four inputs are largely independent with all Spearman correlations below 0.2. The system is built in scikit-fuzzy with Mamdani inference and centroid defuzzification, using triangular and trapezoidal membership functions for continuous inputs and narrow Gaussians for binary risk, with a 5 percent universe margin and seventeen Guardiola-inspired base rules combined by the minimum AND operator. Cross-layer veto adjudication is the hybrid contextual logic and the honest validation. Because position is categorical rather than fuzzy, a post-inference crisp function adjusts the base fuzzy priority: a carded defender is floored at 8.0, a carded tired midfielder at 7.5, while a carded forward generally keeps the base priority, possibly limited if performance is high. The four scenarios make the tradeoffs concrete: a young performing midfielder with no risk scores 1.67, a veteran carded defender 8.00, an exhausted carded midfielder 7.50, and a decisive carded forward 6.00, where risk rules push up but high-performance rules push down, demonstrating the balance of conflicting factors. Crucially, the validation is explicitly not predictive accuracy, since there is no ground truth for ideal priority, but logical consistency with the inputs, rules, and contextual logic. The implementation invariants map directly onto GSE. The four-factor priority composite is GSE's multi-input decision index; the validated-metric adoption is GSE's preference for proven inputs; the position-modulated risk is GSE's situational overlay; the Mamdani-plus-centroid pipeline is GSE's fuzzy aggregation to a crisp score; and the expert-inspired rule base is GSE's coach-reasoning encoding. The input-independence check is GSE's multicollinearity guard, and the no-ground-truth logical-consistency validation is GSE's honest evaluation discipline when no label exists. The outputs are substitution-priority scores from public event data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The most sovereign lessons are the two honest negative results. Applied to all 46,897 instances, substituted players actually have slightly lower mean priority, 4.48 versus 4.68, than non-substituted players, and the comparison is confounded because it uses final state rather than in-game state: non-substituted players completed 90 or more minutes, maximizing the fatigue proxy, while substituted players often left around 70 minutes, so a direct final-score comparison is distorted by minutes played and an in-game analysis at the substitution moment would be required for predictive accuracy. The lower dispersion among substituted players, standard deviation 1.48 versus 2.12, indicates the system consistently flags individual-condition substitutions, while high-priority players who stayed reveal that coaches prioritize tactical schemes and game context over isolated individual metrics. The caveats close the account with the proxy limitation and the calibration path. The minutesPlayed fatigue measure is a proxy that future work would replace with direct GPS metrics, and game-context variables such as score, remaining time, and current strategy would align recommendations with immediate tactical needs; the membership functions and rule base require iterative calibration with coaches and analysts to earn practical trust. The invariant for GSE is to carry the data-grounded fuzzification, the hybrid fuzzy-plus-crisp contextual overlay, and the logical-consistency validation while recording the final-state temporal confound, the tactical-over-individual divergence, and the fatigue-proxy limitation before any quantitative reuse, treating the priority index as an interpretable starting point for coaching judgment rather than a replacement for it. The membership design itself encodes further sovereign choices: the narrow Medium performance triangle reflects the high kurtosis of the standardized score distribution, the High fatigue trapezoid concentrates after 70 minutes to match the 90-minute median, the age sets are approximately symmetric around the 26.7-year mean, and the narrow Gaussian risk functions with sigma 0.1 provide a smooth transition and robustness if the binary input is not exactly zero or one, while the overlapping output triangles allow interpolation across the priority scale. The complete scikit-fuzzy source, pre-processing, exploratory analysis, and validation scripts, together with the generated benchmark dataset, are publicly released, so the entire pipeline is reproducible. For GSE the lesson is that interpretability and reproducibility are not afterthoughts but the conditions under which a fuzzy priority index can be trusted to inform, rather than dictate, a high-stakes real-time decision.",
+      "retrocausal_genealogy": "Formalize coach substitution intuition into fuzzy DSS. Pedro Passos Farias, UFF Institute of Computing, Oct 2025. Gap: no system integrates validated performance + fatigue + disciplinary risk for substitution priority. Lineage: PlayeRank (Pappalardo et al. 2019 ACM TIST, multidimensional role-aware, validated vs scouts); fuzzy control (Huarachi-Macuri LACCEI 2023 player eval; Marliere 2017 robot-soccer tactical arbiter). Data: Pappalardo 2020 Soccer match event dataset (27 CSV/7 comps), consolidated 46,897 player-match instances. Inputs: playerankScore/minutesPlayed/fractional age/TemCartaoAmarelo (tag 1702). scikit-fuzzy Mamdani + Centroid; trimf/trapmf/gaussmf; 17 Guardiola-inspired rules; AND=min.",
+      "theory_of_mind": "EDA universes: playerank [-0.119,0.173] mean .007/median .004 (zero-centered); minutes [1,120] skew -1.40 median 90 (59.3% n=27,828 full 90); age normal mean 26.68/median 26.51 [15.89,41.37]; card 15.34% (n=7,194). Risk position-dependent: CB 19.1/18.5%, central MF 17.3% vs FW 11.1/10.3%. Inputs independent (Spearman |r|<0.2; card-perf -0.179). 5% universe margin: Perf [-.134,.188]/Fatigue [0,126]/Age [14.6,42.7]/Risk [0,1]/Priority [0,10]. Membership params printed (trimf/trapmf/gaussmf). 17 rules A1-A5/B1-B4/M1-M4/R1-R4. Post-inference crisp contextual: CB+risk min 8.0, MF+risk+tired min 7.5, FW base. Centroid = center of mass [0,10].",
+      "cross_layer_veto": "Validation = logical consistency NOT predictive accuracy (no ideal-priority ground truth); 4 scenarios: young MF no-risk 1.67, veteran carded CB 8.00, exhausted carded MF 7.50, decisive carded FW 6.00 (R1/R3/R4 up vs B4/M4 down). Aggregate 46,897: histogram 4-6 Medium; substituted (n=10,977) LOWER mean 4.48/median 4.74 vs not (n=35,920) 4.68/5.00. Final-state confound: Not Sub 90+ max fatigue, Sub left ~70; minutes distort; in-game needed. Sub std 1.48 < Not 2.12 -> tactical-over-individual. Future: GPS direct fatigue (vs minutes proxy), game context, coach calibration; code public. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A scikit-fuzzy Mamdani decision-support system turns a coach's gradual substitution intuition into a quantitative priority index on [0,10], combining a validated role-aware performance metric (playerankScore), a minutes-played fatigue proxy, fractional age, and a position-modulated yellow-card risk through seventeen expert-inspired fuzzy rules with triangular/trapezoidal/Gaussian membership functions and centroid defuzzification, then a crisp post-inference contextual floor by position; it is validated for logical consistency rather than predictive accuracy and honestly shows that substituted players score slightly lower priority because of a final-state minutes confound and because coaches weigh tactical context over individual metrics.",
+  "gsi_mapping": "GSI treats 4 inputs (playerankScore/minutesPlayed/fractional age/TemCartaoAmarelo tag 1702) -> Substitution Priority [0,10]; Pappalardo 2020 dataset 27 CSV/7 comps -> 46,897 player-match instances; EDA universes playerank [-0.119,0.173] zero-centered, minutes [1,120] skew -1.40 median 90 (59.3% full 90), age normal 26.68, card 15.34%; risk position-dependent (CB ~19%/MF 17.3% vs FW ~10-11%); inputs independent (|r|<0.2, card-perf -0.179); scikit-fuzzy Mamdani + Centroid; 5% universe margin; trimf/trapmf/gaussmf exact params printed; 17 Guardiola rules AND=min; post-inference crisp contextual (CB min 8.0/MF min 7.5/FW base); centroid center-of-mass [0,10]; validation logical-consistency not accuracy; scenarios 1.67/8.00/7.50/6.00; aggregate substituted lower (4.48 vs 4.68) final-state minutes confound; Sub std 1.48<2.12 tactical-over-individual; future GPS/game-context/coach calibration; code public.",
+  "gse_mapping": "GSE lifts the four-factor priority composite, the validated-metric adoption, the position-modulated disciplinary risk, the Mamdani-plus-centroid fuzzy aggregation, the expert-rule encoding, and the hybrid fuzzy-plus-crisp contextual overlay as its decision-support and situational-reasoning layer; treats the input-independence check as a multicollinearity guard, the no-ground-truth logical-consistency validation as honest evaluation discipline, the final-state minutes-played confound as a temporal-alignment veto, and the tactical-over-individual divergence as evidence that team context dominates isolated player metrics; records the fatigue-proxy limitation and the coach-calibration requirement as honest limits; all outputs are substitution-priority scores from public event data, never sportsbook lines, and the index is an interpretable starting point for coaching judgment rather than a replacement for it."
+}

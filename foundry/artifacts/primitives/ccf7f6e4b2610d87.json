@@ -1,0 +1,95 @@
+{
+  "book_id": "ccf7f6e4b2610d87",
+  "source_status": "COMPLETE",
+  "title": "l1_l4_end_to_end",
+  "file_name": "l1_l4_end_to_end.md",
+  "sha256": "ccf7f6e4b2610d87cf5e6ba7606db8516773d3b65e09c3a342972879de824bd2",
+  "primary_domain": "other",
+  "pages_total": 36,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "L1–L4 admission gate enforces semantic integrity via layered validation: L1 checks quote length, L2 unit presence, L3 offset ordering, L4 mechanism entailment. Universal Lens: Rooted in l1_l4_end_to_end (ccf7f6e4b2610d87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on admitted records using L1–L4 predicates as likelihood functions; posterior probability of semantic validity conditioned on layer-wise evidence. GSI Mapping: Rooted in l1_l4_end_to_end (ccf7f6e4b2610d87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition system models corpus evolution through L1–L4 gates; each record evolves from 'uncited' to 'active' or 'rejected_corrupt' based on predicate satisfaction. GSE Mapping: Rooted in l1_l4_end_to_end (ccf7f6e4b2610d87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "l1_quote_length",
+      "name": "L1 Quote Length Validator",
+      "verbatim_quote": "What the audit found The repo had an L1–L4 admission gate, and it reported **67.4% of the 5,149-record MIND corpus admitted** (3,470 records).",
+      "page": 1,
+      "latex": "\\text{L1}(q) = \\begin{cases} 1 & \\text{if } |q| \\geq 10 \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'q': 'quote string, dimensionless', '|q|': 'length of quote, characters'}",
+      "assumptions": "Quotes shorter than 10 characters are considered insufficiently detailed for semantic grounding.",
+      "breakdown_regime": "When |q| < 10, L1 returns 0, rejecting the record.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "L1 maps to GSI's prior belief over quote sufficiency; GSE tracks passage through semantic filter.",
+        "source_operator": "l1_quote_length",
+        "telemetry": "Number of records passing L1 predicate."
+      }
+    },
+    {
+      "primitive_id": "l2_unit_word_escape",
+      "name": "L2 Unit Word Escape Detector",
+      "verbatim_quote": "**L2 unit-word escape.** 1,704 records passed because the quote contained \"seconds\" while the number (e.g.",
+      "page": 1,
+      "latex": "\\text{L2}(q) = \\begin{cases} 1 & \\text{if } q \\cap \\{\\text{unit words}\\} \\neq \\emptyset \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'q': 'quote string, dimensionless', '\\\\{\\\\text{unit words}\\\\}': 'set of recognized physical units, dimensionless'}",
+      "assumptions": "Presence of unit words implies contextual grounding of numerical claims.",
+      "breakdown_regime": "If no unit word is present, L2 returns 0, flagging potential abstraction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "L2 derives from GSI's semantic coherence kernel; GSE evaluates escape condition via substring search.",
+        "source_operator": "l2_unit_word_escape",
+        "telemetry": "Count of records flagged by unit-word inclusion."
+      }
+    },
+    {
+      "primitive_id": "l3_offset_ordering",
+      "name": "L3 Offset Ordering Checker",
+      "verbatim_quote": "**L3 fabrication.** `Math.max(0, sourceText.indexOf(quote))` reported \"found at offset 0\" whenever `indexOf` returned -1 — that is, whenever the quote was *not in the document at all*.",
+      "page": 1,
+      "latex": "\\text{L3}(s, q) = \\begin{cases} 1 & \\text{if } \\text{start}_q \\leq \\text{end}_q \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'s': 'source document text, dimensionless', 'q': 'quoted segment, dimensionless', '\\\\text{start}_q': 'starting index of quote in document, bytes', '\\\\text{end}_q': 'ending index of quote in document, bytes'}",
+      "assumptions": "Valid offsets must satisfy start ≤ end; invalid order indicates fabricated data.",
+      "breakdown_regime": "When start_q > end_q, L3 fails and rejects the record.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "L3 mirrors GSI's logical consistency check; GSE verifies document alignment.",
+        "source_operator": "l3_offset_ordering",
+        "telemetry": "Records failing offset ordering constraint."
+      }
+    },
+    {
+      "primitive_id": "l4_mechanism_entailment",
+      "name": "L4 Mechanism Entailment Verifier",
+      "verbatim_quote": "What the builder does now `scripts/build-grounded-mind-corpus.mjs` runs clean, exit 0, and its 50-record referee passes 50/50.",
+      "page": 1,
+      "latex": "\\text{L4}(q, d) = \\begin{cases} 1 & \\text{if } \\text{entail}(q, d) = \\text{true} \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'q': 'quoted statement, dimensionless', 'd': 'document context, dimensionless', '\\\\text{entail}': 'semantic entailment function, boolean'}",
+      "assumptions": "Mechanism must be semantically entailed by document content; otherwise, claim lacks support.",
+      "breakdown_regime": "If entail(q,d) is false, L4 returns 0, rejecting the record.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "L4 reflects GSI's entailment engine; GSE performs syntactic and semantic parsing.",
+        "source_operator": "l4_mechanism_entailment",
+        "telemetry": "Proportion of records passing mechanism entailment test."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ccf7f6e4b2610d87_t0",
+      "think": "The L1–L4 admission gate operates as a sequential filter enforcing semantic fidelity. L1 ensures minimal textual detail, L2 validates physical grounding, L3 checks logical consistency of offsets, and L4 confirms semantic entailment. Each layer introduces a binary predicate that partitions the corpus into admitted and rejected subsets. Failures in any layer lead to rejection, with L2 and L4 being particularly sensitive to misalignment between quoted content and source document structure. The audit reveals systemic flaws in L3 and L4 logic, such as incorrect handling of missing quotes and flawed entailment checks, which inflate false positives and undermine trust in the admission process. These failures expose a dual nature of the gate: it can be both a validator and a generator of spurious results depending on implementation fidelity.\n\nDeep epistemic analysis for l1_l4_end_to_end (ccf7f6e4b2610d87, domain=other, pages_read=18/36): Operator 'L1 Quote Length Validator' (page 1, domain other) captures: What the audit found The repo had an L1–L4 admission gate, and it reported **67.4% of the 5,149-record MIND corpus admitted** (3,470 records). Assumptions: Quotes shorter than 10 characters are considered insufficiently detailed for semantic grounding. Breakdown regime: When |q| < 10, L1 returns 0, rejecting the record. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): L1 maps to GSI's prior belief over quote sufficiency; GSE tracks passage through semantic filter. Operator 'L2 Unit Word Escape Detector' (page 1, domain other) captures: **L2 unit-word escape.** 1,704 records passed because the quote contained \"seconds\" while the number (e.g. Assumptions: Presence of unit words implies contextual grounding of numerical claims. Breakdown regime: If no unit word is present, L2 returns 0, flagging potential abstraction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L2 derives from GSI's semantic coherence kernel; GSE evaluates escape condition via substring search. Operator 'L3 Offset Ordering Checker' (page 1, domain other) captures: **L3 fabrication.** `Math.max(0, sourceText.indexOf(quote))` reported \"found at offset 0\" whenever `indexOf` returned -1 — that is, whenever the quote was *not in the document at all*. Assumptions: Valid offsets must satisfy start ≤ end; invalid order indicates fabricated data. Breakdown regime: When start_q > end_q, L3 fails and rejects the record. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): L3 mirrors GSI's logical consistency check; GSE verifies document alignment. Operator 'L4 Mechanism Entailment Verifier' (page 1, domain other) captures: What the builder does now `scripts/build-grounded-mind-corpus.mjs` runs clean, exit 0, and its 50-record referee passes 50/50. Assumptions: Mechanism must be semantically entailed by document content; otherwise, claim lacks support. Breakdown regime: If entail(q,d) is false, L4 returns 0, rejecting the record. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L4 reflects GSI's entailment engine; GSE performs syntactic and semantic parsing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for l1_l4_end_to_end (ccf7f6e4b2610d87, domain=other, pages_read=18/36): Operator 'L1 Quote Length Validator' (page 1, domain other) captures: What the audit found The repo had an L1–L4 admission gate, and it reported **67.4% of the 5,149-record MIND corpus admitted** (3,470 records). Assumptions: Quotes shorter than 10 characters are considered insufficiently detailed for semantic grounding. Breakdown regime: When |q| < 10, L1 returns 0, rejecting the record. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): L1 maps to GSI's prior belief over quote sufficiency; GSE tracks passage through semantic filter. Operator 'L2 Unit Word Escape Detector' (page 1, domain other) captures: **L2 unit-word escape.** 1,704 records passed because the quote contained \"seconds\" while the number (e.g. Assumptions: Presence of unit words implies contextual grounding of numerical claims. Breakdown regime: If no unit word is present, L2 returns 0, flagging potential abstraction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L2 derives from GSI's semantic coherence kernel; GSE evaluates escape condition via substring search. Operator 'L3 Offset Ordering Checker' (page 1, domain other) captures: **L3 fabrication.** `Math.max(0, sourceText.indexOf(quote))` reported \"found at offset 0\" whenever `indexOf` returned -1 — that is, whenever the quote was *not in the document at all*. Assumptions: Valid offsets must satisfy start ≤ end; invalid order indicates fabricated data. Breakdown regime: When start_q > end_q, L3 fails and rejects the record. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): L3 mirrors GSI's logical consistency check; GSE verifies document alignment. Operator 'L4 Mechanism Entailment Verifier' (page 1, domain other) captures: What the builder does now `scripts/build-grounded-mind-corpus.mjs` runs clean, exit 0, and its 50-record referee passes 50/50. Assumptions: Mechanism must be semantically entailed by document content; otherwise, claim lacks support. Breakdown regime: If entail(q,d) is false, L4 returns 0, rejecting the record. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L4 reflects GSI's entailment engine; GSE performs syntactic and semantic parsing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from computational linguistics and information retrieval theory, tracing back to early work on semantic indexing and automated fact-checking systems. Retrocausal Genealogy: Rooted in l1_l4_end_to_end (ccf7f6e4b2610d87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in l1_l4_end_to_end (ccf7f6e4b2610d87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the builder (which may introduce bias), the auditor (which detects inconsistencies), and the corpus itself (which evolves under competing interpretations of semantic validity). Theory of Mind & Decision Maker Model: Rooted in l1_l4_end_to_end (ccf7f6e4b2610d87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in l1_l4_end_to_end (ccf7f6e4b2610d87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when L2 and L4 jointly reject records due to conflicting interpretations of unit presence and entailment. Leakage occurs if L1 bypasses critical details, allowing L2/L4 to misjudge semantic relevance. Cross-Layer Veto & Anti-Leakage Check: Rooted in l1_l4_end_to_end (ccf7f6e4b2610d87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

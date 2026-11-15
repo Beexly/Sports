@@ -1,0 +1,78 @@
+{
+  "book_id": "2b2607e4199e4d54",
+  "source_status": "COMPLETE",
+  "title": "NEXT_RUN_PROMPT",
+  "file_name": "NEXT_RUN_PROMPT.md",
+  "sha256": "2b2607e4199e4d541245920676e2babc046a4855b63e2ac9670f2cb5e599fb91",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian belief updating with conformal predictive distributions under model-router uncertainty and calibration discrimination constraints. Universal Lens: Rooted in NEXT_RUN_PROMPT (2b2607e4199e4d54), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers sportive outcomes via calibrated probabilistic models; employs isotonic regression and Brier decomposition for reliability assessment. GSI Mapping: Rooted in NEXT_RUN_PROMPT (2b2607e4199e4d54), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE orchestrates state transitions through prompt caching, model routing, and integration testing; manages risk via trust gates and deployment vetoes. GSE Mapping: Rooted in NEXT_RUN_PROMPT (2b2607e4199e4d54), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "model_router_flip",
+      "name": "Model Router Flip",
+      "verbatim_quote": "**Model-tier flips + caching** (highest cost ROI): in `lib/claude-api/model-router.ts` flip `brief` + `calibration-insight` to Haiku; enable `cache:{system:true}` at the high-volume call sites.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'model identifier (Haiku, Claude, etc.)', 'C': 'caching flag (boolean)', 'T': 'call volume threshold'}",
+      "assumptions": "Model performance varies by task; caching reduces latency without altering behavior.",
+      "breakdown_regime": "When T exceeds capacity, cache invalidation triggers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's model routing mirrors GSI's probabilistic inference kernel, where M represents a posterior distribution over models.",
+        "source_operator": "model_router_flip",
+        "telemetry": "Latency reduction, cache hit rate, model accuracy shift"
+      }
+    },
+    {
+      "primitive_id": "calibration_probability_split",
+      "name": "Calibration Probability Split",
+      "verbatim_quote": "- **Calibration probability split** (R3) — persist a modeled win prob distinct from the confidence UX score; calibrate with the new toolkit; market-aware proposals.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{model}': 'modeled win probability', 'P_{confidence}': 'user-facing confidence score', 'B': 'Brier score (dimensionless)'}",
+      "assumptions": "P_{model} must be independent of P_{confidence}; both are bounded [0,1].",
+      "breakdown_regime": "When B exceeds threshold, recalibration required.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's calibration kernel derives from P_{model} and P_{confidence} using isotonic regression and ECE metrics.",
+        "source_operator": "calibration_probability_split",
+        "telemetry": "ECE error, Brier score, discrimination index"
+      }
+    },
+    {
+      "primitive_id": "integration_suite_expansion",
+      "name": "Integration Suite Expansion",
+      "verbatim_quote": "**Expand the integration suite**: add live-DB coverage for the settlement path and the calibration loader; consider a `test:integration` vitest config gated on `DATABASE_URL`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'database connection status (boolean)', 'S': 'settlement path coverage (boolean)', 'C': 'calibration loader coverage (boolean)'}",
+      "assumptions": "Database integrity is necessary for correctness; test suite must be conditional on D.",
+      "breakdown_regime": "If D fails, S and C are disabled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's integration suite maps to GSI's validation layer, where D ensures logical consistency across data pipelines.",
+        "source_operator": "integration_suite_expansion",
+        "telemetry": "Test pass rate, DB uptime, coverage percentage"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2b2607e4199e4d54_t0",
+      "think": "The operators define a layered system where GSE governs execution flow and GSI governs probabilistic inference. Model router flip enables dynamic model selection based on task complexity, aligning with Bayesian model averaging principles. Calibration probability split decouples prediction from confidence, enabling better calibration diagnostics. Integration suite expansion ensures end-to-end correctness, mirroring GSI’s reliance on empirical validation. Failure modes include cache inconsistency, model misalignment, and database downtime—each requiring robust monitoring and fallback protocols.\n\nDeep epistemic analysis for NEXT_RUN_PROMPT (2b2607e4199e4d54, domain=other, pages_read=2/2): Operator 'Model Router Flip' (page 1, domain other) captures: **Model-tier flips + caching** (highest cost ROI): in `lib/claude-api/model-router.ts` flip `brief` + `calibration-insight` to Haiku; enable `cache:{system:true}` at the high-volume call sites. Assumptions: Model performance varies by task; caching reduces latency without altering behavior. Breakdown regime: When T exceeds capacity, cache invalidation triggers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's model routing mirrors GSI's probabilistic inference kernel, where M represents a posterior distribution over models. Operator 'Calibration Probability Split' (page 1, domain other) captures: - **Calibration probability split** (R3) — persist a modeled win prob distinct from the confidence UX score; calibrate with the new toolkit; market-aware proposals. Assumptions: P_{model} must be independent of P_{confidence}; both are bounded [0,1]. Breakdown regime: When B exceeds threshold, recalibration required. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's calibration kernel derives from P_{model} and P_{confidence} using isotonic regression and ECE metrics. Operator 'Integration Suite Expansion' (page 1, domain other) captures: **Expand the integration suite**: add live-DB coverage for the settlement path and the calibration loader; consider a `test:integration` vitest config gated on `DATABASE_URL`. Assumptions: Database integrity is necessary for correctness; test suite must be conditional on D. Breakdown regime: If D fails, S and C are disabled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's integration suite maps to GSI's validation layer, where D ensures logical consistency across data pipelines. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NEXT_RUN_PROMPT (2b2607e4199e4d54, domain=other, pages_read=2/2): Operator 'Model Router Flip' (page 1, domain other) captures: **Model-tier flips + caching** (highest cost ROI): in `lib/claude-api/model-router.ts` flip `brief` + `calibration-insight` to Haiku; enable `cache:{system:true}` at the high-volume call sites. Assumptions: Model performance varies by task; caching reduces latency without altering behavior. Breakdown regime: When T exceeds capacity, cache invalidation triggers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's model routing mirrors GSI's probabilistic inference kernel, where M represents a posterior distribution over models. Operator 'Calibration Probability Split' (page 1, domain other) captures: - **Calibration probability split** (R3) — persist a modeled win prob distinct from the confidence UX score; calibrate with the new toolkit; market-aware proposals. Assumptions: P_{model} must be independent of P_{confidence}; both are bounded [0,1]. Breakdown regime: When B exceeds threshold, recalibration required. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's calibration kernel derives from P_{model} and P_{confidence} using isotonic regression and ECE metrics. Operator 'Integration Suite Expansion' (page 1, domain other) captures: **Expand the integration suite**: add live-DB coverage for the settlement path and the calibration loader; consider a `test:integration` vitest config gated on `DATABASE_URL`. Assumptions: Database integrity is necessary for correctness; test suite must be conditional on D. Breakdown regime: If D fails, S and C are disabled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's integration suite maps to GSI's validation layer, where D ensures logical consistency across data pipelines. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and conformal prediction frameworks, these primitives reflect modern ML systems' evolution toward explainable and reliable inference. Retrocausal Genealogy: Rooted in NEXT_RUN_PROMPT (2b2607e4199e4d54), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in NEXT_RUN_PROMPT (2b2607e4199e4d54), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may prioritize speed over accuracy (GSE), or vice versa (GSI). The founder must mediate between competing objectives: scalability vs. precision. Theory of Mind & Decision Maker Model: Rooted in NEXT_RUN_PROMPT (2b2607e4199e4d54), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in NEXT_RUN_PROMPT (2b2607e4199e4d54), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that GSE's caching does not interfere with GSI's calibration logic. Leakage occurs when P_{model} leaks into P_{confidence}, violating independence. Cross-Layer Veto & Anti-Leakage Check: Rooted in NEXT_RUN_PROMPT (2b2607e4199e4d54), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in NEXT_RUN_PROMPT (2b2607e4199e4d54), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

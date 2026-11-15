@@ -1,0 +1,78 @@
+{
+  "book_id": "67eed875b4913647",
+  "source_status": "COMPLETE",
+  "title": "CLAUDE_REVIEW_PROMPT",
+  "file_name": "CLAUDE_REVIEW_PROMPT.md",
+  "sha256": "67eed875b4913647e2b2501b2dbb344bae2f961adc2b933d7f17211ea263d93b",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Runtime integrity constraints define a causal lattice where schema duplication, unauthorized actions, and data leakage are excluded via persistent state validation. Universal Lens: Rooted in CLAUDE_REVIEW_PROMPT (67eed875b4913647), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on runtime observables uses conformal prediction to bound calibration error, excluding unsettled seasons and ensuring CLV is blocked pre-close. GSI Mapping: Rooted in CLAUDE_REVIEW_PROMPT (67eed875b4913647), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE enforces state transitions through a gated kernel, preventing auto-approval and ensuring telemetry integrity via empirical test coverage. GSE Mapping: Rooted in CLAUDE_REVIEW_PROMPT (67eed875b4913647), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "runtime_integrity_constraint",
+      "name": "Persistent State Validation",
+      "verbatim_quote": "persistence does not duplicate schema or fake completion, workflow runtime cannot publish/send/spend/deploy/scrape/enable public gates/change weights, Redis-missing",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'State space dimensionless', 'T': 'Transition function dimensionless', 'R': 'Redis state variable dimensionless'}",
+      "assumptions": "Schema consistency is enforced by runtime invariant checks; no unauthorized action is permitted without explicit gate activation.",
+      "breakdown_regime": "When R is undefined or T fails to validate S, system enters error state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's probabilistic state tracking mirrors GSE's deterministic transition logic through shared constraint enforcement.",
+        "source_operator": "runtime_integrity_constraint",
+        "telemetry": "State change frequency and schema duplication rate."
+      }
+    },
+    {
+      "primitive_id": "data_reliability_guarantee",
+      "name": "API Call Restriction",
+      "verbatim_quote": "truthful, Jarvis data is safe to wire to cockpit, data reliability does not auto-call paid APIs,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Data stream dimensionless', 'A': 'API access control flag dimensionless', 'C': 'Cost per API call currency'}",
+      "assumptions": "All data flows are validated before cockpit integration; no automatic paid API invocation occurs.",
+      "breakdown_regime": "If A=1 and C>0, system triggers cost alert or halts execution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's data reliability kernel is derived from GSE's telemetry filtering mechanism.",
+        "source_operator": "data_reliability_guarantee",
+        "telemetry": "API call count and cost per session."
+      }
+    },
+    {
+      "primitive_id": "clv_blocking_mechanism",
+      "name": "Customer Lifetime Value Blocking",
+      "verbatim_quote": "are never auto-approved, CLV is blocked before close/result, calibration excludes unsettled seasons, and tests cover the",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'CLV': 'Customer lifetime value currency', 'T': 'Time dimensionless', 'S': 'Season status flag dimensionless'}",
+      "assumptions": "CLV evaluation is deferred until final result; unsettled seasons do not contribute to calibration.",
+      "breakdown_regime": "If S=0 and T>threshold, CLV computation is suspended.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's CLV model aligns with GSE's temporal decision logic through synchronized blocking protocols.",
+        "source_operator": "clv_blocking_mechanism",
+        "telemetry": "CLV approval delay and season resolution time."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "67eed875b4913647_t0",
+      "think": "The runtime integrity constraint defines a causal lattice over state transitions, enforcing that schema duplication and unauthorized operations are prevented by persistent validation. This ensures that each transition T(S) is only valid when S satisfies a set of invariants. The data reliability guarantee introduces a cost-aware constraint such that D is only processed if A=0, preventing unintended API usage. The CLV blocking mechanism acts as a temporal filter, ensuring that CLV computations occur only after all relevant data is settled. These primitives form a dual structure: one enforcing logical consistency (integrity), another ensuring economic safety (reliability), and a third ensuring temporal correctness (calibration). Failure modes arise when any of these constraints are violated—e.g., if T(S) allows invalid schema changes, or if A=1 despite C>0, or if CLV is computed before S=1.\n\nDeep epistemic analysis for CLAUDE_REVIEW_PROMPT (67eed875b4913647, domain=other, pages_read=1/1): Operator 'Persistent State Validation' (page 1, domain other) captures: persistence does not duplicate schema or fake completion, workflow runtime cannot publish/send/spend/deploy/scrape/enable public gates/change weights, Redis-missing Assumptions: Schema consistency is enforced by runtime invariant checks; no unauthorized action is permitted without explicit gate activation. Breakdown regime: When R is undefined or T fails to validate S, system enters error state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic state tracking mirrors GSE's deterministic transition logic through shared constraint enforcement. Operator 'API Call Restriction' (page 1, domain other) captures: truthful, Jarvis data is safe to wire to cockpit, data reliability does not auto-call paid APIs, Assumptions: All data flows are validated before cockpit integration; no automatic paid API invocation occurs. Breakdown regime: If A=1 and C>0, system triggers cost alert or halts execution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's data reliability kernel is derived from GSE's telemetry filtering mechanism. Operator 'Customer Lifetime Value Blocking' (page 1, domain other) captures: are never auto-approved, CLV is blocked before close/result, calibration excludes unsettled seasons, and tests cover the Assumptions: CLV evaluation is deferred until final result; unsettled seasons do not contribute to calibration. Breakdown regime: If S=0 and T>threshold, CLV computation is suspended. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's CLV model aligns with GSE's temporal decision logic through synchronized blocking protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CLAUDE_REVIEW_PROMPT (67eed875b4913647, domain=other, pages_read=1/1): Operator 'Persistent State Validation' (page 1, domain other) captures: persistence does not duplicate schema or fake completion, workflow runtime cannot publish/send/spend/deploy/scrape/enable public gates/change weights, Redis-missing Assumptions: Schema consistency is enforced by runtime invariant checks; no unauthorized action is permitted without explicit gate activation. Breakdown regime: When R is undefined or T fails to validate S, system enters error state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic state tracking mirrors GSE's deterministic transition logic through shared constraint enforcement. Operator 'API Call Restriction' (page 1, domain other) captures: truthful, Jarvis data is safe to wire to cockpit, data reliability does not auto-call paid APIs, Assumptions: All data flows are validated before cockpit integration; no automatic paid API invocation occurs. Breakdown regime: If A=1 and C>0, system triggers cost alert or halts execution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's data reliability kernel is derived from GSE's telemetry filtering mechanism. Operator 'Customer Lifetime Value Blocking' (page 1, domain other) captures: are never auto-approved, CLV is blocked before close/result, calibration excludes unsettled seasons, and tests cover the Assumptions: CLV evaluation is deferred until final result; unsettled seasons do not contribute to calibration. Breakdown regime: If S=0 and T>threshold, CLV computation is suspended. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's CLV model aligns with GSE's temporal decision logic through synchronized blocking protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from Hoare logic and process algebra, these constraints reflect modern runtime systems' need for compositional safety guarantees, tracing back to early work on concurrent program correctness. Retrocausal Genealogy: Rooted in CLAUDE_REVIEW_PROMPT (67eed875b4913647), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CLAUDE_REVIEW_PROMPT (67eed875b4913647), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to bypass constraints through unauthorized API calls or premature CLV computation. The system models these as adversarial perturbations in the state space, requiring robust detection and mitigation strategies. Theory of Mind & Decision Maker Model: Rooted in CLAUDE_REVIEW_PROMPT (67eed875b4913647), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by separating integrity checks (GSE) from reliability metrics (GSI). Leakage is vetoed by enforcing strict telemetry boundaries between layers, preventing cross-layer contamination of sensitive data. Cross-Layer Veto & Anti-Leakage Check: Rooted in CLAUDE_REVIEW_PROMPT (67eed875b4913647), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CLAUDE_REVIEW_PROMPT (67eed875b4913647), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

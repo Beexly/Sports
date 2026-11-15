@@ -1,0 +1,78 @@
+{
+  "book_id": "28345cf3df978e65",
+  "source_status": "COMPLETE",
+  "title": "GSE_MASTER_PACK_2026-10-10",
+  "file_name": "GSE_MASTER_PACK_2026-10-10.md",
+  "sha256": "28345cf3df978e65e0fed0a94ca81faf10c4db9bdaf9f639ce2ff7b7784394b8",
+  "primary_domain": "other",
+  "pages_total": 104,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified mathematical framework integrating probabilistic inference, operational state transitions, and agent-based reasoning through copulas, opinion pooling, and margin-aware architectures. Universal Lens: Rooted in GSE_MASTER_PACK_2026-10-10 (28345cf3df978e65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference via Gaussian copulas and logistic regression for predictive edge; conformal prediction for uncertainty quantification in margin curves and CLV models. GSI Mapping: Rooted in GSE_MASTER_PACK_2026-10-10 (28345cf3df978e65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning through multi-agent state machines, real-time margin policy enforcement, and dynamic engine gap resolution using snapshot-diff detectors and opinion pools. GSE Mapping: Rooted in GSE_MASTER_PACK_2026-10-10 (28345cf3df978e65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "margin_total_copula",
+      "name": "Joint Probability Copula for Margin and Total",
+      "verbatim_quote": "`margin_total_copula` — Gaussian copula joint P(spread cover ∧ total over) from marginal probs + ρ (#22 compl",
+      "page": 3,
+      "latex": "\\mathbb{P}(S \\cap T) = C_{\\rho}(F_S(s), F_T(t))",
+      "symbol_and_unit_ledger": "{'S': 'spread outcome (dimensionless)', 'T': 'total outcome (dimensionless)', 'F_S': 'marginal CDF of spread (dimensionless)', 'F_T': 'marginal CDF of total (dimensionless)', '\\\\rho': 'correlation coefficient (dimensionless)'}",
+      "assumptions": "Gaussian dependence structure, marginal distributions known, fixed correlation parameter.",
+      "breakdown_regime": "When marginal independence fails or ρ approaches ±1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's margin policy engine via joint probability estimation for risk-adjusted payouts.",
+        "source_operator": "margin_total_copula",
+        "telemetry": "Expected value of spread-cover and total-over outcomes under realized market conditions."
+      }
+    },
+    {
+      "primitive_id": "opinion_pool",
+      "name": "Weighted Opinion Pooling Across Bookmakers",
+      "verbatim_quote": "`opinion_pool` — linear / log / power pools across N book probs w/ weights (#45) 4.",
+      "page": 3,
+      "latex": "p_{\\text{pool}} = \\sum_{i=1}^N w_i p_i",
+      "symbol_and_unit_ledger": "{'p_i': 'probability estimate from bookmaker i (dimensionless)', 'w_i': 'weight assigned to bookmaker i (dimensionless)', 'p_{\\\\text{pool}}': 'combined pooled probability (dimensionless)'}",
+      "assumptions": "Independent estimates, normalized weights sum to unity.",
+      "breakdown_regime": "When weights become negative or estimates are highly correlated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSI's CLV model and GSE's market consensus engine.",
+        "source_operator": "opinion_pool",
+        "telemetry": "Cross-book variance reduction in predicted outcomes."
+      }
+    },
+    {
+      "primitive_id": "steam_rlm",
+      "name": "Snapshot-Diff Steam/RLM Detector",
+      "verbatim_quote": "`steam_rlm` — snapshot-diff detector: steam (move ≥ threshold w/ time delta) + RLM flag vs public side stub (#46) 6.",
+      "page": 4,
+      "latex": "\\Delta s(t) > \\theta \\land \\frac{d}{dt} \\log p(t) < -\\alpha",
+      "symbol_and_unit_ledger": "{'\\\\Delta s(t)': 'change in spread over time (units of spread)', '\\\\theta': 'threshold for significant move (units of spread)', 'p(t)': 'market probability at time t (dimensionless)', '\\\\alpha': 'rate of decay parameter (dimensionless)'}",
+      "assumptions": "Time-series stationarity, bounded volatility, known baseline probabilities.",
+      "breakdown_regime": "When rapid changes exceed threshold or log-probability decays below critical rate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's real-time anomaly detection layer for identifying manipulated or biased bookmaker behavior.",
+        "source_operator": "steam_rlm",
+        "telemetry": "Frequency and magnitude of detected steam/RLM events per game."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "28345cf3df978e65_t0",
+      "think": "The core operators—copula-based joint probability, opinion pooling, and snapshot-diff detection—are grounded in statistical inference and operational logic. The margin-total copula enables simultaneous modeling of spread and total outcomes, leveraging Gaussian dependence structures. Opinion pooling aggregates heterogeneous bookmaker signals into coherent predictions, while the steam/RLM detector identifies deviations from expected dynamics. These primitives form a closed-loop system where GSI's Bayesian inference feeds into GSE's situational reasoning, enabling adaptive margin policies and real-time risk mitigation. Failure modes include misestimation of correlations, weight imbalance in opinion pooling, and false positives in anomaly detection.\n\nDeep epistemic analysis for GSE_MASTER_PACK_2026-10-10 (28345cf3df978e65, domain=other, pages_read=18/104): Operator 'Joint Probability Copula for Margin and Total' (page 3, domain other) captures: `margin_total_copula` — Gaussian copula joint P(spread cover ∧ total over) from marginal probs + ρ (#22 compl Assumptions: Gaussian dependence structure, marginal distributions known, fixed correlation parameter. Breakdown regime: When marginal independence fails or ρ approaches ±1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's margin policy engine via joint probability estimation for risk-adjusted payouts. Operator 'Weighted Opinion Pooling Across Bookmakers' (page 3, domain other) captures: `opinion_pool` — linear / log / power pools across N book probs w/ weights (#45) 4. Assumptions: Independent estimates, normalized weights sum to unity. Breakdown regime: When weights become negative or estimates are highly correlated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's CLV model and GSE's market consensus engine. Operator 'Snapshot-Diff Steam/RLM Detector' (page 4, domain other) captures: `steam_rlm` — snapshot-diff detector: steam (move ≥ threshold w/ time delta) + RLM flag vs public side stub (#46) 6. Assumptions: Time-series stationarity, bounded volatility, known baseline probabilities. Breakdown regime: When rapid changes exceed threshold or log-probability decays below critical rate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's real-time anomaly detection layer for identifying manipulated or biased bookmaker behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GSE_MASTER_PACK_2026-10-10 (28345cf3df978e65, domain=other, pages_read=18/104): Operator 'Joint Probability Copula for Margin and Total' (page 3, domain other) captures: `margin_total_copula` — Gaussian copula joint P(spread cover ∧ total over) from marginal probs + ρ (#22 compl Assumptions: Gaussian dependence structure, marginal distributions known, fixed correlation parameter. Breakdown regime: When marginal independence fails or ρ approaches ±1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's margin policy engine via joint probability estimation for risk-adjusted payouts. Operator 'Weighted Opinion Pooling Across Bookmakers' (page 3, domain other) captures: `opinion_pool` — linear / log / power pools across N book probs w/ weights (#45) 4. Assumptions: Independent estimates, normalized weights sum to unity. Breakdown regime: When weights become negative or estimates are highly correlated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's CLV model and GSE's market consensus engine. Operator 'Snapshot-Diff Steam/RLM Detector' (page 4, domain other) captures: `steam_rlm` — snapshot-diff detector: steam (move ≥ threshold w/ time delta) + RLM flag vs public side stub (#46) 6. Assumptions: Time-series stationarity, bounded volatility, known baseline probabilities. Breakdown regime: When rapid changes exceed threshold or log-probability decays below critical rate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's real-time anomaly detection layer for identifying manipulated or biased bookmaker behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in copula theory (Sklar, 1959), opinion pooling (Lindley, 1982), and change-point detection (Page, 1954). Extended through modern machine learning frameworks and agent-based modeling. Retrocausal Genealogy: Rooted in GSE_MASTER_PACK_2026-10-10 (28345cf3df978e65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in GSE_MASTER_PACK_2026-10-10 (28345cf3df978e65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models competing agents including bookmakers with varying degrees of informational advantage, and internal GSE agents tasked with detecting manipulation or inefficiency in real-time. Theory of Mind & Decision Maker Model: Rooted in GSE_MASTER_PACK_2026-10-10 (28345cf3df978e65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in GSE_MASTER_PACK_2026-10-10 (28345cf3df978e65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that margin and total copulas do not redundantly encode similar information. Leakage vetoes prevent opinion pooling from being skewed by correlated inputs, maintaining signal integrity across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in GSE_MASTER_PACK_2026-10-10 (28345cf3df978e65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

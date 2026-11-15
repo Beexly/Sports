@@ -68,60 +68,50 @@ describe("/picks - no false 'free / no-limit' copy survives", () => {
   });
 });
 
-describe("/picks - the sealed locked board is the deliberate, published model", () => {
-  it("renders the sealed Week 8 card as its only data source (no fetch, no fabricated list)", () => {
-    expect(picksSrc).toMatch(/import board from "@\/lib\/week8\/sealed-board\.json"/);
-    expect(picksSrc).toMatch(/import \{ SealedTable \} from "@\/components\/week8\/sealed-table"/);
+describe("/picks - WP5 DoctrineBoard + verifiedLedger paywall model", () => {
+  it("renders the two-doctrines board via loadDoctrineBoard and verifiedLedger (no client fetch, no fabricated list)", () => {
+    expect(picksSrc).toMatch(/import \{ loadDoctrineBoard \} from "@\/lib\/board\/doctrine-loader"/);
+    expect(picksSrc).toMatch(/import \{ DoctrineBoardView \} from "@\/components\/board\/doctrine-board"/);
+    expect(picksSrc).toContain("verifiedLedger");
+    expect(picksSrc).toContain('data-testid="verified-record-strip"');
     expect(picksSrc).not.toMatch(/\bfetch\(/);
     expect(picksSrc).not.toMatch(/\/api\/picks/);
   });
 
-  it("filters to publish-allowed PUBLISH rows only - PASS/abstained markets cannot render", () => {
-    expect(picksSrc).toMatch(
-      /card\.main\.filter\(\(row\) => row\.publishAllowed && row\.decision === "PUBLISH"\)/,
-    );
+  it("reads entitlements server-side before loading DoctrineBoardView so selections stay gated by tier", () => {
+    expect(picksSrc).toContain("getUserEntitlements");
+    expect(picksSrc).toContain("loadDoctrineBoard(viewerEntitlements)");
   });
 
-  it("presents the card as the sealed record with its seal digest, not a live purchasable board", () => {
-    expect(picksSrc).toMatch(/Seal \{card\.seal_digest\}/);
+  it("publishes calibration progress behind the 200-bet law with zero hardcoded win rates", () => {
+    expect(picksSrc).toContain("gate.clvBackedSettled");
+    expect(picksSrc).toContain("gate.target");
+    expect(picksSrc).not.toMatch(/\b\d{2}-\d{1,2}-\d\b/);
   });
 
-  it("the record banner's numbers trace to the committed ledger (derived, never re-typed)", () => {
-    // Provenance pin: the banner record/win%/units must equal the ledger's
-    // pre-TNF prior leg computed live, so the page cannot drift from the
-    // committed record without failing the build.
+  it("the record ledger JSON remains arithmetically self-consistent and /picks reads verifiedLedger", () => {
     const ledger = JSON.parse(ledgerSrc) as {
       verified_record?: {
-        record?: string;
+        wins?: number;
+        losses?: number;
         win_pct?: number;
-        net_units?: string;
-        component_legs?: Array<{
-          id?: string;
-          wins?: number;
-          losses?: number;
-          net_units?: string;
-        }>;
       };
     };
     const verified = ledger.verified_record;
     expect(verified, "the ledger still carries a verified_record").toBeDefined();
-    // The ledger must be arithmetically self-consistent: the published win%
-    // is wins / (wins + losses), recomputed here rather than trusted.
     const wins = verified?.wins ?? 0;
     const losses = verified?.losses ?? 0;
     const recomputedPct = ((wins / (wins + losses)) * 100).toFixed(1);
     expect(recomputedPct).toBe((verified?.win_pct ?? -1).toFixed(1));
-    // ...and the banner may not re-type it. The page reads the ledger constant,
-    // so any hand-typed record in the source is a drift the build must catch.
-    expect(picksSrc).toContain("OFFICIAL_VERIFIED_LEDGER_2026");
+    expect(picksSrc).toContain("verifiedLedger");
     expect(picksSrc).not.toMatch(/\b\d{2}-\d{1,2}-\d\b/);
-    // The all-in view is a labelled secondary, never the headline.
-    expect(picksSrc.toLowerCase()).toContain("all-in");
   });
 
-  it("routes customers to the paid product and the props watchlist", () => {
+  it("routes customers to /packages, /props, /record, and /board", () => {
     expect(picksSrc).toMatch(/href="\/packages"/);
     expect(picksSrc).toMatch(/href="\/props"/);
+    expect(picksSrc).toMatch(/href="\/record"/);
+    expect(picksSrc).toMatch(/href="\/board"/);
   });
 
   it("carries none of the retired teaser model's machinery (the model moved with the page)", () => {

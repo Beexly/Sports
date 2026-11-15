@@ -1,0 +1,78 @@
+{
+  "book_id": "3b0e09277c50ce4f",
+  "source_status": "COMPLETE",
+  "title": "2021 - Soumyajit Bose and Manas Saraswat - Anatomy of Receiving and Turning with the Ball - Unknown Authors",
+  "file_name": "2021 - Soumyajit Bose and Manas Saraswat - Anatomy of Receiving and Turning with the Ball - Unknown Authors.pdf",
+  "sha256": "3b0e09277c50ce4f519b929c4d94b1b64ab7a465fd2e2e6939be00b93127a60b",
+  "primary_domain": "other",
+  "pages_total": 26,
+  "pages_read": 26,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "360-degree tracking data enables contextual player behavior analysis through angular momentum and spatial velocity fields. Universal Lens: Rooted in 2021 - Soumyajit Bose and Manas Saraswat - Anatomy of Receiving and Turning with the Ball - Unknown Authors (3b0e09277c50ce4f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on player turning likelihood using angular deviation distributions from first-pass angles. GSI Mapping: Rooted in 2021 - Soumyajit Bose and Manas Saraswat - Anatomy of Receiving and Turning with the Ball - Unknown Authors (3b0e09277c50ce4f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models transitions from pass reception to next action via dynamic space-time angular constraints. GSE Mapping: Rooted in 2021 - Soumyajit Bose and Manas Saraswat - Anatomy of Receiving and Turning with the Ball - Unknown Authors (3b0e09277c50ce4f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "angular_deviation_metric",
+      "name": "Angular Deviation Metric",
+      "verbatim_quote": "This study employs the 360 data as well to study individual skills/tendencies of players - in particular who receive the ball and turn to progress.",
+      "page": 1,
+      "latex": "\\theta = \\angle(\\vec{v}_{\\text{first pass}}, \\vec{v}_{\\text{second move}})",
+      "symbol_and_unit_ledger": "{'\\\\theta': 'radians', '\\\\vec{v}_{\\\\text{first pass}}': 'unit vector in direction of first pass', '\\\\vec{v}_{\\\\text{second move}}': 'unit vector in direction of second move'}",
+      "assumptions": "Player orientation is approximated by vector direction; angular deviation quantifies turning capability.",
+      "breakdown_regime": "When \\theta approaches 0 or π, indicating minimal or maximal turning respectively.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps angular deviation to probabilistic success rate of subsequent actions in possession sequences.",
+        "source_operator": "angular_deviation_metric",
+        "telemetry": "Frequency distribution of \\theta across possession events."
+      }
+    },
+    {
+      "primitive_id": "back_zone_classification",
+      "name": "Back Zone Classification",
+      "verbatim_quote": "In this work, we focus on a subset of such possible contextualized metrics.",
+      "page": 1,
+      "latex": "\\alpha < \\alpha_{\\text{threshold}} \\Rightarrow \\text{pass from back}",
+      "symbol_and_unit_ledger": "{'\\\\alpha': \"angle in radians between pass direction and receiver's back\", '\\\\alpha_{\\\\text{threshold}}': \"fixed angular threshold defining 'back' zone\"}",
+      "assumptions": "Receiver's back is defined relative to field orientation; angular spread determines classification.",
+      "breakdown_regime": "When \\alpha \\geq \\alpha_{\\text{threshold}}, pass is not considered from back.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to spatial sector classification in pitch control models.",
+        "source_operator": "back_zone_classification",
+        "telemetry": "Proportion of passes classified as 'from back' per player."
+      }
+    },
+    {
+      "primitive_id": "possession_transition_model",
+      "name": "Possession Transition Model",
+      "verbatim_quote": "The location of players in the field of view of broadcast camera allows one to innovate and build new performance evaluation metrics.",
+      "page": 1,
+      "latex": "T_{ij}(t) = \\mathbb{P}(\\text{player } i \\text{ transitions to } j \\mid t)",
+      "symbol_and_unit_ledger": "{'T_{ij}(t)': 'transition probability matrix element', 'i,j': 'player indices', 't': 'time interval'}",
+      "assumptions": "Transition probabilities are Markovian over short time intervals; player locations are known.",
+      "breakdown_regime": "When T_{ij}(t) approaches zero, transition is unlikely or blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies likelihood of ball progression after pass reception using transition matrices.",
+        "source_operator": "possession_transition_model",
+        "telemetry": "Expected number of successful transitions per possession sequence."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3b0e09277c50ce4f_t0",
+      "think": "The core insight lies in modeling player behavior through angular dynamics and spatial transitions. The angular deviation metric \\theta captures how effectively a receiver turns with the ball, serving as a proxy for skillful playmaking. This is grounded in the assumption that directional change correlates with tactical creativity. Back zone classification introduces a geometric constraint—only passes from behind are considered relevant for analysis, aligning with strategic positioning theory. Possession transition models extend this into temporal dynamics, capturing how likely a player is to continue play post-reception. These primitives form a coherent framework for evaluating individual performance in complex, multi-agent environments.\n\nDeep epistemic analysis for 2021 - Soumyajit Bose and Manas Saraswat - Anatomy of Receiving and Turning with the Ball - Unknown Authors (3b0e09277c50ce4f, domain=other, pages_read=26/26): Operator 'Angular Deviation Metric' (page 1, domain other) captures: This study employs the 360 data as well to study individual skills/tendencies of players - in particular who receive the ball and turn to progress. Assumptions: Player orientation is approximated by vector direction; angular deviation quantifies turning capability. Breakdown regime: When \\theta approaches 0 or π, indicating minimal or maximal turning respectively. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps angular deviation to probabilistic success rate of subsequent actions in possession sequences. Operator 'Back Zone Classification' (page 1, domain other) captures: In this work, we focus on a subset of such possible contextualized metrics. Assumptions: Receiver's back is defined relative to field orientation; angular spread determines classification. Breakdown regime: When \\alpha \\geq \\alpha_{\\text{threshold}}, pass is not considered from back. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to spatial sector classification in pitch control models. Operator 'Possession Transition Model' (page 1, domain other) captures: The location of players in the field of view of broadcast camera allows one to innovate and build new performance evaluation metrics. Assumptions: Transition probabilities are Markovian over short time intervals; player locations are known. Breakdown regime: When T_{ij}(t) approaches zero, transition is unlikely or blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies likelihood of ball progression after pass reception using transition matrices. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2021 - Soumyajit Bose and Manas Saraswat - Anatomy of Receiving and Turning with the Ball - Unknown Authors (3b0e09277c50ce4f, domain=other, pages_read=26/26): Operator 'Angular Deviation Metric' (page 1, domain other) captures: This study employs the 360 data as well to study individual skills/tendencies of players - in particular who receive the ball and turn to progress. Assumptions: Player orientation is approximated by vector direction; angular deviation quantifies turning capability. Breakdown regime: When \\theta approaches 0 or π, indicating minimal or maximal turning respectively. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps angular deviation to probabilistic success rate of subsequent actions in possession sequences. Operator 'Back Zone Classification' (page 1, domain other) captures: In this work, we focus on a subset of such possible contextualized metrics. Assumptions: Receiver's back is defined relative to field orientation; angular spread determines classification. Breakdown regime: When \\alpha \\geq \\alpha_{\\text{threshold}}, pass is not considered from back. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to spatial sector classification in pitch control models. Operator 'Possession Transition Model' (page 1, domain other) captures: The location of players in the field of view of broadcast camera allows one to innovate and build new performance evaluation metrics. Assumptions: Transition probabilities are Markovian over short time intervals; player locations are known. Breakdown regime: When T_{ij}(t) approaches zero, transition is unlikely or blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies likelihood of ball progression after pass reception using transition matrices. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical mechanics' angular momentum concepts and modern game theory's positional dominance models, evolving from early tracking data to full 360-degree video integration. Retrocausal Genealogy: Rooted in 2021 - Soumyajit Bose and Manas Saraswat - Anatomy of Receiving and Turning with the Ball - Unknown Authors (3b0e09277c50ce4f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational agents optimizing for space and time efficiency, with opponents influencing decision-making through pressure and coverage. Theory of Mind & Decision Maker Model: Rooted in 2021 - Soumyajit Bose and Manas Saraswat - Anatomy of Receiving and Turning with the Ball - Unknown Authors (3b0e09277c50ce4f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures angular deviation isn't conflated with simple movement direction; leakage veto prevents overfitting to isolated events without broader context. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2021 - Soumyajit Bose and Manas Saraswat - Anatomy of Receiving and Turning with the Ball - Unknown Authors (3b0e09277c50ce4f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

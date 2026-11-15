@@ -1,0 +1,78 @@
+{
+  "book_id": "4c936df1555ded24",
+  "source_status": "COMPLETE",
+  "title": "2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al",
+  "file_name": "2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al.md",
+  "sha256": "4c936df1555ded24e53645f5fa1284ff6c900d271755363defc3a8d7e622e421",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Vision transformers fine-tuned on labeled football tackle clips with focal loss and Taguchi augmentation yield probabilistic risk recall and F1 scores. Universal Lens: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (4c936df1555ded24), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian risk classification using ViViT with focal loss enables conformal prediction of tackle safety, integrating SATT-3 rubric labels into posterior belief states. GSI Mapping: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (4c936df1555ded24), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models tackle risk transitions via state-space evolution of ViViT features under augmented video inputs, tracking recall and F1 degradation. GSE Mapping: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (4c936df1555ded24), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "vivit_risk_classifier",
+      "name": "Video Vision Transformer Risk Classifier",
+      "verbatim_quote": "The original work fine-tuned a Video Vision Transformer (ViViT) on 733 clips labeled with the SATT-3 rubric.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{\\\\text{risk}}': 'dimensionless recall score for risky tackles', 'F_{1}': 'dimensionless F1 score for risky class', 'N_{\\\\text{clips}}': 'count of labeled video clips, 733'}",
+      "assumptions": "Labeled data follows SATT-3 rubric; ViViT architecture captures spatiotemporal features; focal loss mitigates class imbalance.",
+      "breakdown_regime": "Recall drops below 0.545 without augmentation, indicating model sensitivity to input variability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ViViT feature space maps to GSI's Bayesian risk belief state over tackle outcomes.",
+        "source_operator": "vivit_risk_classifier",
+        "telemetry": "Fold-mean risky recall (0.667) and F1 (0.588) align with reported values."
+      }
+    },
+    {
+      "primitive_id": "taguchi_augmentation",
+      "name": "Taguchi L18 Data Augmentation Scheme",
+      "verbatim_quote": "It used focal loss, Taguchi L18 augmentation, and 5-fold cross-validation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{\\\\text{aug}}': 'augmentation scheme index, L18 design', 'R_{\\\\text{recall}}^{\\\\text{main}}': 'main-effect range of recall metric'}",
+      "assumptions": "Augmentation factors are independent; Taguchi design ensures balanced sampling of hyperparameters.",
+      "breakdown_regime": "Brightness decrease dominates augmentation effect with main-effect range 0.055.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Taguchi kernel defines GSE transition probabilities across augmented input domains.",
+        "source_operator": "taguchi_augmentation",
+        "telemetry": "Brightness variation yields largest recall variance compared to rotation, flip, and noise."
+      }
+    },
+    {
+      "primitive_id": "focal_loss_optimization",
+      "name": "Focal Loss Optimization Function",
+      "verbatim_quote": "It used focal loss, Taguchi L18 augmentation, and 5-fold cross-validation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{\\\\text{focal}}': 'focal loss function value', '\\\\alpha': 'modulating factor for rare class weighting', '\\\\gamma': 'focusing parameter for hard example mining'}",
+      "assumptions": "Class imbalance exists in tackle labeling; focal loss prioritizes hard negatives during training.",
+      "breakdown_regime": "Without focal loss, recall degrades to 0.545, underperforming baseline C3D at 0.583.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Focal loss objective maps to GSI's uncertainty quantification in risk classification.",
+        "source_operator": "focal_loss_optimization",
+        "telemetry": "Focal loss improves robustness of ViViT against imbalanced SATT-3 labels."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4c936df1555ded24_t0",
+      "think": "The core operator 'vivit_risk_classifier' operates by mapping 3D video clips into a learned latent space where spatial-temporal features are aggregated through attention mechanisms. The classifier's performance hinges on the quality and distribution of the SATT-3 labeled dataset, which is inherently imbalanced. Focal loss is applied to mitigate the impact of easy examples and focus learning on hard negatives, thereby improving recall and F1 scores. Taguchi L18 augmentation introduces controlled variability in brightness, rotation, and flipping to enhance generalization. The ablation study reveals that brightness variation has the most significant influence on recall, suggesting that visual contrast plays a critical role in detecting risky tackles. The 5-fold cross-validation ensures stable estimates of performance metrics. The derived kernel from Taguchi augmentation defines a probabilistic transformation of input data, enabling GSE to reason about risk transitions under varying environmental conditions.\n\nDeep epistemic analysis for 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (4c936df1555ded24, domain=other, pages_read=10/10): Operator 'Video Vision Transformer Risk Classifier' (page 1, domain other) captures: The original work fine-tuned a Video Vision Transformer (ViViT) on 733 clips labeled with the SATT-3 rubric. Assumptions: Labeled data follows SATT-3 rubric; ViViT architecture captures spatiotemporal features; focal loss mitigates class imbalance. Breakdown regime: Recall drops below 0.545 without augmentation, indicating model sensitivity to input variability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ViViT feature space maps to GSI's Bayesian risk belief state over tackle outcomes. Operator 'Taguchi L18 Data Augmentation Scheme' (page 1, domain other) captures: It used focal loss, Taguchi L18 augmentation, and 5-fold cross-validation. Assumptions: Augmentation factors are independent; Taguchi design ensures balanced sampling of hyperparameters. Breakdown regime: Brightness decrease dominates augmentation effect with main-effect range 0.055. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Taguchi kernel defines GSE transition probabilities across augmented input domains. Operator 'Focal Loss Optimization Function' (page 1, domain other) captures: It used focal loss, Taguchi L18 augmentation, and 5-fold cross-validation. Assumptions: Class imbalance exists in tackle labeling; focal loss prioritizes hard negatives during training. Breakdown regime: Without focal loss, recall degrades to 0.545, underperforming baseline C3D at 0.583. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Focal loss objective maps to GSI's uncertainty quantification in risk classification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (4c936df1555ded24, domain=other, pages_read=10/10): Operator 'Video Vision Transformer Risk Classifier' (page 1, domain other) captures: The original work fine-tuned a Video Vision Transformer (ViViT) on 733 clips labeled with the SATT-3 rubric. Assumptions: Labeled data follows SATT-3 rubric; ViViT architecture captures spatiotemporal features; focal loss mitigates class imbalance. Breakdown regime: Recall drops below 0.545 without augmentation, indicating model sensitivity to input variability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): ViViT feature space maps to GSI's Bayesian risk belief state over tackle outcomes. Operator 'Taguchi L18 Data Augmentation Scheme' (page 1, domain other) captures: It used focal loss, Taguchi L18 augmentation, and 5-fold cross-validation. Assumptions: Augmentation factors are independent; Taguchi design ensures balanced sampling of hyperparameters. Breakdown regime: Brightness decrease dominates augmentation effect with main-effect range 0.055. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Taguchi kernel defines GSE transition probabilities across augmented input domains. Operator 'Focal Loss Optimization Function' (page 1, domain other) captures: It used focal loss, Taguchi L18 augmentation, and 5-fold cross-validation. Assumptions: Class imbalance exists in tackle labeling; focal loss prioritizes hard negatives during training. Breakdown regime: Without focal loss, recall degrades to 0.545, underperforming baseline C3D at 0.583. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Focal loss objective maps to GSI's uncertainty quantification in risk classification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in transformer architectures for vision and temporal sequence modeling, this approach builds upon prior work in action recognition and sports analytics, extending earlier studies on injury prediction through video analysis. Retrocausal Genealogy: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (4c936df1555ded24), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the coach seeking to prevent injury and the athlete learning proper form. The system models these dynamics through risk classification, where misclassification leads to either false reassurance or unnecessary caution. Theory of Mind & Decision Maker Model: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (4c936df1555ded24), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring each augmentation factor contributes independently to the model's robustness. Leakage is prevented by keeping raw clip data private due to IRB constraints, enforcing a controlled data review pathway. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (4c936df1555ded24), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

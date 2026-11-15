@@ -1,0 +1,78 @@
+{
+  "book_id": "6669e149e1a3352c",
+  "source_status": "COMPLETE",
+  "title": "cameron-eth-sleeper-sdk",
+  "file_name": "cameron-eth-sleeper-sdk.md",
+  "sha256": "6669e149e1a3352c9792fd5751bb938400ead4db0ad212ccce4d1492dfe6eaba",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The SDK formalizes a tripartite operator stack over raw state vectors: a valuation kernel mapping roster elements to abstract worth, a production projector measuring realized point differentials, and a decision functor optimizing transitions. This unifies discrete asset allocation with continuous performance signals under a single algebraic framework.",
+  "gsi_mapping": "GSI maps the KTC value system to a Bayesian posterior over player true talent, updated via conformal inference on weekly fantasy points. The 'production signal' acts as a calibration layer, ensuring predicted value distributions align with empirical scoring quantiles across league-specific priors.",
+  "gse_mapping": "GSE treats the GM mode archetypes as macroscopic states in a Markovian transition matrix. The decision layer computes optimal control policies by evaluating expected value gradients across trade proposals, dynamically adjusting for opponent roster constraints and draft capital depreciation.",
+  "primitives": [
+    {
+      "primitive_id": "ktc_valuation_kernel",
+      "name": "KTC Value Adjustment Operator",
+      "verbatim_quote": "**A value system** — how much is each player / pick actually worth?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "V: Abstract asset value (dimensionless KTC units); A: Asset concentration weight (dimensionless ratio)",
+      "assumptions": "Player value is non-linearly dependent on scarcity and draft capital; filler players provide linear baseline utility.",
+      "breakdown_regime": "Singularities occur when market liquidity approaches zero or when proprietary adjustment formulas fail to capture extreme outlier stud factors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's dynamic pricing engine, mapping discrete roster spots to continuous economic value surfaces.",
+        "source_operator": "ktc_valuation_kernel",
+        "telemetry": "Deviation between proposed trade KTC and accepted trade KTC."
+      }
+    },
+    {
+      "primitive_id": "production_projector",
+      "name": "Realized Production Signal",
+      "verbatim_quote": "**A production signal** — is that value backed by real points on the board?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P: Realized fantasy points (dimensionless score); V_hat: Predicted value (KTC units)",
+      "assumptions": "Realized points are an unbiased estimator of underlying talent modulo variance and injury noise.",
+      "breakdown_regime": "Breaks down during early-season cold streaks or catastrophic injuries where sample size N is insufficient for convergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a residual kernel P - f(V) used by GSE to identify undervalued assets in the marketplace.",
+        "source_operator": "production_projector",
+        "telemetry": "Weekly FPTS vs projected FPTS correlation coefficient."
+      }
+    },
+    {
+      "primitive_id": "gm_state_classifier",
+      "name": "Archetype State Classifier",
+      "verbatim_quote": "python -m sleeper.cli league-values camfleety # Classify my team: contender, reloading, rebuilding, or pretender?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: Team state vector (Contender/Rebuilding/etc.); R_v: Value rank (ordinal); R_p: Production rank (ordinal)",
+      "assumptions": "Team trajectory is deterministically bounded by the intersection of current asset value and historical production age curves.",
+      "breakdown_regime": "Fails to classify teams undergoing rapid regime shifts (e.g., sudden blockbuster trades) before the next evaluation cycle.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE situational reasoning nodes, defining the boundary conditions for allowable trade heuristics.",
+        "source_operator": "gm_state_classifier",
+        "telemetry": "Classification accuracy against end-of-season playoff outcomes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6669e149e1a3352c_t0",
+      "think": "The mathematical architecture of the Sleeper SDK rests on decomposing the complex, high-dimensional state space of a dynasty fantasy football league into three orthogonal operators. First, the Valuation Kernel ($\\mathcal{V}$) projects discrete roster elements onto a continuous scalar field of abstract worth (KTC). This operator inherently assumes a non-linear utility function where marginal gains from elite assets ('studs') vastly outstrip linear combinations of mid-tier assets, necessitating an 'asset concentration weighting' to prevent arbitrage in lopsided trades. Second, the Production Projector ($\\mathcal{P}$) acts as a stochastic filter, measuring the realized output (fantasy points) against the theoretical potential defined by $\\mathcal{V}$. The divergence between these two forms a residual vector that identifies market inefficiencies—players whose production exceeds their assigned value. Third, the Decision Functor ($\\mathcal{D}$) consumes these residuals alongside the Archetype State Classifier to propose optimal state transitions. The classifier partitions the league's phase space into distinct basins of attraction (Contender, Rebuilder, Pretender) based on multi-variate inputs like roster age and youth-weighted value. The 'Pretender' trap represents a local maximum where mid-tier value is locked in aging assets, yielding suboptimal production. The CLI serves as the execution interface, translating these abstract mathematical operations into concrete API calls for trade proposal and acceptance, thereby closing the loop between theoretical valuation and empirical action.\n\nDeep epistemic analysis for cameron-eth-sleeper-sdk (6669e149e1a3352c, domain=other, pages_read=9/9): Operator 'KTC Value Adjustment Operator' (page 1, domain other) captures: **A value system** — how much is each player / pick actually worth? Assumptions: Player value is non-linearly dependent on scarcity and draft capital; filler players provide linear baseline utility. Breakdown regime: Singularities occur when market liquidity approaches zero or when proprietary adjustment formulas fail to capture extreme outlier stud factors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's dynamic pricing engine, mapping discrete roster spots to continuous economic value surfaces. Operator 'Realized Production Signal' (page 1, domain other) captures: **A production signal** — is that value backed by real points on the board? Assumptions: Realized points are an unbiased estimator of underlying talent modulo variance and injury noise. Breakdown regime: Breaks down during early-season cold streaks or catastrophic injuries where sample size N is insufficient for convergence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives a residual kernel P - f(V) used by GSE to identify undervalued assets in the marketplace. Operator 'Archetype State Classifier' (page 1, domain other) captures: python -m sleeper.cli league-values camfleety # Classify my team: contender, reloading, rebuilding, or pretender? Assumptions: Team trajectory is deterministically bounded by the intersection of current asset value and historical production age curves. Breakdown regime: Fails to classify teams undergoing rapid regime shifts (e.g., sudden blockbuster trades) before the next evaluation cycle. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE situational reasoning nodes, defining the boundary conditions for allowable trade heuristics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for cameron-eth-sleeper-sdk (6669e149e1a3352c, domain=other, pages_read=9/9): Operator 'KTC Value Adjustment Operator' (page 1, domain other) captures: **A value system** — how much is each player / pick actually worth? Assumptions: Player value is non-linearly dependent on scarcity and draft capital; filler players provide linear baseline utility. Breakdown regime: Singularities occur when market liquidity approaches zero or when proprietary adjustment formulas fail to capture extreme outlier stud factors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's dynamic pricing engine, mapping discrete roster spots to continuous economic value surfaces. Operator 'Realized Production Signal' (page 1, domain other) captures: **A production signal** — is that value backed by real points on the board? Assumptions: Realized points are an unbiased estimator of underlying talent modulo variance and injury noise. Breakdown regime: Breaks down during early-season cold streaks or catastrophic injuries where sample size N is insufficient for convergence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives a residual kernel P - f(V) used by GSE to identify undervalued assets in the marketplace. Operator 'Archetype State Classifier' (page 1, domain other) captures: python -m sleeper.cli league-values camfleety # Classify my team: contender, reloading, rebuilding, or pretender? Assumptions: Team trajectory is deterministically bounded by the intersection of current asset value and historical production age curves. Breakdown regime: Fails to classify teams undergoing rapid regime shifts (e.g., sudden blockbuster trades) before the next evaluation cycle. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE situational reasoning nodes, defining the boundary conditions for allowable trade heuristics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This framework inherits deeply from portfolio optimization theory (Markowitz) and dynamic asset pricing models. The KTC system mirrors the Black-Scholes approach to valuing options, treating draft picks as deferred consumption rights. The archetype classification echoes regime-switching models in quantitative finance, where macroeconomic states dictate optimal asset allocation strategies. The emphasis on 'youth-weighted value' parallels biological aging models applied to human capital depreciation.",
+      "theory_of_mind": "The SDK implicitly models opposing agents as bounded rational actors who may misprice assets due to emotional attachment or cognitive biases (e.g., recency bias in production signals). By rigorously separating objective value ($\\mathcal{V}$) from realized performance ($\\mathcal{P}$), the system exploits these psychological gaps. The 'GM Mode' anticipates the strategic posture of opponents—if a rival is classified as a 'Rebuilder,' the decision layer knows they will likely accept short-term production hits for long-term draft capital, altering the optimal trade proposal geometry.",
+      "cross_layer_veto": "A critical veto condition arises when the Valuation Kernel and Production Projector become highly collinear, indicating a perfectly efficient market where no arbitrage exists. In such regimes, the Decision Functor must halt to prevent overfitting to noise. Furthermore, if the Archetype Classifier detects a 'Pretender' state but the Production Projector shows sudden, unsustainable spikes (variance luck), the system must veto aggressive rebuild trades, recognizing that the underlying value has not fundamentally shifted despite temporary production anomalies."
+    }
+  ]
+}

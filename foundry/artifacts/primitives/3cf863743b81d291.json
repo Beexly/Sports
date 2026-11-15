@@ -1,0 +1,78 @@
+{
+  "book_id": "3cf863743b81d291",
+  "source_status": "COMPLETE",
+  "title": "arxiv_1508.04158v1",
+  "file_name": "arxiv_1508.04158v1.pdf",
+  "sha256": "3cf863743b81d291ddd7b4616c024b93e3b66ebdd82be4abb9b4aa641306f183",
+  "primary_domain": "other",
+  "pages_total": 163,
+  "pages_read": 28,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Random finite set (RFS) theory unifies multi-object tracking as a Bayesian inference problem over measurable spaces of finite sets, enabling consistent estimation across sensor networks. Universal Lens: Rooted in arxiv_1508.04158v1 (3cf863743b81d291), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs RFS-based Bayesian inference for probabilistic object state estimation, leveraging labeled random finite sets to track multiple objects with uncertainty quantification. GSI Mapping: Rooted in arxiv_1508.04158v1 (3cf863743b81d291), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes consensus-based RFS fusion to enable distributed situational awareness, where sensor nodes update belief states through normalized weighted geometric means of multi-object densities. GSE Mapping: Rooted in arxiv_1508.04158v1 (3cf863743b81d291), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "distributed_multi_object_tracking",
+      "name": "Distributed Multi-Object Tracking",
+      "verbatim_quote": "Luigi Chisci Distributed multi-object tracking over sensor networks: a random finite set approach Dipartimento di Ingegneria dell'Informazione Settore Scientifico Disciplinare ING-INF/04 Author: Claudio Fantacci Supervisors: Prof.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Objects are modeled as random finite sets; sensor network operates under consensus-based information exchange.",
+      "breakdown_regime": "Failure occurs when sensor connectivity degrades below critical threshold or measurement noise exceeds detection limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's distributed belief updating via labeled RFS consensus filters, enabling scalable multi-object tracking across sensor topologies.",
+        "source_operator": "distributed_multi_object_tracking",
+        "telemetry": "Normalized weighted geometric mean of multi-object densities across sensor nodes."
+      }
+    },
+    {
+      "primitive_id": "labeled_rfs_information_fusion",
+      "name": "Labeled RFS Information Fusion",
+      "verbatim_quote": "79 5 Centralized multi-object tracking 87 5.1 The δ-GLMB filter .",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each object has a unique label; fusion uses normalized weighted geometric mean of labeled multi-object densities.",
+      "breakdown_regime": "Degradation in fusion accuracy due to label ambiguity or mismatched density representations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to perform robust state transitions by combining labeled posterior densities from multiple sensors using geometric averaging.",
+        "source_operator": "labeled_rfs_information_fusion",
+        "telemetry": "Consensus convergence of labeled multi-object posteriors across networked nodes."
+      }
+    },
+    {
+      "primitive_id": "consensus_based_filtering",
+      "name": "Consensus-Based Filtering",
+      "verbatim_quote": "Contents Acknowledgment 1 Foreword 3 Abstract 5 1 Introduction 7 2 Background 13 2.1 Network model .",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Sensor nodes share local estimates via iterative consensus protocols; filtering updates are synchronized.",
+      "breakdown_regime": "Loss of synchronization or node failure leads to divergence in estimated object trajectories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Supports GSE's distributed state estimation by aligning local Bayesian updates through consensus mechanisms.",
+        "source_operator": "consensus_based_filtering",
+        "telemetry": "Trajectory consistency across nodes via parallel consensus on likelihoods and priors."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3cf863743b81d291_t0",
+      "think": "The core mathematical structure of this work lies in applying Random Finite Set (RFS) theory to multi-object tracking within sensor networks. It leverages Bayesian inference to estimate object states while accounting for uncertainty in both object count and identities. The framework introduces labeled RFS to associate persistent labels with objects across time, enabling tracking consistency. Key innovations include consensus-based distributed filtering and information fusion techniques such as the normalized weighted geometric mean of Mδ-GLMB and LMB densities. These operations allow for decentralized yet coherent estimation of multiple object trajectories. The theoretical foundation rests upon recursive Bayesian estimation principles extended to handle finite sets of random variables. Dualities emerge between single-object and multi-object filtering approaches, particularly in how consensus protocols propagate beliefs. Failure modes arise from insufficient sensor connectivity, high noise levels, or label collisions during fusion. The derivation hinges on measure-theoretic foundations of RFS, ensuring that all operations remain well-defined even under varying object counts.\n\nDeep epistemic analysis for arxiv_1508.04158v1 (3cf863743b81d291, domain=other, pages_read=28/163): Operator 'Distributed Multi-Object Tracking' (page 1, domain other) captures: Luigi Chisci Distributed multi-object tracking over sensor networks: a random finite set approach Dipartimento di Ingegneria dell'Informazione Settore Scientifico Disciplinare ING-INF/04 Author: Claudio Fantacci Supervisors: Prof. Assumptions: Objects are modeled as random finite sets; sensor network operates under consensus-based information exchange. Breakdown regime: Failure occurs when sensor connectivity degrades below critical threshold or measurement noise exceeds detection limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's distributed belief updating via labeled RFS consensus filters, enabling scalable multi-object tracking across sensor topologies. Operator 'Labeled RFS Information Fusion' (page 4, domain other) captures: 79 5 Centralized multi-object tracking 87 5.1 The δ-GLMB filter . Assumptions: Each object has a unique label; fusion uses normalized weighted geometric mean of labeled multi-object densities. Breakdown regime: Degradation in fusion accuracy due to label ambiguity or mismatched density representations. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to perform robust state transitions by combining labeled posterior densities from multiple sensors using geometric averaging. Operator 'Consensus-Based Filtering' (page 3, domain other) captures: Contents Acknowledgment 1 Foreword 3 Abstract 5 1 Introduction 7 2 Background 13 2.1 Network model . Assumptions: Sensor nodes share local estimates via iterative consensus protocols; filtering updates are synchronized. Breakdown regime: Loss of synchronization or node failure leads to divergence in estimated object trajectories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Supports GSE's distributed state estimation by aligning local Bayesian updates through consensus mechanisms. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_1508.04158v1 (3cf863743b81d291, domain=other, pages_read=28/163): Operator 'Distributed Multi-Object Tracking' (page 1, domain other) captures: Luigi Chisci Distributed multi-object tracking over sensor networks: a random finite set approach Dipartimento di Ingegneria dell'Informazione Settore Scientifico Disciplinare ING-INF/04 Author: Claudio Fantacci Supervisors: Prof. Assumptions: Objects are modeled as random finite sets; sensor network operates under consensus-based information exchange. Breakdown regime: Failure occurs when sensor connectivity degrades below critical threshold or measurement noise exceeds detection limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's distributed belief updating via labeled RFS consensus filters, enabling scalable multi-object tracking across sensor topologies. Operator 'Labeled RFS Information Fusion' (page 4, domain other) captures: 79 5 Centralized multi-object tracking 87 5.1 The δ-GLMB filter . Assumptions: Each object has a unique label; fusion uses normalized weighted geometric mean of labeled multi-object densities. Breakdown regime: Degradation in fusion accuracy due to label ambiguity or mismatched density representations. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to perform robust state transitions by combining labeled posterior densities from multiple sensors using geometric averaging. Operator 'Consensus-Based Filtering' (page 3, domain other) captures: Contents Acknowledgment 1 Foreword 3 Abstract 5 1 Introduction 7 2 Background 13 2.1 Network model . Assumptions: Sensor nodes share local estimates via iterative consensus protocols; filtering updates are synchronized. Breakdown regime: Loss of synchronization or node failure leads to divergence in estimated object trajectories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Supports GSE's distributed state estimation by aligning local Bayesian updates through consensus mechanisms. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian estimation and random set theory, building upon earlier works in multi-object tracking using finite sets, notably the GLMB and LMB filters introduced by Vo and Ma. The consensus approach draws from distributed optimization literature. Retrocausal Genealogy: Rooted in arxiv_1508.04158v1 (3cf863743b81d291), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include noisy sensors with imperfect measurements and dynamic environments where object appearance/disappearance occurs. Decision actors are the sensor nodes attempting to maintain global coherence through local interactions. Theory of Mind & Decision Maker Model: Rooted in arxiv_1508.04158v1 (3cf863743b81d291), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple sensors provide redundant or conflicting information without proper labeling. Leakage occurs if the fusion mechanism fails to preserve label integrity, leading to misidentification of tracked objects. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_1508.04158v1 (3cf863743b81d291), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

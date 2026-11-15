@@ -1,0 +1,509 @@
+{
+  "book_id": "181310dec4740603",
+  "shard": "1",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_CV_RECONSTRUCTED_LATEX",
+  "source_note": "'Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System', MIT Sloan Sports Analytics Conference 2018 Research Paper Competition, Paper Track Other Sports, ID #5571 (9 pages). Full paper with a Hough-line field-rectification + jersey-color detection pipeline, CART formation/QB classification (printed accuracy tables), formation-to-play-by-play tendency mining, and 5-fps Euclidean player tracking with yard calibration and speed conversion; extracted faithfully (not a derivative summary). The Euclidean-distance and speed-conversion formulas are shifted-font (garbled glyphs) and reconstructed as labeled LaTeX; the source's speed example uses 5480 feet/mile (a typo for 5280) and the authors acknowledge the speed overestimate (relative-only comparison), both flagged. Outputs are formation labels, tendencies, and tracking-derived athletic measures from public broadcast film; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "film_tagging_tedious",
+      "name": "Film tagging is tedious, error-prone, time-consuming",
+      "verbatim_quote": "NFL coaches spend countless hours tagging and mining game film, searching for tendencies and patterns to exploit in upcoming matchups",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "NFL coaches spend countless hours tagging and mining game film for tendencies; tagging formations, personnel, and routes is tedious and error-prone, and competitive scouting of every team weekly is extremely time-consuming."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Manual film tagging as a bottleneck is the same labor cost GSE automates with computer-vision classification.",
+        "source_operator": "film_tagging_tedious",
+        "telemetry": "coaches: hours tagging film"
+      }
+    },
+    {
+      "primitive_id": "up_to_six_routes",
+      "name": "Up to 6 designed routes per play",
+      "verbatim_quote": "Depending on the play, there can be up to 6 designed routes to account for, generating a wealth of data for each play",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Depending on the play there can be up to 6 designed routes to account for, generating a wealth of per-play data that motivates automated route tracking."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A multi-route play structure is the same per-play complexity GSE's tracking layer must resolve.",
+        "source_operator": "up_to_six_routes",
+        "telemetry": "up to 6 designed routes/play"
+      }
+    },
+    {
+      "primitive_id": "ngs_own_team_only",
+      "name": "Next Gen Stats only covers a team's own players",
+      "verbatim_quote": "Currently, NFL teams can only access the Next Gen Stats player tracking data for their own team, but can’t access competitive team data",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "NFL teams can only access Next Gen Stats tracking for their own team, not competitors, motivating a broadcast-film algorithm that captures tracking for all teams."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A proprietary tracking gap for opponents is the same data-access asymmetry GSE closes with public-film computer vision.",
+        "source_operator": "ngs_own_team_only",
+        "telemetry": "NGS: own team only, not opponents"
+      }
+    },
+    {
+      "primitive_id": "redskins_5fps_dataset",
+      "name": "Manual dataset: Redskins home games at 5 fps",
+      "verbatim_quote": "We chose the Washington Redskins home games as a test case, and captured screenshots at a rate of 5 frames per second",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Without labeled NFL film, a manual dataset was built from Washington Redskins home games, capturing screenshots at 5 frames per second."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A manually labeled broadcast-film corpus at a fixed frame rate is the same training substrate GSE uses for vision models.",
+        "source_operator": "redskins_5fps_dataset",
+        "telemetry": "Redskins home games, 5 fps screenshots"
+      }
+    },
+    {
+      "primitive_id": "hough_line_rectification",
+      "name": "Hough Lines locate field lines for image rectification",
+      "verbatim_quote": "We tried a number of approaches here but ultimately decided on using the Hough Lines computer vision technique",
+      "page": 2,
+      "latex": "\\theta_{\\text{rot}}=\\arccos(x)\\ \\text{from line of scrimmage and its perpendicular}",
+      "symbol_and_unit_ledger": {
+        "theta_rot": "camera rotation relative to field"
+      },
+      "assumptions": [
+        "Because film is shot at different angles, field lines are located and the image rotated to perpendicular using Hough Lines, with heuristics keeping only full-field white lines; camera rotation is computed via arccos(x) from the line of scrimmage and its perpendicular, and extraneous parts (NFL logo) are removed."
+      ],
+      "breakdown_regime": "arccos rotation stated in prose; Hough Lines named",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Field-line rectification to a canonical view is the same geometric normalization GSE applies before tracking players across camera angles.",
+        "source_operator": "hough_line_rectification",
+        "telemetry": "Hough Lines + arccos rotation to perpendicular"
+      }
+    },
+    {
+      "primitive_id": "jersey_color_player_detection",
+      "name": "Detect offensive players by line of scrimmage + jersey color",
+      "verbatim_quote": "Offensive players are identified algorithmically through a series of steps involving identifying the line of scrimmage and color analysis based on jersey color",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Offensive players are identified via the line of scrimmage and jersey-color analysis (burgundy for Washington), with tweaks for closely clustered offensive linemen."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Color-plus-geometry player detection is the same segmentation heuristic GSE uses when RFID tracking is unavailable.",
+        "source_operator": "jersey_color_player_detection",
+        "telemetry": "LOS + jersey color (burgundy) detection"
+      }
+    },
+    {
+      "primitive_id": "coords_relative_to_qb",
+      "name": "Pre-snap X/Y coordinates recorded relative to the QB",
+      "verbatim_quote": "The X and Y player coordinates are recorded pre-snap in relation to the quarterback",
+      "page": 3,
+      "latex": "(x_i,y_i)_{\\text{pre-snap}}\\ \\text{relative to QB origin}",
+      "symbol_and_unit_ledger": {
+        "x_i,y_i": "player i pre-snap coordinates"
+      },
+      "assumptions": [
+        "Player X and Y coordinates are recorded pre-snap relative to the quarterback (marked by a blue square), giving a formation-relative coordinate frame."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A QB-relative coordinate frame is the same formation-normalized representation GSE uses to compare offensive shapes.",
+        "source_operator": "coords_relative_to_qb",
+        "telemetry": "pre-snap X/Y relative to QB"
+      }
+    },
+    {
+      "primitive_id": "500_labeled_formations",
+      "name": "Training set: 500+ auto-tagged formation images",
+      "verbatim_quote": "This was done through automatically tagging over 500 images of formations with the coordinate locations of the players",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A training dataset of labeled images was created by automatically tagging over 500 formation images with player coordinate locations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An auto-tagged coordinate-labeled formation corpus is the same supervised training set GSE builds for formation recognition.",
+        "source_operator": "500_labeled_formations",
+        "telemetry": "500+ labeled formation images"
+      }
+    },
+    {
+      "primitive_id": "five_models_personnel",
+      "name": "Five ML models classify personnel from coordinates",
+      "verbatim_quote": "We tested 5 unique models using coordinate locations to first determine offensive personnel",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Five unique models were tested using coordinate locations to determine offensive personnel: QB position (Shotgun, Under Center, Pistol) and the number/location of running backs, receivers, and tight ends; models run independently per feature because same-formation images can differ greatly."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A multi-model coordinate-based personnel classifier is the same ensemble GSE uses to read offensive structure.",
+        "source_operator": "five_models_personnel",
+        "telemetry": "5 models; QB pos + RB/WR/TE counts"
+      }
+    },
+    {
+      "primitive_id": "formation_sum_of_parts",
+      "name": "Formation derived as the sum of independently detected parts",
+      "verbatim_quote": "After each of the features are determined independently, the formation is derived through the sum of the parts",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "After each feature is determined independently, the formation is derived through the sum of the parts, composing personnel detections into a formation label."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Composing independent feature detections into a whole is the same parts-to-formation aggregation GSE performs.",
+        "source_operator": "formation_sum_of_parts",
+        "telemetry": "formation = sum of detected parts"
+      }
+    },
+    {
+      "primitive_id": "cart_qb_865",
+      "name": "CART best for QB position: 86.5% accuracy",
+      "verbatim_quote": "Focusing on the best classifier, Classification and Regression Trees, the Classification Report provides interesting insights",
+      "page": 4,
+      "latex": "\\text{Acc}_{\\text{CART,QB}}=86.5\\%>\\text{NB }67.5\\%>\\text{SVM }56.1\\%>\\text{KNN }49.8\\%>\\text{LogReg }42.9\\%",
+      "symbol_and_unit_ledger": {
+        "Acc": "QB-position classification accuracy"
+      },
+      "assumptions": [
+        "For QB position, Classification and Regression Trees (CART) is best at 86.5%, ahead of Naive Bayes 67.5%, SVM 56.1%, K Neighbors 49.8%, and Logistic Regression 42.9% (Table 1)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A tree ensemble beating linear and kernel models on coordinate features is the same classifier-selection result GSE records.",
+        "source_operator": "cart_qb_865",
+        "telemetry": "QB acc: CART 86.5% > NB 67.5% > SVM 56.1%"
+      }
+    },
+    {
+      "primitive_id": "pistol_hardest_low_recall",
+      "name": "Pistol is hardest to identify (recall .12, sparse training)",
+      "verbatim_quote": "The toughest quarterback position to correctly identify was Pistol",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Pistol is the toughest QB position to identify (precision .50, recall .12) because its inconsistent use limited the training set; Center is .82/.92 and Shotgun .90/.84, average .84/.85 (Table 2)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A rare class with low recall from sparse training is the same class-imbalance failure GSE flags in formation recognition.",
+        "source_operator": "pistol_hardest_low_recall",
+        "telemetry": "Pistol precision .50 / recall .12 (sparse)"
+      }
+    },
+    {
+      "primitive_id": "29_formations_cart_72",
+      "name": "29 formations recognized; CART ~72.3%",
+      "verbatim_quote": "the models were then combined to recognize formations (29 total) based simply on coordinate locations",
+      "page": 4,
+      "latex": "\\text{Acc}_{\\text{CART,formation}}=72.3\\%",
+      "symbol_and_unit_ledger": {
+        "29": "number of recognized formations"
+      },
+      "assumptions": [
+        "The combined models recognize 29 formations from coordinate locations; CART is again best at 72.3% (Table 3), ahead of Naive Bayes 68.8%, SVM 64.6%, KNN 64.1%, Logistic 55.6%; top formations include Singleback Ace (.86/.90) and Spread Gun (.81/.86)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A 29-class formation recognizer at ~72% is the same proof-of-concept accuracy GSE benchmarks for automated scouting.",
+        "source_operator": "29_formations_cart_72",
+        "telemetry": "29 formations; CART 72.3%"
+      }
+    },
+    {
+      "primitive_id": "playbyplay_merge_layers",
+      "name": "Merge formation labels with layered NFL Gamepass play-by-play",
+      "verbatim_quote": "To simplify the line of scrimmage yard line, it is standardized from 1-99",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Automatically classified formations are merged with NFL Gamepass play-by-play broken into layers (down, distance, standardized LOS 1-99, time in quarter, type, direction, run location, pass type, completion, intended receiver, yards); the opponent's 20-yard line becomes LOS 80."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Joining vision-derived formations to structured play-by-play is the same multimodal fusion GSE uses for tendency mining.",
+        "source_operator": "playbyplay_merge_layers",
+        "telemetry": "formation + Gamepass PBP; LOS 1-99"
+      }
+    },
+    {
+      "primitive_id": "m_cvay_run_tendency",
+      "name": "McVay tendency: ~60% more likely to run in filtered situations",
+      "verbatim_quote": "Overall, McVay was ~60% more likely to call a run play in this situation, preferring the left side",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Analyzing 2015 Sean McVay Redskins games with filters (1st down, >=6 yards to go, own half, >2 minutes left in quarter), McVay was ~60% more likely to call a run, preferring the left side; Matt Jones and Alfred Morris combined for just 2.9 yards per carry on those runs."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A filtered play-caller tendency is the same situational self-scout signal GSE extracts for game planning.",
+        "source_operator": "m_cvay_run_tendency",
+        "telemetry": "McVay ~60% more run; left side; YPC 2.9"
+      }
+    },
+    {
+      "primitive_id": "formation_pass_run_efficiency",
+      "name": "Singleback Ace Pair Slot: passes 4.6 ypp, runs 2.5 ypp",
+      "verbatim_quote": "Passes gained an average of 4.6 yards per play, while runs averaged just 2.5 yards per play",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "For Singleback Ace Pair Slot, the team is equally likely to pass or run; 65% of runs go right (right guard/end), 81% of passes are short routes (Garcon/Jones short, Reed deep); passes average 4.6 yards per play versus 2.5 for runs."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Per-formation pass/run efficiency splits are the same formation-level expected-value table GSE builds.",
+        "source_operator": "formation_pass_run_efficiency",
+        "telemetry": "SB Ace Pair Slot: pass 4.6 ypp, run 2.5 ypp"
+      }
+    },
+    {
+      "primitive_id": "euclidean_distance_traveled",
+      "name": "Distance traveled via Euclidean distance on tracked coordinates",
+      "verbatim_quote": "Based on their original starting point, we can evaluate the distance traveled for each player through Euclidean distance",
+      "page": 6,
+      "latex": "d(p,q)=\\sqrt{(q_1-p_1)^2+(q_2-p_2)^2}",
+      "symbol_and_unit_ledger": {
+        "p,q": "start and current player coordinate pairs"
+      },
+      "assumptions": [
+        "Players' X/Y coordinates are tracked continuously at 5 fps; distance traveled from the starting point is computed by Euclidean distance. The formula is printed in shifted-font glyphs and reconstructed here."
+      ],
+      "breakdown_regime": "shifted-font formula reconstructed (standard Euclidean distance)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Euclidean path length on tracked coordinates is the same distance-traveled metric GSE computes from player tracking.",
+        "source_operator": "euclidean_distance_traveled",
+        "telemetry": "d(p,q) = sqrt((q1-p1)^2+(q2-p2)^2)"
+      }
+    },
+    {
+      "primitive_id": "yard_calibration_5yd_lines",
+      "name": "Calibrate pixels-to-yards from the 5-yard white lines",
+      "verbatim_quote": "the coordinate distance of 1 yard is derived individually for each screenshot using the distance between the full field white lines every 5 yards",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Coordinate distance is converted to yards by deriving the 1-yard coordinate distance individually per screenshot from the spacing of full-field white lines every 5 yards, handling camera zoom."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Per-frame field-line calibration is the same scale-normalization GSE uses to turn pixel tracking into physical units.",
+        "source_operator": "yard_calibration_5yd_lines",
+        "telemetry": "1 yard from 5-yard white-line spacing/frame"
+      }
+    },
+    {
+      "primitive_id": "camera_reference_point",
+      "name": "Reference point corrects for camera movement",
+      "verbatim_quote": "the coordinate location of the highest point in a full field white line in the first image is saved as a reference point",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The highest point of a full-field white line in the first image is saved as a reference point so player coordinate distances are not over- or under-represented as the camera follows the play."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A fixed field reference point is the same camera-motion compensation GSE applies to broadcast tracking.",
+        "source_operator": "camera_reference_point",
+        "telemetry": "reference point = top of white line, frame 1"
+      }
+    },
+    {
+      "primitive_id": "speed_relative_only",
+      "name": "Speeds compared only relative to other players",
+      "verbatim_quote": "the speed numbers will only be compared relative to the speeds of other players",
+      "page": 7,
+      "latex": "v=\\frac{d_{\\text{coord}}}{\\Delta t}\\cdot\\frac{1\\ \\text{yd}}{k\\ \\text{coord}}\\cdot\\frac{3\\ \\text{ft}}{1\\ \\text{yd}}\\cdot\\frac{3600\\ \\text{s}}{1\\ \\text{hr}}\\cdot\\frac{1\\ \\text{mi}}{5280\\ \\text{ft}}",
+      "symbol_and_unit_ledger": {
+        "k": "coordinate units per yard (per frame)",
+        "v": "speed in mph"
+      },
+      "assumptions": [
+        "Speed is derived from frame rate and distance, converted yards/second then to mph; the worked example yields DeSean Jackson ~46.4 mph, which the authors note appears higher than Next Gen Stats, so speeds are only compared relative to other players. The source's conversion uses 5480 feet/mile (a typo for 5280); the chain is reconstructed with the correct 5280 and the overestimate flagged."
+      ],
+      "breakdown_regime": "source uses 5480 ft/mile (typo for 5280); authors acknowledge speed overestimate; relative-only comparison",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A relative-only speed metric with a known calibration bias is the same honest-normalization stance GSE takes on vision-derived athletic measures.",
+        "source_operator": "speed_relative_only",
+        "telemetry": "Jackson ~46.4 mph (overestimate; relative only)"
+      }
+    },
+    {
+      "primitive_id": "acceleration_first_06s",
+      "name": "First-0.6s acceleration separates receivers off the line",
+      "verbatim_quote": "Jackson accelerates to 22.4 mph, while Harris only reaches 19.3 mph",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Looking at the first 0.6 seconds of routes, DeSean Jackson accelerates to 22.4 mph while Maurice Harris reaches only 19.3 mph, quantifying how fast receivers get off the line; average speed/acceleration over a game can indicate fatigue."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Early-route acceleration as a separator is the same burst metric GSE uses to evaluate receiver release.",
+        "source_operator": "acceleration_first_06s",
+        "telemetry": "0.6s: Jackson 22.4 mph, Harris 19.3 mph"
+      }
+    },
+    {
+      "primitive_id": "route_running_quantifiable",
+      "name": "Route running becomes quantifiable beyond straight-line speed",
+      "verbatim_quote": "One of the answers lies in route running, which until now, was mostly unquantifiable",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The speed-versus-route-running puzzle (e.g. Darrius Heyward-Bey's 4.3 forty not translating to elite receiving) is addressed by quantifying route running, comparing how fast a player runs a 10-yard dig versus another receiver, useful for scouting, free agency, and contracts."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Quantifying route precision beyond raw speed is the same skill-separation GSE seeks in receiver evaluation.",
+        "source_operator": "route_running_quantifiable",
+        "telemetry": "route running quantifiable (10-yd dig speed)"
+      }
+    },
+    {
+      "primitive_id": "garcon_precise_break",
+      "name": "Garcon's tighter break beats Jackson's wide turn",
+      "verbatim_quote": "Garçon runs a slightly more precise route and gets out of his break quicker than Jackson",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "In a Stick concept, Garcon runs a more precise comeback route and breaks quicker than Jackson (almost a 180-degree turn versus a wide turn), running 1.3 fewer yards and hauling in the Cousins pass; flat routes by Davis and Reed nearly mirror each other."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Route-precision differences captured by tracking are the same micro-separation GSE uses to grade route execution.",
+        "source_operator": "garcon_precise_break",
+        "telemetry": "Garcon 1.3 fewer yds, ~180-deg break, catches"
+      }
+    },
+    {
+      "primitive_id": "jersey_color_shadow_limitation",
+      "name": "Jersey-color tracking vulnerable to shadows/sunlight",
+      "verbatim_quote": "Because the algorithm uses jersey color to track players, there are some potential obstacles such as on-field shadows and sunlight affecting the RGB color",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Limitations: limited training samples (accuracy should rise with data), jersey-color tracking affected by on-field shadows and sunlight altering RGB, and RFID access would extend the work; future work includes defensive formations, offense-defense play-calling relationships, and kickoff/punt coverage."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Color-based tracking's lighting vulnerability is the same robustness gap GSE records before trusting vision-derived tracking.",
+        "source_operator": "jersey_color_shadow_limitation",
+        "telemetry": "jersey color: shadows/sunlight RGB risk"
+      }
+    },
+    {
+      "primitive_id": "five_min_per_game",
+      "name": "Labeling a full game (~50 plays) takes under 5 minutes",
+      "verbatim_quote": "labeling formations for an entire game (~50 offensive plays) takes less than 5 minutes to complete",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The method is broadly applicable to any level recorded with a stationary camera (NCAA, high school); labeling formations for an entire game (~50 offensive plays) takes less than 5 minutes, with player tracking adding time, a low processing cost."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A sub-5-minute per-game labeling cost is the same scalability claim GSE weighs for league-wide automated scouting.",
+        "source_operator": "five_min_per_game",
+        "telemetry": "~50 plays labeled <5 min; stationary camera"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "nflcv2018_trace",
+      "think": "The retrocausal genealogy of this paper is the labor bottleneck of NFL film study. Coaches spend countless hours tagging and mining game film for tendencies, labeling formations, personnel, and up to six designed routes per play, and while self-scouting is simple, competitively scouting every team weekly is extremely time-consuming. A second motivation is a data asymmetry: NFL teams can access Next Gen Stats tracking only for their own players, not for opponents. The authors therefore build a computer-vision pipeline that classifies NFL All-22 broadcast film from formation labeling through player tracking, using pixel density and weighted spatial reasoning, with no reliance on proprietary RFID data. The methodological lineage is classical computer vision (Hough Lines for field detection) combined with supervised machine learning on coordinate features. The data are Washington Redskins home games, captured as screenshots at five frames per second and manually labeled because no labeled NFL film was available. Because the film is shot at varying angles, the pipeline locates field lines with Hough Lines, keeps only full-field white lines via heuristics, establishes the line of scrimmage from proximity to the offensive line, and computes camera rotation through arccos of the line of scrimmage and its perpendicular, removing extraneous regions like the NFL logo. Offensive players are detected by line of scrimmage and jersey color, with pre-snap X and Y coordinates recorded relative to the quarterback, and over 500 formation images are auto-tagged with player coordinates to form a training set. The recursive theory of mind is reading an offense as a composition of independently detected parts. Five models classify personnel from coordinates, determining quarterback position and the number and location of backs, receivers, and tight ends, and the formation is derived as the sum of the parts. Classification and Regression Trees prove best, reaching 86.5 percent on quarterback position and 72.3 percent across 29 formations, with Pistol hardest to identify at recall 0.12 because its inconsistent use limited training. The detected formations are then merged with layered NFL Gamepass play-by-play, standardizing the line of scrimmage from 1 to 99, to mine tendencies: under specific filters Sean McVay was about 60 percent more likely to run, and Singleback Ace Pair Slot produced 4.6 yards per pass play versus 2.5 per run. Cross-layer veto adjudication is the player-tracking layer and its honest calibration limits. Players are tracked continuously at five frames per second, distance traveled is computed by Euclidean distance, and speed is derived from frame rate and distance after converting coordinate units to yards using the five-yard white-line spacing per frame and a fixed reference point to compensate for camera motion. The worked DeSean Jackson speed of about 46.4 miles per hour appears higher than Next Gen Stats, so the authors compare speeds only relative to other players; the conversion even uses 5480 feet per mile, a typo for 5280, which I flag. Early-route acceleration separates receivers, with Jackson reaching 22.4 miles per hour in the first 0.6 seconds versus Harris's 19.3, and route precision is quantified: Garcon's tighter roughly 180-degree break runs 1.3 fewer yards than Jackson's wide turn and catches the pass. Limitations are limited training data, jersey-color tracking vulnerable to shadows and sunlight, and the need for RFID to extend the work. The implementation invariants map directly onto GSE. Hough-line rectification and QB-relative coordinates are GSE's geometric normalization for cross-angle film; jersey-color detection is GSE's RFID-free segmentation fallback; the parts-to-formation composition and CART classifier are GSE's formation recognizer; the formation-to-play-by-play join is GSE's tendency-mining fusion; Euclidean path length, per-frame yard calibration, and a fixed reference point are GSE's tracking-to-physics pipeline; and the relative-only speed stance is GSE's honest handling of a known calibration bias. The outputs are formation labels, tendencies, and tracking-derived athletic measures from public broadcast film, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The corpus is Redskins home games at five frames per second with 500-plus labeled formation images; the classifiers are CART, Naive Bayes, SVM, K Neighbors, and Logistic Regression, with CART best at 86.5 percent for quarterback position and 72.3 percent for 29 formations; the play-by-play LOS is standardized 1 to 99; the tracking uses Euclidean distance with per-frame yard calibration from five-yard lines; the speed example is Jackson about 46.4 miles per hour, flagged as an overestimate using a 5480-feet-per-mile typo, with first-0.6-second acceleration of 22.4 versus 19.3 miles per hour; and labeling a full game of about 50 offensive plays takes under five minutes. The Euclidean and speed-conversion formulas are shifted-font, so they are reconstructed as labeled LaTeX and flagged, with the unit typo and relative-only comparison preserved. The invariant for GSE is to carry the RFID-free vision-to-tracking pipeline and the formation-tendency fusion, while recording the lighting vulnerability, the small training set, and the speed-calibration bias. The broader payoff for GSE is that broadcast film alone can yield opponent formation tendencies and route-level athletic measures, democratizing the kind of tracking analysis that proprietary RFID systems reserve for a team's own roster, which is exactly the competitive-scouting edge the engine is built to surface from public data.",
+      "retrocausal_genealogy": "The paper originates in NFL film-study labor (hours tagging formations/personnel/up to 6 routes; weekly competitive scouting time-consuming) and a data asymmetry (Next Gen Stats only for a team's own players). Authors build a CV pipeline classifying All-22 broadcast film from formation labeling to player tracking via pixel density + weighted spatial reasoning, no RFID. Lineage: Hough Lines (classical CV) + supervised ML on coordinate features; data = Washington Redskins home games at 5 fps, 500+ auto-labeled formation images.",
+      "theory_of_mind": "An offense is read as independently detected parts composed into a formation. Hough Lines + arccos rectify the field; jersey color + LOS detect players; pre-snap X/Y relative to QB. Five models classify personnel; CART best (QB 86.5%, 29 formations 72.3%; Pistol recall .12 from sparse training). Formations merged with layered Gamepass play-by-play (LOS 1-99) to mine tendencies (McVay ~60% more run; SB Ace Pair Slot pass 4.6 ypp vs run 2.5). Tracking at 5 fps: Euclidean distance, per-frame yard calibration from 5-yard lines, fixed reference point for camera motion.",
+      "cross_layer_veto": "Speed example Jackson ~46.4 mph exceeds Next Gen Stats -> compared relative only; conversion uses 5480 ft/mile (typo for 5280), flagged. First-0.6s acceleration Jackson 22.4 vs Harris 19.3 mph; route precision: Garcon ~180-deg break, 1.3 fewer yards than Jackson, catches. Limitations: small training set, jersey-color shadows/sunlight RGB risk, RFID needed to extend; future defensive formations + special teams. Labeling ~50 plays <5 min, stationary-camera applicable to NCAA/HS. Euclidean/speed formulas shifted-font, reconstructed as labeled LaTeX; zero sportsbook lines."
+    }
+  ],
+  "universal_lens": "NFL broadcast All-22 film is automatically classified into formations and converted into a player-tracking system using Hough-line field rectification, jersey-color detection, CART classification of coordinate features, and Euclidean path tracking with per-frame yard calibration, enabling opponent scouting and route-precision analysis without proprietary RFID data.",
+  "gsi_mapping": "GSI treats the pipeline as Hough Lines + arccos rectification, jersey-color + LOS detection, QB-relative pre-snap coordinates, 5-model personnel classification with CART best (QB 86.5%, 29 formations 72.3%, Pistol recall .12), formation+Gamepass PBP fusion (LOS 1-99) for tendencies (McVay ~60% run; SB Ace Pair Slot 4.6 vs 2.5 ypp), and 5-fps Euclidean tracking d(p,q)=sqrt((q1-p1)^2+(q2-p2)^2) with 5-yard-line calibration + reference point; speed ~46.4 mph flagged overestimate (5480 ft/mi typo), relative-only; 0.6s accel 22.4 vs 19.3 mph.",
+  "gse_mapping": "GSE lifts the RFID-free vision-to-tracking pipeline (rectification, color detection, QB-relative frame, CART formation recognition, formation-PBP tendency fusion, Euclidean tracking with yard calibration and camera-motion reference), and the relative-only speed stance for a known calibration bias; lighting vulnerability, small training set, and speed bias recorded; all outputs are scouting/tracking measures, never sportsbook lines."
+}

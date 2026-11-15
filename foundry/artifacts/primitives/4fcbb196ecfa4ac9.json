@@ -1,0 +1,173 @@
+{
+  "book_id": "4fcbb196ecfa4ac9",
+  "source_status": "COMPLETE",
+  "title": "nfl-source-schema-diff-2026-10-28",
+  "file_name": "nfl-source-schema-diff-2026-10-28.md",
+  "sha256": "4fcbb196ecfa4ac9abc54d0100fe3b4c02d3b822dd3f7ff6851b7b324425172e",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The schema diff defines a structural isomorphism between the latent information manifold of external web hosts and the explicit state space of the prediction engine. The unmodelled fields represent an orthogonal subspace in the Hilbert space of football observables, requiring a rigorous projection operator to map raw payload keys into actionable physical or tactical dimensions. The mapping from heterogeneous market availability flags and microstructure states to a unified geometric manifold of informational liquidity. This structural unification treats dead fields as singularities in the data-generating process, enforcing topological consistency across fragmented exchange schemas.",
+  "gsi_mapping": "In GSI, these unmodelled fields act as high-dimensional covariates for conformal inference. By treating each discovered field as a potential feature vector, we construct a Bayesian hierarchical model where the prior over semantic relevance is updated via empirical payload frequencies, ensuring robust uncertainty quantification when integrating novel data sources into our probabilistic forecasting framework. A conformal Bayesian inference framework where sparse derivative flags act as latent indicators for regime shifts. The engine updates posterior probabilities over valid market configurations, treating empty or dead fields as censored observations within a hierarchical generative model.",
+  "gse_mapping": "For GSE, the 108 fields dictate necessary expansions to the situational reasoning automaton. Each valid field represents a new state-transition trigger or a hidden variable in the Markov Decision Process governing game flow. Mapping these payloads ensures the engine's internal world-model accurately reflects the granular tactical realities exposed by modern digital sports telemetry. Situational state-transitions driven by the presence or absence of specific derivative markets. The engine dynamically reconfigures its tactical reasoning graph based on real-time market-availability flags, ensuring robust decision-making even when primary pricing layers fail.",
+  "primitives": [
+    {
+      "primitive_id": "w0_payload_capture",
+      "name": "Empirical Payload Capture Operator",
+      "verbatim_quote": "# Schema diff — fields these sources expose that the engine does not model Built 2026-10-28 from the 376 captured payloads.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "N: Number of payloads (dimensionless count), S: Set of exposed fields (discrete set)",
+      "assumptions": "Assumes the 376 payloads form a representative sample of the underlying data-generating process across the 17 hosts.",
+      "breakdown_regime": "Breaks down if the sampling distribution of payloads is heavily biased toward specific game states or non-football contexts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw HTTP response bodies directly to the foundational layer of the GSI data lake, establishing the ground truth for available information.",
+        "source_operator": "w0_payload_capture",
+        "telemetry": "Total unique keys extracted per host."
+      }
+    },
+    {
+      "primitive_id": "w0_record_projection",
+      "name": "Record-Level Field Projection",
+      "verbatim_quote": "Record-level fields only (keys of objects inside arrays), so lookup maps and i18n dictionaries do not pollute the result.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "F_raw: Raw field set, F_proj: Projected record-level field set, P: Projection operator",
+      "assumptions": "Assumes static metadata (lookup maps) carries zero marginal informational value regarding dynamic game states compared to record-level arrays.",
+      "breakdown_regime": "Singularities occur if critical contextual mappings are dynamically generated within the array structures rather than stored statically.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the core feature matrix for GSE by filtering out high-cardinality categorical noise, focusing strictly on time-series or event-driven vectors.",
+        "source_operator": "w0_record_projection",
+        "telemetry": "Ratio of filtered keys to total keys."
+      }
+    },
+    {
+      "primitive_id": "w0_vocab_diff",
+      "name": "Vocabulary Differential Operator",
+      "verbatim_quote": "Compared against the engine's own vocabulary: every CSV header in `data/gse-dataset/current/` plus every interface field in `packages/prediction-engine/src`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "V_ext: External vocabulary, V_int: Internal engine vocabulary, Delta: Set difference V_ext \\ V_int",
+      "assumptions": "Assumes the internal engine vocabulary perfectly encapsulates all currently modeled physical and tactical dimensions of the sport.",
+      "breakdown_regime": "Fails if the internal vocabulary contains deprecated aliases that falsely match external fields, masking true informational gaps.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Calculates the exact set difference to identify blind spots in the GSE reasoning layer, directly feeding the feature engineering pipeline.",
+        "source_operator": "w0_vocab_diff",
+        "telemetry": "Cardinality of the differential set (108)."
+      }
+    },
+    {
+      "primitive_id": "w0_semantic_undecidability",
+      "name": "Semantic Undecidability Filter",
+      "verbatim_quote": "Each one is a modelling decision, not a scrape target — the capture proves the field exists and carries data, not that its semantics are settled.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "f: Unmodelled field, D_f: Data distribution of f, Sigma_f: Semantic interpretation (undefined)",
+      "assumptions": "Assumes existence of a data stream does not imply immediate interpretability or causal utility within the current physics-based engine.",
+      "breakdown_regime": "Breaks down if automated NLP tools incorrectly assign fixed semantics to highly context-dependent proprietary metrics.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Flags high-entropy features for manual domain expert review before integration into the GSE state machine, preventing garbage-in-garbage-out dynamics.",
+        "source_operator": "w0_semantic_undecidability",
+        "telemetry": "Number of fields flagged for semantic arbitration."
+      }
+    },
+    {
+      "primitive_id": "market_microstructure_state",
+      "name": "Market Microstructure State Operator",
+      "verbatim_quote": "Open interest and leverage are market microstructure; the engine has no liquidity or positioning concept at all.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "L: Liquidity (dimensionless volume), \\lambda: Leverage ratio (dimensionless).",
+      "assumptions": "Assumes continuous trading environment where open interest directly correlates with aggregate market positioning.",
+      "breakdown_regime": "Breaks down during extreme illiquidity or flash crashes where standard leverage metrics decouple from true risk exposure.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw exchange telemetry to an abstract liquidity tensor consumed by GSI's conformal prediction sets.",
+        "source_operator": "market_microstructure_state",
+        "telemetry": "Variance of dollar_open_interest over rolling time windows."
+      }
+    },
+    {
+      "primitive_id": "derivative_existence_flag",
+      "name": "Derivative Existence Flag Operator",
+      "verbatim_quote": "These are market-availability flags: which derivative markets exist, not just the price.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "M: Market existence indicator (Boolean/0-1).",
+      "assumptions": "Assumes binary existence of a market implies sufficient depth to be considered structurally present.",
+      "breakdown_regime": "Fails if a market exists but is entirely frozen or restricted to non-commercial entities.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates a boolean mask for GSE situational graphs, disabling tactical nodes reliant on missing derivatives.",
+        "source_operator": "derivative_existence_flag",
+        "telemetry": "Ratio of active derivative flags to total possible flags per event."
+      }
+    },
+    {
+      "primitive_id": "devig_points_level",
+      "name": "De-vig Points Level Operator",
+      "verbatim_quote": "A clean two-sided odds schema with a points level, which is the shape a de-vig needs and the engine does not currently carry.",
+      "page": 2,
+      "latex": "P_{clean} = \\frac{O_1 + U_2}{2}",
+      "symbol_and_unit_ledger": "P_{clean}: De-vigged points level (points), O_1: Over line (points), U_2: Under line (points).",
+      "assumptions": "Assumes symmetric vig application around the true consensus equilibrium point.",
+      "breakdown_regime": "Singular when one side of the market is completely absent or heavily restricted.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Injects a normalized equilibrium coordinate into GSI's probabilistic calibration layer.",
+        "source_operator": "devig_points_level",
+        "telemetry": "Absolute difference between implied probability sum and unity."
+      }
+    },
+    {
+      "primitive_id": "dead_field_topology",
+      "name": "Dead Field Topology Operator",
+      "verbatim_quote": "## Dead fields — marked dead, kept in place Every field above was counted across all captures and kept only if it ever carried a non-empty value.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "D: Dead field count (integer), N: Total historical fields (integer).",
+      "assumptions": "Assumes historical non-emptiness guarantees future structural relevance despite current sparsity.",
+      "breakdown_regime": "Degenerates if the underlying data provider permanently removes the API endpoint without notice.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Preserves dimensional integrity in GSE state vectors by masking rather than dropping obsolete features.",
+        "source_operator": "dead_field_topology",
+        "telemetry": "Frequency of null values in historically active fields."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4fcbb196ecfa4ac9_t0",
+      "think": "The fundamental theorem of this chapter window posits that the informational universe of professional football is strictly larger than the current computational substrate of the Galaxy Sports Engine. By executing a rigorous set-theoretic difference between the 376 captured external payloads and the internal type definitions of the prediction engine, we isolate a residual subspace of 108 distinct, football-relevant observables. This is not merely a data engineering task; it is a profound epistemic boundary analysis. The filtering of subscription scaffolding and internationalization dictionaries acts as a noise-canceling operator, projecting the raw web-scraped manifold onto the pure geometric space of sporting events. However, the crucial doctrinal insight lies in the final quote: existence does not equate to semantic resolution. Just because a host exposes a field—say, a proprietary 'pressure index' or a nuanced 'route depth variance'—does not mean our engine possesses the axiomatic framework to ingest it. These 108 fields represent a frontier of unknown unknowns. They demand a shift from passive scraping to active modeling decisions. We must construct new operators, define new units, and establish new causal links before these fields can transition from mere JSON keys to actionable state variables within our Markov Decision Processes. The schema diff is thus a map of our own ignorance, a precise quantification of the delta between reality and our simulation of it.\n\nFull-book synthesis across 2/2 pages of nfl-source-schema-diff-2026-10-28 (4fcbb196ecfa4ac9): [w0_payload_capture p.1]: # Schema diff — fields these sources expose that the engine does not model Built 2026-10-28 from the 376 captured payloads. (Maps raw HTTP response bodies directly to the foundational layer of the GSI data lake, establishing the ground truth for available information.) [w0_record_projection p.1]: Record-level fields only (keys of objects inside arrays), so lookup maps and i18n dictionaries do not pollute the result. (Derives the core feature matrix for GSE by filtering out high-cardinality categorical noise, focusing strictly on time-series or event-driven vectors.) [w0_vocab_diff p.1]: Compared against the engine's own vocabulary: every CSV header in `data/gse-dataset/current/` plus every interface field in `packages/prediction-engine/src`. (Calculates the exact set difference to identify blind spots in the GSE reasoning layer, directly feeding the feature engineering pipeline.) [w0_semantic_undecidability p.1]: Each one is a modelling decision, not a scrape target — the capture proves the field exists and carries data, not that its semantics are settled. (Flags high-entropy features for manual domain expert review before integration into the GSE state machine, preventing garbage-in-garbage-out dynamics.) [market_microstructure_state p.2]: Open interest and leverage are market microstructure; the engine has no liquidity or positioning concept at all. (Maps raw exchange telemetry to an abstract liquidity tensor consumed by GSI's conformal prediction sets.) [derivative_existence_flag p.2]: These are market-availability flags: which derivative markets exist, not just the price. (Generates a boolean mask for GSE situational graphs, disabling tactical nodes reliant on missing derivatives.) [devig_points_level p.2]: A clean two-sided odds schema with a points level, which is the shape a de-vig needs and the engine does not currently carry. (Injects a normalized equilibrium coordinate into GSI's probabilistic calibration layer.) [dead_field_topology p.2]: ## Dead fields — marked dead, kept in place Every field above was counted across all captures and kept only if it ever carried a non-empty value. (Preserves dimensional integrity in GSE state vectors by masking rather than dropping obsolete features.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of nfl-source-schema-diff-2026-10-28 (4fcbb196ecfa4ac9): [w0_payload_capture p.1]: # Schema diff — fields these sources expose that the engine does not model Built 2026-10-28 from the 376 captured payloads. (Maps raw HTTP response bodies directly to the foundational layer of the GSI data lake, establishing the ground truth for available information.) [w0_record_projection p.1]: Record-level fields only (keys of objects inside arrays), so lookup maps and i18n dictionaries do not pollute the result. (Derives the core feature matrix for GSE by filtering out high-cardinality categorical noise, focusing strictly on time-series or event-driven vectors.) [w0_vocab_diff p.1]: Compared against the engine's own vocabulary: every CSV header in `data/gse-dataset/current/` plus every interface field in `packages/prediction-engine/src`. (Calculates the exact set difference to identify blind spots in the GSE reasoning layer, directly feeding the feature engineering pipeline.) [w0_semantic_undecidability p.1]: Each one is a modelling decision, not a scrape target — the capture proves the field exists and carries data, not that its semantics are settled. (Flags high-entropy features for manual domain expert review before integration into the GSE state machine, preventing garbage-in-garbage-out dynamics.) [market_microstructure_state p.2]: Open interest and leverage are market microstructure; the engine has no liquidity or positioning concept at all. (Maps raw exchange telemetry to an abstract liquidity tensor consumed by GSI's conformal prediction sets.) [derivative_existence_flag p.2]: These are market-availability flags: which derivative markets exist, not just the price. (Generates a boolean mask for GSE situational graphs, disabling tactical nodes reliant on missing derivatives.) [devig_points_level p.2]: A clean two-sided odds schema with a points level, which is the shape a de-vig needs and the engine does not currently carry. (Injects a normalized equilibrium coordinate into GSI's probabilistic calibration layer.) [dead_field_topology p.2]: ## Dead fields — marked dead, kept in place Every field above was counted across all captures and kept only if it ever carried a non-empty value. (Preserves dimensional integrity in GSE state vectors by masking rather than dropping obsolete features.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "This methodology traces its lineage directly to the early days of quantitative finance, where alternative data streams (satellite imagery, credit card transactions) were first parsed to find alpha outside traditional market cap tables. In sports, it mirrors the evolution from basic box scores to Next Gen Stats, but pushes further by systematically auditing the entire digital footprint of sports media to find untapped signals that even advanced providers might overlook.",
+      "theory_of_mind": "From a theory of mind perspective, these 108 unmodelled fields represent the private knowledge states of opposing analysts, coaches, and rival algorithms. If a specific betting exchange or analytics site is tracking a micro-metric that we have filtered out, they possess a localized advantage. Our engine must simulate their cognition by asking: 'What does this external host know that I do not?' Integrating these fields is essentially reverse-engineering the mental models of the broader sports intelligence ecosystem.",
+      "cross_layer_veto": "A strict cross-layer veto must be applied here to prevent dimensional collapse. Many of these 108 fields may be highly collinear with existing GSE primitives (e.g., a new 'pass accuracy' metric might just be a noisy re-sampling of our existing completion probability). Blindly ingesting them would introduce multicollinearity, destabilizing our Bayesian posterior updates. Furthermore, we must veto any field whose temporal granularity mismatches our core clock, preventing leakage from future states into present predictions during backtesting."
+    },
+    {
+      "trace_id": "4fcbb196ecfa4ac9_t1",
+      "think": "The extraction of sovereign primitives from this chapter window necessitates a rigorous separation between the ontological existence of a market and its epistemological valuation. The text explicitly delineates 'market microstructure'—comprising open interest and leverage—from the core pricing engine, establishing a foundational duality. In mathematical terms, we are observing a projection from a high-dimensional Hilbert space of all possible market states onto a lower-dimensional subspace utilized by the predictive engine. The `kalshi.com` fields represent a dense, continuous manifold of liquidity, whereas `pinnacle.com` provides a discrete, combinatorial topology of available derivatives. By isolating these as distinct operators, we prevent the conflation of signal (price) with noise (positioning). Furthermore, the treatment of 'dead fields' introduces a temporal persistence constraint. Rather than performing aggressive dimensionality reduction via deletion, the schema employs a masking operator that preserves the structural skeleton of the data universe. This is mathematically equivalent to maintaining a sparse matrix representation where zero entries retain their index coordinates, allowing for potential future re-instantiation. The `legalsportsreport.com` schema acts as a normalization kernel, extracting a 'clean two-sided odds' vector that serves as the invariant core required for de-vigging operations. Ultimately, the derivation here is about constructing a robust, multi-layered feature space that can withstand the stochastic degradation of external data feeds while maintaining strict internal consistency for downstream Bayesian inference.",
+      "retrocausal_genealogy": "This architectural pattern traces back to early financial engineering efforts to separate market making from proprietary trading signals. Historically, quantitative models suffered from overfitting to transient liquidity spikes. The explicit retention of 'dead' fields mirrors the evolution of genomic sequencing, where non-coding DNA is preserved due to unknown regulatory functions. In sports intelligence, this lineage reflects the shift from simple point-spread tracking to complex, multi-exchange arbitrage detection systems.",
+      "theory_of_mind": "Modeling the opposing agents—the exchanges themselves—requires understanding their incentive structures. An exchange like Kalshi exposes microstructure to attract sophisticated liquidity providers, while Pinnacle uses derivative flags to manage liability exposure. The engine must anticipate these strategic disclosures. When a market flag disappears, it is not merely a data loss; it is a deliberate signaling action by the exchange indicating a shift in risk appetite or regulatory constraint.",
+      "cross_layer_veto": "Strict anti-collinearity vetoes must be applied between the microstructure layer and the pricing layer. If leverage estimates become highly correlated with the de-vigged points level, it indicates a leakage of positioning bias into the fundamental valuation model. Additionally, any 'dead field' that suddenly resurrects with high variance must trigger a veto on immediate integration, requiring a quarantine period to verify stability against fresh captures."
+    }
+  ]
+}

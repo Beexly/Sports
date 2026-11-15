@@ -1,0 +1,897 @@
+{
+  "book_id": "844edea160b0f5c9",
+  "source_status": "COMPLETE",
+  "source_note": "Kevin P. Murphy, 'Probabilistic Machine Learning: Advanced Topics', MIT Press, 2023 (Adaptive Computation and Machine Learning series; CC-BY-NC-ND; ISBN 9780262048439 hardcover). Local source is the publisher PDF, 151421194 bytes; sha256 over (str(size) encoded + full PDF bytes) = 844edea160b0f5c9d480eaf217b0a3a632fc2ead92f28927cd39572d45e8fa9f, book_id is its first 16 hex chars. Extraction worked from the born-digital text layer (5079785 bytes, 76752 lines, ~602k words; its own size-prefixed sha256 is facd185e0be6ef789dd9c6dfb2263ece335064903a3f2ad4c858f7af94a4598b), which is clean and complete across all 36 chapters in 6 parts; the file is the online version dated December 10, 2025 of the 2023 print edition. Displayed equations in the text layer are linearized and partially garbled in glyph order; LaTeX below transcribes the source's actual numbered equations in standard notation, unambiguous from surrounding prose. All verbatim quotes were verified as exact normalized substrings of the text file. Chapter 31 (Nonparametric Bayesian models) is an introduction pointing to a supplementary chapter in the print edition, so its primitive states the framework only. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "pgm_factorization_dag",
+      "name": "A directed graphical model factorizes the joint distribution into one conditional per node given its parents",
+      "verbatim_quote": "Probabilistic graphical models (PGMs) provide a convenient formalism for defining joint distributions on sets of random variables.",
+      "page": "Ch. 4, Sec. 4.2.1, Eq. (4.2), txt ~L9555",
+      "latex": "p(x_{1:N_G}) = \\prod_{i=1}^{N_G} p(x_i \\mid x_{pa(i)})",
+      "symbol_and_unit_ledger": {
+        "x_i": "random variable at node i [domain-specific units]",
+        "pa(i)": "parent set of node i in the DAG [index set]",
+        "N_G": "number of nodes in the graph [count]"
+      },
+      "assumptions": [
+        "The graph is a directed acyclic graph with a topological ordering in which parents precede children.",
+        "The ordered Markov property holds: each node is conditionally independent of its non-descendants given its parents."
+      ],
+      "breakdown_regime": "Breaks when the true dependence structure has cycles or unmodeled latent confounders, and when the graph is misspecified the factorization silently encodes false independence claims.",
+      "domain": "probabilistic graphical models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine represents a matchup as a directed graph over team, unit, player, and coaching variables, where each projection is a local conditional given its causal parents. Factorization is what lets the engine update one node, such as a missing lineman, and propagate only through its descendants instead of refitting the whole joint.",
+        "source_operator": "pgm_factorization_dag",
+        "telemetry": "player availability and snap shares, unit level play by play aggregates, coaching tendency rates, venue and rest variables"
+      }
+    },
+    {
+      "primitive_id": "kl_divergence",
+      "name": "KL divergence is the unique measure (up to a constant) of the magnitude of a belief update from q to p",
+      "verbatim_quote": "The Kullback-Leibler divergence or KL divergence, also known as the information gain or relative entropy, is defined as follows:",
+      "page": "Ch. 5, Sec. 5.1.2, Eqs. (5.9)-(5.10), txt ~L13750",
+      "latex": "D_{KL}(p \\parallel q) = \\sum_{k=1}^{K} p_k \\log \\frac{p_k}{q_k}",
+      "symbol_and_unit_ledger": {
+        "p_k": "probability of state k under the updated distribution [dimensionless]",
+        "q_k": "probability of state k under the prior distribution [dimensionless]",
+        "K": "number of states [count]",
+        "D_KL": "divergence in nats for natural log, bits for log base 2 [information units]"
+      },
+      "assumptions": [
+        "Both distributions are over the same support; q_k must be nonzero wherever p_k is nonzero.",
+        "The measure is asymmetric: D_KL(p||q) is the update from q to p, not a distance."
+      ],
+      "breakdown_regime": "Infinite when q assigns zero probability to an event that p allows; as a scoring signal it is dominated by tail disagreements and says nothing about which distribution is closer to reality.",
+      "domain": "information theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine uses KL divergence as the meter on every belief revision: when injury news, weather, or a lineup change moves a projection distribution, the KL between the old and new distribution sizes the update, and outsized updates from thin evidence get flagged for review instead of passing silently.",
+        "source_operator": "kl_divergence",
+        "telemetry": "prior and posterior projection distributions, news timestamps, lineup announcements, market independent model snapshots"
+      }
+    },
+    {
+      "primitive_id": "entropy",
+      "name": "Entropy is the expected surprise of a distribution and the hard floor on how well its outcomes can be compressed or predicted",
+      "verbatim_quote": "The entropy of a discrete random variable X with distribution p over K states is defined by",
+      "page": "Ch. 5, Sec. 5.2.1, Eq. (5.89), txt L14530",
+      "latex": "H(X) = -\\sum_{k=1}^{K} p(X=k) \\log p(X=k) = -E_X[\\log p(X)]",
+      "symbol_and_unit_ledger": {
+        "H(X)": "entropy of X [bits or nats]",
+        "p(X=k)": "probability that X takes state k [dimensionless]",
+        "K": "number of states [count]"
+      },
+      "assumptions": [
+        "X is discrete with a known distribution over K states.",
+        "Log base 2 gives bits, natural log gives nats."
+      ],
+      "breakdown_regime": "Entropy measures spread, not correctness: a confidently wrong distribution can have low entropy, and a calibrated high entropy forecast can be the honest one.",
+      "domain": "information theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Entropy is the engine uncertainty budget. Every projection carries its entropy so downstream layers know whether a sharp looking number is actually a coin flip in disguise, and high entropy projections are routed to information gathering instead of being published as confident calls.",
+        "source_operator": "entropy",
+        "telemetry": "full predictive distributions per projection, historical calibration curves, outcome frequencies by bucket"
+      }
+    },
+    {
+      "primitive_id": "mutual_information",
+      "name": "Mutual information is the KL divergence between the joint distribution and the product of the marginals, equal to the expected reduction in uncertainty about one variable from observing another",
+      "verbatim_quote": "Thus we can interpret the MI between X and Y as the reduction in uncertainty about X after observing Y",
+      "page": "Ch. 5, Sec. 5.3.1, Eq. (5.109), txt L14726",
+      "latex": "I(X; Y) = D_{KL}(p(x, y) \\parallel p(x)p(y)) = \\sum_{y} \\sum_{x} p(x, y) \\log \\frac{p(x, y)}{p(x) p(y)}",
+      "symbol_and_unit_ledger": {
+        "I(X; Y)": "mutual information [bits or nats]",
+        "p(x, y)": "joint probability of X and Y [dimensionless]",
+        "p(x), p(y)": "marginal probabilities [dimensionless]"
+      },
+      "assumptions": [
+        "MI is zero if and only if X and Y are independent.",
+        "Estimation from finite samples is biased upward in high dimensions unless corrected."
+      ],
+      "breakdown_regime": "MI detects dependence but not its direction or cause, and plug-in estimates from sparse contingency tables overstate dependence badly.",
+      "domain": "information theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Mutual information is the engine signal admission test: a candidate signal earns ingestion weight only to the extent that it carries nonzero information about the target given what is already known, and conditional MI exposes signals that are merely echoes of stronger ones.",
+        "source_operator": "mutual_information",
+        "telemetry": "paired histories of candidate signals and outcomes, snap level features, situational splits, tracking metrics"
+      }
+    },
+    {
+      "primitive_id": "posterior_predictive_distribution",
+      "name": "The posterior predictive distribution averages the likelihood over the whole posterior, which is Bayesian model averaging and the guard against plug-in overconfidence",
+      "verbatim_quote": "By integrating out, or marginalizing out, the unknown parameters, we reduce the chance of overfitting, since we are effectively computing the weighted average of predictions from an infinite number of models.",
+      "page": "Ch. 3, Eq. (3.32), txt ~L5259",
+      "latex": "p(y \\mid x, \\mathcal{D}) = \\int p(y \\mid x, \\theta) p(\\theta \\mid \\mathcal{D}) d\\theta",
+      "symbol_and_unit_ledger": {
+        "y": "future observation to predict [outcome units]",
+        "x": "input features [feature units]",
+        "theta": "model parameters [parameter units]",
+        "D": "observed training data [dataset]",
+        "p(theta|D)": "posterior density over parameters [density]"
+      },
+      "assumptions": [
+        "A prior over parameters has been specified and the posterior computed or approximated.",
+        "The plug-in alternative replaces the posterior with a delta function at a point estimate and discards parameter uncertainty."
+      ],
+      "breakdown_regime": "Only as good as the posterior approximation feeding it; with a misspecified likelihood the average is over the wrong model class and the integral is intractable for most deep models without sampling or variational shortcuts.",
+      "domain": "bayesian statistics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine never ships a projection from a single fitted parameter set. Projections are posterior predictive: parameter samples are drawn, predictions computed for each, and the spread across samples becomes part of the published uncertainty rather than hidden inside a point estimate.",
+        "source_operator": "posterior_predictive_distribution",
+        "telemetry": "posterior samples from the fitting lane, holdout outcomes, feature vectors per game and player"
+      }
+    },
+    {
+      "primitive_id": "em_algorithm_elbo",
+      "name": "EM maximizes a lower bound on the log likelihood by alternating an E step that sets q to the posterior over hidden variables with an M step that refits parameters",
+      "verbatim_quote": "The basic idea behind EM is to alternate between estimating the hidden variables (or missing values) during the E step (expectation step), and then using the fully observed data to compute the MLE during the M step (maximization step).",
+      "page": "Ch. 6, Sec. 6.5.3, Eqs. (6.137)-(6.145), txt L17253",
+      "latex": "\\mathcal{L}(\\theta, q_n \\mid y_n) = E_{q_n}[\\log p(y_n, z_n \\mid \\theta)] + H(q_n) \\le \\log p(y_n \\mid \\theta)",
+      "symbol_and_unit_ledger": {
+        "theta": "model parameters [parameter units]",
+        "y_n": "visible data for example n [data units]",
+        "z_n": "hidden variables for example n [latent units]",
+        "q_n": "variational distribution over z_n [density]",
+        "H(q_n)": "entropy of q_n [nats]",
+        "L": "evidence lower bound (ELBO) [log probability]"
+      },
+      "assumptions": [
+        "The model has hidden variables or missing data, so the log likelihood contains a log of a sum that cannot be optimized directly.",
+        "The E step can compute or approximate the posterior over the hidden variables given current parameters."
+      ],
+      "breakdown_regime": "Converges only to a local maximum; the speed of convergence degrades as the fraction of missing information grows, and the bound is loose whenever the E step posterior is approximate.",
+      "domain": "optimization / latent variable models",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "EM is the engine workhorse for latent state estimation with missing data: unobserved player form, hidden scheme changes, and partially observed tracking feeds are treated as hidden variables, imputed in the E step and refit in the M step, with the ELBO tracked so stalled fits are visible.",
+        "source_operator": "em_algorithm_elbo",
+        "telemetry": "incomplete game logs, partial tracking data, play by play with missing annotations, prior parameter snapshots"
+      }
+    },
+    {
+      "primitive_id": "ssm_factorization_bayesian_filtering",
+      "name": "A state-space model factorizes a sequence into an initial state, a dynamics model, and an observation model, and filtering computes the belief state p(z_t given observations up to t)",
+      "verbatim_quote": "We can use the model to compute the belief state p(zt |y1:t ); this is called Bayesian filtering.",
+      "page": "Ch. 8, Sec. 8.1, Eq. (8.1), txt L20667",
+      "latex": "p(y_{1:T}, z_{1:T} \\mid u_{1:T}) = p(z_1 \\mid u_1) \\prod_{t=2}^{T} p(z_t \\mid z_{t-1}, u_t) \\prod_{t=1}^{T} p(y_t \\mid z_t, u_t)",
+      "symbol_and_unit_ledger": {
+        "z_t": "hidden state at time t [state units]",
+        "y_t": "observation at time t [observation units]",
+        "u_t": "optional input at time t [input units]",
+        "p(z_t|z_{t-1}, u_t)": "dynamics (transition) model [density]",
+        "p(y_t|z_t, u_t)": "observation (measurement) model [density]"
+      },
+      "assumptions": [
+        "The state is Markov: z_t depends on the past only through z_{t-1} and the current input.",
+        "Observations depend on history only through the current state and input."
+      ],
+      "breakdown_regime": "The Markov blanket is a modeling choice: real form, fatigue, and morale carry longer memory than one step, so a first order SSM understates persistence unless the state is augmented.",
+      "domain": "state-space models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats a season as a state-space model: each team and player has a latent state that evolves by a dynamics model and is observed noisily through games. Filtering is the weekly update discipline, and smoothing is the honest end of season re-evaluation of what the state must have been.",
+        "source_operator": "ssm_factorization_bayesian_filtering",
+        "telemetry": "game by game observations, practice and injury reports as inputs, snap counts, opponent adjustments"
+      }
+    },
+    {
+      "primitive_id": "kalman_filter",
+      "name": "The Kalman filter is exact Bayesian filtering for linear Gaussian state-space models, with a predict step through the dynamics and an update step weighted by the Kalman gain",
+      "verbatim_quote": "The Kalman filter (KF) is an algorithm for exact Bayesian filtering for linear Gaussian state space models.",
+      "page": "Ch. 8, Sec. 8.2.2, Eqs. (8.22)-(8.31), txt ~L21020",
+      "latex": "K_t = \\Sigma_{t \\mid t-1} H_t^{\\top} S_t^{-1}, \\quad \\mu_{t \\mid t} = \\mu_{t \\mid t-1} + K_t (y_t - \\hat{y}_t), \\quad S_t = H_t \\Sigma_{t \\mid t-1} H_t^{\\top} + R_t",
+      "symbol_and_unit_ledger": {
+        "K_t": "Kalman gain matrix [dimensionless weighting]",
+        "Sigma_{t|t-1}": "predicted state covariance [state units squared]",
+        "H_t": "observation matrix mapping state to observation space [units ratio]",
+        "S_t": "innovation covariance [observation units squared]",
+        "R_t": "observation noise covariance [observation units squared]",
+        "y_t - yhat_t": "innovation or residual [observation units]",
+        "mu_{t|t}": "filtered state mean [state units]"
+      },
+      "assumptions": [
+        "Dynamics and observation models are linear with Gaussian noise, so the belief state stays Gaussian and is summarized by a mean and covariance.",
+        "Noise covariances Q_t and R_t are known or estimated."
+      ],
+      "breakdown_regime": "Exactness dies with nonlinearity or non-Gaussian noise; the gain is only as honest as the noise covariances, and understating observation noise makes the filter chase noise.",
+      "domain": "state-space models / filtering",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Kalman gain is the engine trust dial made explicit: a rating update moves toward a new observation in proportion to prior uncertainty versus observation noise. Quiet bye week priors with low variance barely move; a high variance young player with a loud performance moves a lot, and the gain value itself is logged as the reason.",
+        "source_operator": "kalman_filter",
+        "telemetry": "sequential game observations, player and team rating priors with variances, measurement noise estimates per data source"
+      }
+    },
+    {
+      "primitive_id": "belief_propagation_sum_product",
+      "name": "Belief propagation computes exact posterior marginals on trees by passing local messages that summarize the evidence in each subtree",
+      "verbatim_quote": "Hence these are known as message passing algorithms.",
+      "page": "Ch. 9, Secs. 9.1 and 9.3.2, Eqs. (9.58)-(9.59), txt ~L23145 and ~L23860",
+      "latex": "m_{s \\to t}(z_t) = \\sum_{z_s} \\psi_{st}(z_s, z_t) \\, \\mathrm{bel}_s(z_s)",
+      "symbol_and_unit_ledger": {
+        "m_{s->t}(z_t)": "message from node s to node t, a distribution over z_t [density]",
+        "psi_{st}(z_s, z_t)": "pairwise potential between s and t [unnormalized probability]",
+        "bel_s(z_s)": "belief state at node s combining local evidence and child messages [density]",
+        "z_s, z_t": "variables at nodes s and t [variable units]"
+      },
+      "assumptions": [
+        "The graph is a tree (or has been converted to one), so each message summarizes a disjoint subtree of evidence.",
+        "Potentials factorize over nodes and edges as in the undirected graphical model."
+      ],
+      "breakdown_regime": "On loopy graphs the same evidence circulates and is double counted, so marginals can be overconfident or fail to converge; junction tree conversion restores exactness at exponential cost in treewidth.",
+      "domain": "graphical model inference",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine dependency web, injuries feeding availability feeding unit strength feeding game projection, is a message passing substrate: each node publishes a belief distribution, neighbors update from messages only, and no node needs the global state. That is what keeps a single late injury report from forcing a full refit.",
+        "source_operator": "belief_propagation_sum_product",
+        "telemetry": "node level belief distributions across the matchup graph, availability reports, unit strength estimates"
+      }
+    },
+    {
+      "primitive_id": "hidden_markov_model",
+      "name": "A hidden Markov model is a state-space model with discrete latent states, so the hidden regime sequence can be inferred exactly with forward-backward recursions",
+      "verbatim_quote": "If all the latent variables are discrete (as we assume in this section), the resulting model is called a hidden Markov model or HMM.",
+      "page": "Ch. 9, Sec. 9.2.1, Eq. (9.1), txt ~L23190",
+      "latex": "p(y_{1:T}, z_{1:T}) = p(z_1) \\prod_{t=2}^{T} p(z_t \\mid z_{t-1}) \\prod_{t=1}^{T} p(y_t \\mid z_t)",
+      "symbol_and_unit_ledger": {
+        "z_t": "discrete hidden state at time t [state label]",
+        "y_t": "observation at time t [observation units]",
+        "p(z_t|z_{t-1})": "state transition probabilities [dimensionless]",
+        "p(y_t|z_t)": "emission probabilities [dimensionless]"
+      },
+      "assumptions": [
+        "The latent chain is first order Markov with a finite number of discrete states.",
+        "Emissions depend only on the current state."
+      ],
+      "breakdown_regime": "Geometric state durations are forced by the Markov assumption, and the state labels are only as meaningful as the emissions make them; regime labels fitted post hoc can be storytelling if emissions overlap heavily.",
+      "domain": "state-space models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Hidden regimes are everywhere in the engine domain: a quarterback is in a healthy, limited, or compromised regime, a defense is in a base or injury depleted regime, and the observations are weekly performances. The HMM layer infers the regime path instead of pretending performance itself is the state.",
+        "source_operator": "hidden_markov_model",
+        "telemetry": "weekly performance sequences, practice participation levels, snap share trajectories, opponent adjusted outputs"
+      }
+    },
+    {
+      "primitive_id": "variational_inference_elbo",
+      "name": "Variational inference turns posterior inference into optimization: pick the distribution in a tractable family closest in KL to the true posterior, equivalently maximize the ELBO",
+      "verbatim_quote": "In this chapter, we discuss variational inference, which reduces posterior inference to optimization.",
+      "page": "Ch. 10, Sec. 10.1.1, Eqs. (10.1), (10.9)-(10.10), txt L26546",
+      "latex": "\\mathcal{L}(\\theta, \\psi \\mid x) = E_{q_\\psi(z)}[\\log p_\\theta(x, z) - \\log q_\\psi(z)] \\le \\log p_\\theta(x)",
+      "symbol_and_unit_ledger": {
+        "L": "evidence lower bound (ELBO) [log probability]",
+        "q_psi(z)": "variational approximation to the posterior with parameters psi [density]",
+        "p_theta(x, z)": "joint model density [density]",
+        "log p_theta(x)": "log evidence (marginal likelihood) [log probability]",
+        "psi": "variational parameters [parameter units]"
+      },
+      "assumptions": [
+        "The posterior is intractable but the joint density can be evaluated pointwise.",
+        "A parametric family Q of approximating distributions has been chosen; the true posterior generally lies outside it."
+      ],
+      "breakdown_regime": "The KL direction used (q against p) is mode seeking and typically underestimates posterior variance; a restrictive family caps accuracy no matter how well it is optimized, and the ELBO gap to the evidence is unknown.",
+      "domain": "approximate inference",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Nightly engine scale rules out exact posteriors for the full model stack, so VI is the production inference contract: every approximate posterior ships with its ELBO and family choice recorded, and layers that know their q is mean field treat their own variances as lower bounds on true uncertainty.",
+        "source_operator": "variational_inference_elbo",
+        "telemetry": "joint model evaluations, streaming data batches, prior specifications, compute budgets per run"
+      }
+    },
+    {
+      "primitive_id": "reparameterization_trick",
+      "name": "The reparameterization trick rewrites a sample from a parameterized distribution as a deterministic differentiable function of parameter-free noise, so gradients flow through sampling",
+      "verbatim_quote": "In this section, we discuss the reparameterization trick for taking gradients wrt distributions over continuous latent variables",
+      "page": "Ch. 10, Sec. 10.2.1, Eqs. (10.36)-(10.40), txt ~L26941",
+      "latex": "z = g(\\phi, x, \\epsilon), \\quad \\epsilon \\sim p(\\epsilon); \\qquad z \\sim \\mathcal{N}(\\mu, \\mathrm{diag}(\\sigma)) \\iff z = \\mu + \\epsilon \\odot \\sigma, \\ \\epsilon \\sim \\mathcal{N}(0, I)",
+      "symbol_and_unit_ledger": {
+        "z": "latent sample [latent units]",
+        "g": "differentiable invertible transformation [function]",
+        "phi": "variational parameters [parameter units]",
+        "epsilon": "parameter-free base noise [dimensionless]",
+        "mu, sigma": "Gaussian location and scale [latent units]"
+      },
+      "assumptions": [
+        "The distribution is reparameterizable: samples can be written as a differentiable function of fixed noise and the parameters.",
+        "The Jacobian of the transformation is tractable when densities must be evaluated."
+      ],
+      "breakdown_regime": "Does not apply directly to discrete latent variables, where score function estimators with much higher variance are the fallback; a single Monte Carlo sample gives an unbiased but noisy gradient.",
+      "domain": "variational inference / gradient estimation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Reparameterization is what makes the engine latent models trainable end to end: player and team embeddings live inside probabilistic models, and gradient signal reaches the generative side and the inference side through the same samples, instead of the two being tuned in separate, inconsistent passes.",
+        "source_operator": "reparameterization_trick",
+        "telemetry": "training batches, latent samples, gradient norms, encoder and decoder parameter states"
+      }
+    },
+    {
+      "primitive_id": "monte_carlo_integration",
+      "name": "Monte Carlo integration estimates expectations by averaging function values at random samples, with accuracy governed by sample count rather than dimension",
+      "verbatim_quote": "In this chapter, we discuss Monte Carlo methods, which are a stochastic approach to solving numerical integration problems.",
+      "page": "Ch. 11, Sec. 11.2, Eq. (11.2), txt L29078",
+      "latex": "E[f(x)] \\approx \\frac{1}{N_s} \\sum_{n=1}^{N_s} f(x^{(n)}), \\quad x^{(n)} \\sim p(x)",
+      "symbol_and_unit_ledger": {
+        "f(x)": "function whose expectation is wanted [function units]",
+        "p(x)": "target distribution [density]",
+        "x^(n)": "the n-th random sample [variable units]",
+        "N_s": "number of samples [count]"
+      },
+      "assumptions": [
+        "Samples can be drawn from the target distribution p.",
+        "The estimator variance is finite, so the standard error shrinks like one over the square root of N_s."
+      ],
+      "breakdown_regime": "Useless without a sampler for p, and high variance when f is large where p is small; grid methods beat it in very low dimensions.",
+      "domain": "monte carlo methods",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Game simulation in the engine is Monte Carlo integration over the posterior predictive: sample latent states and parameters, simulate, average. The convergence discipline transfers directly, meaning simulation counts are set from standard errors, not from habit, and rare outcome frequencies carry explicit error bars.",
+        "source_operator": "monte_carlo_integration",
+        "telemetry": "posterior samples, simulated play sequences, outcome tallies with standard errors"
+      }
+    },
+    {
+      "primitive_id": "importance_sampling",
+      "name": "Importance sampling samples from a tractable proposal and reweights by the target-to-proposal density ratio, handling unnormalized targets through self-normalization",
+      "verbatim_quote": "In this section, we describe a Monte Carlo method known as importance sampling for approximating integrals of the form",
+      "page": "Ch. 11, Sec. 11.5, Eqs. (11.33)-(11.34), txt L29477",
+      "latex": "\\tilde{w}_n = \\frac{\\pi(x_n)}{q(x_n)}, \\quad x_n \\sim q(x)",
+      "symbol_and_unit_ledger": {
+        "w_n tilde": "unnormalized importance weight for sample n [dimensionless]",
+        "pi(x_n)": "target density at sample n [density]",
+        "q(x_n)": "proposal density at sample n [density]",
+        "x_n": "n-th sample drawn from the proposal [variable units]"
+      },
+      "assumptions": [
+        "The proposal support covers the target support: q(x) is nonzero wherever pi(x) is nonzero.",
+        "Densities can be evaluated pointwise, at least up to a shared normalization constant for the self-normalized version."
+      ],
+      "breakdown_regime": "Weight degeneracy: in high dimensions a few samples take nearly all the weight, the effective sample size collapses, and estimates look stable while being driven by a handful of points.",
+      "domain": "monte carlo methods",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Importance sampling is the engine counterfactual reweighting tool: simulations generated under one condition, say a neutral game script, are reweighted to answer questions under another condition, such as a star player removed, without rerunning the whole simulation, provided the effective sample size is reported with the answer.",
+        "source_operator": "importance_sampling",
+        "telemetry": "stored simulation samples with their generating densities, scenario definitions, effective sample size diagnostics"
+      }
+    },
+    {
+      "primitive_id": "mcmc_metropolis_hastings",
+      "name": "Metropolis-Hastings builds a Markov chain whose stationary distribution is the target by accepting proposals with a probability that corrects for both target density and proposal asymmetry",
+      "verbatim_quote": "The basic idea behind MCMC is to construct a Markov chain (Section 2.6) on the state space X whose stationary distribution is the target density",
+      "page": "Ch. 12, Secs. 12.1-12.2, Eqs. (12.1)-(12.3), txt L30169",
+      "latex": "A = \\min(1, \\alpha), \\quad \\alpha = \\frac{p^{*}(x') q(x \\mid x')}{p^{*}(x) q(x' \\mid x)}",
+      "symbol_and_unit_ledger": {
+        "A": "acceptance probability [dimensionless, 0 to 1]",
+        "p*(x)": "target density at current state, known up to normalization [density]",
+        "p*(x')": "target density at proposed state [density]",
+        "q(x'|x)": "proposal probability of moving to x' from x [density]",
+        "q(x|x')": "reverse proposal probability [density]"
+      },
+      "assumptions": [
+        "The chain is ergodic: the proposal can eventually reach any region of positive target density.",
+        "Only density ratios are needed, so the target may be unnormalized, which is what makes posterior sampling possible."
+      ],
+      "breakdown_regime": "Samples are correlated, burn-in must be discarded, and mixing can be catastrophically slow in high dimensions or multimodal targets; a chain that has not mixed gives confident wrong answers.",
+      "domain": "markov chain monte carlo",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "MCMC is the engine reference sampler: variational and filtering approximations are periodically audited against long MCMC runs on the same posteriors, so the fast production layers inherit a measured error profile instead of an assumed one.",
+        "source_operator": "mcmc_metropolis_hastings",
+        "telemetry": "posterior density evaluations, proposal tuning statistics, chain diagnostics such as effective sample size and split R-hat"
+      }
+    },
+    {
+      "primitive_id": "particle_filtering_smc",
+      "name": "Sequential Monte Carlo tracks a sequence of target distributions with weighted particles, resampling to fight degeneracy, which yields particle filtering for state-space models",
+      "verbatim_quote": "In this chapter, we discuss sequential Monte Carlo or SMC algorithms, which can be used to sample from a sequence of related probability distributions.",
+      "page": "Ch. 13, Sec. 13.1, Eqs. (13.1)-(13.3), txt L32640",
+      "latex": "\\pi_t(z_{1:t}) = \\frac{\\tilde{\\gamma}_t(z_{1:t})}{Z_t}",
+      "symbol_and_unit_ledger": {
+        "pi_t": "normalized target distribution at step t [density]",
+        "gamma_t tilde": "unnormalized target at step t [unnormalized density]",
+        "Z_t": "normalization constant at step t [probability mass]",
+        "z_{1:t}": "latent sequence up to time t [state units]"
+      },
+      "assumptions": [
+        "Targets form a sequence in which each step extends or refines the previous one, as in filtering where data arrives over time.",
+        "A proposal mechanism can extend particles from step t-1 to step t, and importance weights are computable."
+      ],
+      "breakdown_regime": "Particle degeneracy and sample impoverishment: after resampling, few distinct ancestors survive, so long histories collapse to a handful of trajectories unless rejuvenation moves are added.",
+      "domain": "sequential monte carlo",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Live updating is particle filtering in the engine: each plausible game state or team form trajectory is a particle, each new drive or quarter reweights the set, and resampling concentrates compute on the worlds still consistent with what has actually happened.",
+        "source_operator": "particle_filtering_smc",
+        "telemetry": "streaming play by play events, live win relevant state variables, per particle weights and ancestor counts"
+      }
+    },
+    {
+      "primitive_id": "glm_link_function",
+      "name": "A generalized linear model is a conditional exponential family whose mean is tied to a linear predictor through a link function",
+      "verbatim_quote": "A generalized linear model or GLM [MN89] is a conditional version of an exponential family distribution (Section 2.4).",
+      "page": "Ch. 15, Sec. 15.1, Eqs. (15.1)-(15.4), txt L35144",
+      "latex": "\\ell(\\mu_n) = \\eta_n = w^{\\top} x_n, \\quad \\mu_n = A'(\\eta_n)",
+      "symbol_and_unit_ledger": {
+        "ell": "link function [function]",
+        "mu_n": "expected response for example n [response units]",
+        "eta_n": "natural (linear) predictor [dimensionless]",
+        "w": "weight vector [units per feature]",
+        "x_n": "feature vector for example n [feature units]",
+        "A(eta_n)": "log normalizer of the exponential family [log probability]"
+      },
+      "assumptions": [
+        "The response distribution belongs to an exponential family with sufficient statistic T(y_n) = y_n.",
+        "The natural parameter is linear in the features, so all nonlinearity enters through the link and the family."
+      ],
+      "breakdown_regime": "Linearity in the natural parameter caps predictive flexibility; interactions and nonlinear effects must be hand built as basis expansions, and the variance is fully determined by the mean through A''.",
+      "domain": "predictive models",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GLMs are the engine interpretable baseline layer: a logistic model on a handful of named factors gives a reference projection whose every coefficient can be read aloud, and the deep layers must beat this baseline measurably before their extra complexity is allowed to ship.",
+        "source_operator": "glm_link_function",
+        "telemetry": "named factor feature vectors, binary and count outcomes, coefficient tables with standard errors"
+      }
+    },
+    {
+      "primitive_id": "bayesian_neural_networks",
+      "name": "A Bayesian neural network puts a posterior over network weights and predicts by Bayesian model averaging, trading a single function for a distribution over functions",
+      "verbatim_quote": "Considering all of these different models together can lead to improved accuracy and uncertainty representation.",
+      "page": "Ch. 17, Sec. 17.1, Eq. (17.1), txt L38159",
+      "latex": "p(y \\mid x, \\mathcal{D}) = \\int p(y \\mid x, \\theta) p(\\theta \\mid \\mathcal{D}) d\\theta",
+      "symbol_and_unit_ledger": {
+        "theta": "neural network weights [parameter units]",
+        "p(theta|D)": "posterior over weights [density]",
+        "p(y|x, theta)": "network likelihood for output y [density]",
+        "D": "training data [dataset]"
+      },
+      "assumptions": [
+        "A prior over weights is specified, commonly factored Gaussian, which also defines a prior over functions.",
+        "The posterior is approximated, since exact integration over millions of weights is impossible; Laplace, variational, and ensemble approximations are the standard routes."
+      ],
+      "breakdown_regime": "Underspecification means many weight settings fit the data yet generalize differently; weight space priors map awkwardly to function space behavior, and cheap approximations can badly understate predictive uncertainty out of distribution.",
+      "domain": "bayesian deep learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The BNN layer is the engine answer to neural projections that pretend to be certain: the network outputs a distribution induced by many plausible weight settings, so a projection far from the training manifold automatically widens instead of extrapolating a single function with false confidence.",
+        "source_operator": "bayesian_neural_networks",
+        "telemetry": "training sets with coverage maps, weight posterior approximations, predictive variance decomposed by source"
+      }
+    },
+    {
+      "primitive_id": "gaussian_process",
+      "name": "A Gaussian process is a prior over functions defined by a mean and a positive definite kernel, and conditioning on Gaussian observations gives a closed form posterior with calibrated uncertainty",
+      "verbatim_quote": "In this chapter, we consider a Bayesian approach in which we represent uncertainty about the input-output mapping f by defining a prior distribution over functions, and then updating it given data.",
+      "page": "Ch. 18, Secs. 18.1.1 and 18.3.1, Eqs. (18.1), (18.45)-(18.47), txt L39952 and L40594",
+      "latex": "\\mu_{* \\mid X} = \\mu_* + K_{X,*}^{\\top} K_{X,X}^{-1} (f_X - \\mu_X), \\quad \\Sigma_{* \\mid X} = K_{*,*} - K_{X,*}^{\\top} K_{X,X}^{-1} K_{X,*}",
+      "symbol_and_unit_ledger": {
+        "f(x) ~ GP(m(x), K(x, x'))": "Gaussian process prior over functions [function distribution]",
+        "K(x, x')": "covariance (Mercer kernel) between function values at x and x' [output units squared]",
+        "K_{X,X}": "kernel matrix over training inputs [output units squared]",
+        "K_{X,*}": "kernel cross matrix between training and test inputs [output units squared]",
+        "mu_{*|X}": "posterior mean at test inputs [output units]",
+        "Sigma_{*|X}": "posterior covariance at test inputs [output units squared]"
+      },
+      "assumptions": [
+        "Function values at any finite set of inputs are jointly Gaussian.",
+        "The kernel is positive definite; with a Gaussian likelihood the posterior is available in closed form."
+      ],
+      "breakdown_regime": "Exact inference costs cubic time in the number of points, the kernel choice dominates behavior and a wrong length scale quietly ruins extrapolation, and non-Gaussian likelihoods force approximate inference.",
+      "domain": "gaussian processes / nonparametric bayes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GPs are the engine smooth trajectory model: player aging curves, team strength through a season, and kicker accuracy by distance are functions with uncertainty that must grow away from observations. The kernel encodes how fast the truth is allowed to change, and the posterior band is published with the curve, not hidden.",
+        "source_operator": "gaussian_process",
+        "telemetry": "time stamped performance observations, distance and context covariates, kernel hyperparameter fits by marginal likelihood"
+      }
+    },
+    {
+      "primitive_id": "distribution_shift",
+      "name": "Distribution shift is the failure of the iid assumption when the test distribution differs from the training distribution, often because models lean on spurious correlations that are not stable across distributions",
+      "verbatim_quote": "The standard approach to supervised ML assumes the training and test sets both contain independent and identically distributed (iid) samples from the same distribution.",
+      "page": "Ch. 19, Secs. 19.1-19.2, txt L42919",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Training and deployment data are usually assumed iid from one distribution; shift is defined relative to that assumption.",
+        "Shift can be decomposed causally into changes in inputs, labels, or the conditional relationship between them."
+      ],
+      "breakdown_regime": "No single fix exists: detection can say the world changed without saying how, robustness methods trade in-distribution accuracy for stability, and adaptation with little target data can chase noise.",
+      "domain": "robustness / domain generalization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine treats every season boundary, rule change, and opponent context change as a suspected shift event: features are audited for spurious stability, meaning predictive in the training window but structurally fragile, and projections carry a shift exposure note when the deployment context leaves the training envelope.",
+        "source_operator": "distribution_shift",
+        "telemetry": "feature stability audits across seasons, context tags per game, performance deltas between home contexts and novel contexts"
+      }
+    },
+    {
+      "primitive_id": "variational_autoencoder",
+      "name": "A variational autoencoder pairs a deep latent variable generative model with a learned inference network that amortizes posterior inference, trained jointly on a variational bound",
+      "verbatim_quote": "The model can be thought of as encoding the input x into a stochastic latent bottleneck z and then decoding it to approximately reconstruct the input, as shown in Figure 21.1.",
+      "page": "Ch. 21, Secs. 21.1-21.2, Eqs. (21.1)-(21.7), txt L45630",
+      "latex": "p_\\theta(x) = \\int p_\\theta(x \\mid z) p_\\theta(z) dz",
+      "symbol_and_unit_ledger": {
+        "p_theta(z)": "prior over latent code z [density]",
+        "p_theta(x|z)": "decoder likelihood, an exponential family with parameters from a neural network d_theta(z) [density]",
+        "q_phi(z|x)": "recognition (inference) network approximating the posterior [density]",
+        "z": "latent code [latent units]",
+        "x": "observation [data units]"
+      },
+      "assumptions": [
+        "The prior over latents is simple, usually standard Gaussian, and the decoder is a flexible neural network.",
+        "The true posterior is intractable, so the inference network is trained to approximate it under the same ELBO objective as the generative model."
+      ],
+      "breakdown_regime": "Posterior collapse: a powerful decoder can ignore the latent code entirely, leaving the bottleneck empty; the Gaussian posterior family also limits how faithfully multimodal posteriors are represented.",
+      "domain": "generative models / representation learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The VAE pattern is the engine embedding factory: players, teams, and play types are encoded into stochastic latent codes whose geometry is learned from reconstruction plus regularization, and because the code is a distribution, a rarely observed player gets a wide code that downstream layers must respect.",
+        "source_operator": "variational_autoencoder",
+        "telemetry": "player and team event sequences, box score vectors, play embeddings, reconstruction errors per entity"
+      }
+    },
+    {
+      "primitive_id": "autoregressive_models",
+      "name": "An autoregressive model factorizes a joint distribution by the chain rule into a product of conditionals, each variable given all its predecessors",
+      "verbatim_quote": "By the chain rule of probability, we can write any joint distribution over T variables as follows:",
+      "page": "Ch. 22, Sec. 22.1, Eq. (22.1), txt L47212",
+      "latex": "p(x_{1:T}) = \\prod_{t=1}^{T} p(x_t \\mid x_{1:t-1})",
+      "symbol_and_unit_ledger": {
+        "x_t": "the t-th variable in the sequence [variable units]",
+        "p(x_t|x_{1:t-1})": "conditional distribution of x_t given all predecessors [density]",
+        "T": "sequence length [count]"
+      },
+      "assumptions": [
+        "A variable ordering is fixed; the factorization is exact for any ordering, but learnability depends heavily on the chosen order.",
+        "Each conditional is modeled with a shared function, such as a masked neural network, rather than a separate table."
+      ],
+      "breakdown_regime": "Generation is inherently sequential and slow, the model learns no compact latent representation, and each conditional grows harder as the conditioning set grows unless the architecture compresses the past.",
+      "domain": "generative models / density estimation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Play by play and drive modeling in the engine is autoregressive: the next event distribution is conditioned on the full history of the drive and game, exact likelihoods make competing sequence models directly comparable, and the known cost, sequential generation, is budgeted explicitly in simulation design.",
+        "source_operator": "autoregressive_models",
+        "telemetry": "ordered event streams, down distance and field position histories, exact log likelihoods per sequence model"
+      }
+    },
+    {
+      "primitive_id": "normalizing_flows",
+      "name": "A normalizing flow builds a complex density by pushing a simple base distribution through a composition of invertible transformations, with exact likelihoods from the change of variables formula",
+      "verbatim_quote": "In this chapter we discuss normalizing flows, a class of flexible density models that can be easily sampled from and whose exact likelihood function is efficient to compute.",
+      "page": "Ch. 23, Sec. 23.1.1, Eqs. (23.1)-(23.3), txt L47541",
+      "latex": "\\log p_x(x) = \\log p_u(u) - \\log \\left| \\det J(f)(u) \\right|, \\quad x = f(u)",
+      "symbol_and_unit_ledger": {
+        "p_x(x)": "density of the transformed variable [density]",
+        "p_u(u)": "base density, usually standard Gaussian [density]",
+        "f": "invertible transformation (diffeomorphism) [function]",
+        "J(f)(u)": "Jacobian matrix of f at u [units ratio]",
+        "det J(f)(u)": "Jacobian determinant, the local volume change [dimensionless]"
+      },
+      "assumptions": [
+        "Every transformation is invertible with a tractable Jacobian determinant, typically by triangular structure or coupling design.",
+        "Latent and data dimensions are equal, since the map is a bijection."
+      ],
+      "breakdown_regime": "The invertibility constraint restricts architectures, determinant computation is the bottleneck in high dimensions, and topological mismatches between base and target (such as disconnected modes) force extreme stretching that trains poorly.",
+      "domain": "generative models / density estimation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Flows give the engine exact likelihood density models for continuous stat distributions: a player projection is not just a mean but a full density whose likelihood can be scored, compared across model versions, and sampled, which makes distribution level regression tests possible.",
+        "source_operator": "normalizing_flows",
+        "telemetry": "continuous performance distributions, density evaluations on holdout data, samples for downstream simulation"
+      }
+    },
+    {
+      "primitive_id": "energy_based_models",
+      "name": "An energy-based model defines a distribution through an unnormalized energy function and a partition function, trading architectural freedom for intractable normalization",
+      "verbatim_quote": "Energy-based models or EBM can be written as a Gibbs distribution as follows:",
+      "page": "Ch. 24, Sec. 24.1, Eqs. (24.1)-(24.2), txt L48469",
+      "latex": "p_\\theta(x) = \\frac{\\exp(-E_\\theta(x))}{Z_\\theta}, \\quad Z_\\theta = \\int \\exp(-E_\\theta(x)) dx",
+      "symbol_and_unit_ledger": {
+        "E_theta(x)": "energy function, lower means more plausible [energy units, arbitrary scale]",
+        "Z_theta": "partition function (normalization constant) [probability mass]",
+        "theta": "model parameters [parameter units]",
+        "x": "configuration being scored [data units]"
+      },
+      "assumptions": [
+        "The energy function can be any function returning a scalar; it need not integrate to one, which is the source of the flexibility.",
+        "Training and sampling must work around the intractable partition function, using methods such as contrastive divergence, score matching, or annealed importance sampling."
+      ],
+      "breakdown_regime": "Likelihoods cannot be evaluated exactly, sampling requires MCMC in data space which can mix poorly, and energies are only meaningful relative to the same model since the scale is set by Z.",
+      "domain": "generative models / undirected models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The EBM pattern maps to the engine plausibility layer: a candidate game script or player usage pattern is scored by summed soft constraints, each an energy term, and combining constraint sets is just adding energies, exactly the product of experts structure, so new knowledge enters as a new term without retraining the rest.",
+        "source_operator": "energy_based_models",
+        "telemetry": "constraint violation measurements per candidate scenario, per term energy contributions, sampled scenario sets"
+      }
+    },
+    {
+      "primitive_id": "diffusion_models_ddpm",
+      "name": "A diffusion model defines a fixed forward process that gradually noises data to a reference distribution and learns the reverse process that denoises step by step",
+      "verbatim_quote": "The basic idea behind these models is based on the observation that it is hard to convert noise into structured data, but it is easy to convert structured data into noise.",
+      "page": "Ch. 25, Secs. 25.1-25.2, Eqs. (25.1)-(25.4), txt L49332",
+      "latex": "q(x_t \\mid x_{t-1}) = \\mathcal{N}(x_t; \\sqrt{1 - \\beta_t} \\, x_{t-1}, \\beta_t I)",
+      "symbol_and_unit_ledger": {
+        "x_t": "data corrupted by t steps of noise [data units]",
+        "beta_t": "noise schedule variance at step t [dimensionless, in (0,1)]",
+        "q(x_t|x_{t-1})": "forward diffusion kernel [density]",
+        "p_theta(x_{t-1}|x_t)": "learned reverse (denoising) kernel [density]",
+        "alpha_t bar": "cumulative product of (1 - beta_s), controlling signal retained at step t [dimensionless]"
+      },
+      "assumptions": [
+        "The forward process is fixed and linear Gaussian, so marginals q(x_t|x_0) are available in closed form at any noise level.",
+        "The schedule is chosen so the terminal distribution is approximately standard Gaussian, and all latent states share the dimensionality of the data."
+      ],
+      "breakdown_regime": "Sampling requires running the full reverse chain, training objectives are weighted least squares whose weighting choices materially change sample quality, and the fixed encoder wastes capacity on noise levels that may not matter for the task.",
+      "domain": "generative models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Diffusion is the engine scenario refinement pattern: a coarse game projection is a noisy sketch, and iterative denoising steps, each conditioned on more resolved context such as confirmed lineups, sharpen it into a full distribution of plausible game scripts, with early steps cheap to redo when news breaks.",
+        "source_operator": "diffusion_models_ddpm",
+        "telemetry": "coarse projection sketches, progressively resolved context variables, per step noise level diagnostics"
+      }
+    },
+    {
+      "primitive_id": "gan_minimax",
+      "name": "A GAN trains an implicit generator against a discriminator in a min-max game, so the generator minimizes an estimated divergence that the discriminator is maximizing",
+      "verbatim_quote": "Many of these objectives use zero-sum losses via a min-max formulation: the generator’s goal is to minimize the same function the discriminator is maximizing.",
+      "page": "Ch. 26, Sec. 26.3.1, Eqs. (26.41)-(26.42), txt ~L51190",
+      "latex": "V(\\phi, \\theta) = \\frac{1}{2} E_{p^{*}(x)}[\\log D_\\phi(x)] + \\frac{1}{2} E_{q_\\theta(x)}[\\log(1 - D_\\phi(x))]",
+      "symbol_and_unit_ledger": {
+        "V(phi, theta)": "zero-sum value function [log probability units]",
+        "D_phi(x)": "discriminator probability that x is real [dimensionless, 0 to 1]",
+        "p*(x)": "data distribution [density]",
+        "q_theta(x)": "generator implied distribution [density]",
+        "G_theta(z)": "generator mapping noise z to samples [function]"
+      },
+      "assumptions": [
+        "The generator is an implicit model: it defines a sampling procedure, not an evaluable likelihood.",
+        "The discriminator is trained toward optimality so that the value approximates a true divergence between data and model distributions."
+      ],
+      "breakdown_regime": "Training is a nonconvex game with no reliable convergence guarantee in practice; mode collapse lets the generator win locally while dropping whole regions of the data distribution, and there is no likelihood to audit.",
+      "domain": "generative models / implicit models",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The adversarial pattern is the engine red team: a critic model is trained to distinguish engine projections from realized outcome distributions, and any systematic tell it finds, such as totals that are too narrow after rest advantages, becomes a named defect for the projection layer to fix.",
+        "source_operator": "gan_minimax",
+        "telemetry": "realized outcome distributions, projection samples, discriminator feature attributions, calibration reports by segment"
+      }
+    },
+    {
+      "primitive_id": "latent_factor_models",
+      "name": "A latent factor model generates observations from a single layer of hidden factors through a decoder, and classical models such as factor analysis, PCA, and LDA are special cases obtained by choosing the prior and likelihood",
+      "verbatim_quote": "In this chapter, we discuss a very simple kind of LVM that has the following form:",
+      "page": "Ch. 28, Sec. 28.1, Eqs. (28.1)-(28.2), txt L52339",
+      "latex": "z \\sim p(z), \\qquad x \\mid z \\sim \\mathrm{Expfam}(x \\mid f(z))",
+      "symbol_and_unit_ledger": {
+        "z": "latent factor vector [latent units]",
+        "p(z)": "factor prior [density]",
+        "f(z)": "decoder mapping factors to likelihood parameters [function]",
+        "x": "observation vector [data units]"
+      },
+      "assumptions": [
+        "The decoder is linear in this chapter's classical treatment, which is what makes the special cases (factor analysis, PCA, mixtures of factor analyzers) analytically tractable.",
+        "The scientific goal is posterior inference over the latents (discovery), not merely generating realistic samples."
+      ],
+      "breakdown_regime": "Factors are identifiable only up to rotation or permutation without extra constraints, so named factors can be artifacts of the parameterization; linear decoders miss interactions that the nonlinear (VAE) extension is needed for.",
+      "domain": "discovery / latent variable models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Latent factors are the engine discovery layer for structure nobody labeled: pace, scheme aggression, and garbage time propensity emerge as factors from raw game data, and every downstream layer can consume the factor scores as compact, inspectable state instead of re-deriving them from raw logs.",
+        "source_operator": "latent_factor_models",
+        "telemetry": "game and player observation matrices, factor loadings with rotation diagnostics, posterior factor scores per entity"
+      }
+    },
+    {
+      "primitive_id": "mixture_models",
+      "name": "A mixture model is a convex combination of component distributions, equivalently a hierarchical model with a discrete latent variable selecting the component",
+      "verbatim_quote": "One way to create more complex probability models is to take a convex combination of simple distributions. This is called a mixture model.",
+      "page": "Ch. 28, Sec. 28.2, Eqs. (28.3)-(28.7), txt ~L52390",
+      "latex": "p(x \\mid \\theta) = \\sum_{k=1}^{K} \\pi_k \\, p_k(x), \\quad \\sum_{k=1}^{K} \\pi_k = 1",
+      "symbol_and_unit_ledger": {
+        "pi_k": "mixture weight of component k [dimensionless, 0 to 1]",
+        "p_k(x)": "k-th component density, for a GMM the Gaussian N(x|mu_k, Sigma_k) [density]",
+        "z": "discrete latent component indicator [label]",
+        "K": "number of components [count]"
+      },
+      "assumptions": [
+        "Weights are nonnegative and sum to one, making the mixture a valid density.",
+        "Each observation is generated by exactly one component, chosen by the latent indicator."
+      ],
+      "breakdown_regime": "The number of components K is a modeling choice the data alone settles weakly; EM fitting has local optima and label switching, and components need not correspond to real subpopulations.",
+      "domain": "discovery / latent variable models",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mixtures are the engine archetype machinery: teams and players are soft assigned to performance archetypes, projections are computed per archetype and mixed by assignment probability, and a shifting mixture weight over a season is itself a tracked signal of role or scheme change.",
+        "source_operator": "mixture_models",
+        "telemetry": "entity feature vectors, component assignment posteriors, archetype level performance tables"
+      }
+    },
+    {
+      "primitive_id": "bayesian_nonparametric_models",
+      "name": "A Bayesian nonparametric model places priors directly on infinite dimensional objects such as functions or distributions, so model complexity grows with the data instead of being fixed in advance",
+      "verbatim_quote": "By contrast, in a Bayesian nonparametric (BNP) model (also called a non-parametric Bayesian model) we directly place prior distributions on the objects of interest, such as functions, graphs, probability distributions, etc.",
+      "page": "Ch. 31, Sec. 31.1, txt L59127",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The prior is a stochastic process: a distribution over a potentially infinite collection of random variables, of which only finitely many are ever queried.",
+        "The Gaussian process of Chapter 18 is the canonical example; the main text defers mixture style constructions (Dirichlet processes) to the supplementary chapter."
+      ],
+      "breakdown_regime": "The main chapter is an introduction only, with the technical development in a supplementary chapter, so operational details must come from elsewhere; inference over infinite objects is tractable only because finite data touches finite projections.",
+      "domain": "nonparametric bayes",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The BNP stance governs the engine archetype and factor inventories: the number of team archetypes or latent regimes is not fixed by decree, the model is allowed to open a new component when the data demands it, and unused capacity stays in the prior instead of forcing observations into ill fitting boxes.",
+        "source_operator": "bayesian_nonparametric_models",
+        "telemetry": "growing entity inventories, component occupancy counts, posterior over the number of occupied components"
+      }
+    },
+    {
+      "primitive_id": "representation_learning",
+      "name": "Representation learning trains transformations of raw input that make many downstream tasks easier, without knowing the tasks at training time",
+      "verbatim_quote": "Representation learning is a paradigm for training machine learning models to transform raw inputs into a form that makes it easier to solve new tasks.",
+      "page": "Ch. 32, Sec. 32.1, txt L59157",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The downstream task is unknown or plural at representation training time, so quality is judged by transfer, commonly by linear evaluation on frozen features.",
+        "The training task is a proxy chosen so that solving it forces the desired structure into the representation."
+      ],
+      "breakdown_regime": "A representation can score well on proxy evaluations while discarding exactly the information a new task needs; there is no task free definition of a good representation, and linear probe success can hide nonlinearly entangled factors.",
+      "domain": "representation learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Embeddings are the engine shared substrate: one representation of players, teams, and situations is trained to serve projection, similarity search, archetype discovery, and anomaly detection at once, and it is evaluated by transfer across all of them rather than by the single task that happened to train it.",
+        "source_operator": "representation_learning",
+        "telemetry": "frozen feature evaluations across tasks, similarity retrieval quality, per task transfer deltas against raw features"
+      }
+    },
+    {
+      "primitive_id": "bayesian_decision_theory",
+      "name": "Bayesian decision theory converts beliefs into action by choosing, for each observation, the action minimizing posterior expected loss",
+      "verbatim_quote": "In Bayesian decision theory, we treat the data as an observed constant, x, and the state of nature as an unknown random variable.",
+      "page": "Ch. 34, Sec. 34.1.3, Eqs. (34.7)-(34.9), txt ~L61780",
+      "latex": "\\rho_\\pi(a \\mid x) = E_{p_\\pi(h \\mid x)}[\\ell(h, a)], \\quad \\delta^{*}(x) = \\arg\\min_{a \\in A} \\rho_\\pi(a \\mid x)",
+      "symbol_and_unit_ledger": {
+        "rho_pi(a|x)": "posterior expected loss (posterior risk) of action a [loss units]",
+        "ell(h, a)": "loss incurred by action a when the state of nature is h [loss units]",
+        "h": "unknown state of nature [state units]",
+        "p_pi(h|x)": "posterior over the state given data x [density]",
+        "delta*(x)": "optimal decision rule [action]"
+      },
+      "assumptions": [
+        "A loss function over state and action pairs is specified, and the posterior over the state is available.",
+        "Expectations are taken over the posterior with the data fixed, the opposite conditioning from frequentist risk."
+      ],
+      "breakdown_regime": "The output is only as defensible as the loss function: mispriced losses produce rationally wrong actions, and the framework says nothing about where the loss numbers should come from.",
+      "domain": "decision theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the engine action contract: a projection distribution is never itself a decision. Publishing, passing, or escalating to deeper analysis are actions chosen by posterior expected loss under an explicit loss table, so a narrow distribution and a wide one with the same mean correctly lead to different actions.",
+        "source_operator": "bayesian_decision_theory",
+        "telemetry": "posterior distributions per decision, loss tables per action class, realized loss audits on past decisions"
+      }
+    },
+    {
+      "primitive_id": "value_of_perfect_information",
+      "name": "The value of perfect information is the increase in maximum expected utility from learning a variable before acting, and it prices whether a measurement is worth its cost",
+      "verbatim_quote": "Is it worth doing the test? This depends on how much our MEU changes if we know the outcome of the test (namely the state of S).",
+      "page": "Ch. 34, Sec. 34.2.3, Eq. (34.30), txt L62178",
+      "latex": "\\mathrm{VPI} = \\mathrm{MEU}(G + S \\to D) - \\mathrm{MEU}(G)",
+      "symbol_and_unit_ledger": {
+        "VPI": "value of perfect information about S [utility units]",
+        "MEU(G)": "maximum expected utility in the base influence diagram G [utility units]",
+        "MEU(G + S -> D)": "maximum expected utility after adding an information arc from S to the decision node D [utility units]",
+        "S": "variable that could be measured before deciding [variable units]"
+      },
+      "assumptions": [
+        "The decision maker will act optimally on the measurement once obtained; VPI is zero for information that cannot change any action.",
+        "Perfect information is the upper bound; imperfect tests are worth less and are priced by the same MEU difference construction."
+      ],
+      "breakdown_regime": "VPI is an expectation over measurement outcomes under the current model, so a misspecified model can price worthless information highly; it also ignores the cost of delay while measuring.",
+      "domain": "decision theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "VPI is the engine data acquisition rule: before any new feed, tracking source, or deeper research pass is bought with money or compute, its VPI is estimated as the expected improvement in decision quality, and sources whose information cannot change an action are declined regardless of how interesting they are.",
+        "source_operator": "value_of_perfect_information",
+        "telemetry": "decision logs with and without candidate signals, acquisition costs, counterfactual MEU recomputations on archived cases"
+      }
+    },
+    {
+      "primitive_id": "bellman_optimality_mdp",
+      "name": "In a Markov decision process the optimal value function is the unique solution of Bellman's optimality equations, turning an infinite horizon objective into a one step recursion",
+      "verbatim_quote": "Conversely, the optimal value functions are the only solutions that satisfy the equations.",
+      "page": "Ch. 34, Sec. 34.5.5, Eqs. (34.80)-(34.85), txt ~L63150; RL framing Ch. 35, Sec. 35.1, txt L63934",
+      "latex": "V^{*}(s) = \\max_{a} \\left[ R(s, a) + \\gamma \\, E_{p(s' \\mid s, a)}[V^{*}(s')] \\right]",
+      "symbol_and_unit_ledger": {
+        "V*(s)": "optimal state value [reward units]",
+        "R(s, a)": "expected immediate reward of action a in state s [reward units]",
+        "gamma": "discount factor [dimensionless, 0 to 1]",
+        "p(s'|s, a)": "transition distribution over next states [density]",
+        "Q*(s, a)": "optimal action value, V* composed with one chosen action [reward units]",
+        "G_0": "discounted cumulative return along a trajectory [reward units]"
+      },
+      "assumptions": [
+        "The environment is Markov and stationary, rewards are additive and discounted, and the state is fully observed for planning.",
+        "For a finite MDP at least one deterministic optimal policy exists."
+      ],
+      "breakdown_regime": "The recursion needs the transition and reward models; with learned models the errors compound through the max operator, which is optimistically biased, and partial observability breaks the state sufficiency the equations assume.",
+      "domain": "reinforcement learning / sequential decision making",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sequential choices inside the engine domain, in game decision sequences and week to week roster management alike, are evaluated by Bellman recursion rather than greedy one step scoring: the value of a state includes the value of the decisions it makes available later, which is what stops the planner from spending resources that a later, more valuable decision needed.",
+        "source_operator": "bellman_optimality_mdp",
+        "telemetry": "state transition frequencies from historical sequences, per action outcome distributions, discount settings per horizon"
+      }
+    },
+    {
+      "primitive_id": "causal_do_operator_ate",
+      "name": "Pearl's do-operator formalizes intervention as graph surgery: delete all incoming edges to the treated variable, fix its value, and the average treatment effect is the difference of interventional expectations",
+      "verbatim_quote": "P(X|do(A = a)) is the distribution of X given A = a under the mutilated graph that results from deleting all edges going into A.",
+      "page": "Ch. 36, Sec. 36.2.2, Eqs. (36.9)-(36.11), txt ~L66240",
+      "latex": "\\mathrm{ATE} = E[Y \\mid do(A = 1)] - E[Y \\mid do(A = 0)]",
+      "symbol_and_unit_ledger": {
+        "ATE": "average treatment effect [outcome units]",
+        "do(A = a)": "intervention setting treatment A to value a [operation]",
+        "Y": "outcome [outcome units]",
+        "A": "treatment variable [treatment units]",
+        "P(X|do(A = a))": "interventional distribution of X [density]"
+      },
+      "assumptions": [
+        "A causal graph (structural causal model) over the variables is asserted; the surgery semantics follow from it.",
+        "Conditioning and intervening differ exactly in that intervention cuts the treated variable off from its causes, so confounders keep their marginal distribution."
+      ],
+      "breakdown_regime": "The estimand is defined relative to the asserted graph: a wrong graph yields a precisely defined answer to the wrong question, and effects are undefined where the graph leaves the intervention ambiguous.",
+      "domain": "causal inference",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The do-operator is the engine line between correlation and lever: the effect of resting a player, changing a rotation, or firing a scheme is computed by surgery on the causal graph, not by comparing averages across games where those choices were made for reasons that themselves affect outcomes.",
+        "source_operator": "causal_do_operator_ate",
+        "telemetry": "causal graphs over lineup, rest, scheme, and outcome variables, intervention definitions per study, adjusted outcome histories"
+      }
+    },
+    {
+      "primitive_id": "causal_identification_backdoor",
+      "name": "A causal estimand is identified when assumptions about the causal structure let it be rewritten purely in terms of observable distributions, as in backdoor adjustment over a confounder set",
+      "verbatim_quote": "We say that the causal estimand is identified or identifiable under a given set of assumptions if those assumptions are sufficient to provide a unique answer.",
+      "page": "Ch. 36, Sec. 36.2.3, Eq. (36.12), txt ~L66280",
+      "latex": "\\tau^{ATE} = E\\left[ E[Y \\mid H, A = 1] - E[Y \\mid H, A = 0] \\right]",
+      "symbol_and_unit_ledger": {
+        "tau^ATE": "statistical estimand equal to the ATE under the assumed structure [outcome units]",
+        "H": "observed confounder set satisfying the backdoor criterion relative to A and Y [covariates]",
+        "E[Y|H, A = a]": "observable conditional expectation of the outcome [outcome units]"
+      },
+      "assumptions": [
+        "The adjustment set H blocks all backdoor paths from treatment to outcome and contains no descendants of the treatment.",
+        "Positivity holds: every treatment value occurs with positive probability within every stratum of H that occurs."
+      ],
+      "breakdown_regime": "With an unobserved common cause of treatment and outcome, no adjustment set exists and the effect is not identifiable at any sample size; identification is a property of the assumptions, not of the dataset.",
+      "domain": "causal inference",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Identification is the engine honesty gate for causal claims: before any effect estimate is published internally, the adjustment set and its backdoor justification are recorded, and questions that fail identification are answered with a refusal plus the extra measurement that would identify them, never with a dressed up correlation.",
+        "source_operator": "causal_identification_backdoor",
+        "telemetry": "confounder inventories per study question, stratum coverage tables, lists of unobserved common causes under consideration"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "844edea160b0f5c9-t1",
+      "think": "Kevin Murphy's Probabilistic Machine Learning: Advanced Topics is the third volume of his series and the one that treats the reader as a builder: across thirty six chapters and six parts it assembles the complete working stack of modern probabilistic modeling, and the extraction above mines one load bearing primitive from nearly every chapter. Part I lays the foundations: graphical models supply the factorization grammar, information theory supplies the KL divergence, entropy, and mutual information as the accounting system for belief, and the statistics chapter fixes the posterior predictive distribution as the canonical output object, the averaged prediction that the whole Bayesian approach exists to produce. Part II is the inference engine room, and its organization is itself an argument. Exact methods appear where structure permits them, the Kalman filter for linear Gaussian state sequences and sum product message passing on trees, and the approximate methods are presented as one family with a shared objective rather than as rival schools. EM and variational inference both optimize the same evidence lower bound, derived once in the optimization chapter and then reused everywhere; the reparameterization trick is what makes that bound differentiable end to end; and Monte Carlo integration, importance sampling, Metropolis-Hastings, and sequential Monte Carlo form a sampling ladder of increasing sophistication for the cases where optimization based approximation is not trusted. A reader who absorbs Part II has a complete taxonomy: every inference procedure in the rest of the book is exact message passing, bound optimization, or sampling, and most are hybrids. Part III turns inference toward prediction. GLMs anchor the interpretable end, where the link function and the exponential family do all the work and every coefficient can be defended. Bayesian neural networks and Gaussian processes are the two principled answers to the same question, how to carry a distribution over functions rather than a single fitted function, and Murphy is clear about their complementary costs: weight space priors that map awkwardly to function space for the networks, cubic scaling and kernel sensitivity for the processes. The distribution shift chapter then warns that the iid contract underneath all of it is routinely broken in deployment, and that spurious correlations are the default failure mode of models trained without causal awareness. Part IV treats generation as an explicit design space. VAEs buy amortized inference at the price of an approximate posterior and the risk of posterior collapse; autoregressive models buy exact likelihood at the price of sequential sampling; normalizing flows buy both exact likelihood and sampling at the price of invertibility constraints; energy based models buy total architectural freedom at the price of an intractable partition function; diffusion models buy training stability by fixing the forward noising process and learning only the reversal; GANs buy likelihood free learning at the price of a min-max game with no likelihood to audit. Nothing in Part IV is presented as a winner, which is the point: the choice of generative model is a choice of which intractability to live with. Part V reframes the same machinery as discovery, where the goal is posterior structure rather than samples: latent factor models and mixtures as the classical layer, Bayesian nonparametrics as the license to let complexity grow with data, and representation learning as the modern, task agnostic version of factor discovery. Part VI closes the loop from belief to action, and it is the part most methods books omit. Bayesian decision theory states the contract for converting a posterior into an action under a loss function; the value of information prices measurement itself; the MDP material and Bellman optimality extend the contract across time; and the causality chapter, written by Veitch and D'Amour, draws the formal line between observing and intervening, with the do-operator and an identification gate that refuses to let conditional expectations impersonate effects. For a reasoning engine, the deepest lesson is architectural discipline. Murphy never presents a model without its inference algorithm, its objective, and its failure mode in the same breath, so the book functions as a checklist of contracts: every layer should be able to state what distribution it maintains, what bound or sampler maintains it, what the approximation costs, and what observable would reveal that the cost has become unacceptable. It also disciplines vocabulary. Uncertainty is always a distribution, never an adjective; information is a divergence with units; a decision is the minimizer of a stated loss. Where the book itself breaks is mostly at its boundaries: several chapters, notably graph learning and nonparametric Bayes, are introductions pointing to supplementary material, the treatment of very large scale engineering is necessarily thin, and the 2023 snapshot predates the current generation of large sequence models, whose probabilistic treatment is still being written. None of that weakens the core, because the core is not a catalog of models but a way of holding them: state the joint, name the integral you cannot do, choose your approximation with your eyes open, and let the decision layer, not the modeling layer, decide what the uncertainty was worth. One more structural feature deserves emphasis, because it is easy to miss in a book this size: the parts are cumulative in a strict sense. The ELBO derived for EM in Part I is the same object optimized by variational inference in Part II, amortized by the VAE in Part IV, and generalized by the diffusion objective in Part IV as well, where the fixed encoder turns the hierarchical bound into a weighted least squares problem. The graphical model grammar of Part I is what makes the message passing of Part II, the causal graphs of Part VI, and even the energy based models of Part IV, which are undirected graphs in disguise, legible as variations on one theme. And the decision theory of Part VI retroactively explains the earlier parts: the posterior predictive is not an end in itself but the input to an expected loss computation, entropy and mutual information are not curiosities but the pricing system for attention and data acquisition, and calibration matters because a decision rule fed by a miscalibrated posterior is rationally wrong. An engine built in this image is therefore not a bag of models but a stack with typed interfaces, distributions flowing upward, losses and vetoes flowing downward.",
+      "retrocausal_genealogy": "The lineage runs from Bayes and Laplace through the twentieth century formalizations Murphy cites on every page: Kullback and Leibler (1951) for the divergence, Shannon (1948) behind the entropy chapter, Kalman (1960) for the filter, Dempster, Laird and Rubin (1977) for EM, Metropolis (1953) and Hastings (1970) for MCMC, and Pearl's structural causal program behind the final chapter. The modern layer is the deep learning synthesis of the 2010s: Kingma and Welling's VAE, Goodfellow's GAN, the flow literature, and the diffusion line from Sohl-Dickstein through Ho and collaborators, all re-derived here inside one notation so their shared variational skeleton becomes visible.",
+      "theory_of_mind": "Murphy writes for a reader who will implement things: nearly every chapter is coauthored with a specialist, notation is unified across chapters at real cost to each subfield's local conventions, and algorithms are given as numbered equations and pseudocode rather than prose gestures. His model of the domain is that probabilistic modeling is one subject, not a federation of tribes, and that the differences between methods are mostly differences in which integral is being approximated and what is being traded away to approximate it. He is candid about fashion, flagging where the field's attention exceeds the evidence, and he treats uncertainty quantification as the point of the enterprise rather than a refinement of point prediction.",
+      "cross_layer_veto": "Several results in this book veto common engine shortcuts. The KL asymmetry and the mode seeking direction of variational inference veto reading a variational variance as an honest variance. The distribution shift chapter vetoes deploying any model whose features were never audited for spurious stability. The causality chapter vetoes promoting a conditional expectation into an effect estimate without an identification argument, and the decision theory chapter vetoes acting on a posterior mean when the loss function is asymmetric. Finally the GAN and EBM chapters veto trusting any generative comparison that cannot produce a likelihood or an equivalent audit quantity."
+    }
+  ],
+  "universal_lens": "Read as a template, the book says: any discipline that reasons under uncertainty can be organized as distributions over hidden states, an inference procedure that maintains those distributions, an explicit approximation budget, and a decision rule that converts distributions into actions only at the boundary. Compression, prediction, generation, discovery, and control become one pipeline viewed at different taps, and the quality of a system is measured by whether its uncertainty survives the trip from data to decision without being silently discarded at an interface.",
+  "gsi_mapping": "For the Galaxy Sports Institute this volume is the curriculum spine for probabilistic reasoning: it teaches that a student's model is incomplete until they can name its latent variables, its inference method, its bound or sampler, and its breakdown regime. The institute takes the book's part structure as a syllabus, fundamentals, inference, prediction, generation, discovery, action, and its insistence that every method be presented with its failure mode as the standard for research literacy, including the causal chapters as the required corrective to correlational habits in sports analysis.",
+  "gse_mapping": "For the Galaxy Sports Edge engine this book is the reference architecture: factorization for the matchup graph, Kalman and particle filtering for state tracking across a season, variational bounds with logged ELBOs for nightly inference, posterior predictive outputs with entropy budgets, mutual information as the signal admission test, distribution shift audits at context changes, decision theoretic action selection with priced information gathering, a red team critic in the GAN pattern, and a causality gate that separates effects from associations before anything is called a lever. Each primitive above names the telemetry that would feed its production version."
+}

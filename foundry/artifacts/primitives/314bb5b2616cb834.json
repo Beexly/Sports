@@ -1,0 +1,811 @@
+{
+  "book_id": "314bb5b2616cb834",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_NFL_PASS_BLOCKING_HMM_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Brahme, Mehta, Matthews & Franks, 'Who blocks whom? Probabilistic pass-blocking assignments for evaluating blockers and pass rushers in American football', arXiv:2609.33664v2 [stat.AP], 29 Sep 2026 (Abhijit Brahme, Ishan Mehta, Gregory J. Matthews, Alexander Franks; UCSB / Loyola University Chicago), 30 pages; code on GitHub. Adapts Franks et al. 2015 basketball defensive-matchup HMM to football pass protection: frame-by-frame probabilistic blocker->rusher assignments in continuous time. Latent state = rusher identity; emission position bivariate normal on rusher-QB segment (mu=gamma_r R+gamma_q Q, core assumption blocker between rusher and QB) + von Mises orientation (face opposite rusher, kappa=1); transition stickiness rho with per-blocker Beta empirical-Bayes partial pooling; pre-snap multinomial-logistic prior (alignment/down/distance/formation); disengaged state with asymmetric shed (p_fail)/re-engage (rho_null). Eq1 STRAIN=-v/d (Nguyen 2023, central-difference 2nd-order). Metrics: front-normalized attention n_eff=sum theta; blocker assignment entropy; geometric+STRAIN beaten/won/release; Kaplan-Meier RMST + beat/shed rate (right-censored at throw); opponent-adjusted discrete-time logistic survival frailty (Trent Williams 15th->3rd); continuous-time assignment-weighted plus-minus on Delta STRAIN (filtered posterior no lookahead, AR(1) phi-hat=-0.059, attribute-archetype shrinkage z=[position,height,weight]); Eq4 pocket control PC=logit^-1(sum I_b - sum I_j) (Fernandez-Bornn 2018); Eq5 value-weighted near-QB space Q_k (V=exp(-dist/3yd), 5yd disk); directed assignment-flow space generation SGG (interior double-team generators). Data: 2023 NFL Big Data Bowl / Next Gen Stats 10Hz, 698 rushers/534 blockers/8530 plays, first 8 weeks 2021, PFF roles, snap->QB window, Kalman smoothing. Validation vs independent PFF charting: 44037 blocker-plays mean 0.77 engaged mass on charted rusher, 87.5% most-assigned agreement; rusher effect vs PFF pressure 0.57/sack 0.46 (strong), blocker effect vs pressures allowed 0.32 (directional). Params align football intuition (OL/TE gamma_r 0.82-0.89/rho 0.96-0.98; RB gamma_q 0.45/rho 0.39/p_fail 0.58). Limitations: positioning only (velocity complementary), cannot separate actively-impeding vs merely-in-right-place (missed block while assigned; two-layer HMM future), blocker evaluation associational not causal, STRAIN outcome-agnostic (any frame-level pressure measure substitutable). Extracted faithfully (not a derivative summary). Equations 1-5, transition, von Mises, logistic survival, attention, continuous APM, attribute model, space-generation weight printed in math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Domain football matches catalog (NFL offensive-line / pass-rush tracking analytics). Directly isomorphic to GSE's OL causal-breakdown assignment kernel, STRAIN pressure measure, partial-credit continuous plus-minus, opponent-adjusted block-sustain survival, pocket space-control surface, and teammate-freeing space-generation credit. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "ol_lack_measurable",
+      "name": "OL analysis hindered by lack of easily measurable quantities",
+      "verbatim_quote": "statistical analysis of offensive lineman has been hindered by the lack of easily measurable quantities",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Abhijit Brahme, Ishan Mehta, Gregory J. Matthews, Alexander Franks; UCSB / Loyola Chicago; arXiv:2609.33664v2 [stat.AP], 29 Sep 2026) opens from the premise that statistical analysis of offensive linemen has been hindered by the lack of easily measurable quantities; offensive linemen are typically noticed only when they err (allow a sack or miss a block), events which are relatively rare."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The OL measurement gap is literally the void GSE's tracking-derived blocking-assignment kernel fills.",
+        "source_operator": "ol_lack_measurable",
+        "telemetry": "OL analysis hindered by lack of measurable quantities; noticed only on rare errors (sack/missed block); Brahme/Mehta/Matthews/Franks arXiv 2609.33664"
+      }
+    },
+    {
+      "primitive_id": "hmm_basketball_to_football",
+      "name": "Adapt Franks 2015 defensive-matchup HMM from basketball to football pass protection",
+      "verbatim_quote": "we adapt the defensive-matchup hidden Markov model of Franks et al. (2015) from basketball to football pass protection",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The authors adapt the defensive-matchup hidden Markov model of Franks et al. (2015) from basketball to football pass protection, producing frame-by-frame probabilistic assignments of each pass blocker to the rushers; the latent states are the identities of the rushers a given offensive lineman could be blocking."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The matchup-HMM transfer is the same latent-assignment inference GSE uses for OL causal breakdown.",
+        "source_operator": "hmm_basketball_to_football",
+        "telemetry": "adapt Franks 2015 defensive-matchup HMM basketball->football pass protection; latent state = rusher identity being blocked; frame-by-frame probabilistic assignment"
+      }
+    },
+    {
+      "primitive_id": "frame_probabilistic_assignments",
+      "name": "Frame-by-frame probabilistic blocking assignments in continuous time (no prior work)",
+      "verbatim_quote": "producing frame-by-frame probabilistic assignments of each pass blocker to the rushers",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For each offensive lineman the model produces probabilistic blocking assignments associated with each frame of the tracking data; to the authors' knowledge no prior work generates blocking responsibilities as a frame-by-frame probabilistic quantity in continuous time."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The continuous-time probabilistic assignment is literally GSE's frame-level blocking-responsibility posterior.",
+        "source_operator": "frame_probabilistic_assignments",
+        "telemetry": "per-frame probabilistic blocker->rusher assignment; continuous time; no prior work generates blocking responsibilities as frame-by-frame probabilistic quantity"
+      }
+    },
+    {
+      "primitive_id": "rare_event_unreliable",
+      "name": "Metrics based on counts of rare events are unreliable estimates of ability",
+      "verbatim_quote": "Metrics based on counts of these rare events tend to be unreliable estimates of ability",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Offensive linemen are typically noticed when they err (allow a sack or miss a block), events which are relatively rare; metrics based on counts of these rare events tend to be unreliable estimates of ability, motivating a continuous tracking-based measure."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The rare-event unreliability is literally GSE's small-sample-count veto on sack/pressure-only OL evaluation.",
+        "source_operator": "rare_event_unreliable",
+        "telemetry": "OL noticed only on rare errors; count-based metrics unreliable ability estimates; motivates continuous tracking measure"
+      }
+    },
+    {
+      "primitive_id": "pbwr_ignores_rusher_switches",
+      "name": "PBWR (2.5s hold) ignores rusher ability and changing assignments",
+      "verbatim_quote": "this method may not account for the ability of the rusher, or changing blocking assignments over the course of the play",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Burke's pass block win rate (PBWR) measures the proportion of time a pass blocker holds their block for at least 2.5 seconds and evaluates individual linemen rather than the unit, but this method may not account for the ability of the rusher, or changing blocking assignments over the course of the play."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The PBWR limitation is the same opponent-and-assignment-blindness GSE's probabilistic credit corrects.",
+        "source_operator": "pbwr_ignores_rusher_switches",
+        "telemetry": "PBWR (Burke 2018) = fraction holding block >=2.5s; individual not unit; ignores rusher ability + changing assignments"
+      }
+    },
+    {
+      "primitive_id": "stunt_passoff_credit_misdist",
+      "name": "Stunts/pass-offs disrupt fixed-assignment metrics by mis-distributing credit",
+      "verbatim_quote": "a blocker may stunt, or pass off a rusher to a teammate, disrupting the metric by incorrectly distributing credit among the blockers responsible for the block",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A blocker may stunt, or pass off a rusher to a teammate, disrupting the metric by incorrectly distributing credit among the blockers responsible for the block; the probabilistic assignment resolves this by tracking responsibility continuously."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The stunt/pass-off credit mis-distribution is literally GSE's dynamic-assignment credit-attribution problem.",
+        "source_operator": "stunt_passoff_credit_misdist",
+        "telemetry": "stunt / pass-off rusher to teammate -> fixed-assignment metric mis-distributes credit among responsible blockers; probabilistic assignment resolves"
+      }
+    },
+    {
+      "primitive_id": "eq1_strain_pressure",
+      "name": "Eq1 STRAIN = -v/d: per-frame rusher pressure (close AND closing fast)",
+      "verbatim_quote": "as a per-frame measure of each rusher's pressure on the quarterback",
+      "page": 3,
+      "latex": "\\mathrm{STRAIN}_{ijt}=-\\frac{v_{ijt}}{d_{ijt}},\\qquad v_{ijt}=\\frac{d\\,d_{ijt}}{dt}",
+      "symbol_and_unit_ledger": {
+        "d_ijt": "Euclidean distance rusher j to QB at frame t of play i [yd or m]",
+        "v_ijt": "rate of change of distance (closing rate, negative when approaching) [distance/s]",
+        "STRAIN_ijt": "per-frame pressure (large when close and rapidly closing) [1/s]"
+      },
+      "assumptions": [
+        "With d_ijt the Euclidean distance between rusher j and the quarterback at frame t of play i and v_ijt=dd_ijt/dt its rate of change, Nguyen et al. (2023) define STRAIN_ijt=-v_ijt/d_ijt as a per-frame measure of each rusher's pressure on the quarterback, closely related to strain rate in materials science. Equation 1 is printed math-font and reconstructed here.",
+        "Equation 1 (STRAIN) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Large when rusher both close to and rapidly reducing distance to QB",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "STRAIN is literally GSE's distance-normalized closing-rate pressure kernel.",
+        "source_operator": "eq1_strain_pressure",
+        "telemetry": "d_ijt=Euclidean rusher-QB distance; v_ijt=dd/dt closing rate; STRAIN_ijt=-v_ijt/d_ijt; per-frame pressure; materials-science strain-rate analogy (Nguyen 2023)"
+      }
+    },
+    {
+      "primitive_id": "strain_close_and_closing",
+      "name": "STRAIN large when rusher is both close to and rapidly closing on QB",
+      "verbatim_quote": "large when they are both close to and rapidly reducing their distance to the quarterback",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A rusher's STRAIN is large when they are both close to and rapidly reducing their distance to the quarterback, so it captures the joint proximity-and-velocity threat rather than distance or speed alone."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The proximity-times-closing-rate coupling is the same joint threat measure GSE uses for pressure.",
+        "source_operator": "strain_close_and_closing",
+        "telemetry": "STRAIN large when close AND rapidly reducing distance; joint proximity+velocity threat (not distance or speed alone)"
+      }
+    },
+    {
+      "primitive_id": "central_difference_stable",
+      "name": "Central difference (2nd-order) for v and a, more stable than Nguyen forward difference",
+      "verbatim_quote": "we use the central difference method with second-order accuracy for a more numerically stable derivative",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Whereas Nguyen et al. (2023) estimate v_ijt by a forward difference, this paper uses the central difference method with second-order accuracy for a more numerically stable derivative, and likewise approximates the closing acceleration a_ijt=dv_ijt/dt with a second-order central difference."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The second-order central-difference upgrade is the same numerical-stability refinement GSE applies to tracking derivatives.",
+        "source_operator": "central_difference_stable",
+        "telemetry": "Nguyen forward difference -> central difference 2nd-order (more stable); closing acceleration a=dv/dt also 2nd-order central"
+      }
+    },
+    {
+      "primitive_id": "core_assumption_between_rusher_qb",
+      "name": "Core assumption: blocker positions between assigned rusher and QB",
+      "verbatim_quote": "The core assumption of our model is that the pass-blocker maintain their position such that they are between their pass-rusher assignment and their quarterback",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The core assumption of the model is that the pass-blocker maintains their position such that they are between their pass-rusher assignment and their quarterback; with R_tj the rusher location, Q_t the quarterback position, and O_tb the blocker location, the emission mean is a point on the segment joining rusher to quarterback."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The between-rusher-and-QB positioning assumption is literally GSE's pass-protection geometry prior.",
+        "source_operator": "core_assumption_between_rusher_qb",
+        "telemetry": "core assumption: blocker between assigned rusher and QB; R_tj rusher loc, Q_t QB loc, O_tb blocker loc; emission mean on rusher-QB segment"
+      }
+    },
+    {
+      "primitive_id": "eq2_emission_segment",
+      "name": "Eq2/3 emission: mu=gamma_r*R+gamma_q*Q, O~N2(mu, sigma_D^2 I2) isotropic",
+      "verbatim_quote": "a point on the segment joining the pass rusher to the quarterback, with an isotropic covariance",
+      "page": 4,
+      "latex": "\\mu^{(g)}_{tj}=\\gamma^{(g)}_r R_{tj}+\\gamma^{(g)}_q Q_t,\\qquad O_{tb}\\mid I_{tbj}=1\\sim\\mathcal N_2\\!\\big(\\mu^{(g(b))}_{tj},\\,\\sigma^{2(g(b))}_D I_2\\big)",
+      "symbol_and_unit_ledger": {
+        "R_tj": "rusher j location at frame t [field x-y]",
+        "Q_t": "QB location at frame t [field x-y]",
+        "O_tb": "blocker b location at frame t [field x-y]",
+        "gamma_r/gamma_q": "emission weights along rusher-QB segment (sum~1)",
+        "sigma_D^2": "isotropic positional variance",
+        "I_tbj": "indicator blocker b assigned to rusher j at t"
+      },
+      "assumptions": [
+        "The emission mean mu^(g)_tj=gamma^(g)_r R_tj + gamma^(g)_q Q_t is a point on the segment joining the pass rusher to the quarterback, and the blocker location given assignment is O_tb|I_tbj=1 ~ N2(mu^(g(b))_tj, sigma^2(g(b))_D I2), a bivariate normal with isotropic covariance governed by sigma^2_D; the weights locate the blocker along the rusher-QB segment. Equations 2-3 are printed math-font and reconstructed here.",
+        "Equations 2-3 (emission mean + bivariate normal) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Isotropic bivariate normal; per-position-group weights/variance",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The segment-weighted isotropic emission is literally GSE's blocker-positioning likelihood given matchup.",
+        "source_operator": "eq2_emission_segment",
+        "telemetry": "mu^(g)_tj=gamma_r R_tj+gamma_q Q_t (point on rusher-QB segment); O_tb|I_tbj=1 ~ N2(mu, sigma_D^2 I2) isotropic; gamma_r~0.82-0.89 OL/TE, RB gamma_q~0.45"
+      }
+    },
+    {
+      "primitive_id": "von_mises_orientation",
+      "name": "Orientation modeled von Mises(eta_rusher+pi, kappa=1): blocker faces opposite rusher",
+      "verbatim_quote": "Because orientation is a circular (angular) quantity, we model it directly with a von Mises distribution, the circular analogue of the Gaussian distribution",
+      "page": 4,
+      "latex": "p(\\eta_{tb}\\mid I_{tbj}=1)=\\frac{\\exp\\{-\\kappa\\cos(\\eta_{tb}-\\eta_{tj})\\}}{2\\pi I_0(\\kappa)},\\qquad \\kappa=1",
+      "symbol_and_unit_ledger": {
+        "eta_tb/eta_tj": "blocker/rusher orientation at frame t [radians]",
+        "kappa": "concentration (fixed 1)",
+        "I0": "modified Bessel function of first kind, order zero",
+        "eta_tj+pi": "mean direction (blocker faces opposite rusher)"
+      },
+      "assumptions": [
+        "Because orientation is a circular angular quantity, it is modeled directly with a von Mises distribution, the circular analogue of the Gaussian; given that they are guarding rusher j, blocker b's orientation is vonMises(eta_tj+pi, kappa) with density exp{-kappa cos(eta_tb-eta_tj)}/(2 pi I0(kappa)), where I0 is the modified Bessel function of the first kind of order zero and the mean direction eta_tj+pi encodes the blocker facing opposite the rusher; kappa=1 is fixed. The von Mises density is printed math-font and reconstructed here.",
+        "Von Mises orientation density printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Circular quantity; positional+orientation emissions conditionally independent given assignment (joint = product)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The circular facing-opponent emission is literally GSE's blocker-orientation likelihood (square to rusher).",
+        "source_operator": "von_mises_orientation",
+        "telemetry": "orientation circular -> von Mises (circular Gaussian); eta_tb~vonMises(eta_tj+pi,kappa); density exp{-kappa cos(eta_tb-eta_tj)}/(2pi I0(kappa)); I0 modified Bessel order 0; mean eta_tj+pi (face opposite); kappa=1 fixed"
+      }
+    },
+    {
+      "primitive_id": "blocker_faces_rusher",
+      "name": "Pass blockers face the rusher and stay square during pass blocking",
+      "verbatim_quote": "pass blockers typically face the pass rusher and attempt to stay square to the rusher during pass blocking events",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pass blockers typically face the pass rusher and attempt to stay square to the rusher during pass blocking events, so the expectation that the blocker faces the rusher corresponds to eta_tb approximately eta_tj+pi; the emission distribution encodes that a blocker is expected to be facing their assignment as well as in between the assignment and the quarterback."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The face-and-stay-square technique prior is the same biomechanical positioning assumption GSE encodes.",
+        "source_operator": "blocker_faces_rusher",
+        "telemetry": "blockers face rusher + stay square; eta_tb~eta_tj+pi; emission encodes facing assignment AND between assignment and QB"
+      }
+    },
+    {
+      "primitive_id": "transition_switch_stickiness",
+      "name": "Transition: P(stay)=rho, P(switch)=(1-rho)/(n-1); encodes pass-off/stunt stickiness",
+      "verbatim_quote": "which results in a switch in assignment during the course of the play",
+      "page": 5,
+      "latex": "P(I_{tbj}=1\\mid I_{(t-1)bj}=1)=\\rho^{(g(b))},\\qquad P(I_{tbj}=1\\mid I_{(t-1)bj'}=1)=\\frac{1-\\rho^{(g(b))}}{n_i-1}\\ (j\\ne j')",
+      "symbol_and_unit_ledger": {
+        "rho^(g)": "per-position stickiness (probability of staying on engaged rusher)",
+        "n_i": "number of pass rushers on play i",
+        "I_tbj": "assignment indicator",
+        "g(b)": "position group of blocker b"
+      },
+      "assumptions": [
+        "Offensive linemen may pass off rushers to teammates or stunt (feint toward a rusher then recover to the original assignment), which results in a switch in assignment during the course of the play; the model encodes this frame-to-frame stickiness with P(I_tbj=1|I_(t-1)bj=1)=rho^(g(b)) and P(I_tbj=1|I_(t-1)bj'=1)=(1-rho^(g(b)))/(n_i-1) for j!=j', where n_i is the number of pass rushers; each rho^(g) is estimated by maximum likelihood within EM as the expected fraction of retained assignments. The transition probabilities are printed math-font and reconstructed here.",
+        "Transition probabilities printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "rho~0.96-0.98 OL/TE (rarely switch); ~0.4 RB/WR (release into routes)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The stay/switch transition is literally GSE's assignment-persistence (stickiness) kernel for stunts and pass-offs.",
+        "source_operator": "transition_switch_stickiness",
+        "telemetry": "pass-off/stunt -> switch; P(stay)=rho^(g), P(switch to j')=(1-rho^(g))/(n_i-1); n_i=#rushers; rho via MLE in EM = expected fraction retained assignments"
+      }
+    },
+    {
+      "primitive_id": "beta_partial_pooling",
+      "name": "Per-blocker rho_b ~ Beta empirical-Bayes: many snaps own transitions, few shrunk to position",
+      "verbatim_quote": "A blocker seen on many snaps is governed by his own transitions, while one seen rarely is shrunk toward the position-level mean",
+      "page": 5,
+      "latex": "\\rho_b\\sim\\mathrm{Beta}\\big(\\alpha^{(g(b))}_\\rho,\\,\\beta^{(g(b))}_\\rho\\big),\\qquad \\text{shrinkage target }\\frac{\\alpha^{(g)}_\\rho}{\\alpha^{(g)}_\\rho+\\beta^{(g)}_\\rho}",
+      "symbol_and_unit_ledger": {
+        "rho_b": "per-blocker stickiness",
+        "alpha_rho/beta_rho": "position-group Beta hyperparameters (empirical Bayes)",
+        "alpha/(alpha+beta)": "position-level mean shrinkage target"
+      },
+      "assumptions": [
+        "The transition probability varies by player (an elite tackle anchored on an edge rusher rarely switches, an interior lineman routinely passes off twists), so each blocker's rho_b varies by position with a common Beta prior rho_b~Beta(alpha^(g)_rho, beta^(g)_rho) within each position group; the hyperparameters are estimated by empirical Bayes so player-level estimates are partially pooled: a blocker seen on many snaps is governed by his own transitions, while one seen rarely is shrunk toward the position-level mean alpha/(alpha+beta). The Beta prior is printed math-font and reconstructed here.",
+        "Beta hierarchical prior printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Partial pooling: data-rich blocker own transitions, data-poor shrunk to position",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The empirical-Bayes partial pooling is literally GSE's small-sample shrinkage for per-player assignment persistence.",
+        "source_operator": "beta_partial_pooling",
+        "telemetry": "rho_b~Beta(alpha_rho^(g),beta_rho^(g)) per position; empirical Bayes hyperparams; many snaps own transitions, few shrunk to position mean alpha/(alpha+beta); elite tackle rarely switches vs interior passes off"
+      }
+    },
+    {
+      "primitive_id": "presnap_multinomial_prior",
+      "name": "Pre-snap multinomial-logistic prior over assignments (alignment/down/distance/formation)",
+      "verbatim_quote": "Rather than initializing the hidden Markov chain with a uniform distribution over rushers, we encode this pre-snap belief with a multinomial-logistic model",
+      "page": 5,
+      "latex": "P(I_{0bj}=1)=\\frac{\\exp\\{\\beta^{(g(b))\\top}X_{0bj}\\}}{\\sum_{j'}\\exp\\{\\beta^{(g(b))\\top}X_{0bj'}\\}}",
+      "symbol_and_unit_ledger": {
+        "X0bj": "pre-snap covariates for (blocker b, rusher j) pair (alignment, side, outermost, down/distance/formation interactions)",
+        "beta^(g)": "per-position-group softmax coefficients",
+        "I0bj": "initial assignment indicator"
+      },
+      "assumptions": [
+        "Before the snap a blocker's responsibility is largely dictated by the protection scheme and defensive alignment (a left tackle is a-priori likely responsible for the edge rusher aligned to its side, modulated by down, distance, and formation); rather than initializing the hidden Markov chain uniformly over rushers, the pre-snap belief is encoded with a multinomial-logistic model P(I0bj=1)=exp{beta^(g(b))·X0bj}/sum_j' exp{beta^(g(b))·X0bj'}, with covariates for relative alignment, rusher lined-up alignment, and interactions with down/distance/formation, coefficients shared across plays but estimated per position group. The softmax prior is printed math-font and reconstructed here.",
+        "Multinomial-logistic initial distribution printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Role-specific heterogeneity; not uniform initialization",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The pre-snap scheme-conditioned prior is literally GSE's protection-scheme assignment initialization.",
+        "source_operator": "presnap_multinomial_prior",
+        "telemetry": "pre-snap responsibility = protection scheme + defensive alignment (LT->edge on its side, modulated down/distance/formation); P(I0bj=1)=softmax(beta^(g)·X0bj); covariates relative alignment + interactions; per-position coefficients"
+      }
+    },
+    {
+      "primitive_id": "disengaged_state_emission",
+      "name": "Disengaged (n_i+1)-th state: uniform emission, asymmetric shed/re-engage transitions",
+      "verbatim_quote": "Because the disengaged state does not correspond to a rusher, it has a different emission distribution",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because not every pass-blocker needs to be assigned a rusher, an (n_i+1)-th disengaged state is augmented to each blocker's latent state space; because the disengaged state does not correspond to a rusher it has a different emission distribution (uniform over position and orientation), assigned when no rusher's position-and-orientation density clears the background level; transitions to and from disengaged are asymmetric (block shed p_fail vs re-engage rho_null), reflecting that once a block is shed or lost it is difficult to re-engage."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The disengaged state with asymmetric shed/re-engage is literally GSE's block-failure-and-release latent state.",
+        "source_operator": "disengaged_state_emission",
+        "telemetry": "(n_i+1)-th disengaged state; uniform position+orientation emission; assigned when no rusher density clears background c_bg; asymmetric p_fail (shed) vs rho_null (re-engage); shed block hard to re-engage"
+      }
+    },
+    {
+      "primitive_id": "position_params_football_intuition",
+      "name": "HMM params align with football intuition: OL/TE close to rusher, RB closer to QB",
+      "verbatim_quote": "offensive linemen and tight ends position themselves close to the rusher they engage with",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Consistent with common protection designs, offensive linemen and tight ends position themselves close to the rusher they engage with (gamma_r approximately 0.82-0.89), whereas running backs position themselves closer to the quarterback (gamma_q approximately 0.45); positional variance is tightest for the interior line (approximately 1.0-1.4) and largest for backs, receivers, and fullbacks (approximately 4.6-5.9) who are not anchored to a fixed rusher; these estimates align closely with football intuition, supporting the model construction."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The position-resolved emission parameters are the same role-heterogeneity calibration GSE validates against football intuition.",
+        "source_operator": "position_params_football_intuition",
+        "telemetry": "OL/TE gamma_r~0.82-0.89 (close to rusher); RB gamma_q~0.45 (closer to QB); sigma_D^2 interior ~1.0-1.4 tightest, RB/WR/FB ~4.6-5.9 largest; aligns football intuition"
+      }
+    },
+    {
+      "primitive_id": "rho_release_into_routes",
+      "name": "RB/WR low rho (~0.4): release into routes rather than sustain block",
+      "verbatim_quote": "who are known to release into routes rather than sustaining a block over the course of the play",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The transition parameter rho is very high for linemen and tight ends (approximately 0.96-0.98), indicating these positions rarely switch, and far lower for running backs and wide receivers (approximately 0.4), who are known to release into routes rather than sustaining a block over the course of the play; the structured disengaged state separates that release from a genuine switch through the block-failure parameter p_fail (negligible for interior/TE approximately 0.01-0.02, large for backs/receivers approximately 0.55-0.58), and disengaged persistence rho_null approximately 0.97-1.00 is near-absorbing."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The release-vs-switch separation is literally GSE's distinction between route release and genuine block failure.",
+        "source_operator": "rho_release_into_routes",
+        "telemetry": "rho OL/TE ~0.96-0.98 (rarely switch), RB/WR ~0.4 (release into routes); disengaged state separates release from switch via p_fail (interior/TE 0.01-0.02, backs/receivers 0.55-0.58); rho_null 0.97-1.00 near-absorbing"
+      }
+    },
+    {
+      "primitive_id": "attention_effective_blockers",
+      "name": "Attention n_eff(j,t)=sum_b theta(b,j,t): effective blockers a rusher faces, front-normalized",
+      "verbatim_quote": "we normalize each rusher's attention within every play-frame relative to the average rusher on the field",
+      "page": 7,
+      "latex": "n_{\\mathrm{eff}}(j,t)=\\sum_b \\theta(b,j,t)",
+      "symbol_and_unit_ledger": {
+        "theta(b,j,t)": "assignment probability blocker b on rusher j at frame t",
+        "n_eff(j,t)": "effective number of blockers facing rusher j at t",
+        "front-normalized": "divided by average over active rushers on the snap"
+      },
+      "assumptions": [
+        "Attention is defined as the sum of the assignment probabilities assigned to a rusher at a given time-step, n_eff(j,t)=sum_b theta(b,j,t); aggregated over a play or season it is the number of effective blockers a rusher faces; because the number depends partly on the blocking scheme, each rusher's attention is normalized within every play-frame relative to the average rusher on the field so figures are comparable across three-, four-, and five-man fronts; top rushers generate about 1.5 times as many blockers per play as average. The attention sum is printed math-font and reconstructed here.",
+        "Attention effective-blocker sum printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Front-normalized for cross-front comparability",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The front-normalized effective-blocker attention is literally GSE's double-team-load metric for rushers.",
+        "source_operator": "attention_effective_blockers",
+        "telemetry": "attention n_eff(j,t)=sum_b theta(b,j,t) = effective blockers faced; front-normalized per play-frame vs average rusher (comparable 3/4/5-man fronts); top ~1.5x average (Adam Butler 1.55 edge)"
+      }
+    },
+    {
+      "primitive_id": "entropy_assignment_spread",
+      "name": "Blocker entropy of marginal assignment distribution (normalized by log #rushers)",
+      "verbatim_quote": "We quantify this with the entropy of a blocker's marginal assignment distribution over the rushers on a play",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A blocker who stays attached to a single rusher concentrates all assignment mass on one rusher, whereas one who passes off rushers, picks up stunts, or works combination blocks spreads mass across several; this is quantified with the entropy of a blocker's marginal assignment distribution over the rushers on a play, normalized by log of the number of rushers in the front so it is comparable across fronts of different sizes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The front-normalized assignment entropy is literally GSE's switching-vs-anchored blocker dispersion metric.",
+        "source_operator": "entropy_assignment_spread",
+        "telemetry": "entropy of blocker marginal assignment distribution over rushers; normalized by log(#rushers) for cross-front comparability; concentrated (single rusher) vs spread (pass-off/stunt/combination)"
+      }
+    },
+    {
+      "primitive_id": "interior_highest_entropy",
+      "name": "Highest entropy = interior linemen (pass off twists/stunts); stickiest = tackles",
+      "verbatim_quote": "The most variable (highest entropy) are predominantly interior linemen, consistent with their role in passing off twists, stunts, and looping rushers",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The stickiest blockers (lowest entropy) are almost exclusively offensive tackles, who tend to man up on a single edge rusher; the most variable (highest entropy) are predominantly interior linemen, consistent with their role in passing off twists, stunts, and looping rushers."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The entropy-by-position pattern is the same role-resolved switching signature GSE uses for OL archetype identification.",
+        "source_operator": "interior_highest_entropy",
+        "telemetry": "stickiest (lowest entropy) = tackles (man single edge); most variable (highest entropy) = interior linemen (pass off twists/stunts/looping rushers)"
+      }
+    },
+    {
+      "primitive_id": "beaten_geometric_strain",
+      "name": "Beaten = assigned rusher QB-side (d_rusher<d_blocker) AND STRAIN rising; won/release otherwise",
+      "verbatim_quote": "In order to distinguish these different situations, we use geometric features together with STRAIN",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Three situations lead to a disengaged state: a blocker beaten (rusher crossed to the QB side), a blocker winning by driving the rusher away from the pocket, or a release with no other rusher to engage; to distinguish them, geometric features are used together with STRAIN: a disengaged blocker is beaten only when the assigned rusher (highest assignment probability) is on the quarterback side, d(rusher,QB)<d(blocker,QB), and that rusher's STRAIN is rising; won when the assigned rusher moves away with low or negative STRAIN; otherwise release."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The geometric-plus-STRAIN beaten/won/release classification is literally GSE's block-outcome disambiguation rule.",
+        "source_operator": "beaten_geometric_strain",
+        "telemetry": "3 disengagement causes: beaten/won/release; beaten = assigned rusher QB-side d(rusher,QB)<d(blocker,QB) AND STRAIN rising; won = rusher moving away low/negative STRAIN; else release"
+      }
+    },
+    {
+      "primitive_id": "survival_rmst_censored",
+      "name": "Survival: snap-to-first-beaten, right-censored at throw; Kaplan-Meier RMST + beat rate",
+      "verbatim_quote": "we take the time from the snap to the first time beaten by a rusher as a survival outcome, right-censored at the throw",
+      "page": 8,
+      "latex": "\\mathrm{RMST}_b=\\int_0^{\\tau}\\hat S_b(t)\\,dt,\\qquad \\hat S_b\\text{ Kaplan-Meier, right-censored at throw}",
+      "symbol_and_unit_ledger": {
+        "S_b(t)": "blocker b survival function (probability block still held at t)",
+        "RMST_b": "restricted mean survival time [s]",
+        "BR_b": "per-block beat rate",
+        "tau": "restriction horizon (~4s play horizon)",
+        "right-censoring": "at QB throw for blocks never beaten"
+      },
+      "assumptions": [
+        "For each play and blocker, the time from the snap to the first time beaten by a rusher is taken as a survival outcome, right-censored at the throw for the majority of blocks never beaten, and summarized with the Kaplan-Meier restricted mean survival time RMST_b alongside the per-block beat rate BR_b; computing the same for a rusher gives RMST_j and shed rate BR_j, measuring how quickly and how often he beats the blocks he faces. The survival framing is described in prose; the Kaplan-Meier RMST is a standard estimator reconstructed here for completeness.",
+        "Kaplan-Meier RMST is a standard survival estimator; the paper describes it in prose, reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Most blocks survive to throw -> RMST near ~4s for nearly everyone; beat rate discriminates",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The censored block-survival metric is literally GSE's time-to-beaten sustain kernel for blockers and rushers.",
+        "source_operator": "survival_rmst_censored",
+        "telemetry": "survival = snap->first beaten, right-censored at throw (most blocks never beaten); Kaplan-Meier RMST_b + beat rate BR_b; rusher RMST_j + shed rate BR_j; elite protectors beaten 3-6%, RMST near ~4s horizon"
+      }
+    },
+    {
+      "primitive_id": "elite_rushers_fastest",
+      "name": "Elite rushers (Hightower, Greenard, Bosa, Epenesa) beat blocks fastest and most often",
+      "verbatim_quote": "Dont'a Hightower, Jonathan Greenard, Nick Bosa, and A.J. Epenesa beat blocks both fastest and most often, consistent with their reputations as disruptive rushers",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Table 9b ranks rushers by how quickly they beat their blocks (shortest survival): Dont'a Hightower, Jonathan Greenard, Nick Bosa, and A.J. Epenesa beat blocks both fastest and most often, consistent with their reputations as disruptive rushers; elite pass protectors such as Rashawn Slater, Andrew Thomas, Trent Williams, and Lane Johnson are beaten on only 3-6% of their blocks."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The recovered elite rankings are the same scouting-consensus validation GSE checks for its player-value kernel.",
+        "source_operator": "elite_rushers_fastest",
+        "telemetry": "shortest survival rushers: Hightower/Greenard/Nick Bosa/Epenesa (fastest+most often, disruptive reputations); elite protectors Slater/Thomas/Trent Williams/Lane Johnson beaten 3-6%"
+      }
+    },
+    {
+      "primitive_id": "logistic_survival_opponent",
+      "name": "Opponent-adjusted discrete-time logistic survival: logit h = alpha + g1 t + g2 t^2 + beta_opp R + u_b",
+      "verbatim_quote": "We model the per-frame block-failure hazard directly as a discrete-time logistic survival on the beaten events",
+      "page": 8,
+      "latex": "\\mathrm{logit}\\,h_{b,t}=\\alpha+g_1\\tilde t+g_2\\tilde t^2+\\beta_{\\mathrm{opp}}R_{j(b)}+u_b",
+      "symbol_and_unit_ledger": {
+        "h_b,t": "per-frame block-failure hazard for blocker b at t",
+        "t~": "standardized frames since engagement",
+        "R_j(b)": "engaged rusher peak-STRAIN plus-minus (opponent quality, posterior mean)",
+        "u_b": "regularized per-blocker hold frailty (scale sigma_u)",
+        "-u_b": "opponent-adjusted hold rating"
+      },
+      "assumptions": [
+        "Since elite tackles also face the best rushers, an opponent-adjusted quantity models the per-frame block-failure hazard directly as a discrete-time logistic survival on the beaten events: logit h_b,t = alpha + g1 t~ + g2 t~^2 + beta_opp R_j(b) + u_b, where t~ is standardized frames since engagement, R_j is the engaged rusher's peak-STRAIN plus-minus effect entered at its posterior mean as a fixed opponent-quality covariate, and u_b is a regularized per-blocker hold frailty; fit by NUTS with four chains, the dwell coefficient g1>0 (blocks fail more readily the longer they last) and opponent coefficient beta_opp>0 (better rusher raises failure hazard). The logistic survival is printed math-font and reconstructed here.",
+        "Discrete-time logistic survival hazard printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Dwell g1>0 (longer blocks fail more); opponent beta_opp>0; beat probs ~3% best to ~20% most-beaten",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The opponent-adjusted frailty survival is literally GSE's quality-of-opponent-adjusted block-sustain rating.",
+        "source_operator": "logistic_survival_opponent",
+        "telemetry": "logit h_b,t=alpha+g1 t~+g2 t~^2+beta_opp R_j(b)+u_b; t~=std frames since engagement; R_j=rusher peak-STRAIN APM (posterior mean, opponent covariate); u_b=per-blocker hold frailty; NUTS 4 chains; g1>0 (dwell), beta_opp>0 (opponent); hold rating -u_b"
+      }
+    },
+    {
+      "primitive_id": "trent_williams_opponent_adjust",
+      "name": "Opponent adjustment moves Trent Williams 15th->3rd among 93 tackles (>=40 blocks)",
+      "verbatim_quote": "moves Trent Williams from 15th to 3rd among the 93 tackles with at least 40 blocks",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The resulting hold rating -u_b, now adjusted for opponent quality, moves Trent Williams from 15th to 3rd among the 93 tackles with at least 40 blocks; the implied per-play beat probabilities run from about 3% for the best protectors to about 20% for the most-beaten, rising a point or two against an elite edge rusher."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The opponent-adjustment ranking shift is literally GSE's quality-of-competition correction exposing true elite protection.",
+        "source_operator": "trent_williams_opponent_adjust",
+        "telemetry": "hold rating -u_b opponent-adjusted moves Trent Williams 15th->3rd (93 tackles >=40 blocks); beat probs ~3% best to ~20% most-beaten, +1-2 pts vs elite edge"
+      }
+    },
+    {
+      "primitive_id": "continuous_apm_filtered_posterior",
+      "name": "Continuous-time APM: Delta STRAIN ~ N(mu+R_j+Q_q - sum B_b theta + phi STRAIN); filtered posterior no lookahead",
+      "verbatim_quote": "so that every rusher-frame is a distinct observation rather than a single play-level summary",
+      "page": 9,
+      "latex": "\\Delta\\mathrm{STRAIN}_{ijt}\\sim\\mathcal N\\!\\Big(\\mu+R^{\\Delta}_j+Q^{\\Delta}_{q_i}-\\sum_{b}B^{\\Delta}_b\\,\\theta(b,j,t,i)+\\phi\\,\\mathrm{STRAIN}_{ijt},\\ \\sigma^2_{\\Delta}\\Big)",
+      "symbol_and_unit_ledger": {
+        "Delta STRAIN_ijt": "one-frame change in rusher j STRAIN [1/s]",
+        "R_j/Q_qi": "rusher drive / QB pocket-behavior random intercepts",
+        "B_b": "blocker b engagement deceleration effect (per unit assignment)",
+        "theta(b,j,t,i)": "filtered assignment posterior (data up to frame t, no lookahead)",
+        "phi": "mean-reversion coefficient (hat -0.059); AR(1) coeff 1+phi"
+      },
+      "assumptions": [
+        "The play-level plus-minus model is extended to continuous time by resolving it to the (play i, rusher j, frame t) level so that every rusher-frame is a distinct observation rather than a single play-level summary; the response is the one-frame change Delta STRAIN_ijt=STRAIN_i,j,t+1-STRAIN_ijt, modeled as Delta STRAIN_ijt ~ N(mu + R_j + Q_qi - sum_b B_b theta(b,j,t,i) + phi STRAIN_ijt, sigma^2); because the response looks one frame ahead, theta(b,j,t,i) is the filtered assignment posterior using tracking data only up to frame t (no lookahead); equivalently a first-order autoregression of next-frame STRAIN with coefficient 1+phi, mean-reversion phi-hat=-0.059, fit by NUTS on 1.1M rusher-frames. The continuous-time model is printed math-font and reconstructed here.",
+        "Continuous-time STRAIN autoregression printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Filtered (not smoothed) posterior avoids lookahead; partial continuous credit vs all-or-nothing stints",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The assignment-weighted continuous APM is literally GSE's partial-credit pressure-prevention attribution (no lookahead).",
+        "source_operator": "continuous_apm_filtered_posterior",
+        "telemetry": "Delta STRAIN_ijt=STRAIN_{t+1}-STRAIN_t ~ N(mu+R_j+Q_qi-sum_b B_b theta(b,j,t,i)+phi STRAIN_ijt, sigma^2); filtered posterior theta (data up to t, no lookahead); AR(1) coeff 1+phi; phi-hat=-0.059; NUTS 1.1M rusher-frames; B_b higher=better protection"
+      }
+    },
+    {
+      "primitive_id": "attribute_archetype_shrinkage",
+      "name": "Player effects drawn around attribute archetype z=[position,height,weight] (size/pos shrinkage)",
+      "verbatim_quote": "The rusher, blocker, and quarterback effects are drawn around a linear function of player attributes",
+      "page": 9,
+      "latex": "R^{\\Delta}_j=\\alpha^{\\Delta\\top}_R z_j+\\sigma^{\\Delta}_R\\varepsilon^R_j,\\quad B^{\\Delta}_b=\\alpha^{\\Delta\\top}_B z_b+\\sigma^{\\Delta}_B\\varepsilon^B_b,\\quad \\varepsilon\\sim\\mathcal N(0,1)",
+      "symbol_and_unit_ledger": {
+        "z": "player attributes [position, height, weight]",
+        "alpha_R/alpha_B/alpha_Q": "attribute coefficients",
+        "sigma_R/sigma_B/sigma_Q": "effect scales (half-normal priors)",
+        "eps": "standard normal residual"
+      },
+      "assumptions": [
+        "The rusher, blocker, and quarterback effects are drawn around a linear function of player attributes z=[position, height, weight], which shrinks each player toward their positional/size archetype: R_j=alpha_R·z_j+sigma_R eps, B_b=alpha_B·z_b+sigma_B eps, Q_q=alpha_Q·z_q+sigma_Q eps with eps~N(0,1); scales have half-normal priors and intercept/coefficients N(0,1) priors; on 207 linemen with >=50 PFF pass-block snaps the per-blocker effect correlates negatively with PFF pressures allowed (Pearson -0.32) and beaten rate (-0.25). The hierarchical attribute model is printed math-font and reconstructed here.",
+        "Hierarchical attribute-archetype effects printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Shrinkage toward positional/size archetype; Bayesian uncertainty quantification",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The attribute-archetype shrinkage is literally GSE's position/size-pooled player-effect prior.",
+        "source_operator": "attribute_archetype_shrinkage",
+        "telemetry": "R_j/B_b/Q_q ~ alpha·z + sigma eps, z=[position,height,weight], eps~N(0,1); shrink to positional/size archetype; half-normal scale priors; B_b vs PFF pressures allowed Pearson -0.32, beaten rate -0.25, within-position -0.29 (207 linemen >=50 snaps)"
+      }
+    },
+    {
+      "primitive_id": "pff_077_mass_recovery",
+      "name": "HMM recovers PFF charted responsibility: mean 0.77 engaged mass on charted rusher",
+      "verbatim_quote": "our smoothed assignment places a mean of 0.77 of its engaged probability mass on exactly that rusher",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "PFF tags for each play and blocker the single rusher that blocker was responsible for; over the 44,037 charted blocker-plays that can be matched, the smoothed assignment places a mean of 0.77 of its engaged probability mass on exactly that rusher, an external check derived purely from tracking geometry and STRAIN without hand labels."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The charted-responsibility recovery is literally GSE's label-free assignment validation against independent charting.",
+        "source_operator": "pff_077_mass_recovery",
+        "telemetry": "PFF tags single responsible rusher per blocker-play; 44037 matched; smoothed assignment mean 0.77 engaged mass on charted rusher; purely tracking geometry + STRAIN, no hand labels"
+      }
+    },
+    {
+      "primitive_id": "pff_875_agreement",
+      "name": "Most-assigned rusher agrees with PFF designation on 87.5% of blocker-plays",
+      "verbatim_quote": "the model's most-assigned rusher agrees with PFF's designation on 87.5% of blocker-plays",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model's most-assigned rusher agrees with PFF's designation on 87.5% of blocker-plays; the rush-side metrics validate strongly against independent charting (continuous-time rusher effect vs PFF pressure rate Pearson 0.57, sack rate 0.46, shed rate vs pressure 0.37) and the block-side metrics validate directionally (blocker effect vs pressures allowed oriented 0.32)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The 87.5% agreement and directional correlations are the same external-validation evidence GSE requires for its assignment kernel.",
+        "source_operator": "pff_875_agreement",
+        "telemetry": "most-assigned agrees PFF 87.5% blocker-plays; rusher R_j vs PFF pressure 0.57/sack 0.46/shed-rate 0.37 (strong); blocker B_b vs pressures allowed oriented 0.32 (directional); rush-side strong, block-side directional"
+      }
+    },
+    {
+      "primitive_id": "eq4_pocket_control",
+      "name": "Eq4 pocket control PC(p,t)=logit^-1(sum I_blockers - sum I_rushers): offense space ownership",
+      "verbatim_quote": "the pocket control (PC) at location p is the probability the offense owns that space",
+      "page": 11,
+      "latex": "PC(p,t)=\\mathrm{logit}^{-1}\\!\\Big(\\sum_{b\\in B_t}I_b(p,t)-\\sum_{j\\in R_t}I_j(p,t)\\Big)",
+      "symbol_and_unit_ledger": {
+        "I_k(p,t)": "player k bivariate influence at location p, time t (in (0,1])",
+        "B_t/R_t": "blockers (incl QB) / rushers on field at t",
+        "PC(p,t)": "pocket control = probability offense owns location p",
+        "logit^-1": "logistic sigmoid"
+      },
+      "assumptions": [
+        "Borrowing from Fernandez and Bornn (2018) soccer space control, each player k is assigned a bivariate influence I_k(p,t) in (0,1] over field locations p, and a location is controlled by whichever side's influence is greater; writing B_t for blockers (including the QB) and R_t for rushers, the pocket control at location p is PC(p,t)=logit^-1(sum_{b in B_t} I_b(p,t) - sum_{j in R_t} I_j(p,t)), the probability the offense owns that space; the minimum over a play of the QB's own controlled area predicts charted pressure and sacks. Equation 4 is printed math-font and reconstructed here.",
+        "Equation 4 (pocket control logistic) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Min QB controlled area over play predicts charted pressure/sacks",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The logistic pocket-control surface is literally GSE's pass-protection space-ownership kernel.",
+        "source_operator": "eq4_pocket_control",
+        "telemetry": "influence I_k(p,t) in (0,1]; PC(p,t)=logit^-1(sum_b I_b - sum_j I_j) = prob offense owns space; Fernandez-Bornn 2018 soccer space control; min QB controlled area over play predicts pressure/sacks"
+      }
+    },
+    {
+      "primitive_id": "eq5_value_weighted_space",
+      "name": "Eq5 value-weighted owned space Q_k=sum w_k V(p) da; V=exp(-dist/3yd), disk 5yd around QB",
+      "verbatim_quote": "Since space near the quarterback is more important, we value it with weight",
+      "page": 11,
+      "latex": "Q_k(t)=\\sum_{p\\in D_t}w_k(p,t)\\,V(p)\\,\\Delta a,\\qquad V(p)=e^{-\\|p-QB_t\\|/\\lambda},\\ \\lambda=3\\,\\text{yd},\\quad w_k=\\frac{I_k}{\\sum_{k'}I_{k'}}",
+      "symbol_and_unit_ledger": {
+        "w_k(p,t)": "player k control share at p",
+        "V(p)": "distance-decay value weight (lambda=3 yd from QB)",
+        "D_t": "disk radius 5 yd centered on QB",
+        "Q_k(t)": "value-weighted owned-space quality",
+        "Delta a": "grid cell area"
+      },
+      "assumptions": [
+        "Each player's control share is w_k(p,t)=I_k(p,t)/sum_k' I_k'(p,t); since space near the quarterback is more important it is valued with weight V(p)=exp(-||p-QB_t||/lambda) decaying exponentially with distance lambda=3 yd from the QB; integrating over a disk D_t of radius 5 yd centered on the QB gives each player a value-weighted owned-space quality Q_k(t)=sum_{p in D_t} w_k(p,t) V(p) Delta a on a QB-centered grid. Equation 5 is printed math-font and reconstructed here.",
+        "Equation 5 (value-weighted owned space) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Near-QB space weighted more (exponential decay lambda=3yd); 5yd disk",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The distance-decayed value-weighted space is literally GSE's near-QB space-quality valuation.",
+        "source_operator": "eq5_value_weighted_space",
+        "telemetry": "control share w_k=I_k/sum I_k'; V(p)=exp(-||p-QB||/lambda), lambda=3yd; disk D_t radius 5yd centered QB; Q_k(t)=sum_{p in D_t} w_k(p,t) V(p) Delta a (QB-centered grid)"
+      }
+    },
+    {
+      "primitive_id": "space_generation_pull_blocker",
+      "name": "Space generation: rusher pulls blocker off teammate, credited freed teammate's space gain",
+      "verbatim_quote": "Typically, space generation occurs when a rusher pulls a blocker off a teammate, freeing that teammate to win valuable near-QB ground",
+      "page": 12,
+      "latex": "W_b(i'\\to i)=\\theta(b,i';t)\\big(1-\\theta(b,i';t+w)\\big)\\theta(b,i;t+w)\\big(1-\\theta(b,i;t)\\big),\\quad SGG_i\\mathrel{+}=\\sum_b\\sum_{i'\\ne i}W_b(i'\\to i)\\big(Q_{i'}(t+w)-Q_{i'}(t)\\big)",
+      "symbol_and_unit_ledger": {
+        "theta(b,i;t)": "assignment probability blocker b on rusher i at t",
+        "W_b(i'->i)": "probability blocker b leaves i' for generator i over [t,t+w]",
+        "SGG_i": "space-generated-for-teammates credit for rusher i",
+        "Q_i'(t)": "freed teammate i' value-weighted owned space",
+        "w": "window length"
+      },
+      "assumptions": [
+        "Pass rushers rarely work in isolation: space generation occurs when a rusher pulls a blocker off a teammate, freeing that teammate to win valuable near-QB ground; over a window [t,t+w] the event 'blocker b leaves teammate i' for generator i' is weighted by the assignment probabilities directly, W_b(i'->i)=theta(b,i';t)(1-theta(b,i';t+w))theta(b,i;t+w)(1-theta(b,i;t)), and the generator is credited with that fraction of the value-weighted space his freed teammate then wins, SGG_i += sum_b sum_{i'!=i} W_b(i'->i)(Q_i'(t+w)-Q_i'(t)); this recovers a dimension of pass rushing that personal-pressure metrics miss. The space-generation weight is printed math-font and reconstructed here.",
+        "Space-generation probability weight and credit printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Directed generator->receiver flow; mirrors Fernandez-Bornn space received",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The assignment-flow space generation is literally GSE's teammate-freeing credit kernel (double-team value).",
+        "source_operator": "space_generation_pull_blocker",
+        "telemetry": "space generation = rusher pulls blocker off teammate -> freed teammate wins near-QB ground; W_b(i'->i)=theta(b,i';t)(1-theta(b,i';t+w))theta(b,i;t+w)(1-theta(b,i;t)); SGG_i+=sum_b sum_{i'!=i} W_b(i'->i)(Q_i'(t+w)-Q_i'(t)); captures dimension personal-pressure misses"
+      }
+    },
+    {
+      "primitive_id": "generators_interior_double_teams",
+      "name": "Leading space generators = interior linemen commanding double teams (high attention, low personal pressure)",
+      "verbatim_quote": "The leading space generators (Appendix Table 12) are primarily interior linemen who command double teams and, in doing so, free their teammates",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The leading space generators are primarily interior linemen who command double teams and, in doing so, free their teammates; they rank high in attention but low in personal pressure and plus-minus; summing the directed flow over generator-receiver pairs recovers recognizable synergies (Aaron Donald drawing the double and freeing his nose tackle, Dalvin Tomlinson springing Danielle Hunter off the edge, Maxx Crosby opening the interior); the strongest flow is Grover Stewart to DeForest Buckner at 98.4."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The double-team space-generation finding is literally GSE's hidden-value detection for high-attention low-pressure interior rushers.",
+        "source_operator": "generators_interior_double_teams",
+        "telemetry": "leading generators = interior linemen command double teams free teammates; high attention/low personal pressure+APM; synergies Donald->nose tackle, Tomlinson->Hunter, Crosby->interior; top flow Stewart->Buckner 98.4"
+      }
+    },
+    {
+      "primitive_id": "associational_not_causal",
+      "name": "Blocker evaluation is associational, not causal; causal reformulation is future work",
+      "verbatim_quote": "Reformulating the problem from a causal perspective could potentially provide more actionable insight for coaching and front office perspectives",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Blocker evaluation remains the hardest open problem: the continuous-time model is a step in the right direction but is nonetheless an associational estimate; reformulating the problem from a causal perspective could potentially provide more actionable insight for coaching and front office perspectives."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The associational-not-causal caveat is literally GSE's causal-identification veto on blocker credit attribution.",
+        "source_operator": "associational_not_causal",
+        "telemetry": "blocker evaluation hardest open problem; continuous-time model associational not causal; causal reformulation -> more actionable coaching/front-office insight"
+      }
+    },
+    {
+      "primitive_id": "missed_block_limitation",
+      "name": "Cannot fully separate actively-impeding from merely-in-right-place (missed block while assigned)",
+      "verbatim_quote": "We also do not fully separate a blocker who is actively impeding a rusher from one who merely happens to be in the right place",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model relies primarily on positioning, yet a blocker's direction of velocity carries complementary signal; it does not fully separate a blocker who is actively impeding a rusher from one who merely happens to be in the right place (a missed block while nominally assigned); the disengaged state is a first step, but a two-layer HMM in the spirit of Kabir et al. (2016) could, conditional on the assignment, additionally infer engagement status."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The impeding-vs-positioned limitation is the same engagement-status gap GSE flags for its blocking kernel.",
+        "source_operator": "missed_block_limitation",
+        "telemetry": "positioning only (velocity carries signal); cannot separate actively-impeding vs merely-in-right-place (missed block while nominally assigned); disengaged state first step; two-layer HMM (Kabir 2016) could infer engagement status conditional on assignment"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "passblockhmm2026_trace",
+      "think": "The retrocausal genealogy of this paper is the tracking-data turn in offensive-line evaluation. Abhijit Brahme, Ishan Mehta, Gregory Matthews, and Alexander Franks, posting to arXiv in September 2026 as 2609.33664, start from the premise that statistical analysis of offensive linemen has been hindered by the lack of easily measurable quantities, since linemen are noticed only when they err on rare events like sacks and missed blocks whose counts are unreliable estimates of ability. The work adapts the defensive-matchup hidden Markov model that Franks and colleagues built for basketball in 2015 to football pass protection, and it sits in the lineage of Alamar and Weinstein-Gould's block-hold-time studies, Macdonald's adjusted plus-minus, Burke's pass block win rate, Nguyen's STRAIN pressure metric, and Fernandez and Bornn's soccer space-control surfaces, while drawing on the Kalman filter for smoothing and the von Mises distribution for circular orientation. The recursive theory of mind is the latent-assignment HMM and its emission geometry. The latent state is the identity of the rusher a blocker is engaged with, evolving frame by frame as linemen pass off rushers or stunt; the core assumption is that a blocker positions between their assigned rusher and the quarterback, so the positional emission is a bivariate normal centered on a weighted point of the rusher-to-quarterback segment, and the orientation emission is a von Mises distribution centered opposite the rusher because blockers face and stay square to their assignment. The transition probability encodes stickiness, with a per-blocker Beta prior partially pooled by position so that data-rich blockers govern their own switches and data-poor ones shrink to the position mean; a pre-snap multinomial-logistic prior encodes protection-scheme responsibility from alignment, down, distance, and formation; and an augmented disengaged state with asymmetric shed and re-engage transitions separates a beaten block from a route release. Cross-layer veto adjudication is the suite of metrics derived from the assignment posterior and their external validation. Attention sums assignment probabilities into an effective-blocker count front-normalized for cross-scheme comparability, blocker entropy measures switching versus anchoring, the geometric-plus-STRAIN rule disambiguates beaten from won from release, and a right-censored Kaplan-Meier survival yields restricted-mean hold time and beat rates, upgraded to an opponent-adjusted discrete-time logistic frailty that moves Trent Williams from fifteenth to third among tackles. The continuous-time plus-minus regresses the one-frame change in STRAIN on assignment-weighted blocker effects using the filtered posterior to avoid lookahead, with player effects shrunk toward position-height-weight archetypes; pocket control and value-weighted near-quarterback space then credit rushers both for personal pressure and for the space they generate by pulling blockers off teammates. The implementation invariants map directly onto GSE. The matchup HMM is GSE's offensive-line causal-breakdown assignment kernel; STRAIN is GSE's distance-normalized closing-rate pressure measure; the assignment-weighted continuous plus-minus is GSE's partial-credit pressure-prevention attribution replacing all-or-nothing stints; the censored survival and opponent-adjusted frailty are GSE's quality-of-competition-corrected block-sustain rating; the pocket-control logistic surface and distance-decayed space quality are GSE's pass-protection space-ownership kernel; and the directed assignment-flow space generation is GSE's teammate-freeing credit for double-team-drawing interior rushers. The filtered-posterior no-lookahead discipline and the empirical-Bayes partial pooling are GSE's leakage-free temporal and small-sample shrinkage requirements. The validation results make the credibility concrete and honest. Derived purely from tracking geometry and STRAIN without hand labels, the assignments recover independently charted PFF responsibilities, placing a mean of 0.77 of engaged probability mass on the charted rusher and agreeing on the most-assigned rusher 87.5 percent of the time across 44,037 blocker-plays; the rush-side metrics validate strongly, with the continuous-time rusher effect correlating 0.57 with PFF pressure rate and 0.46 with sack rate, while the block-side metrics validate directionally, the blocker effect correlating 0.32 with pressures allowed. The recovered parameters align with football intuition: linemen and tight ends anchor close to their rusher with high stickiness, running backs and receivers release into routes with low stickiness and high failure hazard, and the leading space generators are interior linemen who command double teams and free teammates, ranking high in attention but low in personal pressure. The caveats close the account with the scope limits that bound the claim. The model relies primarily on positioning and does not fully separate a blocker actively impeding a rusher from one merely in the right place, a missed block while nominally assigned, so a two-layer HMM could additionally infer engagement status; blocker evaluation remains an associational estimate rather than a causal one, and a causal reformulation is flagged as the harder open problem for actionable coaching insight; and the probabilistic instrument is agnostic to the outcome, so any frame-level pressure measure could replace STRAIN without changing the evaluation machinery. The invariant for GSE is to adopt the matchup-HMM assignment kernel, the STRAIN pressure measure, the assignment-weighted continuous plus-minus with filtered no-lookahead posteriors, the censored opponent-adjusted survival, the pocket-control and value-weighted space surfaces, and the directed space-generation credit, while carrying the impeding-versus-positioned limitation, the associational-not-causal caveat, and the outcome-agnostic flexibility as honest bounds on what the tracking-derived blocking model can claim. The two-dimensional pass-rush value plot reinforces the hidden-value point: front-normalized attention and the continuous-time rusher effect are strongly negatively related at Pearson minus zero point seven eight, so edge rushers like T.J. Watt face fewer blockers and build STRAIN quickly while interior linemen draw more blockers but build pressure slowly, and the rare rushers who draw extra attention and still build STRAIN quickly, such as Cameron Heyward, mark the genuinely disruptive exceptions that a personal-pressure-only metric would undervalue.",
+      "retrocausal_genealogy": "Tracking-data turn in OL evaluation. Abhijit Brahme, Ishan Mehta, Gregory J. Matthews, Alexander Franks (UCSB/Loyola Chicago); arXiv:2609.33664v2 [stat.AP] 29 Sep 2026; code on GitHub. OL analysis hindered by lack of measurable quantities (noticed only on rare sacks/missed blocks). Adapts Franks 2015 basketball defensive-matchup HMM to football pass protection. Lineage: Alamar-Weinstein-Gould 2008 block-hold-time, Alamar-Goldner 2011, Macdonald 2012 adjusted plus-minus, Burke 2018 PBWR (2.5s hold), Nguyen 2023 STRAIN, Fernandez-Bornn 2018 soccer space control, Kabir 2016 two-layer HMM; Kalman filter smoothing, von Mises circular orientation. Data 2023 NFL Big Data Bowl / Next Gen Stats 10Hz, 698 rushers/534 blockers/8530 plays first 8 weeks 2021, PFF Pass Block/Pass Rush roles, snap->QB event window.",
+      "theory_of_mind": "HMM latent state = rusher identity blocked; emission position O_tb|I_tbj=1 ~ N2(mu,sigma_D^2 I2), mu=gamma_r R_tj+gamma_q Q_t (point on rusher-QB segment, core assumption blocker between rusher and QB); orientation vonMises(eta_tj+pi,kappa=1) density exp{-kappa cos(eta_tb-eta_tj)}/(2pi I0(kappa)) (face opposite rusher). Transition P(stay)=rho^(g), P(switch)=(1-rho)/(n_i-1); per-blocker rho_b~Beta(alpha,beta) empirical-Bayes partial pooling. Pre-snap multinomial-logistic prior P(I0bj)=softmax(beta^(g)·X0bj) (alignment/down/distance/formation). Disengaged (n_i+1)-th state uniform emission, asymmetric p_fail (shed) vs rho_null (re-engage). Eq1 STRAIN=-v/d (v=dd/dt, central difference 2nd-order). EM forward-backward; assignment probs from E-step. Per-position fit g in {G,T,C,TE,RB,WR,FB}. Eqs 1-5 + transition + von Mises + logistic survival math-font reconstructed.",
+      "cross_layer_veto": "Metrics: attention n_eff=sum_b theta (front-normalized, top ~1.5x); blocker entropy (normalized log #rushers; stickiest tackles, highest interior); beaten=assigned rusher QB-side d(rusher,QB)<d(blocker,QB) AND STRAIN rising, won=rusher away low/neg STRAIN, else release; survival snap->first beaten right-censored at throw, KM RMST_b+beat rate BR_b (rusher RMST_j+shed BR_j); elite protectors beaten 3-6%; opponent-adjusted logistic logit h=alpha+g1 t~+g2 t~^2+beta_opp R_j+u_b (NUTS, g1>0 dwell, beta_opp>0), hold -u_b moves Trent Williams 15th->3rd. Continuous APM Delta STRAIN ~ N(mu+R_j+Q_q-sum B_b theta+phi STRAIN), filtered posterior no lookahead, AR(1) 1+phi, phi-hat=-0.059, NUTS 1.1M frames; effects ~ attribute archetype z=[pos,height,weight]. Eq4 PC=logit^-1(sum I_b - sum I_j); Eq5 Q_k=sum w_k V(p) da, V=exp(-dist/3yd) disk 5yd; space gen W_b(i'->i)=theta product, SGG_i credit freed teammate space gain (interior double-team generators high attention/low pressure; Stewart->Buckner 98.4, Donald->NT, Tomlinson->Hunter). Validation: PFF 44037 blocker-plays mean 0.77 mass, 87.5% most-assigned agreement; rusher R_j vs PFF pressure 0.57/sack 0.46 (strong), blocker B_b vs pressures allowed 0.32 (directional). Params: OL/TE gamma_r 0.82-0.89 rho 0.96-0.98 p_fail 0.01-0.02; RB gamma_q 0.45 rho 0.39 p_fail 0.58. Limitations: positioning only (velocity signal), cannot separate impeding vs in-right-place (missed block), associational not causal, STRAIN outcome-agnostic. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A hidden-Markov treatment of NFL pass protection infers frame-by-frame probabilistic blocker-to-rusher assignments from tracking geometry — a blocker positioned between rusher and quarterback and facing opposite the rusher, with sticky transitions, a pre-snap scheme prior, and a disengaged state — and turns the assignment posterior into rusher attention, blocker switching entropy, censored block-shedding survival with opponent adjustment, assignment-weighted continuous-time plus-minus on STRAIN, pocket space control, and directed teammate-freeing space generation; validated against independent PFF charting (0.77 engaged mass, 87.5% agreement, rush-side correlations 0.57/0.46), it recovers elite rushers and protectors and exposes the hidden value of double-team-drawing interior linemen, while remaining associational rather than causal and unable to fully separate active impedance from mere positioning.",
+  "gsi_mapping": "GSI treats matchup HMM (latent=rusher identity; emission O~N2(gamma_r R+gamma_q Q, sigma_D^2 I2) on rusher-QB segment + vonMises(eta_rusher+pi,kappa=1) orientation; transition P(stay)=rho/P(switch)=(1-rho)/(n-1), per-blocker rho_b~Beta empirical-Bayes; pre-snap softmax(beta·X) prior; disengaged state uniform emission asymmetric p_fail/rho_null); Eq1 STRAIN=-v/d (central diff 2nd-order); per-position fit {G,T,C,TE,RB,WR,FB}; attention n_eff=sum theta front-normalized (top ~1.5x); blocker entropy norm log #rushers (tackles stickiest/interior highest); beaten=rusher QB-side d_rusher<d_blocker AND STRAIN rising/won/release; KM RMST+beat/shed rate right-censored at throw (elite protectors 3-6%); opponent logistic logit h=alpha+g1 t~+g2 t~^2+beta_opp R_j+u_b (g1>0,beta_opp>0; Trent Williams 15th->3rd); continuous APM Delta STRAIN~N(mu+R_j+Q_q-sum B_b theta+phi STRAIN) filtered no-lookahead AR(1) phi-hat=-0.059 NUTS 1.1M frames, attribute archetype z=[pos,height,weight]; Eq4 PC=logit^-1(sum I_b-sum I_j); Eq5 Q_k=sum w_k exp(-dist/3yd) da disk 5yd; space gen W_b=theta product SGG_i freed-teammate credit (interior double-team generators; Stewart->Buckner 98.4); params OL/TE gamma_r 0.82-0.89 rho 0.96-0.98 p_fail 0.01-0.02, RB gamma_q 0.45 rho 0.39 p_fail 0.58; PFF validation 44037 plays 0.77 mass/87.5% agreement, rusher 0.57 pressure/0.46 sack, blocker 0.32; data NGS 10Hz 698 rushers/534 blockers/8530 plays 2021 wk1-8; limitations positioning-only/impeding-vs-positioned/associational-not-causal/STRAIN-agnostic; Eqs 1-5+transition+vonMises+logistic+APM+space-gen math-font reconstructed.",
+  "gse_mapping": "GSE lifts the matchup-HMM as its offensive-line causal-breakdown assignment kernel, STRAIN as its distance-normalized closing-rate pressure measure, the assignment-weighted continuous-time plus-minus with filtered no-lookahead posteriors as its partial-credit pressure-prevention attribution (replacing all-or-nothing stints and correcting stunt/pass-off credit mis-distribution), the censored Kaplan-Meier survival and opponent-adjusted logistic frailty as its quality-of-competition-corrected block-sustain rating, the pocket-control logistic surface and distance-decayed value-weighted space as its pass-protection space-ownership kernel, the front-normalized attention and blocker entropy as its double-team-load and switching-dispersion metrics, and the directed assignment-flow space generation as its teammate-freeing credit for high-attention low-pressure interior rushers; treats the empirical-Bayes partial pooling and filtered-posterior discipline as its small-sample and leakage-free requirements, the PFF charting recovery (0.77 mass, 87.5% agreement) as external validation, and the impeding-versus-positioned limitation, the associational-not-causal caveat, and the outcome-agnostic STRAIN flexibility as honest bounds; all outputs are blocking-assignment and pressure metrics from tracking data, never sportsbook lines."
+}

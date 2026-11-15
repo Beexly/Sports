@@ -26,6 +26,7 @@ import { db } from "@sports/db";
 import {
   supersedeUnpublishedPendingPick,
 } from "./supersede-unpublished-pick.js";
+import { publicationAllowed, futurePickPublishable } from "./publication-gate.js";
 import {
   OddsApiClient,
   DataNormalizer,
@@ -1446,6 +1447,14 @@ export async function processSport(
     let picksGenerated = 0;
     const publishedGameIds = new Set<string>();
 
+    // WP-0 hard write gate: DB game id -> kickoff, so the future-pick receipt
+    // rule can prove the Q3a historical exemption per row.
+    const kickoffByGameId = new Map<string, Date>();
+    for (const g of normalizedGames) {
+      const rec = gameRecords[g.externalId];
+      if (rec) kickoffByGameId.set(rec.id, g.commenceTime);
+    }
+
     for (const pick of scoredPicks) {
       // Fixture guard (C-111): no pick is created or refreshed for a game the
       // day's ESPN scoreboard did not confirm, whatever the scorer emitted.
@@ -1574,13 +1583,22 @@ export async function processSport(
         ingestionRunId: run.id,
         isBootstrap,
         isFeatured,
-        // A publishing mint OMITS the flag so the schema default (true) applies;
-        // only an explicit veto (`canExposePublicPicks === false`) sets it. The
-        // previous `isPublic ? {} : {isPublished:false}` form treated `undefined`
-        // as a veto, which broke the lane-B test whose partial gate fixture never
-        // sets the flag — and in production the gate is a required boolean, so
-        // unspecified only happens in that fixture. Default to publishing.
-        ...(isPublic === false ? { isPublished: false } : {}),
+        // Publication is FAIL-CLOSED. A pick is public only when the existing
+        // gate says yes AND the publication gate says yes. The gate requires
+        // PUBLIC_PICKS_ENABLED === "true", a sealed pregame verdict for this
+        // game, and a passed walk-forward emission gate. The emission gate
+        // reads passed:false today, so this is false in production until the
+        // owner opens it. Previously this line omitted the flag entirely and
+        // the schema default (true) published every pick.
+        isPublished:
+          isPublic === true &&
+          publicationAllowed() &&
+          futurePickPublishable({
+            factorBreakdown: pick.factorBreakdown,
+            generatedAt: new Date(),
+            gameDataFreshnessAt: pick.dataFreshnessAt,
+            gameCommenceTime: kickoffByGameId.get(pick.gameId),
+          }),
         // CLV lock snapshot — the line/price we ACTUALLY published at, captured
         // once at creation. Absent from the updateMany above, so the refresh
         // cycle can never overwrite it. `Pick.line` is now frozen alongside it
@@ -1646,7 +1664,9 @@ export async function processSport(
                 ...createPickData,
                 ...publishedTerms,
                 result: "PENDING",
-                isPublished: true,
+                // Same gated flag as the create path — never a hardcoded true
+                // (WP-0 hard write gate: the supersede fallback is a mint too).
+                isPublished: createPickData.isPublished,
               },
             });
           }

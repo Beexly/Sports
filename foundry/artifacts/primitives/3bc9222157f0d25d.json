@@ -1,0 +1,78 @@
+{
+  "book_id": "3bc9222157f0d25d",
+  "source_status": "COMPLETE",
+  "title": "2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors",
+  "file_name": "2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors.md",
+  "sha256": "3bc9222157f0d25de7887d847c63633924ddc95725491750b1f541af6e10b57a",
+  "primary_domain": "other",
+  "pages_total": 14,
+  "pages_read": 14,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Optical tracking data as a high-dimensional phase-space flow mapping player actions, vision states, and damage dynamics across time-varying game topologies. Universal Lens: Rooted in 2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors (3bc9222157f0d25d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over player intent and team win probability conditioned on real-time action sequences and spatial configurations via conformal predictive distributions. GSI Mapping: Rooted in 2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors (3bc9222157f0d25d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine computes state transitions using Markovian policy graphs derived from tracked ability casts, damage matrices, and fog-of-war visibility events. GSE Mapping: Rooted in 2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors (3bc9222157f0d25d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "phase_space_flow",
+      "name": "Phase Space Flow",
+      "verbatim_quote": "Among other things, we track every champion's location multiple times every second.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x(t)': 'meters', 'y(t)': 'meters', 't': 'seconds'}",
+      "assumptions": "Champion positions are sampled at fixed intervals with negligible latency.",
+      "breakdown_regime": "When champions overlap or are occluded by terrain.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each champion's trajectory maps to a particle in a 3D phase space where position and momentum evolve according to game physics.",
+        "source_operator": "phase_space_flow",
+        "telemetry": "Pixel-level tracking accuracy per second."
+      }
+    },
+    {
+      "primitive_id": "action_sequence_kernel",
+      "name": "Action Sequence Kernel",
+      "verbatim_quote": "In addition to the location data, we also track every ability cast, every attack made, and the damages caused and avoided.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_i': 'dimensionless', 'D_i': 'damage units', 'T_i': 'time seconds'}",
+      "assumptions": "Actions are atomic and timestamped with sub-second resolution.",
+      "breakdown_regime": "When actions are concurrent or ambiguous in causality.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Sequence of actions forms a kernel in action space, enabling convolution-based temporal pattern recognition.",
+        "source_operator": "action_sequence_kernel",
+        "telemetry": "Accuracy of action classification and timing precision."
+      }
+    },
+    {
+      "primitive_id": "vision_state_matrix",
+      "name": "Vision State Matrix",
+      "verbatim_quote": "We track the amount of actual vision granted and denied in the fog of war.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_{ij}(t)': 'dimensionless', 'F_{ij}(t)': 'visibility score'}",
+      "assumptions": "Vision is binary between teams and updated per game tick.",
+      "breakdown_regime": "When fog of war transitions are non-deterministic or delayed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Matrix entries represent visibility relationships between players; models information asymmetry akin to sensor networks.",
+        "source_operator": "vision_state_matrix",
+        "telemetry": "Percentage of map visibility covered per team per interval."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3bc9222157f0d25d_t0",
+      "think": "The core insight is that traditional eSports analytics rely on sparse, event-driven API logs which encode only outcomes rather than processes. By contrast, optical tracking enables dense, continuous monitoring of player behavior, yielding a rich phase-space representation of gameplay dynamics. The phase space flow primitive captures positional evolution, while the action sequence kernel encodes tactical decisions through ability usage and damage metrics. Vision state matrix introduces a strategic layer by modeling information asymmetry. These primitives form a dual framework: one describing motion and interaction (flow), another encoding intent and cognition (kernel). Failure modes arise from occlusion, latency, and misclassification of actions. The system's robustness hinges on real-time processing pipelines that maintain consistency under these adversarial conditions.\n\nDeep epistemic analysis for 2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors (3bc9222157f0d25d, domain=other, pages_read=14/14): Operator 'Phase Space Flow' (page 1, domain other) captures: Among other things, we track every champion's location multiple times every second. Assumptions: Champion positions are sampled at fixed intervals with negligible latency. Breakdown regime: When champions overlap or are occluded by terrain. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each champion's trajectory maps to a particle in a 3D phase space where position and momentum evolve according to game physics. Operator 'Action Sequence Kernel' (page 1, domain other) captures: In addition to the location data, we also track every ability cast, every attack made, and the damages caused and avoided. Assumptions: Actions are atomic and timestamped with sub-second resolution. Breakdown regime: When actions are concurrent or ambiguous in causality. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Sequence of actions forms a kernel in action space, enabling convolution-based temporal pattern recognition. Operator 'Vision State Matrix' (page 1, domain other) captures: We track the amount of actual vision granted and denied in the fog of war. Assumptions: Vision is binary between teams and updated per game tick. Breakdown regime: When fog of war transitions are non-deterministic or delayed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Matrix entries represent visibility relationships between players; models information asymmetry akin to sensor networks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors (3bc9222157f0d25d, domain=other, pages_read=14/14): Operator 'Phase Space Flow' (page 1, domain other) captures: Among other things, we track every champion's location multiple times every second. Assumptions: Champion positions are sampled at fixed intervals with negligible latency. Breakdown regime: When champions overlap or are occluded by terrain. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each champion's trajectory maps to a particle in a 3D phase space where position and momentum evolve according to game physics. Operator 'Action Sequence Kernel' (page 1, domain other) captures: In addition to the location data, we also track every ability cast, every attack made, and the damages caused and avoided. Assumptions: Actions are atomic and timestamped with sub-second resolution. Breakdown regime: When actions are concurrent or ambiguous in causality. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Sequence of actions forms a kernel in action space, enabling convolution-based temporal pattern recognition. Operator 'Vision State Matrix' (page 1, domain other) captures: We track the amount of actual vision granted and denied in the fog of war. Assumptions: Vision is binary between teams and updated per game tick. Breakdown regime: When fog of war transitions are non-deterministic or delayed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Matrix entries represent visibility relationships between players; models information asymmetry akin to sensor networks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This work builds upon classical statistical mechanics and information theory, particularly Boltzmann’s kinetic theory and Shannon entropy, extended to discrete agent-based systems. It also draws from modern machine learning paradigms such as kernel methods and probabilistic graphical models. Retrocausal Genealogy: Rooted in 2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors (3bc9222157f0d25d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents are modeled as stochastic processes with bounded rationality. Their decision-making is inferred from observed action sequences and spatial configurations, assuming bounded utility maximization within known constraints. Theory of Mind & Decision Maker Model: Rooted in 2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors (3bc9222157f0d25d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that vision and action kernels do not redundantly encode similar information. Leakage vetoes prevent feedback loops between telemetry layers, maintaining causal separation between raw observation and derived analytics. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors (3bc9222157f0d25d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

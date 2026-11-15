@@ -46,6 +46,7 @@
 
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { isNeonQuietWindow } from "@/lib/cron/neon-quiet-window";
 import { db } from "@sports/db";
 import {
   SUPPORTED_SPORTS,
@@ -53,7 +54,7 @@ import {
   type OddsCreditLedgerDb,
 } from "@sports/data-ingestion";
 import { refreshOdds } from "@sports/ingestion-pipeline";
-import { getReadinessGates } from "@sports/prediction-engine";
+import { fetchUpcomingWindows, getActiveWindows, getReadinessGates } from "@sports/prediction-engine";
 import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
 import { monitorOddsFetchedAt } from "@/lib/data-reliability/monitor-odds-fetchedat";
 import { runShadowEvaluationPass, type ShadowPassResult } from "@/lib/ops/shadow-evaluation-pass";
@@ -87,6 +88,24 @@ export async function GET(request: Request) {
   }
 
   const pingUrl = process.env["HC_REFRESH_PING_URL"];
+
+  // Neon quiet window (2026-11-13): 02:30–06:30 CT with zero live games =>
+  // skip every Neon query/write so gse-postgres can autosuspend. The live-game
+  // signal comes from the free ESPN scoreboard, never from Neon. If the
+  // scoreboard is unreachable at 3am we treat it as no live games; the next
+  // tick (15 min) retries, and no major sport is live in this window anyway.
+  if (isNeonQuietWindow()) {
+    let liveActive = 0;
+    try {
+      liveActive = getActiveWindows(await fetchUpcomingWindows(), Date.now()).length;
+    } catch {
+      liveActive = 0;
+    }
+    if (liveActive === 0) {
+      return NextResponse.json({ ok: true, skipped: "neon-quiet-window", liveActive: 0 });
+    }
+  }
+
   const governor = apiKey
     ? buildPaidOddsGovernor({ db: db as unknown as OddsCreditLedgerDb })
     : undefined;

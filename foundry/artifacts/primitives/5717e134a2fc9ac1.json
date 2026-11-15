@@ -1,0 +1,78 @@
+{
+  "book_id": "5717e134a2fc9ac1",
+  "source_status": "COMPLETE",
+  "title": "review-rubric",
+  "file_name": "review-rubric.md",
+  "sha256": "5717e134a2fc9ac1fc4e707a94374d9d9fe298423723a609d88f78b868170fce",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Pre-deploy mechanical gates enforce code-level compliance via grep-based verification, ensuring placeholder-free, motion-safe, and animation-mode-complete websites. Universal Lens: Rooted in review-rubric (5717e134a2fc9ac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps pre-deploy checks to posterior confidence in website readiness using grep-derived observables as evidence. GSI Mapping: Rooted in review-rubric (5717e134a2fc9ac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models state transitions through deploy gates, where each failed check triggers a rollback or repair protocol. GSE Mapping: Rooted in review-rubric (5717e134a2fc9ac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "placeholder_verification_gate",
+      "name": "Placeholder Verification Gate",
+      "verbatim_quote": "Grep for the literal markers: `grep -rniE 'lorem ipsum|REMOVE_THIS|blank-app-v1' app/src/`, and scan for any remaining `<...>` placeholder tokens in quoted strings.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All placeholder tokens must be absent from source code prior to deployment.",
+      "breakdown_regime": "Any presence of placeholders results in immediate gate failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The grep-based search function is isomorphic to a logical conjunction over all file paths and content, returning true iff no placeholders exist.",
+        "source_operator": "placeholder_verification_gate",
+        "telemetry": "Boolean outcome of grep command execution"
+      }
+    },
+    {
+      "primitive_id": "animation_mode_compliance",
+      "name": "Animation Mode Compliance",
+      "verbatim_quote": "An eyebrow is a small uppercase/mono kicker sitting DIRECTLY above the section's display headline in the same column; nothing else counts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Eyebrows are strictly defined by their spatial and typographic constraints.",
+      "breakdown_regime": "Failure occurs if eyebrow definition is violated or missing entirely.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Eyebrow kernel derives from layout and typography rules applied to section headers, forming a derived constraint space for visual consistency.",
+        "source_operator": "animation_mode_compliance",
+        "telemetry": "Spatial alignment and font property validation"
+      }
+    },
+    {
+      "primitive_id": "mechanical_gate_completion",
+      "name": "Mechanical Gate Completion",
+      "verbatim_quote": "Mechanical gate (pre-deploy, code-level) Check each item; fix every hit before deploying.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each item in the mechanical gate must pass before deployment.",
+      "breakdown_regime": "Deployment halts upon first failing item.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each mechanical gate item corresponds to a boolean predicate over source code, forming a conjunction that defines successful deployment readiness.",
+        "source_operator": "mechanical_gate_completion",
+        "telemetry": "Aggregate pass/fail status of all mechanical checks"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5717e134a2fc9ac1_t0",
+      "think": "The mechanical gate operates as a deterministic pre-deployment filter enforcing code hygiene and structural correctness. It relies on grep-based searches to detect forbidden patterns, ensuring no placeholders remain. The animation mode gate enforces a specific visual hierarchy through the 'eyebrow' rule, which is a strict spatial and typographic constraint. These primitives form a dual logic: one for code-level integrity and another for visual semantics. Failure in either gate implies a breakdown in either syntactic or semantic completeness, rendering the system in an invalid state until corrected.\n\nDeep epistemic analysis for review-rubric (5717e134a2fc9ac1, domain=other, pages_read=3/3): Operator 'Placeholder Verification Gate' (page 1, domain other) captures: Grep for the literal markers: `grep -rniE 'lorem ipsum|REMOVE_THIS|blank-app-v1' app/src/`, and scan for any remaining `<...>` placeholder tokens in quoted strings. Assumptions: All placeholder tokens must be absent from source code prior to deployment. Breakdown regime: Any presence of placeholders results in immediate gate failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The grep-based search function is isomorphic to a logical conjunction over all file paths and content, returning true iff no placeholders exist. Operator 'Animation Mode Compliance' (page 1, domain other) captures: An eyebrow is a small uppercase/mono kicker sitting DIRECTLY above the section's display headline in the same column; nothing else counts. Assumptions: Eyebrows are strictly defined by their spatial and typographic constraints. Breakdown regime: Failure occurs if eyebrow definition is violated or missing entirely. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Eyebrow kernel derives from layout and typography rules applied to section headers, forming a derived constraint space for visual consistency. Operator 'Mechanical Gate Completion' (page 1, domain other) captures: Mechanical gate (pre-deploy, code-level) Check each item; fix every hit before deploying. Assumptions: Each item in the mechanical gate must pass before deployment. Breakdown regime: Deployment halts upon first failing item. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each mechanical gate item corresponds to a boolean predicate over source code, forming a conjunction that defines successful deployment readiness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for review-rubric (5717e134a2fc9ac1, domain=other, pages_read=3/3): Operator 'Placeholder Verification Gate' (page 1, domain other) captures: Grep for the literal markers: `grep -rniE 'lorem ipsum|REMOVE_THIS|blank-app-v1' app/src/`, and scan for any remaining `<...>` placeholder tokens in quoted strings. Assumptions: All placeholder tokens must be absent from source code prior to deployment. Breakdown regime: Any presence of placeholders results in immediate gate failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The grep-based search function is isomorphic to a logical conjunction over all file paths and content, returning true iff no placeholders exist. Operator 'Animation Mode Compliance' (page 1, domain other) captures: An eyebrow is a small uppercase/mono kicker sitting DIRECTLY above the section's display headline in the same column; nothing else counts. Assumptions: Eyebrows are strictly defined by their spatial and typographic constraints. Breakdown regime: Failure occurs if eyebrow definition is violated or missing entirely. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Eyebrow kernel derives from layout and typography rules applied to section headers, forming a derived constraint space for visual consistency. Operator 'Mechanical Gate Completion' (page 1, domain other) captures: Mechanical gate (pre-deploy, code-level) Check each item; fix every hit before deploying. Assumptions: Each item in the mechanical gate must pass before deployment. Breakdown regime: Deployment halts upon first failing item. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each mechanical gate item corresponds to a boolean predicate over source code, forming a conjunction that defines successful deployment readiness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in software engineering practices of pre-commit hooks and linting systems, evolving into formalized deployment gates with explicit verification criteria. Retrocausal Genealogy: Rooted in review-rubric (5717e134a2fc9ac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in review-rubric (5717e134a2fc9ac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include automated grep tools and human developers. The former enforces syntactic purity while the latter ensures semantic correctness, creating a dual-agent verification model. Theory of Mind & Decision Maker Model: Rooted in review-rubric (5717e134a2fc9ac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in review-rubric (5717e134a2fc9ac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If a placeholder remains undetected by grep, or if an eyebrow violates its definition, the entire deployment process is vetoed due to cross-layer inconsistency between code and design. Cross-Layer Veto & Anti-Leakage Check: Rooted in review-rubric (5717e134a2fc9ac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in review-rubric (5717e134a2fc9ac1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

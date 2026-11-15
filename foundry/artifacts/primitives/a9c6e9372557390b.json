@@ -1,0 +1,95 @@
+{
+  "book_id": "a9c6e9372557390b",
+  "source_status": "COMPLETE",
+  "title": "02-sandbox-cleanup",
+  "file_name": "02-sandbox-cleanup.md",
+  "sha256": "a9c6e9372557390bbf48e7e1ca6fc4c8691f0ae335ab35ddc89e6c0c781b9cca",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'task': 'Compile 3 to 4 crisp sovereign primitives and a concise epistemic trace', 'book_id': 'a9c6e9372557390b', 'title': '02-sandbox-cleanup', 'domain': 'other'} Universal Lens: Rooted in 02-sandbox-cleanup (a9c6e9372557390b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 02-sandbox-cleanup (a9c6e9372557390b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in 02-sandbox-cleanup (a9c6e9372557390b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 02-sandbox-cleanup (a9c6e9372557390b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in 02-sandbox-cleanup (a9c6e9372557390b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "clear_git_index_lock",
+      "name": "Git index lock clearance",
+      "verbatim_quote": "## Run this in PowerShell (not Claude's shell) ```powershell # 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Claude sandbox holds stale git index locks preventing clean operations.",
+      "breakdown_regime": "Workspace integrity degradation when locks persist across sessions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Primer for resolving version control state conflicts in collaborative development environments.",
+        "source_operator": "clear_git_index_lock",
+        "telemetry": "Presence of `.git/index.lock*` files indicates stuck git processes."
+      }
+    },
+    {
+      "primitive_id": "remove_node_modules_directory",
+      "name": "Node modules directory removal",
+      "verbatim_quote": "if (Test-Path \"node_modules\") { Remove-Item -LiteralPath \"node_modules\" -Recurse -Force } if (Test-Path \"_speedtest\") { Remove-Item -LiteralPath \"_speedtest\" -Recurse -Force } # 4.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Partial or corrupted `node_modules` due to interrupted installations.",
+      "breakdown_regime": "Dependency tree inconsistency when directory contents are incomplete.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Standard procedure for purging package caches to enforce fresh resolution.",
+        "source_operator": "remove_node_modules_directory",
+        "telemetry": "Size of `node_modules` directory exceeding expected baseline suggests corruption."
+      }
+    },
+    {
+      "primitive_id": "prisma_client_mismatch_resolution",
+      "name": "Prisma client mismatch correction",
+      "verbatim_quote": "npm run db:generate ``` If step 3 errors with **\"The directory is not empty\"** or **\"Access to the path is denied\"**: - Close VS Code / your editor — file watchers can hold inodes open.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Active file handles prevent deletion of `node_modules` directory.",
+      "breakdown_regime": "Process locking prevents filesystem mutations during active dependency usage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Methodology for identifying and terminating resource-hogging processes in Windows.",
+        "source_operator": "prisma_client_mismatch_resolution",
+        "telemetry": "File access exceptions (`The directory is not empty` / `Access to the path is denied`) flag locking processes."
+      }
+    },
+    {
+      "primitive_id": "toolchain_validation_sequence",
+      "name": "Toolchain validation sequence",
+      "verbatim_quote": "## After it succeeds Verify the toolchain works: ```powershell npm run lint npm run typecheck npm run test npm run build ``` All four should pass.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Clean workspace enables sequential execution of development pipelines.",
+      "breakdown_regime": "Successive validation stages filter out incremental configuration errors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian inference workflow where each command updates posterior probability of system health.",
+        "source_operator": "toolchain_validation_sequence",
+        "telemetry": "Non-zero exit codes from any stage indicate immediate failure mode."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a9c6e9372557390b_t0",
+      "think": "The core challenge is a degraded computational environment where stale metadata and partial dependencies create feedback loops that halt progress. The primitives form a directed acyclic graph (DAG): first clear locks to break mutual exclusion deadlocks, then purge the corrupted state, identify and kill blockers, finally validate through sequential testing. This mirrors GSI's event tree analysis for system failures. The retrocausal genealogy traces back to Unix shell scripting anti-patterns and Windows' more rigid file locking semantics. Modeling opposing agents reveals that automated CI runners might also trigger these stalls, requiring similar recovery. Cross-layer veto conditions ensure that telemetry metrics like disk I/O spikes and memory leaks are monitored to prevent recurrence.\n\nDeep epistemic analysis for 02-sandbox-cleanup (a9c6e9372557390b, domain=other, pages_read=1/1): Operator 'Git index lock clearance' (page 1, domain other) captures: ## Run this in PowerShell (not Claude's shell) ```powershell # 1. Assumptions: Claude sandbox holds stale git index locks preventing clean operations. Breakdown regime: Workspace integrity degradation when locks persist across sessions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Primer for resolving version control state conflicts in collaborative development environments. Operator 'Node modules directory removal' (page 1, domain other) captures: if (Test-Path \"node_modules\") { Remove-Item -LiteralPath \"node_modules\" -Recurse -Force } if (Test-Path \"_speedtest\") { Remove-Item -LiteralPath \"_speedtest\" -Recurse -Force } # 4. Assumptions: Partial or corrupted `node_modules` due to interrupted installations. Breakdown regime: Dependency tree inconsistency when directory contents are incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Standard procedure for purging package caches to enforce fresh resolution. Operator 'Prisma client mismatch correction' (page 1, domain other) captures: npm run db:generate ``` If step 3 errors with **\"The directory is not empty\"** or **\"Access to the path is denied\"**: - Close VS Code / your editor — file watchers can hold inodes open. Assumptions: Active file handles prevent deletion of `node_modules` directory. Breakdown regime: Process locking prevents filesystem mutations during active dependency usage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Methodology for identifying and terminating resource-hogging processes in Windows. Operator 'Toolchain validation sequence' (page 1, domain other) captures: ## After it succeeds Verify the toolchain works: ```powershell npm run lint npm run typecheck npm run test npm run build ``` All four should pass. Assumptions: Clean workspace enables sequential execution of development pipelines. Breakdown regime: Successive validation stages filter out incremental configuration errors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian inference workflow where each command updates posterior probability of system health. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 02-sandbox-cleanup (a9c6e9372557390b, domain=other, pages_read=1/1): Operator 'Git index lock clearance' (page 1, domain other) captures: ## Run this in PowerShell (not Claude's shell) ```powershell # 1. Assumptions: Claude sandbox holds stale git index locks preventing clean operations. Breakdown regime: Workspace integrity degradation when locks persist across sessions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Primer for resolving version control state conflicts in collaborative development environments. Operator 'Node modules directory removal' (page 1, domain other) captures: if (Test-Path \"node_modules\") { Remove-Item -LiteralPath \"node_modules\" -Recurse -Force } if (Test-Path \"_speedtest\") { Remove-Item -LiteralPath \"_speedtest\" -Recurse -Force } # 4. Assumptions: Partial or corrupted `node_modules` due to interrupted installations. Breakdown regime: Dependency tree inconsistency when directory contents are incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Standard procedure for purging package caches to enforce fresh resolution. Operator 'Prisma client mismatch correction' (page 1, domain other) captures: npm run db:generate ``` If step 3 errors with **\"The directory is not empty\"** or **\"Access to the path is denied\"**: - Close VS Code / your editor — file watchers can hold inodes open. Assumptions: Active file handles prevent deletion of `node_modules` directory. Breakdown regime: Process locking prevents filesystem mutations during active dependency usage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Methodology for identifying and terminating resource-hogging processes in Windows. Operator 'Toolchain validation sequence' (page 1, domain other) captures: ## After it succeeds Verify the toolchain works: ```powershell npm run lint npm run typecheck npm run test npm run build ``` All four should pass. Assumptions: Clean workspace enables sequential execution of development pipelines. Breakdown regime: Successive validation stages filter out incremental configuration errors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian inference workflow where each command updates posterior probability of system health. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The sequence draws from classic Unix/Linux system administration rituals (e.g., `rm -rf` with careful targeting) adapted for Windows PowerShell's object-oriented pipeline. It also echoes early 2000s software deployment anti-patterns where partial upgrades left systems in inconsistent states. Retrocausal Genealogy: Rooted in 02-sandbox-cleanup (a9c6e9372557390b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "An opposing actor could be a developer who hastily interrupts an install, leaving the workspace in a locked state, or a security scanner that temporarily holds files open. Understanding their mental model helps prioritize which locks to ignore versus which processes to terminate. Theory of Mind & Decision Maker Model: Rooted in 02-sandbox-cleanup (a9c6e9372557390b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To avoid collinearity, the primitives must be applied strictly in order—deleting `node_modules` before clearing locks risks the new index being immediately corrupted by residual processes. Leakage vetoes include ensuring that PowerShell runs with sufficient privileges to bypass NTFS permissions. Cross-Layer Veto & Anti-Leakage Check: Rooted in 02-sandbox-cleanup (a9c6e9372557390b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

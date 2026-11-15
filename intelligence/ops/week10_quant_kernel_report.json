@@ -1,0 +1,345 @@
+{
+  "sinkhorn_max_residual": 0.0,
+  "games": 13,
+  "mode": "full",
+  "cycle_weights": {
+    "kneeldown_haircut": {
+      "key": "kneeldown_haircut",
+      "cycle": "c1",
+      "registry_weight": 1.0,
+      "se": 12.099645315671577,
+      "inv_var": 0.006830534991371108,
+      "normalized_weight": 1.0
+    },
+    "market_fair_prob_ranking": {
+      "key": "market_fair_prob_ranking",
+      "cycle": "c15",
+      "registry_weight": 1.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "confidence_move_risk": {
+      "key": "confidence_move_risk",
+      "cycle": "c23/c25",
+      "registry_weight": 1.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "sgp_qb_wr_dependence": {
+      "key": "sgp_qb_wr_dependence",
+      "cycle": "c9/c10",
+      "registry_weight": 1.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "sgp_qb_rb_dependence": {
+      "key": "sgp_qb_rb_dependence",
+      "cycle": "c9",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "copula_family_branch": {
+      "key": "copula_family_branch",
+      "cycle": "c11",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "fourth_down_aggression": {
+      "key": "fourth_down_aggression",
+      "cycle": "c29",
+      "registry_weight": 1.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "pressure_timing_weight": {
+      "key": "pressure_timing_weight",
+      "cycle": "c35",
+      "registry_weight": 1.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "safety_out_explosive": {
+      "key": "safety_out_explosive",
+      "cycle": "c27",
+      "registry_weight": 0.5,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "interior_ol_penalty": {
+      "key": "interior_ol_penalty",
+      "cycle": "c16/c17/c18/c21/c22",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "mutual_ilb_cb_override": {
+      "key": "mutual_ilb_cb_override",
+      "cycle": "c7",
+      "registry_weight": 0.25,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "red_zone_stall_prior": {
+      "key": "red_zone_stall_prior",
+      "cycle": "c4",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "scheme_fingerprint": {
+      "key": "scheme_fingerprint",
+      "cycle": "c3",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "nickel_suppression": {
+      "key": "nickel_suppression",
+      "cycle": "c12/c6",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "te_funnel_on_ilb_loss": {
+      "key": "te_funnel_on_ilb_loss",
+      "cycle": "c12",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "rookie_bocpd_breakpoint": {
+      "key": "rookie_bocpd_breakpoint",
+      "cycle": "c13",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "wind_axis_term": {
+      "key": "wind_axis_term",
+      "cycle": "c31/c32/c33/c34",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "offensive_crew_bias": {
+      "key": "offensive_crew_bias",
+      "cycle": "c30",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "cross_book_dispersion": {
+      "key": "cross_book_dispersion",
+      "cycle": "c28",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    },
+    "steam_following": {
+      "key": "steam_following",
+      "cycle": "c26",
+      "registry_weight": 0.0,
+      "se": null,
+      "inv_var": 0.0,
+      "normalized_weight": 0.0
+    }
+  },
+  "farm_census": {
+    "FITTED": 6,
+    "REVERSED": 1,
+    "REFUTED": 11,
+    "PARKED": 2,
+    "PARTIAL": 0
+  },
+  "matchups": [
+    {
+      "id": "cmt4fewrh00jdeat5qnhy6h8f",
+      "matchup": "New England Patriots @ Detroit Lions",
+      "commenceTime": "2026-11-15T14:30:00",
+      "openingSpread": -1.833333333333333,
+      "openingTotal": 48.83333333333334,
+      "market_p_home": 0.5535382900399679,
+      "drive_lattice_p_home": 0.5459,
+      "drive_lattice_tie_prob": 0.0345,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.5497102359449385
+    },
+    {
+      "id": "cmt4fews800jpeat5w2m7q0pb",
+      "matchup": "Miami Dolphins @ Indianapolis Colts",
+      "commenceTime": "2026-11-15T18:00:00",
+      "openingSpread": -6.75,
+      "openingTotal": 46.5,
+      "market_p_home": 0.689909808374722,
+      "drive_lattice_p_home": 0.6778,
+      "drive_lattice_tie_prob": 0.0323,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.6838885230913988
+    },
+    {
+      "id": "cmt4fewry00jleat5cdenxtrq",
+      "matchup": "Houston Texans @ Cleveland Browns",
+      "commenceTime": "2026-11-15T18:00:00",
+      "openingSpread": 4.5,
+      "openingTotal": 37.5,
+      "market_p_home": 0.37055020204731937,
+      "drive_lattice_p_home": 0.3639,
+      "drive_lattice_tie_prob": 0.0403,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.36721109724987494
+    },
+    {
+      "id": "cmt4fews300jneat5dc5jrbcr",
+      "matchup": "Minnesota Vikings @ Green Bay Packers",
+      "commenceTime": "2026-11-15T18:00:00",
+      "openingSpread": -4.5,
+      "openingTotal": 45.16666666666666,
+      "market_p_home": 0.6294497979526806,
+      "drive_lattice_p_home": 0.6199,
+      "drive_lattice_tie_prob": 0.035,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.6246892554840618
+    },
+    {
+      "id": "cmt4fewru00jjeat5lykxxmw3",
+      "matchup": "Carolina Panthers @ New Orleans Saints",
+      "commenceTime": "2026-11-15T18:00:00",
+      "openingSpread": -1.833333333333333,
+      "openingTotal": 43,
+      "market_p_home": 0.5535382900399679,
+      "drive_lattice_p_home": 0.5472,
+      "drive_lattice_tie_prob": 0.0378,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.5503784738592644
+    },
+    {
+      "id": "cmt4fewsc00jreat5k8fz5lhy",
+      "matchup": "Jacksonville Jaguars @ Tennessee Titans",
+      "commenceTime": "2026-11-15T18:00:00",
+      "openingSpread": 2.666666666666667,
+      "openingTotal": 45.5,
+      "market_p_home": 0.4223870714062466,
+      "drive_lattice_p_home": 0.4214,
+      "drive_lattice_tie_prob": 0.0359,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.4218947671156908
+    },
+    {
+      "id": "cmt4fewrl00jfeat5qiyx6jjm",
+      "matchup": "Kansas City Chiefs @ Atlanta Falcons",
+      "commenceTime": "2026-11-15T18:00:00",
+      "openingSpread": 4,
+      "openingTotal": 45,
+      "market_p_home": 0.38449901973186806,
+      "drive_lattice_p_home": 0.3848,
+      "drive_lattice_tie_prob": 0.0354,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.3846399125407753
+    },
+    {
+      "id": "cmt4fewrq00jheat511t2yutz",
+      "matchup": "Buffalo Bills @ New York Jets",
+      "commenceTime": "2026-11-15T18:00:00",
+      "openingSpread": 6.75,
+      "openingTotal": 46,
+      "market_p_home": 0.31009019162527796,
+      "drive_lattice_p_home": 0.3137,
+      "drive_lattice_tie_prob": 0.0325,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.3118896023906248
+    },
+    {
+      "id": "cmt4fewsg00jteat500horgfu",
+      "matchup": "Los Angeles Rams @ Arizona Cardinals",
+      "commenceTime": "2026-11-15T21:05:00",
+      "openingSpread": 10.5,
+      "openingTotal": 47.5,
+      "market_p_home": 0.22037566127178915,
+      "drive_lattice_p_home": 0.2271,
+      "drive_lattice_tie_prob": 0.0271,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.22372312778174988
+    },
+    {
+      "id": "cmt4fewsl00jveat59oe7kp26",
+      "matchup": "Seattle Seahawks @ Las Vegas Raiders",
+      "commenceTime": "2026-11-15T21:05:00",
+      "openingSpread": 6.833333333333333,
+      "openingTotal": 43,
+      "market_p_home": 0.30793465060135133,
+      "drive_lattice_p_home": 0.3081,
+      "drive_lattice_tie_prob": 0.0339,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.3080183667965419
+    },
+    {
+      "id": "cmt4fewsp00jxeat5auo8dp90",
+      "matchup": "San Francisco 49ers @ Dallas Cowboys",
+      "commenceTime": "2026-11-15T21:25:00",
+      "openingSpread": -1.25,
+      "openingTotal": 53,
+      "market_p_home": 0.5365623109478378,
+      "drive_lattice_p_home": 0.5295,
+      "drive_lattice_tie_prob": 0.033,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.533026840849539
+    },
+    {
+      "id": "cmt4fewsu00jzeat5cid5m5sj",
+      "matchup": "Pittsburgh Steelers @ Cincinnati Bengals",
+      "commenceTime": "2026-11-16T01:20:00",
+      "openingSpread": -3.833333333333333,
+      "openingTotal": 47,
+      "market_p_home": 0.610816922514331,
+      "drive_lattice_p_home": 0.6008,
+      "drive_lattice_tie_prob": 0.0345,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.6058259092673657
+    },
+    {
+      "id": "cmt4fewsy00k1eat5o90fmf0g",
+      "matchup": "Los Angeles Chargers @ Baltimore Ravens",
+      "commenceTime": "2026-11-17T01:15:00",
+      "openingSpread": -3,
+      "openingTotal": 47.83333333333334,
+      "market_p_home": 0.5871673457581656,
+      "drive_lattice_p_home": 0.5779,
+      "drive_lattice_tie_prob": 0.0346,
+      "situational_log_odds_delta": 0.0,
+      "cycles_applied": [],
+      "final_p_home": 0.5825377818172541
+    }
+  ]
+}

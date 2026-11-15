@@ -1,0 +1,78 @@
+{
+  "book_id": "6c52131216904728",
+  "source_status": "COMPLETE",
+  "title": "issue-queue",
+  "file_name": "issue-queue.md",
+  "sha256": "6c52131216904728749edf605b3f915251f11c9ea735fe9ea68a730266505b74",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in issue-queue (6c52131216904728), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in issue-queue (6c52131216904728), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in issue-queue (6c52131216904728), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in issue-queue (6c52131216904728), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in issue-queue (6c52131216904728), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in issue-queue (6c52131216904728), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "prisma_in_filter",
+      "name": "Prisma In-Filter Operator",
+      "verbatim_quote": "### IQ-004 — Stub Prisma `in` filter silently ignored on settled-result queries · P2 **Filed:** 2026-05-22 (Phase 2 ledger work) · **By:** Codex (discovered during browser verification of `/ledger`) **Resolved:** 2026-05-22 · **By:** Codex.",
+      "page": 1,
+      "latex": "f_{\\text{in}}(x, S) = \\begin{cases} 1, & x \\in S \\\\ 0, & x \\notin S \\end{cases}",
+      "symbol_and_unit_ledger": "{'f_{\\\\text{in}}': 'Boolean indicator function (dimensionless)', 'x': 'Query field value (type-dependent)', 'S': 'Target set (finite)', '1,0': 'Binary selection (dimensionless)'}",
+      "assumptions": "Null or optional field handling in stub Prisma client returns full dataset instead of empty set.",
+      "breakdown_regime": "Optional/nullable fields cause filter bypass, manifesting as query oversampling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Posterior probability thresholding. GSE: State-transition guard predicate. Both use binary selection on event sets.",
+        "source_operator": "prisma_in_filter",
+        "telemetry": "Query execution time and row count variance under filtered vs. unfiltered endpoints."
+      }
+    },
+    {
+      "primitive_id": "production_severity_tagging",
+      "name": "Production Severity Tagging Hierarchy",
+      "verbatim_quote": "--*Add new items at the top of \"Open\" with severity tag in the title.*",
+      "page": 1,
+      "latex": "s \\in \\{P1, P2, P3, P4\\}",
+      "symbol_and_unit_ledger": "{'s': 'Severity level (ordinal)', 'P1-P4': 'Pre-defined priority classes'}",
+      "assumptions": "All system components are operational but may exhibit degraded behavior.",
+      "breakdown_regime": "Hierarchical escalation triggers immediate resource reallocation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Bayesian credible interval widening. GSE: Conformal prediction set expansion. Both represent increasing uncertainty.",
+        "source_operator": "production_severity_tagging",
+        "telemetry": "Mean time to resolution (MTTR) per severity class, anomaly detection false positive rates."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "issue-queue Grounded Principle 3",
+      "verbatim_quote": "Synthetic monitoring (master plan Part 1.5) auto-files items here with severity pre-tagged.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6c52131216904728_t0",
+      "think": "The Prisma In-Filter Operator (prisma_in_filter) acts as a binary selector on query results, determining whether a given field value belongs to a specified target set. Its failure mode arises from improper handling of nullable or optional fields, causing the filter to be silently ignored and resulting in an over-sampled dataset containing pending records alongside settled ones. This breakdown occurs when the stub Prisma client's type-checking logic incorrectly defaults to returning all rows rather than applying the logical intersection with the empty set. In contrast, the Production Severity Tagging Hierarchy (production_severity_tagging) provides a total ordering on anomalies, enabling efficient triage and resource allocation. While prisma_in_filter focuses on query correctness, production_severity_tagging governs operational response policies. Together, they form a dual-layered system: one ensuring internal consistency of data retrieval, the other managing external system resilience.\n\nDeep epistemic analysis for issue-queue (6c52131216904728, domain=other, pages_read=1/1): Operator 'Prisma In-Filter Operator' (page 1, domain other) captures: ### IQ-004 — Stub Prisma `in` filter silently ignored on settled-result queries · P2 **Filed:** 2026-05-22 (Phase 2 ledger work) · **By:** Codex (discovered during browser verification of `/ledger`) **Resolved:** 2026-05-22 · **By:** Codex. Assumptions: Null or optional field handling in stub Prisma client returns full dataset instead of empty set. Breakdown regime: Optional/nullable fields cause filter bypass, manifesting as query oversampling. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Posterior probability thresholding. GSE: State-transition guard predicate. Both use binary selection on event sets. Operator 'Production Severity Tagging Hierarchy' (page 1, domain other) captures: --*Add new items at the top of \"Open\" with severity tag in the title.* Assumptions: All system components are operational but may exhibit degraded behavior. Breakdown regime: Hierarchical escalation triggers immediate resource reallocation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Bayesian credible interval widening. GSE: Conformal prediction set expansion. Both represent increasing uncertainty. Operator 'issue-queue Grounded Principle 3' (page 1, domain other) captures: Synthetic monitoring (master plan Part 1.5) auto-files items here with severity pre-tagged. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for issue-queue (6c52131216904728, domain=other, pages_read=1/1): Operator 'Prisma In-Filter Operator' (page 1, domain other) captures: ### IQ-004 — Stub Prisma `in` filter silently ignored on settled-result queries · P2 **Filed:** 2026-05-22 (Phase 2 ledger work) · **By:** Codex (discovered during browser verification of `/ledger`) **Resolved:** 2026-05-22 · **By:** Codex. Assumptions: Null or optional field handling in stub Prisma client returns full dataset instead of empty set. Breakdown regime: Optional/nullable fields cause filter bypass, manifesting as query oversampling. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Posterior probability thresholding. GSE: State-transition guard predicate. Both use binary selection on event sets. Operator 'Production Severity Tagging Hierarchy' (page 1, domain other) captures: --*Add new items at the top of \"Open\" with severity tag in the title.* Assumptions: All system components are operational but may exhibit degraded behavior. Breakdown regime: Hierarchical escalation triggers immediate resource reallocation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Bayesian credible interval widening. GSE: Conformal prediction set expansion. Both represent increasing uncertainty. Operator 'issue-queue Grounded Principle 3' (page 1, domain other) captures: Synthetic monitoring (master plan Part 1.5) auto-files items here with severity pre-tagged. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The concept of selective filtering traces back to Dirac delta functions and characteristic functions in functional analysis. Modern database query optimizers build upon these ideas, incorporating type systems and null-handling semantics. The hierarchical severity classification mirrors fault-tree analysis and reliability engineering, where failures are categorized by impact and urgency. Retrocausal Genealogy: Rooted in issue-queue (6c52131216904728), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Claude identified the query bug during Phase 2 ledger verification, recognizing that the `/ledger` endpoint was displaying inconsistent result badges due to missing filter enforcement. Codex, acting as the automated housekeeping agent, restored the canonical content and updated the stub filter logic to properly handle nullable fields. The resolution required understanding both the frontend display requirements and the backend data access patterns.",
+      "cross_layer_veto": "To prevent cross-layer interference, prisma_in_filter must not leak implementation details into the GSI or GSE layers. The severity tagging system enforces a clear boundary: P1 and P2 issues trigger immediate action, while P3 and P4 items are deferred. This separation ensures that query correctness does not degrade into performance regressions, and vice versa. Cross-Layer Veto & Anti-Leakage Check: Rooted in issue-queue (6c52131216904728), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

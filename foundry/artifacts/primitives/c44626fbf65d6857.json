@@ -1,0 +1,78 @@
+{
+  "book_id": "c44626fbf65d6857",
+  "source_status": "COMPLETE",
+  "title": "fastmag_defs",
+  "file_name": "fastmag_defs.txt",
+  "sha256": "c44626fbf65d685782a5d571521e77846dde81c612a5894eb362153b957975e4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Uncovered paths in PMGs define structural constraints; potentially directed paths encode causal directionality; circle paths specify symmetric edge configurations. Universal Lens: Rooted in fastmag_defs (c44626fbf65d6857), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on MAGs uses uncovered circle paths to resolve edge orientations via Zhang's rules, enabling probabilistic causal discovery in GSI models. GSI Mapping: Rooted in fastmag_defs (c44626fbf65d6857), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE leverages p.d. paths and edge orientation rules to transition between structural states in dynamic MAGs. GSE Mapping: Rooted in fastmag_defs (c44626fbf65d6857), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "uncovered_path",
+      "name": "Uncovered Path",
+      "verbatim_quote": ", vn⟩is said to be uncovered if for every 1 ≤i ≤n -1, vi-1 and vi+1 are not adjacent.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'π': 'path in PMG', 'v_i': 'vertex in path', 'n': 'number of vertices'}",
+      "assumptions": "Path is simple, no self-loops, and adjacency defined in PMG.",
+      "breakdown_regime": "When adjacent vertices exist in the path sequence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to constraint graphs in GSI causal structure learning.",
+        "source_operator": "uncovered_path",
+        "telemetry": "Path adjacency matrix validation."
+      }
+    },
+    {
+      "primitive_id": "potentially_directed_path",
+      "name": "Potentially Directed Path",
+      "verbatim_quote": ", vn⟩is said to be potentially directed (p.d.) from v0 to vn if for every 1 ≤i ≤n, the edge between vi-1 and vi is neither vi-1 ←∗vi nor vi-1 ∗-vi.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'π': 'path in PMG', 'v_i': 'vertex in path', 'n': 'number of vertices'}",
+      "assumptions": "Edge types are defined in MAGs; no reverse or bidirectional edges.",
+      "breakdown_regime": "When edge type violates directional constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel for causal direction inference in GSE state transitions.",
+        "source_operator": "potentially_directed_path",
+        "telemetry": "Edge type classification in path segments."
+      }
+    },
+    {
+      "primitive_id": "circle_path",
+      "name": "Circle Path",
+      "verbatim_quote": "In a PMG, a path π is a circle path if every edge on the path is of the form ◦-◦.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'π': 'path in PMG', '◦-◦': 'undirected edge type'}",
+      "assumptions": "All edges in path are undirected.",
+      "breakdown_regime": "When any edge is not of form ◦-◦.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to symmetric relation graphs in GSI.",
+        "source_operator": "circle_path",
+        "telemetry": "Edge type consistency check along path."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c44626fbf65d6857_t0",
+      "think": "The primitives define structural constraints in PMGs. An uncovered path ensures no shortcuts across consecutive vertices, which is essential for identifying valid causal structures. A potentially directed path excludes reverse or bidirectional edges, enabling directional inference. Circle paths enforce uniformity in edge types, aiding in symmetry detection. These primitives interplay in Zhang’s rules to iteratively orient edges in MAGs, forming the basis of causal discovery algorithms in GSI. Failure modes arise when path constraints are violated, leading to ambiguous or incorrect orientations. Dualities emerge in how uncovered paths and circle paths interact with p.d. paths to refine causal directions.\n\nDeep epistemic analysis for fastmag_defs (c44626fbf65d6857, domain=other, pages_read=1/1): Operator 'Uncovered Path' (page 1, domain other) captures: , vn⟩is said to be uncovered if for every 1 ≤i ≤n -1, vi-1 and vi+1 are not adjacent. Assumptions: Path is simple, no self-loops, and adjacency defined in PMG. Breakdown regime: When adjacent vertices exist in the path sequence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to constraint graphs in GSI causal structure learning. Operator 'Potentially Directed Path' (page 1, domain other) captures: , vn⟩is said to be potentially directed (p.d.) from v0 to vn if for every 1 ≤i ≤n, the edge between vi-1 and vi is neither vi-1 ←∗vi nor vi-1 ∗-vi. Assumptions: Edge types are defined in MAGs; no reverse or bidirectional edges. Breakdown regime: When edge type violates directional constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel for causal direction inference in GSE state transitions. Operator 'Circle Path' (page 1, domain other) captures: In a PMG, a path π is a circle path if every edge on the path is of the form ◦-◦. Assumptions: All edges in path are undirected. Breakdown regime: When any edge is not of form ◦-◦. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to symmetric relation graphs in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for fastmag_defs (c44626fbf65d6857, domain=other, pages_read=1/1): Operator 'Uncovered Path' (page 1, domain other) captures: , vn⟩is said to be uncovered if for every 1 ≤i ≤n -1, vi-1 and vi+1 are not adjacent. Assumptions: Path is simple, no self-loops, and adjacency defined in PMG. Breakdown regime: When adjacent vertices exist in the path sequence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to constraint graphs in GSI causal structure learning. Operator 'Potentially Directed Path' (page 1, domain other) captures: , vn⟩is said to be potentially directed (p.d.) from v0 to vn if for every 1 ≤i ≤n, the edge between vi-1 and vi is neither vi-1 ←∗vi nor vi-1 ∗-vi. Assumptions: Edge types are defined in MAGs; no reverse or bidirectional edges. Breakdown regime: When edge type violates directional constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel for causal direction inference in GSE state transitions. Operator 'Circle Path' (page 1, domain other) captures: In a PMG, a path π is a circle path if every edge on the path is of the form ◦-◦. Assumptions: All edges in path are undirected. Breakdown regime: When any edge is not of form ◦-◦. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to symmetric relation graphs in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Pearl's causal inference framework and extended by Zhang (2007) and Ali et al., these primitives formalize structural constraints for causal discovery in MAGs. Retrocausal Genealogy: Rooted in fastmag_defs (c44626fbf65d6857), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in fastmag_defs (c44626fbf65d6857), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may interpret edge orientations differently based on path constraints. GSI models must account for conflicting causal interpretations from varying path traversals. Theory of Mind & Decision Maker Model: Rooted in fastmag_defs (c44626fbf65d6857), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in fastmag_defs (c44626fbf65d6857), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when uncovered paths contradict p.d. path assumptions. Leakage occurs if circle paths do not maintain consistent edge types, invalidating downstream causal inferences. Cross-Layer Veto & Anti-Leakage Check: Rooted in fastmag_defs (c44626fbf65d6857), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in fastmag_defs (c44626fbf65d6857), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

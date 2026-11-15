@@ -1,0 +1,78 @@
+{
+  "book_id": "996a364499636a91",
+  "source_status": "COMPLETE",
+  "title": "teamrankings.com",
+  "file_name": "teamrankings.com.md",
+  "sha256": "996a364499636a912b7061662ff73e3f1e656372470229ccc512afdc21049e59",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph traversal and path taxonomy define a hierarchical URL manifold with categorical node weights and edge connectivity metrics. Universal Lens: Rooted in teamrankings.com (996a364499636a91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on sitemap structure enables probabilistic ranking of content paths via URL frequency and categorical entropy. GSI Mapping: Rooted in teamrankings.com (996a364499636a91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in GSE modelled by path taxonomy updates; each URL segment represents a discrete state with transition probabilities derived from sitemap counts. GSE Mapping: Rooted in teamrankings.com (996a364499636a91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_traversal",
+      "name": "Sitemap Graph Traversal Operator",
+      "verbatim_quote": "# teamrankings.com Category: **analytics** URLs discovered: **19,478** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{urls}}': 'dimensionless, total URLs discovered', 'N_{\\\\text{sitemaps}}': 'dimensionless, number of sitemaps processed'}",
+      "assumptions": "All sitemaps are accessible and contain valid XML structures.",
+      "breakdown_regime": "When sitemap returns HTTP 404, traversal halts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Graph traversal maps to a directed acyclic graph where nodes represent URL segments and edges represent hierarchical relationships.",
+        "source_operator": "sitemap_graph_traversal",
+        "telemetry": "Number of URLs indexed per sitemap."
+      }
+    },
+    {
+      "primitive_id": "path_taxonomy_indexing",
+      "name": "Path Taxonomy Indexing Kernel",
+      "verbatim_quote": "0 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/ncaa-basketball`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_i': 'dimensionless, path segment identifier', 'N(P_i)': 'dimensionless, count of URLs under path segment'}",
+      "assumptions": "Each path segment uniquely identifies a category of content.",
+      "breakdown_regime": "When path segment is not present in sitemap, N(P_i) = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Path indexing defines a categorical partitioning of the URL space into submanifolds with cardinality-weighted nodes.",
+        "source_operator": "path_taxonomy_indexing",
+        "telemetry": "URL count per first-level path segment."
+      }
+    },
+    {
+      "primitive_id": "url_frequency_entropy",
+      "name": "URL Frequency Entropy Measure",
+      "verbatim_quote": "| | `/mlb` | 3,079 | | `/college-football` | 2,516 | | `/nba` | 1,768 |",
+      "page": 1,
+      "latex": "\\mathcal{H} = - \\sum_{i=1}^{k} p_i \\log p_i",
+      "symbol_and_unit_ledger": "{'p_i': 'dimensionless, probability of URL in category i', '\\\\mathcal{H}': 'dimensionless, Shannon entropy of URL distribution'}",
+      "assumptions": "URLs are independently distributed across categories.",
+      "breakdown_regime": "When all categories have equal URL counts, entropy is maximized.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Entropy quantifies information content of URL distribution across categories; used for predictive modeling of content density.",
+        "source_operator": "url_frequency_entropy",
+        "telemetry": "Shannon entropy of URL counts per path segment."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "996a364499636a91_t0",
+      "think": "The sitemap traversal operator defines a graph structure where each sitemap entry corresponds to a node in a directed acyclic graph. The path taxonomy operator assigns weights to these nodes based on URL counts, enabling categorization of content domains. The entropy measure provides a statistical summary of how evenly URLs are distributed across categories, which informs the predictive capacity of GSI models. Failure modes include inaccessible sitemaps (HTTP 404), leading to incomplete graph coverage, and uniform distribution of URLs across categories, reducing entropy-based signal strength. Dualities arise between topological graph properties and information-theoretic measures such as entropy, where graph connectivity mirrors information diversity.\n\nDeep epistemic analysis for teamrankings.com (996a364499636a91, domain=other, pages_read=3/3): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # teamrankings.com Category: **analytics** URLs discovered: **19,478** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are accessible and contain valid XML structures. Breakdown regime: When sitemap returns HTTP 404, traversal halts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Graph traversal maps to a directed acyclic graph where nodes represent URL segments and edges represent hierarchical relationships. Operator 'Path Taxonomy Indexing Kernel' (page 1, domain other) captures: 0 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/ncaa-basketball` Assumptions: Each path segment uniquely identifies a category of content. Breakdown regime: When path segment is not present in sitemap, N(P_i) = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Path indexing defines a categorical partitioning of the URL space into submanifolds with cardinality-weighted nodes. Operator 'URL Frequency Entropy Measure' (page 1, domain other) captures: | | `/mlb` | 3,079 | | `/college-football` | 2,516 | | `/nba` | 1,768 | Assumptions: URLs are independently distributed across categories. Breakdown regime: When all categories have equal URL counts, entropy is maximized. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Entropy quantifies information content of URL distribution across categories; used for predictive modeling of content density. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for teamrankings.com (996a364499636a91, domain=other, pages_read=3/3): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # teamrankings.com Category: **analytics** URLs discovered: **19,478** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are accessible and contain valid XML structures. Breakdown regime: When sitemap returns HTTP 404, traversal halts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Graph traversal maps to a directed acyclic graph where nodes represent URL segments and edges represent hierarchical relationships. Operator 'Path Taxonomy Indexing Kernel' (page 1, domain other) captures: 0 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/ncaa-basketball` Assumptions: Each path segment uniquely identifies a category of content. Breakdown regime: When path segment is not present in sitemap, N(P_i) = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Path indexing defines a categorical partitioning of the URL space into submanifolds with cardinality-weighted nodes. Operator 'URL Frequency Entropy Measure' (page 1, domain other) captures: | | `/mlb` | 3,079 | | `/college-football` | 2,516 | | `/nba` | 1,768 | Assumptions: URLs are independently distributed across categories. Breakdown regime: When all categories have equal URL counts, entropy is maximized. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Entropy quantifies information content of URL distribution across categories; used for predictive modeling of content density. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and information theory, particularly Shannon's entropy and network topology. Influenced by web crawling algorithms and hierarchical data classification systems. Retrocausal Genealogy: Rooted in teamrankings.com (996a364499636a91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in teamrankings.com (996a364499636a91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may manipulate sitemap structures to obscure content or inflate URL counts. Decision actors prioritize high-frequency paths for indexing, potentially skewing entropy estimates. Theory of Mind & Decision Maker Model: Rooted in teamrankings.com (996a364499636a91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in teamrankings.com (996a364499636a91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that path taxonomy and entropy be computed independently to avoid overfitting. Leakage occurs when sitemap access fails, invalidating traversal and entropy computations. Cross-Layer Veto & Anti-Leakage Check: Rooted in teamrankings.com (996a364499636a91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in teamrankings.com (996a364499636a91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

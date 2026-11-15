@@ -1,0 +1,78 @@
+{
+  "book_id": "109af7636553aa64",
+  "source_status": "COMPLETE",
+  "title": "0619-effective-injury-forecasting-in-soccer",
+  "file_name": "0619-effective-injury-forecasting-in-soccer.md",
+  "sha256": "109af7636553aa6498d50bf670a384e86bfad2a006e22f6d88d670deeca4940f",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Workload-injury forecasting via EWMA-accretive ACWR-monotony kernels with ADASYN-enhanced stratified bootstrapping. Universal Lens: Rooted in 0619-effective-injury-forecasting-in-soccer (109af7636553aa64), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian injury probability inference using GSI's conformal predictive distributions over workload-derived features with calibrated uncertainty bounds. GSI Mapping: Rooted in 0619-effective-injury-forecasting-in-soccer (109af7636553aa64), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps player state transitions through workload-injury risk manifolds using derived kernel operators and temporal consistency checks. GSE Mapping: Rooted in 0619-effective-injury-forecasting-in-soccer (109af7636553aa64), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ewma_workload_kernel",
+      "name": "Exponential Weighted Moving Average Workload Kernel",
+      "verbatim_quote": "Method / model - Feature engineering: EWMA of workload features with **span 6**; ACWR with 6-day acute / 27-day chronic windows; monotony over seven days; prior-injury EWMA.",
+      "page": 1,
+      "latex": "\\text{EWMA}_t = \\alpha x_t + (1 - \\alpha) \\text{EWMA}_{t-1}",
+      "symbol_and_unit_ledger": "{'x_t': 'workload feature at time t (dimensionless)', 'α': 'smoothing factor (0 < α ≤ 1)', '\\\\text{EWMA}_t': 'exponentially weighted average at time t (dimensionless)'}",
+      "assumptions": "GPS-derived workload proxies internal physiological load; temporal smoothing captures fatigue accumulation.",
+      "breakdown_regime": "When workload features are sparse or non-stationary, EWMA may lag behind sudden changes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw GPS metrics to fatigue-sensitive latent variables for injury risk modeling.",
+        "source_operator": "ewma_workload_kernel",
+        "telemetry": "Mean absolute error between predicted and actual injury events."
+      }
+    },
+    {
+      "primitive_id": "acwr_ratio_index",
+      "name": "Acute-to-Chronic Workload Ratio Index",
+      "verbatim_quote": "- ACWR = (6-day acute workload) / (27-day chronic workload).",
+      "page": 1,
+      "latex": "\\text{ACWR} = \\frac{\\text{AW}_{6\\text{d}}}{\\text{CW}_{27\\text{d}}}",
+      "symbol_and_unit_ledger": "{'\\\\text{AW}_{6\\\\text{d}}': 'acute workload over 6 days (unitless)', '\\\\text{CW}_{27\\\\text{d}}': 'chronic workload over 27 days (unitless)', '\\\\text{ACWR}': 'acute-to-chronic workload ratio (dimensionless)'}",
+      "assumptions": "Workload imbalance increases injury risk; chronic load reflects adaptation capacity.",
+      "breakdown_regime": "When chronic workload is near zero, ACWR becomes undefined or extremely large.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to standard fatigue stress index used in sports science.",
+        "source_operator": "acwr_ratio_index",
+        "telemetry": "Sensitivity of injury prediction to ACWR thresholds (e.g., >1.5)."
+      }
+    },
+    {
+      "primitive_id": "monotony_measure",
+      "name": "Workload Monotony Measure",
+      "verbatim_quote": "- Monotony = weekly mean / weekly standard deviation over seven days.",
+      "page": 1,
+      "latex": "\\text{Monotony} = \\frac{\\mu_{7\\text{d}}}{\\sigma_{7\\text{d}}}",
+      "symbol_and_unit_ledger": "{'\\\\mu_{7\\\\text{d}}': 'mean workload over 7 days (unitless)', '\\\\sigma_{7\\\\text{d}}': 'standard deviation of workload over 7 days (unitless)', '\\\\text{Monotony}': 'measure of workload variability (dimensionless)'}",
+      "assumptions": "High monotony indicates repetitive training patterns that may increase injury risk.",
+      "breakdown_regime": "When variance approaches zero, monotony diverges; when mean is zero, undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Captures training pattern regularity as a proxy for injury susceptibility.",
+        "source_operator": "monotony_measure",
+        "telemetry": "Correlation between monotony and injury incidence rates."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "109af7636553aa64_t0",
+      "think": "The core forecasting framework combines three distinct workload kernels—EWMA for temporal smoothing, ACWR for imbalance detection, and monotony for variability assessment. These are engineered from GPS-derived metrics such as total distance and high-speed running, then combined into a feature space where decision trees select the most predictive combinations. The use of ADASYN ensures balanced representation of rare injury cases during training. The 10,000-fold cross-validation provides robust estimates of model performance under uncertainty. In GSE, these primitives map directly onto NFL practice load modeling, substituting snap counts and position-specific load proxies for GPS data. The kernel operators form a coherent state-space for player availability prediction, enabling dynamic risk adjustment based on recent training load profiles.\n\nDeep epistemic analysis for 0619-effective-injury-forecasting-in-soccer (109af7636553aa64, domain=other, pages_read=3/3): Operator 'Exponential Weighted Moving Average Workload Kernel' (page 1, domain other) captures: Method / model - Feature engineering: EWMA of workload features with **span 6**; ACWR with 6-day acute / 27-day chronic windows; monotony over seven days; prior-injury EWMA. Assumptions: GPS-derived workload proxies internal physiological load; temporal smoothing captures fatigue accumulation. Breakdown regime: When workload features are sparse or non-stationary, EWMA may lag behind sudden changes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw GPS metrics to fatigue-sensitive latent variables for injury risk modeling. Operator 'Acute-to-Chronic Workload Ratio Index' (page 1, domain other) captures: - ACWR = (6-day acute workload) / (27-day chronic workload). Assumptions: Workload imbalance increases injury risk; chronic load reflects adaptation capacity. Breakdown regime: When chronic workload is near zero, ACWR becomes undefined or extremely large. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to standard fatigue stress index used in sports science. Operator 'Workload Monotony Measure' (page 1, domain other) captures: - Monotony = weekly mean / weekly standard deviation over seven days. Assumptions: High monotony indicates repetitive training patterns that may increase injury risk. Breakdown regime: When variance approaches zero, monotony diverges; when mean is zero, undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures training pattern regularity as a proxy for injury susceptibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0619-effective-injury-forecasting-in-soccer (109af7636553aa64, domain=other, pages_read=3/3): Operator 'Exponential Weighted Moving Average Workload Kernel' (page 1, domain other) captures: Method / model - Feature engineering: EWMA of workload features with **span 6**; ACWR with 6-day acute / 27-day chronic windows; monotony over seven days; prior-injury EWMA. Assumptions: GPS-derived workload proxies internal physiological load; temporal smoothing captures fatigue accumulation. Breakdown regime: When workload features are sparse or non-stationary, EWMA may lag behind sudden changes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw GPS metrics to fatigue-sensitive latent variables for injury risk modeling. Operator 'Acute-to-Chronic Workload Ratio Index' (page 1, domain other) captures: - ACWR = (6-day acute workload) / (27-day chronic workload). Assumptions: Workload imbalance increases injury risk; chronic load reflects adaptation capacity. Breakdown regime: When chronic workload is near zero, ACWR becomes undefined or extremely large. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to standard fatigue stress index used in sports science. Operator 'Workload Monotony Measure' (page 1, domain other) captures: - Monotony = weekly mean / weekly standard deviation over seven days. Assumptions: High monotony indicates repetitive training patterns that may increase injury risk. Breakdown regime: When variance approaches zero, monotony diverges; when mean is zero, undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures training pattern regularity as a proxy for injury susceptibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century fatigue theory and modern sports biomechanics, this approach builds upon the foundational work of monitoring physiological stress in athletes through workload indices. Retrocausal Genealogy: Rooted in 0619-effective-injury-forecasting-in-soccer (109af7636553aa64), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 0619-effective-injury-forecasting-in-soccer (109af7636553aa64), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the athlete’s adaptive capacity and environmental stressors. The model assumes that injury risk emerges from mismatches between workload and recovery, modeled via statistical thresholds and temporal dynamics. Theory of Mind & Decision Maker Model: Rooted in 0619-effective-injury-forecasting-in-soccer (109af7636553aa64), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by selecting only three final features per decision tree run. Leakage is mitigated by time-aware splits and forward simulation protocols ensuring no future data leaks into past predictions. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0619-effective-injury-forecasting-in-soccer (109af7636553aa64), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

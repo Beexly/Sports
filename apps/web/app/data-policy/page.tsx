@@ -16,7 +16,7 @@ export default function DataPolicyPage(): JSX.Element {
       <Nav />
       <main id="main-content" className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
         <header className="rounded-3xl border border-[#252833] bg-[#0E1015] p-8">
-          <span className="rounded-full border border-verify/40/40 bg-verify/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-verify">
+          <span className="rounded-full border border-verify/40 bg-verify/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-verify">
             Zero Data Retention (ZDR) Enforced · OpenRouter Provider Compliance
           </span>
           <h1 className="mt-4 font-display text-3xl uppercase tracking-tight text-white sm:text-4xl">

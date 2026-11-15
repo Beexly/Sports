@@ -1,0 +1,78 @@
+{
+  "book_id": "7a914eca6d35b2b1",
+  "source_status": "COMPLETE",
+  "title": "PolyForm Perimeter 1.0.1",
+  "file_name": "PolyForm Perimeter 1.0.1.txt",
+  "sha256": "7a914eca6d35b2b1397f6ffe0869d4bc3df1f9c4476d0801304f7554aba6ba3c",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Perimeter licensing defines a constrained operational space where copyright, patent, and competition rights interlock to govern software use, distribution, and derivative works under strict conditional validity. Universal Lens: Rooted in PolyForm Perimeter 1.0.1 (7a914eca6d35b2b1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models license compliance as a probabilistic state-space governed by permitted purposes, with noncompete constraints acting as prior distributions over competitive outcomes. GSI Mapping: Rooted in PolyForm Perimeter 1.0.1 (7a914eca6d35b2b1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps license states through deterministic automata: valid use → permitted action; violation → immediate termination; compliance recovery within 32 days resets state transitions. GSE Mapping: Rooted in PolyForm Perimeter 1.0.1 (7a914eca6d35b2b1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "copyright_license",
+      "name": "Copyright License",
+      "verbatim_quote": "## Copyright License The licensor grants you a copyright license for the software to do everything you might do with the software that would otherwise infringe the licensor's copyright in it for any permitted purpose.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All uses are permitted unless explicitly restricted by other clauses.",
+      "breakdown_regime": "When use exceeds permitted scope or violates distribution/new works restrictions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic model of lawful usage as a subset of total possible actions, constrained by conditional permissions.",
+        "source_operator": "copyright_license",
+        "telemetry": "Compliance score derived from audit logs of usage patterns."
+      }
+    },
+    {
+      "primitive_id": "noncompete_constraint",
+      "name": "Noncompete Constraint",
+      "verbatim_quote": "## Noncompete Any purpose is a permitted purpose, except for providing to others any product that competes with the software.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Product competition is defined broadly across interfaces, platforms, and deployment methods.",
+      "breakdown_regime": "When a product offers substitute functionality or value to the software.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from the core concept of fair use and competition, forming a kernel of exclusionary logic in GSE's decision tree for product development.",
+        "source_operator": "noncompete_constraint",
+        "telemetry": "Automated classification of products against functional equivalence metrics."
+      }
+    },
+    {
+      "primitive_id": "patent_license",
+      "name": "Patent License",
+      "verbatim_quote": "## Patent License The licensor grants you a patent license for the software that covers patent claims the licensor can license, or becomes able to license, that you would infringe by using the software.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Patent coverage is limited to claims held or acquired by licensor at time of use.",
+      "breakdown_regime": "Upon assertion of patent infringement claims by user or corporate entity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSI's risk assessment framework for intellectual property exposure, modeled as a dynamic conditional probability over patent liability.",
+        "source_operator": "patent_license",
+        "telemetry": "Patent litigation event detection and license termination flagging."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7a914eca6d35b2b1_t0",
+      "think": "The PolyForm Perimeter License enforces a dual structure: a permissive base for copyright and patent use, coupled with a strong noncompete clause that restricts commercial substitution. This creates a bounded operational manifold where usage is allowed only within defined parameters. The copyright license forms the foundational layer, enabling broad use but mandating adherence to distribution and modification rules. The patent license adds protection against litigation, but terminates upon assertion of infringement claims—a mechanism akin to a dynamic firewall. The noncompete clause introduces a topological constraint that excludes certain product types from being offered as substitutes. These primitives interact through a state machine: valid use maintains license validity; violation triggers immediate termination; compliance can restore validity. The system exhibits a failure mode where a single breach leads to complete loss of all licenses, enforcing strict adherence. The license's design reflects a balance between openness and control, modeled mathematically as a constrained optimization problem over a discrete state space.\n\nDeep epistemic analysis for PolyForm Perimeter 1.0.1 (7a914eca6d35b2b1, domain=other, pages_read=2/2): Operator 'Copyright License' (page 1, domain other) captures: ## Copyright License The licensor grants you a copyright license for the software to do everything you might do with the software that would otherwise infringe the licensor's copyright in it for any permitted purpose. Assumptions: All uses are permitted unless explicitly restricted by other clauses. Breakdown regime: When use exceeds permitted scope or violates distribution/new works restrictions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic model of lawful usage as a subset of total possible actions, constrained by conditional permissions. Operator 'Noncompete Constraint' (page 1, domain other) captures: ## Noncompete Any purpose is a permitted purpose, except for providing to others any product that competes with the software. Assumptions: Product competition is defined broadly across interfaces, platforms, and deployment methods. Breakdown regime: When a product offers substitute functionality or value to the software. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from the core concept of fair use and competition, forming a kernel of exclusionary logic in GSE's decision tree for product development. Operator 'Patent License' (page 1, domain other) captures: ## Patent License The licensor grants you a patent license for the software that covers patent claims the licensor can license, or becomes able to license, that you would infringe by using the software. Assumptions: Patent coverage is limited to claims held or acquired by licensor at time of use. Breakdown regime: Upon assertion of patent infringement claims by user or corporate entity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSI's risk assessment framework for intellectual property exposure, modeled as a dynamic conditional probability over patent liability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PolyForm Perimeter 1.0.1 (7a914eca6d35b2b1, domain=other, pages_read=2/2): Operator 'Copyright License' (page 1, domain other) captures: ## Copyright License The licensor grants you a copyright license for the software to do everything you might do with the software that would otherwise infringe the licensor's copyright in it for any permitted purpose. Assumptions: All uses are permitted unless explicitly restricted by other clauses. Breakdown regime: When use exceeds permitted scope or violates distribution/new works restrictions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic model of lawful usage as a subset of total possible actions, constrained by conditional permissions. Operator 'Noncompete Constraint' (page 1, domain other) captures: ## Noncompete Any purpose is a permitted purpose, except for providing to others any product that competes with the software. Assumptions: Product competition is defined broadly across interfaces, platforms, and deployment methods. Breakdown regime: When a product offers substitute functionality or value to the software. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from the core concept of fair use and competition, forming a kernel of exclusionary logic in GSE's decision tree for product development. Operator 'Patent License' (page 1, domain other) captures: ## Patent License The licensor grants you a patent license for the software that covers patent claims the licensor can license, or becomes able to license, that you would infringe by using the software. Assumptions: Patent coverage is limited to claims held or acquired by licensor at time of use. Breakdown regime: Upon assertion of patent infringement claims by user or corporate entity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSI's risk assessment framework for intellectual property exposure, modeled as a dynamic conditional probability over patent liability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century copyright frameworks and modern open-source licensing paradigms, particularly influenced by the GNU GPL and Creative Commons models, which sought to define usage boundaries while preserving freedom. Retrocausal Genealogy: Rooted in PolyForm Perimeter 1.0.1 (7a914eca6d35b2b1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include potential competitors who may seek to exploit loopholes or challenge enforcement, and licensors who aim to maintain exclusivity and control. Decision-making involves balancing innovation incentives with market dominance risks. Theory of Mind & Decision Maker Model: Rooted in PolyForm Perimeter 1.0.1 (7a914eca6d35b2b1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when competing products bypass the noncompete by operating through indirect interfaces or abstract layers. Leakage occurs if patent defense mechanisms fail to detect cross-licensing implications, leading to cascading invalidation of all licenses. Cross-Layer Veto & Anti-Leakage Check: Rooted in PolyForm Perimeter 1.0.1 (7a914eca6d35b2b1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "109e4bb85b206c81",
+  "source_status": "COMPLETE",
+  "title": "openalex_W4392773685",
+  "file_name": "openalex_W4392773685.pdf",
+  "sha256": "109e4bb85b206c81353857e5db3e5c92f3738ed412c3dff015c840b294a1095f",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Latent role assignment via permutation-equivariant graph neural networks enables tactical trajectory forecasting in team sports. Universal Lens: Rooted in openalex_W4392773685 (109e4bb85b206c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian role-informed trajectory priors inform conformal predictive distributions over player motion paths. GSI Mapping: Rooted in openalex_W4392773685 (109e4bb85b206c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded role dynamics drive state transitions in multi-agent spatial reasoning engines. GSE Mapping: Rooted in openalex_W4392773685 (109e4bb85b206c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "role_permutation_network",
+      "name": "Role Permutation Network",
+      "verbatim_quote": "RolFor uses a new module we developed called Ordering Neural Networks (OrderNN) to permute the order of the players such that each player is assigned to a latent role.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Players are ordered by latent role assignments; permutation equivariance holds under role-based relabeling.",
+      "breakdown_regime": "Permutation differentiability fails under complex model backpropagation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "OrderNN maps unordered player sets into role-sorted latent embeddings for downstream GNN processing.",
+        "source_operator": "role_permutation_network",
+        "telemetry": "Role assignment accuracy via cross-validated ranking metrics."
+      }
+    },
+    {
+      "primitive_id": "role_graph_convolutional_network",
+      "name": "Role Graph Convolutional Network",
+      "verbatim_quote": "Thanks to its graph representation, it provides a fully learnable adjacency matrix that captures the relationships between roles and is subsequently used to forecast the players' future trajectories.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Role adjacency encodes interaction strength; graph structure is dynamic and role-dependent.",
+      "breakdown_regime": "Graph sparsity and role ambiguity degrade adjacency learning.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "RoleGCN encodes role-based player interactions as graph Laplacian eigenfunctions.",
+        "source_operator": "role_graph_convolutional_network",
+        "telemetry": "Trajectory prediction error (ADE/FDE) on NBA dataset."
+      }
+    },
+    {
+      "primitive_id": "latent_role_assignment",
+      "name": "Latent Role Assignment",
+      "verbatim_quote": "In this work, we hypothesize that each participant has a specific function in each action and that role-based interaction is critical for predicting players' future moves.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each player assumes a unique functional role per game action; roles are temporally stable yet contextually adaptive.",
+      "breakdown_regime": "Ambiguous or overlapping roles impair forecasting precision.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Latent role vectors serve as input features for trajectory forecasting modules.",
+        "source_operator": "latent_role_assignment",
+        "telemetry": "Role classification accuracy via supervised training on labeled plays."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "109e4bb85b206c81_t0",
+      "think": "The core innovation lies in modeling team sports as a multi-agent system where each agent's role is latent and dynamically assigned. The RolFor framework leverages a novel Ordering Neural Network (OrderNN) to reorder players according to inferred roles, enabling a structured graph representation. This graph, processed by a Role Graph Convolutional Network (RoleGCN), facilitates trajectory forecasting by capturing role-based interactions. The mathematical duality emerges between permutation-equivariant feature learning and graph-based relational modeling. The failure mode arises from non-differentiable permutations, which hinder gradient propagation during end-to-end training. Thus, the framework balances expressive role modeling with computational tractability through learnable adjacency matrices and differentiable approximations.\n\nDeep epistemic analysis for openalex_W4392773685 (109e4bb85b206c81, domain=other, pages_read=12/12): Operator 'Role Permutation Network' (page 1, domain other) captures: RolFor uses a new module we developed called Ordering Neural Networks (OrderNN) to permute the order of the players such that each player is assigned to a latent role. Assumptions: Players are ordered by latent role assignments; permutation equivariance holds under role-based relabeling. Breakdown regime: Permutation differentiability fails under complex model backpropagation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): OrderNN maps unordered player sets into role-sorted latent embeddings for downstream GNN processing. Operator 'Role Graph Convolutional Network' (page 1, domain other) captures: Thanks to its graph representation, it provides a fully learnable adjacency matrix that captures the relationships between roles and is subsequently used to forecast the players' future trajectories. Assumptions: Role adjacency encodes interaction strength; graph structure is dynamic and role-dependent. Breakdown regime: Graph sparsity and role ambiguity degrade adjacency learning. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RoleGCN encodes role-based player interactions as graph Laplacian eigenfunctions. Operator 'Latent Role Assignment' (page 1, domain other) captures: In this work, we hypothesize that each participant has a specific function in each action and that role-based interaction is critical for predicting players' future moves. Assumptions: Each player assumes a unique functional role per game action; roles are temporally stable yet contextually adaptive. Breakdown regime: Ambiguous or overlapping roles impair forecasting precision. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Latent role vectors serve as input features for trajectory forecasting modules. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W4392773685 (109e4bb85b206c81, domain=other, pages_read=12/12): Operator 'Role Permutation Network' (page 1, domain other) captures: RolFor uses a new module we developed called Ordering Neural Networks (OrderNN) to permute the order of the players such that each player is assigned to a latent role. Assumptions: Players are ordered by latent role assignments; permutation equivariance holds under role-based relabeling. Breakdown regime: Permutation differentiability fails under complex model backpropagation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): OrderNN maps unordered player sets into role-sorted latent embeddings for downstream GNN processing. Operator 'Role Graph Convolutional Network' (page 1, domain other) captures: Thanks to its graph representation, it provides a fully learnable adjacency matrix that captures the relationships between roles and is subsequently used to forecast the players' future trajectories. Assumptions: Role adjacency encodes interaction strength; graph structure is dynamic and role-dependent. Breakdown regime: Graph sparsity and role ambiguity degrade adjacency learning. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RoleGCN encodes role-based player interactions as graph Laplacian eigenfunctions. Operator 'Latent Role Assignment' (page 1, domain other) captures: In this work, we hypothesize that each participant has a specific function in each action and that role-based interaction is critical for predicting players' future moves. Assumptions: Each player assumes a unique functional role per game action; roles are temporally stable yet contextually adaptive. Breakdown regime: Ambiguous or overlapping roles impair forecasting precision. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Latent role vectors serve as input features for trajectory forecasting modules. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph neural networks (GNNs) and permutation-equivariant architectures, this approach builds upon prior work in multi-agent trajectory forecasting and pose estimation, extending earlier models that lacked role-awareness or dynamic reordering capabilities. Retrocausal Genealogy: Rooted in openalex_W4392773685 (109e4bb85b206c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling opposing agents requires encoding both cooperative and antagonistic role dynamics. Each player’s latent role reflects strategic intent, influencing how they interact with teammates and opponents—a dual perspective essential for accurate forecasting. Theory of Mind & Decision Maker Model: Rooted in openalex_W4392773685 (109e4bb85b206c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring distinct role embeddings prevent redundant feature learning. Leakage occurs if role assignments are not strictly ordered or if the graph structure does not reflect true interaction patterns, invalidating predictions. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W4392773685 (109e4bb85b206c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

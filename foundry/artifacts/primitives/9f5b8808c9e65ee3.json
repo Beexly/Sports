@@ -1,0 +1,78 @@
+{
+  "book_id": "9f5b8808c9e65ee3",
+  "source_status": "COMPLETE",
+  "title": "handoff-ethandojo-nfl-builds-2026-09-25",
+  "file_name": "handoff-ethandojo-nfl-builds-2026-09-25.md",
+  "sha256": "9f5b8808c9e65ee3d4397b67fc524556474447be7e78a8401f2c2c8227c6bab0",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A probabilistic ensemble framework integrating temporal NFL data streams with stochastic simulation for predictive inference. Universal Lens: Rooted in handoff-ethandojo-nfl-builds-2026-09-25 (9f5b8808c9e65ee3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on player and team latent variables using conformal prediction intervals derived from XGBoost outputs. GSI Mapping: Rooted in handoff-ethandojo-nfl-builds-2026-09-25 (9f5b8808c9e65ee3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in play-calling and roster management based on real-time defensive coverage and offensive formation analysis. GSE Mapping: Rooted in handoff-ethandojo-nfl-builds-2026-09-25 (9f5b8808c9e65ee3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "xgboost_nfl_model",
+      "name": "XGBoost NFL Model",
+      "verbatim_quote": "XGBoost on NFLverse-style features (QB efficiency, explosive play rate, turnover margin, pass rush, point differential, availability, roster-change adjustments) + Monte Carlo sims.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'QBeff': 'dimensionless (normalized)', 'explosive_rate': 'plays per game', 'turnover_margin': 'net turnovers', 'pass_rush': 'sacks per game', 'point_diff': 'points', 'availability': 'binary (0/1)', 'roster_adj': 'scalar adjustment factor'}",
+      "assumptions": "Features are independent and identically distributed; model is trained on 2018–present data.",
+      "breakdown_regime": "When feature distributions shift beyond training domain.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ensemble decision tree model used for forecasting win probabilities and season outcomes via Monte Carlo simulations.",
+        "source_operator": "xgboost_nfl_model",
+        "telemetry": "Accuracy of weekly predictions vs actual outcomes."
+      }
+    },
+    {
+      "primitive_id": "highlight_reel_detector",
+      "name": "Highlight Reel Detector",
+      "verbatim_quote": "**Highlight reel detector** — auto-detect TDs/INTs from game footage using crowd-noise spikes + commentary cues.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'crowd_spike': 'dB SPL', 'commentary_cue': 'binary (0/1)', 'play_event': 'event type (TD/INT)'}",
+      "assumptions": "Audio and visual cues are synchronous and indicative of key plays.",
+      "breakdown_regime": "Inconsistent audio/video synchronization or ambiguous event markers.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Signal processing pipeline mapping audiovisual anomalies to scoring events.",
+        "source_operator": "highlight_reel_detector",
+        "telemetry": "Precision/recall of detected touchdowns and interceptions."
+      }
+    },
+    {
+      "primitive_id": "defensive_coverage_analyzer",
+      "name": "Defensive Coverage Analyzer",
+      "verbatim_quote": "**Defensive coverage analyzer** — pre/post-snap alignment → coverage classification + team tendency tracking.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'alignment': 'degrees from center', 'coverage_type': 'categorical {man, zone, blitz}', 'tendency': 'probability distribution over coverage types'}",
+      "assumptions": "Defensive alignments are static during snap and predictable across games.",
+      "breakdown_regime": "Highly dynamic or unpredictable defensive schemes.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Statistical classification of defensive alignments into coverage types for tactical modeling.",
+        "source_operator": "defensive_coverage_analyzer",
+        "telemetry": "Match accuracy of coverage classification against known defensive sets."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9f5b8808c9e65ee3_t0",
+      "think": "The XGBoost NFL model operates as a decision-tree ensemble that aggregates multiple weak learners to predict outcomes such as win probability and playoff likelihood. It leverages NFLverse-style features including quarterback efficiency, explosive play rate, turnover margin, pass rush metrics, point differentials, and player availability. These inputs are adjusted for roster changes through scalar modifiers. Monte Carlo simulations run 10,000 iterations to estimate season outcomes. The highlight reel detector uses audiovisual signals—specifically crowd noise spikes and commentary cues—to identify touchdown and interception events automatically. This system relies on signal processing techniques to correlate acoustic and visual anomalies with game events. The defensive coverage analyzer classifies pre- and post-snap alignments into man, zone, or blitz coverages, enabling tracking of team tendencies. Each primitive contributes to a larger framework where probabilistic inference and pattern recognition inform strategic decisions in real time. Failure modes include overfitting due to limited feature diversity, misclassification of dynamic plays, and breakdown in audio-visual correlation under noisy conditions.\n\nDeep epistemic analysis for handoff-ethandojo-nfl-builds-2026-09-25 (9f5b8808c9e65ee3, domain=football, pages_read=2/2): Operator 'XGBoost NFL Model' (page 1, domain football) captures: XGBoost on NFLverse-style features (QB efficiency, explosive play rate, turnover margin, pass rush, point differential, availability, roster-change adjustments) + Monte Carlo sims. Assumptions: Features are independent and identically distributed; model is trained on 2018–present data. Breakdown regime: When feature distributions shift beyond training domain. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensemble decision tree model used for forecasting win probabilities and season outcomes via Monte Carlo simulations. Operator 'Highlight Reel Detector' (page 1, domain football) captures: **Highlight reel detector** — auto-detect TDs/INTs from game footage using crowd-noise spikes + commentary cues. Assumptions: Audio and visual cues are synchronous and indicative of key plays. Breakdown regime: Inconsistent audio/video synchronization or ambiguous event markers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Signal processing pipeline mapping audiovisual anomalies to scoring events. Operator 'Defensive Coverage Analyzer' (page 1, domain football) captures: **Defensive coverage analyzer** — pre/post-snap alignment → coverage classification + team tendency tracking. Assumptions: Defensive alignments are static during snap and predictable across games. Breakdown regime: Highly dynamic or unpredictable defensive schemes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Statistical classification of defensive alignments into coverage types for tactical modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for handoff-ethandojo-nfl-builds-2026-09-25 (9f5b8808c9e65ee3, domain=football, pages_read=2/2): Operator 'XGBoost NFL Model' (page 1, domain football) captures: XGBoost on NFLverse-style features (QB efficiency, explosive play rate, turnover margin, pass rush, point differential, availability, roster-change adjustments) + Monte Carlo sims. Assumptions: Features are independent and identically distributed; model is trained on 2018–present data. Breakdown regime: When feature distributions shift beyond training domain. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensemble decision tree model used for forecasting win probabilities and season outcomes via Monte Carlo simulations. Operator 'Highlight Reel Detector' (page 1, domain football) captures: **Highlight reel detector** — auto-detect TDs/INTs from game footage using crowd-noise spikes + commentary cues. Assumptions: Audio and visual cues are synchronous and indicative of key plays. Breakdown regime: Inconsistent audio/video synchronization or ambiguous event markers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Signal processing pipeline mapping audiovisual anomalies to scoring events. Operator 'Defensive Coverage Analyzer' (page 1, domain football) captures: **Defensive coverage analyzer** — pre/post-snap alignment → coverage classification + team tendency tracking. Assumptions: Defensive alignments are static during snap and predictable across games. Breakdown regime: Highly dynamic or unpredictable defensive schemes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Statistical classification of defensive alignments into coverage types for tactical modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in machine learning applications to sports analytics, building upon early work in statistical modeling of player performance and game outcome prediction by researchers like David Romer and others in the 2000s. Retrocausal Genealogy: Rooted in handoff-ethandojo-nfl-builds-2026-09-25 (9f5b8808c9e65ee3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include coaches making real-time tactical decisions, opposing teams adapting strategies, and fans forming expectations. The model must account for both rational and irrational behavior in these actors to maintain robustness. Theory of Mind & Decision Maker Model: Rooted in handoff-ethandojo-nfl-builds-2026-09-25 (9f5b8808c9e65ee3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that features like turnover margin and pass rush do not redundantly encode similar information. Leakage veto prevents use of future data in training, maintaining temporal integrity of predictions. Cross-Layer Veto & Anti-Leakage Check: Rooted in handoff-ethandojo-nfl-builds-2026-09-25 (9f5b8808c9e65ee3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

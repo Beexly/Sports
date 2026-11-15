@@ -1,0 +1,78 @@
+{
+  "book_id": "166bffba695701d6",
+  "source_status": "COMPLETE",
+  "title": "Identifying_basketball_performance_indic",
+  "file_name": "Identifying_basketball_performance_indic.md",
+  "sha256": "166bffba695701d6fa6d9d221921dde65d48b0cbb083ec4359246e9109c0ee53",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Basketball game outcomes are distinguished by differential performance indicators: assist dominance in regular seasons, defensive rebounding in playoffs, with score imbalance clustering. Universal Lens: Rooted in Identifying_basketball_performance_indic (166bffba695701d6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps game outcome likelihood via discriminant performance vectors (assists, rebounds) conditioned on temporal regime (regular vs. playoff) and score margin. GSI Mapping: Rooted in Identifying_basketball_performance_indic (166bffba695701d6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models state transitions from pre-game setup to post-game outcome using dynamic performance metrics, with regime-specific action-space constraints. GSE Mapping: Rooted in Identifying_basketball_performance_indic (166bffba695701d6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "game_outcome_discriminant",
+      "name": "Game Outcome Discriminant",
+      "verbatim_quote": "A discriminant analysis was used to identify the performance indicators either in regular season and playoff games.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'discriminant function value (dimensionless)', 'X': 'performance vector (assists, rebounds, FG%)', 'Y': 'outcome class (win/loss)'}",
+      "assumptions": "Linear separability of performance classes; multivariate normality of predictors.",
+      "breakdown_regime": "Score margin > 28 points or low sample size (< 10 games).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI Bayesian posterior probability P(Y|X) derived from discriminant scores D(X).",
+        "source_operator": "game_outcome_discriminant",
+        "telemetry": "Classification accuracy of win/loss based on X."
+      }
+    },
+    {
+      "primitive_id": "score_imbalance_cluster",
+      "name": "Score Imbalance Cluster",
+      "verbatim_quote": "A previous cluster analysis allowed splitting the sample in balanced (equal or below 12 points), unbalanced (between 13 and 28 points) and very unbalanced games (above 28 points).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'cluster label (balanced, unbalanced, very unbalanced)', 'ΔS': 'final score difference (points)'}",
+      "assumptions": "Cluster centroids represent stable game dynamics; ΔS defines game intensity.",
+      "breakdown_regime": "ΔS < 12 points or ΔS > 28 points with insufficient data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE state space partitioning into C-regimes with distinct tactical behaviors.",
+        "source_operator": "score_imbalance_cluster",
+        "telemetry": "Proportion of games in each ΔS category."
+      }
+    },
+    {
+      "primitive_id": "defensive_rebound_superiority",
+      "name": "Defensive Rebound Superiority",
+      "verbatim_quote": "However, in playoff games the winning teams' superiority was only in defensive rebounding.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DR': 'defensive rebounds per game (dimensionless)', 'W': 'winning team indicator (0 or 1)'}",
+      "assumptions": "Rebound rate correlates with possession control; playoff pressure increases defensive focus.",
+      "breakdown_regime": "Low DR variance or W=0 in sample.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI conditional expectation E[DR|W=1] exceeds baseline in playoff context.",
+        "source_operator": "defensive_rebound_superiority",
+        "telemetry": "Mean DR difference between winning and losing teams."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "166bffba695701d6_t0",
+      "think": "The core mathematical structure emerges from discriminant analysis applied to basketball performance data. The discriminant function D(X) maps high-dimensional performance vectors X to binary outcomes Y. In regular season, D(X) is sensitive to assist and field goal success rates, reflecting strategic offensive dominance. In playoffs, D(X) becomes more sensitive to defensive rebounding, indicating a shift toward limiting opponent scoring. This dual behavior reflects a regime change in game dynamics—where regular season emphasizes offensive efficiency and playoff emphasis shifts to defensive resilience. The score imbalance clusters act as bifurcation parameters, altering the effective dimensionality of X. When ΔS ≤ 12, the game is balanced and D(X) operates under standard assumptions. When ΔS > 28, the game is unstable and D(X) fails due to reduced sample size and increased variance. The derived kernel in GSI encodes these regime-dependent mappings as Bayesian posteriors, while GSE uses the same kernels to model state transitions across game regimes.\n\nDeep epistemic analysis for Identifying_basketball_performance_indic (166bffba695701d6, domain=other, pages_read=12/12): Operator 'Game Outcome Discriminant' (page 1, domain other) captures: A discriminant analysis was used to identify the performance indicators either in regular season and playoff games. Assumptions: Linear separability of performance classes; multivariate normality of predictors. Breakdown regime: Score margin > 28 points or low sample size (< 10 games). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian posterior probability P(Y|X) derived from discriminant scores D(X). Operator 'Score Imbalance Cluster' (page 1, domain other) captures: A previous cluster analysis allowed splitting the sample in balanced (equal or below 12 points), unbalanced (between 13 and 28 points) and very unbalanced games (above 28 points). Assumptions: Cluster centroids represent stable game dynamics; ΔS defines game intensity. Breakdown regime: ΔS < 12 points or ΔS > 28 points with insufficient data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state space partitioning into C-regimes with distinct tactical behaviors. Operator 'Defensive Rebound Superiority' (page 1, domain other) captures: However, in playoff games the winning teams' superiority was only in defensive rebounding. Assumptions: Rebound rate correlates with possession control; playoff pressure increases defensive focus. Breakdown regime: Low DR variance or W=0 in sample. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI conditional expectation E[DR|W=1] exceeds baseline in playoff context. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Identifying_basketball_performance_indic (166bffba695701d6, domain=other, pages_read=12/12): Operator 'Game Outcome Discriminant' (page 1, domain other) captures: A discriminant analysis was used to identify the performance indicators either in regular season and playoff games. Assumptions: Linear separability of performance classes; multivariate normality of predictors. Breakdown regime: Score margin > 28 points or low sample size (< 10 games). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian posterior probability P(Y|X) derived from discriminant scores D(X). Operator 'Score Imbalance Cluster' (page 1, domain other) captures: A previous cluster analysis allowed splitting the sample in balanced (equal or below 12 points), unbalanced (between 13 and 28 points) and very unbalanced games (above 28 points). Assumptions: Cluster centroids represent stable game dynamics; ΔS defines game intensity. Breakdown regime: ΔS < 12 points or ΔS > 28 points with insufficient data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state space partitioning into C-regimes with distinct tactical behaviors. Operator 'Defensive Rebound Superiority' (page 1, domain other) captures: However, in playoff games the winning teams' superiority was only in defensive rebounding. Assumptions: Rebound rate correlates with possession control; playoff pressure increases defensive focus. Breakdown regime: Low DR variance or W=0 in sample. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI conditional expectation E[DR|W=1] exceeds baseline in playoff context. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Fisher’s linear discriminant analysis (1936) and extended by multivariate statistical methods in sports science literature since the 1990s. Influenced by Sampaio et al. (2010) and Ibáñez et al. (2003) who formalized performance indicators in competitive contexts. Retrocausal Genealogy: Rooted in Identifying_basketball_performance_indic (166bffba695701d6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (teams) optimize performance metrics under asymmetric payoff functions: regular season rewards offensive consistency, playoffs reward defensive resilience. Each agent computes expected utility from D(X) to select optimal strategies. Theory of Mind & Decision Maker Model: Rooted in Identifying_basketball_performance_indic (166bffba695701d6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that assist and rebound metrics do not co-vary excessively, preventing overfitting in GSI. Leakage veto prevents use of future data (e.g., final score) in defining X, maintaining causal integrity in GSE transition models. Cross-Layer Veto & Anti-Leakage Check: Rooted in Identifying_basketball_performance_indic (166bffba695701d6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

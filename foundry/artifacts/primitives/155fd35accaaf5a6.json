@@ -1,0 +1,95 @@
+{
+  "book_id": "155fd35accaaf5a6",
+  "source_status": "COMPLETE",
+  "title": "content-surfaces",
+  "file_name": "content-surfaces.md",
+  "sha256": "155fd35accaaf5a60d10bdbd86eb3f007af1f26f058a1714e0f5db21b3b5af4e",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Content surfaces define a fourfold temporal rhythm of observatory signals, each operating as a distinct Bayesian feedback loop over discrete game states. Universal Lens: Rooted in content-surfaces (155fd35accaaf5a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Each surface maps to a conformal predictive inference layer: watchlist (daily), silence (post-event), autopsy (retrospective), and number (real-time). GSI Mapping: Rooted in content-surfaces (155fd35accaaf5a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "The four surfaces encode state transitions in a Markovian decision process: observation → gating → action → reflection, with silent states as terminal attractors. GSE Mapping: Rooted in content-surfaces (155fd35accaaf5a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "what_im_watching_tonight",
+      "name": "Observational Pressure Point",
+      "verbatim_quote": "--## The four surfaces | # | Surface | Cadence | Where it lives | One-line role | |---|---|---|---|---| | 1 | What I'm watching tonight | Daily, before slate publish | `/observatory` + email + social | Today's incoming pressure points.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P(t)': 'probability of pressure point activation at time t', 'S(t)': 'schedule fatigue factor at time t', 'M(t)': 'market line stability measure at time t'}",
+      "assumptions": "Pressure points are deterministic functions of schedule and market dynamics; P(t) is binary in shadow mode.",
+      "breakdown_regime": "When S(t) > threshold, P(t) transitions from 0 to 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's daily Bayesian update kernel, where P(t) acts as a prior trigger for pick generation.",
+        "source_operator": "what_im_watching_tonight",
+        "telemetry": "Observable: line stickiness, schedule density, internal shadow factor activation."
+      }
+    },
+    {
+      "primitive_id": "why_the_model_stayed_quiet",
+      "name": "Silent Gate Condition",
+      "verbatim_quote": "| | 2 | Why the model stayed quiet | As-needed, after held/no-pick games | `/observatory/quiet` + email | Silence, explained.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G(t)': 'gate function at time t', 'D(t)': 'data confirmation delay at time t', 'F(t)': 'factor in shadow mode at time t'}",
+      "assumptions": "A pick is withheld if G(t) ≠ 1; F(t) contributes only when D(t) < threshold.",
+      "breakdown_regime": "When D(t) ≥ threshold, G(t) = 0, preventing pick publication.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's conditional action state, where silence is a valid terminal state.",
+        "source_operator": "why_the_model_stayed_quiet",
+        "telemetry": "Observable: injury report timing, data confirmation lag, internal factor flags."
+      }
+    },
+    {
+      "primitive_id": "signal_autopsy",
+      "name": "Post-Pick Retrospective",
+      "verbatim_quote": "| | 3 | Signal autopsy | Weekly, post-settlement | `/observatory/autopsy` + email | Honest review of one settled pick.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R(t)': 'result vector at time t', 'C(t)': 'confidence score at time t', 'E(t)': 'error term at time t'}",
+      "assumptions": "Retrospective error E(t) is a function of C(t) and R(t); E(t) is bounded by model calibration.",
+      "breakdown_regime": "When R(t) ≠ C(t), E(t) triggers reweighting of factor priors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's retrospective Bayesian correction kernel, where E(t) updates belief states.",
+        "source_operator": "signal_autopsy",
+        "telemetry": "Observable: pick direction, market consensus, final score, factor contributions."
+      }
+    },
+    {
+      "primitive_id": "one_number_that_moved",
+      "name": "Market Datapoint Trigger",
+      "verbatim_quote": "| | 4 | One number that moved | 2–3× per week | `/observatory/number` + social | A market datapoint, plain-spoken.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N(t)': 'market number at time t', 'ΔN(t)': 'change in N(t) since last update', 'T(t)': 'threshold for signal activation'}",
+      "assumptions": "Signal activation occurs when ΔN(t) > T(t); N(t) is sourced from external data feeds.",
+      "breakdown_regime": "When ΔN(t) exceeds T(t), N(t) becomes a new input to the engine's factor space.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's real-time data ingestion protocol, where N(t) triggers factor reevaluation.",
+        "source_operator": "one_number_that_moved",
+        "telemetry": "Observable: line movement, book depth, implied probability shifts."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "155fd35accaaf5a6_t0",
+      "think": "The four content surfaces form a closed-loop system of Bayesian inference and decision-making. Each surface encodes a distinct temporal phase: observation (watchlist), constraint (silence), evaluation (autopsy), and realignment (number). These phases are mathematically dualized through a Markovian transition matrix, where each state is conditionally dependent on prior inputs. The system avoids prediction language by design, ensuring that all outputs are grounded in empirical data. The failure mode arises when a surface is misaligned with its intended cadence, leading to either premature or delayed information release. The engine's voice authority enforces consistency across all surfaces, preventing anthropomorphic framing. The dual nature of the system lies in its ability to both generate and reflect upon decisions without introducing speculative bias.\n\nDeep epistemic analysis for content-surfaces (155fd35accaaf5a6, domain=other, pages_read=7/7): Operator 'Observational Pressure Point' (page 1, domain other) captures: --## The four surfaces | # | Surface | Cadence | Where it lives | One-line role | |---|---|---|---|---| | 1 | What I'm watching tonight | Daily, before slate publish | `/observatory` + email + social | Today's incoming pressure points. Assumptions: Pressure points are deterministic functions of schedule and market dynamics; P(t) is binary in shadow mode. Breakdown regime: When S(t) > threshold, P(t) transitions from 0 to 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's daily Bayesian update kernel, where P(t) acts as a prior trigger for pick generation. Operator 'Silent Gate Condition' (page 1, domain other) captures: | | 2 | Why the model stayed quiet | As-needed, after held/no-pick games | `/observatory/quiet` + email | Silence, explained. Assumptions: A pick is withheld if G(t) ≠ 1; F(t) contributes only when D(t) < threshold. Breakdown regime: When D(t) ≥ threshold, G(t) = 0, preventing pick publication. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's conditional action state, where silence is a valid terminal state. Operator 'Post-Pick Retrospective' (page 1, domain other) captures: | | 3 | Signal autopsy | Weekly, post-settlement | `/observatory/autopsy` + email | Honest review of one settled pick. Assumptions: Retrospective error E(t) is a function of C(t) and R(t); E(t) is bounded by model calibration. Breakdown regime: When R(t) ≠ C(t), E(t) triggers reweighting of factor priors. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's retrospective Bayesian correction kernel, where E(t) updates belief states. Operator 'Market Datapoint Trigger' (page 1, domain other) captures: | | 4 | One number that moved | 2–3× per week | `/observatory/number` + social | A market datapoint, plain-spoken. Assumptions: Signal activation occurs when ΔN(t) > T(t); N(t) is sourced from external data feeds. Breakdown regime: When ΔN(t) exceeds T(t), N(t) becomes a new input to the engine's factor space. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's real-time data ingestion protocol, where N(t) triggers factor reevaluation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for content-surfaces (155fd35accaaf5a6, domain=other, pages_read=7/7): Operator 'Observational Pressure Point' (page 1, domain other) captures: --## The four surfaces | # | Surface | Cadence | Where it lives | One-line role | |---|---|---|---|---| | 1 | What I'm watching tonight | Daily, before slate publish | `/observatory` + email + social | Today's incoming pressure points. Assumptions: Pressure points are deterministic functions of schedule and market dynamics; P(t) is binary in shadow mode. Breakdown regime: When S(t) > threshold, P(t) transitions from 0 to 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's daily Bayesian update kernel, where P(t) acts as a prior trigger for pick generation. Operator 'Silent Gate Condition' (page 1, domain other) captures: | | 2 | Why the model stayed quiet | As-needed, after held/no-pick games | `/observatory/quiet` + email | Silence, explained. Assumptions: A pick is withheld if G(t) ≠ 1; F(t) contributes only when D(t) < threshold. Breakdown regime: When D(t) ≥ threshold, G(t) = 0, preventing pick publication. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's conditional action state, where silence is a valid terminal state. Operator 'Post-Pick Retrospective' (page 1, domain other) captures: | | 3 | Signal autopsy | Weekly, post-settlement | `/observatory/autopsy` + email | Honest review of one settled pick. Assumptions: Retrospective error E(t) is a function of C(t) and R(t); E(t) is bounded by model calibration. Breakdown regime: When R(t) ≠ C(t), E(t) triggers reweighting of factor priors. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's retrospective Bayesian correction kernel, where E(t) updates belief states. Operator 'Market Datapoint Trigger' (page 1, domain other) captures: | | 4 | One number that moved | 2–3× per week | `/observatory/number` + social | A market datapoint, plain-spoken. Assumptions: Signal activation occurs when ΔN(t) > T(t); N(t) is sourced from external data feeds. Breakdown regime: When ΔN(t) exceeds T(t), N(t) becomes a new input to the engine's factor space. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's real-time data ingestion protocol, where N(t) triggers factor reevaluation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian decision theory and temporal logic, with influence from conformal prediction frameworks and Markovian state machines. The structure mirrors the evolution of probabilistic reasoning in machine learning systems. Retrocausal Genealogy: Rooted in content-surfaces (155fd35accaaf5a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in content-surfaces (155fd35accaaf5a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market (which may contradict internal signals), the engine (which must remain silent when uncertain), and the user (who seeks clarity without noise). The system models these interactions through conditional probability distributions. Theory of Mind & Decision Maker Model: Rooted in content-surfaces (155fd35accaaf5a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each surface operates independently within its own domain. Leakage occurs if a surface's output influences another without proper gating. Veto conditions include lack of data, violation of brand safety rules, and deviation from first-person authority. Cross-Layer Veto & Anti-Leakage Check: Rooted in content-surfaces (155fd35accaaf5a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "077797226231c216",
+  "source_status": "COMPLETE",
+  "title": "mlgm_epfl_book",
+  "file_name": "mlgm_epfl_book.pdf",
+  "sha256": "077797226231c2168fbe6e452279066c77785fe0a4506ad07f773690a4ff1b1d",
+  "primary_domain": "other",
+  "pages_total": 343,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Probabilistic graphical models unify supervised and unsupervised learning through belief propagation and marginalization. Universal Lens: Rooted in mlgm_epfl_book (077797226231c216), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference in GSI maps to probabilistic belief networks with KL divergence for uncertainty quantification. GSI Mapping: Rooted in mlgm_epfl_book (077797226231c216), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning uses state transitions driven by belief propagation in directed acyclic graphs. GSE Mapping: Rooted in mlgm_epfl_book (077797226231c216), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "nearest_neighbor_classification",
+      "name": "Nearest Neighbor Classification",
+      "verbatim_quote": "19 I Machine Learning : The basics 20 2 Nearest Neighbour Classification 21 2.1 Nearest Neighbour .",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Data points are distributed in a metric space; similarity is measured via distance functions.",
+      "breakdown_regime": "Curse of dimensionality leads to increased computational cost and reduced accuracy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Nearest neighbor classification mirrors GSI's Bayesian updating under uniform prior over neighbors.",
+        "source_operator": "nearest_neighbor_classification",
+        "telemetry": "Classification error rate on validation set."
+      }
+    },
+    {
+      "primitive_id": "principal_components_analysis",
+      "name": "Principal Components Analysis",
+      "verbatim_quote": "27 3.1.1 Example : Reducing the dimension of digits .",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Linear relationships exist between variables; data is centered around mean.",
+      "breakdown_regime": "Nonlinear structures are misrepresented as linear subspaces.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "PCA-derived kernel captures variance in high-dimensional digit images for GSE feature extraction.",
+        "source_operator": "principal_components_analysis",
+        "telemetry": "Explained variance ratio per component."
+      }
+    },
+    {
+      "primitive_id": "linear_discriminant_analysis",
+      "name": "Linear Discriminant Analysis",
+      "verbatim_quote": "44 5 Linear Discriminant Analysis 45 5.1 Unsupervised Dimension Reduction .",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Classes follow Gaussian distributions with shared covariance matrices.",
+      "breakdown_regime": "Inadequate when class distributions deviate significantly from normality.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "LDA projects data onto discriminant vectors that align with GSI's posterior probability maximization.",
+        "source_operator": "linear_discriminant_analysis",
+        "telemetry": "Misclassification rate on labeled test samples."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "077797226231c216_t0",
+      "think": "Nearest neighbor classification operates on the principle of assigning a query point to the class most prevalent among its k nearest neighbors in feature space. This method relies on local similarity measures such as Euclidean distance. Its failure mode arises from the curse of dimensionality where distances become less meaningful. Linear Discriminant Analysis (LDA) seeks optimal projections that maximize inter-class separation while minimizing intra-class variance. It assumes normally distributed classes with equal covariance matrices. When these assumptions fail, LDA may misclassify due to biased projections. Principal Component Analysis (PCA) reduces dimensionality by identifying principal components capturing maximum variance. While PCA is effective for noise reduction and visualization, it lacks class discrimination. These primitives form a hierarchy: nearest neighbor provides non-parametric local inference, LDA enables parametric discriminative projection, and PCA offers foundational low-rank representation. Each builds upon statistical independence and metric structure, yet diverges in handling complexity and generalization.\n\nDeep epistemic analysis for mlgm_epfl_book (077797226231c216, domain=other, pages_read=32/343): Operator 'Nearest Neighbor Classification' (page 2, domain other) captures: 19 I Machine Learning : The basics 20 2 Nearest Neighbour Classification 21 2.1 Nearest Neighbour . Assumptions: Data points are distributed in a metric space; similarity is measured via distance functions. Breakdown regime: Curse of dimensionality leads to increased computational cost and reduced accuracy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Nearest neighbor classification mirrors GSI's Bayesian updating under uniform prior over neighbors. Operator 'Principal Components Analysis' (page 2, domain other) captures: 27 3.1.1 Example : Reducing the dimension of digits . Assumptions: Linear relationships exist between variables; data is centered around mean. Breakdown regime: Nonlinear structures are misrepresented as linear subspaces. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): PCA-derived kernel captures variance in high-dimensional digit images for GSE feature extraction. Operator 'Linear Discriminant Analysis' (page 3, domain other) captures: 44 5 Linear Discriminant Analysis 45 5.1 Unsupervised Dimension Reduction . Assumptions: Classes follow Gaussian distributions with shared covariance matrices. Breakdown regime: Inadequate when class distributions deviate significantly from normality. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LDA projects data onto discriminant vectors that align with GSI's posterior probability maximization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for mlgm_epfl_book (077797226231c216, domain=other, pages_read=32/343): Operator 'Nearest Neighbor Classification' (page 2, domain other) captures: 19 I Machine Learning : The basics 20 2 Nearest Neighbour Classification 21 2.1 Nearest Neighbour . Assumptions: Data points are distributed in a metric space; similarity is measured via distance functions. Breakdown regime: Curse of dimensionality leads to increased computational cost and reduced accuracy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Nearest neighbor classification mirrors GSI's Bayesian updating under uniform prior over neighbors. Operator 'Principal Components Analysis' (page 2, domain other) captures: 27 3.1.1 Example : Reducing the dimension of digits . Assumptions: Linear relationships exist between variables; data is centered around mean. Breakdown regime: Nonlinear structures are misrepresented as linear subspaces. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): PCA-derived kernel captures variance in high-dimensional digit images for GSE feature extraction. Operator 'Linear Discriminant Analysis' (page 3, domain other) captures: 44 5 Linear Discriminant Analysis 45 5.1 Unsupervised Dimension Reduction . Assumptions: Classes follow Gaussian distributions with shared covariance matrices. Breakdown regime: Inadequate when class distributions deviate significantly from normality. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LDA projects data onto discriminant vectors that align with GSI's posterior probability maximization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century work on multivariate statistics and pattern recognition, with formalized contributions from Fisher (LDA), Cover & Hart (nearest neighbor), and Hotelling (PCA). Retrocausal Genealogy: Rooted in mlgm_epfl_book (077797226231c216), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in mlgm_epfl_book (077797226231c216), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might employ adversarial perturbations to exploit nearest neighbor boundaries or bias LDA projections toward spurious correlations in training data. Theory of Mind & Decision Maker Model: Rooted in mlgm_epfl_book (077797226231c216), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in mlgm_epfl_book (077797226231c216), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires orthogonalization of features across layers; leakage occurs when PCA components retain class-relevant information, violating LDA’s assumption of shared covariance. Cross-Layer Veto & Anti-Leakage Check: Rooted in mlgm_epfl_book (077797226231c216), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in mlgm_epfl_book (077797226231c216), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

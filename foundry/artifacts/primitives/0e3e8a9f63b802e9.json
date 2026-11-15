@@ -1,0 +1,78 @@
+{
+  "book_id": "0e3e8a9f63b802e9",
+  "source_status": "COMPLETE",
+  "title": "2025-holdout-distribution-v2",
+  "file_name": "2025-holdout-distribution-v2.md",
+  "sha256": "0e3e8a9f63b802e95376b856480b3495a7400008182ff6d659e2b2b6883d34f7",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Pregame probability distributions as single-source association metrics; conditional independence under pregame context; probabilistic causality via bridge functions. Universal Lens: Rooted in 2025-holdout-distribution-v2 (0e3e8a9f63b802e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates from single-source pregame probabilities; conformal prediction intervals for game outcomes using association-only priors. GSI Mapping: Rooted in 2025-holdout-distribution-v2 (0e3e8a9f63b802e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions driven by association-only game probabilities; dynamic policy updates based on single-source confidence thresholds. GSE Mapping: Rooted in 2025-holdout-distribution-v2 (0e3e8a9f63b802e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "association_only_probability",
+      "name": "Association-Only Probability Metric",
+      "verbatim_quote": "not a cause, and not a pick. 2025_01_DAL_PHI conclusion: ASSOCIATION_ONLY. Sources: 1. Summary: 0.8507281977552686. Withheld reasons:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{\\\\text{assoc}}': 'dimensionless probability value in [0,1]'}",
+      "assumptions": "Single-source probabilistic input; no causal mechanism modeled; pregame context assumed fixed.",
+      "breakdown_regime": "When source count > 1 or when causal structure is known.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's Bayesian update kernel with single-source prior; maps to GSE's state transition function with fixed confidence.",
+        "source_operator": "association_only_probability",
+        "telemetry": "Probability score P_assoc for game outcome classification."
+      }
+    },
+    {
+      "primitive_id": "pregame_context_bridge_function",
+      "name": "Pregame Context Bridge Function",
+      "verbatim_quote": "# 2025 holdout distribution v2 The bridge file supplied one pregame-context probability per game.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f_{\\\\text{bridge}}(t_{\\\\text{pregame}})': 'probability mapping from time t to outcome likelihood'}",
+      "assumptions": "Bridge function is deterministic; pregame context fully encodes game state.",
+      "breakdown_regime": "When pregame context is incomplete or ambiguous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's contextual likelihood function; mirrors GSE's temporal state evolution operator.",
+        "source_operator": "pregame_context_bridge_function",
+        "telemetry": "Contextual encoding fidelity of f_bridge."
+      }
+    },
+    {
+      "primitive_id": "single_source_independence_test",
+      "name": "Single Source Independence Test",
+      "verbatim_quote": "input. One source is not agreement. | Conclusion | Games | |---|---| | INSUFFICIENT | 0",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{I}_{\\\\text{src}}': 'binary indicator for source agreement'}",
+      "assumptions": "Independence between sources implies lack of correlation; single-source model is valid.",
+      "breakdown_regime": "When \\mathcal{I}_{\\text{src}} = 0 or multiple sources present.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's coherence check for probabilistic consistency; GSE's validation filter for belief propagation.",
+        "source_operator": "single_source_independence_test",
+        "telemetry": "Binary test result for source independence."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0e3e8a9f63b802e9_t0",
+      "think": "The core operator 'association_only_probability' models a single-source probabilistic inference where each game is assigned a scalar likelihood P_assoc ∈ [0,1]. This is derived from a bridge function f_bridge(t_pregame) that maps pregame context to outcome likelihood. The operator assumes no causal structure, only association. When P_assoc > 0.5, it implies a higher likelihood of home win; conversely, P_assoc < 0.5 implies away win. The failure mode occurs when multiple sources exist or when causal mechanisms are known, invalidating the single-source assumption. The GSI mapping applies Bayesian updating with this prior, while GSE uses it to transition states in a belief network. The dual nature of this operator lies in its ability to be both a static measure and a dynamic input to evolving systems. The retrocausal genealogy traces back to classical probability theory and Bayesian inference, particularly in the work of Laplace and Bayes. The theory of mind considers opposing agents who may use different source sets or interpret the same source differently. Anti-collinearity vetoes arise when multiple independent sources are available, as they would contradict the 'association-only' premise.\n\nDeep epistemic analysis for 2025-holdout-distribution-v2 (0e3e8a9f63b802e9, domain=other, pages_read=7/7): Operator 'Association-Only Probability Metric' (page 1, domain other) captures: not a cause, and not a pick. 2025_01_DAL_PHI conclusion: ASSOCIATION_ONLY. Sources: 1. Summary: 0.8507281977552686. Withheld reasons: Assumptions: Single-source probabilistic input; no causal mechanism modeled; pregame context assumed fixed. Breakdown regime: When source count > 1 or when causal structure is known. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian update kernel with single-source prior; maps to GSE's state transition function with fixed confidence. Operator 'Pregame Context Bridge Function' (page 1, domain other) captures: # 2025 holdout distribution v2 The bridge file supplied one pregame-context probability per game. Assumptions: Bridge function is deterministic; pregame context fully encodes game state. Breakdown regime: When pregame context is incomplete or ambiguous. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's contextual likelihood function; mirrors GSE's temporal state evolution operator. Operator 'Single Source Independence Test' (page 1, domain other) captures: input. One source is not agreement. | Conclusion | Games | |---|---| | INSUFFICIENT | 0 Assumptions: Independence between sources implies lack of correlation; single-source model is valid. Breakdown regime: When \\mathcal{I}_{\\text{src}} = 0 or multiple sources present. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's coherence check for probabilistic consistency; GSE's validation filter for belief propagation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2025-holdout-distribution-v2 (0e3e8a9f63b802e9, domain=other, pages_read=7/7): Operator 'Association-Only Probability Metric' (page 1, domain other) captures: not a cause, and not a pick. 2025_01_DAL_PHI conclusion: ASSOCIATION_ONLY. Sources: 1. Summary: 0.8507281977552686. Withheld reasons: Assumptions: Single-source probabilistic input; no causal mechanism modeled; pregame context assumed fixed. Breakdown regime: When source count > 1 or when causal structure is known. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian update kernel with single-source prior; maps to GSE's state transition function with fixed confidence. Operator 'Pregame Context Bridge Function' (page 1, domain other) captures: # 2025 holdout distribution v2 The bridge file supplied one pregame-context probability per game. Assumptions: Bridge function is deterministic; pregame context fully encodes game state. Breakdown regime: When pregame context is incomplete or ambiguous. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's contextual likelihood function; mirrors GSE's temporal state evolution operator. Operator 'Single Source Independence Test' (page 1, domain other) captures: input. One source is not agreement. | Conclusion | Games | |---|---| | INSUFFICIENT | 0 Assumptions: Independence between sources implies lack of correlation; single-source model is valid. Breakdown regime: When \\mathcal{I}_{\\text{src}} = 0 or multiple sources present. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's coherence check for probabilistic consistency; GSE's validation filter for belief propagation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian probability theory (Bayes, 1763), extended through Laplace’s work on inverse probability and modern conformal prediction frameworks. Retrocausal Genealogy: Rooted in 2025-holdout-distribution-v2 (0e3e8a9f63b802e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2025-holdout-distribution-v2 (0e3e8a9f63b802e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might employ multi-source models or causal inference engines, leading to divergent beliefs even with identical pregame data. Theory of Mind & Decision Maker Model: Rooted in 2025-holdout-distribution-v2 (0e3e8a9f63b802e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 2025-holdout-distribution-v2 (0e3e8a9f63b802e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If more than one source is present, or if causal structures are known, the 'association-only' primitive is invalidated due to anti-collinearity with richer models. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2025-holdout-distribution-v2 (0e3e8a9f63b802e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2025-holdout-distribution-v2 (0e3e8a9f63b802e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

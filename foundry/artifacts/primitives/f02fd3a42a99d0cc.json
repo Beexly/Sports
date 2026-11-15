@@ -1,0 +1,78 @@
+{
+  "book_id": "f02fd3a42a99d0cc",
+  "source_status": "COMPLETE",
+  "title": "statking-coverage-map",
+  "file_name": "statking-coverage-map.md",
+  "sha256": "f02fd3a42a99d0cca233c89d2bcec21214d9729f820b382319f2846a76448cee",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Coverage map as a probabilistic trust lattice over data sources, with clearance gates ensuring legal usability and operational integrity. Universal Lens: Rooted in statking-coverage-map (f02fd3a42a99d0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on data trust and freshness, conditioned on source clearance and conflict resolution for derived metric validity. GSI Mapping: Rooted in statking-coverage-map (f02fd3a42a99d0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine uses coverage state transitions to guide UX scaffolding and alert propagation based on metric confidence thresholds. GSE Mapping: Rooted in statking-coverage-map (f02fd3a42a99d0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "data_coverage_lattice",
+      "name": "Data Coverage Lattice",
+      "verbatim_quote": "## Derived metrics — live coverage (\"stats we have that they don't\") Single source of truth: `apps/web/lib/metrics/coverage-map.ts` (typed, clearance-gated — a metric only counts as live coverage if its source clears `checkClearance()` for the commercial/derived use).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Coverage set, dimensionless', 'S': 'Source set, dimensionless', 'T': 'Trust score, [0,1]', 'G': 'Clearance gate function, boolean'}",
+      "assumptions": "Each metric is a function of source trust and clearance status; coverage is binary per source.",
+      "breakdown_regime": "When G(S) = false, C(S) = ∅",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Lattice structure maps to Bayesian network nodes where each node represents a source's contribution to coverage under trust constraints.",
+        "source_operator": "data_coverage_lattice",
+        "telemetry": "Source clearance status and metric inclusion rate"
+      }
+    },
+    {
+      "primitive_id": "trust_conflict_resolution",
+      "name": "Trust Conflict Resolution",
+      "verbatim_quote": "## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_i': 'Trust level of source i, [0,1]', 'F_i': 'Conflict flag for source i, boolean', 'R': 'Resolution function, {0,1}'}",
+      "assumptions": "Conflicts arise when T_i < threshold and F_i = true; resolution requires external validation.",
+      "breakdown_regime": "R(T_i, F_i) = 0 when T_i < τ and F_i = true",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel computes trust-weighted average of conflicting sources, resolving via legal clearance.",
+        "source_operator": "trust_conflict_resolution",
+        "telemetry": "Number of resolved conflicts and post-resolution trust scores"
+      }
+    },
+    {
+      "primitive_id": "ux_comprehension_layer",
+      "name": "UX Comprehension Layer",
+      "verbatim_quote": "- HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U': 'User comprehension score, [0,1]', 'T_c': 'Time to comprehension, seconds', 'M': 'Metric set, dimensionless'}",
+      "assumptions": "U is inversely proportional to T_c and directly correlated with clarity of trust/conflict indicators.",
+      "breakdown_regime": "U(M) = 1 − α·T_c(M), where α > 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel models UX efficiency through metric presentation and trust visualization.",
+        "source_operator": "ux_comprehension_layer",
+        "telemetry": "Average time to understand coverage and trust per user session"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f02fd3a42a99d0cc_t0",
+      "think": "The coverage map is modeled as a probabilistic lattice where each node corresponds to a data source with associated trust and clearance properties. The lattice structure enables efficient querying of metric coverage under legal constraints. Trust conflict resolution operates as a kernel that aggregates multiple source signals while enforcing clearance gates. The UX comprehension layer is a derived metric that balances information density with cognitive load, optimizing for rapid understanding within a fixed temporal window. Failure modes include unchecked data drift, unresolvable conflicts, and insufficient trust signals. Dualities emerge between source trust and UX clarity, where higher trust correlates with lower cognitive burden. The system's integrity depends on maintaining a consistent clearance protocol across all derived metrics.\n\nDeep epistemic analysis for statking-coverage-map (f02fd3a42a99d0cc, domain=other, pages_read=1/1): Operator 'Data Coverage Lattice' (page 1, domain other) captures: ## Derived metrics — live coverage (\"stats we have that they don't\") Single source of truth: `apps/web/lib/metrics/coverage-map.ts` (typed, clearance-gated — a metric only counts as live coverage if its source clears `checkClearance()` for the commercial/derived use). Assumptions: Each metric is a function of source trust and clearance status; coverage is binary per source. Breakdown regime: When G(S) = false, C(S) = ∅ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Lattice structure maps to Bayesian network nodes where each node represents a source's contribution to coverage under trust constraints. Operator 'Trust Conflict Resolution' (page 1, domain other) captures: ## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe. Assumptions: Conflicts arise when T_i < threshold and F_i = true; resolution requires external validation. Breakdown regime: R(T_i, F_i) = 0 when T_i < τ and F_i = true Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel computes trust-weighted average of conflicting sources, resolving via legal clearance. Operator 'UX Comprehension Layer' (page 1, domain other) captures: - HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds. Assumptions: U is inversely proportional to T_c and directly correlated with clarity of trust/conflict indicators. Breakdown regime: U(M) = 1 − α·T_c(M), where α > 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel models UX efficiency through metric presentation and trust visualization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for statking-coverage-map (f02fd3a42a99d0cc, domain=other, pages_read=1/1): Operator 'Data Coverage Lattice' (page 1, domain other) captures: ## Derived metrics — live coverage (\"stats we have that they don't\") Single source of truth: `apps/web/lib/metrics/coverage-map.ts` (typed, clearance-gated — a metric only counts as live coverage if its source clears `checkClearance()` for the commercial/derived use). Assumptions: Each metric is a function of source trust and clearance status; coverage is binary per source. Breakdown regime: When G(S) = false, C(S) = ∅ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Lattice structure maps to Bayesian network nodes where each node represents a source's contribution to coverage under trust constraints. Operator 'Trust Conflict Resolution' (page 1, domain other) captures: ## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe. Assumptions: Conflicts arise when T_i < threshold and F_i = true; resolution requires external validation. Breakdown regime: R(T_i, F_i) = 0 when T_i < τ and F_i = true Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel computes trust-weighted average of conflicting sources, resolving via legal clearance. Operator 'UX Comprehension Layer' (page 1, domain other) captures: - HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds. Assumptions: U is inversely proportional to T_c and directly correlated with clarity of trust/conflict indicators. Breakdown regime: U(M) = 1 − α·T_c(M), where α > 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel models UX efficiency through metric presentation and trust visualization. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian belief networks and lattice theory, with influence from information theory and cognitive science. Inspired by prior work in data governance and trust modeling. Retrocausal Genealogy: Rooted in statking-coverage-map (f02fd3a42a99d0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in statking-coverage-map (f02fd3a42a99d0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors with varying levels of compliance, users seeking clarity under time pressure, and regulatory systems enforcing legal usage. Each agent's behavior influences the lattice's structure and the kernel's resolution strategy. Theory of Mind & Decision Maker Model: Rooted in statking-coverage-map (f02fd3a42a99d0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that trust and UX layers do not redundantly encode the same signal. Leakage vetoes prevent derived metrics from exposing raw source data without proper clearance. Cross-Layer Veto & Anti-Leakage Check: Rooted in statking-coverage-map (f02fd3a42a99d0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in statking-coverage-map (f02fd3a42a99d0cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

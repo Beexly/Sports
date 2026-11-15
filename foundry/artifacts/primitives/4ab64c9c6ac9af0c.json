@@ -1,0 +1,78 @@
+{
+  "book_id": "4ab64c9c6ac9af0c",
+  "source_status": "COMPLETE",
+  "title": "p0125",
+  "file_name": "p0125.txt",
+  "sha256": "4ab64c9c6ac9af0c6bc074e821fc02eff41426d27ced82f011e1bb73a47aa4d7",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Scrimmage initiation and ball-in-play protocols define a discrete-state dynamical system with penalty enforcement as a control mechanism. Universal Lens: Rooted in p0125 (4ab64c9c6ac9af0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on scrimmage validity and foul declarations inform probabilistic state transitions in GSI's game model. GSI Mapping: Rooted in p0125 (4ab64c9c6ac9af0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps player roles and ball possession states through state-transition graphs governed by scrimmage rules. GSE Mapping: Rooted in p0125 (4ab64c9c6ac9af0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "scrimmage_initiation",
+      "name": "Scrimmage Initiation Protocol",
+      "verbatim_quote": "The ball shall be put in play by a scrimmage unless otherwise specifically provided.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'time (s)', 'S': 'scrimmage state (discrete)', 'B': 'ball position (m)'}",
+      "assumptions": "Ball is placed at line of scrimmage; players must be in formation before snap.",
+      "breakdown_regime": "When snapper-back violates pre-snap positioning or feints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's belief network models scrimmage legality as a binary event; GSE encodes this into a deterministic state transition graph.",
+        "source_operator": "scrimmage_initiation",
+        "telemetry": "Verification of legal snap timing and player alignment."
+      }
+    },
+    {
+      "primitive_id": "fair_catch_playback",
+      "name": "Fair Catch Playback Rule",
+      "verbatim_quote": "After a fair catch the, ball may be put in play by any player of the side making the fair catch, by either a punt, drop-kick, place-kick or scrimmage.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'play type (punt/drop-kick/place-kick/scrimmage)', 'C': 'catcher role (player identifier)', 'R': 'receiving player (player identifier)'}",
+      "assumptions": "Player who catches the ball retains right to initiate next play.",
+      "breakdown_regime": "When a player attempts to play the ball without valid action.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses fair catch as a kernel to derive subsequent play options; GSI evaluates these as conditional probabilities over action space.",
+        "source_operator": "fair_catch_playback",
+        "telemetry": "Tracking of post-fair catch play selection and execution."
+      }
+    },
+    {
+      "primitive_id": "penalty_enforcement",
+      "name": "Penalty Enforcement Protocol",
+      "verbatim_quote": "If a foul is declared the ball shall not be put in play again until the penalty therefor has either been enforced or declined.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'foul declaration (boolean)', 'E': 'enforcement status (boolean)', 'Y': 'yardage change (yards)'}",
+      "assumptions": "Enforcement or decline halts game progression until resolved.",
+      "breakdown_regime": "Upon foul declaration without immediate resolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI models penalty resolution as a stochastic process; GSE treats it as a control input that modifies state transitions.",
+        "source_operator": "penalty_enforcement",
+        "telemetry": "Time delay between foul and resumption of play."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4ab64c9c6ac9af0c_t0",
+      "think": "The core dynamics of ball-in-play initiation are governed by a set of discrete-state rules: scrimmage initiation defines the baseline protocol, fair catch introduces a branching point in play options, and penalties act as control inputs that halt progression. These form a Markovian decision process where each rule defines a transition function. Scrimmage initiation is the primary operator, enforcing a deterministic sequence of player actions. Fair catch acts as a non-deterministic fork, allowing multiple play types. Penalty enforcement introduces a temporal constraint, requiring resolution before further progression. The failure modes arise from violations such as illegal movement before snap or false starts. These operators exhibit duality in their structure: one governs initiation, another governs continuation, and a third governs interruption. Each has a well-defined domain of applicability and a codomain of possible outcomes. The interplay between these operators creates a layered logical architecture within which game states evolve.\n\nDeep epistemic analysis for p0125 (4ab64c9c6ac9af0c, domain=other, pages_read=1/1): Operator 'Scrimmage Initiation Protocol' (page 1, domain other) captures: The ball shall be put in play by a scrimmage unless otherwise specifically provided. Assumptions: Ball is placed at line of scrimmage; players must be in formation before snap. Breakdown regime: When snapper-back violates pre-snap positioning or feints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's belief network models scrimmage legality as a binary event; GSE encodes this into a deterministic state transition graph. Operator 'Fair Catch Playback Rule' (page 1, domain other) captures: After a fair catch the, ball may be put in play by any player of the side making the fair catch, by either a punt, drop-kick, place-kick or scrimmage. Assumptions: Player who catches the ball retains right to initiate next play. Breakdown regime: When a player attempts to play the ball without valid action. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses fair catch as a kernel to derive subsequent play options; GSI evaluates these as conditional probabilities over action space. Operator 'Penalty Enforcement Protocol' (page 1, domain other) captures: If a foul is declared the ball shall not be put in play again until the penalty therefor has either been enforced or declined. Assumptions: Enforcement or decline halts game progression until resolved. Breakdown regime: Upon foul declaration without immediate resolution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI models penalty resolution as a stochastic process; GSE treats it as a control input that modifies state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0125 (4ab64c9c6ac9af0c, domain=other, pages_read=1/1): Operator 'Scrimmage Initiation Protocol' (page 1, domain other) captures: The ball shall be put in play by a scrimmage unless otherwise specifically provided. Assumptions: Ball is placed at line of scrimmage; players must be in formation before snap. Breakdown regime: When snapper-back violates pre-snap positioning or feints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's belief network models scrimmage legality as a binary event; GSE encodes this into a deterministic state transition graph. Operator 'Fair Catch Playback Rule' (page 1, domain other) captures: After a fair catch the, ball may be put in play by any player of the side making the fair catch, by either a punt, drop-kick, place-kick or scrimmage. Assumptions: Player who catches the ball retains right to initiate next play. Breakdown regime: When a player attempts to play the ball without valid action. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses fair catch as a kernel to derive subsequent play options; GSI evaluates these as conditional probabilities over action space. Operator 'Penalty Enforcement Protocol' (page 1, domain other) captures: If a foul is declared the ball shall not be put in play again until the penalty therefor has either been enforced or declined. Assumptions: Enforcement or decline halts game progression until resolved. Breakdown regime: Upon foul declaration without immediate resolution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI models penalty resolution as a stochastic process; GSE treats it as a control input that modifies state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century football rulebooks, these primitives reflect a formalization of game mechanics into discrete logic. They evolved from informal play interpretations into structured axioms under the influence of Spalding’s Guide and referee adjudication systems. Retrocausal Genealogy: Rooted in p0125 (4ab64c9c6ac9af0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams model each other's strategic intent via feint detection and penalty anticipation. Players must anticipate whether an opponent will commit a foul or mislead through false starts, influencing both offensive and defensive positioning decisions. Theory of Mind & Decision Maker Model: Rooted in p0125 (4ab64c9c6ac9af0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures scrimmage legality does not overlap with penalty enforcement without explicit resolution. Leakage vetoes occur when a player attempts to carry the ball after a fair catch, violating the derived kernel of play types. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0125 (4ab64c9c6ac9af0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

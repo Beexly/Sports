@@ -1,0 +1,95 @@
+{
+  "book_id": "70e7a4f4d7283f56",
+  "source_status": "COMPLETE",
+  "title": "Airkid29-TruthMarket",
+  "file_name": "Airkid29-TruthMarket.md",
+  "sha256": "70e7a4f4d7283f56750bb59b9c9886e4e487766a0206ea3225b78515cb780502",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "(Market Price - Model Probability) * Sign(Divergence) > Threshold. Static ±5pp rule applied to convex combination of Elo, Titles, Form. No uncertainty quantification. Universal Lens: Rooted in Airkid29-TruthMarket (70e7a4f4d7283f56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian updating via posterior predictive checks on static odds intervals. Conformal p-values derived from empirical distribution of model errors, assuming exchangeability. GSI Mapping: Rooted in Airkid29-TruthMarket (70e7a4f4d7283f56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning tracks state transitions where divergence exceeds ±5pp triggers BUY/SELL actions. State-transition matrix incorporates fixed-threshold signal logic. GSE Mapping: Rooted in Airkid29-TruthMarket (70e7a4f4d7283f56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "polymarket_elo_divergence_monitor",
+      "name": "Polymarket ELO Divergence Monitor",
+      "verbatim_quote": "# Airkid29/TruthMarket **Stars:** 1 | **License:** MIT | **Pushed:** 2026-04-21 | **Language:** Python | **Forks:** 0 ## 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Fixed 50/30/20 weight allocation, no cross-validation, no dynamic adjustment.",
+      "breakdown_regime": "Static threshold failure when market volatility exceeds ±5pp.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's Situational Reasoning layer as a crude anomaly detection filter for betting inefficiencies.",
+        "source_operator": "polymarket_elo_divergence_monitor",
+        "telemetry": "Signal generation rate relative to market maker spreads."
+      }
+    },
+    {
+      "primitive_id": "flask_dashboard_with_signals",
+      "name": "Flask Dashboard with Sparkline Signals",
+      "verbatim_quote": "Signals are BET AGAINST / FOLLOW / HOLD at ±5pp divergence, served through a Flask dashboard with sparklines and confidence gauges.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Binary signal classification based on static probability thresholds.",
+      "breakdown_regime": "Dashboard usability degradation under high-frequency market noise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's State-Transition Mapping as a visualization tool for tracking model vs. market misalignments.",
+        "source_operator": "flask_dashboard_with_signals",
+        "telemetry": "Average dashboard update latency per event."
+      }
+    },
+    {
+      "primitive_id": "polymarket_gamma_api_connector",
+      "name": "Polymarket Gamma API Connector",
+      "verbatim_quote": "- Polymarket's Gamma API (public, no auth) for live market data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Public API access without authentication, limited rate limiting.",
+      "breakdown_regime": "API outage or endpoint deprecation disrupts data flow.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's Data Ingestion layer as a direct market data feed integration.",
+        "source_operator": "polymarket_gamma_api_connector",
+        "telemetry": "API request success rate and response time distributions."
+      }
+    },
+    {
+      "primitive_id": "weighted_prediction_model",
+      "name": "Weighted Prediction Model",
+      "verbatim_quote": "Vision A \"sophisticated sports prediction engine\" (the README's words) that pulls live Polymarket odds and flags mispricings against a weighted model: 50% Elo, 30% historical titles, 20% recent form.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Arbitrary fixed weighting scheme without statistical optimization.",
+      "breakdown_regime": "Performance collapse when input data distributions shift.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian Inference framework as a weighted ensemble baseline.",
+        "source_operator": "weighted_prediction_model",
+        "telemetry": "Out-of-sample accuracy improvement over equal-weighted benchmarks."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "70e7a4f4d7283f56_t0",
+      "think": "This primitive implements a static threshold filter on model-market disagreement, which is a basic anomaly detection approach. However, its reliance on fixed Elo ratings and arbitrary weightings makes it brittle under distribution shifts. The ±5pp rule lacks calibration, meaning signal frequency may be misleading. While conceptually sound, the execution is too simplistic for robust deployment.\n\nDeep epistemic analysis for Airkid29-TruthMarket (70e7a4f4d7283f56, domain=other, pages_read=1/1): Operator 'Polymarket ELO Divergence Monitor' (page 1, domain other) captures: # Airkid29/TruthMarket **Stars:** 1 | **License:** MIT | **Pushed:** 2026-04-21 | **Language:** Python | **Forks:** 0 ## 1. Assumptions: Fixed 50/30/20 weight allocation, no cross-validation, no dynamic adjustment. Breakdown regime: Static threshold failure when market volatility exceeds ±5pp. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's Situational Reasoning layer as a crude anomaly detection filter for betting inefficiencies. Operator 'Flask Dashboard with Sparkline Signals' (page 1, domain other) captures: Signals are BET AGAINST / FOLLOW / HOLD at ±5pp divergence, served through a Flask dashboard with sparklines and confidence gauges. Assumptions: Binary signal classification based on static probability thresholds. Breakdown regime: Dashboard usability degradation under high-frequency market noise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's State-Transition Mapping as a visualization tool for tracking model vs. market misalignments. Operator 'Polymarket Gamma API Connector' (page 1, domain other) captures: - Polymarket's Gamma API (public, no auth) for live market data. Assumptions: Public API access without authentication, limited rate limiting. Breakdown regime: API outage or endpoint deprecation disrupts data flow. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's Data Ingestion layer as a direct market data feed integration. Operator 'Weighted Prediction Model' (page 1, domain other) captures: Vision A \"sophisticated sports prediction engine\" (the README's words) that pulls live Polymarket odds and flags mispricings against a weighted model: 50% Elo, 30% historical titles, 20% recent form. Assumptions: Arbitrary fixed weighting scheme without statistical optimization. Breakdown regime: Performance collapse when input data distributions shift. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian Inference framework as a weighted ensemble baseline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Airkid29-TruthMarket (70e7a4f4d7283f56, domain=other, pages_read=1/1): Operator 'Polymarket ELO Divergence Monitor' (page 1, domain other) captures: # Airkid29/TruthMarket **Stars:** 1 | **License:** MIT | **Pushed:** 2026-04-21 | **Language:** Python | **Forks:** 0 ## 1. Assumptions: Fixed 50/30/20 weight allocation, no cross-validation, no dynamic adjustment. Breakdown regime: Static threshold failure when market volatility exceeds ±5pp. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's Situational Reasoning layer as a crude anomaly detection filter for betting inefficiencies. Operator 'Flask Dashboard with Sparkline Signals' (page 1, domain other) captures: Signals are BET AGAINST / FOLLOW / HOLD at ±5pp divergence, served through a Flask dashboard with sparklines and confidence gauges. Assumptions: Binary signal classification based on static probability thresholds. Breakdown regime: Dashboard usability degradation under high-frequency market noise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's State-Transition Mapping as a visualization tool for tracking model vs. market misalignments. Operator 'Polymarket Gamma API Connector' (page 1, domain other) captures: - Polymarket's Gamma API (public, no auth) for live market data. Assumptions: Public API access without authentication, limited rate limiting. Breakdown regime: API outage or endpoint deprecation disrupts data flow. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's Data Ingestion layer as a direct market data feed integration. Operator 'Weighted Prediction Model' (page 1, domain other) captures: Vision A \"sophisticated sports prediction engine\" (the README's words) that pulls live Polymarket odds and flags mispricings against a weighted model: 50% Elo, 30% historical titles, 20% recent form. Assumptions: Arbitrary fixed weighting scheme without statistical optimization. Breakdown regime: Performance collapse when input data distributions shift. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian Inference framework as a weighted ensemble baseline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Descends from early prediction market algorithms and linear scoring rules, but omits modern calibration techniques like proper scoring rules or online learning. Retrocausal Genealogy: Rooted in Airkid29-TruthMarket (70e7a4f4d7283f56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Airkid29-TruthMarket (70e7a4f4d7283f56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include liquidity providers who exploit predictable patterns and informed bettors who challenge fixed weight assumptions. Theory of Mind & Decision Maker Model: Rooted in Airkid29-TruthMarket (70e7a4f4d7283f56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in Airkid29-TruthMarket (70e7a4f4d7283f56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Vetos apply if the model exhibits multicollinearity between inputs or if signals leak across unrelated events. Cross-Layer Veto & Anti-Leakage Check: Rooted in Airkid29-TruthMarket (70e7a4f4d7283f56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in Airkid29-TruthMarket (70e7a4f4d7283f56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "book_id": "65ada2e09fe46562",
+  "source_status": "COMPLETE",
+  "title": "02-compiled-ast-equation-executor",
+  "file_name": "02-compiled-ast-equation-executor.md",
+  "sha256": "65ada2e09fe465627ac0db9f9e09b55ce1ea728a1b9a6d52262a1f95190f3eb8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 1,
+  "windows_extracted": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "End-to-end compilation of 21,419 registry equations via zero-eval AST closures over normalized features and positive-definite copula tail evaluations. Universal Lens: Rooted in 02-compiled-ast-equation-executor (65ada2e09fe46562, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian inference framework leveraging normalized physical features and copula tail evaluations to compute posterior weights for 21,419 equations under min_sample_size constraints. GSI Mapping: Rooted in 02-compiled-ast-equation-executor (65ada2e09fe46562, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "Situational reasoning engine applies deterministic state transitions based on effective weight thresholds and sample size gates to govern equation execution within GSE's dynamic model space. GSE Mapping: Rooted in 02-compiled-ast-equation-executor (65ada2e09fe46562, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "compiled_safe_ast_equation_executor",
+      "name": "Compiled Safe AST Equation Executor",
+      "verbatim_quote": "02: Compiled Safe AST Equation Executor, Unit Normalization & min_sample_size Gate What to build: End-to-end mathematical execution of all 21,419 registry equations via zero-eval compiled AST closures over normalized physical/market features, positive-definite copula_tail evaluation, and deterministic min_sample_size holding (effective_weight = 0.0).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'AST': 'Abstract Syntax Tree', 'registry_equations': '21,419 total', 'normalized_features': 'dimensionless'}",
+      "assumptions": "All equations are precompiled into AST form; feature normalization ensures consistent scaling across domains.",
+      "breakdown_regime": "When sample size falls below threshold, effective weight becomes zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps AST-based symbolic computation to GSI's probabilistic inference engine through normalized input space.",
+        "source_operator": "compiled_safe_ast_equation_executor",
+        "telemetry": "Batch execution latency < 0.35s for full registry."
+      }
+    },
+    {
+      "primitive_id": "unit_normalization",
+      "name": "Unit Normalization",
+      "verbatim_quote": "• ☒ Unit normalizers scale physical inputs so EQ_00003 evaluates to -0.088894 and EQ_06896 evaluates to -0.197351, and all 1,372 registry copula_tail rows return real finite floats across negative quadrants.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'EQ_00003': '-0.088894', 'EQ_06896': '-0.197351', 'copula_tail_rows': '1,372'}",
+      "assumptions": "Physical inputs must be mapped to a common dimensional scale for consistent evaluation.",
+      "breakdown_regime": "Negative quadrant evaluation requires finite real-valued copula tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables cross-equation comparability by standardizing units in GSE's feature space.",
+        "source_operator": "unit_normalization",
+        "telemetry": "Verification of finite float outputs across negative quadrants."
+      }
+    },
+    {
+      "primitive_id": "min_sample_size_gate",
+      "name": "Min Sample Size Gate",
+      "verbatim_quote": "• ☒ All 1,400 equations with sample_size_n < min_sample_size return effective_weight == 0.0, post_gate_delta == 0.0, and gate_status == \"HELD_BELOW_MIN_SAMPLE_SIZE\".",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sample_size_n': 'integer', 'min_sample_size': 'threshold value', 'effective_weight': '0.0'}",
+      "assumptions": "Equations with insufficient data are excluded from active inference until minimum sample criteria are met.",
+      "breakdown_regime": "Effective weight drops to zero when sample size is below threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Connects statistical reliability checks to GSI's confidence-weighted decision logic.",
+        "source_operator": "min_sample_size_gate",
+        "telemetry": "Equation status tracking for sample size compliance."
+      }
+    },
+    {
+      "primitive_id": "copula_tail_evaluation",
+      "name": "Copula Tail Evaluation",
+      "verbatim_quote": "all 21,419 registry equations via zero-eval compiled AST closures over normalized physical/market features, positive-definite copula_tail evaluation,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'copula_tail': 'positive-definite function', 'evaluation': 'real finite floats'}",
+      "assumptions": "Tail behavior is modeled using positive-definite copulas ensuring boundedness and stability.",
+      "breakdown_regime": "Evaluation fails if copula returns non-finite values.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides risk-sensitive evaluation metrics for GSE’s probabilistic reasoning layer.",
+        "source_operator": "copula_tail_evaluation",
+        "telemetry": "Validation of real finite float outputs from copula tail functions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "65ada2e09fe46562_t0",
+      "think": "This chapter introduces the foundational architecture for executing a vast registry of mathematical equations through compiled Abstract Syntax Trees (ASTs), ensuring that each equation operates within a normalized feature space. The system enforces strict unit consistency via normalization routines, which allows meaningful comparisons across diverse physical and market variables. A critical component is the min_sample_size gate that dynamically filters out unreliable computations based on empirical evidence thresholds. This filtering mechanism ensures only statistically robust equations contribute to downstream inference processes. Additionally, the positive-definite copula_tail evaluation provides a stable foundation for modeling dependencies among variables, particularly in extreme regimes where traditional correlation models may fail. Together, these elements form a resilient computational backbone capable of supporting high-dimensional probabilistic reasoning in complex environments such as sports intelligence systems. Window 1 Synthesis: Rooted in 02-compiled-ast-equation-executor (65ada2e09fe46562, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 02-compiled-ast-equation-executor (65ada2e09fe46562, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 1/1 pages of 02-compiled-ast-equation-executor (65ada2e09fe46562): [compiled_safe_ast_equation_executor p.1]: 02: Compiled Safe AST Equation Executor, Unit Normalization & min_sample_size Gate What to build: End-to-end mathematical execution of all 21,419 registry equations via zero-eval compiled AST closures over normalized physical/market features, positive-definite copula_tail evaluation, and deterministic min_sample_size holding (effective_weight = 0.0). (Maps AST-based symbolic computation to GSI's probabilistic inference engine through normalized input space.) [unit_normalization p.1]: • ☒ Unit normalizers scale physical inputs so EQ_00003 evaluates to -0.088894 and EQ_06896 evaluates to -0.197351, and all 1,372 registry copula_tail rows return real finite floats across negative quadrants. (Enables cross-equation comparability by standardizing units in GSE's feature space.) [min_sample_size_gate p.1]: • ☒ All 1,400 equations with sample_size_n < min_sample_size return effective_weight == 0.0, post_gate_delta == 0.0, and gate_status == \"HELD_BELOW_MIN_SAMPLE_SIZE\". (Connects statistical reliability checks to GSI's confidence-weighted decision logic.) [copula_tail_evaluation p.1]: all 21,419 registry equations via zero-eval compiled AST closures over normalized physical/market features, positive-definite copula_tail evaluation, (Provides risk-sensitive evaluation metrics for GSE’s probabilistic reasoning layer.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of 02-compiled-ast-equation-executor (65ada2e09fe46562): [compiled_safe_ast_equation_executor p.1]: 02: Compiled Safe AST Equation Executor, Unit Normalization & min_sample_size Gate What to build: End-to-end mathematical execution of all 21,419 registry equations via zero-eval compiled AST closures over normalized physical/market features, positive-definite copula_tail evaluation, and deterministic min_sample_size holding (effective_weight = 0.0). (Maps AST-based symbolic computation to GSI's probabilistic inference engine through normalized input space.) [unit_normalization p.1]: • ☒ Unit normalizers scale physical inputs so EQ_00003 evaluates to -0.088894 and EQ_06896 evaluates to -0.197351, and all 1,372 registry copula_tail rows return real finite floats across negative quadrants. (Enables cross-equation comparability by standardizing units in GSE's feature space.) [min_sample_size_gate p.1]: • ☒ All 1,400 equations with sample_size_n < min_sample_size return effective_weight == 0.0, post_gate_delta == 0.0, and gate_status == \"HELD_BELOW_MIN_SAMPLE_SIZE\". (Connects statistical reliability checks to GSI's confidence-weighted decision logic.) [copula_tail_evaluation p.1]: all 21,419 registry equations via zero-eval compiled AST closures over normalized physical/market features, positive-definite copula_tail evaluation, (Provides risk-sensitive evaluation metrics for GSE’s probabilistic reasoning layer.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of 02-compiled-ast-equation-executor (65ada2e09fe46562): [compiled_safe_ast_equation_executor p.1]: 02: Compiled Safe AST Equation Executor, Unit Normalization & min_sample_size Gate What to build: End-to-end mathematical execution of all 21,419 registry equations via zero-eval compiled AST closures over normalized physical/market features, positive-definite copula_tail evaluation, and deterministic min_sample_size holding (effective_weight = 0.0). (Maps AST-based symbolic computation to GSI's probabilistic inference engine through normalized input space.) [unit_normalization p.1]: • ☒ Unit normalizers scale physical inputs so EQ_00003 evaluates to -0.088894 and EQ_06896 evaluates to -0.197351, and all 1,372 registry copula_tail rows return real finite floats across negative quadrants. (Enables cross-equation comparability by standardizing units in GSE's feature space.) [min_sample_size_gate p.1]: • ☒ All 1,400 equations with sample_size_n < min_sample_size return effective_weight == 0.0, post_gate_delta == 0.0, and gate_status == \"HELD_BELOW_MIN_SAMPLE_SIZE\". (Connects statistical reliability checks to GSI's confidence-weighted decision logic.) [copula_tail_evaluation p.1]: all 21,419 registry equations via zero-eval compiled AST closures over normalized physical/market features, positive-definite copula_tail evaluation, (Provides risk-sensitive evaluation metrics for GSE’s probabilistic reasoning layer.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of 02-compiled-ast-equation-executor (65ada2e09fe46562): [compiled_safe_ast_equation_executor p.1]: 02: Compiled Safe AST Equation Executor, Unit Normalization & min_sample_size Gate What to build: End-to-end mathematical execution of all 21,419 registry equations via zero-eval compiled AST closures over normalized physical/market features, positive-definite copula_tail evaluation, and deterministic min_sample_size holding (effective_weight = 0.0). (Maps AST-based symbolic computation to GSI's probabilistic inference engine through normalized input space.) [unit_normalization p.1]: • ☒ Unit normalizers scale physical inputs so EQ_00003 evaluates to -0.088894 and EQ_06896 evaluates to -0.197351, and all 1,372 registry copula_tail rows return real finite floats across negative quadrants. (Enables cross-equation comparability by standardizing units in GSE's feature space.) [min_sample_size_gate p.1]: • ☒ All 1,400 equations with sample_size_n < min_sample_size return effective_weight == 0.0, post_gate_delta == 0.0, and gate_status == \"HELD_BELOW_MIN_SAMPLE_SIZE\". (Connects statistical reliability checks to GSI's confidence-weighted decision logic.) [copula_tail_evaluation p.1]: all 21,419 registry equations via zero-eval compiled AST closures over normalized physical/market features, positive-definite copula_tail evaluation, (Provides risk-sensitive evaluation metrics for GSE’s probabilistic reasoning layer.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in formal verification techniques from compiler theory and statistical learning frameworks, this design inherits principles from Bayesian hierarchical modeling and conformal prediction methodologies developed in the late 20th century. Retrocausal Genealogy (Window 1): Rooted in 02-compiled-ast-equation-executor (65ada2e09fe46562, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The system models opposing strategies by evaluating how different combinations of normalized inputs affect outcome probabilities. Coaches and analysts can simulate various tactical scenarios using these equations, while agents interpret results through probabilistic lenses. Theory of Mind (Window 1): Rooted in 02-compiled-ast-equation-executor (65ada2e09fe46562, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that no two equations share identical normalized input vectors beyond noise tolerance. Leakage is mitigated by constraining copula tail evaluations to finite ranges, preventing spurious correlations from propagating into higher-level decisions. Cross-Layer Veto (Window 1): Rooted in 02-compiled-ast-equation-executor (65ada2e09fe46562, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

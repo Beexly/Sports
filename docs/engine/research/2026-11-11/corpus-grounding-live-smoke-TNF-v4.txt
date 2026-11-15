@@ -1,0 +1,60 @@
+
+[restFatigue] support=0.808 chunks=seeded sit=3 stmt=4 chunk=2 
+  q: short week Thursday night game rest fatigue recovery
+  - (chunk w=0.469) lit.corpus_chunk:6b7d4b42bf90#10 [PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION] score, factor descriptions, recommendations, and derived values. The recommendation service branches on configured thresholds for ACWR, sleep, RPE, rest days, injury recency, and deceleration counts. Some recommendation 
+  - (chunk w=0.435) lit.corpus_chunk:6b7d4b42bf90#7 [PITCHPULSE: A WEB-BASED FOOTBALL INJURY-RISK MONITORING PROTOTYPE WITH SYNTHETIC-DATA MODEL EVALUATION] efined transformations, not validated physiological thresholds. $$\text{ACWR} = \text{L7} / \max(\text{Lc},\, ?), \quad \text{spike} = (\text{L7} \,?\, \text{Lc}) / \max(\text{Lc},\, ?) \qquad (1)$$ The implemented fatig
+  - (situation w=0.360) lit.situation:6b7d4b42bf90#6 Assessing player fatigue from sleep, perceived exertion, and rest days -> Combine sleep duration, RPE, and rest days into a fatigue index. Lesson: Fatigue monitoring can aggregate sleep, perceived exertion, and rest days
+
+[pressure] support=0.805 chunks=seeded sit=5 stmt=5 chunk=5 
+  q: pass rush pressure blitz quarterback sacks offensive line protection
+  - (chunk w=0.438) lit.corpus_chunk:fbd6a2c6b3ca#15 [undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf] s and less on more traditional rushes). Positioning is very important, both in a raw tracking sense but also in the traditional charting sense (i.e., if you’re an edge player or an interior player). Stadium effects are n
+  - (chunk w=0.412) lit.corpus_chunk:fbd6a2c6b3ca#30 [undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf] er means of deception – run-pass options, read options, pre-snap, and at-the-snap motion – to understand how these tactics displace defenders and how that displacement affects defensive performance. There have been studi
+  - (chunk w=0.410) lit.corpus_chunk:fbd6a2c6b3ca#16 [undated - Using Tracking and Charting Data to Better Evaluate NFL Players A Review - Eager et al.pdf] ). Most importantly when both of these rates are used together the r- squared values increase. In other words, charting data combined with tracking data do a better job than either one individually. Metric R-Squared (Pre
+
+[weather] support=0.808 chunks=seeded sit=5 stmt=4 chunk=3 
+  q: November cold wind outdoor stadium kicking passing
+  - (chunk w=0.482) lit.corpus_chunk:38890283f2c9#1 [2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al.pdf] act each of these respective weather conditions can have on offensive efficiency in an attempt to answer the question: How do temperature and wind speed affect NFL rushing and passing efficiency? Goal Question: How do te
+  - (chunk w=0.399) lit.corpus_chunk:38890283f2c9#7 [2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al.pdf] ses ○ Likely because hands are colder in cold weather making it harder to throw and catch ● Interestingly, rushing EPA means are at their highest in freezing weather and steadily decline after that. This could be explain
+  - (chunk w=0.383) lit.corpus_chunk:38890283f2c9#6 [2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al.pdf] hrows, hence the lack of super high and super low EPAs. For example, teams would likely be much more hesitant to dial up a 40-yard post route in heavy wind not knowing where the ball may even land. Wind Speed Observation
+
+[coveragePersonnel] support=0.906 chunks=seeded sit=5 stmt=5 chunk=5 
+  q: man coverage zone coverage cornerback receiver matchup
+  - (situation w=0.600) lit.situation:8d17a3b7ae94#40 Classifying cornerback coverage as man or zone using patterns of motion. -> Do not infer man or zone coverage from cornerback motion patterns, because the analysis found no apparent relationship.. Lesson: Cornerback moti
+  - (situation w=0.556) lit.situation:8d17a3b7ae94#23 defensive back in zone coverage -> expect the player to watch the quarterback rather than a receiver, with motion that is more static and has greater variance in direction relative to the nearest offensive player. Lesson
+  - (chunk w=0.470) lit.corpus_chunk:8d17a3b7ae94#39 [2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf] e-34 is in man coverage according to the GMM. Defense-21 does not follow Oﬀense-17 and instead occupies a zone in the middle frame, where his pattern of motion only slightly follows that of Oﬀense-17. Finally, Defense-23
+
+[qbSkillScript] support=0.701 chunks=seeded sit=4 stmt=3 chunk=1 
+  q: rookie quarterback opening script play action quick passing
+  - (chunk w=0.389) lit.corpus_chunk:eda6e9032a9c#34 [Olympic lifting vs. traditional lifting methods for North American high school football players] h Cond Res, 1999; 13(1): 58-66. Nikolenko M, Brown LE, Coburn JW, Spiering BA, Tran TT. Relationship between core power and measures of sport performance. Kinesiology, 2011; 43(2): 163-168. Patra K. Broncos LB Von Miller
+  - (situation w=0.300) lit.situation:eda6e9032a9c#4 A professional linebacker in pass coverage and rushing the quarterback -> Develop a physical skill set with both speed to cover wide receivers downfield and power and strength to run over offensive linemen to get to the 
+  - (situation w=0.300) lit.situation:94484fae9a86#56 Evaluating a quarterback whose WAR contributions are about equal as a rusher, as a passer, and through yards after the catch. -> Use WAR contributions across rushing, passing, and yards after the catch to characterize th
+
+[marketMicrostructure] support=0.836 chunks=seeded sit=2 stmt=3 chunk=4 
+  q: betting line movement public money closing line
+  - (chunk w=0.483) lit.corpus_chunk:08288b6f889b#11 [Predicting_NFL_Point_Spreads_via_Machine_Learning.pdf] accuracy for that time period was 65.8%. Much of the past research work for NFL point-spread bets involves classification: beating the spread or not (picking the winning bet given the point spread). Most of the point-spr
+  - (chunk w=0.457) lit.corpus_chunk:08288b6f889b#16 [Predicting_NFL_Point_Spreads_via_Machine_Learning.pdf] tion of 13.7 points; see Fig. 3. Note that some studies use standard deviation and some use root mean square error (RMSE), but since the mean is about zero, we can directly compare the two measures. Boyd (2017) reported 
+  - (chunk w=0.415) lit.corpus_chunk:08288b6f889b#17 [Predicting_NFL_Point_Spreads_via_Machine_Learning.pdf] tting opportunities early in the week against the opening Vegas line, so this study uses just team data available early in the week before injury information and consensus betting becomes available. In addition, this cas
+
+[other] support=0.656 chunks=seeded sit=2 stmt=1 chunk=1 
+  q: divisional rivalry familiarity home field crowd
+  - (chunk w=0.330) lit.corpus_chunk:0822449bdfa7#10 [2012 - The Sensitivity of College Football Rankings to Several Modeling Choices - Unknown Authors.pdf] iﬀerences. 2.1 Separate FCS Population with Pooled Variance We ﬁrst present our model including separate FBS and FCS populations, as- suming that the FBS and FCS distributions share a common variance. In Section 2.2 we d
+  - (situation w=0.300) lit.situation:0822449bdfa7#12 Estimating home field advantage in college football rankings when scheduling between teams is nonrandom. -> Do not include a home field effect in the model.. Lesson: Home field advantage estimates can be confounded by no
+  - (situation w=0.267) lit.situation:fa86f2d38c6f#2 field goal kick success factors, including regular vs post season and home vs away -> do not treat situational factors such as regular vs post season or home vs away as significant for field goal success. Lesson: Analysi
+
+[other] support=0.898 chunks=seeded sit=5 stmt=4 chunk=0 
+  q: fourth down decision short yardage go for it punt
+  - (situation w=0.533) lit.situation:7e98ad100cb6#33 A team faces a fourth down and must choose between punting and going for it. -> Evaluate the punt-or-go-for-it decision by how it affects the team’s win probability.. Lesson: Fourth-down choices should be assessed by the
+  - (situation w=0.533) lit.situation:1acab2f2b51d#0 Fourth down with the available choices to go for it, kick a field goal, or punt -> Choose the fourth-down action that maximizes win probability. Lesson: Fourth-down decisions should be made by maximizing win probability 
+  - (situation w=0.533) lit.situation:4f3611a2c66e#82 The offensive team has a fourth down at yardline y. -> If the offensive team punts, model the opposing team as having a first down at the next yardline, treated as a random variable.. Lesson: Punt value depends on the di
+
+overallSupport=0.803831 coverage=1 latencyMs=38019
+
+overlay call: coverage=1 support=0.803831; pressurex0.902579 weatherx0.903868 restFatiguex0.903985 coveragePersonnelx0.952849 qbSkillScriptx0.850261 marketMicrostructurex0.917833
+  pressure: support=0.805 x0.902579 0.03 -> 0.02708
+  weather: support=0.808 x0.903868 -0.01 -> -0.00904
+  restFatigue: support=0.808 x0.903985 -0.02 -> -0.01808
+  coveragePersonnel: support=0.906 x0.952849 0.025 -> 0.02382
+  qbSkillScript: support=0.701 x0.850261 0.035 -> 0.02976
+  marketMicrostructure: support=0.836 x0.917833 0.015 -> 0.01377
+publishAllowed (fixture PASS): false
+SMOKE PASS

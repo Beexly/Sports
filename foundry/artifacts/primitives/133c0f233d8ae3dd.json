@@ -1,0 +1,78 @@
+{
+  "book_id": "133c0f233d8ae3dd",
+  "source_status": "COMPLETE",
+  "title": "p0036",
+  "file_name": "p0036.txt",
+  "sha256": "133c0f233d8ae3dde407a33323cacf7ae8319d3dfb3b8ee78a90eb518556a87a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Economic systems under risk and uncertainty: formalized as stochastic processes with incomplete information leading to bounded rationality. Universal Lens: Rooted in p0036 (133c0f233d8ae3dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on risk vs. uncertainty domains using conformal predictive distributions over strategic act outcomes. GSI Mapping: Rooted in p0036 (133c0f233d8ae3dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models competitive equilibria as Markovian state transitions conditioned on epistemic uncertainty and knowledge gaps. GSE Mapping: Rooted in p0036 (133c0f233d8ae3dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "risk_vs_uncertainty_duality",
+      "name": "Risk vs. Uncertainty Duality",
+      "verbatim_quote": "Our main concern will be with the contrast between Risk as a known chance and true Uncertainty, and treatment of the former is incidental to this purpose.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Risk (measurable probability, dimensionless)', 'U': 'Uncertainty (unmeasurable probability, dimensionless)'}",
+      "assumptions": "Risk is quantifiable; uncertainty is non-quantifiable. Both influence strategic behavior.",
+      "breakdown_regime": "When risk becomes indistinguishable from uncertainty due to lack of probabilistic models.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Risk maps to stochastic process with known distribution; uncertainty maps to non-stochastic process with unknown distribution.",
+        "source_operator": "risk_vs_uncertainty_duality",
+        "telemetry": "Decision-making consistency under known vs. unknown probability environments"
+      }
+    },
+    {
+      "primitive_id": "perfect_planning_impossibility",
+      "name": "Perfect Planning Impossibility",
+      "verbatim_quote": "IN ECONOMIC THEORY 21 results of their acts, while the cause of the failure ever to reach the goal is equally evident so long as omniscience remains unattainable.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'O': 'Omniscience (dimensionless)', 'P': 'Planning capability (dimensionless)', 'G': 'Goal achievement (dimensionless)'}",
+      "assumptions": "Planning is bounded by information availability. Omniscience is unattainable.",
+      "breakdown_regime": "When P(O) → 0, G approaches zero due to information asymmetry.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Impossibility of perfect planning stems from bounded rationality in information processing.",
+        "source_operator": "perfect_planning_impossibility",
+        "telemetry": "Deviation of actual outcomes from optimal outcomes under full information"
+      }
+    },
+    {
+      "primitive_id": "competitive_force_realization",
+      "name": "Competitive Force Realization",
+      "verbatim_quote": "Now since risk, in the ordinary sense, does not preclude perfect planning (for reasons which can easily be made clear), such risk cannot pre-vent the complete realization of the tendencies of competitive forces, or give rise to profit.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Competitive force (dimensionless)', 'R': 'Risk (dimensionless)', 'P': 'Profit (currency unit)'}",
+      "assumptions": "Risk does not prevent competitive forces from operating. Profit arises from market inefficiencies.",
+      "breakdown_regime": "When risk exceeds threshold where competitive dynamics become unstable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Competitive force realization mirrors equilibrium dynamics in game-theoretic models.",
+        "source_operator": "competitive_force_realization",
+        "telemetry": "Market efficiency index and profit generation rate under risk"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "133c0f233d8ae3dd_t0",
+      "think": "The core duality of risk and uncertainty forms the foundational structure for economic modeling. Risk, being measurable, allows for probabilistic forecasting and optimization within bounded rationality frameworks. In contrast, true uncertainty—unmeasurable and irreducible—introduces fundamental limits to prediction and control. These two domains define the epistemic boundaries of economic action. Perfect planning is impossible because omniscience is unattainable; thus, all decisions must be made under bounded information. This leads to the emergence of competitive forces that operate according to known stochastic laws, yet remain susceptible to unpredictable shocks from uncertainty. The interplay between these elements defines the structure of economic systems, where risk enables strategic planning and uncertainty necessitates adaptive mechanisms. The impossibility of perfect planning implies that even in idealized markets, outcomes deviate from theoretical optima due to incomplete knowledge. Competitive forces, while theoretically predictable, manifest in practice through dynamic equilibria shaped by both measurable risk and unmeasurable uncertainty. Thus, the economic system's behavior is governed by a dual logic: one of calculable risk and another of irreducible uncertainty.\n\nDeep epistemic analysis for p0036 (133c0f233d8ae3dd, domain=other, pages_read=1/1): Operator 'Risk vs. Uncertainty Duality' (page 1, domain other) captures: Our main concern will be with the contrast between Risk as a known chance and true Uncertainty, and treatment of the former is incidental to this purpose. Assumptions: Risk is quantifiable; uncertainty is non-quantifiable. Both influence strategic behavior. Breakdown regime: When risk becomes indistinguishable from uncertainty due to lack of probabilistic models. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Risk maps to stochastic process with known distribution; uncertainty maps to non-stochastic process with unknown distribution. Operator 'Perfect Planning Impossibility' (page 1, domain other) captures: IN ECONOMIC THEORY 21 results of their acts, while the cause of the failure ever to reach the goal is equally evident so long as omniscience remains unattainable. Assumptions: Planning is bounded by information availability. Omniscience is unattainable. Breakdown regime: When P(O) → 0, G approaches zero due to information asymmetry. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Impossibility of perfect planning stems from bounded rationality in information processing. Operator 'Competitive Force Realization' (page 1, domain other) captures: Now since risk, in the ordinary sense, does not preclude perfect planning (for reasons which can easily be made clear), such risk cannot pre-vent the complete realization of the tendencies of competitive forces, or give rise to profit. Assumptions: Risk does not prevent competitive forces from operating. Profit arises from market inefficiencies. Breakdown regime: When risk exceeds threshold where competitive dynamics become unstable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Competitive force realization mirrors equilibrium dynamics in game-theoretic models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0036 (133c0f233d8ae3dd, domain=other, pages_read=1/1): Operator 'Risk vs. Uncertainty Duality' (page 1, domain other) captures: Our main concern will be with the contrast between Risk as a known chance and true Uncertainty, and treatment of the former is incidental to this purpose. Assumptions: Risk is quantifiable; uncertainty is non-quantifiable. Both influence strategic behavior. Breakdown regime: When risk becomes indistinguishable from uncertainty due to lack of probabilistic models. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Risk maps to stochastic process with known distribution; uncertainty maps to non-stochastic process with unknown distribution. Operator 'Perfect Planning Impossibility' (page 1, domain other) captures: IN ECONOMIC THEORY 21 results of their acts, while the cause of the failure ever to reach the goal is equally evident so long as omniscience remains unattainable. Assumptions: Planning is bounded by information availability. Omniscience is unattainable. Breakdown regime: When P(O) → 0, G approaches zero due to information asymmetry. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Impossibility of perfect planning stems from bounded rationality in information processing. Operator 'Competitive Force Realization' (page 1, domain other) captures: Now since risk, in the ordinary sense, does not preclude perfect planning (for reasons which can easily be made clear), such risk cannot pre-vent the complete realization of the tendencies of competitive forces, or give rise to profit. Assumptions: Risk does not prevent competitive forces from operating. Profit arises from market inefficiencies. Breakdown regime: When risk exceeds threshold where competitive dynamics become unstable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Competitive force realization mirrors equilibrium dynamics in game-theoretic models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Knight’s distinction between risk and uncertainty (1921), extended by Savage (1954) and Wald (1950) into formal decision theory and robust statistics. Influenced by von Neumann-Morgenstern utility theory and modern Bayesian inference paradigms. Retrocausal Genealogy: Rooted in p0036 (133c0f233d8ae3dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model themselves as bounded rational actors who optimize under risk but must account for uncertainty through heuristics and adaptive strategies. Opposing agents may differ in their perception of risk vs. uncertainty, leading to divergent behaviors and strategic interactions. Theory of Mind & Decision Maker Model: Rooted in p0036 (133c0f233d8ae3dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when risk and uncertainty are conflated, causing misalignment in Bayesian updating and predictive models. Leakage occurs if uncertainty is treated as risk, invalidating probabilistic reasoning and undermining GSE state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0036 (133c0f233d8ae3dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

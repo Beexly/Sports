@@ -1,0 +1,847 @@
+{
+ "book_id": "c4cd66c1cb097e68",
+ "source_status": "COMPLETE",
+ "source_note": "David J. C. MacKay, Information Theory, Inference, and Learning Algorithms, Cambridge University Press, 2003 (local file is version 7.2, fourth printing, March 28, 2005, of the 2003 first edition; on-screen PDF from the author's site). Local PDF: ~/workspace/full-library-2026-11-12/library/books-d-models/MacKay-2003-InformationTheoryInferenceLearningAlgorithms.pdf, size 11675219 bytes, file sha256 868adc5f0ef6630366b122d88d691acfbe8339978b4ec3f38fca5e231f135791, gatekeeper scan digest (sha256 of str(size) + file bytes) c4cd66c1cb097e688090560d101858b91a68d784ed1abf0d0da3a6296e8eb285, book_id = first 16 hex chars of that digest. Extracted text (41122 lines) is clean and complete across all seven parts and 50 chapters; a few words are split by the extractor (e.g. 'in formation') and some margin notes interleave with body text, so quotes were chosen only from passages verified contiguous in the text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "hamming_74_code",
+   "name": "The (7,4) Hamming code adds three parity-check bits to four data bits so any single bit error in a block of seven can be detected and corrected",
+   "verbatim_quote": "By including three parity-check bits in a block of 7 bits it is possible to detect and correct any single bit error in each block.",
+   "page": "Ch 1, Sec 1.4 Summary (p. 15)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Errors strike bits independently with a small flip probability, so single-error patterns dominate.",
+    "The receiver knows the parity-check structure of the code."
+   ],
+   "breakdown_regime": "Fails whenever two or more errors land in one block of seven; its rate 4/7 and distance 3 do not scale, which is exactly the limitation Shannon's theorem says better codes can escape.",
+   "domain": "channel_coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Parity checks are the prototype of a consistency layer in the engine: redundant constraints over a state vector whose syndrome pattern localizes which component disagrees, so a corrupted input is flagged and repaired instead of silently propagated.",
+    "source_operator": "hamming_74_code",
+    "telemetry": "syndrome patterns from redundant data feeds, cross-source agreement checks on the same underlying quantity"
+   }
+  },
+  {
+   "primitive_id": "noisy_channel_coding_theorem",
+   "name": "Shannon's noisy-channel coding theorem: every channel has a capacity C such that reliable communication is possible at any rate below C and impossible above it; for the binary symmetric channel C = 1 - H2(f)",
+   "verbatim_quote": "Information can be communicated over a noisy channel at a non-zero rate with arbitrarily small error probability.",
+   "page": "Ch 1, Sec 1.4 Summary (p. 15)",
+   "latex": "C(f) = 1 - H_2(f) = 1 - \\left[ f \\log_2 \\frac{1}{f} + (1-f) \\log_2 \\frac{1}{1-f} \\right]",
+   "symbol_and_unit_ledger": {
+    "C": "channel capacity, bits per channel use",
+    "f": "bit flip probability of the binary symmetric channel, dimensionless",
+    "H_2": "binary entropy function, bits"
+   },
+   "assumptions": [
+    "The channel is discrete and memoryless.",
+    "Arbitrarily long blocklengths are allowed, since the result is asymptotic in blocklength N."
+   ],
+   "breakdown_regime": "The theorem is an existence result, not a construction: it says nothing about finite blocklength performance, decoding complexity, or channels with memory, feedback structure, or unknown statistics.",
+   "domain": "information_theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Capacity is the engine's feasibility frontier concept: for any noisy evidence channel there is a hard ceiling on how much reliable signal it can deliver per observation, and effort spent pushing past that ceiling is wasted no matter how clever the downstream processing is.",
+    "source_operator": "noisy_channel_coding_theorem",
+    "telemetry": "per-source error rates, observation counts, and agreement rates used to estimate each feed's effective capacity"
+   }
+  },
+  {
+   "primitive_id": "entropy_definition",
+   "name": "Entropy H(X) is the expected Shannon information content of an ensemble, the average uncertainty of a random variable, measured in bits",
+   "verbatim_quote": "Like the information content, entropy is measured in bits. When it is convenient, we may also write H(X) as H(p), where p is the vector (p1 , p2 , . . . , pI ). Another name for the entropy of X is the uncertainty of X.",
+   "page": "Ch 2, Sec 2.4 (p. 32)",
+   "latex": "H(X) \\equiv \\sum_{x \\in A_X} P(x) \\log \\frac{1}{P(x)}",
+   "symbol_and_unit_ledger": {
+    "H(X)": "entropy of ensemble X, bits",
+    "P(x)": "probability of outcome x, dimensionless",
+    "A_X": "alphabet (set of possible outcomes) of X"
+   },
+   "assumptions": [
+    "The ensemble has a known probability distribution over a discrete alphabet.",
+    "The convention 0 log(1/0) = 0 is adopted for zero-probability outcomes."
+   ],
+   "breakdown_regime": "For continuous variables the naive integral version diverges and depends on coordinate grain; only differences and mutual informations stay well defined (handled in Chapter 11).",
+   "domain": "information_theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Entropy gives the engine a calibrated uncertainty budget for every predictive distribution it emits: a forecast whose entropy is high is a forecast that should be weighted, priced, and communicated differently from a concentrated one.",
+    "source_operator": "entropy_definition",
+    "telemetry": "predictive distributions over outcomes, their entropies tracked per signal family and per situation"
+   }
+  },
+  {
+   "primitive_id": "gibbs_inequality_kl_divergence",
+   "name": "The relative entropy (Kullback-Leibler divergence) between two distributions is non-negative by Gibbs' inequality, vanishing only when the distributions coincide, and measures the cost of assuming Q when the truth is P",
+   "verbatim_quote": "Gibbs' inequality is probably the most important inequality in this book.",
+   "page": "Ch 2, Sec 2.6 (p. 34)",
+   "latex": "D_{KL}(P \\| Q) = \\sum_x P(x) \\log \\frac{P(x)}{Q(x)} \\ge 0",
+   "symbol_and_unit_ledger": {
+    "D_KL(P||Q)": "relative entropy of P with respect to Q, bits",
+    "P(x)": "true probability of outcome x",
+    "Q(x)": "assumed probability of outcome x"
+   },
+   "assumptions": [
+    "P and Q are probability distributions over the same alphabet.",
+    "Q(x) must be non-zero wherever P(x) is non-zero, or the divergence is infinite."
+   ],
+   "breakdown_regime": "It is not symmetric and not a true distance; and when the assumed model assigns zero probability to an event that occurs, the divergence and the corresponding code length penalty explode.",
+   "domain": "information_theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "KL divergence is the engine's misspecification meter: it prices, in bits, how far any internal model sits from the distribution that actually generates outcomes, and it lower-bounds the loss any amount of cleverness can never recover.",
+    "source_operator": "gibbs_inequality_kl_divergence",
+    "telemetry": "realized outcome frequencies versus model-implied probabilities, per market, per team, per signal family"
+   }
+  },
+  {
+   "primitive_id": "bayesian_inference_posterior",
+   "name": "Bayesian inference is the universal language for inverse problems: posterior probability is proportional to likelihood times prior, and the full posterior, not a point estimate, is the answer",
+   "verbatim_quote": "It is not a controversial statement that Bayes' theorem provides the correct language for describing the inference of a message communicated over a noisy channel",
+   "page": "Ch 3, introduction (p. 48)",
+   "latex": "P(H_1 \\mid s, F) = \\frac{P(s \\mid F, H_1) P(H_1)}{P(s \\mid F)}",
+   "symbol_and_unit_ledger": {
+    "P(H_1|s,F)": "posterior probability of hypothesis H_1 given data s of F trials",
+    "P(s|F,H_1)": "likelihood (evidence) of the data under H_1",
+    "P(H_1)": "prior probability of H_1",
+    "P(s|F)": "normalizing constant, total probability of the data"
+   },
+   "assumptions": [
+    "A likelihood function and a prior can be stated explicitly.",
+    "The hypotheses under consideration include an adequate model of how the data were generated."
+   ],
+   "breakdown_regime": "If the true generating process lies outside the hypothesis space, the posterior concentrates confidently on the least wrong model; garbage priors or likelihoods yield authoritative-looking garbage posteriors.",
+   "domain": "inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's constitution: every signal enters as a likelihood, every belief state is a posterior distribution, and no layer is allowed to collapse uncertainty into a point estimate before the final decision layer asks for one.",
+    "source_operator": "bayesian_inference_posterior",
+    "telemetry": "likelihoods from each evidence source, prior state snapshots, posterior traces per prediction"
+   }
+  },
+  {
+   "primitive_id": "laplace_rule_of_succession",
+   "name": "Laplace's rule: with a uniform prior on a bent coin's bias, the predictive probability of outcome a after counts Fa and Fb is (Fa + 1)/(Fa + Fb + 2), obtained by marginalizing the unknown bias",
+   "verbatim_quote": "Our prediction about the next toss, the probability that the next toss is an a, is obtained by integrating over pa .",
+   "page": "Ch 3, Sec 3.2 (p. 52)",
+   "latex": "P(a \\mid s, F) = \\frac{F_a + 1}{F_a + F_b + 2}",
+   "symbol_and_unit_ledger": {
+    "F_a": "count of outcome a observed so far",
+    "F_b": "count of outcome b observed so far",
+    "P(a|s,F)": "predictive probability that the next outcome is a, given the observed string s"
+   },
+   "assumptions": [
+    "Trials are exchangeable Bernoulli draws with a fixed but unknown bias pa.",
+    "The prior over pa is uniform on [0, 1]."
+   ],
+   "breakdown_regime": "The add-one smoothing is prior-dependent: with few data the prediction is dominated by the prior, and if trials are not exchangeable (drift, dependence) the rule misprices the next outcome.",
+   "domain": "inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Laplace's rule is the engine's cold-start estimator: any rate estimated from counts gets smoothed by the prior pseudo-counts, so a 3-for-3 streak is evidence, not certainty, and small samples are automatically discounted.",
+    "source_operator": "laplace_rule_of_succession",
+    "telemetry": "event counts per category, per team, per situation, with sample sizes attached"
+   }
+  },
+  {
+   "primitive_id": "source_coding_theorem",
+   "name": "Shannon's source coding theorem: N independent samples of an ensemble of entropy H can be compressed to essentially N H bits and no further, because almost all probability mass sits in a typical set of about 2^(N H) sequences",
+   "verbatim_quote": "As long as we are allowed a tiny probability of error δ, compression down to N H bits is possible.",
+   "page": "Ch 4, Sec 4.3, Theorem 4.1 (p. 78)",
+   "latex": "\\left| \\frac{1}{N} H_{\\delta}(X^N) - H \\right| < \\epsilon",
+   "symbol_and_unit_ledger": {
+    "H_delta(X^N)": "minimum compressed length in bits allowing error probability delta",
+    "H": "entropy per symbol, bits",
+    "N": "number of independent samples",
+    "epsilon, delta": "arbitrarily small positive tolerances"
+   },
+   "assumptions": [
+    "Samples are independent and identically distributed from a known ensemble.",
+    "A tiny probability of compression failure delta is tolerated."
+   ],
+   "breakdown_regime": "Real sources have memory and unknown statistics, so the iid typical-set argument must be replaced by modelling (Chapter 6) or universality arguments; at small N the asymptotic concentration has not kicked in.",
+   "domain": "data_compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The typical set is the engine's notion of the expected scenario envelope: almost everything that actually happens lies in a thin, enumerable shell of typical sequences, and reasoning effort should be spent inside that shell, with explicit flags for outcomes outside it.",
+    "source_operator": "source_coding_theorem",
+    "telemetry": "realized sequences of events versus typical-set membership under the current model"
+   }
+  },
+  {
+   "primitive_id": "kraft_inequality",
+   "name": "The Kraft inequality: a uniquely decodeable binary code must have codeword lengths satisfying sum 2^(-li) <= 1, and any lengths satisfying it admit a prefix code",
+   "verbatim_quote": "For any lengths satisfying the Kraft inequality, there exists a prefix code with those lengths.",
+   "page": "Ch 5, Sec 5.7 Summary (p. 102)",
+   "latex": "\\sum_{i=1}^{I} 2^{-l_i} \\le 1",
+   "symbol_and_unit_ledger": {
+    "l_i": "length in bits of the codeword for symbol i",
+    "I": "number of symbols in the alphabet, |A_X|"
+   },
+   "assumptions": [
+    "Codewords are binary strings and the code must be uniquely decodeable.",
+    "Lengths are integers."
+   ],
+   "breakdown_regime": "The inequality constrains lengths only; it says nothing about which assignment of lengths to symbols is good, and integer lengths force the up-to-one-bit slack that Huffman codes suffer.",
+   "domain": "data_compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Kraft is a budget identity the engine reuses everywhere: probabilities, code lengths, and attention are all allocations under one shared unit budget, and any scheme whose implied probabilities sum to more than one is incoherent by construction.",
+    "source_operator": "kraft_inequality",
+    "telemetry": "allocation vectors over hypotheses, scenarios, or resources, checked for unit-sum coherence"
+   }
+  },
+  {
+   "primitive_id": "huffman_coding",
+   "name": "Huffman's algorithm constructs the optimal symbol code for a given set of symbol probabilities by repeatedly merging the two least probable symbols; its expected length lies between H(X) and H(X) + 1",
+   "verbatim_quote": "Huffman's algorithm constructs an optimal symbol code for a given set of symbol probabilities.",
+   "page": "Ch 6, Sec 6.6 Summary (p. 123)",
+   "latex": "H(X) \\le L(C, X) < H(X) + 1",
+   "symbol_and_unit_ledger": {
+    "L(C,X)": "expected codeword length of code C for ensemble X, bits per symbol",
+    "H(X)": "entropy of the source ensemble, bits per symbol"
+   },
+   "assumptions": [
+    "Symbol probabilities are known and fixed for the whole message.",
+    "Each symbol must receive an integer number of bits."
+   ],
+   "breakdown_regime": "The integer-length constraint wastes up to one bit per symbol, catastrophic for low-entropy sources, and the code cannot adapt when probabilities change with context; both defects motivate arithmetic coding.",
+   "domain": "data_compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Huffman is the engine's greedy-merge template: repeatedly combining the two least significant items is optimal for building a single static code, and its one-bit slack is the standing warning that any per-item integer rounding of a continuous quantity leaks value.",
+    "source_operator": "huffman_coding",
+    "telemetry": "symbol frequency tables, merge trees, rounding losses in discretized engine outputs"
+   }
+  },
+  {
+   "primitive_id": "arithmetic_coding",
+   "name": "Arithmetic coding encodes a whole string as a sub-interval of [0,1) whose size equals the string's probability under an explicit probabilistic model, achieving lengths within about two bits of the Shannon information content with any adaptive model",
+   "verbatim_quote": "Arithmetic codes combine a probabilistic model with an encoding algorithm that identifies each string with a sub-interval of [0, 1) of size equal to the probability of that string under the model.",
+   "page": "Ch 6, Sec 6.6 Summary (p. 123)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Encoder and decoder share the same probabilistic model, which can change from context to context.",
+    "Finite-precision arithmetic is managed by renormalization so intervals never underflow."
+   ],
+   "breakdown_regime": "Compression is only as good as the model: a mismatched model inflates length by the KL divergence between model and source, and a single corrupted bit destroys the whole decoded stream.",
+   "domain": "data_compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Arithmetic coding is the purest statement of the engine's design philosophy: modelling and coding are the same act, so the quality of a prediction system is exactly the quality of its probability model, and every improvement in the model converts mechanically into performance.",
+    "source_operator": "arithmetic_coding",
+    "telemetry": "sequential predictive probabilities assigned to realized event streams, scored as total code length"
+   }
+  },
+  {
+   "primitive_id": "lempel_ziv_universality",
+   "name": "The Lempel-Ziv algorithm replaces repeated substrings by pointers to earlier occurrences and, with no explicit probabilistic model, provably compresses any ergodic source down to its entropy rate asymptotically",
+   "verbatim_quote": "the Lempel-Ziv algorithm can be proven asymptotically to compress down to the entropy of the source. This is why it is called a 'universal' compression algorithm.",
+   "page": "Ch 6, Sec 6.4 (p. 120)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The source is ergodic, so its statistics are stable over long timescales.",
+    "Asymptotically long inputs are available for the dictionary to learn from."
+   ],
+   "breakdown_regime": "Convergence can be unfeasibly slow for sources whose typical substrings are numerous, and the method exploits only literal repetition, so structure that is statistical rather than verbatim passes it by.",
+   "domain": "data_compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Lempel-Ziv is the engine's memory-of-patterns layer: recurring sequences are named once and referenced thereafter, which is how a reasoning system turns raw history into a compact library of reusable situations without an explicit model of why they recur.",
+    "source_operator": "lempel_ziv_universality",
+    "telemetry": "repeated subsequences in event streams, recurrence counts, dictionary growth rates"
+   }
+  },
+  {
+   "primitive_id": "elias_universal_code",
+   "name": "Elias's universal code for integers encodes the length of the length of the length, recursively, giving one self-delimiting code that is within a constant factor of optimal for every monotone decreasing prior over the integers",
+   "verbatim_quote": "A code is called a 'universal' code if for any distribution in a given class, it encodes into an average length that is within some factor of the ideal average length.",
+   "page": "Ch 7 (p. 135)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The class of priors considered is monotone decreasing distributions over the positive integers with finite entropy.",
+    "Integers are positive and unbounded."
+   ],
+   "breakdown_regime": "Universality is bought with slack: for any specific known prior a matched code beats it, and for priors outside the monotone finite-entropy class the guarantee evaporates.",
+   "domain": "data_compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The integer codes teach the engine that every encoding is an implicit prior: choosing a representation for magnitudes, counts, or severities silently commits to a belief distribution, and the Elias construction shows how to stay near-optimal when that belief must cover an unbounded range.",
+    "source_operator": "elias_universal_code",
+    "telemetry": "distributions of magnitudes the engine must encode, from counts to durations to distances"
+   }
+  },
+  {
+   "primitive_id": "mutual_information",
+   "name": "Mutual information I(X;Y) = H(X) - H(X|Y) measures the average reduction in uncertainty about one variable from learning another; it is symmetric and non-negative",
+   "verbatim_quote": "It measures the average reduction in uncertainty about x that results from learning the value of y; or vice versa, the average amount of information that x conveys about y.",
+   "page": "Ch 8, Sec 8.1 (p. 139)",
+   "latex": "I(X; Y) \\equiv H(X) - H(X \\mid Y)",
+   "symbol_and_unit_ledger": {
+    "I(X;Y)": "mutual information between X and Y, bits",
+    "H(X)": "entropy of X, bits",
+    "H(X|Y)": "conditional entropy of X given Y, bits"
+   },
+   "assumptions": [
+    "X and Y have a known joint distribution.",
+    "Entropies are computed with the same logarithm base (bits)."
+   ],
+   "breakdown_regime": "Mutual information captures dependence of any form but says nothing about causation or about which variable is useful for predicting the other in a decision; it can also be dominated by rare joint events.",
+   "domain": "information_theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mutual information is the engine's signal-admission test: a candidate signal earns its place by the measured reduction in outcome uncertainty it delivers, conditional on everything already in the model, not by its raw correlation or its reputation.",
+    "source_operator": "mutual_information",
+    "telemetry": "joint outcome and signal histories used to estimate conditional mutual information per candidate signal"
+   }
+  },
+  {
+   "primitive_id": "data_processing_theorem",
+   "name": "The data processing theorem: if W, D, R form a Markov chain (world, data, processed data), then I(W;R) <= I(W;D); processing can only destroy information about the world",
+   "verbatim_quote": "The data processing theorem states that data processing can only destroy information.",
+   "page": "Ch 8, Sec 8.3 (p. 141)",
+   "latex": "I(W; R) \\le I(W; D) \\quad \\text{for the Markov chain } W \\to D \\to R",
+   "symbol_and_unit_ledger": {
+    "W": "state of the world",
+    "D": "data gathered about the world",
+    "R": "processed version of the data",
+    "I(W;D), I(W;R)": "information the data, respectively the processed data, convey about the world, bits"
+   },
+   "assumptions": [
+    "The processed data R depends on the world only through the gathered data D (Markov condition).",
+    "No side information enters during processing."
+   ],
+   "breakdown_regime": "The theorem bounds information, not usefulness: processing can make the surviving information far more usable for a specific decision, and it does not apply when processing injects external knowledge such as a model or new data.",
+   "domain": "information_theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This theorem vetoes a whole class of engine designs: no downstream transformation, summary, or feature pipeline can add information about outcomes, so every aggregation step must justify itself as preserving decision-relevant information rather than creating it.",
+    "source_operator": "data_processing_theorem",
+    "telemetry": "information audits comparing raw feeds against their processed derivatives"
+   }
+  },
+  {
+   "primitive_id": "channel_capacity_max_mutual_information",
+   "name": "The capacity of a channel Q is its maximum mutual information over input distributions, C(Q) = max over P_X of I(X;Y), attained by an optimal input distribution",
+   "verbatim_quote": "We define the capacity of the channel to be its maximum mutual information.",
+   "page": "Ch 9, Sec 9.5 (p. 150)",
+   "latex": "C(Q) = \\max_{P_X} I(X; Y)",
+   "symbol_and_unit_ledger": {
+    "C(Q)": "capacity of channel Q, bits per channel use",
+    "P_X": "input distribution, the quantity optimized over",
+    "I(X;Y)": "mutual information between channel input and output, bits"
+   },
+   "assumptions": [
+    "The channel transition probabilities P(y|x) are fixed and known.",
+    "The input distribution can be chosen freely."
+   ],
+   "breakdown_regime": "Capacity is an asymptotic, error-vanishing quantity: it ignores delay, finite blocklength penalties, and the cost of inputs, all of which bind in real systems.",
+   "domain": "information_theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Capacity reframes every evidence source in the engine as a channel with an optimal operating point: how a source is queried or weighted (the input distribution) changes how much it can tell us, and the maximum is a property of the pairing, not of the source alone.",
+    "source_operator": "channel_capacity_max_mutual_information",
+    "telemetry": "per-source information yield under different weighting and querying regimes"
+   }
+  },
+  {
+   "primitive_id": "random_coding_joint_typicality",
+   "name": "Shannon's random-coding proof: averaging the block error probability over all random codes shows it is small below capacity, because an independent false codeword is jointly typical with the output with probability only about 2^(-N I(X;Y))",
+   "verbatim_quote": "and proved that this average is small. There must then exist individual codes that have small probability of block error.",
+   "page": "Ch 10, Sec 10.3 (p. 164)",
+   "latex": "P\\big( (x', y') \\in J^N_{\\beta} \\big) \\le 2^{-N (I(X;Y) - 3\\beta)}",
+   "symbol_and_unit_ledger": {
+    "J^N_beta": "set of jointly typical input-output sequence pairs of length N at tolerance beta",
+    "I(X;Y)": "mutual information of one channel use, bits",
+    "N": "blocklength"
+   },
+   "assumptions": [
+    "Codewords are drawn independently from the capacity-achieving input ensemble.",
+    "Decoding is by joint typicality; blocklength N is large."
+   ],
+   "breakdown_regime": "The argument proves existence, not a usable code: random codebooks need exponential storage and search, which is the gap sparse-graph codes (Part VI) were invented to close.",
+   "domain": "information_theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Random coding is the engine's existence-proof pattern: when a good configuration is hard to construct directly, average over a random ensemble of configurations to show good ones are abundant, then search the ensemble instead of designing from scratch.",
+    "source_operator": "random_coding_joint_typicality",
+    "telemetry": "ensemble performance distributions for randomized model and portfolio configurations"
+   }
+  },
+  {
+   "primitive_id": "gaussian_channel_capacity",
+   "name": "The capacity of a bandwidth-W continuous channel with power P and noise spectral density N0 is C = W log2(1 + P/(N0 W)) bits per second, so spreading fixed power over more bandwidth beats concentrating it",
+   "verbatim_quote": "The most popular model of a real-input, real-output channel is the Gaussian channel.",
+   "page": "Ch 11, Sec 11.3 (p. 182)",
+   "latex": "C = W \\log_2 \\left( 1 + \\frac{P}{N_0 W} \\right) \\text{ bits per second}",
+   "symbol_and_unit_ledger": {
+    "C": "capacity, bits per second",
+    "W": "bandwidth, Hertz",
+    "P": "average signal power",
+    "N_0": "noise spectral density, power per Hertz"
+   },
+   "assumptions": [
+    "Noise is additive white Gaussian with spectral density N0.",
+    "The input is subject to an average power constraint P and the channel is band-limited to W."
+   ],
+   "breakdown_regime": "Real channels have non-Gaussian noise, fading, and interference; the formula also hides that approaching capacity at very low signal-to-noise ratio demands extreme bandwidth and long codes.",
+   "domain": "channel_coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Shannon-Hartley tradeoff is the engine's breadth-versus-intensity law: under a fixed resource budget, widening the base of weak observations usually buys more reliable total information than intensifying a few strong ones.",
+    "source_operator": "gaussian_channel_capacity",
+    "telemetry": "observation counts, per-observation noise levels, and total information yield across data collection regimes"
+   }
+  },
+  {
+   "primitive_id": "gaussian_precision_addition",
+   "name": "Multiplying two Gaussian information sources about one unknown gives a Gaussian posterior whose precision is the sum of the two precisions and whose mean is the precision-weighted average",
+   "verbatim_quote": "The weights 1/σ 2 and 1/v are the precisions of the two Gaussians that we multiplied together in equation (11.28): the prior and the likelihood.",
+   "page": "Ch 11, Sec 11.3 (p. 181)",
+   "latex": "P(x \\mid y) = \\mathrm{Normal}\\!\\left( x;\\ \\frac{v}{v + \\sigma^2}\\, y,\\ \\left( \\frac{1}{v} + \\frac{1}{\\sigma^2} \\right)^{-1} \\right)",
+   "symbol_and_unit_ledger": {
+    "v": "prior variance of the unknown x",
+    "sigma^2": "noise variance of the observation y given x",
+    "1/v, 1/sigma^2": "precisions of prior and likelihood",
+    "P(x|y)": "posterior density of x given y"
+   },
+   "assumptions": [
+    "Prior and likelihood are both Gaussian in x.",
+    "The two information sources are independent given x."
+   ],
+   "breakdown_regime": "With non-Gaussian or dependent sources the precision-addition rule fails; heavy-tailed evidence gets over-trusted because the Gaussian likelihood weights it by a fixed precision.",
+   "domain": "inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Precision weighting is the engine's fusion rule for continuous estimates: independent assessments combine in proportion to their inverse variances, and the fused uncertainty is smaller than either input, with an exact formula instead of a hand-tuned average.",
+    "source_operator": "gaussian_precision_addition",
+    "telemetry": "per-source estimate values with their standard errors, tracked so fusion weights are computed, not chosen"
+   }
+  },
+  {
+   "primitive_id": "hash_codes",
+   "name": "Hash codes map N-bit records to M-bit hashes with M much smaller than N, turning an infeasible 2^N lookup table into a feasible 2^M one, at the price of collisions that must be resolved",
+   "verbatim_quote": "We will study random codes that map from N bits to M bits where M is smaller than N .",
+   "page": "Ch 12, Sec 12.2 (p. 195)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The hash function behaves like a fixed random mapping, spreading records roughly uniformly over the table.",
+    "The number of stored records S is much smaller than 2^N but comparable to the table size 2^M."
+   ],
+   "breakdown_regime": "Adversarial or structured inputs can collide catastrophically if the hash is weak (the anagram defect of simple additive hashes), and the table gives no ordering information, so range queries are impossible.",
+   "domain": "information_retrieval",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hashing is the engine's indexing primitive for pattern memory: high-dimensional situations are projected to compact keys so that similar past situations can be retrieved in near-constant time, accepting collisions as the cost of feasibility.",
+    "source_operator": "hash_codes",
+    "telemetry": "situation fingerprints, retrieval hit rates, collision rates in the engine's case memory"
+   }
+  },
+  {
+   "primitive_id": "beyond_minimum_distance_decoding",
+   "name": "Bounded-distance decoders, which correct only up to t = floor((d-1)/2) errors, cannot reach the Shannon limit; practical decoders must often correct error patterns beyond the code's minimum distance",
+   "verbatim_quote": "The state of the art in error-correcting codes have decoders that work way beyond the minimum distance of the code.",
+   "page": "Ch 13, Sec 13.2 (p. 207)",
+   "latex": "t = \\left\\lfloor \\frac{d - 1}{2} \\right\\rfloor",
+   "symbol_and_unit_ledger": {
+    "t": "number of errors a distance-d code can guarantee to correct",
+    "d": "minimum Hamming distance between codewords"
+   },
+   "assumptions": [
+    "Decoding is judged against the binary symmetric channel.",
+    "The code's minimum distance d is well defined (for linear codes, the minimum non-zero codeword weight)."
+   ],
+   "breakdown_regime": "MacKay's warning cuts the other way too: chasing distance alone is a worst-case obsession; codes with 'very bad' distance but sparse structure (low-density generator codes) can still decode superbly probabilistically.",
+   "domain": "channel_coding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The veto here is on worst-case thinking inside the engine: guaranteeing performance only under the worst configuration of noise systematically undervalues methods whose typical-case performance is excellent, so components are judged on their error distributions, not their worst case.",
+    "source_operator": "beyond_minimum_distance_decoding",
+    "telemetry": "error distributions of engine components, worst-case versus typical-case performance gaps"
+   }
+  },
+  {
+   "primitive_id": "random_linear_codes_are_good",
+   "name": "Averaging over all parity-check matrices H shows almost all linear codes achieve the noisy-channel coding theorem for the binary symmetric channel at any rate R < 1 - H(X), and the same syndrome machinery yields near-lossless linear compression",
+   "verbatim_quote": "By showing that the average probability of type-II error vanishes, we will thus show that there exist linear codes with vanishing error probability, indeed, that almost all linear codes are very good.",
+   "page": "Ch 14, Sec 14.1 (p. 231)",
+   "latex": "R < 1 - H(X)",
+   "symbol_and_unit_ledger": {
+    "R": "code rate, information bits per transmitted bit",
+    "H(X)": "entropy of the channel noise per bit, bits",
+    "1 - H(X)": "capacity of the binary symmetric channel, bits per use"
+   },
+   "assumptions": [
+    "H is drawn uniformly from binary matrices of the given size.",
+    "Decoding is by typical-set syndrome decoding; blocklength grows with the number of checks proportional."
+   ],
+   "breakdown_regime": "The proof licenses random H but typical-set decoding over a random matrix is computationally infeasible at scale; structure must be reintroduced (sparsity) before the result becomes engineering.",
+   "domain": "channel_coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The duality matters to the engine: one random linear projection both protects a message (as a code) and compresses it (as a hash), so a single syndrome-style representation can serve as both the fingerprint and the error check of a situation state.",
+    "source_operator": "random_linear_codes_are_good",
+    "telemetry": "syndrome-style fingerprints of state vectors, collision and recovery statistics"
+   }
+  },
+  {
+   "primitive_id": "sum_product_algorithm",
+   "name": "The sum-product algorithm computes exact marginals of a factored distribution on a tree-like factor graph by passing messages between variable and factor nodes; run on graphs with cycles it becomes loopy belief propagation, inexact but the workhorse of modern decoding",
+   "verbatim_quote": "When the sum-product algorithm is run on a graph with cycles, the algorithm does not necessarily converge, and certainly does not in general compute the correct marginal functions; but it is nevertheless an algorithm of great practical importance, especially in the decoding of sparse-graph codes.",
+   "page": "Ch 26, Sec 26.2 (p. 338)",
+   "latex": "r_{m \\to n}(x_n) = \\sum_{x_{m \\setminus n}} \\left[ f_m(x_m) \\prod_{n' \\in N(m) \\setminus n} q_{n' \\to m}(x_{n'}) \\right]",
+   "symbol_and_unit_ledger": {
+    "r_{m->n}(x_n)": "message from factor m to variable n, a function of x_n",
+    "f_m(x_m)": "factor m evaluated on its variable set x_m",
+    "q_{n'->m}(x_{n'})": "message from variable n' to factor m",
+    "N(m)": "set of variables factor m depends on"
+   },
+   "assumptions": [
+    "The distribution factors as a product of local factors over small variable subsets.",
+    "Exactness requires the factor graph to be a tree; messages are functions that can be represented and multiplied."
+   ],
+   "breakdown_regime": "On loopy graphs messages may oscillate or converge to wrong marginals with overconfident values, because evidence circulates and is counted multiple times.",
+   "domain": "inference_algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sum-product is the engine's inference operating system: beliefs about interdependent quantities are maintained as messages on a factor graph, each factor (a matchup relation, a situational constraint, a market observation) contributing local evidence that propagates globally without any node seeing the whole problem.",
+    "source_operator": "sum_product_algorithm",
+    "telemetry": "factor graph topology of the prediction problem, message traces, marginal posteriors per variable"
+   }
+  },
+  {
+   "primitive_id": "kmeans_clustering",
+   "name": "K-means partitions data into K clusters by alternating an assignment step (each point to its nearest mean) and an update step (each mean to the sample mean of its assigned points), always converging to a fixed point",
+   "verbatim_quote": "In the assignment step, each data point n is assigned to the nearest mean. In the update step, the means are adjusted to match the sample means of the data points that they are responsible for.",
+   "page": "Ch 20, Sec 20.1 (p. 286)",
+   "latex": "\\hat{k}^{(n)} = \\arg\\min_k \\big\\{ d\\big(m^{(k)}, x^{(n)}\\big) \\big\\}",
+   "symbol_and_unit_ledger": {
+    "k-hat^(n)": "cluster assigned to data point n",
+    "m^(k)": "mean (centre) of cluster k",
+    "x^(n)": "data point n",
+    "d(.,.)": "distance metric on the data space"
+   },
+   "assumptions": [
+    "A distance metric on the data space is given and meaningful.",
+    "The number of clusters K is chosen in advance and clusters are roughly spherical under that metric."
+   ],
+   "breakdown_regime": "Convergence is to a local, initialization-dependent fixed point, not a global optimum; elongated or unequal clusters are carved up wrongly, and hard assignments discard membership uncertainty that soft (EM) versions keep.",
+   "domain": "machine_learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "K-means is the engine's regime-discovery baseline: unlabeled historical situations are grouped by alternating assignment and re-centring, producing named situation families whose statistics can then be estimated separately instead of pooled.",
+    "source_operator": "kmeans_clustering",
+    "telemetry": "situation feature vectors, cluster assignments, within-cluster outcome statistics"
+   }
+  },
+  {
+   "primitive_id": "laplace_approximation",
+   "name": "Laplace's method approximates an unnormalized density by a Gaussian matched at its mode, giving the normalizing constant (evidence) as peak height times (2 pi)^(K/2) / sqrt(det A), where A is the Hessian of the negative log density at the mode",
+   "verbatim_quote": "Predictions can be made using the approximation Q. Physicists also call this widely-used approximation the saddle-point approximation.",
+   "page": "Ch 27 (p. 341)",
+   "latex": "Z_P \\simeq Z_Q = P^{*}(x_0) \\sqrt{\\frac{(2\\pi)^K}{\\det A}}",
+   "symbol_and_unit_ledger": {
+    "Z_P": "true normalizing constant of the unnormalized density P*",
+    "x_0": "mode of P*",
+    "A": "matrix of second derivatives of -ln P* at x_0",
+    "K": "dimension of x"
+   },
+   "assumptions": [
+    "The density is sharply peaked and well approximated by a Gaussian near its mode.",
+    "The mode is interior and the Hessian A is positive definite."
+   ],
+   "breakdown_regime": "Multimodal, skewed, or heavy-tailed posteriors are badly served by a single Gaussian at the mode, and the approximation is basis-dependent: a nonlinear reparameterization changes the answer.",
+   "domain": "inference_algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Laplace's method is the engine's fast evidence estimator: when full integration over parameters is too slow, the height and curvature at the best fit give an approximate marginal likelihood that still carries the Occam penalty, so model comparison stays honest at speed.",
+    "source_operator": "laplace_approximation",
+    "telemetry": "best-fit parameter values, Hessian curvature summaries, approximate log evidences per model"
+   }
+  },
+  {
+   "primitive_id": "bayesian_occam_razor",
+   "name": "Bayesian model comparison automatically embodies Occam's razor: the evidence P(D|H) is a normalized predictive distribution, so a complex model that spreads its predictions thinly is penalized by an Occam factor whenever a simpler model predicted the data more strongly",
+   "verbatim_quote": "Simple models tend to make precise predictions. Complex models, by their nature, are capable of making a greater variety of predictions (figure 28.3).",
+   "page": "Ch 28, Sec 28.1 (p. 344)",
+   "latex": "\\frac{P(H_1 \\mid D)}{P(H_2 \\mid D)} = \\frac{P(H_1)}{P(H_2)} \\cdot \\frac{P(D \\mid H_1)}{P(D \\mid H_2)}",
+   "symbol_and_unit_ledger": {
+    "P(H_i|D)": "posterior probability of model H_i given data D",
+    "P(D|H_i)": "evidence (marginal likelihood) of model H_i",
+    "P(H_i)": "prior probability of model H_i"
+   },
+   "assumptions": [
+    "Each model's evidence is computed by marginalizing its parameters under a stated prior.",
+    "The models compared are the models actually entertained; the true process need not be among them for the ranking to be meaningful but the guarantee is relative."
+   ],
+   "breakdown_regime": "Evidences are sensitive to parameter priors, especially for parameters the data do not constrain; sloppy priors can manufacture or erase Occam factors, so prior choices must be reported with the result.",
+   "domain": "inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's complexity governor: candidate models, signals, and features are admitted by marginal likelihood, so added complexity must pay rent in predictive concentration, and the penalty emerges from the math rather than from a hand-set regularization knob.",
+    "source_operator": "bayesian_occam_razor",
+    "telemetry": "log evidences per candidate model or feature set, prior specifications attached to each"
+   }
+  },
+  {
+   "primitive_id": "importance_sampling",
+   "name": "Importance sampling estimates expectations under an intractable target P by sampling from a tractable proposal Q and reweighting each sample by w = P*(x)/Q*(x)",
+   "verbatim_quote": "To take into account the fact that we have sampled from the wrong distribution, we introduce weights",
+   "page": "Ch 29, Sec 29.3 (p. 362)",
+   "latex": "w_r \\equiv \\frac{P^{*}\\big(x^{(r)}\\big)}{Q^{*}\\big(x^{(r)}\\big)}",
+   "symbol_and_unit_ledger": {
+    "w_r": "importance weight of sample r",
+    "P*(x)": "unnormalized target density at x",
+    "Q*(x)": "unnormalized proposal density at x",
+    "x^(r)": "the r-th sample drawn from Q"
+   },
+   "assumptions": [
+    "Q(x) is non-zero wherever P(x) is non-zero.",
+    "Both unnormalized densities can be evaluated pointwise."
+   ],
+   "breakdown_regime": "If Q has thinner tails than P, a few samples dominate the weights and the estimator's true variance can be enormous while the empirical variance looks calm; the failure is silent.",
+   "domain": "inference_algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Importance sampling is the engine's counterfactual reweighting tool: data gathered under one regime (one schedule, one market state, one sampling policy) can be reweighted to estimate expectations under another, provided the overlap condition holds and weight concentration is monitored.",
+    "source_operator": "importance_sampling",
+    "telemetry": "sample weights, effective sample sizes, overlap diagnostics per reweighted estimate"
+   }
+  },
+  {
+   "primitive_id": "metropolis_hastings",
+   "name": "The Metropolis-Hastings algorithm builds a Markov chain whose equilibrium is the target distribution by proposing moves from a state-dependent density Q and accepting them with probability min(1, a), where a corrects for both target and proposal ratios",
+   "verbatim_quote": "Note the difference from rejection sampling: in rejection sampling, rejected points are discarded and have no influence on the list of samples {x (r) } that we collected. Here, a rejection causes the current state to be written again onto the list.",
+   "page": "Ch 29, Sec 29.4 (p. 366)",
+   "latex": "a = \\frac{P^{*}(x') \\, Q(x^{(t)};\\, x')}{P^{*}(x^{(t)}) \\, Q(x';\\, x^{(t)})}",
+   "symbol_and_unit_ledger": {
+    "a": "acceptance ratio for the proposed move",
+    "P*(x)": "unnormalized target density",
+    "Q(x'; x^(t))": "proposal density for moving to x' from current state x^(t)",
+    "x'": "tentative new state"
+   },
+   "assumptions": [
+    "The target density can be evaluated up to a normalizing constant.",
+    "The proposal chain is ergodic enough to reach all regions of appreciable target mass."
+   ],
+   "breakdown_regime": "Samples are dependent, burn-in biases early estimates, and in high dimensions random-walk proposals mix painfully slowly, which motivates gradient methods such as Hamiltonian Monte Carlo.",
+   "domain": "inference_algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Metropolis-Hastings is the engine's general-purpose posterior explorer for models too irregular for closed forms: any scoring function that can be evaluated can be turned into samples, and the accept-reject bookkeeping (rejections repeat the current state) is what keeps the sample frequencies honest.",
+    "source_operator": "metropolis_hastings",
+    "telemetry": "acceptance rates, chain traces, effective sample sizes per posterior quantity"
+   }
+  },
+  {
+   "primitive_id": "hamiltonian_monte_carlo",
+   "name": "Hamiltonian Monte Carlo augments the state with momentum variables and proposes distant moves by simulated Hamiltonian dynamics, using gradient information to suppress random-walk behaviour, then corrects with a Metropolis acceptance test",
+   "verbatim_quote": "The Hamiltonian Monte Carlo method is a Metropolis method, applicable to continuous state spaces, that makes use of gradient information to reduce random walk behaviour.",
+   "page": "Ch 30, Sec 30.1 (p. 387)",
+   "latex": "H(x, p) = E(x) + K(p)",
+   "symbol_and_unit_ledger": {
+    "H(x,p)": "Hamiltonian (total energy) of position x and momentum p",
+    "E(x)": "potential energy, -ln P*(x) up to a constant",
+    "K(p)": "kinetic energy, typically p^T p / 2"
+   },
+   "assumptions": [
+    "The target is continuous and its gradient can be evaluated.",
+    "Leapfrog integration approximates Hamiltonian dynamics closely enough that acceptance stays high."
+   ],
+   "breakdown_regime": "Step size and trajectory length need tuning; discrete parameters are not directly handled, and badly conditioned posteriors (funnels, disparate scales) still mix poorly without reparameterization.",
+   "domain": "inference_algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "HMC is the engine's high-dimensional inference engine of choice: gradient-guided trajectories explore correlated parameter spaces orders of magnitude faster than random walks, which is what makes full Bayesian treatment of rich models practical at all.",
+    "source_operator": "hamiltonian_monte_carlo",
+    "telemetry": "gradient evaluations, trajectory acceptance rates, posterior samples for hierarchical model parameters"
+   }
+  },
+  {
+   "primitive_id": "variational_free_energy",
+   "name": "Variational free energy minimization approximates an intractable distribution P by a tractable family Q(theta), minimizing F-tilde = expected energy minus entropy of Q, which equals the true free energy plus D_KL(Q||P) and so bounds the partition function",
+   "verbatim_quote": "Variational free energy minimization is a method for approximating the complex distribution P (x) by a simpler ensemble Q(x; θ) that is parameterized by adjustable parameters θ.",
+   "page": "Ch 33, Sec 33.1 (p. 423)",
+   "latex": "\\beta \\tilde{F}(\\theta) = D_{KL}(Q \\| P) + \\beta F",
+   "symbol_and_unit_ledger": {
+    "F-tilde(theta)": "variational free energy of approximating ensemble Q with parameters theta",
+    "F": "true free energy, -ln Z / beta",
+    "D_KL(Q||P)": "relative entropy from approximating to true distribution",
+    "beta": "inverse temperature"
+   },
+   "assumptions": [
+    "The approximating family Q is simple enough that its entropy and expected energy are computable.",
+    "The true distribution is of Boltzmann form with a known energy function."
+   ],
+   "breakdown_regime": "The bound is only as tight as the family is rich: a separable (mean-field) Q systematically underestimates posterior variance and can lock onto one mode of a multimodal P.",
+   "domain": "inference_algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Variational free energy gives the engine a principled speed-accuracy dial: replace an intractable posterior with the best tractable surrogate and keep the KL gap explicit as a quality certificate, and the same objective reappears as the training loss behind EM and modern variational inference.",
+    "source_operator": "variational_free_energy",
+    "telemetry": "variational objectives per model fit, KL gap estimates, surrogate posterior parameters"
+   }
+  },
+  {
+   "primitive_id": "decision_theory_expected_utility",
+   "name": "Decision theory: given actions a, states x with probabilities P(x|a), and a utility U(x,a), the rational action is the one maximizing expected utility E[U|a]; inference ends and decision begins at this maximization",
+   "verbatim_quote": "The task of decision theory is to select the action that maximizes the expected utility,",
+   "page": "Ch 36 (p. 451)",
+   "latex": "E[U \\mid a] = \\int d^K x\\; U(x, a)\\, P(x \\mid a)",
+   "symbol_and_unit_ledger": {
+    "E[U|a]": "expected utility of action a",
+    "U(x,a)": "utility of state x when action a is taken",
+    "P(x|a)": "probability of state x given action a",
+    "K": "dimension of the state x"
+   },
+   "assumptions": [
+    "A utility function over state-action pairs can be stated.",
+    "The probability model P(x|a), including how actions influence states, is available from inference."
+   ],
+   "breakdown_regime": "The formula is trivial and the difficulty migrates entirely into the inputs: misspecified utilities or probabilities yield confidently wrong actions, and sequential problems explode combinatorially because anticipated information changes later decisions.",
+   "domain": "decision_theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's output contract: posterior distributions are not the product, decisions are, and every prediction must terminate in an action ranked by expected utility under an explicit payoff, with pass (no action) as an ordinary candidate action.",
+    "source_operator": "decision_theory_expected_utility",
+    "telemetry": "action sets, utility specifications, expected utility tables per decision"
+   }
+  },
+  {
+   "primitive_id": "learning_as_inference",
+   "name": "Neural network learning is Bayesian inference in disguise: the error function is minus the log likelihood and the regularizer is minus the log prior, so minimizing error plus regularizer is maximum a posteriori estimation",
+   "verbatim_quote": "So the error function G can be interpreted as minus the log likelihood:",
+   "page": "Ch 41, Sec 41.1 (p. 492)",
+   "latex": "P(D \\mid w) = \\exp[-G(w)]",
+   "symbol_and_unit_ledger": {
+    "P(D|w)": "likelihood of the training data D given weights w",
+    "G(w)": "error function (cross-entropy) of the network with weights w",
+    "D": "observed targets, inputs treated as given"
+   },
+   "assumptions": [
+    "Network outputs are interpreted literally as class probabilities.",
+    "The regularizer corresponds to a proper (normalizable) prior over weights, here Gaussian."
+   ],
+   "breakdown_regime": "MAP point estimates inherit all the fragility of point estimates: they ignore posterior uncertainty over weights, so predictive confidence is overstated exactly where data are scarce.",
+   "domain": "machine_learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This identification disciplines every learner the engine trains: whatever the architecture, its loss decomposes into a likelihood term and a prior term, so regularization strength is a prior belief that must be stated, tuned by evidence, and audited like any other assumption.",
+    "source_operator": "learning_as_inference",
+    "telemetry": "loss decompositions per trained model, prior hyperparameters, evidence comparisons across regularizers"
+   }
+  },
+  {
+   "primitive_id": "gaussian_processes",
+   "name": "Gaussian process modelling places a prior directly on the space of functions, specified by a mean function and a covariance function, so prediction is exact Bayesian inference over functions with no parameter fitting; wide Bayesian neural networks converge to Gaussian processes",
+   "verbatim_quote": "The idea of Gaussian process modelling is to place a prior P (y(x)) directly on the space of functions, without parameterizing y(x).",
+   "page": "Ch 45 (p. 535)",
+   "latex": "P\\big(y(x) \\mid t^N, X^N\\big) = \\frac{P\\big(t^N \\mid y(x), X^N\\big) P\\big(y(x)\\big)}{P\\big(t^N \\mid X^N\\big)}",
+   "symbol_and_unit_ledger": {
+    "y(x)": "unknown function at input x",
+    "t^N": "observed target values at inputs X^N",
+    "P(y(x))": "Gaussian process prior over functions",
+    "P(t^N|X^N)": "evidence normalizing the posterior over functions"
+   },
+   "assumptions": [
+    "The prior over functions is Gaussian, fully specified by mean and covariance functions.",
+    "The noise model for observations is stated (often Gaussian for regression)."
+   ],
+   "breakdown_regime": "Exact inference costs O(N^3) in the number of data points, and a mischosen covariance function silently imposes wrong smoothness and lengthscales; classification requires approximate inference on top.",
+   "domain": "machine_learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gaussian processes are the engine's function-space reasoner: instead of committing to one fitted curve, the engine carries a distribution over curves, so interpolation between observed situations comes with honest, distance-aware uncertainty that widens exactly where experience is thin.",
+    "source_operator": "gaussian_processes",
+    "telemetry": "covariance functions over situation features, predictive means and variances at unobserved points"
+   }
+  },
+  {
+   "primitive_id": "ldpc_sum_product_decoding",
+   "name": "Low-density parity-check codes, defined by a sparse parity-check matrix H, are decoded by running the sum-product algorithm on their bipartite factor graph; the delta-domain check update factorizes as a signed product over neighbouring bits",
+   "verbatim_quote": "The algorithm would produce the exact posterior probabilities of all the bits after a fixed number of iterations if the bipartite graph defined by the matrix H contained no cycles.",
+   "page": "Ch 47, Sec 47.3 (p. 561)",
+   "latex": "\\delta r_{mn} = (-1)^{z_m} \\prod_{n' \\in N(m) \\setminus n} \\delta q_{mn'}",
+   "symbol_and_unit_ledger": {
+    "delta r_mn": "difference of the two check-to-bit message probabilities (states 0 and 1)",
+    "z_m": "observed syndrome value of check m",
+    "delta q_mn'": "difference of bit-to-check message probabilities for bit n'",
+    "N(m)": "bits participating in check m"
+   },
+   "assumptions": [
+    "The parity-check matrix is sparse, so each bit joins few checks and the graph is locally tree-like.",
+    "Per-bit channel likelihoods are available to initialize the messages."
+   ],
+   "breakdown_regime": "Cycles make the algorithm approximate; short cycles and trapping sets create error floors, and performance depends sensitively on the degree distribution of the graph.",
+   "domain": "channel_coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "LDPC decoding is the existence proof that local message passing on a sparse graph of weak constraints can match global optimal inference: the engine copies the pattern whenever many weak, overlapping consistency relations must jointly pin down a hidden state.",
+    "source_operator": "ldpc_sum_product_decoding",
+    "telemetry": "sparse constraint graphs over hidden states, iteration counts, convergence and residual syndrome statistics"
+   }
+  },
+  {
+   "primitive_id": "turbo_codes",
+   "name": "A turbo code feeds the same source bits to two (or more) convolutional encoders, the second through a random interleaver, and is decoded by exchanging soft information between the constituent decoders on its factor graph, reaching near-Shannon performance",
+   "verbatim_quote": "The turbo code can be represented by a factor graph in which the two trellises are represented by two large rectangular nodes (figure 48.9a)",
+   "page": "Ch 48, Sec 48.4 (p. 579)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Constituent encoders are recursive systematic convolutional codes decoded with soft-input soft-output (forward-backward) decoders.",
+    "The interleaver is long and effectively random, decorrelating the two decoders' errors."
+   ],
+   "breakdown_regime": "Performance degrades at short blocklengths where the interleaver cannot decorrelate, error floors appear at very low error rates, and decoding latency is high because many iterations over the full block are required.",
+   "domain": "channel_coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The turbo principle generalizes inside the engine: two different weak reasoners that see the same evidence in different orders can bootstrap each other by exchanging calibrated soft beliefs, iterating to a joint conclusion neither reaches alone, provided their errors are decorrelated by design.",
+    "source_operator": "turbo_codes",
+    "telemetry": "paired model outputs, exchanged belief traces, iteration-by-iteration agreement statistics"
+   }
+  },
+  {
+   "primitive_id": "lt_fountain_codes",
+   "name": "LT digital fountain codes are rateless: each encoded packet is the XOR of a random number of source packets drawn from a designed degree distribution (ideal soliton, robustified in practice), so a receiver can decode from any slightly-more-than-K packets with no feedback and no pre-chosen rate",
+   "verbatim_quote": "Digital fountain codes are rateless in the sense that the number of encoded packets that can be generated from the source message is potentially limitless; and the number of encoded packets generated can be determined on the fly.",
+   "page": "Ch 50, Sec 50.1 (p. 590)",
+   "latex": "\\rho(1) = \\frac{1}{K}, \\qquad \\rho(d) = \\frac{1}{d(d-1)} \\ \\text{ for } d = 2, 3, \\ldots, K",
+   "symbol_and_unit_ledger": {
+    "rho(d)": "ideal soliton degree distribution: probability an encoded packet has degree d",
+    "K": "number of source packets",
+    "d": "number of source packets XORed into one encoded packet"
+   },
+   "assumptions": [
+    "The channel erases packets but does not corrupt them undetectably.",
+    "Sender and receiver can agree on each packet's degree and neighbour set (via a shared pseudorandom key)."
+   ],
+   "breakdown_regime": "The pure ideal soliton distribution is fragile (the ripple of degree-one packets can die out), hence the robust soliton's extra parameters; overhead grows for small K, and decoding is all-or-nothing if the ripple stalls early.",
+   "domain": "channel_coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Ratelessness is the engine's answer to unknown channel quality: instead of committing in advance to how much evidence a conclusion needs, generate checkable consequences indefinitely and stop when the accumulated set is sufficient to pin down the answer, which is exactly how open-ended evidence gathering should behave.",
+    "source_operator": "lt_fountain_codes",
+    "telemetry": "counts of independent confirming observations per conclusion, sufficiency thresholds, overhead ratios"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "c4cd66c1cb097e68-t1",
+   "think": "This book is one integrated argument disguised as a textbook. Its claim is that information theory and Bayesian inference are the same subject seen from two ends: compression asks how many bits a source is worth, inference asks what a receiver should believe after seeing bits, and both are governed by probability distributions and the logarithm of probability. The first six chapters build the compression side. Entropy is defined as expected information content, the source coding theorem shows that long sequences concentrate on a typical set of size about 2^(N H), and the Kraft inequality plus Huffman, arithmetic, and Lempel-Ziv codes show how that limit is approached in practice, with arithmetic coding making the moral explicit: a code is exactly as good as the probabilistic model inside it. Chapter 7 adds the reflexive twist that every complete code is an implicit prior, so choosing a representation is choosing a belief.\n\nThe second movement reverses the direction. Instead of removing redundancy, channel coding adds it deliberately. Mutual information measures what survives a noisy channel, capacity is its maximum, and Shannon's theorem, proved by random coding and joint typicality, says reliable communication is possible at any rate below capacity and impossible above it. The Gaussian channel extends the result to the continuous world and produces the bandwidth-power tradeoff. Chapters 12 to 14 then stress-test intuition: hash codes reuse random mappings for retrieval, distance-obsessed decoding is shown to be a worst-case trap, and random linear codes are proved good by an averaging argument, the same syndrome object serving both error correction and compression.\n\nThe third movement generalizes the machinery into an inference engine. Message passing on trees becomes the sum-product algorithm on factor graphs, which computes marginals of any factored distribution by local computation. Around it MacKay assembles the practical toolkit: exact marginalization where feasible, Laplace's Gaussian approximation where not, Monte Carlo methods (importance sampling, Metropolis-Hastings, Gibbs, Hamiltonian Monte Carlo) when integrals resist analysis, variational free energy minimization when even sampling is too slow, and Bayesian model comparison, in which the evidence automatically applies Occam's razor. Neural networks are then re-read as inference devices: the error function is a log likelihood, the regularizer a log prior, and Gaussian processes take the final step of putting the prior on functions themselves. The closing part returns to coding with everything learned: low-density parity-check codes, turbo codes, repeat-accumulate codes, and LT fountain codes are all sparse factor graphs decoded by the sum-product algorithm, and they reach the Shannon limit that the opening chapters proved was there.\n\nFor a reasoning engine, the book supplies both the objective functions and the algorithms. Entropy and KL divergence price uncertainty and misspecification in bits. Evidence and Occam factors govern model admission. Sum-product message passing is a concrete architecture for combining local evidence on a graph. The Monte Carlo and variational chapters give a ladder of approximations with explicit failure modes, so the engine can choose its rung per problem and know what it is giving up. And the decision theory chapter draws the boundary: inference produces probabilities, and only an expected-utility maximization turns them into actions.\n\nTwo design habits recur so often that they amount to the book's method. The first is to make the implicit explicit: codes carry implicit priors, regularizers are log priors, symbol lengths are log probabilities, and a decoder is a posterior computation, so every apparently purely algorithmic choice is dragged back to the probability distribution it secretly assumes and can then be criticized on those terms. The second is to prefer averaging arguments over constructions when existence is the question: Shannon weighs all babies at once to prove a light one exists, Gallager-style random codes are certified by their ensemble average, and the same trick reappears for random linear codes and random hashing. Against these stand the constructive chapters, and the tension is deliberate: existence proofs set the target, sparse structure makes it reachable, and the factor graph is the shared language in which the second can finally speak to the first.\n\nThe middle parts reward attention too. Chapter 2 derives probability itself as the unique consistent calculus of plausible reasoning, which is why the inference chapters feel inevitable rather than optional. Chapter 16 teaches message passing with soldiers counting themselves in the mist before a single distribution appears, and that pedagogical order is the thesis in miniature: distributed local computation first, probability as its most important application second. The Ising model chapters quietly unify the physics and inference views, so that by the time variational free energy arrives it is recognizable as one idea wearing two costumes, statistical mechanics and approximate Bayesian computation, with the EM algorithm filed under the same heading. Even the asides load weight: the integer codes of Chapter 7 are a complete theory of priors over magnitudes, and the Dasher text-entry system, built by inverting an arithmetic coder, demonstrates that a good predictive model is simultaneously a compressor, a generator, and an interface.\n\nWhere it breaks matters as much as where it works. Nearly every guarantee is asymptotic: typicality, capacity, universality, and variational tightness all live in limits that finite data only approach. The Bayesian machinery is hostage to its priors and its hypothesis space. Loopy belief propagation, the workhorse of the final chapters, is not guaranteed to converge or to be calibrated. MacKay is unusually candid about all of this, which is why the book can serve as a foundation rather than a sales pitch: each primitive in this artifact carries its breakdown regime with it.",
+   "retrocausal_genealogy": "The lineage runs from Shannon's 1948 paper, which created information theory and solved its central problems in one stroke, through the coding theory of Hamming, Gallager's 1963 low-density parity-check codes (ignored for three decades for lack of computing power), and the Bayesian revival associated with Cox's probability logic and Jaynes. MacKay writes as the inheritor who reunifies the split: the inference half descends from Laplace through Keynes's Treatise on Probability to modern Bayesian machine learning (Neal's Hamiltonian Monte Carlo and Gaussian process work are woven through the later chapters), while the coding half culminates in the 1993 turbo code shock and the sparse-graph renaissance of the late 1990s, including Luby's LT codes. The book, published in 2003 and given away free online, is itself an artifact of the open-science moment it describes.",
+   "theory_of_mind": "MacKay believes the reader is a future builder of intelligent systems, not a student to be examined: exercises are rated like Knuth's, solutions are printed in the book, and the prose argues, jokes, and editorializes (against bounded-distance decoding, against sampling-theory statistics, against worst-case thinking) because the author's model of the domain is that information theory and inference are one subject and that its ideas are only understood by being used. He assumes comfort with probability and calculus, distrusts any method that hides its assumptions, and treats every algorithm as an implicit claim about the world that should be dragged into the open and priced in bits.",
+   "cross_layer_veto": "Several results in this book veto whole design directions elsewhere. The data processing theorem forbids expecting any pipeline stage to create information: downstream layers can only preserve or destroy what upstream evidence contained. Gibbs' inequality vetoes free lunches in modelling, since any misspecified distribution pays a KL toll that no cleverness refunds. Capacity vetoes effort spent extracting more reliable signal from a channel than its mutual information allows. And the Occam evidence calculus vetoes unpenalized complexity: any layer that adds parameters without adding predictive concentration is automatically demoted. Together they act as conservation laws the rest of the engine must obey."
+  }
+ ],
+ "universal_lens": "Read as a general template, the book says: any system that must act under uncertainty should represent its knowledge as probability distributions, price information and error in one currency (bits), combine local evidence by message passing on an explicit graph of dependencies, approximate intractable integrals by a ladder of methods whose failure modes are named, penalize complexity automatically through marginal likelihood, and convert beliefs into actions only through an explicit utility. Compression, communication, learning, and decision are one discipline with four accents.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book is core curriculum and research method at once: it supplies the mathematics for studying how information flows through competitive systems, how much any observable can in principle reveal about hidden states, and how to compare rival explanatory models by evidence rather than rhetoric. Its emphasis on implicit priors, universality, and honest asymptotics is a template for how the Institute should evaluate any proposed analytic framework before adopting it.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, this is the foundational text: entropy and mutual information score and admit signals, Bayesian posteriors with Laplace-rule smoothing handle small samples, precision weighting fuses continuous estimates, factor graphs with sum-product message passing combine matchup, situational, and health evidence, evidence ratios with Occam factors govern model and feature admission, Monte Carlo and variational methods provide the inference ladder, and expected utility with an explicit pass action turns projections into decisions."
+}

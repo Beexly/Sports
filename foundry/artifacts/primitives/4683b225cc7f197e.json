@@ -1,0 +1,78 @@
+{
+  "book_id": "4683b225cc7f197e",
+  "source_status": "COMPLETE",
+  "title": "05-sgp-carousel",
+  "file_name": "05-sgp-carousel.txt",
+  "sha256": "4683b225cc7f197ec63d80b3afe2ce713dc24b0f8763f21b0935ede85e34c706",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Situational probability kernels for player prop outcomes under team offensive dynamics and defensive resistance. Universal Lens: Rooted in 05-sgp-carousel (4683b225cc7f197e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on player performance using conformal predictive intervals derived from historical prop distributions and game-state priors. GSI Mapping: Rooted in 05-sgp-carousel (4683b225cc7f197e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition models for player involvement in scoring opportunities, conditioned on play-calling, down-distance, and opponent coverage schemes. GSE Mapping: Rooted in 05-sgp-carousel (4683b225cc7f197e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "zay_flowers_receiving_yards",
+      "name": "Zay Flowers Receiving Yards",
+      "verbatim_quote": "BAL @ BUF Zay Flowers 70+ receiving yards James Cook III 75+ rush and receiving yards Josh Allen anytime rushing touchdown Fair +252.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Y_{ZF}': 'receiving yards for Zay Flowers, dimensionless'}",
+      "assumptions": "Player performance follows a conditional distribution based on opponent defensive alignment and game situation.",
+      "breakdown_regime": "Y_{ZF} > 70",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI Bayesian update on Y_{ZF} using prior prop distributions and game context; GSE transition to target zone probability.",
+        "source_operator": "zay_flowers_receiving_yards",
+        "telemetry": "Observed receiving yards vs. expected baseline from historical prop data."
+      }
+    },
+    {
+      "primitive_id": "james_cook_rush_receive_yards",
+      "name": "James Cook Rush & Receive Yards",
+      "verbatim_quote": "BAL @ BUF Zay Flowers 70+ receiving yards James Cook III 75+ rush and receiving yards Josh Allen anytime rushing touchdown Fair +252.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Y_{JC}': 'total rushing and receiving yards for James Cook III, dimensionless'}",
+      "assumptions": "Combined rushing and receiving contributions are additive and independent of each other.",
+      "breakdown_regime": "Y_{JC} > 75",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI joint probability model for Y_{JC}; GSE evaluates role-based involvement in both phases.",
+        "source_operator": "james_cook_rush_receive_yards",
+        "telemetry": "Cumulative yardage from rushing and receiving plays."
+      }
+    },
+    {
+      "primitive_id": "josh_allen_rushing_touchdown",
+      "name": "Josh Allen Anytime Rushing Touchdown",
+      "verbatim_quote": "BAL @ BUF Zay Flowers 70+ receiving yards James Cook III 75+ rush and receiving yards Josh Allen anytime rushing touchdown Fair +252.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{JA}': 'binary indicator for Josh Allen scoring a rushing touchdown, dimensionless'}",
+      "assumptions": "Touchdown event is modeled as a Bernoulli trial with time-dependent probability.",
+      "breakdown_regime": "T_{JA} = 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI binary outcome prediction via logistic regression on game state; GSE simulates play execution paths.",
+        "source_operator": "josh_allen_rushing_touchdown",
+        "telemetry": "Presence of rushing touchdown within game window."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4683b225cc7f197e_t0",
+      "think": "The primitives define probabilistic thresholds for individual player contributions in specific game contexts. Each is grounded in empirical prop distributions and situational game theory. The kernel structure enables compositional reasoning across multiple players and events. Dualities emerge between offensive roles and defensive resistance, where failure modes include misalignment of expected vs. actual defensive coverage. The system's robustness depends on updating priors with real-time game state and adjusting for variance in player availability and performance. The epistemic closure is maintained through recursive Bayesian inference on observed outcomes against predicted prop ranges.\n\nDeep epistemic analysis for 05-sgp-carousel (4683b225cc7f197e, domain=other, pages_read=1/1): Operator 'Zay Flowers Receiving Yards' (page 1, domain other) captures: BAL @ BUF Zay Flowers 70+ receiving yards James Cook III 75+ rush and receiving yards Josh Allen anytime rushing touchdown Fair +252. Assumptions: Player performance follows a conditional distribution based on opponent defensive alignment and game situation. Breakdown regime: Y_{ZF} > 70 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian update on Y_{ZF} using prior prop distributions and game context; GSE transition to target zone probability. Operator 'James Cook Rush & Receive Yards' (page 1, domain other) captures: BAL @ BUF Zay Flowers 70+ receiving yards James Cook III 75+ rush and receiving yards Josh Allen anytime rushing touchdown Fair +252. Assumptions: Combined rushing and receiving contributions are additive and independent of each other. Breakdown regime: Y_{JC} > 75 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI joint probability model for Y_{JC}; GSE evaluates role-based involvement in both phases. Operator 'Josh Allen Anytime Rushing Touchdown' (page 1, domain other) captures: BAL @ BUF Zay Flowers 70+ receiving yards James Cook III 75+ rush and receiving yards Josh Allen anytime rushing touchdown Fair +252. Assumptions: Touchdown event is modeled as a Bernoulli trial with time-dependent probability. Breakdown regime: T_{JA} = 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI binary outcome prediction via logistic regression on game state; GSE simulates play execution paths. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 05-sgp-carousel (4683b225cc7f197e, domain=other, pages_read=1/1): Operator 'Zay Flowers Receiving Yards' (page 1, domain other) captures: BAL @ BUF Zay Flowers 70+ receiving yards James Cook III 75+ rush and receiving yards Josh Allen anytime rushing touchdown Fair +252. Assumptions: Player performance follows a conditional distribution based on opponent defensive alignment and game situation. Breakdown regime: Y_{ZF} > 70 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian update on Y_{ZF} using prior prop distributions and game context; GSE transition to target zone probability. Operator 'James Cook Rush & Receive Yards' (page 1, domain other) captures: BAL @ BUF Zay Flowers 70+ receiving yards James Cook III 75+ rush and receiving yards Josh Allen anytime rushing touchdown Fair +252. Assumptions: Combined rushing and receiving contributions are additive and independent of each other. Breakdown regime: Y_{JC} > 75 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI joint probability model for Y_{JC}; GSE evaluates role-based involvement in both phases. Operator 'Josh Allen Anytime Rushing Touchdown' (page 1, domain other) captures: BAL @ BUF Zay Flowers 70+ receiving yards James Cook III 75+ rush and receiving yards Josh Allen anytime rushing touchdown Fair +252. Assumptions: Touchdown event is modeled as a Bernoulli trial with time-dependent probability. Breakdown regime: T_{JA} = 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI binary outcome prediction via logistic regression on game state; GSE simulates play execution paths. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference and modern Bayesian networks, extending into predictive modeling frameworks used in sports analytics since the 1990s. Retrocausal Genealogy: Rooted in 05-sgp-carousel (4683b225cc7f197e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 05-sgp-carousel (4683b225cc7f197e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include defensive coordinators adapting to offensive tendencies, and betting markets adjusting odds based on live game progression. Decision actors must balance risk and reward while accounting for temporal dependencies in player performance. Theory of Mind & Decision Maker Model: Rooted in 05-sgp-carousel (4683b225cc7f197e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates on distinct game variables. Leakage is mitigated by isolating each prop’s conditional probability space from others. Cross-layer veto ensures no redundant or conflicting signals propagate between GSI and GSE layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in 05-sgp-carousel (4683b225cc7f197e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

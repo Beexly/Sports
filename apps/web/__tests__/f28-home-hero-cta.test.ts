@@ -20,12 +20,11 @@ describe("F-28: front door CTAs and board door copy", () => {
   );
 
   it("primary CTA links to /packages", () => {
-    // The header's "ALL PACKS" control is the persistent primary CTA across
-    // every stage of the field walk.
-    // The storefront stage owns the persistent path to the packs surface: the
-    // catalogue link navigates and "View packs" walks the camera there.
-    expect(world).toMatch(/<Link href="\/packages"/);
-    expect(world).toContain("Full Pack Catalog");
+    // The persistent primary CTA across the field walk is the plate-ghost
+    // "Full Pack Catalog" link (RedlineWorld rebuild retired the header-menu class).
+    expect(world).toMatch(/href="\/packages" className="plate-ghost"/);
+    // The first plate's "View packs" action walks the camera to the storefront
+    // stage instead of navigating away.
     expect(world).toContain("View packs");
   });
 

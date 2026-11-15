@@ -322,7 +322,7 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
               </p>
             </div>
 
-            <div className="bg-obsidian border border-caution/30/60 rounded-lg p-5">
+            <div className="bg-obsidian border border-caution/60 rounded-lg p-5">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-xs uppercase tracking-wider text-caution">
                   shared_blind

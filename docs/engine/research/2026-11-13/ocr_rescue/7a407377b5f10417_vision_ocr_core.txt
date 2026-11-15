@@ -1,0 +1,1240 @@
+========== PAGE 1 ==========
+8TH ANNUAL
+MIT SLOAN
+SPORTS ANALYTICS CONFERENCE
+FEBRUARY 28 - MARCH 1, 2014 HYNES CONVENTION CENTER
+PRESENTED BY
+Quantifying Shot Quality in the NBA
+Yu-Han Chang, Rajiv Maheswaran, Jeff Su, Sheldon Kwok, Tal Levy, Adam Wexler, Kevin Squire
+Second Spectrum, Inc.
+Los Angeles, CA
+ychang@secondspectrum.com
+Abstract
+In basketball, efficiency is primarily determined by the value from shooting the ball. Effective field goal
+percentage (EFG) is the advanced metric currently used to evaluate shooting. The problem is that EFG
+confounds two different properties: the quality of a shot and the ability to make that shot. In this paper, we
+introduce and propose methodologies for deriving and evaluating two new metrics: (1) Effective Shot Quality
+(ESQ) and (2) EFG+, which is EFG minus ESQ, a measure of shooting ability above expectation. We discuss
+how this recharacterizes performance for teams and players, and how this type of analysis can affect analysis
+beyond shooting.
+1 Introduction
+The primary challenge for sports teams on offense is to maximize the value of each opportunity when they possess
+the ball and equivalently to minimize that value when their opponent possesses it. In basketball, while generating
+free throws, not turning the ball over and rebounding are significant, efficiency is primarily determined by the value
+from shooting the ball as the vast majority of possessions end in field goal attempts. Dean Oliver in his seminal
+work categorized shooting the most significant of the Four Factors [1]. Effective field goal percentage (EFG) is the
+advanced metric currently used to evaluate shooting. It is the rate that field goals are made modified to account for
+the increased value of a made-three pointer. The problem is that EFG confounds two different properties: the
+quality of a shot and the ability to make that shot. Consider the following examples.
+Is an NBA player who has an effective field goal percentage of 50% a good shooter? If the same shots were taken
+by an average NBA player and went in at 40%, it would tell one story. If the same shots were taken by an average
+NBA player and went in at 60% it would tell a different story. This notional "average NBA player" expectation
+represents what viewers of the game identify as shot quality. Intuitively, we can read a play-by-play line saying "Player
+X misses 20-foot jumper” but understand that not all 20-footers are not created the same. If the player is standing
+still with no one within 10 feet, that is an entirely different shot than if the player is fading off the dribble with two
+defenders in his face. NBA staffs understand this as well. Offenses and plays are designed to get "good shots".
+Coaches can be heard during broadcasts encouraging teams to continue taking the shots they are getting even
+though they aren't going in or conversely, warning them that they are not generating good opportunities even
+though their EFG might be high. The challenge is to devise a methodology to appropriately quantify shot quality.
+In this paper, we introduce Shot Quality (SQ) and Effective Shot Quality (ESQ) as analogues to field goal
+percentage and effective field goal percentage, which is the value of a shot given that is taken by an "average NBA
+player". We discuss both methodologies to derive and evaluate these metrics. The methodologies are based on
+player tracking data from the NBA which has recently adopted the STATS SportVU system league-wide which
+enables us to consider many more properties of a shot such as shot distance, shot angle, defender distance, defender
+angle, player speed, player velocity angle and many many more. We leverage a variety of machine learning methods
+in combination with a mean-square-error / Briar-Score penalty function to quantitatively obtain the best predictors
+for the likelihood of a shot going in. We can use the results to see which players and teams take the easiest or
+toughest shots under a variety of contexts.
+In addition, we introduce the notion of EFG+, which is EFG minus ESQ. This captures how much better than
+expectation that a player or team shoots. We propose that this is a better evaluation of shooting skill than EFG as it
+accounts for shot quality. Fundamentally, we are separating shooting into two components: shot quality (ESQ) and
+shooting ability (EFG+). We first discuss various components that go into calculating shot quality, then discuss the
+approach by which we derive ESQ and EFG+ and then discuss how these rankings reflects the abilities of teams
+and players in terms of shooting. We end with discussion on individual player adjustments and how these metrics
+can be used to evaluate other aspects of the game beyond just shooting.
+42-ANALYTICS
+2014 Research Paper Competition
+Presented by:
+ticketmaster®
+
+========== PAGE 2 ==========
+8TH ANNUAL
+MIT SLOAN
+SPORTS ANALYTICS CONFERENCE
+FEBRUARY 28 - MARCH 1, 2014 HYNES CONVENTION CENTER
+PRESENTED BY
+T
+2 Components of Shot Quality
+Here we take an initial look at some of the variables that we use to develop Effective Shot Quality (ESQ). Effective
+Field Goal percentage (EFG) essentially makes a simple classification separating shots by their potential value (three
+pointer vs. two pointer). An obvious first variable is the location of the shot. Below, we show three partitions of
+court space and show how EFG varies according to various cells within these partition.
+42.3
+41.6
+63.0
+63.0
+57.1
+57.9 57.1
+57.9
+40.0
+40.0
+47.9
+40.6
+47.9
+51.8
+53.4
+41.4
+52.2
+51.4
+21.1
+45 52 58
+EFG
+58.5 43.2 39.0 36.3 54.7 55.3 41.2 40.5 43.0 54.5
+55.3 40.7 39.1 408 60.7 62.3 41.3 68.1 39.5 57.2
+50.9 39.9 40.3 36.9 47.9 48.7 367 39.3 40.8 53.8
+55.9 38.8 40.6 38.5 41.6 41.2 38.4 40.1 40.5 52.4
+52.2 53.3 41.4 39.2 46.0 42.3 42.5 38.4 52.9 50.2
+38.7 50.4 50.6 43.8 40.6 39.8 42.6 51.6 47.7 38.9
+35.7 30.8 47.8 51.1 55.0 51.7 49.2 47.1 25.2 26.9
+10.0 32.9 41.0 40.9 41.7 34.0 25.0 30.5 17.9 10.0
+0.0 10.0 5.9 18.8 41.2 10.7 30.0 29.4 10.7 9.1
+30.0 16.7 35.7 7.7/31.8 17.4 13.3 28.1 13.2 15.0
+The first is a relatively common partition of space into corner-threes, non-corner threes, mid-range, the paint and
+the circle. The second splits the non-corner three and the mid-range into additional cells and the third is a grid view
+with square cells. An important note is that the three pictures represent three different models which balance
+coarseness of the partitions with the sample sizes of shots available for each cell. Finding a way to choose between
+models is a key problem which we will discuss later. These figures clearly illustrates that shooting abilities of mid-
+range shooters and three-point shooters should not be judged on the same scale (by EFG) as the baseline levels of
+performance are significantly different. Why and whether they should be taking those shots is a different question.
+Researchers such as Kirk Goldsberry have attempted to build shooting metrics around the location of the shot [2].
+As we discussed in the introduction, shots from the same location can have significantly different contexts. Let us
+next consider the distance of the nearest defender when the shot is taken. Sandy Weil did some early work on
+defender distance with a significantly smaller data set that indicated the value of tight defense [3]. We are now able
+to look at defender distance in a more fine-grained manner. The figure below shows the EFG of shots by shot
+distance (vertical axis) and closest defender distance (horizontal axis).
+Shot Distance
+24
+20
+EFG by Shot Distance and Defender Distance
+51
+41.7
+43.5
+46.9
+51.4
+54.6
+56.6
+58.8
+60.1
+60.8
+24
+B
+53.9
+41
+41.8
+45.8
+50.8
+53.8
+57.6
+60.8
+63.6
+61.1
+49.3
+34.7
+33.8
+37.3
+39.2
+41.6
+43
+44.3
+46.7
+44.7
+37.9
+32.5
+34
+37.4
+39.4
+43.2
+43.9
+45.9
+47.5
+46
+33.3
+32.2
+35.4
+40.4
+41.3
+43.9
+43.9
+46.4
+45.1
+44.6
+30.6
+32.1
+33.8
+39.3
+42
+44.9
+48.1
+49.6
+52.9
+54.3
+36.2
+34.2
+36.1
+37.9
+41.5
+41.5
+44.5
+49.5
+52.5
+46.3
+31.6
+34
+35.6
+38.1
+C
+42.8
+44.1
+44.1
+41.8
+40.4
+51.7
+36.6
+34.3
+37.1
+40.7
+44
+51.1
+47.3
+54
+52.4
+53.8
+8
+38.1
+39.5
+43.2
+47.6
+50.6
+51.6
+55.6
+54.9
+63.9
+57.9
+44.7
+45.1
+52.3
+58.8
+63.4
+72.5
+79
+82.8
+86.2
+78.7
+49.9
+52
+61.1
+70.4
+80.6
+83.7
+89.6
+87.1
+96.6
+96.2
+52.4
+54.2
+63.1
+71.1
+78.4
+82.4
+84.3
+90.2
+90.9
+100
+3
+9
+The heatmap indicates the significant and
+non-linear effects that defender distance can
+have on the resulting EFG. Let us consider
+three sets of shot conditions:
+A. Shots close to the basket (2-4 feet) with
+defenders between 1 and 5 feet away. The
+marginal value of a foot of defender distance
+is 9.5% of EFG.
+B. Three-pointers with defenders from 3 to 7
+feet away. The marginal value of a foot of
+defender distance is 3.2% of EFG.
+C. Mid-range shots from 12-14 feet with
+defenders from 1 to 7 feet away. The
+marginal value of a foot of defender distance
+is 2.0% of EFG.
+Defender Distance
+The sets were chosen simply to illustrate how defender distance can have varying and significant impact at various
+parts of the court. This also indicates that it is not simply a matter of a shot being "contested" or not but that there
+is significant marginal value in every foot of space between the shooter and the closest defender.
+42-ANALYTICS
+2014 Research Paper Competition
+Presented by:
+ticketmaster®
+
+========== PAGE 3 ==========
+Shot Distance
+8TH ANNUAL
+MIT SLOAN
+SPORTS ANALYTICS CONFERENCE
+FEBRUARY 28 - MARCH 1, 2014 HYNES CONVENTION CENTER
+PRESENTED BY
+T
+Finally, we take a look at whether a shot was taken off the dribble or without dribbling, i.e., a catch-and-shoot.
+OFF THE DRIBBLE
+Comparison
+CATCH AND SHOOT
+38.4
+38.9
+9.3➡
+6.8->
+47.7
+45.6
+58.8
+11.2
+69.9
+51.2
+46,4
++99
+12.9
+57.8
+59.3
+38.2
+38.2
+5.2
+47->
+43.3
+42.9
+45.8
+9.2
+55.0
+40.4
+49.3
+45.1
+5.9
+25
+42.9
+9.8->
+55.2
+54.9
+47.5
+6.6-
+54.2
+39 45
+52 58
+EFG
+45 52
+58
+EFG
+33.3
+38.1
+34.1
+44.7
+45.6
+54.9
+52.3
+51.6
+52.7
+57.6
+66.7
+53.1
+48.4
+54.6
+54,6
+57.6
+60.7
+61.7
+61.3
+24
+24
+51.3
+35.6
+31.9
+40.1
+42.7
+47.9
+52.7
+54.3
+52.2
+47.6
+57.6
+45.1
+47.3
+48.6
+54 B 55.4
+58.4
+62.2
+66.6
+63.3
+45.2
+33.9
+31.7
+34.8
+38
+37.9
+41.7
+41.9
+44.4
+44.6
+52.9
+37.3
+38
+41.9
+40.9
+44,7
+43.9
+45.6
+48
+43.9
+20
+39.8
+31.2
+33.4
+37.1
+39.1
+44.2
+42.8
+47.6
+49.1
+47.6
+38.1
+36.9
+36.2
+38.8
+40.1
+42.2
+44.8
+45.5
+46
+45.5
+29.5
+29.7
+35.4
+39.5
+41.5
+42.5
+44.7
+49.1
+43.3
+42
+30.8
+31.2
+33.5
+39.5
+43.5
+46.3
+50.6
+49.4
+56.8
+66.2
+33
+34.8
+35.3
+37
+41.8
+41.8
+49.2
+44.8
+55.3
+40
+32.7
+34.2
+35.6
+37.7
+41.7
+43.1
+40.8
+35.1
+55.6
+60
+Shot Distance
+50
+38.7
+35.8
+43.6
+41
+45.3
+43.4
+45.1
+46.8
+46.8
+37.5
+38.7
+35.6
+38.7
+40.2
+43.6
+47.1
+50.5
+48.4
+43.9
+55
+33.9
+41.8
+39.9
+41.3
+40.7
+42.1
+56.4
+49
+45.8
+28.8
+32.1
+38
+38.4
+45.5
+46.5
+47.4
+52.1
+36
+45.5
+37.7
+34.4
+36.8
+40.5
+43.7
+50
+45.2
+56.9
+55.6
+54.5
+35.5
+34.1
+40.5
+42.5
+42.9
+53.7
+51.3
+55
+42.1
+54.5
+37.8
+38.6
+42.1
+46.7
+50.7
+48.6
+54.8
+54.4
+54.5
+60
+41
+43.8
+48.6
+51
+54.6
+59.3
+60.6
+57.9
+80
+63.6
+42.7
+43.3
+56.7
+62
+71.8
+77.6
+77.3
+80
+84
+52.3
+51.3
+59.4
+66.2
+68.5
+76.7
+84.2
+89.5
+94.9
+78.9
+49.6
+48.5
+56.7
+66.4
+77.7
+80.7
+82.9
+82.1
+96.7
+93.8
+50.4
+57
+68
+77.1
+86.3
+88.6
+94.2
+92.4
+97.1
+98.5
+46.5
+49.4
+57.2
+65.4
+71.4
+76.2
+79.3
+84.6
+88
+100
+53.8
+57.6
+68.5 78.2
+85.2
+87.9
+85.5
+95.4
+92.6
+100
+Defender Distance
+Defender Distance
+In the first row of the figure, we see that if we compare off-the-dribble to catch-and-shoot by shot location, there is
+a significant difference in favor of catch-and-shoot at all areas of the court. One hypothesis might be that catch-
+and-shoots simply incorporate defender distance as they might be taken with more space than shots off the dribble.
+The second row of the figure above shows that when we compare off-the-dribble (Left-hand side) and catch-and-
+shoot (Right-hand side) while conditioning on both shot distance and defender distance, catch-and-shoot shots still
+have a significant advantage. Considering the sets we used earlier, for shots between 2 and 4 feet with defender
+distance between 1 and 4 feet, catch-and-shoot provides an average margin of 9.8% and for the three-point shot set,
+with defenders between 3 and 7 feet, it provides an average margin of 4.4%. The results above were illustrative to
+show how several variables have significant impact on the prediction of a likelihood of a shot being made. With
+player tracking data, we have the ability to include additional variables such as shot angle, defender angle, player
+speed, player velocity angle, defender velocity, defender velocity angle and many more. The key challenge is
+evaluating various models and their ability to appropriately capture shot quality.
+3 Shot Quality Model Evaluation
+Here, we discuss (1) the model evaluation methodology, (2) how error rates in the evaluation of shot quality impact
+the ability to analyze shooting and (3) what the error rates tell us in general about the predictability of shooting in
+general. We present a high-level view here. Details are found in the Appendix. A model M takes a feature vector Vi
+for a shot i and produces a prediction p; that is the probability that the shot will go in, i.e., pi = M(vi). The model
+is learned using a training set and evaluated on a separate test set. We use 10-fold cross-validation in the results
+presented below. The loss function we use is the mean squared error (MSE), which is also referred to as a Brier
+Score depending on your academic community [4,5]. The reason for this is that the MSE is minimized when the
+prediction is the actual likelihood of occurrence. This is not the case for loss functions such as mean absolute error
+for which predicting the most likely outcome (e.g., a miss for every shot) would lead to the same error as predicting
+the actual likelihood. The model M* that minimizes the MSE using data from all player shots gives us the best
+estimator of Shot Quality (SQ). By making the appropriate adjustment for three-point shots, we can arrive at an
+Expected Shot Quality (ESQ) model.
+42-ANALYTICS
+2014 Research Paper Competition
+Presented by:
+ticketmaster®
+
+========== PAGE 4 ==========
+8TH ANNUAL
+MIT SLOAN
+SPORTS ANALYTICS CONFERENCE
+FEBRUARY 28 - MARCH 1, 2014 HYNES CONVENTION CENTER
+PRESENTED BY
+The models that we considered are several generally applied in the machine learning communities including decision
+trees (using ID3, M5P), logistic regression, Gaussian process regression among others [6,7,8]. The focus here is not
+the modeling type as we expect that models will be improved with time but instead the methodology and its
+consequences. The table below shows various models and their MSE values:
+Model
+M1: 0.500 for all shots
+Mean Error
+ESQ Error Reduction
+0.2500
+Predictability
+0.500
+M2: 0.466 for all shots
+0.2488
+0.035
+0.534
+M3: Only using shot distance
+0.2373
+0.107
+0.613
+M4: Only using shot distance and defender distance
+M5: All variables
+0.2330
+0.066
+0.630
+0.2322
+0.028
+0.633
+The models include the static predictions of 0.50 for all shots (M1), and the shot likelihood of the test set, e.g., the
+league average field goal percentage when using all the data as the test set (M2). The other models are the ones that
+performed the best with limitations on available variables identified in the table. When going from M4 to M5, the
+MSE is reduced by 0.0008. The critical question to be answered is: why should someone care that an improved
+model can reduce MSE by 0.0008?
+To understand the impact on determining ESQ, consider the following. In the NBA, the range of offensive and
+defensive efficiencies (points per 100 possessions) is approximately 10 points, with the best teams around 110 and
+the worst around 100, in the last five years. If one is trying to estimate the shot quality and consequently the
+efficiency of various strategies, every 1.0 percentage point of error in shot quality estimation is approximately 2.0
+points of error in efficiency estimation. A 2.5 percentage point error in shot quality estimation is shifting an average
+team to the best (or worst) team in the league. Small shifts in ESQ can have big impacts in efficiency estimation.
+How does this relate to MSE? Consider the case where the true distribution is estimated incorrectly by some error.
+This error in estimation corresponds to a change of that error squared in MSE (see Appendix). So a 1.0 percentage
+point error in estimation (0.01) leads to a 0.0001 change in MSE. A 2.0 percentage point error in estimation (0.02)
+leads to a 0.0004 change in MSE. Small improvements in MSE correspond to big improvements in the value of the
+model. Given NBA efficiency ranges, even an improvement of 0.0001 in MSE is significant. Let us go back to the
+table above and see how the models improved our ability to predict. The “ESQ Error Reduction" column shows
+how much the model in that row reduced error in ESQ compared to the model in the row above it. Adding the
+shot distance had a big impact as did adding defender distance. We see the difference between the full model (M5)
+and (M4) is a 2.8 percentage point improvement. So why should care than an improved model can reduce MSE by
+0.0008? It is the difference in confusing an average offense with the best or worst offense in the league.
+The analysis above outlines an approach to generating and evaluating models for ESQ and demonstrates why
+seemingly trivial improvements have significant impact on evaluation. We can also evaluate the predictability of
+shooting in general using this approach. The "Predictability” column in the table above is the value of the Bernoulli
+distribution that yields the same MSE as the model when predicted optimally. Intuitively, it is the field goal
+percentage of a collection of shots, with no information other than make/miss, that is equivalently predictable as a
+given model. We see that the predictability goes from 53.4% for an informed static model (M2) to 63.3% for M5.
+We surmise that it will be difficult to get a model with predictability above 65%. This seems intuitive because while
+there are open layups and last-second heaves, very few shots in the NBA go in at higher than a 65% rate or lower
+than a 35% rate. Even if this is the case, that still leaves a lot of room to improve Effective Shot Quality (ESQ).
+Takes Tougher Shots
+Shoots Well
+Takes Tougher Shots
+Shoots Poorly
+Takes Easier Shots
+Shoots Well
+Takes Easier Shots
+Shoots Poorty
+Given ESQ, we can then calculate EFG+ = EFG - ESQ.
+which is a measure of how well a player or team shoots above
+or below expectation as determined by the quality of shots
+that they are taking. By decomposing shooting into ESQ and
+EFG+, we now have a way of quantifying (1) the quality of
+shots that a team or player is generating and (2) their skill in
+hitting those shots, which were previously confounded in
+EFG. When the number of samples is sufficiently high,
+EFG+ indicate that a player or team has a particular skill in
+being able to shoot a particular type of shot beyond an
+average NBA player who takes those types of shot. The figure on the right shows that this decomposition yields a
+wide spread for players in terms of shot quality and ability even across positions (indicated by circle color).
+42-ANALYTICS
+ESO
+2014 Research Paper Competition
+Presented by:
+ticketmaster®
+
+========== PAGE 5 ==========
+8TH ANNUAL
+MIT SLOAN
+SPORTS ANALYTICS CONFERENCE
+FEBRUARY 28 - MARCH 1, 2014 HYNES CONVENTION CENTER
+PRESENTED BY
+T
+4 ESQ and EFG+ for NBA Teams
+We applied the full model (M5) to shots taken by NBA teams in the 2013-2014 NBA season through early January
+2014. The tables below show values for offense on the left and defense on the right. The first, second and third
+row of tables show the top ten teams ranked by EFG, ESQ and EFG+, respectively.
+OFFENSE
+DEFENSE
+EFG
+ESQ
+EFG+
+EFG
+ESQ
+EFG+
+Heat
+56.5
+51.1
+5.4
+Pacers
+44.5
+47.2
+-2.8
+Spurs
+53.9
+50.5
+3.5
+Warriors
+46.8
+48.2
+-1.4
+Rockets
+53.5
+51.5
+2.0
+Bulls
+47.1
+47.7
+-0.5
+Mavericks
+52.0
+48.8
+3.2
+Thunder
+47.1
+49.5
+-2.4
+Warriors
+52.0
+49.2
+2.8
+Nuggets
+48.4
+48.6
+-0.2
+Suns
+51.8
+49.9
+1.9
+Rockets
+48.5
+49.0
+-0.5
+Trail Blazers
+51.7
+48.5
+3.2
+Suns
+48.5
+49.1
+-0.6
+Thunder
+51.5
+48.6
+2.9
+Celtics
+48.9
+49.2
+-0.3
+Clippers
+51.3
+49.7
+1.6
+Clippers
+48.9
+49.2
+-0.4
+Hawks
+51.2
+50.0
+1.2
+Bobcats
+48.9
+47.6
+1.3
+EFG
+ESQ
+EFG+
+EFG
+ESQ
+EFG+
+Rockets
+53.5
+51.5
+2.0
+Pacers
+44.5
+47.2
+-2.8
+Heat
+56.5
+51.1
+5.4
+Spurs
+49.0
+47.4
+1.6
+Spurs
+53.9
+50.5
+3.5
+Bobcats
+48.9
+47.6
+1.3
+Hawks
+51.2
+50.0
+1.2
+Bulls
+47.1
+47.7
+-0.5
+Timberwolves
+48.3
+50.0
+-1.7
+Magic
+49.7
+48.1
+1.5
+76ers
+48.9
+50.0
+-1.1
+Warriors
+46.8
+48.2
+-1.4
+Nuggets
+49.7
+49.9
+-0.2
+Hawks
+50.2
+48.4
+1.9
+Suns
+51.8
+49.9
+1.9
+Trail Blazers
+49.4
+48.5
+0.9
+Clippers
+51.3
+49.7
+1.6
+Nuggets
+48.4
+48.6
+-0.2
+Pistons
+48.8
+49.5
+-0.8
+Wizards
+51.4
+48.8
+2.5
+EFG
+ESQ
+EFG+
+EFG
+ESQ
+EFG+
+Heat
+56.5
+51.1
+5.4
+Pacers
+44.5
+47.2
+-2.8
+Spurs
+53.9
+50.5
+3.5
+Thunder
+47.1
+49.5
+-2.4
+Trail Blazers
+51.7
+48.5
+3.2
+Warriors
+46.8
+48.2
+-1.4
+Mavericks
+52.0
+48.8
+3.2
+Lakers
+49.7
+50.5
+-0.8
+Thunder
+51.5
+48.6
+2.9
+Suns
+48.5
+49.1
+-0.6
+Warriors
+52.0
+49.2
+2.8
+Rockets
+48.5
+49.0
+-0.5
+Rockets
+53.5
+51.5
+2.0
+Bulls
+47.1
+47.7
+-0.5
+Suns
+51.8
+49.9
+1.9
+Clippers
+48.9
+49.21
+-0.4
+Nets
+49.4
+47.7
+1.7
+Clippers
+51.3
+49.7
+1.6
+Celtics
+Nuggets
+48.9
+49.2
+-0.3
+48.4
+48.6
+-0.2
+We see that on offense, the Heat, Spurs and Rockets form the top tier in EFG. This is because they are the top
+three in ESQ and also top teams in EFG+, with the Heat and Spurs being the top two EFG+ teams in the league.
+The Rockets are 7th in EFG+ but are the best in the league in terms of ESQ. These teams both take good shots and
+have the players who can make those shots better than average NBA players taking those shots. There is another
+cluster of four teams (Trail Blazers, Mavericks, Thunder and Warriors) who have EFG+ between 2.8 and 3.2
+indicating that they have talented shooters on their team, however, they take worse shots than the first tier. There is
+another cluster of two teams (Suns and Clippers) who achieve good EFG with a balance of taking good shots and
+making them at slightly higher than league average rates. We also see from the ESQ Offensive rankings that the
+Timberwolves and 76ers are generating good shots but are converting them at a poor rate. On defense, we see that
+the Pacers are in a class by themselves as they give up the toughest shots and also keep offenses below expectation
+to the largest degree. The Thunder are almost as good at the Pacers at keeping offenses shooting below expectation
+(EFG+ = -2.4), however they give up much easier shots, ranking in the lower half of the league with a defensive
+ESQ of 49.5. The Warriors and Bulls are also solid in both dimensions ranking in the top 7 in terms of the quality
+of shots that they give up and keeping offenses from shooting under expectation. The Spurs, Bobcats and Magic
+are top 5 teams in terms of the quality of shots that they give up but teams shoot above expectation when they play
+them. Interestingly, the Lakers are the fourth best team in terms of keeping shooters below expectation but are hurt
+by giving up high quality shots. Their 50.4 ESQ on defense is worst in the league.
+The analysis shows the value of the decomposition as the rankings for EFG on both offense and defense is
+composed of teams that can be of various combinations of success in shot quality and ability. This decomposition
+also helps move towards identifying areas for improvement as ESQ would seem to correlate more with scheme and
+decision-making and EFG+ more with talent, but these are questions that need significantly more research before
+conclusions can be drawn.
+42 ANALYTICS
+2014 Research Paper Competition
+Presented by:
+ticketmaster®
+
+========== PAGE 6 ==========
+8TH ANNUAL
+MIT SLOAN
+SPORTS ANALYTICS CONFERENCE
+FEBRUARY 28 - MARCH 1, 2014 HYNES CONVENTION CENTER
+PRESENTED BY
+4 ESQ and EFG+ for NBA Players
+Below are tables for the top five players with at least 100 attempts in various categories of shots ranked by EFG+.
+All Shots
+Three Pointers
+EFG
+ESQ
+EFG+
+EFG
+ESQ
+EFG+
+Kyle Korver
+63.3
+48.6
+14.7
+Kyle Korver
+69.6
+53.1
+16.5
+Jose Calderon
+60.7
+47.7
+13.1
+Jose Calderon
+67.1
+52.7
+14.4
+LeBron James
+62.9
+50.5
+12.5
+Damian Lillard
+64.4
+50.4
+14.0
+Andre Iguodala
+65.7
+53.9
+11.8
+Spencer Hawes
+68.7
+56.1
+12.5
+Marco Belinelli
+61.6
+49.9
+11.7
+Kevin Durant
+62.1
+50.1
+12.1
+Mid-Range
+Paint
+EFG
+ESQ
+EFG+
+EFG
+ESQ
+EFG+
+Gerald Green
+59.8
+42.0
+17.8
+LeBron James
+75.6
+56.7
+19.0
+Kyle Korver
+55.9
+41.7
+14.3
+Manu Ginobili
+68.1
+54.1
+14.0
+Isaiah Thomas
+54.0
+41.1
+12.9
+Kevin Durant
+62.7
+51.6
+11.2
+Marco Belinelli
+54.9
+42.0
+12.9
+Boris Diaw
+67.2
+56.0
+11.2
+Damian Lillard
+50.0
+38.6
+11.4
+Al Horford
+67.4
+56.4
+11.0
+-
+While EFG+ is highly correlated with EFG, the adjustments made due to ESQ do reveal interesting results. When
+considering all shots, ESQ values range from 41.9 to 60.3 and EFG+ ranges from -19.8 to 14.7. In the All-Shots
+list, the big difference from an EFG list is the removal of DeAndre Jordan and Chris Anderson who were #2 and
+#3. This is because they are #1 and #2 in ESQ – they take the easiest shots in the league. Nevertheless, they both
+actually shoot well above expectation (5.2 and 6.0, respectively). In the Three-Pointer list, we see that Spencer
+Hawes and Kevin Durant are performing at roughly the same level above expectation even though Hawes has an
+EFG that is 6.6 percentage points higher. ESQ shows that Spencer Hawes takes significantly easier three-pointers
+than Kevin Durant does. In the Mid-Range top five, we see that the 4.9 percentage point difference between Marco
+Belinelli and Damian Lillard primarily due to the difficulty in the shots that they are taking. In the Paint, we see
+Kevin Durant appear as #3 in EFG+ as his shots are much tougher than those around him. ESQ and EFG+ also
+validate Lebron James' domination in the paint, as his high EFG is not explained purely by the ease of shots but
+mostly by his ability to convert them significantly above expectation.
+This type of approach where we separate shooting into shot quality and shooting ability also allows us to more
+properly value players whose EFGs are undercut by shot quality. A great example of this is Dirk Nowitzki, who
+ranked 64th in our list with an EFG of 53.9. However, Dirk had the 6th lowest ESQ (44.0) meaning he has been
+taking very difficult shots. Adjusting for this, Dirk has an EFG+ of 10.0, which is 6th in the league and more
+reflective of his elite shooting ability.
+5 Conclusion
+In this paper, we introduce the notions of Effective Shot Quality (ESQ) and EFG+ to separately characterize the
+difficulty of shots and the ability to make them. We developed methodologies to evaluate the generation of models
+for these metrics and the impact that they have in shot evaluation. We've shown how teams and players with similar
+EFG can be decomposed in different ways to gain insight about how they achieve that performance. Key areas for
+future work include investigation of additional variables that could bring additional predictability to estimating shot
+quality. One area of great value would be to apply these techniques to build models for individual players. Early
+results have shown that we can indeed increase accuracy with player specific information, however most players do
+not have sample sizes sufficiently large to perform such analysis at a large-scale at the current time. The notion of
+ESQ can expand beyond shooting. ESQ is essentially the value of the instantaneous state of the basketball game
+assuming the player will shoot at that instant. Thus, ESQ can be used to measure the value of passing and dribbling
+by applying the metric to the states at the beginning and end of when players get and release the ball. ESQ and
+EFG+ represent initial forays of the basketball world into establishing baseline expectations for various aspects of
+the game and judging performance relative to that expectation as opposed to using absolute metrics. This approach
+has already permeated baseball but spatiotemporal sports such as basketball have much more complexity in
+establishing these expectation levels. With the NBA having league-wide adoption of player tracking, we anticipate
+that we are at a a tipping point for the development of these expectation models and thus, fundamentally changing the
+way the sport is analyzed.
+42-ANALYTICS
+2014 Research Paper Competition
+Presented by:
+ticketmaster®
+
+========== PAGE 7 ==========
+8TH ANNUAL
+MIT SLOAN
+SPORTS ANALYTICS CONFERENCE
+FEBRUARY 28-MARCH 1, 2014 HYNES CONVENTION CENTER
+PRESENTED BY
+References
+[1] Oliver, D. (2004). Basketball on paper: rules and tools for performance analysis. Potomac Books, Inc..
+[2] Goldsberry, K. (2012). CourtVision: New Visual and Spatial Analytics for the NBA. 2012 MIT Sloan Sports
+Analytics Conference.
+[3] Weil, S. (2011). The Importance of Being Open: What Optical Tracking Data Can Say About NBA Field Goal
+Shooting. 2011 MIT Sloan Sports Analytics Conference.
+[4] James, W., & Stein, C. (1961). Estimation with quadratic loss. In Proceedings of the fourth Berkeley symposium
+on mathematical statistics and probability (Vol. 1, No. 1961, pp. 361-379).
+[5] Brier, G. W. (1950). Verification of forecasts expressed in terms of probability. Monthly Weather Review, 78(1)
+[6] Quinlan, J. R. (1986). Induction of decision trees. Machine learning, 1(1), 81-106.
+[7] Bishop, C. M., & Nasrabadi, N. M. (2006). Pattern recognition and machine learning (Vol. 1, p. 740).
+[8] Rasmussen, C. E. (2006). Gaussian processes for machine learning.
+Appendix
+Models
+→
+Let MV [01] be a model that is a mapping from a feature vector
+space V to probability values. Thus, p₁ = M(vi), Vvi Є V where på Є [01]
+and i denotes the i-th feature vector associated with the i-th shot attempt
+in a data set. Let o¿ € {0,1} be the outcome associated with the i-th shot
+attempt where 0 indicates that the shot was missed and 1 indicates that the
+shot was made.
+Loss Function
+We define loss function to be the mean square error of the model M with
+respect to the test set S as:
+1
+e(M): =
+Σ(M(vi) - oi)²
+|S|
+iЄS
+The best model M* Є M where M is the space of considered models is:
+M*
+= arg_min
+MinM
+MSE Change for Estimation Error
+Let x0 = |S₁|/|S| where S₁ = {i Є S : o₁ = 1} be the proportion of the set S
+where the outcome is 1, indicating a made shot. Let M₁(vi) = x0+^, Vi Є S
+and Mo(vi) = x0, Vi Є S. Then,
+e(M) - e(Mo)
+=
+(x0(1 − (xo+A))² + (1 − x0)(x+A)²)
+-
+- (xo(1 − xo)² + (1 − x0)(x0)²)
+-
+x0(-2A(1 − x0) + A²) + (1 − x0)(2^x0+ A²)
+42-ANALYTICS
+=
+=
+xoA? + (1− xo)A
+=
+A²
+2014 Research Paper Competition
+Presented by:
+ticketmaster®
+
+========== PAGE 8 ==========
+8TH ANNUAL
+MIT SLOAN
+SPORTS ANALYTICS CONFERENCE
+FEBRUARY 28- MARCH 1, 2014 HYNES CONVENTION CENTER
+PRESENTED BY
+Predictability Given MSE
+Given an MSE value of eo we can derive predictability by obtaining the xo
+such that e(Mo) = eo:
+xo(1 − x0)² + (1 − x0)(x0)² = eo
+-
+-
+= eo
+(1 – 20) (zo(1 – 20)+r)) =
+(1 - x0)x0 = eo
+– 2o+eo = 0
+This is a quadratic in xo which we can solve:
+.
+xo 0.5 (1+√√√1-4e0)
+=
+42-ANALYTICS
+2014 Research Paper Competition
+Presented by:
+ticketmaster®

@@ -1,0 +1,78 @@
+{
+  "book_id": "553671eb151f3928",
+  "source_status": "COMPLETE",
+  "title": "2020 - High Anticipation Exploring Trends Between Public Perception and Player Value - Unknown Authors",
+  "file_name": "2020 - High Anticipation Exploring Trends Between Public Perception and Player Value - Unknown Authors.md",
+  "sha256": "553671eb151f39283d3bcf1628497ae26623eace30df95e7bf95b8a38c910428",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Public perception of NBA rookies is modeled as a multivariate function of performance metrics, web engagement, and sentiment data, enabling predictive analytics on popularity trends. Universal Lens: Rooted in 2020 - High Anticipation Exploring Trends Between Public Perception and Player Value - Unknown Authors (553671eb151f3928), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework maps player performance and digital footprint to posterior distributions over public sentiment, incorporating conformal prediction for uncertainty quantification. GSI Mapping: Rooted in 2020 - High Anticipation Exploring Trends Between Public Perception and Player Value - Unknown Authors (553671eb151f3928), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions states based on real-time performance Game Scores and evolving popularity clusters, updating internal belief states via recursive Bayesian updates. GSE Mapping: Rooted in 2020 - High Anticipation Exploring Trends Between Public Perception and Player Value - Unknown Authors (553671eb151f3928), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "popularity_index",
+      "name": "Popularity Index",
+      "verbatim_quote": "**Popularity** = (wiki_views + avg_web_hits + avg_image_hits + avg_news_hits + avg_yt_hits) / 5 4.",
+      "page": 2,
+      "latex": "\\text{Popularity} = \\frac{\\sum_{i=1}^{5} x_i}{5}",
+      "symbol_and_unit_ledger": "{'x_1': 'wiki_views (dimensionless)', 'x_2': 'avg_web_hits (dimensionless)', 'x_3': 'avg_image_hits (dimensionless)', 'x_4': 'avg_news_hits (dimensionless)', 'x_5': 'avg_yt_hits (dimensionless)'}",
+      "assumptions": "All components are normalized and equally weighted; linear aggregation assumes independence.",
+      "breakdown_regime": "When one or more components approach zero, index becomes undefined or skewed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps aggregated online engagement to a scalar popularity score used in regression models.",
+        "source_operator": "popularity_index",
+        "telemetry": "Daily Wikipedia views, Google Trends hits, YouTube views"
+      }
+    },
+    {
+      "primitive_id": "game_score",
+      "name": "Game Score",
+      "verbatim_quote": "**Game Score:** a rough measure of a player's productivity for a single game 3.",
+      "page": 2,
+      "latex": "GS = P + 0.4S - 0.7F - 0.4T - 0.7R - 0.4A",
+      "symbol_and_unit_ledger": "{'P': 'Points scored (points)', 'S': 'Rebounds (count)', 'F': 'Field goals made (count)', 'T': 'Three-pointers made (count)', 'R': 'Turnovers (count)', 'A': 'Assists (count)'}",
+      "assumptions": "Linear weighting of statistics; does not account for opponent strength or context.",
+      "breakdown_regime": "Inconsistent when player has no statistical contribution across key categories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a composite performance vector in GSE state-space.",
+        "source_operator": "game_score",
+        "telemetry": "Box score data per game"
+      }
+    },
+    {
+      "primitive_id": "sentiment_cluster",
+      "name": "Sentiment Cluster",
+      "verbatim_quote": "- Clusters - Average minutes played and average points scored are the most important in predicting popularity and sentiment clusters 11 ##### Continuing the Research - Introduce more variables to the models.",
+      "page": 1,
+      "latex": "C_k = f(\\mu_{min}, \\mu_{pts})",
+      "symbol_and_unit_ledger": "{'C_k': 'Cluster label (categorical)', '\\\\mu_{min}': 'Average minutes played (minutes)', '\\\\mu_{pts}': 'Average points scored (points)'}",
+      "assumptions": "Clustering is based on two primary performance indicators; other factors are implicitly captured.",
+      "breakdown_regime": "When variance in minutes or points is minimal, cluster assignment becomes ambiguous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps performance averages to discrete sentiment groupings for classification tasks.",
+        "source_operator": "sentiment_cluster",
+        "telemetry": "Seasonal averages of minutes and points"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "553671eb151f3928_t0",
+      "think": "The study introduces a multi-dimensional model linking public perception to player performance through digital footprints and game outcomes. The popularity index aggregates various online metrics into a single scalar, assuming equal weight and independence. Game Score provides a synthetic performance indicator derived from core box score stats, which may oversimplify complex contributions. Sentiment clustering uses average minutes and points to categorize players, implying that these two metrics are sufficient to distinguish perceptual groups. Dualities emerge in how performance translates to perception—where high performance might not always equate to high popularity due to external biases or narrative framing. Failure modes include over-reliance on aggregate metrics without contextual variation, and potential misalignment between perceived and actual value. The model lacks explicit temporal dynamics, limiting its ability to capture evolving perceptions over time.\n\nDeep epistemic analysis for 2020 - High Anticipation Exploring Trends Between Public Perception and Player Value - Unknown Authors (553671eb151f3928, domain=other, pages_read=3/3): Operator 'Popularity Index' (page 2, domain other) captures: **Popularity** = (wiki_views + avg_web_hits + avg_image_hits + avg_news_hits + avg_yt_hits) / 5 4. Assumptions: All components are normalized and equally weighted; linear aggregation assumes independence. Breakdown regime: When one or more components approach zero, index becomes undefined or skewed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps aggregated online engagement to a scalar popularity score used in regression models. Operator 'Game Score' (page 2, domain other) captures: **Game Score:** a rough measure of a player's productivity for a single game 3. Assumptions: Linear weighting of statistics; does not account for opponent strength or context. Breakdown regime: Inconsistent when player has no statistical contribution across key categories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a composite performance vector in GSE state-space. Operator 'Sentiment Cluster' (page 1, domain other) captures: - Clusters - Average minutes played and average points scored are the most important in predicting popularity and sentiment clusters 11 ##### Continuing the Research - Introduce more variables to the models. Assumptions: Clustering is based on two primary performance indicators; other factors are implicitly captured. Breakdown regime: When variance in minutes or points is minimal, cluster assignment becomes ambiguous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps performance averages to discrete sentiment groupings for classification tasks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2020 - High Anticipation Exploring Trends Between Public Perception and Player Value - Unknown Authors (553671eb151f3928, domain=other, pages_read=3/3): Operator 'Popularity Index' (page 2, domain other) captures: **Popularity** = (wiki_views + avg_web_hits + avg_image_hits + avg_news_hits + avg_yt_hits) / 5 4. Assumptions: All components are normalized and equally weighted; linear aggregation assumes independence. Breakdown regime: When one or more components approach zero, index becomes undefined or skewed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps aggregated online engagement to a scalar popularity score used in regression models. Operator 'Game Score' (page 2, domain other) captures: **Game Score:** a rough measure of a player's productivity for a single game 3. Assumptions: Linear weighting of statistics; does not account for opponent strength or context. Breakdown regime: Inconsistent when player has no statistical contribution across key categories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a composite performance vector in GSE state-space. Operator 'Sentiment Cluster' (page 1, domain other) captures: - Clusters - Average minutes played and average points scored are the most important in predicting popularity and sentiment clusters 11 ##### Continuing the Research - Introduce more variables to the models. Assumptions: Clustering is based on two primary performance indicators; other factors are implicitly captured. Breakdown regime: When variance in minutes or points is minimal, cluster assignment becomes ambiguous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps performance averages to discrete sentiment groupings for classification tasks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early sports analytics and social media impact studies, building upon foundational work in player valuation and fan behavior modeling from the 2010s. Retrocausal Genealogy: Rooted in 2020 - High Anticipation Exploring Trends Between Public Perception and Player Value - Unknown Authors (553671eb151f3928), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational actors who form opinions based on objective performance and visibility, overlooking emotional or cultural influences that could drive divergent outcomes. Theory of Mind & Decision Maker Model: Rooted in 2020 - High Anticipation Exploring Trends Between Public Perception and Player Value - Unknown Authors (553671eb151f3928), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is violated when performance and popularity metrics co-vary strongly, leading to overfitting in predictive models. Leakage occurs if sentiment data leaks into performance calculations, undermining causal inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2020 - High Anticipation Exploring Trends Between Public Perception and Player Value - Unknown Authors (553671eb151f3928), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

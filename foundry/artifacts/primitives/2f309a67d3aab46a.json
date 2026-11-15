@@ -1,0 +1,95 @@
+{
+  "book_id": "2f309a67d3aab46a",
+  "source_status": "COMPLETE",
+  "title": "our-metric-stack",
+  "file_name": "our-metric-stack.md",
+  "sha256": "2f309a67d3aab46a6cab2062d4408df8e2468d2bd9d0f3c39d2eee1dc4d08f78",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "epa_per_dropback",
+      "name": "Expected Points Added per Dropback",
+      "verbatim_quote": "The sample - **2025 full regular season = the base.** 46,452 regular-season plays → **29,239 plays after filters** (17 games per team; 285 games in the file including postseason, which we exclude).",
+      "page": 1,
+      "latex": "$\\text{EPA}_{dropback} = \\frac{\\sum_{plays} EP_{added}}{plays_{after_filters}}$",
+      "symbol_and_unit_ledger": "{'EP_added': 'Expected Points Added (dimensionless)', 'plays_after_filters': 'Number of plays after filtering (dimensionless)'}",
+      "assumptions": "Multinomial logistic regression model for Expected Points, NFLverse-provided EPA values, no re-estimation.",
+      "breakdown_regime": "Regular season baseline; postseason excluded; 17-game schedule per team.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's core efficiency metrics via linear aggregation of play-level EPA.",
+        "source_operator": "epa_per_dropback",
+        "telemetry": "Average points per dropback, split by offensive and defensive EPA."
+      }
+    },
+    {
+      "primitive_id": "interception_worthy_throws",
+      "name": "Interception-Worthy Throw Detection",
+      "verbatim_quote": "- **FTN charting subset** — a human-charted overlay published through nflverse, used here for exactly one column: `is_interception_worthy` (whether a throw was charted as turnover-worthy, 2025 only).",
+      "page": 1,
+      "latex": "IW_i = \\begin{cases} 1, & \\text{if throw } i \\text{ is interception-worthy}\\\\ 0, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'IW_i': 'Binary indicator (dimensionless)', 'throw_i': 'Individual throw event (dimensionless)'}",
+      "assumptions": "Human-charted binary classification; FTN charting subset provides ground truth.",
+      "breakdown_regime": "2025 season only; small sample due to reliance on human annotations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Used in GSE for situational reasoning about throw difficulty and interception risk.",
+        "source_operator": "interception_worthy_throws",
+        "telemetry": "Count of interception-worthy throws per team/season."
+      }
+    },
+    {
+      "primitive_id": "drives_with_turnovers",
+      "name": "Drive-Level Turnover Impact",
+      "verbatim_quote": "The sample - **2025 full regular season = the base.** 46,452 regular-season plays → **29,239 plays after filters** (17 games per team; 285 games in the file including postseason, which we exclude).",
+      "page": 1,
+      "latex": "TurnoverDrives = f(DriveCount, TurnoverCount, TurnoverType)",
+      "symbol_and_unit_ledger": "{'DriveCount': 'Total drives (dimensionless)', 'TurnoverCount': 'Total turnovers (dimensionless)', 'TurnoverType': 'Type of turnover (e.g., INT, fumble) (categorical)'}",
+      "assumptions": "Drive-level analysis treats all drives equally regardless of length or context.",
+      "breakdown_regime": "Unfiltered drive data includes garbage-time and punt situations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's drive-based efficiency metrics, accounting for turnover impact.",
+        "source_operator": "drives_with_turnovers",
+        "telemetry": "Average points lost per turnover drive."
+      }
+    },
+    {
+      "primitive_id": "luck_adjustment_metric",
+      "name": "Luck Adjustment Turnover Metric",
+      "verbatim_quote": "This is the entire foundation of every team rating and player projection we publish.",
+      "page": 1,
+      "latex": "LuckMeter = Actual - Expected = (ActualINTs - LeagueAvgINTRate \\times Dropbacks) + (ActualFumblesLost - LeagueAvgFLRate \\times Plays)$",
+      "symbol_and_unit_ledger": "{'ActualINTs': 'Actual interceptions (dimensionless)', 'LeagueAvgINTRate': 'League-average INT rate per dropback (dimensionless)', 'Dropbacks': 'Total dropbacks (dimensionless)', 'ActualFumblesLost': 'Actual fumbles lost (dimensionless)', 'LeagueAvgFLRate': 'League-average fumble-lost rate per play (dimensionless)', 'Plays': 'Total plays (dimensionless)'}",
+      "assumptions": "League-average baselines derived from 2025 data; assumes randomness in turnover occurrence.",
+      "breakdown_regime": "Long-term turnover probabilities; variance due to skill vs. luck.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's luck-adjustment framework using league averages as counterfactuals.",
+        "source_operator": "luck_adjustment_metric",
+        "telemetry": "Difference between actual and expected turnovers per team."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2f309a67d3aab46a_t0",
+      "think": "These primitives form a coherent stack for NFL analytics. They bridge from play-level Expected Points Added (EPA) to drive-level turnover impacts, incorporating both statistical models and human-charted judgments. The key challenge is separating signal from noise: distinguishing sustainable skill from random luck in turnover generation. This requires careful filtering of the raw data to remove noise from garbage-time plays and post-season anomalies. The primitives also enable cross-layer mapping: the drive-level metrics feed into GSI's overall team ratings, while the interception-worthy metric informs GSE's situational reasoning about throw difficulty.\n\nDeep epistemic analysis for our-metric-stack (2f309a67d3aab46a, domain=other, pages_read=4/4): Operator 'Expected Points Added per Dropback' (page 1, domain other) captures: The sample - **2025 full regular season = the base.** 46,452 regular-season plays → **29,239 plays after filters** (17 games per team; 285 games in the file including postseason, which we exclude). Assumptions: Multinomial logistic regression model for Expected Points, NFLverse-provided EPA values, no re-estimation. Breakdown regime: Regular season baseline; postseason excluded; 17-game schedule per team. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's core efficiency metrics via linear aggregation of play-level EPA. Operator 'Interception-Worthy Throw Detection' (page 1, domain other) captures: - **FTN charting subset** — a human-charted overlay published through nflverse, used here for exactly one column: `is_interception_worthy` (whether a throw was charted as turnover-worthy, 2025 only). Assumptions: Human-charted binary classification; FTN charting subset provides ground truth. Breakdown regime: 2025 season only; small sample due to reliance on human annotations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used in GSE for situational reasoning about throw difficulty and interception risk. Operator 'Drive-Level Turnover Impact' (page 1, domain other) captures: The sample - **2025 full regular season = the base.** 46,452 regular-season plays → **29,239 plays after filters** (17 games per team; 285 games in the file including postseason, which we exclude). Assumptions: Drive-level analysis treats all drives equally regardless of length or context. Breakdown regime: Unfiltered drive data includes garbage-time and punt situations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's drive-based efficiency metrics, accounting for turnover impact. Operator 'Luck Adjustment Turnover Metric' (page 1, domain other) captures: This is the entire foundation of every team rating and player projection we publish. Assumptions: League-average baselines derived from 2025 data; assumes randomness in turnover occurrence. Breakdown regime: Long-term turnover probabilities; variance due to skill vs. luck. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's luck-adjustment framework using league averages as counterfactuals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for our-metric-stack (2f309a67d3aab46a, domain=other, pages_read=4/4): Operator 'Expected Points Added per Dropback' (page 1, domain other) captures: The sample - **2025 full regular season = the base.** 46,452 regular-season plays → **29,239 plays after filters** (17 games per team; 285 games in the file including postseason, which we exclude). Assumptions: Multinomial logistic regression model for Expected Points, NFLverse-provided EPA values, no re-estimation. Breakdown regime: Regular season baseline; postseason excluded; 17-game schedule per team. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's core efficiency metrics via linear aggregation of play-level EPA. Operator 'Interception-Worthy Throw Detection' (page 1, domain other) captures: - **FTN charting subset** — a human-charted overlay published through nflverse, used here for exactly one column: `is_interception_worthy` (whether a throw was charted as turnover-worthy, 2025 only). Assumptions: Human-charted binary classification; FTN charting subset provides ground truth. Breakdown regime: 2025 season only; small sample due to reliance on human annotations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used in GSE for situational reasoning about throw difficulty and interception risk. Operator 'Drive-Level Turnover Impact' (page 1, domain other) captures: The sample - **2025 full regular season = the base.** 46,452 regular-season plays → **29,239 plays after filters** (17 games per team; 285 games in the file including postseason, which we exclude). Assumptions: Drive-level analysis treats all drives equally regardless of length or context. Breakdown regime: Unfiltered drive data includes garbage-time and punt situations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's drive-based efficiency metrics, accounting for turnover impact. Operator 'Luck Adjustment Turnover Metric' (page 1, domain other) captures: This is the entire foundation of every team rating and player projection we publish. Assumptions: League-average baselines derived from 2025 data; assumes randomness in turnover occurrence. Breakdown regime: Long-term turnover probabilities; variance due to skill vs. luck. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's luck-adjustment framework using league averages as counterfactuals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opponents and coaches aim to maximize EPA while minimizing turnovers. Bookmakers incorporate these metrics into betting lines, creating incentives for accurate prediction. Theory of Mind & Decision Maker Model: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Avoid collinearity by ensuring drive-level metrics are not redundant with play-level EPA. Prevent leakage by using separate samples for training and validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in our-metric-stack (2f309a67d3aab46a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

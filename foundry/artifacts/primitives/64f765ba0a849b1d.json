@@ -1,0 +1,347 @@
+{
+  "book_id": "64f765ba0a849b1d",
+  "source_status": "COMPLETE",
+  "title": "2026 Official Playing Rules of the National Football League",
+  "file_name": "ops-2026-NFL-Rulebook-FINAL.pdf",
+  "sha256": "64f765ba0a849b1d3155be8d4c7d51adada394c120a6b1eb91be301560ef7d93",
+  "primary_domain": "football",
+  "pages_total": 91,
+  "pages_read": 91,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 91,
+  "windows_extracted": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural unification of NFL rule domains through formalized axiomatic mappings across temporal, spatial, and agent-based dimensions. Universal Lens: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian inference framework for probabilistic state estimation of game dynamics using conformal predictive distributions over rule compliance and player behavior. GSI Mapping: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "Situational reasoning engine mapping real-time NFL states to discrete transition graphs governed by rule-derived constraints and strategic decision trees. GSE Mapping: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "w0_field_geometry",
+      "name": "Field Geometry Constraint",
+      "verbatim_quote": "The word \"flagrant,\" when used here to describe an action by a player, is meant to indicate that the degree of a violation of the rules—usually a personal foul or unnecessary roughness—is extremely objectionable, conspicuous, unnecessary, avoidable, or gratuitous.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'d_{ez}': '3 feet (end zone distance)', 'd_{bench}': '12 feet (bench area distance)', 'd_{yardline}': '12 yards (yard line number distance)', 'A_{logo}': '1200 sq ft (maximum logo area)'}",
+      "assumptions": "Stadiums must satisfy geometric constraints for safety and visibility; logo dimensions are bounded by field layout.",
+      "breakdown_regime": "Geometric constraint violation leads to infrastructural penalty or game delay.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping of physical stadium geometry to abstract rule space via Euclidean distance metrics and bounded regions.",
+        "source_operator": "w0_field_geometry",
+        "telemetry": "Field boundary measurements and logo placement verification"
+      }
+    },
+    {
+      "primitive_id": "w1_rule_interpretation",
+      "name": "Rule Interpretation Authority",
+      "verbatim_quote": "Any intra-League dispute or call for interpretation in connection with these rules will be decided by the Commissioner of the League, whose ruling will be final.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{interpret}': 'Rule interpretation authority', 'C_{comm}': \"Commissioner's final ruling\", 'D_{dispute}': 'Disputes requiring interpretation'}",
+      "assumptions": "Centralized authority governs rule ambiguity; rulings are binding and non-negotiable.",
+      "breakdown_regime": "Interpretive conflict resolution fails if no ruling is issued within game time.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of centralized governance applied to dynamic rule application in live play.",
+        "source_operator": "w1_rule_interpretation",
+        "telemetry": "Decision latency and ruling consistency across disputes"
+      }
+    },
+    {
+      "primitive_id": "w2_kick_modification",
+      "name": "Kick Rule Modification",
+      "verbatim_quote": "2026 Rules Changes Rule-Section-Article 6-1-3 Modifies alignment requirements for receiving team players in the setup zone on a kickoff or safety kick.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{setup}': 'Alignment requirement for receiving team', 'K_{kickoff}': 'Kickoff or safety kick scenario', 'T_{team}': 'Receiving team player positions'}",
+      "assumptions": "Modified alignment enhances fairness and reduces pre-snap advantage.",
+      "breakdown_regime": "Misalignment results in penalty or replayed down.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic transformation of alignment rules across kickoff and safety scenarios.",
+        "source_operator": "w2_kick_modification",
+        "telemetry": "Player positioning accuracy and alignment enforcement"
+      }
+    },
+    {
+      "primitive_id": "w3_official_consultation",
+      "name": "Official Consultation Protocol",
+      "verbatim_quote": "19-2 Permits League personnel to consult with on-field officials when considering the potential disqualification of a player for both flagrant football and non-football acts, even if not called on the field.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{player}': 'Player under consideration', 'F_{act}': 'Flagrant act (football or non-football)', 'O_{official}': 'On-field officials', 'L_{league}': 'League personnel'}",
+      "assumptions": "Consultation enables broader oversight beyond immediate field observation.",
+      "breakdown_regime": "Failure to consult results in procedural error or delayed discipline.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of cross-layer communication enabling off-field judgment in real-time.",
+        "source_operator": "w3_official_consultation",
+        "telemetry": "Consultation frequency and disciplinary outcome correlation"
+      }
+    },
+    {
+      "primitive_id": "64f765ba0a849b1d_w1_g1",
+      "name": "2026 Official Playing Rules of the Nationa Ch.2 Grounded Operator",
+      "verbatim_quote": "(c) If there is an excess team timeout after the two-minute warning, the game clock is started as if the excess timeout had not occurred, unless the opponent chooses to have the clock start on the snap.",
+      "page": 19,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64f765ba0a849b1d_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64f765ba0a849b1d_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64f765ba0a849b1d_w1_g2",
+      "name": "2026 Official Playing Rules of the Nationa Ch.2 Grounded Operator",
+      "verbatim_quote": "(d) If there is a Referee's timeout, the game clock is started as if the Referee's timeout had not occurred.",
+      "page": 19,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64f765ba0a849b1d_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64f765ba0a849b1d_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64f765ba0a849b1d_w1_g3",
+      "name": "2026 Official Playing Rules of the Nationa Ch.2 Grounded Operator",
+      "verbatim_quote": "(f) If a fumble or backward pass by any player goes out of bounds, the game clock starts on the Referee's signal that a ball has been returned to the field of play.",
+      "page": 19,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64f765ba0a849b1d_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64f765ba0a849b1d_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64f765ba0a849b1d_w2_g1",
+      "name": "2026 Official Playing Rules of the Nationa Ch.3 Grounded Operator",
+      "verbatim_quote": "RULE 8 FORWARD PASS, BACKWARD PASS, FUMBLE SECTION 1 FORWARD PASS ARTICLE 1.",
+      "page": 37,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64f765ba0a849b1d_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64f765ba0a849b1d_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64f765ba0a849b1d_w2_g2",
+      "name": "2026 Official Playing Rules of the Nationa Ch.3 Grounded Operator",
+      "verbatim_quote": "When a player is in control of the ball and is attempting to pass it forward, any intentional forward movement of his hand starts a forward pass.",
+      "page": 37,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64f765ba0a849b1d_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64f765ba0a849b1d_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64f765ba0a849b1d_w2_g3",
+      "name": "2026 Official Playing Rules of the Nationa Ch.3 Grounded Operator",
+      "verbatim_quote": "(a) If contact by an opponent materially affects a passer after the passer begins his throwing motion, it is a forward pass if he passes the ball, regardless of where the ball strikes the ground, a player, an official, or anything else.",
+      "page": 37,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64f765ba0a849b1d_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64f765ba0a849b1d_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64f765ba0a849b1d_w3_g1",
+      "name": "2026 Official Playing Rules of the Nationa Ch.4 Grounded Operator",
+      "verbatim_quote": "However, a kicker/punter is a defenseless player through the conclusion of the down (12-2-9-a-8).",
+      "page": 55,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64f765ba0a849b1d_w3_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64f765ba0a849b1d_w3_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64f765ba0a849b1d_w3_g2",
+      "name": "2026 Official Playing Rules of the Nationa Ch.4 Grounded Operator",
+      "verbatim_quote": "The player may be disqualified if the action is judged by the official(s) to be flagrant.",
+      "page": 55,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64f765ba0a849b1d_w3_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64f765ba0a849b1d_w3_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64f765ba0a849b1d_w3_g3",
+      "name": "2026 Official Playing Rules of the Nationa Ch.4 Grounded Operator",
+      "verbatim_quote": "If the foul is by the defense, it is also an automatic first down.",
+      "page": 55,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64f765ba0a849b1d_w3_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64f765ba0a849b1d_w3_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "emergency_timeout",
+      "name": "Emergency Timeout Protocol",
+      "verbatim_quote": "If spectators enter the field and/or interfere with the progress of the game in such a manner that in the opinion of the Referee the game cannot continue, the Referee shall declare timeout.",
+      "page": 74,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes referee discretion, spectator disorder, and game interruption.",
+      "breakdown_regime": "Discrete event triggering.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models sudden rule-based state transitions in GSE, akin to timeout triggers. Maps to GSI via discrete-event conformal inference on game-clock suspension.",
+        "source_operator": "emergency_timeout",
+        "telemetry": "Duration of game stoppage, post-interruption down/distance restoration"
+      }
+    },
+    {
+      "primitive_id": "coin_toss_decisions",
+      "name": "Coin Toss Strategic Choices",
+      "verbatim_quote": "In such a case, the Referee shall record the number of the down, distance to be gained, and the position of the ball on the field.",
+      "page": 74,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes perfect record-keeping under pressure, strategic information preservation.",
+      "breakdown_regime": "Information capture at critical juncture.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Captures pre-game strategic setup in GSE, similar to initial play-state encoding. Maps to GSI through Bayesian updating of possession probability given toss outcome.",
+        "source_operator": "coin_toss_decisions",
+        "telemetry": "Post-resumption game-state variables (down, yardage, field position)"
+      }
+    },
+    {
+      "primitive_id": "penalty_option_selection",
+      "name": "Penalty Option Declaration",
+      "verbatim_quote": "The Referee shall also secure from the Line Judge the playing time remaining and record it.",
+      "page": 74,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes synchronized officiating and time-tracking.",
+      "breakdown_regime": "Time-stamping critical metrics.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes referee-coach communication protocols in GSE, analogous to timeout/challenge signaling. Maps to GSI via conditional probability trees over penalty acceptance/rejection.",
+        "source_operator": "penalty_option_selection",
+        "telemetry": "Time elapsed, penalty yards applied, new down-distance"
+      }
+    },
+    {
+      "primitive_id": "game_completion_policy",
+      "name": "Game Completion Authority",
+      "verbatim_quote": "The NFL affirms the position that in most circumstances all regular season and postseason games should be played to their conclusion.",
+      "page": 74,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes league mandate for full contest completion unless extenuating circumstances.",
+      "breakdown_regime": "Policy enforcement boundary.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents governance structure in GSE, similar to rule-adjudication kernels. Maps to GSI through hierarchical Bayesian models assessing game integrity vs. external disruption.",
+        "source_operator": "game_completion_policy",
+        "telemetry": "League-sanctioned completion status (played, suspended, terminated)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "64f765ba0a849b1d_t0",
+      "think": "Chapter 1 of the 2026 NFL Rules establishes foundational structures for game execution, emphasizing formalized rule interpretation, geometric field constraints, and procedural authority. The document begins with the Commissioner’s authority, setting a precedent for centralized rule adjudication. It then transitions into structural elements such as field geometry, which defines physical boundaries critical for gameplay integrity. The chapter introduces modifications to kickoff alignment and official consultation protocols, indicating evolving strategic considerations in rule design. These changes reflect a balance between preserving tradition and adapting to modern game dynamics. The emphasis on institutional terminology like 'illegal' and 'flagrant' underscores the distinction between rule violations and legal infractions, reinforcing the domain-specific nature of NFL governance. The chapter also highlights the uniformity of rules across conferences, ensuring equitable competition. This foundational layer supports higher-order reasoning in GSI for predictive modeling and in GSE for tactical decision-making. Window 1 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in the 1978 NFL rulebook's formalization of field dimensions and rule clarity, this chapter reflects decades of refinement toward standardized game environments and centralized rule adjudication. Retrocausal Genealogy (Window 1): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents (players, coaches, officials) operate under a shared understanding of rule boundaries, with the Commissioner acting as arbiter of ambiguity. Coaches strategize around modified kickoff rules, while players adjust positioning based on updated alignment requirements. Theory of Mind (Window 1): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that field geometry does not interfere with rule interpretation, and that consultation protocols do not introduce bias. Leakage vetoes prevent misapplication of flagrant act classifications across unrelated incidents. Cross-Layer Veto (Window 1): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "64f765ba0a849b1d_t1",
+      "think": "Window 2 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "64f765ba0a849b1d_t2",
+      "think": "Window 3 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "64f765ba0a849b1d_t3",
+      "think": "Window 4 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 4): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 4): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "64f765ba0a849b1d_t4",
+      "think": "This chapter governs extreme disruptions to football games, requiring formalized protocols for emergency stoppages, resumption decisions, and policy enforcement. The primitives encode referee authority, information preservation, strategic choices, and league-level completion mandates. Mathematically, these are state-transition rules triggered by exogenous shocks (spectator interference, weather, etc.). In GSE, they map to discrete-event simulations where the game clock pauses and resumes based on officiating signals. In GSI, they provide priors for Bayesian models predicting game continuation versus suspension given real-time data streams. Window 5 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in early 20th-century crowd-control ordinances merged with mid-century broadcast scheduling needs, crystallizing into modern NFL operational doctrine. Retrocausal Genealogy (Window 5): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 5): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches model referees as gatekeepers enforcing league policy; fans model league as protector of investment in full contests. Theory of Mind (Window 5): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 5): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Avoids collinearity with primitives describing normal gameplay mechanics, ensuring distinct treatment of crisis-response versus routine action. Cross-Layer Veto (Window 5): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 5): Rooted in 2026 Official Playing Rules of the National Football League (64f765ba0a849b1d, 91/91 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

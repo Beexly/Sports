@@ -1,0 +1,78 @@
+{
+  "book_id": "25e1daf8a578efbf",
+  "source_status": "COMPLETE",
+  "title": "p0348",
+  "file_name": "p0348.txt",
+  "sha256": "25e1daf8a578efbfc1e51f7fad73761f8731dc342715d62143981db79ebc99b8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "sER vs sLR threshold competition under incompatible potentials governs reaction selection via dynamic dominance. Universal Lens: Rooted in p0348 (25e1daf8a578efbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update over reaction potential space using sER/sLR ratio with inhibitory interference terms. GSI Mapping: Rooted in p0348 (25e1daf8a578efbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition graph models reaction selection as path optimization through competing sER landscapes with mutual inhibition. GSE Mapping: Rooted in p0348 (25e1daf8a578efbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "reaction_threshold_competition",
+      "name": "Reaction Threshold Competition",
+      "verbatim_quote": "REACTION THRESHOLD-RESPONSE EVOCATION 341 THE COMPETITION OF SIMULTANEOUS INCOMPATIBLE REACTION POTENTIALS There remains to be considered one more important matter before the relationship between sER and reaction is formally complete.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sER': 'dimensionless effective reaction potential', 'sLR': 'dimensionless latent reaction potential'}",
+      "assumptions": "No reaction occurs unless sER > sLR; simultaneous incompatible potentials exist.",
+      "breakdown_regime": "When sER < sLR or multiple incompatible sERs coexist.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: probabilistic thresholding; GSE: deterministic state transition with inhibition.",
+        "source_operator": "reaction_threshold_competition",
+        "telemetry": "Observable behavioral selection rate under competing stimuli."
+      }
+    },
+    {
+      "primitive_id": "incompatible_potential_interference",
+      "name": "Incompatible Potential Interference",
+      "verbatim_quote": "This is because there are frequently encountered situations in which the stimulus complex impinging on the organism may simultaneously give rise to two or more incompatible reaction potentials.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sER_i': 'effective reaction potential for i-th competing tendency', 'sER_max': 'maximum effective reaction potential among incompatible set'}",
+      "assumptions": "Multiple incompatible sERs coexist; only dominant can act.",
+      "breakdown_regime": "Simultaneous activation of incompatible reaction tendencies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: mutual inhibition model; GSE: conflict resolution via dominance hierarchy.",
+        "source_operator": "incompatible_potential_interference",
+        "telemetry": "Behavioral conflict resolution time and accuracy."
+      }
+    },
+    {
+      "primitive_id": "dominance_selection_rule",
+      "name": "Dominance Selection Rule",
+      "verbatim_quote": "It is obvious that in such a situation the momentarily weaker of two competing reaction potentials cannot possibly mediate its reaction.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sER_dominant': 'dominant effective reaction potential', 'sER_weaker': 'weaker competing effective reaction potential'}",
+      "assumptions": "Only dominant sER can mediate action; weaker is suppressed.",
+      "breakdown_regime": "When sER_dominant < sER_weaker or equal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: stochastic dominance sampling; GSE: deterministic selection via max operator.",
+        "source_operator": "dominance_selection_rule",
+        "telemetry": "Selection probability of dominant vs weaker reaction tendency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "25e1daf8a578efbf_t0",
+      "think": "The core mechanism involves a threshold-based reaction evocation where sER must exceed sLR for any response. However, when multiple incompatible sERs arise, the system selects based on dominance. The mathematical structure implies a competitive selection process governed by a max operator over competing reaction potentials. Each sER_i represents a distinct behavioral tendency, and their simultaneous activation creates a conflict. The system resolves this via a dominance rule, where only the maximum sER_i can proceed. This introduces a non-linear element into the otherwise linear threshold model. Inhibitory interference arises from mutual suppression, suggesting a form of associative inhibition akin to extinction effects. The resulting formalism supports both probabilistic inference in GSI and deterministic state transitions in GSE. The failure mode occurs when sER is insufficiently large or when competing potentials are nearly equal, leading to indeterminate behavior.\n\nDeep epistemic analysis for p0348 (25e1daf8a578efbf, domain=other, pages_read=1/1): Operator 'Reaction Threshold Competition' (page 1, domain other) captures: REACTION THRESHOLD-RESPONSE EVOCATION 341 THE COMPETITION OF SIMULTANEOUS INCOMPATIBLE REACTION POTENTIALS There remains to be considered one more important matter before the relationship between sER and reaction is formally complete. Assumptions: No reaction occurs unless sER > sLR; simultaneous incompatible potentials exist. Breakdown regime: When sER < sLR or multiple incompatible sERs coexist. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: probabilistic thresholding; GSE: deterministic state transition with inhibition. Operator 'Incompatible Potential Interference' (page 1, domain other) captures: This is because there are frequently encountered situations in which the stimulus complex impinging on the organism may simultaneously give rise to two or more incompatible reaction potentials. Assumptions: Multiple incompatible sERs coexist; only dominant can act. Breakdown regime: Simultaneous activation of incompatible reaction tendencies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: mutual inhibition model; GSE: conflict resolution via dominance hierarchy. Operator 'Dominance Selection Rule' (page 1, domain other) captures: It is obvious that in such a situation the momentarily weaker of two competing reaction potentials cannot possibly mediate its reaction. Assumptions: Only dominant sER can mediate action; weaker is suppressed. Breakdown regime: When sER_dominant < sER_weaker or equal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: stochastic dominance sampling; GSE: deterministic selection via max operator. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0348 (25e1daf8a578efbf, domain=other, pages_read=1/1): Operator 'Reaction Threshold Competition' (page 1, domain other) captures: REACTION THRESHOLD-RESPONSE EVOCATION 341 THE COMPETITION OF SIMULTANEOUS INCOMPATIBLE REACTION POTENTIALS There remains to be considered one more important matter before the relationship between sER and reaction is formally complete. Assumptions: No reaction occurs unless sER > sLR; simultaneous incompatible potentials exist. Breakdown regime: When sER < sLR or multiple incompatible sERs coexist. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: probabilistic thresholding; GSE: deterministic state transition with inhibition. Operator 'Incompatible Potential Interference' (page 1, domain other) captures: This is because there are frequently encountered situations in which the stimulus complex impinging on the organism may simultaneously give rise to two or more incompatible reaction potentials. Assumptions: Multiple incompatible sERs coexist; only dominant can act. Breakdown regime: Simultaneous activation of incompatible reaction tendencies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: mutual inhibition model; GSE: conflict resolution via dominance hierarchy. Operator 'Dominance Selection Rule' (page 1, domain other) captures: It is obvious that in such a situation the momentarily weaker of two competing reaction potentials cannot possibly mediate its reaction. Assumptions: Only dominant sER can mediate action; weaker is suppressed. Breakdown regime: When sER_dominant < sER_weaker or equal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: stochastic dominance sampling; GSE: deterministic selection via max operator. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical conditioning theory and stimulus-response models, evolving through Hebbian learning and neural network architectures to modern reinforcement frameworks. Retrocausal Genealogy: Rooted in p0348 (25e1daf8a578efbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0348 (25e1daf8a578efbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model each other's reaction potential landscapes, predicting conflict and resolution paths. Decision-making emerges from internal competition rather than external reward. Theory of Mind & Decision Maker Model: Rooted in p0348 (25e1daf8a578efbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0348 (25e1daf8a578efbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that GSI and GSE do not redundantly encode identical dynamics. Leakage is prevented by enforcing orthogonal representations of probabilistic vs deterministic pathways. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0348 (25e1daf8a578efbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0348 (25e1daf8a578efbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

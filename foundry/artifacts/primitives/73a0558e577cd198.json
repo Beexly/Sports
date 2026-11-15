@@ -1,0 +1,95 @@
+{
+  "book_id": "73a0558e577cd198",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "73a0558e577cd19839415b2a8a5d22daba16f9c367a5828b7d3cefdda6e2ee7f",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Lattice-std unifies governance plans and deploy scripts through shared ABI-shaped struct encodings, enabling deterministic contract interaction and state transitions. Universal Lens: Rooted in README (73a0558e577cd198), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models governance actions as Bayesian belief updates over encoded call structures, using EnvVar and Call primitives to infer operational intent from deployment artifacts. GSI Mapping: Rooted in README (73a0558e577cd198), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions by simulating multi-step call sequences via LatticeTest's prank-based authority application, ensuring compliance with timelock and safe thresholds. GSE Mapping: Rooted in README (73a0558e577cd198), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "call",
+      "name": "Governance Action Unit",
+      "verbatim_quote": "## What it provides | | | |---|---| | `Call` | `{to, value, data}`: the unit of a governance plan.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'to': 'address', 'value': 'uint256 (wei)', 'data': 'bytes'}",
+      "assumptions": "Action is atomic and executable within EVM context.",
+      "breakdown_regime": "When EVM execution fails due to invalid target or insufficient gas.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Call maps to a single-step transition in GSE's state machine, where 'to' specifies the target contract, 'value' sets ETH balance change, and 'data' defines the calldata payload.",
+        "source_operator": "call",
+        "telemetry": "Transaction receipt status and revert reason."
+      }
+    },
+    {
+      "primitive_id": "deployment",
+      "name": "Contract Address Registry",
+      "verbatim_quote": "| | `Deployment` | `{name, addr}`: what a deploy script's entry point returns, naming each address for the address book.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'name': 'string', 'addr': 'address'}",
+      "assumptions": "Each contract has a unique identifier and deterministic address upon deployment.",
+      "breakdown_regime": "Upon failed deployment or mismatched bytecode hash.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Deployment encodes a registry key-value pair mapping contract names to addresses, used by GSE to resolve dependencies during simulation.",
+        "source_operator": "deployment",
+        "telemetry": "Address book consistency check against expected contract bytecode."
+      }
+    },
+    {
+      "primitive_id": "envvar",
+      "name": "Scalar Parameter Encoder",
+      "verbatim_quote": "| | `EnvVar` | `{key, value}`: one scalar param, for a step that updates params.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'key': 'string', 'value': 'bytes'}",
+      "assumptions": "Parameters are encoded as fixed-length bytes for ABI compatibility.",
+      "breakdown_regime": "On invalid key or malformed value encoding.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "EnvVar represents a scalar parameter update in GSI's probabilistic model, allowing dynamic configuration of governance steps based on environment variables.",
+        "source_operator": "envvar",
+        "telemetry": "Parameter validation success/failure during plan execution."
+      }
+    },
+    {
+      "primitive_id": "env",
+      "name": "Environment Reader",
+      "verbatim_quote": "| | `Env` | Reads `.lattice/env.json`: `addr(name)`, `implementation(name)`, `staged(name)` (an implementation deployed but not yet live, which is what an upgrade plan proposes), `has(name)` and `hasStaged(name)`; `str`, `addr_`, `bool_`, `uint256_`, `int256_`, `bytes32_`, `bytes_` and the range-checked `uint8_` ...",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'addr(name)': 'address', 'implementation(name)': 'address', 'staged(name)': 'address', 'has(name)': 'bool', 'hasStaged(name)': 'bool', 'str(key)': 'string', 'addr_(key)': 'address', 'bool_(key)': 'bool', 'uint256_(key)': 'uint256', 'int256_(key)': 'int256', 'bytes32_(key)': 'bytes32', 'bytes_(key)': 'bytes', 'uint8_(key)': 'uint8'}",
+      "assumptions": "Environment variables are stored in a structured JSON file and accessed via deterministic keys.",
+      "breakdown_regime": "When env.json is missing or contains invalid entries.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Env encapsulates runtime context for GSE’s conditional logic, enabling access to deployed contracts and parameters without hardcoding values.",
+        "source_operator": "env",
+        "telemetry": "Validation of all resolved environment values against schema."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "73a0558e577cd198_t0",
+      "think": "The core insight of lattice-std lies in its use of ABI-shape matching rather than type identity, enabling interoperability between governance plans and deploy scripts without requiring identical imports or type names. This design choice allows for a unified interface across different implementations while maintaining strong typing guarantees at runtime. The primitives—Call, Deployment, EnvVar, and Env—are defined in a single file with no external dependencies, making them robust and portable. The emphasis on fixed encodings ensures deterministic behavior, critical for secure smart contract operations. In GSI, these primitives form the basis of Bayesian inference over governance actions, where each Call represents a potential update to system state. For GSE, they define the sequence of operations needed to transition from one valid system configuration to another, leveraging the environment reader to dynamically resolve addresses and parameters. The derived kernel nature of Deployment and Env reflects their role in building higher-level abstractions from lower-level encodings.\n\nDeep epistemic analysis for README (73a0558e577cd198, domain=other, pages_read=2/2): Operator 'Governance Action Unit' (page 1, domain other) captures: ## What it provides | | | |---|---| | `Call` | `{to, value, data}`: the unit of a governance plan. Assumptions: Action is atomic and executable within EVM context. Breakdown regime: When EVM execution fails due to invalid target or insufficient gas. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Call maps to a single-step transition in GSE's state machine, where 'to' specifies the target contract, 'value' sets ETH balance change, and 'data' defines the calldata payload. Operator 'Contract Address Registry' (page 1, domain other) captures: | | `Deployment` | `{name, addr}`: what a deploy script's entry point returns, naming each address for the address book. Assumptions: Each contract has a unique identifier and deterministic address upon deployment. Breakdown regime: Upon failed deployment or mismatched bytecode hash. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Deployment encodes a registry key-value pair mapping contract names to addresses, used by GSE to resolve dependencies during simulation. Operator 'Scalar Parameter Encoder' (page 1, domain other) captures: | | `EnvVar` | `{key, value}`: one scalar param, for a step that updates params. Assumptions: Parameters are encoded as fixed-length bytes for ABI compatibility. Breakdown regime: On invalid key or malformed value encoding. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): EnvVar represents a scalar parameter update in GSI's probabilistic model, allowing dynamic configuration of governance steps based on environment variables. Operator 'Environment Reader' (page 1, domain other) captures: | | `Env` | Reads `.lattice/env.json`: `addr(name)`, `implementation(name)`, `staged(name)` (an implementation deployed but not yet live, which is what an upgrade plan proposes), `has(name)` and `hasStaged(name)`; `str`, `addr_`, `bool_`, `uint256_`, `int256_`, `bytes32_`, `bytes_` and the range-checked `uint8_` ... Assumptions: Environment variables are stored in a structured JSON file and accessed via deterministic keys. Breakdown regime: When env.json is missing or contains invalid entries. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Env encapsulates runtime context for GSE’s conditional logic, enabling access to deployed contracts and parameters without hardcoding values. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (73a0558e577cd198, domain=other, pages_read=2/2): Operator 'Governance Action Unit' (page 1, domain other) captures: ## What it provides | | | |---|---| | `Call` | `{to, value, data}`: the unit of a governance plan. Assumptions: Action is atomic and executable within EVM context. Breakdown regime: When EVM execution fails due to invalid target or insufficient gas. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Call maps to a single-step transition in GSE's state machine, where 'to' specifies the target contract, 'value' sets ETH balance change, and 'data' defines the calldata payload. Operator 'Contract Address Registry' (page 1, domain other) captures: | | `Deployment` | `{name, addr}`: what a deploy script's entry point returns, naming each address for the address book. Assumptions: Each contract has a unique identifier and deterministic address upon deployment. Breakdown regime: Upon failed deployment or mismatched bytecode hash. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Deployment encodes a registry key-value pair mapping contract names to addresses, used by GSE to resolve dependencies during simulation. Operator 'Scalar Parameter Encoder' (page 1, domain other) captures: | | `EnvVar` | `{key, value}`: one scalar param, for a step that updates params. Assumptions: Parameters are encoded as fixed-length bytes for ABI compatibility. Breakdown regime: On invalid key or malformed value encoding. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): EnvVar represents a scalar parameter update in GSI's probabilistic model, allowing dynamic configuration of governance steps based on environment variables. Operator 'Environment Reader' (page 1, domain other) captures: | | `Env` | Reads `.lattice/env.json`: `addr(name)`, `implementation(name)`, `staged(name)` (an implementation deployed but not yet live, which is what an upgrade plan proposes), `has(name)` and `hasStaged(name)`; `str`, `addr_`, `bool_`, `uint256_`, `int256_`, `bytes32_`, `bytes_` and the range-checked `uint8_` ... Assumptions: Environment variables are stored in a structured JSON file and accessed via deterministic keys. Breakdown regime: When env.json is missing or contains invalid entries. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Env encapsulates runtime context for GSE’s conditional logic, enabling access to deployed contracts and parameters without hardcoding values. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early Ethereum governance frameworks and Solidity's ABI specification, lattice-std builds upon the foundational idea of structured data exchange in decentralized systems, evolving from static configuration files into dynamic, self-contained encoding libraries. Retrocausal Genealogy: Rooted in README (73a0558e577cd198), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious actors who might attempt to manipulate governance plans or misrepresent contract states, and automated systems that must validate and execute these plans reliably. The design assumes rational actors with bounded computational resources, focusing on minimizing attack surface through deterministic encoding. Theory of Mind & Decision Maker Model: Rooted in README (73a0558e577cd198), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating concerns: Call handles execution details, Deployment manages registry, EnvVar deals with scalar parameters, and Env provides contextual access. Leakage vetoes occur when any primitive exposes internal state beyond its intended scope, such as revealing private keys or sensitive environment data. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (73a0558e577cd198), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "c402edf2d14b15ce",
+  "source_status": "COMPLETE",
+  "title": "1926-distributional-reinforcement-learning-with-quantile-regression",
+  "file_name": "1926-distributional-reinforcement-learning-with-quantile-regression.md",
+  "sha256": "c402edf2d14b15ce7757f36f7a385a16f551585024180753cccba062a1331581",
+  "primary_domain": "cs",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Quantile regression bridges Cramér and Wasserstein metrics via fixed quantile midpoints, enabling stochastic gradient minimization of distributional Bellman targets. Universal Lens: Rooted in 1926-distributional-reinforcement-learning-with-quantile-regression (c402edf2d14b15ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "QR-DQN's quantile Huber loss enables Bayesian posterior inference over return distributions, conformally calibrated via Wasserstein distance minimization. GSI Mapping: Rooted in 1926-distributional-reinforcement-learning-with-quantile-regression (c402edf2d14b15ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-action return distributions evolve under quantile-projected Bellman updates, enabling situational reasoning through stochastic policy transitions and value distribution dynamics. GSE Mapping: Rooted in 1926-distributional-reinforcement-learning-with-quantile-regression (c402edf2d14b15ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "quantile_projection_operator",
+      "name": "Quantile Projection Operator",
+      "verbatim_quote": "- Quantile projection Π_{W1}: projects a distribution onto N fixed quantile midpoints.",
+      "page": 1,
+      "latex": "\\Pi_{W1}: \\mathcal{P}(\\mathbb{R}) \\to \\mathbb{R}^N",
+      "symbol_and_unit_ledger": "{'Π_{W1}': 'projection operator mapping probability distributions to quantile locations', 'N': 'number of quantiles, dimensionless'}",
+      "assumptions": "Fixed quantile midpoints τ̂_i = (τ_{i-1} + τ_i)/2, countable state/action space",
+      "breakdown_regime": "Quantile crossing or non-monotonic quantile ordering",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps distributional returns to quantile locations, enabling stochastic gradient descent on Wasserstein-targeted Bellman updates",
+        "source_operator": "quantile_projection_operator",
+        "telemetry": "1-Wasserstein distance convergence during training"
+      }
+    },
+    {
+      "primitive_id": "quantile_regression_loss",
+      "name": "Quantile Regression Loss",
+      "verbatim_quote": "Loss: quantile Huber loss ρ^κ_τ(δ)=|τ-1{δ<0}|·L_κ(δ)/κ on pairwise TD-errors δ_{ij}=r+γθ_j(x′,π(x′))-θ_i(x,a), with κ the Huber threshold.",
+      "page": 1,
+      "latex": "\\mathcal{L}_{\\rho}^{\\kappa}(\\delta) = \\frac{1}{\\kappa} |\\tau - \\mathbb{I}_{\\delta < 0}| \\cdot L_{\\kappa}(\\delta)",
+      "symbol_and_unit_ledger": "{'ρ^κ_τ': 'quantile Huber loss function', 'δ': 'TD error, scalar', 'κ': 'Huber threshold, scalar', 'τ': 'quantile level, scalar in [0,1]'}",
+      "assumptions": "Stochastic gradient descent on empirical samples, fixed quantile midpoints",
+      "breakdown_regime": "Failure to maintain monotonicity of quantile estimates",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables learning of return distribution via quantile regression, bypassing direct Wasserstein contraction",
+        "source_operator": "quantile_regression_loss",
+        "telemetry": "Convergence of quantile estimates to true distributional targets"
+      }
+    },
+    {
+      "primitive_id": "bellman_update_with_quantile_projection",
+      "name": "Bellman Update with Quantile Projection",
+      "verbatim_quote": "- Proposition 2: the combined operator Π_{W1}T^π is a γ-contraction in d̄_∞ (maximal ∞-Wasserstein metric): d̄_∞(Π_{W1}T^πZ_1, Π_{W1}T^πZ_2) ≤ γ d̄_∞(Z_1,Z_2) for countable state/action MDPs.",
+      "page": 1,
+      "latex": "\\Pi_{W1} T^\\pi: \\mathcal{D} \\to \\mathcal{D}, \\quad \\text{where } \\mathcal{D} \\text{ is the space of return distributions}",
+      "symbol_and_unit_ledger": "{'T^π': 'Bellman operator for policy π', 'Π_{W1}': 'quantile projection operator', 'γ': 'discount factor, dimensionless'}",
+      "assumptions": "Countable state/action space, contraction in maximal Wasserstein metric",
+      "breakdown_regime": "Infinite state/action spaces or non-contractive dynamics",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ensures convergence of quantile-based return distributions under Bellman updates",
+        "source_operator": "bellman_update_with_quantile_projection",
+        "telemetry": "Contraction rate of Wasserstein distance between successive quantile distributions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c402edf2d14b15ce_t0",
+      "think": "The core innovation lies in replacing C51’s categorical projection, which minimizes the Cramér distance, with a quantile-based approach that approximates the return distribution using a mixture of Dirac deltas. This allows for stochastic gradient descent to approximate the Wasserstein contraction of the distributional Bellman operator. The quantile projection operator Π_{W1} maps distributions to fixed quantile midpoints, ensuring that the loss function ρ^κ_τ can be optimized via SGD. Theorem 1 establishes that minimizing Wasserstein distance via sample gradients is generally infeasible, motivating the use of quantile regression. Proposition 2 proves that the composition Π_{W1}T^π is a γ-contraction in the maximal Wasserstein metric, providing theoretical grounding for convergence. The QR-DQN loss function aggregates pairwise quantile errors, enabling end-to-end training without explicit support bounds. This reformulates reinforcement learning as a distributional optimization problem solvable via quantile regression.\n\nDeep epistemic analysis for 1926-distributional-reinforcement-learning-with-quantile-regression (c402edf2d14b15ce, domain=cs, pages_read=3/3): Operator 'Quantile Projection Operator' (page 1, domain cs) captures: - Quantile projection Π_{W1}: projects a distribution onto N fixed quantile midpoints. Assumptions: Fixed quantile midpoints τ̂_i = (τ_{i-1} + τ_i)/2, countable state/action space Breakdown regime: Quantile crossing or non-monotonic quantile ordering Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps distributional returns to quantile locations, enabling stochastic gradient descent on Wasserstein-targeted Bellman updates Operator 'Quantile Regression Loss' (page 1, domain cs) captures: Loss: quantile Huber loss ρ^κ_τ(δ)=|τ-1{δ<0}|·L_κ(δ)/κ on pairwise TD-errors δ_{ij}=r+γθ_j(x′,π(x′))-θ_i(x,a), with κ the Huber threshold. Assumptions: Stochastic gradient descent on empirical samples, fixed quantile midpoints Breakdown regime: Failure to maintain monotonicity of quantile estimates Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables learning of return distribution via quantile regression, bypassing direct Wasserstein contraction Operator 'Bellman Update with Quantile Projection' (page 1, domain cs) captures: - Proposition 2: the combined operator Π_{W1}T^π is a γ-contraction in d̄_∞ (maximal ∞-Wasserstein metric): d̄_∞(Π_{W1}T^πZ_1, Π_{W1}T^πZ_2) ≤ γ d̄_∞(Z_1,Z_2) for countable state/action MDPs. Assumptions: Countable state/action space, contraction in maximal Wasserstein metric Breakdown regime: Infinite state/action spaces or non-contractive dynamics Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures convergence of quantile-based return distributions under Bellman updates Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1926-distributional-reinforcement-learning-with-quantile-regression (c402edf2d14b15ce, domain=cs, pages_read=3/3): Operator 'Quantile Projection Operator' (page 1, domain cs) captures: - Quantile projection Π_{W1}: projects a distribution onto N fixed quantile midpoints. Assumptions: Fixed quantile midpoints τ̂_i = (τ_{i-1} + τ_i)/2, countable state/action space Breakdown regime: Quantile crossing or non-monotonic quantile ordering Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps distributional returns to quantile locations, enabling stochastic gradient descent on Wasserstein-targeted Bellman updates Operator 'Quantile Regression Loss' (page 1, domain cs) captures: Loss: quantile Huber loss ρ^κ_τ(δ)=|τ-1{δ<0}|·L_κ(δ)/κ on pairwise TD-errors δ_{ij}=r+γθ_j(x′,π(x′))-θ_i(x,a), with κ the Huber threshold. Assumptions: Stochastic gradient descent on empirical samples, fixed quantile midpoints Breakdown regime: Failure to maintain monotonicity of quantile estimates Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables learning of return distribution via quantile regression, bypassing direct Wasserstein contraction Operator 'Bellman Update with Quantile Projection' (page 1, domain cs) captures: - Proposition 2: the combined operator Π_{W1}T^π is a γ-contraction in d̄_∞ (maximal ∞-Wasserstein metric): d̄_∞(Π_{W1}T^πZ_1, Π_{W1}T^πZ_2) ≤ γ d̄_∞(Z_1,Z_2) for countable state/action MDPs. Assumptions: Countable state/action space, contraction in maximal Wasserstein metric Breakdown regime: Infinite state/action spaces or non-contractive dynamics Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures convergence of quantile-based return distributions under Bellman updates Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the Cramér distance minimization of C51 and the Wasserstein contraction theory of distributional RL, this primitive extends earlier work by bridging the gap between theoretical contraction and practical SGD optimization through quantile regression. Retrocausal Genealogy: Rooted in 1926-distributional-reinforcement-learning-with-quantile-regression (c402edf2d14b15ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include those using traditional point-value methods (e.g., DQN) or categorical distributional approaches (e.g., C51), both of which either fail to optimize Wasserstein distance or lack SGD feasibility. QR-DQN offers a middle ground by leveraging quantile regression to approximate the optimal distributional Bellman target. Theory of Mind & Decision Maker Model: Rooted in 1926-distributional-reinforcement-learning-with-quantile-regression (c402edf2d14b15ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that quantile estimates do not become degenerate or cross, which could lead to incorrect distributional inference. Leakage occurs when fixed quantile spacing fails to capture tail behavior, especially in high-variance environments. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1926-distributional-reinforcement-learning-with-quantile-regression (c402edf2d14b15ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

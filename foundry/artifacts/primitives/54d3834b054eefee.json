@@ -1,0 +1,78 @@
+{
+  "book_id": "54d3834b054eefee",
+  "source_status": "COMPLETE",
+  "title": "matchup-refusal",
+  "file_name": "matchup-refusal.md",
+  "sha256": "54d3834b054eefeecccc22367f745610c1263d5c16ee2703e451afd505f84f4e",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Source integrity gates enforce artifact validity via null-delta degradation; failure modes are binary—either complete refusal or partial enrichment. Universal Lens: Rooted in matchup-refusal (54d3834b054eefee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian source credibility models use gating thresholds to infer predictive confidence; refusal signals update belief states with zero likelihood for invalid inputs. GSI Mapping: Rooted in matchup-refusal (54d3834b054eefee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engines apply two-tier data validation: core sources gate full outputs, while enrichment sources degrade gracefully to null deltas. GSE Mapping: Rooted in matchup-refusal (54d3834b054eefee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "source_integrity_gate",
+      "name": "Source Integrity Gate",
+      "verbatim_quote": "MAX_PROFILE_AGE_MS; return async (candidate: GateCandidate): Promise<SignalRead | null> => { // Hard honesty gate.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'candidate': 'GateCandidate object', 'profile': 'MatchupProfile object', 'ageMs': 'milliseconds', 'maxAgeMs': 'milliseconds'}",
+      "assumptions": "All input data must be present and valid to produce a non-null signal.",
+      "breakdown_regime": "When any required data source fails or returns empty results.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's Bayesian update logic mirrors GSE's conditional refusal mechanism; both validate input integrity before computation.",
+        "source_operator": "source_integrity_gate",
+        "telemetry": "SignalRead presence/absence indicates whether data integrity was sufficient."
+      }
+    },
+    {
+      "primitive_id": "gating_vs_enrichment_split",
+      "name": "Gating vs Enrichment Split",
+      "verbatim_quote": "### The nearest local analogue, quoted `apps/web/lib/conviction/signals/scheme-matchup.ts:177-210` is the one local module that actually withholds on absent/thin matchup data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'modelR': 'Promise resolution for player model', 'scheduleR': 'Promise resolution for schedule context', 'envR': 'Promise resolution for team environment', 'pcR': 'Promise resolution for pressure coverage'}",
+      "assumptions": "Only core data sources can invalidate the entire output; auxiliary data degrades to null values.",
+      "breakdown_regime": "Failure in core data sources leads to full refusal; enrichment failures yield null deltas.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's state transition logic depends on this kernel to determine when to halt or degrade processing based on data availability.",
+        "source_operator": "gating_vs_enrichment_split",
+        "telemetry": "Count of fulfilled vs rejected promises determines artifact validity."
+      }
+    },
+    {
+      "primitive_id": "honest_empty_shape",
+      "name": "Honest Empty Shape",
+      "verbatim_quote": "It returns `null` — no vote — at every failure point: ```ts export function createSchemeMatchupSignal(deps: SchemeMatchupDeps): SignalFn { const live =",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'rows': 'array of matchup rows', 'gamesCovered': 'integer count', 'matchupsRead': 'integer count'}",
+      "assumptions": "Empty but successful reads should not be treated as valid data; they must be explicitly marked as errors.",
+      "breakdown_regime": "Upon encountering an empty yet resolved data fetch.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's error propagation aligns with GSE's refusal semantics by returning structured nulls rather than false positives.",
+        "source_operator": "honest_empty_shape",
+        "telemetry": "Presence of empty structures with error notes confirms intentional refusal."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "54d3834b054eefee_t0",
+      "think": "The core insight is that data integrity drives computational outcomes through a binary refusal mechanism. In GSE, the system evaluates whether critical data sources are available before proceeding with complex reasoning. If any such source fails or returns empty data, the system halts and returns a null signal. This is modeled mathematically as a conditional function f(data) → {signal, null} where the condition checks for presence and validity of core inputs. For GSI, this translates into Bayesian updating where prior beliefs collapse to zero probability upon detection of invalid or missing data. The dualism between gating and enrichment sources ensures that only essential data affects final predictions, while supplementary data degrades gracefully. This structure prevents spurious conclusions from incomplete datasets and maintains robustness across varying data quality levels.\n\nDeep epistemic analysis for matchup-refusal (54d3834b054eefee, domain=other, pages_read=5/5): Operator 'Source Integrity Gate' (page 2, domain other) captures: MAX_PROFILE_AGE_MS; return async (candidate: GateCandidate): Promise<SignalRead | null> => { // Hard honesty gate. Assumptions: All input data must be present and valid to produce a non-null signal. Breakdown regime: When any required data source fails or returns empty results. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's Bayesian update logic mirrors GSE's conditional refusal mechanism; both validate input integrity before computation. Operator 'Gating vs Enrichment Split' (page 1, domain other) captures: ### The nearest local analogue, quoted `apps/web/lib/conviction/signals/scheme-matchup.ts:177-210` is the one local module that actually withholds on absent/thin matchup data. Assumptions: Only core data sources can invalidate the entire output; auxiliary data degrades to null values. Breakdown regime: Failure in core data sources leads to full refusal; enrichment failures yield null deltas. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's state transition logic depends on this kernel to determine when to halt or degrade processing based on data availability. Operator 'Honest Empty Shape' (page 1, domain other) captures: It returns `null` — no vote — at every failure point: ```ts export function createSchemeMatchupSignal(deps: SchemeMatchupDeps): SignalFn { const live = Assumptions: Empty but successful reads should not be treated as valid data; they must be explicitly marked as errors. Breakdown regime: Upon encountering an empty yet resolved data fetch. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's error propagation aligns with GSE's refusal semantics by returning structured nulls rather than false positives. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for matchup-refusal (54d3834b054eefee, domain=other, pages_read=5/5): Operator 'Source Integrity Gate' (page 2, domain other) captures: MAX_PROFILE_AGE_MS; return async (candidate: GateCandidate): Promise<SignalRead | null> => { // Hard honesty gate. Assumptions: All input data must be present and valid to produce a non-null signal. Breakdown regime: When any required data source fails or returns empty results. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's Bayesian update logic mirrors GSE's conditional refusal mechanism; both validate input integrity before computation. Operator 'Gating vs Enrichment Split' (page 1, domain other) captures: ### The nearest local analogue, quoted `apps/web/lib/conviction/signals/scheme-matchup.ts:177-210` is the one local module that actually withholds on absent/thin matchup data. Assumptions: Only core data sources can invalidate the entire output; auxiliary data degrades to null values. Breakdown regime: Failure in core data sources leads to full refusal; enrichment failures yield null deltas. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's state transition logic depends on this kernel to determine when to halt or degrade processing based on data availability. Operator 'Honest Empty Shape' (page 1, domain other) captures: It returns `null` — no vote — at every failure point: ```ts export function createSchemeMatchupSignal(deps: SchemeMatchupDeps): SignalFn { const live = Assumptions: Empty but successful reads should not be treated as valid data; they must be explicitly marked as errors. Breakdown regime: Upon encountering an empty yet resolved data fetch. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's error propagation aligns with GSE's refusal semantics by returning structured nulls rather than false positives. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach builds on classical control theory principles of feedback loops and threshold-based decision-making, extended into probabilistic domains via Bayesian inference and conformal prediction frameworks. Retrocausal Genealogy: Rooted in matchup-refusal (54d3834b054eefee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in matchup-refusal (54d3834b054eefee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit weak data points or introduce noise. The system models these adversarial behaviors by enforcing strict source validation, ensuring that even if an agent attempts to inject false data, the refusal mechanism will detect inconsistencies and prevent erroneous inference. Theory of Mind & Decision Maker Model: Rooted in matchup-refusal (54d3834b054eefee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by separating core and auxiliary data paths. Leakage occurs only when enrichment data is misused as a substitute for gating data. Veto conditions ensure that any attempt to bypass the integrity check triggers immediate rejection of the entire computation chain. Cross-Layer Veto & Anti-Leakage Check: Rooted in matchup-refusal (54d3834b054eefee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

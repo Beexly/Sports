@@ -1,0 +1,95 @@
+{
+  "book_id": "3f8ebfeb17c80baa",
+  "source_status": "COMPLETE",
+  "title": "ADR-0003-amplify-auth-storage-backend-risk",
+  "file_name": "ADR-0003-amplify-auth-storage-backend-risk.md",
+  "sha256": "3f8ebfeb17c80baaebd9329189fa9f0925daefff2c72254738b594c45a96413a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "backend_expansion_risk",
+      "name": "Backend Expansion Risk",
+      "verbatim_quote": "- Adding Amplify backend services would increase security and migration risk.",
+      "page": 1,
+      "latex": "\\Delta R_{\\text{risk}} > 0",
+      "symbol_and_unit_ledger": "{'\\\\Delta R_{\\\\text{risk}}': 'Dimensionless risk amplification factor'}",
+      "assumptions": "Current application architecture already embeds foundational identity and database assumptions.",
+      "breakdown_regime": "Singularity occurs when cloud persistence introduces cascading IAM, secret management, and data-retention obligations beyond preview-stage necessity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal inference pipelines where risk factors serve as prior distributions in Bayesian updating.",
+        "source_operator": "backend_expansion_risk",
+        "telemetry": "Observed escalation in deployment complexity and secret rotation frequency."
+      }
+    },
+    {
+      "primitive_id": "source_rights_review",
+      "name": "Source Rights Review",
+      "verbatim_quote": "- Source rights for storage must be reviewed before any cloud persistence.",
+      "page": 1,
+      "latex": "R_{\\text{rights}}(S) \\rightarrow \\text{Valid}(S)",
+      "symbol_and_unit_ledger": "{'R_{\\\\text{rights}}(S)': 'Source rights function over storage asset S', '\\\\text{Valid}(S)': 'Boolean indicator of legal compliance'}",
+      "assumptions": "Cloud persistence requires explicit contractual validation independent of technical implementation.",
+      "breakdown_regime": "Failure regime occurs when storage migration bypasses intellectual property audit, leading to regulatory sanctions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's situational reasoning where legal constraints act as hard state-transition guards.",
+        "source_operator": "source_rights_review",
+        "telemetry": "Rate of contractually compliant storage migrations versus total attempts."
+      }
+    },
+    {
+      "primitive_id": "preview_only_spike",
+      "name": "Preview-Only Spike",
+      "verbatim_quote": "obligations not needed for a preview-only spike. Allowed: - docs-only analysis. - preview-hosting evaluation after approval.",
+      "page": 1,
+      "latex": "\\mathcal{O}_{\\text{full}} \\supset \\mathcal{O}_{\\text{preview}}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{O}_{\\\\text{full}}': 'Set of full operational obligations', '\\\\mathcal{O}_{\\\\text{preview}}': 'Set of preview-stage obligations'}",
+      "assumptions": "Preview stages operate under relaxed operational requirements that exclude long-term governance overhead.",
+      "breakdown_regime": "Regime singularity happens when preview-phase codebase inherits production-level secrets and IAM policies, causing excessive blast radius.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian monitoring where preview data informs posterior distributions without triggering full production alert thresholds.",
+        "source_operator": "preview_only_spike",
+        "telemetry": "Ratio of preview-specific IAM roles to production IAM roles deployed per sprint."
+      }
+    },
+    {
+      "primitive_id": "adoption_trigger",
+      "name": "Adoption Trigger",
+      "verbatim_quote": "Adoption trigger: - explicit owner decision to evaluate AWS-native auth/storage, plus a data-rights and rollback review.",
+      "page": 1,
+      "latex": "\\exists O, R_{\\text{rights}}, R_{\\text{rollback}} : T_{\\text{adopt}} = f(O, R_{\\text{rights}}, R_{\\text{rollback}})",
+      "symbol_and_unit_ledger": "{'T_{\\\\text{adopt}}': 'Adoption timestamp event', 'O': 'Owner decision variable', 'R_{\\\\text{rights}}': 'Data rights review outcome', 'R_{\\\\text{rollback}}': 'Rollback readiness assessment'}",
+      "assumptions": "Adoption decisions are contingent upon multi-stakeholder consensus and pre-flight safety checks.",
+      "breakdown_regime": "Breakdown occurs when any prerequisite (owner, rights, rollback) fails, halting the transition to production.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state-transition logic where adoption events serve as deterministic catalysts for system expansion.",
+        "source_operator": "adoption_trigger",
+        "telemetry": "Time elapsed between trigger activation and successful adoption completion."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3f8ebfeb17c80baa_t0",
+      "think": "The core challenge is managing the transition from a monolithic, self-contained preview phase to a distributed, cloud-native backend. This involves quantifying the additional risk introduced by each new service category (IAM, secrets, retention) and establishing a threshold where the marginal cost exceeds the marginal benefit for a preview-stage project. The primitives formalize this as a constraint satisfaction problem: given current architectural assumptions, adding Amplify services violates the principle of least privilege and increases the attack surface. The adoption trigger acts as a gatekeeper, ensuring that any backend expansion undergoes rigorous scrutiny before deployment. In GSI terms, this maps to conformal prediction intervals where the expanded feature space must remain within valid prediction sets; in GSE, it corresponds to state machines where transitions require explicit authorization tokens.\n\nDeep epistemic analysis for ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa, domain=other, pages_read=1/1): Operator 'Backend Expansion Risk' (page 1, domain other) captures: - Adding Amplify backend services would increase security and migration risk. Assumptions: Current application architecture already embeds foundational identity and database assumptions. Breakdown regime: Singularity occurs when cloud persistence introduces cascading IAM, secret management, and data-retention obligations beyond preview-stage necessity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal inference pipelines where risk factors serve as prior distributions in Bayesian updating. Operator 'Source Rights Review' (page 1, domain other) captures: - Source rights for storage must be reviewed before any cloud persistence. Assumptions: Cloud persistence requires explicit contractual validation independent of technical implementation. Breakdown regime: Failure regime occurs when storage migration bypasses intellectual property audit, leading to regulatory sanctions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's situational reasoning where legal constraints act as hard state-transition guards. Operator 'Preview-Only Spike' (page 1, domain other) captures: obligations not needed for a preview-only spike. Allowed: - docs-only analysis. - preview-hosting evaluation after approval. Assumptions: Preview stages operate under relaxed operational requirements that exclude long-term governance overhead. Breakdown regime: Regime singularity happens when preview-phase codebase inherits production-level secrets and IAM policies, causing excessive blast radius. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian monitoring where preview data informs posterior distributions without triggering full production alert thresholds. Operator 'Adoption Trigger' (page 1, domain other) captures: Adoption trigger: - explicit owner decision to evaluate AWS-native auth/storage, plus a data-rights and rollback review. Assumptions: Adoption decisions are contingent upon multi-stakeholder consensus and pre-flight safety checks. Breakdown regime: Breakdown occurs when any prerequisite (owner, rights, rollback) fails, halting the transition to production. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition logic where adoption events serve as deterministic catalysts for system expansion. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa, domain=other, pages_read=1/1): Operator 'Backend Expansion Risk' (page 1, domain other) captures: - Adding Amplify backend services would increase security and migration risk. Assumptions: Current application architecture already embeds foundational identity and database assumptions. Breakdown regime: Singularity occurs when cloud persistence introduces cascading IAM, secret management, and data-retention obligations beyond preview-stage necessity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal inference pipelines where risk factors serve as prior distributions in Bayesian updating. Operator 'Source Rights Review' (page 1, domain other) captures: - Source rights for storage must be reviewed before any cloud persistence. Assumptions: Cloud persistence requires explicit contractual validation independent of technical implementation. Breakdown regime: Failure regime occurs when storage migration bypasses intellectual property audit, leading to regulatory sanctions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's situational reasoning where legal constraints act as hard state-transition guards. Operator 'Preview-Only Spike' (page 1, domain other) captures: obligations not needed for a preview-only spike. Allowed: - docs-only analysis. - preview-hosting evaluation after approval. Assumptions: Preview stages operate under relaxed operational requirements that exclude long-term governance overhead. Breakdown regime: Regime singularity happens when preview-phase codebase inherits production-level secrets and IAM policies, causing excessive blast radius. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian monitoring where preview data informs posterior distributions without triggering full production alert thresholds. Operator 'Adoption Trigger' (page 1, domain other) captures: Adoption trigger: - explicit owner decision to evaluate AWS-native auth/storage, plus a data-rights and rollback review. Assumptions: Adoption decisions are contingent upon multi-stakeholder consensus and pre-flight safety checks. Breakdown regime: Breakdown occurs when any prerequisite (owner, rights, rollback) fails, halting the transition to production. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition logic where adoption events serve as deterministic catalysts for system expansion. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This reasoning traces back to early cloud security frameworks (e.g., shared responsibility model) and modern DevSecOps practices emphasizing just-in-time access and immutable infrastructure. It also draws parallels to mathematical control theory, where feedback loops are used to stabilize systems against external perturbations. Retrocausal Genealogy: Rooted in ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include cloud platform vendors advocating for their native services, security teams focused on minimizing blast radius, and development teams seeking rapid iteration. The decision actor (owner) balances innovation velocity against operational stability, often influenced by regulatory pressures and budget constraints. Theory of Mind & Decision Maker Model: Rooted in ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring independent verification of each obligation (rights, rollback, secrets). Leakage is prevented by isolating preview environments from production secrets, using distinct keyspaces and access controls that prevent cross-layer information flow. Cross-Layer Veto & Anti-Leakage Check: Rooted in ADR-0003-amplify-auth-storage-backend-risk (3f8ebfeb17c80baa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

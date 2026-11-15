@@ -1,0 +1,78 @@
+{
+  "book_id": "db94bd2a214a8813",
+  "source_status": "COMPLETE",
+  "title": "KpiCard.prompt",
+  "file_name": "KpiCard.prompt.md",
+  "sha256": "db94bd2a214a88135f86390a8ac17e15c41281b850f8c67a07947d8f91aa83a8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "KpiCard as a structured telemetry operator embedding multi-dimensional sportive state in probabilistic inference space. Universal Lens: Rooted in KpiCard.prompt (db94bd2a214a8813), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update over consensus depth and line age using KpiCard-derived observables as sufficient statistics for predictive confidence. GSI Mapping: Rooted in KpiCard.prompt (db94bd2a214a8813), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine employs KpiCard states to transition between predictive regimes based on real-time book coverage and quote staleness. GSE Mapping: Rooted in KpiCard.prompt (db94bd2a214a8813), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "picks_on_board",
+      "name": "Picks on Board",
+      "verbatim_quote": "=> ( <div style={grid}> <KpiCard label=\"Picks on board\" value=\"24\" sublabel=\"Across 4 sports today\" /> <KpiCard label=\"Books",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{\\\\text{board}}': '\\\\text{dimensionless count of active picks}'}",
+      "assumptions": "Static count of picks across multiple sports; assumes uniform distribution of picks per sport.",
+      "breakdown_regime": "When P_{\\text{board}} \\to 0, predictive signal strength degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's ensemble cardinality measure; used in conformal prediction bounds.",
+        "source_operator": "picks_on_board",
+        "telemetry": "Observable: number of active betting lines."
+      }
+    },
+    {
+      "primitive_id": "books_covered",
+      "name": "Books Covered",
+      "verbatim_quote": "=> ( <div style={grid}> <KpiCard label=\"Picks on board\" value=\"24\" sublabel=\"Across 4 sports today\" /> <KpiCard label=\"Books",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_{\\\\text{covered}}': '\\\\text{dimensionless count of distinct books}'}",
+      "assumptions": "Each book contributes independent information; consensus depth increases with B_{\\text{covered}}.",
+      "breakdown_regime": "When B_{\\text{covered}} \\to 0, model lacks external validation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's information diversity kernel; reflects agent consensus.",
+        "source_operator": "books_covered",
+        "telemetry": "Observable: number of distinct data sources covering event."
+      }
+    },
+    {
+      "primitive_id": "line_age",
+      "name": "Line Age",
+      "verbatim_quote": "sublabel=\"Consensus depth\" tone=\"good\" /> <KpiCard label=\"Line age\" value=\"12m\" sublabel=\"Oldest quote on the board\" tone=\"bad\" /> </div>",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{age}}': '\\\\text{time in months since last update}'}",
+      "assumptions": "Stale lines reduce predictive accuracy; exponential decay of relevance with time.",
+      "breakdown_regime": "When T_{\\text{age}} \\to \\infty, line becomes unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's temporal entropy estimator; used in uncertainty quantification.",
+        "source_operator": "line_age",
+        "telemetry": "Observable: maximum time elapsed since quote modification."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "db94bd2a214a8813_t0",
+      "think": "The KpiCard constructs a structured telemetry framework where each card encodes a scalar observation with associated metadata. The 'Picks on Board' operator serves as a cardinality measure of active predictions, enabling GSI to compute ensemble variance. The 'Books Covered' operator acts as a proxy for information diversity, allowing GSE to assess consensus reliability. The 'Line Age' operator introduces a temporal dimension, modeling the degradation of predictive fidelity over time. These operators form a triadic basis for dual inference: one rooted in combinatorial sampling (picks), another in information-theoretic consistency (books), and a third in temporal coherence (age). Failure modes include: zero picks leading to null hypothesis collapse, minimal book coverage causing overfitting, and stale lines triggering spurious confidence. Each primitive maps to a distinct layer of GSI’s Bayesian updating and GSE’s state transition logic.\n\nDeep epistemic analysis for KpiCard.prompt (db94bd2a214a8813, domain=other, pages_read=1/1): Operator 'Picks on Board' (page 1, domain other) captures: => ( <div style={grid}> <KpiCard label=\"Picks on board\" value=\"24\" sublabel=\"Across 4 sports today\" /> <KpiCard label=\"Books Assumptions: Static count of picks across multiple sports; assumes uniform distribution of picks per sport. Breakdown regime: When P_{\\text{board}} \\to 0, predictive signal strength degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's ensemble cardinality measure; used in conformal prediction bounds. Operator 'Books Covered' (page 1, domain other) captures: => ( <div style={grid}> <KpiCard label=\"Picks on board\" value=\"24\" sublabel=\"Across 4 sports today\" /> <KpiCard label=\"Books Assumptions: Each book contributes independent information; consensus depth increases with B_{\\text{covered}}. Breakdown regime: When B_{\\text{covered}} \\to 0, model lacks external validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's information diversity kernel; reflects agent consensus. Operator 'Line Age' (page 1, domain other) captures: sublabel=\"Consensus depth\" tone=\"good\" /> <KpiCard label=\"Line age\" value=\"12m\" sublabel=\"Oldest quote on the board\" tone=\"bad\" /> </div> Assumptions: Stale lines reduce predictive accuracy; exponential decay of relevance with time. Breakdown regime: When T_{\\text{age}} \\to \\infty, line becomes unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's temporal entropy estimator; used in uncertainty quantification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for KpiCard.prompt (db94bd2a214a8813, domain=other, pages_read=1/1): Operator 'Picks on Board' (page 1, domain other) captures: => ( <div style={grid}> <KpiCard label=\"Picks on board\" value=\"24\" sublabel=\"Across 4 sports today\" /> <KpiCard label=\"Books Assumptions: Static count of picks across multiple sports; assumes uniform distribution of picks per sport. Breakdown regime: When P_{\\text{board}} \\to 0, predictive signal strength degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's ensemble cardinality measure; used in conformal prediction bounds. Operator 'Books Covered' (page 1, domain other) captures: => ( <div style={grid}> <KpiCard label=\"Picks on board\" value=\"24\" sublabel=\"Across 4 sports today\" /> <KpiCard label=\"Books Assumptions: Each book contributes independent information; consensus depth increases with B_{\\text{covered}}. Breakdown regime: When B_{\\text{covered}} \\to 0, model lacks external validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's information diversity kernel; reflects agent consensus. Operator 'Line Age' (page 1, domain other) captures: sublabel=\"Consensus depth\" tone=\"good\" /> <KpiCard label=\"Line age\" value=\"12m\" sublabel=\"Oldest quote on the board\" tone=\"bad\" /> </div> Assumptions: Stale lines reduce predictive accuracy; exponential decay of relevance with time. Breakdown regime: When T_{\\text{age}} \\to \\infty, line becomes unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's temporal entropy estimator; used in uncertainty quantification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century statistical process control and modernized through machine learning telemetry frameworks. Influenced by information theory and causal inference models from econometrics and sports analytics. Retrocausal Genealogy: Rooted in KpiCard.prompt (db94bd2a214a8813), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in KpiCard.prompt (db94bd2a214a8813), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models competing agents: bookmakers, bettors, and prediction algorithms. Each KpiCard reflects a different agent’s perspective—picks reflect bettor behavior, books reflect market aggregation, and age reflects algorithmic timeliness. Theory of Mind & Decision Maker Model: Rooted in KpiCard.prompt (db94bd2a214a8813), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by orthogonal dimensions: picks (count), books (diversity), age (temporal). Leakage occurs when temporal decay is misattributed to information loss, or when book diversity is conflated with pick volume. Cross-Layer Veto & Anti-Leakage Check: Rooted in KpiCard.prompt (db94bd2a214a8813), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

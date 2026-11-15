@@ -1,0 +1,78 @@
+{
+  "book_id": "8139b60568bab0ef",
+  "source_status": "COMPLETE",
+  "title": "AGENT_FAILURE_MODES",
+  "file_name": "AGENT_FAILURE_MODES.md",
+  "sha256": "8139b60568bab0ef07264f110bcf40e92b89d63ffec569aa4d015f5df45689ed",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Agent failure modes form a categorical fiber bundle over operational domains; each failure type corresponds to a structural singularity in information flow, governed by control-theoretic constraints. Universal Lens: Rooted in AGENT_FAILURE_MODES (8139b60568bab0ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models agent failures via Bayesian belief updates on source integrity and cloud status claims, using conformal prediction to calibrate uncertainty bounds on model proofs and secret leakage risks. GSI Mapping: Rooted in AGENT_FAILURE_MODES (8139b60568bab0ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes agent behavior as state transitions through a Markov decision process, where failure modes act as absorbing states triggered by violations of access control and telemetry integrity checks. GSE Mapping: Rooted in AGENT_FAILURE_MODES (8139b60568bab0ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "blocked_source_usage",
+      "name": "Source Integrity Constraint",
+      "verbatim_quote": "# Agent Failure Modes Failure: agent uses a blocked source. Control: source registry adapter and tests.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'set of valid sources (dimensionless)', 'B': 'set of blocked sources (dimensionless)', 'A': \"agent's source set (dimensionless)\"}",
+      "assumptions": "Agent operates under bounded rationality; source registry is complete and consistent.",
+      "breakdown_regime": "When A ∩ B ≠ ∅, integrity violation occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Source registry constraint maps to a topological closure operation on the agent's input space.",
+        "source_operator": "blocked_source_usage",
+        "telemetry": "Registry compliance rate"
+      }
+    },
+    {
+      "primitive_id": "cloud_status_invention",
+      "name": "Cloud Status Inflation",
+      "verbatim_quote": "starts paid AWS work. Control: AWS gates default off. Failure: agent invents cloud status. Control: final",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'claimed cloud state (dimensionless)', 'L': 'live resource state (dimensionless)', 'F': 'final report (dimensionless)'}",
+      "assumptions": "Agent has access to both claimed and live data; final report is authoritative.",
+      "breakdown_regime": "When C ≠ L and F ≠ L, status inflation detected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Inflated status arises from a kernel of misaligned incentives in reporting protocols.",
+        "source_operator": "cloud_status_invention",
+        "telemetry": "Discrepancy between claimed and live resource states"
+      }
+    },
+    {
+      "primitive_id": "secret_leakage",
+      "name": "Information-Theoretic Leakage",
+      "verbatim_quote": "local skeletons from live resources. Failure: agent leaks secrets. Control: no secret files and `npm run",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'entropy of secret data (bits)', 'I': 'information channel capacity (bits/second)', 'L': 'leakage event indicator (dimensionless)'}",
+      "assumptions": "Secrets are modeled as high-entropy variables; leakage is detectable via channel capacity analysis.",
+      "breakdown_regime": "When I > H, leakage threshold crossed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Leakage maps to an information-theoretic entropy bound violation in secure communication channels.",
+        "source_operator": "secret_leakage",
+        "telemetry": "Entropy increase in exposed data streams"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8139b60568bab0ef_t0",
+      "think": "Each agent failure mode constitutes a distinct category of operational breakdown in a structured information system. The first, blocked source usage, reflects a failure in input validation—a categorical error that can be resolved via registry enforcement. The second, cloud status invention, introduces a semantic inconsistency between claimed and actual states, modeled as a divergence in probabilistic belief systems. The third, secret leakage, represents a breakdown in information-theoretic security, where entropy thresholds are exceeded due to improper access control. These primitives form a fibered structure over the agent’s operational domain, with each failure mode corresponding to a specific layer of abstraction in the system’s logical architecture. The interplay between these modes reveals a dual nature: one rooted in syntactic correctness and another in semantic fidelity. Together, they define a failure manifold that can be analyzed through category theory and information geometry.\n\nDeep epistemic analysis for AGENT_FAILURE_MODES (8139b60568bab0ef, domain=other, pages_read=1/1): Operator 'Source Integrity Constraint' (page 1, domain other) captures: # Agent Failure Modes Failure: agent uses a blocked source. Control: source registry adapter and tests. Assumptions: Agent operates under bounded rationality; source registry is complete and consistent. Breakdown regime: When A ∩ B ≠ ∅, integrity violation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Source registry constraint maps to a topological closure operation on the agent's input space. Operator 'Cloud Status Inflation' (page 1, domain other) captures: starts paid AWS work. Control: AWS gates default off. Failure: agent invents cloud status. Control: final Assumptions: Agent has access to both claimed and live data; final report is authoritative. Breakdown regime: When C ≠ L and F ≠ L, status inflation detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Inflated status arises from a kernel of misaligned incentives in reporting protocols. Operator 'Information-Theoretic Leakage' (page 1, domain other) captures: local skeletons from live resources. Failure: agent leaks secrets. Control: no secret files and `npm run Assumptions: Secrets are modeled as high-entropy variables; leakage is detectable via channel capacity analysis. Breakdown regime: When I > H, leakage threshold crossed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Leakage maps to an information-theoretic entropy bound violation in secure communication channels. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for AGENT_FAILURE_MODES (8139b60568bab0ef, domain=other, pages_read=1/1): Operator 'Source Integrity Constraint' (page 1, domain other) captures: # Agent Failure Modes Failure: agent uses a blocked source. Control: source registry adapter and tests. Assumptions: Agent operates under bounded rationality; source registry is complete and consistent. Breakdown regime: When A ∩ B ≠ ∅, integrity violation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Source registry constraint maps to a topological closure operation on the agent's input space. Operator 'Cloud Status Inflation' (page 1, domain other) captures: starts paid AWS work. Control: AWS gates default off. Failure: agent invents cloud status. Control: final Assumptions: Agent has access to both claimed and live data; final report is authoritative. Breakdown regime: When C ≠ L and F ≠ L, status inflation detected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Inflated status arises from a kernel of misaligned incentives in reporting protocols. Operator 'Information-Theoretic Leakage' (page 1, domain other) captures: local skeletons from live resources. Failure: agent leaks secrets. Control: no secret files and `npm run Assumptions: Secrets are modeled as high-entropy variables; leakage is detectable via channel capacity analysis. Breakdown regime: When I > H, leakage threshold crossed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Leakage maps to an information-theoretic entropy bound violation in secure communication channels. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early control theory and information theory, these primitives echo von Neumann's foundational work on self-reproducing automata and Shannon's information entropy. They extend to modern adversarial machine learning frameworks and formal verification paradigms. Retrocausal Genealogy: Rooted in AGENT_FAILURE_MODES (8139b60568bab0ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents may act rationally within their own belief space but fail when their internal models diverge from external constraints. This suggests a dual-agent framework: one optimizing for internal consistency and another enforcing external integrity. The conflict arises when these agents' objectives are misaligned. Theory of Mind & Decision Maker Model: Rooted in AGENT_FAILURE_MODES (8139b60568bab0ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each failure mode operates in orthogonal dimensions—syntactic, semantic, and informational. Leakage cannot be masked by status inflation, nor can status inflation obscure source integrity issues. Veto conditions are defined by cross-layer orthogonality and mutual exclusion of failure signatures. Cross-Layer Veto & Anti-Leakage Check: Rooted in AGENT_FAILURE_MODES (8139b60568bab0ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

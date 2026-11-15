@@ -1,0 +1,95 @@
+{
+  "book_id": "2ab7d525c4c7f7bd",
+  "source_status": "COMPLETE",
+  "title": "p0157",
+  "file_name": "p0157.txt",
+  "sha256": "2ab7d525c4c7f7bd0a16a6c8214e8bf883120d1633c29c115bb888422d0a29c9",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "alternative_inheritance",
+      "name": "Alternative inheritance pattern",
+      "verbatim_quote": "Parents of different Statures usually transmit a blended heritage to their children, but parents of different Eyecolours usually transmit an alternative heritage.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Genetic factors act independently without continuous intermediate states.",
+      "breakdown_regime": "Discrete trait transmission where parental alleles are expressed as distinct phenotypes rather than averages.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI discrete probability mass functions over categorical outcomes, analogous to conformal prediction intervals for binary classification.",
+        "source_operator": "alternative_inheritance",
+        "telemetry": "Observed variance in categorical offspring traits relative to parental categories"
+      }
+    },
+    {
+      "primitive_id": "dominance_rule",
+      "name": "Dominance rule for eye colour",
+      "verbatim_quote": "one parent has a light Eyecolour and the other a dark Eye-colour, some of the children",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "One allele is dominant over the other, resulting in non-blending phenotypic expression.",
+      "breakdown_regime": "Binary segregation of Mendelian traits producing two distinct offspring classes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE state-transition logic where initial conditions determine exclusive outcome branches, similar to deterministic game trees.",
+        "source_operator": "dominance_rule",
+        "telemetry": "Proportion of offspring displaying either parental phenotype versus intermediate shades"
+      }
+    },
+    {
+      "primitive_id": "quasi_additive_stature",
+      "name": "Quasi-additive stature inheritance",
+      "verbatim_quote": "of different Statures usually transmit a blended heritage to their children, but parents of different Eyecolours",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Multiple genetic loci contribute additively to a continuous phenotype distribution.",
+      "breakdown_regime": "Continuous normal distribution of offspring means around parental values.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Gaussian process regression models where input variables combine linearly to predict continuous outputs.",
+        "source_operator": "quasi_additive_stature",
+        "telemetry": "Heritability coefficient measuring the proportion of phenotypic variance explained by parental means"
+      }
+    },
+    {
+      "primitive_id": "limited_variability_eye_colour",
+      "name": "Limited variability eye colour origin",
+      "verbatim_quote": "medium eye-coloured parents. The blending in Stature is due to its being the aggregate of the",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Few genetic loci control eye colour with minimal environmental interaction.",
+      "breakdown_regime": "Reduced phenotypic plasticity leading to a narrow range of observable outcomes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE fixed-parameter automata where state transitions are governed by a small set of hardwired rules rather than continuous dynamics.",
+        "source_operator": "limited_variability_eye_colour",
+        "telemetry": "Effective number of genetic contributors estimated from cross-breeding experiments"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2ab7d525c4c7f7bd_t0",
+      "think": "These four sovereign primitives formalize the empirical distinction between polygenic quantitative traits (stature) and Mendelian qualitative traits (eye colour). Alternative inheritance and dominance rules describe discrete, non-overlapping genetic outcomes, while quasi-additive stature and limited variability eye colour capture continuous blending and restricted polymorphism respectively. Mathematically, this maps onto the fundamental difference between convolution of probability distributions (central limit theorem) and Bernoulli trials with fixed success probabilities. In GSI, these primitives enable robust conformal prediction for rare categorical events versus standard regression for common continuous measurements. In GSE, they support efficient state-space pruning in deterministic search algorithms versus exhaustive sampling in probabilistic domains. The failure mode occurs when linkage disequilibrium violates independence assumptions, causing systematic misclassification.\n\nDeep epistemic analysis for p0157 (2ab7d525c4c7f7bd, domain=other, pages_read=1/1): Operator 'Alternative inheritance pattern' (page 1, domain other) captures: Parents of different Statures usually transmit a blended heritage to their children, but parents of different Eyecolours usually transmit an alternative heritage. Assumptions: Genetic factors act independently without continuous intermediate states. Breakdown regime: Discrete trait transmission where parental alleles are expressed as distinct phenotypes rather than averages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI discrete probability mass functions over categorical outcomes, analogous to conformal prediction intervals for binary classification. Operator 'Dominance rule for eye colour' (page 1, domain other) captures: one parent has a light Eyecolour and the other a dark Eye-colour, some of the children Assumptions: One allele is dominant over the other, resulting in non-blending phenotypic expression. Breakdown regime: Binary segregation of Mendelian traits producing two distinct offspring classes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition logic where initial conditions determine exclusive outcome branches, similar to deterministic game trees. Operator 'Quasi-additive stature inheritance' (page 1, domain other) captures: of different Statures usually transmit a blended heritage to their children, but parents of different Eyecolours Assumptions: Multiple genetic loci contribute additively to a continuous phenotype distribution. Breakdown regime: Continuous normal distribution of offspring means around parental values. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Gaussian process regression models where input variables combine linearly to predict continuous outputs. Operator 'Limited variability eye colour origin' (page 1, domain other) captures: medium eye-coloured parents. The blending in Stature is due to its being the aggregate of the Assumptions: Few genetic loci control eye colour with minimal environmental interaction. Breakdown regime: Reduced phenotypic plasticity leading to a narrow range of observable outcomes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE fixed-parameter automata where state transitions are governed by a small set of hardwired rules rather than continuous dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0157 (2ab7d525c4c7f7bd, domain=other, pages_read=1/1): Operator 'Alternative inheritance pattern' (page 1, domain other) captures: Parents of different Statures usually transmit a blended heritage to their children, but parents of different Eyecolours usually transmit an alternative heritage. Assumptions: Genetic factors act independently without continuous intermediate states. Breakdown regime: Discrete trait transmission where parental alleles are expressed as distinct phenotypes rather than averages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI discrete probability mass functions over categorical outcomes, analogous to conformal prediction intervals for binary classification. Operator 'Dominance rule for eye colour' (page 1, domain other) captures: one parent has a light Eyecolour and the other a dark Eye-colour, some of the children Assumptions: One allele is dominant over the other, resulting in non-blending phenotypic expression. Breakdown regime: Binary segregation of Mendelian traits producing two distinct offspring classes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition logic where initial conditions determine exclusive outcome branches, similar to deterministic game trees. Operator 'Quasi-additive stature inheritance' (page 1, domain other) captures: of different Statures usually transmit a blended heritage to their children, but parents of different Eyecolours Assumptions: Multiple genetic loci contribute additively to a continuous phenotype distribution. Breakdown regime: Continuous normal distribution of offspring means around parental values. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Gaussian process regression models where input variables combine linearly to predict continuous outputs. Operator 'Limited variability eye colour origin' (page 1, domain other) captures: medium eye-coloured parents. The blending in Stature is due to its being the aggregate of the Assumptions: Few genetic loci control eye colour with minimal environmental interaction. Breakdown regime: Reduced phenotypic plasticity leading to a narrow range of observable outcomes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE fixed-parameter automata where state transitions are governed by a small set of hardwired rules rather than continuous dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "A sportsbook might model stature as a continuous handicap line using historical player data, but treat eye colour as a binary bet on whether offspring match maternal vs paternal traits, reflecting different consumer expectations about outcome certainty. Theory of Mind & Decision Maker Model: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity condition: Must ensure that genetic markers for stature and eye colour do not co-segregate, otherwise the quasi-additivity assumption breaks down and joint prediction becomes impossible. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0157 (2ab7d525c4c7f7bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

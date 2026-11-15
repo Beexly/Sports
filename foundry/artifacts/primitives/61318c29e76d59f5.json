@@ -1,0 +1,289 @@
+{
+  "book_id": "61318c29e76d59f5",
+  "source_status": "COMPLETE",
+  "title": "2309.09089v2",
+  "file_name": "2309.09089v2.pdf",
+  "sha256": "61318c29e76d59f5329f3c9416a68e523df0217d695c813125d4d5a4169ca134",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 10,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Geometric dynamics of Sinkhorn iterations via heat kernel flows and ODE regularization on manifolds. Riemannian gradient flows on entropy functionals define Sinkhorn iterations as compositional dynamics in measure space. Universal Lens: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian inference through posterior contraction on transport maps using Sinkhorn geometry and entropy regularization. Bayesian inference via Sinkhorn flows maps prior-posterior updates through Fisher-Rao geometry of entropic regularizations. GSI Mapping: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "Situational reasoning in transport dynamics via iterative flow updates with stability-driven convergence acceleration. Situationally grounded state transitions in GSE follow gradient descent on joint distributions using iterative reweighting. GSE Mapping: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "61318c29e76d59f5_w0_g1",
+      "name": "2309.09089v2 Ch.1 Grounded Operator",
+      "verbatim_quote": "ON THE GEOMETRY AND DYNAMICAL FORMULATION OF THE SINKHORN ALGORITHM FOR OPTIMAL TRANSPORT KLAS MODIN On the occasion of the 60th birthdays of Hans Munthe–Kaas and Brynjulf Owren Abstract.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 61318c29e76d59f5_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "61318c29e76d59f5_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "61318c29e76d59f5_w0_g2",
+      "name": "2309.09089v2 Ch.1 Grounded Operator",
+      "verbatim_quote": "The Sinkhorn algorithm is a numerical method for the solution of optimal transport problems.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 61318c29e76d59f5_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "61318c29e76d59f5_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "61318c29e76d59f5_w0_g3",
+      "name": "2309.09089v2 Ch.1 Grounded Operator",
+      "verbatim_quote": "Here, I give a brief survey of this algorithm, with a strong emphasis on its geometric origin: it is natural to view it as a discretization, by standard methods, of a non-linear integral equation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 61318c29e76d59f5_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "61318c29e76d59f5_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "sinkhorn_ode_flow",
+      "name": "Sinkhorn ODE Flow",
+      "verbatim_quote": "Notice that if C = R M aeε∆b then, along the flow (4), d dsC = Z M aeε∆b log \u0012aeε∆b ρ0 \u0013 Z M beε∆a log \u0012beε∆a ρ1 \u0013 .",
+      "page": 3,
+      "latex": "\\frac{d}{ds}C = \\int_M a e^{\\varepsilon \\Delta b} \\log \\left(\\frac{a e^{\\varepsilon \\Delta b}}{\\rho_0}\\right) + \\int_M b e^{\\varepsilon \\Delta a} \\log \\left(\\frac{b e^{\\varepsilon \\Delta a}}{\\rho_1}\\right)",
+      "symbol_and_unit_ledger": "{'C': 'dimensionless', 'a, b': 'probability densities, dimensionless', 'ε': 'regularization parameter, dimensionless', 'Δ': 'Laplacian operator, inverse length squared', 'ρ₀, ρ₁': 'reference measures, probability density units'}",
+      "assumptions": "M is a compact Riemannian manifold; ε > 0; a, b are positive functions; ρ₀, ρ₁ are probability densities.",
+      "breakdown_regime": "ε → 0 leads to loss of connection to original problem (4).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's iterative update mechanism via entropy-regularized optimal transport dynamics.",
+        "source_operator": "sinkhorn_ode_flow",
+        "telemetry": "Convergence rate of entropy functional under flow."
+      }
+    },
+    {
+      "primitive_id": "trotter_euler_discretization",
+      "name": "Trotter-Euler Discretization",
+      "verbatim_quote": "The discrete Sinkhorn algorithm on M is given by the time discretization (6) with h = 1.",
+      "page": 3,
+      "latex": "f^{(k+1)} = (1-h)f^{(k)} - h \\log(K_\\varepsilon \\exp g^{(k)}) + h \\log q, \\quad g^{(k+1)} = (1-h)g^{(k)} - h \\log(K_\\varepsilon^\\top \\exp f^{(k+1)}) + h \\log p",
+      "symbol_and_unit_ledger": "{'f, g': 'logarithms of potential functions, dimensionless', 'h': 'time step size, dimensionless', 'K_ε': 'heat kernel, probability density units', 'q, p': 'marginal distributions, probability density units'}",
+      "assumptions": "Time step h = 1; K_ε symmetric; convergence under stability condition.",
+      "breakdown_regime": "h too large causes instability; h → 0 recovers continuous limit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI’s belief propagation via iterative message passing on transport graphs.",
+        "source_operator": "trotter_euler_discretization",
+        "telemetry": "Stability region of the Trotter-Euler scheme vs. convergence speed."
+      }
+    },
+    {
+      "primitive_id": "overrelaxed_sinkhorn",
+      "name": "Overrelaxed Sinkhorn Algorithm",
+      "verbatim_quote": "For h > 1 this is the over-relaxed Sinkhorn algorithm, which convergences faster than (7) (see [23, 18, 12]).",
+      "page": 3,
+      "latex": "h > 1 \\Rightarrow \\text{accelerated convergence}",
+      "symbol_and_unit_ledger": "{'h': 'step size, dimensionless', 'convergence_rate': 'rate of decrease in error norm'}",
+      "assumptions": "h > 1; ε fixed; system remains stable under larger steps.",
+      "breakdown_regime": "h beyond stability threshold leads to divergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's adaptive temporal stepping based on linear stability analysis.",
+        "source_operator": "overrelaxed_sinkhorn",
+        "telemetry": "Eigenvalue magnitudes of flow map vs. iteration count."
+      }
+    },
+    {
+      "primitive_id": "heat_kernel_property",
+      "name": "Heat Kernel Symmetry Property",
+      "verbatim_quote": ", aN) and the heat kernel property Kε(yi, xj) = Kε(xj, yi) is used.",
+      "page": 3,
+      "latex": "K_\\varepsilon(y_i, x_j) = K_\\varepsilon(x_j, y_i)",
+      "symbol_and_unit_ledger": "{'K_ε': 'heat kernel, probability density units', 'x_i, y_j': 'points on manifold M, spatial coordinates'}",
+      "assumptions": "Symmetric heat kernel; M is compact Riemannian manifold.",
+      "breakdown_regime": "Non-symmetric kernels break symmetry-based derivations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI’s symmetric information flow across marginal distributions.",
+        "source_operator": "heat_kernel_property",
+        "telemetry": "Symmetry preservation in iterative Sinkhorn updates."
+      }
+    },
+    {
+      "primitive_id": "61318c29e76d59f5_w2_g1",
+      "name": "2309.09089v2 Ch.3 Grounded Operator",
+      "verbatim_quote": "6 KLAS MODIN Let me first introduce two central functionals from information theory.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 61318c29e76d59f5_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "61318c29e76d59f5_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "61318c29e76d59f5_w2_g2",
+      "name": "2309.09089v2 Ch.3 Grounded Operator",
+      "verbatim_quote": "The first is entropy, i.e., the functional on Dens(M) given by E(ρ) = Z M ρ log ρ.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 61318c29e76d59f5_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "61318c29e76d59f5_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "61318c29e76d59f5_w2_g3",
+      "name": "2309.09089v2 Ch.3 Grounded Operator",
+      "verbatim_quote": "Its cousin, the Fisher information functional, is given by I(ρ) = 1 2 Z M |∇ρ|2 ρ .",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 61318c29e76d59f5_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "61318c29e76d59f5_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "gradient_flow_entropy",
+      "name": "Gradient Flow on Entropy Functional",
+      "verbatim_quote": "It is straightforward to check that the Riemannian gradient flow for the functional F1(a) = Hρ0(aeε∆b) with respect to the metric (17) is given by equation (16).",
+      "page": 8,
+      "latex": "\\partial_s a = -a \\log \\left(\\frac{a e^{\\varepsilon \\Delta b}}{\\rho_0}\\right)",
+      "symbol_and_unit_ledger": "{'a': 'probability density, dimensionless', 'b': 'auxiliary variable, dimensionless', 'ρ₀': 'reference density, dimensionless', 'ε': 'regularization parameter, dimensionless', 'Δ': 'Laplacian operator, inverse length squared', 's': 'flow time parameter, time'}",
+      "assumptions": "Compact manifold M, smooth densities, fixed boundary conditions.",
+      "breakdown_regime": "When ε → 0, convergence to optimal transport plan.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transition kernel derived from entropy gradient flow.",
+        "source_operator": "gradient_flow_entropy",
+        "telemetry": "KL divergence between current and target distributions."
+      }
+    },
+    {
+      "primitive_id": "fisher_rao_metric",
+      "name": "Fisher-Rao Metric on Density Space",
+      "verbatim_quote": "The Fisher-Rao metric for ∂sσ is given by ⟨∂sσ, ∂sσ⟩σ = Z M (∂sσ)2 σ = Z M (∂sa)2eε∆b a .",
+      "page": 8,
+      "latex": "\\langle \\partial_s \\sigma, \\partial_s \\sigma \\rangle_\\sigma = \\int_M \\frac{(\\partial_s \\sigma)^2}{\\sigma}",
+      "symbol_and_unit_ledger": "{'σ': 'density variable, dimensionless', 'a': 'probability density, dimensionless', 'b': 'auxiliary variable, dimensionless', 'ε': 'regularization parameter, dimensionless', 'Δ': 'Laplacian operator, inverse length squared', 's': 'flow time parameter, time'}",
+      "assumptions": "Smooth probability densities, compact domain, fixed parameters.",
+      "breakdown_regime": "Degenerates when σ approaches zero or infinity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI probabilistic model uses Fisher-Rao metric for inference.",
+        "source_operator": "fisher_rao_metric",
+        "telemetry": "Geodesic distance in statistical manifold."
+      }
+    },
+    {
+      "primitive_id": "sinkhorn_composition",
+      "name": "Sinkhorn Composition of Gradient Flows",
+      "verbatim_quote": "Consequently, the Sinkhorn algorithm is the composition of steps for the first and second gradient flows.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'a': 'probability density, dimensionless', 'b': 'auxiliary variable, dimensionless', 'ρ₀': 'reference density, dimensionless', 'ρ₁': 'target density, dimensionless', 'ε': 'regularization parameter, dimensionless'}",
+      "assumptions": "Fixed marginal constraints, iterative update scheme.",
+      "breakdown_regime": "Non-convergence if ε too small or iteration limit exceeded.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE iterative solver combines alternating gradient steps.",
+        "source_operator": "sinkhorn_composition",
+        "telemetry": "Entropy residual after each iteration."
+      }
+    },
+    {
+      "primitive_id": "beurling_transform",
+      "name": "Beurling Transform on Measures",
+      "verbatim_quote": "Beurling's \"forgotten\" result Motivated by Einstein's work on Brownian motion governed in law by the heat flow, Schr ̈odinger [21] arrived at the equations (15) by studying the most likely stochastic path for a system of particles from initial distribution ρ0 to final distribution ρ1.",
+      "page": 8,
+      "latex": "T_\\varepsilon(\\alpha \\wedge \\beta) = \\mu_0 \\wedge \\mu_1",
+      "symbol_and_unit_ledger": "{'T_ε': 'transport map, dimensionless', 'α, β': 'measures on M×M, dimensionless', 'μ₀, μ₁': 'marginal measures, dimensionless', 'ε': 'regularization parameter, dimensionless'}",
+      "assumptions": "Compact manifold, positive kernels, existence of solutions.",
+      "breakdown_regime": "Solutions may fail for degenerate marginals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI measure-theoretic framework models stochastic paths.",
+        "source_operator": "beurling_transform",
+        "telemetry": "Measure preservation under transport map."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "61318c29e76d59f5_t0",
+      "think": "Window 1 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "61318c29e76d59f5_t1",
+      "think": "This chapter introduces a geometric formulation of the Sinkhorn algorithm using ODEs derived from optimal transport theory. It establishes a connection between the continuous-time dynamics of entropy-regularized transport and discrete iterative algorithms. The core idea involves expressing the evolution of potentials (a, b) as a system of ODEs governed by the heat kernel, which encodes the underlying geometry of the space. These ODEs are then discretized using the Trotter-Euler method, leading to the standard Sinkhorn iteration. The paper further explores how varying the time step size h affects convergence behavior—specifically, larger steps (h > 1) lead to faster convergence due to over-relaxation, but at the cost of stability. This insight bridges numerical analysis and dynamical systems, offering a deeper understanding of why certain variants of the Sinkhorn algorithm perform better. The stability analysis reveals that convergence is tied to the spectral properties of the associated linearized system, particularly eigenvalues of the flow map. This provides a principled way to tune parameters for optimal performance in practical implementations. Window 2 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in Benamou-Brenier formulation of optimal transport and extended through recent works on entropy regularization and numerical ODE integration. Influenced by earlier studies on heat kernel diffusion and variational principles in transport theory. Retrocausal Genealogy (Window 2): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models the interaction between computational agents optimizing transport plans under uncertainty. Each iteration reflects a player adjusting strategies based on feedback from prior steps, akin to a coach adapting tactics during a game. Theory of Mind (Window 2): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents direct mapping to non-dynamical formulations of Sinkhorn. Ensures that only geometrically consistent representations are considered, avoiding leakage into purely combinatorial or matrix-based approaches. Cross-Layer Veto (Window 2): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "61318c29e76d59f5_t2",
+      "think": "Window 3 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "61318c29e76d59f5_t3",
+      "think": "Chapter window 4 explores the geometric foundations of Sinkhorn algorithms through the lens of Riemannian gradient flows on entropy functionals. The core idea is that solving the Schrödinger problem (15) corresponds to finding a stationary point of integral equations (4), which are interpreted as gradient-type flows. Specifically, the first part of (15) yields a gradient flow for the functional F1(a) = Hρ0(aeεΔb), where the gradient is computed with respect to the Fisher-Rao metric (17). This leads to the differential equation ∂sa = -a log(aeεΔb/ρ0). Similarly, the second part defines a gradient flow for F2(b) = Hρ1(beεΔa). These two flows compose into the full Sinkhorn iteration. The underlying structure relies on the Beurling transformation Tε, which maps product measures to joint measures satisfying marginal constraints. The key insight is that the Sinkhorn algorithm emerges naturally from the geometry of entropy minimization under transport constraints. This geometric formulation provides a unified view of how iterative reweighting schemes converge to optimal transport plans while preserving probabilistic interpretations. Window 4 Synthesis: Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Historically rooted in Schrödinger's stochastic mechanics and Einstein’s Brownian motion, later formalized by Beurling and extended to modern optimal transport theory via entropy regularization and gradient flows. Retrocausal Genealogy (Window 4): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents in GSI interpret data as evolving along geodesics in entropy space; GSE models decision-making as minimizing divergence under dynamic constraints, akin to particle paths in stochastic systems. Theory of Mind (Window 4): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that GSI and GSE do not redundantly encode the same geometric structures; GSI focuses on probabilistic inference, while GSE emphasizes dynamical evolution. Cross-Layer Veto (Window 4): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 2309.09089v2 (61318c29e76d59f5, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

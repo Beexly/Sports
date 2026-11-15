@@ -1,0 +1,78 @@
+{
+  "book_id": "15d2b69aaecb5f95",
+  "source_status": "COMPLETE",
+  "title": "prompt-stale-intel",
+  "file_name": "prompt-stale-intel.md",
+  "sha256": "15d2b69aaecb5f95543c926b5fd9d7cbbdfaf19070df8e38cb062aa65aed0360",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Branch divergence analysis via git commit distance and license compliance checks. Universal Lens: Rooted in prompt-stale-intel (15d2b69aaecb5f95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on intellectual property boundaries using branch-ahead deltas and competitive-intel zip exclusion sets. GSI Mapping: Rooted in prompt-stale-intel (15d2b69aaecb5f95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates state transitions between main and branch heads, enforcing restrictive license queuing. GSE Mapping: Rooted in prompt-stale-intel (15d2b69aaecb5f95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "branch_divergence_distance",
+      "name": "Branch Divergence Distance",
+      "verbatim_quote": "Ahead of main: - claude/kind-gauss-kb2qsd (15) - hermes/wave2-ingest-2026-09-05b (13) - claude/ecc-gse-gsn-commands-weaxnk (7) - claude/sports-launch-round2-fixes-hk7kv9 (3) - docs branches and hermes/verify-p0s are 1 ahead Use gh compare.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{\\\\text{branch}}': 'dimensionless commit count', 'D_{\\\\text{main}}': 'dimensionless commit count'}",
+      "assumptions": "Repository integrity maintained; all branches are linear extensions of main.",
+      "breakdown_regime": "When $ D_{\\text{branch}} - D_{\\text{main}} > 0 $, divergence exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Git commit graph traversal with divergence metrics.",
+        "source_operator": "branch_divergence_distance",
+        "telemetry": "Commit difference between branch head and main base."
+      }
+    },
+    {
+      "primitive_id": "license_compliance_check",
+      "name": "License Compliance Check",
+      "verbatim_quote": "already in the Drive dump's competitive-intel zip? Quote the path. Restrictive licenses stay queued. Do not",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{\\\\text{restrictive}}': 'boolean flag', 'Z_{\\\\text{zip}}': 'set of file paths'}",
+      "assumptions": "All files have defined license metadata; zip contains full competitive-intel set.",
+      "breakdown_regime": "If $ L_{\\text{restrictive}} \\land \\exists p \\in Z_{\\text{zip}}, p \\in \\text{path} $, then queue.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from file path inclusion and license tag validation.",
+        "source_operator": "license_compliance_check",
+        "telemetry": "Boolean result of license restriction check against zip contents."
+      }
+    },
+    {
+      "primitive_id": "method_formula_boundary",
+      "name": "Method Formula Boundary",
+      "verbatim_quote": "Question: which method, formula, or do-not-copy boundary is on a branch and not on main, and not already in the Drive dump's competitive-intel zip?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_{\\\\text{branch}}': 'set of methods/formulas', 'M_{\\\\text{main}}': 'set of methods/formulas', 'B_{\\\\text{boundary}}': 'set of boundary identifiers'}",
+      "assumptions": "Methods and formulas are uniquely identifiable by path or signature.",
+      "breakdown_regime": "$ M_{\\text{branch}} \\setminus M_{\\text{main}} \\setminus Z_{\\text{zip}} \\neq \\emptyset $",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to set difference operations over method signatures.",
+        "source_operator": "method_formula_boundary",
+        "telemetry": "Path of unique method/formula not present in main or zip."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "15d2b69aaecb5f95_t0",
+      "think": "The operators model a Git-based divergence detection system where each branch is evaluated for its commit distance from main. The divergence distance primitive computes a scalar value representing how far ahead a branch is. This is used in conjunction with a license compliance check that filters out any content already present in the competitive-intel zip. The method/formula boundary primitive identifies unique intellectual constructs by comparing sets of methods across branches, main, and the zip. These primitives form a dual structure: one for tracking divergence and another for enforcing exclusivity. Failure modes include false positives from untracked commits or misclassified license tags. The system assumes repository consistency and complete metadata availability.\n\nDeep epistemic analysis for prompt-stale-intel (15d2b69aaecb5f95, domain=other, pages_read=1/1): Operator 'Branch Divergence Distance' (page 1, domain other) captures: Ahead of main: - claude/kind-gauss-kb2qsd (15) - hermes/wave2-ingest-2026-09-05b (13) - claude/ecc-gse-gsn-commands-weaxnk (7) - claude/sports-launch-round2-fixes-hk7kv9 (3) - docs branches and hermes/verify-p0s are 1 ahead Use gh compare. Assumptions: Repository integrity maintained; all branches are linear extensions of main. Breakdown regime: When $ D_{\\text{branch}} - D_{\\text{main}} > 0 $, divergence exists. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Git commit graph traversal with divergence metrics. Operator 'License Compliance Check' (page 1, domain other) captures: already in the Drive dump's competitive-intel zip? Quote the path. Restrictive licenses stay queued. Do not Assumptions: All files have defined license metadata; zip contains full competitive-intel set. Breakdown regime: If $ L_{\\text{restrictive}} \\land \\exists p \\in Z_{\\text{zip}}, p \\in \\text{path} $, then queue. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from file path inclusion and license tag validation. Operator 'Method Formula Boundary' (page 1, domain other) captures: Question: which method, formula, or do-not-copy boundary is on a branch and not on main, and not already in the Drive dump's competitive-intel zip? Assumptions: Methods and formulas are uniquely identifiable by path or signature. Breakdown regime: $ M_{\\text{branch}} \\setminus M_{\\text{main}} \\setminus Z_{\\text{zip}} \\neq \\emptyset $ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to set difference operations over method signatures. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prompt-stale-intel (15d2b69aaecb5f95, domain=other, pages_read=1/1): Operator 'Branch Divergence Distance' (page 1, domain other) captures: Ahead of main: - claude/kind-gauss-kb2qsd (15) - hermes/wave2-ingest-2026-09-05b (13) - claude/ecc-gse-gsn-commands-weaxnk (7) - claude/sports-launch-round2-fixes-hk7kv9 (3) - docs branches and hermes/verify-p0s are 1 ahead Use gh compare. Assumptions: Repository integrity maintained; all branches are linear extensions of main. Breakdown regime: When $ D_{\\text{branch}} - D_{\\text{main}} > 0 $, divergence exists. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Git commit graph traversal with divergence metrics. Operator 'License Compliance Check' (page 1, domain other) captures: already in the Drive dump's competitive-intel zip? Quote the path. Restrictive licenses stay queued. Do not Assumptions: All files have defined license metadata; zip contains full competitive-intel set. Breakdown regime: If $ L_{\\text{restrictive}} \\land \\exists p \\in Z_{\\text{zip}}, p \\in \\text{path} $, then queue. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from file path inclusion and license tag validation. Operator 'Method Formula Boundary' (page 1, domain other) captures: Question: which method, formula, or do-not-copy boundary is on a branch and not on main, and not already in the Drive dump's competitive-intel zip? Assumptions: Methods and formulas are uniquely identifiable by path or signature. Breakdown regime: $ M_{\\text{branch}} \\setminus M_{\\text{main}} \\setminus Z_{\\text{zip}} \\neq \\emptyset $ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to set difference operations over method signatures. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Git's distributed version control theory and formalized through set theory for conflict resolution and boundary identification in software engineering. Retrocausal Genealogy: Rooted in prompt-stale-intel (15d2b69aaecb5f95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in prompt-stale-intel (15d2b69aaecb5f95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the repository maintainer, who enforces compliance, and the system itself, which autonomously detects divergence and boundary violations. Theory of Mind & Decision Maker Model: Rooted in prompt-stale-intel (15d2b69aaecb5f95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in prompt-stale-intel (15d2b69aaecb5f95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that divergence metrics do not correlate with license flags. Leakage vetoes occur when a boundary element appears in both branch and zip, invalidating the check. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-stale-intel (15d2b69aaecb5f95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

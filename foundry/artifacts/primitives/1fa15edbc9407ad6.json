@@ -1,0 +1,78 @@
+{
+  "book_id": "1fa15edbc9407ad6",
+  "source_status": "COMPLETE",
+  "title": "p0332",
+  "file_name": "p0332.txt",
+  "sha256": "1fa15edbc9407ad612d4a12bc353649c31e85b1a4e1d87711803fe7b3acc9919",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Reaction threshold maps excitatory potential to response onset; empirical threshold aligns with extinction decrement curves; zero-scale alignment defines baseline. Universal Lens: Rooted in p0332 (1fa15edbc9407ad6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on conditioned response timing estimates reaction threshold via reinforcement frequency; conformal prediction bounds empirical thresholds using extinction data. GSI Mapping: Rooted in p0332 (1fa15edbc9407ad6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models state transitions from subthreshold excitation to evoked response; state-space evolution tracks threshold-crossing dynamics through extinction series. GSE Mapping: Rooted in p0332 (1fa15edbc9407ad6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "empirical_reaction_threshold",
+      "name": "Empirical Reaction Threshold",
+      "verbatim_quote": "REACTION THRESHOLD-RESPONSE EVOCATION 325 the height of the reaction threshold.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sER': 'Effective reaction potential (dimensionless)', 'sLk': 'Excitatory potential at threshold (dimensionless)'}",
+      "assumptions": "Threshold corresponds to minimal excitatory potential required for response initiation.",
+      "breakdown_regime": "When sER < sLk, no response occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Statistical estimation of sER from reinforcement timing. GSE: State transition from sER < sLk to sER ≥ sLk.",
+        "source_operator": "empirical_reaction_threshold",
+        "telemetry": "Reinforcement count until first conditioned response"
+      }
+    },
+    {
+      "primitive_id": "extinction_increment_curve",
+      "name": "Extinction Increment Curve",
+      "verbatim_quote": "A careful examination of this figure shows that both fitted curves originate at the same point, namely, at a value of four extinction increments (∆IR) below the point at which response would be evoked, i.e.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'∆IR': 'Extinction increment (dimensionless)', 'N': 'Number of extinction steps (dimensionless)'}",
+      "assumptions": "Curves begin at fixed offset below threshold; response onset occurs at N=0.",
+      "breakdown_regime": "Below N=0, no measurable response due to subthreshold sER.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Extrapolation of sER(N) to N=0. GSE: Transition from N>0 to N≤0.",
+        "source_operator": "extinction_increment_curve",
+        "telemetry": "Response probability vs. extinction step count"
+      }
+    },
+    {
+      "primitive_id": "zero_response_scale_alignment",
+      "name": "Zero Response Scale Alignment",
+      "verbatim_quote": "This means that the zero value of any response scale falls exactly at the reaction threshold.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Response magnitude (dimensionless)', 'sER': 'Effective reaction potential (dimensionless)'}",
+      "assumptions": "Scale origin coincides with sER threshold.",
+      "breakdown_regime": "At R=0, sER = sLk.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Calibration of response scale to sER. GSE: Mapping R=0 to sER=sLk state.",
+        "source_operator": "zero_response_scale_alignment",
+        "telemetry": "Response magnitude at threshold crossing"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1fa15edbc9407ad6_t0",
+      "think": "The empirical reaction threshold represents the minimal excitatory potential (sER) required to evoke a conditioned response. It is inferred from reinforcement timing: subjects requiring more reinforcements to first respond have higher thresholds. The extinction increment curve illustrates how sER decays over time, with both curves originating at four ∆IR below the threshold. This implies that even before response onset, sER is already below threshold by four units. The zero point of the response scale aligns precisely with the reaction threshold, indicating that R=0 corresponds to sER=sLk. These relationships form a dual structure: one side measures threshold via reinforcement count, the other via decay curves. Failure modes include misalignment between measured and true thresholds, or incorrect extrapolation beyond measurable range. Theoretical consistency requires that sER < sLk precludes response, while sER ≥ sLk enables it. The model assumes linearity in extinction behavior and that threshold remains stable across trials.\n\nDeep epistemic analysis for p0332 (1fa15edbc9407ad6, domain=other, pages_read=1/1): Operator 'Empirical Reaction Threshold' (page 1, domain other) captures: REACTION THRESHOLD-RESPONSE EVOCATION 325 the height of the reaction threshold. Assumptions: Threshold corresponds to minimal excitatory potential required for response initiation. Breakdown regime: When sER < sLk, no response occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Statistical estimation of sER from reinforcement timing. GSE: State transition from sER < sLk to sER ≥ sLk. Operator 'Extinction Increment Curve' (page 1, domain other) captures: A careful examination of this figure shows that both fitted curves originate at the same point, namely, at a value of four extinction increments (∆IR) below the point at which response would be evoked, i.e. Assumptions: Curves begin at fixed offset below threshold; response onset occurs at N=0. Breakdown regime: Below N=0, no measurable response due to subthreshold sER. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Extrapolation of sER(N) to N=0. GSE: Transition from N>0 to N≤0. Operator 'Zero Response Scale Alignment' (page 1, domain other) captures: This means that the zero value of any response scale falls exactly at the reaction threshold. Assumptions: Scale origin coincides with sER threshold. Breakdown regime: At R=0, sER = sLk. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Calibration of response scale to sER. GSE: Mapping R=0 to sER=sLk state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0332 (1fa15edbc9407ad6, domain=other, pages_read=1/1): Operator 'Empirical Reaction Threshold' (page 1, domain other) captures: REACTION THRESHOLD-RESPONSE EVOCATION 325 the height of the reaction threshold. Assumptions: Threshold corresponds to minimal excitatory potential required for response initiation. Breakdown regime: When sER < sLk, no response occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Statistical estimation of sER from reinforcement timing. GSE: State transition from sER < sLk to sER ≥ sLk. Operator 'Extinction Increment Curve' (page 1, domain other) captures: A careful examination of this figure shows that both fitted curves originate at the same point, namely, at a value of four extinction increments (∆IR) below the point at which response would be evoked, i.e. Assumptions: Curves begin at fixed offset below threshold; response onset occurs at N=0. Breakdown regime: Below N=0, no measurable response due to subthreshold sER. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Extrapolation of sER(N) to N=0. GSE: Transition from N>0 to N≤0. Operator 'Zero Response Scale Alignment' (page 1, domain other) captures: This means that the zero value of any response scale falls exactly at the reaction threshold. Assumptions: Scale origin coincides with sER threshold. Breakdown regime: At R=0, sER = sLk. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Calibration of response scale to sER. GSE: Mapping R=0 to sER=sLk state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical conditioning theory (Pavlov, Skinner), extended by Perin's empirical work on threshold quantification through extinction protocols. Retrocausal Genealogy: Rooted in p0332 (1fa15edbc9407ad6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0332 (1fa15edbc9407ad6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model internal states as sER evolving toward sLk. Decision-making involves threshold crossing; agents may delay response if sER insufficiently exceeds sLk. Theory of Mind & Decision Maker Model: Rooted in p0332 (1fa15edbc9407ad6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0332 (1fa15edbc9407ad6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity: GSI and GSE must not redundantly encode threshold. Leakage veto: If sER is not properly isolated from confounding variables, both layers fail to converge. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0332 (1fa15edbc9407ad6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0332 (1fa15edbc9407ad6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

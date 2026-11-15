@@ -1,0 +1,615 @@
+{
+ "book_id": "9fd0285d2feab6ee",
+ "source_status": "COMPLETE",
+ "source_note": "John E. Hopcroft (Cornell University) and Jeffrey D. Ullman (Princeton University), Introduction to Automata Theory, Languages, and Computation, Addison-Wesley, 1979. ISBN 0-201-02988-X. Local file: Internet Archive scan PDF (Trent University copy), 268023869 bytes. Extracted text: 1123055 bytes, 20129 lines, OCR text layer with occasional symbol degradation in displayed formulas (epsilon rendered as a pound sign in places, subscripts flattened); every verbatim quote in this artifact was verified as an exact whitespace normalized substring of the extracted text, with OCR artifacts left as printed. Source identity: sha256 over (str(size) encoded plus full PDF bytes) = 9fd0285d2feab6ee5a9779de460903ff054dcad6d18037327a7ea4878f2a09f0; book_id is the first 16 hex characters. The full text was read end to end, Chapters 1 to 14, before extraction. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "hu-01",
+   "name": "countability_of_descriptions_uncountability_of_languages",
+   "verbatim_quote": "Sets that can be placed in one-to-one correspondence with the integers are said to be countably infinite or countable. The rationals and the set I* of the finite-length strings from an alphabet Z are countably infinite.",
+   "page": "Sections 1.2 and 1.4 (Chapter 1, printed pp. 1-14)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Effective descriptions are finite strings over a finite alphabet, so the set of all machines, grammars, and programs is countable. The set of all languages over an alphabet is the power set of a countable set and is uncountable by the diagonal argument of Section 1.4.",
+   "breakdown_regime": "The counting argument says nothing about which specific languages escape a given enumeration, and it yields no decision procedure. Its force is existential: any deployed system works with finitely many descriptions anyway, so the practical reading is a coverage caveat, not a bound.",
+   "domain": "computability foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any registry of models, features, or strategies an engine can name is countable and therefore cannot cover the space of all possible behaviors; coverage claims must be stated relative to a named family, never absolutely.",
+    "source_operator": "description space enumerator",
+    "telemetry": "emits the cardinality class of a description family (finite, countable, uncountable) and a coverage caveat flag"
+   }
+  },
+  {
+   "primitive_id": "hu-02",
+   "name": "subset_construction",
+   "verbatim_quote": "Theorem 2.1 Let L be a set accepted by a nondeterministic finite automaton. Then there exists a deterministic finite automaton that accepts L.",
+   "page": "Section 2.3 (Chapter 2); Theorem 2.1",
+   "latex": "$\\delta'(S, a) = \\bigcup_{q \\in S} \\delta(q, a)$",
+   "symbol_and_unit_ledger": "delta prime: transition function of the constructed DFA. S: a subset of the NFA state set Q, serving as one DFA state. a: one input symbol. delta: transition relation of the NFA. The union runs over every NFA state q inside the current subset S.",
+   "assumptions": "The NFA has finitely many states, so the powerset is finite (at most 2 to the |Q| subsets). Acceptance is by final state in both machines and the input alphabet is shared.",
+   "breakdown_regime": "In the worst case the determinized machine needs exponentially many reachable subsets, so the construction is a correctness guarantee, not an efficiency guarantee. It presumes nondeterminism only in the transitions; adding stack or tape memory breaks the argument entirely.",
+   "domain": "finite automata",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A tracker that maintains several simultaneous hypotheses about a live state can always be rewritten as one deterministic tracker whose state is the set of live hypotheses, which is the form a real time monitoring pipeline requires.",
+    "source_operator": "powerset state tracker",
+    "telemetry": "emits reachable subset count versus total powerset size, and the per symbol fan out of the original nondeterministic relation"
+   }
+  },
+  {
+   "primitive_id": "hu-03",
+   "name": "epsilon_closure_elimination",
+   "verbatim_quote": "Theorem 2.2 If L is accepted by an NFA with £-transitions, then L is accepted by an NFA without £-transitions.",
+   "page": "Section 2.4 (Chapter 2); Theorem 2.2",
+   "latex": "$\\delta'(q, a) = \\varepsilon\\text{-CLOSURE}\\left(\\bigcup_{p \\in \\varepsilon\\text{-CLOSURE}(q)} \\delta(p, a)\\right)$",
+   "symbol_and_unit_ledger": "epsilon-CLOSURE(q): the set of states reachable from q by empty moves alone (the pound sign in the quote is the OCR rendering of epsilon). delta prime: transition function of the epsilon free NFA. delta: transition function of the original NFA. q, p: states. a: one input symbol.",
+   "assumptions": "Epsilon moves consume no input, so closing over them before and after each real symbol preserves the accepted language. The start state becomes final exactly when its epsilon closure meets an old final state.",
+   "breakdown_regime": "Closure computation is per state and can inflate the transition table quadratically. The elimination works because empty moves add no memory; for pushdown systems the analogous empty moves interact with the stack and cannot be removed by closure alone.",
+   "domain": "finite automata",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Silent or zero cost transitions in any state model (automatic follow on states, default propagations) can be compiled away by precomputing closure, leaving a machine whose every transition consumes a real event.",
+    "source_operator": "epsilon closure compiler",
+    "telemetry": "emits closure size distribution per state and the count of silent transitions removed"
+   }
+  },
+  {
+   "primitive_id": "hu-04",
+   "name": "regular_expressions_automata_equivalence",
+   "verbatim_quote": "Theorem 2.3 Let r be a regular expression. Then there exists an NFA with e-transitions that accepts L(r).",
+   "page": "Sections 2.5 and 2.6 (Chapter 2); Theorems 2.3 and 2.4",
+   "latex": "$L^* = \\bigcup_{i \\geq 0} L^i, \\quad L^0 = \\{\\varepsilon\\}, \\quad L^{i+1} = L^i L$",
+   "symbol_and_unit_ledger": "L star: the Kleene closure of language L, all concatenations of finitely many strings of L. L to the i: the i fold concatenation of L with itself. epsilon: the empty string, the sole member of L to the 0. Regular expressions are built from the empty set, epsilon, and single symbols by union, concatenation, and this closure.",
+   "assumptions": "Both directions are effective constructions: expressions compile to automata by induction on the operators (Theorem 2.3), and automata convert back to expressions by state elimination (Theorem 2.4). The equivalence is about denotation, not about succinctness.",
+   "breakdown_regime": "Conversion can blow up expression size exponentially in the number of states, and automaton size can blow up for nested stars. The equivalence also stops at regularity: no regular expression denotes a non regular set, whatever its length.",
+   "domain": "finite automata",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pattern languages and state machines are interchangeable views of the same regular behavior, so a declarative pattern specification and an executable tracker can be kept in agreement by compilation rather than by hand.",
+    "source_operator": "expression to automaton compiler",
+    "telemetry": "emits state count of the compiled automaton and expression operator depth as a succinctness gauge"
+   }
+  },
+  {
+   "primitive_id": "hu-05",
+   "name": "pumping_lemma_regular_sets",
+   "verbatim_quote": "Lemma 3.1 Let L be a regular set. Then there is a constant n such that if z is any word in L, and \\z\\ > n, we may write z = uvw",
+   "page": "Section 3.1 (Chapter 3); Lemma 3.1",
+   "latex": "$z = uvw, \\quad |uv| \\leq n, \\quad |v| \\geq 1, \\quad uv^iw \\in L \\text{ for all } i \\geq 0$",
+   "symbol_and_unit_ledger": "z: a string in L longer than the constant n. u, v, w: the three factors of z, with v nonempty and the pair uv lying inside the first n symbols. n: a constant depending only on L, at most the state count of the smallest FA accepting L. uv^iw: the string with v repeated i times between u and w. The backslash notation in the quote is the OCR rendering of the length bars.",
+   "assumptions": "The lemma is a necessary condition only. It is used contrapositively: a set whose long strings cannot all be pumped is not regular. The pigeonhole step needs an accepting run longer than the number of states.",
+   "breakdown_regime": "Satisfying the pumping condition does not prove regularity; some non regular sets pump. The constant is existential, so the lemma refutes membership in the class without giving an algorithm or a usable numeric threshold for a specific new set.",
+   "domain": "finite automata",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Finite memory systems cannot count unbounded repetitions; any behavior that requires distinguishing arbitrarily many prefixes is beyond a finite state tracker, and the pumping shape is the counterexample template that proves it.",
+    "source_operator": "finite memory refuter",
+    "telemetry": "emits the minimal prefix length at which a candidate behavior first forces a repeated state"
+   }
+  },
+  {
+   "primitive_id": "hu-06",
+   "name": "myhill_nerode_characterization",
+   "verbatim_quote": "Theorem 3.9 (The Myhill-N erode theorem). The following three statements are equivalent: 1) The set L £ X* is accepted by some finite automaton.",
+   "page": "Section 3.4 (Chapter 3); Theorem 3.9",
+   "latex": "$x \\equiv_L y \\iff \\forall z \\in \\Sigma^*:\\ xz \\in L \\Leftrightarrow yz \\in L$",
+   "symbol_and_unit_ledger": "x, y: finite strings (prefixes). z: an arbitrary continuation string. Sigma star: all strings over the alphabet. xz in L if and only if yz in L: the two prefixes are interchangeable in every context. The number of equivalence classes of this relation is the index of L.",
+   "assumptions": "The relation is a right congruence: equivalent prefixes stay equivalent under any common continuation. Finite index is exactly regularity, and the classes themselves serve as the states of a canonical machine (used in Theorem 3.10).",
+   "breakdown_regime": "Computing the classes requires knowing L on all continuations, so the characterization is a yardstick, not an algorithm. For non regular L the index is infinite and the relation, while still defined, yields no finite machine.",
+   "domain": "finite automata",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The index of a behavior is the exact number of distinguishable histories a tracker must remember; two histories that no future observation can tell apart may be merged without loss, and no tracker can use fewer states than the index.",
+    "source_operator": "history equivalence indexer",
+    "telemetry": "emits the number of distinguishable prefix classes found in a sample and a lower bound on tracker memory"
+   }
+  },
+  {
+   "primitive_id": "hu-07",
+   "name": "unique_minimum_state_dfa",
+   "verbatim_quote": "Theorem 3.10 The minimum state automaton accepting a set L is unique up to an isomorphism (i.e., a renaming of the states) and is given by M' in the proof of Theorem 3.9.",
+   "page": "Section 3.4 (Chapter 3); Theorem 3.10 (printed p. 68)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Start from any DFA accepting L, merge states that no input string distinguishes, and the quotient machine is minimal. Any two minimal machines for L differ only by state names, so minimality is a property of L, not of the construction path.",
+   "breakdown_regime": "Uniqueness holds for complete deterministic machines over a fixed alphabet; partial machines and transducers need separate treatment. Minimization presumes the language is already known to be regular and that some machine for it is in hand.",
+   "domain": "finite automata",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Redundant states in a deployed tracker can be merged to a canonical minimal form, which gives a normal form for comparing two independently built trackers: minimize both, then compare up to renaming.",
+    "source_operator": "state quotient minimizer",
+    "telemetry": "emits state count before and after merging and the number of equivalence classes collapsed"
+   }
+  },
+  {
+   "primitive_id": "hu-08",
+   "name": "derivations_and_parse_trees",
+   "verbatim_quote": "Theorem 4.1 Let G — (V, T, P, S) be a context-free grammar. Then S a if and only if there is a derivation tree in grammar G with yield a.",
+   "page": "Section 4.3 (Chapter 4); Theorem 4.1",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "A derivation tree records the production choices of a derivation while forgetting their order; the yield reads the terminal frontier from left to right. The correspondence is exact for context-free grammars because productions rewrite one variable independently of context. (In the quote, the long dash is the OCR rendering of the equals sign and the derivation arrow glyphs were dropped by the scan.)",
+   "breakdown_regime": "The tree forgets derivation order, so properties that depend on rewriting order (leftmost versus rightmost derivations) are invisible in a single tree. The correspondence also presumes context freeness; context sensitive rewriting has no such clean geometric object.",
+   "domain": "context-free languages",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A structured output can be audited as a tree rather than as a sequence of steps: the derivation history of any generated artifact compresses to its parse tree, and two generations agree exactly when their trees agree.",
+    "source_operator": "derivation tree auditor",
+    "telemetry": "emits tree depth, branching profile, and the count of distinct trees per output as an ambiguity gauge"
+   }
+  },
+  {
+   "primitive_id": "hu-09",
+   "name": "chomsky_normal_form",
+   "verbatim_quote": "Theorem 4.5 (Chomsky normal form, or CNF) Any context-free language without e is generated by a grammar in which all productions are of the form A —%º BC or A -> a. Here, A, B, and C, are variables and a is a terminal.",
+   "page": "Section 4.5 (Chapter 4); Theorem 4.5",
+   "latex": "$A \\to BC \\quad \\text{or} \\quad A \\to a$",
+   "symbol_and_unit_ledger": "A, B, C: variables (nonterminals) of the grammar. a: a single terminal symbol. Every production of a CNF grammar has one of these two shapes; the start symbol may additionally derive the empty string when the empty string belongs to the language.",
+   "assumptions": "The source language must not contain the empty string (handled separately by one start production). The conversion first removes useless symbols, epsilon productions, and unit productions, then breaks long right sides into binary steps.",
+   "breakdown_regime": "Normal form can grow the grammar quadratically, and it destroys the natural grouping of the original productions, so diagnostics on the normalized grammar do not map back one to one. It normalizes shape only; ambiguity survives conversion untouched.",
+   "domain": "context-free languages",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any structured generation process can be refactored until every step is either a binary split or a terminal emission, which is the shape that makes dynamic programming over the structure possible.",
+    "source_operator": "binary normal form refactor",
+    "telemetry": "emits production count before and after normalization and the share of productions in each allowed shape"
+   }
+  },
+  {
+   "primitive_id": "hu-10",
+   "name": "greibach_normal_form",
+   "verbatim_quote": "Theorem 4.6 (Greibach normal form or GNF) Every context-free language L without e can be generated by a grammar for which every production is of the form A -*% act, where A is a variable, a is a terminal, and a is a (possibly empty) string of variables.",
+   "page": "Section 4.6 (Chapter 4); Theorem 4.6",
+   "latex": "$A \\to a\\alpha$",
+   "symbol_and_unit_ledger": "A: a variable. a: a single terminal, always the first symbol of the right side. alpha (the second a in the quote, a Greek letter flattened by the scan): a possibly empty string of variables. Every derivation step in GNF therefore emits exactly one terminal at the left edge.",
+   "assumptions": "The language excludes the empty string. The construction goes through CNF and a substitution ordering on variables that eliminates left recursion; every sentential form derived has a terminal prefix matching the input consumed so far.",
+   "breakdown_regime": "The conversion can be expensive and the resulting grammar is usually far larger and less readable. Terminal first form is bought at the cost of losing the original phrase structure groupings.",
+   "domain": "context-free languages",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A generator in Greibach form consumes input and produces structure in lockstep, one terminal per step, which is the invariant a streaming parser or a left to right incremental builder needs.",
+    "source_operator": "terminal first normalizer",
+    "telemetry": "emits derivation length in steps per output symbol, which under this form equals the output length"
+   }
+  },
+  {
+   "primitive_id": "hu-11",
+   "name": "inherent_ambiguity",
+   "verbatim_quote": "Theorem 4.7 The CFL, L - {anbncmdm | n > 1, m > 1} u {anbmcmdn \\ n > 1, m > 1}, is inherently ambiguous.",
+   "page": "Section 4.7 (Chapter 4); Theorem 4.7",
+   "latex": "$L = \\{a^nb^nc^md^m : n, m \\geq 1\\} \\cup \\{a^nb^mc^md^n : n, m \\geq 1\\}$",
+   "symbol_and_unit_ledger": "a, b, c, d: terminal symbols (exponents are flattened in the quote by the scan). n, m: positive integers counting block lengths. In the first component the a block matches the b block and the c block matches the d block; in the second the a block matches the d block and the b block matches the c block. Strings with all four blocks equal lie in both components.",
+   "assumptions": "The proof assumes an unambiguous grammar exists, converts it to a restricted form (via Lemma 4.6 of the book) in which each variable derives a limited shape, and forces two different parse trees for one string.",
+   "breakdown_regime": "Inherent ambiguity is a property of the language, not of a careless grammar: no rewriting removes it. Most practical languages are not inherently ambiguous, so the result bounds the worst case rather than describing the typical case.",
+   "domain": "context-free languages",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Some structured domains admit two genuinely different explanations of the same observation under any grammar; a system that forces a single parse will silently hide real ambiguity instead of resolving it.",
+    "source_operator": "ambiguity witness exhibitor",
+    "telemetry": "emits example strings with two certified distinct parse trees as standing ambiguity witnesses"
+   }
+  },
+  {
+   "primitive_id": "hu-12",
+   "name": "pda_cfl_equivalence",
+   "verbatim_quote": "Theorem 5.4 If L is N(M) for some PDA M, then L is a context-free language.",
+   "page": "Sections 5.2 and 5.3 (Chapter 5); Theorems 5.1 to 5.4",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Both acceptance conventions (final state and empty stack) define the same class. The grammar built from a PDA uses variables of the form [q, A, p], recording a state, a stack symbol, and the state in which that symbol is net removed; Theorem 5.3 gives the converse direction from grammars to machines.",
+   "breakdown_regime": "The equivalence is nondeterministic: deterministic pushdown automata define a strictly smaller class (Chapter 10). The triple construction can cube the description size, and the equivalence says nothing about parsing efficiency.",
+   "domain": "context-free languages",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stack disciplined processes and grammar generated structures are the same phenomenon seen from the machine side and the language side; a nested, last in first out workflow can be specified either way and verified in whichever form is cheaper.",
+    "source_operator": "stack grammar translator",
+    "telemetry": "emits the count of state stack state triples the translation generates as a complexity gauge"
+   }
+  },
+  {
+   "primitive_id": "hu-13",
+   "name": "cfl_pumping_and_ogden_lemma",
+   "verbatim_quote": "Lemma 6.2 (Ogden’s lemma). Let L be a CFL. Then there is a constant n (which may in fact be the same as for the pumping lemma) such that if z is any word in L, and we mark any n or more positions of z “distinguished,” then we can write z = uvwxy",
+   "page": "Section 6.1 (Chapter 6); Lemmas 6.1 and 6.2",
+   "latex": "$z = uvwxy, \\quad |vwx| \\leq n, \\quad |vx| \\geq 1, \\quad uv^iwx^iy \\in L \\text{ for all } i \\geq 0$",
+   "symbol_and_unit_ledger": "z: a string in the CFL L. u, v, w, x, y: its five factors. v and x: the two pumped factors, not both empty, lying within a window of n symbols. n: a constant depending only on L. In Ogden's strengthening at least n positions of z are marked distinguished and the pumpable window is forced to interact with the marks.",
+   "assumptions": "The grammar is taken in CNF, so parse trees are binary and a sufficiently tall tree has a long root to leaf path with a repeated variable; the segment between the two occurrences is the pumpable part. Lemma 6.1 is the unmarked case.",
+   "breakdown_regime": "Like the regular pumping lemma, the condition is necessary, not sufficient: it cannot certify that a set is context-free. The plain version is too weak for some non context-free sets, which is exactly the gap Ogden's marked version closes.",
+   "domain": "context-free languages",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A single stack cannot enforce two independent unbounded agreements at once; the two factor pumping shape is the reusable refutation template for any claim that a stack based tracker recognizes a doubly constrained pattern.",
+    "source_operator": "two factor pump refuter",
+    "telemetry": "emits the marked positions used and the smallest window length that forces a repeated variable"
+   }
+  },
+  {
+   "primitive_id": "hu-14",
+   "name": "cyk_membership_algorithm",
+   "verbatim_quote": "We shall here present a simple cubic time algorithm known as the Cocke-Younger-Kasami or CYK algorithm. It is based on the dynamic programming technique discussed in the solution to Exercise 3.23.",
+   "page": "Section 6.3 (Chapter 6); the CYK algorithm, with Theorem 6.6",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The grammar is in Chomsky normal form, so every substring either is a single terminal or splits into two parts at some midpoint. The table entry for a substring collects every variable deriving it, filled by increasing substring length; Theorem 6.6 adds that emptiness, finiteness, and infiniteness of a CFL are also decidable.",
+   "breakdown_regime": "Cubic time is in the input length for a fixed grammar; grammar size enters the constant and the conversion to CNF can grow it. The algorithm decides membership only; it does not by itself select a preferred parse among ambiguous ones.",
+   "domain": "parsing algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Membership of a sequence in a grammar defined class is decidable in cubic time by dynamic programming over intervals, the template for any interval based consistency checker over structured sequences.",
+    "source_operator": "interval membership solver",
+    "telemetry": "emits table fill count (order n cubed cells) and the set of start derivations found per input"
+   }
+  },
+  {
+   "primitive_id": "hu-15",
+   "name": "turing_machine_basic_model",
+   "verbatim_quote": "The basic model, illustrated in Fig. 7.1, has a finite control, an input tape that is divided into cells, and a tape head that scans one cell of the tape at a time. The tape has a leftmost cell but is infinite to the right.",
+   "page": "Section 7.2 (Chapter 7); printed p. 148",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The machine is a tuple of states, input alphabet, tape alphabet, transition function, start state, blank symbol, and final states. An instantaneous description writes the tape contents with the current state inserted just before the scanned symbol; acceptance is halting in a final state, and Section 7.6 records Church's hypothesis that this model captures effective computability.",
+   "breakdown_regime": "The model deliberately omits efficiency and input output conventions; results proved about it concern computability, not cost. Any physical realization also faces finite memory, which the model assumes away.",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "State plus work tape plus head position is the minimal complete snapshot of any stepwise process; a system that can serialize this triple for its own processes can pause, resume, audit, and replay any of them.",
+    "source_operator": "instantaneous description snapshotter",
+    "telemetry": "emits snapshot size in symbols and move count between snapshots"
+   }
+  },
+  {
+   "primitive_id": "hu-16",
+   "name": "equivalent_tm_models",
+   "verbatim_quote": "Theorem 7.2 If a language L is accepted by a multitape Turing machine, it is accepted by a single-tape Turing machine.",
+   "page": "Section 7.5 (Chapter 7); Theorems 7.2 and 7.3",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Multitape machines are simulated on one tape with tracks (two per simulated tape) and marked head positions. Nondeterministic machines (Theorem 7.3) are simulated by breadth first exploration of the tree of move choices, choices numbered and enumerated by increasing length so no infinite branch starves the search; enumerators and dovetailing (Section 7.7, Theorems 7.7 and 7.8) rest on the same enumeration idea.",
+   "breakdown_regime": "Equivalence is about the class of languages, not about cost: single tape simulation of a multitape machine is quadratic, and deterministic simulation of nondeterminism by this search is exponential. Restricted storage variants (Chapter 14) do not join the same class, which is where the equivalence stops.",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Architecture choices (parallel tapes, guessing) change cost, not expressive power, at the top level; a system may adopt whichever machine shape fits its constraints without changing what is computable in principle.",
+    "source_operator": "model equivalence certifier",
+    "telemetry": "emits the simulation overhead class (quadratic for tapes, exponential for naive nondeterminism removal)"
+   }
+  },
+  {
+   "primitive_id": "hu-17",
+   "name": "diagonal_language_not_re",
+   "verbatim_quote": "To guarantee that no TM accepts Ld, we insist that w, is in Ld if and only if the (i, i) entry is 0, that is, if M( does not accept wt.",
+   "page": "Section 8.3 (Chapter 8); Lemma 8.1",
+   "latex": "$L_d = \\{w_i : M_i \\text{ does not accept } w_i\\}$",
+   "symbol_and_unit_ledger": "w_i: the i-th string in the standard enumeration of binary strings (subscripts flattened in the quote). M_i: the Turing machine whose code is w_i when w_i is a valid code; invalid codes are treated as a fixed trivial machine. The (i, i) entry: whether M_i accepts w_i, in the infinite table of machines against strings.",
+   "assumptions": "Every TM has infinitely many binary codes and every binary string codes at most one machine (the encoding of Theorem 7.10), so the acceptance table is well defined. The language flips the diagonal entry of each row.",
+   "breakdown_regime": "The argument shows this one language escapes every effective enumeration of machines; it does not quantify how many languages are unrecognizable, and it depends on machines being effectively codable as strings.",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Self reference is a hard boundary: any complete registry of analyzers leaves a diagonal case the registry itself cannot settle, so audit systems must expect a residue of cases that no internal tool classifies.",
+    "source_operator": "diagonal case generator",
+    "telemetry": "emits, for any proposed enumeration of analyzers, one constructed input on which the enumeration's verdict is provably wrong or absent"
+   }
+  },
+  {
+   "primitive_id": "hu-18",
+   "name": "universal_language_re_not_recursive",
+   "verbatim_quote": "Define L,,, the “universal language,” to be {(M, w)|M accepts w}.",
+   "page": "Section 8.3 (Chapter 8); Theorems 8.4 and 8.5",
+   "latex": "$L_u = \\{(M, w) \\mid M \\text{ accepts } w\\}$",
+   "symbol_and_unit_ledger": "(M, w): a coded pair of a Turing machine description and an input string (the subscript u is flattened in the quote). M accepts w: the machine halts in a final state on that input. The universal machine reads the code, simulates M step by step on w, and accepts exactly when the simulated machine accepts.",
+   "assumptions": "A universal TM exists because the transition table of any M can be encoded and interpreted. Lu is recursively enumerable because simulation accepts in finite time whenever M accepts (Theorem 8.4); it is not recursive because deciding it would also decide the diagonal language (Theorem 8.5).",
+   "breakdown_regime": "Simulation has overhead and, decisively, non acceptance can never be confirmed in finite time by simulation alone. The result separates semidecision from decision; it does not give a usable halting test for any particular machine.",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "One interpreter can run any described process, which is why a general simulation host is possible at all; the same theorem fixes the limit: the host can confirm successful runs but can never in general certify that a run will not succeed later.",
+    "source_operator": "universal simulation host",
+    "telemetry": "emits simulated step count and a three valued run status (accepted, halted without accepting, still running)"
+   }
+  },
+  {
+   "primitive_id": "hu-19",
+   "name": "rice_theorem",
+   "verbatim_quote": "Theorem 8.6 (Rice's Theorem) Any nontrivial property ST of the r.e. languages is undecidable.",
+   "page": "Section 8.4 (Chapter 8); Theorem 8.6",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "A property is a set of recursively enumerable languages, nontrivial when some r.e. language has it and some does not. The property must depend only on the language accepted, not on the machine's code, speed, or state names; semantic properties of the computed language are exactly the target.",
+   "breakdown_regime": "Syntactic properties of programs (state counts, code length, presence of a named state) escape the theorem and may well be decidable. The index set refinement (Theorem 8.7) places many specific properties at exact levels of the arithmetical hierarchy rather than merely undecidable.",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "No general verifier can decide any nontrivial semantic property of arbitrary programs or models; verification budgets must go to restricted languages, bounded checks, or statistical evidence, never to a universal semantic gate.",
+    "source_operator": "semantic gate veto",
+    "telemetry": "emits, for each proposed semantic check, its classification (syntactic and decidable, semantic and undecidable, semantic with hierarchy level)"
+   }
+  },
+  {
+   "primitive_id": "hu-20",
+   "name": "post_correspondence_problem",
+   "verbatim_quote": "An instance of Post's Correspondence Problem (PCP ) consists of two lists, A = wu . . wk and B = xl5 . . . , xk, of strings over some alphabet I.",
+   "page": "Section 8.5 (Chapter 8); Theorem 8.8",
+   "latex": "$w_{i_1} w_{i_2} \\cdots w_{i_m} = x_{i_1} x_{i_2} \\cdots x_{i_m}$",
+   "symbol_and_unit_ledger": "A: the list of top strings w_1 through w_k. B: the list of bottom strings x_1 through x_k over the same alphabet (subscripts flattened in the quote). A solution is a sequence of indices i_1 through i_m whose top concatenation equals the bottom concatenation. The modified problem MPCP additionally requires the sequence to start with index 1.",
+   "assumptions": "The reduction first proves the modified problem undecidable (Lemma 8.5) by encoding Turing machine computations as domino matchings, then removes the start constraint by marking symbols. The alphabet can be reduced to two symbols by coding, and Theorem 8.8 concludes PCP itself is undecidable.",
+   "breakdown_regime": "Undecidability needs unbounded solution length; bounded PCP, with a cap on the number of dominos, is decidable by finite search. The problem is a matching puzzle with no algebraic shortcut, which is why it transfers hardness to grammar questions so effectively.",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tile matching with unbounded length is a universal hardness source: when a scheduling or assembly problem can encode domino matching, expect undecidability or intractability and design explicitly bounded versions instead.",
+    "source_operator": "domino encoding detector",
+    "telemetry": "emits whether a target problem admits a domino encoding and the smallest bounded length at which solutions were searched"
+   }
+  },
+  {
+   "primitive_id": "hu-21",
+   "name": "cfg_ambiguity_undecidable",
+   "verbatim_quote": "Theorem 8.9 It is undecidable whether an arbitrary CFG is ambiguous.",
+   "page": "Section 8.5 (Chapter 8); Theorem 8.9",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The proof builds, from a PCP instance, grammars whose combined language has a string with two different parse trees exactly when the instance has a solution. Ambiguity is a property of the grammar as given, and no algorithm can test it in general.",
+   "breakdown_regime": "Ambiguity of a specific small grammar is usually easy to settle by inspection or bounded search; the theorem bars a universal test. For restricted classes (for example LR grammars) ambiguity is excluded by construction, which is the practical escape.",
+   "domain": "context-free languages",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "There is no universal ambiguity auditor for grammar specified generators; ambiguity control must be achieved by restricting the grammar class up front, not by testing after the fact.",
+    "source_operator": "ambiguity test veto",
+    "telemetry": "emits the grammar class of a generator and whether that class excludes ambiguity by construction"
+   }
+  },
+  {
+   "primitive_id": "hu-22",
+   "name": "invalid_computations_reduction",
+   "verbatim_quote": "Theorem 8.11 It is undecidable for any arbitrary CFG G whether L(G) = Z*.",
+   "page": "Section 8.6 (Chapter 8); Lemmas 8.6 and 8.7, Theorem 8.11",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "A computation is a sequence of instantaneous descriptions, each following from the previous by one move, written as one string with separators. The grammar generates every string except valid accepting computations: each local defect (a bad start, a window violating a move rule, a missing accepting state) is captured by its own grammar component, and their union (Lemma 8.7) covers all invalid strings, so the constructed grammar generates everything exactly when the machine accepts nothing.",
+   "breakdown_regime": "The method needs computation histories to be checkable by local windows of bounded size; it works because a computation is a sequence of configurations over a fixed alphabet. Properties not expressible as forbidden local patterns need other reductions.",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Global correctness of a step sequence can be certified by checking only local transitions between consecutive states; a verifier needs the window rules, not a re execution of the whole history.",
+    "source_operator": "local window computation checker",
+    "telemetry": "emits the count and positions of windows violating start, step, or acceptance conditions"
+   }
+  },
+  {
+   "primitive_id": "hu-23",
+   "name": "greibach_theorem",
+   "verbatim_quote": "This suggests that there is an analog of Rice’s theorem for classes of languages such as the CFL’s, and indeed there is.",
+   "page": "Section 8.7 (Chapter 8); Theorem 8.14",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The class must be effectively presented (an effective enumeration of its descriptions), effectively closed under union and under concatenation with regular sets, and rich enough to encode computations; in the book's formulation the undecidability of emptiness for the class is the seed from which undecidability of every nontrivial property of the class follows.",
+   "breakdown_regime": "The theorem transfers undecidability within a class; it needs its closure hypotheses, and classes failing them are outside its reach, which is why the deterministic context-free languages need the separate treatment of Chapter 10. It also speaks only about properties of languages, not about properties of descriptions.",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hardness is contagious across any well presented family with mild closure: prove one semantic question hard for the family and every nontrivial semantic question about that family is hard, so scoping a family is a one time investment.",
+    "source_operator": "hardness transfer principle",
+    "telemetry": "emits the closure checklist status of a language family and the list of properties inherited as undecidable"
+   }
+  },
+  {
+   "primitive_id": "hu-24",
+   "name": "recursion_theorem",
+   "verbatim_quote": "The second theorem, called the recursion theorem, states that every total recursive function o mapping indices (integers denoting Turing machines) of partial recur¬ sive functions into indices of partial recursive functions has a fixed point x0",
+   "page": "Section 8.8 (Chapter 8); Theorems 8.17 and 8.18 (printed p. 208)",
+   "latex": "$f_{x_0}(y) = f_{o(x_0)}(y) \\text{ for all } y$",
+   "symbol_and_unit_ledger": "f_x: the partial recursive function computed by the machine with index x. o: an arbitrary total recursive transformation on indices (the letter printed in the text). x_0: a fixed point index, guaranteed to exist. y: an arbitrary input. The equality says the program at index x_0 and the program obtained by transforming x_0 compute the same function.",
+   "assumptions": "Indices enumerate all partial recursive functions, and the Smn theorem (Theorem 8.17) lets a parameter be frozen into a program effectively. The fixed point is uniform: from a description of o one can effectively construct x_0.",
+   "breakdown_regime": "The theorem is about extensional equality of computed functions, not about a program literally containing its own unmodified text, and it gives no bound on the size or runtime of the fixed point program. It also yields the book's closing caution (Example 8.10) that some halting facts are true but unprovable in a fixed formal system.",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Self modifying and self describing programs are not anomalies but guaranteed fixed points; any sufficiently expressive automation layer can be made to generate variants of itself, which is both a capability to design for and a behavior to audit for.",
+    "source_operator": "fixed point constructor",
+    "telemetry": "emits a constructed self referential index for a given transformation and a verification trace of the functional equality on sample inputs"
+   }
+  },
+  {
+   "primitive_id": "hu-25",
+   "name": "chomsky_hierarchy",
+   "verbatim_quote": "The CFL’s not containing the empty string are properly contained in the context-sensitive languages, (c) The CSL’s are properly contained in the r.e. sets.",
+   "page": "Section 9.4 (Chapter 9); Theorem 9.9, with Theorems 9.5 and 9.6",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Type 3 grammars are the regular grammars, type 2 the context-free, type 1 the context-sensitive (equivalently the linear bounded automaton languages, Theorems 9.5 and 9.6, with every CSL recursive by Theorem 9.7), and type 0 the unrestricted grammars (equivalently the r.e. sets, Theorems 9.3 and 9.4). Theorem 9.9 part (a) adds that the regular sets are properly contained in the CFL's; properness witnesses are a non regular CFL, the language of matched triples a^n b^n c^n, and a diagonal recursive language that is not context-sensitive (Theorem 9.8).",
+   "breakdown_regime": "The hierarchy classifies by worst case power of the grammar type; a given language may sit far below the type of a particular grammar that generates it. Containments are about classes, and individual decision questions inherit the status of the lowest class containing the language.",
+   "domain": "formal language theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Expressive power comes in discrete, provably separated tiers indexed by memory structure (none, stack, bounded tape, unbounded tape); choosing a representation tier is choosing the strongest phenomenon the system can express at all.",
+    "source_operator": "expressiveness tier classifier",
+    "telemetry": "emits the lowest tier containing a given behavior and the witness phenomenon that forces the next tier up"
+   }
+  },
+  {
+   "primitive_id": "hu-26",
+   "name": "dcfl_complement_closure",
+   "verbatim_quote": "Theorem 10.1 The complement of a DCFL is a DCFL.",
+   "page": "Section 10.2 (Chapter 10); Theorem 10.1",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The DPDA is first normalized (Lemma 10.3) so that it always scans its whole input and its looping behavior is controlled; the complement machine tracks, alongside the simulated state, which phase of the simulated behavior it is in, and swaps acceptance accordingly. The same chapter shows DCFL's are also closed under inverse homomorphism and intersection with regular sets (Theorems 10.4 and 10.5), but not under union, concatenation, or homomorphism (Theorem 10.3).",
+   "breakdown_regime": "Complement closure is the exception inside the CFL family: full CFL's are not closed under complement. The construction fails for nondeterministic PDA precisely because acceptance there is existential over paths, and negating it requires the universal control that determinism provides.",
+   "domain": "deterministic context-free languages",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A deterministic structured recognizer can always be negated: for every pattern it accepts there is an effective recognizer for the complementary pattern, which is what detecting the absence of a structured event requires.",
+    "source_operator": "deterministic complementer",
+    "telemetry": "emits the state expansion factor of the complemented machine and its loop phase bookkeeping size"
+   }
+  },
+  {
+   "primitive_id": "hu-27",
+   "name": "lr0_grammar_characterization",
+   "verbatim_quote": "Theorem 10.12 A language L has an LR( 0) grammar if and only if L is a DCFL with the prefix property.",
+   "page": "Section 10.7 (Chapter 10); Theorem 10.12",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The prefix property says no string of the language is a proper prefix of another string of it, achievable in practice by appending an endmarker (the book's corollary for L with an endmarker). LR(0) grammars are those whose item sets never force a shift reduce or reduce reduce conflict when the parser has seen a viable prefix and uses no lookahead; the two constructions (Theorems 10.10 and 10.11) pass between such grammars and DPDA's.",
+   "breakdown_regime": "The characterization is exact for LR(0) only; adding lookahead (LR(k), Section 10.8) widens the grammar class while the language class stays exactly the DCFL's, so grammar power and language power separate here. Whether two arbitrary DCFL's can be tested for equivalence was still open at the book's writing (Theorems 10.7 and 10.8 area).",
+   "domain": "parsing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Zero lookahead parsing is possible exactly for deterministic languages with a terminator convention; when a stream format is designed so each record ends with an explicit marker, conflict free deterministic parsing comes for free.",
+    "source_operator": "prefix property checker",
+    "telemetry": "emits item set conflict counts and whether the endmarker convention restores the prefix property"
+   }
+  },
+  {
+   "primitive_id": "hu-28",
+   "name": "trios_and_gsm_mappings",
+   "verbatim_quote": "Theorem 11.1 Every full trio is closed under GSM mappings. Every trio is closed under e-free GSM mappings.",
+   "page": "Section 11.2 (Chapter 11); Theorem 11.1",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "A trio is a family closed under epsilon free homomorphism, inverse homomorphism, and intersection with regular sets; a full trio also allows erasing homomorphisms. A GSM is a finite automaton with output strings attached to its transitions, the general finite state transduction. Abstract families (AFL's) add closure under union, concatenation, and positive closure, with the independence of the operations recorded in Theorem 11.6.",
+   "breakdown_regime": "Closure under the trio operations is what is preserved; decidability properties such as emptiness are not automatically inherited by images under GSM mappings. The abstraction also hides cost: a GSM image can have a much larger description than its source.",
+   "domain": "abstract families of languages",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Closure properties compose: if a family of behaviors survives relabeling, filtering by regular conditions, and inverse relabeling, then it survives every finite state transformation, so three checks buy an infinite family of guarantees.",
+    "source_operator": "closure signature auditor",
+    "telemetry": "emits the trio checklist for a behavior family and the derived list of transformations certified safe"
+   }
+  },
+  {
+   "primitive_id": "hu-29",
+   "name": "savitch_theorem",
+   "verbatim_quote": "If L is in NSPACE(S(n)), then L is in DSPACE(S2(n)) provided S(n) is fully space constructible and S(n) > log2 n.",
+   "page": "Section 12.4 (Chapter 12); Theorem 12.11",
+   "latex": "$\\mathrm{NSPACE}(S(n)) \\subseteq \\mathrm{DSPACE}(S(n)^2)$",
+   "symbol_and_unit_ledger": "NSPACE(S(n)): languages accepted by a nondeterministic TM using at most S(n) tape cells on inputs of length n. DSPACE(S(n) squared): the same for deterministic machines with the square of the space bound. S(n): a fully space constructible function at least log base 2 of n. The proof recursively tests reachability between configurations through a midpoint, reusing space at each level.",
+   "assumptions": "Configurations of an S(n) space bounded machine have length of order S(n), so reachability between two configurations can be tested by guessing and recursively checking a midpoint, with recursion depth of order S(n) and one configuration stored per level. A corollary is that PSPACE equals NPSPACE.",
+   "breakdown_regime": "The square is the cost of this generic simulation; whether nondeterministic space can be determinized with less overhead is not settled by the theorem, and for time the analogous question is the open P versus NP problem. Below logarithmic space the configuration counting changes character.",
+   "domain": "computational complexity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Reachability in a huge but succinctly described state graph can be decided while reusing memory by recursive midpoint search; the same recursion is the memory frugal way to test connectivity in any configuration graph a system defines.",
+    "source_operator": "recursive midpoint reachability",
+    "telemetry": "emits recursion depth, peak stored configurations, and the squared space bound actually consumed"
+   }
+  },
+  {
+   "primitive_id": "hu-30",
+   "name": "time_and_space_hierarchies",
+   "verbatim_quote": "Thus we know that there is an infinite hierarchy of deterministic time complexity classes. A similar result holds for deterministic space complexity classes, and for nondeterministic time and space classes.",
+   "page": "Section 12.3 (Chapter 12); Theorems 12.7 to 12.9",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The diagonal machine runs a universal simulation of the smaller class's machines on their own codes under a clock or space bound, flips the answer, and uses constructibility of the bounds to keep its own resource use inside the larger class; Theorem 12.7 is the unbounded diagonal core, and Theorems 12.8 and 12.9 add the growth conditions (an infinite often little o separation) under which the separation is strict.",
+   "breakdown_regime": "The hierarchies need constructible bounds and a simulation overhead gap. The gap theorem (Theorem 12.13) shows arbitrarily large recursive gaps can separate complexity classes with no language in between, and the Blum speed up theorem (Theorem 12.14) shows some languages have no best algorithm at all, so hierarchy intuition must not be read as smooth or complete.",
+   "domain": "computational complexity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "More budget strictly buys more capability, but not smoothly: resource planning cannot assume a best possible algorithm exists or that small budget increases yield proportional gains; measure which classes actual workloads fall into.",
+    "source_operator": "resource class separator",
+    "telemetry": "emits, for benchmark task families, the smallest resource bound class observed to contain them"
+   }
+  },
+  {
+   "primitive_id": "hu-31",
+   "name": "cook_theorem_satisfiability_np_complete",
+   "verbatim_quote": "Theorem 13.1 The satisfiability problem is NP-complete. Proof The easy part of the proof is that L,at is in To determine if an expression of length n is satisfiable, nondeterministically guess values for all the variables and then evaluate the expression.",
+   "page": "Section 13.2 (Chapter 13); Theorem 13.1",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "NP is the class accepted by polynomial time nondeterministic machines (equivalently, polynomially checkable certificates). The proof encodes a polynomial time computation as a Boolean formula whose variables describe the computation tableau (cell contents, states, head positions at each time step) and whose clauses enforce a legal accepting history; the formula is produced by a log space transducer, so every NP language is log space reducible to satisfiability, and the standard chain continues through CNF-SAT and 3SAT (Theorems 13.2 and 13.3) to vertex cover and Hamilton path (Theorems 13.4 to 13.6).",
+   "breakdown_regime": "Completeness is worst case and up to polynomial reductions; it does not say every satisfiability instance is hard, and structured subclasses (2SAT, Horn formulas) are tractable. The log space strength of the reduction matters when transferring finer complexity conclusions.",
+   "domain": "computational complexity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any efficiently checkable search problem can be compiled into satisfiability, so a single strong satisfiability style solver is a universal backend for combinatorial search; problem specific solvers compete with it on structure, not on scope.",
+    "source_operator": "tableau to formula compiler",
+    "telemetry": "emits formula size as a function of the simulated time bound (order p(n) squared clauses in the book's construction)"
+   }
+  },
+  {
+   "primitive_id": "hu-32",
+   "name": "qbf_pspace_completeness",
+   "verbatim_quote": "Theorem 13.10 The problem of deciding whether a QBF is true is PSPACE complete.",
+   "page": "Section 13.4 (Chapter 13); Theorem 13.10",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "A quantified Boolean formula alternates existential and universal quantifiers over its variables. Hardness is proved by writing, for a polynomial space bounded machine, formulas F_j asserting reachability between two configurations in at most 2 to the j steps, reusing a single quantified copy of the previous level formula (formula (13.3) in the book) so the formula grows only linearly per level; Lemma 13.9 first puts the problem in PSPACE. The same completeness extends to context-sensitive recognition (Theorem 13.11).",
+   "breakdown_regime": "The quantified alternation is the source of hardness; bounding the number of alternations drops the problem into the corresponding level of the polynomial hierarchy instead. PSPACE completeness is a worst case classification and does not preclude fast evaluation of shallow or structured formulas.",
+   "domain": "computational complexity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Adversarial, alternating choice problems (one side picks, the other responds) are the canonical hard core of polynomial space search; game like and robust planning workloads should be budgeted as polynomial space, not as NP.",
+    "source_operator": "alternating quantifier evaluator",
+    "telemetry": "emits quantifier alternation count and formula growth per reachability doubling level"
+   }
+  },
+  {
+   "primitive_id": "hu-33",
+   "name": "oracle_relativization_barrier",
+   "verbatim_quote": "Suppose we could simulate arbitrary polynomial time-bounded NTM’s by polynomial time-bounded DTM’s.",
+   "page": "Section 13.7 (Chapter 13); Theorems 13.17 and 13.18",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "An oracle machine may query membership in a fixed set in one step, and the quoted sentence opens the chapter's closing argument about which proof methods survive adding oracles. Relative to the PSPACE complete oracle of true quantified Boolean formulas, P and NP both collapse to PSPACE (Theorem 13.17); the diagonal oracle B is built stage by stage so that the i-th deterministic polynomial time oracle machine fails on an input its nondeterministic counterpart accepts by querying a witness string, giving P relative to B different from NP relative to B (Theorem 13.18).",
+   "breakdown_regime": "The barrier applies to techniques that relativize, meaning the standard simulation and diagonalization arguments; it does not prove that P differs from NP in the unrelativized world, and later non relativizing techniques are outside its scope, which is exactly the guidance the result offers.",
+   "domain": "computational complexity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A proof technique that works unchanged in every oracle world cannot settle a question whose answer differs between oracle worlds; method selection for hard open problems must first check whether the method is in the barred class.",
+    "source_operator": "relativization screen",
+    "telemetry": "emits, for a proposed proof strategy, whether its steps relativize and therefore whether the strategy is screened out"
+   }
+  },
+  {
+   "primitive_id": "hu-34",
+   "name": "auxiliary_pda_time_equivalence",
+   "verbatim_quote": "Corollary L is in ZP if and only if L is accepted by a log n-APDA.",
+   "page": "Section 14.1 (Chapter 14); Theorem 14.1 and its Corollary",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "An auxiliary PDA has a read only input, a space bounded work tape, and an unbounded stack, with S(n) above log n. Theorem 14.1 states the three way equivalence of deterministic S(n) auxiliary PDA, nondeterministic S(n) auxiliary PDA, and DTIME(c to the S(n)) for some constant c; the proof summarizes stack behavior through TEST configurations and traverses time bounded computations with a stack. In the quote, ZP is the scan's rendering of the class P.",
+   "breakdown_regime": "The equivalence needs the workspace bound above log n so that inputs and indices fit on the work tape. Deterministic and nondeterministic auxiliary machines coincide here, a collapse that fails for plain time classes and is special to the stack plus bounded workspace combination.",
+   "domain": "computational complexity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stack memory plus a small bounded workspace is exactly exponential time in the workspace size; in particular, logarithmic workspace plus a stack is polynomial time, which budgets any recursive, stack based evaluator precisely.",
+    "source_operator": "stack workspace budget translator",
+    "telemetry": "emits the implied time bound c to the S(n) from a measured workspace bound and stack depth profile"
+   }
+  },
+  {
+   "primitive_id": "hu-35",
+   "name": "indexed_and_ol_languages",
+   "verbatim_quote": "Theorem 14.8 If L is a OL-language, then L is an indexed language.",
+   "page": "Sections 14.3 and 14.4 (Chapter 14); Theorems 14.7 and 14.8",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Indexed grammars attach to each variable a string of indices that is distributed to the variables of a production's right side, letting one coordinated structure control several blocks at once (the matched triple language a^n b^n c^n is the running example); Theorem 14.7 places indexed languages between the context-free and context-sensitive classes and records their characterization by one way nested stack automata. An OL system rewrites every symbol of a string in parallel at each step, modeling growth, and the theorem's construction encodes those parallel steps inside an indexed grammar.",
+   "breakdown_regime": "The inclusions do not collapse: indexed languages are strictly above the CFL's and strictly below the CSL's. Parallel rewriting with erasing productions or richer interaction (general Lindenmayer systems) climbs higher, so the OL restrictions are doing real work in the result.",
+   "domain": "formal language theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Parallel growth processes, where every component updates at each tick, generate exactly the indexed class of patterns when updates are context free per component; this is the right formal home for population, branching, and diffusion style generators.",
+    "source_operator": "parallel rewrite simulator",
+    "telemetry": "emits string length growth per parallel step and the index string depth the equivalent indexed grammar needs"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "9fd0285d2feab6ee-t1",
+   "think": "This book is a single long argument that computation can be stratified, and that each stratum is closed, decidable, or universal for reasons that can be proved rather than asserted. Read as an extraction target, its load bearing structure is a repeating pair: a machine model and a language class, locked together by an equivalence theorem, then probed with three questions. What operations preserve the class. What questions about the class can be answered mechanically. Where the class sits relative to its neighbors. The primitives extracted here follow that skeleton exactly, because the skeleton is the reusable part. The subset construction, the epsilon closure elimination, and the two directions of the Kleene equivalence say that three different descriptions of regularity (nondeterministic automata, automata with empty moves, and regular expressions) denote one class, so any system that tracks finite state behavior may choose whichever representation is cheapest and convert freely. The pumping lemma, the Myhill Nerode characterization, and the uniqueness of the minimum state automaton then give the class its physics: a counting bound that witnesses non membership, an index that measures exactly how much memory a behavior requires, and a canonical minimal machine that any two builders will reach independently. Context free languages repeat the pattern one level up, with normal forms in place of minimization: Chomsky and Greibach normal forms constrain production shape until parsing and proof become tractable, parse trees identify derivations with geometric objects that forget step order, inherent ambiguity marks the first point where representational choice cannot be eliminated, and the pushdown equivalence, the marked pumping of Ogden's lemma, and the cubic Cocke Younger Kasami membership test bound what one stack of memory can and cannot do. The Turing machine chapters then change the question from classification to existence. The diagonal language shows that any effective enumeration of machines leaves a language outside it, the universal language shows that a single machine can interpret all others, and Rice's theorem collapses almost every semantic question about programs into undecidability, with the Post correspondence problem and the invalid computations construction supplying the concrete reductions that make grammar questions undecidable as well. Greibach's theorem and the recursion theorem are the two great transfer principles of the back half: one moves undecidability across any effectively presented class with mild closure properties, the other guarantees self referential programs their fixed points, so quines and self modifying descriptions are theorems rather than tricks. The hierarchy theorem of Chapter 9 assembles the four Chomsky levels with proper containments, and the deterministic context free chapter shows how one extra bit of control, determinism of the stack, buys complement closure and an exact grammar characterization through LR(0) languages, facts that matter whenever a system must negate a structured pattern rather than merely detect one. The abstract families chapter abstracts the closure algebra itself: a trio is exactly the closure signature that survives GSM mappings, which are finite state transductions, so closure under a short checklist propagates to closure under every finite state transformation. The complexity chapters convert the same diagonal method into quantitative form: Savitch's theorem squares space to remove nondeterminism by reusing a reachability test, the hierarchy theorems show that more time or space always buys new languages under mild conditions, and the gap and speed up theorems warn that these bounds have pathological slack, so resource accounting in any real system must be measured rather than merely asymptotic. Cook's theorem and the PSPACE completeness of quantified Boolean formulas locate the two great attractors of hard search, satisfiability and quantified evaluation, and the oracle chapter proves that relativizing techniques cannot separate P from NP, a permanent constraint on what kind of proof a designer may hope for. The final chapter ties time and stack space together exactly through auxiliary pushdown automata, and places parallel rewriting growth inside the context sensitive world through indexed languages. The extraction deliberately favors theorem statements with effective content (constructions, characterizations, completeness results, and closure signatures) over the book's many exercises, whose role is to probe boundaries the theorems leave implicit; where a result was still open in 1979, notably deterministic context free equivalence, the primitive records the openness rather than papering over it. Extracted this way, the book is not a museum of definitions. It is a complete parts catalog for reasoning about any system that recognizes patterns, transforms streams, searches combinatorial spaces, or simulates other systems, with each part stamped with its exact power and its exact failure boundary. Two further habits of the book deserve to be carried into any system built on it. The first is its treatment of decision problems as a standard inventory: for each class the text asks the same battery of questions (emptiness, finiteness, membership, equivalence, universality) and records the answers in one place, so that a designer meeting a new class knows exactly which questions to ask before trusting it. The second is its honesty about cost. Simulations are stated with their overheads (quadratic for tape reduction, exponential for the naive removal of nondeterminism, cubic for context free membership), and several results exist mainly to mark where accounting breaks down: the gap theorem shows that complexity classes can have large recursive gaps with no language in between, and the speed up theorem shows that some problems have no optimal algorithm, so the search for one is not a plan. The primitives also record what the book proves about its own methods. Diagonalization is shown to relativize, and the oracle constructions of the complexity chapters convert that observation into a barrier result: any proof technique that survives arbitrary oracles unchanged cannot resolve the central open question of the field. That self limiting structure, a method strong enough to map its own jurisdiction, is the deepest pattern in the book, and it is the standard this extraction aimed to preserve: every primitive states not only what it establishes but the regime in which it stops working.",
+   "retrocausal_genealogy": "Every major result in the back half of the book descends from the diagonal flip of Chapter 1 and Section 8.3. The flipped diagonal produces the diagonal language, which no machine accepts; adding a universal machine turns that escape into the universal language, which is enumerable but not recursive; reducing the universal problem to semantic properties yields Rice's theorem; encoding machine computations as domino tilings yields the Post correspondence problem; encoding them as locally checkable histories yields the invalid computations method and from it the undecidability of grammar universality and ambiguity; abstracting the shared closure pattern of those proofs yields Greibach's theorem. The same diagonal engine, fitted with clocks and space bounds, later produces the time and space hierarchies, and its relativized failure mode produces the oracle barrier. The automata line has its own genealogy: subset construction feeds minimization, minimization feeds the Myhill Nerode index, and the index idea reappears as configuration counting inside Savitch's theorem and as the tableau inside Cook's theorem.",
+   "theory_of_mind": "The authors write as systematizers, not as advocates for a single model. Their recurring authorial decision is to define each class three ways at once (machine, grammar, and closure algebra) and to prove the definitions coincide, because the intended lesson is that power resides in the memory structure, not in the notation. They consistently prefer effective content: a theorem is prized when its proof is a construction another worker can run, and the text flags honestly where knowledge stops, recording deterministic context free equivalence as open and presenting the gap and speed up theorems as warnings against over reading the hierarchy results. Reading their stance correctly means treating the book's confidence as calibrated: what is stated as a theorem is meant to be load bearing forever, and what is stated as an exercise is a boundary they chose not to settle in print.",
+   "cross_layer_veto": "The layers veto each other at precise joints, and the vetoes are as valuable as the constructions. The pumping lemmas veto any claim that a finite state or single stack system recognizes a pattern needing two independent unbounded counts. Rice's theorem vetoes every proposed universal semantic checker for programs, and Greibach's theorem extends the veto across whole language families. The hierarchy theorem vetoes the hope that a lower class secretly suffices, by exhibiting separating languages at each level. The oracle results veto an entire family of proof techniques for the P versus NP question, not the question itself. The gap and speed up theorems veto naive resource comparisons between algorithms. In the other direction, determinism vetoes the vetoes where it applies: complement closure for deterministic context free languages is a positive result that the nondeterministic layer forbids, and the LR(0) characterization shows the price of recovering it is exactly the prefix property."
+  }
+ ],
+ "universal_lens": "One lens organizes the whole book: enumerate the descriptions, simulate them, and diagonalize against the simulation. Every class here is captured by that loop. Machines are strings, strings can be fed to a universal machine, and the universal machine's behavior against its own description draws the boundary of the class. Power is always purchased with a memory discipline (no memory, a stack, a bounded tape, an unbounded tape, an auxiliary stack), and each discipline has a canonical algebra of operations it survives. The transferable habit is to ask of any proposed system the book's three questions in order: what is its memory discipline, what is it closed under, and what diagonal or pumping witness escapes it.",
+ "gsi_mapping": "For a research institute curriculum, this book is a complete spine for formal reasoning literacy. The automata chapters teach state and memory as measurable resources; the context free chapters teach structure, normal forms, and the difference between a property of a representation and a property of the thing represented; the computability chapters teach the permanent limits of verification and the craft of reductions; the complexity chapters teach resource accounting, completeness, and intellectual honesty about open problems. Taught in that order, the primitives here become graded modules: each carries a construction a student can implement, a boundary witness a student can reproduce, and a failure regime a student can state. The research habit it trains, reducing a new question to a settled one, is the same habit the institute needs when evaluating claims in any formal domain.",
+ "gse_mapping": "For a reasoning engine over structured, time ordered data, the book supplies design law rather than algorithms. The Myhill Nerode index prices the memory any tracker of a behavior must carry, and minimization gives the canonical form for comparing two trackers. Determinization and epsilon closure compilation turn declarative pattern specifications into executable deterministic monitors, and deterministic complement closure licenses absence detection, not just presence detection. Rice's theorem is a standing veto on building universal semantic validators over arbitrary model code; effort belongs in restricted, checkable fragments instead. Savitch's recursion is the memory frugal reachability method for configuration graphs, Cook's theorem marks satisfiability as the universal backend for combinatorial search, and quantified formulas mark alternating, adversarial search as a different and harder budget class. The hierarchy results cap the whole design: choose the weakest memory discipline that expresses the target phenomenon, because each stronger tier is provably a different world."
+}

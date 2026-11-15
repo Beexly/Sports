@@ -1,0 +1,78 @@
+{
+  "book_id": "2ec0e5a642f6fb86",
+  "source_status": "COMPLETE",
+  "title": "source-trust-model",
+  "file_name": "source-trust-model.md",
+  "sha256": "2ec0e5a642f6fb86b492753eaf821691ad50a8ab2de4703b74cc49c6b80923cb",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Source trust as a conformal predictive system integrating coverage, freshness, and conflict resolution into a probabilistic data confidence lattice. Universal Lens: Rooted in source-trust-model (2ec0e5a642f6fb86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on data trustworthiness using source credibility scores and historical alignment with ground truth. GSI Mapping: Rooted in source-trust-model (2ec0e5a642f6fb86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine employs state transitions guided by trust metrics to select optimal data pathways for inference. GSE Mapping: Rooted in source-trust-model (2ec0e5a642f6fb86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "data_coverage_ratio",
+      "name": "Data Coverage Ratio",
+      "verbatim_quote": "## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{active}': 'dimensionless, active usable data count', 'C_{seeded}': 'dimensionless, total seeded source universe'}",
+      "assumptions": "Coverage ratio is bounded between 0 and 1; assumes legal usability is a binary condition.",
+      "breakdown_regime": "When C_active / C_seeded approaches 0, data integrity is compromised.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI for computing posterior trust weights; in GSE, used to trigger fallbacks when coverage drops below threshold.",
+        "source_operator": "data_coverage_ratio",
+        "telemetry": "Ratio of active legal data points to total seeded data points."
+      }
+    },
+    {
+      "primitive_id": "trust_confidence_index",
+      "name": "Trust Confidence Index",
+      "verbatim_quote": "- Coverage, source trust, conflict, freshness, proof, comps, archetypes, alerts, versioning, competitive, and king-standard foundations.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'TCI': 'dimensionless, normalized trust index'}",
+      "assumptions": "TCI aggregates multiple trust indicators into a scalar; each indicator is weighted equally unless otherwise specified.",
+      "breakdown_regime": "When TCI < 0.5, data is flagged for review or exclusion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian updating framework; GSE uses it to determine data routing priority.",
+        "source_operator": "trust_confidence_index",
+        "telemetry": "Aggregate score derived from source metadata and historical validation."
+      }
+    },
+    {
+      "primitive_id": "freshness_metric",
+      "name": "Freshness Metric",
+      "verbatim_quote": "- Coverage, source trust, conflict, freshness, proof, comps, archetypes, alerts, versioning, competitive, and king-standard foundations.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'days since last update'}",
+      "assumptions": "Freshness is inversely correlated with data staleness; assumes uniform update frequency across sources.",
+      "breakdown_regime": "When F > 30 days, data is considered stale and may be deprecated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "In GSI, used to weight recent data more heavily in predictive models; in GSE, triggers refresh protocols.",
+        "source_operator": "freshness_metric",
+        "telemetry": "Time elapsed since last verified update of a data record."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2ec0e5a642f6fb86_t0",
+      "think": "The core duality lies in balancing data breadth (coverage) with depth (trust), where insufficient coverage creates a gap that undermines even high-trust data. The failure mode occurs when trust indices are computed without considering coverage constraints, leading to overconfidence in sparse datasets. The system must enforce a minimum coverage threshold before assigning trust scores. Freshness acts as a dynamic constraint on trust, ensuring temporal relevance. The kernel of the model is a multi-dimensional trust lattice, where each dimension—coverage, trust, freshness—is a component of a unified confidence measure. This lattice enables both GSI’s probabilistic inference and GSE’s adaptive decision-making.\n\nDeep epistemic analysis for source-trust-model (2ec0e5a642f6fb86, domain=other, pages_read=1/1): Operator 'Data Coverage Ratio' (page 1, domain other) captures: ## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe. Assumptions: Coverage ratio is bounded between 0 and 1; assumes legal usability is a binary condition. Breakdown regime: When C_active / C_seeded approaches 0, data integrity is compromised. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI for computing posterior trust weights; in GSE, used to trigger fallbacks when coverage drops below threshold. Operator 'Trust Confidence Index' (page 1, domain other) captures: - Coverage, source trust, conflict, freshness, proof, comps, archetypes, alerts, versioning, competitive, and king-standard foundations. Assumptions: TCI aggregates multiple trust indicators into a scalar; each indicator is weighted equally unless otherwise specified. Breakdown regime: When TCI < 0.5, data is flagged for review or exclusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian updating framework; GSE uses it to determine data routing priority. Operator 'Freshness Metric' (page 1, domain other) captures: - Coverage, source trust, conflict, freshness, proof, comps, archetypes, alerts, versioning, competitive, and king-standard foundations. Assumptions: Freshness is inversely correlated with data staleness; assumes uniform update frequency across sources. Breakdown regime: When F > 30 days, data is considered stale and may be deprecated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): In GSI, used to weight recent data more heavily in predictive models; in GSE, triggers refresh protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for source-trust-model (2ec0e5a642f6fb86, domain=other, pages_read=1/1): Operator 'Data Coverage Ratio' (page 1, domain other) captures: ## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe. Assumptions: Coverage ratio is bounded between 0 and 1; assumes legal usability is a binary condition. Breakdown regime: When C_active / C_seeded approaches 0, data integrity is compromised. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI for computing posterior trust weights; in GSE, used to trigger fallbacks when coverage drops below threshold. Operator 'Trust Confidence Index' (page 1, domain other) captures: - Coverage, source trust, conflict, freshness, proof, comps, archetypes, alerts, versioning, competitive, and king-standard foundations. Assumptions: TCI aggregates multiple trust indicators into a scalar; each indicator is weighted equally unless otherwise specified. Breakdown regime: When TCI < 0.5, data is flagged for review or exclusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian updating framework; GSE uses it to determine data routing priority. Operator 'Freshness Metric' (page 1, domain other) captures: - Coverage, source trust, conflict, freshness, proof, comps, archetypes, alerts, versioning, competitive, and king-standard foundations. Assumptions: Freshness is inversely correlated with data staleness; assumes uniform update frequency across sources. Breakdown regime: When F > 30 days, data is considered stale and may be deprecated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): In GSI, used to weight recent data more heavily in predictive models; in GSE, triggers refresh protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and Bayesian networks, evolving through data governance frameworks and modern predictive systems. Retrocausal Genealogy: Rooted in source-trust-model (2ec0e5a642f6fb86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in source-trust-model (2ec0e5a642f6fb86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors with incentive misalignments and internal audit systems seeking maximal transparency. The system models these as competing signals in a trust optimization landscape. Theory of Mind & Decision Maker Model: Rooted in source-trust-model (2ec0e5a642f6fb86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If coverage falls below 50% or freshness exceeds 30 days, all trust-based inferences are suspended until remediation. Anti-collinearity ensures no single metric dominates the composite index. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-trust-model (2ec0e5a642f6fb86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-trust-model (2ec0e5a642f6fb86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

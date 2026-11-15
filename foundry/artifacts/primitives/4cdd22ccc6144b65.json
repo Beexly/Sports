@@ -1,0 +1,95 @@
+{
+  "book_id": "4cdd22ccc6144b65",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "4cdd22ccc6144b65cdf5b00ed3ca46f83faac7ef4400d46075877d1291063eed",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "gelo",
+      "name": "G-Elo margin-of-victory rating",
+      "verbatim_quote": "# ratings — team-strength and margin ratings Implements the c10 research ratings stack (buildable-systems.md SYS-01, SYS-02, SYS-10, SYS-26; syntheses.md Pipeline 2).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Margin-of-victory data follows a heavy-tailed distribution.",
+      "breakdown_regime": "Underperform when category frequencies violate stationarity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps margin distributions to skill updates in conformal prediction intervals.",
+        "source_operator": "gelo",
+        "telemetry": "Holdout log-loss on synthetic DGP"
+      }
+    },
+    {
+      "primitive_id": "plusdc_bt",
+      "name": "PlusDC-BT Bradley-Terry model",
+      "verbatim_quote": "the ignorance rule (1083) | | `plusdc.py` | PlusDC-BT (0213): P(home i beats j)=σ(u_i-u_j+x_ijTv), Σu_i=0, ridge-regularized",
+      "page": 1,
+      "latex": "P(home\\ i\\ beats\\ j)=\\sigma(u_i-u_j+x_{ij}^Tv)",
+      "symbol_and_unit_ledger": "{'u_i': 'Skill parameter (dimensionless)', 'x_ij': 'Covariate vector (dimensional)', 'v': 'Covariate coefficient (reciprocal dimensional)', 'σ': 'Standard logistic function (dimensionless)'}",
+      "assumptions": "Transitive pairwise comparisons and linear covariate effects.",
+      "breakdown_regime": "Degenerates when Σu_i ≠ 0 due to rank deficiency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conforms to Bayesian network structure for match outcome probabilities.",
+        "source_operator": "plusdc_bt",
+        "telemetry": "Rolling log-loss on 2022-2024 data"
+      }
+    },
+    {
+      "primitive_id": "qb_decomposition",
+      "name": "QB change decomposition",
+      "verbatim_quote": "`qb_decomp.py` | INFERENCE extension: u_i = τ_team + q_QB(i) — QB changes move the rating without",
+      "page": 1,
+      "latex": "u_i = \\tau_{team} + q_{QB(i)}",
+      "symbol_and_unit_ledger": "{'u_i': 'Overall team rating (dimensionless)', 'τ_team': 'Fixed team-specific skill (dimensionless)', 'q_QB(i)': 'QB-change adjustment (dimensionless)'}",
+      "assumptions": "QB effects are additive and independent of team strength.",
+      "breakdown_regime": "Leakage occurs if QB adjustments correlate with pre-existing skill.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Separates static team identity from dynamic quarterback influence.",
+        "source_operator": "qb_decomposition",
+        "telemetry": "Match-level prediction error reduction"
+      }
+    },
+    {
+      "primitive_id": "relative_form",
+      "name": "Relative form testing",
+      "verbatim_quote": "| `relativize.py` | 0049 rule: relative (difference/ratio) form tested against the TWO-feature absolute form (never the",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Performance metrics are scale-invariant under linear transformations.",
+      "breakdown_regime": "Fails when interaction terms dominate main effects.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Applies to calibration of probabilistic forecasts across different feature spaces.",
+        "source_operator": "relative_form",
+        "telemetry": "Honest +5% scale delta on holdout sets"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4cdd22ccc6144b65_t0",
+      "think": "G-Elo extends classic Elo by incorporating margin categories, yielding η=(1/2)log10(f_J/f_0). PlusDC-BT introduces ridge-regularized MLE to handle rank deficiency. QB-decomposition isolates quarterback effects, while relative-form testing ensures robustness. These primitives interoperate within a unified DGP framework.\n\nDeep epistemic analysis for README (4cdd22ccc6144b65, domain=other, pages_read=1/1): Operator 'G-Elo margin-of-victory rating' (page 1, domain other) captures: # ratings — team-strength and margin ratings Implements the c10 research ratings stack (buildable-systems.md SYS-01, SYS-02, SYS-10, SYS-26; syntheses.md Pipeline 2). Assumptions: Margin-of-victory data follows a heavy-tailed distribution. Breakdown regime: Underperform when category frequencies violate stationarity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps margin distributions to skill updates in conformal prediction intervals. Operator 'PlusDC-BT Bradley-Terry model' (page 1, domain other) captures: the ignorance rule (1083) | | `plusdc.py` | PlusDC-BT (0213): P(home i beats j)=σ(u_i-u_j+x_ijTv), Σu_i=0, ridge-regularized Assumptions: Transitive pairwise comparisons and linear covariate effects. Breakdown regime: Degenerates when Σu_i ≠ 0 due to rank deficiency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conforms to Bayesian network structure for match outcome probabilities. Operator 'QB change decomposition' (page 1, domain other) captures: `qb_decomp.py` | INFERENCE extension: u_i = τ_team + q_QB(i) — QB changes move the rating without Assumptions: QB effects are additive and independent of team strength. Breakdown regime: Leakage occurs if QB adjustments correlate with pre-existing skill. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Separates static team identity from dynamic quarterback influence. Operator 'Relative form testing' (page 1, domain other) captures: | `relativize.py` | 0049 rule: relative (difference/ratio) form tested against the TWO-feature absolute form (never the Assumptions: Performance metrics are scale-invariant under linear transformations. Breakdown regime: Fails when interaction terms dominate main effects. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Applies to calibration of probabilistic forecasts across different feature spaces. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (4cdd22ccc6144b65, domain=other, pages_read=1/1): Operator 'G-Elo margin-of-victory rating' (page 1, domain other) captures: # ratings — team-strength and margin ratings Implements the c10 research ratings stack (buildable-systems.md SYS-01, SYS-02, SYS-10, SYS-26; syntheses.md Pipeline 2). Assumptions: Margin-of-victory data follows a heavy-tailed distribution. Breakdown regime: Underperform when category frequencies violate stationarity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps margin distributions to skill updates in conformal prediction intervals. Operator 'PlusDC-BT Bradley-Terry model' (page 1, domain other) captures: the ignorance rule (1083) | | `plusdc.py` | PlusDC-BT (0213): P(home i beats j)=σ(u_i-u_j+x_ijTv), Σu_i=0, ridge-regularized Assumptions: Transitive pairwise comparisons and linear covariate effects. Breakdown regime: Degenerates when Σu_i ≠ 0 due to rank deficiency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conforms to Bayesian network structure for match outcome probabilities. Operator 'QB change decomposition' (page 1, domain other) captures: `qb_decomp.py` | INFERENCE extension: u_i = τ_team + q_QB(i) — QB changes move the rating without Assumptions: QB effects are additive and independent of team strength. Breakdown regime: Leakage occurs if QB adjustments correlate with pre-existing skill. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Separates static team identity from dynamic quarterback influence. Operator 'Relative form testing' (page 1, domain other) captures: | `relativize.py` | 0049 rule: relative (difference/ratio) form tested against the TWO-feature absolute form (never the Assumptions: Performance metrics are scale-invariant under linear transformations. Breakdown regime: Fails when interaction terms dominate main effects. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Applies to calibration of probabilistic forecasts across different feature spaces. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bookmakers use similar skill updates but lack formal uncertainty quantification. Theory of Mind & Decision Maker Model: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents covariate leakage by enforcing strict train-test separation. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (4cdd22ccc6144b65), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * LIVE smoke for the graded projections pool, under the nodejs environment.
  *

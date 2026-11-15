@@ -1,0 +1,78 @@
+{
+  "book_id": "39047ef45b093fc1",
+  "source_status": "COMPLETE",
+  "title": "2026-08-18_openrouter-apps",
+  "file_name": "2026-08-18_openrouter-apps.md",
+  "sha256": "39047ef45b093fc1a89c0d43b34bbb3d34c36628ab46b12044b381ae0e4540b7",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Hermes-at-scale operational dynamics map model allocation, attribution, and resource burn via ranked inference kernels. Universal Lens: Rooted in 2026-08-18_openrouter-apps (39047ef45b093fc1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian model selection over ranked inference kernels; conformal prediction of resource burn and attribution fidelity. GSI Mapping: Rooted in 2026-08-18_openrouter-apps (39047ef45b093fc1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions between fallback models based on daily defaults and API availability thresholds. GSE Mapping: Rooted in 2026-08-18_openrouter-apps (39047ef45b093fc1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "model_ranking_kernel",
+      "name": "Ranked Inference Kernel",
+      "verbatim_quote": "## What Hermes-at-scale actually burns (last 30d) | Rank | Model | Free on this box?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Rank': 'dimensionless ordinal index', 'Model': 'string identifier', 'Free_on_this_box': 'boolean {true, false}'}",
+      "assumptions": "Models are ranked by operational cost and availability; free status implies no API key required.",
+      "breakdown_regime": "At rank 5, DeepSeek V4 Pro is skipped due to cost; at rank 9, MiniMax M3 is skipped due to rate limit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each model rank maps to a distinct inference kernel with unique cost and availability parameters in GSI's Bayesian model selection framework.",
+        "source_operator": "model_ranking_kernel",
+        "telemetry": "Daily model usage logs and API response codes"
+      }
+    },
+    {
+      "primitive_id": "attribution_fidelity",
+      "name": "HTTP Referer Attribution",
+      "verbatim_quote": "/ OpenClaw / Codex. You already run Hermes Agent (#1, 37.6T). Hermes already sends HTTP-Referer +",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'HTTP_Referer': 'URI string', 'X_Title': 'string identifier', 'Attribution_Config': 'boolean {true, false}'}",
+      "assumptions": "HTTP headers provide sufficient provenance for model tracking without additional configuration.",
+      "breakdown_regime": "Failure occurs when referer is malformed or stripped by proxy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from model ranking kernel; enables GSI to trace inference back to source application.",
+        "source_operator": "attribution_fidelity",
+        "telemetry": "Header presence and integrity in HTTP request logs"
+      }
+    },
+    {
+      "primitive_id": "fallback_model_selector",
+      "name": "Fallback Model Selector",
+      "verbatim_quote": "| | 2 | Hy3 | yes — fallback 2 / `beexly-smart` | | 3 |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Fallback_Index': 'dimensionless ordinal', 'Model_Name': 'string identifier', 'API_Status': 'boolean {true, false}'}",
+      "assumptions": "Fallbacks are selected based on API availability and cost efficiency.",
+      "breakdown_regime": "When primary model fails, fallbacks are invoked in order of preference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from model ranking kernel; enables GSE to transition between models dynamically.",
+        "source_operator": "fallback_model_selector",
+        "telemetry": "API response codes and fallback invocation logs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "39047ef45b093fc1_t0",
+      "think": "The Hermes-at-scale system operates as a dynamic inference engine where ranked models are selected based on cost, availability, and fallback logic. The ranked kernel (model_ranking_kernel) defines a precedence list of models, each with a boolean 'Free on this box' flag indicating API access. This structure enables Bayesian model selection in GSI, where each model's performance and cost are tracked. Attribution fidelity is maintained through HTTP headers, ensuring traceability. Fallbacks (fallback_model_selector) are triggered when primary models fail, governed by API availability. These primitives form a closed-loop system where model selection, attribution, and fallbacks interact to maintain operational continuity under varying resource constraints.\n\nDeep epistemic analysis for 2026-08-18_openrouter-apps (39047ef45b093fc1, domain=other, pages_read=1/1): Operator 'Ranked Inference Kernel' (page 1, domain other) captures: ## What Hermes-at-scale actually burns (last 30d) | Rank | Model | Free on this box? Assumptions: Models are ranked by operational cost and availability; free status implies no API key required. Breakdown regime: At rank 5, DeepSeek V4 Pro is skipped due to cost; at rank 9, MiniMax M3 is skipped due to rate limit. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each model rank maps to a distinct inference kernel with unique cost and availability parameters in GSI's Bayesian model selection framework. Operator 'HTTP Referer Attribution' (page 1, domain other) captures: / OpenClaw / Codex. You already run Hermes Agent (#1, 37.6T). Hermes already sends HTTP-Referer + Assumptions: HTTP headers provide sufficient provenance for model tracking without additional configuration. Breakdown regime: Failure occurs when referer is malformed or stripped by proxy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from model ranking kernel; enables GSI to trace inference back to source application. Operator 'Fallback Model Selector' (page 1, domain other) captures: | | 2 | Hy3 | yes — fallback 2 / `beexly-smart` | | 3 | Assumptions: Fallbacks are selected based on API availability and cost efficiency. Breakdown regime: When primary model fails, fallbacks are invoked in order of preference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from model ranking kernel; enables GSE to transition between models dynamically. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-08-18_openrouter-apps (39047ef45b093fc1, domain=other, pages_read=1/1): Operator 'Ranked Inference Kernel' (page 1, domain other) captures: ## What Hermes-at-scale actually burns (last 30d) | Rank | Model | Free on this box? Assumptions: Models are ranked by operational cost and availability; free status implies no API key required. Breakdown regime: At rank 5, DeepSeek V4 Pro is skipped due to cost; at rank 9, MiniMax M3 is skipped due to rate limit. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each model rank maps to a distinct inference kernel with unique cost and availability parameters in GSI's Bayesian model selection framework. Operator 'HTTP Referer Attribution' (page 1, domain other) captures: / OpenClaw / Codex. You already run Hermes Agent (#1, 37.6T). Hermes already sends HTTP-Referer + Assumptions: HTTP headers provide sufficient provenance for model tracking without additional configuration. Breakdown regime: Failure occurs when referer is malformed or stripped by proxy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from model ranking kernel; enables GSI to trace inference back to source application. Operator 'Fallback Model Selector' (page 1, domain other) captures: | | 2 | Hy3 | yes — fallback 2 / `beexly-smart` | | 3 | Assumptions: Fallbacks are selected based on API availability and cost efficiency. Breakdown regime: When primary model fails, fallbacks are invoked in order of preference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from model ranking kernel; enables GSE to transition between models dynamically. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s multi-agent inference frameworks, evolving into modern model orchestration systems with probabilistic selection and attribution. Retrocausal Genealogy: Rooted in 2026-08-18_openrouter-apps (39047ef45b093fc1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2026-08-18_openrouter-apps (39047ef45b093fc1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include rate-limiting APIs, model availability failures, and misconfigured headers. Decision actors are the Hermes agent and its underlying inference stack. Theory of Mind & Decision Maker Model: Rooted in 2026-08-18_openrouter-apps (39047ef45b093fc1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 2026-08-18_openrouter-apps (39047ef45b093fc1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Veto conditions arise when model rank exceeds API limits (e.g., MiniMax M3), or when attribution headers are missing, preventing GSI from verifying provenance. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-08-18_openrouter-apps (39047ef45b093fc1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-08-18_openrouter-apps (39047ef45b093fc1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

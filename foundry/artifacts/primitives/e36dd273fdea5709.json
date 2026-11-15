@@ -1,0 +1,78 @@
+{
+  "book_id": "e36dd273fdea5709",
+  "source_status": "COMPLETE",
+  "title": "TASK_ROUTING_SUMMARY",
+  "file_name": "TASK_ROUTING_SUMMARY.md",
+  "sha256": "e36dd273fdea57091cca5d186966f82e93c17fae4af58d98fdb013efb6db10f0",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Task routing as a deterministic automaton with state transitions governed by agent capability and task metadata. Universal Lens: Rooted in TASK_ROUTING_SUMMARY (e36dd273fdea5709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on task status and risk using agent priors and evidence likelihoods. GSI Mapping: Rooted in TASK_ROUTING_SUMMARY (e36dd273fdea5709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models task flow through state-space with blocking and priority constraints. GSE Mapping: Rooted in TASK_ROUTING_SUMMARY (e36dd273fdea5709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "task_routing_automaton",
+      "name": "Deterministic Task Routing Automaton",
+      "verbatim_quote": "# Task Routing Implementation Implemented a typed seed task queue and deterministic router under `apps/web/lib/tasks`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Task identifier (dimensionless)', 'A': 'Agent capability vector (dimensionless)', 'S': 'Task state (dimensionless)', 'R': 'Routing rule set (dimensionless)'}",
+      "assumptions": "Tasks are deterministic, agent capabilities are static per role, routing rules are exhaustive.",
+      "breakdown_regime": "When agent capability does not satisfy task execution requirements.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The automaton maps task metadata to agent eligibility via a state transition function.",
+        "source_operator": "task_routing_automaton",
+        "telemetry": "Agent-task assignment success rate and blocking frequency."
+      }
+    },
+    {
+      "primitive_id": "agent_capability_vector",
+      "name": "Agent Capability Vector",
+      "verbatim_quote": "- DRAFT_ONLY agents can receive draft tasks but not executable tasks.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_A': 'Agent capability vector (dimensionless)', 'D': 'Draft eligibility flag (binary)', 'E': 'Executable eligibility flag (binary)'}",
+      "assumptions": "Capability is binary in task types; agents are categorized by fixed roles.",
+      "breakdown_regime": "When an agent's capability vector does not match required task type.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from agent role and task type to determine eligibility.",
+        "source_operator": "agent_capability_vector",
+        "telemetry": "Number of draft vs executable task assignments per agent."
+      }
+    },
+    {
+      "primitive_id": "operating_queue_registry",
+      "name": "Seeded Operating Queue Registry",
+      "verbatim_quote": "## Seeded operating queue Includes public-picks gate, CLV foundation, stale-ingestion alerting, score-source rights review, 25-pick calibration threshold, content review, subscription intelligence, ccusage rollup, memory candidate system, tool governance, historical feature registry, and stat coverage auditor.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q': 'Queue registry (dimensionless)', 'F_i': 'Feature or function (dimensionless)', 'T_i': 'Task type (dimensionless)'}",
+      "assumptions": "Each queue entry corresponds to a distinct operational function with defined inputs.",
+      "breakdown_regime": "When queue entries do not align with current task stream.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Registry mirrors operational functions as task queues with defined inputs and outputs.",
+        "source_operator": "operating_queue_registry",
+        "telemetry": "Queue throughput and task backlog per function."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e36dd273fdea5709_t0",
+      "think": "The task routing system operates as a deterministic automaton where each task T is mapped to an agent A based on a routing rule R. The state S of a task evolves according to its metadata: status, priority, risk, department, etc. Agent capability C_A defines whether A can execute T. If C_A does not meet T's requirements, the task remains blocked. The seeded operating queue Q provides a structured registry of task types F_i that must be processed. Each F_i has a defined input-output behavior, ensuring predictable task handling. Failure modes occur when agent roles do not align with task types, or when queue entries are misaligned with incoming tasks. The system enforces exclusivity: DRAFT_ONLY agents cannot process executable tasks, and NOT_WIRED agents cannot receive any executable tasks. This ensures that only appropriately authorized agents handle specific task types, maintaining integrity and preventing unauthorized execution.\n\nDeep epistemic analysis for TASK_ROUTING_SUMMARY (e36dd273fdea5709, domain=other, pages_read=1/1): Operator 'Deterministic Task Routing Automaton' (page 1, domain other) captures: # Task Routing Implementation Implemented a typed seed task queue and deterministic router under `apps/web/lib/tasks`. Assumptions: Tasks are deterministic, agent capabilities are static per role, routing rules are exhaustive. Breakdown regime: When agent capability does not satisfy task execution requirements. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The automaton maps task metadata to agent eligibility via a state transition function. Operator 'Agent Capability Vector' (page 1, domain other) captures: - DRAFT_ONLY agents can receive draft tasks but not executable tasks. Assumptions: Capability is binary in task types; agents are categorized by fixed roles. Breakdown regime: When an agent's capability vector does not match required task type. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from agent role and task type to determine eligibility. Operator 'Seeded Operating Queue Registry' (page 1, domain other) captures: ## Seeded operating queue Includes public-picks gate, CLV foundation, stale-ingestion alerting, score-source rights review, 25-pick calibration threshold, content review, subscription intelligence, ccusage rollup, memory candidate system, tool governance, historical feature registry, and stat coverage auditor. Assumptions: Each queue entry corresponds to a distinct operational function with defined inputs. Breakdown regime: When queue entries do not align with current task stream. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry mirrors operational functions as task queues with defined inputs and outputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for TASK_ROUTING_SUMMARY (e36dd273fdea5709, domain=other, pages_read=1/1): Operator 'Deterministic Task Routing Automaton' (page 1, domain other) captures: # Task Routing Implementation Implemented a typed seed task queue and deterministic router under `apps/web/lib/tasks`. Assumptions: Tasks are deterministic, agent capabilities are static per role, routing rules are exhaustive. Breakdown regime: When agent capability does not satisfy task execution requirements. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The automaton maps task metadata to agent eligibility via a state transition function. Operator 'Agent Capability Vector' (page 1, domain other) captures: - DRAFT_ONLY agents can receive draft tasks but not executable tasks. Assumptions: Capability is binary in task types; agents are categorized by fixed roles. Breakdown regime: When an agent's capability vector does not match required task type. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from agent role and task type to determine eligibility. Operator 'Seeded Operating Queue Registry' (page 1, domain other) captures: ## Seeded operating queue Includes public-picks gate, CLV foundation, stale-ingestion alerting, score-source rights review, 25-pick calibration threshold, content review, subscription intelligence, ccusage rollup, memory candidate system, tool governance, historical feature registry, and stat coverage auditor. Assumptions: Each queue entry corresponds to a distinct operational function with defined inputs. Breakdown regime: When queue entries do not align with current task stream. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry mirrors operational functions as task queues with defined inputs and outputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in automata theory and state machine design, with influences from access control models and workflow engines. Retrocausal Genealogy: Rooted in TASK_ROUTING_SUMMARY (e36dd273fdea5709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in TASK_ROUTING_SUMMARY (e36dd273fdea5709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as decision nodes with fixed capability vectors, while tasks are dynamic entities with evolving states. Opposing agents may attempt to bypass routing rules, leading to potential security breaches or inefficiencies. Theory of Mind & Decision Maker Model: Rooted in TASK_ROUTING_SUMMARY (e36dd273fdea5709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by strict agent-task compatibility checks. Leakage occurs if task metadata is not fully validated before routing, leading to incorrect agent assignment or blocked tasks. Cross-Layer Veto & Anti-Leakage Check: Rooted in TASK_ROUTING_SUMMARY (e36dd273fdea5709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in TASK_ROUTING_SUMMARY (e36dd273fdea5709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

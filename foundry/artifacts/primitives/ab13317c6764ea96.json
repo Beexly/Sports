@@ -1,0 +1,768 @@
+{
+ "book_id": "ab13317c6764ea96",
+ "source_status": "COMPLETE",
+ "source_note": "John Maynard Keynes, A Treatise on Probability, Macmillan and Co., London, 1921. Local source: publisher scan PDF (Keynes-1921-TreatiseOnProbability.pdf, 30,606,577 bytes) and its extracted text file (Keynes-1921-TreatiseOnProbability.pdf.txt, 1,146,307 bytes, 19,878 lines, 181,573 words). Identity by the gatekeeper method, sha256 over (str(size) encoded + full PDF bytes): ab13317c6764ea96a7d5db8241711e184e327c8bdc4758b8350e2962b171537b; book_id ab13317c6764ea96. Text quality: clean, complete, machine readable text of the whole treatise, Preface through Chapter XXXIII, with OCR artifacts typical of the scan (broken display formulas, occasional words split at line ends, some misread symbols in the symbolic chapters); the prose is reliable, and every quotation in this artifact was taken from a clean prose passage and verified against the text file. Catalog corrections: none required; author, title, year, and publisher as cataloged are correct. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "probability_logical_relation",
+   "name": "Probability is a logical relation between a conclusion and a body of evidence, not a property of things and not a frequency",
+   "verbatim_quote": "Its object has been to emphasise the existence of a logical relation between two sets of propositions in cases where it is not possible to argue demonstratively from one to the other.",
+   "page": "Part I, Ch. I, sec. 9; printed pp. 8-9; text lines 470-535",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A probability relation holds between propositions, so both the conclusion and the evidence must be statable as propositions.",
+    "The relation is perceived by direct logical intuition and cannot be defined in terms of simpler logical notions."
+   ],
+   "breakdown_regime": "The relation is indefinable and rests on claimed direct apprehension, so two reasoners can disagree about a probability with no procedure in the book to settle the disagreement.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine stores every forecast as a relation between a claim and a versioned evidence set, never as a free floating number attached to the claim alone. Recomputing a forecast means naming the evidence snapshot it is relative to, so two forecasts for the same event at different evidence states are different objects and can be compared honestly.",
+    "source_operator": "probability_logical_relation",
+    "telemetry": "Evidence set identifiers and timestamps attached to every stored probability judgment."
+   }
+  },
+  {
+   "primitive_id": "probability_relative_to_evidence",
+   "name": "A proposition has no probability in itself; its probability changes as the evidence it is relative to changes",
+   "verbatim_quote": "As our knowledge or our hypothesis changes, our conclusions have new probabilities, not in themselves, but relatively to these new premisses.",
+   "page": "Part I, Ch. I, sec. 7; printed pp. 7-8; text lines 470-490",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The old probability relative to the old evidence remains true after new evidence arrives; it is not corrected, it is superseded as the operative relation."
+   ],
+   "breakdown_regime": "Breaks down as a practical guide when the evidence cannot be cleanly partitioned into an old and a new body, or when the reasoner cannot say which body a stored judgment was relative to.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from probability_logical_relation: the engine versions its evidence base and re-derives probabilities on each version, keeping superseded judgments readable for audit instead of overwriting them. A judgment whose evidence version is unknown is treated as unusable, however plausible its number looks.",
+    "source_operator": "probability_relative_to_evidence",
+    "telemetry": "Evidence version diffs; count of judgments lacking a recorded evidence basis."
+   }
+  },
+  {
+   "primitive_id": "non_numerical_probability",
+   "name": "Only a limited class of probabilities is numerically measurable; some pairs are comparable only as more or less, and some pairs are not comparable at all",
+   "verbatim_quote": "By saying that not all probabilities are measurable, I mean that it is not possible to say of every pair of conclusions, about which we have some knowledge, that the degree of our rational belief in one bears any numerical relation to the degree of our rational belief in the other",
+   "page": "Part I, Ch. III, sec. 14; printed p. 34; text lines 1550-1570",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Comparison of more and less is possible for some pairs without any numerical measure of the difference.",
+    "Numerical measurement arises only in a special type of case, roughly where a probability can be located among equiprobable alternatives that form a measurable series."
+   ],
+   "breakdown_regime": "The doctrine blocks arithmetic on most real judgments: sums, averages, and expectations of non-numerical probabilities are undefined, so any system that forces every judgment into a decimal is adding structure the evidence does not contain.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps an ordinal and partial comparison layer alongside its numerical layer: signal families whose support cannot be honestly numerified are carried as ranked or incomparable judgments, and downstream combination rules refuse to average them into a spurious point estimate.",
+    "source_operator": "non_numerical_probability",
+    "telemetry": "Share of active judgments stored as ordinal or incomparable rather than numerical; refusal events when arithmetic is requested on them."
+   }
+  },
+  {
+   "primitive_id": "principle_of_indifference",
+   "name": "Where there is no known reason to prefer one of several alternatives, the alternatives carry equal probability relative to that knowledge",
+   "verbatim_quote": "The Principle of Indifference asserts that if there is no known reason for predicating of our subject one rather than another of several alternatives, then relatively to such knowledge the assertions of each of these alternatives have an equal probability.",
+   "page": "Part I, Ch. IV, sec. 2; printed p. 42; text lines 1853-1860",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The alternatives must be indivisible in the sense that there is no relevant way of subdividing them that the evidence supports.",
+    "The absence of a known reason must be genuine ignorance relative to the stated evidence, not a failure to look."
+   ],
+   "breakdown_regime": "Applied to subdivisible or redescribable alternatives it yields contradictions (the same unknown quantity gets different distributions under different descriptions), so it is valid only after the alternative set has been fixed by judgments of relevance and irrelevance.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived as the engine's only licence for flat priors: a uniform prior may be entered only over an explicitly enumerated, indivisible alternative set, with the irrelevance judgments recorded. Any prior not traceable to such a set is flagged as assumed, and sensitivity to it must be reported with the forecast.",
+    "source_operator": "principle_of_indifference",
+    "telemetry": "Prior registry entries with their alternative sets and the irrelevance judgments supporting each."
+   }
+  },
+  {
+   "primitive_id": "irrelevance_independence_for_probability",
+   "name": "Irrelevance is symmetric: if one occurrence has no bearing on another in a given state of knowledge, the second has no bearing on the first",
+   "verbatim_quote": "if in a given state of knowledge one occurrence has no bearing on another, then equally the second has no bearing on the first.",
+   "page": "Part I, Ch. IV, sec. 14; printed p. 55; text lines 2438-2458",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Irrelevance is defined relative to a stated body of evidence: a further proposition is irrelevant to a conclusion if adding it to the evidence does not change the conclusion's probability.",
+    "The strict definition requires that no part of the added evidence, inferrible from it but not from the original evidence, affects the probability."
+   ],
+   "breakdown_regime": "Independence for probability is not physical independence: two causally linked events can be irrelevant given rich evidence, and two physically separate events can be strongly relevant because learning one informs an unknown common condition.",
+   "domain": "probability calculus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine tests dependence between signals through the evidence, not through physical intuition: before two signals are combined as independent, it checks whether conditioning on either moves the assessed probability of the other under the current evidence set, and records the direction of any failure.",
+    "source_operator": "irrelevance_independence_for_probability",
+    "telemetry": "Conditional probability shifts between signal pairs under the live evidence set; pairs failing the irrelevance check."
+   }
+  },
+  {
+   "primitive_id": "weight_of_arguments",
+   "name": "Weight is a second dimension of an argument beside probability: the amount of relevant evidence it rests on; probability measures the balance, weight measures the sum",
+   "verbatim_quote": "the evidential weight of an argument rises, though its probability may either rise or fall, with every accession of relevant evidence.",
+   "page": "Part I, Ch. VI, sec. 2; text lines 3116-3122",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Weight increases with every accession of relevant evidence, favourable or unfavourable; probability moves only with the balance.",
+    "Weights of arguments resting on non-overlapping evidence are often incomparable, like the probabilities themselves."
+   ],
+   "breakdown_regime": "Weight has no general numerical measure in the book, so it disciplines judgment qualitatively: it can veto acting on a high probability built on thin evidence, but it cannot be traded off against probability by any formula Keynes supplies.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine output carries two channels: the probability and a weight annotation summarising how much relevant evidence supports it. Promotion rules require minimum weight as well as favourable probability, so a confident number from a thin base cannot outrank a slightly weaker number from a deep base without the difference being shown.",
+    "source_operator": "weight_of_arguments",
+    "telemetry": "Relevant evidence counts and coverage per judgment; distribution of weight across promoted and unpromoted signals."
+   }
+  },
+  {
+   "primitive_id": "frequency_theory_critique",
+   "name": "Identifying probability with statistical frequency (Venn) abandons most probability judgments, including all judgments about single cases and about arguments from testimony, memory, and analogy",
+   "verbatim_quote": "the identification of probability with statistical frequency is a very grave departure from the established use of words",
+   "page": "Part I, Ch. VIII, sec. 4; printed pp. 95-96; text lines 4066-4075",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Frequencies are evidence for probabilities, often the best evidence, but they are not what probability means.",
+    "A series must be chosen before any frequency exists, and the choice of the relevant series is itself a probability judgment the frequency theory cannot supply."
+   ],
+   "breakdown_regime": "The critique cuts both ways for practice: it forbids reading a probability off a frequency table mechanically, but it gives no replacement algorithm, so frequency evidence still has to be weighed by the inductive methods of Part III.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every empirical frequency as evidence to be weighed, never as the definition of the probability it informs. Each frequency input must name the series it was counted over and the reason that series is the relevant one, which is exactly the judgment the frequency theory hides.",
+    "source_operator": "frequency_theory_critique",
+    "telemetry": "Frequency inputs with their declared reference series and the recorded rationale for choosing that series."
+   }
+  },
+  {
+   "primitive_id": "addition_theorem",
+   "name": "Addition theorem: the probability of a disjunction equals the sum of the probabilities minus the probability of the conjunction; for exclusive alternatives the conjunction term vanishes",
+   "verbatim_quote": "This is the ordinary rule for the addition of the probabilities of exclusive alternatives.",
+   "page": "Part II, Ch. XIV, sec. 2, theorem (24.1); printed p. 144; text lines 5888-5898",
+   "latex": "$\\frac{a+b}{h} = \\frac{a}{h} + \\frac{b}{h} - \\frac{ab}{h}$",
+   "symbol_and_unit_ledger": {
+    "a, b": "propositions (alternatives)",
+    "h": "the evidence or hypothesis the probabilities are relative to",
+    "a/h": "probability of a relative to h, dimensionless, between 0 and 1",
+    "ab": "conjunction, a and b",
+    "a + b": "disjunction, a or b, in Keynes's notation"
+   },
+   "assumptions": [
+    "Both probabilities and the conjunction probability are relative to the same evidence h.",
+    "Exclusivity is relative to h: ab/h = 0 must hold on the evidence, not merely in fact."
+   ],
+   "breakdown_regime": "Fails silently when the conjunction term is dropped for alternatives that are not exclusive on the evidence, double counting the overlap; also inapplicable where the probabilities involved are non-numerical.",
+   "domain": "probability calculus",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for combining mutually exclusive and overlapping scenario sets in the engine: scenario unions are computed with the conjunction correction, and the exclusivity of combined scenarios is checked against the evidence rather than assumed from labels.",
+    "source_operator": "addition_theorem",
+    "telemetry": "Conjunction probability estimates for combined scenarios; exclusivity check failures."
+   }
+  },
+  {
+   "primitive_id": "multiplication_theorem",
+   "name": "Multiplication theorem: the probability of a conjunction is the probability of one term times the probability of the other given the first; under independence for probability it factorises into the product of the separate probabilities",
+   "verbatim_quote": "we can arrive at the probability of al and a2 jointly on the same hypothesis by simple multiplication of the probabilities",
+   "page": "Part II, Ch. XIV, sec. 5, theorem (36); text lines 6053-6065",
+   "latex": "$\\frac{a_1 a_2}{h} = \\frac{a_1}{h} \\cdot \\frac{a_2}{a_1 h}$",
+   "symbol_and_unit_ledger": {
+    "a_1, a_2": "propositions whose joint occurrence is in question",
+    "h": "the evidence the probabilities are relative to",
+    "a_2/a_1 h": "probability of a_2 relative to evidence h together with a_1, dimensionless",
+    "a_1 a_2 / h": "probability of the conjunction relative to h, dimensionless"
+   },
+   "assumptions": [
+    "The conditional factor must be assessed relative to the evidence enlarged by the first term, not relative to the original evidence alone.",
+    "Factorisation into separate probabilities requires independence for probability in the sense of the irrelevance primitive."
+   ],
+   "breakdown_regime": "The commonest formal error in applied probability: replacing the conditional factor by the unconditional probability when the terms are relevant to each other, which is precisely the assumption Bernoulli's theorem needs and rarely gets.",
+   "domain": "probability calculus",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for all multi-leg and multi-signal combinations in the engine: joint probabilities are built through the chain of conditionals, and the independence shortcut is permitted only where the irrelevance check has passed and is logged.",
+    "source_operator": "multiplication_theorem",
+    "telemetry": "Conditional versus unconditional factor gaps in joint assessments; independence shortcut usage log."
+   }
+  },
+  {
+   "primitive_id": "inverse_principle",
+   "name": "Inverse principle (Bayes): the probability of a cause after its effect is proportional to its prior probability times the probability of the effect given the cause; with two exhaustive causes the posterior is the normalised product",
+   "verbatim_quote": "are the d priori probabilities of the existence of Al and A2 respectively, when it is not known whether or not the event B has occurred",
+   "page": "Part II, Ch. XIV, sec. 6, theorems (38.1)-(38.2); printed pp. 148-149; text lines 6070-6110",
+   "latex": "$\\frac{a_1}{bh} = \\frac{p_1 q_1}{p_1 q_1 + p_2 q_2}$",
+   "symbol_and_unit_ledger": {
+    "a_1, a_2": "two exhaustive and exclusive hypotheses or causes",
+    "b": "the observed event or effect",
+    "h": "the background evidence",
+    "p_1 = a_1/h, p_2 = a_2/h": "prior probabilities of the causes, dimensionless",
+    "q_1 = b/a_1 h, q_2 = b/a_2 h": "probabilities of the effect given each cause, dimensionless",
+    "a_1/bh": "posterior probability of the first cause after the event, dimensionless"
+   },
+   "assumptions": [
+    "The causes must be exhaustive and exclusive relative to the evidence, and the effect must be possible on the evidence (bh not inconsistent).",
+    "Priors for the causes must exist before the effect is seen; the theorem redistributes probability, it does not create it."
+   ],
+   "breakdown_regime": "Without defensible priors the formula outputs whatever the assumed priors dictate; applied with flat priors over causes that were never enumerated by an indifference argument, it manufactures precision, which is the abuse Part V prosecutes in Laplace's methods.",
+   "domain": "probability calculus",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel governing every inverse update in the engine: no posterior is computed unless the hypothesis set is enumerated, the priors are registered with their justification, and the likelihoods are stated per hypothesis. Updates that cannot meet this are reported as directional evidence only.",
+    "source_operator": "inverse_principle",
+    "telemetry": "Registered prior sets and likelihood tables per update; count of updates blocked for missing priors."
+   }
+  },
+  {
+   "primitive_id": "analogy_and_pure_induction",
+   "name": "Every inductive argument has two components: analogy, resting on the likeness of the instances, and pure induction, resting on their number",
+   "verbatim_quote": "It will be useful to call arguments inductive which depend in any way on the methods of Analogy and Pure Induction.",
+   "page": "Part III, Ch. XVIII, sec. 3; printed p. 217; text lines 9090-9110",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The two components are distinguishable in every empirical argument even when one of them contributes almost nothing."
+   ],
+   "breakdown_regime": "Conflating the components misdiagnoses weak arguments: adding more instances cannot repair a bad analogy, and a perfect analogy between two instances still leaves the numerical component thin.",
+   "domain": "inductive logic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine scores evidential support for a generalisation on two separate axes, likeness of the supporting cases to the target case and count of independent supporting cases, and reports which axis is weak instead of merging them into one confidence figure.",
+    "source_operator": "analogy_and_pure_induction",
+    "telemetry": "Per generalisation: analogy quality assessments and independent instance counts, reported separately."
+   }
+  },
+  {
+   "primitive_id": "positive_negative_analogy",
+   "name": "An inductive argument is strengthened by reducing the superfluous resemblances among its instances (increasing the negative analogy) until it approximates a perfect analogy; instance value comes from the resemblances an instance eliminates, not from its mere addition to the count",
+   "verbatim_quote": "The object of the accumulation of further experience is still the same as before, namely, to make the form of the argument approximate more and more closely to that of perfect analogy.",
+   "page": "Part III, Ch. XIX, sec. 7; printed pp. 228-229; text lines 9490-9510",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The instances share some characteristics the generalisation disregards; the fewer and less comprehensive those shared but disregarded characteristics, the stronger the argument.",
+    "With incomplete knowledge of the instances, the mere number of instances still matters, because numerous instances give more opportunity for unknown differences to exist."
+   ],
+   "breakdown_regime": "When the instances are all drawn from one narrow corner of the field, their shared disregarded characteristics stay comprehensive and the argument plateaus: the millionth similar instance adds almost nothing, which raw counting conceals.",
+   "domain": "inductive logic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Data acquisition for the engine is steered by eliminated resemblance, not volume: new cases are valued by which shared but unmodelled characteristics they break up, and a case stream that keeps arriving from the same narrow conditions is reported as stagnant evidence even while its count grows.",
+    "source_operator": "positive_negative_analogy",
+    "telemetry": "Coverage of condition space by the case base; list of shared characteristics across supporting cases not yet broken by any contrary case."
+   }
+  },
+  {
+   "primitive_id": "pure_induction_instance_value",
+   "name": "Each additional instance raises the probability of a generalisation only if the new instance could not have been predicted with certainty from the instances already known",
+   "verbatim_quote": "each additional instance increases the probability of the generalisation, so long as the new instance could not have been predicted with certainty from a knowledge of the former instances",
+   "page": "Part III, Ch. XX, sec. 4; printed p. 236; text lines 10020-10050",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each instance must follow necessarily from the generalisation, so that its truth is a genuine consequence being tested.",
+    "Instances must differ, or be capable of differing, in analogy; an exact repeat of a former instance adds nothing."
+   ],
+   "breakdown_regime": "Pure repetition under identical conditions is evidentially empty even in unlimited quantity; the result also caps what counting alone can do, since it shows increase without showing any approach to certainty.",
+   "domain": "inductive logic",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from positive_negative_analogy as the engine's deduplication rule for evidence: a new confirming case is weighted by its unpredictability from the cases already held, so near duplicate confirmations are discounted before they reach any count based promotion rule.",
+    "source_operator": "pure_induction_instance_value",
+    "telemetry": "Novelty scores of incoming cases relative to the held case base; effective independent instance counts."
+   }
+  },
+  {
+   "primitive_id": "pure_induction_finite_probability_conditions",
+   "name": "Pure induction can drive a generalisation toward certainty only if the generalisation has a finite prior probability from some other source and, supposing it false, the next instance's satisfying it remains finitely uncertain",
+   "verbatim_quote": "Pure Induction can be usefully employed to strengthen an argument if, after a certain number of instances have been examined, we have, from some other source, a finite probability in favour of the generalisation, and, assuming the generalisation is false, a finite uncertainty as to its conclusion being satisfied by the next hitherto unexamined instance which satisfies its premiss.",
+   "page": "Part III, Ch. XX, sec. 6; printed pp. 238-239",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Finite probability means exceeding some numerically expressible probability, however small; it is a floor above impossibility, not a sizeable value.",
+    "The prior probability normally comes from analogy; the conditions are independent of where it comes from."
+   ],
+   "breakdown_regime": "If the prior probability is zero or infinitesimal, no finite number of instances rescues the generalisation; this is the formal reason consequence counting can never establish a hypothesis that had no standing before its consequences were checked.",
+   "domain": "inductive logic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine requires a registered prior standing, however small, before instance accumulation is allowed to promote a hypothesis. Hypotheses proposed purely because their consequences check out are held in a separate class labelled no prior standing, and their confirmation counts are displayed with that label attached.",
+    "source_operator": "pure_induction_finite_probability_conditions",
+    "telemetry": "Hypothesis registry with prior standing source; confirmations accumulated per hypothesis class."
+   }
+  },
+  {
+   "primitive_id": "limited_independent_variety",
+   "name": "The inductive hypothesis: the objects generalised over do not have infinitely many independent qualities; their characteristics cohere in a finite number of groups of invariable connection generated by finitely many underlying properties",
+   "verbatim_quote": "the objects in the field, over which our generalisations extend, do not have an infinite number of independent qualities ; that, in other words, their characteristics, however numerous, cohere together in groups of invariable connection, which are finite in number.",
+   "page": "Part III, Ch. XXII, sec. 6; printed pp. 256-257",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only a finite prior probability of the hypothesis is needed, not its certainty; experience conforming to it can then raise its probability by the same inductive method without circularity.",
+    "For universal generalisations a further finite probability is needed that the conditioning characters are not producible by more than one distinct generator set."
+   ],
+   "breakdown_regime": "The hypothesis is an assumption about the world, not a theorem: in a domain whose variety is genuinely unbounded, induction has no finite starting probability and the methods of this part lose their warrant there.",
+   "domain": "inductive logic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats each domain it models as a finite generator hypothesis to be stated and tested: features are organised under a declared set of underlying generators, and generalisations are licensed only within fields where that finite structure has survived attempts to break it. New fields start unlicensed, with a finite but small prior, rather than borrowing licences from neighbouring fields.",
+    "source_operator": "limited_independent_variety",
+    "telemetry": "Declared generator sets per domain; fields with and without a surviving finite structure hypothesis."
+   }
+  },
+  {
+   "primitive_id": "atomic_uniformity",
+   "name": "The working assumption behind scientific induction is stronger than bare uniformity of nature: nature is atomic, each legal atom exercising its own separate, independent, and invariable effect, with total changes compounded of separate changes",
+   "verbatim_quote": "each of them exercises its own separate, independent, and invariable effect, a change of the total state being compounded of a number of separate changes each of which is solely due to a separate portion of the preceding state",
+   "page": "Part III, Ch. XXI, sec. 6; printed pp. 249-250",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Uniformity of nature alone (same total cause, same effect) does not imply atomic uniformity; wholes could obey laws irreducible to their parts while nature stayed uniform.",
+    "The size of the atomic unit is itself an assumption, taken for mental events as an individual consciousness and for material events as an object small relative to perception."
+   ],
+   "breakdown_regime": "Where law is organic rather than atomic, where complexes obey laws not statable through their parts, knowledge of a part gives no presumptive knowledge of its behaviour in new combinations, and analogy based on parts fails.",
+   "domain": "inductive logic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's factor architecture is this assumption made explicit: influences are modelled as separable factors with stable individual effects that compose. Where interaction terms keep absorbing the explanatory load, the engine flags the domain as possibly organic and suspends part based analogy for it instead of forcing the factor form.",
+    "source_operator": "atomic_uniformity",
+    "telemetry": "Share of explained variation carried by interaction terms per domain; organic domain flags."
+   }
+  },
+  {
+   "primitive_id": "inductive_correlation_form",
+   "name": "The defensible output of empirical argument is usually an inductive correlation (it is probable of any given instance, taken at random, that it satisfies the conclusion), not a universal generalisation (it is probable that every instance does)",
+   "verbatim_quote": "It is more likely than not, for example, that any number will be divisible either by two or by three, but it is not more likely than not that all numbers are divisible either by two or by three.",
+   "page": "Part V, Ch. XXXIII, sec. 1; printed p. 406",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The correlation form survives the certain existence of exceptions; the universal form is destroyed by one.",
+    "Plurality of causes, which cannot be excluded by any finite probability argument available to us, is the standing reason for preferring the correlation form."
+   ],
+   "breakdown_regime": "Stating a correlation in universal dress overclaims and converts the first exception into a refutation of the whole assessment, whereas the correlation itself priced exceptions in from the start.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine outputs are phrased and stored in correlation form: a probability for the next case drawn from a named series, never as a claim that all cases in the series conform. Any downstream surface wanting universal language must re-derive it and carry the exception risk explicitly.",
+    "source_operator": "inductive_correlation_form",
+    "telemetry": "Output statements classified by logical form; universal form statements and their justifications."
+   }
+  },
+  {
+   "primitive_id": "objective_chance",
+   "name": "Objective chance is a derivative notion: an event is due to objective chance when no knowledge of laws or of the permanent facts of the field would give an appreciable probability for preferring it to its alternatives, and only a great mass of further facts of existence could",
+   "verbatim_quote": "An event is due to objective chance if in order to predict it, or to prefer it to alternatives, at present equi-probable, with any high degree of probability, it would be necessary to know a great many more facts of existence about it than we actually do know, and if the addition of a wide knowledge of general principles would be little use.",
+   "page": "Part IV, Ch. XXIV, secs. 8-9, restated in Part V, Ch. XXXIII, sec. 7; printed pp. 288-289 and p. 418",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Subjective chance (irrelevance relative to actual knowledge) is fundamental; objective chance adds robustness of that irrelevance to a whole kind of possible knowledge, namely laws and permanent facts.",
+    "The definition is deliberately imprecise about how many facts of existence would be needed; usage approximates to it."
+   ],
+   "breakdown_regime": "Where a learnable law or a permanent fact does discriminate between the alternatives, calling the event chance is an error that more knowledge corrects; the notion therefore shrinks as science grows, and any list of chance governed processes is provisional.",
+   "domain": "philosophy of chance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine labels a residual as chance only after checking that its available law like knowledge and its stable field facts do not discriminate within it. The label is stored with the checks that were run, so a residual can be reclassified when a discriminating factor is later found, rather than chance being treated as a property of the process itself.",
+    "source_operator": "objective_chance",
+    "telemetry": "Residual classes with their discrimination check history; reclassifications of chance labelled residuals."
+   }
+  },
+  {
+   "primitive_id": "random_selection",
+   "name": "A case is taken at random relative to evidence and to a specified characteristic when what is known of its identity is irrelevant to the probability of its having that characteristic; randomness is relative to the generalisation in question, not a physical property of the sampling",
+   "verbatim_quote": "Whether or not a given instance is taken at random, depends, therefore, upon what generalisation is in question.",
+   "page": "Part IV, Ch. XXIV, sec. 11; printed pp. 291-292",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Randomness is defined through irrelevance relative to evidence h, not through long run behaviour of a selection procedure.",
+    "The same case can be random for one characteristic and biased for another."
+   ],
+   "breakdown_regime": "Defining randomness by long run equiprobability of sets (the frequency school's definition) is circular in practice, since whether a sample is random in that sense can only be known when knowledge is nearly complete; it also counts perfectly patterned arrangements as random.",
+   "domain": "philosophy of chance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sampling audits in the engine are characteristic specific: a dataset is certified random for a named target characteristic by showing that the identity information available about its cases is irrelevant to that characteristic, and the certification does not transfer to other characteristics without a fresh check.",
+    "source_operator": "random_selection",
+    "telemetry": "Randomness certifications per dataset and characteristic; identity information fields available per case."
+   }
+  },
+  {
+   "primitive_id": "design_argument_needs_prior",
+   "name": "Inverse arguments (design, remarkable occurrences) can only raise a probability that already exists: unless there is an appreciable probability for the hypothesis before the striking event, there cannot be an appreciable probability after it",
+   "verbatim_quote": "The argument tells us that the existence of the hypothetical agent is more likely after the event than before it ; but, as in the case of the general inductive problem dealt with in Part III., unless there is an appreciable probability first, there cannot be an appreciable probability afterwards.",
+   "page": "Part IV, Ch. XXV, sec. 4; printed pp. 297-298",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every specific outcome is vastly improbable before the fact when the alternatives are numerous, so remarkableness alone carries no evidential force; some alternative would have been equally remarkable.",
+    "The posterior requires the prior through the inverse principle; a likelihood ratio by itself settles nothing."
+   ],
+   "breakdown_regime": "The argument is routinely run backwards in practice: a pattern that would have been one among millions is treated as self certifying. Keynes's analysis shows the missing ingredient is always an independently grounded prior for the specific explanation, and where that is absent the correct output is an investigation trigger, not a probability.",
+   "domain": "philosophy of chance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine routes surprising patterns to an investigation queue rather than to belief revision: a pattern upgrades a hypothesis only when that hypothesis has registered prior standing, and the size of the upgrade is computed through the inverse principle with that prior shown.",
+    "source_operator": "design_argument_needs_prior",
+    "telemetry": "Surprise events logged; hypotheses with and without prior standing at the time of each surprise."
+   }
+  },
+  {
+   "primitive_id": "weight_and_risk_in_conduct",
+   "name": "Mathematical expectation is an incomplete rule of action: it ignores the weight of the arguments (the amount of evidence behind each probability) and it ignores risk, treating an even chance of a great good or a great evil as exactly equivalent to the certain attainment of the proportional mean",
+   "verbatim_quote": "because it ignores what I have termed in Part I. the ' weights ' of the arguments, namely, the amount of evidence upon which each probability is founded ; and second, because it ignores the element of ' risk '",
+   "page": "Part IV, Ch. XXVI, sec. 5; printed pp. 311-312",
+   "latex": "$R = qE$",
+   "symbol_and_unit_ledger": {
+    "R": "risk of an expectation, in the same units as the good at stake",
+    "E": "mathematical expectation, E = pA, in units of the good",
+    "p": "probability of attaining the good, dimensionless; q = 1 - p, probability that the sacrifice made for it is made in vain",
+    "A": "amount of good that may result if the event succeeds"
+   },
+   "assumptions": [
+    "The definition of risk presupposes a numerical probability and a measurable good; where either fails, risk like expectation is only qualitative.",
+    "Keynes proposes risk and weight as relevant coefficients but supplies no formula for how much they should move a decision; the correction is a judgment, not a computation."
+   ],
+   "breakdown_regime": "Where probabilities are non-numerical or goods non-additive, expectation arithmetic is not merely incomplete but undefined, and decisions must be taken by direct judgment on the whole situation; pretending the product rule still applies manufactures a ranking the inputs do not support.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Decision surfaces in the engine report three quantities side by side: expectation, the weight behind the probabilities entering it, and the risk term qE. Rules may require risk and weight to be displayed before an expectation based ranking is acted on, so a high expectation carried by a near even chance on thin evidence cannot present as equivalent to a sure moderate gain.",
+    "source_operator": "weight_and_risk_in_conduct",
+    "telemetry": "Per decision: expectation, weight annotation, and risk term; decisions where ranking by expectation and ranking by risk adjusted judgment differ."
+   }
+  },
+  {
+   "primitive_id": "petersburg_paradox_moral_expectation",
+   "name": "The Petersburg game has infinite mathematical expectation yet no sane price, which refutes expectation as the complete measure of value; Bernoulli's repair makes the moral value of money logarithmic in its amount (diminishing marginal utility), and Keynes locates the remaining paradox in the neglected risk term, which is infinite for the unlimited game",
+   "verbatim_quote": "Nothing, it is said, could be more paradoxical, and no sane Paul would engage on these terms even with an honest Peter.",
+   "page": "Part IV, Ch. XXVI, sec. 9; printed pp. 316-319",
+   "latex": "$\\frac{dy}{dx} = \\frac{k}{x}$",
+   "symbol_and_unit_ledger": {
+    "x": "physical fortune, in units of money",
+    "y": "moral fortune, the value of x to its holder, in utility units",
+    "k": "a positive constant fixing the scale of moral value",
+    "dy/dx = k/x": "Bernoulli's hypothesis that the moral increment from an increment of fortune is inversely proportional to the fortune already held"
+   },
+   "assumptions": [
+    "Bernoulli's logarithmic law is a hypothesis about valuation, offered as the first explicit form of diminishing marginal utility; Keynes treats it as partially explanatory, not as a derivation.",
+    "The game's payoffs double with each toss while their probabilities halve, giving expectation one unit per toss summed without limit."
+   ],
+   "breakdown_regime": "Truncating the game at any finite number of tosses makes the expectation finite but still leaves a paradoxically large fair price, so solvency and utility repairs alone do not close the problem; the risk analysis (relative risk approaching unity) is Keynes's own residual explanation.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from weight_and_risk_in_conduct as the engine's stress test for any expectation based valuation: payoff schemes whose expectation is dominated by remote, enormous, improbable outcomes are flagged, their risk terms computed where possible, and their valuations reported with the contribution of the extreme tail separated from the body of the distribution.",
+    "source_operator": "petersburg_paradox_moral_expectation",
+    "telemetry": "Tail contribution shares in valued expectations; valuations whose fair price is dominated by outcomes beyond stated probability floors."
+   }
+  },
+  {
+   "primitive_id": "statistical_description_vs_inference",
+   "name": "Descriptive statistics and statistical inference are different sciences sharing one toolbox: fitting curves and computing coefficients describes the observed cases, and nothing in the quality of the description licenses extending it to unobserved cases",
+   "verbatim_quote": "But this union is also the occasion of a great deal of confusion.",
+   "page": "Part V, Ch. XXVII, secs. 1-2; printed pp. 327-330",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Terms such as probable error and correlation are used in both senses, which is one mechanism by which descriptive results acquire unearned inferential force.",
+    "The inferential step always needs extraneous knowledge about how the sample arose and what the unobserved cases are like; most of that knowledge is not numerical."
+   ],
+   "breakdown_regime": "The failure mode is institutional, not occasional: the more technical the descriptive work, the stronger the temptation to mistake it for a generalisation, so long calculations actively increase the risk unless the inferential argument is made separately and explicitly.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's pipeline enforces the split structurally: descriptive artefacts (fitted distributions, coefficients, summaries) are stored in a layer that cannot be read by the forecasting layer until an inference record is attached, stating the sample's provenance and the analogy argument for extending it.",
+    "source_operator": "statistical_description_vs_inference",
+    "telemetry": "Descriptive artefacts lacking inference records; inference records per promoted statistic."
+   }
+  },
+  {
+   "primitive_id": "stability_of_statistical_frequencies",
+   "name": "The foundation of statistical induction is not a universal Law of Great Numbers but the observed stability of some statistical frequencies; stable frequencies exist, are not very common, and cannot be assumed from the size of a series",
+   "verbatim_quote": "Observation shows that some statistical frequencies are, within narrower or wider limits, stable. But stable frequencies are not very common, and cannot be assumed lightly.",
+   "page": "Part V, Ch. XXVIII, sec. 2; printed pp. 335-336",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stability is an empirical property of particular classes of phenomena under particular conditions, discovered by examination, not a theorem about large numbers as such.",
+    "The regularity, where it exists, typically concerns proportions over successive sets, not individual outcomes."
+   ],
+   "breakdown_regime": "Assuming stability because a series is long is the canonical error the chapter exists to block: numerous statistics over an unstable frequency produce precise looking averages of a moving quantity, and the error grows more confident as more data is added.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Before any frequency is used for prediction, the engine tests it for stability across successive sub-series and reports the stability finding as part of the statistic. Frequencies that have not passed, or have failed, a stability examination are blocked from the uses that presuppose stability, however many observations stand behind them.",
+    "source_operator": "stability_of_statistical_frequencies",
+    "telemetry": "Stability test results per tracked frequency; observation counts displayed alongside, never instead of, stability status."
+   }
+  },
+  {
+   "primitive_id": "bernoulli_theorem",
+   "name": "Bernoulli's theorem: given a constant per trial probability p over m trials, the most probable number of occurrences is mp, and the probability that the proportion of occurrences lies within a stated distance of p grows with m, at a rate computable by the normal approximation",
+   "verbatim_quote": "If the probability of an event's occurrence under certain conditions is p, then, if these conditions are present on m occasions, the most probable number of the event's occurrences is mp (or the nearest integer to this)",
+   "page": "Part V, Ch. XXIX, sec. 2; printed pp. 337-340",
+   "latex": "$\\binom{m}{n} p^n q^{m-n}$",
+   "symbol_and_unit_ledger": {
+    "m": "number of trials, count",
+    "n": "number of occurrences of the event, count",
+    "p": "probability of the event at each trial, dimensionless, constant across trials",
+    "q": "1 - p, probability of failure at each trial, dimensionless",
+    "the displayed term": "probability of exactly n occurrences in m trials, before summation over ranges"
+   },
+   "assumptions": [
+    "Every trial carries the same probability p relative to the initial evidence.",
+    "The normal approximation used for ranges requires not only m large but mpq large; for small mpq the true distribution about mp is appreciably asymmetric."
+   ],
+   "breakdown_regime": "The theorem is a piece of algebra about an assumed probability model; it predicts what is probable on the evidence, not what will happen, and experiments that disobey it indict the assumed conditions (as with Wolf's biased dice), not the theorem.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for forward simulation from assessed probabilities to expected frequencies, used only inside the conditions gate of bernoulli_applicability_conditions: the engine computes expected counts and ranges from per case probabilities through this term and its Poisson generalisation, and tags every such output with the gate result it passed.",
+    "source_operator": "bernoulli_theorem",
+    "telemetry": "Forward frequency projections with their gate status; observed versus projected frequency divergences."
+   }
+  },
+  {
+   "primitive_id": "bernoulli_applicability_conditions",
+   "name": "Bernoulli's theorem may be applied only when learning the outcomes of some trials would leave the probability at every other trial exactly unchanged; since outcomes usually inform an unknown common condition, the condition is the exception, not the rule",
+   "verbatim_quote": "It assumes that a knowledge of the fact that the event has occurred on every one of the first r - 1 occasions does not in any degree affect the probability of its occurrence on the rth.",
+   "page": "Part V, Ch. XXIX, sec. 5; printed pp. 341-343",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The condition is about knowledge, not about physical causation: outcomes may be physically independent while remaining relevant to each other through an unknown shared constitution (one of several possible bags, a possibly biased coin).",
+    "Keynes's limiting case: a coin known to be either double headed or double tailed has probability one half of heads at every toss, yet in 2m tosses the split m heads and m tails has probability zero."
+   ],
+   "breakdown_regime": "Careless application exaggerates concentration: it understates the probability of wide divergences, because real series exhibit supernormal dispersion when outcomes revise the probability as they accumulate. The longer the series, the more the revision matters, which is the opposite of the theorem's usual moral.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's master gate for frequency forecasting: before Bernoulli or Poisson machinery runs on a series, the engine asks whether early outcomes in that series have historically revised the assessed probability of later ones. A yes answer routes the series to updating models that learn the common condition as outcomes arrive, and forbids fixed probability projection.",
+    "source_operator": "bernoulli_applicability_conditions",
+    "telemetry": "Within series probability revision measurements; series classified as fixed probability versus condition learning."
+   }
+  },
+  {
+   "primitive_id": "poisson_theorem",
+   "name": "Poisson's theorem generalises Bernoulli's to trials whose known probabilities differ from trial to trial, with the expected frequency given by their mean; it still assumes that outcomes at some trials do not revise the probabilities at others",
+   "verbatim_quote": "The typical example for Poisson's Theorem is that of balls drawn from a series of urns, each containing black and white balls in different known proportions.",
+   "page": "Part V, Ch. XXIX, sec. 8; printed pp. 344-346",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each trial's probability must be known in advance and fixed by the statement of the problem, as when successive draws come from urns of known differing composition.",
+    "The prediction concerns the aggregate count over the series, whose dispersion depends on the sum of the individual p q terms."
+   ],
+   "breakdown_regime": "Poisson's own paradox (probabilities for later draws from an urn without replacement misstated as independent of earlier draws) shows the same confusion between physical and epistemic independence inside the generalisation itself; where the differing probabilities are themselves estimated from the series, the theorem's inputs are not known in the required sense.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from bernoulli_theorem for heterogeneous case streams: where each case carries its own assessed probability, the engine aggregates expected counts through the mean probability and the summed p q dispersion, inside the same applicability gate, instead of forcing a single pooled probability onto unlike cases.",
+    "source_operator": "poisson_theorem",
+    "telemetry": "Per case probability vectors entering aggregate projections; summed dispersion terms per projection."
+   }
+  },
+  {
+   "primitive_id": "prediction_span_limits",
+   "name": "When the per trial probability is itself estimated from s past cases with r occurrences, projecting n future occurrences compounds the estimate's error: the projection is sound only if n is small compared with s and also small compared with r, so a rare event's run probability is not approximately p to the n however large s is",
+   "verbatim_quote": "the number of previous instances multiplied by the probability based upon them, i.e. sp ( = r), must be large in comparison with the number of new instances.",
+   "page": "Part V, Ch. XXIX, sec. 11; printed pp. 349-351",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The exact run probability under frequency estimated priors is the product of successive updated fractions (r + i)/(s + i), which exceeds p to the n by a factor Q that departs from unity as n grows relative to r and s.",
+    "The analysis assumes the frequency estimate is the whole basis of the prior; corroborating non-statistical evidence about stability changes the position and must be argued separately."
+   ],
+   "breakdown_regime": "Czuber's Austrian birth calculation is the standing warning: a probability based on about 8.36 million cases was projected over about 12.7 million further cases to practical certainty within narrow limits, violating both span conditions, and the method's promised limits in fact failed for a later period.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from bernoulli_applicability_conditions as a numeric horizon rule: every frequency based projection carries its evidence base size and its expected occurrence count, and the engine caps the projection span relative to both, refusing long projections for rare events even when the raw case count behind the rate is enormous.",
+    "source_operator": "prediction_span_limits",
+    "telemetry": "Projection spans relative to evidence base sizes and expected counts; refused projections with their span ratios."
+   }
+  },
+  {
+   "primitive_id": "tchebycheff_theorem",
+   "name": "Tchebycheff's theorem bounds the probability that a sum of independent magnitudes departs from its expectation using only first and second moments, rigorously and without approximation, for every series length; Bernoulli's and Poisson's theorems are corollaries with weaker but assumption free limits",
+   "verbatim_quote": "that TchebychefPs discovery is far more than a technical device for solving a special problem, and points the way to the fundamental method for attacking these questions on the mathematical side.",
+   "page": "Part V, Ch. XXIX, secs. 13-15; printed pp. 353-358",
+   "latex": "$P\\left(sp - \\alpha\\sqrt{spq} < N < sp + \\alpha\\sqrt{spq}\\right) > 1 - \\frac{1}{\\alpha^2}$",
+   "symbol_and_unit_ledger": {
+    "s": "number of trials, count",
+    "p": "probability of the event at each trial, dimensionless; q = 1 - p",
+    "N": "number of occurrences of the event in the s trials, count",
+    "alpha": "an arbitrary number greater than 1 fixing the width of the limits, dimensionless",
+    "the inequality": "Bernoulli case of Tchebycheff's general theorem on sums of independent magnitudes"
+   },
+   "assumptions": [
+    "The magnitudes combined must be independent; the theorem needs their expectations and the expectations of their squares, nothing about their full distributions.",
+    "No largeness condition on s is required, unlike the Stirling based approximations behind the usual Bernoulli formula."
+   ],
+   "breakdown_regime": "The price of rigour is width: for narrow limits the bound can be far weaker than Bernoulli's approximate value, so the theorem disciplines claims (nothing stronger than this is certain) rather than replacing precise calculation where the stronger assumptions genuinely hold.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel supplying the engine's conservative interval layer: alongside any precise frequency interval stands the Tchebycheff bound computed from moments alone, and the gap between the two intervals is reported as the price of the extra assumptions the precise interval depends on.",
+    "source_operator": "tchebycheff_theorem",
+    "telemetry": "Moment based bounds versus approximation based intervals per projection; assumption price gaps."
+   }
+  },
+  {
+   "primitive_id": "rule_of_succession_refuted",
+   "name": "Laplace's rule of succession, that after m occurrences and n failures the probability of occurrence next is (m + 1)/(m + n + 2), rests on assigning a uniform prior over all values of an unknown probability; it is inconsistent with its own premise of ignorance and is rejected",
+   "verbatim_quote": "But refinements of disproof are hardly needed. The principle's conclusion is inconsistent with its premisses.",
+   "page": "Part V, Ch. XXX, secs. 5-10; printed pp. 372-378",
+   "latex": "$\\frac{m+1}{m+n+2}$",
+   "symbol_and_unit_ledger": {
+    "m": "number of observed occurrences of the event, count",
+    "n": "number of observed failures, count",
+    "the fraction": "the rule's asserted probability of occurrence at the next trial, dimensionless"
+   },
+   "assumptions": [
+    "The derivation treats every value of the unknown probability between 0 and 1 as an equally likely hypothesis, an application of indifference one level up, to probabilities themselves.",
+    "It also assumes successive occurrences independent at a fixed unknown probability, contradicting the rule's own updating."
+   ],
+   "breakdown_regime": "The rule assigns probability one half to an event about which nothing whatever is known, two thirds after a single favourable instance, and one third to a never observed event that failed on its only trial; incompatible events can each receive such probabilities simultaneously, which is a reductio of the machinery, not a paradox of the world.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine bans succession style smoothing as a source of probabilities: adding pseudo counts may be used as a numerical stabiliser inside an estimator, but its output may not be reported as a probability unless the prior it encodes is separately stated and defended. Cold start cases are reported as no basis, with the raw counts shown.",
+    "source_operator": "rule_of_succession_refuted",
+    "telemetry": "Estimators using pseudo count smoothing and their prior disclosures; cold start outputs and their labelling."
+   }
+  },
+  {
+   "primitive_id": "clustering_of_ratios_near_extremes",
+   "name": "The equal distribution of ignorance is empirically false as well as formally impossible: statistical ratios for positive qualities cluster near zero and for negative qualities near unity, so a uniform prior over frequencies misstates the world in a known direction",
+   "verbatim_quote": "experience, if it shows anything, shows that there is a very marked clustering of statistical ratios in the neighbourhoods of zero and unity",
+   "page": "Part V, Ch. XXX, sec. 13; printed pp. 380-382",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The formal point: if a compound character is the conjunction of two independent characters with uniform frequencies, its frequency is the product, whose distribution is concentrated toward zero; uniformity cannot hold for all characters at once.",
+    "The empirical point is made relative to how qualities are described (positive versus negative), so any claimed distribution of ratios must specify its reference class of qualities."
+   ],
+   "breakdown_regime": "Pearson's defence of the uniform prior from experience collapses on his own examples, and the resulting method is too powerful: from a sample of 100 with 10 per cent affected it delivers even odds on the next sample falling inside limits near 8 to 14 per cent, a certainty no analysis of the sampling could support.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Prior construction for rates in the engine uses the clustering finding as its default geometry: base rates for specific positive qualities are expected near the extremes, priors are built from reference classes of similar qualities, and any prior centred mid range must justify why this quality is not like the generality of positive qualities.",
+    "source_operator": "clustering_of_ratios_near_extremes",
+    "telemetry": "Reference class rate distributions per quality type; priors and their reference class citations."
+   }
+  },
+  {
+   "primitive_id": "inversion_of_bernoulli_conditions",
+   "name": "An inversion of Bernoulli's theorem is legitimate only under stated conditions (exhaustive equiprobable ultimate alternatives, random sampling, perfect analogy among instances, and a finite bound on the number of possible constitutions, each carrying finite prior probability); even then the conclusion is that the true ratio lies in a neighbourhood of the observed frequency with probability tending to certainty, never an exact measure",
+   "verbatim_quote": "as the number of instances is increased the probability, that q is in the neighbourhood of q', tends towards certainty",
+   "page": "Part V, Ch. XXXI, secs. 3-5; printed pp. 385-389",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The possible values of the ratio are finite in number because the number of underlying alternatives is bounded; each interval of values carries some finite prior probability, not an equal one.",
+    "Random sampling from the condition class and perfect analogy among the examined instances are material assumptions that counting cannot verify."
+   ],
+   "breakdown_regime": "The vagueness is irreducible within the method: logic cannot state how many instances yield a given certainty, because that depends on the unknown bound and the unknown priors. Any method promising exact posterior probabilities from frequencies alone has smuggled those in.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Frequency to probability conversions in the engine are issued as neighbourhood statements with the four conditions attached as a checklist, each marked verified, assumed, or failed. A conversion with a failed condition is demoted to a description of the sample, and the width of the neighbourhood is presented as judgment based, not computed from the counts alone.",
+    "source_operator": "inversion_of_bernoulli_conditions",
+    "telemetry": "Conversion records with condition checklists; neighbourhood widths and their stated basis."
+   }
+  },
+  {
+   "primitive_id": "lexis_dispersion_ratio",
+   "name": "Lexis's method: split a series into sub-series and compare the observed dispersion of the sub-frequencies (R) with the dispersion Bernoulli's formula predicts (r); Q = R/r near 1 marks normal dispersion, Q above 1 supernormal (the underlying probability itself varies), Q below 1 subnormal, which signals an organic or dependent series",
+   "verbatim_quote": "If Q = 1 , we have normal dispersion ; if Q > 1 , we have supernormal dispersion; and if Q< 1, we have subnormal dispersion, which is an indication that the series is ' organic.'",
+   "page": "Part V, Ch. XXXII, sec. 6; printed pp. 398-400",
+   "latex": "$Q = \\frac{R}{r}$",
+   "symbol_and_unit_ledger": {
+    "Q": "Lexis's ratio of dispersion, dimensionless",
+    "R": "probable error of the sub-series frequencies derived from their actual deviations from their mean",
+    "r": "probable error predicted on Bernoullian assumptions for a constant underlying probability, r built from 0.4769 times the root of v(1 - v)/g",
+    "v": "the underlying probability or mean frequency, dimensionless",
+    "g": "number of instances each sub-frequency is based on, count"
+   },
+   "assumptions": [
+    "Sub-series must be formed by a principle of classification the generalisation treats as irrelevant; the test examines exactly that irrelevance claim.",
+    "With very large sub-series bases the combinatorial component r shrinks and real variation in the underlying probability dominates, so apparent instability can be an artefact of scale, and with small bases real variation can hide inside normal looking dispersion."
+   ],
+   "breakdown_regime": "Keynes's correction to Lexis: supernormal dispersion can also arise from organic connection between successive terms, not only from a varying underlying probability, so the decomposition of R into ordinary and physical components is not exhaustive; and the measure itself is partly conventional, one of many possible stability measures.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel implementing stability examination as the engine's standard test for any rate it intends to generalise: series are split by time, place, and other candidate irrelevant classifiers, dispersion is compared with the Bernoullian benchmark in both directions, and both supernormal and subnormal findings block naive generalisation, for opposite reasons that are reported distinctly.",
+    "source_operator": "lexis_dispersion_ratio",
+    "telemetry": "Dispersion ratios per series and classifier; classifiers under which dispersion departs from the benchmark in either direction."
+   }
+  },
+  {
+   "primitive_id": "two_stage_statistical_induction",
+   "name": "Statistical induction has two stages that must not be merged: a statistical stage, arguing from observed frequencies in sampled series to those series' constitutions, and an inductive stage, arguing by positive and negative analogy from the examined series to an unexamined series; stability of the probable frequencies across many classifications is what the first stage must establish before the second begins",
+   "verbatim_quote": "The most usual error in modern method consists in treating too lightly what I have termed above the inductive problem",
+   "page": "Part V, Ch. XXXIII, sec. 6; printed pp. 413-417",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The target instance must be a random member of the target series relative to the evidence; extra knowledge about the instance can make the series result inapplicable to it without making the series result less probable.",
+    "Classifications of the aggregate into sub-series should be multiplied across every principle the available knowledge suggests, and stability is claimed only over the classifications actually tried."
+   ],
+   "breakdown_regime": "If the examined series are all the same series as the target, the second stage vanishes, but in social and scientific inquiry that is seldom the case; skipping the stage is how a rate measured in one population becomes a confident claim about another.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's generalisation workflow is literally two gated stages: stage one certifies a stable probable frequency over the examined series under multiple classifications; stage two requires a written analogy case for the target population, listing shared and differing class characteristics, before the stage one number may be quoted for the target.",
+    "source_operator": "two_stage_statistical_induction",
+    "telemetry": "Stage one stability certificates; stage two analogy cases per target population; quotations of rates outside their certified populations."
+   }
+  },
+  {
+   "primitive_id": "correlation_coefficient_description_only",
+   "name": "A correlation coefficient is a description of how nearly the frequencies in a two way table group about its diagonal; it becomes evidence for a connection only when there is prior reason to expect one, and sensible investigators use it to test conclusions reached on other grounds",
+   "verbatim_quote": "sensible investigators only employ the correlation coefficient to test or confirm conclusions at which they have arrived on other grounds.",
+   "page": "Part V, Ch. XXXIII, sec. 9; printed pp. 426-427",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The table's axes must be arranged in a significant order, meaning there is some prior reason for expecting the order of one characteristic to correspond to the order of the other.",
+    "The inverse probability step from tight diagonal grouping to causal connection needs a prior probability for the connection, exactly as in the design argument."
+   ],
+   "breakdown_regime": "With arbitrarily ordered categories (baby weights against Christian names) a large coefficient can arise by arrangement or accident, and the formalism cannot tell the difference; treating the coefficient itself as the probability of a generalisation repeats, in two dimensions, the description inference confusion.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Correlation outputs in the engine are labelled descriptive until a prior expectation for the specific pairing is registered; promotion to evidence requires that registration plus stability of the coefficient across sub-series, mirroring the two stage rule for frequencies.",
+    "source_operator": "correlation_coefficient_description_only",
+    "telemetry": "Correlation reports with prior expectation registrations; coefficients tracked across sub-series for stability."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "ab13317c6764ea96-t1",
+   "think": "This Treatise is Keynes's attempt to rebuild the whole theory of probability on one idea: probability is a logical relation between a proposition and a body of evidence, written a/h, and it is this relation, not a frequency and not a feeling, that fixes the degree of belief it is rational to hold. Everything else in the book is the working out of what that idea permits and what it forbids. It permits less arithmetic than the classical theory promised. Because the relation is only sometimes numerical, probability is in general a partial order: some pairs compare as more and less, some do not compare at all, and numerical measurement is a special case that has to be earned, typically by locating a judgment among indivisible equiprobable alternatives under the Principle of Indifference. Beside the probability itself stands a second magnitude, the weight of the argument, the amount of relevant evidence the judgment rests on. Probability measures the balance of the evidence, weight measures its sum, and the two vary independently: new evidence can raise the weight while lowering the probability. Any engine that stores only the probability has thrown away half of what its own judgments contain. The formal part of the book then builds the calculus honestly. Relevance and irrelevance are defined through the relation itself, irrelevance is proved symmetric, and the addition, multiplication, and inverse theorems follow in the a/h notation. The inverse theorem is the hinge of the whole treatise: a posterior probability is a prior probability redistributed by likelihoods, so no inverse argument can manufacture probability where no prior existed. That single point is later used to dismantle the design argument, the Laplacean machinery of unknown probabilities, and every attempt to read exact posterior probabilities off observed frequencies. Part III faces Hume. Keynes separates every inductive argument into analogy, which rests on likeness, and pure induction, which rests on number, and shows that instances strengthen an argument by shrinking the superfluous resemblances among them, not by piling up. Pure induction is then given exact conditions: a generalisation can be driven toward certainty by instances only if it starts with a finite prior probability and if, supposing it false, the next instance remains finitely uncertain. The prior ordinarily comes from analogy, and analogy has a finite starting probability only on a substantive assumption about the world, the limitation of independent variety: the qualities of things cohere in finitely many groups generated by finitely many underlying properties, so that two character sets have a finite chance of belonging to the same group. The scientist's version of the same assumption is atomic uniformity, separable factors with stable individual effects, which is stronger than the bare uniformity of nature and is exactly what factor based modelling presupposes. Where plurality of generators cannot be excluded, Keynes draws the moral that conclusions should be stated as inductive correlations about the next case, not as universal generalisations. Part IV dissolves the rival vocabulary. Chance is not a thing in the world: an event is due to objective chance when no knowledge of laws or of the permanent facts of a field would let us prefer it to its alternatives, a derivative and provisional status. Random selection is likewise epistemic and characteristic relative. In conduct, the book then refuses to let mathematical expectation govern alone: expectation ignores weight and risk, and the Petersburg game, with its infinite expectation and its insane fair price, is the standing refutation. Bernoulli's logarithmic repair introduces diminishing marginal utility, but Keynes's own emphasis falls on the risk term and on the cases where goods or probabilities are not numerical at all and no product rule can rank the options. Part V applies all of this to statistics and is the part an engine builder should read twice. Description is separated from inference. The Law of Great Numbers is renamed the stability of statistical frequencies, an empirical property some series have and most do not. Bernoulli's theorem is proved and then fenced: it applies only when learning outcomes would not revise the probability at later trials, a condition that unknown common constitutions violate in most real series, so careless use understates dispersion exactly where the series is longest. Poisson widens the inputs, Tchebycheff supplies rigorous moment based bounds with Bernoulli as a corollary, and the span analysis shows that a frequency estimated from s cases with r occurrences supports projections only over spans small against both numbers. Laplace's two exits from these limits are then closed: the inversion of Bernoulli's theorem is legitimate only under enumerated conditions and yields neighbourhoods, not measures, and the rule of succession is destroyed, root and branch, as an inconsistent application of indifference to probabilities themselves, with the observed clustering of real ratios near zero and unity as the empirical coffin nail. What survives is Lexis: split the series, measure dispersion against the Bernoullian benchmark in both directions, treat abnormal dispersion either way as information, and run statistical induction as two stages, constitution of the examined series first, analogy to the unexamined series second. A reasoning engine built on this book would therefore be gated everywhere the classical theory was free: priors registered before updates, weight displayed beside probability, stability certified before generalisation, horizons capped by evidence volume, and every confident number accompanied by the conditions under which it was earned. Two honest limits should be recorded alongside the praise. The book supplies no calculus for its non-numerical judgments, so an engine must provide estimators of its own and use Keynes as constitutional law rather than as code. And the keystone of the inductive edifice, the finite prior probability grounded in the limitation of independent variety, is avowed at the end of Part III as an assumption, not proved as a theorem; the justification of induction is exactly as strong as that avowal, and no stronger. Keynes states this himself, without flinching, which is one reason the book can be trusted precisely where it claims less than the rivals it dismantles.",
+   "retrocausal_genealogy": "The book descends from Keynes's 1907 and 1908 fellowship dissertations at King's College, Cambridge, reworked over more than a decade before publication in 1921. Its ancestry is double. From logic it takes Boole's and W. E. Johnson's treatment of probability as a relation between propositions, the Cambridge analysis of Russell and Moore, and Butler's dictum that probability is the very guide of life. From the classical calculus it takes Bernoulli's theorem as foundation, Laplace's inverse methods as the chief target, Venn's frequency theory as the chief foil, and the Leibniz and Bernoulli correspondence of 1703 as the original statement of the problem of passing from frequencies to probabilities. Its statistics come from the German school of Lexis, Bortkiewicz, and Tschuprow, and its most modern mathematics from Tchebycheff and Markoff, whom Keynes champions against the reigning Laplacian tradition of the textbooks.",
+   "theory_of_mind": "Keynes writes for a reader he treats as a rational agent working under partial knowledge, whose beliefs ought to track the logical relations that his evidence bears to his conclusions. His model of the domain is that common sense already reasons in exactly this way, and errs mainly when mathematicians force its judgments into numerical moulds they do not fit. He assumes the reader can perceive probability relations directly, in something like the way logical implication is perceived, and that most disagreement is traceable to differences in evidence rather than differences in faculty. The author's persistent move is deflationary: whenever a formula promises more precision than the evidence contains, he suspects the formula rather than the evidence, and he consistently trusts an honestly vague judgment over an exactly wrong number.",
+   "cross_layer_veto": "The book's layers veto one another in a definite order. The measurement doctrine vetoes arithmetic on judgments that have not earned numerical form, which vetoes most expectation calculations in the theory of conduct. The weight doctrine vetoes acting on a favourable probability whose evidence base is thin when a rival course rests on deeper evidence. The inverse principle vetoes every attempt to create probability out of consequences alone, striking design arguments, succession rules, and unpriored inverse updates alike. The Bernoulli conditions veto frequency forecasts for any series whose outcomes revise their own probabilities. The stability requirement vetoes generalising any frequency, however numerous its instances, whose sub-series disperse abnormally in either direction. And the two stage doctrine vetoes quoting a rate for a population whose analogy to the measured population has not been argued, so each layer can block the next layer's output without touching its internal correctness."
+  }
+ ],
+ "universal_lens": "Read as a general template, the Treatise is a discipline for any reasoning under uncertainty, in any field. State every belief as a relation between a claim and a named body of evidence. Keep two accounts for each belief, its balance and its weight. Refuse numbers the evidence cannot support, and say so in the output itself. Let counting help only where a finite prior standing and a finite variety of underlying generators make counting meaningful. Test every aggregate by splitting it, and trust it only where the splits agree. Treat every striking pattern as a reason to investigate, never as its own proof. These rules transfer intact to medicine, law, engineering risk, intelligence analysis, and machine reasoning, because none of them depends on the subject matter; they depend only on the shape of evidence and on the honesty with which its limits are reported.",
+ "gsi_mapping": "For the Galaxy Sports Institute the book supplies a research method and a standard of proof. Extractions from any literature should carry the structure this artifact carries: the claim, its verbatim source, its assumptions, and the regime where it breaks, because Keynes shows that a claim detached from its evidence relation is not knowledge but numerology. The Institute takes the limitation of independent variety as its working hypothesis about learnable domains, the idea that a field's phenomena are generated by a finite structure which study can progressively uncover, and it takes the two stage doctrine as its publication standard: findings are first certified inside the material studied, then argued across to new material by explicit analogy, with the analogy itself published beside the finding so that readers can weigh it.",
+ "gse_mapping": "For the Galaxy Sports Edge engine the book is a constitution. Forecasts are stored as relations to versioned evidence, each carrying a weight annotation beside its probability. Priors are registered before any inverse update runs, and updates without registered priors degrade to directional notes. Every rate the engine generalises must first pass a stability examination across time and context splits, with abnormal dispersion in either direction blocking promotion. Projection horizons are capped by the size of the evidence base and by the expected number of occurrences, so rare events cannot be projected far on the strength of large denominators. Correlation outputs stay labelled descriptive until a prior expectation for the pairing is on record. The result is an engine whose confidence is always accompanied by the conditions that entitle it."
+}

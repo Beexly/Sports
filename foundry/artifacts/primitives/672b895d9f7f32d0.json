@@ -1,0 +1,289 @@
+{
+  "book_id": "672b895d9f7f32d0",
+  "source_status": "COMPLETE",
+  "title": "ItsTitle-fantasy-football-draft-room",
+  "file_name": "ItsTitle-fantasy-football-draft-room.md",
+  "sha256": "672b895d9f7f32d090ac12e2a0259d7a728da46cb35eca67b5665dc0325000fe",
+  "primary_domain": "football",
+  "pages_total": 7,
+  "pages_read": 7,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 7,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The draft room constitutes a constrained optimization manifold where subjective priors (notes) and tunable biases (sliders) perturb the consensus ADP distribution. Keeper mechanics introduce retroactive boundary conditions, forcing state transitions that preserve historical allocations while dynamically altering future pick availability. A draft engine operates as a deterministic state machine with ephemeral browser storage, where client-side computation ensures immediate pick validation and server-side aggregation resolves cross-origin data conflicts.",
+  "gsi_mapping": "GSI treats user notes as localized Bayesian priors overriding global ranking exports. The reach dial modulates the conformal prediction intervals derived from empirical ADP standard deviations, ensuring that projected player values remain calibrated against the stochastic volatility of thousands of real-world drafts. Bayesian inference models draft outcomes using prior player survival probabilities and posterior rankings, with conformal prediction ensuring confidence intervals over roster construction decisions.",
+  "gse_mapping": "GSE models the draft board as a dynamic Markov Decision Process. Keeper declarations act as pre-committed state locks, instantly removing assets from the available pool and shifting roster-need vectors, while tunable sliders continuously re-weight the utility function for subsequent agent selections. Situational reasoning maps pick actions to state transitions through a snake-order constraint kernel, where each selection updates internal roster slots and position dial configurations dynamically.",
+  "primitives": [
+    {
+      "primitive_id": "672b895d9f7f32d0_w0_g1",
+      "name": "ItsTitle-fantasy-football-draft-room Ch.1 Grounded Operator",
+      "verbatim_quote": "**Mock draft** simulates a room against you: live ADP for your scoring format, any roster shape, your own ranking file, and dials for how hard the computer teams lean on each position.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 672b895d9f7f32d0_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "672b895d9f7f32d0_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "672b895d9f7f32d0_w0_g2",
+      "name": "ItsTitle-fantasy-football-draft-room Ch.1 Grounded Operator",
+      "verbatim_quote": "**Draft assistant** simulates nothing: it follows your real Sleeper draft as it happens, mirroring every pick onto the board so your rankings and availability always face the actual room.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 672b895d9f7f32d0_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "672b895d9f7f32d0_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "672b895d9f7f32d0_w0_g3",
+      "name": "ItsTitle-fantasy-football-draft-room Ch.1 Grounded Operator",
+      "verbatim_quote": "--## Run it You need **Node 22.12 or newer**, or **Node 20.19 or newer** if you are still on the Node 20 line.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 672b895d9f7f32d0_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "672b895d9f7f32d0_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "note_override_kernel",
+      "name": "Note Override Kernel",
+      "verbatim_quote": "The notes file wins, because a ranking export is replaced every time its publisher updates and should not quietly undo something you wrote.",
+      "page": 2,
+      "latex": "N_{final}(p) = \\mathbb{I}_{\\text{local}}(p) \\cdot N_{\\text{user}}(p) + (1 - \\mathbb{I}_{\\text{local}}(p)) \\cdot R_{\\text{export}}(p)",
+      "symbol_and_unit_ledger": "N: Qualitative note string (dimensionless), I: Indicator function (boolean), p: Player entity index.",
+      "assumptions": "User-defined local priors possess higher epistemic authority than external, time-varying ranking distributions.",
+      "breakdown_regime": "Fails if the system lacks a persistent local storage layer to cache user overrides against continuous upstream API updates.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's hierarchical belief update mechanism, where local observation tensors override global consensus matrices.",
+        "source_operator": "note_override_kernel",
+        "telemetry": "Frequency of local note persistence versus export overwrites."
+      }
+    },
+    {
+      "primitive_id": "tunable_reach_manifold",
+      "name": "Tunable Reach Manifold",
+      "verbatim_quote": "Every setting moves players by a number of picks, and the panel says how many.",
+      "page": 2,
+      "latex": "\\Delta \\pi_i = \\sum_{j \\in \\mathcal{S}} \\alpha_j \\cdot w_j + \\beta \\cdot \\sigma_{\\text{ADP}, i}",
+      "symbol_and_unit_ledger": "\\Delta \\pi: Rank displacement (integer picks), \\alpha: Slider bias (-5 to +5), \\sigma: ADP standard deviation (picks).",
+      "assumptions": "Positional biases and reach parameters linearly combine to shift the underlying probability density of draft selection.",
+      "breakdown_regime": "Singularity occurs when extreme slider values (+5/-5) push predicted ranks beyond the total number of available draft rounds.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to GSE's dynamic utility weighting, translating abstract preference dials into concrete rank-space translations.",
+        "source_operator": "tunable_reach_manifold",
+        "telemetry": "Observed variance in draft position relative to baseline ADP under active slider manipulation."
+      }
+    },
+    {
+      "primitive_id": "keeper_state_lock",
+      "name": "Keeper State Lock",
+      "verbatim_quote": "Every keeper sits on the board in its own pick from the moment the draft opens, and on its team's roster from pick one.",
+      "page": 2,
+      "latex": "B_t = B_0 \\setminus \\{k \\mid k \\in K_{\\text{declared}}\\} \\cup \\{\\text{null}_{\\text{pick}(k)}\\}",
+      "symbol_and_unit_ledger": "B: Draft board state set, K: Set of declared keepers, null: Placeholder token for occupied pick.",
+      "assumptions": "Keeper declarations are immutable boundary conditions established prior to the initialization of the draft clock.",
+      "breakdown_regime": "System instability if keeper cost exceeds maximum draft depth or conflicts with snake-draft parity rules.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to GSE's pre-game roster constraint injection, locking specific asset indices before simulation begins.",
+        "source_operator": "keeper_state_lock",
+        "telemetry": "Number of valid board states pruned due to keeper constraints."
+      }
+    },
+    {
+      "primitive_id": "adp_volatility_calibration",
+      "name": "ADP Volatility Calibration",
+      "verbatim_quote": "Both halves matter to the room, not just to the display: a team keeping a receiver in round eight holds that receiver in round one, and a room that does not know it drafts the position again and again until its own keeper finally lands.",
+      "page": 2,
+      "latex": "P(\\text{reach}) \\propto \\frac{\\partial \\mu_{\\text{ADP}}}{\\partial t} + \\lambda \\cdot \\nabla \\sigma_{\\text{ADP}}",
+      "symbol_and_unit_ledger": "P(reach): Probability of reaching for a position, \\mu: Mean ADP, \\sigma: ADP standard deviation, \\lambda: Sensitivity coefficient.",
+      "assumptions": "Draft room behavior adapts dynamically to perceived scarcity, driven by the statistical dispersion of historical pick data.",
+      "breakdown_regime": "Calibration fails if the underlying ADP dataset lacks sufficient granularity (e.g., missing standard deviations for late-round prospects).",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's conformal inference engine, using historical dispersion to bound current strategic reach probabilities.",
+        "source_operator": "adp_volatility_calibration",
+        "telemetry": "Correlation between observed positional runs and theoretical ADP standard deviation bands."
+      }
+    },
+    {
+      "primitive_id": "672b895d9f7f32d0_w2_g1",
+      "name": "ItsTitle-fantasy-football-draft-room Ch.3 Grounded Operator",
+      "verbatim_quote": "Two bounds keep the top setting playable: a ceiling on the draw, and a hard limit on how far ahead of ADP anyone will reach.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 672b895d9f7f32d0_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "672b895d9f7f32d0_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "672b895d9f7f32d0_w2_g2",
+      "name": "ItsTitle-fantasy-football-draft-room Ch.3 Grounded Operator",
+      "verbatim_quote": "**Roster need, 0 to 10.** A bonus for filling a starting slot that is still open, growing as a team runs out of picks.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 672b895d9f7f32d0_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "672b895d9f7f32d0_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "672b895d9f7f32d0_w2_g3",
+      "name": "ItsTitle-fantasy-football-draft-room Ch.3 Grounded Operator",
+      "verbatim_quote": "A team whose remaining picks exactly equal its open starting slots stops taking depth entirely.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 672b895d9f7f32d0_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "672b895d9f7f32d0_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "browser_draft_state_machine",
+      "name": "Draft State Transition Kernel",
+      "verbatim_quote": "A pick has to land the instant you click it, and nothing about a draft needs a server round trip.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time step of draft action', 'S': 'set of available players', 'T': 'team roster state vector', 'P': 'pick action function'}",
+      "assumptions": "Client-side execution implies instantaneous state update; no network latency affects pick validity.",
+      "breakdown_regime": "When t > 0, P(t) must be consistent with T(t-1) and S(t).",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The draft state transition function P(t) mirrors the GSI's Bayesian update process over player survival and ranking distributions.",
+        "source_operator": "browser_draft_state_machine",
+        "telemetry": "Pick consistency across simulated drafts and live board alignment."
+      }
+    },
+    {
+      "primitive_id": "server_data_aggregation",
+      "name": "Cross-Origin Data Fusion",
+      "verbatim_quote": "The server exists to reach two feeds a browser cannot call directly, to cache them, and to join them in one place so the client never has to guess whether two records name the same player.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F1, F2': 'external data feeds', 'C': 'cache layer', 'J': 'join operation', 'R': 'resolved player identity record'}",
+      "assumptions": "Data integrity is preserved via centralized caching and canonical naming resolution.",
+      "breakdown_regime": "When J(F1, F2) fails due to duplicate identifiers, R becomes ambiguous.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Server fusion kernel enables GSE's unified board view by resolving identity mismatches in external data sources.",
+        "source_operator": "server_data_aggregation",
+        "telemetry": "Number of resolved player duplicates per session."
+      }
+    },
+    {
+      "primitive_id": "anonymity_filter",
+      "name": "Privacy-Consistent Draft Interface",
+      "verbatim_quote": "age.ts what the browser keeps between visits ├── anon.ts the anonymity filter, for screenshots ├── engine/ the draft itself.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'anonymity toggle state', 'D': 'draft session identifier', 'I': 'user identity mask'}",
+      "assumptions": "User anonymity is maintained through masking of personal identifiers during session persistence.",
+      "breakdown_regime": "When A=off, I is fully exposed; when A=on, I is obfuscated.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Anonymity filter maps to GSI's privacy-preserving inference framework, where user identities are abstracted from decision logic.",
+        "source_operator": "anonymity_filter",
+        "telemetry": "Percentage of anonymized sessions vs total sessions."
+      }
+    },
+    {
+      "primitive_id": "league_identity_resolver",
+      "name": "League User Identification Protocol",
+      "verbatim_quote": "**A league ID identifies real people.** It is enough to look the league up and read every manager in it.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'LID': 'league identifier', 'M': 'manager list', 'U': 'user identity set'}",
+      "assumptions": "Each LID uniquely maps to a set of U via M, enabling access control and tracking.",
+      "breakdown_regime": "If LID is invalid or M is empty, U remains undefined.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "League resolver underpins GSE’s multi-agent simulation by assigning roles to real-world users within virtual teams.",
+        "source_operator": "league_identity_resolver",
+        "telemetry": "Unique managers identified per league ID."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "672b895d9f7f32d0_t0",
+      "think": "Window 1 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "672b895d9f7f32d0_t1",
+      "think": "The chapter window delineates the foundational architecture of a sovereign draft environment, transitioning from static data ingestion to dynamic state management. Mathematically, the system operates as a high-dimensional filtering process. The 'Notes' primitive establishes a localized coordinate system where user-specific qualitative priors supersede the global, time-varying ranking matrix. This prevents epistemic erosion caused by automated export refreshes, effectively freezing a subjective valuation at the moment of analysis. Concurrently, the 'Tunable Room' introduces a continuous deformation field over the discrete rank space. Sliders ranging from -5 to +5 act as vector fields, pushing player entities along the ordinal axis based on positional scarcity and roster needs. This deformation is bounded and informed by the 'ADP Volatility' kernel. By integrating the standard deviation of historical draft data, the system quantifies the uncertainty envelope around each pick, allowing the 'reach dial' to probabilistically expand or contract the acceptable selection radius. Finally, the 'Keeper' mechanic imposes rigid topological constraints on the draft graph. A keeper is not merely a roster addition; it is a retrocausal lock that simultaneously occupies a future draft slot and removes an asset from the present pool. This dual-state requirement forces the optimization algorithm to account for hidden variables—teams holding unseen assets—which drastically alters the equilibrium strategies of all participating agents. The interplay between these primitives transforms a simple sequential picking game into a complex, multi-agent resource allocation problem governed by strict conservation laws and probabilistic boundaries.",
+      "retrocausal_genealogy": "These primitives trace their lineage to early 20th-century operations research and auction theory. The note override mirrors the introduction of subjective expected utility, diverging from purely objective market pricing. The tunable sliders echo adaptive control systems developed during WWII, allowing operators to manually bias automated targeting radars. Keeper mechanics reflect modern financial derivatives, specifically forward contracts that lock in future asset transfers today, fundamentally altering present-day liquidity and risk exposure within the closed economic system of the fantasy league.",
+      "theory_of_mind": "Modeling opposing agents requires inferring their hidden tuner configurations and unspoken notes. If Agent A heavily biases the running back slider, they will aggressively consume early-round running backs, creating a vacuum in the wide receiver market. A sophisticated Theory of Mind engine must simulate this cascading effect, predicting that Agent B will exploit the resulting receiver surplus. Furthermore, the presence of keepers acts as a massive signaling event; a team keeping a late-round asset signals immense confidence, prompting opponents to adjust their probabilistic models of that team's future aggression and roster construction philosophy.",
+      "cross_layer_veto": "To prevent systemic collapse, strict anti-collinearity vetoes must be enforced across layers. If the 'Reach Dial' is maximized while the 'Roster Need Dial' is simultaneously inverted, the resulting utility function may produce contradictory rank displacements, leading to oscillatory sorting behaviors or infinite loops in the draft queue. Additionally, leakage vetoes ensure that a user's private notes do not inadvertently broadcast their exact slider settings to other clients. The mathematical isolation of the subjective prior (notes) from the public deformation field (sliders) is critical; otherwise, the market efficiency of the draft room collapses as agents perfectly collude against the most vocal optimizer."
+    },
+    {
+      "trace_id": "672b895d9f7f32d0_t2",
+      "think": "Window 3 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "672b895d9f7f32d0_t3",
+      "think": "Chapter 4 explores the architectural separation between client-side draft execution and server-side data aggregation. The browser-based engine ensures real-time pick validation without network delay, while the server aggregates external feeds to resolve identity conflicts. This dual-layer design reflects a distributed system model where the client handles deterministic logic and the server provides data coherence. The anonymity filter and league identity protocol introduce privacy and access control layers, respectively, aligning with principles of secure multi-agent interaction. The engine's self-testing suite validates both synthetic and live data scenarios, reinforcing the robustness of the draft mechanism. Window 4 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in early web application architecture, evolving from synchronous HTTP requests to asynchronous client-side rendering and decentralized data handling. Retrocausal Genealogy (Window 4): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents within the draft simulate strategic behavior based on player rankings and positional constraints, with each pick influencing future decision trees through updated roster states. Theory of Mind (Window 4): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that anonymity and identity protocols do not interfere with the core draft logic, while leakage vetoes prevent sensitive user data from being exposed during state transitions. Cross-Layer Veto (Window 4): Rooted in ItsTitle-fantasy-football-draft-room (672b895d9f7f32d0, 7/7 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

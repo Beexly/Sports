@@ -1,0 +1,312 @@
+{
+  "book_id": "32d8b2d0d4f7f22f",
+  "source_status": "COMPLETE",
+  "pages_total": 294,
+  "pages_read": 264,
+  "source_note": "Library scan (barcode 3 3540 00023 1976; call number 796.33207 R592c, p293). PDF page = printed page + 22 (printed p150 = PDF p172); all citations are PDF pages. Read pp31-294 in full (264 pages: core 31-117 and 158-294 plus gap 118-157); front matter pp1-30 (title, preface, contents) not read. Zero printed equations: the only numeric objects are the empirical play-value table (p172), the factor-weight judgment tables (pp173-175, partially garbled by OCR), the 35% pull-out claim (p126), the 33 1/3% away-game claim (p224), and printed angles/counts; all formalizations are explicitly labeled predicate-logic renderings of prose rules. OCR defects quarantined: rotated practice-schedule text pp212-213, diagram-only pages pp139-140, 216-217, 238-239, garbled factor table p173. No sportsbook content anywhere in the source. Era chain position: eighth primary source, 1894-1925; first with printed distributional priors.",
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Tactical situation state tuple (defensive expectation prior)",
+      "verbatim_quote": "A team on defense must keep in mind the downs, the yards to gain, position on the field, score, and time left to play. These conditions are called the “tactical situation.”",
+      "page": 86,
+      "latex": "\\mathrm{State} = (d, y, x, s, t);\\quad \\pi_{\\mathrm{def}}(a \\mid \\mathrm{State})\\ \\text{is the expectation prior over offensive actions}",
+      "symbol_and_unit_ledger": "d = down index (dimensionless, 1..4); y = yards to gain (yd, source unit); x = field position (yd from goal line); s = score differential (points); t = time remaining (min, source clock); a = offensive action class (dimensionless label); pi_def = defensive subjective probability measure over actions (dimensionless, sums to 1). Formalization of printed prose rule; no equation printed in source.",
+      "assumptions": "Printed prose rule: defense must condition expectations on the five named variables. Source gives no functional form, no fitting procedure, and no stationarity claim; the tuple is stated as necessary context for every defensive call (pp86-87, and repeated as a standing hint at pp123, 128, 136, 144, 151, 155, 167-168, 170-171, 272, 275).",
+      "breakdown_regime": "The source itself names the override: 'Disregard tactical situation whenever the defensive team presents a glaring weakness' (p171) — the prior is suspended when a visible alignment defect dominates. Also fails when the offense deliberately violates its own down-distance tendencies (the book's psychological plays, p236), i.e. when the prior is being actively poisoned.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p1",
+        "mapping": "Direct ancestor of the GSE Coach-Mind situational layer: (down, distance, field position, score, time) is exactly the state vector the cognitive router consumes before off_play_call / def_shell_call. Rockne's tuple is the 1925 instance of the same state-conditioned action prior; his 'glaring weakness' override is the alignment-defect exception path.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Sacrifice plays (negative-EPA actions with positive setup externality)",
+      "verbatim_quote": "Eleventh, sacrifice plays. These are plays which are used to make other plays good. Example of this is the common ordinary reverse play which while it may not gain much ground yet its use makes the other plays good.",
+      "page": 237,
+      "latex": "\\exists a_{\\mathrm{sac}}:\\ \\mathbb{E}[Y(a_{\\mathrm{sac}})] \\approx 0\\ \\wedge\\ \\mathbb{E}[Y(a_{\\mathrm{other}}) \\mid \\mathrm{history} \\ni a_{\\mathrm{sac}}] > \\mathbb{E}[Y(a_{\\mathrm{other}}) \\mid \\mathrm{history} \\not\\ni a_{\\mathrm{sac}}]",
+      "symbol_and_unit_ledger": "Y = yards gained (yd); a_sac = sacrifice action label; a_other = subsequent action label; history = ordered play sequence (dimensionless); E = expectation under source-stated coaching judgment (probability measure, dimensionless). Formalization of printed prose rule; no equation printed in source.",
+      "assumptions": "Source classifies plays into thirteen functional roles (pp235-237); the sacrifice class is defined by its effect on OTHER plays' effectiveness, not its own gain. The reverse play and the guard smash are the printed examples; the smash 'may draw the tackle and end in where a sudden use of a wide end run might now become very effective' (p237). No magnitude is printed.",
+      "breakdown_regime": "Fails if the defense does not adapt (a passive defense that never tightens gains nothing from the setup), or if the sacrifice is repeated past the point where the defense re-adjusts — the book's own nursing rule (p256) bounds exploit frequency. The externality is unquantified in the source; any numeric value would be fabricated.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p2",
+        "mapping": "Play-call action space must carry setup externalities: a call's value is not its own expected yards but its marginal effect on the future call distribution. In the Coach-Mind sim this is the conditioning of def_shell_call on prior off_play_call history — the 1925 statement that a play can be correct while gaining almost nothing.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Check plays (counter-policy actions contingent on defensive adaptation)",
+      "verbatim_quote": "Third, check plays. These are plays which are not good until the defense changes their position to stop your strong plays. For instance, a wide end run around the defensive end is not a good play by itself. However, when the defensive end comes smashing in tight to stop your strong plays then a run around him becomes a good play for two reasons",
+      "page": 236,
+      "latex": "V(a_{\\mathrm{check}} \\mid \\sigma_{\\mathrm{def}}) > 0 \\iff \\sigma_{\\mathrm{def}} = \\mathrm{adapt}(\\mathrm{strong\\ plays});\\quad V(a_{\\mathrm{check}} \\mid \\sigma_{\\mathrm{def}}^{0}) \\le 0",
+      "symbol_and_unit_ledger": "V = play value (source-stated coaching judgment, dimensionless ordering); a_check = check-play label; sigma_def = defensive policy (dimensionless); sigma_def^0 = unadapted baseline defense; adapt() = defensive adjustment operator (printed prose, not a source function). Formalization of printed prose rule; no equation printed in source.",
+      "assumptions": "Printed example: the wide end run 'is not a good play by itself' but becomes good when the defensive end smashes in tight, for two printed reasons — it gains ground AND it drives the end back out so the strong plays work again (p236). The split-buck is named as a second check type. Value is explicitly conditional on the opponent's adaptation state.",
+      "breakdown_regime": "Against a defense that never adapts, the check play is dead weight in the repertoire. Against a defense that adapts deceptively (shows tight, rotates late), the condition is misread — the book's own signal-leak and feint doctrine (pp122, 208-210) is the adversarial counter.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p3",
+        "mapping": "This is a best-response contingent on the opponent's learned policy — the 1925 form of the two-high shell trap logic: the call is only correct after the defense has committed to stopping something else. Binds to the router's def_shell_call state and to the recursive theory-of-mind layer (modeling the DC's adaptation, not just his alignment).",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Empirical play-class outcome distributions (thirty-game analysis)",
+      "verbatim_quote": "These distances I have chosen above are purely arbitrary and they have been arrived at after an analysis of about thirty games against teams somewhat our equal. A few have been better, but the main thing I want to point out is that these are the results of averages against stern, intense resistance in every part of the field except inside the ten-yard line.",
+      "page": 172,
+      "latex": "\\hat{P}(\\mathrm{long\\ pass}) = (\\mathrm{complete}\\ 4/8,\\ \\mathrm{incomplete}\\ 3/8,\\ \\mathrm{intercepted}\\ 2/8);\\quad \\hat{P}(\\mathrm{short\\ pass}) = (6/8,\\ 1/8,\\ 1/8);\\quad \\mathbb{E}[\\mathrm{punt}] = 40\\ \\mathrm{yd}",
+      "symbol_and_unit_ledger": "Fractions are source-printed outcome counts over 8 attempts per pass class (dimensionless probabilities); line plunge 2 yds 3/4, slant 3 yds 3/4, flank 4 yds 2/4 with loss of 2 yds 1/4 (yd = yards, source unit); punt average 40 yd. All values printed in the table 'SOME HINTS IN VALUES FOR OFFENSIVE QUARTERBACK' (p172, printed p150). Source-stated empirical judgment, not a fitted model.",
+      "assumptions": "Printed provenance: 'arrived at after an analysis of about thirty games against teams somewhat our equal', 'averages against stern, intense resistance in every part of the field except inside the ten-yard line'. The author explicitly labels the distances 'purely arbitrary'. Sample is ~30 games, opponent class restricted to roughly equal teams.",
+      "breakdown_regime": "Explicitly void inside the ten-yard line — the 'zone of intense resistance' where 'the resistance is going to be much more stubborn' and reserved scoring plays must replace the regular distribution (pp172-173). Also void against materially stronger/we opponents and (by the book's own wet-day doctrine, p175) in conditions that suppress the passing game.",
+      "domain": "football",
+      "timescales": [
+        "tau_1",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p4",
+        "mapping": "The first printed distributional prior in the extracted era chain: play-class-conditional outcome probabilities with an explicit field-position regime boundary at the 10. Structurally identical to a play-type EPA prior with a red-zone regime shift; the 4/8-3/8-2/8 long-pass split is a source-stated turnover-risk term, not a modern estimate. Any modern calibration must re-fit, never inherit these numbers.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Guard pull-out within-game A/B intervention (35 percent efficiency claim)",
+      "verbatim_quote": "plays became 35% more efficient and in an important and tight game that would have meant the difference between the plays working and not working.",
+      "page": 126,
+      "latex": "\\frac{E_{\\mathrm{with\\ pull}}}{E_{\\mathrm{without\\ pull}}} = 1.35\\ \\text{(source-stated, single game)}",
+      "symbol_and_unit_ledger": "E = play efficiency (source does not define the metric; dimensionless ratio as claimed); 1.35 from the printed '35% more efficient' (p126, printed p106). Setup printed p125: same running play, first half without guards pulling, second half with guards pulling. Source-stated judgment from one game; no variance, no metric definition, no control for game state.",
+      "assumptions": "Within-game, same-play comparison across halves (p125). The author treats halves as exchangeable treatment periods; no randomization, no blinding, no adjustment for score, fatigue, or halftime defensive adjustment. The efficiency metric itself is undefined in the source.",
+      "breakdown_regime": "Halftime confounds are uncontrolled: the defense adjusts between halves, fatigue accumulates, and score state changes — any of which could produce the claimed 35 percent without the pull-out causing it. The number is a coaching claim, not an identified causal effect; it must never be used as a calibrated effect size.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p5",
+        "mapping": "A 1925 causal-intervention attempt on line-play design: holds the play constant and toggles one blocking assignment. Binds to the OL causal-breakdown layer as a historical precedent for assignment-level ablation — and as a standing warning that halftime-split comparisons confound treatment with game-state drift.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Sifting end: the commitment duel ('who will show first')",
+      "verbatim_quote": "The battle between the interference and ball carrier on one hand and the end on the other hand is to see who will show first. A good team does not tip off if it is an inside play or outside play but covers this up as long as possible. Against this type of play the end must go in on path No. 2 as fast and as far as possible without committing himself.",
+      "page": 143,
+      "latex": "\\theta_{\\mathrm{entry}} \\in \\{65^{\\circ}, 75^{\\circ}\\};\\quad \\mathrm{commit}(t) \\ge \\mathrm{reveal}_{\\mathrm{offense}}(t)\\ \\text{(end must not commit before the play shows)}",
+      "symbol_and_unit_ledger": "theta_entry = defensive end entry angle (degrees, printed '65° or 75°', p143); t = time since snap (s, implicit); commit/reveal = commitment and information-revelation events (dimensionless predicates). Paths 1/2/3 are printed branch labels (inside jam / uncommitted / outside contain). Formalization of printed prose rule plus printed angles; no equation in source.",
+      "assumptions": "Printed geometry: three-step entry, step length scaled to backfield speed; path 2 held 'as fast and as far as possible without committing himself'; the angle is chosen so the carrier 'can neither circle the end nor go back in' without being tackled above the knees (p143). The smashing end (45° committed dive) and the waiting/square end (perpendicular retreat) are printed as the two failure modes (p142).",
+      "breakdown_regime": "The smashing end fails against open formations (gets one interferer, is run around); the waiting end fails inside (leaves a gap between himself and the tackle). The sifting path fails if the offense reveals nothing and the end is forced to commit by sheer speed — the book concedes the contest is decided by 'who will show first', i.e. the duel has no guaranteed winner.",
+      "domain": "football",
+      "timescales": [
+        "tau_0"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p6",
+        "mapping": "An explicit information-revelation war of attrition at the point of attack: both sides pay to delay commitment, and the first to reveal loses leverage. Structurally the same object as the snap-timing/disguise KL layer in the 10Hz engine doc (409f5dad119c06ed) — commitment entropy as a contested resource, here stated in 1925 prose with printed entry angles.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p7",
+      "name": "Bounded-downside long pass as punt substitute",
+      "verbatim_quote": "I would throw a long fifty-yard forward pass down either side line. - If completed it means a touchdown. If incomplete it means merely the loss of a down. If inter- cepted, it should still be just as good as a punt.",
+      "page": 259,
+      "latex": "V(\\mathrm{complete}) = \\mathrm{TD};\\quad V(\\mathrm{incomplete}) = -1\\ \\mathrm{down};\\quad V(\\mathrm{intercepted}) \\approx V(\\mathrm{punt})\\ \\text{(midfield, tied, early second quarter)}",
+      "symbol_and_unit_ledger": "V = source-stated value ordering (dimensionless); TD = touchdown (6 points under the era scoring vector, cf NCAA 1922 guide 2d97f3a1f7fad21e); down = possession attempt (dimensionless count); 50 yd pass length printed in the question. The interception-punt equivalence is the author's explicit judgment for the stated game state only. Formalization of printed prose; no equation in source.",
+      "assumptions": "State tuple printed in the question: midfield, third down and eighteen, second quarter just starting, score even (p259, Q107). The equivalence 'if intercepted, it should still be just as good as a punt' holds because an interception at the end of a 50-yard sideline pass lands the opponent roughly where a punt would have. No wind or personnel qualifier is printed here.",
+      "breakdown_regime": "The equivalence is field-position-dependent and breaks deep in own territory, where an interception hands over a short field — the book itself restricts own-goal-line passing to being behind late or facing a glaring weakness (p256, Q106; p259-260). It also breaks if the pass is short enough that the interception return replaces the punt's field-position effect.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p7",
+        "mapping": "A printed downside-equivalence argument: a gamble is admissible when its worst branch is no worse than the conservative default's outcome. This is the 1925 ancestor of bounded-downside veto gating — the conjunction gate's PASS logic has the same shape (reject only when the tail branch is strictly worse than the fallback).",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p8",
+      "name": "Weak-spot nursing (exploit-rate constraint under adversary adaptation)",
+      "verbatim_quote": "It should not be used too much or the other coach may make a substitution which will correct this weak point. Nurse it along and use it only when you have to and you will have something to fall back on when you get into difficulties in the scoring zone.",
+      "page": 256,
+      "latex": "f_{\\mathrm{exploit}} \\le f_{\\max}\\ \\text{such that}\\ \\mathrm{Substitution}_{\\mathrm{opp}}(\\mathrm{weak\\ spot})\\ \\text{is not triggered};\\quad \\mathrm{reserve\\ value} = V(\\mathrm{weak\\ spot} \\mid \\mathrm{scoring\\ zone\\ crisis})",
+      "symbol_and_unit_ledger": "f_exploit = frequency of attacking the discovered weakness (dimensionless rate over plays); f_max = source-unspecified ceiling (no number printed); Substitution_opp = opponent coach's personnel-adjustment operator (printed prose); V = reserved option value in the scoring zone (dimensionless judgment). Formalization of printed prose rule; no equation in source.",
+      "assumptions": "Printed mechanism: overuse triggers the opposing coach's substitution, which repairs the weakness; the discovered edge is therefore a depletable, adversary-reactive resource to be saved 'for a time when it will count the most' (p170 hint 16, repeated p256 Q91). The source gives no rate, no decay model, no detection threshold.",
+      "breakdown_regime": "If the opponent has no substitution depth (small squad, injuries), the constraint relaxes — the book's own roster doctrine says reserve material is scarcest at end (p137). If the weakness is structural rather than personnel-based, substitution cannot repair it and nursing wastes value. The ceiling is unquantified; any numeric f_max would be fabricated.",
+      "domain": "football",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p8",
+        "mapping": "Information preservation as option value: an observed opponent defect is an asset whose exercise alerts the adversary. Binds to the scouting-to-gameplan pipeline as an exploit-scheduling constraint, and to the recursive ToM layer (model the opposing coach's substitution policy before spending the edge).",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p9",
+      "name": "Punt-signal masking and mixed punt numbers",
+      "verbatim_quote": "numbers for a punt, and the quarterback was instructed to mix up these numbers as much as possible. I used outstanding numbers which were not very likely to confuse our own men. The numbers I actually used were 13, 11, 66, 99, and 44.",
+      "page": 209,
+      "latex": "\\mathcal{S}_{\\mathrm{punt}} = \\{13, 11, 66, 99, 44\\};\\quad \\sigma_{\\mathrm{punt}} \\in \\Delta(\\mathcal{S}_{\\mathrm{punt}})\\ \\text{with support mixed 'as much as possible'}",
+      "symbol_and_unit_ledger": "S_punt = printed set of five punt call numbers (dimensionless labels); sigma_punt = quarterback's mixing distribution over the set (probability simplex, dimensionless); 99 is printed as 'the regular punt number' (p209). Masking rationale printed p208: a constant punt number lets a scout reconstruct the whole signal system. Formalization of printed prose; no equation in source.",
+      "assumptions": "The five numbers were chosen 'outstanding... not very likely to confuse our own men' (p209); the punt formation itself already leaks the action class, so the mixing protects the SIGNAL SYSTEM, not the punt decision. The digit-system encoding (second digits of called numbers compose the play number, pp206-207) and mid-game key switching ('from now on the first number is blank', p209) are the surrounding code.",
+      "breakdown_regime": "Side channels defeat the mixing: accent on key numbers, gaze toward the play direction, and rut patterns in dummy numbers are all printed as leaks the quarterback must police (pp209-210). Against a scout who records formation-plus-number pairs across games, even mixed numbers can be correlated if the mixing is non-uniform — the source demands maximum mixing but prints no distribution.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p9",
+        "mapping": "A finite-alphabet covert channel with an adversarial decoder and explicit side-channel countermeasures — structurally a mixed strategy over signals in the Shannon sense, 23 years before Shannon. Binds to the snap-timing entropy / tendency-masking layer: predictable cadence is the modern equivalent of the constant punt number.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p10",
+      "name": "Scouting sample-selection rule (offense revealed in easy games, defense in hard games)",
+      "verbatim_quote": "It is, as a rule, easy to get the offense of a team when this team has a fairly easy game. Defensive points are brought out more clearly when this team has a hard game.",
+      "page": 188,
+      "latex": "\\mathcal{D}_{\\mathrm{offense}} \\mid \\mathrm{easy\\ game} \\ne \\mathcal{D}_{\\mathrm{offense}} \\mid \\mathrm{hard\\ game};\\quad \\mathrm{observe} \\ge 2\\ \\text{games (source: 'scouted several times')}",
+      "symbol_and_unit_ledger": "D = distribution of observed team behavior (probability measure over actions, dimensionless); easy/hard game = opponent-strength conditioning event (printed prose categories); observe = number of scouting observations (count, source says 'several', no number). Formalization of printed prose rule; no equation in source.",
+      "assumptions": "Printed mechanism: a team shows its offense when unpressed and its defense when pressed, so single-game scouting samples a biased slice of the opponent's policy. Notes are to be filed year to year, and coaches 'run in cycles' detectable from opening-game choices (p188).",
+      "breakdown_regime": "If the opponent deliberately masks both phases (the book's own deception doctrine), neither game type reveals the true policy. Cross-season cycle inference fails when the coach changes staff or scheme — the source's year-to-year filing assumes coach continuity.",
+      "domain": "football",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p10",
+        "mapping": "Distribution shift between observation contexts, stated in 1925: the scouting sample is not the game-day population. Binds to the held-out-discipline layer as a historical statement of why fit-on-easy-games data mispredicts hard-game behavior, and to the provenance-first harvest rule (record the context of every observation).",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p11",
+      "name": "Scout epistemic honesty constraint",
+      "verbatim_quote": "As scout be sure you have their plays down as correct as pos- sible and do not try to draw upon your imagination. Better say that “This is all I can get” than to say “I imagine, etc.”",
+      "page": 202,
+      "latex": "\\mathrm{report}(o) = o\\ \\text{iff observed}(o);\\quad \\mathrm{report}(\\varnothing) = \\text{'This is all I can get'}\\ \\text{when}\\ \\neg\\mathrm{observed}",
+      "symbol_and_unit_ledger": "o = observed play fact (dimensionless proposition); report = scout's written report (string); observed = predicate over direct visual evidence. Formalization of printed prose rule; no equation in source. Companion printed rule: 'There must be no writing while the play is in progress' (p189) — observation bandwidth is reserved for looking.",
+      "assumptions": "The scout must not 'draw upon your imagination'; partial reports are explicitly preferred to invented completions (p202). Attention is allocated to players, not the ball (p188). The rule is a provenance constraint on the intelligence pipeline, not a statistical estimator.",
+      "breakdown_regime": "Memory-based reconstruction after the game (the book's prescribed method, p189) is itself a corruption channel — the source trusts trained memory but prints no verification step. Under time pressure the honesty constraint competes with the coach's demand for complete reports; the book resolves this by demanding mature, trained scouts.",
+      "domain": "football",
+      "timescales": [
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p11",
+        "mapping": "The 1925 statement of the foundry's own INSUFFICIENT_SOURCE_ACCESS doctrine: an honest partial report beats a fabricated complete one. Binds to the provenance layer of every harvest adapter — report what was observed, mark the rest unobserved, never impute.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p12",
+      "name": "Scrimmage load cap and the six-week critical window",
+      "verbatim_quote": "No man scrimmages more than thirty minutes during the week. It is not necessary.",
+      "page": 218,
+      "latex": "L_{\\mathrm{scrimmage}}(player, week) \\le 30\\ \\mathrm{min};\\quad \\mathrm{team\\ formation} \\subseteq [0, 6]\\ \\mathrm{weeks}",
+      "symbol_and_unit_ledger": "L = full-contact scrimmage load (min/week, printed 'thirty minutes'); the six-week window is printed: 'the team is made in the first six weeks, or it is not made at all' (p218). No scrimmage at all in the first two weeks (p217); after week six, scrimmage only occasionally after easy games (p218). Source-stated coaching rules, not measured dose-response.",
+      "assumptions": "Printed tradeoff: 'It is better to have a team underscrimmaged but full of eagerness to play football, than to have them overscrimmaged, and as a result listless' (p218). Group work is claimed to supply equivalent physical work without injury risk, minus team-play benefits (p217). Early scrimmage injuries cost 'two to three weeks' practice' at the critical time (p218).",
+      "breakdown_regime": "The cap is a judgment rule with no printed injury-rate data; it assumes group work transfers to game combat, which the source admits is incomplete ('it lacks... the values and benefits derived from team play'). The six-week window is asserted, not derived; modern load science would re-estimate both.",
+      "domain": "football",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p12",
+        "mapping": "A load-budget constraint with a critical developmental window: readiness is produced early and protected late, and peak eagerness is treated as a state variable that over-practice depletes. Binds to the fatigue/availability layer (tau_2) and to practice-week load management in the Week-10 crucible context — the 1925 ancestor of 'don't win Tuesday's practice at the cost of Saturday'.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p13",
+      "name": "Intentional safety as points-for-field-position exchange",
+      "verbatim_quote": "Yes, if there is a strong wind against you and you are three or more points ahead near the end of the game, I would purposely make a safety. This is particularly true if we had a real slow kicker who blows up when kicking under pressure, but kicks well when given plenty of time.",
+      "page": 251,
+      "latex": "\\mathrm{lead} \\ge 3\\ \\wedge\\ \\mathrm{wind\\ against} \\ \\wedge\\ t \\to T_{\\mathrm{end}} \\implies \\mathrm{safety}(-2\\ \\mathrm{pts}) \\succ \\mathrm{punt\\ under\\ pressure}",
+      "symbol_and_unit_ledger": "lead = score advantage (points); safety costs 2 points (era scoring vector, NCAA 1922 guide 2d97f3a1f7fad21e); lead >= 3 printed as the condition so the lead survives the 2-point concession; wind against = printed qualitative condition; t -> T_end = 'near the end of the game' (min, source clock). Formalization of printed prose rule; no equation in source.",
+      "assumptions": "Printed mechanism: a slow kicker who 'blows up when kicking under pressure, but kicks well when given plenty of time' is better served by the free kick after a safety than by a rushed punt from deep own territory into a strong wind (p251, Q65). The same answer recurs at 3-0 with two minutes left (p257, Q94). The new safety rule is acknowledged to reduce but not eliminate the tactic (p260, Q122).",
+      "breakdown_regime": "Fails when the lead is 1 or 2 (the concession ties or loses the game), when the wind is not a material factor, or when the kicker is reliable under pressure — then the punt dominates. The source's condition set is conjunctive; drop any conjunct and the exchange is no longer printed as justified.",
+      "domain": "football",
+      "timescales": [
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "source_operator": "p13",
+        "mapping": "An explicit negative-points-for-position trade with a conjunctive gate — the same logical shape as the Class B conjunction gate: a superficially dominated action (giving up points) is correct when the coupled state (wind, kicker pressure response, lead margin, clock) satisfies every condition. Historical proof that 'never concede points' is a heuristic, not an invariant.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p14",
+      "name": "Lead-magnitude irrelevance and triple-pass relaxation trap",
+      "verbatim_quote": "7 to 6 in our favor is just as good as 14 to 6. Game must be played safe.",
+      "page": 254,
+      "latex": "t \\to T_{\\mathrm{end}} \\implies V(\\mathrm{lead} = 1) = V(\\mathrm{lead} = 8)\\ \\text{(win is binary)};\\quad \\mathrm{relax}(\\mathrm{end} \\mid 2\\mathrm{nd\\ lateral}) \\to \\mathrm{vulnerable}(\\mathrm{3rd\\ pass})",
+      "symbol_and_unit_ledger": "lead = score margin (points); V = game outcome value (win/loss, binary under the source's late-game framing); t, T_end = clock (min); the second conjunct formalizes the printed triple-pass trap (p144): the defensive end naturally relaxes after the second backward pass and must fight the habit. Formalization of printed prose rules; no equations in source.",
+      "assumptions": "Printed context: with seven minutes left and a 7-6 lead, the strongest running play is used deliberately to consume time, no kick until forced — because the margin's size is irrelevant to the binary outcome (p254, Q75). The companion maxim 'When ahead; play safe; when behind take a chance' is printed at p171. The triple-pass trap is printed as a habituation exploit at p144 and repeated in the end hints (p146).",
+      "breakdown_regime": "The binary-value framing fails when point differential matters (tiebreakers, aggregate formats) — not part of the 1925 single-game context. The relaxation trap fails against offenses that never throw the third pass (the habit is then correctly relaxed); it is an exploit conditional on the opponent's actual triple-pass tendency, which scouting must establish first.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p14",
+        "mapping": "Two invariants in one: (1) late-game win probability is a step function of the lead, not a linear function of margin — the ancestor of clock-aware risk posture in the situational router; (2) habituation after repeated benign stimuli is an exploitable defensive state — the recursive ToM layer's 1925 instance of modeling what the opponent has learned to ignore.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "The Rockne 1925 text is the terminal node of the extracted era chain and the first source in that chain that prints its own probability distributions. To read it correctly you have to reconstruct what produced it. The chain runs Camp 1894 (29a9a56fe196f2f2), whose physician-clearance gate and vital-index screening were responses to the mass-play injury crisis; Lewis 1896 (6bc7d84da4bde923); Reed 1913 (52b5d36325e11cd7), which already contains a source-stated matching-coins mixed-strategy endgame; Edwards 1916 (3fa96d690212683b), with its fresh-substitute law and injury-concealment incentive; Cavanaugh 1919 (6aeb75fe28eb9cd8); Berry 1921 (5fee5df924431396), which treats the forward pass as an established weapon with its own legality geometry; and the NCAA 1922 official guide (2d97f3a1f7fad21e), which fixes the constraint substrate: ten yards in four downs, the 6/1/3/2 scoring vector, forward-pass legality, safety impetus. Rockne writes three years after that codification, and every quiz answer in his Chapter XXII computes over exactly those rules — his penalty-acceptance answer (third down and four at the four versus fourth down and two at the two, p280) is a down-and-distance option-value calculation on the 1922 state machine. The historical scar that shapes his style is resource asymmetry: his 'equality in competition' passage (pp221-222) is a bitter account of small-school scheduling subordination, and the response is an information-intensive, preservation-heavy game — scout several times, nurse weak spots, save plays for the climax, mix the punt numbers. He even reaches back before Camp to anchor lineage: 'Pudge' Heffelfinger of Yale was pulling out in 1889 (p125), a priority claim that extends the guard-pull genealogy behind the extracted chain's start. The deepest retrocausal fact is the thirty-game table (p172): coaching judgment has become explicitly distributional. Where Reed 1913 reasons about a single endgame gamble, Rockne prints outcome fractions per play class and names the regime where they void — inside the ten-yard line, the zone of intense resistance. That is the moment in this corpus when the coach's prior becomes a stated empirical object, with a sample size, an opponent class, and a breakdown boundary, however arbitrary the author admits the distances to be.\n\nThe recursive theory of mind in this book is not decorative; it is the operating system. The quarterback maintains a fused belief state from a sensor chain — ends report tackle shifts, tackles report guards, guards report the center, halfbacks report ends — and must 'keep an index of information in his mind' while the defense changes continuously (p115). The defense runs the mirror operation: the defensive center reads mannerisms, 'just a look with the eyes, just a leaning of the body, a slight shiver when a certain number is called, now a pulling up of the pants, and in some cases digging in a little deeper with the cleats' (p122), and broadcasts the read aloud to demoralize the offense. The sifting-end duel is stated as a literal contest of revelation: 'the battle... is to see who will show first' (p143). The halftime cross-up is explicit second-order manipulation: smash over center on first down to condition the defensive center to stay in, then throw over the halfback's head on the next first down, 'from the point of view of demoralizing the morale of the defensive team' (pp168-169). Trick plays are deterrence without execution — letting the opponent know you have them 'will keep them in a state of mental unrest which renders them less effective against your regular attack' (pp236-237). And the belief clash under pressure is resolved by a printed default: 'When in doubt, punt' (p169), overridden only by a glaring defensive weakness (p171). The coach's comfort call, the defensive coordinator's tendency trap, and the quarterback's internal clock are all named in the text as competing belief sources; Rockne's resolution is a hierarchy — personnel and tendency evidence first, tactical prior second, panic never. Even the center is forbidden to call signals, because the instant his head goes down to snap, a clever defense re-optimizes (p276): the snap itself is an information event.\n\nCross-layer veto adjudication is where this source earns its place in the foundry, because Rockne repeatedly lets one layer veto another layer's locally optimal call. The physiology layer vetoes the preparation-maximizing call: no man scrimmages more than thirty minutes a week, and the team is made in the first six weeks or not at all (p218) — extra full-speed reps before the big game are rejected because injury at the critical window dominates any execution gain. The fatigue layer vetoes the possession-maximizing call: with a tired team leading 20-10 and the opponent surging, he elects to kick off, because 'it is more tiring to play offensively than defensively' and the ball carrier may fumble or throw into coverage (p247) — possession, normally the positive-EV asset, becomes a liability under fatigue asymmetry. The field-position layer vetoes the never-concede-points heuristic: the intentional safety is correct when lead is at least three, the wind is against, the clock is late, and the kicker blows up under pressure (p251) — a conjunctive gate over coupled state, exactly the shape of the Class B gate. The tail-risk layer vetoes the turnover-maximizing call: in the flat zone, intercept only when sure, otherwise tackle the receiver, because a missed interception turns a negligible gain into a touchdown (p151). And the bounded-downside pass (p259) is admissible only where the interception branch is field-position-equivalent to a punt; move the same call deep into own territory and the equivalence collapses, which the book itself encodes by restricting own-goal-line passing to being behind late or facing a glaring weakness (p256). The psychology layer adds its own vetoes: bawling out a fumbler tightens him and worsens the fumble rate (p278), and repeated fear appeals habituate — 'after a while the team refuses to scare, and a decided opposite reaction will set in' (p181). Every one of these is a cross-layer constraint overriding a single-layer maximand, stated in 1925 prose, with no odds, no lines, and no fabricated quantities anywhere in the extraction.",
+      "retrocausal_genealogy": "Rockne 1925 descends from the injury-crisis reform lineage: Camp 1894's medical gate, the legalized forward pass treated as established by Berry 1921, and the NCAA 1922 codification that fixes the down-distance and scoring state machine his quiz answers compute over. His small-school resource asymmetry ('equality in competition' rant, pp221-222) selects for an information-preserving style: scout repeatedly, nurse weak spots, reserve plays for the climax, mix punt numbers. The Heffelfinger 1889 priority claim (p125) extends the guard-pull genealogy before the chain's start. The thirty-game empirical table (p172) marks the chain's transition from anecdotal judgment to stated distributional priors with an explicit red-zone breakdown boundary.",
+      "theory_of_mind": "The book is a manual of nested beliefs. The quarterback fuses a sensor chain (ends to tackles to guards to center, p115) into a running defensive index; the defensive center reads micro-mannerisms (pants pull, cleat dig, p122) and broadcasts them to demoralize. The sifting-end duel is 'who will show first' (p143) — a war of attrition over revelation. The halftime cross-up conditions the center with a smash, then passes over his head (pp168-169). Trick plays deter without execution by keeping the defense in 'mental unrest' (pp236-237). Under pressure the belief clash resolves by hierarchy: 'When in doubt, punt' (p169) is the default prior, overridden only by a glaring weakness (p171); the center never calls signals because his head-down snap instant is when the defense re-optimizes (p276).",
+      "cross_layer_veto": "Five printed cross-layer vetoes: (1) load cap — thirty scrimmage minutes per week and the six-week formation window (p218) veto extra reps before the big game; (2) fatigue asymmetry — elect to kick off when tired and leading, because offense is more tiring than defense (p247), vetoing the possession-maximizing call; (3) intentional safety — lead at least three, wind against, late clock, pressure-fragile kicker (p251) veto the never-concede-points heuristic via a conjunctive gate; (4) flat-zone tail risk — intercept only when sure (p151) vetoing the turnover attempt whose miss branch is a touchdown; (5) bounded-downside pass — admissible only where interception equals punt in field position (p259), void deep in own territory (p256). Psychology adds: scolding a fumbler worsens fumbles (p278); fear appeals habituate (p181)."
+    }
+  ],
+  "universal_lens": "Read through a polymath decision-theory lens, Rockne 1925 is pre-formal stochastic control: a named state tuple, empirical action-class priors with regime boundaries, an action taxonomy carrying setup externalities and counter-policy contingencies, mixed strategies over a covert signal alphabet, bounded-downside equivalence arguments, adversary-reactive resource nursing, and load budgets with critical windows — all stated as prose rules a century before the formalism existed.",
+  "gsi_mapping": "Load cap and six-week window map to injury-risk dosing and recovery scheduling (tau_2); the arousal-regulation doctrine (individualized handling, fear habituation, coach-to-team calm contagion, pp179-185) maps to stress-response modulation of execution fidelity; the fumbler-scolding veto is a printed negative-feedback instability. No clinical telemetry exists in a 1925 source; all bindings are labeled derived and LATENT_UNIDENTIFIABLE until measured.",
+  "gse_mapping": "The tactical tuple is the Coach-Mind situational layer's state vector; the thirteen-class taxonomy supplies action-space semantics including sacrifice externalities and check-play contingencies; the thirty-game table is a play-class prior with a red-zone regime shift at the 10; punt-number mixing binds to snap-timing entropy; scouting sample-selection binds to distribution-shift-aware observation; the quiz bank (pp241-288) is a proto-RLVR situational prompt set with source-stated policy answers. No odds, no publication from this lane."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "44cfcc45582a3ba4",
+  "source_status": "COMPLETE",
+  "title": "WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT",
+  "file_name": "WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT.md",
+  "sha256": "44cfcc45582a3ba4c9cadb08a8388f6903b9e3552eef41c2d02881a52c2d2824",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Expanding window walk-forward simulation with deterministic replay across weeks 1–7, omitting unavailable week 8 data. Universal Lens: Rooted in WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT (44cfcc45582a3ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian probabilistic forecasting using Brier score and ECE for calibrated uncertainty quantification in play-by-play prediction. GSI Mapping: Rooted in WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT (44cfcc45582a3ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine tracks state transitions via EPA ridge RMSE and log-loss metrics for adaptive policy learning. GSE Mapping: Rooted in WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT (44cfcc45582a3ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "expanding_window_simulation",
+      "name": "Expanding Window Simulation",
+      "verbatim_quote": "# Weeks 1–8 Continuous Simulation Replay Audit Generated: 2026-11-03T17:53:25+00:00 · seed `20261103` Source: `C:\\c\\wt-week8-forensic\\intelligence\\coaching\\data\\play_by_play_2026.parquet` (13,131 plays) Weeks available: [1, 2, 3, 4, 5, 6, 7] ## Coverage caveat Week 8 play-by-play is **not** in the source parquet.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'weeks of simulation (1–7)', 'P': 'plays per epoch'}",
+      "assumptions": "Data availability is limited to weeks 1–7; no synthetic week 8 data is generated.",
+      "breakdown_regime": "Week 8 data missing, leading to incomplete temporal coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic forecasting framework where each epoch expands training set size while maintaining temporal order.",
+        "source_operator": "expanding_window_simulation",
+        "telemetry": "Play count per epoch (P), Brier score, ECE"
+      }
+    },
+    {
+      "primitive_id": "deterministic_replay",
+      "name": "Deterministic Replay",
+      "verbatim_quote": "This run does not fabricate week-8 rows — the replay covers weeks 1–7 and the gap is reported rather than papered over.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'replay consistency indicator (0/1)'}",
+      "assumptions": "Replay must be deterministic and reproducible under fixed seed.",
+      "breakdown_regime": "Failure occurs when synthetic data is introduced instead of actual data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's state transition kernel that ensures deterministic evolution of game states through time.",
+        "source_operator": "deterministic_replay",
+        "telemetry": "Seed value, replay integrity flag"
+      }
+    },
+    {
+      "primitive_id": "calibration_metrics",
+      "name": "Calibration Metrics",
+      "verbatim_quote": "(P(pass), expanding window) | Epoch | Plays graded | Brier | Log-Loss | ECE | |---|---|---|---|---|",
+      "page": 1,
+      "latex": "\\text{Brier} = \\frac{1}{N} \\sum_{i=1}^{N} (p_i - o_i)^2",
+      "symbol_and_unit_ledger": "{'p_i': 'predicted probability of outcome i', 'o_i': 'observed outcome (0 or 1)', 'N': 'number of predictions'}",
+      "assumptions": "Predictions are binary outcomes with associated probabilities.",
+      "breakdown_regime": "Poor calibration leads to unreliable confidence intervals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction module which evaluates forecast reliability using Brier score and ECE.",
+        "source_operator": "calibration_metrics",
+        "telemetry": "Brier score, Log-Loss, ECE values"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "44cfcc45582a3ba4_t0",
+      "think": "The simulation operates under an expanding window walk-forward paradigm, where each epoch trains on increasing subsets of prior weeks' data. The deterministic nature of the replay ensures reproducibility and prevents data leakage by avoiding future information. The absence of week 8 data introduces a critical gap in temporal coverage, which is explicitly acknowledged rather than masked. Calibration metrics such as Brier score and ECE provide quantitative measures of model reliability, indicating how well predicted probabilities align with observed outcomes. These metrics are computed at each epoch, enabling dynamic assessment of model performance. The EPA ridge RMSE serves as a secondary metric for evaluating predictive accuracy in terms of expected points added, offering insight into strategic decision-making quality. The failure mode arises when synthetic data is introduced to fill gaps, undermining the integrity of the simulation.\n\nDeep epistemic analysis for WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT (44cfcc45582a3ba4, domain=other, pages_read=1/1): Operator 'Expanding Window Simulation' (page 1, domain other) captures: # Weeks 1–8 Continuous Simulation Replay Audit Generated: 2026-11-03T17:53:25+00:00 · seed `20261103` Source: `C:\\c\\wt-week8-forensic\\intelligence\\coaching\\data\\play_by_play_2026.parquet` (13,131 plays) Weeks available: [1, 2, 3, 4, 5, 6, 7] ## Coverage caveat Week 8 play-by-play is **not** in the source parquet. Assumptions: Data availability is limited to weeks 1–7; no synthetic week 8 data is generated. Breakdown regime: Week 8 data missing, leading to incomplete temporal coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic forecasting framework where each epoch expands training set size while maintaining temporal order. Operator 'Deterministic Replay' (page 1, domain other) captures: This run does not fabricate week-8 rows — the replay covers weeks 1–7 and the gap is reported rather than papered over. Assumptions: Replay must be deterministic and reproducible under fixed seed. Breakdown regime: Failure occurs when synthetic data is introduced instead of actual data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's state transition kernel that ensures deterministic evolution of game states through time. Operator 'Calibration Metrics' (page 1, domain other) captures: (P(pass), expanding window) | Epoch | Plays graded | Brier | Log-Loss | ECE | |---|---|---|---|---| Assumptions: Predictions are binary outcomes with associated probabilities. Breakdown regime: Poor calibration leads to unreliable confidence intervals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction module which evaluates forecast reliability using Brier score and ECE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT (44cfcc45582a3ba4, domain=other, pages_read=1/1): Operator 'Expanding Window Simulation' (page 1, domain other) captures: # Weeks 1–8 Continuous Simulation Replay Audit Generated: 2026-11-03T17:53:25+00:00 · seed `20261103` Source: `C:\\c\\wt-week8-forensic\\intelligence\\coaching\\data\\play_by_play_2026.parquet` (13,131 plays) Weeks available: [1, 2, 3, 4, 5, 6, 7] ## Coverage caveat Week 8 play-by-play is **not** in the source parquet. Assumptions: Data availability is limited to weeks 1–7; no synthetic week 8 data is generated. Breakdown regime: Week 8 data missing, leading to incomplete temporal coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic forecasting framework where each epoch expands training set size while maintaining temporal order. Operator 'Deterministic Replay' (page 1, domain other) captures: This run does not fabricate week-8 rows — the replay covers weeks 1–7 and the gap is reported rather than papered over. Assumptions: Replay must be deterministic and reproducible under fixed seed. Breakdown regime: Failure occurs when synthetic data is introduced instead of actual data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's state transition kernel that ensures deterministic evolution of game states through time. Operator 'Calibration Metrics' (page 1, domain other) captures: (P(pass), expanding window) | Epoch | Plays graded | Brier | Log-Loss | ECE | |---|---|---|---|---| Assumptions: Predictions are binary outcomes with associated probabilities. Breakdown regime: Poor calibration leads to unreliable confidence intervals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction module which evaluates forecast reliability using Brier score and ECE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in temporal cross-validation techniques pioneered in machine learning for time-series forecasting, extended to sports analytics with deterministic replay principles from computational physics. Retrocausal Genealogy: Rooted in WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT (44cfcc45582a3ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT (44cfcc45582a3ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational agents with bounded knowledge, optimizing based on historical play patterns and probabilistic forecasts. Opposing agents may introduce variability through unpredictable actions or strategic misrepresentation. Theory of Mind & Decision Maker Model: Rooted in WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT (44cfcc45582a3ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring distinct epochs do not share overlapping training data beyond the expanding window. Leakage is mitigated by strict temporal ordering and exclusion of week 8 data until real-time availability. Cross-Layer Veto & Anti-Leakage Check: Rooted in WEEKS-1-TO-8-CONTINUOUS-SIMULATION-REPLAY-AUDIT (44cfcc45582a3ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

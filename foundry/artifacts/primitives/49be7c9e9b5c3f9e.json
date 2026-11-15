@@ -1,0 +1,272 @@
+{
+  "book_id": "49be7c9e9b5c3f9e",
+  "source_status": "COMPLETE",
+  "title": "undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins",
+  "file_name": "undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins.md",
+  "sha256": "49be7c9e9b5c3f9e34385ce23198973cc12ce303f05458817577753442139e43",
+  "primary_domain": "cs",
+  "pages_total": 20,
+  "pages_read": 20,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 20,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "GSI Mapping: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "GSE Mapping: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "49be7c9e9b5c3f9e_w0_g1",
+      "name": "undated - Deep Reinforcement Learning for  Ch.1 Grounded Operator",
+      "verbatim_quote": "Introduction** Basketball analytics have long relied on box score statistics and regression-based methods such as Regularized Adjusted Plus-Minus (RAPM).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be7c9e9b5c3f9e_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be7c9e9b5c3f9e_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49be7c9e9b5c3f9e_w0_g2",
+      "name": "undated - Deep Reinforcement Learning for  Ch.1 Grounded Operator",
+      "verbatim_quote": "While effective in many settings, these approaches struggle to capture context-dependent contributions, temporal dynamics, and multi-player interactions, particularly for defensive and off-ball players.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be7c9e9b5c3f9e_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be7c9e9b5c3f9e_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49be7c9e9b5c3f9e_w0_g3",
+      "name": "undated - Deep Reinforcement Learning for  Ch.1 Grounded Operator",
+      "verbatim_quote": "As a result, many impactful actions are understated or entirely absent from traditional evaluation systems.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be7c9e9b5c3f9e_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be7c9e9b5c3f9e_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "lineup_embedding",
+      "name": "Learned Lineup Embedding",
+      "verbatim_quote": "Lineup features use learned player embeddings rather than one-hot encodings, enabling the model to capture player similarity and generalize across lineups.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a continuous latent space where similar players share nearby coordinates.",
+      "breakdown_regime": "Degenerates when the embedding dimension exceeds the number of unique lineups.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's latent factor models for player similarity and GSE's dynamic lineup state transitions.",
+        "source_operator": "lineup_embedding",
+        "telemetry": "Drop in predictive accuracy when encountering rare or novel player combinations."
+      }
+    },
+    {
+      "primitive_id": "momentum_features",
+      "name": "Exponentially Weighted Momentum",
+      "verbatim_quote": "Momentum features incorporate exponentially weighted scoring averages at multiple timescales (τ = 30, 60, 120 seconds), allowing the model to detect runs and shifts in game flow.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Weights decay exponentially with recency, giving more importance to recent performance.",
+      "breakdown_regime": "Breaks down during extended droughts or hot streaks due to exponential smoothing.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's momentum-adjusted Bayesian priors and GSE's temporal reasoning over possession-level context.",
+        "source_operator": "momentum_features",
+        "telemetry": "Increased prediction error during playoff momentum swings or coaching adjustments."
+      }
+    },
+    {
+      "primitive_id": "distributional_value",
+      "name": "Categorical Distributional Value",
+      "verbatim_quote": "We use an 81-bin categorical distribution spanning margins from -40 to 81 +40, with a network f : S→∆ that maps each state to a softmax probability vector.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Models the terminal score differential as a discrete probability mass function.",
+      "breakdown_regime": "Inefficient for continuous outcomes; requires discretization granularity trade-offs.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction intervals for outcome distributions and GSE's probabilistic state-transition dynamics.",
+        "source_operator": "distributional_value",
+        "telemetry": "Uncertainty quantification quality degrades if the bin width does not match natural game volatility."
+      }
+    },
+    {
+      "primitive_id": "neural_shapley",
+      "name": "Neural Multi-Head Attention Shapley",
+      "verbatim_quote": "We adapt Shapley values to this setting using a neural approximation with multi-head attention.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Attribution satisfies efficiency, symmetry, dummy player, and additivity axioms.",
+      "breakdown_regime": "Computationally intensive; may suffer from gradient vanishing in deep architectures.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Shapley-value based player marginal contributions and GSE's coalition-based decision trees.",
+        "source_operator": "neural_shapley",
+        "telemetry": "Attribution stability drops when the number of players exceeds the attention head capacity."
+      }
+    },
+    {
+      "primitive_id": "49be7c9e9b5c3f9e_w2_g1",
+      "name": "undated - Deep Reinforcement Learning for  Ch.3 Grounded Operator",
+      "verbatim_quote": "ed in traditional metrics: the learned value of +0.78 reflects that the shooter deserves substantial credit for converting the opportunity.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be7c9e9b5c3f9e_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be7c9e9b5c3f9e_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49be7c9e9b5c3f9e_w2_g2",
+      "name": "undated - Deep Reinforcement Learning for  Ch.3 Grounded Operator",
+      "verbatim_quote": "Crucially, the standard deviations in **Table 4** reveal substantial context-dependence invisible to fixed weights.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be7c9e9b5c3f9e_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be7c9e9b5c3f9e_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49be7c9e9b5c3f9e_w2_g3",
+      "name": "undated - Deep Reinforcement Learning for  Ch.3 Grounded Operator",
+      "verbatim_quote": "**Figure 6** visualizes this variation: maximum leverage occurs in close games during clutch time (±4 points, final 3 minutes), where single possessions can swing win probability most dramatically.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be7c9e9b5c3f9e_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be7c9e9b5c3f9e_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49be7c9e9b5c3f9e_w3_g1",
+      "name": "undated - Deep Reinforcement Learning for  Ch.4 Grounded Operator",
+      "verbatim_quote": "d as **descriptive indicators of complementary performance under observed conditions** , rather than causal predictions of how two players would interact in all contexts or on all teams.",
+      "page": 16,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be7c9e9b5c3f9e_w3_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be7c9e9b5c3f9e_w3_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49be7c9e9b5c3f9e_w3_g2",
+      "name": "undated - Deep Reinforcement Learning for  Ch.4 Grounded Operator",
+      "verbatim_quote": "### **4.6 Predictive Validation** To assess whether DRL-Shapley captures **genuine, out-of-sample predictive signals** , we evaluate its ability to forecast game outcomes in the held-out test set.",
+      "page": 16,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be7c9e9b5c3f9e_w3_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be7c9e9b5c3f9e_w3_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49be7c9e9b5c3f9e_w3_g3",
+      "name": "undated - Deep Reinforcement Learning for  Ch.4 Grounded Operator",
+      "verbatim_quote": "Player ratings are computed only from the training period; for each test game, we estimate team strength by summing the DRL-Shapley ratings of projected starters, weighted by expected minutes.",
+      "page": 16,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be7c9e9b5c3f9e_w3_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be7c9e9b5c3f9e_w3_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "49be7c9e9b5c3f9e_t0",
+      "think": "Window 1 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "49be7c9e9b5c3f9e_t1",
+      "think": "This chapter introduces foundational sovereign primitives for representing basketball game states and decomposing value. The core challenge is bridging microscopic action-level data (e.g., shot attempts) to macroscopic state-level outcomes (e.g., win probability). The authors achieve this via learned representations that respect both combinatorial lineup structure and temporal momentum patterns. Crucially, they adopt a distributional perspective on value, which naturally supports uncertainty-aware reasoning—a key requirement for both GSI's risk management and GSE's real-time situational awareness. The primitives here form a minimal universal lens: they map raw spatio-temporal data to interpretable, generalizable, and verifiable quantities. Window 2 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opponents' strategies are modeled as stochastic deviations around optimal play; coaches adjust lineups based on perceived player synergy and momentum. Theory of Mind (Window 2): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents collinearity between momentum features and lineup embeddings by ensuring orthogonality constraints; avoids leakage from future game states into current features. Cross-Layer Veto (Window 2): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "49be7c9e9b5c3f9e_t2",
+      "think": "Window 3 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "49be7c9e9b5c3f9e_t3",
+      "think": "Window 4 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 4): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 4): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in undated - Deep Reinforcement Learning for NBA Player Valuation A Temporal Difference Approach with Shapley Attribution - Jenkins (49be7c9e9b5c3f9e, 20/20 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

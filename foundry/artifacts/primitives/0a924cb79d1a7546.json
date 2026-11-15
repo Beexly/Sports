@@ -1,0 +1,78 @@
+{
+  "book_id": "0a924cb79d1a7546",
+  "source_status": "COMPLETE",
+  "title": "p0390",
+  "file_name": "p0390.txt",
+  "sha256": "0a924cb79d1a7546e2252181c195b0ccf665d1f598b4695e328b6861288a3a2c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Motivational learning dynamics under supervised spelling correction; stochastic error propagation in cognitive rehearsal. Universal Lens: Rooted in p0390 (0a924cb79d1a7546), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian error correction model with conformal predictive intervals for spelling accuracy; likelihood-weighted posterior updates on word retention. GSI Mapping: Rooted in p0390 (0a924cb79d1a7546), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transition graph of spelling practice; Markovian evolution from incorrect to correct spelling via supervised feedback loops. GSE Mapping: Rooted in p0390 (0a924cb79d1a7546), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "supervised_spelling_correction",
+      "name": "Supervised Spelling Correction",
+      "verbatim_quote": "360 Motivation and Learning page of each word These instructions were considered \"mysterious\" or \"funny\" but",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{words}}': 'dimensionless, number of words practiced', 'T_{\\\\text{practice}}': 'time units, duration of practice per word', 'P_{\\\\text{correct}}': 'probability, proportion of correctly spelled words'}",
+      "assumptions": "Practice is uniformly distributed across words; supervision ensures deterministic execution.",
+      "breakdown_regime": "When N_{\\text{words}} approaches zero or T_{\\text{practice}} exceeds threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: probabilistic error correction via Bayesian update; GSE: state transition from incorrect to correct spelling.",
+        "source_operator": "supervised_spelling_correction",
+        "telemetry": "Frequency of correct spelling post-practice."
+      }
+    },
+    {
+      "primitive_id": "error_frequency_analysis",
+      "name": "Error Frequency Analysis",
+      "verbatim_quote": "times The results are shown in the following two tables Subject Words practised Errors after A",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{\\\\text{wrong}}': 'frequency, count of wrong responses', 'F_{\\\\text{right}}': 'frequency, count of correct responses', 'E_{\\\\text{total}}': 'dimensionless, total errors observed'}",
+      "assumptions": "Each word is tested at least four times; error counts are independent.",
+      "breakdown_regime": "When F_{\\text{wrong}} exceeds F_{\\text{right}} by threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: frequency-based error classification; GSE: error propagation in cognitive state space.",
+        "source_operator": "error_frequency_analysis",
+        "telemetry": "Ratio of wrong vs. right responses per subject."
+      }
+    },
+    {
+      "primitive_id": "cognitive_rehearsal_model",
+      "name": "Cognitive Rehearsal Model",
+      "verbatim_quote": "words an equal amount of practice in which the word was correctly spelled was carried out",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{\\\\text{rehearse}}': 'rate, rehearsal cycles per word', 'M_{\\\\text{memory}}': 'memory strength, normalized cognitive retention', 'T_{\\\\text{feedback}}': 'time units, delay between practice and feedback'}",
+      "assumptions": "Rehearsal improves memory strength linearly; feedback is immediate.",
+      "breakdown_regime": "When M_{\\text{memory}} falls below critical threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: reinforcement learning with delayed reward; GSE: iterative state refinement.",
+        "source_operator": "cognitive_rehearsal_model",
+        "telemetry": "Change in memory strength over time."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0a924cb79d1a7546_t0",
+      "think": "The core operator 'supervised_spelling_correction' models a controlled learning environment where each word is subjected to identical practice duration and supervision. This induces a stochastic process where errors are categorized into known wrong responses versus correct ones. The 'error_frequency_analysis' primitive captures the empirical distribution of these outcomes, enabling probabilistic inference about learning efficacy. The 'cognitive_rehearsal_model' extends this by introducing temporal dynamics, where repeated exposure modifies memory strength. These primitives form a dual structure: one rooted in Bayesian updating of error probabilities (GSI), the other in Markovian transitions of cognitive states (GSE). Failure modes occur when practice duration becomes insufficient or when feedback delays exceed cognitive thresholds, leading to divergence from intended learning paths.\n\nDeep epistemic analysis for p0390 (0a924cb79d1a7546, domain=other, pages_read=1/1): Operator 'Supervised Spelling Correction' (page 1, domain other) captures: 360 Motivation and Learning page of each word These instructions were considered \"mysterious\" or \"funny\" but Assumptions: Practice is uniformly distributed across words; supervision ensures deterministic execution. Breakdown regime: When N_{\\text{words}} approaches zero or T_{\\text{practice}} exceeds threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: probabilistic error correction via Bayesian update; GSE: state transition from incorrect to correct spelling. Operator 'Error Frequency Analysis' (page 1, domain other) captures: times The results are shown in the following two tables Subject Words practised Errors after A Assumptions: Each word is tested at least four times; error counts are independent. Breakdown regime: When F_{\\text{wrong}} exceeds F_{\\text{right}} by threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: frequency-based error classification; GSE: error propagation in cognitive state space. Operator 'Cognitive Rehearsal Model' (page 1, domain other) captures: words an equal amount of practice in which the word was correctly spelled was carried out Assumptions: Rehearsal improves memory strength linearly; feedback is immediate. Breakdown regime: When M_{\\text{memory}} falls below critical threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: reinforcement learning with delayed reward; GSE: iterative state refinement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0390 (0a924cb79d1a7546, domain=other, pages_read=1/1): Operator 'Supervised Spelling Correction' (page 1, domain other) captures: 360 Motivation and Learning page of each word These instructions were considered \"mysterious\" or \"funny\" but Assumptions: Practice is uniformly distributed across words; supervision ensures deterministic execution. Breakdown regime: When N_{\\text{words}} approaches zero or T_{\\text{practice}} exceeds threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: probabilistic error correction via Bayesian update; GSE: state transition from incorrect to correct spelling. Operator 'Error Frequency Analysis' (page 1, domain other) captures: times The results are shown in the following two tables Subject Words practised Errors after A Assumptions: Each word is tested at least four times; error counts are independent. Breakdown regime: When F_{\\text{wrong}} exceeds F_{\\text{right}} by threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: frequency-based error classification; GSE: error propagation in cognitive state space. Operator 'Cognitive Rehearsal Model' (page 1, domain other) captures: words an equal amount of practice in which the word was correctly spelled was carried out Assumptions: Rehearsal improves memory strength linearly; feedback is immediate. Breakdown regime: When M_{\\text{memory}} falls below critical threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: reinforcement learning with delayed reward; GSE: iterative state refinement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century behaviorist learning theory, particularly Thorndike's law of effect and Skinner's operant conditioning. Later formalized in information theory and machine learning frameworks. Retrocausal Genealogy: Rooted in p0390 (0a924cb79d1a7546), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0390 (0a924cb79d1a7546), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include the learner (seeking optimal performance) and the environment (providing feedback). The learner's internal model evolves based on error signals, while the environment maintains fixed error patterns. Theory of Mind & Decision Maker Model: Rooted in p0390 (0a924cb79d1a7546), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when error frequencies become indistinguishable across subjects. Leakage occurs if feedback mechanisms fail to distinguish between correct and incorrect spelling, invalidating both GSI and GSE mappings. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0390 (0a924cb79d1a7546), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0390 (0a924cb79d1a7546), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

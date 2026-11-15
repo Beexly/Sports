@@ -683,7 +683,7 @@ class GSEFullSlateSimulator:
                     bonus_rush_100 = 3.0 * (rush_yds >= 100.0)
                     fpts_matrix[:, global_k] = 1.0 * receptions + 0.10 * rec_yds + bonus_rec_100 + 0.10 * rush_yds + bonus_rush_100 + 6.0 * tds
                 elif p_pos == "DST":
-                    mu_dst = max(3.0, self._proj(row, "proj_fpts", 7.0))
+                    mu_dst = max(5.5, self._proj(row, "proj_fpts", 7.0))
                     fpts_matrix[:, global_k] = norm.ppf(u, loc=mu_dst, scale=4.8)
 
         cov_matrix = np.cov(fpts_matrix, rowvar=False)

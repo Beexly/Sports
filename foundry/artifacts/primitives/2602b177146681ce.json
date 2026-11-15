@@ -1,0 +1,78 @@
+{
+  "book_id": "2602b177146681ce",
+  "source_status": "COMPLETE",
+  "title": "p0095",
+  "file_name": "p0095.txt",
+  "sha256": "2602b177146681cedf59ababe949eb7f281acc2a9db7505884235a4da223992f",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Expectation-disruption duality in goal-directed behavior: \\( \\mathcal{E}(G_{\\text{expected}}) \\leftrightarrow \\mathcal{D}(G_{\\text{actual}}) \\) with directional asymmetry. Universal Lens: Rooted in p0095 (2602b177146681ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian surprise as information gain: \\( S = \\log \\frac{P(G_{\\text{observed}})}{P(G_{\\text{expected}})} \\), conditioned on prior expectations. GSI Mapping: Rooted in p0095 (2602b177146681ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition disruption kernel: \\( \\Delta \\mathcal{T} = \\mathcal{T}_{\\text{new}} - \\mathcal{T}_{\\text{old}} \\), where \\( \\mathcal{T} \\in \\mathbb{R}^n \\) encodes behavioral trajectory under goal-object expectation. GSE Mapping: Rooted in p0095 (2602b177146681ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "expectation_disruption_duality",
+      "name": "Expectation-Disruption Duality",
+      "verbatim_quote": "is always mmanent the expectation of some more or less specific type of goal-object. If such",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G_{\\\\text{expected}}': 'Goal-object expectation, dimensionless', 'G_{\\\\text{actual}}': 'Actual goal-object encountered, dimensionless', 'S': 'Surprise measure, nats'}",
+      "assumptions": "Behavioral responses are governed by expectation mismatch; disruption is asymmetric across directionality of goal change.",
+      "breakdown_regime": "When \\( G_{\\text{actual}} \\neq G_{\\text{expected}} \\) and \\( |G_{\\text{actual}} - G_{\\text{expected}}| > \\epsilon \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The duality maps expectation mismatch to behavioral disruption via information-theoretic surprise \\( S \\).",
+        "source_operator": "expectation_disruption_duality",
+        "telemetry": "Frequency and magnitude of behavioral deviation from expected goal-object encounter."
+      }
+    },
+    {
+      "primitive_id": "directional_asymmetry_in_disruption",
+      "name": "Directional Asymmetry in Disruption",
+      "verbatim_quote": "the change was from a more demanded to a less demanded goal-object No overt disruptions have,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{\\\\text{upward}}': 'Disruption from less to more demanded goal, dimensionless', 'D_{\\\\text{downward}}': 'Disruption from more to less demanded goal, dimensionless'}",
+      "assumptions": "Disruption is not symmetric; downward shifts in goal demand elicit stronger behavioral responses than upward shifts.",
+      "breakdown_regime": "When \\( D_{\\text{downward}} > D_{\\text{upward}} \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel captures asymmetry in behavioral disruption based on goal-object value shift direction.",
+        "source_operator": "directional_asymmetry_in_disruption",
+        "telemetry": "Observation of overt disruption behaviors (e.g., delay, hesitation) during goal-object substitution."
+      }
+    },
+    {
+      "primitive_id": "latent_surprise_detection",
+      "name": "Latent Surprise Detection",
+      "verbatim_quote": "startled speeding up ın the behavior, might be detected even in these latter cases And, in",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\Delta t_{\\\\text{behavior}}': 'Temporal deviation in behavior, seconds', '\\\\alpha': 'Detection sensitivity parameter, dimensionless'}",
+      "assumptions": "Behavioral surprise may be undetectable with coarse observation but detectable through high-resolution temporal analysis.",
+      "breakdown_regime": "When \\( \\Delta t_{\\text{behavior}} > \\tau \\) and \\( \\alpha > \\alpha_{\\text{threshold}} \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Latent surprise is modeled as a time-based deviation in behavioral dynamics, detectable with refined telemetry.",
+        "source_operator": "latent_surprise_detection",
+        "telemetry": "High-frequency behavioral tempo changes or acceleration in movement patterns."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2602b177146681ce_t0",
+      "think": "The core operator is the expectation-disruption duality, which formalizes how organisms respond to deviations from expected goal-objects. This is expressed mathematically as a mapping between expected and actual goal states, \\( \\mathcal{E}(G_{\\text{expected}}) \\leftrightarrow \\mathcal{D}(G_{\\text{actual}}) \\). The disruption is quantified via information-theoretic surprise, \\( S = \\log \\frac{P(G_{\\text{observed}})}{P(G_{\\text{expected}})} \\). Directional asymmetry arises because disruptions are more pronounced when moving from higher to lower demand goals, i.e., \\( D_{\\text{downward}} > D_{\\text{upward}} \\). This asymmetry reflects evolutionary optimization toward avoiding suboptimal outcomes. Latent surprise detection suggests that while overt disruption is absent in reverse-direction changes, subtle behavioral accelerations or timing shifts may still signal internal surprise, captured by \\( \\Delta t_{\\text{behavior}} \\). These primitives form a layered model where the first layer encodes expectation, the second encodes asymmetry, and the third models hidden behavioral signals.\n\nDeep epistemic analysis for p0095 (2602b177146681ce, domain=other, pages_read=1/1): Operator 'Expectation-Disruption Duality' (page 1, domain other) captures: is always mmanent the expectation of some more or less specific type of goal-object. If such Assumptions: Behavioral responses are governed by expectation mismatch; disruption is asymmetric across directionality of goal change. Breakdown regime: When \\( G_{\\text{actual}} \\neq G_{\\text{expected}} \\) and \\( |G_{\\text{actual}} - G_{\\text{expected}}| > \\epsilon \\) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The duality maps expectation mismatch to behavioral disruption via information-theoretic surprise \\( S \\). Operator 'Directional Asymmetry in Disruption' (page 1, domain other) captures: the change was from a more demanded to a less demanded goal-object No overt disruptions have, Assumptions: Disruption is not symmetric; downward shifts in goal demand elicit stronger behavioral responses than upward shifts. Breakdown regime: When \\( D_{\\text{downward}} > D_{\\text{upward}} \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel captures asymmetry in behavioral disruption based on goal-object value shift direction. Operator 'Latent Surprise Detection' (page 1, domain other) captures: startled speeding up ın the behavior, might be detected even in these latter cases And, in Assumptions: Behavioral surprise may be undetectable with coarse observation but detectable through high-resolution temporal analysis. Breakdown regime: When \\( \\Delta t_{\\text{behavior}} > \\tau \\) and \\( \\alpha > \\alpha_{\\text{threshold}} \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Latent surprise is modeled as a time-based deviation in behavioral dynamics, detectable with refined telemetry. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0095 (2602b177146681ce, domain=other, pages_read=1/1): Operator 'Expectation-Disruption Duality' (page 1, domain other) captures: is always mmanent the expectation of some more or less specific type of goal-object. If such Assumptions: Behavioral responses are governed by expectation mismatch; disruption is asymmetric across directionality of goal change. Breakdown regime: When \\( G_{\\text{actual}} \\neq G_{\\text{expected}} \\) and \\( |G_{\\text{actual}} - G_{\\text{expected}}| > \\epsilon \\) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The duality maps expectation mismatch to behavioral disruption via information-theoretic surprise \\( S \\). Operator 'Directional Asymmetry in Disruption' (page 1, domain other) captures: the change was from a more demanded to a less demanded goal-object No overt disruptions have, Assumptions: Disruption is not symmetric; downward shifts in goal demand elicit stronger behavioral responses than upward shifts. Breakdown regime: When \\( D_{\\text{downward}} > D_{\\text{upward}} \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel captures asymmetry in behavioral disruption based on goal-object value shift direction. Operator 'Latent Surprise Detection' (page 1, domain other) captures: startled speeding up ın the behavior, might be detected even in these latter cases And, in Assumptions: Behavioral surprise may be undetectable with coarse observation but detectable through high-resolution temporal analysis. Breakdown regime: When \\( \\Delta t_{\\text{behavior}} > \\tau \\) and \\( \\alpha > \\alpha_{\\text{threshold}} \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Latent surprise is modeled as a time-based deviation in behavioral dynamics, detectable with refined telemetry. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century operant conditioning studies by Thorndike and Skinner, extended into cognitive science through Bayesian accounts of prediction error. Influenced by neural coding theories of prediction error in dopamine systems. Retrocausal Genealogy: Rooted in p0095 (2602b177146681ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model their own expectations as probabilistic distributions over goal-objects. When expectations fail, they update beliefs or alter behavior. The asymmetry implies that agents are more sensitive to losses than gains, aligning with prospect theory and loss aversion. Theory of Mind & Decision Maker Model: Rooted in p0095 (2602b177146681ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the expectation-disruption duality does not collapse into simple reward prediction error. The directional asymmetry vetoes linear models of behavior. Latent surprise detection prevents overfitting to overt behavioral metrics alone. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0095 (2602b177146681ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

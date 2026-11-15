@@ -1,0 +1,173 @@
+{
+  "book_id": "759d5bc327e31a4d",
+  "source_status": "COMPLETE",
+  "title": "BUILD-NRT-003-nfl-com-roster-adapter-probe",
+  "file_name": "BUILD-NRT-003-nfl-com-roster-adapter-probe.md",
+  "sha256": "759d5bc327e31a4de353d8e8d3362725a6f06e5eb5cfddca73a416396f815eb0",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "Roster truth is a constrained optimization over a high-dimensional categorical state space. We define a global potential function minimizing the divergence between observed official evidence and internal player representations, subject to strict combinatorial constraints on team rosters, jersey numbers, and positional hierarchies.",
+  "gsi_mapping": "GSI employs conformal inference to bound the epistemic uncertainty of roster attributes. By treating official NFL transactions as gold-standard calibration sets, we construct prediction regions for player status transitions, guaranteeing finite-sample coverage against data corruption or delayed reporting from upstream sources.",
+  "gse_mapping": "The GSE models roster dynamics as a continuous-time Markov jump process. State transitions (e.g., IR to Active) are governed by hazard rates derived from transaction logs, enabling precise situational reasoning about lineup availability and real-time probability updates for game-day projections.",
+  "primitives": [
+    {
+      "primitive_id": "roster_evidence_weighting",
+      "name": "Official Evidence Dominance Operator",
+      "verbatim_quote": "Official current evidence wins unless stale or contradicted by newer official transaction evidence.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "E_official: Set of official evidence records (dimensionless). t_issue: Timestamp of issuance (ISO 8601). w(E): Confidence weight (dimensionless, [0,1]).",
+      "assumptions": "Official league transactions possess higher signal-to-noise ratio than scraped surfaces; temporal decay applies uniformly across all evidence types.",
+      "breakdown_regime": "System singularity occurs during mass transaction windows (e.g., league-wide cuts) where simultaneous updates violate sequential consistency assumptions.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's hierarchical Bayesian prior updating mechanism, where official APIs act as strong priors overriding weak observational posteriors.",
+        "source_operator": "roster_evidence_weighting",
+        "telemetry": "Frequency of evidence overrides and latency between official API push and internal state convergence."
+      }
+    },
+    {
+      "primitive_id": "fact_level_reconciliation",
+      "name": "Multi-Source Fact Alignment Kernel",
+      "verbatim_quote": "## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "F_attr: Attribute-level fact tuple (dimensionless). S_i: Data source index (integer). d(F_a, F_b): Edit distance or semantic divergence metric (dimensionless).",
+      "assumptions": "Attributes across disparate sources can be normalized into a canonical schema; conflicts are resolvable via deterministic voting or authority weighting.",
+      "breakdown_regime": "Breaks down when schema drift occurs in external APIs without versioning, causing unresolvable type mismatches in core identifiers.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the GSE entity resolution graph, ensuring that a player's statistical identity remains invariant despite underlying data pipeline fragmentation.",
+        "source_operator": "fact_level_reconciliation",
+        "telemetry": "Rate of unresolved attribute conflicts per ingestion cycle."
+      }
+    },
+    {
+      "primitive_id": "corruption_impact_surface",
+      "name": "Downstream Trust Degradation Metric",
+      "verbatim_quote": "Wrong team, number, status, or staff role corrupts Player Lab, GSE Rating, search, content, customer trust, and internal decisions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "C_roster: Roster correctness binary indicator (boolean). U_system: System utility function (dimensionless). P_corrupt: Probability of downstream failure (dimensionless).",
+      "assumptions": "Roster accuracy is a foundational dependency; its failure cascades linearly into all dependent analytical modules and user-facing products.",
+      "breakdown_regime": "Total system collapse if foundational identity mapping fails, rendering all subsequent performance metrics meaningless.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the loss function in GSI's end-to-end differentiable data pipelines, penalizing root-cause errors heavily to enforce upstream hygiene.",
+        "source_operator": "corruption_impact_surface",
+        "telemetry": "Volume of manual overrides required in the founder roster accuracy cockpit."
+      }
+    },
+    {
+      "primitive_id": "adapter_probe_ingestion",
+      "name": "Read-Only Fixture Ingestion Protocol",
+      "verbatim_quote": "## Source Proof Needed - SRC-001 - SRC-003 ## Product Surface - team pages - player cards ## Internal Surface - founder roster accuracy cockpit - data quality reports ## Data Model - RawSourceSnapshot - SourceEvidence ## Ingestion Plan Use read-only source adapters or fixture-based probes first.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "A_readonly: Read-only adapter interface (type definition). F_fixture: Static test dataset snapshot (JSON/CSV). T_hash: Cryptographic hash of payload (SHA-256).",
+      "assumptions": "Initial integration must not mutate production state; idempotent parsing is achievable through static fixtures before live streaming.",
+      "breakdown_regime": "Probes fail if live network topology changes drastically from the fixture environment, exposing hidden dependencies on runtime context.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Forms the basis of GSE's safe-deployment sandbox, allowing rigorous unit testing of parser logic against historical ground truths.",
+        "source_operator": "adapter_probe_ingestion",
+        "telemetry": "Parser success rate on historical fixtures versus live stream deviation."
+      }
+    },
+    {
+      "primitive_id": "verify_repo_state",
+      "name": "Repository State Verification",
+      "verbatim_quote": "First verify repo root, branch, dirty state, package manager, scripts, and existing patterns.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The repository is in a clean, deterministic state with version-controlled dependencies.",
+      "breakdown_regime": "Standard operational baseline; no singularities.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's `Package Integrity Conformity` axiom, ensuring reproducible builds.",
+        "source_operator": "verify_repo_state",
+        "telemetry": "Git hash, npm/yarn lockfile checksum, build timestamp."
+      }
+    },
+    {
+      "primitive_id": "disable_new_code",
+      "name": "Safe Disabled-by-Default Implementation",
+      "verbatim_quote": "Build the smallest safe docs-first, fixture-backed, type-only, or disabled-by-default implementation.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "New code is isolated behind feature flags or disabled at compile-time to prevent accidental execution.",
+      "breakdown_regime": "No runtime evaluation; pure static analysis.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corresponds to GSE's `State-Transition Guardrails`, preventing unauthorized state mutations.",
+        "source_operator": "disable_new_code",
+        "telemetry": "Flag status, compilation success/failure, test coverage metrics."
+      }
+    },
+    {
+      "primitive_id": "fixture_based_validation",
+      "name": "Fixture-Backed Fact Validation",
+      "verbatim_quote": "Every public roster fact must have evidence, freshness, conflict handling, and rollback.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All factual assertions are backed by immutable, time-stamped fixture data.",
+      "breakdown_regime": "Deterministic fixture resolution; no external API calls.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates to GSI's `Evidence Freshness Protocol`, ensuring all claims are verifiable.",
+        "source_operator": "fixture_based_validation",
+        "telemetry": "Fixture file existence, hash match, validation pass rate."
+      }
+    },
+    {
+      "primitive_id": "rollback_procedure",
+      "name": "Reversible Code Removal",
+      "verbatim_quote": "## Rollback Plan Remove new disabled script/types/docs, delete generated fixtures, and leave existing production data untouched.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Rollback operations are idempotent and do not alter historical data.",
+      "breakdown_regime": "Pure deletion or flag reversal; no data loss.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSE's `Atomic Rollback Semantics`, guaranteeing system consistency.",
+        "source_operator": "rollback_procedure",
+        "telemetry": "Deleted file count, database transaction logs, rollback success indicator."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "759d5bc327e31a4d_t0",
+      "think": "The fundamental challenge addressed in this chapter window is the establishment of an axiomatic truth layer for NFL roster data within a complex, multi-source ecosystem. Mathematically, we can conceptualize the 'NFL roster truth system' as a dynamic hypergraph where nodes represent players, teams, and roles, and edges represent time-dependent affiliations. The 'adapter probe' acts as a boundary operator, translating raw, noisy signals from external APIs (like NFL.com) into validated, structured tensors compatible with the internal Galaxy Sports Engine (GSE). The text emphasizes a 'Duplicate Gate' and 'reconciliation plan,' which implies a rigorous collision resolution protocol. This is not merely deduplication but a sophisticated belief merging process where conflicting evidence (e.g., a player listed as active on one surface but injured on another) must be resolved based on a hierarchy of authority and temporal freshness. The 'Official current evidence wins' rule establishes a strict partial order over information sources, effectively defining a dominance relation in the lattice of possible roster states. Furthermore, the mention of 'corruption' affecting 'Player Lab' and 'GSE Rating' highlights the systemic risk of foundational data errors. This necessitates a robust validation framework, akin to a continuous integration pipeline for data integrity, where 'roster:audit' and 'roster:verify' serve as invariant checks. The transition from 'generic freshness' to 'fact-level NFL roster evidence' signifies a shift from coarse-grained metadata tracking to fine-grained, attribute-level provenance. This requires storing 'RawSourceSnapshot' objects that preserve the exact state of the external world at a given timestamp, enabling retroactive debugging and causal analysis of any discrepancies. Ultimately, the goal is to construct a self-correcting, highly available truth service that minimizes the entropy of the roster state space, ensuring that all downstream applications operate on a consistent and reliable foundation.\n\nFull-book synthesis across 2/2 pages of BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d): [roster_evidence_weighting p.1]: Official current evidence wins unless stale or contradicted by newer official transaction evidence. (Maps directly to GSI's hierarchical Bayesian prior updating mechanism, where official APIs act as strong priors overriding weak observational posteriors.) [fact_level_reconciliation p.1]: ## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact. (Derives the GSE entity resolution graph, ensuring that a player's statistical identity remains invariant despite underlying data pipeline fragmentation.) [corruption_impact_surface p.1]: Wrong team, number, status, or staff role corrupts Player Lab, GSE Rating, search, content, customer trust, and internal decisions. (Isomorphic to the loss function in GSI's end-to-end differentiable data pipelines, penalizing root-cause errors heavily to enforce upstream hygiene.) [adapter_probe_ingestion p.1]: ## Source Proof Needed - SRC-001 - SRC-003 ## Product Surface - team pages - player cards ## Internal Surface - founder roster accuracy cockpit - data quality reports ## Data Model - RawSourceSnapshot - SourceEvidence ## Ingestion Plan Use read-only source adapters or fixture-based probes first. (Forms the basis of GSE's safe-deployment sandbox, allowing rigorous unit testing of parser logic against historical ground truths.) [verify_repo_state p.2]: First verify repo root, branch, dirty state, package manager, scripts, and existing patterns. (Maps to GSI's `Package Integrity Conformity` axiom, ensuring reproducible builds.) [disable_new_code p.2]: Build the smallest safe docs-first, fixture-backed, type-only, or disabled-by-default implementation. (Corresponds to GSE's `State-Transition Guardrails`, preventing unauthorized state mutations.) [fixture_based_validation p.2]: Every public roster fact must have evidence, freshness, conflict handling, and rollback. (Relates to GSI's `Evidence Freshness Protocol`, ensuring all claims are verifiable.) [rollback_procedure p.2]: ## Rollback Plan Remove new disabled script/types/docs, delete generated fixtures, and leave existing production data untouched. (Mirrors GSE's `Atomic Rollback Semantics`, guaranteeing system consistency.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d): [roster_evidence_weighting p.1]: Official current evidence wins unless stale or contradicted by newer official transaction evidence. (Maps directly to GSI's hierarchical Bayesian prior updating mechanism, where official APIs act as strong priors overriding weak observational posteriors.) [fact_level_reconciliation p.1]: ## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact. (Derives the GSE entity resolution graph, ensuring that a player's statistical identity remains invariant despite underlying data pipeline fragmentation.) [corruption_impact_surface p.1]: Wrong team, number, status, or staff role corrupts Player Lab, GSE Rating, search, content, customer trust, and internal decisions. (Isomorphic to the loss function in GSI's end-to-end differentiable data pipelines, penalizing root-cause errors heavily to enforce upstream hygiene.) [adapter_probe_ingestion p.1]: ## Source Proof Needed - SRC-001 - SRC-003 ## Product Surface - team pages - player cards ## Internal Surface - founder roster accuracy cockpit - data quality reports ## Data Model - RawSourceSnapshot - SourceEvidence ## Ingestion Plan Use read-only source adapters or fixture-based probes first. (Forms the basis of GSE's safe-deployment sandbox, allowing rigorous unit testing of parser logic against historical ground truths.) [verify_repo_state p.2]: First verify repo root, branch, dirty state, package manager, scripts, and existing patterns. (Maps to GSI's `Package Integrity Conformity` axiom, ensuring reproducible builds.) [disable_new_code p.2]: Build the smallest safe docs-first, fixture-backed, type-only, or disabled-by-default implementation. (Corresponds to GSE's `State-Transition Guardrails`, preventing unauthorized state mutations.) [fixture_based_validation p.2]: Every public roster fact must have evidence, freshness, conflict handling, and rollback. (Relates to GSI's `Evidence Freshness Protocol`, ensuring all claims are verifiable.) [rollback_procedure p.2]: ## Rollback Plan Remove new disabled script/types/docs, delete generated fixtures, and leave existing production data untouched. (Mirrors GSE's `Atomic Rollback Semantics`, guaranteeing system consistency.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "This primitive lineage traces back to early database normalization theories and entity-resolution algorithms developed in the 1970s. It evolved through the era of master data management (MDM) systems, which sought to create a 'golden record' from disparate enterprise sources. In sports analytics, it specifically descends from the need to reconcile box-score data with roster moves, a problem exacerbated by the proliferation of unofficial scraping sites and delayed official API updates. The current formulation represents a modernization of these concepts, incorporating immutable logging (snapshots) and automated conflict resolution rules tailored to the specific semantics of professional football transactions.",
+      "theory_of_mind": "From a theory-of-mind perspective, the system must model the behavior of both human agents (team personnel making roster moves) and automated agents (API providers pushing updates). Team personnel operate under strategic constraints and deadlines, leading to bursty patterns of activity (e.g., final roster cuts). API providers may experience outages or delays, introducing stochastic noise into the signal. The 'adapter probe' must anticipate these behaviors, distinguishing between a genuine roster change and a transient reporting error. It also needs to account for the 'intent' behind a move—for instance, placing a player on injured reserve has different downstream implications for salary cap calculations and game-day availability than a simple practice squad assignment. Understanding these nuances allows the system to prioritize certain types of evidence and flag anomalies that might indicate either a strategic surprise or a data corruption event.",
+      "cross_layer_veto": "To prevent catastrophic failures, strict cross-layer veto conditions must be enforced. First, any update that violates basic combinatorial constraints (e.g., a team exceeding the 53-man active roster limit without corresponding inactive/designated injured slots) must be automatically rejected or flagged for immediate human review. Second, there must be a veto against 'silent' updates—changes that occur without a corresponding transaction log entry, as these break the audit trail. Third, temporal consistency must be maintained; a player cannot be listed as active for a game before their contract is officially recorded as signed. Finally, leakage between environments must be prevented; test fixtures or simulated scenarios must never contaminate the production truth database. These vetoes act as hard boundaries in the state space, ensuring that the system remains within a physically and logically plausible configuration at all times."
+    },
+    {
+      "trace_id": "759d5bc327e31a4d_t1",
+      "think": "This chapter establishes a robust, mathematically grounded framework for NFL roster construction within the Galaxy Sports Intelligence ecosystem. By enforcing strict evidence-based constraints and rollback protocols, we ensure that every derived fact carries transparent provenance and is susceptible to retroactive correction. The primitives align with GSI's foundational axioms of conformity and GSE's state-transition logic, creating a unified mathematical structure that mitigates legal risks associated with stale or conflicting data. Window 2 Synthesis: Rooted in BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in statistical quality control theory applied to sports databases, evolving from early automated data pipelines into modern microservice architectures. Retrocausal Genealogy (Window 2): Rooted in BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and front office analysts expect roster data to be accurate and auditable; this framework models their need for verifiable truth. Theory of Mind (Window 2): Rooted in BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents cross-layer information leakage by strictly separating fixture generation from runtime fact rendering, avoiding circular dependencies. Cross-Layer Veto (Window 2): Rooted in BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in BUILD-NRT-003-nfl-com-roster-adapter-probe (759d5bc327e31a4d, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

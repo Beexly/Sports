@@ -1,0 +1,78 @@
+{
+  "book_id": "e832ddc4fc278c38",
+  "source_status": "COMPLETE",
+  "title": "syntheses-partB",
+  "file_name": "syntheses-partB.md",
+  "sha256": "e832ddc4fc278c3840598c60e22fea18da5e7023328a43f5a1797eba80c223a8",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Synthetic composition logic unifies edge estimation, risk sizing, and drawdown control through layered stochastic processes. Each layer enforces structural constraints on bankroll dynamics, market mean-reversion, and posterior uncertainty. Universal Lens: Rooted in syntheses-partB (e832ddc4fc278c38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration stack maps observed outcomes to calibrated edge estimates using hierarchical nonparametric inference. Conformal prediction bounds ensure validity under distribution shift while maintaining statistical power. GSI Mapping: Rooted in syntheses-partB (e832ddc4fc278c38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally aware staking engine integrates effective pricing, fractional Kelly allocation, and CVaR-based risk controls. State transitions governed by dynamic drawdown penalties and posterior edge variability. GSE Mapping: Rooted in syntheses-partB (e832ddc4fc278c38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fractional_kelly_stake",
+      "name": "Fractional Kelly Stake",
+      "verbatim_quote": "The three-layer staking stack **Components:** fractional Kelly (SESSION_2, r51) → drawdown governor (1749, r32) → composite risk sizing (2143, r38).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'κ': 'fractional Kelly multiplier, dimensionless', 'K_t': 'Kelly stake at time t, currency'}",
+      "assumptions": "Edge estimate p̂ is stationary and independent across periods; market dynamics are ergodic.",
+      "breakdown_regime": "When p̂ < 0.5, Kelly stake becomes negative, triggering zero exposure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kelly stake derived from log-utility maximization under geometric Brownian motion assumption.",
+        "source_operator": "fractional_kelly_stake",
+        "telemetry": "Logarithmic growth rate of bankroll over time series."
+      }
+    },
+    {
+      "primitive_id": "alpha_governor",
+      "name": "Alpha Governor",
+      "verbatim_quote": "**α-governor (1749):** scale the weekly Kelly stake by π = 1 - α/d_t where d_t = B_t/M_t (bankroll / running maximum), α=0.7.",
+      "page": 1,
+      "latex": "\\pi_t = 1 - \\frac{\\alpha}{d_t}, \\quad d_t = \\frac{B_t}{M_t}",
+      "symbol_and_unit_ledger": "{'π_t': 'scaling factor, dimensionless', 'α': 'governor parameter, dimensionless', 'B_t': 'bankroll at time t, currency', 'M_t': 'running maximum bankroll, currency'}",
+      "assumptions": "Bankroll follows a stochastic process with bounded drawdowns; α is fixed.",
+      "breakdown_regime": "If d_t < α, π_t > 1, leading to overexposure; if d_t > α, π_t < 1, reducing exposure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Governor enforces pathwise drawdown constraint via multiplicative scaling of Kelly stake.",
+        "source_operator": "alpha_governor",
+        "telemetry": "Running maximum-to-current bankroll ratio over weekly intervals."
+      }
+    },
+    {
+      "primitive_id": "composite_risk_sizing",
+      "name": "Composite Risk Sizing",
+      "verbatim_quote": "**Two-layer CVaR (2143):** inner CVaR_ε over game outcomes given the market model F; outer CVaR_δ over the posterior of the engine's own edge estimate p (beta-binomial on rolling 8-week Brier history).",
+      "page": 1,
+      "latex": "CVaR_{\\delta}(p) = \\mathbb{E}[X | X \\leq F^{-1}_{\\delta}(p)]",
+      "symbol_and_unit_ledger": "{'CVaR_δ(p)': 'conditional value-at-risk, dimensionless', 'p': 'edge estimate, probability', 'F': 'market model, cumulative distribution function'}",
+      "assumptions": "Market outcomes follow a known distribution; edge estimate p is modeled as beta-binomial.",
+      "breakdown_regime": "When edge uncertainty increases, CVaR penalty grows, reducing position size.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Risk-adjusted sizing combines game-level variance and estimator uncertainty into a single penalty term.",
+        "source_operator": "composite_risk_sizing",
+        "telemetry": "Brier score of rolling 8-week edge posterior."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e832ddc4fc278c38_t0",
+      "think": "The synthesis framework defines a compositional architecture for stochastic trading decisions. The fractional Kelly stake (S1) provides an unconstrained growth target based on calibrated edge estimates p̂. This is then modulated by the α-governor (S2), which dynamically scales the stake according to drawdown history to enforce pathwise risk limits. Finally, the composite risk sizing (S3) introduces a two-layer CVaR structure that penalizes both outcome variance and edge estimation uncertainty. These layers interact through shared variables such as effective price and bankroll dynamics. The system exhibits dual behavior: Kelly drives growth, the governor ensures stability, and CVaR mitigates tail risks. Failure modes include overfitting to short-term volatility, misalignment between edge estimates and actual performance, and insufficient calibration of the posterior edge distribution.\n\nDeep epistemic analysis for syntheses-partB (e832ddc4fc278c38, domain=other, pages_read=6/6): Operator 'Fractional Kelly Stake' (page 1, domain other) captures: The three-layer staking stack **Components:** fractional Kelly (SESSION_2, r51) → drawdown governor (1749, r32) → composite risk sizing (2143, r38). Assumptions: Edge estimate p̂ is stationary and independent across periods; market dynamics are ergodic. Breakdown regime: When p̂ < 0.5, Kelly stake becomes negative, triggering zero exposure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kelly stake derived from log-utility maximization under geometric Brownian motion assumption. Operator 'Alpha Governor' (page 1, domain other) captures: **α-governor (1749):** scale the weekly Kelly stake by π = 1 - α/d_t where d_t = B_t/M_t (bankroll / running maximum), α=0.7. Assumptions: Bankroll follows a stochastic process with bounded drawdowns; α is fixed. Breakdown regime: If d_t < α, π_t > 1, leading to overexposure; if d_t > α, π_t < 1, reducing exposure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Governor enforces pathwise drawdown constraint via multiplicative scaling of Kelly stake. Operator 'Composite Risk Sizing' (page 1, domain other) captures: **Two-layer CVaR (2143):** inner CVaR_ε over game outcomes given the market model F; outer CVaR_δ over the posterior of the engine's own edge estimate p (beta-binomial on rolling 8-week Brier history). Assumptions: Market outcomes follow a known distribution; edge estimate p is modeled as beta-binomial. Breakdown regime: When edge uncertainty increases, CVaR penalty grows, reducing position size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Risk-adjusted sizing combines game-level variance and estimator uncertainty into a single penalty term. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for syntheses-partB (e832ddc4fc278c38, domain=other, pages_read=6/6): Operator 'Fractional Kelly Stake' (page 1, domain other) captures: The three-layer staking stack **Components:** fractional Kelly (SESSION_2, r51) → drawdown governor (1749, r32) → composite risk sizing (2143, r38). Assumptions: Edge estimate p̂ is stationary and independent across periods; market dynamics are ergodic. Breakdown regime: When p̂ < 0.5, Kelly stake becomes negative, triggering zero exposure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kelly stake derived from log-utility maximization under geometric Brownian motion assumption. Operator 'Alpha Governor' (page 1, domain other) captures: **α-governor (1749):** scale the weekly Kelly stake by π = 1 - α/d_t where d_t = B_t/M_t (bankroll / running maximum), α=0.7. Assumptions: Bankroll follows a stochastic process with bounded drawdowns; α is fixed. Breakdown regime: If d_t < α, π_t > 1, leading to overexposure; if d_t > α, π_t < 1, reducing exposure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Governor enforces pathwise drawdown constraint via multiplicative scaling of Kelly stake. Operator 'Composite Risk Sizing' (page 1, domain other) captures: **Two-layer CVaR (2143):** inner CVaR_ε over game outcomes given the market model F; outer CVaR_δ over the posterior of the engine's own edge estimate p (beta-binomial on rolling 8-week Brier history). Assumptions: Market outcomes follow a known distribution; edge estimate p is modeled as beta-binomial. Breakdown regime: When edge uncertainty increases, CVaR penalty grows, reducing position size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Risk-adjusted sizing combines game-level variance and estimator uncertainty into a single penalty term. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kelly's logarithmic utility theory, extended by modern risk management frameworks like CVaR and drawdown control. Influenced by stochastic control theory and Bayesian decision-making principles. Retrocausal Genealogy: Rooted in syntheses-partB (e832ddc4fc278c38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in syntheses-partB (e832ddc4fc278c38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include market noise, which distorts edge estimates; regulatory constraints, which limit leverage; and adversarial environments, which introduce regime shifts. The engine models these as sources of uncertainty in its decision space. Theory of Mind & Decision Maker Model: Rooted in syntheses-partB (e832ddc4fc278c38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when the governor's scaling conflicts with CVaR penalties, e.g., during high volatility epochs. Leakage occurs if the effective price is not properly adjusted for mean-reversion dynamics, causing mispricing errors. Cross-Layer Veto & Anti-Leakage Check: Rooted in syntheses-partB (e832ddc4fc278c38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

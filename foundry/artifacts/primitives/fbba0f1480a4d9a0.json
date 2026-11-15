@@ -1,0 +1,78 @@
+{
+  "book_id": "fbba0f1480a4d9a0",
+  "source_status": "COMPLETE",
+  "title": "4for4.com",
+  "file_name": "4for4.com.md",
+  "sha256": "fbba0f1480a4d9a0b1986cee05111ce0537a45685c0a142c19d43d4fdbf4da2a",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph traversal and path frequency analysis yield hierarchical URL taxonomy with temporal and categorical segmentation. Universal Lens: Rooted in 4for4.com (fbba0f1480a4d9a0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on content distribution via sitemap entry counts and year-based URL clustering enable probabilistic forecasting of article relevance. GSI Mapping: Rooted in 4for4.com (fbba0f1480a4d9a0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in fantasy football coverage are modeled through temporal path routing and betting content prioritization within dynamic web graph. GSE Mapping: Rooted in 4for4.com (fbba0f1480a4d9a0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_traversal",
+      "name": "Sitemap Graph Traversal",
+      "verbatim_quote": "# 4for4.com Category: **analytics** URLs discovered: **60,000** Sitemaps walked: 2 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{urls}}': '\\\\text{dimensionless, total URLs discovered}', 'N_{\\\\text{sitemaps}}': '\\\\text{dimensionless, number of sitemaps walked}'}",
+      "assumptions": "All sitemaps are accessible and contain valid XML structure; URLs are uniformly distributed across segments.",
+      "breakdown_regime": "When N_{\\text{urls}} \\to \\infty, sitemap coverage approaches completeness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The sitemap traversal process mirrors a directed graph walk where each node represents a URL segment and edges represent hierarchical navigation paths.",
+        "source_operator": "sitemap_graph_traversal",
+        "telemetry": "Number of unique URL segments and their frequency counts."
+      }
+    },
+    {
+      "primitive_id": "path_frequency_analysis",
+      "name": "Path Frequency Analysis",
+      "verbatim_quote": "45,724 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/news`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f_{\\\\text{path}}(s)': '\\\\text{dimensionless, frequency of path } s', 's': '\\\\text{URL segment identifier}'}",
+      "assumptions": "Frequency counts reflect content popularity and editorial focus; all paths are independent.",
+      "breakdown_regime": "When f_{\\text{path}}(s) \\to 0, path s becomes negligible in information flow.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Path frequencies form a kernel density estimate over URL space, enabling classification of content categories by dominance.",
+        "source_operator": "path_frequency_analysis",
+        "telemetry": "Top-N path segments and their associated URL counts."
+      }
+    },
+    {
+      "primitive_id": "temporal_content_segmentation",
+      "name": "Temporal Content Segmentation",
+      "verbatim_quote": "| | `/2020` | 1,628 | | `/2019` | 1,610 | | `/2022` | 1,579 |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{y}': '\\\\text{dimensionless, temporal year index}', 'N_{y}': '\\\\text{dimensionless, number of articles in year } y'}",
+      "assumptions": "Articles are indexed by calendar year; temporal distribution reflects editorial cadence.",
+      "breakdown_regime": "When N_{y} \\to 0, year y is inactive in content production.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Temporal segmentation maps to a time-series kernel over content availability, enabling prediction of future article generation.",
+        "source_operator": "temporal_content_segmentation",
+        "telemetry": "Yearly article count distributions and seasonal trends."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fbba0f1480a4d9a0_t0",
+      "think": "The primitives define a structured approach to analyzing 4for4.com's content architecture. Sitemap traversal provides a topological map of the site’s information landscape, while path frequency analysis reveals dominant content categories. Temporal segmentation allows for understanding how content evolves over time. These operators interplay to form a dual framework: one for static categorization and another for dynamic evolution. Failure modes include incomplete sitemap indexing, skewed path distributions due to editorial bias, and temporal gaps in content publishing. The system must maintain robustness against these by validating data integrity and applying smoothing techniques to temporal series.\n\nDeep epistemic analysis for 4for4.com (fbba0f1480a4d9a0, domain=other, pages_read=3/3): Operator 'Sitemap Graph Traversal' (page 1, domain other) captures: # 4for4.com Category: **analytics** URLs discovered: **60,000** Sitemaps walked: 2 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are accessible and contain valid XML structure; URLs are uniformly distributed across segments. Breakdown regime: When N_{\\text{urls}} \\to \\infty, sitemap coverage approaches completeness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The sitemap traversal process mirrors a directed graph walk where each node represents a URL segment and edges represent hierarchical navigation paths. Operator 'Path Frequency Analysis' (page 1, domain other) captures: 45,724 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/news` Assumptions: Frequency counts reflect content popularity and editorial focus; all paths are independent. Breakdown regime: When f_{\\text{path}}(s) \\to 0, path s becomes negligible in information flow. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Path frequencies form a kernel density estimate over URL space, enabling classification of content categories by dominance. Operator 'Temporal Content Segmentation' (page 1, domain other) captures: | | `/2020` | 1,628 | | `/2019` | 1,610 | | `/2022` | 1,579 | Assumptions: Articles are indexed by calendar year; temporal distribution reflects editorial cadence. Breakdown regime: When N_{y} \\to 0, year y is inactive in content production. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal segmentation maps to a time-series kernel over content availability, enabling prediction of future article generation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 4for4.com (fbba0f1480a4d9a0, domain=other, pages_read=3/3): Operator 'Sitemap Graph Traversal' (page 1, domain other) captures: # 4for4.com Category: **analytics** URLs discovered: **60,000** Sitemaps walked: 2 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are accessible and contain valid XML structure; URLs are uniformly distributed across segments. Breakdown regime: When N_{\\text{urls}} \\to \\infty, sitemap coverage approaches completeness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The sitemap traversal process mirrors a directed graph walk where each node represents a URL segment and edges represent hierarchical navigation paths. Operator 'Path Frequency Analysis' (page 1, domain other) captures: 45,724 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/news` Assumptions: Frequency counts reflect content popularity and editorial focus; all paths are independent. Breakdown regime: When f_{\\text{path}}(s) \\to 0, path s becomes negligible in information flow. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Path frequencies form a kernel density estimate over URL space, enabling classification of content categories by dominance. Operator 'Temporal Content Segmentation' (page 1, domain other) captures: | | `/2020` | 1,628 | | `/2019` | 1,610 | | `/2022` | 1,579 | Assumptions: Articles are indexed by calendar year; temporal distribution reflects editorial cadence. Breakdown regime: When N_{y} \\to 0, year y is inactive in content production. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal segmentation maps to a time-series kernel over content availability, enabling prediction of future article generation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and information theory, this lens builds upon early web crawling models and hierarchical document classification systems developed in the 1990s. Retrocausal Genealogy: Rooted in 4for4.com (fbba0f1480a4d9a0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 4for4.com (fbba0f1480a4d9a0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include automated crawlers seeking maximal coverage or editorial teams optimizing for user engagement, both influencing path and temporal distributions. Theory of Mind & Decision Maker Model: Rooted in 4for4.com (fbba0f1480a4d9a0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 4for4.com (fbba0f1480a4d9a0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that temporal and categorical segmentation do not overlap excessively; leakage occurs when temporal signals corrupt category kernels or vice versa. Cross-Layer Veto & Anti-Leakage Check: Rooted in 4for4.com (fbba0f1480a4d9a0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 4for4.com (fbba0f1480a4d9a0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

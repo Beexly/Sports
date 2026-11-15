@@ -1,0 +1,78 @@
+{
+  "book_id": "5f403399dcefe9e8",
+  "source_status": "COMPLETE",
+  "title": "ROUTE_SURFACE_CONTRACT",
+  "file_name": "ROUTE_SURFACE_CONTRACT.md",
+  "sha256": "5f403399dcefe9e8d0aae295d9bf5452a91de98e7d9b9125ff22d497419a97ca",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Route surface classification as a ternary state space partitioning public, internal, and protected domains under trust-invariant constraints. Universal Lens: Rooted in ROUTE_SURFACE_CONTRACT (5f403399dcefe9e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian trust inference on public route exposure using methodology freshness and uncertainty labels as probabilistic priors. GSI Mapping: Rooted in ROUTE_SURFACE_CONTRACT (5f403399dcefe9e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions across route surfaces governed by access control invariants and engine logic isolation. GSE Mapping: Rooted in ROUTE_SURFACE_CONTRACT (5f403399dcefe9e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "public_surface_classification",
+      "name": "Public Surface Classification",
+      "verbatim_quote": "This contract classifies every surface as **Public**, **Internal** (operator/admin, auth-gated), or **Protected** (engine logic — never a public route).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'surface type ∈ {Public, Internal, Protected}', 'T': 'trust context (methodology, freshness, uncertainty)'}",
+      "assumptions": "All public surfaces must carry trust context; no direct exposure of protected logic.",
+      "breakdown_regime": "When trust context is absent or invalid, surface degrades to stub state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Public surface space maps to GSI's trust-inference lattice over public data streams.",
+        "source_operator": "public_surface_classification",
+        "telemetry": "Exposure compliance rate of public route metadata."
+      }
+    },
+    {
+      "primitive_id": "internal_access_control",
+      "name": "Internal Access Control",
+      "verbatim_quote": "- **Internal**: `/cockpit/*`, `/admin/*`, `/dashboard` — operator/owner tools; must never expose protected methodology to public props/bundles.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'access level ∈ {operator, admin, owner}', 'B': 'bundle visibility (public vs private)'}",
+      "assumptions": "Internal tools are isolated from public-facing bundles.",
+      "breakdown_regime": "If protected logic leaks into public bundle, access control fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Internal access domain derived from GSE's state transition kernel with explicit denial of public exposure.",
+        "source_operator": "internal_access_control",
+        "telemetry": "Bundle leakage detection rate in public-facing assets."
+      }
+    },
+    {
+      "primitive_id": "protected_engine_logic",
+      "name": "Protected Engine Logic",
+      "verbatim_quote": "- **Protected**: scoring weights, thresholds, aggregation, prompt chains, calibration internals.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'engine logic state', 'W': 'scoring weight vector', 'T': 'threshold scalar'}",
+      "assumptions": "Protected logic remains isolated from public API and UI layers.",
+      "breakdown_regime": "If engine parameters leak into public API, integrity of inference is compromised.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Protected engine state is GSE's internal kernel invariant under public interface projection.",
+        "source_operator": "protected_engine_logic",
+        "telemetry": "Parameter leakage detection in public API responses."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5f403399dcefe9e8_t0",
+      "think": "The route surface contract defines a ternary logical partitioning of system surfaces into Public, Internal, and Protected domains. Each domain enforces distinct trust and access invariants. Public surfaces must carry trust context (methodology, freshness, uncertainty) to maintain verifiability. Internal surfaces are operator-gated and must not leak protected logic. Protected surfaces encapsulate engine internals such as weights and thresholds, which are strictly isolated. The contract ensures that public exposure is bounded by configurable flags like canExposePublicPicks and canExposeEdgeIndex, which default to closed states. Failure modes include trust context omission, logic leakage, and unauthorized exposure. These invariants form a dual structure where public transparency is balanced against internal integrity. The system's robustness depends on enforcement of these boundaries through guardrails and telemetry.\n\nDeep epistemic analysis for ROUTE_SURFACE_CONTRACT (5f403399dcefe9e8, domain=other, pages_read=2/2): Operator 'Public Surface Classification' (page 1, domain other) captures: This contract classifies every surface as **Public**, **Internal** (operator/admin, auth-gated), or **Protected** (engine logic — never a public route). Assumptions: All public surfaces must carry trust context; no direct exposure of protected logic. Breakdown regime: When trust context is absent or invalid, surface degrades to stub state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Public surface space maps to GSI's trust-inference lattice over public data streams. Operator 'Internal Access Control' (page 1, domain other) captures: - **Internal**: `/cockpit/*`, `/admin/*`, `/dashboard` — operator/owner tools; must never expose protected methodology to public props/bundles. Assumptions: Internal tools are isolated from public-facing bundles. Breakdown regime: If protected logic leaks into public bundle, access control fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Internal access domain derived from GSE's state transition kernel with explicit denial of public exposure. Operator 'Protected Engine Logic' (page 1, domain other) captures: - **Protected**: scoring weights, thresholds, aggregation, prompt chains, calibration internals. Assumptions: Protected logic remains isolated from public API and UI layers. Breakdown regime: If engine parameters leak into public API, integrity of inference is compromised. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Protected engine state is GSE's internal kernel invariant under public interface projection. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ROUTE_SURFACE_CONTRACT (5f403399dcefe9e8, domain=other, pages_read=2/2): Operator 'Public Surface Classification' (page 1, domain other) captures: This contract classifies every surface as **Public**, **Internal** (operator/admin, auth-gated), or **Protected** (engine logic — never a public route). Assumptions: All public surfaces must carry trust context; no direct exposure of protected logic. Breakdown regime: When trust context is absent or invalid, surface degrades to stub state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Public surface space maps to GSI's trust-inference lattice over public data streams. Operator 'Internal Access Control' (page 1, domain other) captures: - **Internal**: `/cockpit/*`, `/admin/*`, `/dashboard` — operator/owner tools; must never expose protected methodology to public props/bundles. Assumptions: Internal tools are isolated from public-facing bundles. Breakdown regime: If protected logic leaks into public bundle, access control fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Internal access domain derived from GSE's state transition kernel with explicit denial of public exposure. Operator 'Protected Engine Logic' (page 1, domain other) captures: - **Protected**: scoring weights, thresholds, aggregation, prompt chains, calibration internals. Assumptions: Protected logic remains isolated from public API and UI layers. Breakdown regime: If engine parameters leak into public API, integrity of inference is compromised. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Protected engine state is GSE's internal kernel invariant under public interface projection. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal access control theory and information flow security models, particularly those developed in secure multi-party computation and trusted execution environments. Retrocausal Genealogy: Rooted in ROUTE_SURFACE_CONTRACT (5f403399dcefe9e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ROUTE_SURFACE_CONTRACT (5f403399dcefe9e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious actors seeking unauthorized exposure of protected logic and system administrators aiming to maintain operational integrity while enabling public access. The model assumes adversarial intent in public exposure attempts and cooperative behavior in internal access. Theory of Mind & Decision Maker Model: Rooted in ROUTE_SURFACE_CONTRACT (5f403399dcefe9e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that public surfaces do not directly reference protected engine parameters. Leakage vetoes occur when public APIs attempt to expose internal state variables, triggering degradation to stub states. Cross-Layer Veto & Anti-Leakage Check: Rooted in ROUTE_SURFACE_CONTRACT (5f403399dcefe9e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

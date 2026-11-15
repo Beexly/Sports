@@ -597,7 +597,7 @@ def main():
                         reasoning = %s,
                         "reasoningShort" = %s,
                         "factorBreakdown" = %s,
-                        "isPublished" = true,
+                        "isPublished" = false,  -- fail-closed (L5 publication gate, 2026-11-12): manual scripts never publish
                         "isFeatured" = true,
                         "isBootstrap" = false,
                         result = 'PENDING',

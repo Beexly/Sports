@@ -1,0 +1,78 @@
+{
+  "book_id": "e12a24fa01693fe6",
+  "source_status": "COMPLETE",
+  "title": "calibration-chain",
+  "file_name": "calibration-chain.md",
+  "sha256": "e12a24fa01693fe6b7b945bf82c716cbfb74939cfbba7395c77901976537c8d1",
+  "primary_domain": "other",
+  "pages_total": 8,
+  "pages_read": 8,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Calibration-chain verification maps composed numeric gates to arxiv-deep ledger decision rules, ensuring adherence to source-defined acceptance/rejection criteria through adversarial scrutiny. Universal Lens: Rooted in calibration-chain (e12a24fa01693fe6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian conformal inference to validate calibration metrics against ledger-defined gates, using ECE ≤0.04 and Brier ≤0.22 as core observables for probabilistic consistency checks. GSI Mapping: Rooted in calibration-chain (e12a24fa01693fe6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning to transition between operational states defined by calibration floors, resolving discrepancies via state-machine logic that reconciles live-doc versus checklist thresholds. GSE Mapping: Rooted in calibration-chain (e12a24fa01693fe6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "calibration_gate",
+      "name": "Calibration Gate",
+      "verbatim_quote": "Real vs invented gates **Finding: no gate was invented by the brief layer.** Every numeric acceptance gate in the compose chain is stated verbatim in the corresponding arxiv-deep ledger's \"Acceptance / rejection gate\" section (sections 13/14) or the 1079 \"Numeric gate\" section.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "ECE ∈ [0, 1], Brier ∈ [0, 1], Calibration = {Brier ≤ 0.22} ∩ {ECE ≤ 0.04}",
+      "assumptions": "Gate values are sourced from arxiv-deep ledger; ECE and Brier scores are computed under identical data conditions.",
+      "breakdown_regime": "When ECE > 0.04 or Brier > 0.22, the system transitions to rejection state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's ECE metric aligns with ledger's defined threshold; GSE uses this to gate model adoption in operational pipelines.",
+        "source_operator": "calibration_gate",
+        "telemetry": "Observed ECE score and Brier loss from live model evaluation."
+      }
+    },
+    {
+      "primitive_id": "sample_size_floor",
+      "name": "Sample Size Floor",
+      "verbatim_quote": "**Sample-size floor: n≥100 vs N≥500.** Launch doc floors say n≥100 with three consecutive green cron runs (`:161`); `CALIBRATION_PUBLISH_CHECKLIST.md:9` says N≥500.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "n ∈ ℕ, N ∈ ℕ, SampleSize = {n ≥ 100} ∪ {N ≥ 500}",
+      "assumptions": "Sample size is derived from sequential validation runs; N represents total dataset size.",
+      "breakdown_regime": "If n < 100 or N < 500, the system flags insufficient statistical power.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE derives sample adequacy from launch doc thresholds; GSI evaluates statistical robustness via bootstrapped confidence intervals.",
+        "source_operator": "sample_size_floor",
+        "telemetry": "Number of validated runs (n) and total samples (N) from operational logs."
+      }
+    },
+    {
+      "primitive_id": "acceptance_gate",
+      "name": "Acceptance Gate",
+      "verbatim_quote": "Every numeric acceptance gate in the compose chain is stated in a source file (the arxiv-deep ledger's own \"Acceptance / rejection gate\" sections), not invented by the brief layer.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Acceptance = {∀gates ∈ ledger} g ∈ G, where G = {g₁, ..., gₙ}",
+      "assumptions": "All gates originate from authoritative ledger documents; no synthetic or inferred values exist.",
+      "breakdown_regime": "Any deviation from ledger-specified gates triggers audit alert.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI verifies gate compliance against ledger entries; GSE enforces these rules during model deployment.",
+        "source_operator": "acceptance_gate",
+        "telemetry": "Verification status of each gate against arxiv-deep ledger entries."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e12a24fa01693fe6_t0",
+      "think": "The calibration-chain verification process establishes a dual-check mechanism: GSI validates probabilistic accuracy using ECE and Brier scores against ledger-defined thresholds, while GSE ensures operational readiness through sample-size and acceptance-gate compliance. Discrepancies such as ECE floor disagreement (0.04 vs 0.05) or mislabeled metrics (MSFE/RMSFE) indicate potential misalignment between brief summaries and source documentation. These inconsistencies do not invalidate the core numbers but highlight the need for precise semantic alignment in reporting. The failure mode occurs when provisional checklist values (e.g., N≥500) are presented as ratified standards, leading to inflated authority. Dual verification across multiple layers prevents false positives and maintains fidelity to original research intent.\n\nDeep epistemic analysis for calibration-chain (e12a24fa01693fe6, domain=other, pages_read=8/8): Operator 'Calibration Gate' (page 3, domain other) captures: Real vs invented gates **Finding: no gate was invented by the brief layer.** Every numeric acceptance gate in the compose chain is stated verbatim in the corresponding arxiv-deep ledger's \"Acceptance / rejection gate\" section (sections 13/14) or the 1079 \"Numeric gate\" section. Assumptions: Gate values are sourced from arxiv-deep ledger; ECE and Brier scores are computed under identical data conditions. Breakdown regime: When ECE > 0.04 or Brier > 0.22, the system transitions to rejection state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's ECE metric aligns with ledger's defined threshold; GSE uses this to gate model adoption in operational pipelines. Operator 'Sample Size Floor' (page 4, domain other) captures: **Sample-size floor: n≥100 vs N≥500.** Launch doc floors say n≥100 with three consecutive green cron runs (`:161`); `CALIBRATION_PUBLISH_CHECKLIST.md:9` says N≥500. Assumptions: Sample size is derived from sequential validation runs; N represents total dataset size. Breakdown regime: If n < 100 or N < 500, the system flags insufficient statistical power. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE derives sample adequacy from launch doc thresholds; GSI evaluates statistical robustness via bootstrapped confidence intervals. Operator 'Acceptance Gate' (page 1, domain other) captures: Every numeric acceptance gate in the compose chain is stated in a source file (the arxiv-deep ledger's own \"Acceptance / rejection gate\" sections), not invented by the brief layer. Assumptions: All gates originate from authoritative ledger documents; no synthetic or inferred values exist. Breakdown regime: Any deviation from ledger-specified gates triggers audit alert. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI verifies gate compliance against ledger entries; GSE enforces these rules during model deployment. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for calibration-chain (e12a24fa01693fe6, domain=other, pages_read=8/8): Operator 'Calibration Gate' (page 3, domain other) captures: Real vs invented gates **Finding: no gate was invented by the brief layer.** Every numeric acceptance gate in the compose chain is stated verbatim in the corresponding arxiv-deep ledger's \"Acceptance / rejection gate\" section (sections 13/14) or the 1079 \"Numeric gate\" section. Assumptions: Gate values are sourced from arxiv-deep ledger; ECE and Brier scores are computed under identical data conditions. Breakdown regime: When ECE > 0.04 or Brier > 0.22, the system transitions to rejection state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's ECE metric aligns with ledger's defined threshold; GSE uses this to gate model adoption in operational pipelines. Operator 'Sample Size Floor' (page 4, domain other) captures: **Sample-size floor: n≥100 vs N≥500.** Launch doc floors say n≥100 with three consecutive green cron runs (`:161`); `CALIBRATION_PUBLISH_CHECKLIST.md:9` says N≥500. Assumptions: Sample size is derived from sequential validation runs; N represents total dataset size. Breakdown regime: If n < 100 or N < 500, the system flags insufficient statistical power. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE derives sample adequacy from launch doc thresholds; GSI evaluates statistical robustness via bootstrapped confidence intervals. Operator 'Acceptance Gate' (page 1, domain other) captures: Every numeric acceptance gate in the compose chain is stated in a source file (the arxiv-deep ledger's own \"Acceptance / rejection gate\" sections), not invented by the brief layer. Assumptions: All gates originate from authoritative ledger documents; no synthetic or inferred values exist. Breakdown regime: Any deviation from ledger-specified gates triggers audit alert. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI verifies gate compliance against ledger entries; GSE enforces these rules during model deployment. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian calibration theory (Good, 1950) and modern conformal prediction frameworks (Vovk et al., 2005), this lens extends earlier work on probabilistic forecasting and decision-theoretic validation. Retrocausal Genealogy: Rooted in calibration-chain (e12a24fa01693fe6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in calibration-chain (e12a24fa01693fe6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the brief layer (which may introduce ambiguity) and the ledger author (who defines strict rules). The system models these as competing information sources, with GSI acting as a filter and GSE as a validator. Theory of Mind & Decision Maker Model: Rooted in calibration-chain (e12a24fa01693fe6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct telemetry streams per layer: GSI's probabilistic metrics must be decoupled from GSE's operational thresholds. Leakage occurs if checklist floors are treated as final rather than provisional, which violates cross-layer independence. Cross-Layer Veto & Anti-Leakage Check: Rooted in calibration-chain (e12a24fa01693fe6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

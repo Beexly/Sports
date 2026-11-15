@@ -1,0 +1,95 @@
+{
+  "book_id": "434bcecfb9695597",
+  "source_status": "COMPLETE",
+  "title": "round-01-repositories",
+  "file_name": "round-01-repositories.md",
+  "sha256": "434bcecfb96955973ce330f6625476059027d7a63873e9a71786be08c782dc2c",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "version_truth",
+      "name": "Version Truth",
+      "verbatim_quote": "**Lesson applied.** Version truth lives in `expo/bundledNativeModules.json` inside the `expo` package tarball — not in a blog post, not in a tutorial, and not in this agent's training data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The package manager's internal metadata is authoritative over developer documentation.",
+      "breakdown_regime": "Semantic divergence between local development and CI/CD environments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic model updating: both are about establishing a single source of truth to avoid empirical drift.",
+        "source_operator": "version_truth",
+        "telemetry": "Hash-based integrity checks on package-lock files or tarball contents."
+      }
+    },
+    {
+      "primitive_id": "env_validation",
+      "name": "Environment Variable Validation",
+      "verbatim_quote": "**Lessons applied.** - **Envs are validated at build time, not read ad hoc.** The template fails the build on a missing `EXPO_PUBLIC_*` rather than discovering it at runtime on a customer's phone.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Critical configuration parameters must be checked early to prevent unpredictable runtime failures.",
+      "breakdown_regime": "Static analysis of environmental dependencies during compilation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state-transition logic: both enforce immediate error handling upon encountering invalid inputs to prevent system instability.",
+        "source_operator": "env_validation",
+        "telemetry": "Build-time exit codes or compile-time exceptions triggered by missing environment variables."
+      }
+    },
+    {
+      "primitive_id": "retry_policy",
+      "name": "Retry Policy Configuration",
+      "verbatim_quote": "This app reads one env var (`EXPO_PUBLIC_API_BASE_URL`) and defaults it to the canonical www host rather than failing — a deliberate divergence, because a missing API base should point at production, not brick the app.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "HTTP status codes carry semantic meaning that should drive application-level retry strategies.",
+      "breakdown_regime": "Custom error-handling logic overriding generic network retry mechanisms.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal inference framework: both involve rejecting default heuristics when the underlying distribution shifts.",
+        "source_operator": "retry_policy",
+        "telemetry": "Counters for HTTP 5xx errors with custom error codes versus generic exponential backoff attempts."
+      }
+    },
+    {
+      "primitive_id": "token_generation",
+      "name": "Token Generation System",
+      "verbatim_quote": "**Lesson applied.** The app ports from ONE file — `design-tokens.css`, which",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Design systems require a single, authoritative source to eliminate redundancy and maintain consistency.",
+      "breakdown_regime": "Centralized generation of platform-specific style artifacts from a unified definition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives from the Style Dictionary's core principle of generating consistent UI across platforms, aligning with GSE's need for reproducible state transitions.",
+        "source_operator": "token_generation",
+        "telemetry": "File hash comparisons between generated platform-specific CSS/JSON files and the original token source."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "434bcecfb9695597_t0",
+      "think": "Deep epistemic analysis for round-01-repositories (434bcecfb9695597, domain=other, pages_read=5/5): Operator 'Version Truth' (page 1, domain other) captures: **Lesson applied.** Version truth lives in `expo/bundledNativeModules.json` inside the `expo` package tarball — not in a blog post, not in a tutorial, and not in this agent's training data. Assumptions: The package manager's internal metadata is authoritative over developer documentation. Breakdown regime: Semantic divergence between local development and CI/CD environments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic model updating: both are about establishing a single source of truth to avoid empirical drift. Operator 'Environment Variable Validation' (page 1, domain other) captures: **Lessons applied.** - **Envs are validated at build time, not read ad hoc.** The template fails the build on a missing `EXPO_PUBLIC_*` rather than discovering it at runtime on a customer's phone. Assumptions: Critical configuration parameters must be checked early to prevent unpredictable runtime failures. Breakdown regime: Static analysis of environmental dependencies during compilation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition logic: both enforce immediate error handling upon encountering invalid inputs to prevent system instability. Operator 'Retry Policy Configuration' (page 1, domain other) captures: This app reads one env var (`EXPO_PUBLIC_API_BASE_URL`) and defaults it to the canonical www host rather than failing — a deliberate divergence, because a missing API base should point at production, not brick the app. Assumptions: HTTP status codes carry semantic meaning that should drive application-level retry strategies. Breakdown regime: Custom error-handling logic overriding generic network retry mechanisms. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal inference framework: both involve rejecting default heuristics when the underlying distribution shifts. Operator 'Token Generation System' (page 4, domain other) captures: **Lesson applied.** The app ports from ONE file — `design-tokens.css`, which Assumptions: Design systems require a single, authoritative source to eliminate redundancy and maintain consistency. Breakdown regime: Centralized generation of platform-specific style artifacts from a unified definition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from the Style Dictionary's core principle of generating consistent UI across platforms, aligning with GSE's need for reproducible state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for round-01-repositories (434bcecfb9695597, domain=other, pages_read=5/5): Operator 'Version Truth' (page 1, domain other) captures: **Lesson applied.** Version truth lives in `expo/bundledNativeModules.json` inside the `expo` package tarball — not in a blog post, not in a tutorial, and not in this agent's training data. Assumptions: The package manager's internal metadata is authoritative over developer documentation. Breakdown regime: Semantic divergence between local development and CI/CD environments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic model updating: both are about establishing a single source of truth to avoid empirical drift. Operator 'Environment Variable Validation' (page 1, domain other) captures: **Lessons applied.** - **Envs are validated at build time, not read ad hoc.** The template fails the build on a missing `EXPO_PUBLIC_*` rather than discovering it at runtime on a customer's phone. Assumptions: Critical configuration parameters must be checked early to prevent unpredictable runtime failures. Breakdown regime: Static analysis of environmental dependencies during compilation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition logic: both enforce immediate error handling upon encountering invalid inputs to prevent system instability. Operator 'Retry Policy Configuration' (page 1, domain other) captures: This app reads one env var (`EXPO_PUBLIC_API_BASE_URL`) and defaults it to the canonical www host rather than failing — a deliberate divergence, because a missing API base should point at production, not brick the app. Assumptions: HTTP status codes carry semantic meaning that should drive application-level retry strategies. Breakdown regime: Custom error-handling logic overriding generic network retry mechanisms. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal inference framework: both involve rejecting default heuristics when the underlying distribution shifts. Operator 'Token Generation System' (page 4, domain other) captures: **Lesson applied.** The app ports from ONE file — `design-tokens.css`, which Assumptions: Design systems require a single, authoritative source to eliminate redundancy and maintain consistency. Breakdown regime: Centralized generation of platform-specific style artifacts from a unified definition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from the Style Dictionary's core principle of generating consistent UI across platforms, aligning with GSE's need for reproducible state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Theory of Mind & Decision Maker Model: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Cross-Layer Veto & Anti-Leakage Check: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in round-01-repositories (434bcecfb9695597), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

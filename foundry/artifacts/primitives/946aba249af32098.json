@@ -1,0 +1,95 @@
+{
+  "book_id": "946aba249af32098",
+  "source_status": "COMPLETE",
+  "title": "inline-widgets",
+  "file_name": "inline-widgets.md",
+  "sha256": "946aba249af3209808ad83417ba47c2ea685e521e653f7459fcf155f013d7c39",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in inline-widgets (946aba249af32098), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in inline-widgets (946aba249af32098), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in inline-widgets (946aba249af32098), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in inline-widgets (946aba249af32098), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in inline-widgets (946aba249af32098), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in inline-widgets (946aba249af32098), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "playwright_screenshot",
+      "name": "Playwright full-page screenshot",
+      "verbatim_quote": "Screenshot it to PNG with Playwright: ```bash npx --yes playwright@1.62.1 screenshot \\ --viewport-size=1200,900 --wait-for-timeout=2000 --full-page \\ \"file://$PWD/brandkit/reviews/<board>.html\" \\ \"$PWD/brandkit/reviews/<board>.png\" ``` 2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes stable Playwright installation, sufficient viewport memory, and deterministic DOM rendering.",
+      "breakdown_regime": "Memory exhaustion or DOM mutation race conditions cause partial screenshots.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI sequential observation pipelines where temporal consistency ensures reproducible data splits for conformal prediction.",
+        "source_operator": "playwright_screenshot",
+        "telemetry": "Render time distribution and PNG file size serve as proxy metrics for computational complexity."
+      }
+    },
+    {
+      "primitive_id": "rsvg_convert",
+      "name": "Rasterize SVG to PNG",
+      "verbatim_quote": "```bash rsvg-convert --format png --width 2048 --height 2048 --keep-aspect-ratio \\ --output \"$BRANDKIT_WORKDIR/logo/candidate-1-preview.png\" \\ \"$BRANDKIT_WORKDIR/logo/candidate-1.svg\" ``` Never redraw, normalize, recolor, or otherwise alter a candidate during review.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes valid SVG input with consistent coordinate systems and no external resource dependencies.",
+      "breakdown_regime": "Invalid XML syntax or missing fonts trigger conversion failures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE state-transition systems where SVG files represent immutable configuration states, and PNG previews serve as lossy telemetry snapshots for human-in-the-loop validation.",
+        "source_operator": "rsvg_convert",
+        "telemetry": "Pixel-by-pixel image difference quantifies unintended post-processing artifacts."
+      }
+    },
+    {
+      "primitive_id": "verify_contrast",
+      "name": "Contrast readability inspection",
+      "verbatim_quote": "Verify the intended font loaded, nothing is clipped, and text/background contrast is readable.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes perceptually uniform color spaces and standardized display gamma correction.",
+      "breakdown_regime": "Low luminance contrast (<4.5:1) causes accessibility failures on mobile devices.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Establishes duality with GSI calibration metrics that enforce conformal coverage constraints through empirical quantile estimation.",
+        "source_operator": "verify_contrast",
+        "telemetry": "Automated contrast ratio measurements validate adherence to WCAG guidelines."
+      }
+    },
+    {
+      "primitive_id": "provide_paths",
+      "name": "Provide absolute file paths",
+      "verbatim_quote": "Provide the absolute HTML path as the editable review file.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes POSIX-compliant filesystem semantics and stable working directory contexts.",
+      "breakdown_regime": "Relative path resolution fails across异地ynchronous build environments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE persistent state storage where absolute URIs anchor configuration metadata for reproducible system resets.",
+        "source_operator": "provide_paths",
+        "telemetry": "Path resolution success rate indicates filesystem integrity."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "946aba249af32098_t0",
+      "think": "These primitives form a compositional pipeline for deterministic visual audit trails. The core challenge is ensuring that rendered outputs faithfully reflect source code changes while remaining human-interpretable. This necessitates a blend of symbolic verification (DOM structure) and numerical evaluation (contrast ratios). In GSI, this maps to sequential data splitting where each split must be independently reproducible to maintain exchangeability for conformal inference. In GSE, it mirrors state-transition systems where configuration files transition to runtime states via lossy encoding steps. Failure modes include divergent rendering due to dependency version skew or environmental variable conflicts, which can be mitigated by locking dependencies and using containerized execution sandboxes.\n\nDeep epistemic analysis for inline-widgets (946aba249af32098, domain=other, pages_read=1/1): Operator 'Playwright full-page screenshot' (page 1, domain other) captures: Screenshot it to PNG with Playwright: ```bash npx --yes playwright@1.62.1 screenshot \\ --viewport-size=1200,900 --wait-for-timeout=2000 --full-page \\ \"file://$PWD/brandkit/reviews/<board>.html\" \\ \"$PWD/brandkit/reviews/<board>.png\" ``` 2. Assumptions: Assumes stable Playwright installation, sufficient viewport memory, and deterministic DOM rendering. Breakdown regime: Memory exhaustion or DOM mutation race conditions cause partial screenshots. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI sequential observation pipelines where temporal consistency ensures reproducible data splits for conformal prediction. Operator 'Rasterize SVG to PNG' (page 1, domain other) captures: ```bash rsvg-convert --format png --width 2048 --height 2048 --keep-aspect-ratio \\ --output \"$BRANDKIT_WORKDIR/logo/candidate-1-preview.png\" \\ \"$BRANDKIT_WORKDIR/logo/candidate-1.svg\" ``` Never redraw, normalize, recolor, or otherwise alter a candidate during review. Assumptions: Assumes valid SVG input with consistent coordinate systems and no external resource dependencies. Breakdown regime: Invalid XML syntax or missing fonts trigger conversion failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition systems where SVG files represent immutable configuration states, and PNG previews serve as lossy telemetry snapshots for human-in-the-loop validation. Operator 'Contrast readability inspection' (page 1, domain other) captures: Verify the intended font loaded, nothing is clipped, and text/background contrast is readable. Assumptions: Assumes perceptually uniform color spaces and standardized display gamma correction. Breakdown regime: Low luminance contrast (<4.5:1) causes accessibility failures on mobile devices. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Establishes duality with GSI calibration metrics that enforce conformal coverage constraints through empirical quantile estimation. Operator 'Provide absolute file paths' (page 1, domain other) captures: Provide the absolute HTML path as the editable review file. Assumptions: Assumes POSIX-compliant filesystem semantics and stable working directory contexts. Breakdown regime: Relative path resolution fails across异地ynchronous build environments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE persistent state storage where absolute URIs anchor configuration metadata for reproducible system resets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for inline-widgets (946aba249af32098, domain=other, pages_read=1/1): Operator 'Playwright full-page screenshot' (page 1, domain other) captures: Screenshot it to PNG with Playwright: ```bash npx --yes playwright@1.62.1 screenshot \\ --viewport-size=1200,900 --wait-for-timeout=2000 --full-page \\ \"file://$PWD/brandkit/reviews/<board>.html\" \\ \"$PWD/brandkit/reviews/<board>.png\" ``` 2. Assumptions: Assumes stable Playwright installation, sufficient viewport memory, and deterministic DOM rendering. Breakdown regime: Memory exhaustion or DOM mutation race conditions cause partial screenshots. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI sequential observation pipelines where temporal consistency ensures reproducible data splits for conformal prediction. Operator 'Rasterize SVG to PNG' (page 1, domain other) captures: ```bash rsvg-convert --format png --width 2048 --height 2048 --keep-aspect-ratio \\ --output \"$BRANDKIT_WORKDIR/logo/candidate-1-preview.png\" \\ \"$BRANDKIT_WORKDIR/logo/candidate-1.svg\" ``` Never redraw, normalize, recolor, or otherwise alter a candidate during review. Assumptions: Assumes valid SVG input with consistent coordinate systems and no external resource dependencies. Breakdown regime: Invalid XML syntax or missing fonts trigger conversion failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition systems where SVG files represent immutable configuration states, and PNG previews serve as lossy telemetry snapshots for human-in-the-loop validation. Operator 'Contrast readability inspection' (page 1, domain other) captures: Verify the intended font loaded, nothing is clipped, and text/background contrast is readable. Assumptions: Assumes perceptually uniform color spaces and standardized display gamma correction. Breakdown regime: Low luminance contrast (<4.5:1) causes accessibility failures on mobile devices. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Establishes duality with GSI calibration metrics that enforce conformal coverage constraints through empirical quantile estimation. Operator 'Provide absolute file paths' (page 1, domain other) captures: Provide the absolute HTML path as the editable review file. Assumptions: Assumes POSIX-compliant filesystem semantics and stable working directory contexts. Breakdown regime: Relative path resolution fails across异地ynchronous build environments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE persistent state storage where absolute URIs anchor configuration metadata for reproducible system resets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in inline-widgets (946aba249af32098), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in inline-widgets (946aba249af32098), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling opposing agents reveals tension between developer convenience (relative paths, dynamic generation) and operational reliability (absolute paths, static assets). Decision actors prioritize robustness over ergonomics, treating visual consistency as critical quality assurance. Theory of Mind & Decision Maker Model: Rooted in inline-widgets (946aba249af32098), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires independent verification across layers: GSI must ensure sampling independence, GSE must prevent state leakage, and these primitives must avoid introducing hidden temporal coupling through shared filesystem caches. Cross-Layer Veto & Anti-Leakage Check: Rooted in inline-widgets (946aba249af32098), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

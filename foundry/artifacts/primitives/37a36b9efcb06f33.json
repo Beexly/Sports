@@ -1,0 +1,447 @@
+{
+  "book_id": "37a36b9efcb06f33",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_FOOTBALL_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Brill & Weisman, 'Predicting the Quarterback-MVP in the NFL', Wharton Sports Analytics Student Research Journal, July 2021 (catalog year 2022; paper dated July 2021), 7 pages. Complete student research paper: logistic regression QB-MVP classifier on nflfastR season-aggregated rank features (tot_td_rank/tot_yard_rank/win_rank/epa_rank + tot_ints), trained 2003-2016 (excl RB years), holdout 2017-2020 (100%); coefficient-sign overfitting veto; narrative/supporting-cast and voter-bias residuals (2009 Brees, 2015 Newton, 2003 McNair). Extracted faithfully (not a derivative summary). The source prints the MVP-score logistic equation, logistic function, per-season normalization, and argmax (lines 109-147) in a shifted/custom font that extracts garbled; reconstructed in labeled LaTeX and flagged. The paper uses soft-hyphenated compounds (Quarterback-MVP, player-season, hold-out) that fold to merged tokens; quotes selected from clean prose spans. Domain football matches catalog. The rank-based era-inflation-proof features, logistic-score-normalize-argmax pipeline, coefficient-sign overfitting guard, and narrative-residual humility are directly isomorphic to GSE's award/outcome prediction and model-selection layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE (the MVP award is a media vote, not a betting market).",
+  "primitives": [
+    {
+      "primitive_id": "mvp_human_voters",
+      "name": "NFL MVP chosen by 50 AP sportswriters (human judgment, not pure stats)",
+      "verbatim_quote": "The NFL MVP award is chosen each year by a panel of 50 sportswriters who are selected by the Associated Press",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The NFL MVP is chosen annually by a panel of 50 Associated Press sportswriters who base decisions not necessarily on statistics but on watching games and talking to coaches and players, motivating the question of whether a mathematical rule can describe the selection process."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Human-voter award selection is the same subjective-judgment target GSE models when predicting narrative-driven outcomes.",
+        "source_operator": "mvp_human_voters",
+        "telemetry": "MVP = 50 AP sportswriters; human judgment (games/coaches/players), not pure stats"
+      }
+    },
+    {
+      "primitive_id": "mathematical_rule_question",
+      "name": "Can a mathematical rule describe the MVP selection process?",
+      "verbatim_quote": "it is natural to wonder whether there is a mathematical rule that can describe the MVP selection process",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper's task is to create a statistical model predicting the NFL MVP, asking whether a mathematical rule can describe a selection process driven by humans who watch games and consult coaches and players rather than relying solely on statistics."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reverse-engineering a human decision rule is the same revealed-preference modeling GSE applies to voter/coach behavior.",
+        "source_operator": "mathematical_rule_question",
+        "telemetry": "goal: statistical model of MVP selection; mathematical rule behind human judgment"
+      }
+    },
+    {
+      "primitive_id": "qb_majority_79pct",
+      "name": "Since 1987 only QBs/RBs win MVP; QBs 79% (27/34) -> restrict to QBs",
+      "verbatim_quote": "Since 1987, only quarterbacks (QBs) and running backs (RBs) have won the MVP",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Since 1987 only quarterbacks and running backs have won MVP, with QBs taking 79% (27/34), so the analysis restricts to QBs; future work proposes a separate RB-MVP model plus a third model choosing between QB-MVP and RB-MVP."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The position-restriction base rate is the same prior-narrowing GSE applies before modeling a position-specific outcome.",
+        "source_operator": "qb_majority_79pct",
+        "telemetry": "since 1987 QB/RB only; QB 79%=27/34; restrict to QB; RB model future work"
+      }
+    },
+    {
+      "primitive_id": "nflfastR_season_data",
+      "name": "nflfastR play-by-play aggregated to QB-season rows + MVP indicator",
+      "verbatim_quote": "We begin by assembling a dataset of QB statistics from nflfastR",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The dataset aggregates nflfastR play-by-play data into season-level statistics, one row per QB per year, with a binary MVP indicator column (1 if the QB won MVP that year) from the award datatable; data restricted to since 2003 for modernity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Play-by-play-to-season aggregation with a binary label is the same feature-table construction GSE uses for outcome models.",
+        "source_operator": "nflfastR_season_data",
+        "telemetry": "nflfastR PBP -> QB-season rows; binary MVP indicator; since 2003"
+      }
+    },
+    {
+      "primitive_id": "binary_logistic_choice",
+      "name": "Binary MVP output -> logistic regression is the natural model",
+      "verbatim_quote": "and we have a binary output column MVP, it is natural to use logistic regression",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because the target is a binary MVP indicator, logistic regression is the natural model choice; years where RBs won (2005, 2006, 2012) are removed and QBs restricted to over 150 pass attempts."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binary-outcome logistic choice is the same model-selection-by-target-type GSE applies.",
+        "source_operator": "binary_logistic_choice",
+        "telemetry": "binary MVP -> logistic regression; drop RB years 2005/2006/2012; >150 attempts"
+      }
+    },
+    {
+      "primitive_id": "150_pass_attempt_filter",
+      "name": "Restrict to QBs with >150 pass attempts (qualifying sample)",
+      "verbatim_quote": "We also restrict ourselves to QBs with over 150 pass attempts",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The analysis restricts to QBs with over 150 pass attempts in a season to ensure a meaningful qualifying sample, yielding 432 player-seasons of training data after removing RB-MVP years."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The minimum-attempt qualifier is the same sample-eligibility threshold GSE enforces to avoid small-sample noise.",
+        "source_operator": "150_pass_attempt_filter",
+        "telemetry": ">150 pass attempts/season; 432 player-seasons; qualifying sample"
+      }
+    },
+    {
+      "primitive_id": "comparative_award_rankings",
+      "name": "MVP is comparative -> rank features, not absolute thresholds",
+      "verbatim_quote": "if you perform better than all the other QBs, then you win the MVP",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Features use within-year rankings rather than absolute numbers because the MVP is a comparative award (perform better than all other QBs to win, no absolute yard/TD threshold); the five features are tot_td_rank, tot_yard_rank, win_rank, epa_rank, and tot_ints (interceptions kept as a count)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Rank-relative-to-peers features are the same era-and-context-normalized inputs GSE uses for comparative awards.",
+        "source_operator": "comparative_award_rankings",
+        "telemetry": "MVP comparative (no absolute threshold); rank features td/yd/win/epa + INT count"
+      }
+    },
+    {
+      "primitive_id": "rankings_prevent_inflation",
+      "name": "Rankings prevent statistical inflation from corrupting the model",
+      "verbatim_quote": "rankings prevent statistical inflation from ruining our model",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A second reason for rankings is that they prevent statistical inflation from ruining the model: passing yards have inflated over 20 years, and rankings keep the model from undervaluing an earlier-era league leader relative to a later-era one."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Rank-normalization against era inflation is literally GSE's cross-era comparability fix for accumulating stats.",
+        "source_operator": "rankings_prevent_inflation",
+        "telemetry": "rankings neutralize stat inflation; cross-era comparability"
+      }
+    },
+    {
+      "primitive_id": "passing_yard_inflation",
+      "name": "Yard inflation example: Manning 2003 (4267) vs Brees 2016 (5208)",
+      "verbatim_quote": "the average number of passing yards has experienced inflation, but we don't want our model to think less of Manning in 2003",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In 2003 Peyton Manning threw for a league-high 4267 yards whereas in 2016 Drew Brees threw for a league-high 5208 yards; average passing yards have inflated over 20 years, but the model should not think less of Manning in 2003, which rankings achieve."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The concrete inflation example is the same era-adjustment evidence GSE cites for rank-based features.",
+        "source_operator": "passing_yard_inflation",
+        "telemetry": "Manning 2003 4267 yds vs Brees 2016 5208 yds (both league-high); inflation ~20yr"
+      }
+    },
+    {
+      "primitive_id": "ranking_ties_averaged",
+      "name": "Ranking: order desc, assign 1,2,3..., ties averaged (base-R rank)",
+      "verbatim_quote": "Ties in the ranking are settled by averaging",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "To rank a statistic, take the vector of all QBs' values in a season, order largest to smallest, assign positive integers 1,2,3,..., with ties settled by averaging (base-R rank function); e.g., (40,43,37,40) ranks to (2.5,1,4,2.5)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The tie-averaged ordinal transform is the same rank-encoding GSE applies to peer-relative features.",
+        "source_operator": "ranking_ties_averaged",
+        "telemetry": "rank desc 1,2,3...; ties averaged; base-R rank; (40,43,37,40)->(2.5,1,4,2.5)"
+      }
+    },
+    {
+      "primitive_id": "training_11yr_432",
+      "name": "Train 2003-2016 (excl RB years) = 11 yr, 432 player-seasons, 12 MVP",
+      "verbatim_quote": "This yields 11 years of training data. Since we restrict to QBs with at least 150 pass attempts in a given season",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Training uses 2003-2016 excluding RB-MVP years (2005/2006/2012) = 11 years; with the 150-attempt filter, 432 player-seasons remain, 12 of which are MVP player-seasons (12 not 11 because 2003 had co-MVPs Steve McNair and Peyton Manning); 2017-2020 is hold-out."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The train/holdout split with co-MVP handling is the same temporal-validation design GSE uses.",
+        "source_operator": "training_11yr_432",
+        "telemetry": "train 2003-2016 excl RB yrs = 11yr/432 seasons/12 MVP (2003 co-MVP); holdout 2017-2020"
+      }
+    },
+    {
+      "primitive_id": "touchdowns_most_important",
+      "name": "Negative rank coefficients: better rank -> higher MVP prob; TD most important",
+      "verbatim_quote": "touchdowns are the most important scoring play in football, and so MVPs should score more touchdowns than their peers",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Trained coefficients: intercept 7.749, beta_td -0.685, beta_yd -0.0401, beta_win -0.492, beta_epa -0.572, beta_int -0.263; negative rank coefficients mean a low rank-value (1,2,3 = better than peers) raises MVP probability; touchdowns are the most important scoring play so MVPs should outscore peers, and more interceptions lower MVP probability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sign-consistent coefficient interpretation is the same sanity-check GSE applies to model weights.",
+        "source_operator": "touchdowns_most_important",
+        "telemetry": "beta0 7.749/td -0.685/yd -0.0401/win -0.492/epa -0.572/int -0.263; neg rank = better = higher prob"
+      }
+    },
+    {
+      "primitive_id": "logistic_mvp_score_pipeline",
+      "name": "MVP-score = logistic(linear rank combo), normalized to sum 1, argmax selects",
+      "verbatim_quote": "the probability that quarterback q wins MVP during season s",
+      "page": 3,
+      "latex": "M_s(q) = \\frac{1}{1+e^{-(\\beta_0 + \\beta_{td}x_{td} + \\beta_{yd}x_{yd} + \\beta_{win}x_{win} + \\beta_{epa}x_{epa} + \\beta_{int}x_{int})}}, \\quad \\hat{M}_s(q)=\\frac{M_s(q)}{\\sum_r M_s(r)}, \\quad q^*(s)=\\arg\\max_q \\hat{M}_s(q)",
+      "symbol_and_unit_ledger": {
+        "M_s(q": "raw logistic MVP-score for QB q in season s [0,1]",
+        "L(z)": "logistic function 1/(1+e^-z) [dimensionless]",
+        "beta_i": "trained coefficients [per rank-unit]",
+        "x_i": "within-season rank features (td/yd/win/epa) + INT count",
+        "M_hat_s(q)": "season-normalized MVP probability [sum_q = 1]",
+        "q*(s)": "argmax selected QB-MVP"
+      },
+      "assumptions": [
+        "The MVP-score Ms(q) = L(beta0 + beta_td*x_td + beta_yd*x_yd + beta_win*x_win + beta_epa*x_epa + beta_int*x_int) where L(z)=1/(1+e^-z) is the logistic function and x are the QB's season rank features; scores are normalized per season to sum to 1 (interpretable as probability, comparable across seasons); the QB-MVP is argmax_q Ms(q). The printed equations use a shifted/custom font and are reconstructed here in labeled LaTeX.",
+        "Printed equations (source lines 109-147) reconstructed from the garbled shifted-font display plus unambiguous prose; flagged in source_note."
+      ],
+      "breakdown_regime": "rank features assume same-season peer set; normalization forces sum=1 (not calibrated individual probabilities); argmax ignores narrative/supporting-cast",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The logistic-score-then-normalize-then-argmax pipeline is the same probabilistic ranking-and-selection GSE uses for award/outcome prediction.",
+        "source_operator": "logistic_mvp_score_pipeline",
+        "telemetry": "Ms(q)=L(beta0+sum beta_i x_i); L(z)=1/(1+e^-z); normalize sum=1; argmax selects MVP"
+      }
+    },
+    {
+      "primitive_id": "normalize_across_seasons",
+      "name": "Normalize scores to sum 1 per season for cross-season comparability",
+      "verbatim_quote": "to put each season on the same scale so as to allow comparison between seasons",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "MVP-scores are normalized during each season to sum to 1 so they can be interpreted as the probability that a QB wins MVP and so each season is on the same scale, allowing comparison between seasons."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Per-season normalization is the same cohort-relative probability scaling GSE uses to compare across contexts.",
+        "source_operator": "normalize_across_seasons",
+        "telemetry": "normalize Ms(q) to sum 1 per season; probability interpretation; cross-season scale"
+      }
+    },
+    {
+      "primitive_id": "holdout_100pct",
+      "name": "Hold-out 2017-2020: correct MVP all 4 seasons (100% testing accuracy)",
+      "verbatim_quote": "Our algorithm picks the correct MVP in each of these four seasons, yielding a testing accuracy of 100%",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "On hold-out 2017-2020 the algorithm picks the correct MVP in all four seasons (100% testing accuracy); training accuracy is 8.5/11 = 77% counting 2003 as half-correct (co-MVP), wrong in 2009 (Brees over Manning) and 2015 (Palmer over Newton)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The temporal hold-out result is the same out-of-sample validation GSE requires before trusting a predictor.",
+        "source_operator": "holdout_100pct",
+        "telemetry": "holdout 2017-2020 4/4 = 100%; training 8.5/11 = 77% (2003 half); wrong 2009/2015"
+      }
+    },
+    {
+      "primitive_id": "overfitting_sign_flip",
+      "name": "Overfitting veto: extra features flip beta_yd positive (nonsensical)",
+      "verbatim_quote": "adding these features causes some of the other coefficients, including βyd, to be positive instead of negative, which is problematic",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Adding tot_games_played and cpoe_rank raises training accuracy to 9.5/11 = 86% (correctly picking 2015 Cam Newton) while retaining 100% testing accuracy, but flips some coefficients including beta_yd positive; a positive beta_yd would mean more yards (lower rank-value) associates with lower MVP probability, which makes no sense — a sign of overfitting."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The coefficient-sign sanity veto overriding an accuracy gain is literally GSE's overfitting guard: a nonsensical weight sign rejects the richer model.",
+        "source_operator": "overfitting_sign_flip",
+        "telemetry": "+games_played/cpoe_rank -> train 86% but beta_yd flips positive (nonsensical) = overfitting"
+      }
+    },
+    {
+      "primitive_id": "prefer_simpler_model",
+      "name": "Choose simpler model despite lower training accuracy (sign sanity wins)",
+      "verbatim_quote": "we decide to stick with the simpler model without these extra features, despite the lower training accuracy",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because the positive beta_yd is a sign of overfitting, the authors stick with the simpler five-feature model despite its lower training accuracy, prioritizing coefficient-sign plausibility over a training-accuracy gain."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Parsimony-over-accuracy when signs break is the same model-selection discipline GSE enforces.",
+        "source_operator": "prefer_simpler_model",
+        "telemetry": "keep simpler 5-feature model; sign plausibility > training accuracy"
+      }
+    },
+    {
+      "primitive_id": "rodgers_edges_mahomes",
+      "name": "2020: Rodgers edges Mahomes (TD/EPA/INT); yards weight small",
+      "verbatim_quote": "Aaron Rodgers edges out Patrick Mahomes by having more touchdowns, a higher EPA, and fewer interceptions",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In 2020 Aaron Rodgers edges Patrick Mahomes by more touchdowns, higher EPA, and fewer interceptions; although Mahomes has significantly more total yards, beta_yd is much smaller in magnitude than the other coefficients so total-yards rank matters less than the other features."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The coefficient-magnitude-weighted comparison is the same feature-importance reasoning GSE uses to explain a pick.",
+        "source_operator": "rodgers_edges_mahomes",
+        "telemetry": "2020 Rodgers > Mahomes (TD/EPA/INT); beta_yd small magnitude -> yards matter less"
+      }
+    },
+    {
+      "primitive_id": "manning_978_prob",
+      "name": "2013 Manning: model .978 prob matches 49/50 votes (record 5477 yd/55 TD)",
+      "verbatim_quote": "Our model gives Manning a .978 probability of winning MVP, which matches his nearly unanimous winning of the award",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Peyton Manning's record 5th MVP in 2013 (single-season records 5477 yards and 55 touchdowns, 49 of 50 votes) receives a model probability of .978, matching his nearly unanimous win — a calibration sanity check on a dominant season."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The dominant-season probability matching the vote share is the same face-validity calibration check GSE runs.",
+        "source_operator": "manning_978_prob",
+        "telemetry": "2013 Manning .978 prob ~ 49/50 votes; records 5477 yd/55 TD"
+      }
+    },
+    {
+      "primitive_id": "brees_2009_snubbed",
+      "name": "2009 model picks Brees over Manning; media agreed Brees snubbed (voter bias)",
+      "verbatim_quote": "many sources on the internet claim that Drew Brees was massively snubbed in 2009",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In 2009 the model chooses Drew Brees over actual winner Peyton Manning, and many media sources agree Brees was snubbed (Bleacher Report: 'Manning's MVP Selection Shows Prejudice Amongst Voters'); Brees was statistically superior (more TD, more yards/pass, fewer INT, higher passer rating and completion %) with a worse record by one game only because the Saints clinched the top seed early; Manning edged him as the 'darling of the NFL'."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Model-vs-voter divergence revealing media bias is the same revealed-preference-vs-narrative audit GSE performs.",
+        "source_operator": "brees_2009_snubbed",
+        "telemetry": "2009 model Brees > Manning; media 'snubbed'/voter prejudice; Brees stat-superior, record -1 (clinched early)"
+      }
+    },
+    {
+      "primitive_id": "newton_supporting_cast",
+      "name": "2015 Newton won despite worse supporting cast (narrative beyond stats)",
+      "verbatim_quote": "he had similar production to his competitors (Palmer and Brady) despite having a worse supporting cast",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In 2015 the model picks Carson Palmer first, Tom Brady second, and actual MVP Cam Newton third; Newton won for a McNair-2003-like reason — similar production to Palmer/Brady despite a worse supporting cast (top receivers Ted Ginn and Jerricho Cotchery); Coach Rivera urged looking 'beyond the numbers', and a supporting-cast-quality feature might help the model pick Newton."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The supporting-cast/narrative residual is the same unmodeled-context veto GSE flags when stats underdetermine an outcome.",
+        "source_operator": "newton_supporting_cast",
+        "telemetry": "2015 model Palmer>Brady>Newton; Newton won w/ worse cast (Ginn/Cotchery); narrative beyond stats"
+      }
+    },
+    {
+      "primitive_id": "stats_not_full_process",
+      "name": "Statistics may not account for the full MVP selection process",
+      "verbatim_quote": "it is possible that in some years, statistics don't account for the full MVP selection process",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The authors conclude that adding a supporting-cast-quality feature may help pick Newton in 2015, but alternatively in some years statistics simply do not account for the full MVP selection process — an honest acknowledgment of the irreducible narrative component in human-voter awards."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The irreducible-narrative admission is the same epistemic-humility ceiling GSE places on stat-only award models.",
+        "source_operator": "stats_not_full_process",
+        "telemetry": "stats may not fully determine MVP; supporting-cast feature or irreducible narrative"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "qbmvp2021_trace",
+      "think": "The retrocausal genealogy of this paper is the attempt to reverse-engineer a human judgment into a mathematical rule. Ryan Brill and Ryan Weisman, writing in the Wharton Sports Analytics Student Research Journal in July 2021, observe that the NFL MVP is chosen each year by a panel of 50 Associated Press sportswriters who base their decision not necessarily on statistics but on watching games and talking to coaches and players, and ask whether a mathematical rule can describe that selection process. Since 1987 only quarterbacks and running backs have won the award, with quarterbacks taking 79 percent, 27 of 34, so they restrict the analysis to quarterbacks and build a logistic regression classifier on nflfastR play-by-play data aggregated to quarterback-season rows with a binary MVP indicator. The recursive theory of mind is the feature engineering and the scoring pipeline. Because the MVP is a comparative award with no absolute threshold, the authors use within-year rankings rather than absolute numbers for total touchdowns, total yards, team wins, and expected points added, keeping interceptions as a count, and rankings also prevent statistical inflation from corrupting the model across eras, as when Manning's league-high 4267 yards in 2003 should not be valued below Brees's league-high 5208 in 2016. Ties are settled by averaging using the base-R rank function. The model is trained on 2003 to 2016 excluding the running-back years 2005, 2006, and 2012, yielding 11 years and 432 player-seasons with 12 MVP seasons because 2003 had co-MVPs, restricted to quarterbacks with over 150 pass attempts. The MVP-score is a logistic function of a linear combination of the rank features with intercept 7.749 and coefficients -0.685 for touchdowns, -0.0401 for yards, -0.492 for wins, -0.572 for EPA, and -0.263 for interceptions; scores are normalized per season to sum to one and the argmax selects the quarterback MVP. Cross-layer veto adjudication is the overfitting guard and the narrative residual. On hold-out 2017 to 2020 the model picks the correct MVP in all four seasons, 100 percent testing accuracy, against a training accuracy of 8.5 of 11, 77 percent, counting 2003 as half-correct. Adding total games played and CPOE rank raises training accuracy to 86 percent and correctly picks Cam Newton in 2015, but it flips the yards coefficient positive, which would nonsensically imply that more yards lowers MVP probability; the authors read this as overfitting and keep the simpler five-feature model despite the lower training accuracy, prioritizing coefficient-sign plausibility over an accuracy gain. The implementation invariants map directly onto GSE. Rank-relative-to-peers features are GSE's era-inflation-proof inputs; the logistic-score-normalize-argmax pipeline is GSE's probabilistic ranking-and-selection; the coefficient-sign sanity check overriding an accuracy gain is GSE's overfitting veto; and the temporal hold-out is GSE's out-of-sample validation requirement. The choice of features is itself instructive: touchdowns carry the largest magnitude coefficient at -0.685, expected points added next at -0.572, team wins at -0.492, interceptions at -0.263, and total yards a distant -0.0401, so the model rewards scoring and efficiency and team success far more than raw yardage, which is why Rodgers can edge Mahomes in 2020 despite fewer yards. The per-season normalization is a deliberate design choice that turns raw logistic outputs into a within-cohort probability distribution summing to one, making seasons comparable but explicitly not claiming that each individual score is a calibrated standalone probability. The outputs are MVP probabilities and a selected quarterback; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The 2013 Manning case, where the model's .978 probability matches his 49-of-50 votes, is a face-validity calibration check on a dominant season. The caveats close the account with the model's two failures read as evidence about voters rather than bugs. In 2009 the model picks Drew Brees over Peyton Manning, and media sources agree Brees was snubbed, statistically superior with a worse record by only one game because the Saints clinched early, Manning winning as the darling of the NFL. In 2015 the model ranks Palmer and Brady above Newton, who won with similar production but a worse supporting cast, his top receivers Ted Ginn and Jerricho Cotchery, prompting Rivera's call to look beyond the numbers. The authors conclude that a supporting-cast feature might help, but that in some years statistics simply do not account for the full MVP selection process. The invariant for GSE is to carry the rank-based logistic pipeline and its sign-sanity overfitting guard while recording the irreducible narrative component and the voter-bias residual before any quantitative reuse, treating the model's disagreement with voters as a measurement of bias rather than a failure to be patched away. The authors' proposed future work is to build a parallel running-back MVP classifier and then a third model that chooses between the quarterback and running back candidates, acknowledging that the quarterback restriction, while justified by the 79 percent base rate, excludes the running backs who occasionally win. The code is publicly available, which lets GSE audit the exact feature construction and coefficient fitting rather than trusting the reported numbers. The broader lesson for GSE is that a transparent, sign-consistent, rank-based model that openly reports its narrative failures is more trustworthy than a black-box classifier that maximizes training accuracy by absorbing spurious features, and that predicting a human-voted award is fundamentally a study of the voters as much as of the players.",
+      "retrocausal_genealogy": "Reverse-engineer human MVP judgment into a math rule. Brill & Weisman, Wharton Sports Analytics Student Research Journal, July 2021 (catalog 2022). MVP = 50 AP sportswriters (watch games/talk coaches, not pure stats). Since 1987 QB/RB only, QB 79%=27/34 -> restrict QB. nflfastR PBP -> QB-season rows + binary MVP indicator; since 2003, drop RB years 2005/2006/2012, >150 pass attempts. Comparative award -> within-year rank features (tot_td_rank/tot_yard_rank/win_rank/epa_rank) + tot_ints count; rankings prevent stat inflation (Manning 2003 4267 vs Brees 2016 5208); ties averaged (base-R rank). Train 2003-2016 excl RB = 11yr/432 player-seasons/12 MVP (2003 co-MVP McNair+Manning); holdout 2017-2020. Code github.com/snoopryan123/QBMVP.",
+      "theory_of_mind": "Logistic MVP-score Ms(q)=L(beta0+beta_td x_td+beta_yd x_yd+beta_win x_win+beta_epa x_epa+beta_int x_int), L(z)=1/(1+e^-z); beta0 7.749/td -0.685/yd -0.0401/win -0.492/epa -0.572/int -0.263 (neg rank=better=higher prob). Normalize per season sum=1 (probability, cross-season scale); argmax selects. Printed equations shifted-font reconstructed. Training acc 8.5/11=77% (2003 half; wrong 2009 Brees>Manning, 2015 Palmer>Newton); holdout 4/4=100%. +games_played/cpoe_rank -> train 9.5/11=86% (picks Newton) but beta_yd flips positive (nonsensical) = overfitting -> keep simpler model.",
+      "cross_layer_veto": "Overfitting veto: coefficient-sign plausibility overrides accuracy gain (beta_yd positive would mean more yards -> lower MVP prob, nonsense). Narrative residual: 2009 Brees stat-superior snubbed (media 'Prejudice Amongst Voters', record -1 clinched early, Manning 'darling of NFL'); 2015 Newton won w/ worse supporting cast (Ginn/Cotchery) despite model Palmer>Brady>Newton, Rivera 'look beyond the numbers'; 2003 McNair co-MVP 'you had to be there' (injuries/inferior team). 2013 Manning .978 ~ 49/50 votes (5477yd/55TD records) face-validity. 2020 Rodgers>Mahomes (TD/EPA/INT; beta_yd small). Stats may not fully determine MVP; supporting-cast feature or irreducible narrative. Future: RB-MVP model + chooser. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A logistic regression on within-year rank features (touchdowns, yards, wins, EPA, plus interception count) predicts the NFL quarterback MVP — a comparative, human-voted award — by scoring each QB with a logistic function, normalizing scores to sum to one per season, and taking the argmax; it achieves 100% hold-out accuracy (2017-2020), rejects a richer feature set whose coefficient signs turn nonsensical (overfitting), and treats its 2009/2015 misses as evidence of voter bias and irreducible narrative rather than model bugs.",
+  "gsi_mapping": "GSI treats MVP=50 AP sportswriters; QB 79%=27/34 since 1987; nflfastR PBP->QB-season + binary MVP; >150 attempts, drop 2005/2006/2012; rank features td/yd/win/epa + INT count (comparative award, inflation-proof, ties averaged base-R); train 2003-2016=11yr/432 seasons/12 MVP, holdout 2017-2020; Ms(q)=L(beta0+sum beta_i x_i), L=1/(1+e^-z), beta0 7.749/td -.685/yd -.0401/win -.492/epa -.572/int -.263; normalize sum=1, argmax; train 77%/holdout 100%; +games/cpoe -> 86% but beta_yd positive=overfitting -> simpler model; 2013 Manning .978~49/50; 2009 Brees/2015 Newton narrative residuals; equations shifted-font reconstructed.",
+  "gse_mapping": "GSE lifts the rank-based era-inflation-proof feature design, the logistic-score-normalize-argmax selection pipeline, the coefficient-sign-sanity overfitting veto (parsimony over accuracy when signs break), and the temporal hold-out validation requirement as its award/outcome prediction layer; records the irreducible-narrative ceiling, the voter-bias residual (model-vs-voter divergence as bias measurement), and the supporting-cast confound as honest limits; all outputs are MVP probabilities and a selected quarterback from media-vote data, never sportsbook lines, and a model's disagreement with human voters is read as a measurement of bias rather than a failure to patch away."
+}

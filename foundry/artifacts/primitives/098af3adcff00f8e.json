@@ -1,0 +1,95 @@
+{
+  "book_id": "098af3adcff00f8e",
+  "source_status": "COMPLETE",
+  "title": "p0422",
+  "file_name": "p0422.txt",
+  "sha256": "098af3adcff00f8e76b3d47c9f6faf91f443441e13a83c60544da566c77e98b1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The present system assumes behavior-determinants (capacities, immanent determinants, behavior-adjustments) as sovereign primitives, unified through hierarchical dependencies on external stimuli, physiology, heredity, and training. This contrasts with individual, normative, and complete psychologies that treat variables differently.",
+  "gsi_mapping": "Bayesian networks model behavior-determinants as latent variables with conditional probability distributions, enabling conformal prediction intervals for behavioral outcomes under different stimulus conditions. GSI Mapping: Rooted in p0422 (098af3adcff00f8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition graphs represent behavior-adjustments as actions mapping current behavioral states to successor states, governed by initiating physiological triggers, hereditary constraints, and learned response probabilities. GSE Mapping: Rooted in p0422 (098af3adcff00f8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "behavior_determinants",
+      "name": "Behavior-Determinant Dependencies",
+      "verbatim_quote": "The Variables Assumed by the Present System to be Compared with Those Assumed by Other Šystems E wish now to summarize all the variables and interrelationships which have been assumed.",
+      "page": 1,
+      "latex": "$B = f(C, I, A)$",
+      "symbol_and_unit_ledger": "{'B': 'Behavior (dimensionless)', 'C': 'Capacities (dimensionless)', 'I': 'Immanent Determinants (dimensionless)', 'A': 'Behavior-Adjustments (dimensionless)', 'S': 'Stimuli (dimensionless)', 'P_T': 'Past Training (dimensionless)', 'H': 'Heredity (dimensionless)', 'O': 'Physiological State (dimensionless)'}",
+      "assumptions": "Hierarchical causality, bounded rationality, Markov blanket closure.",
+      "breakdown_regime": "Singularities occur when conditioning sets become empty or highly correlated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual representation in Hilbert spaces: behavioral outcomes as projections onto subspaces defined by determinants.",
+        "source_operator": "behavior_determinants",
+        "telemetry": "Neural population activity patterns, reaction time variances, learning curve slopes"
+      }
+    },
+    {
+      "primitive_id": "individual_psychologies",
+      "name": "Individual Differences Paradigm",
+      "verbatim_quote": "Individual Psychologies\"; \"Normative Psychologies\"; \"Complete Psychologies\" The psychologies of individual differences (\"individual psychologies\") are, of course, now most rampant.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Statistical normality, independence across subjects, additive noise models.",
+      "breakdown_regime": "Failure occurs under non-stationary environments or small sample sizes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kernel methods embed individual traits into reproducing kernel Hilbert spaces, inducing similarity metrics between subjects.",
+        "source_operator": "individual_psychologies",
+        "telemetry": "Principal component loadings, t-sne embeddings, pairwise distance matrices"
+      }
+    },
+    {
+      "primitive_id": "normative_psychologies",
+      "name": "Normative Behavioral Constraints",
+      "verbatim_quote": "Other academic psychologies can, we believe, be usefully grouped into three main varieties to be designated as—\"Individual Psychologies,\" \"Normative Psychologies\" and \"Complete Psychologies.\" Let us begin, then, by considering the sort of variables assumed by typical instances of each of these three.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Rational choice axioms, utility maximization, equilibrium constraints.",
+      "breakdown_regime": "Equilibria may be unstable under bounded rationality or strategic interaction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Game-theoretic Nash equilibria correspond to fixed points in behavioral adjustment spaces.",
+        "source_operator": "normative_psychologies",
+        "telemetry": "Strategy profile frequencies, payoff matrix recovery, equilibrium selection criteria"
+      }
+    },
+    {
+      "primitive_id": "complete_psychologies",
+      "name": "Holistic Psychological Integration",
+      "verbatim_quote": "Other academic psychologies can, we believe, be usefully grouped into three main varieties to be designated as—\"Individual Psychologies,\" \"Normative Psychologies\" and \"Complete Psychologies.\" Let us begin, then, by considering the sort of variables assumed by typical instances of each of these three.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "System dynamics, feedback loops, emergent properties from micro-level interactions.",
+      "breakdown_regime": "Complex systems exhibit phase transitions and critical slowing down near tipping points.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Information integration theory maps local neural connectivity to global conscious states via integrated information measures.",
+        "source_operator": "complete_psychologies",
+        "telemetry": "Phi-statistics from multivariate time series, network entropy gradients"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "098af3adcff00f3a",
+      "think": "The core challenge is unifying diverse psychological frameworks within a coherent mathematical structure. Purposive Behaviorism treats behavior as a function of capacities, immanent determinants, and adjustments, forming a hierarchical cascade. This differs fundamentally from individual psychology's focus on variance components and normative approaches' reliance on optimization principles. Complete psychologies attempt holistic synthesis but often lack operationalizable mechanisms. Our primitives address this gap by providing modular, mathematically rigorous building blocks that can be combined flexibly.\n\nDeep epistemic analysis for p0422 (098af3adcff00f8e, domain=other, pages_read=1/1): Operator 'Behavior-Determinant Dependencies' (page 1, domain other) captures: The Variables Assumed by the Present System to be Compared with Those Assumed by Other Šystems E wish now to summarize all the variables and interrelationships which have been assumed. Assumptions: Hierarchical causality, bounded rationality, Markov blanket closure. Breakdown regime: Singularities occur when conditioning sets become empty or highly correlated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual representation in Hilbert spaces: behavioral outcomes as projections onto subspaces defined by determinants. Operator 'Individual Differences Paradigm' (page 1, domain other) captures: Individual Psychologies\"; \"Normative Psychologies\"; \"Complete Psychologies\" The psychologies of individual differences (\"individual psychologies\") are, of course, now most rampant. Assumptions: Statistical normality, independence across subjects, additive noise models. Breakdown regime: Failure occurs under non-stationary environments or small sample sizes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kernel methods embed individual traits into reproducing kernel Hilbert spaces, inducing similarity metrics between subjects. Operator 'Normative Behavioral Constraints' (page 1, domain other) captures: Other academic psychologies can, we believe, be usefully grouped into three main varieties to be designated as—\"Individual Psychologies,\" \"Normative Psychologies\" and \"Complete Psychologies.\" Let us begin, then, by considering the sort of variables assumed by typical instances of each of these three. Assumptions: Rational choice axioms, utility maximization, equilibrium constraints. Breakdown regime: Equilibria may be unstable under bounded rationality or strategic interaction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Game-theoretic Nash equilibria correspond to fixed points in behavioral adjustment spaces. Operator 'Holistic Psychological Integration' (page 1, domain other) captures: Other academic psychologies can, we believe, be usefully grouped into three main varieties to be designated as—\"Individual Psychologies,\" \"Normative Psychologies\" and \"Complete Psychologies.\" Let us begin, then, by considering the sort of variables assumed by typical instances of each of these three. Assumptions: System dynamics, feedback loops, emergent properties from micro-level interactions. Breakdown regime: Complex systems exhibit phase transitions and critical slowing down near tipping points. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Information integration theory maps local neural connectivity to global conscious states via integrated information measures. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0422 (098af3adcff00f8e, domain=other, pages_read=1/1): Operator 'Behavior-Determinant Dependencies' (page 1, domain other) captures: The Variables Assumed by the Present System to be Compared with Those Assumed by Other Šystems E wish now to summarize all the variables and interrelationships which have been assumed. Assumptions: Hierarchical causality, bounded rationality, Markov blanket closure. Breakdown regime: Singularities occur when conditioning sets become empty or highly correlated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual representation in Hilbert spaces: behavioral outcomes as projections onto subspaces defined by determinants. Operator 'Individual Differences Paradigm' (page 1, domain other) captures: Individual Psychologies\"; \"Normative Psychologies\"; \"Complete Psychologies\" The psychologies of individual differences (\"individual psychologies\") are, of course, now most rampant. Assumptions: Statistical normality, independence across subjects, additive noise models. Breakdown regime: Failure occurs under non-stationary environments or small sample sizes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kernel methods embed individual traits into reproducing kernel Hilbert spaces, inducing similarity metrics between subjects. Operator 'Normative Behavioral Constraints' (page 1, domain other) captures: Other academic psychologies can, we believe, be usefully grouped into three main varieties to be designated as—\"Individual Psychologies,\" \"Normative Psychologies\" and \"Complete Psychologies.\" Let us begin, then, by considering the sort of variables assumed by typical instances of each of these three. Assumptions: Rational choice axioms, utility maximization, equilibrium constraints. Breakdown regime: Equilibria may be unstable under bounded rationality or strategic interaction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Game-theoretic Nash equilibria correspond to fixed points in behavioral adjustment spaces. Operator 'Holistic Psychological Integration' (page 1, domain other) captures: Other academic psychologies can, we believe, be usefully grouped into three main varieties to be designated as—\"Individual Psychologies,\" \"Normative Psychologies\" and \"Complete Psychologies.\" Let us begin, then, by considering the sort of variables assumed by typical instances of each of these three. Assumptions: System dynamics, feedback loops, emergent properties from micro-level interactions. Breakdown regime: Complex systems exhibit phase transitions and critical slowing down near tipping points. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Information integration theory maps local neural connectivity to global conscious states via integrated information measures. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The lineage traces back to von Neumann's game theory, Wiener's cybernetics, and Shannon's information theory. These foundational works introduced concepts of optimal control, feedback loops, and quantified uncertainty, which were later adapted by computational neuroscience and machine learning. Retrocausal Genealogy: Rooted in p0422 (098af3adcff00f8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "An opposing agent might argue that psychological phenomena cannot be reduced to deterministic functions due to free will or quantum indeterminacy. However, our framework accommodates stochasticity naturally through probabilistic graphical models, allowing for both deterministic tendencies and random perturbations. Theory of Mind & Decision Maker Model: Rooted in p0422 (098af3adcff00f8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent anti-collinearity, we require that each determinant captures distinct information not redundantly encoded by others. Leakage vetoes are enforced by ensuring that conditioning on one variable blocks paths through confounders, maintaining conditional independencies in the causal graph. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0422 (098af3adcff00f8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

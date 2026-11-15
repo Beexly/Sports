@@ -11,7 +11,7 @@ from typing import Any, Dict, Optional
 import numpy as np
 
 PBP_COUPLE_MIN_MEAN = 2.0
-SHOWDOWN_SALARY_FLOOR = 48000
+SHOWDOWN_SALARY_FLOOR = 48500
 SHOWDOWN_SALARY_CAP = 50000
 
 

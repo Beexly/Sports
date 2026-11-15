@@ -1,0 +1,78 @@
+{
+  "book_id": "21b75099ba9fa3cd",
+  "source_status": "COMPLETE",
+  "title": "p0033",
+  "file_name": "p0033.txt",
+  "sha256": "21b75099ba9fa3cd057ee6e1319e8a66d91d8ff2383b6fa2eee39d4b245f3f81",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Contrast perception via simultaneous induction and edge interference modulates sensory input through spatial frequency filtering and accommodation-dependent visual processing. Universal Lens: Rooted in p0033 (21b75099ba9fa3cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models perceptual contrast using probabilistic priors over edge gradients and illumination disparities, updating beliefs via evidence accumulation from dual-scrap stimuli. GSI Mapping: Rooted in p0033 (21b75099ba9fa3cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps visual state transitions through fixation duration and accommodation thresholds, triggering state changes when contrast yields to induction or edge artifacts dominate. GSE Mapping: Rooted in p0033 (21b75099ba9fa3cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "simultaneous_induction",
+      "name": "Simultaneous Induction",
+      "verbatim_quote": "By continued fixation the contrast becomes weaker and finally yields to simultaneous induction, causing the scraps to become indistinguishable from the ground.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C(t)': 'contrast intensity (dimensionless)', 't': 'fixation time (seconds)', 'I_{\\\\text{ground}}': 'background illumination (lux)'}",
+      "assumptions": "Fixed spatial frequency content, constant ambient lighting, linear temporal decay of contrast.",
+      "breakdown_regime": "t → ∞, C(t) → 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI Bayesian belief update under fixed observation model; GSE state transition to perceptual fusion.",
+        "source_operator": "simultaneous_induction",
+        "telemetry": "Change in perceptual discriminability over time"
+      }
+    },
+    {
+      "primitive_id": "edge_interference",
+      "name": "Edge Interference",
+      "verbatim_quote": "If it appears less clearly on the upper scrap, it is because of its bright and dark edges, its inequalities, its grain, etc.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{\\\\text{bright}}': 'bright edge intensity (lux)', 'E_{\\\\text{dark}}': 'dark edge intensity (lux)', 'σ': 'edge roughness (dimensionless)'}",
+      "assumptions": "Edge effects are additive and spatially localized; grain impacts local contrast sensitivity.",
+      "breakdown_regime": "σ → ∞, E_{\\text{bright}} - E_{\\text{dark}} → 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI spatial frequency filtering kernel; GSE boundary detection logic.",
+        "source_operator": "edge_interference",
+        "telemetry": "Perceptual clarity degradation due to edge disparity"
+      }
+    },
+    {
+      "primitive_id": "accommodation_dependence",
+      "name": "Accommodation Dependence",
+      "verbatim_quote": "When the accommodation is exact, there is no essential change, although then on the upper scrap the bright edge on the side toward the light, and the dark edge on the shadow side, disturb somewhat.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'accommodation level (diopters)', 'D_{\\\\text{light}}': 'illumination direction (unit vector)', 'D_{\\\\text{shadow}}': 'shadow direction (unit vector)'}",
+      "assumptions": "Accommodation is a scalar function of optical focus; directional illumination affects perceived contrast.",
+      "breakdown_regime": "A → A_{\\text{max}}, D_{\\text{light}} ⊥ D_{\\text{shadow}}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI dynamic focus adjustment; GSE gaze control feedback loop.",
+        "source_operator": "accommodation_dependence",
+        "telemetry": "Change in contrast visibility with accommodation angle"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "21b75099ba9fa3cd_t0",
+      "think": "The core mechanism involves two gray scraps positioned relative to a transparent glass pane, each subject to distinct optical influences. The first scrap lies beneath a paper layer, while the second is suspended above the glass. When a green field is introduced underneath the glass, both scraps exhibit contrast due to differential illumination. This phenomenon is governed by the interplay of simultaneous induction and edge interference. Simultaneous induction causes fading of contrast over time under sustained fixation, modeled as an exponential decay process. Edge interference introduces variability in contrast visibility based on the physical properties of the scraps' boundaries—specifically their brightness and texture. Accommodation dependence further modulates this perception by altering how the eye focuses on the stimuli, introducing directional bias in contrast interpretation. These three operators form a hierarchical system where edge interference sets initial conditions, accommodation determines the observer's perspective, and simultaneous induction governs temporal evolution. The failure mode occurs when environmental factors such as lighting inconsistency or improper positioning disrupt the controlled experimental setup, leading to unreliable data.\n\nDeep epistemic analysis for p0033 (21b75099ba9fa3cd, domain=other, pages_read=1/1): Operator 'Simultaneous Induction' (page 1, domain other) captures: By continued fixation the contrast becomes weaker and finally yields to simultaneous induction, causing the scraps to become indistinguishable from the ground. Assumptions: Fixed spatial frequency content, constant ambient lighting, linear temporal decay of contrast. Breakdown regime: t → ∞, C(t) → 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian belief update under fixed observation model; GSE state transition to perceptual fusion. Operator 'Edge Interference' (page 1, domain other) captures: If it appears less clearly on the upper scrap, it is because of its bright and dark edges, its inequalities, its grain, etc. Assumptions: Edge effects are additive and spatially localized; grain impacts local contrast sensitivity. Breakdown regime: σ → ∞, E_{\\text{bright}} - E_{\\text{dark}} → 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI spatial frequency filtering kernel; GSE boundary detection logic. Operator 'Accommodation Dependence' (page 1, domain other) captures: When the accommodation is exact, there is no essential change, although then on the upper scrap the bright edge on the side toward the light, and the dark edge on the shadow side, disturb somewhat. Assumptions: Accommodation is a scalar function of optical focus; directional illumination affects perceived contrast. Breakdown regime: A → A_{\\text{max}}, D_{\\text{light}} ⊥ D_{\\text{shadow}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI dynamic focus adjustment; GSE gaze control feedback loop. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0033 (21b75099ba9fa3cd, domain=other, pages_read=1/1): Operator 'Simultaneous Induction' (page 1, domain other) captures: By continued fixation the contrast becomes weaker and finally yields to simultaneous induction, causing the scraps to become indistinguishable from the ground. Assumptions: Fixed spatial frequency content, constant ambient lighting, linear temporal decay of contrast. Breakdown regime: t → ∞, C(t) → 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian belief update under fixed observation model; GSE state transition to perceptual fusion. Operator 'Edge Interference' (page 1, domain other) captures: If it appears less clearly on the upper scrap, it is because of its bright and dark edges, its inequalities, its grain, etc. Assumptions: Edge effects are additive and spatially localized; grain impacts local contrast sensitivity. Breakdown regime: σ → ∞, E_{\\text{bright}} - E_{\\text{dark}} → 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI spatial frequency filtering kernel; GSE boundary detection logic. Operator 'Accommodation Dependence' (page 1, domain other) captures: When the accommodation is exact, there is no essential change, although then on the upper scrap the bright edge on the side toward the light, and the dark edge on the shadow side, disturb somewhat. Assumptions: Accommodation is a scalar function of optical focus; directional illumination affects perceived contrast. Breakdown regime: A → A_{\\text{max}}, D_{\\text{light}} ⊥ D_{\\text{shadow}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI dynamic focus adjustment; GSE gaze control feedback loop. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Helmholtz's foundational work on visual perception and contrast phenomena, building upon earlier investigations into the physiological basis of sensation and neural encoding of spatial patterns. Retrocausal Genealogy: Rooted in p0033 (21b75099ba9fa3cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0033 (21b75099ba9fa3cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the observer's cognitive system attempting to distinguish the scraps, and the perceptual system's inherent tendency toward perceptual fusion under prolonged exposure. The agent's attentional control mediates between these competing processes. Theory of Mind & Decision Maker Model: Rooted in p0033 (21b75099ba9fa3cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises from conflicting interpretations between GSI's probabilistic inference engine and GSE's deterministic state machine. Leakage occurs if edge artifacts are misinterpreted as signal rather than noise, undermining both systems' reliability. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0033 (21b75099ba9fa3cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

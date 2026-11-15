@@ -57,6 +57,14 @@ export async function GET(req: Request) {
       if (pkg.windowSlot === "SUN_MAIN") {
         return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN";
       }
+      // Two-door offers: primetime pack covers the standalone night games;
+      // the Sunday full-slate pack covers every Sunday window.
+      if (pkg.windowSlot === "PRIMETIME") {
+        return w.windowSlot === "SNF" || w.windowSlot === "MNF" || w.windowSlot === "TNF";
+      }
+      if (pkg.windowSlot === "SUNDAY_FULL") {
+        return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN" || w.windowSlot === "SNF";
+      }
       return w.windowSlot === pkg.windowSlot;
     });
 
@@ -68,12 +76,17 @@ export async function GET(req: Request) {
     });
 
     if (effectiveSessionId) {
+      const isProd = process.env.NODE_ENV === "production";
       res.cookies.set(`gse_unlock_${pkg.slug}`, effectiveSessionId, {
+        httpOnly: true,
+        secure: isProd,
         path: "/",
         maxAge: 60 * 60 * 24 * 30,
         sameSite: "lax",
       });
       res.cookies.set("gse_unlock_global", effectiveSessionId, {
+        httpOnly: true,
+        secure: isProd,
         path: "/",
         maxAge: 60 * 60 * 24 * 30,
         sameSite: "lax",
@@ -83,7 +96,7 @@ export async function GET(req: Request) {
     return res;
   } catch (error) {
     return NextResponse.json(
-      { unlocked: false, error: error instanceof Error ? error.message : "Internal server error" },
+      { unlocked: false, error: "Internal server error" },
       { status: 500 },
     );
   }

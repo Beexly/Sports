@@ -91,3 +91,28 @@ test("evidence vocabulary is NOT retained in NUMERIC_SAFE_CONTEXT (the bug's exa
     );
   }
 });
+
+// --- Import/export wiring skip (2026-11-13) ---------------------------------
+// Module wiring is not rendered copy: `import { verifiedLedger } from ...`
+// must not fire the phrase pass, but a rendered claim still must.
+import { scanLine } from "./no-unsupported-performance-claims.mjs";
+
+test("import statement with evidence vocabulary is not a claim", () => {
+  const line = 'import { verifiedLedger, formatWlp } from "@/lib/ledger/verified-ledger-view";';
+  assert.deepEqual(scanLine([line], 0, FILE), []);
+});
+
+test("side-effect import is not a claim", () => {
+  assert.deepEqual(scanLine(['import "./verified-polyfill";'], 0, FILE), []);
+});
+
+test("re-export wiring is not a claim", () => {
+  const line = 'export { verifiedLedger } from "@/lib/ledger/verified-ledger-view";';
+  assert.deepEqual(scanLine([line], 0, FILE), []);
+});
+
+test("rendered verified claim still fires (skip is not over-broad)", () => {
+  const line = '<p>Our verified system wins every week.</p>';
+  const hits = scanLine([line], 0, FILE);
+  assert.ok(hits.length > 0, "rendered claim must still be flagged");
+});

@@ -1,0 +1,95 @@
+{
+  "book_id": "a83cf8dc2f42e9d6",
+  "source_status": "COMPLETE",
+  "title": "1628-drawdown-modulated-feedback-control-stock",
+  "file_name": "1628-drawdown-modulated-feedback-control-stock.md",
+  "sha256": "a83cf8dc2f42e9d66d866bc6409fa5dd35cc2e95d64470a87d7e5a80ad67c48d",
+  "primary_domain": "cs",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "nvidia-nemotron-550b:nvidia/nemotron-3-ultra-550b-a55b",
+  "ocr_rescued": false,
+  "universal_lens": "A feedback control law I(k)=γ·M(k)·V(k) with modulator M(k)=(dmax−d(k))/(1−d(k)) enforces an almost-sure hard cap on percentage drawdown d(k) by driving position size to zero as d(k)→dmax. The gain γ* is calibrated via Monte Carlo to maximize expected log-growth under the constraint, trading ~12% terminal wealth for a 5% vs 22.5% drawdown cap.",
+  "gsi_mapping": "The modulator M(k) acts as a conformal risk-control layer: given a predictive distribution over returns, it constructs a prediction set for stake size that guarantees coverage of the drawdown constraint. γ* becomes a calibration parameter learned via conformal quantile regression on historical pick returns, ensuring finite-sample validity of the drawdown cap.",
+  "gse_mapping": "GSE implements a state-transition system where bankroll drawdown d(k) is the state variable. At each slate, the actuator scales posted stakes by M(k). When d(k)≥dmax, the system enters a forced-recovery regime (stakes=0) until d(k)<dmax. γ* is tuned offline via Monte Carlo on settled picks 2024–2026, then fixed online as a constant gain.",
+  "primitives": [
+    {
+      "primitive_id": "drawdown_modulator",
+      "name": "Drawdown Modulator M(k)",
+      "verbatim_quote": "Method / model Investment rule I(k) = γ·M(k)·V(k), where V(k) is account value and M(k) = (dmax - d(k))/(1 - d(k)) is the drawdown modulator with d(k) the current percentage drawdown.",
+      "page": 1,
+      "latex": "M(k) = \\frac{d_{\\max} - d(k)}{1 - d(k)}",
+      "symbol_and_unit_ledger": "dmax: dimensionless cap [0,1); d(k): dimensionless current drawdown [0,1); M(k): dimensionless scaling factor [0,1]",
+      "assumptions": "d(k) < 1 (bankruptcy not yet occurred); dmax ∈ (0,1) preset; returns bounded so d(k) evolves continuously",
+      "breakdown_regime": "Singularity at d(k)=1 (total ruin); modulator undefined. If d(k) ≥ dmax, M(k) ≤ 0 → position zero or negative (short), requiring floor at zero.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE slate-level stake scaler: each posted stake s_i ← s_i · M(k). The modulator is the actuator for the circuit-breaker levels calibrated in 1627/1629.",
+        "source_operator": "drawdown_modulator",
+        "telemetry": "Realized max drawdown per season; fraction of slates with M(k)<0.1; terminal wealth ratio vs unconstrained Kelly"
+      }
+    },
+    {
+      "primitive_id": "investment_rule",
+      "name": "Feedback Investment Rule I(k)",
+      "verbatim_quote": "Method / model Investment rule I(k) = γ·M(k)·V(k), where V(k) is account value and M(k) = (dmax - d(k))/(1 - d(k)) is the drawdown modulator with d(k) the current percentage drawdown.",
+      "page": 1,
+      "latex": "I(k) = \\gamma \\, M(k) \\, V(k)",
+      "symbol_and_unit_ledger": "I(k): currency units (stake size); γ: dimensionless gain (Kelly-fraction multiplier); M(k): dimensionless modulator; V(k): currency units (account equity)",
+      "assumptions": "γ constant (tuned offline); V(k) > 0; M(k) ∈ [0,1]; returns bounded in [Xmin, Xmax]",
+      "breakdown_regime": "If γ·M(k) > 1, leverage > 100% → potential ruin in single step. If return distribution shifts (model risk), γ* becomes suboptimal or dangerous.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE core position-sizing kernel: total bankroll allocation = γ* · M(k) · bankroll. γ* ≈ 11.15 from TSLA Monte Carlo; GSE re-tunes on its own pick-return history.",
+        "source_operator": "investment_rule",
+        "telemetry": "Expected log-growth per slate; Kelly fraction realized; leverage ratio I(k)/V(k)"
+      }
+    },
+    {
+      "primitive_id": "drawdown_definition",
+      "name": "Percentage Drawdown d(k)",
+      "verbatim_quote": "- Assumptions: returns bounded (Xmin, Xmax known/estimated); the Monte Carlo return model matches future returns.",
+      "page": 1,
+      "latex": "d(k) = 1 - \\frac{V(k)}{\\max_{j \\le k} V(j)}",
+      "symbol_and_unit_ledger": "V(k): currency units (current equity); max_{j≤k} V(j): currency units (running peak equity); d(k): dimensionless [0,1]",
+      "assumptions": "Equity path V(j) observed without latency; peak computed over all prior steps j ≤ k",
+      "breakdown_regime": "If V(k) = 0, d(k)=1 (ruin). If data feed stalls, peak may be stale → d(k) underestimated → modulator too large → oversized stakes.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE state variable for the drawdown governor. Computed each slate from settled bankroll. Feeds directly into M(k).",
+        "source_operator": "drawdown_definition",
+        "telemetry": "Current d(k) vs dmax; time since last peak; frequency of d(k) > 0.5·dmax"
+      }
+    },
+    {
+      "primitive_id": "gain_tuning",
+      "name": "Monte Carlo Gain Calibration γ*",
+      "verbatim_quote": "The gain γ is tuned by Monte Carlo over the return distribution; the optimal γ*≈11.15 maximizes expected log-growth within the drawdown cap.",
+      "page": 1,
+      "latex": "\\gamma^* = \\arg\\max_{\\gamma} \\mathbb{E}[\\log V_T(\\gamma)] \\quad \\text{s.t.} \\quad \\max_k d(k) \\le d_{\\max} \\text{ a.s.}",
+      "symbol_and_unit_ledger": "γ: dimensionless; return distribution: empirical or parametric; T: horizon (steps); expectation over Monte Carlo paths",
+      "assumptions": "Return distribution stationary and matches future; 100,000 paths sufficient; bounded returns (Xmin, Xmax known); dmax fixed",
+      "breakdown_regime": "Non-stationarity (regime change) invalidates γ*. Small-sample model risk (60 returns in paper). Overfitting to historical path dependence.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE offline tuner: input = settled pick returns 2024–2026; output = γ* maximizing expected log-growth subject to dmax=0.20. Re-run quarterly.",
+        "source_operator": "gain_tuning",
+        "telemetry": "Out-of-sample log-growth vs in-sample; realized max drawdown vs dmax; γ* stability across re-tuning windows"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a83cf8dc2f42e9d6_t0",
+      "think": "The drawdown-modulated feedback controller constructs a state-dependent gain M(k) that vanishes linearly as the current drawdown d(k) approaches the preset cap dmax. The investment rule I(k)=γ·M(k)·V(k) is a multiplicative policy: the Kelly fraction γ is attenuated by M(k)∈[0,1]. Since d(k)=1−V(k)/max_{j≤k}V(j), the modulator can be rewritten purely in terms of equity and its running maximum: M(k)=(dmax−1+V(k)/peak)/(V(k)/peak). As V(k)→peak·(1−dmax), M(k)→0, forcing I(k)→0 almost surely under bounded returns. The gain γ* is chosen by Monte Carlo to maximize 𝔼[log V_T] subject to the almost-sure constraint max_k d(k)≤dmax. This is a constrained stochastic control problem where the constraint is enforced by the feedback law itself, not by a Lagrange multiplier. The ~12% growth cost for dmax=0.05 vs unconstrained Kelly (dmax≈0.225) quantifies the price of the hard cap. Failure modes: (1) return distribution shift invalidates γ*; (2) discrete jumps can breach dmax before M(k) reacts; (3) small-sample model risk in γ* estimation; (4) latency in peak equity calculation.\n\nDeep epistemic analysis for 1628-drawdown-modulated-feedback-control-stock (a83cf8dc2f42e9d6, domain=cs, pages_read=2/2): Operator 'Drawdown Modulator M(k)' (page 1, domain cs) captures: Method / model Investment rule I(k) = γ·M(k)·V(k), where V(k) is account value and M(k) = (dmax - d(k))/(1 - d(k)) is the drawdown modulator with d(k) the current percentage drawdown. Assumptions: d(k) < 1 (bankruptcy not yet occurred); dmax ∈ (0,1) preset; returns bounded so d(k) evolves continuously Breakdown regime: Singularity at d(k)=1 (total ruin); modulator undefined. If d(k) ≥ dmax, M(k) ≤ 0 → position zero or negative (short), requiring floor at zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE slate-level stake scaler: each posted stake s_i ← s_i · M(k). The modulator is the actuator for the circuit-breaker levels calibrated in 1627/1629. Operator 'Feedback Investment Rule I(k)' (page 1, domain cs) captures: Method / model Investment rule I(k) = γ·M(k)·V(k), where V(k) is account value and M(k) = (dmax - d(k))/(1 - d(k)) is the drawdown modulator with d(k) the current percentage drawdown. Assumptions: γ constant (tuned offline); V(k) > 0; M(k) ∈ [0,1]; returns bounded in [Xmin, Xmax] Breakdown regime: If γ·M(k) > 1, leverage > 100% → potential ruin in single step. If return distribution shifts (model risk), γ* becomes suboptimal or dangerous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE core position-sizing kernel: total bankroll allocation = γ* · M(k) · bankroll. γ* ≈ 11.15 from TSLA Monte Carlo; GSE re-tunes on its own pick-return history. Operator 'Percentage Drawdown d(k)' (page 1, domain cs) captures: - Assumptions: returns bounded (Xmin, Xmax known/estimated); the Monte Carlo return model matches future returns. Assumptions: Equity path V(j) observed without latency; peak computed over all prior steps j ≤ k Breakdown regime: If V(k) = 0, d(k)=1 (ruin). If data feed stalls, peak may be stale → d(k) underestimated → modulator too large → oversized stakes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state variable for the drawdown governor. Computed each slate from settled bankroll. Feeds directly into M(k). Operator 'Monte Carlo Gain Calibration γ*' (page 1, domain cs) captures: The gain γ is tuned by Monte Carlo over the return distribution; the optimal γ*≈11.15 maximizes expected log-growth within the drawdown cap. Assumptions: Return distribution stationary and matches future; 100,000 paths sufficient; bounded returns (Xmin, Xmax known); dmax fixed Breakdown regime: Non-stationarity (regime change) invalidates γ*. Small-sample model risk (60 returns in paper). Overfitting to historical path dependence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE offline tuner: input = settled pick returns 2024–2026; output = γ* maximizing expected log-growth subject to dmax=0.20. Re-run quarterly. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1628-drawdown-modulated-feedback-control-stock (a83cf8dc2f42e9d6, domain=cs, pages_read=2/2): Operator 'Drawdown Modulator M(k)' (page 1, domain cs) captures: Method / model Investment rule I(k) = γ·M(k)·V(k), where V(k) is account value and M(k) = (dmax - d(k))/(1 - d(k)) is the drawdown modulator with d(k) the current percentage drawdown. Assumptions: d(k) < 1 (bankruptcy not yet occurred); dmax ∈ (0,1) preset; returns bounded so d(k) evolves continuously Breakdown regime: Singularity at d(k)=1 (total ruin); modulator undefined. If d(k) ≥ dmax, M(k) ≤ 0 → position zero or negative (short), requiring floor at zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE slate-level stake scaler: each posted stake s_i ← s_i · M(k). The modulator is the actuator for the circuit-breaker levels calibrated in 1627/1629. Operator 'Feedback Investment Rule I(k)' (page 1, domain cs) captures: Method / model Investment rule I(k) = γ·M(k)·V(k), where V(k) is account value and M(k) = (dmax - d(k))/(1 - d(k)) is the drawdown modulator with d(k) the current percentage drawdown. Assumptions: γ constant (tuned offline); V(k) > 0; M(k) ∈ [0,1]; returns bounded in [Xmin, Xmax] Breakdown regime: If γ·M(k) > 1, leverage > 100% → potential ruin in single step. If return distribution shifts (model risk), γ* becomes suboptimal or dangerous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE core position-sizing kernel: total bankroll allocation = γ* · M(k) · bankroll. γ* ≈ 11.15 from TSLA Monte Carlo; GSE re-tunes on its own pick-return history. Operator 'Percentage Drawdown d(k)' (page 1, domain cs) captures: - Assumptions: returns bounded (Xmin, Xmax known/estimated); the Monte Carlo return model matches future returns. Assumptions: Equity path V(j) observed without latency; peak computed over all prior steps j ≤ k Breakdown regime: If V(k) = 0, d(k)=1 (ruin). If data feed stalls, peak may be stale → d(k) underestimated → modulator too large → oversized stakes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state variable for the drawdown governor. Computed each slate from settled bankroll. Feeds directly into M(k). Operator 'Monte Carlo Gain Calibration γ*' (page 1, domain cs) captures: The gain γ is tuned by Monte Carlo over the return distribution; the optimal γ*≈11.15 maximizes expected log-growth within the drawdown cap. Assumptions: Return distribution stationary and matches future; 100,000 paths sufficient; bounded returns (Xmin, Xmax known); dmax fixed Breakdown regime: Non-stationarity (regime change) invalidates γ*. Small-sample model risk (60 returns in paper). Overfitting to historical path dependence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE offline tuner: input = settled pick returns 2024–2026; output = γ* maximizing expected log-growth subject to dmax=0.20. Re-run quarterly. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kelly (1956) growth-optimal betting and drawdown-constrained portfolio optimization (Grossman & Zhou 1993; Chekhlov et al. 2005). The feedback modulator M(k) is a discrete-time analog of the continuous-time risk-limiting controller in Browne (1999). The Monte Carlo gain tuning follows stochastic approximation (Robbins-Monro) and simulation-based optimization (Fu 2002). Retrocausal Genealogy: Rooted in 1628-drawdown-modulated-feedback-control-stock (a83cf8dc2f42e9d6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The market is modeled as an adversarial return sequence bounded in [Xmin,Xmax] but otherwise unknown. The controller assumes the empirical distribution from 60 TSLA days is representative. An opposing agent (market regime shift) could exploit the fixed γ* by delivering returns outside the training support, causing M(k) to mis-scale. The Monte Carlo tuner assumes stationarity; a non-stationary adversary breaks the calibration.",
+      "cross_layer_veto": "Veto conditions: (1) If realized max drawdown > dmax + ε (ε=0.01), halt trading — modulator failed. (2) If γ* changes >20% between quarterly re-tunings, flag model risk — distribution shift detected. (3) If peak equity stale >2 slates (data latency), freeze stakes — d(k) unreliable. (4) If I(k)/V(k) > 1.5·γ* (leverage spike), cut positions — modulator singularity near d(k)=1."
+    }
+  ]
+}

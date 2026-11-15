@@ -1,0 +1,95 @@
+{
+  "book_id": "5cce76bfea567700",
+  "source_status": "COMPLETE",
+  "title": "wiring-backlog",
+  "file_name": "wiring-backlog.md",
+  "sha256": "5cce76bfea567700073efec7e45bfe82ef1ebf79be8fc4a17ed521ed7c9db510",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in wiring-backlog (5cce76bfea567700), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in wiring-backlog (5cce76bfea567700), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in wiring-backlog (5cce76bfea567700), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in wiring-backlog (5cce76bfea567700), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in wiring-backlog (5cce76bfea567700), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in wiring-backlog (5cce76bfea567700), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "route_win_rate",
+      "name": "Route Win Rate",
+      "verbatim_quote": "Route Win Rate **What:** WR route-win % — core input to Robbed Score, inventoried via @AjayTakes 2026-10-05 PM.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes clean NFLVERSE/charting data with accurate route classifications and tracking.",
+      "breakdown_regime": "Degenerates when route sample size is too small, leading to unreliable estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "RouteWinRate maps to GSI posterior probability of successful route execution given defender proximity and route type. It serves as a derived kernel in GSE state-transition models for receiver-targeting decisions.",
+        "source_operator": "route_win_rate",
+        "telemetry": "Observed variance in RouteWinRate across different route types and defender match-ups."
+      }
+    },
+    {
+      "primitive_id": "yards_per_route_run_yprr",
+      "name": "Yards Per Route Run",
+      "verbatim_quote": "YPRR (Yards Per Route Run) **What:** Standard WR/TE efficiency metric.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes accurate route classification and separation data from NFLVERSE/charting.",
+      "breakdown_regime": "Fails when route counts are sparse, producing noisy estimators.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "YPRR translates to a GSI efficiency parameter measuring receiver separation quality per route. In GSE, it informs state-transition probabilities for receiver-targeting during downs.",
+        "source_operator": "yards_per_route_run_yprr",
+        "telemetry": "Regression slope of receiving yards on route count, adjusted for defender proximity."
+      }
+    },
+    {
+      "primitive_id": "true_pass_set_prwr",
+      "name": "(True Pass Set variant)",
+      "verbatim_quote": "True Pass Set variant) **What:** ESPN pass-rush win rate; @ColeJacksonFB 2026-10-05 PM item 48 specifies the \"True pass set\" variant (cleaner signal).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes ESPN's cleaned pass-rush dataset without sacks or scrambles.",
+      "breakdown_regime": "Breaks down when defensive line sample sizes are insufficient for reliable win-rate estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "TruePassSetPRWR maps to a GSI defensive effectiveness measure, serving as a derived kernel in GSE quarterback-pressure state-transition models.",
+        "source_operator": "true_pass_set_prwr",
+        "telemetry": "Observed pass-rush win rates for individual defensive linemen, adjusted for opponent offensive line quality."
+      }
+    },
+    {
+      "primitive_id": "robbed_score_buy_low_signal",
+      "name": "Robbed Score — Buy-Low Signal",
+      "verbatim_quote": "Robbed Score — @AjayTakes (2026-10-05 PM, item 1) **What:** Buy-low WR composite: (Route Win Rate - TPRR) + uncatchable target % + (XFPTS - FPTS), mapped vs Separation Score.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes XFPTS and FPTS are well-calibrated fantasy projections, and separation data is accurate.",
+      "breakdown_regime": "Degenerates when fantasy point values are mispriced or when separation signals are weak.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "RobbedScoreBuyLowSignal maps to a GSI relative-value metric comparing observed receiver performance to expected performance based on route efficiency and separation. In GSE, it drives tactical targeting adjustments.",
+        "source_operator": "robbed_score_buy_low_signal",
+        "telemetry": "Residual between actual and predicted fantasy points, conditional on route efficiency and defender proximity."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5cce76bfea567700_t0",
+      "think": "These four primitives form a unified framework for receiver evaluation and quarterback-targeting within GSE. RouteWinRate and YPRR provide empirical measures of receiver skill and separation quality, while TruePassSetPRWR quantifies defensive pressure. RobbedScoreBuyLow integrates these into a predictive buy-low signal, leveraging both receiver inefficiency and defender mismatch. The primitives' failure modes—small sample sizes and mispriced fantasy values—are mitigated through hierarchical Bayesian shrinkage in GSI and conformal prediction in GSE.\n\nDeep epistemic analysis for wiring-backlog (5cce76bfea567700, domain=other, pages_read=5/5): Operator 'Route Win Rate' (page 1, domain other) captures: Route Win Rate **What:** WR route-win % — core input to Robbed Score, inventoried via @AjayTakes 2026-10-05 PM. Assumptions: Assumes clean NFLVERSE/charting data with accurate route classifications and tracking. Breakdown regime: Degenerates when route sample size is too small, leading to unreliable estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RouteWinRate maps to GSI posterior probability of successful route execution given defender proximity and route type. It serves as a derived kernel in GSE state-transition models for receiver-targeting decisions. Operator 'Yards Per Route Run' (page 1, domain other) captures: YPRR (Yards Per Route Run) **What:** Standard WR/TE efficiency metric. Assumptions: Assumes accurate route classification and separation data from NFLVERSE/charting. Breakdown regime: Fails when route counts are sparse, producing noisy estimators. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): YPRR translates to a GSI efficiency parameter measuring receiver separation quality per route. In GSE, it informs state-transition probabilities for receiver-targeting during downs. Operator '(True Pass Set variant)' (page 1, domain other) captures: True Pass Set variant) **What:** ESPN pass-rush win rate; @ColeJacksonFB 2026-10-05 PM item 48 specifies the \"True pass set\" variant (cleaner signal). Assumptions: Assumes ESPN's cleaned pass-rush dataset without sacks or scrambles. Breakdown regime: Breaks down when defensive line sample sizes are insufficient for reliable win-rate estimation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): TruePassSetPRWR maps to a GSI defensive effectiveness measure, serving as a derived kernel in GSE quarterback-pressure state-transition models. Operator 'Robbed Score — Buy-Low Signal' (page 1, domain other) captures: Robbed Score — @AjayTakes (2026-10-05 PM, item 1) **What:** Buy-low WR composite: (Route Win Rate - TPRR) + uncatchable target % + (XFPTS - FPTS), mapped vs Separation Score. Assumptions: Assumes XFPTS and FPTS are well-calibrated fantasy projections, and separation data is accurate. Breakdown regime: Degenerates when fantasy point values are mispriced or when separation signals are weak. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RobbedScoreBuyLowSignal maps to a GSI relative-value metric comparing observed receiver performance to expected performance based on route efficiency and separation. In GSE, it drives tactical targeting adjustments. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for wiring-backlog (5cce76bfea567700, domain=other, pages_read=5/5): Operator 'Route Win Rate' (page 1, domain other) captures: Route Win Rate **What:** WR route-win % — core input to Robbed Score, inventoried via @AjayTakes 2026-10-05 PM. Assumptions: Assumes clean NFLVERSE/charting data with accurate route classifications and tracking. Breakdown regime: Degenerates when route sample size is too small, leading to unreliable estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RouteWinRate maps to GSI posterior probability of successful route execution given defender proximity and route type. It serves as a derived kernel in GSE state-transition models for receiver-targeting decisions. Operator 'Yards Per Route Run' (page 1, domain other) captures: YPRR (Yards Per Route Run) **What:** Standard WR/TE efficiency metric. Assumptions: Assumes accurate route classification and separation data from NFLVERSE/charting. Breakdown regime: Fails when route counts are sparse, producing noisy estimators. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): YPRR translates to a GSI efficiency parameter measuring receiver separation quality per route. In GSE, it informs state-transition probabilities for receiver-targeting during downs. Operator '(True Pass Set variant)' (page 1, domain other) captures: True Pass Set variant) **What:** ESPN pass-rush win rate; @ColeJacksonFB 2026-10-05 PM item 48 specifies the \"True pass set\" variant (cleaner signal). Assumptions: Assumes ESPN's cleaned pass-rush dataset without sacks or scrambles. Breakdown regime: Breaks down when defensive line sample sizes are insufficient for reliable win-rate estimation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): TruePassSetPRWR maps to a GSI defensive effectiveness measure, serving as a derived kernel in GSE quarterback-pressure state-transition models. Operator 'Robbed Score — Buy-Low Signal' (page 1, domain other) captures: Robbed Score — @AjayTakes (2026-10-05 PM, item 1) **What:** Buy-low WR composite: (Route Win Rate - TPRR) + uncatchable target % + (XFPTS - FPTS), mapped vs Separation Score. Assumptions: Assumes XFPTS and FPTS are well-calibrated fantasy projections, and separation data is accurate. Breakdown regime: Degenerates when fantasy point values are mispriced or when separation signals are weak. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RobbedScoreBuyLowSignal maps to a GSI relative-value metric comparing observed receiver performance to expected performance based on route efficiency and separation. In GSE, it drives tactical targeting adjustments. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The primitives descend from NFLVERSE's foundational player-tracking data, ESPN's advanced defensive metrics, and Ajay's fantasy-analytics work. They incorporate ideas from sports-econometrics (value-based drafting) and reinforcement-learning (tactical targeting optimization). Retrocausal Genealogy: Rooted in wiring-backlog (5cce76bfea567700), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in wiring-backlog (5cce76bfea567700), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams exploit mismatches by adjusting their defensive alignments based on observed receiver tendencies. Our primitives help GSE anticipate and capitalize on these adjustments through dynamic state-representation. Theory of Mind & Decision Maker Model: Rooted in wiring-backlog (5cce76bfea567700), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Cross-layer veto occurs if the primitives leak information across training/validation splits (e.g., using future fantasy-point data) or if they collinearly inflate uncertainty estimates, causing GSI conformal intervals to lose coverage. Cross-Layer Veto & Anti-Leakage Check: Rooted in wiring-backlog (5cce76bfea567700), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -6,9 +6,9 @@ import {
   devigAllSixMethods,
   evaluateUnifiedQuantitativeArchitectureOverlay,
   mapInjuryDesignationToDropoffBucket,
+  normalPpf,
   simulateVictoryFormationRule4,
   solveNflfastrPr618NetEp,
-  normalPpf,
   studentTUpperTailDependence,
 } from "../nfl/unified-quantitative-nfl-architecture.js";
 import { evaluateZeroOrphanExpectedMetricsOverlay } from "../nfl/zero-orphan-expected-metrics-bridge.js";
@@ -96,6 +96,18 @@ describe("Unified Quantitative NFL Architecture & X/IG Sweep Wiring", () => {
 
     const direct = evaluateUnifiedQuantitativeArchitectureOverlay({ sampleRushYards: 6 });
     expect(direct.cfbdCarryLineYardsSample).toBe(5);
+  });
+
+  it("keeps Acklam normalPpf accurate across all three branches after the tuple-const fix", () => {
+    // Central branch
+    expect(normalPpf(0.5)).toBeCloseTo(0, 12);
+    expect(normalPpf(0.975)).toBeCloseTo(1.959963984540054, 8);
+    // Lower tail branch (pc < 0.02425)
+    expect(normalPpf(0.001)).toBeCloseTo(-3.090232306167813, 8);
+    // Upper tail branch (pc > 1 - 0.02425)
+    expect(normalPpf(0.999)).toBeCloseTo(3.090232306167813, 8);
+    // Symmetry
+    expect(normalPpf(0.025) + normalPpf(0.975)).toBeCloseTo(0, 8);
   });
 
   it("keeps the devig underdog diagnostic numeric and the Acklam quantile finite", () => {

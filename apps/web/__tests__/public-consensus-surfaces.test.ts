@@ -187,10 +187,11 @@ describe("public claim surface wiring (preview + dashboard + API)", () => {
     expect(dash).toMatch(/projectPublicConsensusReasoning/);
   });
 
-  it("/picks renders sealed rows only and makes no bookmaker claim", () => {
+  it("/picks renders DoctrineBoardView + verifiedLedger and makes no bookmaker claim", () => {
     const src = readFileSync(resolve(root, paths.picks), "utf8");
-    expect(src).toMatch(/sealed-board\.json/);
-    expect(src).toMatch(/publishAllowed/);
+    expect(src).toMatch(/loadDoctrineBoard/);
+    expect(src).toMatch(/DoctrineBoardView/);
+    expect(src).toMatch(/verifiedLedger/);
     expect(src).not.toMatch(/bindPublicConsensusClaim/);
     expect(src).not.toMatch(/bookmaker consensus/i);
   });

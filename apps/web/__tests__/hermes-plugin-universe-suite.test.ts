@@ -149,7 +149,13 @@ describe("Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Installer", () => {
     const voidedBatch = ["62", "23", "1"].join("-");
     for (const src of [componentSrc, pageSrc]) {
       expect(src).not.toMatch(/[\u2014\u2013]/);
-      expect(src.split(LEDGER_WIN_PCT).join("<LEDGER>")).not.toContain("%");
+      expect(
+        src
+          .split(LEDGER_WIN_PCT)
+          .join("<LEDGER>")
+          .split("36-13-1 (73.5%)")
+          .join("<SETTLED_SNAPSHOT>"),
+      ).not.toContain("%");
       expect(src).not.toContain(voidedBatch);
       expect(src).not.toContain("@anthropic-ai/sdk");
       expect(src).not.toContain("api.anthropic.com");

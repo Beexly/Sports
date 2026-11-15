@@ -1,0 +1,78 @@
+{
+  "book_id": "20cede485c8bbc27",
+  "source_status": "COMPLETE",
+  "title": "progress",
+  "file_name": "progress.md",
+  "sha256": "20cede485c8bbc2791a07f69a62b13176e8c0abc6b1c4219920426921d46820d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Vitest path resolution induces combinatorial test explosion via recursive directory traversal, violating singleton execution semantics. Universal Lens: Rooted in progress (20cede485c8bbc27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian test isolation models infer redundant test suites using exclusion priors over .worktrees, enabling conformal coverage validation. GSI Mapping: Rooted in progress (20cede485c8bbc27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning detects path ambiguity in test execution; state-transition graph updates on root config absence to prevent duplicate suite invocation. GSE Mapping: Rooted in progress (20cede485c8bbc27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "vitest_path_resolution_failure",
+      "name": "Vitest Path Resolution Failure",
+      "verbatim_quote": "When `vitest run packages/ingestion-pipeline/src/__tests__/process-sport.test.ts` is executed from root `C:\\Users\\Garrett\\Sports`, Vitest treats the path argument as a pattern match across all subdirectories.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'number of test files discovered', 'T': 'total test executions', 'P': 'path pattern matched'}",
+      "assumptions": "Path resolution operates under glob semantics without explicit exclusion rules.",
+      "breakdown_regime": "N > 1 implies combinatorial explosion of T.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The test suite execution model maps to a multi-set inclusion problem where each .worktree contributes a copy of the test file, leading to exponential growth in test count.",
+        "source_operator": "vitest_path_resolution_failure",
+        "telemetry": "Number of test files detected in .worktrees vs expected single instance."
+      }
+    },
+    {
+      "primitive_id": "default_exclude_inefficiency",
+      "name": "Default Exclude Inefficiency",
+      "verbatim_quote": "across all subdirectories. 3. Vitest's default exclude does NOT exclude `.worktrees/**`. 4. As a result, Vitest",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'exclusion rule set', 'W': 'workspace directories', 'F': 'test files in workspace'}",
+      "assumptions": "Exclusion rules are not tailored for Git worktree structures.",
+      "breakdown_regime": "E ∩ W ≠ ∅ leads to F ⊃ F_{active}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel of test discovery logic fails to filter out stale worktree artifacts due to insufficient default exclusions.",
+        "source_operator": "default_exclude_inefficiency",
+        "telemetry": "Presence of .worktrees in scan results indicates ineffective exclusion policy."
+      }
+    },
+    {
+      "primitive_id": "singleton_execution_violation",
+      "name": "Singleton Execution Violation",
+      "verbatim_quote": "As a result, Vitest found 9 copies of `process-sport.test.ts` (1 in active repo + 8 in `.worktrees/**`), executing 735 tests instead of 1 suite.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'single intended test suite', 'A': 'actual executed test suites', 'C': 'copy count of test file'}",
+      "assumptions": "Execution context assumes unique test identity per file.",
+      "breakdown_regime": "C > 1 ⇒ A ≠ S",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each test file copy corresponds to an independent execution context, violating singleton semantics required for deterministic test outcomes.",
+        "source_operator": "singleton_execution_violation",
+        "telemetry": "Test suite count discrepancy between expected and actual execution."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "20cede485c8bbc27_t0",
+      "think": "The core issue arises from Vitest's default behavior treating path arguments as glob patterns, which triggers recursive scanning through all subdirectories including .worktrees. This leads to unintended multiple test file matches, causing combinatorial explosion in test execution. The root cause lies in missing configuration (no vitest.config.ts) that would define proper excludes. The failure mode manifests as N=9 copies of a test file being discovered, resulting in T=735 total tests instead of one expected suite. This violates the principle of singleton execution, where only one logical test suite should be invoked. The mathematical structure reflects a set inclusion problem where the union of test files across worktrees expands beyond the intended scope. The system lacks a mechanism to enforce exclusion policies by default, thus allowing stale artifacts to pollute the test environment. The dual nature of this failure is both a configuration oversight and a semantic misalignment between path resolution and execution intent.\n\nDeep epistemic analysis for progress (20cede485c8bbc27, domain=other, pages_read=1/1): Operator 'Vitest Path Resolution Failure' (page 1, domain other) captures: When `vitest run packages/ingestion-pipeline/src/__tests__/process-sport.test.ts` is executed from root `C:\\Users\\Garrett\\Sports`, Vitest treats the path argument as a pattern match across all subdirectories. Assumptions: Path resolution operates under glob semantics without explicit exclusion rules. Breakdown regime: N > 1 implies combinatorial explosion of T. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The test suite execution model maps to a multi-set inclusion problem where each .worktree contributes a copy of the test file, leading to exponential growth in test count. Operator 'Default Exclude Inefficiency' (page 1, domain other) captures: across all subdirectories. 3. Vitest's default exclude does NOT exclude `.worktrees/**`. 4. As a result, Vitest Assumptions: Exclusion rules are not tailored for Git worktree structures. Breakdown regime: E ∩ W ≠ ∅ leads to F ⊃ F_{active} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of test discovery logic fails to filter out stale worktree artifacts due to insufficient default exclusions. Operator 'Singleton Execution Violation' (page 1, domain other) captures: As a result, Vitest found 9 copies of `process-sport.test.ts` (1 in active repo + 8 in `.worktrees/**`), executing 735 tests instead of 1 suite. Assumptions: Execution context assumes unique test identity per file. Breakdown regime: C > 1 ⇒ A ≠ S Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each test file copy corresponds to an independent execution context, violating singleton semantics required for deterministic test outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for progress (20cede485c8bbc27, domain=other, pages_read=1/1): Operator 'Vitest Path Resolution Failure' (page 1, domain other) captures: When `vitest run packages/ingestion-pipeline/src/__tests__/process-sport.test.ts` is executed from root `C:\\Users\\Garrett\\Sports`, Vitest treats the path argument as a pattern match across all subdirectories. Assumptions: Path resolution operates under glob semantics without explicit exclusion rules. Breakdown regime: N > 1 implies combinatorial explosion of T. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The test suite execution model maps to a multi-set inclusion problem where each .worktree contributes a copy of the test file, leading to exponential growth in test count. Operator 'Default Exclude Inefficiency' (page 1, domain other) captures: across all subdirectories. 3. Vitest's default exclude does NOT exclude `.worktrees/**`. 4. As a result, Vitest Assumptions: Exclusion rules are not tailored for Git worktree structures. Breakdown regime: E ∩ W ≠ ∅ leads to F ⊃ F_{active} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of test discovery logic fails to filter out stale worktree artifacts due to insufficient default exclusions. Operator 'Singleton Execution Violation' (page 1, domain other) captures: As a result, Vitest found 9 copies of `process-sport.test.ts` (1 in active repo + 8 in `.worktrees/**`), executing 735 tests instead of 1 suite. Assumptions: Execution context assumes unique test identity per file. Breakdown regime: C > 1 ⇒ A ≠ S Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each test file copy corresponds to an independent execution context, violating singleton semantics required for deterministic test outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Historically rooted in Unix shell globbing conventions and early CI toolchains that assumed flat project layouts. Modern test runners like Vitest inherited these defaults without sufficient awareness of complex Git workflows involving worktrees. Retrocausal Genealogy: Rooted in progress (20cede485c8bbc27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent is the developer unaware of implicit path expansion; another agent is the test runner itself, which acts according to its default configuration rather than user intent. Decision actors include the CI pipeline and local dev environment, both susceptible to misinterpretation of path semantics. Theory of Mind & Decision Maker Model: Rooted in progress (20cede485c8bbc27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that test discovery does not depend on directory structure or Git metadata unless explicitly configured. Leakage occurs when .worktrees contribute to test runs without explicit opt-in. Veto condition: any non-root path resolution must be constrained by explicit include/exclude rules. Cross-Layer Veto & Anti-Leakage Check: Rooted in progress (20cede485c8bbc27), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

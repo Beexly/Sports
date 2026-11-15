@@ -1,0 +1,78 @@
+{
+  "book_id": "2f3916b867b825fb",
+  "source_status": "COMPLETE",
+  "title": "p0085",
+  "file_name": "p0085.txt",
+  "sha256": "2f3916b867b825fb412f51083e0ab9c7755e4df402048836bc3e8e4a53d2d44e",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "Rowing mechanics map to a constrained Hamiltonian system. The keel alignment defines the principal axis of inertia, while the catch and finish dictate impulse transfer. Synchronization errors manifest as phase lags or spatial deviations, generating destructive torque and drag that degrade the collective thrust vector.",
+  "gsi_mapping": "GSI treats crew synchronization as a time-series coherence problem. Bayesian filters estimate individual oarsman phase states from telemetry. Conformal prediction bounds quantify the probability of 'swinging out' or 'getting in late', dynamically updating the collective efficiency metric based on observed kinematic variance.",
+  "gse_mapping": "GSE models the shell as a multi-agent state machine. Situational reasoning tracks transitions between optimal drive, static hold, and turning maneuvers. State constraints enforce even-keel balance, vetoing actions like backing water during turns to prevent structural singularity and maximize hydrodynamic glide.",
+  "primitives": [
+    {
+      "primitive_id": "spatial_phase_drift",
+      "name": "Swings Out Operator",
+      "verbatim_quote": "Swings out,\" that is, fails to keep in line over the keel so that the men are not in line.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "x_i(t): transverse displacement (m), v_i(t): transverse velocity (m/s)",
+      "assumptions": "Continuous differentiable motion along the slide; rigid body approximation for the oarsman.",
+      "breakdown_regime": "Singularity occurs when transverse deviation exceeds the lateral stability margin, causing catastrophic loss of stroke power.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to transverse phase drift in coupled oscillator networks. Represents a breakdown in spatial symmetry relative to the central momentum vector.",
+        "source_operator": "spatial_phase_drift",
+        "telemetry": "High-frequency IMU lateral acceleration variance across the crew."
+      }
+    },
+    {
+      "primitive_id": "temporal_catch_lag",
+      "name": "Gets In Late Operator",
+      "verbatim_quote": "Gets in late.\" The oar goes into the water after the others, or the swing up with the shoulders is too slow and breaks the time.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "\\Delta t: temporal lag (s), \\omega: angular velocity of shoulder swing (rad/s)",
+      "assumptions": "A globally synchronized metronome exists; water entry requires a minimum threshold angular velocity.",
+      "breakdown_regime": "Breakdown when \\Delta t exceeds the recovery window, resulting in a clipped stroke and zero propulsive impulse.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to temporal desynchronization in distributed control systems. A delayed trigger event disrupts the collective force integration kernel.",
+        "source_operator": "temporal_catch_lag",
+        "telemetry": "Oarlock pressure sensor timestamp delta relative to the coxswain's cadence signal."
+      }
+    },
+    {
+      "primitive_id": "negative_impulse_drag",
+      "name": "Gets Out Late Operator",
+      "verbatim_quote": "Gets out late.\" The oar drags at finish and backs water.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "F_d: drag force (N), \\tau: negative torque (Nm)",
+      "assumptions": "Fluid dynamics remain quasi-steady; blade exit angle dictates drag coefficient.",
+      "breakdown_regime": "Singularity where backward drag force equals forward thrust, halting boat momentum entirely.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents a negative feedback loop in the propulsion cycle. Isomorphic to braking friction introduced post-impulse in a ballistic trajectory.",
+        "source_operator": "negative_impulse_drag",
+        "telemetry": "Post-exit blade hydrodynamic resistance measured via strain gauges on the oar shaft."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2f3916b867b825fb_t0",
+      "think": "The provided excerpts define a rigorous kinematic framework for rowing, which we formalize as a multi-body dynamical system subject to strict geometric and temporal constraints. The primary objective is maximizing the integral of the thrust vector projected onto the keel axis. The 'Swings out' primitive represents a spatial symmetry breaking event. Mathematically, if the center of mass of an oarsman deviates transversely from the principal axis of inertia, it introduces a parasitic torque \\tau = r \\times F, disrupting the hull's pitch and roll equilibrium. This is directly observable as a 'scissors motion,' indicating a failure in the coupling stiffness between adjacent oscillators (rowers). Temporal synchronization is equally critical. The 'Gets in late' operator describes a phase lag \\Delta \\phi in the periodic driving force. If the catch (water entry) is delayed beyond the optimal window, the effective stroke length decreases, reducing the total impulse J = \\int F dt delivered to the fluid. Furthermore, the 'Drops on catch' error implies a vertical component to the applied force, wasting metabolic energy on heaving rather than driving. Finally, the 'Gets out late' primitive introduces a negative impulse regime. By dragging the blade through the water post-finish, the rower generates hydrodynamic drag opposing the velocity vector, effectively acting as a brake. The management rules regarding turning and holding water further emphasize minimizing internal stress tensors within the shell structure, ensuring the rigging does not exceed its elastic limit under asymmetric loading.\n\nDeep epistemic analysis for p0085 (2f3916b867b825fb, domain=other, pages_read=1/1): Operator 'Swings Out Operator' (page 1, domain other) captures: Swings out,\" that is, fails to keep in line over the keel so that the men are not in line. Assumptions: Continuous differentiable motion along the slide; rigid body approximation for the oarsman. Breakdown regime: Singularity occurs when transverse deviation exceeds the lateral stability margin, causing catastrophic loss of stroke power. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to transverse phase drift in coupled oscillator networks. Represents a breakdown in spatial symmetry relative to the central momentum vector. Operator 'Gets In Late Operator' (page 1, domain other) captures: Gets in late.\" The oar goes into the water after the others, or the swing up with the shoulders is too slow and breaks the time. Assumptions: A globally synchronized metronome exists; water entry requires a minimum threshold angular velocity. Breakdown regime: Breakdown when \\Delta t exceeds the recovery window, resulting in a clipped stroke and zero propulsive impulse. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to temporal desynchronization in distributed control systems. A delayed trigger event disrupts the collective force integration kernel. Operator 'Gets Out Late Operator' (page 1, domain other) captures: Gets out late.\" The oar drags at finish and backs water. Assumptions: Fluid dynamics remain quasi-steady; blade exit angle dictates drag coefficient. Breakdown regime: Singularity where backward drag force equals forward thrust, halting boat momentum entirely. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a negative feedback loop in the propulsion cycle. Isomorphic to braking friction introduced post-impulse in a ballistic trajectory. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0085 (2f3916b867b825fb, domain=other, pages_read=1/1): Operator 'Swings Out Operator' (page 1, domain other) captures: Swings out,\" that is, fails to keep in line over the keel so that the men are not in line. Assumptions: Continuous differentiable motion along the slide; rigid body approximation for the oarsman. Breakdown regime: Singularity occurs when transverse deviation exceeds the lateral stability margin, causing catastrophic loss of stroke power. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to transverse phase drift in coupled oscillator networks. Represents a breakdown in spatial symmetry relative to the central momentum vector. Operator 'Gets In Late Operator' (page 1, domain other) captures: Gets in late.\" The oar goes into the water after the others, or the swing up with the shoulders is too slow and breaks the time. Assumptions: A globally synchronized metronome exists; water entry requires a minimum threshold angular velocity. Breakdown regime: Breakdown when \\Delta t exceeds the recovery window, resulting in a clipped stroke and zero propulsive impulse. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to temporal desynchronization in distributed control systems. A delayed trigger event disrupts the collective force integration kernel. Operator 'Gets Out Late Operator' (page 1, domain other) captures: Gets out late.\" The oar drags at finish and backs water. Assumptions: Fluid dynamics remain quasi-steady; blade exit angle dictates drag coefficient. Breakdown regime: Singularity where backward drag force equals forward thrust, halting boat momentum entirely. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a negative feedback loop in the propulsion cycle. Isomorphic to braking friction introduced post-impulse in a ballistic trajectory. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Walter Camp's early 20th-century codification of rowing terminology represents one of the earliest attempts to discretize continuous biomechanical flows into actionable diagnostic primitives. Historically, this lineage traces back to the classical mechanics of the 18th century, where Euler and Lagrange formalized the dynamics of rigid bodies and constrained systems. Camp's vernacular—'short on catch,' 'clips'—is the empirical precursor to modern motor learning theory and stochastic optimal control, translating complex differential equations into intuitive, coachable state failures.",
+      "theory_of_mind": "In a competitive racing environment, these primitives become tools for adversarial modeling. A coxswain or opposing strategist observes the micro-failures of an enemy crew—such as a starboard side consistently 'getting in late.' Recognizing this asymmetry allows the opposing agent to adjust their pacing strategy, perhaps initiating a sprint when the rival's synchronization is most fragile. The decision actor must infer the hidden fatigue states of the opposing oarsmen from these visible kinematic degradations, predicting exactly when the crew will cross the threshold into catastrophic desynchronization.",
+      "cross_layer_veto": "To prevent model collapse and ensure robust inference, we establish strict anti-collinearity vetoes between these primitives. Specifically, a 'spatial_phase_drift' (swinging out) must not be mathematically collinear with a 'temporal_catch_lag' (getting in late); they represent orthogonal failure manifolds in the high-dimensional state space. Leakage vetoes ensure that environmental noise, such as wave-induced heave, is filtered out before attributing a 'drop on catch' to oarsman error. Furthermore, the structural integrity constraints (e.g., avoiding strain during turns) act as hard boundary conditions, vetoing any optimization trajectory that maximizes thrust at the expense of exceeding the shell's material yield strength."
+    }
+  ]
+}

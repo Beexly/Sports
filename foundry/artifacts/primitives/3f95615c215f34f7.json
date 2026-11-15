@@ -1,0 +1,78 @@
+{
+  "book_id": "3f95615c215f34f7",
+  "source_status": "COMPLETE",
+  "title": "sweep-2026-09-21",
+  "file_name": "sweep-2026-09-21.md",
+  "sha256": "3f95615c215f34f78aa98da7283b02b658039c64d827a1ae8d7a148db4e53e73",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Core metrics unify team strength (CFBData CORE) and player aging (Barlowe ANALYTICS) through spline-derived age curves and pressure-to-sack rate for predictive modeling. Universal Lens: Rooted in sweep-2026-09-21 (3f95615c215f34f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps CORE and age-curve derivatives to probabilistic player performance trajectories; conformal prediction bounds uncertainty in pressure-to-sack rate projections. GSI Mapping: Rooted in sweep-2026-09-21 (3f95615c215f34f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning uses CORE for team-state transitions and pressure-to-sack rate for QB risk modeling; age-curve derivatives inform roster optimization and positional fatigue. GSE Mapping: Rooted in sweep-2026-09-21 (3f95615c215f34f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "core_team_strength",
+      "name": "Core Team Strength",
+      "verbatim_quote": "**CORE (CollegeFootballData.com)** — \"Points above FBS average per 100 plays\", 25% preseason / 75% observed blend.",
+      "page": 1,
+      "latex": "\\text{CORE} = \\alpha \\cdot \\text{Preseason} + (1 - \\alpha) \\cdot \\text{Observed}",
+      "symbol_and_unit_ledger": "{'CORE': 'dimensionless points above FBS average per 100 plays', 'α': 'scalar blending factor (0.25)'}",
+      "assumptions": "Linear interpolation between preseason and observed data; FBS baseline normalization.",
+      "breakdown_regime": "Preseason data unavailable → fallback to observed only.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CORE serves as input to GSI's Bayesian team strength posterior; informs GSE's state transition probabilities for team matchups.",
+        "source_operator": "core_team_strength",
+        "telemetry": "Team-level performance deviation from FBS mean"
+      }
+    },
+    {
+      "primitive_id": "age_curve_derivative",
+      "name": "Age Curve Derivative",
+      "verbatim_quote": "**Age-curve derivatives (Barlowe ANALYTICS)** — derivative of natural-cubic-spline fitted EPA age contributions, 94% pointwise intervals.",
+      "page": 1,
+      "latex": "\\frac{d}{dt} \\text{EPA}(t) = f'(t)",
+      "symbol_and_unit_ledger": "{\"f'(t)\": 'EPA per year derivative at age t', 't': 'player age in years'}",
+      "assumptions": "Natural cubic spline fits EPA contribution over age; 94% confidence interval applies to pointwise estimates.",
+      "breakdown_regime": "Insufficient EPA data for age <18 or >35 → extrapolation invalid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI to compute player decline likelihood; GSE employs it for position-specific fatigue modeling.",
+        "source_operator": "age_curve_derivative",
+        "telemetry": "Player performance degradation rate by age"
+      }
+    },
+    {
+      "primitive_id": "pressure_to_sack_rate",
+      "name": "Pressure-to-Sack Rate",
+      "verbatim_quote": "**Pressure-to-sack rate (SumerSports, via @benlinsey_)** — \"Share of pressured dropbacks that end in a sack.\" Bryce Young: 23.3% (30 of 30, 2023) → 15.8% (10 of 31, 2024) → 12.7% (8 of 29, 2025) → 10.5% (2026, unranked, 2 games/38 pressured dropbacks).",
+      "page": 1,
+      "latex": "\\text{P/S} = \\frac{\\text{Sacks}}{\\text{Pressured Dropbacks}}",
+      "symbol_and_unit_ledger": "{'P/S': 'dimensionless ratio', 'Sacks': 'count', 'Pressured Dropbacks': 'count'}",
+      "assumptions": "Sacks are exclusively from pressured dropbacks; sample size increases with season progression.",
+      "breakdown_regime": "Sample size <5 dropbacks → unreliable estimate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's QB pressure risk model; GSE uses it for defensive scheme adjustment.",
+        "source_operator": "pressure_to_sack_rate",
+        "telemetry": "QB vulnerability to sack under pressure"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3f95615c215f34f7_t0",
+      "think": "CORE combines preseason and observed data using a weighted average to reflect evolving team strength. It is derived from raw play-by-play data normalized against FBS averages. The age curve derivative is computed from a natural cubic spline fit to EPA contributions across player ages, capturing performance trends. Its derivative identifies peak performance ages (RB: 24.53, WR: 25.33, QB: 26.67). Pressure-to-sack rate models QB durability and scheme effectiveness, with declining rates indicating improved pocket protection. Each primitive exhibits distinct failure modes: CORE lacks early-season signal, age curves assume smooth performance evolution, and P/S rate assumes consistent data quality. These primitives form a dual framework for predictive modeling: CORE for team dynamics and age curves for individual trajectory, while P/S rate provides tactical insight into QB resilience.\n\nDeep epistemic analysis for sweep-2026-09-21 (3f95615c215f34f7, domain=other, pages_read=2/2): Operator 'Core Team Strength' (page 1, domain other) captures: **CORE (CollegeFootballData.com)** — \"Points above FBS average per 100 plays\", 25% preseason / 75% observed blend. Assumptions: Linear interpolation between preseason and observed data; FBS baseline normalization. Breakdown regime: Preseason data unavailable → fallback to observed only. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CORE serves as input to GSI's Bayesian team strength posterior; informs GSE's state transition probabilities for team matchups. Operator 'Age Curve Derivative' (page 1, domain other) captures: **Age-curve derivatives (Barlowe ANALYTICS)** — derivative of natural-cubic-spline fitted EPA age contributions, 94% pointwise intervals. Assumptions: Natural cubic spline fits EPA contribution over age; 94% confidence interval applies to pointwise estimates. Breakdown regime: Insufficient EPA data for age <18 or >35 → extrapolation invalid. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to compute player decline likelihood; GSE employs it for position-specific fatigue modeling. Operator 'Pressure-to-Sack Rate' (page 1, domain other) captures: **Pressure-to-sack rate (SumerSports, via @benlinsey_)** — \"Share of pressured dropbacks that end in a sack.\" Bryce Young: 23.3% (30 of 30, 2023) → 15.8% (10 of 31, 2024) → 12.7% (8 of 29, 2025) → 10.5% (2026, unranked, 2 games/38 pressured dropbacks). Assumptions: Sacks are exclusively from pressured dropbacks; sample size increases with season progression. Breakdown regime: Sample size <5 dropbacks → unreliable estimate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's QB pressure risk model; GSE uses it for defensive scheme adjustment. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sweep-2026-09-21 (3f95615c215f34f7, domain=other, pages_read=2/2): Operator 'Core Team Strength' (page 1, domain other) captures: **CORE (CollegeFootballData.com)** — \"Points above FBS average per 100 plays\", 25% preseason / 75% observed blend. Assumptions: Linear interpolation between preseason and observed data; FBS baseline normalization. Breakdown regime: Preseason data unavailable → fallback to observed only. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CORE serves as input to GSI's Bayesian team strength posterior; informs GSE's state transition probabilities for team matchups. Operator 'Age Curve Derivative' (page 1, domain other) captures: **Age-curve derivatives (Barlowe ANALYTICS)** — derivative of natural-cubic-spline fitted EPA age contributions, 94% pointwise intervals. Assumptions: Natural cubic spline fits EPA contribution over age; 94% confidence interval applies to pointwise estimates. Breakdown regime: Insufficient EPA data for age <18 or >35 → extrapolation invalid. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to compute player decline likelihood; GSE employs it for position-specific fatigue modeling. Operator 'Pressure-to-Sack Rate' (page 1, domain other) captures: **Pressure-to-sack rate (SumerSports, via @benlinsey_)** — \"Share of pressured dropbacks that end in a sack.\" Bryce Young: 23.3% (30 of 30, 2023) → 15.8% (10 of 31, 2024) → 12.7% (8 of 29, 2025) → 10.5% (2026, unranked, 2 games/38 pressured dropbacks). Assumptions: Sacks are exclusively from pressured dropbacks; sample size increases with season progression. Breakdown regime: Sample size <5 dropbacks → unreliable estimate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's QB pressure risk model; GSE uses it for defensive scheme adjustment. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "CORE builds on traditional efficiency metrics like EPA and PYTHAGOREAN expectation. Age curve derivatives stem from spline-based regression techniques in sports analytics. Pressure-to-sack rate traces back to defensive efficiency modeling in football analytics literature. Retrocausal Genealogy: Rooted in sweep-2026-09-21 (3f95615c215f34f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include QBs adapting to defensive schemes and coaches optimizing lineups based on CORE and age profiles. GSI models these as stochastic processes, while GSE simulates real-time tactical adjustments. Theory of Mind & Decision Maker Model: Rooted in sweep-2026-09-21 (3f95615c215f34f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "CORE and age curves must not be conflated due to differing temporal scales. P/S rate should not be used without sufficient sample size. Age curves are not causally linked to performance decline but describe trends. Cross-Layer Veto & Anti-Leakage Check: Rooted in sweep-2026-09-21 (3f95615c215f34f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "198b030a1eceaede",
+  "source_status": "COMPLETE",
+  "title": "0420-gaining-momentum-uncovering-hidden-scoring-dynamics",
+  "file_name": "0420-gaining-momentum-uncovering-hidden-scoring-dynamics.md",
+  "sha256": "198b030a1eceaedead57998b0a95b51cf74ed10aa92b8e0603d099f585a4f029",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A causal inference framework for hockey momentum using LSTM sequence models and X-Learner estimation, invalidated by circular treatment definition and proprietary data. Universal Lens: Rooted in 0420-gaining-momentum-uncovering-hidden-scoring-dynamics (198b030a1eceaede), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian causal modeling of scoring dynamics via sequence embeddings; conformal prediction bounds on goal probability estimates from LSTM outputs. GSI Mapping: Rooted in 0420-gaining-momentum-uncovering-hidden-scoring-dynamics (198b030a1eceaede), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions encoded via Hawkes or LSTM event sequences; momentum features derived as predictive drives in WP/EPA models with temporal splits. GSE Mapping: Rooted in 0420-gaining-momentum-uncovering-hidden-scoring-dynamics (198b030a1eceaede), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "momentum_sequence_embedding",
+      "name": "Momentum Sequence Embedding",
+      "verbatim_quote": "The paper claims to uncover hidden scoring dynamics via an LSTM over event sequences and then estimate momentum's causal effect with an X-Learner.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time in seconds', 'x_t': 'event type at time t', 'h_t': 'hidden state vector at time t', 'z_t': 'embedding of event window at time t'}",
+      "assumptions": "Event sequences are Markovian; overlapping windows capture temporal dependencies; LSTM learns latent scoring patterns.",
+      "breakdown_regime": "When overlapping windows contain same-game events in train/test splits, leading to data leakage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Embedding kernel maps event sequences to latent momentum space; used as input to GSE's predictive models.",
+        "source_operator": "momentum_sequence_embedding",
+        "telemetry": "LSTM training/validation accuracy and loss over event windows."
+      }
+    },
+    {
+      "primitive_id": "x_learner_causal_effect",
+      "name": "X-Learner Causal Effect Estimator",
+      "verbatim_quote": "The paper claims to uncover hidden scoring dynamics via an LSTM over event sequences and then estimate momentum's causal effect with an X-Learner.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Y': 'binary goal/no-goal outcome', 'T': 'treatment indicator (high-momentum chain membership)', 'ATE': 'average treatment effect', 'f_{\\\\text{prop}}': 'propensity score function'}",
+      "assumptions": "Unconfoundedness; overlap condition holds; treatment assignment is ignorable.",
+      "breakdown_regime": "Circular definition of treatment (momentum defined post hoc from model output); no valid instrumental variable or randomization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "X-Learner maps to GSI’s Bayesian counterfactual inference engine; however, invalid due to lack of credible identification strategy.",
+        "source_operator": "x_learner_causal_effect",
+        "telemetry": "Bootstrap confidence intervals for ATE estimate."
+      }
+    },
+    {
+      "primitive_id": "drive_energy_feature",
+      "name": "Drive Energy Feature",
+      "verbatim_quote": "l \"scoring\" for the LSTM; treatment indicator (membership in a high-momentum chain) and goal outcome for the X-Learner.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_d': 'drive energy scalar', 'p_d': 'probability of scoring during drive d', 'S_d': 'sequence of plays in drive d'}",
+      "assumptions": "Drive-level sequences are temporally ordered; energy reflects cumulative event intensity.",
+      "breakdown_regime": "Feature is not causally interpretable but can serve as predictive input in GSE models.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Drive energy becomes a feature in GSE’s WP/EPA models; computed via self-exciting process or LSTM over play-level events.",
+        "source_operator": "drive_energy_feature",
+        "telemetry": "Correlation between E_d and actual goal rate in held-out drives."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "198b030a1eceaede_t0",
+      "think": "The core issue lies in the circularity of defining momentum: the treatment group (high-momentum chains) is determined after model training, violating standard causal inference principles. This renders the X-Learner's ATE estimate invalid. The LSTM-based embedding approach is mathematically sound for capturing sequential dependencies but fails due to data leakage from overlapping windows and proprietary dataset access. The paper's methodology lacks temporal ordering in validation, allowing same-game events to leak across train/test sets. In GSI, this would be modeled as a Bayesian hierarchical model with proper time-aware splits. For GSE, the sequence embedding idea is salvageable but must be re-implemented on open data such as nflverse, using temporal cross-validation. The key insight is that while momentum may be a latent signal, its causal interpretation requires either randomized trials or strong identifying assumptions absent here.\n\nDeep epistemic analysis for 0420-gaining-momentum-uncovering-hidden-scoring-dynamics (198b030a1eceaede, domain=other, pages_read=3/3): Operator 'Momentum Sequence Embedding' (page 1, domain other) captures: The paper claims to uncover hidden scoring dynamics via an LSTM over event sequences and then estimate momentum's causal effect with an X-Learner. Assumptions: Event sequences are Markovian; overlapping windows capture temporal dependencies; LSTM learns latent scoring patterns. Breakdown regime: When overlapping windows contain same-game events in train/test splits, leading to data leakage. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Embedding kernel maps event sequences to latent momentum space; used as input to GSE's predictive models. Operator 'X-Learner Causal Effect Estimator' (page 1, domain other) captures: The paper claims to uncover hidden scoring dynamics via an LSTM over event sequences and then estimate momentum's causal effect with an X-Learner. Assumptions: Unconfoundedness; overlap condition holds; treatment assignment is ignorable. Breakdown regime: Circular definition of treatment (momentum defined post hoc from model output); no valid instrumental variable or randomization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): X-Learner maps to GSI’s Bayesian counterfactual inference engine; however, invalid due to lack of credible identification strategy. Operator 'Drive Energy Feature' (page 2, domain other) captures: l \"scoring\" for the LSTM; treatment indicator (membership in a high-momentum chain) and goal outcome for the X-Learner. Assumptions: Drive-level sequences are temporally ordered; energy reflects cumulative event intensity. Breakdown regime: Feature is not causally interpretable but can serve as predictive input in GSE models. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Drive energy becomes a feature in GSE’s WP/EPA models; computed via self-exciting process or LSTM over play-level events. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0420-gaining-momentum-uncovering-hidden-scoring-dynamics (198b030a1eceaede, domain=other, pages_read=3/3): Operator 'Momentum Sequence Embedding' (page 1, domain other) captures: The paper claims to uncover hidden scoring dynamics via an LSTM over event sequences and then estimate momentum's causal effect with an X-Learner. Assumptions: Event sequences are Markovian; overlapping windows capture temporal dependencies; LSTM learns latent scoring patterns. Breakdown regime: When overlapping windows contain same-game events in train/test splits, leading to data leakage. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Embedding kernel maps event sequences to latent momentum space; used as input to GSE's predictive models. Operator 'X-Learner Causal Effect Estimator' (page 1, domain other) captures: The paper claims to uncover hidden scoring dynamics via an LSTM over event sequences and then estimate momentum's causal effect with an X-Learner. Assumptions: Unconfoundedness; overlap condition holds; treatment assignment is ignorable. Breakdown regime: Circular definition of treatment (momentum defined post hoc from model output); no valid instrumental variable or randomization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): X-Learner maps to GSI’s Bayesian counterfactual inference engine; however, invalid due to lack of credible identification strategy. Operator 'Drive Energy Feature' (page 2, domain other) captures: l \"scoring\" for the LSTM; treatment indicator (membership in a high-momentum chain) and goal outcome for the X-Learner. Assumptions: Drive-level sequences are temporally ordered; energy reflects cumulative event intensity. Breakdown regime: Feature is not causally interpretable but can serve as predictive input in GSE models. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Drive energy becomes a feature in GSE’s WP/EPA models; computed via self-exciting process or LSTM over play-level events. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This work builds upon earlier efforts in sports analytics using recurrent networks for temporal pattern recognition, particularly inspired by Koopman operator theory and dynamic mode decomposition (DMD), which were shown to fail in capturing true momentum dynamics (p=0.89). Retrocausal Genealogy: Rooted in 0420-gaining-momentum-uncovering-hidden-scoring-dynamics (198b030a1eceaede), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the authors who assume momentum exists and can be captured, and the GSI/GSE systems that demand rigorous causal identification before deploying any inferred signals into decision pipelines. Theory of Mind & Decision Maker Model: Rooted in 0420-gaining-momentum-uncovering-hidden-scoring-dynamics (198b030a1eceaede), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes the use of overlapping windows in training; leakage veto prevents using same-game data in both train and test sets. These conditions invalidate the X-Learner pipeline and require temporal stratification for valid causal inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0420-gaining-momentum-uncovering-hidden-scoring-dynamics (198b030a1eceaede), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

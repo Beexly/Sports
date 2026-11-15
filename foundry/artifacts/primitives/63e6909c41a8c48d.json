@@ -1,0 +1,78 @@
+{
+  "book_id": "63e6909c41a8c48d",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "63e6909c41a8c48d36cbabaf5c1a7cd22a775680301761138d3136e5e0e780dc",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A signed receipt system with ed25519 verification and keyring lifecycle management enables tamper-evident, policy-gated AI tool calls. Universal Lens: Rooted in README (63e6909c41a8c48d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on receipt validity uses keyring-verifiable signatures to update belief states over policy-admittance decisions. GSI Mapping: Rooted in README (63e6909c41a8c48d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions through gated tool-call states using ENFORCE mode, with state updates tracked via receipt persistence. GSE Mapping: Rooted in README (63e6909c41a8c48d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "signed_governed_receipt",
+      "name": "Signed Governed Receipt",
+      "verbatim_quote": "`createGoverned()` wraps any tool call with a policy gate, then produces a `SignedGovernedReceipt` (ed25519-signed) whether the call was admitted or refused — so every gated call leaves a durable, tamper-evident record, without the caller having to think about signing or key management.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'receipt': 'dimensionless', 'signature': 'ed25519', 'tool_call': 'dimensionless', 'policy_gate': 'boolean'}",
+      "assumptions": "Every tool call is wrapped by a policy gate; all receipts are cryptographically signed.",
+      "breakdown_regime": "When policy gate returns REFUSE, tool execution is blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each receipt corresponds to a state transition in GSE's tool-call graph, verified via GSI's Bayesian belief update on keyring status.",
+        "source_operator": "signed_governed_receipt",
+        "telemetry": "Receipt signature validation and policy decision outcome."
+      }
+    },
+    {
+      "primitive_id": "keyring_lifecycle_manager",
+      "name": "Keyring Lifecycle Manager",
+      "verbatim_quote": "A companion keyring (`packages/governed/src/keyring.ts`, `rotate-keys.ts`) manages the signing key lifecycle (rotate → retire → revoke) so old receipts stay verifiable across key rotation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'keyring': 'set of key objects', 'active_key': 'ed25519 key', 'retiring_key': 'ed25519 key', 'retired_key': 'ed25519 key'}",
+      "assumptions": "Key rotation preserves cryptographic validity of prior signatures.",
+      "breakdown_regime": "Grace period for retiring keys allows continued verification before final retirement.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Keyring state evolution in GSE supports persistent receipt verification; in GSI, it defines a time-dependent parameter space for signature trustworthiness.",
+        "source_operator": "keyring_lifecycle_manager",
+        "telemetry": "Key status changes (active, retiring, retired) and grace period expiration."
+      }
+    },
+    {
+      "primitive_id": "enforce_mode_gate",
+      "name": "Enforce Mode Gate",
+      "verbatim_quote": "The caller must explicitly set `ctx.mode = \"ENFORCE\"` to get blocking behavior.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ctx.mode': 'string', 'decision': 'ADMIT | REFUSE', 'result': '{ok: boolean, decision: string, receipt}'}",
+      "assumptions": "Explicit context flag determines whether refusal blocks execution.",
+      "breakdown_regime": "If ctx.mode ≠ ENFORCE, refusal results in non-blocking notification.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSE, enforce mode triggers state transition block; in GSI, it modifies conditional probability of tool-call acceptance.",
+        "source_operator": "enforce_mode_gate",
+        "telemetry": "Mode flag value and corresponding refusal behavior."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "63e6909c41a8c48d_t0",
+      "think": "The core structure of the system is a policy-gated tool call abstraction where each invocation yields a signed receipt. The receipt is produced regardless of admission status, ensuring full auditability. The ed25519 signature ensures integrity and non-repudiation. The keyring lifecycle ensures that even after key rotation, older receipts remain verifiable, but their trustworthiness depends on key status. The enforcement mechanism introduces a dual behavior: when ctx.mode = 'ENFORCE', refusal blocks execution; otherwise, refusal only records a negative decision. This duality creates a layered control system where policy decisions can be either advisory or binding. The system's robustness lies in its separation of concerns: signing, key management, and policy enforcement are distinct modules. Verification requires both cryptographic validation and keyring status checks, preventing use of revoked keys. The grace period for retiring keys provides operational flexibility during key transitions. The mathematical structure resembles a finite-state automaton with policy-driven transitions, where each state transition is logged and cryptographically secured.\n\nDeep epistemic analysis for README (63e6909c41a8c48d, domain=other, pages_read=2/2): Operator 'Signed Governed Receipt' (page 1, domain other) captures: `createGoverned()` wraps any tool call with a policy gate, then produces a `SignedGovernedReceipt` (ed25519-signed) whether the call was admitted or refused — so every gated call leaves a durable, tamper-evident record, without the caller having to think about signing or key management. Assumptions: Every tool call is wrapped by a policy gate; all receipts are cryptographically signed. Breakdown regime: When policy gate returns REFUSE, tool execution is blocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each receipt corresponds to a state transition in GSE's tool-call graph, verified via GSI's Bayesian belief update on keyring status. Operator 'Keyring Lifecycle Manager' (page 1, domain other) captures: A companion keyring (`packages/governed/src/keyring.ts`, `rotate-keys.ts`) manages the signing key lifecycle (rotate → retire → revoke) so old receipts stay verifiable across key rotation. Assumptions: Key rotation preserves cryptographic validity of prior signatures. Breakdown regime: Grace period for retiring keys allows continued verification before final retirement. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Keyring state evolution in GSE supports persistent receipt verification; in GSI, it defines a time-dependent parameter space for signature trustworthiness. Operator 'Enforce Mode Gate' (page 1, domain other) captures: The caller must explicitly set `ctx.mode = \"ENFORCE\"` to get blocking behavior. Assumptions: Explicit context flag determines whether refusal blocks execution. Breakdown regime: If ctx.mode ≠ ENFORCE, refusal results in non-blocking notification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSE, enforce mode triggers state transition block; in GSI, it modifies conditional probability of tool-call acceptance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (63e6909c41a8c48d, domain=other, pages_read=2/2): Operator 'Signed Governed Receipt' (page 1, domain other) captures: `createGoverned()` wraps any tool call with a policy gate, then produces a `SignedGovernedReceipt` (ed25519-signed) whether the call was admitted or refused — so every gated call leaves a durable, tamper-evident record, without the caller having to think about signing or key management. Assumptions: Every tool call is wrapped by a policy gate; all receipts are cryptographically signed. Breakdown regime: When policy gate returns REFUSE, tool execution is blocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each receipt corresponds to a state transition in GSE's tool-call graph, verified via GSI's Bayesian belief update on keyring status. Operator 'Keyring Lifecycle Manager' (page 1, domain other) captures: A companion keyring (`packages/governed/src/keyring.ts`, `rotate-keys.ts`) manages the signing key lifecycle (rotate → retire → revoke) so old receipts stay verifiable across key rotation. Assumptions: Key rotation preserves cryptographic validity of prior signatures. Breakdown regime: Grace period for retiring keys allows continued verification before final retirement. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Keyring state evolution in GSE supports persistent receipt verification; in GSI, it defines a time-dependent parameter space for signature trustworthiness. Operator 'Enforce Mode Gate' (page 1, domain other) captures: The caller must explicitly set `ctx.mode = \"ENFORCE\"` to get blocking behavior. Assumptions: Explicit context flag determines whether refusal blocks execution. Breakdown regime: If ctx.mode ≠ ENFORCE, refusal results in non-blocking notification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSE, enforce mode triggers state transition block; in GSI, it modifies conditional probability of tool-call acceptance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in cryptographic signature schemes (ed25519), key management protocols, and access control systems. Influenced by blockchain consensus mechanisms and secure multi-party computation frameworks. Retrocausal Genealogy: Rooted in README (63e6909c41a8c48d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (63e6909c41a8c48d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the policy gatekeeper (enforcing rules), the tool caller (seeking access), and the verifier (checking legitimacy). Each agent operates under different information sets and objectives: gatekeeper seeks compliance, caller seeks utility, verifier seeks authenticity. Theory of Mind & Decision Maker Model: Rooted in README (63e6909c41a8c48d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises between GSE's enforcement logic and GSI's probabilistic inference; leakage occurs if keyring verification bypasses cryptographic checks. Veto conditions ensure that revoked keys cannot validate receipts, and that enforce mode is explicitly opted into by callers. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (63e6909c41a8c48d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

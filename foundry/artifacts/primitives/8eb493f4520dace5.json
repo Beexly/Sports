@@ -1,0 +1,78 @@
+{
+  "book_id": "8eb493f4520dace5",
+  "source_status": "COMPLETE",
+  "title": "cadence-v2.5-2026-10-29",
+  "file_name": "cadence-v2.5-2026-10-29.md",
+  "sha256": "8eb493f4520dace52cf81ab6af629378084e1ad73e6ce6729fdb47fd962abd35",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Cadence v2.5 integrates injury data via Sinkhorn reweighting, maintaining sealed state integrity through merkle consistency and deterministic EPA dropoff tables. Universal Lens: Rooted in cadence-v2.5-2026-10-29 (8eb493f4520dace5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference on sealed injury overlays using EPA-weighted role matrices, aligning with conformal prediction frameworks for probabilistic player impact modeling. GSI Mapping: Rooted in cadence-v2.5-2026-10-29 (8eb493f4520dace5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning to reweighted role assignments via Sinkhorn iteration, transitioning states based on sealed EPAs while preserving deterministic engine behavior. GSE Mapping: Rooted in cadence-v2.5-2026-10-29 (8eb493f4520dace5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "injury_overlay_advanced",
+      "name": "Advanced Injury Overlay Operator",
+      "verbatim_quote": "# Cadence v2.5, Thursday 16:30 CT, 2026-10-29: injury overlay advanced, Sinkhorn weights reallocated, seal unchanged Slot: TNF, Week 8, 2026 season.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_{\\\\text{week8}}': 'Injury indicators for Week 8 (dimensionless binary)', 'W_{\\\\text{sinkhorn}}': 'Sinkhorn reweighting matrix (dimensionless)'}",
+      "assumptions": "Injury data is complete and temporally aligned with game week; reweighting preserves marginal totals.",
+      "breakdown_regime": "When injury count exceeds baseline (e.g., 249 vs 16 rows).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps NFLverse injury data to GSE role-weighted EPA matrices via Sinkhorn normalization.",
+        "source_operator": "injury_overlay_advanced",
+        "telemetry": "SHA-256 of merged CSV file and row count increase."
+      }
+    },
+    {
+      "primitive_id": "sinkhorn_weight_reallocations",
+      "name": "Sinkhorn Weight Reallocation Kernel",
+      "verbatim_quote": "- `gse_injury_overlay_v2.py` EPA table hash `9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938` equals its recorded `EPA_DROPOFF_SHA256`.",
+      "page": 2,
+      "latex": "\\mathcal{W}^{(k)} = \\text{Sinkhorn}(\\mathcal{M}) \\quad \\text{where } \\mathcal{M}_{ij} = \\exp(-\\frac{\\text{EPA}_{ij}}{\\tau})",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{W}^{(k)}': 'Reallocated weight matrix (dimensionless)', '\\\\mathcal{M}': 'Base EPA-based cost matrix (dimensionless)', '\\\\tau': 'Temperature parameter (dimensionless)'}",
+      "assumptions": "EPA values are normalized and bounded; Sinkhorn algorithm converges under fixed marginals.",
+      "breakdown_regime": "When EPA values exceed threshold causing numerical instability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives new role weights from EPA dropoffs using Sinkhorn iteration.",
+        "source_operator": "sinkhorn_weight_reallocations",
+        "telemetry": "Hash match of EPA table and convergence metrics."
+      }
+    },
+    {
+      "primitive_id": "sealed_state_integrity",
+      "name": "Sealed State Integrity Validator",
+      "verbatim_quote": "`unchanged` asserts byte identity with the active seal center, not independent reproducibility.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_{\\\\text{seal}}': 'Merkle hash of sealed state (SHA-256)', 'H_{\\\\text{active}}': 'Active seal hash (SHA-256)'}",
+      "assumptions": "All prior seals are deterministic and immutable; byte-level equality implies logical equivalence.",
+      "breakdown_regime": "Upon mismatch between stored and computed hashes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ensures consistency of sealed role sets across engine runs via Merkle tree validation.",
+        "source_operator": "sealed_state_integrity",
+        "telemetry": "Boolean assertion of Merkle hash equality."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8eb493f4520dace5_t0",
+      "think": "The Cadence v2.5 system operates by advancing injury overlays through a dual-stage process: first, integrating updated NFLverse data with internal datasets, then applying Sinkhorn reweighting to derive role-specific EPA adjustments. This ensures that each team’s offensive and defensive role weights reflect current injury status. The sealed state integrity check confirms that no unintended changes occurred during processing, maintaining a consistent computational environment. The derived kernel maps these adjusted weights into a probabilistic framework where each player's contribution is quantified via EPA dropoffs. The system avoids introducing bias by ensuring all transformations preserve marginal totals and maintain deterministic behavior. Failure modes include hash mismatches indicating data corruption or divergent execution paths, which would invalidate the sealed state and require rollback.\n\nDeep epistemic analysis for cadence-v2.5-2026-10-29 (8eb493f4520dace5, domain=other, pages_read=3/3): Operator 'Advanced Injury Overlay Operator' (page 1, domain other) captures: # Cadence v2.5, Thursday 16:30 CT, 2026-10-29: injury overlay advanced, Sinkhorn weights reallocated, seal unchanged Slot: TNF, Week 8, 2026 season. Assumptions: Injury data is complete and temporally aligned with game week; reweighting preserves marginal totals. Breakdown regime: When injury count exceeds baseline (e.g., 249 vs 16 rows). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps NFLverse injury data to GSE role-weighted EPA matrices via Sinkhorn normalization. Operator 'Sinkhorn Weight Reallocation Kernel' (page 2, domain other) captures: - `gse_injury_overlay_v2.py` EPA table hash `9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938` equals its recorded `EPA_DROPOFF_SHA256`. Assumptions: EPA values are normalized and bounded; Sinkhorn algorithm converges under fixed marginals. Breakdown regime: When EPA values exceed threshold causing numerical instability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives new role weights from EPA dropoffs using Sinkhorn iteration. Operator 'Sealed State Integrity Validator' (page 2, domain other) captures: `unchanged` asserts byte identity with the active seal center, not independent reproducibility. Assumptions: All prior seals are deterministic and immutable; byte-level equality implies logical equivalence. Breakdown regime: Upon mismatch between stored and computed hashes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures consistency of sealed role sets across engine runs via Merkle tree validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for cadence-v2.5-2026-10-29 (8eb493f4520dace5, domain=other, pages_read=3/3): Operator 'Advanced Injury Overlay Operator' (page 1, domain other) captures: # Cadence v2.5, Thursday 16:30 CT, 2026-10-29: injury overlay advanced, Sinkhorn weights reallocated, seal unchanged Slot: TNF, Week 8, 2026 season. Assumptions: Injury data is complete and temporally aligned with game week; reweighting preserves marginal totals. Breakdown regime: When injury count exceeds baseline (e.g., 249 vs 16 rows). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps NFLverse injury data to GSE role-weighted EPA matrices via Sinkhorn normalization. Operator 'Sinkhorn Weight Reallocation Kernel' (page 2, domain other) captures: - `gse_injury_overlay_v2.py` EPA table hash `9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938` equals its recorded `EPA_DROPOFF_SHA256`. Assumptions: EPA values are normalized and bounded; Sinkhorn algorithm converges under fixed marginals. Breakdown regime: When EPA values exceed threshold causing numerical instability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives new role weights from EPA dropoffs using Sinkhorn iteration. Operator 'Sealed State Integrity Validator' (page 2, domain other) captures: `unchanged` asserts byte identity with the active seal center, not independent reproducibility. Assumptions: All prior seals are deterministic and immutable; byte-level equality implies logical equivalence. Breakdown regime: Upon mismatch between stored and computed hashes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures consistency of sealed role sets across engine runs via Merkle tree validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the 2024-2025 evolution of probabilistic sports modeling, influenced by Sinkhorn divergence techniques from optimal transport theory and Bayesian belief updating in predictive analytics. Retrocausal Genealogy: Rooted in cadence-v2.5-2026-10-29 (8eb493f4520dace5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in cadence-v2.5-2026-10-29 (8eb493f4520dace5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling opposing agents includes both the NFL's injury reporting mechanisms and the GSE's internal simulation logic, where each agent's actions are constrained by deterministic seals and probabilistic EPA distributions. Theory of Mind & Decision Maker Model: Rooted in cadence-v2.5-2026-10-29 (8eb493f4520dace5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring role mappings do not overlap (e.g., OL and DEF roles carry zero engine weight). Leakage vetoes prevent cross-layer contamination when role labels like LT do not map to expected keys such as OL. Cross-Layer Veto & Anti-Leakage Check: Rooted in cadence-v2.5-2026-10-29 (8eb493f4520dace5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

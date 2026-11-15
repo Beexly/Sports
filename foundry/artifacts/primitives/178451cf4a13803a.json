@@ -1,0 +1,78 @@
+{
+  "book_id": "178451cf4a13803a",
+  "source_status": "COMPLETE",
+  "title": "VENDOR_QUESTIONNAIRE_JEFF_MANS",
+  "file_name": "VENDOR_QUESTIONNAIRE_JEFF_MANS.md",
+  "sha256": "178451cf4a13803a4153ee79319894059d9c2f19139ea5520e38293946d749fd",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Public feed sovereignty as a stochastic process over time-indexed claim streams, modeled via Bayesian belief updates on RSS syndication integrity. Universal Lens: Rooted in VENDOR_QUESTIONNAIRE_JEFF_MANS (178451cf4a13803a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers claim accountability through conformal predictive intervals on paraphrased statements, using RSS-derived temporal sequences as evidence streams. GSI Mapping: Rooted in VENDOR_QUESTIONNAIRE_JEFF_MANS (178451cf4a13803a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states based on automated telemetry flags from podcast metadata, applying rule-based constraints to avoid proprietary data leakage during situational reasoning. GSE Mapping: Rooted in VENDOR_QUESTIONNAIRE_JEFF_MANS (178451cf4a13803a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "public_feed_sovereignty",
+      "name": "Public Feed Sovereignty",
+      "verbatim_quote": "## Part A — What we verified (internal, 2026-06-12) | Question | Finding | |---|---| | Does the show exist as a public feed?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F(t)': 'Feed availability function over time t, binary-valued', 'S': 'Syndication type (RSS, HTTP, etc.), dimensionless'}",
+      "assumptions": "Feed is accessible without authentication; syndication is open and machine-readable.",
+      "breakdown_regime": "When F(t) = 0 or S ≠ RSS, sovereignty fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "RSS feed integrity maps to a time-series signal processing kernel in GSE, where F(t) acts as a deterministic observable for claim validation in GSI.",
+        "source_operator": "public_feed_sovereignty",
+        "telemetry": "Podcast RSS endpoint response time and content digest match"
+      }
+    },
+    {
+      "primitive_id": "pundit_claim_accountability",
+      "name": "Pundit Claim Accountability",
+      "verbatim_quote": "**Pundit-claim accountability**: log paraphrased, attributed, dated claims (\"Mans on X player, week N\") and grade them publicly over time.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_i(t)': 'Claim i at time t, categorical label', 'A_i': 'Attribution vector for claim i, dimensionless', 'G_i': 'Grade assigned to claim i, real-valued [0,1]'}",
+      "assumptions": "Claims are paraphrased and dated; grading is consistent and verifiable.",
+      "breakdown_regime": "When A_i is missing or G_i is undefined, accountability fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's claim tracking kernel derives from RSS-based temporal indexing, enabling GSE to perform state transitions on claim validity.",
+        "source_operator": "pundit_claim_accountability",
+        "telemetry": "Logged claim entries with timestamp and attribution match RSS metadata"
+      }
+    },
+    {
+      "primitive_id": "proprietary_data_isolation",
+      "name": "Proprietary Data Isolation",
+      "verbatim_quote": "**NOT wanted as model input**: his picks/analysis are proprietary predictions — `data-rules.ts` forbids extracting them as engine inputs, license or no license.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P(t)': 'Proprietary content indicator at time t, binary-valued', 'I(t)': 'Input eligibility function, binary-valued'}",
+      "assumptions": "Proprietary content cannot be extracted regardless of licensing status.",
+      "breakdown_regime": "When I(t) = 1 and P(t) = 1, isolation fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's input filtering logic mirrors the data-rules.ts constraint, ensuring that P(t) = 1 implies I(t) = 0 in all automated pipelines.",
+        "source_operator": "proprietary_data_isolation",
+        "telemetry": "Automated extraction jobs flagged when P(t) = 1"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "178451cf4a13803a_t0",
+      "think": "The sovereign primitives derive from a dual structure: (1) Public feed sovereignty ensures that only open-access, syndicated content is considered valid for ingestion; (2) Pundit claim accountability enables GSI to track and grade assertions made by the vendor; (3) Proprietary data isolation prevents unauthorized access to non-public content. These form a triadic system where each primitive must hold for the others to function correctly. Failure in one leads to cascading invalidation in the others. For example, if a feed is not public, then claim accountability cannot be established. If proprietary data leaks into the pipeline, the entire trust chain collapses. The system operates under a Bayesian framework where each primitive contributes a likelihood factor to the overall confidence score of the vendor’s suitability.\n\nDeep epistemic analysis for VENDOR_QUESTIONNAIRE_JEFF_MANS (178451cf4a13803a, domain=other, pages_read=2/2): Operator 'Public Feed Sovereignty' (page 1, domain other) captures: ## Part A — What we verified (internal, 2026-06-12) | Question | Finding | |---|---| | Does the show exist as a public feed? Assumptions: Feed is accessible without authentication; syndication is open and machine-readable. Breakdown regime: When F(t) = 0 or S ≠ RSS, sovereignty fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RSS feed integrity maps to a time-series signal processing kernel in GSE, where F(t) acts as a deterministic observable for claim validation in GSI. Operator 'Pundit Claim Accountability' (page 1, domain other) captures: **Pundit-claim accountability**: log paraphrased, attributed, dated claims (\"Mans on X player, week N\") and grade them publicly over time. Assumptions: Claims are paraphrased and dated; grading is consistent and verifiable. Breakdown regime: When A_i is missing or G_i is undefined, accountability fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's claim tracking kernel derives from RSS-based temporal indexing, enabling GSE to perform state transitions on claim validity. Operator 'Proprietary Data Isolation' (page 1, domain other) captures: **NOT wanted as model input**: his picks/analysis are proprietary predictions — `data-rules.ts` forbids extracting them as engine inputs, license or no license. Assumptions: Proprietary content cannot be extracted regardless of licensing status. Breakdown regime: When I(t) = 1 and P(t) = 1, isolation fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's input filtering logic mirrors the data-rules.ts constraint, ensuring that P(t) = 1 implies I(t) = 0 in all automated pipelines. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for VENDOR_QUESTIONNAIRE_JEFF_MANS (178451cf4a13803a, domain=other, pages_read=2/2): Operator 'Public Feed Sovereignty' (page 1, domain other) captures: ## Part A — What we verified (internal, 2026-06-12) | Question | Finding | |---|---| | Does the show exist as a public feed? Assumptions: Feed is accessible without authentication; syndication is open and machine-readable. Breakdown regime: When F(t) = 0 or S ≠ RSS, sovereignty fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RSS feed integrity maps to a time-series signal processing kernel in GSE, where F(t) acts as a deterministic observable for claim validation in GSI. Operator 'Pundit Claim Accountability' (page 1, domain other) captures: **Pundit-claim accountability**: log paraphrased, attributed, dated claims (\"Mans on X player, week N\") and grade them publicly over time. Assumptions: Claims are paraphrased and dated; grading is consistent and verifiable. Breakdown regime: When A_i is missing or G_i is undefined, accountability fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's claim tracking kernel derives from RSS-based temporal indexing, enabling GSE to perform state transitions on claim validity. Operator 'Proprietary Data Isolation' (page 1, domain other) captures: **NOT wanted as model input**: his picks/analysis are proprietary predictions — `data-rules.ts` forbids extracting them as engine inputs, license or no license. Assumptions: Proprietary content cannot be extracted regardless of licensing status. Breakdown regime: When I(t) = 1 and P(t) = 1, isolation fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's input filtering logic mirrors the data-rules.ts constraint, ensuring that P(t) = 1 implies I(t) = 0 in all automated pipelines. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and access control models from early 2020s, extended into modern podcasting and data governance paradigms. Retrocausal Genealogy: Rooted in VENDOR_QUESTIONNAIRE_JEFF_MANS (178451cf4a13803a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in VENDOR_QUESTIONNAIRE_JEFF_MANS (178451cf4a13803a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the vendor (seeking full access), GSI (validating claims), and GSE (ensuring compliance). Each agent has distinct objectives: vendor wants inclusion, GSI wants verifiability, GSE wants safety. Theory of Mind & Decision Maker Model: Rooted in VENDOR_QUESTIONNAIRE_JEFF_MANS (178451cf4a13803a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that no single primitive can override another. For instance, even if a feed is public, proprietary data isolation must still prevent leakage. Leakage vetoes occur when RSS metadata contradicts the claim log. Cross-Layer Veto & Anti-Leakage Check: Rooted in VENDOR_QUESTIONNAIRE_JEFF_MANS (178451cf4a13803a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "bb176e81a4aee853",
+  "source_status": "COMPLETE",
+  "title": "BRIEFING",
+  "file_name": "BRIEFING.md",
+  "sha256": "bb176e81a4aee8530f80218d141511f3142b1d7fe0f034c1e48b15d7069e6cbe",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Neural-temporal alignment of game logs and rest-day computations across NFL seasons via relational backfill protocols. Universal Lens: Rooted in BRIEFING (bb176e81a4aee853), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on settled game outcomes using conformal predictive sets derived from team_game_logs and rest-day metrics. GSI Mapping: Rooted in BRIEFING (bb176e81a4aee853), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions in NFL pick selection governed by rest-day thresholds and edge confidence intervals within dynamic game slates. GSE Mapping: Rooted in BRIEFING (bb176e81a4aee853), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "rest_day_computation",
+      "name": "Rest Day Duration Operator",
+      "verbatim_quote": "KC (10/4), CAR (10/5), TB (10/9), and DAL (10/9) had their last log on Aug 21-23, causing rest days to compute as `gameDate - Aug 22 = 56-57 days`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'gameDate': 'ISO date string', 'lastLog': 'ISO date string', 'restDays': 'integer days'}",
+      "assumptions": "All teams log once per week; rest day is computed as difference between game date and last log date.",
+      "breakdown_regime": "When lastLog < gameDate and gap exceeds 50 days",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Computed rest days serve as input to Bayesian edge estimation models in GSI.",
+        "source_operator": "rest_day_computation",
+        "telemetry": "Mean deviation from expected rest-day range (4–8 days)"
+      }
+    },
+    {
+      "primitive_id": "backfill_game_logs",
+      "name": "Settled Game Log Backfill Protocol",
+      "verbatim_quote": "77 settled 2026 regular-season NFL games exist in `games` with scores, representing 154 team logs ready for backfill.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'settledGames': 'integer count', 'teamLogsPerGame': 'integer 2', 'totalLogs': 'integer 154'}",
+      "assumptions": "Each game produces two team logs; all games have settled scores.",
+      "breakdown_regime": "When totalLogs < 154 due to missing data",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relational backfill mirrors temporal consistency checks in GSE's game-state graph traversal.",
+        "source_operator": "backfill_game_logs",
+        "telemetry": "Percentage of completed team logs post-backfill"
+      }
+    },
+    {
+      "primitive_id": "edge_confidence_threshold",
+      "name": "Positive Edge Confidence Threshold",
+      "verbatim_quote": "Evaluated remaining 5 games (`NO@NYG`, `TEN@IND`, `PIT@TB`, `DAL@GB`, `BAL@CLE`) with specific positive-edge plays over consensus odds.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'positiveEdge': 'dimensionless ratio > 1', 'consensusOdds': 'decimal probability', 'analystEdge': 'decimal probability'}",
+      "assumptions": "Analyst edge is defined as analystOdds > consensusOdds.",
+      "breakdown_regime": "When analystEdge < threshold (e.g., -2.7%)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Edge confidence drives pick selection logic in GSE's decision tree.",
+        "source_operator": "edge_confidence_threshold",
+        "telemetry": "Number of picks rejected below threshold"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "bb176e81a4aee853_t0",
+      "think": "The core operators define a closed-loop system where rest-day computation acts as a proxy for team readiness, which informs backfill decisions that ensure sufficient data for Bayesian inference. The backfill protocol ensures that each team has a minimum number of logs, enabling accurate rest-day recalculation. Positive edge detection then filters viable picks based on probabilistic advantage over consensus. Failure modes include data gaps in logs leading to incorrect rest-day estimates, or insufficient backfilled data causing unreliable edge calculations. These primitives form a dual structure: one for data integrity (backfill) and one for decision-making (edge confidence).\n\nDeep epistemic analysis for BRIEFING (bb176e81a4aee853, domain=other, pages_read=2/2): Operator 'Rest Day Duration Operator' (page 1, domain other) captures: KC (10/4), CAR (10/5), TB (10/9), and DAL (10/9) had their last log on Aug 21-23, causing rest days to compute as `gameDate - Aug 22 = 56-57 days`. Assumptions: All teams log once per week; rest day is computed as difference between game date and last log date. Breakdown regime: When lastLog < gameDate and gap exceeds 50 days Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computed rest days serve as input to Bayesian edge estimation models in GSI. Operator 'Settled Game Log Backfill Protocol' (page 1, domain other) captures: 77 settled 2026 regular-season NFL games exist in `games` with scores, representing 154 team logs ready for backfill. Assumptions: Each game produces two team logs; all games have settled scores. Breakdown regime: When totalLogs < 154 due to missing data Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relational backfill mirrors temporal consistency checks in GSE's game-state graph traversal. Operator 'Positive Edge Confidence Threshold' (page 1, domain other) captures: Evaluated remaining 5 games (`NO@NYG`, `TEN@IND`, `PIT@TB`, `DAL@GB`, `BAL@CLE`) with specific positive-edge plays over consensus odds. Assumptions: Analyst edge is defined as analystOdds > consensusOdds. Breakdown regime: When analystEdge < threshold (e.g., -2.7%) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Edge confidence drives pick selection logic in GSE's decision tree. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BRIEFING (bb176e81a4aee853, domain=other, pages_read=2/2): Operator 'Rest Day Duration Operator' (page 1, domain other) captures: KC (10/4), CAR (10/5), TB (10/9), and DAL (10/9) had their last log on Aug 21-23, causing rest days to compute as `gameDate - Aug 22 = 56-57 days`. Assumptions: All teams log once per week; rest day is computed as difference between game date and last log date. Breakdown regime: When lastLog < gameDate and gap exceeds 50 days Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computed rest days serve as input to Bayesian edge estimation models in GSI. Operator 'Settled Game Log Backfill Protocol' (page 1, domain other) captures: 77 settled 2026 regular-season NFL games exist in `games` with scores, representing 154 team logs ready for backfill. Assumptions: Each game produces two team logs; all games have settled scores. Breakdown regime: When totalLogs < 154 due to missing data Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relational backfill mirrors temporal consistency checks in GSE's game-state graph traversal. Operator 'Positive Edge Confidence Threshold' (page 1, domain other) captures: Evaluated remaining 5 games (`NO@NYG`, `TEN@IND`, `PIT@TB`, `DAL@GB`, `BAL@CLE`) with specific positive-edge plays over consensus odds. Assumptions: Analyst edge is defined as analystOdds > consensusOdds. Breakdown regime: When analystEdge < threshold (e.g., -2.7%) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Edge confidence drives pick selection logic in GSE's decision tree. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in temporal relational algebra and Bayesian decision theory, tracing back to early 20th-century statistical inference frameworks. Retrocausal Genealogy: Rooted in BRIEFING (bb176e81a4aee853), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BRIEFING (bb176e81a4aee853), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may prioritize different edge metrics—some favor volatility-based strategies while others prefer conservative risk-adjusted returns. Theory of Mind & Decision Maker Model: Rooted in BRIEFING (bb176e81a4aee853), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in BRIEFING (bb176e81a4aee853), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring rest-day metrics do not correlate linearly with edge confidence; leakage occurs when outdated logs skew rest-day computations. Cross-Layer Veto & Anti-Leakage Check: Rooted in BRIEFING (bb176e81a4aee853), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in BRIEFING (bb176e81a4aee853), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

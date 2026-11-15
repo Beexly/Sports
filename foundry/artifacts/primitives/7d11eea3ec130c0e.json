@@ -1,0 +1,78 @@
+{
+  "book_id": "7d11eea3ec130c0e",
+  "source_status": "COMPLETE",
+  "title": "tetrad_javadoc_repaired",
+  "file_name": "tetrad_javadoc_repaired.txt",
+  "sha256": "7d11eea3ec130c0e8ee1d7ec9e6914cb7d3b13975a326175842f6c0e03442f4a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Tetrad causal discovery rules encode structural constraints on directed acyclic graphs, enabling orienting edges via conditional independence and path-based criteria. Universal Lens: Rooted in tetrad_javadoc_repaired (7d11eea3ec130c0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs these rules for Bayesian causal structure learning, inferring latent variable dependencies through conformal prediction and probabilistic graphical models. GSI Mapping: Rooted in tetrad_javadoc_repaired (7d11eea3ec130c0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies tetrad primitives to model dynamic state transitions in causal systems, using edge orientations to guide policy decisions under uncertainty. GSE Mapping: Rooted in tetrad_javadoc_repaired (7d11eea3ec130c0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "r10_orienting_edges",
+      "name": "R10 Orienting Edges via Collider Paths",
+      "verbatim_quote": ">> R10 Suppose α o→ γ, β → γ ← θ, p1 is an uncovered potentially directed (semidirected) path from α to β, and p2 is an uncovered p.d.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'α, β, γ, θ': 'Nodes in a causal graph'}",
+      "assumptions": "Paths are uncovered; nodes represent variables with directed edges indicating causal relationships.",
+      "breakdown_regime": "When collider structures are present but paths are not fully observed or directed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conditional independence testing framework where collider paths imply non-collinearity among variables.",
+        "source_operator": "r10_orienting_edges",
+        "telemetry": "Edge orientation consistency across multiple conditional independence tests."
+      }
+    },
+    {
+      "primitive_id": "r6_collider_rule",
+      "name": "R6 Collider Rule",
+      "verbatim_quote": "'α'=U+03B1 'β'=U+03B2 >> R6 If α —- β o--∗ γ (α and γ may or may",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'α, β, γ': 'Nodes in a causal graph'}",
+      "assumptions": "The presence of a collider structure implies that β must be oriented toward γ based on adjacency and path properties.",
+      "breakdown_regime": "When β is part of a v-structure but not directly connected to γ.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used by GSE to derive causal directionality when observing only observational data.",
+        "source_operator": "r6_collider_rule",
+        "telemetry": "Consistency of edge orientations in FCI algorithm steps."
+      }
+    },
+    {
+      "primitive_id": "r7_path_orienting",
+      "name": "R7 Path-Orienting Rule",
+      "verbatim_quote": "'α'=U+03B1 'γ'=U+03B3 'β'=U+03B2 '-'=U+2212 '-'=U+2212 '∗'=U+2217 'γ'=U+03B3 'β'=U+03B2 '-'=U+2212 '-'=U+2212 '∗'=U+2217 'γ'=U+03B3 >> R7 If α",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'α, β, γ': 'Nodes in a causal graph'}",
+      "assumptions": "Path existence without direct adjacency allows for orientation of intermediate nodes.",
+      "breakdown_regime": "When intermediate node β lies on a path between non-adjacent α and γ.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to infer causal influence through indirect pathways in sparse networks.",
+        "source_operator": "r7_path_orienting",
+        "telemetry": "Accuracy of inferred causal directions in partially observed graphs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7d11eea3ec130c0e_t0",
+      "think": "These tetrad rules define systematic procedures for orienting edges in causal graphs based on conditional independence and path structures. R10 leverages collider paths to determine orientations, ensuring that unobserved confounders do not bias conclusions. R6 and R7 extend this logic to handle more complex v-structures and path configurations. The interplay between these rules enables robust causal discovery even in high-dimensional settings where full observational data is unavailable. Failure modes arise when assumptions about path coverage or conditional independence are violated, leading to incorrect edge orientations and spurious causal inferences.\n\nDeep epistemic analysis for tetrad_javadoc_repaired (7d11eea3ec130c0e, domain=other, pages_read=1/1): Operator 'R10 Orienting Edges via Collider Paths' (page 1, domain other) captures: >> R10 Suppose α o→ γ, β → γ ← θ, p1 is an uncovered potentially directed (semidirected) path from α to β, and p2 is an uncovered p.d. Assumptions: Paths are uncovered; nodes represent variables with directed edges indicating causal relationships. Breakdown regime: When collider structures are present but paths are not fully observed or directed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conditional independence testing framework where collider paths imply non-collinearity among variables. Operator 'R6 Collider Rule' (page 1, domain other) captures: 'α'=U+03B1 'β'=U+03B2 >> R6 If α —- β o--∗ γ (α and γ may or may Assumptions: The presence of a collider structure implies that β must be oriented toward γ based on adjacency and path properties. Breakdown regime: When β is part of a v-structure but not directly connected to γ. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used by GSE to derive causal directionality when observing only observational data. Operator 'R7 Path-Orienting Rule' (page 1, domain other) captures: 'α'=U+03B1 'γ'=U+03B3 'β'=U+03B2 '-'=U+2212 '-'=U+2212 '∗'=U+2217 'γ'=U+03B3 'β'=U+03B2 '-'=U+2212 '-'=U+2212 '∗'=U+2217 'γ'=U+03B3 >> R7 If α Assumptions: Path existence without direct adjacency allows for orientation of intermediate nodes. Breakdown regime: When intermediate node β lies on a path between non-adjacent α and γ. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to infer causal influence through indirect pathways in sparse networks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for tetrad_javadoc_repaired (7d11eea3ec130c0e, domain=other, pages_read=1/1): Operator 'R10 Orienting Edges via Collider Paths' (page 1, domain other) captures: >> R10 Suppose α o→ γ, β → γ ← θ, p1 is an uncovered potentially directed (semidirected) path from α to β, and p2 is an uncovered p.d. Assumptions: Paths are uncovered; nodes represent variables with directed edges indicating causal relationships. Breakdown regime: When collider structures are present but paths are not fully observed or directed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conditional independence testing framework where collider paths imply non-collinearity among variables. Operator 'R6 Collider Rule' (page 1, domain other) captures: 'α'=U+03B1 'β'=U+03B2 >> R6 If α —- β o--∗ γ (α and γ may or may Assumptions: The presence of a collider structure implies that β must be oriented toward γ based on adjacency and path properties. Breakdown regime: When β is part of a v-structure but not directly connected to γ. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used by GSE to derive causal directionality when observing only observational data. Operator 'R7 Path-Orienting Rule' (page 1, domain other) captures: 'α'=U+03B1 'γ'=U+03B3 'β'=U+03B2 '-'=U+2212 '-'=U+2212 '∗'=U+2217 'γ'=U+03B3 'β'=U+03B2 '-'=U+2212 '-'=U+2212 '∗'=U+2217 'γ'=U+03B3 >> R7 If α Assumptions: Path existence without direct adjacency allows for orientation of intermediate nodes. Breakdown regime: When intermediate node β lies on a path between non-adjacent α and γ. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to infer causal influence through indirect pathways in sparse networks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Pearl's causal inference framework and Spirtes et al.'s PC algorithm, these rules evolved from foundational work in graphical models and structural equation modeling. Retrocausal Genealogy: Rooted in tetrad_javadoc_repaired (7d11eea3ec130c0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in tetrad_javadoc_repaired (7d11eea3ec130c0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to manipulate causal structures or introduce noise into observed data to obscure true relationships, necessitating robust validation mechanisms within GSI and GSE. Theory of Mind & Decision Maker Model: Rooted in tetrad_javadoc_repaired (7d11eea3ec130c0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in tetrad_javadoc_repaired (7d11eea3ec130c0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity checks prevent overfitting in GSI’s probabilistic models, while leakage vetoes ensure that GSE does not propagate erroneous causal directions from incomplete or misoriented graphs. Cross-Layer Veto & Anti-Leakage Check: Rooted in tetrad_javadoc_repaired (7d11eea3ec130c0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in tetrad_javadoc_repaired (7d11eea3ec130c0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

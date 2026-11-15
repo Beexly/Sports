@@ -1,0 +1,429 @@
+{
+  "book_id": "678271d94588b50d",
+  "source_status": "COMPLETE",
+  "pages_total": 541,
+  "pages_read": 104,
+  "source_note": "Simon Prince, Understanding Deep Learning (MIT Press 2023), author's freely-distributed draft (udllibook.com; 'Draft: please send errata to udlbookmail@gmail.com' on every page; CC-BY-NC-ND, (C) MIT Press). 541 PDF pages. PDF page = printed page + 14 (printed 57 = PDF 71; printed 402 = PDF 416); all citations PDF pages. EXTRACTION: this is a proper LaTeX-typeset PDF whose mathematics IS text-extractable as Unicode glyphs (phi, theta, partial, sum, product, sigma^2, in, R, pi, KL). Equations render across multiple lines in the text layer with equation numbers interleaved; latex fields are TRANSCRIBED from the printed text-layer equations and explicitly labeled as reassembled from multi-line extraction, never claimed as verbatim glyph images. Prose quotes are verbatim. Text PDF, NOT image-only -> not INSUFFICIENT_OCR. Dense-monograph (>400pp) solo core-read of 104 pages across eight blocks: 43-50 (universal approximation/shallow general case), 70-86 (loss functions/MLE/least-squares/heteroscedastic/cross-entropy=KL), 91-105 (fitting/GD/SGD/momentum/Nesterov/Adam), 117-125 (backprop algorithm/He-Glorot init), 132-147 (measuring performance/bias-variance-noise/double descent/curse of dimensionality/hyperparameters), 152-160 (explicit+implicit regularization/MAP/early stopping/ensembling), 200-210 (residual networks/shattered gradients/BatchNorm/ResNet), 416-434 (ch20 'Why does deep learning work?'/NP-hardness/lottery tickets/flat minima/grokking/adversarial/pruning/distillation/no prescriptive theory). Front matter, ch1-2/4 detail, ch10 convolutions, ch12-19 (transformers/GNNs/generative/RL), ch21 ethics, appendices, bibliography, index not read. No sportsbook lines/spreads/totals/implied odds anywhere. Era-chain position: the 2023 MODERN DL-THEORY layer ABOVE Nielsen 2015 — it updates the learning mechanics with double descent, implicit regularization, ResNets/BatchNorm, Adam, and the honest 'why does it work' frontier; unifies with Garnett (MAP=prior, cross-entropy=KL=info) and ADM (decision) under one information-theoretic objective.",
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Maximum-likelihood recipe for constructing any loss function",
+      "verbatim_quote": "The recipe for constructing loss functions for training data {xi, yi} using the maximum likelihood approach is hence:",
+      "page": 74,
+      "latex": "\\hat\\phi=\\arg\\min_\\phi\\Bigl[-\\sum_{i=1}^{I}\\log\\Pr\\bigl(y_i\\,\\big|\\,f[x_i,\\phi]\\bigr)\\Bigr]\\quad\\text{(eq 5.6)}",
+      "symbol_and_unit_ledger": "phi = model parameters; f[x_i,phi] = network predicting distribution parameters theta; Pr(y|theta) = chosen output distribution; I = training-set size (count); L[phi] = negative log-likelihood loss (nats). Transcribed from printed text-layer eq 5.6 (PDF p74 / printed 60); Unicode glyphs reassembled from multi-line extraction. The recipe: (1) choose Pr(y|theta) on the output domain, (2) set theta=f[x,phi], (3) minimize NLL, (4) infer via the distribution or its mode.",
+      "assumptions": "The model is recast as computing a conditional distribution Pr(y|x), not a point prediction. Two implicit assumptions: the distributional form is the same for every data point, and the conditional outputs are independent so the likelihood factorizes (eq 5.2).",
+      "breakdown_regime": "If the chosen distribution does not match the output domain (e.g. a Gaussian for bounded counts) or the independence assumption fails, the derived loss is mis-specified. The recipe is a construction principle, not a guarantee the chosen family is correct.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p1",
+        "mapping": "GSE must construct its value-model loss from a declared output distribution, not an ad-hoc penalty: choose the distribution over the game outcome (win/loss Bernoulli, margin Gaussian, play-count Poisson), predict its parameters, minimize NLL. This is the printed principled justification for the engine's loss design and the veto against arbitrary loss choices.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Least squares is a consequence of the Gaussian + independence assumptions",
+      "verbatim_quote": "The result of these manipulations is the least squares loss function that we originally introduced when we discussed linear regression in chapter 2:",
+      "page": 76,
+      "latex": "L[\\phi]=\\sum_{i=1}^{I}\\bigl(y_i-f[x_i,\\phi]\\bigr)^2\\quad\\text{(eq 5.11, from Gaussian NLL eq 5.10)}",
+      "symbol_and_unit_ledger": "y_i = observed output; f[x_i,phi] = predicted mean mu; I = count. Transcribed from printed eq 5.10-5.11 (PDF p76 / printed 62). The constant 1/(2 sigma^2) scaling and the log-normalizer are dropped because they do not move the argmin.",
+      "assumptions": "Least squares follows ONLY from assuming outputs are (i) independent and (ii) normally distributed with mean mu=f[x_i,phi]. It is not a universal default; it is the NLL of a specific distributional choice.",
+      "breakdown_regime": "For heavy-tailed errors the Gaussian assumption is wrong and least squares is non-robust; the book's distribution table (fig 5.11) prescribes Laplace/t for robust regression, Poisson for counts, von Mises for direction. Using MSE outside its assumption regime is a declared modeling error.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p2",
+        "mapping": "GSE's choice of squared-error loss on margins is a declared Gaussian assumption, not a neutral default. For count-like outcomes (sacks, turnovers) the printed prescription is Poisson; for heavy-tailed margin errors, Laplace/t. The engine must match the loss to the outcome's distribution, and the source prints the exact mapping table.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Heteroscedastic regression: predict the variance, not just the mean",
+      "verbatim_quote": "When the uncertainty of the model varies as a function of the input data, we refer to this as heteroscedastic (as opposed to homoscedastic, where the uncertainty is constant).",
+      "page": 78,
+      "latex": "\\mu=f_1[x,\\phi],\\quad \\sigma^2=f_2[x,\\phi]^2\\quad\\text{(eq 5.14)}",
+      "symbol_and_unit_ledger": "f1 = network output predicting mean mu; f2 = network output whose square predicts variance sigma^2 (squaring guarantees positivity); homoscedastic = constant variance, heteroscedastic = input-dependent variance. Transcribed from printed eq 5.14 (PDF p78 / printed 64).",
+      "assumptions": "A two-output network predicts both mean and variance; the variance is squared to stay positive. The learned variance 'tells us about the uncertainty of the prediction' (p78). This is the printed route to input-dependent uncertainty quantification.",
+      "breakdown_regime": "The variance head can collapse or mis-calibrate if not regularized; the squaring ensures positivity but not calibration. Homoscedastic models hide input-dependent uncertainty, which is exactly the regime where a confident point estimate is most dangerous.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p3",
+        "mapping": "GSE should predict a variance alongside its value estimate (heteroscedastic), so uncertainty rises in unfamiliar matchup regimes rather than staying constant. This is the printed kernel for the engine's confidence calibration: a point estimate without an input-dependent variance is the homoscedastic defect the source warns against.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Negative log-likelihood, cross-entropy, and KL divergence are equivalent",
+      "verbatim_quote": "and the cross-entropy criterion (from minimizing the distance between the model and empirical data distributions) are equivalent.",
+      "page": 86,
+      "latex": "D_{\\mathrm{KL}}[q\\|p]=\\int q(z)\\log\\frac{q(z)}{p(z)}\\,dz\\quad\\text{(eq 5.27)};\\quad \\hat\\phi=\\arg\\min_\\phi\\Bigl[-\\sum_i\\log\\Pr(y_i|f[x_i,\\phi])\\Bigr]\\quad\\text{(eq 5.31)}",
+      "symbol_and_unit_ledger": "q(y) = empirical data distribution (sum of Dirac masses, eq 5.28); p = model distribution; D_KL = Kullback-Leibler divergence (nats). Transcribed from printed eq 5.27-5.31 (PDF p85-86 / printed 71-72). The q log q term is independent of phi and drops; the remaining cross-entropy term equals the NLL.",
+      "assumptions": "Minimizing NLL (maximizing data likelihood) and minimizing KL divergence between model and empirical distributions are the SAME objective. Cross-entropy is 'the amount of uncertainty that remains in one distribution after taking into account what we already know from the other' (p86).",
+      "breakdown_regime": "The equivalence holds for the empirical (Dirac) data distribution; KL is asymmetric (D_KL[q||p] != D_KL[p||q]), so the direction matters. This is the information-theoretic bridge to Garnett's entropy search and ADM's value of information.",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p4",
+        "mapping": "GSE's cross-entropy training loss IS a KL-divergence minimization between the predicted outcome distribution and the empirical game outcomes — the same information quantity Garnett's acquisition and ADM's VOI optimize. This unifies the learning layer (Prince), the experiment-design layer (Garnett), and the decision layer (ADM) under one information-theoretic objective.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Convex losses guarantee the global minimum; neural losses do not",
+      "verbatim_quote": "Convexity implies that wherever we initialize the parameters, we are bound to reach the minimum if we keep walking downhill",
+      "page": 94,
+      "latex": null,
+      "assumptions": "Linear-regression least-squares loss is convex: every chord lies above the surface, so walking downhill from any initialization reaches the global minimum and 'the training procedure can't fail'. Neural-network losses are non-convex, with local minima (gradient zero, loss increases in every direction) and saddle points (gradient zero, increases in some directions, decreases in others) (PDF p94-97 / printed 80-83).",
+      "breakdown_regime": "For non-convex losses there is no guarantee of reaching the global minimum, and 'there is no way of knowing whether there is a better solution elsewhere' (p95). Near a saddle point the surface is flat, so a small-gradient termination criterion may stop erroneously.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p5",
+        "mapping": "GSE cannot claim its value-model training found the global optimum: the loss is non-convex, and a small gradient may signal a saddle point, not convergence. The engine must treat 'trained to convergence' as a local statement, never a global guarantee — the printed convex/non-convex distinction is the veto.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Adam: adaptive per-parameter steps with bias-corrected moments",
+      "verbatim_quote": "The result is an algorithm that can converge to the overall minimum and makes good Notebook 6.5 Adam progress in every direction in the parameter space.",
+      "page": 104,
+      "latex": "\\phi_{t+1}\\leftarrow\\phi_t-\\alpha\\,\\frac{\\tilde m_{t+1}}{\\sqrt{\\tilde v_{t+1}}+\\epsilon}\\quad\\text{(eq 6.17)};\\quad \\tilde m_{t+1}=\\frac{m_{t+1}}{1-\\beta^{t+1}},\\ \\tilde v_{t+1}=\\frac{v_{t+1}}{1-\\gamma^{t+1}}\\quad\\text{(eq 6.16)}",
+      "symbol_and_unit_ledger": "m = momentum (EMA of gradient, coeff beta); v = EMA of squared gradient (coeff gamma); alpha = learning rate; epsilon = small constant preventing division by zero; tilde = bias-corrected statistics. Transcribed from printed eq 6.15-6.18 (PDF p102-104 / printed 88-90).",
+      "assumptions": "Fixed-step GD makes large updates where gradients are large (should be cautious) and small updates where gradients are small (should explore). Adam normalizes by the squared-gradient magnitude so each coordinate moves a comparable distance, and bias correction fixes the unrealistically small early estimates. Adam 'helps compensate for' depth-dependent gradient magnitudes and 'balances out changes across the different layers' (p104).",
+      "breakdown_regime": "Adam is usually stochastic (mini-batch), so the trajectory is noisy; it is less sensitive to the initial learning rate but is not a global-optimum guarantee. The book notes SGD may generalize better than Adam, though careful hyperparameter search narrows the gap (p425-426).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p6",
+        "mapping": "GSE's value-model optimizer should use adaptive per-parameter steps (Adam) to balance updates across features with very different gradient scales, and to partially compensate depth-dependent gradient magnitudes. The printed bias-correction and the SGD-vs-Adam generalization caveat are both declared design considerations, not free guarantees.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p7",
+      "name": "He initialization: variance 2/D_h keeps ReLU activations stable",
+      "verbatim_quote": "where Dh is the dimension of the original layer to which the weights were applied. This is known as He initialization.",
+      "page": 124,
+      "latex": "\\sigma^2_\\Omega=\\frac{2}{D_h}\\quad\\text{(eq 7.32, forward)};\\quad \\sigma^2_\\Omega=\\frac{2}{D_{h'}}\\quad\\text{(eq 7.33, backward)};\\quad \\sigma^2_\\Omega=\\frac{4}{D_h+D_{h'}}\\quad\\text{(eq 7.34, compromise)}",
+      "symbol_and_unit_ledger": "sigma^2_Omega = weight variance; D_h = fan-in (previous-layer width); D_h' = fan-out (next-layer width); biases initialized to zero. Transcribed from printed eq 7.31-7.34 (PDF p123-125 / printed 109-111). Derivation: ReLU halves the second moment, so sigma^2_f' = (1/2) D_h sigma^2_Omega sigma^2_f; setting sigma^2_Omega=2/D_h preserves variance.",
+      "assumptions": "With std-1 weights the pre-activation variance grows or shrinks exponentially with depth (vanishing/exploding gradients). He initialization (2/D_h for ReLU) keeps forward activation variance and backward gradient variance stable. For non-square layers the 4/(D_h+D_h') compromise balances both passes.",
+      "breakdown_regime": "He init is for ReLU; sigmoid/tanh need Glorot (the factor-of-two difference, p202). It stabilizes variance at initialization but does not prevent later divergence during training. The empirical fig 7.7 shows variance stable only at sigma^2=0.02 for D_h=100.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p7",
+        "mapping": "GSE's ReLU value network must use He initialization (variance 2/fan-in), the precise modern successor to Nielsen's 1/sqrt(n_in) sigmoid rule. The printed variance-preservation derivation is the executable kernel; using the wrong activation's init rule is a declared defect.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p8",
+      "name": "Bias-variance-noise decomposition of expected test error",
+      "verbatim_quote": "This equation says that the expected loss after considering the uncertainty in the training data D and the test data y consists of three additive components.",
+      "page": 138,
+      "latex": "\\mathbb{E}_D\\bigl[\\mathbb{E}_y[L[x]]\\bigr]=\\underbrace{\\mathbb{E}_D\\bigl[(f[x,\\phi[D]]-f_\\mu[x])^2\\bigr]}_{\\text{variance}}+\\underbrace{\\bigl(f_\\mu[x]-\\mu[x]\\bigr)^2}_{\\text{bias}}+\\underbrace{\\sigma^2}_{\\text{noise}}\\quad\\text{(eq 8.7)}",
+      "symbol_and_unit_ledger": "f_mu[x] = E_D[f[x,phi[D]]] = expected model over training datasets; mu[x] = true function mean; sigma^2 = irreducible noise variance; D = training dataset (random sample). Transcribed from printed eq 8.3-8.7 (PDF p137-138 / printed 123-124). Holds additively for least-squares regression; interaction is more complex for other losses (p138, p147).",
+      "assumptions": "Expected test error = variance (sensitivity to the particular training sample) + bias squared (systematic deviation of the average model from truth) + noise (irreducible). Noise is insurmountable; variance falls with more data; bias falls with more capacity but variance rises (bias-variance trade-off).",
+      "breakdown_regime": "The additive decomposition is exact only for least-squares regression; for classification the terms interact non-additively (Friedman 1997, Domingos 2000). The bias and variance are not directly observable in practice (bias needs the true function; variance needs multiple independent datasets).",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p8",
+        "mapping": "GSE's prediction error decomposes into irreducible game noise, model bias, and sample variance. The engine cannot reduce the noise floor (football is stochastic); it can only trade bias against variance via capacity and data. This is the printed framework for diagnosing WHY the engine errs, and the veto against claiming zero error is achievable.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p9",
+      "name": "Double descent: test error falls again past the interpolation threshold",
+      "verbatim_quote": "The first part of the curve is referred to as the classical or under-parameterized regime, and the second part as the modern or over-parameterized regime.",
+      "page": 143,
+      "latex": null,
+      "assumptions": "Classical bias-variance predicts test error rises as capacity approaches the interpolation threshold (parameters ~ data). Double descent shows test error then FALLS again in the over-parameterized 'modern' regime, sometimes below the classical minimum. Three regimes: classical/under-parameterized, critical (the peak), modern/over-parameterized (PDF p141-143 / printed 127-129; Belkin 2019, Nakkiran 2021).",
+      "breakdown_regime": "The putative explanation is smoother interpolation between sparse data points as capacity grows, but 'it's unclear what drives this' (p146); the smoothness story is plausible, not proven. Double descent is more prominent with label noise. It contradicts the classical 'more capacity always overfits' rule.",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p9",
+        "mapping": "GSE must not assume that adding model capacity past the data size always hurts: the printed double-descent curve shows the modern regime can generalize better. But the mechanism is not understood, so the engine treats overparameterization as an empirical lever validated out-of-sample, never a theoretical guarantee — the critical-regime peak is a real danger zone.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p10",
+      "name": "Curse of dimensionality: training data are vanishingly sparse",
+      "verbatim_quote": "The tendency of the volume of high-dimensional space to overwhelm the number of training points is termed the curse of dimensionality.",
+      "page": 143,
+      "latex": null,
+      "assumptions": "Quantizing each of 40 MNIST-1D input dimensions into 10 bins gives 10^40 bins constrained by only 10^4 examples — one data point per 10^36 bins (PDF p143 / printed 129). High-dimensional input space is overwhelmingly empty; the model's behavior between data points is governed by its inductive bias, not by data.",
+      "breakdown_regime": "Because data are sparse, generalization depends entirely on what the model assumes between points. A model with 10^42 linear regions has ~10^38 regions per training example (p417); almost none contain data. This is why inductive bias and architecture matter more than raw fit.",
+      "domain": "math",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p10",
+        "mapping": "GSE's feature space is high-dimensional and its historical games are vanishingly sparse within it. The engine's predictions in unseen matchup regimes are governed by its inductive bias, not by data coverage — the printed curse of dimensionality is the veto against claiming the training set 'covers' the space of possible games.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p11",
+      "name": "Implicit regularization: SGD penalizes batch-gradient variance",
+      "verbatim_quote": "SGD implicitly favors places where the gradients are stable (where all the batches agree on the slope).",
+      "page": 157,
+      "latex": "\\tilde L_{\\mathrm{SGD}}[\\phi]=L[\\phi]+\\frac{\\alpha}{4}\\Bigl\\|\\frac{\\partial L}{\\partial\\phi}\\Bigr\\|^2+\\frac{\\alpha}{4B}\\sum_{b=1}^{B}\\Bigl\\|\\frac{\\partial L_b}{\\partial\\phi}-\\frac{\\partial L}{\\partial\\phi}\\Bigr\\|^2\\quad\\text{(eq 9.9)}",
+      "symbol_and_unit_ledger": "L = full-data mean loss; L_b = batch-b mean loss; B = number of batches per epoch; alpha = learning rate. Transcribed from printed eq 9.8-9.10 (PDF p156-157 / printed 142-143). GD adds a gradient-norm penalty (eq 9.8); SGD adds a batch-gradient-variance penalty.",
+      "assumptions": "Neither GD nor SGD moves neutrally to a minimum; each prefers some solutions. Discrete GD is repelled from steep regions (gradient-norm penalty); SGD additionally favors solutions where all batches agree on the slope (low batch-gradient variance). This is implicit regularization — it modifies the trajectory, not necessarily the global-minimum position.",
+      "breakdown_regime": "The effect scales with learning rate alpha; it does not change minima where gradients are already zero. Smaller batches and larger learning rates generalize better, plausibly via this mechanism (p157, p425). It is a leading explanation, not a complete theory.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p11",
+        "mapping": "GSE's mini-batch world sampling is not just a computational shortcut — it implicitly regularizes toward value surfaces where all worlds agree on the gradient (stable, generalizable solutions). The printed batch-variance penalty is the kernel linking the 10,000-world ensemble to generalization, and the veto against treating SGD as merely noisy GD.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p12",
+      "name": "Regularization is a Bayesian prior: MAP estimation",
+      "verbatim_quote": "The regularization term can be considered as a prior Pr(ϕ) that represents knowledge about the parameters before we observe the data and we now have the maximum a posteriori or MAP criterion:",
+      "page": 153,
+      "latex": "\\hat\\phi=\\arg\\max_\\phi\\Bigl[\\Pr(\\phi)\\prod_{i=1}^{I}\\Pr(y_i|x_i,\\phi)\\Bigr]\\quad\\text{(eq 9.4)};\\quad \\lambda\\,g[\\phi]=-\\log\\Pr(\\phi)",
+      "symbol_and_unit_ledger": "Pr(phi) = prior over parameters; lambda*g[phi] = regularization term = negative log-prior; L2 (eq 9.5) corresponds to a Gaussian prior on weights. Transcribed from printed eq 9.3-9.5 (PDF p153-154 / printed 139-140).",
+      "assumptions": "Adding lambda*g[phi] to the NLL loss is exactly MAP estimation with prior Pr(phi)=exp(-lambda*g[phi]). L2 weight decay = Gaussian prior favoring small weights; applied to weights not biases. Regularization trades variance reduction against increased bias (p154).",
+      "breakdown_regime": "The prior is a generic preference (small weights), not domain knowledge; too large lambda over-smooths and worsens fit (fig 9.2e-f). The Bayesian interpretation unifies regularization with Garnett's prior-based acquisition, but the prior choice remains a declared assumption.",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p12",
+        "mapping": "GSE's weight decay IS a Bayesian prior over value-model parameters — the same prior machinery Garnett uses for acquisition. This unifies the learning layer's regularization with the experiment-design layer's Bayesian inference under one MAP framework, and declares the prior as an assumption to be validated, not a free guarantee.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p13",
+      "name": "Residual identity path: gradients reach early layers directly",
+      "verbatim_quote": "The identity term on the right- hand side shows that changes in the parameters ϕ1 in the first layer f1[x, ϕ1] contribute directly to changes in the network output y.",
+      "page": 205,
+      "latex": "\\frac{\\partial y}{\\partial f_1}=I+\\frac{\\partial f_2}{\\partial f_1}+\\Bigl(\\frac{\\partial f_3}{\\partial f_1}+\\frac{\\partial f_2}{\\partial f_1}\\frac{\\partial f_3}{\\partial f_2}\\Bigr)+\\cdots\\quad\\text{(eq 11.6)};\\quad h_k=h_{k-1}+f_k[h_{k-1},\\phi_k]\\quad\\text{(eq 11.4)}",
+      "symbol_and_unit_ledger": "I = identity matrix (the residual/skip path); f_k = residual block computing an additive change; the gradient is a sum over paths of differing length. Transcribed from printed eq 11.4-11.6 (PDF p203-205 / printed 189-191).",
+      "assumptions": "A residual block adds its input back to its output (h_k = h_{k-1} + f_k). Unraveling gives an ensemble of paths; the identity term means early-layer parameters contribute DIRECTLY to the output gradient, plus shorter derivative chains. 'Gradients through shorter paths will be better behaved', so residual nets suffer less from shattered gradients (p205).",
+      "breakdown_regime": "Residual connections roughly double trainable depth but do not allow arbitrary depth: the forward variance still doubles per block (exploding), requiring BatchNorm or 1/sqrt(2) rescaling (p206). The identity path fixes gradient shattering, not variance explosion.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p13",
+        "mapping": "GSE's deep value model should use residual/skip connections so early feature gradients reach the output directly via the identity path — the printed fix for the shattered-gradient problem Nielsen diagnosed. This is the modern architectural kernel that makes depth trainable, and the veto against plain deep stacks.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p14",
+      "name": "Shattered gradients: deep-network gradients become uncorrelated",
+      "verbatim_quote": "Nearby gradients are correlated for shallow networks, but this correlation quickly drops to zero for deep networks.",
+      "page": 201,
+      "latex": null,
+      "assumptions": "For a shallow network the output gradient changes slowly with input; for a deep network a tiny input change gives a completely different gradient. The gradient autocorrelation drops to zero for deep nets — the shattered gradients phenomenon (Balduzzi 2017, PDF p201-202 / printed 187-188). GD relies on the loss surface being smooth so gradients are related before and after a step; finite step sizes land on unrelated gradients.",
+      "breakdown_regime": "This is a conjecture for why very deep plain networks fail to train (training AND test error both rise, p201), not a proven theorem. The derivative assumes an infinitesimal change but optimizers use finite steps; the loss surface looks like 'an enormous range of tiny mountains'. Residual connections and BatchNorm mitigate it.",
+      "domain": "cs",
+      "timescales": [
+        "tau_1",
+        "tau_2"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p14",
+        "mapping": "GSE must recognize that beyond a depth, its value-model gradients become uncorrelated across steps (shattered), so a finite learning rate lands on an unrelated gradient and training stalls. This is the printed mechanism behind 'deeper is harder' and the reason the engine needs residual paths and normalization, not just more layers.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p15",
+      "name": "Batch normalization: standardize then learn scale and shift",
+      "verbatim_quote": "Batch normalization makes the network invariant to rescaling the weights and biases that contribute to each activation;",
+      "page": 208,
+      "latex": "h_i\\leftarrow\\frac{h_i-m_h}{s_h+\\epsilon}\\quad\\text{(eq 11.8)};\\quad h_i\\leftarrow\\gamma h_i+\\delta\\quad\\text{(eq 11.9)}",
+      "symbol_and_unit_ledger": "m_h, s_h = batch mean and std of activation h (eq 11.7); gamma, delta = learned scale and shift; epsilon prevents division by zero. Transcribed from printed eq 11.7-11.9 (PDF p206-208 / printed 192-194). At test time the statistics are computed over the whole training set and frozen.",
+      "assumptions": "BatchNorm standardizes each activation to zero mean/unit variance across the batch, then learns gamma/delta. In residual nets it converts exponential variance growth to linear (fig 11.6c), makes the loss surface smoother (higher learning rates), and injects batch-dependent noise (implicit regularization). It creates weight-rescaling redundancy.",
+      "breakdown_regime": "BatchNorm depends on batch statistics, so it behaves differently at test time (frozen statistics) and with small batches. It adds parameters and redundancy; the benefits (stable propagation, higher LR, regularization) are empirical. The residual variance still grows linearly, not stays constant.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p15",
+        "mapping": "GSE's residual value network needs BatchNorm to keep activation variance from exploding with depth and to smooth the loss surface for higher learning rates. The printed train/test statistic-freezing distinction is a declared operational detail the engine must honor, and the batch-noise regularization links back to the ensemble.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p16",
+      "name": "The epistemic frontier: a priori, deep learning shouldn't work",
+      "verbatim_quote": "finding the global minimum of an arbitrary non-convex function is NP-hard (Murty & Kabadi, 1987), and this is also true for certain neural network loss functions (Blum & Rivest, 1992).",
+      "page": 416,
+      "latex": null,
+      "assumptions": "Finding the global minimum of an arbitrary non-convex function is NP-hard (Murty & Kabadi 1987), and so is training certain neural networks (Blum & Rivest 1992). Yet deep nets fit reliably and generalize 'dumbfounding[ly]'. 'A priori, deep learning shouldn't work. And yet it does.' (PDF p416-417 / printed 402-403). The curse of dimensionality and the surfeit of parameters make generalization surprising.",
+      "breakdown_regime": "This is the book's central honest admission: the success of deep learning is empirically undeniable but theoretically unexplained. Overparameterization and activation choice are the two most important factors for tractable fitting (p433), but 'theory cannot yet explain empirical fitting performance' (p420).",
+      "domain": "cs",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p16",
+        "mapping": "This is the foundry's epistemic posture in printed form: GSE's value model works empirically despite NP-hard training and vanishingly sparse data, and the engine must NOT claim a theoretical guarantee of success. The honest stance is executable kernels where they exist and declared limits where they do not — exactly the book's 'understanding of deep learning is still limited'.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p17",
+      "name": "Lottery ticket hypothesis: winning subnetworks at initialization",
+      "verbatim_quote": "They term this the lottery ticket hypothesis and denote the sub-networks as winning tickets.",
+      "page": 421,
+      "latex": null,
+      "assumptions": "Frankle & Carbin 2019: train a network, prune the smallest-magnitude weights, retrain the remainder FROM THE SAME initial weights, and recover the same or better performance. This fails with random re-initialization. The overparameterized network contains small trainable subnetworks ('winning tickets') sufficient for the performance (PDF p421 / printed 407). VGG-19 pruned 98.5% on CIFAR-10; ResNet-50 pruned 80% on ImageNet (p430).",
+      "breakdown_regime": "The hypothesis is empirical; 'a precise characterization of this idea is lacking' (p421). Pruned networks are STILL overparameterized relative to data after pruning, so this does not prove overparameterization is unnecessary. The winning ticket depends on the specific initialization.",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p17",
+        "mapping": "GSE's overparameterized value model may contain a small winning subnetwork that does the real work — the printed lottery-ticket result suggests pruning could shrink the engine without losing performance, but only from the same initialization. The engine treats this as an empirical compression lever, not a proof that small models suffice.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p18",
+      "name": "Flat minima correlate with generalization — but sharpness alone is not sufficient",
+      "verbatim_quote": "flat minima in the loss function generalize better than sharp minima (figure 20.11).",
+      "page": 426,
+      "latex": null,
+      "assumptions": "Flat minima generalize better than sharp minima (Hochreiter & Schmidhuber 1997): small parameter errors matter less in flat regions; minimum-description-length theory says fewer-bit models generalize better (PDF p426 / printed 412). Flatness measured by region size, curvature, or max neighborhood loss; weight averaging (Izmailov 2018) flattens and improves generalization.",
+      "breakdown_regime": "CAUTION: 'sharpness alone is not a good criterion to predict generalization between datasets' — randomizing CIFAR labels (making generalization impossible) does NOT sharpen the minimum (Neyshabur 2017, p427). Flatness can be gamed by ReLU reparameterization (Dinh 2017). It is a correlate, not a guarantee.",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p18",
+        "mapping": "GSE may prefer flat value-model minima (robust to parameter perturbation), but must NOT use sharpness as a generalization certificate: the printed random-label counterexample shows a model can be flat and still generalize not at all. Flatness is a heuristic correlate, validated out-of-sample, never a guarantee.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p19",
+      "name": "Grokking and the Goldilocks zone: delayed generalization via weight norm",
+      "verbatim_quote": "in which a sudden improvement in generalization can occur many epochs after the training error is already zero",
+      "page": 427,
+      "latex": null,
+      "assumptions": "Grokking (Power 2022): generalization suddenly improves many epochs AFTER training error is already zero. Explanation (Liu 2023c): the weight norm starts too large (fits data but varies wildly between points); implicit/explicit regularization slowly shrinks the norm into the 'Goldilocks zone' (Fort & Scherlis 2019) where curvature is positive and generalization is good (PDF p427 / printed 413).",
+      "breakdown_regime": "The Goldilocks zone is a narrow weight-norm range around He/Xavier initialization; too small a norm cannot capture variation, too large a norm interpolates erratically. Grokking is an observed phenomenon with a proposed norm-based explanation, not a prescriptive theory; the lag depends on initialization.",
+      "domain": "cs",
+      "timescales": [
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p19",
+        "mapping": "GSE must not declare a value model 'done' when training error hits zero: the printed grokking phenomenon shows generalization can arrive much later as the weight norm settles into the Goldilocks zone. The engine should monitor held-out performance beyond zero training error and control weight norm, not stop at fit.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    },
+    {
+      "primitive_id": "p20",
+      "name": "No prescriptive theory: the limits of understanding deep learning",
+      "verbatim_quote": "We do not currently have any prescriptive theory that will allow us to predict the circumstances in which training and generalization will succeed or fail.",
+      "page": 434,
+      "latex": null,
+      "assumptions": "'We do not currently have any prescriptive theory that will allow us to predict the circumstances in which training and generalization will succeed or fail. We do not know the limits of learning in deep networks or whether much more efficient models possible.' The study of deep learning is driven by empirical demonstrations 'not yet matched by our understanding of deep learning mechanisms' (PDF p434 / printed 420).",
+      "breakdown_regime": "This is the declared boundary of the field: overparameterization and depth appear required for generalization, but 'we do not yet know why' (p434). Bubeck & Sellke 2021 prove smooth interpolation needs D times more parameters than mere interpolation (p431-432), a rare theoretical result amid empiricism.",
+      "domain": "cs",
+      "timescales": [
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "source_operator": "p20",
+        "mapping": "This is the foundry's terminal epistemic veto: GSE inherits a field with NO prescriptive theory of when training/generalization succeed. The engine must validate every claim out-of-sample, declare its limits honestly, and PASS wherever the gate cannot be cleared — never dress empirical success as theoretical guarantee. The book's own title is ironic: 'understanding' is still limited.",
+        "telemetry": "LATENT_UNIDENTIFIABLE"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Understanding Deep Learning is the 2023 modern theory layer of the foundry corpus, the source that updates Nielsen 2015 with everything the field learned in the intervening eight years, and it sits above Nielsen in the learning spine exactly as Garnett sits above ADM in the decision spine. Where Nielsen prints the mechanics and pathologies of training a network, Prince prints the modern understanding of why training works at all, why generalization is surprising, and where the field's understanding stops. Read retrocausally, the book's citations are a genealogy of the entire discipline: Cauchy 1847 inventing gradient descent, Robbins and Monro 1951 inventing stochastic approximation, Cybenko 1989 and Hornik-Stinchcombe-White 1989 proving universality, Glorot and Bengio 2010 and He 2015 deriving initialization, Kingma and Ba's Adam, He 2016 residual networks, Ioffe and Szegedy 2015 batch normalization, Belkin 2019 and Nakkiran 2021 double descent, Frankle and Carbin 2019 lottery tickets, Hochreiter and Schmidhuber 1997 flat minima, Power 2022 grokking, Murty and Kabadi 1987 and Blum and Rivest 1992 proving NP-hardness, Zhang 2017 fitting random labels, Sejnowski 2020's 'haystack of needles', and Bubeck and Sellke 2021's smooth-interpolation lower bound. Now run that backward into the extracted corpus and the decision spine. Prince's maximum-likelihood recipe (eq 5.6) is the principled foundation Nielsen only gestures at: the loss is the negative log-likelihood of a declared output distribution, least squares is the Gaussian special case, and cross-entropy is exactly KL-divergence minimization (eq 5.31) — the same information quantity Garnett's entropy search and ADM's value of information optimize. Prince's MAP interpretation of regularization (eq 9.4) is the same Bayesian prior machinery Garnett uses for acquisition. So the three modern sources unify: Prince prints how the model is fit and why it generalizes, Garnett prints how to design the next observation, ADM prints how to decide given the model, and all three meet at the information-theoretic objective. The era sources computed best-response from scouting tables by hand; Prince prints the gradient machinery that learns those tables from data, and then honestly admits the machinery's success is not understood.\n\nThe recursive theory of mind in Prince is the field modeling its own surprise, and chapter 20 is the most explicit example in the corpus. The author enumerates the hypotheses for why deep networks train despite NP-hardness — the dataset is simple, regularization flattens the loss, SGD escapes valleys, overparameterization creates degenerate solutions, the activation matters, initialization matters, depth matters — and then tests each against evidence: Zhang 2017 fits random labels and random pixels (so the dataset is not the reason), Keskar 2017 fits with huge batches (so SGD randomness is not the reason), full-batch gradient descent with no regularization still fits random data (so the loss may genuinely have no bad local minima). This is the engine modeling why its own value model works: not because the problem is easy, but because overparameterization turns 'finding a needle in a haystack' into 'a haystack of needles'. The cross-entropy-as-surprise and the MAP-as-prior are theory-of-mind about the model's own uncertainty; the heteroscedastic head (eq 5.14) is the model predicting its own variance; the grokking analysis is the experimenter modeling the slow drift of the weight norm into the Goldilocks zone. And the book's recurring honesty — 'understanding of deep learning is still limited', 'theory cannot yet explain empirical fitting performance', 'we do not yet know why' — is the meta-cognitive layer: the author models the limits of his own field and refuses to dress empiricism as theory.\n\nCross-layer veto adjudication is where Prince earns its place above Nielsen, because it prints the modern results that overturn classical intuitions and the honest limits that veto overclaim. The MLE recipe (p1) vetoes ad-hoc loss design; least-squares-from-Gaussian (p2) vetoes using MSE outside its assumption regime; the heteroscedastic head (p3) vetoes point-estimate-only prediction; the convex/non-convex distinction (p5) vetoes 'we found the global optimum'; double descent (p9) vetoes 'more capacity always overfits'; implicit regularization (p11) vetoes 'SGD is just noisy GD'; the residual identity path (p13) and BatchNorm (p15) are the printed fixes for the shattered gradients (p14) Nielsen diagnosed; the NP-hardness result (p16) vetoes any guarantee of training success; the flat-minima caveat (p18) vetoes sharpness as a generalization certificate; grokking (p19) vetoes stopping at zero training error; and the no-prescriptive-theorem admission (p20) is the terminal veto against dressing empirical success as theoretical guarantee. Each is a cross-layer constraint overriding a single-layer maximand, and together they make Prince the modern-theory-and-limits layer the foundry was missing. The extraction is honest about its form: this is the author's freely-distributed draft (MIT Press 2023, udllibook.com, errata to udlbookmail@gmail.com), whose equations ARE text-extractable as Unicode glyphs, so the sovereign primitives are verbatim prose quotes plus equations transcribed from the printed text layer and explicitly labeled as reassembled from multi-line extraction — never claimed as a verbatim glyph image. The durable lesson Prince hands the foundry is the same one it hands the field: the kernels are executable and the successes are real, but the understanding is incomplete, and the only honest posture is to validate out-of-sample, declare the limits, and PASS wherever the gate cannot be cleared. Two final printed results sharpen that posture. Bubeck and Sellke 2021 prove that in D dimensions smooth interpolation requires D times more parameters than mere interpolation (p431-432), a rare hard lower bound amid the empiricism, and the book argues current models may not be overparameterized enough. And the adversarial-example analysis (p428-429, Ilyas 2019) concludes that tiny imperceptible perturbations flip predictions not because the model is fragile to out-of-distribution data but because it exploits non-robust features that are genuinely in the training distribution yet invisible to humans — a warning that GSE's value model may likewise latch onto statistically real but football-meaningless signals, which the out-of-sample crucible must expose.",
+      "retrocausal_genealogy": "Prince's printed citations: Cauchy 1847 (GD), Robbins-Monro 1951 (SGD), Cybenko 1989 / Hornik-Stinchcombe-White 1989 (universality), Glorot-Bengio 2010 / He 2015 (init), Adam (Kingma-Ba), He 2016 (ResNet), Ioffe-Szegedy 2015 (BatchNorm), Belkin 2019 / Nakkiran 2021 (double descent), Frankle-Carbin 2019 (lottery tickets), Hochreiter-Schmidhuber 1997 (flat minima), Power 2022 (grokking), Murty-Kabadi 1987 / Blum-Rivest 1992 (NP-hard), Zhang 2017 (random labels), Sejnowski 2020 (haystack of needles), Bubeck-Sellke 2021 (smooth interpolation needs D x parameters). Backward links: MLE recipe (eq 5.6) = principled foundation Nielsen gestures at; cross-entropy=KL (eq 5.31) = the info quantity Garnett entropy-search / ADM VOI optimize; MAP=regularization-as-prior (eq 9.4) = Garnett's Bayesian prior; bias-variance-noise (eq 8.7) = the error-decomposition the calibration work uses. Prince UPDATES Nielsen 2015 with double descent, implicit regularization, ResNets/BatchNorm, and the 'why does it work' frontier.",
+      "theory_of_mind": "Chapter 20 is the field modeling its own surprise: enumerate hypotheses for why deep nets train despite NP-hardness (simple dataset, regularization, SGD escape, overparameterization, activation, init, depth), then test each — Zhang 2017 fits random labels/pixels (dataset not the reason), Keskar 2017 fits with huge batches (SGD randomness not the reason), full-batch GD with no regularization still fits random data (loss may have no bad local minima). Overparameterization turns 'needle in a haystack' into 'haystack of needles' (Sejnowski 2020). The heteroscedastic head (eq 5.14) is the model predicting its own variance; grokking is the experimenter modeling the weight norm's slow drift into the Goldilocks zone. The meta-cognitive layer is the book's honesty: 'understanding of deep learning is still limited', 'theory cannot yet explain empirical fitting performance', 'we do not yet know why'.",
+      "cross_layer_veto": "Printed cross-layer vetoes: (1) MLE recipe — loss must come from a declared output distribution, not ad-hoc (p74); (2) least squares is the Gaussian special case, wrong for heavy-tailed/count outcomes (p76); (3) heteroscedastic — predict variance, not just mean (p78); (4) convex vs non-convex — no global-optimum guarantee, small gradient may be a saddle (p94); (5) double descent — more capacity past interpolation can generalize BETTER, classical rule overturned (p143); (6) implicit regularization — SGD penalizes batch-gradient variance, not just noisy GD (p157); (7) residual identity path + BatchNorm fix shattered gradients (p205, p208); (8) NP-hardness — no guarantee of training success (p416); (9) flat minima correlate with generalization but sharpness alone is NOT sufficient (random-label counterexample, p426-427); (10) grokking — do not stop at zero training error (p427); (11) no prescriptive theory — terminal veto against empirical-success-as-guarantee (p434)."
+    }
+  ],
+  "universal_lens": "Read through a polymath learning-theory lens, Prince 2023 is the unified modern account of fitting and generalization: probabilistic loss construction (MLE/MAP), optimization (GD/SGD/Adam), credit assignment (backprop/He init), error decomposition (bias-variance-noise), the double-descent overturn of classical capacity intuition, implicit regularization, architectural fixes (ResNet/BatchNorm), and the epistemic frontier (NP-hardness, lottery tickets, grokking, no prescriptive theory). It is the rare source that prints both executable kernels and an honest account of where the field's understanding stops.",
+  "gsi_mapping": "The heteroscedastic variance head (eq 5.14) maps to a physiological model that predicts its own uncertainty as a function of the patient state; the bias-variance-noise decomposition (eq 8.7) maps to separating irreducible biological noise from model bias and sample variance; the MLE recipe maps to choosing the right outcome distribution (Poisson for event counts, von Mises for circular direction). No clinical telemetry exists in this methods text; all bindings are labeled derived and LATENT_UNIDENTIFIABLE until measured.",
+  "gse_mapping": "The modern learning layer above Nielsen: MLE loss recipe (p74) for principled loss design; heteroscedastic uncertainty (p78) for input-dependent confidence; cross-entropy=KL (p86) unifying with Garnett/ADM info; Adam (p104) and He init (p124) for training; bias-variance-noise (p138) for error diagnosis; double descent (p143) and implicit regularization (p157) for the ensemble/capacity strategy; ResNet identity (p205) + BatchNorm (p208) for depth; and the ch20 frontier (NP-hardness p416, no prescriptive theory p434) as the terminal epistemic veto. No odds, no publication from this lane."
+}

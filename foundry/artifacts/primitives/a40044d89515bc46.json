@@ -1,0 +1,78 @@
+{
+  "book_id": "a40044d89515bc46",
+  "source_status": "COMPLETE",
+  "title": "vision-repo-validation-2026",
+  "file_name": "vision-repo-validation-2026.md",
+  "sha256": "a40044d89515bc46f7aa73b281308698035de57b88d5f6ce814d6362bdaf82d0",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Vision data integrity and spatial enrichment parity across GSE layers. Universal Lens: Rooted in vision-repo-validation-2026 (a40044d89515bc46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian spatial confidence bounds on play-state metrics via Kalman coverage fields. GSI Mapping: Rooted in vision-repo-validation-2026 (a40044d89515bc46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning grounded in enriched tracklet geometry and shadow-derived play states. GSE Mapping: Rooted in vision-repo-validation-2026 (a40044d89515bc46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "spatial_enrichment_gap",
+      "name": "Spatial Enrichment Gap",
+      "verbatim_quote": "CRITICAL GAP — spatial/label columns ABSENT: The enrichment parquet does NOT contain x, y, separation, pocket_depth, SOE, or coverage_shell columns.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x, y': 'meters (spatial coordinates)', 'separation': 'meters (player distance)', 'pocket_depth': 'meters (passing pocket depth)', 'SOE': 'dimensionless (spread offset estimate)', 'coverage_shell': 'meters (defensive coverage radius)'}",
+      "assumptions": "Enrichment parquet lacks spatial metadata required for geometric inference.",
+      "breakdown_regime": "When spatial columns are missing, derived metrics become undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel maps missing spatial columns to zero-dimensional observables in GSI's probabilistic state space.",
+        "source_operator": "spatial_enrichment_gap",
+        "telemetry": "Column existence check in enrichment parquet."
+      }
+    },
+    {
+      "primitive_id": "proof_play_validation",
+      "name": "Proof Play Validation",
+      "verbatim_quote": "Shadow play_id presence: play_id 4579: 22 rows, week 5 (PRESENT — matches proof play) play_id 1820: 0 rows (ABSENT — not in 2026 enr",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'play_id': 'integer (unique identifier)', 'rows': 'count (number of tracklet entries)', 'week': 'integer (NFL season week)'}",
+      "assumptions": "Validation requires alignment between shadow and enrichment datasets.",
+      "breakdown_regime": "Mismatched play IDs indicate data inconsistency or incomplete ingestion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between shadow and enrichment play sets enables cross-validation of tracklet consistency.",
+        "source_operator": "proof_play_validation",
+        "telemetry": "Play ID set intersection between shadow and enrichment."
+      }
+    },
+    {
+      "primitive_id": "pocket_depth_discrepancy",
+      "name": "Pocket Depth Discrepancy",
+      "verbatim_quote": "Claimed defects vs measured (from shadow derived metrics, section 3C): pocket_depth_yards claimed 4.15: QB max dropback measured 8.09 yd.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'pocket_depth_yards': 'yards (measured)', 'QB_max_dropback': 'yards (measured)'}",
+      "assumptions": "Shadow metrics are inconsistent with empirical measurements.",
+      "breakdown_regime": "Discrepancy arises when claimed values exceed physical constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel compares shadow-predicted pocket depth against actual QB movement trajectory.",
+        "source_operator": "pocket_depth_discrepancy",
+        "telemetry": "Correlation between shadow and measured pocket depths."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a40044d89515bc46_t0",
+      "think": "The core issue lies in the mismatch between expected and actual spatial data availability. The GSE vision repo contains valid data under a new path, yet the enrichment parquet lacks critical spatial columns such as x, y, pocket_depth, and SOE. This creates a fundamental gap in geometric reasoning that undermines both GSI’s probabilistic inference and GSE’s situational awareness. The proof play validation confirms that while some plays are correctly mapped, others are absent from the enrichment layer, indicating an incomplete ingestion pipeline. The pocket depth discrepancy further highlights a systemic failure where shadow-derived metrics do not align with empirical observations. These failures are not due to measurement error but to architectural limitations in data enrichment, which must be corrected through explicit spatial column inclusion and validation protocols.\n\nDeep epistemic analysis for vision-repo-validation-2026 (a40044d89515bc46, domain=other, pages_read=7/7): Operator 'Spatial Enrichment Gap' (page 1, domain other) captures: CRITICAL GAP — spatial/label columns ABSENT: The enrichment parquet does NOT contain x, y, separation, pocket_depth, SOE, or coverage_shell columns. Assumptions: Enrichment parquet lacks spatial metadata required for geometric inference. Breakdown regime: When spatial columns are missing, derived metrics become undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel maps missing spatial columns to zero-dimensional observables in GSI's probabilistic state space. Operator 'Proof Play Validation' (page 1, domain other) captures: Shadow play_id presence: play_id 4579: 22 rows, week 5 (PRESENT — matches proof play) play_id 1820: 0 rows (ABSENT — not in 2026 enr Assumptions: Validation requires alignment between shadow and enrichment datasets. Breakdown regime: Mismatched play IDs indicate data inconsistency or incomplete ingestion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between shadow and enrichment play sets enables cross-validation of tracklet consistency. Operator 'Pocket Depth Discrepancy' (page 2, domain other) captures: Claimed defects vs measured (from shadow derived metrics, section 3C): pocket_depth_yards claimed 4.15: QB max dropback measured 8.09 yd. Assumptions: Shadow metrics are inconsistent with empirical measurements. Breakdown regime: Discrepancy arises when claimed values exceed physical constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel compares shadow-predicted pocket depth against actual QB movement trajectory. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for vision-repo-validation-2026 (a40044d89515bc46, domain=other, pages_read=7/7): Operator 'Spatial Enrichment Gap' (page 1, domain other) captures: CRITICAL GAP — spatial/label columns ABSENT: The enrichment parquet does NOT contain x, y, separation, pocket_depth, SOE, or coverage_shell columns. Assumptions: Enrichment parquet lacks spatial metadata required for geometric inference. Breakdown regime: When spatial columns are missing, derived metrics become undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel maps missing spatial columns to zero-dimensional observables in GSI's probabilistic state space. Operator 'Proof Play Validation' (page 1, domain other) captures: Shadow play_id presence: play_id 4579: 22 rows, week 5 (PRESENT — matches proof play) play_id 1820: 0 rows (ABSENT — not in 2026 enr Assumptions: Validation requires alignment between shadow and enrichment datasets. Breakdown regime: Mismatched play IDs indicate data inconsistency or incomplete ingestion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between shadow and enrichment play sets enables cross-validation of tracklet consistency. Operator 'Pocket Depth Discrepancy' (page 2, domain other) captures: Claimed defects vs measured (from shadow derived metrics, section 3C): pocket_depth_yards claimed 4.15: QB max dropback measured 8.09 yd. Assumptions: Shadow metrics are inconsistent with empirical measurements. Breakdown regime: Discrepancy arises when claimed values exceed physical constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel compares shadow-predicted pocket depth against actual QB movement trajectory. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s computer vision frameworks for NFL tracking, this lineage extends into modern deep learning pipelines for player motion reconstruction and spatial reasoning. Retrocausal Genealogy: Rooted in vision-repo-validation-2026 (a40044d89515bc46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in vision-repo-validation-2026 (a40044d89515bc46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the shadow inference engine, which assumes full spatial fidelity, and the validation system, which detects mismatches. Decision actors are constrained by data integrity rules and must balance accuracy with computational efficiency. Theory of Mind & Decision Maker Model: Rooted in vision-repo-validation-2026 (a40044d89515bc46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring explicit spatial columns in enrichment; leakage is prevented by isolating shadow metrics from unverified data sources. Cross-Layer Veto & Anti-Leakage Check: Rooted in vision-repo-validation-2026 (a40044d89515bc46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in vision-repo-validation-2026 (a40044d89515bc46), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

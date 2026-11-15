@@ -1,0 +1,78 @@
+{
+  "book_id": "67ee285aa99871ac",
+  "source_status": "COMPLETE",
+  "title": "data-ingestion-agent",
+  "file_name": "data-ingestion-agent.md",
+  "sha256": "67ee285aa99871ac51fad15be2104725b342e7bae115af865e4e003a5b7e3819",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Data ingestion agents enforce clearance validation and freshness constraints via timestamped provenance checks, ensuring normalized factual feeds remain conformally bounded. Universal Lens: Rooted in data-ingestion-agent (67ee285aa99871ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models ingestion pipelines as Bayesian belief updates over cleared data streams, where each record's clearance status acts as a prior constraint on probabilistic confidence intervals. GSI Mapping: Rooted in data-ingestion-agent (67ee285aa99871ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE treats ingestion events as state transitions in a deterministic automaton, where each transition is gated by clearance verification and enforced through temporal consistency checks. GSE Mapping: Rooted in data-ingestion-agent (67ee285aa99871ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "clearance_validation",
+      "name": "Clearance Validation Kernel",
+      "verbatim_quote": "`checkClearance()` (`apps/web/lib/scraping/clearance-engine.ts:85`) MUST run before every extraction job; a result with `allowed=false` stops the job.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Clearance status (boolean)', 'T': 'Timestamp (seconds since epoch)'}",
+      "assumptions": "Each extraction job requires a valid clearance token before proceeding.",
+      "breakdown_regime": "When C = false, job execution halts immediately.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The clearance function maps to a logical predicate in GSE's state machine, where allowed = true corresponds to a valid transition.",
+        "source_operator": "clearance_validation",
+        "telemetry": "Job start time minus clearance check duration."
+      }
+    },
+    {
+      "primitive_id": "freshness_constraint",
+      "name": "Freshness Constraint Operator",
+      "verbatim_quote": "- **CLAUDE.md rule 5 (no stale data)**: validate timestamps/freshness on every fetch; don't let a cached or delayed value pass as current.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_fresh': 'Freshness threshold (seconds)', 't_now': 'Current timestamp (seconds)', 't_last': 'Last update timestamp (seconds)'}",
+      "assumptions": "Data is considered stale if t_now - t_last > t_fresh.",
+      "breakdown_regime": "If t_now - t_last > t_fresh, data is rejected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Freshness check acts as a kernel in GSI's Bayesian update process, filtering out outdated evidence.",
+        "source_operator": "freshness_constraint",
+        "telemetry": "Percentage of records rejected due to freshness violation."
+      }
+    },
+    {
+      "primitive_id": "provenance_guard",
+      "name": "Provenance Guard Function",
+      "verbatim_quote": "Every extracted record MUST go through `wrapExtractedRecord()` (`clearance-engine.ts:367`), which throws if clearance wasn't granted.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Record (structured data)', 'P(R)': 'Provenance of R (timestamp, source ID)'}",
+      "assumptions": "All records must carry verifiable provenance metadata.",
+      "breakdown_regime": "If P(R) is invalid, wrapExtractedRecord() raises an exception.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Provenance guard mirrors GSE's integrity checks, ensuring all inputs are traceable and auditable.",
+        "source_operator": "provenance_guard",
+        "telemetry": "Number of records processed with valid provenance vs total."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "67ee285aa99871ac_t0",
+      "think": "The data ingestion agent operates under a dual constraint system: clearance validation ensures legal access, while freshness enforcement prevents stale data propagation. These two primitives form a Cartesian product in GSE's state space, where each valid ingestion event is a tuple (C=true, t_now - t_last < t_fresh). The failure mode occurs when either condition fails—either unauthorized access (C=false) or outdated data (t_now - t_last ≥ t_fresh). This dual logic is modeled as a conditional probability distribution in GSI’s Bayesian framework, where the joint likelihood of clearance and freshness defines the posterior belief over ingested facts. The epistemic closure of these constraints implies that only records satisfying both predicates can enter the feature store, thereby maintaining a consistent and reliable input stream for downstream prediction engines.\n\nDeep epistemic analysis for data-ingestion-agent (67ee285aa99871ac, domain=other, pages_read=2/2): Operator 'Clearance Validation Kernel' (page 1, domain other) captures: `checkClearance()` (`apps/web/lib/scraping/clearance-engine.ts:85`) MUST run before every extraction job; a result with `allowed=false` stops the job. Assumptions: Each extraction job requires a valid clearance token before proceeding. Breakdown regime: When C = false, job execution halts immediately. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The clearance function maps to a logical predicate in GSE's state machine, where allowed = true corresponds to a valid transition. Operator 'Freshness Constraint Operator' (page 1, domain other) captures: - **CLAUDE.md rule 5 (no stale data)**: validate timestamps/freshness on every fetch; don't let a cached or delayed value pass as current. Assumptions: Data is considered stale if t_now - t_last > t_fresh. Breakdown regime: If t_now - t_last > t_fresh, data is rejected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Freshness check acts as a kernel in GSI's Bayesian update process, filtering out outdated evidence. Operator 'Provenance Guard Function' (page 1, domain other) captures: Every extracted record MUST go through `wrapExtractedRecord()` (`clearance-engine.ts:367`), which throws if clearance wasn't granted. Assumptions: All records must carry verifiable provenance metadata. Breakdown regime: If P(R) is invalid, wrapExtractedRecord() raises an exception. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Provenance guard mirrors GSE's integrity checks, ensuring all inputs are traceable and auditable. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for data-ingestion-agent (67ee285aa99871ac, domain=other, pages_read=2/2): Operator 'Clearance Validation Kernel' (page 1, domain other) captures: `checkClearance()` (`apps/web/lib/scraping/clearance-engine.ts:85`) MUST run before every extraction job; a result with `allowed=false` stops the job. Assumptions: Each extraction job requires a valid clearance token before proceeding. Breakdown regime: When C = false, job execution halts immediately. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The clearance function maps to a logical predicate in GSE's state machine, where allowed = true corresponds to a valid transition. Operator 'Freshness Constraint Operator' (page 1, domain other) captures: - **CLAUDE.md rule 5 (no stale data)**: validate timestamps/freshness on every fetch; don't let a cached or delayed value pass as current. Assumptions: Data is considered stale if t_now - t_last > t_fresh. Breakdown regime: If t_now - t_last > t_fresh, data is rejected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Freshness check acts as a kernel in GSI's Bayesian update process, filtering out outdated evidence. Operator 'Provenance Guard Function' (page 1, domain other) captures: Every extracted record MUST go through `wrapExtractedRecord()` (`clearance-engine.ts:367`), which throws if clearance wasn't granted. Assumptions: All records must carry verifiable provenance metadata. Breakdown regime: If P(R) is invalid, wrapExtractedRecord() raises an exception. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Provenance guard mirrors GSE's integrity checks, ensuring all inputs are traceable and auditable. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from software engineering and information theory, particularly inspired by the work of Dijkstra on guarded commands and the concept of temporal logic in model checking. Retrocausal Genealogy: Rooted in data-ingestion-agent (67ee285aa99871ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in data-ingestion-agent (67ee285aa99871ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to circumvent clearance or inject stale data. The system models adversarial behavior as a perturbation in the clearance or freshness signal, requiring robust detection mechanisms within the pipeline. Theory of Mind & Decision Maker Model: Rooted in data-ingestion-agent (67ee285aa99871ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that no single source can dominate the ingestion pipeline without proper clearance. Leakage vetoes occur when a source violates permission rules or lacks sufficient freshness guarantees, preventing contamination of the normalized fact feed. Cross-Layer Veto & Anti-Leakage Check: Rooted in data-ingestion-agent (67ee285aa99871ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

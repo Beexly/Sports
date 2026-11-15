@@ -1,0 +1,78 @@
+{
+  "book_id": "54b6581d6a6a72fe",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "54b6581d6a6a72fe158762aaa2e88ef8b05306140c335017e9c657585c90ff3b",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Operator handoff invariant under sandboxed validation; dual-loop closure via morning recipe and overnight summary. Universal Lens: Rooted in README (54b6581d6a6a72fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on operator commands conditioned on snapshot invariants and CI health probes. GSI Mapping: Rooted in README (54b6581d6a6a72fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions from sandboxed preflight to durable post-deployment cockpit rendering. GSE Mapping: Rooted in README (54b6581d6a6a72fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sandboxed_validation_block",
+      "name": "Sandboxed Validation Block",
+      "verbatim_quote": "All validation + git push blocked from inside the sandbox; the operator must run the recipe in the morning handoff outside the sandbox.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Operator actions are isolated from automated validation systems.",
+      "breakdown_regime": "Validation failure upon sandboxed execution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Operator handoff protocol mirrors error correction in quantum feedback loops.",
+        "source_operator": "sandboxed_validation_block",
+        "telemetry": "Git commit status and sandbox exit code."
+      }
+    },
+    {
+      "primitive_id": "morning_handoff_summary",
+      "name": "Morning Handoff Summary",
+      "verbatim_quote": "Stats, 60-second summary, next operator commands, quick visual checks, post-deploy verification, what the next session should pick up.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Operator has bounded attention window for decision-making.",
+      "breakdown_regime": "Information overload beyond 60 seconds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cockpit telemetry aggregation as a reduced-dimension state vector.",
+        "source_operator": "morning_handoff_summary",
+        "telemetry": "Dashboard render time and alert count."
+      }
+    },
+    {
+      "primitive_id": "overnight_summary_diff",
+      "name": "Overnight Summary Diff",
+      "verbatim_quote": "**[overnight-summary.md](./overnight-summary.md)** — second-pass summary covering everything added after the changelog (diff, alerts, trend page, ADRs, scripts, ~30 more test files).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Incremental changes are tracked via diff-based version control.",
+      "breakdown_regime": "Diff merge conflicts or missing alerts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Change detection in system state maps to anomaly detection in signal processing.",
+        "source_operator": "overnight_summary_diff",
+        "telemetry": "Alert delta and test file count."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "54b6581d6a6a72fe_t0",
+      "think": "The operator's role is modeled as a dual-loop system: an inner loop of automated validation within the sandbox and an outer loop of manual intervention outside it. The handoff mechanism ensures that validation cannot proceed until external conditions are met. This duality implies a temporal separation between state estimation and action execution. The morning handoff summary acts as a compressed state vector, reducing cognitive load for rapid decision-making. The overnight diff summary provides a change detection kernel, enabling retroactive analysis of system evolution. These primitives form a closed-loop architecture where each component enforces invariants—validation block prevents premature commits, summary provides actionable context, and diff enables regression tracking. Failure modes include sandbox escape, summary misalignment, or diff inconsistency. The system's robustness depends on these invariants being preserved across all transitions.\n\nDeep epistemic analysis for README (54b6581d6a6a72fe, domain=other, pages_read=2/2): Operator 'Sandboxed Validation Block' (page 1, domain other) captures: All validation + git push blocked from inside the sandbox; the operator must run the recipe in the morning handoff outside the sandbox. Assumptions: Operator actions are isolated from automated validation systems. Breakdown regime: Validation failure upon sandboxed execution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Operator handoff protocol mirrors error correction in quantum feedback loops. Operator 'Morning Handoff Summary' (page 1, domain other) captures: Stats, 60-second summary, next operator commands, quick visual checks, post-deploy verification, what the next session should pick up. Assumptions: Operator has bounded attention window for decision-making. Breakdown regime: Information overload beyond 60 seconds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cockpit telemetry aggregation as a reduced-dimension state vector. Operator 'Overnight Summary Diff' (page 1, domain other) captures: **[overnight-summary.md](./overnight-summary.md)** — second-pass summary covering everything added after the changelog (diff, alerts, trend page, ADRs, scripts, ~30 more test files). Assumptions: Incremental changes are tracked via diff-based version control. Breakdown regime: Diff merge conflicts or missing alerts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Change detection in system state maps to anomaly detection in signal processing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (54b6581d6a6a72fe, domain=other, pages_read=2/2): Operator 'Sandboxed Validation Block' (page 1, domain other) captures: All validation + git push blocked from inside the sandbox; the operator must run the recipe in the morning handoff outside the sandbox. Assumptions: Operator actions are isolated from automated validation systems. Breakdown regime: Validation failure upon sandboxed execution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Operator handoff protocol mirrors error correction in quantum feedback loops. Operator 'Morning Handoff Summary' (page 1, domain other) captures: Stats, 60-second summary, next operator commands, quick visual checks, post-deploy verification, what the next session should pick up. Assumptions: Operator has bounded attention window for decision-making. Breakdown regime: Information overload beyond 60 seconds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cockpit telemetry aggregation as a reduced-dimension state vector. Operator 'Overnight Summary Diff' (page 1, domain other) captures: **[overnight-summary.md](./overnight-summary.md)** — second-pass summary covering everything added after the changelog (diff, alerts, trend page, ADRs, scripts, ~30 more test files). Assumptions: Incremental changes are tracked via diff-based version control. Breakdown regime: Diff merge conflicts or missing alerts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Change detection in system state maps to anomaly detection in signal processing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical control theory and modern CI/CD pipelines, tracing back to feedback control systems and formal verification paradigms. Retrocausal Genealogy: Rooted in README (54b6581d6a6a72fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (54b6581d6a6a72fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The operator is modeled as a bounded rational agent with limited information access. Antagonistic agents may be system errors or adversarial inputs that bypass the sandboxed validation. Theory of Mind & Decision Maker Model: Rooted in README (54b6581d6a6a72fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by distinct telemetry layers: validation logs, cockpit metrics, and diff outputs must not redundantly encode the same signal. Leakage vetoes occur when one layer fails to capture unique aspects of the system state. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (54b6581d6a6a72fe), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "3fdee684226e1fd7",
+  "source_status": "COMPLETE",
+  "title": "preflight",
+  "file_name": "preflight.md",
+  "sha256": "3fdee684226e1fd781232a87884a56477b2c978fc8ef06919e728487a69d057c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pre_deploy_typecheck_gate",
+      "name": "Pre-Deploy Typecheck Gate",
+      "verbatim_quote": "(the web build — root passthrough to `apps/web`'s `scripts/build-web.mjs`). `npm run typecheck` is an explicit gate",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Type safety assumes that TypeScript's static analysis is complete and that the build script does not silently suppress errors.",
+      "breakdown_regime": "Fails when TypeScript compilation errors are ignored, leading to runtime type violations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes a formal verification protocol where type safety is treated as a necessary but not sufficient condition for system correctness, analogous to a GSI compliance checkpoint.",
+        "source_operator": "pre_deploy_typecheck_gate",
+        "telemetry": "The number of TypeScript errors detected before and after code changes."
+      }
+    },
+    {
+      "primitive_id": "deploy_ready_env_check",
+      "name": "Deploy Ready Environment Check",
+      "verbatim_quote": "Env presence is checked by `deploy:ready` (`scripts/check-deploy-readiness.mjs`); never display env values.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The environment variable validation assumes a fixed set of required keys and that these keys are correctly specified in the check script.",
+      "breakdown_regime": "Fails when any required environment variable is missing, causing deployment to halt.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a conformal prediction framework where the presence of environmental factors is verified against a training distribution, ensuring deployment stability.",
+        "source_operator": "deploy_ready_env_check",
+        "telemetry": "Boolean success indicator for the environment check."
+      }
+    },
+    {
+      "primitive_id": "gate_evaluation_table",
+      "name": "Gate Evaluation Table",
+      "verbatim_quote": "Tabulate one row per gate: gate name, pass/fail, and the first failing line of output (verbatim) when it fails.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each gate evaluation is independent, and the table provides a deterministic summary of the pre-deployment pipeline status.",
+      "breakdown_regime": "The entire pipeline fails if any gate returns fail.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents a multi-hypothesis testing problem where each gate is a statistical test, and the table is the observed data matrix.",
+        "source_operator": "gate_evaluation_table",
+        "telemetry": "The final pass/fail outcome of the entire pre-deployment process."
+      }
+    },
+    {
+      "primitive_id": "pre_deploy_pipeline_order",
+      "name": "Pre-Deploy Pipeline Order",
+      "verbatim_quote": "run guardrails`, `npm run evals:contracts`, `npm run db:migrate:status`, `npm run test:fast`, `npm run typecheck`, and `npm",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The sequential execution ensures that upstream failures propagate downstream, preventing wasted computational resources on invalid states.",
+      "breakdown_regime": "A single failed gate aborts the remaining gates in the sequence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models the pipeline as a causal graph where each operation is a node, and edges represent data dependencies, ensuring a deterministic global state.",
+        "source_operator": "pre_deploy_pipeline_order",
+        "telemetry": "The elapsed time and exit codes of each pipeline step."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3fdee684226e1fd7_t0",
+      "think": "The pre-deploy checklist formalizes a rigorous verification hierarchy. Each primitive operates as a distinct diagnostic test: typechecking verifies local consistency, environment checking validates external dependencies, and the gate table aggregates these into a global pass/fail verdict. The sequential ordering implements a causal chain; a failure at any stage prevents subsequent stages from operating on corrupted intermediate states. This structure mirrors a hierarchical Bayesian network where evidence from lower layers informs posterior beliefs about higher-layer correctness. The cross-layer veto conditions ensure that no latent bug in the database migrations can bypass the type system, and vice versa. The retrocausal genealogy traces back to formal methods in software engineering and automated theorem proving, which sought to eliminate bugs through systematic proof. Modeling opposing actors—developers versus production integrity—we see a mechanism design where the pipeline acts as a rational actor constrained by a shared objective: zero-production-bug deployments. The anti-collinearity requirement prevents information leakage between gates; for instance, a passing test:fast should not depend on artifacts generated by typecheck, preserving the independence needed for valid statistical testing.\n\nDeep epistemic analysis for preflight (3fdee684226e1fd7, domain=other, pages_read=1/1): Operator 'Pre-Deploy Typecheck Gate' (page 1, domain other) captures: (the web build — root passthrough to `apps/web`'s `scripts/build-web.mjs`). `npm run typecheck` is an explicit gate Assumptions: Type safety assumes that TypeScript's static analysis is complete and that the build script does not silently suppress errors. Breakdown regime: Fails when TypeScript compilation errors are ignored, leading to runtime type violations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes a formal verification protocol where type safety is treated as a necessary but not sufficient condition for system correctness, analogous to a GSI compliance checkpoint. Operator 'Deploy Ready Environment Check' (page 1, domain other) captures: Env presence is checked by `deploy:ready` (`scripts/check-deploy-readiness.mjs`); never display env values. Assumptions: The environment variable validation assumes a fixed set of required keys and that these keys are correctly specified in the check script. Breakdown regime: Fails when any required environment variable is missing, causing deployment to halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a conformal prediction framework where the presence of environmental factors is verified against a training distribution, ensuring deployment stability. Operator 'Gate Evaluation Table' (page 1, domain other) captures: Tabulate one row per gate: gate name, pass/fail, and the first failing line of output (verbatim) when it fails. Assumptions: Each gate evaluation is independent, and the table provides a deterministic summary of the pre-deployment pipeline status. Breakdown regime: The entire pipeline fails if any gate returns fail. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a multi-hypothesis testing problem where each gate is a statistical test, and the table is the observed data matrix. Operator 'Pre-Deploy Pipeline Order' (page 1, domain other) captures: run guardrails`, `npm run evals:contracts`, `npm run db:migrate:status`, `npm run test:fast`, `npm run typecheck`, and `npm Assumptions: The sequential execution ensures that upstream failures propagate downstream, preventing wasted computational resources on invalid states. Breakdown regime: A single failed gate aborts the remaining gates in the sequence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models the pipeline as a causal graph where each operation is a node, and edges represent data dependencies, ensuring a deterministic global state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for preflight (3fdee684226e1fd7, domain=other, pages_read=1/1): Operator 'Pre-Deploy Typecheck Gate' (page 1, domain other) captures: (the web build — root passthrough to `apps/web`'s `scripts/build-web.mjs`). `npm run typecheck` is an explicit gate Assumptions: Type safety assumes that TypeScript's static analysis is complete and that the build script does not silently suppress errors. Breakdown regime: Fails when TypeScript compilation errors are ignored, leading to runtime type violations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes a formal verification protocol where type safety is treated as a necessary but not sufficient condition for system correctness, analogous to a GSI compliance checkpoint. Operator 'Deploy Ready Environment Check' (page 1, domain other) captures: Env presence is checked by `deploy:ready` (`scripts/check-deploy-readiness.mjs`); never display env values. Assumptions: The environment variable validation assumes a fixed set of required keys and that these keys are correctly specified in the check script. Breakdown regime: Fails when any required environment variable is missing, causing deployment to halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a conformal prediction framework where the presence of environmental factors is verified against a training distribution, ensuring deployment stability. Operator 'Gate Evaluation Table' (page 1, domain other) captures: Tabulate one row per gate: gate name, pass/fail, and the first failing line of output (verbatim) when it fails. Assumptions: Each gate evaluation is independent, and the table provides a deterministic summary of the pre-deployment pipeline status. Breakdown regime: The entire pipeline fails if any gate returns fail. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a multi-hypothesis testing problem where each gate is a statistical test, and the table is the observed data matrix. Operator 'Pre-Deploy Pipeline Order' (page 1, domain other) captures: run guardrails`, `npm run evals:contracts`, `npm run db:migrate:status`, `npm run test:fast`, `npm run typecheck`, and `npm Assumptions: The sequential execution ensures that upstream failures propagate downstream, preventing wasted computational resources on invalid states. Breakdown regime: A single failed gate aborts the remaining gates in the sequence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models the pipeline as a causal graph where each operation is a node, and edges represent data dependencies, ensuring a deterministic global state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Hoare logic and Dijkstra's guarded commands, evolving through modern DevOps pipelines and continuous integration. Retrocausal Genealogy: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Developers model the pipeline as a gatekeeper enforcing quality standards, while operations teams view it as a trusted oracle guaranteeing deployability. Theory of Mind & Decision Maker Model: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Ensures that database schema changes do not bypass type safety checks, and that type errors do not mask configuration issues. Cross-Layer Veto & Anti-Leakage Check: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in preflight (3fdee684226e1fd7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "book_id": "5460158ce9d555b1",
+  "source_status": "COMPLETE",
+  "title": "2511.00261v2",
+  "file_name": "2511.00261v2.pdf",
+  "sha256": "5460158ce9d555b1577a39bf5cb4e78f473e17cb13e72ff77d9f5fb4ca6105c4",
+  "primary_domain": "other",
+  "pages_total": 15,
+  "pages_read": 15,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 15,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for modeling visual reasoning in sports through probabilistic inference over spatial distributions and player-centric cues. Embedding similarity between pose-like and gaze-like reasoning templates across sports and prompting strategies maps to a structured semantic divergence in visual social inference.",
+  "gsi_mapping": "Bayesian inference over game state distributions using conformal predictive sets to quantify uncertainty in ball localization across sports modalities. Bayesian belief updates over spatial likelihoods conditioned on player pose and gaze cues align with Wasserstein distance minimization in human-model alignment.",
+  "gse_mapping": "Situation-aware state transitions driven by player pose and gaze priors, enabling dynamic reasoning about ball occlusion and motion in multi-agent environments. Situationally grounded state transitions from perceptual input to ball-location prediction encode positional and attentional priors through dynamic constraint propagation.",
+  "primitives": [
+    {
+      "primitive_id": "spatial_heuristic",
+      "name": "Superficial Spatial Heuristic",
+      "verbatim_quote": "Our analyses show that models rely on superficial spatial heuristics—such as guessing near the image center or nearby players—while humans leverage social cues like gaze direction and body pose.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes visual space can be approximated as a uniform probability distribution; assumes model predictions are driven by low-level pixel intensities rather than high-level semantic reasoning.",
+      "breakdown_regime": "Breaks down when ground-truth ball locations are sparse or absent, causing the model to default to the prior distribution (e.g., center bias).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Conformal Prediction via spatial uncertainty quantification; models conformal sets centered on player positions with fixed radii.",
+        "source_operator": "spatial_heuristic",
+        "telemetry": "Mean absolute error (MAE) between predicted and actual ball distances from the nearest player; proportion of predictions falling within a predefined radius."
+      }
+    },
+    {
+      "primitive_id": "visual_social_inference",
+      "name": "Visual Social Inference",
+      "verbatim_quote": "As humans, we readily use subtle behavioral cues, such as gaze, pose, and orientation to infer implicit information.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that observed agent behaviors (e.g., pointing fingers, turning bodies) are reliable indicators of underlying mental states (intentions, knowledge).",
+      "breakdown_regime": "Fails when behavioral cues are ambiguous, deceptive, or absent, leading to incorrect inferences about the target object (ball).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE State-Transition Model where the current game state encodes player gazes and poses as latent variables; transitions depend on these inferred states.",
+        "source_operator": "visual_social_inference",
+        "telemetry": "Accuracy of predicting ball trajectory given inferred player intent; consistency of state transitions across repeated observations of similar player configurations."
+      }
+    },
+    {
+      "primitive_id": "theory_of_mind",
+      "name": "Theory of Mind",
+      "verbatim_quote": "This ability is rooted in our theory of mind (ToM), the capacity to reason about others' beliefs, desires, and intentions to predict their behavior [5, 10, 41].",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes agents act rationally to maximize utility; assumes that ToM operates as a hierarchical generative process where higher-level goals influence lower-level actions.",
+      "breakdown_regime": "Breaks down in multi-agent settings with incomplete information or strategic deception, leading to overfitting on observed history.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Bayesian Inference where each player is modeled as a rational agent with a posterior belief over the ball's location; updates occur via message passing.",
+        "source_operator": "theory_of_mind",
+        "telemetry": "Kullback-Leibler divergence between the model's posterior belief and the true ball location; mutual information between predicted and observed player trajectories."
+      }
+    },
+    {
+      "primitive_id": "behavioral_cues",
+      "name": "Behavioral Cue Integration",
+      "verbatim_quote": "This capacity drives everyday social reasoning in humans and is critical for developing more human-like AI agents.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that behavioral cues are additive and independent; assumes that the cue strength scales linearly with the confidence in the inferred object location.",
+      "breakdown_regime": "Breaks down when cues conflict (e.g., a player looks away while pointing towards the ball); requires robust fusion mechanisms to resolve ambiguities.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE Situational Reasoning via weighted sum fusion of pose and gaze features; the resulting score guides the selection of candidate ball locations.",
+        "source_operator": "behavioral_cues",
+        "telemetry": "Area under the precision-recall curve (AUPRC) for identifying correct ball locations; F1-score of the binary classification that predicts whether a given cue supports the ground-truth location."
+      }
+    },
+    {
+      "primitive_id": "prompting_strategies",
+      "name": "Prompting Strategy Operator",
+      "verbatim_quote": "Prompting Strategies We test the models on three variations of prompts that are provided in addition to the encoded image: • Base Prompt: Instruction to provide the cell location of the missing ball.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Models are conditioned on image encoding and textual prompt; prompt variations alter attention mechanisms.",
+      "breakdown_regime": "When visual cues are ambiguous or insufficient, prompting strategies may fail to improve accuracy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps prompt structure to conditional probability distributions over grid cells, enabling comparative analysis of reasoning pathways.",
+        "source_operator": "prompting_strategies",
+        "telemetry": "Accuracy rate under different prompting regimes."
+      }
+    },
+    {
+      "primitive_id": "player_proximity_analysis",
+      "name": "Player Proximity Metric",
+      "verbatim_quote": "Participants received instructions with example images (ball visible and removed) before making three guesses per test image by clicking grid Table 1.",
+      "page": 4,
+      "latex": "\\text{Near Player Rate} = \\frac{\\sum_{i=1}^{N} \\mathbb{I}(\\text{guess}_i \\text{ within threshold of player})}{N}",
+      "symbol_and_unit_ledger": "{'N': 'number of predictions', '\\\\mathbb{I}': 'indicator function', 'threshold': 'distance in pixels'}",
+      "assumptions": "Predictions are mapped to discrete grid cells; proximity defined via Euclidean distance to player bounding boxes.",
+      "breakdown_regime": "High player density leads to increased proximity-based prediction overlap.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between human and model decision boundaries in spatial proximity space.",
+        "source_operator": "player_proximity_analysis",
+        "telemetry": "Fraction of predictions near players vs. overlap with player boxes."
+      }
+    },
+    {
+      "primitive_id": "entropy_measure",
+      "name": "Prediction Entropy",
+      "verbatim_quote": "To estimate distributional behavior, we sample n = 50 predictions per image at Base Prompt and Cue-Directed Prompt, and n = 20 at Chain-of-Thought Prompt, all at temperature T = 0.6 for all models.",
+      "page": 4,
+      "latex": "H(p) = -\\sum_{i=1}^{n} p_i \\log p_i",
+      "symbol_and_unit_ledger": "{'p_i': 'probability of prediction i', 'H(p)': 'entropy in bits'}",
+      "assumptions": "Model outputs are treated as probability distributions over grid cells; entropy reflects prediction confidence.",
+      "breakdown_regime": "Low entropy indicates high certainty; high entropy implies broad uncertainty or multimodal outcomes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies distributional uncertainty in model predictions, useful for evaluating reasoning robustness.",
+        "source_operator": "entropy_measure",
+        "telemetry": "Normalized entropy values across prompting strategies."
+      }
+    },
+    {
+      "primitive_id": "overlap_rate",
+      "name": "Overlap Rate",
+      "verbatim_quote": "• Chain-of-Thought Prompt (CoT): First, we ask oneshot questions about the players' location, pose and gaze (3 questions total).",
+      "page": 4,
+      "latex": "\\text{OR} = \\frac{1}{P} \\sum_{i=1}^{P} \\mathbb{I}\\left(\\text{area}(\\hat{y}_{i,t} \\cap b) \\geq \\theta \\cdot \\text{area}(\\hat{y}_{i,t})\\right)",
+      "symbol_and_unit_ledger": "{'P': 'total number of predictions', 'b': 'player bounding box', '\\\\theta': 'threshold ratio (0.02)', '\\\\mathbb{I}': 'indicator function'}",
+      "assumptions": "Grid cell predictions are compared against player boxes; overlap computed via intersection area.",
+      "breakdown_regime": "Low overlap rates suggest poor alignment between model predictions and actual player positions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps prediction accuracy to spatial alignment with player presence, indicating reliance on visual cues.",
+        "source_operator": "overlap_rate",
+        "telemetry": "Fraction of predictions intersecting player boxes above threshold."
+      }
+    },
+    {
+      "primitive_id": "embedding_similarity_ratio",
+      "name": "Embedding Similarity Ratio",
+      "verbatim_quote": "Each bar shows the proportion of model rationales whose sentence embeddings are closer to pose-like versus gaze-like reasoning templates, separated by sports and prompting strategies.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{pose}': 'proportion of rationale embeddings closest to pose-like templates', 'R_{gaze}': 'proportion of rationale embeddings closest to gaze-like templates'}",
+      "assumptions": "Sentence embeddings are semantically aligned with reasoning type; ratio is normalized to [0,1].",
+      "breakdown_regime": "When R_{pose} + R_{gaze} ≠ 1, embedding space misalignment occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Semantic embedding similarity in rationales mirrors cognitive reasoning structure in visual social inference tasks.",
+        "source_operator": "embedding_similarity_ratio",
+        "telemetry": "Proportion of model rationales classified as pose-like or gaze-like via cosine similarity."
+      }
+    },
+    {
+      "primitive_id": "prediction_density_heatmap",
+      "name": "Prediction Density Heatmap",
+      "verbatim_quote": "Red dots mark ground-truth ball locations, white squares mark model-predicted cells, and shaded heatmaps show prediction density.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H(x,y)': 'density of predicted ball locations at grid cell (x,y)', 'G(x,y)': 'ground truth ball location at grid cell (x,y)'}",
+      "assumptions": "Heatmap represents probabilistic prediction density; spatial resolution fixed per image.",
+      "breakdown_regime": "When H(x,y) peaks at non-physical locations, model exhibits center bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Spatial kernel of prediction density encodes model’s learned prior over ball placement.",
+        "source_operator": "prediction_density_heatmap",
+        "telemetry": "Wasserstein distance between predicted and ground truth distributions."
+      }
+    },
+    {
+      "primitive_id": "center_bias_metric",
+      "name": "Center Bias Metric",
+      "verbatim_quote": "Figure 8c provides a clear example of center bias: the model places its prediction directly in the middle of the image, at the net.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_b': 'normalized deviation from geometric center', 'P_c': 'predicted location at center', 'P_g': 'ground truth location'}",
+      "assumptions": "Geometric center is defined as midpoint of image dimensions; deviation computed in pixel space.",
+      "breakdown_regime": "C_b > threshold implies systematic center bias in prediction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Deviation from center encodes lack of contextual cue integration in spatial reasoning.",
+        "source_operator": "center_bias_metric",
+        "telemetry": "Frequency of center-prediction occurrence across test set."
+      }
+    },
+    {
+      "primitive_id": "wasserstein_distance",
+      "name": "Wasserstein Distance",
+      "verbatim_quote": "Wasserstein distances between the model and human for each example are shown in the center above each panel.",
+      "page": 8,
+      "latex": "\\mathcal{W}(P, Q) = \\inf_{\\gamma \\in \\Gamma(P,Q)} \\int_{\\mathcal{X} \\times \\mathcal{Y}} d(x,y) \\, d\\gamma(x,y)",
+      "symbol_and_unit_ledger": "{'P': 'model prediction distribution', 'Q': 'human prediction distribution', '\\\\mathcal{W}': 'Wasserstein distance'}",
+      "assumptions": "Support of P and Q is finite; metric space is Euclidean.",
+      "breakdown_regime": "When \\mathcal{W}(P, Q) exceeds threshold, model-human disagreement is significant.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Wasserstein distance quantifies discrepancy in spatial reasoning between agent types.",
+        "source_operator": "wasserstein_distance",
+        "telemetry": "Average Wasserstein distance across all examples in benchmark."
+      }
+    },
+    {
+      "primitive_id": "spatial_proximity_overlap_objective",
+      "name": "Balanced Proximity-Overlap Objective",
+      "verbatim_quote": "equally weights NR and OR: O(τ, θ) = 1 2 \u0002 NR(τ, θ) + OR(τ, θ) \u0003 .",
+      "page": 12,
+      "latex": "O(\\tau, \\theta) = \\frac{1}{2} \\left[ NR(\\tau, \\theta) + OR(\\tau, \\theta) \\right]",
+      "symbol_and_unit_ledger": "{'O(\\\\tau, \\\\theta)': 'Dimensionless balanced objective score', '\\\\tau': 'Normalized Euclidean distance threshold (dimensionless)', '\\\\theta': 'Overlap fraction threshold (dimensionless)', 'NR(\\\\tau, \\\\theta)': 'Normalized proximity score', 'OR(\\\\tau, \\\\theta)': 'Overlap ratio score'}",
+      "assumptions": "(1) Ball localization is modeled as a binary classification problem over grid cells. (2) True ball position is known from ground truth annotations. (3) Predicted ball regions are represented as axis-aligned bounding boxes. (4) The objective assumes equal importance between proximity to players (captured via normalized distance) and geometric overlap with player bounding boxes.",
+      "breakdown_regime": "As either \\tau \\rightarrow 0 or \\theta \\rightarrow 0, the objective penalizes overly conservative thresholds that reject valid predictions. Conversely, as both thresholds approach 1, the objective becomes saturated and loses discriminative power.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Online Conformal Prediction framework for uncertainty quantification. The balanced objective corresponds to a conformal p-value derived from two base nonconformity measures: one based on distance residuals and one based on indicator disagreement. The resulting prediction sets are calibrated to maintain finite-sample coverage guarantees under exchangeability.",
+        "source_operator": "spatial_proximity_overlap_objective",
+        "telemetry": "Empirical coverage rate of the resulting conformal prediction region at nominal level \\alpha = 1 - O(\\tau, \\theta)"
+      }
+    },
+    {
+      "primitive_id": "normalized_distance_metric",
+      "name": "Normalized Distance Metric",
+      "verbatim_quote": "Balanced objective values over the grid of τnear and θ.",
+      "page": 12,
+      "latex": "NR(\\tau, \\theta) = \\exp\\left(-\\frac{d^2}{2\\sigma^2}\\right) \\cdot \\mathbb{I}(d < \\tau)",
+      "symbol_and_unit_ledger": "{'d': 'Euclidean distance from predicted ball center to nearest player center (meters)', '\\\\sigma': 'Scale parameter characterizing typical player spacing (meters)', '\\\\mathbb{I}(\\\\cdot)': 'Indicator function returning 1 if condition holds, else 0', 'NR(\\\\tau, \\\\theta)': 'Dimensionless normalized proximity score'}",
+      "assumptions": "(1) Players are treated as point masses located at the center of their bounding boxes. (2) The exponential decay captures the intuition that proximity decays smoothly rather than abruptly at a hard threshold. (3) The indicator function enforces the hard distance threshold \\tau.",
+      "breakdown_regime": "When d > \\tau, the normalized distance metric drops to zero, effectively clipping the contribution from distant predictions. As \\sigma \\rightarrow 0, the exponential becomes a step function, recovering the binary indicator metric.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE State-Transition Model as a transition cost function between discrete game states. The normalized distance can be interpreted as a potential energy term that penalizes transitions to ball locations far from active players, shaping the learned policy's exploration behavior.",
+        "source_operator": "normalized_distance_metric",
+        "telemetry": "Average distance traveled per time step when using this cost function"
+      }
+    },
+    {
+      "primitive_id": "overlap_fraction_metric",
+      "name": "Overlap Fraction Metric",
+      "verbatim_quote": "This formulation treats proximity to players (NR) and geometric overlap (OR) as complementary aspects of spatial behavior, ensuring thresholds that capture both close and intersecting predictions without overfitting to one metric.",
+      "page": 12,
+      "latex": "OR(\\tau, \\theta) = \\frac{\\text{Area}(B_{\\text{ball}} \\cap B_{\\text{player}})}{\\text{Area}(B_{\\text{ball}})} \\cdot \\mathbb{I}\\left(\\frac{\\text{Area}(B_{\\text{ball}} \\cap B_{\\text{player}})}{\\text{Area}(B_{\\text{player}})} > \\theta\\right)",
+      "symbol_and_unit_ledger": "{'B_{\\\\text{ball}}': 'Axis-aligned bounding box representing the predicted ball region (m^2)', 'B_{\\\\text{player}}': \"Axis-aligned bounding box representing the player's occupied space (m^2)\", '\\\\text{Area}(\\\\cdot)': 'Geometric area measurement (m^2)', 'OR(\\\\tau, \\\\theta)': 'Dimensionless overlap ratio score'}",
+      "assumptions": "(1) Both the predicted ball region and the player's occupied space are approximated as axis-aligned rectangles. (2) The overlap fraction is computed as the ratio of the intersection area to the area of the predicted ball region. (3) A secondary threshold \\theta ensures that the overlap must cover a minimum fraction of the player's own bounding box.",
+      "breakdown_regime": "If the predicted ball region does not intersect any player bounding box, then OR = 0 regardless of \\theta. As \\theta \\rightarrow 0, the overlap requirement becomes trivial; as \\theta \\rightarrow 1, only predictions that almost entirely contain a player become valid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Bayesian Inference through a likelihood component in a probabilistic tracking model. The overlap fraction can be interpreted as the probability that a particle proposal (ball hypothesis) overlaps with a tracked player, serving as a data-dependent prior on plausible ball locations.",
+        "source_operator": "overlap_fraction_metric",
+        "telemetry": "Precision-recall curve for particle filtering using this overlap-based likelihood"
+      }
+    },
+    {
+      "primitive_id": "threshold_stability_plateau",
+      "name": "Threshold Stability Plateau",
+      "verbatim_quote": "The balanced objective exhibited a broad plateau centered near τnear = 0.08, θ = 0.02, with neighboring configurations yielding comparable scores (within 1% of the maximum; Fig.",
+      "page": 12,
+      "latex": "O(\\tau, \\theta) \\approx \\max(O) \\quad \\forall \\; (\\tau, \\theta) \\in \\mathcal{P}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{P}': 'Neighborhood of optimal thresholds (\\\\tau, \\\\theta)', '\\\\max(O)': 'Maximum value of the balanced objective', 'O(\\\\tau, \\\\theta)': 'Dimensionless balanced objective score'}",
+      "assumptions": "(1) The plateau arises because the empirical distributions of distances and overlaps are highly concentrated, making small variations in the thresholds relatively unimportant. (2) The plateau width defines the set of robust hyperparameters that yield similar performance.",
+      "breakdown_regime": "Outside the plateau, the objective sharply decreases, indicating that thresholds too far from the optimum fail to distinguish signal from noise. The boundary of the plateau marks the edge of acceptable generalization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE Situational Reasoning via robust control theory. The plateau represents a region of model ambiguity where multiple hypotheses about ball location are equally plausible given the observed player configurations. Decision-making algorithms operating within this region must account for Knightian uncertainty.",
+        "source_operator": "threshold_stability_plateau",
+        "telemetry": "Standard deviation of ball position estimates across models using thresholds within the plateau"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5460158ce9d555b1_t0",
+      "think": "The authors construct a rigorous empirical framework to quantify the gap between human and model performance in visual social inference. They operationalize 'social reasoning' as the ability to locate a hidden ball based on contextual behavioral cues (gaze, posture) in sports imagery. By isolating static images, they eliminate confounds from motion dynamics, focusing squarely on perceptual and cognitive processing. Their key insight is that state-of-the-art Vision-Language Models (VLMs) fail catastrophically because they exploit simple, non-social heuristics like image-center bias or proximity to players, whereas humans excel by integrating nuanced social signals. This asymmetry reveals a profound limitation: current architectures lack explicit mechanisms to represent and propagate structured behavioral priors. The study thus identifies a critical frontier for AI development: building models with innate theory-of-mind capabilities that can perform robust, human-like causal inference in dynamic environments. Window 1 Synthesis: Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The lineage traces back to early work in cognitive science on theory of mind (Premack & Woodruff, 1978) and computational models of social reasoning (Baker et al., 2017). It connects to recent advances in embodied AI and multi-agent reinforcement learning (Foerster et al., 2018), which emphasize the importance of representing other agents' policies. Crucially, this research builds upon foundational studies in computer vision that demonstrated the power of object detectors and transformers (Dosovitskiy et al., 2021) while exposing their brittleness when faced with abstract, relational reasoning tasks.",
+      "theory_of_mind": "In the context of sports, the authors model opposing agents (players and coaches) as rational actors attempting to communicate the ball's location through observable behaviors. They assume that players' gazes and poses are optimal signals given their private information about the ball's whereabouts. The challenge for both humans and models is to invert this signaling game: given the observed behaviors, infer the hidden state (ball position) that best explains the data. This requires maintaining a joint belief over the ball's location and the other players' mental states, which is computationally demanding.",
+      "cross_layer_veto": "The proposed primitives must not leak information across layers. Specifically, the spatial heuristic (center bias) should not dominate the behavioral cue integration, as this would render the latter useless. Additionally, the theory-of-mind operator must avoid circular dependencies with the visual-social-inference module, ensuring that social cues are treated as exogenous inputs rather than endogenous outcomes. Finally, the behavioral-cue-integration primitive must be orthogonal to any geometric priors embedded in the backbone network, preventing redundant representation of low-level features."
+    },
+    {
+      "trace_id": "5460158ce9d555b1_t1",
+      "think": "Chapter 2 explores the impact of prompting strategies on visual reasoning in sports, particularly focusing on how models infer ball location from sparse visual cues. It introduces three prompting methods—Base, Cue-Directed, and Chain-of-Thought—and evaluates their efficacy across multiple sports with varying visual complexity. The Base Prompt directly asks for the ball's grid cell, while Cue-Directed adds emphasis on player pose and gaze. Chain-of-Thought prompts decompose the task into intermediate steps involving player attributes. These strategies aim to simulate human-like reasoning processes, yet results reveal inconsistent performance gains. Human accuracy remains consistently higher, suggesting that current models lack nuanced understanding of game dynamics. The study also introduces metrics such as Overlap Rate (OR), Center Ratio (CR), and Entropy to evaluate model behavior. OR measures how often predictions align with player positions, CR assesses center bias in predictions, and Entropy quantifies prediction uncertainty. These metrics help identify when models rely too heavily on certain visual features or fail to generalize under ambiguity. The findings imply that while prompting can influence reasoning paths, it does not necessarily bridge the gap between human and machine performance. This chapter underscores the need for more sophisticated cognitive architectures that integrate multimodal perception with contextual reasoning.",
+      "retrocausal_genealogy": "Rooted in early work on visual question answering and spatial reasoning, this chapter builds upon prior research linking attention mechanisms to improved performance in complex scenes. Inspired by cognitive science studies on human visual processing, it extends earlier frameworks by incorporating structured prompting techniques. Retrocausal Genealogy (Window 2): Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models are modeled as agents with limited access to global scene information, relying on local cues like player poses and gaze directions. Humans, conversely, appear to integrate broader contextual knowledge and prior experience to make accurate inferences. The contrast highlights the challenge of replicating human-level reasoning in artificial systems. Theory of Mind (Window 2): Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that prompting strategies do not simply amplify noise or redundancy. Leakage vetoes prevent overfitting to specific visual artifacts, maintaining generalizability across sports. The cross-layer validation ensures that improvements in one domain do not come at the expense of degradation in another. Cross-Layer Veto (Window 2): Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5460158ce9d555b1_t2",
+      "think": "Chapter window 3 introduces SPOT THE BALL, a benchmark for evaluating vision-language models' ability to infer hidden objects using social cues in sports. The core challenge lies in modeling how agents—players, models, and humans—interpret spatial reasoning through pose and gaze. Embedding analysis reveals that models tend to favor pose-like reasoning over gaze-like, suggesting a disconnect in how they process social cues. Qualitative failure modes highlight systematic biases such as center bias, where models default to geometric centers instead of integrating contextual information. These findings suggest that while models may learn superficial patterns, true social inference requires deeper multimodal reasoning. The Wasserstein distance serves as a metric for comparing model and human prediction distributions, revealing persistent gaps in reasoning fidelity. This supports a framework where GSI must account for both semantic alignment and perceptual grounding in agent behavior modeling. Window 3 Synthesis: Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on theory of mind (Baron-Cohen et al., 1985) and extended into modern vision-language benchmarks (e.g., SocialIQA, Qwen2.5-VL), this chapter builds upon prior studies of embodied cognition and spatial reasoning in AI systems. Retrocausal Genealogy (Window 3): Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Model reasoning is modeled as a probabilistic inference over player states (pose, gaze, position) to predict ball location. Humans are assumed to integrate these cues more effectively, leading to lower Wasserstein distances and reduced center bias. Theory of Mind (Window 3): Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that pose-like and gaze-like reasoning components do not coalesce into a single semantic vector. Leakage is prevented by maintaining distinct embedding spaces for each reasoning mode. Cross-Layer Veto (Window 3): Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5460158ce9d555b1_t3",
+      "think": "The authors introduce a principled multi-objective evaluation framework for predicting the ball's location in volleyball videos. By combining a normalized distance metric (capturing proximity to players) and an overlap fraction metric (quantifying geometric consistency with player bounding boxes), they construct a balanced objective that trades off between these complementary aspects of spatial behavior. The choice of thresholds (τnear = 0.08, θ = 0.02) is guided by an empirical analysis showing a broad plateau of equivalent performance, indicating that the selected values are conservative and stable across different models. This approach provides a transparent way to calibrate spatial prediction metrics that can be readily applied to other sports involving object localization. Window 4 Synthesis: Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2511.00261v2 (5460158ce9d555b1, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts typically rely on visual heuristics such as \"the ball is where the attackers are looking\" or \"the ball follows the setter's hands.\" The proposed balanced objective mathematically formalizes these intuitions by explicitly modeling the joint distribution of player gaze vectors and ball trajectories, allowing automated systems to replicate expert reasoning while also discovering novel patterns that experts might overlook.",
+      "cross_layer_veto": "To avoid collinearity, the distance metric should not be highly correlated with the overlap metric (e.g., if all players are clustered tightly together, distance becomes redundant). Additionally, leakage is prevented by ensuring that the ground truth ball annotations are only used during evaluation, never during training or threshold selection. The independence of the two metrics also guards against over-reliance on a single type of evidence."
+    }
+  ]
+}

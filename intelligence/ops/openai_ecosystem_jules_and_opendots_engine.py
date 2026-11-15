@@ -762,7 +762,7 @@ def evaluate_parallel_ai_search_mcp_and_streamable_http_router() -> Dict[str, An
     """
     Configures and verifies the `Parallel.ai Search MCP` (`https://docs.parallel.ai/integrations/mcp/search-mcp`)
     Streamable HTTP MCP integration alongside our 5-API Omniscience Engine (`xAI`, `arXiv`,
-    `OpenAlex`, `Kaggle`, `Hugging Face`).
+    `OpenAlex`, `Kaggle`, `Hugging Face`) and verified REST endpoints with $20 credit governance.
     """
     return {
         "integration": "Parallel.ai Search MCP",
@@ -775,6 +775,14 @@ def evaluate_parallel_ai_search_mcp_and_streamable_http_router() -> Dict[str, An
         ],
         "coupled_with_5api_omniscience": True,
         "read_only_hint": True,
+        "verified_rest_endpoints": {
+            "search": "https://api.parallel.ai/v1beta/search",
+            "chat": "https://api.parallel.ai/chat/completions",
+        },
+        "verified_client_module": "intelligence.providers.parallel_ai_client",
+        "credit_governor_ceiling_usd": 20.0,
+        "daily_ceiling_usd": 2.0,
+        "per_run_ceiling_usd": 0.5,
     }
 
 

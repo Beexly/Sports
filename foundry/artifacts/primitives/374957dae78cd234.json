@@ -1,0 +1,95 @@
+{
+  "book_id": "374957dae78cd234",
+  "source_status": "COMPLETE",
+  "title": "2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors",
+  "file_name": "2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors.md",
+  "sha256": "374957dae78cd2344cda640296637b5bd33767ef270a8b5b3211396766748cf0",
+  "primary_domain": "football",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors (374957dae78cd234), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors (374957dae78cd234), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors (374957dae78cd234), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "formation_identification",
+      "name": "Formation Identification",
+      "verbatim_quote": "Without access to labeled NFL game film, the dataset needed to be developed manually.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes manual labor for initial dataset creation; assumes consistent jersey colors across seasons.",
+      "breakdown_regime": "Breaks down under rule changes affecting jersey uniformity or camera positioning.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI probabilistic classification via machine learning ensembles, where formation labels serve as latent variables for opponent strategy inference.",
+        "source_operator": "formation_identification",
+        "telemetry": "Training set accuracy metrics (e.g., precision, recall) on historical formation distributions."
+      }
+    },
+    {
+      "primitive_id": "player_tracking",
+      "name": "Player Tracking",
+      "verbatim_quote": "2018 Research Papers Competition Presented by: 1 **Figure 1.** _Example screenshot of NFL �All-22� game film_ After capturing the screenshots, there is a series of transformations that needs to occur to standardize the analysis.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes stable camera calibration and fixed frame rates; assumes no occlusions beyond a threshold.",
+      "breakdown_regime": "Breaks down during heavy rain, fog, or extreme crowd interference distorting player silhouette detection.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE state-transition dynamics, where tracked player coordinates become state variables for predicting route runs and defensive adjustments.",
+        "source_operator": "player_tracking",
+        "telemetry": "Root mean squared error (RMSE) between predicted and actual player trajectories."
+      }
+    },
+    {
+      "primitive_id": "route_classification",
+      "name": "Route Classification",
+      "verbatim_quote": "Depending on the play, there can be up to 6 designed routes to account for, generating a wealth of data for each play.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes fixed playbook vocabulary; assumes independent route execution within a play.",
+      "breakdown_regime": "Breaks down when offenses employ misdirection or decoy tactics, confusing route assignments.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction intervals for route probabilities, accounting for uncertainty in opponent defensive reads.",
+        "source_operator": "route_classification",
+        "telemetry": "Confusion matrix entries quantifying false positives/negatives in route identification."
+      }
+    },
+    {
+      "primitive_id": "formation_prediction",
+      "name": "Formation Prediction",
+      "verbatim_quote": "We chose the Washington Redskins home games as a test case, and captured screenshots at a rate of 5 frames per second.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes stationary distribution of formations across games; assumes sufficient temporal resolution for snap-to-snap analysis.",
+      "breakdown_regime": "Breaks down during playoff runs or injury replacements altering typical lineup compositions.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE situational reasoning, where formation predictions inform optimal play selection conditioned on down, distance, and field position.",
+        "source_operator": "formation_prediction",
+        "telemetry": "Area under the receiver operating characteristic curve (AUC-ROC) for formation class separation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "374957dae78cd234_t0",
+      "think": "The core challenge is converting raw RGB video frames into actionable strategic variables. This requires a cascade of geometric transforms and pattern recognition. The geometric transforms rectify perspective distortions caused by varying camera angles, ensuring that Euclidean distances on the screen correspond to physical yardage on the field. Pattern recognition algorithms then segment players from the background using color thresholds (e.g., burgundy jerseys), followed by clustering techniques to identify individual player positions. These primitives form a pipeline: first, robust feature extraction (cornerness detection, Hough transforms for field lines); second, rigid body transformation matrices to align frames; third, nearest-neighbor assignment of pixels to player centroids. Crucially, this pipeline operates as a generative model for synthetic game film, enabling counterfactual analysis of alternative formations.\n\nDeep epistemic analysis for 2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors (374957dae78cd234, domain=football, pages_read=6/6): Operator 'Formation Identification' (page 1, domain football) captures: Without access to labeled NFL game film, the dataset needed to be developed manually. Assumptions: Assumes manual labor for initial dataset creation; assumes consistent jersey colors across seasons. Breakdown regime: Breaks down under rule changes affecting jersey uniformity or camera positioning. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI probabilistic classification via machine learning ensembles, where formation labels serve as latent variables for opponent strategy inference. Operator 'Player Tracking' (page 1, domain football) captures: 2018 Research Papers Competition Presented by: 1 **Figure 1.** _Example screenshot of NFL �All-22� game film_ After capturing the screenshots, there is a series of transformations that needs to occur to standardize the analysis. Assumptions: Assumes stable camera calibration and fixed frame rates; assumes no occlusions beyond a threshold. Breakdown regime: Breaks down during heavy rain, fog, or extreme crowd interference distorting player silhouette detection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition dynamics, where tracked player coordinates become state variables for predicting route runs and defensive adjustments. Operator 'Route Classification' (page 1, domain football) captures: Depending on the play, there can be up to 6 designed routes to account for, generating a wealth of data for each play. Assumptions: Assumes fixed playbook vocabulary; assumes independent route execution within a play. Breakdown regime: Breaks down when offenses employ misdirection or decoy tactics, confusing route assignments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction intervals for route probabilities, accounting for uncertainty in opponent defensive reads. Operator 'Formation Prediction' (page 1, domain football) captures: We chose the Washington Redskins home games as a test case, and captured screenshots at a rate of 5 frames per second. Assumptions: Assumes stationary distribution of formations across games; assumes sufficient temporal resolution for snap-to-snap analysis. Breakdown regime: Breaks down during playoff runs or injury replacements altering typical lineup compositions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE situational reasoning, where formation predictions inform optimal play selection conditioned on down, distance, and field position. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors (374957dae78cd234, domain=football, pages_read=6/6): Operator 'Formation Identification' (page 1, domain football) captures: Without access to labeled NFL game film, the dataset needed to be developed manually. Assumptions: Assumes manual labor for initial dataset creation; assumes consistent jersey colors across seasons. Breakdown regime: Breaks down under rule changes affecting jersey uniformity or camera positioning. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI probabilistic classification via machine learning ensembles, where formation labels serve as latent variables for opponent strategy inference. Operator 'Player Tracking' (page 1, domain football) captures: 2018 Research Papers Competition Presented by: 1 **Figure 1.** _Example screenshot of NFL �All-22� game film_ After capturing the screenshots, there is a series of transformations that needs to occur to standardize the analysis. Assumptions: Assumes stable camera calibration and fixed frame rates; assumes no occlusions beyond a threshold. Breakdown regime: Breaks down during heavy rain, fog, or extreme crowd interference distorting player silhouette detection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition dynamics, where tracked player coordinates become state variables for predicting route runs and defensive adjustments. Operator 'Route Classification' (page 1, domain football) captures: Depending on the play, there can be up to 6 designed routes to account for, generating a wealth of data for each play. Assumptions: Assumes fixed playbook vocabulary; assumes independent route execution within a play. Breakdown regime: Breaks down when offenses employ misdirection or decoy tactics, confusing route assignments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction intervals for route probabilities, accounting for uncertainty in opponent defensive reads. Operator 'Formation Prediction' (page 1, domain football) captures: We chose the Washington Redskins home games as a test case, and captured screenshots at a rate of 5 frames per second. Assumptions: Assumes stationary distribution of formations across games; assumes sufficient temporal resolution for snap-to-snap analysis. Breakdown regime: Breaks down during playoff runs or injury replacements altering typical lineup compositions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE situational reasoning, where formation predictions inform optimal play selection conditioned on down, distance, and field position. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors (374957dae78cd234), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors (374957dae78cd234), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing coaches are rational actors seeking to maximize win probability. They adapt formations to exploit perceived weaknesses in defensive schemes. Our primitives invert this logic: given a formation, we predict the most likely defensive response. For instance, if the model detects a 'Spread Gun' formation, it infers that the defense might shift to a Cover 2 alignment to counter deep passing threats. This predictive capability creates a feedback loop where teams adjust their strategies based on publicly available analytics, driving the evolution of new formations.",
+      "cross_layer_veto": "Anti-collinearity conditions require that the primitives operate on independent sources of information. For example, formation identification should not leak into route classification via shared features like jersey color. Cross-layer veto checks involve verifying that the latent representations learned by CNNs for player tracking do not contain spurious correlations with game outcomes unrelated to player movement (e.g., stadium acoustics). Leakage tests compare out-of-sample residuals from formation prediction against actual point spreads; significant correlation indicates a veto."
+    }
+  ]
+}

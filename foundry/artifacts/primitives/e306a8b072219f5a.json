@@ -1,0 +1,78 @@
+{
+  "book_id": "e306a8b072219f5a",
+  "source_status": "COMPLETE",
+  "title": "verified-claims",
+  "file_name": "verified-claims.md",
+  "sha256": "e306a8b072219f5ab0f75605833bdb64fe74d9b778ba572d68aebcaf64aea226",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Calibration honesty machinery confirmed; most headline remedies unexecuted. CQR bug repaired, verifier harness draft, ranking remedy absent. Universal Lens: Rooted in verified-claims (e306a8b072219f5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration verified via backtest; CQR clamp repaired but not live. Ranking remedy absent, implying incomplete conformal inference pipeline. GSI Mapping: Rooted in verified-claims (e306a8b072219f5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning detects unmerged PRs and missing mechanisms. State transitions blocked by unexecuted ranking and CQR fixes, leading to partial system integrity. GSE Mapping: Rooted in verified-claims (e306a8b072219f5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "cqr_clamp_bug",
+      "name": "CQR N-1 Clamp Bug",
+      "verbatim_quote": "b API | CORRECTED — PR open/draft/unmerged; exists only on `hermes/port-verifier-harness` | | A14 | CQR n-1 clamp bug | `apps/web/lib/calibration/cqr.ts:10-19` | CORRECTED — repaired (unclamped rank, fail-closes +∞); only the acceptance backtest is owed | ## B.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'rank': 'dimensionless rank value', 'clamp': 'boolean flag indicating clamping behavior'}",
+      "assumptions": "Rank values must be unclamped to prevent failure closure at +∞.",
+      "breakdown_regime": "When rank exceeds threshold, fails closed to +∞.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CQR clamp logic derived from calibration kernel; affects posterior rank distribution.",
+        "source_operator": "cqr_clamp_bug",
+        "telemetry": "Acceptance backtest status"
+      }
+    },
+    {
+      "primitive_id": "verifier_harness",
+      "name": "Verifier Harness",
+      "verbatim_quote": "b API | CORRECTED — PR open/draft/unmerged; exists only on `hermes/port-verifier-harness` | | A14 | CQR n-1 clamp bug | `apps/web/lib/calibration/cqr.ts:10-19` | CORRECTED — repaired (unclamped rank, fail-closes +∞); only the acceptance backtest is owed | ## B.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'harness_state': 'boolean indicating PR merged status'}",
+      "assumptions": "Harness exists but is not yet merged into mainline.",
+      "breakdown_regime": "Unmerged PR prevents execution of verification protocol.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Verifier harness isomorphic to live validation module; mismatch causes operational gap.",
+        "source_operator": "verifier_harness",
+        "telemetry": "PR merge status"
+      }
+    },
+    {
+      "primitive_id": "ranking_remedy",
+      "name": "Ranking Remedy",
+      "verbatim_quote": "Three \"landed\" items from the Phase-1 map are wrong: the CQR bug is repaired (not live), the verifier harness is an unmerged draft PR (not landed), the ranking remedy was never built.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'remedy_status': 'boolean indicating implementation completeness'}",
+      "assumptions": "Ranking remedy must be implemented to enable full calibration fidelity.",
+      "breakdown_regime": "Missing remedy leads to incomplete ranking kernel.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ranking remedy is derived from calibration kernel; absence implies incomplete inference pipeline.",
+        "source_operator": "ranking_remedy",
+        "telemetry": "Implementation completeness check"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e306a8b072219f5a_t0",
+      "think": "The primitives reveal a calibration system where core components—CQR clamp, verifier harness, and ranking remedy—are either corrected or unimplemented. The CQR clamp bug is fixed but not deployed, implying a latent failure mode in live systems. The verifier harness remains unmerged, indicating a procedural gap in deployment. The ranking remedy is entirely absent, suggesting that the system lacks full calibration fidelity. These failures create a cascade of incomplete inference pipelines, undermining trust in the calibration honesty machinery. Dualities emerge between claimed and actual system states, with the headline remedies being misaligned with operational reality. Failure modes include unmerged PRs, unexecuted fixes, and missing kernels, all contributing to a degraded inference architecture.\n\nDeep epistemic analysis for verified-claims (e306a8b072219f5a, domain=other, pages_read=4/4): Operator 'CQR N-1 Clamp Bug' (page 2, domain other) captures: b API | CORRECTED — PR open/draft/unmerged; exists only on `hermes/port-verifier-harness` | | A14 | CQR n-1 clamp bug | `apps/web/lib/calibration/cqr.ts:10-19` | CORRECTED — repaired (unclamped rank, fail-closes +∞); only the acceptance backtest is owed | ## B. Assumptions: Rank values must be unclamped to prevent failure closure at +∞. Breakdown regime: When rank exceeds threshold, fails closed to +∞. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CQR clamp logic derived from calibration kernel; affects posterior rank distribution. Operator 'Verifier Harness' (page 2, domain other) captures: b API | CORRECTED — PR open/draft/unmerged; exists only on `hermes/port-verifier-harness` | | A14 | CQR n-1 clamp bug | `apps/web/lib/calibration/cqr.ts:10-19` | CORRECTED — repaired (unclamped rank, fail-closes +∞); only the acceptance backtest is owed | ## B. Assumptions: Harness exists but is not yet merged into mainline. Breakdown regime: Unmerged PR prevents execution of verification protocol. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Verifier harness isomorphic to live validation module; mismatch causes operational gap. Operator 'Ranking Remedy' (page 1, domain other) captures: Three \"landed\" items from the Phase-1 map are wrong: the CQR bug is repaired (not live), the verifier harness is an unmerged draft PR (not landed), the ranking remedy was never built. Assumptions: Ranking remedy must be implemented to enable full calibration fidelity. Breakdown regime: Missing remedy leads to incomplete ranking kernel. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ranking remedy is derived from calibration kernel; absence implies incomplete inference pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for verified-claims (e306a8b072219f5a, domain=other, pages_read=4/4): Operator 'CQR N-1 Clamp Bug' (page 2, domain other) captures: b API | CORRECTED — PR open/draft/unmerged; exists only on `hermes/port-verifier-harness` | | A14 | CQR n-1 clamp bug | `apps/web/lib/calibration/cqr.ts:10-19` | CORRECTED — repaired (unclamped rank, fail-closes +∞); only the acceptance backtest is owed | ## B. Assumptions: Rank values must be unclamped to prevent failure closure at +∞. Breakdown regime: When rank exceeds threshold, fails closed to +∞. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CQR clamp logic derived from calibration kernel; affects posterior rank distribution. Operator 'Verifier Harness' (page 2, domain other) captures: b API | CORRECTED — PR open/draft/unmerged; exists only on `hermes/port-verifier-harness` | | A14 | CQR n-1 clamp bug | `apps/web/lib/calibration/cqr.ts:10-19` | CORRECTED — repaired (unclamped rank, fail-closes +∞); only the acceptance backtest is owed | ## B. Assumptions: Harness exists but is not yet merged into mainline. Breakdown regime: Unmerged PR prevents execution of verification protocol. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Verifier harness isomorphic to live validation module; mismatch causes operational gap. Operator 'Ranking Remedy' (page 1, domain other) captures: Three \"landed\" items from the Phase-1 map are wrong: the CQR bug is repaired (not live), the verifier harness is an unmerged draft PR (not landed), the ranking remedy was never built. Assumptions: Ranking remedy must be implemented to enable full calibration fidelity. Breakdown regime: Missing remedy leads to incomplete ranking kernel. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ranking remedy is derived from calibration kernel; absence implies incomplete inference pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in software engineering practices of phase-based development and PR review cycles. Influenced by prior work on calibration robustness and adversarial verification protocols. Retrocausal Genealogy: Rooted in verified-claims (e306a8b072219f5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in verified-claims (e306a8b072219f5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents within the system operate under assumptions of correctness. Misalignment occurs when operational checks (e.g., PR status) diverge from claimed outcomes (e.g., deployed fixes). Decision actors may misinterpret status labels due to lack of real-time telemetry. Theory of Mind & Decision Maker Model: Rooted in verified-claims (e306a8b072219f5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is violated when verification layers depend on unmerged or unexecuted components. Leakage occurs when incomplete kernels propagate through inference chains, causing downstream errors in prediction confidence. Cross-Layer Veto & Anti-Leakage Check: Rooted in verified-claims (e306a8b072219f5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in verified-claims (e306a8b072219f5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

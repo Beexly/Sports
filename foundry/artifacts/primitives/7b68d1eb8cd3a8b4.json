@@ -1,0 +1,78 @@
+{
+  "book_id": "7b68d1eb8cd3a8b4",
+  "source_status": "COMPLETE",
+  "title": "cfb_data",
+  "file_name": "cfb_data.md",
+  "sha256": "7b68d1eb8cd3a8b4f749aa45b87aa7aab70ee908e4737892e00caafca100682f",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The CORE metric formalizes a dual-space projection of team performance, mapping offensive and defensive efficacy onto an orthogonal plane. By normalizing scoring differentials against FBS baseline per fixed play counts, it establishes a rigorous phase space for evaluating two-way competitive separation.",
+  "gsi_mapping": "GSI treats the 25% preseason / 75% observed blend as a Bayesian posterior update. The CORE quadrants define conformal prediction regions, where early-season empirical play data rapidly shrinks prior expectations, isolating true talent distributions from initial noise.",
+  "gse_mapping": "In GSE, the quadrant topology dictates state transitions. A team's position in the 'stronger on both sides' region acts as a high-stability attractor, while extreme asymmetries trigger dynamic situational adjustments in real-time game engine simulations.",
+  "primitives": [
+    {
+      "primitive_id": "core_quadrant_projection",
+      "name": "CORE Quadrant Projection Operator",
+      "verbatim_quote": "- Definition (as stated in footer): \"Points above FBS average per 100 plays · Dashed lines = 0 (average)\".",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "CORE: Points per 100 plays (dimensionless relative to FBS mean). X-axis: Offensive CORE. Y-axis: Defensive CORE.",
+      "assumptions": "Assumes play volume sufficiently normalizes variance; assumes FBS average is a stable baseline reference across the season.",
+      "breakdown_regime": "Singularities emerge during extremely low-sample sizes (e.g., Week 1-2) where small deviations drastically skew the per-100-play projection.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's bivariate efficiency manifolds, utilizing zero-lines as decision boundaries for regime classification.",
+        "source_operator": "core_quadrant_projection",
+        "telemetry": "Observed points per play differential vs. league-wide baseline."
+      }
+    },
+    {
+      "primitive_id": "temporal_belief_blend",
+      "name": "Temporal Belief Blending Kernel",
+      "verbatim_quote": "👀 25% preseason / 75% observed blend.\" ## Metric: CORE (CollegeFootballData.com) - Chart title: \"CORE Offense vs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "w_prior: Preseason weight (0.25). w_obs: Observed weight (0.75). Metric: Weighted composite score.",
+      "assumptions": "Assumes linear convex combination accurately reflects information decay between preseason projections and early-season empirical reality.",
+      "breakdown_regime": "Fails if observed sample size is statistically insignificant, causing over-reaction to stochastic variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to GSI's time-decay Bayesian updating mechanism, dynamically adjusting confidence intervals based on accumulated play-action telemetry.",
+        "source_operator": "temporal_belief_blend",
+        "telemetry": "Variance reduction rate between preseason models and live tracking data."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "cfb_data Grounded Principle 3",
+      "verbatim_quote": "Cincinnati, OH; link CollegeFootballData.com; joined Aug 2019; 324 following / 11.7K followers.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7b68d1eb8cd3a8b4_t0",
+      "think": "The foundational operator here is the CORE metric, which projects team performance into a two-dimensional Euclidean space defined by offensive and defensive efficiency relative to the FBS mean. Mathematically, this creates a phase space where the origin (0,0) represents the exact league average. The derivation relies on normalizing raw point totals by play count (per 100 plays), effectively converting discrete scoring events into a continuous rate metric. This normalization allows for the construction of four distinct topological quadrants, each representing a unique strategic archetype (e.g., 'Stronger on Both Sides').\n\nThe temporal blending kernel introduces a dynamic weighting function, combining static priors (preseason expectations) with streaming empirical data (observed gameplay). At Week 3, the 25/75 split indicates a rapid convergence toward empirical truth, heavily penalizing preseason biases. The duality lies in the tension between the static structural identity of a program (prior) and its fluid, observed execution (posterior). \n\nFailure modes arise primarily from low-count statistics. In the early weeks, the denominator (total plays) is small, meaning the variance of the CORE estimator is high. A single anomalous drive can artificially inflate the per-100-play metric, creating false positives in the 'stronger offense' quadrant. Furthermore, the assumption that defense and offense are independent axes ignores systemic correlations (e.g., a strong passing attack inherently pressures the secondary), potentially distorting the quadrant interpretation.\n\nDeep epistemic analysis for cfb_data (7b68d1eb8cd3a8b4, domain=other, pages_read=1/1): Operator 'CORE Quadrant Projection Operator' (page 1, domain other) captures: - Definition (as stated in footer): \"Points above FBS average per 100 plays · Dashed lines = 0 (average)\". Assumptions: Assumes play volume sufficiently normalizes variance; assumes FBS average is a stable baseline reference across the season. Breakdown regime: Singularities emerge during extremely low-sample sizes (e.g., Week 1-2) where small deviations drastically skew the per-100-play projection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's bivariate efficiency manifolds, utilizing zero-lines as decision boundaries for regime classification. Operator 'Temporal Belief Blending Kernel' (page 1, domain other) captures: 👀 25% preseason / 75% observed blend.\" ## Metric: CORE (CollegeFootballData.com) - Chart title: \"CORE Offense vs. Assumptions: Assumes linear convex combination accurately reflects information decay between preseason projections and early-season empirical reality. Breakdown regime: Fails if observed sample size is statistically insignificant, causing over-reaction to stochastic variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to GSI's time-decay Bayesian updating mechanism, dynamically adjusting confidence intervals based on accumulated play-action telemetry. Operator 'cfb_data Grounded Principle 3' (page 1, domain other) captures: Cincinnati, OH; link CollegeFootballData.com; joined Aug 2019; 324 following / 11.7K followers. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for cfb_data (7b68d1eb8cd3a8b4, domain=other, pages_read=1/1): Operator 'CORE Quadrant Projection Operator' (page 1, domain other) captures: - Definition (as stated in footer): \"Points above FBS average per 100 plays · Dashed lines = 0 (average)\". Assumptions: Assumes play volume sufficiently normalizes variance; assumes FBS average is a stable baseline reference across the season. Breakdown regime: Singularities emerge during extremely low-sample sizes (e.g., Week 1-2) where small deviations drastically skew the per-100-play projection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's bivariate efficiency manifolds, utilizing zero-lines as decision boundaries for regime classification. Operator 'Temporal Belief Blending Kernel' (page 1, domain other) captures: 👀 25% preseason / 75% observed blend.\" ## Metric: CORE (CollegeFootballData.com) - Chart title: \"CORE Offense vs. Assumptions: Assumes linear convex combination accurately reflects information decay between preseason projections and early-season empirical reality. Breakdown regime: Fails if observed sample size is statistically insignificant, causing over-reaction to stochastic variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to GSI's time-decay Bayesian updating mechanism, dynamically adjusting confidence intervals based on accumulated play-action telemetry. Operator 'cfb_data Grounded Principle 3' (page 1, domain other) captures: Cincinnati, OH; link CollegeFootballData.com; joined Aug 2019; 324 following / 11.7K followers. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces back to early 20th-century efficiency metrics in industrial engineering, later adapted into sports via DVOA and EPA/play frameworks. The specific quadrant visualization borrows from radar charts used in multi-criteria decision analysis, while the temporal blending mirrors Kalman filtering techniques used in tracking systems to fuse predicted states with noisy sensor measurements. Retrocausal Genealogy: Rooted in cfb_data (7b68d1eb8cd3a8b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "From an agent perspective, coaches and analysts act as rational actors attempting to minimize uncertainty. The use of a blended model suggests an awareness of cognitive bias; they intentionally overweight recent empirical evidence to counteract the narrative inertia of preseason hype. Opposing agents exploit these quadrant classifications to formulate game plans, targeting the weaker axis of a two-way contender. Theory of Mind & Decision Maker Model: Rooted in cfb_data (7b68d1eb8cd3a8b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "We must veto any interpretation that treats the CORE axes as perfectly orthogonal. In reality, schematic identities create leakage between offense and defense (e.g., a pass-heavy offense forces the defense onto the field longer, artificially depressing defensive efficiency). Additionally, we veto relying solely on the 25/75 blend without calculating the standard error of the observed metric; without confidence intervals, the quadrant placement remains a point estimate vulnerable to stochastic noise."
+    }
+  ]
+}

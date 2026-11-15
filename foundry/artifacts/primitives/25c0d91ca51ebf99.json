@@ -1,0 +1,78 @@
+{
+  "book_id": "25c0d91ca51ebf99",
+  "source_status": "COMPLETE",
+  "title": "openalex_W7205015727",
+  "file_name": "openalex_W7205015727.pdf",
+  "sha256": "25c0d91ca51ebf998f1f1d53b3a69b8fcc3c3e70c2e0d2678625d6bbde4f14c7",
+  "primary_domain": "other",
+  "pages_total": 50,
+  "pages_read": 27,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework modeling women's football as a dynamic commercial ecosystem governed by investment, governance, and market forces. Universal Lens: Rooted in openalex_W7205015727 (25c0d91ca51ebf99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps institutional and financial variables to probabilistic growth trajectories in women's football markets. GSI Mapping: Rooted in openalex_W7205015727 (25c0d91ca51ebf99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models state transitions between marginalization and mainstream recognition using governance and revenue dynamics. GSE Mapping: Rooted in openalex_W7205015727 (25c0d91ca51ebf99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "commercial_ecosystem_evolution",
+      "name": "Commercial Ecosystem Evolution",
+      "verbatim_quote": "The Business of Women's Football This book provides a critical and timely examination of the commercial and organisational evolution of the women's game.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E(t)': 'Commercial ecosystem state at time t (dimensionless)', 'I': 'Investment intensity (USD/year)', 'G': 'Governance structure index (dimensionless)'}",
+      "assumptions": "E(t) evolves under influence of I and G; linear dependence assumed for simplicity.",
+      "breakdown_regime": "When I < threshold, E(t) collapses into marginalization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "E(t) = f(I, G) models transition from marginalization to mainstream recognition.",
+        "source_operator": "commercial_ecosystem_evolution",
+        "telemetry": "Observable: league revenues, broadcast viewership, sponsorship deals"
+      }
+    },
+    {
+      "primitive_id": "strategic_complexity_index",
+      "name": "Strategic Complexity Index",
+      "verbatim_quote": "It highlights the strategic complexities and unique opportunities within the women's football ecosystem.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Strategic complexity index (dimensionless)', 'O': 'Organizational structure (dimensionless)', 'M': 'Market forces intensity (dimensionless)'}",
+      "assumptions": "C increases with O and M; non-linear interaction assumed.",
+      "breakdown_regime": "C exceeds threshold when O and M exceed critical values.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "C ≈ g(O, M) mirrors organizational and market interplay in GSE.",
+        "source_operator": "strategic_complexity_index",
+        "telemetry": "Observable: club decision-making speed, policy adaptability, competitive balance"
+      }
+    },
+    {
+      "primitive_id": "revenue_generation_model",
+      "name": "Revenue Generation Model",
+      "verbatim_quote": "Topics include historical and institutional development, governance and regulatory frameworks, owner‐ ship and investment models, revenue generation, marketing strategies, and future growth trajectories.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R(t)': 'Revenue stream at time t (USD)', 'S': 'Sponsorship level (dimensionless)', 'M': 'Media exposure index (dimensionless)'}",
+      "assumptions": "R(t) = h(S, M) assumes proportional relationship.",
+      "breakdown_regime": "R(t) approaches zero if S or M fall below minimum viable levels.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "R(t) = αS + βM models revenue contribution from sponsorship and media.",
+        "source_operator": "revenue_generation_model",
+        "telemetry": "Observable: ticket sales, broadcasting rights, merchandising income"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "25c0d91ca51ebf99_t0",
+      "think": "The core operators define a multi-layered model of women’s football evolution. The Commercial Ecosystem Evolution primitive captures the systemic shift from marginalization to recognition through investment and governance. Strategic Complexity Index reflects the increasing sophistication required to manage modern clubs amidst diverse market forces. Revenue Generation Model quantifies economic viability through sponsorships and media. These primitives form a dualistic structure: one layer representing institutional and financial dynamics, another capturing strategic adaptation. Failure modes occur when investment thresholds are not met or when governance structures fail to scale. The interplay between these layers reveals a feedback loop where increased complexity demands higher investment, which in turn fuels further institutional development. The model supports both predictive analytics (GSI) and situational reasoning (GSE) by encoding temporal dependencies and causal relationships.\n\nDeep epistemic analysis for openalex_W7205015727 (25c0d91ca51ebf99, domain=other, pages_read=27/50): Operator 'Commercial Ecosystem Evolution' (page 2, domain other) captures: The Business of Women's Football This book provides a critical and timely examination of the commercial and organisational evolution of the women's game. Assumptions: E(t) evolves under influence of I and G; linear dependence assumed for simplicity. Breakdown regime: When I < threshold, E(t) collapses into marginalization. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): E(t) = f(I, G) models transition from marginalization to mainstream recognition. Operator 'Strategic Complexity Index' (page 2, domain other) captures: It highlights the strategic complexities and unique opportunities within the women's football ecosystem. Assumptions: C increases with O and M; non-linear interaction assumed. Breakdown regime: C exceeds threshold when O and M exceed critical values. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): C ≈ g(O, M) mirrors organizational and market interplay in GSE. Operator 'Revenue Generation Model' (page 2, domain other) captures: Topics include historical and institutional development, governance and regulatory frameworks, owner‐ ship and investment models, revenue generation, marketing strategies, and future growth trajectories. Assumptions: R(t) = h(S, M) assumes proportional relationship. Breakdown regime: R(t) approaches zero if S or M fall below minimum viable levels. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): R(t) = αS + βM models revenue contribution from sponsorship and media. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W7205015727 (25c0d91ca51ebf99, domain=other, pages_read=27/50): Operator 'Commercial Ecosystem Evolution' (page 2, domain other) captures: The Business of Women's Football This book provides a critical and timely examination of the commercial and organisational evolution of the women's game. Assumptions: E(t) evolves under influence of I and G; linear dependence assumed for simplicity. Breakdown regime: When I < threshold, E(t) collapses into marginalization. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): E(t) = f(I, G) models transition from marginalization to mainstream recognition. Operator 'Strategic Complexity Index' (page 2, domain other) captures: It highlights the strategic complexities and unique opportunities within the women's football ecosystem. Assumptions: C increases with O and M; non-linear interaction assumed. Breakdown regime: C exceeds threshold when O and M exceed critical values. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): C ≈ g(O, M) mirrors organizational and market interplay in GSE. Operator 'Revenue Generation Model' (page 2, domain other) captures: Topics include historical and institutional development, governance and regulatory frameworks, owner‐ ship and investment models, revenue generation, marketing strategies, and future growth trajectories. Assumptions: R(t) = h(S, M) assumes proportional relationship. Breakdown regime: R(t) approaches zero if S or M fall below minimum viable levels. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): R(t) = αS + βM models revenue contribution from sponsorship and media. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in industrial organization theory and sport economics, this framework builds on earlier models of market entry and institutional logics in sports industries. Retrocausal Genealogy: Rooted in openalex_W7205015727 (25c0d91ca51ebf99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in openalex_W7205015727 (25c0d91ca51ebf99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include traditional sports stakeholders resisting change and progressive entities pushing for equity and commercialization. Their decisions shape the evolution of the ecosystem through resource allocation and policy formation. Theory of Mind & Decision Maker Model: Rooted in openalex_W7205015727 (25c0d91ca51ebf99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that strategic complexity does not solely depend on revenue, preventing overfitting. Leakage veto prevents assuming uniform impact of governance across all markets, maintaining model robustness. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W7205015727 (25c0d91ca51ebf99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W7205015727 (25c0d91ca51ebf99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

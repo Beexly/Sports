@@ -551,6 +551,7 @@ export {
   betaCalibration,
   equalMassEce,
   selectCalibrator,
+  applyCorpusRegularizedBookPathCalibration,
 } from "./calibration-map.js";
 
 // R&D ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â temperature scaling (one-parameter overconfidence softener). Not live.
@@ -577,6 +578,8 @@ export type {
   BetaModel,
   CalibratorScore,
   CalibratorSelection,
+  CorpusRegularizedBookCalibrationInput,
+  CorpusRegularizedBookCalibrationReceipt,
 } from "./calibration-map.js";
 
 // R&D ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â linear Thompson sampling contextual bandit (2026-07-02 ZK/ML dump,
@@ -5899,3 +5902,80 @@ export * from "./retrieval/pinecone-corpus-retriever.js";
 // Research-derived projection parameters (quote-verified evidence).
 export { SHIPPED_PROJECTION_PARAMETERS, SHIPPED_PARAMETERS_RESEARCH_DERIVED } from "./research/shipped-params.js";
 export type { ProjectionParameters } from "./player-projection.js";
+
+// Stage-2 corpus grounding over the prose corpus (lit.situation / corpus_statement / corpus_chunk).
+export {
+  groundFacet,
+  groundGame,
+  applyCorpusGroundingToFamilyDeltas,
+  UNSUPPORTED_FAMILY_FLOOR,
+} from "./literature/corpus-grounding.js";
+
+// Stage-2 Sovereign Foundry + Shard B + Drive Master situational priors (bounded Positive-Part James-Stein).
+export {
+  evaluateFoundryCorpusSituationalPriors,
+  computePositivePartJamesSteinShrinkage,
+  evaluateRulebookAndPsychologyOverlay,
+  evaluateSplitFieldCoverageOverlay,
+  FOUNDRY_CORPUS_BASELINE_SNAPSHOT,
+  CORPUS_SITUATIONAL_FAMILIES,
+  CORPUS_SNAPSHOT_METADATA,
+  CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX,
+  MAX_ABS_CORPUS_LOG_ODDS,
+  MAX_CORPUS_FAMILY_PROB_MODULATION,
+  NFL_2026_PLAYING_RULES_OPERATORS,
+  SPORTS_PSYCHOLOGY_PRESSURE_OPERATORS,
+  SPLIT_FIELD_QUARTERS_COVERAGE_OPERATORS,
+  type CorpusSituationalFamily,
+  type CorpusFamilyBaselineEvidence,
+  type FoundryCorpusSituationalInput,
+  type FoundryCorpusSituationalReceipt,
+  type NflRuleOperatorSpec,
+  type RulebookAndPsychologyOverlayInput,
+  type RulebookAndPsychologyOverlayReceipt,
+  type SplitFieldCoverageCheckCode,
+  type SplitFieldCoverageCheckSpec,
+  type SplitFieldCoverageOverlayInput,
+  type SplitFieldCoverageOverlayReceipt,
+} from "./nfl/foundry-corpus-situational-priors.js";
+export type {
+  GroundingFacet,
+  GroundingEvidence,
+  FacetGrounding,
+  GameGrounding,
+  FamilyGroundingAdjustment,
+  SituationalFamily,
+} from "./literature/corpus-grounding.js";
+
+export {
+  SHRINK_PSEUDOCOUNT,
+  shrinkTowardBaseline,
+  parseCsv,
+  parseNum,
+  parsePercent,
+  parseQbEpaByDefTier,
+  parseGridironMatchup,
+  parseBarrettManZone,
+  parseDynatyzeCard,
+  parseJmThriveInjury,
+  parseFantasyPtsTprr,
+  parseBarrettDank2,
+  classifySweepFile,
+  loadMorningSweepSignals,
+} from "./nfl/morning-sweep-2026-11-14-signals.js";
+
+export type {
+  ShrunkEstimate,
+  CsvRow,
+  DefTier,
+  QbTierEpa,
+  QbEpaRow,
+  QbEpaByDefTierTable,
+  GridironMatchupRow,
+  ManZoneRow,
+  InjuryRow as MorningSweepInjuryRow,
+  TprrRow,
+  Dank2Row,
+  SweepFamily,
+  MorningSweepBundle,
+} from "./nfl/morning-sweep-2026-11-14-signals.js";

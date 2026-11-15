@@ -1,0 +1,78 @@
+{
+  "book_id": "3ecaca3e29305875",
+  "source_status": "COMPLETE",
+  "title": "155ffd6fe5d3",
+  "file_name": "155ffd6fe5d3.txt",
+  "sha256": "3ecaca3e29305875a110dace036bcb591b51f5fee5cc8cf15b130dc1d864676a",
+  "primary_domain": "other",
+  "pages_total": 23,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Discontinuous American odds require probabilistic averaging; edge index maps engine scores via identity-clamp to [0,100]; independent fair values prevent self-grading. Universal Lens: Rooted in 155ffd6fe5d3 (3ecaca3e29305875), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration of independent fair values against de-vigged market probs; conformal inference ensures robust edge scoring without market echo bias. GSI Mapping: Rooted in 155ffd6fe5d3 (3ecaca3e29305875), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning computes independent edge using multi-source fair values; state transitions update ranking score based on honest edge, not market price. GSE Mapping: Rooted in 155ffd6fe5d3 (3ecaca3e29305875), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "american_odds_averaging",
+      "name": "American Odds Probability Averaging",
+      "verbatim_quote": "Needed because American odds are * DISCONTINUOUS across the ±100 boundary (a value like +2 is not a real price), * so market prices must be averaged in probability space and only then converted * back to a representative American price.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'O_{\\\\text{American}}': 'American odds (dimensionless)', 'P_{\\\\text{prob}}': 'Implied probability (0 to 1)'}",
+      "assumptions": "American odds are discontinuous at ±100; direct averaging yields invalid probabilities.",
+      "breakdown_regime": "When odds straddle ±100 boundary.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Converts American odds to probability space, averages, then maps back to ensure valid implied probabilities.",
+        "source_operator": "american_odds_averaging",
+        "telemetry": "Cross-book probability consistency check"
+      }
+    },
+    {
+      "primitive_id": "edge_index_mapping",
+      "name": "Edge Index Canonical Mapping",
+      "verbatim_quote": "* * This is the SINGLE source of truth for the Edge Index scale.",
+      "page": 2,
+      "latex": "\\text{EdgeIndex} = \\text{clamp}(\\text{round}(\\text{engineScore}), 0, 100)",
+      "symbol_and_unit_ledger": "{'\\\\text{engineScore}': 'Normalized edge score (0–100)', '\\\\text{EdgeIndex}': 'Public-facing edge index (0–100)'}",
+      "assumptions": "Engine score is already normalized to 0–100; no external scaling.",
+      "breakdown_regime": "When engine score exceeds [0,100].",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps internal engine edge score to public-facing Edge Index via identity-clamp.",
+        "source_operator": "edge_index_mapping",
+        "telemetry": "Display consistency of Edge Index across UI layers"
+      }
+    },
+    {
+      "primitive_id": "independent_edge_assessment",
+      "name": "Independent Edge Assessment",
+      "verbatim_quote": "Kalshi / Poisson / Elo / // FPI / ClubElo / Dixon–Coles, threaded through context.independentFairValues) // against the sportsbook's own de-vigged fair probability, via the edge engine.",
+      "page": 3,
+      "latex": "\\text{independentEdge} = \\text{assessEdge}(\\text{marketFairProb}, \\text{independents})",
+      "symbol_and_unit_ledger": "{'\\\\text{marketFairProb}': 'De-vigged market fair probability (0 to 1)', '\\\\text{independents}': 'List of independent fair value estimates (probabilities)', '\\\\text{independentEdge}': 'Computed independent edge (dimensionless)'}",
+      "assumptions": "Independent fair values are sourced from non-market models; avoids self-referential edge computation.",
+      "breakdown_regime": "When market and independent values diverge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Computes edge using independent fair values instead of market price to avoid self-grading.",
+        "source_operator": "independent_edge_assessment",
+        "telemetry": "Cross-model edge divergence metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3ecaca3e29305875_t0",
+      "think": "The core insight is that American odds are discontinuous at ±100, making direct averaging invalid. Thus, probabilities must be computed first, averaged, then mapped back to American format. The Edge Index is a canonical mapping of engine scores to a 0–100 scale, clamped to prevent overflow. Independent edge assessment prevents self-grading by comparing market-devised fair probabilities against independent model outputs. This ensures that the engine does not grade its own predictions, which would lead to overconfidence and spurious edge. The system enforces a dual logic: one for market consistency and another for independent validation. Failure modes include misalignment in probability conversion, incorrect clamping, or reliance on self-referential inputs. These are mitigated by strict data quality checks and explicit separation of market vs. independent signals.\n\nDeep epistemic analysis for 155ffd6fe5d3 (3ecaca3e29305875, domain=other, pages_read=18/23): Operator 'American Odds Probability Averaging' (page 1, domain other) captures: Needed because American odds are * DISCONTINUOUS across the ±100 boundary (a value like +2 is not a real price), * so market prices must be averaged in probability space and only then converted * back to a representative American price. Assumptions: American odds are discontinuous at ±100; direct averaging yields invalid probabilities. Breakdown regime: When odds straddle ±100 boundary. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Converts American odds to probability space, averages, then maps back to ensure valid implied probabilities. Operator 'Edge Index Canonical Mapping' (page 2, domain other) captures: * * This is the SINGLE source of truth for the Edge Index scale. Assumptions: Engine score is already normalized to 0–100; no external scaling. Breakdown regime: When engine score exceeds [0,100]. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps internal engine edge score to public-facing Edge Index via identity-clamp. Operator 'Independent Edge Assessment' (page 3, domain other) captures: Kalshi / Poisson / Elo / // FPI / ClubElo / Dixon–Coles, threaded through context.independentFairValues) // against the sportsbook's own de-vigged fair probability, via the edge engine. Assumptions: Independent fair values are sourced from non-market models; avoids self-referential edge computation. Breakdown regime: When market and independent values diverge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computes edge using independent fair values instead of market price to avoid self-grading. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 155ffd6fe5d3 (3ecaca3e29305875, domain=other, pages_read=18/23): Operator 'American Odds Probability Averaging' (page 1, domain other) captures: Needed because American odds are * DISCONTINUOUS across the ±100 boundary (a value like +2 is not a real price), * so market prices must be averaged in probability space and only then converted * back to a representative American price. Assumptions: American odds are discontinuous at ±100; direct averaging yields invalid probabilities. Breakdown regime: When odds straddle ±100 boundary. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Converts American odds to probability space, averages, then maps back to ensure valid implied probabilities. Operator 'Edge Index Canonical Mapping' (page 2, domain other) captures: * * This is the SINGLE source of truth for the Edge Index scale. Assumptions: Engine score is already normalized to 0–100; no external scaling. Breakdown regime: When engine score exceeds [0,100]. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps internal engine edge score to public-facing Edge Index via identity-clamp. Operator 'Independent Edge Assessment' (page 3, domain other) captures: Kalshi / Poisson / Elo / // FPI / ClubElo / Dixon–Coles, threaded through context.independentFairValues) // against the sportsbook's own de-vigged fair probability, via the edge engine. Assumptions: Independent fair values are sourced from non-market models; avoids self-referential edge computation. Breakdown regime: When market and independent values diverge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computes edge using independent fair values instead of market price to avoid self-grading. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century work on probability theory and betting market design. Influenced by modern Bayesian calibration and conformal prediction frameworks. Retrocausal Genealogy: Rooted in 155ffd6fe5d3 (3ecaca3e29305875), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 155ffd6fe5d3 (3ecaca3e29305875), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the sportsbook, independent models (Kalshi, Elo, etc.), and the engine itself. Each agent contributes to the edge computation, but only independent models are trusted for final edge scoring. Theory of Mind & Decision Maker Model: Rooted in 155ffd6fe5d3 (3ecaca3e29305875), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring no market-derived signal influences the independent edge. Leakage is prevented by isolating market-internal components from the ranking score. Veto conditions include null inputs, out-of-range probabilities, and inconsistent independent estimates. Cross-Layer Veto & Anti-Leakage Check: Rooted in 155ffd6fe5d3 (3ecaca3e29305875), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

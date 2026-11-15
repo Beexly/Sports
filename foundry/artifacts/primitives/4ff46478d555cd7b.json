@@ -1,0 +1,78 @@
+{
+  "book_id": "4ff46478d555cd7b",
+  "source_status": "COMPLETE",
+  "title": "BUILD-NRT-016-canonical-external-id-table",
+  "file_name": "BUILD-NRT-016-canonical-external-id-table.md",
+  "sha256": "4ff46478d555cd7b79f65485d7a9f8a3bc3b89f4212579826344d0cf39868c3d",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Canonical external ID table unifies NFL roster facts via truth maintenance, reconciling stale or conflicting evidence with timestamped source snapshots. Universal Lens: Rooted in BUILD-NRT-016-canonical-external-id-table (4ff46478d555cd7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers roster truth through Bayesian evidence networks, validating facts against source hashes and conflict resolution protocols. GSI Mapping: Rooted in BUILD-NRT-016-canonical-external-id-table (4ff46478d555cd7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning on roster states, transitioning between stale, confirmed, and conflicted regimes using reconciliation and validation telemetry. GSE Mapping: Rooted in BUILD-NRT-016-canonical-external-id-table (4ff46478d555cd7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "duplicate_gate",
+      "name": "Duplicate Gate",
+      "verbatim_quote": "# BUILD-NRT-016: Canonical external ID table ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-081 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The existence of a prior canonical truth layer (BUILD-GV2-081) defines base freshness rules.",
+      "breakdown_regime": "When duplicate_check_status = 'EXTENSION', implies new evidence must align with existing truth rules.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Duplicate gate maps to a logical inclusion check in GSI's truth network, ensuring consistency with prior evidence layers.",
+        "source_operator": "duplicate_gate",
+        "telemetry": "Source evidence hash comparison and conflict flagging."
+      }
+    },
+    {
+      "primitive_id": "evidence_reconciliation",
+      "name": "Evidence Reconciliation",
+      "verbatim_quote": "## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Multiple data sources exist with varying degrees of reliability and timeliness.",
+      "breakdown_regime": "When official evidence is stale or contradicted, fallbacks are used to resolve discrepancies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Reconciliation kernel computes weighted consensus over fact-level evidence from multiple sources.",
+        "source_operator": "evidence_reconciliation",
+        "telemetry": "Fact-level conflict counts and resolution timestamps."
+      }
+    },
+    {
+      "primitive_id": "truth_validation",
+      "name": "Truth Validation",
+      "verbatim_quote": "## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Validation routines are necessary to ensure truth integrity before deployment.",
+      "breakdown_regime": "Validation fails when stale or unknown facts are rendered as confirmed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Validation kernel applies rule sets to detect stale or conflicting facts in the roster.",
+        "source_operator": "truth_validation",
+        "telemetry": "Audit flags, conflict counts, and stale fact identifiers."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4ff46478d555cd7b_t0",
+      "think": "The canonical external ID table operates as a truth maintenance system for NFL rosters. It extends prior freshness logic (BUILD-GV2-081) while introducing specific roster-level evidence handling. The system enforces a hierarchy where official evidence takes precedence unless stale or contradicted. This creates a dual regime: one of truth assertion (confirmed facts) and another of uncertainty (stale/conflicted). The reconciliation process uses fact-by-fact comparison across sources, with a fallback mechanism. Validation ensures that stale or unknown facts do not appear as confirmed. The system’s failure mode arises when evidence is not properly timestamped or when conflicts are not surfaced. The structure supports a Bayesian inference model in GSI where each fact is assigned a confidence score based on source reliability and recency. In GSE, this translates into state transitions between confirmed, stale, and conflicted roster entries, governed by telemetry from validation and reconciliation.\n\nDeep epistemic analysis for BUILD-NRT-016-canonical-external-id-table (4ff46478d555cd7b, domain=other, pages_read=2/2): Operator 'Duplicate Gate' (page 1, domain other) captures: # BUILD-NRT-016: Canonical external ID table ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-081 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules. Assumptions: The existence of a prior canonical truth layer (BUILD-GV2-081) defines base freshness rules. Breakdown regime: When duplicate_check_status = 'EXTENSION', implies new evidence must align with existing truth rules. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Duplicate gate maps to a logical inclusion check in GSI's truth network, ensuring consistency with prior evidence layers. Operator 'Evidence Reconciliation' (page 1, domain other) captures: ## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact. Assumptions: Multiple data sources exist with varying degrees of reliability and timeliness. Breakdown regime: When official evidence is stale or contradicted, fallbacks are used to resolve discrepancies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Reconciliation kernel computes weighted consensus over fact-level evidence from multiple sources. Operator 'Truth Validation' (page 1, domain other) captures: ## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented. Assumptions: Validation routines are necessary to ensure truth integrity before deployment. Breakdown regime: Validation fails when stale or unknown facts are rendered as confirmed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validation kernel applies rule sets to detect stale or conflicting facts in the roster. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BUILD-NRT-016-canonical-external-id-table (4ff46478d555cd7b, domain=other, pages_read=2/2): Operator 'Duplicate Gate' (page 1, domain other) captures: # BUILD-NRT-016: Canonical external ID table ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-081 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules. Assumptions: The existence of a prior canonical truth layer (BUILD-GV2-081) defines base freshness rules. Breakdown regime: When duplicate_check_status = 'EXTENSION', implies new evidence must align with existing truth rules. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Duplicate gate maps to a logical inclusion check in GSI's truth network, ensuring consistency with prior evidence layers. Operator 'Evidence Reconciliation' (page 1, domain other) captures: ## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact. Assumptions: Multiple data sources exist with varying degrees of reliability and timeliness. Breakdown regime: When official evidence is stale or contradicted, fallbacks are used to resolve discrepancies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Reconciliation kernel computes weighted consensus over fact-level evidence from multiple sources. Operator 'Truth Validation' (page 1, domain other) captures: ## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented. Assumptions: Validation routines are necessary to ensure truth integrity before deployment. Breakdown regime: Validation fails when stale or unknown facts are rendered as confirmed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validation kernel applies rule sets to detect stale or conflicting facts in the roster. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal truth maintenance systems and data quality frameworks, evolving from early database integrity models to modern semantic web and knowledge graph approaches. Retrocausal Genealogy: Rooted in BUILD-NRT-016-canonical-external-id-table (4ff46478d555cd7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BUILD-NRT-016-canonical-external-id-table (4ff46478d555cd7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data sources with differing update frequencies and reliability, and internal systems that may misinterpret stale evidence as current. The system must model both adversarial and cooperative data behaviors. Theory of Mind & Decision Maker Model: Rooted in BUILD-NRT-016-canonical-external-id-table (4ff46478d555cd7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that validation does not rely on stale evidence alone. Leakage is prevented by restricting public-facing views to only verified facts with timestamps. Deploy gates prevent production mutations without explicit approval. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUILD-NRT-016-canonical-external-id-table (4ff46478d555cd7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

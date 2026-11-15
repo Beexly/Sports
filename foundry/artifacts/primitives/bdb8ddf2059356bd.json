@@ -1,0 +1,95 @@
+{
+  "book_id": "bdb8ddf2059356bd",
+  "source_status": "COMPLETE",
+  "title": "1196-optimising-game-tactics-for-football",
+  "file_name": "1196-optimising-game-tactics-for-football.md",
+  "sha256": "bdb8ddf2059356bdf01746de98aa83ac5d44989948e1242b74398d0082c23346",
+  "primary_domain": "football",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The paper introduces a pre-match Bayesian game and an in-match stochastic game for optimizing football tactics using proprietary StatsBomb EPL data. However, it lacks market calibration, fails to transfer to GSI prediction or GSE state-transition reasoning, and suffers from standard random cross-validation leakage.",
+  "gsi_mapping": "The work attempts to predict match outcomes (home/draw/away) using a DNN, but it bypasses GSI's core conformal/refit paradigm by using standard random CV splits that leak future information. It does not produce well-calibrated probabilistic forecasts or proper scoring rules for GSI.",
+  "gse_mapping": "The in-match stochastic game models substitution decisions as state transitions, but it uses a crude substitute-pool approximation and lacks empirical telemetry from GSE's state-representation systems. The aggressive/reserved policy heuristics do not align with GSE's reinforcement-learning state-value functions.",
+  "primitives": [
+    {
+      "primitive_id": "bayesian_game",
+      "name": "Bayesian Game",
+      "verbatim_quote": "- **In-match stochastic game** G_S = (X, T, S(x), π, u): states X = scorelines from 0–0; transitions π(x′|x, s1, s2) learned per-state via RBF-SVM (features: team strength, formations, styles; Dixon–Robinson-inspired time/score dependence); substitution payoffs add bench-player centrality (from Beal et al.",
+      "page": 1,
+      "latex": "G_B = (T, A, Θ, p, u)",
+      "symbol_and_unit_ledger": "T = set of types; A = set of actions; Θ = joint action profile; p = prior belief; u = utility function (dimensionless)",
+      "assumptions": "Both teams share the same prior beliefs from historical data; equilibria not solved; pre-match decisions fully determine starting in-match strategies.",
+      "breakdown_regime": "Standard incomplete-information game with finite action sets; no computational complexity analysis provided.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal predictive systems through the DNN's probabilistic output layer, but fails due to the random CV leakage that violates exchangeability required for conformal validity.",
+        "source_operator": "bayesian_game",
+        "telemetry": "Cross-validation split statistics showing future-match leakage during training"
+      }
+    },
+    {
+      "primitive_id": "stochastic_game",
+      "name": "Stochastic Game",
+      "verbatim_quote": "d per state; aggressive (max P(move to better state)) vs reserved (max P(stay)) policies.",
+      "page": 2,
+      "latex": "G_S = (X, T, S(x), π, u)",
+      "symbol_and_unit_ledger": "X = scoreline states; T = transition probability matrix; S(x) = set of feasible substitutions; π = transition kernel; u = substitution payoff (dimensionless)",
+      "assumptions": "Markov decision process assumption; transition probabilities learned per state; substitute centrality computed from graph metrics.",
+      "breakdown_regime": "Finite-state Markov decision process with learned dynamics; no convergence guarantees for the RBF-SVM transition estimator.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state-transition reasoning through the transition kernel π, but the crude substitute-pool approximation breaks the correspondence to GSE's fine-grained player-entity state representation.",
+        "source_operator": "stochastic_game",
+        "telemetry": "Transition accuracy metrics (SVM prediction error) on holdout validation sets"
+      }
+    },
+    {
+      "primitive_id": "k_means_clustering",
+      "name": "K-Means Clustering",
+      "verbatim_quote": "- Schema: per-match events with coordinates; team formations (30 distinct; 4-2-3-1 most common at 21%); style clusters from k-means on passes/shots/goals/tackles (4 clusters via elbow; Man City its own cluster in 2017/18).",
+      "page": 1,
+      "latex": "min_{μ_j} Σ_i ||x_i - μ_j||^2",
+      "symbol_and_unit_ledger": "x_i = data point; μ_j = centroid; ||·|| = Euclidean distance (meters squared)",
+      "assumptions": "Convex clusters; number of clusters chosen by elbow method; equal variance across clusters assumed.",
+      "breakdown_regime": "Standard k-means++ initialization; local optimality guaranteed, not global.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a similarity kernel between teams based on cluster membership, which could inform GSI's kernel-based temporal aggregation models for similar opponents.",
+        "source_operator": "k_means_clustering",
+        "telemetry": "Within-cluster sum-of-squares reduction curve showing elbow point at K=4"
+      }
+    },
+    {
+      "primitive_id": "support_vector_machine",
+      "name": "Support Vector Machine",
+      "verbatim_quote": "Opposition formation predicted by RBF-kernel SVM on prior-5-games-vs-same-style-cluster features; payoff model = 3-layer fully-connected ReLU DNN with categorical cross-entropy predicting home/draw/away probabilities from styles, formations, and Dixon-Coles-derived team strengths.",
+      "page": 1,
+      "latex": "f(x) = Σ λ_i φ(||x - m_i||)",
+      "symbol_and_unit_ledger": "φ = radial basis function (Gaussian); λ_i = Lagrange multipliers (dimensionless); m_i = support vectors (pitch coordinates); x = feature vector (dimensionless)",
+      "assumptions": "Linearly inseparable data mapped to high-dimensional space; RBF kernel with γ parameter; regularization parameter C chosen by grid search.",
+      "breakdown_regime": "Non-linear decision boundary; sensitivity to γ and C; prone to overfitting with small training sets.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Constructs a kernel function from pitch coordinates and team features, which could be integrated into GSE's spatial-temporal reasoning kernels for player movement patterns.",
+        "source_operator": "support_vector_machine",
+        "telemetry": "SVM classification accuracy on opposition formation prediction (holdout test set)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "bdb8ddf2059356bd_t0",
+      "think": "The core failure is the use of standard random cross-validation (CV) splits within two pooled seasons, which leaks future matches into the training set. This breaks the exchangeability required for GSI's conformal-refit pipeline, rendering the DNN's probability outputs uncalibrated. Additionally, the crude substitute-pool approximation and lack of empirical telemetry from GSE's state-representation systems prevent transfer to the GSE lane. The paper models coaches as decision actors but ignores the sophisticated behavioral economics of bookmaker risk management and fan CLV maximization.\n\nDeep epistemic analysis for 1196-optimising-game-tactics-for-football (bdb8ddf2059356bd, domain=football, pages_read=3/3): Operator 'Bayesian Game' (page 1, domain football) captures: - **In-match stochastic game** G_S = (X, T, S(x), π, u): states X = scorelines from 0–0; transitions π(x′|x, s1, s2) learned per-state via RBF-SVM (features: team strength, formations, styles; Dixon–Robinson-inspired time/score dependence); substitution payoffs add bench-player centrality (from Beal et al. Assumptions: Both teams share the same prior beliefs from historical data; equilibria not solved; pre-match decisions fully determine starting in-match strategies. Breakdown regime: Standard incomplete-information game with finite action sets; no computational complexity analysis provided. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal predictive systems through the DNN's probabilistic output layer, but fails due to the random CV leakage that violates exchangeability required for conformal validity. Operator 'Stochastic Game' (page 2, domain football) captures: d per state; aggressive (max P(move to better state)) vs reserved (max P(stay)) policies. Assumptions: Markov decision process assumption; transition probabilities learned per state; substitute centrality computed from graph metrics. Breakdown regime: Finite-state Markov decision process with learned dynamics; no convergence guarantees for the RBF-SVM transition estimator. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition reasoning through the transition kernel π, but the crude substitute-pool approximation breaks the correspondence to GSE's fine-grained player-entity state representation. Operator 'K-Means Clustering' (page 1, domain football) captures: - Schema: per-match events with coordinates; team formations (30 distinct; 4-2-3-1 most common at 21%); style clusters from k-means on passes/shots/goals/tackles (4 clusters via elbow; Man City its own cluster in 2017/18). Assumptions: Convex clusters; number of clusters chosen by elbow method; equal variance across clusters assumed. Breakdown regime: Standard k-means++ initialization; local optimality guaranteed, not global. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives a similarity kernel between teams based on cluster membership, which could inform GSI's kernel-based temporal aggregation models for similar opponents. Operator 'Support Vector Machine' (page 1, domain football) captures: Opposition formation predicted by RBF-kernel SVM on prior-5-games-vs-same-style-cluster features; payoff model = 3-layer fully-connected ReLU DNN with categorical cross-entropy predicting home/draw/away probabilities from styles, formations, and Dixon-Coles-derived team strengths. Assumptions: Linearly inseparable data mapped to high-dimensional space; RBF kernel with γ parameter; regularization parameter C chosen by grid search. Breakdown regime: Non-linear decision boundary; sensitivity to γ and C; prone to overfitting with small training sets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Constructs a kernel function from pitch coordinates and team features, which could be integrated into GSE's spatial-temporal reasoning kernels for player movement patterns. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1196-optimising-game-tactics-for-football (bdb8ddf2059356bd, domain=football, pages_read=3/3): Operator 'Bayesian Game' (page 1, domain football) captures: - **In-match stochastic game** G_S = (X, T, S(x), π, u): states X = scorelines from 0–0; transitions π(x′|x, s1, s2) learned per-state via RBF-SVM (features: team strength, formations, styles; Dixon–Robinson-inspired time/score dependence); substitution payoffs add bench-player centrality (from Beal et al. Assumptions: Both teams share the same prior beliefs from historical data; equilibria not solved; pre-match decisions fully determine starting in-match strategies. Breakdown regime: Standard incomplete-information game with finite action sets; no computational complexity analysis provided. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal predictive systems through the DNN's probabilistic output layer, but fails due to the random CV leakage that violates exchangeability required for conformal validity. Operator 'Stochastic Game' (page 2, domain football) captures: d per state; aggressive (max P(move to better state)) vs reserved (max P(stay)) policies. Assumptions: Markov decision process assumption; transition probabilities learned per state; substitute centrality computed from graph metrics. Breakdown regime: Finite-state Markov decision process with learned dynamics; no convergence guarantees for the RBF-SVM transition estimator. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition reasoning through the transition kernel π, but the crude substitute-pool approximation breaks the correspondence to GSE's fine-grained player-entity state representation. Operator 'K-Means Clustering' (page 1, domain football) captures: - Schema: per-match events with coordinates; team formations (30 distinct; 4-2-3-1 most common at 21%); style clusters from k-means on passes/shots/goals/tackles (4 clusters via elbow; Man City its own cluster in 2017/18). Assumptions: Convex clusters; number of clusters chosen by elbow method; equal variance across clusters assumed. Breakdown regime: Standard k-means++ initialization; local optimality guaranteed, not global. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives a similarity kernel between teams based on cluster membership, which could inform GSI's kernel-based temporal aggregation models for similar opponents. Operator 'Support Vector Machine' (page 1, domain football) captures: Opposition formation predicted by RBF-kernel SVM on prior-5-games-vs-same-style-cluster features; payoff model = 3-layer fully-connected ReLU DNN with categorical cross-entropy predicting home/draw/away probabilities from styles, formations, and Dixon-Coles-derived team strengths. Assumptions: Linearly inseparable data mapped to high-dimensional space; RBF kernel with γ parameter; regularization parameter C chosen by grid search. Breakdown regime: Non-linear decision boundary; sensitivity to γ and C; prone to overfitting with small training sets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Constructs a kernel function from pitch coordinates and team features, which could be integrated into GSE's spatial-temporal reasoning kernels for player movement patterns. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 1196-optimising-game-tactics-for-football (bdb8ddf2059356bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1196-optimising-game-tactics-for-football (bdb8ddf2059356bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The authors model the opposition as a rational agent with known style clusters, but they ignore the dynamic nature of team form, injury updates, and psychological factors that affect real-world tactical decisions. Theory of Mind & Decision Maker Model: Rooted in 1196-optimising-game-tactics-for-football (bdb8ddf2059356bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity veto: The formation/style/payoff models are trained on future matches due to random CV, violating GSI/GSE data flow. Leakage veto: No out-of-sample testing against live odds or fantasy performance metrics, so no betting-edge evidence exists. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1196-optimising-game-tactics-for-football (bdb8ddf2059356bd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

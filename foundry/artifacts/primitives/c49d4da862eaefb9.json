@@ -1,0 +1,78 @@
+{
+  "book_id": "c49d4da862eaefb9",
+  "source_status": "COMPLETE",
+  "title": "training-mission-2026-10-02",
+  "file_name": "training-mission-2026-10-02.md",
+  "sha256": "c49d4da862eaefb9b194231cdd01c0cd65e9fc507379dc67cd1ffcffcfd8a2d2",
+  "primary_domain": "physiology",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Training mission enforces causal consistency via walk-forward temporal partitioning, preventing tau-cell leakage by isolating in-season data post-freeze. Universal Lens: Rooted in training-mission-2026-10-02 (c49d4da862eaefb9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian calibration of refusal thresholds using historical abstention rates, ensuring conformal validity of predictive abstentions. GSI Mapping: Rooted in training-mission-2026-10-02 (c49d4da862eaefb9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning through frozen vintage data to enable state transitions that respect temporal causality and prevent overfitting. GSE Mapping: Rooted in training-mission-2026-10-02 (c49d4da862eaefb9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "walk_forward_temporal_partitioning",
+      "name": "Walk-Forward Temporal Partitioning",
+      "verbatim_quote": "**Coaching tau** — walk-forward fit on 2022–2024, validate on 2025, live-check on 2026 W1–4.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_train': 'time interval [2022, 2024]', 't_val': 'time interval [2025]', 't_live': 'time interval [2026W1–4]'}",
+      "assumptions": "Temporal order is preserved; future data is not used during training.",
+      "breakdown_regime": "t_train ∩ t_val ∩ t_live = ∅",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to time-series cross-validation with strict temporal ordering.",
+        "source_operator": "walk_forward_temporal_partitioning",
+        "telemetry": "Accuracy on held-out validation set"
+      }
+    },
+    {
+      "primitive_id": "frozen_data_vintage",
+      "name": "Frozen Data Vintage",
+      "verbatim_quote": "The frozen vintage is what every component trains on until the next scheduled refresh.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_frozen': 'data set frozen at time T', 'T_freeze': 'freeze timestamp'}",
+      "assumptions": "Data remains static after freezing to ensure reproducibility.",
+      "breakdown_regime": "D_frozen(t) = D_frozen(T_freeze) ∀ t ≥ T_freeze",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of stable feature space derived from frozen data.",
+        "source_operator": "frozen_data_vintage",
+        "telemetry": "Consistency of model weights across components"
+      }
+    },
+    {
+      "primitive_id": "tau_cell_leak_prevention",
+      "name": "Tau Cell Leak Prevention",
+      "verbatim_quote": "The tau 2026-cell leak (in-season weeks pooled into a table presented as pre-kickoff) is the exact failure to avoid — every fit ships a train/eval year manifest, and the held-out check gates it (train_years ∩ eval_years = ∅ or the metric is contaminated).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'τ_cell': 'in-season cell signal', 'τ_pre_kickoff': 'pre-kickoff aggregated signal', 'train_years': 'set of years used for training', 'eval_years': 'set of years used for evaluation'}",
+      "assumptions": "In-season data must be excluded from training to avoid contamination.",
+      "breakdown_regime": "train_years ∩ eval_years = ∅ ⇒ τ_cell ⊥ τ_pre_kickoff",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to data leakage prevention in causal inference.",
+        "source_operator": "tau_cell_leak_prevention",
+        "telemetry": "Metric contamination rate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c49d4da862eaefb9_t0",
+      "think": "The core principle of the training mission is to maintain temporal consistency and prevent data leakage. Walk-forward temporal partitioning ensures that models are trained on past data and validated on future data without overlap. This prevents the model from learning spurious correlations that would not generalize. The frozen data vintage ensures all components operate on identical data, maintaining alignment between reasoning and intelligence modules. Tau cell leak prevention explicitly avoids using in-season data in pre-kickoff predictions, which would otherwise introduce bias. These primitives form a coherent framework where each component's calibration and validation respects temporal causality, thereby enabling robust inference under uncertainty.\n\nDeep epistemic analysis for training-mission-2026-10-02 (c49d4da862eaefb9, domain=physiology, pages_read=2/2): Operator 'Walk-Forward Temporal Partitioning' (page 1, domain physiology) captures: **Coaching tau** — walk-forward fit on 2022–2024, validate on 2025, live-check on 2026 W1–4. Assumptions: Temporal order is preserved; future data is not used during training. Breakdown regime: t_train ∩ t_val ∩ t_live = ∅ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to time-series cross-validation with strict temporal ordering. Operator 'Frozen Data Vintage' (page 1, domain physiology) captures: The frozen vintage is what every component trains on until the next scheduled refresh. Assumptions: Data remains static after freezing to ensure reproducibility. Breakdown regime: D_frozen(t) = D_frozen(T_freeze) ∀ t ≥ T_freeze Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of stable feature space derived from frozen data. Operator 'Tau Cell Leak Prevention' (page 1, domain physiology) captures: The tau 2026-cell leak (in-season weeks pooled into a table presented as pre-kickoff) is the exact failure to avoid — every fit ships a train/eval year manifest, and the held-out check gates it (train_years ∩ eval_years = ∅ or the metric is contaminated). Assumptions: In-season data must be excluded from training to avoid contamination. Breakdown regime: train_years ∩ eval_years = ∅ ⇒ τ_cell ⊥ τ_pre_kickoff Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to data leakage prevention in causal inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for training-mission-2026-10-02 (c49d4da862eaefb9, domain=physiology, pages_read=2/2): Operator 'Walk-Forward Temporal Partitioning' (page 1, domain physiology) captures: **Coaching tau** — walk-forward fit on 2022–2024, validate on 2025, live-check on 2026 W1–4. Assumptions: Temporal order is preserved; future data is not used during training. Breakdown regime: t_train ∩ t_val ∩ t_live = ∅ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to time-series cross-validation with strict temporal ordering. Operator 'Frozen Data Vintage' (page 1, domain physiology) captures: The frozen vintage is what every component trains on until the next scheduled refresh. Assumptions: Data remains static after freezing to ensure reproducibility. Breakdown regime: D_frozen(t) = D_frozen(T_freeze) ∀ t ≥ T_freeze Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of stable feature space derived from frozen data. Operator 'Tau Cell Leak Prevention' (page 1, domain physiology) captures: The tau 2026-cell leak (in-season weeks pooled into a table presented as pre-kickoff) is the exact failure to avoid — every fit ships a train/eval year manifest, and the held-out check gates it (train_years ∩ eval_years = ∅ or the metric is contaminated). Assumptions: In-season data must be excluded from training to avoid contamination. Breakdown regime: train_years ∩ eval_years = ∅ ⇒ τ_cell ⊥ τ_pre_kickoff Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to data leakage prevention in causal inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in temporal cross-validation principles from machine learning and causal inference theory, particularly influenced by Pearl’s structural causal models and modern time-series forecasting practices. Retrocausal Genealogy: Rooted in training-mission-2026-10-02 (c49d4da862eaefb9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in training-mission-2026-10-02 (c49d4da862eaefb9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the model itself, which may overfit to in-season signals, and the environment, which evolves independently. The system must balance adaptability with stability to avoid false confidence in predictive signals. Theory of Mind & Decision Maker Model: Rooted in training-mission-2026-10-02 (c49d4da862eaefb9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring distinct temporal partitions. Leakage veto conditions require that train/eval sets do not share any years, thus eliminating shared information that could lead to inflated performance metrics. Cross-Layer Veto & Anti-Leakage Check: Rooted in training-mission-2026-10-02 (c49d4da862eaefb9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

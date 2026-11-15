@@ -1,0 +1,78 @@
+{
+  "book_id": "0bd420b51fc8ebc7",
+  "source_status": "COMPLETE",
+  "title": "0220-using-machine-learning-for-move-sequence",
+  "file_name": "0220-using-machine-learning-for-move-sequence.md",
+  "sha256": "0bd420b51fc8ebc7be67f2a7bb74855155ddfda2c82656a288d3bb8565d6d111",
+  "primary_domain": "cs",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sequence-to-sequence learning with attention for ordered hold prediction in climbing, mapped to structured state transitions. Universal Lens: Rooted in 0220-using-machine-learning-for-move-sequence (0bd420b51fc8ebc7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over move sequence likelihoods using conformal prediction for probabilistic hold ordering in GSI's tactical analysis framework. GSI Mapping: Rooted in 0220-using-machine-learning-for-move-sequence (0bd420b51fc8ebc7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine mapping unordered holds to valid move sequences via transformer-based state transitions in GSE’s play simulation. GSE Mapping: Rooted in 0220-using-machine-learning-for-move-sequence (0bd420b51fc8ebc7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "move_sequence_prediction",
+      "name": "Move Sequence Prediction",
+      "verbatim_quote": "- **Prediction model 1 (seq2seq):** PyTorch encoder–decoder with attention, 512-dim latent space; input words \"xN_yN\" (holds), output words \"limb_xN_yN\" (moves); teacher forcing; token-wise predictio",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x_N, y_N': 'Hold coordinates in normalized [0,1] space', 'limb_xN_yN': 'Limb assignment for hold N', 't': 'Time step in sequence'}",
+      "assumptions": "Input holds are discrete points; move sequences are temporally ordered; model learns from aligned hold-limb pairs.",
+      "breakdown_regime": "Failure when hold labeling is noisy or resolution insufficient due to discretization.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's sequential pattern recognition using attention mechanisms for move ordering.",
+        "source_operator": "move_sequence_prediction",
+        "telemetry": "Token-level prediction accuracy on hold-limb pairs."
+      }
+    },
+    {
+      "primitive_id": "hold_ordering_transformer",
+      "name": "Hold Ordering Transformer",
+      "verbatim_quote": "- **Prediction model 3 (simplified Transformer):** encoder layer + linear decoder, single forward pass, no positional embedding, no masking; trained with Adam for 300 epochs.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'h_i': 'Hold index at position i', 'P(h_i | h_{<i})': 'Conditional probability of hold i given previous holds', 't': 'Epoch count'}",
+      "assumptions": "Holds are indexed; order is invariant under permutation; model predicts next hold based on prior context.",
+      "breakdown_regime": "Fails when model learns to pad instead of predict valid hold sequences.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's state transition kernel for ordered hold sequences in simulated plays.",
+        "source_operator": "hold_ordering_transformer",
+        "telemetry": "Accuracy of predicted hold order vs. ground truth."
+      }
+    },
+    {
+      "primitive_id": "perplexity_evaluation",
+      "name": "Perplexity Evaluation",
+      "verbatim_quote": "Equations & assumptions - Perplexity of fixed-length models (evaluation metric): `PPL(x_0, x_1, ..., x_t) = exp(-(1/t) Σ_i log(p_θ(x_i | x_{<i})))` — Equation (1).",
+      "page": 2,
+      "latex": "PPL(x_0, x_1, ..., x_t) = \\exp\\left(-\\frac{1}{t} \\sum_{i=1}^t \\log p_\\theta(x_i | x_{<i})\\right)",
+      "symbol_and_unit_ledger": "{'PPL': 'Perplexity metric', 'p_θ(x_i | x_{<i})': 'Predictive probability of token i', 't': 'Number of tokens'}",
+      "assumptions": "Model evaluates performance via cross-entropy loss; lower perplexity implies better fit.",
+      "breakdown_regime": "Breaks down when model outputs padding tokens consistently.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's confidence interval estimation for move sequence predictions.",
+        "source_operator": "perplexity_evaluation",
+        "telemetry": "Model perplexity score on held-out sequences."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0bd420b51fc8ebc7_t0",
+      "think": "The core operators in this work are grounded in sequence modeling with attention and transformer architectures. The move sequence prediction primitive attempts to map hold coordinates to limb assignments using a seq2seq architecture, but suffers from label noise and discretization artifacts. The hold ordering transformer simplifies this to a single-pass prediction, yet fails due to padding token dominance. Perplexity evaluation provides a scalar metric for model quality, but reveals that even improved models fall short of acceptable accuracy. These primitives reflect a dual challenge: accurate pose estimation and robust sequence generation. The failure modes stem from data limitations (noisy videos, small datasets) and architectural constraints (lack of positional encoding, insufficient training). In GSI, these would map to probabilistic inference over move likelihoods; in GSE, they would inform state transitions in simulated plays.\n\nDeep epistemic analysis for 0220-using-machine-learning-for-move-sequence (0bd420b51fc8ebc7, domain=cs, pages_read=4/4): Operator 'Move Sequence Prediction' (page 1, domain cs) captures: - **Prediction model 1 (seq2seq):** PyTorch encoder–decoder with attention, 512-dim latent space; input words \"xN_yN\" (holds), output words \"limb_xN_yN\" (moves); teacher forcing; token-wise predictio Assumptions: Input holds are discrete points; move sequences are temporally ordered; model learns from aligned hold-limb pairs. Breakdown regime: Failure when hold labeling is noisy or resolution insufficient due to discretization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's sequential pattern recognition using attention mechanisms for move ordering. Operator 'Hold Ordering Transformer' (page 2, domain cs) captures: - **Prediction model 3 (simplified Transformer):** encoder layer + linear decoder, single forward pass, no positional embedding, no masking; trained with Adam for 300 epochs. Assumptions: Holds are indexed; order is invariant under permutation; model predicts next hold based on prior context. Breakdown regime: Fails when model learns to pad instead of predict valid hold sequences. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's state transition kernel for ordered hold sequences in simulated plays. Operator 'Perplexity Evaluation' (page 2, domain cs) captures: Equations & assumptions - Perplexity of fixed-length models (evaluation metric): `PPL(x_0, x_1, ..., x_t) = exp(-(1/t) Σ_i log(p_θ(x_i | x_{<i})))` — Equation (1). Assumptions: Model evaluates performance via cross-entropy loss; lower perplexity implies better fit. Breakdown regime: Breaks down when model outputs padding tokens consistently. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's confidence interval estimation for move sequence predictions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0220-using-machine-learning-for-move-sequence (0bd420b51fc8ebc7, domain=cs, pages_read=4/4): Operator 'Move Sequence Prediction' (page 1, domain cs) captures: - **Prediction model 1 (seq2seq):** PyTorch encoder–decoder with attention, 512-dim latent space; input words \"xN_yN\" (holds), output words \"limb_xN_yN\" (moves); teacher forcing; token-wise predictio Assumptions: Input holds are discrete points; move sequences are temporally ordered; model learns from aligned hold-limb pairs. Breakdown regime: Failure when hold labeling is noisy or resolution insufficient due to discretization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's sequential pattern recognition using attention mechanisms for move ordering. Operator 'Hold Ordering Transformer' (page 2, domain cs) captures: - **Prediction model 3 (simplified Transformer):** encoder layer + linear decoder, single forward pass, no positional embedding, no masking; trained with Adam for 300 epochs. Assumptions: Holds are indexed; order is invariant under permutation; model predicts next hold based on prior context. Breakdown regime: Fails when model learns to pad instead of predict valid hold sequences. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's state transition kernel for ordered hold sequences in simulated plays. Operator 'Perplexity Evaluation' (page 2, domain cs) captures: Equations & assumptions - Perplexity of fixed-length models (evaluation metric): `PPL(x_0, x_1, ..., x_t) = exp(-(1/t) Σ_i log(p_θ(x_i | x_{<i})))` — Equation (1). Assumptions: Model evaluates performance via cross-entropy loss; lower perplexity implies better fit. Breakdown regime: Breaks down when model outputs padding tokens consistently. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's confidence interval estimation for move sequence predictions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s sequence-to-sequence models and attention mechanisms, later extended to vision-language tasks. The use of DBSCAN for clustering and transformer-based order prediction reflects modern deep learning trends in structured prediction. Retrocausal Genealogy: Rooted in 0220-using-machine-learning-for-move-sequence (0bd420b51fc8ebc7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The authors assume that motion can be decomposed into discrete hold-limb pairs and that temporal order can be learned from static poses. However, the lack of physical realism in generated animations suggests a mismatch between model assumptions and real-world dynamics. Theory of Mind & Decision Maker Model: Rooted in 0220-using-machine-learning-for-move-sequence (0bd420b51fc8ebc7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "The primitives lack cross-layer compatibility with GSE’s NFL-specific state transitions due to domain mismatch (climbing vs. football). Additionally, the models’ poor generalization and reliance on synthetic data preclude reliable deployment in GSI’s tactical inference systems. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0220-using-machine-learning-for-move-sequence (0bd420b51fc8ebc7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

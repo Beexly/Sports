@@ -1,0 +1,78 @@
+{
+  "book_id": "265f9e7a00599623",
+  "source_status": "COMPLETE",
+  "title": "p0328",
+  "file_name": "p0328.txt",
+  "sha256": "265f9e7a005996238340fa1ef9d3768f75bfad8c4b540edd28430e17b6f9d79d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Behavioral oscillation emerges from conditioned stimulus variance; neural afferent interaction modulates response amplitude via stimulus component intrusion. Universal Lens: Rooted in p0328 (265f9e7a00599623), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models behavioral variability through conditioned stimulus perturbations using conformal predictive distributions over response amplitudes. GSI Mapping: Rooted in p0328 (265f9e7a00599623), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps stimulus intrusion events to state transitions in neural response dynamics, leveraging action evocation thresholds and oscillatory feedback loops. GSE Mapping: Rooted in p0328 (265f9e7a00599623), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "behavioral_oscillation",
+      "name": "Behavioral Oscillation",
+      "verbatim_quote": "BEHAVIORAL OSCILLATION 321 which agrees to the second decimal place with the entry in column b, opposite that of 1.3 σ in column a in Table 9.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'σ': 'standard deviation (dimensionless)', 'x': 'midpoint value (dimensionless)'}",
+      "assumptions": "Response variability follows Gaussian distribution; oscillation magnitude correlates with stimulus variance.",
+      "breakdown_regime": "When stimulus variance exceeds 1.35σ, oscillation amplitude increases nonlinearly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Neural response oscillation mirrors statistical variance in conditioned stimuli; GSI computes posterior probability of oscillation given stimulus variance.",
+        "source_operator": "behavioral_oscillation",
+        "telemetry": "Observed response amplitude variation relative to baseline"
+      }
+    },
+    {
+      "primitive_id": "afferent_impulse_modulation",
+      "name": "Afferent Impulse Modulation",
+      "verbatim_quote": "42), such an intrusion would change to a certain extent the afferent impulse produced by the originally conditioned stimulus components.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'afferent impulse magnitude (arbitrary units)', 'ΔI': 'change in impulse due to intrusion (arbitrary units)'}",
+      "assumptions": "Impulse modulation is proportional to stimulus component novelty.",
+      "breakdown_regime": "Impulse change saturates beyond threshold stimulus novelty.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Modulated impulse drives GSE state transition functions; GSI quantifies modulation via cross-correlation between original and novel stimulus components.",
+        "source_operator": "afferent_impulse_modulation",
+        "telemetry": "Change in neural activation level post-stimulus intrusion"
+      }
+    },
+    {
+      "primitive_id": "response_amplitude_damping",
+      "name": "Response Amplitude Damping",
+      "verbatim_quote": "185), should weaken the resulting reaction, thus producing an oscillation in a downward direction.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'response amplitude (arbitrary units)', 'D': 'damping factor (dimensionless)'}",
+      "assumptions": "Damping is inversely proportional to stimulus novelty.",
+      "breakdown_regime": "Amplitude damping becomes negligible when novelty exceeds critical threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Damped response feeds back into GSE oscillation model; GSI estimates damping coefficient via regression on observed decay rates.",
+        "source_operator": "response_amplitude_damping",
+        "telemetry": "Decay rate of response amplitude following stimulus intrusion"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "265f9e7a00599623_t0",
+      "think": "The core mechanism of behavioral oscillation arises from the interplay between conditioned stimulus components and novel intrusions. The system exhibits a dual nature: it maintains stability under consistent conditions but oscillates when new stimulus elements are introduced. This behavior can be modeled as a stochastic process where the mean response shifts according to the variance of the stimulus components. The afferent impulse modulation introduces a dynamic element that alters the neural signal strength, leading to measurable changes in response amplitude. When a novel stimulus component enters the system, it modifies the afferent input, causing a reduction in the overall reaction strength—this is captured by the damping function. These interactions form a closed-loop system where each perturbation influences subsequent responses, creating oscillatory patterns. The mathematical framework integrates these phenomena through probabilistic mappings of stimulus variance to response variability, enabling prediction of oscillation characteristics.\n\nDeep epistemic analysis for p0328 (265f9e7a00599623, domain=other, pages_read=1/1): Operator 'Behavioral Oscillation' (page 1, domain other) captures: BEHAVIORAL OSCILLATION 321 which agrees to the second decimal place with the entry in column b, opposite that of 1.3 σ in column a in Table 9. Assumptions: Response variability follows Gaussian distribution; oscillation magnitude correlates with stimulus variance. Breakdown regime: When stimulus variance exceeds 1.35σ, oscillation amplitude increases nonlinearly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Neural response oscillation mirrors statistical variance in conditioned stimuli; GSI computes posterior probability of oscillation given stimulus variance. Operator 'Afferent Impulse Modulation' (page 1, domain other) captures: 42), such an intrusion would change to a certain extent the afferent impulse produced by the originally conditioned stimulus components. Assumptions: Impulse modulation is proportional to stimulus component novelty. Breakdown regime: Impulse change saturates beyond threshold stimulus novelty. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Modulated impulse drives GSE state transition functions; GSI quantifies modulation via cross-correlation between original and novel stimulus components. Operator 'Response Amplitude Damping' (page 1, domain other) captures: 185), should weaken the resulting reaction, thus producing an oscillation in a downward direction. Assumptions: Damping is inversely proportional to stimulus novelty. Breakdown regime: Amplitude damping becomes negligible when novelty exceeds critical threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Damped response feeds back into GSE oscillation model; GSI estimates damping coefficient via regression on observed decay rates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0328 (265f9e7a00599623, domain=other, pages_read=1/1): Operator 'Behavioral Oscillation' (page 1, domain other) captures: BEHAVIORAL OSCILLATION 321 which agrees to the second decimal place with the entry in column b, opposite that of 1.3 σ in column a in Table 9. Assumptions: Response variability follows Gaussian distribution; oscillation magnitude correlates with stimulus variance. Breakdown regime: When stimulus variance exceeds 1.35σ, oscillation amplitude increases nonlinearly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Neural response oscillation mirrors statistical variance in conditioned stimuli; GSI computes posterior probability of oscillation given stimulus variance. Operator 'Afferent Impulse Modulation' (page 1, domain other) captures: 42), such an intrusion would change to a certain extent the afferent impulse produced by the originally conditioned stimulus components. Assumptions: Impulse modulation is proportional to stimulus component novelty. Breakdown regime: Impulse change saturates beyond threshold stimulus novelty. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Modulated impulse drives GSE state transition functions; GSI quantifies modulation via cross-correlation between original and novel stimulus components. Operator 'Response Amplitude Damping' (page 1, domain other) captures: 185), should weaken the resulting reaction, thus producing an oscillation in a downward direction. Assumptions: Damping is inversely proportional to stimulus novelty. Breakdown regime: Amplitude damping becomes negligible when novelty exceeds critical threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Damped response feeds back into GSE oscillation model; GSI estimates damping coefficient via regression on observed decay rates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical conditioning theory and neural network dynamics, this formalism builds upon earlier work in psychophysics and neurophysiology, particularly the principles of afferent interaction and stimulus-response correlation developed in the mid-20th century. Retrocausal Genealogy: Rooted in p0328 (265f9e7a00599623), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents within the model include the organism's adaptive response system and the environmental stimulus variability. The organism seeks to maintain stable behavior while adapting to novel inputs, leading to oscillatory adjustments. Decision actors are represented by the neural pathways that process conditioned vs. novel stimuli, with conflicting signals driving oscillation. Theory of Mind & Decision Maker Model: Rooted in p0328 (265f9e7a00599623), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that the GSI and GSE layers do not redundantly encode the same stimulus variance metrics. Leakage occurs if both systems treat novelty identically without distinct operational semantics. Veto conditions prevent overfitting by requiring independent validation of oscillation and modulation parameters across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0328 (265f9e7a00599623), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

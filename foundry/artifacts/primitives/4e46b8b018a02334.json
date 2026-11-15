@@ -1,0 +1,78 @@
+{
+  "book_id": "4e46b8b018a02334",
+  "source_status": "COMPLETE",
+  "title": "myfantasyleague.com",
+  "file_name": "myfantasyleague.com.md",
+  "sha256": "4e46b8b018a02334eee2000ab1c2c7496fb00db6f15e927feccda404deb3ab23",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Client-side app bundle analysis reveals zero accessible JSON endpoints or filter-passing functions; all model logic resides server-side, precluding direct observational inference. Universal Lens: Rooted in myfantasyleague.com (4e46b8b018a02334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on fantasy league data requires credentialled access or indirect parsing; public client surface offers no probabilistic observables for posterior update. GSI Mapping: Rooted in myfantasyleague.com (4e46b8b018a02334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE must account for server-side state transitions; client-side functions are inert, necessitating session-based or crawl-driven state evolution. GSE Mapping: Rooted in myfantasyleague.com (4e46b8b018a02334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "client_surface_gaps",
+      "name": "Client Surface Observability Gap",
+      "verbatim_quote": "# myfantasyleague.com — engineering App bundles beautified: **0** JSON endpoints captured: **0** Client functions passing filter: **0** ## Captured JSON endpoints _None.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All relevant data is encapsulated server-side; no unauthenticated client access.",
+      "breakdown_regime": "Public client interface yields zero extractable observables.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Client-side function absence mirrors GSI's inability to infer posterior distributions without telemetry.",
+        "source_operator": "client_surface_gaps",
+        "telemetry": "Credentialled session or parsed HTML required for valid state transition."
+      }
+    },
+    {
+      "primitive_id": "server_side_modeling",
+      "name": "Server-Side Model Logic",
+      "verbatim_quote": "The model is server-side._ ## Gap Nothing extractable from the public client surface.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Model behavior is deterministic and inaccessible via client interface.",
+      "breakdown_regime": "Client cannot observe internal model state or dynamics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's state evolution depends on server-provided model updates; client lacks kernel access.",
+        "source_operator": "server_side_modeling",
+        "telemetry": "Session-bound API responses define valid state transitions."
+      }
+    },
+    {
+      "primitive_id": "authentication_barrier",
+      "name": "Authentication-Based Access Control",
+      "verbatim_quote": "No JSON endpoint was reachable unauthenticated from the client surface._ ## Client-side functions that passed the filter _None survived.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Unauthenticated access is blocked; all data requires valid session.",
+      "breakdown_regime": "Public interface is void of usable data streams.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's probabilistic inference is gated by authentication; client lacks sufficient evidence for belief update.",
+        "source_operator": "authentication_barrier",
+        "telemetry": "Session token validity determines access to model outputs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4e46b8b018a02334_t0",
+      "think": "The client-side analysis of myfantasyleague.com reveals a complete absence of accessible JSON endpoints or functional filters, indicating that all application logic resides server-side. This implies that any meaningful inference or state transition within GSI or GSE must be derived through authenticated sessions or indirect parsing methods. The lack of public observables creates a fundamental gap in the data pipeline, where the client surface provides no empirical input for Bayesian updating or situational reasoning. The model's server-side nature enforces a strict partitioning between client and data, preventing direct observation of internal dynamics. This architectural choice introduces a dual failure mode: first, no unauthenticated data can be used for inference; second, client-side functions do not contribute to the system's operational semantics. The implications for GSI are severe—without session tokens or structured crawling, posterior beliefs cannot be updated. For GSE, this means that state transitions are entirely dependent on server-provided payloads, rendering client-side prediction impossible. The mathematical structure reflects a non-observable system under a constrained interface, where information flow is strictly controlled by authentication mechanisms.\n\nDeep epistemic analysis for myfantasyleague.com (4e46b8b018a02334, domain=other, pages_read=1/1): Operator 'Client Surface Observability Gap' (page 1, domain other) captures: # myfantasyleague.com — engineering App bundles beautified: **0** JSON endpoints captured: **0** Client functions passing filter: **0** ## Captured JSON endpoints _None. Assumptions: All relevant data is encapsulated server-side; no unauthenticated client access. Breakdown regime: Public client interface yields zero extractable observables. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Client-side function absence mirrors GSI's inability to infer posterior distributions without telemetry. Operator 'Server-Side Model Logic' (page 1, domain other) captures: The model is server-side._ ## Gap Nothing extractable from the public client surface. Assumptions: Model behavior is deterministic and inaccessible via client interface. Breakdown regime: Client cannot observe internal model state or dynamics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's state evolution depends on server-provided model updates; client lacks kernel access. Operator 'Authentication-Based Access Control' (page 1, domain other) captures: No JSON endpoint was reachable unauthenticated from the client surface._ ## Client-side functions that passed the filter _None survived. Assumptions: Unauthenticated access is blocked; all data requires valid session. Breakdown regime: Public interface is void of usable data streams. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic inference is gated by authentication; client lacks sufficient evidence for belief update. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for myfantasyleague.com (4e46b8b018a02334, domain=other, pages_read=1/1): Operator 'Client Surface Observability Gap' (page 1, domain other) captures: # myfantasyleague.com — engineering App bundles beautified: **0** JSON endpoints captured: **0** Client functions passing filter: **0** ## Captured JSON endpoints _None. Assumptions: All relevant data is encapsulated server-side; no unauthenticated client access. Breakdown regime: Public client interface yields zero extractable observables. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Client-side function absence mirrors GSI's inability to infer posterior distributions without telemetry. Operator 'Server-Side Model Logic' (page 1, domain other) captures: The model is server-side._ ## Gap Nothing extractable from the public client surface. Assumptions: Model behavior is deterministic and inaccessible via client interface. Breakdown regime: Client cannot observe internal model state or dynamics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's state evolution depends on server-provided model updates; client lacks kernel access. Operator 'Authentication-Based Access Control' (page 1, domain other) captures: No JSON endpoint was reachable unauthenticated from the client surface._ ## Client-side functions that passed the filter _None survived. Assumptions: Unauthenticated access is blocked; all data requires valid session. Breakdown regime: Public interface is void of usable data streams. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic inference is gated by authentication; client lacks sufficient evidence for belief update. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architecture echoes early web service models where server-side computation was privileged over client-side interaction. It aligns with the emergence of RESTful APIs and session-based authentication paradigms in the 2000s, which formalized the separation of frontend and backend logic. Retrocausal Genealogy: Rooted in myfantasyleague.com (4e46b8b018a02334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the user seeking data access and the server enforcing access control. The user operates under incomplete information, while the server maintains full knowledge of its internal state. The system's design assumes adversarial access patterns, where unauthorized clients are denied entry to prevent data leakage. Theory of Mind & Decision Maker Model: Rooted in myfantasyleague.com (4e46b8b018a02334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by the strict separation of client and server layers. Leakage occurs only through authenticated channels, ensuring no cross-layer contamination. Any attempt to derive state from client-side artifacts would violate the integrity of both GSI and GSE models due to the absence of shared observables. Cross-Layer Veto & Anti-Leakage Check: Rooted in myfantasyleague.com (4e46b8b018a02334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

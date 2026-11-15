@@ -1,0 +1,95 @@
+{
+  "book_id": "3284365444f3839d",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2406.01011v1",
+  "file_name": "arxiv_2406.01011v1.pdf",
+  "sha256": "3284365444f3839d5cb067e7a5198ede7a7933018c3c79f41fd9d426530d4da1",
+  "primary_domain": "other",
+  "pages_total": 16,
+  "pages_read": 16,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "probabilistic_association",
+      "name": "Probabilistic Association",
+      "verbatim_quote": "Furthermore, enhancements to the presented approaches in the form of probabilistic association algorithms are considered for this task.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes independent Gaussian distributions for object states and employs Bayes' theorem for posterior probability updates.",
+      "breakdown_regime": "Degenerates when track hypothesis cardinality exceeds sensor capacity, leading to combinatorial explosion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal predictive regions via kernel density estimation, enabling uncertainty-aware track-to-detection assignments.",
+        "source_operator": "probabilistic_association",
+        "telemetry": "Negative log-likelihood of association metrics serves as empirical verification metric."
+      }
+    },
+    {
+      "primitive_id": "greedy_assignment",
+      "name": "Greedy Assignment",
+      "verbatim_quote": "Keywords: 3+1D Imaging Radar, Multi-Object Tracking, 3D Object Detection 1 Introduction Building an accurate environment model is of high importance for an automated vehicle.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Operates under the assumption of a single most likely correspondence per time-step, minimizing immediate cost.",
+      "breakdown_regime": "Breaks down in high-density clutter scenarios where multiple hypotheses share similar costs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Serves as a baseline within GSE's state-transition logic, providing rapid, albeit suboptimal, track maintenance during short-term maneuvers.",
+        "source_operator": "greedy_assignment",
+        "telemetry": "Assignment consistency rate over consecutive frames acts as leakage veto condition."
+      }
+    },
+    {
+      "primitive_id": "point_object_tracking",
+      "name": "Point Object Tracking",
+      "verbatim_quote": "This, in turn, enhances detection performance by maintaining tracks and therefore objects, even when not detected by the sensor.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Represents objects as singleton points, typically the geometric center, ignoring shape and orientation information.",
+      "breakdown_regime": "Fails when radar sparsity causes frequent centroid shifts, leading to track fragmentation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual to GSI's particle filter representations, where each particle corresponds to a point track, facilitating cross-domain algorithm transfer.",
+        "source_operator": "point_object_tracking",
+        "telemetry": "Track continuity loss frequency quantifies tracking failure mode."
+      }
+    },
+    {
+      "primitive_id": "extended_object_tracking",
+      "name": "Extended Object Tracking",
+      "verbatim_quote": "Liu et al. [12] compare three tracking approaches. The first involves a TBD method with point object tracking (POT), which solely considers the center positions of detected objects. In the second approach, a JDT procedure with an extended object tracker (EOT)",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Models objects as geometric primitives (e.g., ellipsoids) to capture size and orientation, improving robustness to sparse measurements.",
+      "breakdown_regime": "Computational burden scales super-linearly with object dimensionality, risking real-time failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Incorporates into GSE's situational awareness layer to maintain coherent vehicle outlines despite sensor noise, enhancing collision avoidance.",
+        "source_operator": "extended_object_tracking",
+        "telemetry": "Ellipsoid volume change rate serves as anti-collinearity veto metric."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3284365444f3839d_t0",
+      "think": "Probabilistic association maps to conformal predictive regions in GSI, enabling uncertainty-aware track-to-detection assignments. Greedy assignment serves as a fast baseline in GSE's state-transition logic. Point object tracking dualizes to particle filters in GSI, while extended object tracking incorporates geometric priors for enhanced collision avoidance in GSE. These primitives form a unified mathematical framework for handling sparse, noisy radar data across both domains.\n\nDeep epistemic analysis for arxiv_2406.01011v1 (3284365444f3839d, domain=other, pages_read=16/16): Operator 'Probabilistic Association' (page 1, domain other) captures: Furthermore, enhancements to the presented approaches in the form of probabilistic association algorithms are considered for this task. Assumptions: Assumes independent Gaussian distributions for object states and employs Bayes' theorem for posterior probability updates. Breakdown regime: Degenerates when track hypothesis cardinality exceeds sensor capacity, leading to combinatorial explosion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal predictive regions via kernel density estimation, enabling uncertainty-aware track-to-detection assignments. Operator 'Greedy Assignment' (page 1, domain other) captures: Keywords: 3+1D Imaging Radar, Multi-Object Tracking, 3D Object Detection 1 Introduction Building an accurate environment model is of high importance for an automated vehicle. Assumptions: Operates under the assumption of a single most likely correspondence per time-step, minimizing immediate cost. Breakdown regime: Breaks down in high-density clutter scenarios where multiple hypotheses share similar costs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as a baseline within GSE's state-transition logic, providing rapid, albeit suboptimal, track maintenance during short-term maneuvers. Operator 'Point Object Tracking' (page 1, domain other) captures: This, in turn, enhances detection performance by maintaining tracks and therefore objects, even when not detected by the sensor. Assumptions: Represents objects as singleton points, typically the geometric center, ignoring shape and orientation information. Breakdown regime: Fails when radar sparsity causes frequent centroid shifts, leading to track fragmentation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSI's particle filter representations, where each particle corresponds to a point track, facilitating cross-domain algorithm transfer. Operator 'Extended Object Tracking' (page 3, domain other) captures: Liu et al. [12] compare three tracking approaches. The first involves a TBD method with point object tracking (POT), which solely considers the center positions of detected objects. In the second approach, a JDT procedure with an extended object tracker (EOT) Assumptions: Models objects as geometric primitives (e.g., ellipsoids) to capture size and orientation, improving robustness to sparse measurements. Breakdown regime: Computational burden scales super-linearly with object dimensionality, risking real-time failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Incorporates into GSE's situational awareness layer to maintain coherent vehicle outlines despite sensor noise, enhancing collision avoidance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_2406.01011v1 (3284365444f3839d, domain=other, pages_read=16/16): Operator 'Probabilistic Association' (page 1, domain other) captures: Furthermore, enhancements to the presented approaches in the form of probabilistic association algorithms are considered for this task. Assumptions: Assumes independent Gaussian distributions for object states and employs Bayes' theorem for posterior probability updates. Breakdown regime: Degenerates when track hypothesis cardinality exceeds sensor capacity, leading to combinatorial explosion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal predictive regions via kernel density estimation, enabling uncertainty-aware track-to-detection assignments. Operator 'Greedy Assignment' (page 1, domain other) captures: Keywords: 3+1D Imaging Radar, Multi-Object Tracking, 3D Object Detection 1 Introduction Building an accurate environment model is of high importance for an automated vehicle. Assumptions: Operates under the assumption of a single most likely correspondence per time-step, minimizing immediate cost. Breakdown regime: Breaks down in high-density clutter scenarios where multiple hypotheses share similar costs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as a baseline within GSE's state-transition logic, providing rapid, albeit suboptimal, track maintenance during short-term maneuvers. Operator 'Point Object Tracking' (page 1, domain other) captures: This, in turn, enhances detection performance by maintaining tracks and therefore objects, even when not detected by the sensor. Assumptions: Represents objects as singleton points, typically the geometric center, ignoring shape and orientation information. Breakdown regime: Fails when radar sparsity causes frequent centroid shifts, leading to track fragmentation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSI's particle filter representations, where each particle corresponds to a point track, facilitating cross-domain algorithm transfer. Operator 'Extended Object Tracking' (page 3, domain other) captures: Liu et al. [12] compare three tracking approaches. The first involves a TBD method with point object tracking (POT), which solely considers the center positions of detected objects. In the second approach, a JDT procedure with an extended object tracker (EOT) Assumptions: Models objects as geometric primitives (e.g., ellipsoids) to capture size and orientation, improving robustness to sparse measurements. Breakdown regime: Computational burden scales super-linearly with object dimensionality, risking real-time failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Incorporates into GSE's situational awareness layer to maintain coherent vehicle outlines despite sensor noise, enhancing collision avoidance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Emerges from Kalman filtering theory, incorporating modern machine learning losses and Bayesian nonparametrics. Retrocausal Genealogy: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Adversarial agents may craft adversarial examples to manipulate association metrics, necessitating robustness checks. Theory of Mind & Decision Maker Model: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents information leakage between GSI's predictive systems and GSE's control loops by enforcing strict telemetry isolation boundaries. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_2406.01011v1 (3284365444f3839d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

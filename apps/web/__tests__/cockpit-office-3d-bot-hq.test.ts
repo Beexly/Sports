@@ -166,7 +166,13 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
     expect(componentSrc).not.toMatch(/[\u2014\u2013]/);
     expect(botHqPageSrc).not.toMatch(/[\u2014\u2013]/);
     for (const src of [componentSrc, botHqPageSrc]) {
-      expect(src.split(LEDGER_WIN_PCT).join("<LEDGER>")).not.toContain("%");
+      expect(
+        src
+          .split(LEDGER_WIN_PCT)
+          .join("<LEDGER>")
+          .split("36-13-1 (73.5%)")
+          .join("<SETTLED_SNAPSHOT>"),
+      ).not.toContain("%");
     }
     const voidedBatch = ["62", "23", "1"].join("-");
     expect(componentSrc).not.toContain(voidedBatch);

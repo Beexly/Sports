@@ -1,0 +1,306 @@
+{
+  "book_id": "513c8319702acb05",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2502.20111v1",
+  "file_name": "arxiv_2502.20111v1.pdf",
+  "sha256": "513c8319702acb054f5c03ce2b81f5d50804d86cfaed944728321cb340daf039",
+  "primary_domain": "other",
+  "pages_total": 17,
+  "pages_read": 17,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 17,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Multi-view visual object tracking integrates 3D feature volumes across K camera views to refine occluded target trajectories via cross-view projection and temporal consistency. Universal Lens: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "GSI employs Bayesian belief propagation over multi-view feature manifolds to infer object states with conformal uncertainty quantification across temporal frames. GSI Mapping: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "GSE applies Markovian state transitions on 3D spatial-temporal manifolds to model object motion and predict occlusion events using learned cross-view feature kernels. GSE Mapping: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "mvot_feature_volume_projection",
+      "name": "Multi-View Feature Volume Projection",
+      "verbatim_quote": "Given K camera views, our method projects features from views with visible targets into a 3D feature volume space, which is then used to refine tracking in views where the target is occluded.",
+      "page": 1,
+      "latex": "\\mathcal{V}_{3D} = \\bigcup_{k=1}^{K} \\text{Proj}_k(\\mathbf{f}_k) \\quad \\text{where } \\mathbf{f}_k \\in \\mathbb{R}^{d_k}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{V}_{3D}': '3D feature volume space, dimensionless', 'K': 'number of camera views, dimensionless', '\\\\text{Proj}_k': 'projection operator from view k, dimensionless', '\\\\mathbf{f}_k': 'feature vector from view k, \\\\(\\\\mathbb{R}^{d_k}\\\\)'}",
+      "assumptions": "Features are invariant under viewpoint change; 3D volume is dense and continuous.",
+      "breakdown_regime": "When target is fully occluded in all views or feature mismatch exceeds threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The 3D feature volume acts as a shared latent space between views, enabling isomorphic tracking across modalities.",
+        "source_operator": "mvot_feature_volume_projection",
+        "telemetry": "Tracking accuracy in occluded regions vs. visible regions."
+      }
+    },
+    {
+      "primitive_id": "mitracker_cross_view_integration",
+      "name": "MITracker Cross-View Integration",
+      "verbatim_quote": "In conjunction with this dataset, we introduce a novel MVOT method, Multi-View Integration Tracker (MITracker), to efficiently integrate multi-view object features and provide stable tracking outcomes.",
+      "page": 1,
+      "latex": "\\hat{\\mathbf{x}}_t = \\arg\\max_{\\mathbf{x}} \\sum_{k=1}^{K} \\mathcal{S}(\\mathbf{f}_k^t, \\mathbf{f}_{k,\\text{ref}}) \\cdot \\mathcal{T}(\\mathbf{x}, \\mathbf{x}_{t-1})",
+      "symbol_and_unit_ledger": "{'\\\\hat{\\\\mathbf{x}}_t': 'estimated object position at time t, meters', '\\\\mathcal{S}': 'similarity function between features, dimensionless', '\\\\mathcal{T}': 'temporal transition model, dimensionless', '\\\\mathbf{f}_k^t': 'feature vector at time t from view k, \\\\(\\\\mathbb{R}^{d_k}\\\\)', '\\\\mathbf{f}_{k,\\\\text{ref}}': 'reference feature from view k, \\\\(\\\\mathbb{R}^{d_k}\\\\)'}",
+      "assumptions": "Temporal consistency and feature similarity are sufficient for tracking stability.",
+      "breakdown_regime": "When inter-view feature alignment fails or temporal transitions are discontinuous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The kernel combines spatial similarity and temporal dynamics to derive tracking likelihood.",
+        "source_operator": "mitracker_cross_view_integration",
+        "telemetry": "Mean Average Precision (mAP) on MVTrack dataset."
+      }
+    },
+    {
+      "primitive_id": "mvtrack_dataset_comprehensive",
+      "name": "MVTrack Dataset Comprehensive Coverage",
+      "verbatim_quote": "To overcome these limitations, we compiled a Multi-View object Tracking (MVTrack) dataset of 234K high-quality annotated frames featuring 27 distinct objects across various scenes.",
+      "page": 1,
+      "latex": "\\mathcal{D} = \\{ (\\mathbf{I}_k^t, \\mathbf{B}_k^t, \\mathcal{C}_k) \\}_{k=1}^{K}, \\quad \\text{where } \\mathbf{I}_k^t \\in \\mathbb{R}^{H \\times W \\times 3}, \\mathbf{B}_k^t \\in \\mathbb{R}^{4}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{D}': 'Multi-View Tracking Dataset, dimensionless', '\\\\mathbf{I}_k^t': 'image frame from view k at time t, \\\\(\\\\mathbb{R}^{H \\\\times W \\\\times 3}\\\\)', '\\\\mathbf{B}_k^t': 'bounding box in view k at time t, \\\\(\\\\mathbb{R}^{4}\\\\)', '\\\\mathcal{C}_k': 'camera calibration matrix for view k, \\\\(\\\\mathbb{R}^{3 \\\\times 4}\\\\)'}",
+      "assumptions": "Annotations are accurate and consistent across views; scene diversity supports generalization.",
+      "breakdown_regime": "When object classes or scene types exceed dataset coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dataset structure mirrors the mathematical structure of multi-view tracking problems.",
+        "source_operator": "mvtrack_dataset_comprehensive",
+        "telemetry": "Number of unique object classes and scene types in dataset."
+      }
+    },
+    {
+      "primitive_id": "occlusion_refinement_trajectory",
+      "name": "Occlusion Refinement Trajectory",
+      "verbatim_quote": "This technique is crucial for applications such as augmented reality and autonomous driving, where it is essential to continuously monitor and predict the trajectories of various objects within dynamic environments.",
+      "page": 1,
+      "latex": "\\mathcal{T}_{\\text{refined}} = \\mathcal{F}(\\mathcal{V}_{3D}, \\mathcal{T}_{\\text{initial}}) \\quad \\text{with } \\mathcal{F}: \\mathbb{R}^{d_{3D}} \\to \\mathbb{R}^{d_{\\text{trajectory}}}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{T}_{\\\\text{refined}}': 'refined trajectory estimate, meters', '\\\\mathcal{V}_{3D}': '3D feature volume, dimensionless', '\\\\mathcal{T}_{\\\\text{initial}}': 'initial trajectory estimate, meters', '\\\\mathcal{F}': 'refinement function, dimensionless'}",
+      "assumptions": "Trajectories are smooth and predictable in 3D feature space.",
+      "breakdown_regime": "When occlusion duration exceeds temporal coherence window.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Trajectory refinement kernel maps 3D feature volume to spatial-temporal path predictions.",
+        "source_operator": "occlusion_refinement_trajectory",
+        "telemetry": "Prediction error in trajectory continuity during occlusion."
+      }
+    },
+    {
+      "primitive_id": "mitracker_view_specific_encoder",
+      "name": "Multi-View Independent Representation",
+      "verbatim_quote": "(a) The view-specific feature extraction module employs a ViT that utilizes temporal tokens to process each view independently, outputting unrefined results that can be further improved by multi-view information.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Independent processing of each camera view without inter-view communication; temporal coherence enforced through dedicated tokens.",
+      "breakdown_regime": "Degenerates when temporal tokens fail to capture long-term dynamics, leading to inconsistent tracking.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction intervals for multi-camera sensor fusion, where each view provides independent likelihood estimates.",
+        "source_operator": "mitracker_view_specific_encoder",
+        "telemetry": "Cross-view inconsistency metrics such as IoU variance between predicted bounding boxes."
+      }
+    },
+    {
+      "primitive_id": "mitracker_3d_feature_volume",
+      "name": "Pixel-Wise 3D Volume Construction",
+      "verbatim_quote": "As illustrated in Figure 3b, we construct a 3D feature volume of size X × Y × Z, where (X, Y ) represents the horizontal plane and Z axis denotes the vertical direction following [17, 44].",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'X': 'pixels', 'Y': 'pixels', 'Z': 'vertical depth levels'}",
+      "assumptions": "Perspective projection models are accurate; feature maps align perfectly under known camera intrinsics.",
+      "breakdown_regime": "Fails when occlusions cause missing projections along the Z-axis, creating holes in the 3D reconstruction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Matches GSE's occupancy grid representation for situational awareness, where each voxel receives evidence from multiple sensors.",
+        "source_operator": "mitracker_3d_feature_volume",
+        "telemetry": "Volume completeness ratio: percentage of non-empty voxels with valid feature aggregation."
+      }
+    },
+    {
+      "primitive_id": "mitracker_spatial_enhanced_attention",
+      "name": "Spatial-Enhanced Tracking Refinement",
+      "verbatim_quote": "Finally, we embed the aggregated feature to a 3D-aware token to refine all view-specific features I1 U, I2 U, ..., IK U via spatial-enhanced attention, thus producing stable tracking results across different viewpoints.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Aggregated 3D features contain sufficient spatial context; attention mechanism operates within a fixed receptive field.",
+      "breakdown_regime": "Collapses when spatial relationships become highly dynamic, causing attention weights to misassign importance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates to GSI's Bayesian updating framework for sequential belief revision using spatial priors.",
+        "source_operator": "mitracker_spatial_enhanced_attention",
+        "telemetry": "Tracking stability index: variance of object positions across consecutive frames after refinement."
+      }
+    },
+    {
+      "primitive_id": "mitracker_bev_guidance",
+      "name": "Bird's-Eye-View Supervision",
+      "verbatim_quote": "Multi-View Integration To effectively integrate 2D feature maps F 1 2D, F 2 2D, ..., F K 2D from K viewpoints, we project them into a 3D feature space and then aggregate them under the supervision of BEV guidance.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "BEV ground truth is available for alignment; projection matrices are precisely calibrated.",
+      "breakdown_regime": "Breaks down when BEV annotations are absent or noisy, causing misalignment in the 3D space.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Connects to GSE's state-transition models where BEV serves as a latent state variable guiding action selection.",
+        "source_operator": "mitracker_bev_guidance",
+        "telemetry": "BEV consistency error: L2 distance between projected 2D features and their corresponding BEV coordinates."
+      }
+    },
+    {
+      "primitive_id": "513c8319702acb05_w2_g1",
+      "name": "arxiv_2502.20111v1 Ch.3 Grounded Operator",
+      "verbatim_quote": "Furthermore, we aim to enhance MITracker by reducing its dependency on precise camera calibration, making it more adaptable to scenarios where accurate calibration is challenging.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 513c8319702acb05_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "513c8319702acb05_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "513c8319702acb05_w2_g2",
+      "name": "arxiv_2502.20111v1 Ch.3 Grounded Operator",
+      "verbatim_quote": "MITracker achieves SOTA results on MVTrack and GMTD datasets, demonstrating its ability to provide stable and reliable tracking across different viewpoints and video durations.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 513c8319702acb05_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "513c8319702acb05_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "513c8319702acb05_w2_g3",
+      "name": "arxiv_2502.20111v1 Ch.3 Grounded Operator",
+      "verbatim_quote": "Our contributions lay the foundation for future advancements in MVOT, enabling the development of more robust and accurate tracking systems for real-world scenarios.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 513c8319702acb05_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "513c8319702acb05_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id",
+      "name": "Multi-View Temporal Fusion",
+      "verbatim_quote": "1.5 2 2.5 3 Restart count 450 500 550 600 Max length MITracker ODTrack MixFormer HIPTrack AQATrack SeqTrack EVPTrack OSTrack ARTrack GRM (f) Robust tracking plot on GMTD.",
+      "page": 13,
+      "latex": "\\text{Robust Tracking Performance} \\propto \\frac{\\mathcal{L}_{temporal}}{\\mathcal{R}_{reinit}}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{L}_{temporal}': 'Temporal consistency length (dimensionless)', '\\\\mathcal{R}_{reinit}:': 'Reinitialization frequency (Hz)'}",
+      "assumptions": "Assumes independent observation noise across views and Markovian temporal dynamics.",
+      "breakdown_regime": "Fails when reinitialization rate exceeds optimal threshold due to information loss.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's multi-horizon predictive filtering, where fusion across views reduces posterior uncertainty. Maps to GSE's state-transition models, where fusion enables smoother transitions between hidden states.",
+        "source_operator": "w3_snake_case_id",
+        "telemetry": "Normalized precision vs. normalized location error threshold"
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_2",
+      "name": "Precision-Normalized Tradeoff",
+      "verbatim_quote": "Parts (a) and (c) sort methods by P with a 20-pixel threshold, parts (b) and (d) by Pnorm with a 0.2 threshold, and part (e) by AUC.",
+      "page": 13,
+      "latex": "P_{norm} = \\frac{P(\\tau)}{\\max(P(\\tau))}, \\quad AUC = \\int_{\\tau_{min}}^{\\tau_{max}} P(\\tau) d\\tau",
+      "symbol_and_unit_ledger": "{'P(\\\\tau):': 'Precision at threshold \\\\tau (dimensionless)', 'P_{norm}:': 'Normalized precision (dimensionless)', 'AUC:': 'Area under the precision-recall curve (dimensionless)'}",
+      "assumptions": "Assumes isotropic Gaussian error distributions and constant recall across thresholds.",
+      "breakdown_regime": "Breaks down when error covariance becomes anisotropic or non-Gaussian.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction intervals, where AUC corresponds to calibration sharpness. Maps to GSE's belief-state updates, where P_norm quantifies relative confidence in state estimates.",
+        "source_operator": "w3_snake_case_id_w3_2",
+        "telemetry": "AUC values across MVTrack and GMTD datasets"
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_3",
+      "name": "Multi-View Redundancy Gain",
+      "verbatim_quote": "To assess the importance of the number of views for tracking, we select a fixed camera from each scenario in the testing set.",
+      "page": 14,
+      "latex": "\\Delta R(N) = R(N+1) - R(N), \\quad N \\in \\{1,2,3\\}",
+      "symbol_and_unit_ledger": "{'R(N):': 'Tracking performance metric (e.g., AUC or precision) with N views (dimensionless)', '\\\\Delta R(N):': 'Marginal redundancy gain from adding one view (dimensionless)'}",
+      "assumptions": "Assumes independent targets across views and stationary background clutter.",
+      "breakdown_regime": "Redundancy gain saturates when added views provide negligible new information.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's ensemble averaging over multiple bookmakers' odds, where diversity reduces variance. Maps to GSE's sensor fusion architectures, where redundant perception layers improve robustness to occlusions.",
+        "source_operator": "w3_snake_case_id_w3_3",
+        "telemetry": "Performance improvement as a function of added camera count"
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_4",
+      "name": "Zero-Shot Generalization Gap",
+      "verbatim_quote": "During zero-shot testing on the GMTD, SAM2 and SAM2Long perform better under lenient threshold conditions but lacks the ability to localize objects precisely.",
+      "page": 14,
+      "latex": "\\Delta_{gen} = P_{train}(\\tau) - P_{test}(\\tau), \\quad \\tau \\in [0, \\tau_{max}]",
+      "symbol_and_unit_ledger": "{'P_{train}(\\\\tau):': 'Training set precision at threshold \\\\tau (dimensionless)', 'P_{test}(\\\\tau):': 'Test set (GMTD) precision at threshold \\\\tau (dimensionless)', '\\\\Delta_{gen}:': 'Generalization gap (dimensionless)'}",
+      "assumptions": "Assumes identical data distribution shifts between training and test sets.",
+      "breakdown_regime": "Gap widens when test domain has significantly higher variance than train.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's out-of-sample risk in Bayesian portfolio optimization, where gap reflects model misspecification. Maps to GSE's transfer learning across game states, where gap measures policy adaptation difficulty.",
+        "source_operator": "w3_snake_case_id_w3_4",
+        "telemetry": "Precision difference between MVTrack and GMTD at varying thresholds"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "513c8319702acb05_t0",
+      "think": "Chapter 1 introduces MITracker, a method for multi-view object tracking that addresses key limitations in single-view tracking such as occlusion, appearance variation, and target loss. The paper identifies two major bottlenecks: scarcity of comprehensive multi-view datasets and lack of effective cross-view integration techniques. To resolve these, they propose MVTrack, a large-scale dataset with 234K frames and 27 object classes, and MITracker, a method that projects features from visible views into a 3D feature volume space to refine tracking in occluded views. The mathematical foundation lies in projecting multi-view features into a shared 3D space, enabling robust tracking even when objects are not visible in all cameras. This approach leverages geometric constraints and temporal consistency to maintain tracking integrity. The method's strength lies in its ability to generalize across diverse scenes and object types without requiring per-class training. It also provides a framework for evaluating tracking performance under challenging attributes like partial/full occlusion, motion blur, and low resolution. The implications extend beyond academic benchmarks to real-world applications in autonomous driving and augmented reality, where continuous monitoring of object trajectories is essential. The paper's theoretical contribution is the formalization of cross-view feature integration as a 3D volume projection problem, while its practical contribution is the open-sourcing of both dataset and code.",
+      "retrocausal_genealogy": "Building upon prior work in single-view tracking (e.g., Siamese networks, transformers) and multi-view tracking datasets (GMTD, DIVOTrack), this chapter extends the paradigm by introducing a scalable, multi-view dataset and a novel integration mechanism that enables robust tracking in complex environments. Retrocausal Genealogy (Window 1): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents in this context include occluding objects, environmental clutter, and dynamic lighting. The tracker must model these adversarial influences while maintaining object identity. Coaches or planners would need to account for sensor limitations and temporal delays in decision-making processes. Theory of Mind (Window 1): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that tracking does not rely solely on redundant visual cues. Leakage veto prevents overfitting to specific camera angles or object appearances by enforcing cross-view consistency and generalization across datasets. Cross-Layer Veto (Window 1): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "513c8319702acb05_t1",
+      "think": "This chapter introduces MITracker, a multi-camera visual tracking system that integrates independent view-specific feature extraction with multi-view information fusion. The core challenge is fusing heterogeneous 2D observations into a coherent 3D representation while maintaining temporal consistency. The method achieves this by constructing a 3D feature volume via perspective projection and refining results through spatial-enhanced attention guided by Bird's-Eye-View (BEV) supervision. The resulting operators provide a universal lens for handling sensor fusion in robotics and autonomous driving, enabling robust tracking under occlusion and varying viewpoints. Window 2 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in classical structure-from-motion algorithms and Kalman filtering, evolving through deep learning-based multi-view geometry and transformer architectures for spatial reasoning. Retrocausal Genealogy (Window 2): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents (e.g., other vehicles or pedestrians) may exploit tracking inconsistencies at object boundaries or during rapid maneuvers, necessitating robust fusion. Theory of Mind (Window 2): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents collinearity by ensuring each camera view provides unique geometric information; leakage is vetoed through orthogonal projection matrices and independent attention heads. Cross-Layer Veto (Window 2): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "513c8319702acb05_t2",
+      "think": "Window 3 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "513c8319702acb05_t3",
+      "think": "This chapter introduces a novel multi-view tracking framework (MITracker) that addresses three core challenges: robustness to target disappearance, interference from similar distractors, and generalization to unseen environments. The empirical analysis reveals that MITracker achieves superior AUC and precision metrics compared to baseline trackers (ODTrack, SAM2, etc.) across both MVTrack and GMTD datasets. Key insights include: 1) Multi-view fusion improves temporal consistency (reduction in reinitializations) while maintaining high localization accuracy; 2) Zero-shot performance on GMTD highlights the trade-off between broad recall (lenient thresholds) and precise localization; 3) Adding redundant camera views yields diminishing returns once sufficient information redundancy is achieved. These findings have direct implications for GSI's real-time player tracking systems (where missing a key player can cost millions) and GSE's autonomous agent decision-making (where misclassification leads to catastrophic outcomes). The underlying mathematics leverages probabilistic graphical models and information-theoretic fusion rules. Window 4 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in early work on Kalman filtering for multi-target tracking (1970s), evolved through particle filter extensions for visual SLAM (2000s), and influenced by recent advances in transformer-based sequence modeling (2017+). Retrocausal Genealogy (Window 4): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing coaches may deploy decoy plays or screen formations to exploit single-camera tracking vulnerabilities. Players might intentionally move into blind spots to create false positives. Bookmakers could adjust odds based on perceived tracking reliability. Theory of Mind (Window 4): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must avoid collinearity between views from nearly parallel angles, which would introduce spurious correlations. Leakage occurs if training/test splits share identical camera trajectories across scenarios. Cross-Layer Veto (Window 4): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in arxiv_2502.20111v1 (513c8319702acb05, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

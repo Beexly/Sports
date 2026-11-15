@@ -1,0 +1,183 @@
+{
+ "book_id": "55d0f88972ad63be",
+ "title": "Football: The American Intercollegiate Game",
+ "author": "Parke H. Davis",
+ "year": 1911,
+ "language": "en",
+ "source": {
+  "file": "Davis-1911-Football-The-American-Intercollegiate-Game.pdf",
+  "sha256": "55d0f88972ad63bed9887306358b3979d0e917a169b342c77c9b7a6847e157b2",
+  "pages_total": 577,
+  "pages_read": 577
+ },
+ "source_note": "Google Books scan of the 1911 Charles Scribner's Sons first edition (digitization notice PDF p1; title page PDF p12; 'Published September, 1911' PDF p13). Public domain; no retraction. Author Parke H. Davis was a member of the Intercollegiate Rules Committee (title page), i.e., participant-observer; the appendix reprints the official proceedings. OCR artifacts preserved verbatim in all quotes (e.g., '3ide', 'strat^y', 'histoiy', 'q^ass', 'Tlie', 'requirem^it'). Coverage: front matter pp1-13 and Part I pp14-158 read verbatim; appendix pp530-577 read verbatim; Part II pp158-529 (372 pages of play-by-play game records) processed page-by-page via heading digest plus full reads of pp158-161, 222, 300-302, 305, 430-432, 528; used as calibration evidence, not quoted for betting content. Two editorial defects quarantined, no primitives built on them: (1) ch. VIII narrative (PDF p145) says 'five yards on four downs' but the 1882 rule text (PDF p541) and Part II records ('third down', PDF p222) establish three downs; (2) narrative dates the field-goal reduction to the 1903 session (PDF p143) but the official proceedings place it at the March 1904 meeting (PDF pp564-565) - appendix used as authoritative.",
+ "primitives": [
+  {
+   "id": "p1",
+   "name": "Three-downs-five-yards possession reset rule (1882)",
+   "domain": "football/history",
+   "source_operator": "Slice the 1882 convention rule text from the appendix (PDF p541) between 'If on three consecutive fairs and downs' and 'fourth down was made.'; formalize the printed threshold disjunction as a possession-reset predicate over net yardage.",
+   "verbatim_quote": "If on three consecutive fairs and downs a team shall not have advanced the ball five yards or lost ten, they must give up the ball to the other side at the spot where the fourth down was made.",
+   "page": 541,
+   "latex": "G = x_{4}-x_{1},\\qquad \\mathrm{surrender}\\;\\Longleftrightarrow\\;(G<5\\,\\mathrm{yd})\\;\\lor\\;(G\\le-10\\,\\mathrm{yd})",
+   "symbol_and_unit_ledger": "x_k = ball position at the start of down k, measured in yards from the possessing side's own goal line (yd); G = net advance over three consecutive downs (yd); 5 yd and 10 yd = printed thresholds (yd); down index k dimensionless. Every term in the predicate is a yardage: dimensionally homogeneous.",
+   "assumptions": "Formalization of printed prose; the source contains no equation. 'Consecutive' is defined by the rule itself as 'without leaving the hands of the side holding it' (PDF p541), so the sequence resets on any change of possession. Under net-gain accounting the second disjunct (loss of ten) is subsumed by the first (gain < 5); both clauses are preserved because both are printed. The rule assigns possession to the other side at the spot where the fourth down was made.",
+   "breakdown_regime": "Governs 1882-1905 only; superseded by the ten-yard requirement of the 1906 code (ch. VIII, PDF p145). Void mid-sequence whenever possession changes (fumble, kick); scoring plays reset the down count. The narrative's 'four downs' phrasing (PDF p145) is an editorial defect quarantined in source_note: the rule text and the Part II records ('On the third down', PDF p222) establish three downs.",
+   "timescales": [
+    "tau_0: one down (seconds)",
+    "tau_1: possession series of three downs (minutes)",
+    "tau_2: season (months)",
+    "tau_3: rule era 1882-1905 (years)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The rule is a reset operator on the possession Markov chain of the 22-player football dynamical system: the state (down, distance-to-gain) gates the admissible play-call distribution, and the possession branch terminates when net gain G < 5 yd at the end of down three. Modern down-and-distance is the same operator with a ten-yard threshold; the kernel's structure, not its constant, is the invariant.",
+    "telemetry": "Per-down yardage distributions, third-down conversion rate, punt frequency on third-and-long, all extractable from Part II play-by-play (e.g., 'On the third down, and 3 yards to go', PDF p222) and from modern tracking data.",
+    "source_operator": "55d0f88972ad63be:p1 (source_operator slice cited above)"
+   }
+  },
+  {
+   "id": "p2",
+   "name": "Era-weighted additive scoring functional (1883-1910)",
+   "domain": "football/history",
+   "source_operator": "Slice the October 1883 value table (PDF p105), the December 1883 amendment (PDF pp105, 542), the 1897 values (PDF p560) and the 1904 field-goal amendment (PDF p565); assemble the era weight vectors and formalize the score as a weighted event count.",
+   "verbatim_quote": "This grievance the convention of October 17, 1883, removed by assigning a numerical value to the scoring plays as follows: Safely 1 Touchdown 2 Goal following touchdown 4 Goal from field 5",
+   "page": 105,
+   "latex": "S = w_{\\mathrm{TD}}\\,n_{\\mathrm{TD}} + w_{\\mathrm{GT}}\\,n_{\\mathrm{GT}} + w_{\\mathrm{FG}}\\,n_{\\mathrm{FG}} + w_{\\mathrm{S}}\\,n_{\\mathrm{S}}",
+   "symbol_and_unit_ledger": "n_TD, n_GT, n_FG, n_S = counts of touchdowns, goals-after-touchdown, field goals, and safeties forced (dimensionless event counts); w_* = printed point weights (points per event); S = total score (points). Each summand is points: homogeneous. Era vectors (w_TD, w_GT, w_FG, w_S): Oct 1883 (2,4,5,1); Dec 1883-1896 (4,2,5,2); 1897-1903 (5,1,5,2); 1904+ (5,1,4,2).",
+   "assumptions": "Formalization of printed tables; no equation in source. The 1897 w_GT = 1 is DERIVED, not printed: the appendix gives 'Goal obtained by touchdown, 6 points' versus 'touchdown failing goal, 5 points' (PDF p560), so the conversion increment is 6 - 5 = 1. Safeties add to the opposing team's score (PDF p542), so n_S counts safeties forced against the opponent. The December 1883 amendment is confirmed both in the narrative (PDF p105) and the official proceedings (PDF p542).",
+   "breakdown_regime": "Weights are era-specific; applying one era's vector to another era's games corrupts scores. Below 1883 the functional does not apply: the 1876 code was lexicographic ('a goal shall be equal to four touchdowns', PDF p93), and the 1876/1878 Harvard-Yale games counted goals alone by pre-game agreement, with ten men per side in 1876 (PDF p300). Safeties were not scoring plays until 1881 (PDF p100). A bare touchdown outranks a field goal only from 1897 (5=5) and strictly from 1904 (5>4); before that the drop-kick was the premium play.",
+   "timescales": [
+    "tau_0: one scoring play (seconds)",
+    "tau_1: game (hours)",
+    "tau_2: season (months)",
+    "tau_3: scoring era 1883-1910 (years)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Weighted additive aggregation of terminal events is the same functional as P&L roll-up in portfolio accounting, with era-dependent weights playing the role of contract multipliers. In the 22-player system the weight vector IS the coach's objective function: the bare-touchdown versus field-goal crossover (1897 equality, 1904 strict dominance) shifts fourth-down and kicking decision thresholds era by era.",
+    "telemetry": "Scoring-event frequencies by era from Part II box scores (e.g., the 1876 Harvard-Yale game scored by goals alone, PDF p300); implied decision thresholds derivable from each era's weight vector.",
+    "source_operator": "55d0f88972ad63be:p2 (source_operator slice cited above)"
+   }
+  },
+  {
+   "id": "p3",
+   "name": "Scrimmage snap-back: deterministic possession assignment (1880)",
+   "domain": "football/history",
+   "source_operator": "Slice Davis's statement of the scrimmage's consequence (PDF p99) and Rule 6 of the 1880 code (PDF p539); formalize the rule's possession guarantee as a degenerate transition probability.",
+   "verbatim_quote": "This is the device which introduced into our game the principle of an orderly retention of the ball by one 3ide, thereby making possible the use of prearranged strat^y, the most distinctive and fascinating characteristic of the American game.",
+   "page": 99,
+   "latex": "\\Pr(\\text{offense retains possession}\\mid\\text{legal snap-back}) = 1",
+   "symbol_and_unit_ledger": "Probability dimensionless; conditioning event = legal snap-back per Rule 6 (PDF p539). No numerical probability is printed for the preceding scrummage contest; none is assigned here. The '1' is the rule's deterministic guarantee, not a measured frequency.",
+   "assumptions": "Formalization of printed prose ('orderly retention of the ball by one side'); determinism is a rule fiat, not an empirical claim. Holds only while the snap is not fumbled. Rule 6 names the snap receiver 'quarter-back' and forbids him to rush forward with the ball (PDF p539), separating possession from advancement. The 1880 rule assigned possession without requiring progress.",
+   "breakdown_regime": "A fumble restores the stochastic contest. Without a progress quota, deterministic retention permits block-game stasis: Princeton retained the ball for the remainder of the 1880 game to force a 0-0 draw (PDF p100), repeated in 1881 (PDF pp101-102); repaired by the 1882 quota (p1). Pre-1880 scrummage play is outside the kernel's domain.",
+   "timescales": [
+    "tau_0: snap event (seconds)",
+    "tau_1: possession (minutes)",
+    "tau_2: season (months)",
+    "tau_3: rule era 1880-present (years)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Deterministic resource assignment is the enabling condition for coordinated multi-agent planning - the same structure as turn-based allocation versus continuous contention in distributed systems. In the 22-player system the snap is the synchronization event that makes prearranged strategy (the signal system, PDF p104) executable; without it no play-call distribution exists to optimize.",
+    "telemetry": "Snap-to-snap interval, false-start and offside rates, signal-call distributions; historically, the transition from scrummage to scrimmage visible in the pre-1880 Part II records ('kicks and scrummages following in rapid succession', PDF p301).",
+    "source_operator": "55d0f88972ad63be:p3 (source_operator slice cited above)"
+   }
+  },
+  {
+   "id": "p4",
+   "name": "Forward pass as defensive-spreading threat option (1906)",
+   "domain": "football",
+   "source_operator": "Slice the 1906 introduction clause (PDF p145) and the fear-of-use statement (PDF p147); derive the coverage-allocation forcing term as an option-value expectation over pass/run branches.",
+   "verbatim_quote": "The chief value of the play, however, soon appeared to be in the fear of its use by the defensive team, which thereby was compelled to spread and weaken its defence.",
+   "page": 147,
+   "latex": "\\mathbb{E}[G] = p\\,G_{\\mathrm{pass}}(n_s) + (1-p)\\,G_{\\mathrm{run}}(11-n_s),\\qquad \\partial_{n_s}G_{\\mathrm{pass}}<0,\\ \\partial_{n_s}G_{\\mathrm{run}}>0",
+   "symbol_and_unit_ledger": "p = probability the offense passes on a down (dimensionless, 0<p<1 once legalized); n_s = defenders allocated to pass coverage (players); 11 = rules-standard team size (players); G_pass, G_run = expected yards gained on pass/run (yd); E[G] = expected gain (yd). Both branches are yardages: homogeneous.",
+   "assumptions": "DERIVED formalization of printed prose; no equation in source. Assumes the defense observes formation but not the call (incomplete information), pass and run are mutually exclusive per down, and 11 defenders per the rules-standard team size; earlier roster sizes (ten men in the 1876 Harvard-Yale game, PDF p300) are outside the domain. The monotonicity signs encode Davis's statement that fear of the pass 'compelled [the defense] to spread and weaken its defence' (PDF p147). Introduction at the suggestion of John C. Bell and Paul J. Dashiell (PDF p145).",
+   "breakdown_regime": "Before 1906, p=0 by rule and the option does not exist. The five-yard restriction on the quarter-back run and the forward pass constrained the underlying until its removal in the 1910 code (PDF p150); wherever the pass is infeasible the threat value collapses. If the defense perfectly predicts the call, p becomes known 0/1 and the option value vanishes. The kernel is a threat model, not a completion-probability model: it prices fear, not execution.",
+   "timescales": [
+    "tau_0: one down (seconds)",
+    "tau_1: drive (minutes)",
+    "tau_2: season (months)",
+    "tau_3: pass era 1906-present (years)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The option value of an unused threat binds the defensive resource-allocation constraint of the 22-player system: any p > 0 forces coverage allocation n_s > 0 even at vanishing pass frequency, exactly the pricing of an out-of-the-money option. The kernel enters the Coach-Mind deception model as a forcing term on the defense's allocation, independent of the offense's actual pass rate.",
+    "telemetry": "Safety depth, box counts, run/pass ratios, coverage snaps - observable in Part II 1906-1910 records and in modern tracking data; the five-yard restriction's removal (PDF p150) is a natural experiment in option-value release.",
+    "source_operator": "55d0f88972ad63be:p4 (source_operator slice cited above)"
+   }
+  },
+  {
+   "id": "p5",
+   "name": "Mass-play innovation-prohibition cycle (1884-1910)",
+   "domain": "history/football",
+   "source_operator": "Slice Davis's cycle statement (PDF p151) and anchor each phase to dated instances: V Trick 1884 (p108), flying wedge Nov 1892 (p120), abolition 1894 (p128), guards-back (p129), tackle-back 1900 (p139), mechanism ban 1910 (p151).",
+   "verbatim_quote": "Those great creations, the V, the flying wedge, the turtle- back, guards-back, the tandem, and the tackle-back, period- ically had arisen to win victories for their creators, to be chaiged with rendering the sport uninteresting and uncouth and with being the cause of its injuries, and eventually to be ouUawed, only to be replaced by another great device of coaching genius still constructed along the lines of the q^ass idea.",
+   "page": 151,
+   "latex": null,
+   "symbol_and_unit_ledger": "No equation: qualitative cycle. Entities: formation F (V, flying wedge, turtle-back, guards-back, tandem, tackle-back); phases: innovation -> victory -> injury/ugliness charge -> prohibition -> successor formation along the same mass idea. All dates printed: 1884, 1892, 1894, 1900, 1910.",
+   "assumptions": "Qualitative source; no printed numbers beyond dates. The cycle is Davis's explicit generalization ('periodically had arisen... only to be replaced by another great device... still constructed along the lines of the mass idea', PDF p151), not an inferred pattern. Instance anchors verified in the narrative at the cited pages: V Trick invented by R. M. Hodge for Pennsylvania vs Princeton, October 25, 1884 (PDF p108).",
+   "breakdown_regime": "The cycle terminates only when the rule removes the mechanism rather than the formation: the 1910 code required seven men on the line and forbade hand/arm assistance and interlocking (PDF p151). Formation-specific bans are evadable by re-parameterization - the source's own statement. After 1910 the mass idea itself is illegal, so the cycle's successor step no longer applies to interlocked interference.",
+   "timescales": [
+    "tau_0: one play (seconds)",
+    "tau_1: season of dominance (months)",
+    "tau_2: prohibition cycle (years)",
+    "tau_3: full cycle 1884-1910 (decades)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Adversarial innovation-regulation cycles are isomorphic to edge discovery, exploitation, and decay in prediction and DFS markets: each outlawed formation is a priced-in edge, and banning instances without closing the mechanism spawns successor edges. The 1910 mechanism ban is the market-design lesson: close the mechanism, not the instance.",
+    "telemetry": "Formation usage frequencies before and after rule changes, scoring distributions, injury counts (Dexter's registry, PDF p142); the 1894 abolition (PDF p128) and 1910 ban (PDF p151) are dated intervention points.",
+    "source_operator": "55d0f88972ad63be:p5 (source_operator slice cited above)"
+   }
+  },
+  {
+   "id": "p6",
+   "name": "Participant-verification protocol with declared uncertainty (Davis method)",
+   "domain": "history",
+   "source_operator": "Slice Davis's method statement (PDF p67) and uncertainty declaration (PDF p67); cross-check against the appendix's official proceedings and the narrative's injury-survey episodes (PDF pp125, 128).",
+   "verbatim_quote": "The facts here presented of this first intercollegiate football game have been obtained from the surviving players",
+   "page": 67,
+   "latex": null,
+   "symbol_and_unit_ledger": "No equation: epistemic protocol. Entities: claim C (historical fact), witness set W (surviving players), verification V (participant cross-check), declared residual uncertainty U. Printed anchors: 'obtained from the surviving players' and 'the uncertainty which invariably cloaks an original occur- rence' (PDF p67).",
+   "assumptions": "Davis's stated method: facts of the first intercollegiate game (1869) obtained from surviving players, with uncertainty declared rather than smoothed (PDF p67). The protocol is descriptive of the source's own practice, verified against the narrative; it is not a statistical estimator and carries no printed error rates.",
+   "breakdown_regime": "Survivor memory decays (~40 years for the 1869 game); the survivor sample is biased toward prominent players. Participant-adjacent testimony still needs adversarial cross-checking: the Munchener Nachrickten's sensational exaggeration of injuries (PDF p125) is Davis's own counterexample, answered by Camp's systematic questionnaire to every former player (PDF p128). Where narrative and official proceedings conflict, the protocol must prefer the proceedings (see source_note defects).",
+   "timescales": [
+    "tau_0: single testimony (minutes)",
+    "tau_1: verification campaign (months)",
+    "tau_2: memory decay (decades)",
+    "tau_3: historiographic tradition (centuries)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The participant-verification protocol is isomorphic to the Foundry gatekeeper's fail-closed extraction: claims require verbatim anchors plus programmatic substring checks, and residual uncertainty must be declared in source_note rather than smoothed away. The appendix-over-narrative precedence rule is the same source-routing discipline the gatekeeper enforces.",
+    "telemetry": "Quote-verification pass rate, refusal rate, OCR-artifact counts per page; in this extraction, 19 of 19 sliced quotes verified as substrings of the normalized source with page anchors.",
+    "source_operator": "55d0f88972ad63be:p6 (source_operator slice cited above)"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "id": "t1",
+   "primitive_ids": [
+    "p1",
+    "p2",
+    "p3",
+    "p4",
+    "p5",
+    "p6"
+   ],
+   "think": "Davis's 1911 monograph is not a playbook but a stratigraphy of rule scars, and reading it as one yields six sovereign primitives that bind the modern 22-player football dynamical system to its legislative history. The author's provenance matters: the title page identifies Parke H. Davis as a member of the Intercollegiate Rules Committee (PDF p12), so the narrative is participant-observation by a legislator, and the appendix reprints the official proceedings he helped write (PDF pp530-577). Where the two disagree, the appendix governs.\n\nThe deepest invariant is 55d0f88972ad63be:p3. The 1880 substitution of the scrummage by the scrimmage converted possession from a stochastic contest into a deterministic assignment: the ball is snapped back to a named quarter-back who may not himself rush (Rule 6, PDF p539), and Davis states the consequence explicitly - 'the principle of an orderly retention of the ball by one side, thereby making possible the use of prearranged strategy' (PDF p99). Determinism is the enabling condition of every coordinated-strategy object the Coach-Mind simulator manipulates: without guaranteed retention there is no offense to call plays for, no signal system (PDF p104), no play-call distribution to optimize. But determinism without a progress quota is degenerate, and the book records the degeneracy with unusual precision: in the 1880 Princeton-Yale game Princeton made eleven safeties and Yale six, none of which counted as scoring, and Princeton retained the ball to force a 0-0 draw - the 'block game' (PDF p100). The 1881 sequel forced the safety-counting rule and Princeton's touch-in-goal evasion (PDF pp101-102). The 1882 repair (55d0f88972ad63be:p1, PDF p541) - surrender unless five yards are gained in three consecutive downs - is a reset operator on the possession Markov chain, and its 'consecutive' clause, defined in the same rule as 'without leaving the hands of the side holding it,' marks the exact boundary where the deterministic kernel reverts to contest. Every modern down-and-distance state, third-down conversion rate, and punt decision descends from this operator; the Part II records calibrate it directly ('On the third down, and 3 yards to go,' PDF p222).\n\nThe second stratum is valuation (55d0f88972ad63be:p2). The objective function was rewritten four times in twenty years: October 1883 (safety 1, touchdown 2, goal-after 4, field goal 5, PDF p105); December 1883 (touchdown 4, safety 2, goal-after 2, PDF pp105, 542); 1897 (touchdown 5, goal-with-touchdown 6, field goal 5, safety 2, PDF p560); 1904 (field goal reduced to 4, PDF p565). The crossover is decision-theoretic: a bare touchdown is worth less than a field goal until 1897, equal in 1897, and strictly greater only from 1904 - which is why the early game was a kicking game and why fourth-down thresholds cannot be transported across eras. The functional's domain has a hard lower bound: the 1876 code decided matches by majority of touchdowns with a goal equal to four touchdowns (PDF p93), a lexicographic order, not an additive sum; and the Part II records show games played under even stranger local contracts - the 1876 and 1878 Harvard-Yale games counted goals alone by pre-game agreement, and the 1876 game used ten men per side (PDF p300). Any historical simulation that applies one era's weights, or one era's roster size, to another era's games commits exactly the silent-failure error the gatekeeper exists to prevent.\n\nThe third stratum is threat (55d0f88972ad63be:p4). The forward pass, legalized in 1906 at the suggestion of John C. Bell and Paul J. Dashiell (PDF p145), produced its chief value 'in the fear of its use by the defensive team, which thereby was compelled to spread and weaken its defence' (PDF p147). This is option value in its purest printed form: any positive pass probability forces coverage allocation even at vanishing pass frequency. The five-yard restriction on the quarter-back run and the forward pass, removed only in the 1910 code (PDF p150), was an exercise in killing option value by constraining the underlying; its removal 'obliterated the checker-board and brought back the famous gridiron' (PDF p150).\n\nThe fourth stratum is the regulation cycle (55d0f88972ad63be:p5, PDF p151): V Trick (1884, PDF p108), flying wedge (November 1892, PDF p120), guards-back (PDF p129), tackle-back (1900, PDF p139) - each arises, wins, is charged with injuries and ugliness, is outlawed (the V and flying wedge in 1894, PDF p128), and is replaced by a successor 'still constructed along the lines of the mass idea.' The cycle terminates only when the rule attacks the mechanism rather than the formation: the 1910 code required seven men on the line and forbade hand-or-arm assistance and interlocking (PDF p151). This is the historical proof that instance-bans without mechanism-closure generate successor edges - the same law that governs projection exploitation and market-edge decay.\n\nFinally 55d0f88972ad63be:p6 (PDF p67) is Davis's own epistemic protocol: facts 'obtained from the surviving players,' with the uncertainty of the original occurrence declared rather than smoothed. The book models the gatekeeper's fail-closed doctrine including its failure modes: the Munchener Nachrickten's sensational exaggeration of American football injuries (PDF p125) shows that even participant-adjacent testimony needs adversarial cross-checking, and Camp's injury questionnaire to every former player (PDF p128) is the counter-move - verification by systematic survey. Two editorial defects were quarantined in source_note rather than built upon: the narrative's 'four downs' phrasing (PDF p145) contradicts the three-down rule text and the game records, and the field-goal reduction is dated to the 1903 session in the narrative (PDF p143) but to the March 1904 meeting in the official proceedings (PDF pp564-565). The appendix, not the narrative, is the authoritative stratum - a general lesson for any corpus where commentary and primary text disagree.",
+   "retrocausal_genealogy": "Each rule in Davis's appendix is scar tissue over a named failure, and the genealogy runs backward from every modern hidden state. The 1880 scrimmage exists because the rugby scrummage made possession a lottery and blocked prearranged strategy (PDF pp97-99). The 1882 five-yard quota exists because determinism without quota produced the 1880-81 block games, eleven uncounted safeties in a single 0-0 draw (PDF pp100-102). The 1883 numerical scoring exists because lexicographic touchdown-counting produced ties and disputes, and the December amendment reweighted safety and touchdown within two months (PDF pp104-105, 542). The 1894 wedge abolition exists because the November 1892 flying wedge and the 1893 injury crisis nearly abolished the game (PDF pp120-128). The 1906 forward pass and ten-yard requirement exist because the 1905 crisis forced the joint session (PDF pp144-145). The 1910 mechanism ban exists because formation bans had failed for twenty-six years and the 1909 season produced the first fatal injuries on intercollegiate teams (PDF pp150-151). Reading forward from any modern rule, its genealogy is a chain of falsified equilibria: each hidden state variable - down count, weight vector, pass legality, interference geometry - was installed by a named failure, not designed ab initio.",
+   "theory_of_mind": "The sources are saturated with recursive belief, and Davis writes as a legislator who models other minds. The 1906 defense 'feared' a pass that was rarely completed - the defensive coordinator's model of the quarterback's intent, not the quarterback's actual behavior, moved the secondary (PDF p147). After the 1910 code, 'the generals of the gridiron, proceeding cautiously as usual, clung as closely as possible to their old formations, leaving the profound possibilities of the new rules for gradual development' (PDF p154): belief states persist after the payoff structure changes, the same lag a Coach-Mind simulator must model when a coordinator keeps calling mass-era plays because his career was built on them. Camp's injury questionnaire (PDF p128) is a deliberate theory-of-mind instrument - he surveyed every former player to falsify the public's exaggerated injury beliefs with compiled testimony. Davis himself models his readers: he publishes the violations while narrating the reform, calibrating how much scandal the coalition will bear. The quarter-back rule (PDF p539) - the snap receiver may not rush - encodes the committee's belief about which player should hold decision authority, a recursive assignment of who may model whom.",
+   "cross_layer_veto": "The injury record is the biomechanical veto layer over the tactical-EV layer, and Davis documents the veto firing. Mass plays were high-EV - the tackle-back won Yale victories (PDF p139) - yet the 1909 season's injuries, 'some of these, unfortunately, were fatal,' the first on intercollegiate teams, forced the 1910 removal (PDF pp150-151): expected points cannot outweigh the blunt-trauma and axonal-shear load of interlocked-mass collisions. The flying tackle, 'a spectacular feat, but one frequently provocative of injury,' was forbidden in the same code (PDF p151), and hurdling was placed under referee jurisdiction (PDF p569) - both vetoed by injury mechanics, not by inefficiency. In modern terms, a high-EV quarterback hit or launch-point tackle must be vetoed by the GSI fluid/axonal-shear constraint even when the football-EV layer approves it; the 1910 code is the historical precedent for a cross-layer veto overriding a single-layer optimum. Dexter's injury registry (PDF p142) is the telemetry that made the veto computable: without it the committee argued from anecdote, with it the reform became evidence-driven, and the 1910 mechanism ban could be aimed at the actual injury-producing geometry rather than at its symptoms.",
+   "universal_lens": "Mechanism-design audit lens: for any competitive system ask (1) does retention require progress, or is stasis an equilibrium? (2) is valuation additive or lexicographic, and who rewrote the weights? (3) do bans target instances or mechanisms? (4) which unused threats are already pricing the defense? The polymath check applies the four questions to markets, protocols, and rulebooks alike; a system failing any one has a discoverable exploit.",
+   "gsi_mapping": "The mass-play injury cycle is a natural experiment in trauma biomechanics: interlocked-mass momentum plays concentrate impulse on the tackle position, and the 1909 fatalities are the endpoint that forced the 1910 mechanism ban. Dexter's injury registry (PDF p142) and Camp's 1894 questionnaire (PDF p128) are early injury-surveillance instruments, isomorphic to GSI clinical registry design; the flying-tackle and hurdling prohibitions map to axonal-shear constraint enforcement in the bioenergetic layer.",
+   "gse_mapping": "Coach-Mind binds p1's down-distance reset operator as the possession transition kernel and p2's era weight vectors as the objective function; p4's threat-option value enters the deception model as a coverage-allocation forcing term; p5's innovation-prohibition cycle models edge decay for DFS and portfolio construction; p6's participant-verification protocol mirrors the gatekeeper's fail-closed quote checks, with the appendix-over-narrative precedence rule as a source-router precedent."
+  }
+ ],
+ "universal_lens": "Mechanism-design audit lens: for any competitive system ask (1) does retention require progress, or is stasis an equilibrium? (2) is valuation additive or lexicographic, and who rewrote the weights? (3) do bans target instances or mechanisms? (4) which unused threats are already pricing the defense? The polymath check applies the four questions to markets, protocols, and rulebooks alike; a system failing any one has a discoverable exploit.",
+ "gsi_mapping": "The mass-play injury cycle is a natural experiment in trauma biomechanics: interlocked-mass momentum plays concentrate impulse on the tackle position, and the 1909 fatalities are the endpoint that forced the 1910 mechanism ban. Dexter's injury registry (PDF p142) and Camp's 1894 questionnaire (PDF p128) are early injury-surveillance instruments, isomorphic to GSI clinical registry design; the flying-tackle and hurdling prohibitions map to axonal-shear constraint enforcement in the bioenergetic layer.",
+ "gse_mapping": "Coach-Mind binds p1's down-distance reset operator as the possession transition kernel and p2's era weight vectors as the objective function; p4's threat-option value enters the deception model as a coverage-allocation forcing term; p5's innovation-prohibition cycle models edge decay for DFS and portfolio construction; p6's participant-verification protocol mirrors the gatekeeper's fail-closed quote checks, with the appendix-over-narrative precedence rule as a source-router precedent."
+}

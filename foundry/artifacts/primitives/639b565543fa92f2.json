@@ -1,0 +1,98 @@
+{
+  "book_id": "639b565543fa92f2",
+  "source_status": "COMPLETE",
+  "title": "1107-sentiment-dynamics-social-media-news",
+  "file_name": "1107-sentiment-dynamics-social-media-news.md",
+  "sha256": "639b565543fa92f2714c11b95e49512af7d6ff6b73ed87e3fb89232d7fbd9baa",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 1,
+  "windows_extracted": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sentiment dynamics across social media platforms modeled via VADER and LDA, with correlation analysis as a descriptive kernel. Universal Lens: Rooted in 1107-sentiment-dynamics-social-media-news (639b565543fa92f2, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian inference on sentiment likelihoods using VADER scores as latent variables; conformal prediction bounds on topic relevance weights. GSI Mapping: Rooted in 1107-sentiment-dynamics-social-media-news (639b565543fa92f2, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "Situational reasoning maps post/comment sentiment correlations to state transitions in audience engagement models; transition probabilities derived from LDA topic distributions. GSE Mapping: Rooted in 1107-sentiment-dynamics-social-media-news (639b565543fa92f2, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "vader_sentiment_kernel",
+      "name": "VADER Sentiment Kernel",
+      "verbatim_quote": "VADER scores mapped to integer [-5,5]; LDA optimum k=10; human topic precision 80.3%; relevance weight λ=0.6.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'s': 'sentiment score ∈ [-5, 5], dimensionless', 'k': 'number of topics in LDA, integer', 'λ': 'relevance weight, dimensionless'}",
+      "assumptions": "Sentiment is linearly separable in the [-5,5] range; LDA topic model captures semantic structure.",
+      "breakdown_regime": "When s approaches ±5, VADER may saturate; when k increases beyond 10, overfitting risk rises.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw textual sentiment to probabilistic latent variables for downstream GSI inference.",
+        "source_operator": "vader_sentiment_kernel",
+        "telemetry": "Human-annotated topic precision (80.3%) and VADER score variance."
+      }
+    },
+    {
+      "primitive_id": "lda_topic_model",
+      "name": "LDA Topic Model",
+      "verbatim_quote": "# [1107] Sentiment Dynamics in Social Media News Channels (arXiv:1908.08147v1) **Citation:** Nagendra Kumar, Rakshita Nagalla, Tanya Marwah, and Manish Singh (2019).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'k': 'optimal number of topics, integer', 'θ': 'topic distribution per document, probability simplex', 'φ': 'word distribution per topic, probability simplex'}",
+      "assumptions": "Documents are generated from a mixture of topics; word distributions are fixed per topic.",
+      "breakdown_regime": "When k exceeds empirical capacity, model becomes non-identifiable; when documents are sparse, convergence fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically maps textual content to probabilistic topic space for GSE reasoning.",
+        "source_operator": "lda_topic_model",
+        "telemetry": "Human-annotated topic precision (80.3%) and topic coherence metrics."
+      }
+    },
+    {
+      "primitive_id": "post_comment_correlation",
+      "name": "Post-Comment Correlation",
+      "verbatim_quote": "Reported: Fox negative posts 40%; NPR positive 43%, negative 28%; post/comment correlations CNN 0.97, Fox 0.98, Economist 0.95, NYT 0.97, NPR 0.93 (claimed p<.05).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r_{pc}': 'correlation coefficient between post and comment sentiment, dimensionless', 'N': 'sample size, integer'}",
+      "assumptions": "Correlations reflect true signal; post and comment sentiment are jointly normally distributed.",
+      "breakdown_regime": "When r_{pc} > 0.95, normalization and shared audience bias dominate; p-value claims invalid at large N.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives audience engagement patterns from sentiment alignment; used in GSE state transition modeling.",
+        "source_operator": "post_comment_correlation",
+        "telemetry": "Correlation coefficients per channel and sample size N ≈ 10^5."
+      }
+    },
+    {
+      "primitive_id": "engagement_normalization",
+      "name": "Engagement Normalization",
+      "verbatim_quote": "(2) Post/comment correlations ~0.95+ are likely artifacts of the normalized engagement metric and common audience rather than discovered signal — and engagement is *normalized*, removing the scale that prediction needs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{norm}': 'normalized engagement metric, dimensionless', 'E': 'raw engagement count, integer'}",
+      "assumptions": "Normalization removes predictive scale; shared audience induces spurious correlation.",
+      "breakdown_regime": "When E_{norm} is used, predictive utility is lost due to loss of variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Identifies normalization artifacts in engagement signals; critical for GSE rejection of spurious signals.",
+        "source_operator": "engagement_normalization",
+        "telemetry": "Normalized vs. raw engagement comparison and correlation artifact detection."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "639b565543fa92f2_t0",
+      "think": "This chapter presents a descriptive study of sentiment dynamics in social media news channels, focusing on VADER-based sentiment scoring and LDA topic modeling. The research question explores how sentiment varies across five Facebook news channels, but lacks predictive validation or generalizability. The reported high correlations (~0.95+) are flagged as artifacts of normalized engagement metrics and shared audiences, undermining their use for predictive modeling. The absence of held-out evaluations and transferable methods renders the work unsuitable for GSE adaptation. The paper's rejection grounds align with GSI’s criteria for actionable intelligence: it provides no calibrated predictive framework, nor does it offer a method applicable to sports outcomes or fan sentiment. Instead, it serves as a cautionary example of descriptive analytics without inferential rigor. The replacement ledger 1308 introduces a direct NLP pipeline for live sports-event data, which is operationally relevant to GSE’s mission. Window 1 Synthesis: Rooted in 1107-sentiment-dynamics-social-media-news (639b565543fa92f2, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1107-sentiment-dynamics-social-media-news (639b565543fa92f2, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 1/1 pages of 1107-sentiment-dynamics-social-media-news (639b565543fa92f2): [vader_sentiment_kernel p.1]: VADER scores mapped to integer [-5,5]; LDA optimum k=10; human topic precision 80.3%; relevance weight λ=0.6. (Maps raw textual sentiment to probabilistic latent variables for downstream GSI inference.) [lda_topic_model p.1]: # [1107] Sentiment Dynamics in Social Media News Channels (arXiv:1908.08147v1) **Citation:** Nagendra Kumar, Rakshita Nagalla, Tanya Marwah, and Manish Singh (2019). (Isomorphically maps textual content to probabilistic topic space for GSE reasoning.) [post_comment_correlation p.1]: Reported: Fox negative posts 40%; NPR positive 43%, negative 28%; post/comment correlations CNN 0.97, Fox 0.98, Economist 0.95, NYT 0.97, NPR 0.93 (claimed p<.05). (Derives audience engagement patterns from sentiment alignment; used in GSE state transition modeling.) [engagement_normalization p.1]: (2) Post/comment correlations ~0.95+ are likely artifacts of the normalized engagement metric and common audience rather than discovered signal — and engagement is *normalized*, removing the scale that prediction needs. (Identifies normalization artifacts in engagement signals; critical for GSE rejection of spurious signals.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of 1107-sentiment-dynamics-social-media-news (639b565543fa92f2): [vader_sentiment_kernel p.1]: VADER scores mapped to integer [-5,5]; LDA optimum k=10; human topic precision 80.3%; relevance weight λ=0.6. (Maps raw textual sentiment to probabilistic latent variables for downstream GSI inference.) [lda_topic_model p.1]: # [1107] Sentiment Dynamics in Social Media News Channels (arXiv:1908.08147v1) **Citation:** Nagendra Kumar, Rakshita Nagalla, Tanya Marwah, and Manish Singh (2019). (Isomorphically maps textual content to probabilistic topic space for GSE reasoning.) [post_comment_correlation p.1]: Reported: Fox negative posts 40%; NPR positive 43%, negative 28%; post/comment correlations CNN 0.97, Fox 0.98, Economist 0.95, NYT 0.97, NPR 0.93 (claimed p<.05). (Derives audience engagement patterns from sentiment alignment; used in GSE state transition modeling.) [engagement_normalization p.1]: (2) Post/comment correlations ~0.95+ are likely artifacts of the normalized engagement metric and common audience rather than discovered signal — and engagement is *normalized*, removing the scale that prediction needs. (Identifies normalization artifacts in engagement signals; critical for GSE rejection of spurious signals.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of 1107-sentiment-dynamics-social-media-news (639b565543fa92f2): [vader_sentiment_kernel p.1]: VADER scores mapped to integer [-5,5]; LDA optimum k=10; human topic precision 80.3%; relevance weight λ=0.6. (Maps raw textual sentiment to probabilistic latent variables for downstream GSI inference.) [lda_topic_model p.1]: # [1107] Sentiment Dynamics in Social Media News Channels (arXiv:1908.08147v1) **Citation:** Nagendra Kumar, Rakshita Nagalla, Tanya Marwah, and Manish Singh (2019). (Isomorphically maps textual content to probabilistic topic space for GSE reasoning.) [post_comment_correlation p.1]: Reported: Fox negative posts 40%; NPR positive 43%, negative 28%; post/comment correlations CNN 0.97, Fox 0.98, Economist 0.95, NYT 0.97, NPR 0.93 (claimed p<.05). (Derives audience engagement patterns from sentiment alignment; used in GSE state transition modeling.) [engagement_normalization p.1]: (2) Post/comment correlations ~0.95+ are likely artifacts of the normalized engagement metric and common audience rather than discovered signal — and engagement is *normalized*, removing the scale that prediction needs. (Identifies normalization artifacts in engagement signals; critical for GSE rejection of spurious signals.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of 1107-sentiment-dynamics-social-media-news (639b565543fa92f2): [vader_sentiment_kernel p.1]: VADER scores mapped to integer [-5,5]; LDA optimum k=10; human topic precision 80.3%; relevance weight λ=0.6. (Maps raw textual sentiment to probabilistic latent variables for downstream GSI inference.) [lda_topic_model p.1]: # [1107] Sentiment Dynamics in Social Media News Channels (arXiv:1908.08147v1) **Citation:** Nagendra Kumar, Rakshita Nagalla, Tanya Marwah, and Manish Singh (2019). (Isomorphically maps textual content to probabilistic topic space for GSE reasoning.) [post_comment_correlation p.1]: Reported: Fox negative posts 40%; NPR positive 43%, negative 28%; post/comment correlations CNN 0.97, Fox 0.98, Economist 0.95, NYT 0.97, NPR 0.93 (claimed p<.05). (Derives audience engagement patterns from sentiment alignment; used in GSE state transition modeling.) [engagement_normalization p.1]: (2) Post/comment correlations ~0.95+ are likely artifacts of the normalized engagement metric and common audience rather than discovered signal — and engagement is *normalized*, removing the scale that prediction needs. (Identifies normalization artifacts in engagement signals; critical for GSE rejection of spurious signals.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "The work builds on early sentiment analysis frameworks such as VADER and LDA, extending them to social media news contexts. It reflects a transitional phase where descriptive studies were common before rigorous predictive validation became standard. Retrocausal Genealogy (Window 1): Rooted in 1107-sentiment-dynamics-social-media-news (639b565543fa92f2, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The authors model audience behavior through sentiment alignment, assuming that post and comment sentiments co-vary. However, they fail to account for confounding factors like shared viewership or engagement normalization, leading to misinterpretation of signal strength. A more sophisticated agent model would consider both behavioral and structural biases in social media dynamics. Theory of Mind (Window 1): Rooted in 1107-sentiment-dynamics-social-media-news (639b565543fa92f2, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "The study is vetoed due to anti-collinearity issues: high correlations are artifacts of normalization and shared audience, not true predictive signals. Leakage occurs because engagement metrics are scaled, removing variance needed for prediction. Additionally, the lack of GSE-relevant domain alignment (news vs. sports) disqualifies its applicability. Cross-Layer Veto (Window 1): Rooted in 1107-sentiment-dynamics-social-media-news (639b565543fa92f2, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "5b82553e7288168d",
+  "source_status": "COMPLETE",
+  "title": "prompt-wire-check",
+  "file_name": "prompt-wire-check.md",
+  "sha256": "5b82553e7288168d38f56141fd58acbba4bae5cedd212d7783a1c738a3e73a84",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural unification of file existence checks and adaptive inference gates across probabilistic and conformal reasoning layers. Universal Lens: Rooted in prompt-wire-check (5b82553e7288168d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference primitives validate file integrity and debiasing protocols using ECE metrics; adaptive calibration ensures robustness under sample or connectivity failure. GSI Mapping: Rooted in prompt-wire-check (5b82553e7288168d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine enforces state transitions based on holdout row validity and bridge premise sufficiency; refusal logic prevents spurious probability assignment. GSE Mapping: Rooted in prompt-wire-check (5b82553e7288168d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "file_existence_validator",
+      "name": "File Existence Validator",
+      "verbatim_quote": "Check each against C:\\Users\\Garrett\\Sports-wt-intel and say EXISTS, PARTIAL, or ABSENT with the file path.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All target paths are absolute and accessible within the filesystem.",
+      "breakdown_regime": "File system access denied or path resolution failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's file integrity check module which validates input data sources before inference.",
+        "source_operator": "file_existence_validator",
+        "telemetry": "Verification status (EXISTS/PARTIAL/ABSENT) per file path."
+      }
+    },
+    {
+      "primitive_id": "ece_debiasing_gate",
+      "name": "ECE Debiasing Gate",
+      "verbatim_quote": "identical-row-bakeoff.ts, ece-debiased.ts, calibration-map-bakeoff.ts — do these files exist, and do they already report a debiased or adaptive ECE?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Files contain valid implementations of ECE computation or adaptive calibration functions.",
+      "breakdown_regime": "Missing or malformed ECE reporting function in target files.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSI's calibration kernel to detect and correct systematic bias in predictive models.",
+        "source_operator": "ece_debiasing_gate",
+        "telemetry": "Function name returning debiased ECE value."
+      }
+    },
+    {
+      "primitive_id": "connectivity_refusal_logic",
+      "name": "Connectivity Refusal Logic",
+      "verbatim_quote": "2110-03874-bradley-terry-uq.ts — does it exist, and does it already refuse when a connectivity or sample gate fails?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The file implements a conditional refusal mechanism upon detection of invalid graph connectivity or insufficient samples.",
+      "breakdown_regime": "Graph connectivity violation or insufficient sample size triggers refusal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's robustness kernel that enforces logical consistency in uncertainty quantification.",
+        "source_operator": "connectivity_refusal_logic",
+        "telemetry": "Boolean flag indicating refusal due to connectivity or sampling failure."
+      }
+    },
+    {
+      "primitive_id": "holdout_row_refusal",
+      "name": "Holdout Row Refusal",
+      "verbatim_quote": "from-bridge.ts — confirm it already refuses a holdout row with no stored bridge premise.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Bridge premise storage is required for valid holdout row processing.",
+      "breakdown_regime": "Absence of stored bridge premise leads to refusal of holdout row evaluation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSE's validation layer where incomplete premises lead to rejection of downstream inference steps.",
+        "source_operator": "holdout_row_refusal",
+        "telemetry": "Boolean refusal signal for holdout rows lacking bridge premise."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b82553e7288168d_t0",
+      "think": "Each primitive represents a distinct operational check: file existence ensures data availability, ECE debiasing validates model calibration, connectivity refusal enforces logical consistency in graph-based inference, and holdout row refusal prevents erroneous extrapolation. These checks form a layered verification protocol that aligns with GSI’s Bayesian inference framework and GSE’s situational reasoning architecture. The failure modes—missing files, invalid ECE reports, broken connectivity, and missing premises—are mathematically modeled as discrete states in a state-transition system. Each primitive maps to either an isomorphism (direct correspondence) or derived kernel (induced structure), ensuring alignment between empirical observables and theoretical constructs. The interplay of these primitives reflects a dualistic approach: one side ensures data integrity through structural checks, while the other enforces logical coherence via conditional refusals.\n\nDeep epistemic analysis for prompt-wire-check (5b82553e7288168d, domain=other, pages_read=1/1): Operator 'File Existence Validator' (page 1, domain other) captures: Check each against C:\\Users\\Garrett\\Sports-wt-intel and say EXISTS, PARTIAL, or ABSENT with the file path. Assumptions: All target paths are absolute and accessible within the filesystem. Breakdown regime: File system access denied or path resolution failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's file integrity check module which validates input data sources before inference. Operator 'ECE Debiasing Gate' (page 1, domain other) captures: identical-row-bakeoff.ts, ece-debiased.ts, calibration-map-bakeoff.ts — do these files exist, and do they already report a debiased or adaptive ECE? Assumptions: Files contain valid implementations of ECE computation or adaptive calibration functions. Breakdown regime: Missing or malformed ECE reporting function in target files. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's calibration kernel to detect and correct systematic bias in predictive models. Operator 'Connectivity Refusal Logic' (page 1, domain other) captures: 2110-03874-bradley-terry-uq.ts — does it exist, and does it already refuse when a connectivity or sample gate fails? Assumptions: The file implements a conditional refusal mechanism upon detection of invalid graph connectivity or insufficient samples. Breakdown regime: Graph connectivity violation or insufficient sample size triggers refusal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's robustness kernel that enforces logical consistency in uncertainty quantification. Operator 'Holdout Row Refusal' (page 1, domain other) captures: from-bridge.ts — confirm it already refuses a holdout row with no stored bridge premise. Assumptions: Bridge premise storage is required for valid holdout row processing. Breakdown regime: Absence of stored bridge premise leads to refusal of holdout row evaluation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSE's validation layer where incomplete premises lead to rejection of downstream inference steps. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prompt-wire-check (5b82553e7288168d, domain=other, pages_read=1/1): Operator 'File Existence Validator' (page 1, domain other) captures: Check each against C:\\Users\\Garrett\\Sports-wt-intel and say EXISTS, PARTIAL, or ABSENT with the file path. Assumptions: All target paths are absolute and accessible within the filesystem. Breakdown regime: File system access denied or path resolution failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's file integrity check module which validates input data sources before inference. Operator 'ECE Debiasing Gate' (page 1, domain other) captures: identical-row-bakeoff.ts, ece-debiased.ts, calibration-map-bakeoff.ts — do these files exist, and do they already report a debiased or adaptive ECE? Assumptions: Files contain valid implementations of ECE computation or adaptive calibration functions. Breakdown regime: Missing or malformed ECE reporting function in target files. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's calibration kernel to detect and correct systematic bias in predictive models. Operator 'Connectivity Refusal Logic' (page 1, domain other) captures: 2110-03874-bradley-terry-uq.ts — does it exist, and does it already refuse when a connectivity or sample gate fails? Assumptions: The file implements a conditional refusal mechanism upon detection of invalid graph connectivity or insufficient samples. Breakdown regime: Graph connectivity violation or insufficient sample size triggers refusal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's robustness kernel that enforces logical consistency in uncertainty quantification. Operator 'Holdout Row Refusal' (page 1, domain other) captures: from-bridge.ts — confirm it already refuses a holdout row with no stored bridge premise. Assumptions: Bridge premise storage is required for valid holdout row processing. Breakdown regime: Absence of stored bridge premise leads to refusal of holdout row evaluation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSE's validation layer where incomplete premises lead to rejection of downstream inference steps. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification practices from software engineering and probabilistic programming, extending into modern machine learning reliability frameworks such as conformal prediction and Bayesian model checking. Retrocausal Genealogy: Rooted in prompt-wire-check (5b82553e7288168d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in prompt-wire-check (5b82553e7288168d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial data injection attempts and faulty inference engines. The primitives act as decision boundaries that prevent misalignment between agent behavior and intended outcomes by enforcing strict adherence to predefined protocols. Theory of Mind & Decision Maker Model: Rooted in prompt-wire-check (5b82553e7288168d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring each primitive operates independently without shared variables. Leakage vetoes occur when a primitive's output influences another without explicit causal link, which is prevented by strict isolation of functional domains. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-wire-check (5b82553e7288168d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

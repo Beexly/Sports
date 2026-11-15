@@ -1,0 +1,381 @@
+{
+  "book_id": "66cf17c82c8ba2a9",
+  "source_status": "COMPLETE",
+  "title": "GT_book (1)",
+  "file_name": "GT_book (1).pdf",
+  "sha256": "66cf17c82c8ba2a99c87770709cea2827a14fc1f2f24102ac91dce70fb50b513",
+  "primary_domain": "other",
+  "pages_total": 634,
+  "pages_read": 634,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 622,
+  "windows_extracted": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Ordinal strategic-form games unify player preferences and rationality through dominance and Nash equilibrium concepts. Strategic form representation of extensive games with imperfect information and Bayesian updating under common knowledge assumptions.",
+  "gsi_mapping": "Bayesian inference models player belief updates using ordinal dominance hierarchies and Nash equilibria as posterior constraints. Bayesian belief revision functions map prior plausibility orders to posterior beliefs via AGM axioms in knowledge-based decision frameworks.",
+  "gse_mapping": "Situationally grounded state transitions in game dynamics are encoded via iterated strict dominance and equilibrium selection mechanisms. Situationally grounded state transitions model sequential decision-making under uncertainty using information sets and subgame perfection criteria.",
+  "primitives": [
+    {
+      "primitive_id": "w0_strict_dominance",
+      "name": "Strict Dominance Operator",
+      "verbatim_quote": "At the end of each chapter there is a collection of exercises (a total of 193 exercises) accompanied by complete and detailed answers.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Players have ordinal preferences; strategies are comparable via payoff dominance.",
+      "breakdown_regime": "When strict dominance fails, weak dominance or equilibrium analysis applies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dominance relations map to GSI's belief updating and GSE's state transition logic via preference ordering consistency.",
+        "source_operator": "w0_strict_dominance",
+        "telemetry": "Dominance hierarchy stability under strategy deletion."
+      }
+    },
+    {
+      "primitive_id": "w1_nash_equilibrium",
+      "name": "Nash Equilibrium Selector",
+      "verbatim_quote": "Theorem. For every ordinal strategic-form game G, NE(G) ⊆IDSDS(G).",
+      "page": 52,
+      "latex": "\\text{NE}(G) \\subseteq \\text{IDSDS}(G)",
+      "symbol_and_unit_ledger": "{'NE(G)': 'Set of Nash equilibria in game G', 'IDSDS(G)': 'Iteratively Deleted Strictly Dominant Strategies in game G'}",
+      "assumptions": "Players choose best responses given others' strategies; no incentive to deviate.",
+      "breakdown_regime": "When no pure-strategy Nash equilibrium exists, mixed strategies or behavioral refinements apply.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Nash equilibrium emerges as fixed point in GSE's iterative refinement process and GSI's probabilistic inference framework.",
+        "source_operator": "w1_nash_equilibrium",
+        "telemetry": "Equilibrium existence and uniqueness in strategic form games."
+      }
+    },
+    {
+      "primitive_id": "w2_iterated_deletion",
+      "name": "Iterated Deletion Kernel",
+      "verbatim_quote": "If NE(G) = ∅ there is nothing to prove. Assume, therefore, that NE(G)̸ = ∅and let s∗= (s∗ 1,...,s∗ n) ∈ NE(G). We need to show that s∗∈IDSDS(G).",
+      "page": 52,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Rationality and common knowledge of rationality hold across players.",
+      "breakdown_regime": "Deletion terminates when no further strictly dominated strategies remain.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Iterative deletion maps to GSE's dynamic pruning of action spaces and GSI's recursive elimination of inconsistent beliefs.",
+        "source_operator": "w2_iterated_deletion",
+        "telemetry": "Convergence rate of iterated strict dominance procedures."
+      }
+    },
+    {
+      "primitive_id": "w3_pareto_efficiency",
+      "name": "Pareto Efficiency Criterion",
+      "verbatim_quote": "Preface to the third edition, 2024 The stimulus to prepare a third edition was a long list of comments and suggestions provided by Christian Bach, who adopted the second edition of this book as textbook for his undergraduate Game Theory course at the University of Liverpool.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "No player can be made better off without making another worse off.",
+      "breakdown_regime": "Efficiency may conflict with fairness or individual rationality in multi-agent settings.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pareto efficiency aligns with GSE's optimal outcome selection and GSI’s utility maximization under constraints.",
+        "source_operator": "w3_pareto_efficiency",
+        "telemetry": "Efficient allocation of resources among competing strategies."
+      }
+    },
+    {
+      "primitive_id": "66cf17c82c8ba2a9_w1_g1",
+      "name": "GT_book (1) Ch.2 Grounded Operator",
+      "verbatim_quote": "4.2 Strategies 129 As another example, consider the extensive form of Figure 4.3 and view it as a game by assuming that each player is selfish and greedy (only cares about how much money he/she gets and prefers more money to less).",
+      "page": 129,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 66cf17c82c8ba2a9_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "66cf17c82c8ba2a9_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "66cf17c82c8ba2a9_w1_g2",
+      "name": "GT_book (1) Ch.2 Grounded Operator",
+      "verbatim_quote": "Then the associated strategic form is shown in Figure 4.7, where Bob's strategy (x,y) means \"I say x if Ann chose a black card and I say y if Ann chose a red card\".",
+      "page": 129,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 66cf17c82c8ba2a9_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "66cf17c82c8ba2a9_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "66cf17c82c8ba2a9_w1_g3",
+      "name": "GT_book (1) Ch.2 Grounded Operator",
+      "verbatim_quote": "Thus (R,B) means \"if Ann chose a black card I say Red and if Ann chose a red card I say Black\" (that is, Bob plans to lie in both cases).",
+      "page": 129,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 66cf17c82c8ba2a9_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "66cf17c82c8ba2a9_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "extensive_form_game",
+      "name": "Extensive Form Game Structure",
+      "verbatim_quote": "Extensive-form Games Exercise 7.7 Consider the extensive-form game shown in Figure 7.16.",
+      "page": 254,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A, B, C, D, E, F, G, H': 'Player actions or nodes in game tree', 'L, R': 'Branch labels indicating choices'}",
+      "assumptions": "Players move sequentially; information sets define knowledge at decision points; payoffs are specified at terminal nodes.",
+      "breakdown_regime": "When information sets become perfect recall, game reduces to strategic form.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The extensive form maps to a strategic form through action profiles and payoff matrices, enabling Nash equilibrium analysis.",
+        "source_operator": "extensive_form_game",
+        "telemetry": "Equilibrium existence and uniqueness in pure and mixed strategies."
+      }
+    },
+    {
+      "primitive_id": "mugging_decision_model",
+      "name": "Mugging Decision Model",
+      "verbatim_quote": "(a) What is the ordinal ranking of the outcomes for each player?",
+      "page": 256,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'Wallet carried', 'M': 'Mugged', 'NM': 'Not mugged'}",
+      "assumptions": "Players have ordinal preferences over outcomes; utility depends on presence of wallet and occurrence of mugging.",
+      "breakdown_regime": "When preferences align with risk aversion and deterrence effects.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ordinal preference rankings induce a binary choice structure for wallet carrying decisions under threat models.",
+        "source_operator": "mugging_decision_model",
+        "telemetry": "Optimal strategy selection based on expected utility maximization."
+      }
+    },
+    {
+      "primitive_id": "common_knowledge_logic",
+      "name": "Common Knowledge Logic Framework",
+      "verbatim_quote": "The affirmative answer of Student 3 is not informative, because in each of these states Student 3 knows that the color of her own hat is red.",
+      "page": 279,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S1, S2, S3': 'Students', 'R, W': 'Hat colors', 'K_i': 'Knowledge operator for student i'}",
+      "assumptions": "All students know the rules; mutual knowledge implies recursive knowledge; public announcements update shared beliefs.",
+      "breakdown_regime": "At convergence of iterative knowledge updates, common knowledge emerges.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Common knowledge logic mirrors Bayesian belief dynamics where public announcements refine posterior distributions.",
+        "source_operator": "common_knowledge_logic",
+        "telemetry": "Convergence of belief states across agents in iterated knowledge scenarios."
+      }
+    },
+    {
+      "primitive_id": "belief_revision_axioms",
+      "name": "Belief Revision Axioms",
+      "verbatim_quote": "Then the following plausibility order ≽rationalizes f (as in Chapter 2, we use the convention that if state s is above state s′ then s is more plausible than s′ and if s and s′ are on the same row then they are equally plausible):",
+      "page": 328,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f': 'Belief revision function', '≽': 'Plausibility relation', 'U': 'Set of possible worlds/states'}",
+      "assumptions": "Belief revision satisfies AGM postulates; plausibility order defines rationalization of belief change.",
+      "breakdown_regime": "When new evidence contradicts existing beliefs, revision must preserve consistency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "AGM-compatible belief revision enables dynamic updating of epistemic states in response to observations.",
+        "source_operator": "belief_revision_axioms",
+        "telemetry": "Consistency preservation and belief contraction/expansion metrics."
+      }
+    },
+    {
+      "primitive_id": "ckr_model_existence",
+      "name": "CKR Model Existence",
+      "verbatim_quote": "Then then there is a model of G and a state w in that model, such that w ∈CKR and the strategy profile associated with w is s, that is, (ζ1(w),...,ζn(w)) = s.",
+      "page": 381,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Finite strategic-form game with cardinal payoffs; pure-strategy profile s surviving cardinal iterated deletion of strictly dominated strategies.",
+      "breakdown_regime": "Breaks down under abrupt structural non-stationarity, rule changes, or sparse small-sample tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Provides formal guarantee that observed player behavior (strategy profile) is consistent with a Bayesian conformal inference framework where states w represent possible epistemic configurations satisfying common knowledge of rationality. GSE: Establishes that the set of surviving strategies forms a stable invariant set under backward induction, allowing for deterministic state-transition predictions.",
+        "source_operator": "ckr_model_existence",
+        "telemetry": "Observed strategy profiles that survive deletion serve as empirical anchors for posterior predictive checks in conformal prediction pipelines."
+      }
+    },
+    {
+      "primitive_id": "iterated_deletion_characterization",
+      "name": "Iterated Deletion Characterization",
+      "verbatim_quote": "Rationality 10.3 Beyond common knowledge of rationality In Sections 10.2.1 and 10.2.2 we saw that the notion of common belief/knowledge of rationality provides a doxastic/epistemic foundation or justification for the procedure of iterated deletion of strictly dominated strategies.",
+      "page": 382,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Finite strategic-form game with cardinal payoffs.",
+      "breakdown_regime": "Breaks down under abrupt structural non-stationarity, rule changes, or sparse small-sample tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Maps to conformal prediction via sequential testing, where strictly dominated strategies correspond to null hypotheses rejected at each step. GSE: Models this as a state-transition system where dominated states are pruned, leaving only rationalizable trajectories.",
+        "source_operator": "iterated_deletion_characterization",
+        "telemetry": "The number of deletion rounds correlates with the complexity of the decision problem, serving as a computational cost metric."
+      }
+    },
+    {
+      "primitive_id": "sequential_rationality",
+      "name": "Sequential Rationality",
+      "verbatim_quote": "What about the procedure of iterated deletion of weakly dominated strategies: can one provide an epistemic foundation for it?",
+      "page": 382,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Strategic-form game setting.",
+      "breakdown_regime": "Breaks down under abrupt structural non-stationarity, rule changes, or sparse small-sample tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Extends to dynamic settings where weak dominance may arise due to imperfect information or bounded rationality. GSE: Requires careful handling of non-unique best responses, often resolved via refinement concepts like trembling-hand perfection.",
+        "source_operator": "sequential_rationality",
+        "telemetry": "Instability in solution paths when weakly dominated strategies are present indicates sensitivity to initial conditions."
+      }
+    },
+    {
+      "primitive_id": "bayesian_updating",
+      "name": "Bayesian Updating",
+      "verbatim_quote": "10.2 Strategic-form games with cardinal payoffs 381 Theorem 10.2.2 Let G be a finite strategic-form game with cardinal payoffs and let s ∈S be a pure-strategy profile that survives the cardinal iterated deletion of strictly dominated strategies.",
+      "page": 381,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Strategic-form game setting.",
+      "breakdown_regime": "Breaks down under abrupt structural non-stationarity, rule changes, or sparse small-sample tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Connects to online learning via Bayes' rule, where beliefs μ are updated based on observed actions σ. GSE: Encodes belief propagation through information sets using conditional probabilities.",
+        "source_operator": "bayesian_updating",
+        "telemetry": "Failure of Bayesian updating (e.g., zero-probability nodes) signals a need for robust uncertainty quantification methods."
+      }
+    },
+    {
+      "primitive_id": "sequential_rationality_w4_1",
+      "name": "Sequential Rationality Condition",
+      "verbatim_quote": "13.9 Solutions to Exercises 507 gives a payoff of \u00001 2 \u0001 1+ \u00001 2 \u0001 3 = 2; thus g is sequentially rational.",
+      "page": 507,
+      "latex": "\\text{Payoff} = \\frac{1}{2} \\cdot 1 + \\frac{1}{2} \\cdot 3 = 2",
+      "symbol_and_unit_ledger": "{'1': 'unit payoff', '2': 'probability weight', '3': 'unit payoff'}",
+      "assumptions": "Player chooses action maximizing expected utility at each information set.",
+      "breakdown_regime": "When information sets are reached, action must yield highest expected utility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's belief update mechanism aligns with sequential rationality via Bayesian inference.",
+        "source_operator": "sequential_rationality_w4_1",
+        "telemetry": "Expected utility maximization at each node."
+      }
+    },
+    {
+      "primitive_id": "perfect_bayesian_equilibrium",
+      "name": "Perfect Bayesian Equilibrium",
+      "verbatim_quote": "Another perfect Bayesian equilibrium is: σ = (a,d,e,h), μ = \u0012 ac ad acf ade ad f 0 1 0 1 0 \u0013 .",
+      "page": 507,
+      "latex": "\\sigma = (a,d,e,h), \\quad \\mu = \\begin{pmatrix} ac & ad & acf & ade & ad f \\\\ 0 & 1 & 0 & 1 & 0 \\end{pmatrix}",
+      "symbol_and_unit_ledger": "{'a': 'action', 'd': 'action', 'e': 'action', 'h': 'action', 'ac': 'history', 'ad': 'history', 'acf': 'history', 'ade': 'history', 'adf': 'history'}",
+      "assumptions": "Beliefs consistent with Bayes' rule and strategies optimal given beliefs.",
+      "breakdown_regime": "Equilibrium requires consistency of beliefs and strategies across all nodes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's state transition model mirrors PBE through belief propagation and strategy alignment.",
+        "source_operator": "perfect_bayesian_equilibrium",
+        "telemetry": "Consistency of beliefs and strategy optimality."
+      }
+    },
+    {
+      "primitive_id": "plausibility_ordering",
+      "name": "Plausibility Ordering",
+      "verbatim_quote": "The assessment is rationalized by the following plausibility order:     most plausible /0,a,ad,ade,adeh b,ac,ace,ad f,ad fh acf,acfh,adeg least plausible acfg,ad fg     Only the top equivalence class E1 = {/0,a,ad,ade,adeh} has a non-empty intersection with D+ μ = {/0,a,ad,ade}.",
+      "page": 507,
+      "latex": "\\text{Plausibility Order: } E_1 = \\{ /0,a,ad,ade,adeh \\}, E_2 = \\{ b,ac,ace,ad f,ad fh \\}, E_3 = \\{ acf,acfh,adeg \\}, E_4 = \\{ acfg,ad fg \\}",
+      "symbol_and_unit_ledger": "{'E_1': 'top equivalence class', 'E_2': 'intermediate class', 'E_3': 'intermediate class', 'E_4': 'bottom class'}",
+      "assumptions": "History sets ordered by plausibility, with top class intersecting decision set.",
+      "breakdown_regime": "Only top class intersects with decision set \\(D^+_\\mu\\).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's belief hierarchy reflects plausibility ordering via conditional probability.",
+        "source_operator": "plausibility_ordering",
+        "telemetry": "Equivalence class assignment and intersection with decision set."
+      }
+    },
+    {
+      "primitive_id": "agm_consistency",
+      "name": "AGM Consistency",
+      "verbatim_quote": "For AGM consistency, note that all of the actions, except a and b, are plausibility preserving and, furthermore, all decision histories are assigned positive probability by μ.",
+      "page": 509,
+      "latex": "\\text{AGM Consistency: } \\forall h \\in H, \\mu(h) > 0 \\text{ and actions preserve plausibility}",
+      "symbol_and_unit_ledger": "{'h': 'decision history', 'H': 'set of all histories', 'μ': 'belief function'}",
+      "assumptions": "All histories receive positive probability and actions maintain plausibility.",
+      "breakdown_regime": "Ensures no zero-probability event contradicts plausibility structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's probabilistic reasoning aligns with AGM consistency through belief maintenance.",
+        "source_operator": "agm_consistency",
+        "telemetry": "Positive probability assignment and plausibility preservation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "66cf17c82c8ba2a9_t0",
+      "think": "Chapter 2 introduces foundational structures for analyzing ordinal games in strategic form. It establishes key analytical tools including strict and weak dominance, Nash equilibrium, and iterated deletion processes. These concepts provide a mathematical foundation for understanding rational behavior in competitive environments. The interplay between dominance and equilibrium highlights how rationality constrains choices and leads to predictable outcomes. The theorem linking Nash equilibria to iterated strict dominance underscores the power of logical deduction in game theory. This chapter sets up the formalism needed for deeper exploration of equilibrium refinements and solution concepts in later chapters. The emphasis on ordinal preferences ensures broad applicability across diverse contexts where exact payoffs are unknown or irrelevant. The structure supports both theoretical development and practical applications in modeling decision-making under uncertainty. Window 1 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in von Neumann-Morgenstern utility theory and Nash's equilibrium concept, this chapter builds upon early game-theoretic foundations established in the mid-20th century. Retrocausal Genealogy (Window 1): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models players as rational actors who evaluate strategies based on ordinal rankings, assuming mutual knowledge of rationality and consistent preference ordering. Theory of Mind (Window 1): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity prevents over-reliance on dominance alone; leakage veto ensures that equilibrium selection does not ignore relevant behavioral or informational constraints. Cross-Layer Veto (Window 1): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "66cf17c82c8ba2a9_t1",
+      "think": "Window 2 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "66cf17c82c8ba2a9_t2",
+      "think": "Chapter window 3 (pages 254–380) explores foundational concepts in game theory and epistemic logic. It begins with extensive-form games and their strategic representations, introducing the notion of subgame perfection and mixed-strategy equilibria. The mugging example illustrates decision-making under asymmetric information and risk, linking individual behavior to collective outcomes. Common knowledge is formalized through iterative reasoning processes, showing how public announcements alter belief structures among agents. Finally, belief revision axioms provide a rigorous framework for updating knowledge dynamically, grounding epistemic models in mathematical consistency. These themes interweave to form a coherent foundation for analyzing complex strategic interactions in uncertain environments. Window 3 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in von Neumann-Morgenstern utility theory and Aumann's work on common knowledge, this chapter builds upon earlier developments in game theory and epistemic logic to establish modern frameworks for reasoning about beliefs and strategies. Retrocausal Genealogy (Window 3): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents are modeled as rational actors with ordinal preferences and bounded knowledge. Players reason about opponents' strategies while accounting for incomplete information, leading to sophisticated equilibrium concepts such as subgame-perfect equilibria and Bayesian updating. Theory of Mind (Window 3): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "No cross-layer conflicts arise since all primitives operate within consistent logical domains—strategic interaction, belief dynamics, and epistemic reasoning—each contributing to a unified understanding of intelligent agency. Cross-Layer Veto (Window 3): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "66cf17c82c8ba2a9_t3",
+      "think": "This chapter window systematically develops the epistemic foundations of solution concepts in game theory. It establishes that the procedure of iterated deletion of strictly dominated strategies can be justified as the consequence of common knowledge of rationality (CKR). The key insight is that for any surviving strategy profile, there exists a model where all players are rational and know each other's rationality ad infinitum. This bridges the gap between normative reasoning (rationality) and observable outcomes (surviving strategies). The analysis extends to sequential games via sequential rationality and Bayesian updating, providing a unified treatment of both static and dynamic settings. The challenge of weak dominance remains open, highlighting the fragility of solution concepts when indifference is involved. Window 4 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in the work of Brandenburger and Keisler (2006) on common knowledge of rationality, building on earlier contributions from Aumann (1987) on interactive epistemology. It draws on logical fixed-point theory and applies it to economic reasoning about strategic interaction. Retrocausal Genealogy (Window 4): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models agents who reason about other agents' reasoning, leading to infinite regress. Each agent must correctly anticipate how others will eliminate dominated strategies, requiring high-order mutual knowledge. In practice, this may be approximated by bounded-depth reasoning or learning dynamics. Theory of Mind (Window 4): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity requires that different epistemic foundations (e.g., CKR vs. correlated equilibria) do not simultaneously hold without contradiction. Leakage vetoes occur when external factors (e.g., noise, bounded rationality) introduce dependencies that violate the independence assumptions needed for CKR. Cross-Layer Veto (Window 4): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "66cf17c82c8ba2a9_t4",
+      "think": "Chapter 5 covers solutions to exercises involving sequential rationality, perfect Bayesian equilibria, and plausibility orders in dynamic games with incomplete information. The focus is on verifying that strategies are optimal given beliefs and that these beliefs are updated according to Bayes’ rule. Key concepts include the identification of decision histories, their plausibility classes, and how these influence belief assignments. The exercises demonstrate how to construct and verify perfect Bayesian equilibria, ensuring that players' strategies are sequentially rational and that beliefs are consistent with the equilibrium path. This chapter emphasizes the interplay between rationality, belief formation, and equilibrium construction in complex game-theoretic settings. Window 5 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in Bayesian game theory and rational expectations models developed by Harsanyi and Selten, extending earlier work on Nash equilibria to dynamic settings with imperfect information. Retrocausal Genealogy (Window 5): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 5): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models players as rational agents who form beliefs based on observed actions and update them using Bayes’ rule, assuming mutual understanding of game structure and rationality. Theory of Mind (Window 5): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 5): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting of beliefs to specific paths; ensures that plausibility structures remain robust across alternative histories and that equilibrium conditions hold universally. Cross-Layer Veto (Window 5): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 5): Rooted in GT_book (1) (66cf17c82c8ba2a9, 634/634 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

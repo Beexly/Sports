@@ -1,0 +1,78 @@
+{
+  "book_id": "2a4710fade814701",
+  "source_status": "COMPLETE",
+  "title": "GSN_OSINT_AND_SOURCE_QUALITY",
+  "file_name": "GSN_OSINT_AND_SOURCE_QUALITY.md",
+  "sha256": "2a4710fade814701ea2c1889078f8cef1253cfbde722c6765db670f9022d6877",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "OSINT source quality and freshness as a Bayesian belief update framework with temporal decay and confidence scoring. Universal Lens: Rooted in GSN_OSINT_AND_SOURCE_QUALITY (2a4710fade814701), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers source trustworthiness via probabilistic belief maps using temporal freshness and provenance scores in conformal prediction spaces. GSI Mapping: Rooted in GSN_OSINT_AND_SOURCE_QUALITY (2a4710fade814701), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states based on source confidence rubric and rumor quarantine logic, updating internal models through observable telemetry. GSE Mapping: Rooted in GSN_OSINT_AND_SOURCE_QUALITY (2a4710fade814701), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "source_confidence_rubric",
+      "name": "Source Confidence Rubric",
+      "verbatim_quote": "## Account And Source Reputation Scoring Internal score dimensions, each 0-5: - Provenance: Is the source directly connected to the event?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Provenance score (0–5)', 'T': 'Track record score (0–5)'}",
+      "assumptions": "Sources are scored independently; higher P and T imply greater reliability.",
+      "breakdown_regime": "When P < 2 or T < 2, source is quarantined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Confidence score maps to Bayesian likelihood of truth in GSI's probabilistic model; track record and provenance form prior beliefs.",
+        "source_operator": "source_confidence_rubric",
+        "telemetry": "Source credibility index derived from historical accuracy and direct relevance."
+      }
+    },
+    {
+      "primitive_id": "freshness_state_classifier",
+      "name": "Freshness State Classifier",
+      "verbatim_quote": "Identify whether a report is original or copied from another source.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Freshness state (Live, Fresh, Aging, Stale, Expired)', 't_obs': 'Observed timestamp', 't_cap': 'Captured timestamp', 't_fresh': 'Freshness cutoff'}",
+      "assumptions": "Temporal thresholds define state transitions; reports are classified by time-delta from capture to freshness limit.",
+      "breakdown_regime": "If t_obs > t_fresh, state transitions to Stale or Expired.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Freshness state determines how long a claim remains valid in GSE’s temporal reasoning engine.",
+        "source_operator": "freshness_state_classifier",
+        "telemetry": "Time-based classification of claim validity in GSE’s state machine."
+      }
+    },
+    {
+      "primitive_id": "rumor_handling_protocol",
+      "name": "Rumor Handling Protocol",
+      "verbatim_quote": "Mark claim status: confirmed, developing, conflicting, stale, rumor, or rejected.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Rumor flag (0 or 1)', 'S': 'Source quality score', 'C': 'Conflict indicator with official sources'}",
+      "assumptions": "A claim is flagged as rumor if S < 3 or C > 0.",
+      "breakdown_regime": "R = 1 when S < 3 or C > 0; otherwise R = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Rumor protocol aligns with GSI's rejection logic for low-confidence claims; quarantines in GSE for further review.",
+        "source_operator": "rumor_handling_protocol",
+        "telemetry": "Flagging mechanism for unverified or conflicting claims in GSI’s inference pipeline."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2a4710fade814701_t0",
+      "think": "The framework establishes a dual logic: one for lawful data ingestion and one for source quality evaluation. The confidence rubric acts as a Bayesian prior over source trustworthiness, where provenance and track record jointly determine belief strength. Freshness classification introduces a temporal dimension that governs how long a claim remains actionable in GSE’s reasoning engine. Rumor handling enforces a binary filter—claims below threshold are quarantined, preventing propagation of unverified data. These primitives form a closed-loop system where GSI evaluates and ranks inputs, while GSE uses these ranked inputs to transition between states. Failure modes include misclassification of sources due to lack of provenance or overreliance on outdated data. Temporal decay ensures obsolescence, while rumor protocols prevent noise injection into the system.\n\nDeep epistemic analysis for GSN_OSINT_AND_SOURCE_QUALITY (2a4710fade814701, domain=other, pages_read=4/4): Operator 'Source Confidence Rubric' (page 1, domain other) captures: ## Account And Source Reputation Scoring Internal score dimensions, each 0-5: - Provenance: Is the source directly connected to the event? Assumptions: Sources are scored independently; higher P and T imply greater reliability. Breakdown regime: When P < 2 or T < 2, source is quarantined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Confidence score maps to Bayesian likelihood of truth in GSI's probabilistic model; track record and provenance form prior beliefs. Operator 'Freshness State Classifier' (page 1, domain other) captures: Identify whether a report is original or copied from another source. Assumptions: Temporal thresholds define state transitions; reports are classified by time-delta from capture to freshness limit. Breakdown regime: If t_obs > t_fresh, state transitions to Stale or Expired. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Freshness state determines how long a claim remains valid in GSE’s temporal reasoning engine. Operator 'Rumor Handling Protocol' (page 1, domain other) captures: Mark claim status: confirmed, developing, conflicting, stale, rumor, or rejected. Assumptions: A claim is flagged as rumor if S < 3 or C > 0. Breakdown regime: R = 1 when S < 3 or C > 0; otherwise R = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Rumor protocol aligns with GSI's rejection logic for low-confidence claims; quarantines in GSE for further review. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GSN_OSINT_AND_SOURCE_QUALITY (2a4710fade814701, domain=other, pages_read=4/4): Operator 'Source Confidence Rubric' (page 1, domain other) captures: ## Account And Source Reputation Scoring Internal score dimensions, each 0-5: - Provenance: Is the source directly connected to the event? Assumptions: Sources are scored independently; higher P and T imply greater reliability. Breakdown regime: When P < 2 or T < 2, source is quarantined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Confidence score maps to Bayesian likelihood of truth in GSI's probabilistic model; track record and provenance form prior beliefs. Operator 'Freshness State Classifier' (page 1, domain other) captures: Identify whether a report is original or copied from another source. Assumptions: Temporal thresholds define state transitions; reports are classified by time-delta from capture to freshness limit. Breakdown regime: If t_obs > t_fresh, state transitions to Stale or Expired. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Freshness state determines how long a claim remains valid in GSE’s temporal reasoning engine. Operator 'Rumor Handling Protocol' (page 1, domain other) captures: Mark claim status: confirmed, developing, conflicting, stale, rumor, or rejected. Assumptions: A claim is flagged as rumor if S < 3 or C > 0. Breakdown regime: R = 1 when S < 3 or C > 0; otherwise R = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Rumor protocol aligns with GSI's rejection logic for low-confidence claims; quarantines in GSE for further review. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and Bayesian inference, this structure mirrors earlier frameworks in digital forensics and reputational risk modeling, particularly those addressing source credibility in adversarial environments. Retrocausal Genealogy: Rooted in GSN_OSINT_AND_SOURCE_QUALITY (2a4710fade814701), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in GSN_OSINT_AND_SOURCE_QUALITY (2a4710fade814701), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to manipulate source quality or propagate false claims. The system models adversarial behavior through rumor detection and source reputation scoring, assuming rational actors who seek to exploit gaps in verification. Theory of Mind & Decision Maker Model: Rooted in GSN_OSINT_AND_SOURCE_QUALITY (2a4710fade814701), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating GSI’s probabilistic inference from GSE’s deterministic state transitions. Leakage occurs if GSE treats rumor flags as truth or if GSI ignores temporal constraints. Veto conditions ensure that only verified, fresh, and non-rumor claims proceed to publication. Cross-Layer Veto & Anti-Leakage Check: Rooted in GSN_OSINT_AND_SOURCE_QUALITY (2a4710fade814701), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

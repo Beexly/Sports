@@ -1,0 +1,78 @@
+{
+  "book_id": "325bd73a7614b4a5",
+  "source_status": "COMPLETE",
+  "title": "arxiv_1511.04136v4",
+  "file_name": "arxiv_1511.04136v4.pdf",
+  "sha256": "325bd73a7614b4a57e21eb278ac17297cb0e13cc4b70ad89990f646e38bfa659",
+  "primary_domain": "other",
+  "pages_total": 27,
+  "pages_read": 27,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "MOT systems decompose into detection and tracking operators; UA-DETRAC enables joint evaluation via precision-recall thresholds and MOTA scores. Universal Lens: Rooted in arxiv_1511.04136v4 (325bd73a7614b4a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on MOT performance integrates detection uncertainty with tracking reliability through conformal prediction frameworks. GSI Mapping: Rooted in arxiv_1511.04136v4 (325bd73a7614b4a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models MOT state transitions using dynamic programming over detection-score thresholds and trajectory consistency. GSE Mapping: Rooted in arxiv_1511.04136v4 (325bd73a7614b4a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mot_system_decomposition",
+      "name": "MOT System Decomposition",
+      "verbatim_quote": "As such, a general MOT system entails an object detection step to find target locations in each video frame, and an object tracking step that generates target trajectories across video frames1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Detection and tracking are independent modules with fixed temporal alignment.",
+      "breakdown_regime": "When detection fails, tracking cannot propagate valid trajectories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "MOT system is isomorphic to a composite operator (detection ⊕ tracking) acting on video sequences.",
+        "source_operator": "mot_system_decomposition",
+        "telemetry": "Trajectory continuity and bounding box overlap rates."
+      }
+    },
+    {
+      "primitive_id": "ua_detrac_benchmark_protocol",
+      "name": "UA-DETRAC Benchmark Protocol",
+      "verbatim_quote": "In this work, we propose a new University at Albany DEtection and TRACking (UA-DETRAC) dataset for comprehensive performance evaluation of MOT systems especially on detectors.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Dataset supports multi-object detection and tracking under real-world conditions.",
+      "breakdown_regime": "Under occlusion or illumination variation, detector performance degrades significantly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "UA-DETRAC kernel defines a space of MOT configurations indexed by detection accuracy and tracking stability.",
+        "source_operator": "ua_detrac_benchmark_protocol",
+        "telemetry": "MOTA score vs. detection recall curves."
+      }
+    },
+    {
+      "primitive_id": "precision_recall_mota_tradeoff",
+      "name": "Precision-Recall vs MOTA Tradeoff",
+      "verbatim_quote": "The x-axis corresponds to different precision/recall scores of detectors obtained by varying the detection score threshold.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Performance varies non-linearly with detection confidence thresholds.",
+      "breakdown_regime": "At low recall, tracking performance collapses due to missed detections.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Tradeoff maps to a Pareto frontier in detection-tracker joint optimization space.",
+        "source_operator": "precision_recall_mota_tradeoff",
+        "telemetry": "MOTA score as function of F1-score for detection module."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "325bd73a7614b4a5_t0",
+      "think": "The core insight is that MOT systems are composed of two interdependent modules: detection and tracking. The UA-DETRAC dataset provides a structured environment where these modules can be evaluated jointly rather than in isolation. By varying detection thresholds, one observes how changes in detection precision and recall affect overall MOT performance, measured via MOTA. This reveals a tradeoff surface in the detection-tracker configuration space. The mathematical structure reflects a composite operator acting on video frames, where each module contributes to a global objective function. Failure modes occur when either detection or tracking fails catastrophically—e.g., missing targets or false positives leading to fragmentation or drift in trajectories. The protocol allows for empirical validation of this structure through comparative analysis across multiple detection/tracking algorithm pairs.\n\nDeep epistemic analysis for arxiv_1511.04136v4 (325bd73a7614b4a5, domain=other, pages_read=27/27): Operator 'MOT System Decomposition' (page 1, domain other) captures: As such, a general MOT system entails an object detection step to find target locations in each video frame, and an object tracking step that generates target trajectories across video frames1. Assumptions: Detection and tracking are independent modules with fixed temporal alignment. Breakdown regime: When detection fails, tracking cannot propagate valid trajectories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): MOT system is isomorphic to a composite operator (detection ⊕ tracking) acting on video sequences. Operator 'UA-DETRAC Benchmark Protocol' (page 1, domain other) captures: In this work, we propose a new University at Albany DEtection and TRACking (UA-DETRAC) dataset for comprehensive performance evaluation of MOT systems especially on detectors. Assumptions: Dataset supports multi-object detection and tracking under real-world conditions. Breakdown regime: Under occlusion or illumination variation, detector performance degrades significantly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): UA-DETRAC kernel defines a space of MOT configurations indexed by detection accuracy and tracking stability. Operator 'Precision-Recall vs MOTA Tradeoff' (page 2, domain other) captures: The x-axis corresponds to different precision/recall scores of detectors obtained by varying the detection score threshold. Assumptions: Performance varies non-linearly with detection confidence thresholds. Breakdown regime: At low recall, tracking performance collapses due to missed detections. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Tradeoff maps to a Pareto frontier in detection-tracker joint optimization space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_1511.04136v4 (325bd73a7614b4a5, domain=other, pages_read=27/27): Operator 'MOT System Decomposition' (page 1, domain other) captures: As such, a general MOT system entails an object detection step to find target locations in each video frame, and an object tracking step that generates target trajectories across video frames1. Assumptions: Detection and tracking are independent modules with fixed temporal alignment. Breakdown regime: When detection fails, tracking cannot propagate valid trajectories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): MOT system is isomorphic to a composite operator (detection ⊕ tracking) acting on video sequences. Operator 'UA-DETRAC Benchmark Protocol' (page 1, domain other) captures: In this work, we propose a new University at Albany DEtection and TRACking (UA-DETRAC) dataset for comprehensive performance evaluation of MOT systems especially on detectors. Assumptions: Dataset supports multi-object detection and tracking under real-world conditions. Breakdown regime: Under occlusion or illumination variation, detector performance degrades significantly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): UA-DETRAC kernel defines a space of MOT configurations indexed by detection accuracy and tracking stability. Operator 'Precision-Recall vs MOTA Tradeoff' (page 2, domain other) captures: The x-axis corresponds to different precision/recall scores of detectors obtained by varying the detection score threshold. Assumptions: Performance varies non-linearly with detection confidence thresholds. Breakdown regime: At low recall, tracking performance collapses due to missed detections. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Tradeoff maps to a Pareto frontier in detection-tracker joint optimization space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical computer vision paradigms of object detection (DPM, R-CNN) and tracking (IHTLS, H2T), extended by CLEAR MOT metrics and modern deep learning frameworks. Retrocausal Genealogy: Rooted in arxiv_1511.04136v4 (325bd73a7614b4a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in arxiv_1511.04136v4 (325bd73a7614b4a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the detector trying to maximize recall while minimizing false alarms, and the tracker attempting to maintain consistent identity across frames despite noisy inputs. Theory of Mind & Decision Maker Model: Rooted in arxiv_1511.04136v4 (325bd73a7614b4a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in arxiv_1511.04136v4 (325bd73a7614b4a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when detection and tracking modules share similar failure modes (e.g., both sensitive to occlusion). Leakage occurs if tracking does not account for detection uncertainty, causing spurious associations. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_1511.04136v4 (325bd73a7614b4a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

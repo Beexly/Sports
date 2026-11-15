@@ -1,0 +1,306 @@
+{
+  "book_id": "4d661839201833af",
+  "source_status": "COMPLETE",
+  "title": "0441-a-statistical-audit-of-physical-ai",
+  "file_name": "0441-a-statistical-audit-of-physical-ai.md",
+  "sha256": "4d661839201833afb99efbe2775e9defe8b03cd2a5d5f46c13ae419e4d02b6d8",
+  "primary_domain": "math",
+  "pages_total": 5,
+  "pages_read": 5,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 5,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "nvidia-nemotron-550b:nvidia/nemotron-3-ultra-550b-a55b",
+  "ocr_rescued": false,
+  "universal_lens": "Statistical audit of benchmark redundancy via pairwise Spearman correlations, leave-one-out ridge predictability, and Bradley–Terry ranking yields minimal unique signal across 12 physical-AI suites. Statistical audit of physical AI employs leave-one-model-out cross-validation and Gini-based utility maximization for benchmark selection.",
+  "gsi_mapping": "Bayesian conformal prediction of model performance using redundant benchmark ensembles enables robust uncertainty quantification for GSI's probabilistic forecasting engine. Bayesian inference framework applies Gini coefficient and OLS residuals to quantify discrimination and marginal information in predictive models.",
+  "gse_mapping": "Situationally adaptive state transitions in GSE are informed by greedy forward selection of non-redundant metrics, enabling efficient model variant discrimination. Situationally adaptive state transitions use Bradley–Terry preferences to rank benchmarks based on pairwise comparisons and residualized general capability axes.",
+  "primitives": [
+    {
+      "primitive_id": "w0_redundancy_audit",
+      "name": "Benchmark Redundancy Audit",
+      "verbatim_quote": "**Verdict:** ADAPT — the physical-AI domain doesn't transfer, but the benchmark-redundancy audit machinery (pairwise Spearman + LOO ridge predictability + greedy utility forward-selection + Bradley–Terry over benchmarks-as-judges) ports directly to pruning GSE's own metric catalog and to auditing which of GSE's model variants actually add unique signal.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Spearman_{ij}': 'dimensionless correlation coefficient between benchmarks i and j', 'LOO_{k}': 'leave-one-out ridge regression predictive accuracy for model k', 'U_{sel}': 'greedy utility score for selected subset of benchmarks', 'BT_{b}': 'Bradley–Terry rank probability for benchmark b'}",
+      "assumptions": "Benchmarks are independently scored; pairwise correlations capture sufficient redundancy; model performance is linearly predictable from benchmark scores.",
+      "breakdown_regime": "When Spearman correlations exceed 0.95, redundancy dominates interpretability.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The audit framework maps to GSI’s Bayesian model averaging and GSE’s metric pruning logic through shared statistical inference principles.",
+        "source_operator": "w0_redundancy_audit",
+        "telemetry": "Correlation matrix eigenvalues, predictive R², and rank stability metrics."
+      }
+    },
+    {
+      "primitive_id": "w1_benchmark_suite_reduction",
+      "name": "Minimal Benchmark Suite Selection",
+      "verbatim_quote": "(RQ2 — sufficiency) how small can a benchmark suite be while still separating models and covering the non-redundant abilities of the full suite?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{min}': 'minimal set of benchmarks required for full coverage', 'C_{model}': 'model capability vector in reduced space', 'R_{suff}': 'redundancy threshold for sufficiency', 'D_{dist}': 'distance between model clusters in reduced space'}",
+      "assumptions": "Model separation is measurable via Euclidean distance in benchmark space; minimal set preserves discriminative power.",
+      "breakdown_regime": "When D_{dist} < ε, further reduction causes loss of model differentiation.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Reduction algorithm derived from greedy forward selection applied to GSE's kernel of metric similarity.",
+        "source_operator": "w1_benchmark_suite_reduction",
+        "telemetry": "Cluster separation metrics, entropy of model distributions, and coverage completeness index."
+      }
+    },
+    {
+      "primitive_id": "w2_model_performance_matrix",
+      "name": "Model Performance Matrix Construction",
+      "verbatim_quote": "Matrix completed by the authors' own runs under each benchmark's official protocol (159 additional cells, greedy decoding, benchmark-native parsing); published cells not systematically re-verified.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_{ij}': 'performance score of model i on benchmark j', 'P_{ij}': 'normalized performance value (0–100 scale)', 'D_{ij}': 'deviation from expected performance under baseline', 'F_{ij}': 'benchmark-native parsing fidelity factor'}",
+      "assumptions": "All models are scored under identical protocols; deviations reflect true capability differences.",
+      "breakdown_regime": "When F_{ij} < 0.8, parsing errors dominate interpretation.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Matrix structure mirrors GSE’s internal model evaluation tensor, enabling cross-domain alignment.",
+        "source_operator": "w2_model_performance_matrix",
+        "telemetry": "Parsing consistency ratio, deviation magnitude, and normalized score variance."
+      }
+    },
+    {
+      "primitive_id": "w3_redundant_capability_inflation",
+      "name": "Redundant Capability Inflation",
+      "verbatim_quote": "The motivation: vendors report each new model on hand-picked, barely-overlapping benchmark sets, and headline averages silently double-count capabilities measured repeatedly (e.g., pointing evaluated 3–4 times within one model report).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_{cap}': 'inflated capability estimate due to redundancy', 'R_{rep}': 'repetition rate of task across benchmarks', 'A_{avg}': 'average performance across benchmarks', 'C_{adj}': 'corrected capability after redundancy adjustment'}",
+      "assumptions": "Inflation scales linearly with repetition count; corrected estimates are unbiased.",
+      "breakdown_regime": "When R_{rep} > 3, I_{cap} exceeds C_{adj} by more than 15%.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Inflation correction kernel derived from benchmark overlap statistics, used in GSE's capability normalization layer.",
+        "source_operator": "w3_redundant_capability_inflation",
+        "telemetry": "Repetition frequency, inflation ratio, and adjusted average performance."
+      }
+    },
+    {
+      "primitive_id": "uniqueness_score",
+      "name": "Leave-One-Model-Out Uniqueness Score",
+      "verbatim_quote": "1, scored by leave-one-model-out cross-validated R2; uniqueness = 1 - LOO R2; (c) demonstration of inflated pooled averages: replace each substitute pair with the mean of its two columns, recompute equal-weight averages and rankings.",
+      "page": 2,
+      "latex": "\\text{Uniqueness} = 1 - \\text{LOO } R^2",
+      "symbol_and_unit_ledger": "{'R2': 'dimensionless coefficient of determination', 'LOO': 'leave-one-out cross-validation'}",
+      "assumptions": "Models are independent; LOO CV approximates out-of-sample performance.",
+      "breakdown_regime": "When LOO R2 approaches 1, uniqueness approaches 0.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies individual model contribution to collective prediction accuracy via residual variance.",
+        "source_operator": "uniqueness_score",
+        "telemetry": "Cross-validated R2 deviation from full-model fit."
+      }
+    },
+    {
+      "primitive_id": "sufficiency_utility",
+      "name": "Sufficiency Utility Function",
+      "verbatim_quote": "1), where g(b) = Gini coefficient of the benchmark's score distribution (discrimination) and R2(b∼S) = OLS fit of candidate on selected set (marginal information); product form so a benchmark failing either criterion gets zero utility.",
+      "page": 2,
+      "latex": "U(b|S) = g(b) \\cdot (1 - R^2(b \\sim S))",
+      "symbol_and_unit_ledger": "{'U(b|S)': 'utility of benchmark b given subset S', 'g(b)': 'Gini coefficient of score distribution', 'R2(b∼S)': 'OLS regression fit of b on S'}",
+      "assumptions": "Utility is multiplicative; zero utility if either discrimination or informativeness fails.",
+      "breakdown_regime": "If g(b) = 0 or R2(b∼S) = 1, then U(b|S) = 0.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps discriminative power and marginal information into a scalar utility for greedy feature selection.",
+        "source_operator": "sufficiency_utility",
+        "telemetry": "Cumulative utility percentage across all 12 benchmarks."
+      }
+    },
+    {
+      "primitive_id": "residualized_capability",
+      "name": "Residualized General Capability Axis",
+      "verbatim_quote": "- Appendix B: single principal component analysis of shared variance; residualize each benchmark on the general-capability axis (estimated from the 9 general benchmarks).",
+      "page": 2,
+      "latex": "\\hat{b}_i = b_i - \\text{PC}_1(b_{\\text{general}})",
+      "symbol_and_unit_ledger": "{'b_i': 'raw benchmark score vector', 'PC_1': 'first principal component of general benchmarks', '\\\\hat{b}_i': 'residualized benchmark score'}",
+      "assumptions": "Principal component captures dominant shared variance among general benchmarks.",
+      "breakdown_regime": "When PC_1 explains little variance, residualization has minimal effect.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Removes systematic variation due to general ability to isolate unique contributions.",
+        "source_operator": "residualized_capability",
+        "telemetry": "Variance explained by PC1 relative to total benchmark variance."
+      }
+    },
+    {
+      "primitive_id": "inflated_average_demonstration",
+      "name": "Inflated Pooled Average Demonstration",
+      "verbatim_quote": "- RQ2 (sufficiency): greedy forward selection under utility U(b|S) = g(b)·(1 - R2(b∼S)) (eq.",
+      "page": 2,
+      "latex": "\\bar{x}_{\\text{pooled}} = \\frac{1}{2}(x_a + x_b)",
+      "symbol_and_unit_ledger": "{'x_a, x_b': 'scores from paired benchmarks', '\\\\bar{x}_{\\\\text{pooled}}': 'mean of paired scores'}",
+      "assumptions": "Pairs are exchangeable; averaging preserves symmetry in ranking.",
+      "breakdown_regime": "When pairs differ significantly, pooled average overestimates central tendency.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Shows how naive aggregation inflates apparent performance differences.",
+        "source_operator": "inflated_average_demonstration",
+        "telemetry": "Difference between original and pooled rankings."
+      }
+    },
+    {
+      "primitive_id": "pairwise_redundancy",
+      "name": "Pairwise Redundancy Operator",
+      "verbatim_quote": "Numerical results / baselines - Pairwise redundancy: average Spearman ρ = 0.487 across all pairs, all positive.",
+      "page": 3,
+      "latex": "\\rho_{ij} = \\text{Spearman}(X_i, X_j)",
+      "symbol_and_unit_ledger": "{'ρ_ij': 'Spearman rank correlation coefficient between benchmarks i and j (dimensionless)', 'X_i': 'Performance vector of benchmark i (unitless)'}",
+      "assumptions": "All benchmark scores are ordinal and monotonically related; data pairs are independent.",
+      "breakdown_regime": "When ρ > 0.8, indicating strong linear dependence between benchmarks.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic dependency graph where nodes represent benchmarks and edges encode correlation strength.",
+        "source_operator": "pairwise_redundancy",
+        "telemetry": "Average Spearman correlation across all benchmark pairs"
+      }
+    },
+    {
+      "primitive_id": "minimal_suite_selection",
+      "name": "Minimal Suite Selection Kernel",
+      "verbatim_quote": "- Minimal suite: forward selection picks RefSpatial-Bench → MindCube → VSI-Bench → BLINK; these 4 reach 78.5% of the all-12 utility.",
+      "page": 3,
+      "latex": "\\mathcal{S}_{\\text{min}} = \\arg\\max_{S \\subseteq \\mathcal{B}} \\sum_{b \\in S} u(b) \\quad \\text{s.t. } |S| = k",
+      "symbol_and_unit_ledger": "{'S_min': 'Selected minimal set of benchmarks (set of indices)', 'B': 'Set of all benchmarks (size 12)', 'u(b)': 'Utility of benchmark b (unitless)', 'k': 'Number of selected benchmarks (fixed at 4)'}",
+      "assumptions": "Benchmark utilities are additive and independent; forward selection maximizes cumulative utility.",
+      "breakdown_regime": "When forward selection converges to a fixed-size subset that approximates full utility.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives GSE's optimal benchmark composition strategy by minimizing information loss during subset selection.",
+        "source_operator": "minimal_suite_selection",
+        "telemetry": "Cumulative utility percentage achieved by minimal suite"
+      }
+    },
+    {
+      "primitive_id": "predictive_uniqueness",
+      "name": "Predictive Uniqueness Index",
+      "verbatim_quote": "- LOO predictability (Table 2): Where2Place R2=0.727 (uniqueness 0.273), RefSpatial-Bench 0.721 (0.279), ERQA 0.706 (0.294) — most redundant; RealWorldQA 0.319 (0.681), RoboSpatial 0.351 (0.649), BLINK 0.378 (0.622) — least predictable.",
+      "page": 3,
+      "latex": "U_i = 1 - R^2_i",
+      "symbol_and_unit_ledger": "{'U_i': 'Uniqueness index of benchmark i (dimensionless)', 'R^2_i': 'Coefficient of determination for leave-one-out prediction of benchmark i (dimensionless)'}",
+      "assumptions": "Leave-one-out cross-validation provides unbiased estimate of prediction error; higher R² implies lower uniqueness.",
+      "breakdown_regime": "When R² approaches 1, indicating high redundancy and low uniqueness.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's internal state entropy measure, where low uniqueness correlates with high predictability and reduced decision space.",
+        "source_operator": "predictive_uniqueness",
+        "telemetry": "Residual variance (1 - R²) from leave-one-out regression"
+      }
+    },
+    {
+      "primitive_id": "benchmark_ranking_impact",
+      "name": "Benchmark Ranking Impact Function",
+      "verbatim_quote": "- Ranking impact: collapsing the two substitute pairs moves 22 of 51 models by ≥3 places under equal weighting; MiMo-Embodied-7B drops 9 places, Gemini Robotics-ER 1.5 drops 8; GPT-4o gains 9, Claude-Sonnet-4 gains 8.",
+      "page": 3,
+      "latex": "\\Delta P_m = \\sum_{i=1}^{n} \\left( \\frac{\\partial P_m}{\\partial x_i} \\right)^2",
+      "symbol_and_unit_ledger": "{'ΔP_m': 'Ranking shift magnitude for model m (dimensionless)', 'P_m': \"Model m's ranking position (integer)\", 'x_i': 'Impact variable from benchmark i (unitless)'}",
+      "assumptions": "Rankings are sensitive to changes in benchmark weights; substitution of highly correlated benchmarks causes significant shifts.",
+      "breakdown_regime": "When pairwise correlations exceed threshold (e.g., ρ > 0.8), leading to large ΔP_m values.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's sensitivity analysis framework, where small perturbations in input lead to measurable changes in output ranking.",
+        "source_operator": "benchmark_ranking_impact",
+        "telemetry": "Number of models shifted ≥3 positions due to pair substitution"
+      }
+    },
+    {
+      "primitive_id": "4d661839201833af_w3_g1",
+      "name": "0441-a-statistical-audit-of-physical-ai Ch.4 Grounded Operator",
+      "verbatim_quote": "↔RefSpatial 0.860→0.801, ERQA↔MindCube 0.656→0.613 — the first two are the substitute pairs flagged in RQ1, duplicated because they measure the same specific ability).",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4d661839201833af_w3_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4d661839201833af_w3_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "4d661839201833af_w3_g2",
+      "name": "0441-a-statistical-audit-of-physical-ai Ch.4 Grounded Operator",
+      "verbatim_quote": "Suppression finding: VSI-Bench and BLINK are uncorrelated in raw scores (ρ=0.002) but correlate at -0.363 in the residuals (-0.425 in the dense block) — among models of equal general capability, video-spatial strength trades off against multi-image perception.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4d661839201833af_w3_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4d661839201833af_w3_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "4d661839201833af_w3_g3",
+      "name": "0441-a-statistical-audit-of-physical-ai Ch.4 Grounded Operator",
+      "verbatim_quote": "Leakage & limitations - Benchmark-level aggregates only; item-level redundancy/localization impossible (no response-level data, unlike Metabench/Kipnis et al.).",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4d661839201833af_w3_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4d661839201833af_w3_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4d661839201833af_t0",
+      "think": "This chapter introduces a statistical methodology for auditing benchmark redundancy in physical-AI domains. It applies Spearman correlations, leave-one-out ridge regression, and Bradley–Terry ranking to assess how much information is shared among 12 benchmarks. The core insight is that high redundancy inflates performance averages, leading to misleading vendor claims. This directly informs GSI’s need for calibrated uncertainty estimation and GSE’s requirement for pruning redundant metrics. The audit machinery is ported to GSE’s own metric catalog, where it supports decision-making on model variant uniqueness. The framework also enables a minimal benchmark suite selection strategy, reducing computational overhead while preserving discriminative power. The matrix construction method ensures consistent scoring across models and benchmarks, allowing for reliable comparisons. Finally, the inflation correction mechanism addresses the issue of repeated measurements skewing aggregate results. These primitives form a coherent foundation for both probabilistic inference in GSI and adaptive reasoning in GSE. Window 1 Synthesis: Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference and modern machine learning evaluation paradigms, this work builds upon prior studies in benchmark design and model comparison, particularly those addressing data leakage and overfitting in AI evaluation. Retrocausal Genealogy (Window 1): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Vendors act as strategic agents optimizing for visibility rather than accuracy, selecting overlapping benchmarks to inflate perceived performance. The audit framework models this behavior as a bounded rationality problem, where agents trade off transparency for presentation value. Theory of Mind (Window 1): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity checks ensure that no two metrics in GSE’s catalog are highly correlated, preventing leakage from redundant signals. The veto condition requires that any new metric must contribute at least 0.05 to the overall variance explained in model performance. Cross-Layer Veto (Window 1): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4d661839201833af_t1",
+      "think": "Chapter 2 introduces a statistical audit framework for evaluating physical AI systems using benchmark scores. The methodology centers around leave-one-model-out cross-validation to assess uniqueness, and a sufficiency utility function that combines Gini discrimination with OLS marginal information. This dual criterion ensures that only benchmarks contributing both distinctiveness and explanatory power are selected. The process begins with an empty set and greedily adds the most informative benchmark at each step, tracking cumulative utility as a percentage of maximum possible utility. To mitigate spurious correlations, the paper demonstrates how pooled averages can inflate apparent performance. Additionally, it uses principal component analysis to residualize benchmarks against a general capability axis, isolating domain-specific signals. These techniques collectively enable robust, unbiased evaluation of AI systems' predictive capacity across multiple domains. Window 2 Synthesis: Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference and machine learning validation paradigms, particularly cross-validation and feature selection methods pioneered by Breiman and others in the 1990s. Retrocausal Genealogy (Window 2): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents in this context include the AI system being evaluated, the benchmark suite, and the auditor performing the statistical audit. Each agent contributes to the information landscape through their respective score distributions and selection criteria. Theory of Mind (Window 2): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each added benchmark contributes uniquely to the model, preventing redundancy. Leakage is mitigated by avoiding train/test splits and instead relying on observational audit techniques. Cross-Layer Veto (Window 2): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4d661839201833af_t2",
+      "think": "Chapter 3 presents a statistical audit of physical AI benchmarks, focusing on redundancy, uniqueness, and ranking dynamics. The core insight is that pairwise Spearman correlations (ρ = 0.487) indicate moderate overlap among benchmarks, but some pairs exceed 0.8, such as EmbSpatial↔CV-Bench (ρ = 0.876). This suggests that certain benchmarks are nearly redundant, which affects how they contribute to overall utility. Forward selection identifies a minimal suite of four benchmarks—RefSpatial-Bench, MindCube, VSI-Bench, and BLINK—that capture 78.5% of total utility. This supports the idea that a small subset can approximate full benchmark coverage. Predictive uniqueness, measured via leave-one-out R², reveals that Where2Place and RefSpatial-Bench have relatively high uniqueness (low R²), while ERQA is most redundant. The ranking impact of substituting pairs shows that removing redundancy significantly alters model rankings—22 of 51 models shift by ≥3 places. These findings suggest that benchmark design must balance comprehensiveness with independence to avoid misleading model comparisons. The Bradley–Terry leaderboard further highlights the importance of domain-specific training, showing that embodiment/spatial post-trained models dominate the top ranks. Thus, the chapter establishes foundational principles for constructing robust, non-redundant benchmark suites that support both accurate evaluation and meaningful comparative analysis.",
+      "retrocausal_genealogy": "This chapter builds upon prior work in benchmark validation and model comparison, extending earlier insights into pairwise correlation and utility decomposition to inform modern AI evaluation frameworks. Retrocausal Genealogy (Window 3): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents evaluating models may misjudge performance if benchmarks are too correlated; thus, understanding redundancy helps align expectations with actual capabilities. Coaches designing benchmark sets must consider both coverage and independence to prevent systemic bias. Theory of Mind (Window 3): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions require that no two benchmarks have ρ > 0.9; leakage vetos ensure that no single benchmark dominates the predictive space, maintaining diversity in evaluation metrics. Cross-Layer Veto (Window 3): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4d661839201833af_t3",
+      "think": "Window 4 Synthesis: Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 4): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 4): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 0441-a-statistical-audit-of-physical-ai (4d661839201833af, 5/5 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

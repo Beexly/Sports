@@ -1,0 +1,78 @@
+{
+  "book_id": "47a39073d4f5e905",
+  "source_status": "COMPLETE",
+  "title": "p0011",
+  "file_name": "p0011.txt",
+  "sha256": "47a39073d4f5e9053ffe7ce9db8a728827fe328a080b747706811534ac7d31df",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Heart rate reserve normalization under weighted temporal aggregation yields intensity score via stochastic scaling. Universal Lens: Rooted in p0011 (47a39073d4f5e905), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of physiological intensity from HRV time-series using conformal predictive distributions over reserve value weights. GSI Mapping: Rooted in p0011 (47a39073d4f5e905), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models athlete state transitions through dynamic intensity score feedback loops with actuation thresholds. GSE Mapping: Rooted in p0011 (47a39073d4f5e905), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "heart_rate_reserve_conversion",
+      "name": "Heart Rate Reserve Conversion",
+      "verbatim_quote": "U.S. Patent Aug. 29, 2017 Sheet 10 of 35 US 9,743,848 B2 Step 1002 Convert heart",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'HR': 'beats per minute (BPM)', 'HRR': 'beats per minute (BPM)'}",
+      "assumptions": "Resting heart rate is known and constant; maximum heart rate is determined by age or measured baseline.",
+      "breakdown_regime": "When resting heart rate exceeds 100 BPM or maximum heart rate is below 120 BPM.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw HR to HRR space via linear transformation: HRR = HR - RHR, where RHR is resting heart rate.",
+        "source_operator": "heart_rate_reserve_conversion",
+        "telemetry": "Normalized heart rate reserve signal"
+      }
+    },
+    {
+      "primitive_id": "weighted_hrr_aggregation",
+      "name": "Weighted Heart Rate Reserve Aggregation",
+      "verbatim_quote": "into heart rate reserve values Step 1004 Weight heart rate reserve values according to weighting scheme",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'w_i': 'dimensionless weight factor', 'HRR_i': 'beats per minute (BPM)'}",
+      "assumptions": "Weights are precomputed and fixed; temporal resolution is uniform across intervals.",
+      "breakdown_regime": "When any weight w_i becomes negative or sum of weights is zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Aggregates HRR time series using inner product: S = Σ(w_i * HRR_i), producing scalar intensity measure.",
+        "source_operator": "weighted_hrr_aggregation",
+        "telemetry": "Weighted sum of normalized heart rate reserves"
+      }
+    },
+    {
+      "primitive_id": "intensity_score_scaling",
+      "name": "Intensity Score Scaling",
+      "verbatim_quote": "to generate intensity score Step 1010 Store intensity score on non-transitory computer-readable storage medium Step 1012",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'dimensionless intensity score', 'S': 'normalized aggregate HRR value'}",
+      "assumptions": "Scaling function is monotonic and bounded; normalization ensures I ∈ [0,1].",
+      "breakdown_regime": "When S is undefined due to division by zero in normalization step.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applies sigmoidal or affine scaling: I = f(S), where f maps S to [0,1] interval.",
+        "source_operator": "intensity_score_scaling",
+        "telemetry": "Final intensity score for athlete monitoring"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "47a39073d4f5e905_t0",
+      "think": "The core computation begins with converting instantaneous heart rate (HR) into heart rate reserve (HRR), defined as HRR = HR − RHR, where RHR is the resting heart rate. This transformation normalizes HR relative to an individual's physiological baseline. Next, a temporal sequence of HRR values is aggregated using a weighted sum: S = Σ(w_i × HRR_i), where each term is scaled by a fixed weight w_i. The resulting scalar S is then normalized to a unit interval [0,1] via a scaling function f(S) = I, yielding the final intensity score. This process enables continuous tracking of exercise intensity while accounting for inter-individual variability in cardiovascular response. Failure modes include invalid inputs such as negative weights or undefined RHR, which would lead to singularities in the transformation chain. Dualities arise in that the same intensity may be expressed through different combinations of HR and RHR depending on the individual’s fitness level. The system assumes stationarity in both RHR and maximum heart rate over short time windows.\n\nDeep epistemic analysis for p0011 (47a39073d4f5e905, domain=other, pages_read=1/1): Operator 'Heart Rate Reserve Conversion' (page 1, domain other) captures: U.S. Patent Aug. 29, 2017 Sheet 10 of 35 US 9,743,848 B2 Step 1002 Convert heart Assumptions: Resting heart rate is known and constant; maximum heart rate is determined by age or measured baseline. Breakdown regime: When resting heart rate exceeds 100 BPM or maximum heart rate is below 120 BPM. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw HR to HRR space via linear transformation: HRR = HR - RHR, where RHR is resting heart rate. Operator 'Weighted Heart Rate Reserve Aggregation' (page 1, domain other) captures: into heart rate reserve values Step 1004 Weight heart rate reserve values according to weighting scheme Assumptions: Weights are precomputed and fixed; temporal resolution is uniform across intervals. Breakdown regime: When any weight w_i becomes negative or sum of weights is zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Aggregates HRR time series using inner product: S = Σ(w_i * HRR_i), producing scalar intensity measure. Operator 'Intensity Score Scaling' (page 1, domain other) captures: to generate intensity score Step 1010 Store intensity score on non-transitory computer-readable storage medium Step 1012 Assumptions: Scaling function is monotonic and bounded; normalization ensures I ∈ [0,1]. Breakdown regime: When S is undefined due to division by zero in normalization step. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applies sigmoidal or affine scaling: I = f(S), where f maps S to [0,1] interval. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0011 (47a39073d4f5e905, domain=other, pages_read=1/1): Operator 'Heart Rate Reserve Conversion' (page 1, domain other) captures: U.S. Patent Aug. 29, 2017 Sheet 10 of 35 US 9,743,848 B2 Step 1002 Convert heart Assumptions: Resting heart rate is known and constant; maximum heart rate is determined by age or measured baseline. Breakdown regime: When resting heart rate exceeds 100 BPM or maximum heart rate is below 120 BPM. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw HR to HRR space via linear transformation: HRR = HR - RHR, where RHR is resting heart rate. Operator 'Weighted Heart Rate Reserve Aggregation' (page 1, domain other) captures: into heart rate reserve values Step 1004 Weight heart rate reserve values according to weighting scheme Assumptions: Weights are precomputed and fixed; temporal resolution is uniform across intervals. Breakdown regime: When any weight w_i becomes negative or sum of weights is zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Aggregates HRR time series using inner product: S = Σ(w_i * HRR_i), producing scalar intensity measure. Operator 'Intensity Score Scaling' (page 1, domain other) captures: to generate intensity score Step 1010 Store intensity score on non-transitory computer-readable storage medium Step 1012 Assumptions: Scaling function is monotonic and bounded; normalization ensures I ∈ [0,1]. Breakdown regime: When S is undefined due to division by zero in normalization step. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applies sigmoidal or affine scaling: I = f(S), where f maps S to [0,1] interval. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in physiological monitoring theory from early 20th century cardiology, extended into modern wearable computing via digital signal processing and machine learning frameworks. Retrocausal Genealogy: Rooted in p0011 (47a39073d4f5e905), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0011 (47a39073d4f5e905), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents could include environmental stressors (e.g., heat, altitude) that alter baseline HR or training load dynamics that shift RHR. Decision actors might be coaches adjusting workout intensity based on predicted recovery states derived from these scores. Theory of Mind & Decision Maker Model: Rooted in p0011 (47a39073d4f5e905), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that HRR and its weights do not become perfectly correlated, preventing degenerate solutions. Leakage vetoes occur when external noise corrupts the HR signal before conversion, invalidating downstream computations. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0011 (47a39073d4f5e905), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

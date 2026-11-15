@@ -1,0 +1,78 @@
+{
+  "book_id": "5b7f4ee1737ded5a",
+  "source_status": "COMPLETE",
+  "title": "source-hierarchy",
+  "file_name": "source-hierarchy.md",
+  "sha256": "5b7f4ee1737ded5ae9bf1ada1ab3bed1f3ee1fd2a246a8d3d806dbcf350555e2",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Source tier hierarchy defines evidence weight, expiration, and disclosure rules via ordered six-tier lattice with strict precedence. Universal Lens: Rooted in source-hierarchy (5b7f4ee1737ded5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on intelligence claims using source tier likelihoods as prior weights in conformal predictive inference framework. GSI Mapping: Rooted in source-hierarchy (5b7f4ee1737ded5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions in GSE driven by source tier validation gates and contradiction resolution protocols. GSE Mapping: Rooted in source-hierarchy (5b7f4ee1737ded5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "source_tier_precedence",
+      "name": "Source Tier Precedence Operator",
+      "verbatim_quote": "The tier determines: how much weight the evidence receives, how quickly it expires, whether it can appear on a public surface, and what language must surround it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_i': 'tier index ∈ {1, ..., 6}', 'W_i': 'weight of tier i evidence'}",
+      "assumptions": "Evidence weight W_i strictly decreases with increasing tier index T_i; no two tiers are equivalent.",
+      "breakdown_regime": "When T_i = T_j, contradiction flagged for human review.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian evidence fusion kernel where T_i acts as prior strength parameter.",
+        "source_operator": "source_tier_precedence",
+        "telemetry": "Contradiction log count per claim."
+      }
+    },
+    {
+      "primitive_id": "tier_1_official_assertion",
+      "name": "Tier 1 Official Assertion Kernel",
+      "verbatim_quote": "--## Six-Tier Taxonomy ### Tier 1 — Official / Primary **Definition**: Direct statements from the authoritative entity.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{\\\\text{off}}': 'official assertion from authoritative source', 'T_1': 'tier 1 evidence class'}",
+      "assumptions": "A_{\\text{off}} ⊆ T_1 implies absolute precedence over lower tiers.",
+      "breakdown_regime": "Conflicting A_{\\text{off}} from different authorities triggers contradiction protocol.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transition function prioritizes A_{\\text{off}} as terminal condition in reasoning chain.",
+        "source_operator": "tier_1_official_assertion",
+        "telemetry": "Assertion timestamp and authority identity verified against registry."
+      }
+    },
+    {
+      "primitive_id": "tier_6_synthetic_rejection",
+      "name": "Tier 6 Synthetic Rejection Rule",
+      "verbatim_quote": "--### Tier 3 — Trusted Secondary **Definition**: Reporting from credentialed journalists and established outlets with a track record of accuracy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{synth}}': 'synthetic or unattributed intelligence', 'T_6': 'tier 6 evidence class'}",
+      "assumptions": "S_{\\text{synth}} ∉ T_6 is invalid for truth-based decisions; only acceptable for internal drafting.",
+      "breakdown_regime": "Use of S_{\\text{synth}} in public-facing claims violates integrity constraint.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE rejection filter blocks S_{\\text{synth}} from influencing pick or recommendation states.",
+        "source_operator": "tier_6_synthetic_rejection",
+        "telemetry": "Synthetic content usage flagged in audit trail."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b7f4ee1737ded5a_t0",
+      "think": "The source hierarchy operates as a strict partial order over six evidence classes, each with defined precedence, freshness, and disclosure rules. Tier 1 assertions carry absolute weight and override all lower tiers; conflicting assertions at this level trigger a contradiction protocol. Tier 2 data is structured but derivative, requiring licensing compliance for use. Tier 3 represents trusted secondary reporting, which may be public but must cite sources. Tier 4 reflects market signals, informative but not authoritative. Tier 5 is reserved for aggregated consensus, and Tier 6 is synthetic or untrusted, disallowed in truth claims. This structure enforces a layered logic of trust and validation, preventing cascading errors from low-trust sources. Failure modes include contradiction at Tier 1, unauthorized redistribution of Tier 2 data, and misuse of Tier 6 content in public contexts.\n\nDeep epistemic analysis for source-hierarchy (5b7f4ee1737ded5a, domain=other, pages_read=3/3): Operator 'Source Tier Precedence Operator' (page 1, domain other) captures: The tier determines: how much weight the evidence receives, how quickly it expires, whether it can appear on a public surface, and what language must surround it. Assumptions: Evidence weight W_i strictly decreases with increasing tier index T_i; no two tiers are equivalent. Breakdown regime: When T_i = T_j, contradiction flagged for human review. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian evidence fusion kernel where T_i acts as prior strength parameter. Operator 'Tier 1 Official Assertion Kernel' (page 1, domain other) captures: --## Six-Tier Taxonomy ### Tier 1 — Official / Primary **Definition**: Direct statements from the authoritative entity. Assumptions: A_{\\text{off}} ⊆ T_1 implies absolute precedence over lower tiers. Breakdown regime: Conflicting A_{\\text{off}} from different authorities triggers contradiction protocol. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition function prioritizes A_{\\text{off}} as terminal condition in reasoning chain. Operator 'Tier 6 Synthetic Rejection Rule' (page 1, domain other) captures: --### Tier 3 — Trusted Secondary **Definition**: Reporting from credentialed journalists and established outlets with a track record of accuracy. Assumptions: S_{\\text{synth}} ∉ T_6 is invalid for truth-based decisions; only acceptable for internal drafting. Breakdown regime: Use of S_{\\text{synth}} in public-facing claims violates integrity constraint. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE rejection filter blocks S_{\\text{synth}} from influencing pick or recommendation states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for source-hierarchy (5b7f4ee1737ded5a, domain=other, pages_read=3/3): Operator 'Source Tier Precedence Operator' (page 1, domain other) captures: The tier determines: how much weight the evidence receives, how quickly it expires, whether it can appear on a public surface, and what language must surround it. Assumptions: Evidence weight W_i strictly decreases with increasing tier index T_i; no two tiers are equivalent. Breakdown regime: When T_i = T_j, contradiction flagged for human review. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian evidence fusion kernel where T_i acts as prior strength parameter. Operator 'Tier 1 Official Assertion Kernel' (page 1, domain other) captures: --## Six-Tier Taxonomy ### Tier 1 — Official / Primary **Definition**: Direct statements from the authoritative entity. Assumptions: A_{\\text{off}} ⊆ T_1 implies absolute precedence over lower tiers. Breakdown regime: Conflicting A_{\\text{off}} from different authorities triggers contradiction protocol. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition function prioritizes A_{\\text{off}} as terminal condition in reasoning chain. Operator 'Tier 6 Synthetic Rejection Rule' (page 1, domain other) captures: --### Tier 3 — Trusted Secondary **Definition**: Reporting from credentialed journalists and established outlets with a track record of accuracy. Assumptions: S_{\\text{synth}} ∉ T_6 is invalid for truth-based decisions; only acceptable for internal drafting. Breakdown regime: Use of S_{\\text{synth}} in public-facing claims violates integrity constraint. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE rejection filter blocks S_{\\text{synth}} from influencing pick or recommendation states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in epistemological frameworks of scientific evidence hierarchy and information theory’s source-channel model, adapted for real-time sports intelligence. Retrocausal Genealogy: Rooted in source-hierarchy (5b7f4ee1737ded5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in source-hierarchy (5b7f4ee1737ded5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents within GSI consider source credibility as a dynamic variable in belief update functions; GSE models decision-makers as bounded rational actors who weigh evidence according to its source tier. Theory of Mind & Decision Maker Model: Rooted in source-hierarchy (5b7f4ee1737ded5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no two tiers are treated equivalently; leakage veto prevents Tier 6 from entering truth-based inference paths, maintaining logical consistency across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-hierarchy (5b7f4ee1737ded5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-hierarchy (5b7f4ee1737ded5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

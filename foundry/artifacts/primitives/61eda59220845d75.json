@@ -1,0 +1,78 @@
+{
+  "book_id": "61eda59220845d75",
+  "source_status": "COMPLETE",
+  "title": "AUDIT_FINDINGS",
+  "file_name": "AUDIT_FINDINGS.md",
+  "sha256": "61eda59220845d755fb9805b0bdba72bd219290294679b88ab917dee496e52f0",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Audit findings form a structured reliability lattice with failure modes mapped to operational invariants across data ingestion, authentication, freshness gates, and performance stats. Universal Lens: Rooted in AUDIT_FINDINGS (61eda59220845d75), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers statistical consistency via Bayesian update kernels over normalized odds data, where G2's NaN handling ensures finite score propagation under stochastic game states. GSI Mapping: Rooted in AUDIT_FINDINGS (61eda59220845d75), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions through hardened server actions and freshness constraints, applying temporal logic gates to prevent stale pick propagation and ensure coherent user experience. GSE Mapping: Rooted in AUDIT_FINDINGS (61eda59220845d75), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "g2_nan_score_handling",
+      "name": "NaN Score Collapse Kernel",
+      "verbatim_quote": "| `data-ingestion/src/normalizer.ts` | | **G3** double-settle race | Settlement write is now `updateMany({where:{id, result:\"PENDING\"}})`; the race loser matches 0 rows and skips re-grading/re-stamping/CLV/snapshot.",
+      "page": 1,
+      "latex": "\\text{If } \\neg \\text{Number.isFinite}(x) \\Rightarrow \\text{score} \\gets \\text{null}",
+      "symbol_and_unit_ledger": "{'x': 'raw score input (dimensionless)', 'score': 'normalized score (dimensionless)'}",
+      "assumptions": "Non-numeric inputs are indicative of abandoned or pending game states.",
+      "breakdown_regime": "When input is not finite, score becomes null to avoid misgrading.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw odds to stable statistical estimates using finite-value filtering.",
+        "source_operator": "g2_nan_score_handling",
+        "telemetry": "Percentage of non-finite scores collapsed to null during normalization."
+      }
+    },
+    {
+      "primitive_id": "g4_freshness_gate",
+      "name": "Freshness Validation Gate",
+      "verbatim_quote": "| `app/cockpit/page.tsx` | | **G4** (picks gate) freshness mask | The public picks freshness gate now requires `oddsInserted > 0`, not just `status:\"SUCCESS\"` — an empty-but-200 odds run can no longer reset the freshness clock and mask staleness.",
+      "page": 1,
+      "latex": "\\text{freshness} \\gets \\text{oddsInserted} > 0 \\land \\text{status} = \\text{SUCCESS}",
+      "symbol_and_unit_ledger": "{'oddsInserted': 'timestamp of last odds insertion (seconds since epoch)', 'status': 'game status flag (SUCCESS/PENDING/FAILED)', 'freshness': 'boolean indicating valid odds freshness'}",
+      "assumptions": "Freshness depends on both presence of odds and successful status.",
+      "breakdown_regime": "Stale odds without insertion time are ignored.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps time-based freshness to conditional logic in pick validation.",
+        "source_operator": "g4_freshness_gate",
+        "telemetry": "Ratio of stale picks masked due to missing oddsInsertion timestamp."
+      }
+    },
+    {
+      "primitive_id": "m4_stripe_fail_open",
+      "name": "Stripe Billing Fail-Closed Guard",
+      "verbatim_quote": "| `ingestion-pipeline/src/settle-sport.ts` (+ test) | | **M4** Stripe fail-open | `mapStripeStatus` default flipped `ACTIVE → INCOMPLETE` (fail-closed billing gate for any future unknown Stripe status).",
+      "page": 1,
+      "latex": "\\text{billingStatus} = \\begin{cases} \\text{INCOMPLETE}, & \\text{if } \\text{unknownStripeStatus} \\\\ \\text{ACTIVE}, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'unknownStripeStatus': 'boolean indicating unrecognized Stripe status', 'billingStatus': 'final billing outcome (ACTIVE/INCOMPLETE)'}",
+      "assumptions": "Unknown statuses must default to closed billing to prevent unauthorized access.",
+      "breakdown_regime": "Any unrecognized Stripe status triggers incomplete billing state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces conservative billing policy via default fallback logic.",
+        "source_operator": "m4_stripe_fail_open",
+        "telemetry": "Count of unknown Stripe statuses triggering fail-closed behavior."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "61eda59220845d75_t0",
+      "think": "The audit findings reveal a layered system of reliability checks: G2 handles data integrity by collapsing invalid scores into nulls, preventing misclassification of abandoned games. G4 enforces temporal consistency in odds freshness, ensuring stale data does not propagate through the system. M4 applies a fail-closed principle to Stripe billing, safeguarding against unauthorized access when encountering unknown statuses. These primitives form a dual structure of input validation and temporal logic, where each layer mitigates specific failure modes while maintaining system coherence. The interplay between these operators reflects a mathematical duality: data integrity (G2) and temporal consistency (G4) are both grounded in conditional logic, whereas security (M4) is enforced through conservative defaults. The system’s resilience emerges from this modular composition, where each primitive acts as a kernel in a broader reliability lattice.\n\nDeep epistemic analysis for AUDIT_FINDINGS (61eda59220845d75, domain=other, pages_read=5/5): Operator 'NaN Score Collapse Kernel' (page 1, domain other) captures: | `data-ingestion/src/normalizer.ts` | | **G3** double-settle race | Settlement write is now `updateMany({where:{id, result:\"PENDING\"}})`; the race loser matches 0 rows and skips re-grading/re-stamping/CLV/snapshot. Assumptions: Non-numeric inputs are indicative of abandoned or pending game states. Breakdown regime: When input is not finite, score becomes null to avoid misgrading. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw odds to stable statistical estimates using finite-value filtering. Operator 'Freshness Validation Gate' (page 1, domain other) captures: | `app/cockpit/page.tsx` | | **G4** (picks gate) freshness mask | The public picks freshness gate now requires `oddsInserted > 0`, not just `status:\"SUCCESS\"` — an empty-but-200 odds run can no longer reset the freshness clock and mask staleness. Assumptions: Freshness depends on both presence of odds and successful status. Breakdown regime: Stale odds without insertion time are ignored. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps time-based freshness to conditional logic in pick validation. Operator 'Stripe Billing Fail-Closed Guard' (page 1, domain other) captures: | `ingestion-pipeline/src/settle-sport.ts` (+ test) | | **M4** Stripe fail-open | `mapStripeStatus` default flipped `ACTIVE → INCOMPLETE` (fail-closed billing gate for any future unknown Stripe status). Assumptions: Unknown statuses must default to closed billing to prevent unauthorized access. Breakdown regime: Any unrecognized Stripe status triggers incomplete billing state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces conservative billing policy via default fallback logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for AUDIT_FINDINGS (61eda59220845d75, domain=other, pages_read=5/5): Operator 'NaN Score Collapse Kernel' (page 1, domain other) captures: | `data-ingestion/src/normalizer.ts` | | **G3** double-settle race | Settlement write is now `updateMany({where:{id, result:\"PENDING\"}})`; the race loser matches 0 rows and skips re-grading/re-stamping/CLV/snapshot. Assumptions: Non-numeric inputs are indicative of abandoned or pending game states. Breakdown regime: When input is not finite, score becomes null to avoid misgrading. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw odds to stable statistical estimates using finite-value filtering. Operator 'Freshness Validation Gate' (page 1, domain other) captures: | `app/cockpit/page.tsx` | | **G4** (picks gate) freshness mask | The public picks freshness gate now requires `oddsInserted > 0`, not just `status:\"SUCCESS\"` — an empty-but-200 odds run can no longer reset the freshness clock and mask staleness. Assumptions: Freshness depends on both presence of odds and successful status. Breakdown regime: Stale odds without insertion time are ignored. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps time-based freshness to conditional logic in pick validation. Operator 'Stripe Billing Fail-Closed Guard' (page 1, domain other) captures: | `ingestion-pipeline/src/settle-sport.ts` (+ test) | | **M4** Stripe fail-open | `mapStripeStatus` default flipped `ACTIVE → INCOMPLETE` (fail-closed billing gate for any future unknown Stripe status). Assumptions: Unknown statuses must default to closed billing to prevent unauthorized access. Breakdown regime: Any unrecognized Stripe status triggers incomplete billing state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces conservative billing policy via default fallback logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification practices of distributed systems, drawing from concurrency control theory and temporal logic principles established in database design and secure computing models. Retrocausal Genealogy: Rooted in AUDIT_FINDINGS (61eda59220845d75), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in AUDIT_FINDINGS (61eda59220845d75), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial data inputs (e.g., malformed odds), temporal drift (stale data), and external service failures (Stripe). The system models these as probabilistic threats requiring deterministic guards. Theory of Mind & Decision Maker Model: Rooted in AUDIT_FINDINGS (61eda59220845d75), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by separating concerns: G2 operates at data ingestion, G4 at presentation logic, and M4 at transactional boundaries. Leakage is prevented by enforcing strict type-checking and isolation between layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in AUDIT_FINDINGS (61eda59220845d75), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

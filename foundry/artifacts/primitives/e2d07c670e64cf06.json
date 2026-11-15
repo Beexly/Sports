@@ -1,0 +1,78 @@
+{
+  "book_id": "e2d07c670e64cf06",
+  "source_status": "COMPLETE",
+  "title": "TYPECHECK_FAILURE_SUMMARY",
+  "file_name": "TYPECHECK_FAILURE_SUMMARY.md",
+  "sha256": "e2d07c670e64cf06d935e2ceaff1310b59765c4755ee6d67c53510f59d5447f3",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Type consistency between schema and generated client mirrors a gauge theory's fiber bundle mismatch; synchronization via regeneration restores local triviality. Universal Lens: Rooted in TYPECHECK_FAILURE_SUMMARY (e2d07c670e64cf06), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian update on schema-client alignment enables probabilistic inference over data integrity states using conformal predictive distributions. GSI Mapping: Rooted in TYPECHECK_FAILURE_SUMMARY (e2d07c670e64cf06), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning resolves stale client states through deterministic state transitions triggered by schema modification events. GSE Mapping: Rooted in TYPECHECK_FAILURE_SUMMARY (e2d07c670e64cf06), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "schema_client_synchronization",
+      "name": "Schema-Client Synchronization Operator",
+      "verbatim_quote": "## Root cause The TypeScript baseline was failing because the local generated Prisma client in `node_modules/@prisma/client` was stale relative to `packages/db/prisma/schema.prisma`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'schema state, dimensionless', 'C': 'client state, dimensionless', 'T': 'typecheck result, {0,1}', 'G': 'generation command, {0,1}'}",
+      "assumptions": "Client state C is a function of schema state S; T = 0 iff C(S) is consistent.",
+      "breakdown_regime": "T = 1 when ||C(S) - S|| > ε for some threshold ε.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The synchronization operator maps schema evolution to client regeneration, ensuring type coherence across data layers.",
+        "source_operator": "schema_client_synchronization",
+        "telemetry": "Typecheck exit code T and generation success flag G"
+      }
+    },
+    {
+      "primitive_id": "prisma_client_regeneration",
+      "name": "Prisma Client Regeneration Kernel",
+      "verbatim_quote": "The missing symbols all exist in the schema as Prisma models, enums, or generated helper types, but they were not present in the generated client until the repo's existing generation command was run: `npm run db:generate` After regeneration, `npm run typecheck` exited `0`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'regeneration trigger, {0,1}', 'M': 'missing symbol set, dimensionless', 'P': 'prisma client, dimensionless', 'F': 'failure state, {0,1}'}",
+      "assumptions": "Regeneration R updates P such that P ⊃ M; F = 0 after successful R.",
+      "breakdown_regime": "F = 1 when ∃m ∈ M such that m ∉ P.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The kernel encapsulates the procedural fix for schema-client divergence by invoking the generation script.",
+        "source_operator": "prisma_client_regeneration",
+        "telemetry": "Symbol presence in client P and failure flag F"
+      }
+    },
+    {
+      "primitive_id": "typecheck_consistency",
+      "name": "Typecheck Consistency Validator",
+      "verbatim_quote": "# Typecheck / Prisma Baseline Failure Summary ## Command `npm run typecheck` ## Initial exit code `2` Raw output is captured in `handoff/codex/typecheck-prisma-baseline/TYPECHECK_FAILURE_RAW.log`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'validation state, {0,1}', 'E': 'error count, ℕ', 'C': 'client state, dimensionless', 'S': 'schema state, dimensionless'}",
+      "assumptions": "V = 1 iff E = 0; E = 0 when C(S) is valid.",
+      "breakdown_regime": "V = 0 when E > 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Validator ensures that client C reflects schema S; inconsistency triggers error propagation.",
+        "source_operator": "typecheck_consistency",
+        "telemetry": "Exit code from npm run typecheck and error logs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e2d07c670e64cf06_t0",
+      "think": "The root cause of the typecheck failure is a temporal misalignment between the Prisma schema and its generated client. This misalignment manifests as a discrepancy in symbol availability—specifically, symbols like CockpitComplianceStatus and CockpitDecision are defined in the schema but absent from the stale client. The system's typechecker (npm run typecheck) fails because it cannot resolve these symbols. The solution lies in regenerating the client using npm run db:generate, which synchronizes the client with the schema. This process is a form of dynamic consistency enforcement, where the system corrects itself upon detecting a divergence. The failure mode is a fiber bundle misalignment in a gauge-theoretic interpretation of the data layer, where the base space is the schema and the fiber is the client. The fix operates by applying a gauge transformation (regeneration) to restore local triviality.\n\nDeep epistemic analysis for TYPECHECK_FAILURE_SUMMARY (e2d07c670e64cf06, domain=other, pages_read=2/2): Operator 'Schema-Client Synchronization Operator' (page 1, domain other) captures: ## Root cause The TypeScript baseline was failing because the local generated Prisma client in `node_modules/@prisma/client` was stale relative to `packages/db/prisma/schema.prisma`. Assumptions: Client state C is a function of schema state S; T = 0 iff C(S) is consistent. Breakdown regime: T = 1 when ||C(S) - S|| > ε for some threshold ε. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The synchronization operator maps schema evolution to client regeneration, ensuring type coherence across data layers. Operator 'Prisma Client Regeneration Kernel' (page 1, domain other) captures: The missing symbols all exist in the schema as Prisma models, enums, or generated helper types, but they were not present in the generated client until the repo's existing generation command was run: `npm run db:generate` After regeneration, `npm run typecheck` exited `0`. Assumptions: Regeneration R updates P such that P ⊃ M; F = 0 after successful R. Breakdown regime: F = 1 when ∃m ∈ M such that m ∉ P. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The kernel encapsulates the procedural fix for schema-client divergence by invoking the generation script. Operator 'Typecheck Consistency Validator' (page 1, domain other) captures: # Typecheck / Prisma Baseline Failure Summary ## Command `npm run typecheck` ## Initial exit code `2` Raw output is captured in `handoff/codex/typecheck-prisma-baseline/TYPECHECK_FAILURE_RAW.log`. Assumptions: V = 1 iff E = 0; E = 0 when C(S) is valid. Breakdown regime: V = 0 when E > 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Validator ensures that client C reflects schema S; inconsistency triggers error propagation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for TYPECHECK_FAILURE_SUMMARY (e2d07c670e64cf06, domain=other, pages_read=2/2): Operator 'Schema-Client Synchronization Operator' (page 1, domain other) captures: ## Root cause The TypeScript baseline was failing because the local generated Prisma client in `node_modules/@prisma/client` was stale relative to `packages/db/prisma/schema.prisma`. Assumptions: Client state C is a function of schema state S; T = 0 iff C(S) is consistent. Breakdown regime: T = 1 when ||C(S) - S|| > ε for some threshold ε. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The synchronization operator maps schema evolution to client regeneration, ensuring type coherence across data layers. Operator 'Prisma Client Regeneration Kernel' (page 1, domain other) captures: The missing symbols all exist in the schema as Prisma models, enums, or generated helper types, but they were not present in the generated client until the repo's existing generation command was run: `npm run db:generate` After regeneration, `npm run typecheck` exited `0`. Assumptions: Regeneration R updates P such that P ⊃ M; F = 0 after successful R. Breakdown regime: F = 1 when ∃m ∈ M such that m ∉ P. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The kernel encapsulates the procedural fix for schema-client divergence by invoking the generation script. Operator 'Typecheck Consistency Validator' (page 1, domain other) captures: # Typecheck / Prisma Baseline Failure Summary ## Command `npm run typecheck` ## Initial exit code `2` Raw output is captured in `handoff/codex/typecheck-prisma-baseline/TYPECHECK_FAILURE_RAW.log`. Assumptions: V = 1 iff E = 0; E = 0 when C(S) is valid. Breakdown regime: V = 0 when E > 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Validator ensures that client C reflects schema S; inconsistency triggers error propagation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This pattern mirrors classical gauge theory corrections in physics, where inconsistencies in field configurations are resolved by redefining local frames. In software, this translates to schema-client synchronization via regeneration. Retrocausal Genealogy: Rooted in TYPECHECK_FAILURE_SUMMARY (e2d07c670e64cf06), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in TYPECHECK_FAILURE_SUMMARY (e2d07c670e64cf06), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the schema author (who modifies the schema) and the typechecker (which enforces consistency). The system's agent must balance schema evolution with client fidelity to prevent runtime errors. Theory of Mind & Decision Maker Model: Rooted in TYPECHECK_FAILURE_SUMMARY (e2d07c670e64cf06), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that schema changes do not propagate without corresponding client regeneration. Leakage is prevented by isolating the regeneration step from other build processes. Cross-Layer Veto & Anti-Leakage Check: Rooted in TYPECHECK_FAILURE_SUMMARY (e2d07c670e64cf06), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in TYPECHECK_FAILURE_SUMMARY (e2d07c670e64cf06), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

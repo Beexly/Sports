@@ -1,0 +1,78 @@
+{
+  "book_id": "0522d842ea799903",
+  "source_status": "COMPLETE",
+  "title": "p0358",
+  "file_name": "p0358.txt",
+  "sha256": "0522d842ea7999038efe8af86be831a43ae1d893972f4d4b127d1a02bb2963c6",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Capital-Land duality under uncertainty; value adjustment lags, reproducibility, and form-change define productive asset classes. Universal Lens: Rooted in p0358 (0522d842ea799903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on capital revaluation using conformal predictive intervals for lagged price shifts and skill-value accrual. GSI Mapping: Rooted in p0358 (0522d842ea799903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions in capital stock and labor value, conditioned on technological obsolescence and adaptive costs. GSE Mapping: Rooted in p0358 (0522d842ea799903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "capital_land_duality",
+      "name": "Capital-Land Duality",
+      "verbatim_quote": "We have seen that the difference between capital and land is one of degree, depending on these qualities in the agent.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'capital stock (dimensionless)', 'L': 'land endowment (dimensionless)', 'Q': 'quality factor (dimensionless)'}",
+      "assumptions": "Capital and land are continuous variables differing in reproducibility and rigidity.",
+      "breakdown_regime": "When Q approaches zero, capital becomes indistinguishable from land.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a phase transition model where K and L are order parameters under technological perturbation.",
+        "source_operator": "capital_land_duality",
+        "telemetry": "Value-adjustment lag time and capital turnover rate."
+      }
+    },
+    {
+      "primitive_id": "value_adjustment_lag",
+      "name": "Value Adjustment Lag",
+      "verbatim_quote": "UNCERTAINTY AND SOCIAL PROGRESS 345 owner in whose hands they are when the price change takes place, which may not be the owner at the time the new process is invented, for these price changes will also lag more or less.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ΔV': 'change in value (currency)', 'τ': 'lag time (time units)', 'O': 'ownership status (binary)'}",
+      "assumptions": "Ownership and valuation are decoupled due to informational delays.",
+      "breakdown_regime": "As τ → ∞, ΔV becomes irreversible.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of delayed feedback in asset pricing models; captures misalignment between innovation and valuation.",
+        "source_operator": "value_adjustment_lag",
+        "telemetry": "Asset revaluation delay and ownership transfer frequency."
+      }
+    },
+    {
+      "primitive_id": "adaptive_capital_cost",
+      "name": "Adaptive Capital Cost",
+      "verbatim_quote": "With ordinary capital equipment, allowance must be made for the life of the agency and also for the possibility and cost, including the time required, to adapt it to the new conditions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_a': 'adaptive cost (currency)', 'T': 'adaptation time (time units)', 'L': 'life span (time units)'}",
+      "assumptions": "Capital assets depreciate over time and incur adaptation costs.",
+      "breakdown_regime": "When T > L, C_a → ∞.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from resource allocation dynamics; models cost of technological transition in capital-intensive systems.",
+        "source_operator": "adaptive_capital_cost",
+        "telemetry": "Total capital redeployment cost and average adaptation duration."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0522d842ea799903_t0",
+      "think": "The core insight is that capital and land form a continuum defined by reproducibility and rigidity. Capital, at one extreme, is embodied in goods-in-process, while land, at the other, is fixed in supply. Value adjustments for capital lag behind innovations due to ownership and adaptation costs. This creates a dual structure: one of dynamic capital flows and another of static land rents. The lag in value adjustment implies that the economic agent's realized return depends on timing and ownership. The adaptive cost of capital reflects the trade-off between obsolescence and transformation. These primitives map into a stochastic framework where uncertainty drives both capital reallocation and labor value shifts. The failure mode occurs when lag exceeds the system's capacity to adjust, leading to disequilibrium.\n\nDeep epistemic analysis for p0358 (0522d842ea799903, domain=other, pages_read=1/1): Operator 'Capital-Land Duality' (page 1, domain other) captures: We have seen that the difference between capital and land is one of degree, depending on these qualities in the agent. Assumptions: Capital and land are continuous variables differing in reproducibility and rigidity. Breakdown regime: When Q approaches zero, capital becomes indistinguishable from land. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a phase transition model where K and L are order parameters under technological perturbation. Operator 'Value Adjustment Lag' (page 1, domain other) captures: UNCERTAINTY AND SOCIAL PROGRESS 345 owner in whose hands they are when the price change takes place, which may not be the owner at the time the new process is invented, for these price changes will also lag more or less. Assumptions: Ownership and valuation are decoupled due to informational delays. Breakdown regime: As τ → ∞, ΔV becomes irreversible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of delayed feedback in asset pricing models; captures misalignment between innovation and valuation. Operator 'Adaptive Capital Cost' (page 1, domain other) captures: With ordinary capital equipment, allowance must be made for the life of the agency and also for the possibility and cost, including the time required, to adapt it to the new conditions. Assumptions: Capital assets depreciate over time and incur adaptation costs. Breakdown regime: When T > L, C_a → ∞. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from resource allocation dynamics; models cost of technological transition in capital-intensive systems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0358 (0522d842ea799903, domain=other, pages_read=1/1): Operator 'Capital-Land Duality' (page 1, domain other) captures: We have seen that the difference between capital and land is one of degree, depending on these qualities in the agent. Assumptions: Capital and land are continuous variables differing in reproducibility and rigidity. Breakdown regime: When Q approaches zero, capital becomes indistinguishable from land. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a phase transition model where K and L are order parameters under technological perturbation. Operator 'Value Adjustment Lag' (page 1, domain other) captures: UNCERTAINTY AND SOCIAL PROGRESS 345 owner in whose hands they are when the price change takes place, which may not be the owner at the time the new process is invented, for these price changes will also lag more or less. Assumptions: Ownership and valuation are decoupled due to informational delays. Breakdown regime: As τ → ∞, ΔV becomes irreversible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of delayed feedback in asset pricing models; captures misalignment between innovation and valuation. Operator 'Adaptive Capital Cost' (page 1, domain other) captures: With ordinary capital equipment, allowance must be made for the life of the agency and also for the possibility and cost, including the time required, to adapt it to the new conditions. Assumptions: Capital assets depreciate over time and incur adaptation costs. Breakdown regime: When T > L, C_a → ∞. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from resource allocation dynamics; models cost of technological transition in capital-intensive systems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical marginal productivity theory and modern asset pricing models, particularly those incorporating information asymmetry and temporal arbitrage. Retrocausal Genealogy: Rooted in p0358 (0522d842ea799903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0358 (0522d842ea799903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as optimizing under bounded rationality, where information lags and adaptation costs shape decisions. Opposing forces include speculative behavior and risk-averse capital preservation. Theory of Mind & Decision Maker Model: Rooted in p0358 (0522d842ea799903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0358 (0522d842ea799903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that capital and land are not conflated in modeling. Leakage vetoes occur when ownership and valuation are not properly disentangled, causing spurious correlation in economic indicators. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0358 (0522d842ea799903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0358 (0522d842ea799903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

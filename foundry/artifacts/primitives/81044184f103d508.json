@@ -1,0 +1,78 @@
+{
+  "book_id": "81044184f103d508",
+  "source_status": "COMPLETE",
+  "title": "game-flow",
+  "file_name": "game-flow.md",
+  "sha256": "81044184f103d5084761a181cda3990d908ef556285d1389b84c633205402071",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Game flow maps to a realtime multiplayer state transition system with deterministic rule enforcement and decentralized agent validation. Universal Lens: Rooted in game-flow (81044184f103d508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers game logic via Bayesian validation of actions against immutable rule contracts, ensuring conformal consistency across distributed game states. GSI Mapping: Rooted in game-flow (81044184f103d508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes game state transitions using derived kernel logic from AGENTS.md, enforcing turn-based constraints and validating moves through client-side action filters. GSE Mapping: Rooted in game-flow (81044184f103d508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "realtime_multiplayer_room",
+      "name": "Real-Time Multiplayer Room",
+      "verbatim_quote": "# Game flow — `--type game` A game is a website whose template ships **realtime multiplayer rooms**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Room identifier (dimensionless)', 't': 'Time (s)', 'S': 'State vector (dimensionless)'}",
+      "assumptions": "Rooms operate under shared global state with synchronized updates.",
+      "breakdown_regime": "When concurrent actions exceed single-threaded processing capacity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each room is an isomorphic state machine with unique path-based identity.",
+        "source_operator": "realtime_multiplayer_room",
+        "telemetry": "WebSocket connection count and latency per room"
+      }
+    },
+    {
+      "primitive_id": "rule_contract_enforcement",
+      "name": "Rule Contract Enforcement",
+      "verbatim_quote": "Two rules the checker cannot enforce and that decide whether the game is any good: - **`validateAction` is the only defence.** The client is untrusted and can send any action at any time.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Action input (dimensionless)', 'V(A)': 'Validation function (boolean)', 'T': 'Turn indicator (dimensionless)'}",
+      "assumptions": "Client-side actions must be validated before state mutation.",
+      "breakdown_regime": "Upon invalid or malicious action submission.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The validateAction function defines the kernel of game validity by filtering inputs into admissible state changes.",
+        "source_operator": "rule_contract_enforcement",
+        "telemetry": "Number of rejected actions per session"
+      }
+    },
+    {
+      "primitive_id": "scaffolded_template_system",
+      "name": "Scaffolded Template System",
+      "verbatim_quote": "## Create ```bash higgsfield website create --type game --category <genre> --subdomain <name> ``` - **`--category` is REQUIRED and must be a game genre** — `arcade`, `puzzle`, `shooter`, `platformer`, `rpg`, `strategy`, `racing`, `simulation`, `adventure`, `action`, `fighting`, `survival`, `horror`, `sports`, `card-board`, `education`, `endless-runner`, `moba`, `music-rhythm`, `sandbox-building`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_s': 'Template type (dimensionless)', 'C_g': 'Category genre (dimensionless)', 'U': 'URL subdomain (dimensionless)'}",
+      "assumptions": "All games inherit a standardized structure defined by category and template.",
+      "breakdown_regime": "When non-compliant templates or categories are specified.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each game category corresponds to a canonical template structure that governs its behavior.",
+        "source_operator": "scaffolded_template_system",
+        "telemetry": "Compliance rate of category and template usage"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "81044184f103d508_t0",
+      "think": "The game flow model represents a distributed system where each room functions as a distinct but interconnected state machine. The transition from legacy engines to unified website deployment implies a shift toward centralized control over decentralized execution. Rule enforcement relies on a dual-check mechanism: static validation via `bun run check:logic` and dynamic validation via `validateAction`. This ensures that while the system remains flexible, it maintains integrity through both compile-time and runtime checks. Failure modes arise when either validation layer fails, leading to inconsistent or exploitable game states.\n\nDeep epistemic analysis for game-flow (81044184f103d508, domain=other, pages_read=2/2): Operator 'Real-Time Multiplayer Room' (page 1, domain other) captures: # Game flow — `--type game` A game is a website whose template ships **realtime multiplayer rooms**. Assumptions: Rooms operate under shared global state with synchronized updates. Breakdown regime: When concurrent actions exceed single-threaded processing capacity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each room is an isomorphic state machine with unique path-based identity. Operator 'Rule Contract Enforcement' (page 1, domain other) captures: Two rules the checker cannot enforce and that decide whether the game is any good: - **`validateAction` is the only defence.** The client is untrusted and can send any action at any time. Assumptions: Client-side actions must be validated before state mutation. Breakdown regime: Upon invalid or malicious action submission. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The validateAction function defines the kernel of game validity by filtering inputs into admissible state changes. Operator 'Scaffolded Template System' (page 1, domain other) captures: ## Create ```bash higgsfield website create --type game --category <genre> --subdomain <name> ``` - **`--category` is REQUIRED and must be a game genre** — `arcade`, `puzzle`, `shooter`, `platformer`, `rpg`, `strategy`, `racing`, `simulation`, `adventure`, `action`, `fighting`, `survival`, `horror`, `sports`, `card-board`, `education`, `endless-runner`, `moba`, `music-rhythm`, `sandbox-building`. Assumptions: All games inherit a standardized structure defined by category and template. Breakdown regime: When non-compliant templates or categories are specified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each game category corresponds to a canonical template structure that governs its behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for game-flow (81044184f103d508, domain=other, pages_read=2/2): Operator 'Real-Time Multiplayer Room' (page 1, domain other) captures: # Game flow — `--type game` A game is a website whose template ships **realtime multiplayer rooms**. Assumptions: Rooms operate under shared global state with synchronized updates. Breakdown regime: When concurrent actions exceed single-threaded processing capacity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each room is an isomorphic state machine with unique path-based identity. Operator 'Rule Contract Enforcement' (page 1, domain other) captures: Two rules the checker cannot enforce and that decide whether the game is any good: - **`validateAction` is the only defence.** The client is untrusted and can send any action at any time. Assumptions: Client-side actions must be validated before state mutation. Breakdown regime: Upon invalid or malicious action submission. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The validateAction function defines the kernel of game validity by filtering inputs into admissible state changes. Operator 'Scaffolded Template System' (page 1, domain other) captures: ## Create ```bash higgsfield website create --type game --category <genre> --subdomain <name> ``` - **`--category` is REQUIRED and must be a game genre** — `arcade`, `puzzle`, `shooter`, `platformer`, `rpg`, `strategy`, `racing`, `simulation`, `adventure`, `action`, `fighting`, `survival`, `horror`, `sports`, `card-board`, `education`, `endless-runner`, `moba`, `music-rhythm`, `sandbox-building`. Assumptions: All games inherit a standardized structure defined by category and template. Breakdown regime: When non-compliant templates or categories are specified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each game category corresponds to a canonical template structure that governs its behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web-based multiplayer architectures and evolved from monolithic game engines into modular, scalable frameworks akin to modern microservices and edge computing paradigms. Retrocausal Genealogy: Rooted in game-flow (81044184f103d508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in game-flow (81044184f103d508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents within this framework include players, validators, and the underlying infrastructure. Players submit actions; validators ensure correctness; infrastructure handles synchronization and persistence. Each agent operates under bounded rationality, with the system compensating for adversarial inputs through robust validation. Theory of Mind & Decision Maker Model: Rooted in game-flow (81044184f103d508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if rule contracts are not strictly enforced at runtime, allowing divergent behaviors between client and server. Leakage occurs when template configurations deviate from canonical structures, undermining system coherence. Cross-Layer Veto & Anti-Leakage Check: Rooted in game-flow (81044184f103d508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

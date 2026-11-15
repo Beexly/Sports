@@ -1,0 +1,78 @@
+{
+  "book_id": "5fe1f9d863d2e74d",
+  "source_status": "COMPLETE",
+  "title": "syntheses",
+  "file_name": "syntheses.md",
+  "sha256": "5fe1f9d863d2e74d2b79f0b9279084e25606604629a412912dba443137081519",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A dual-layer decision system combining risk-neutral optimization (0207) and behavior prediction (1575) via quantile-MDP inverse learning. Universal Lens: Rooted in syntheses (5fe1f9d863d2e74d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of coach behavior τ̂ via quantile regression; conformal prediction of WP-optimal actions under uncertainty. GSI Mapping: Rooted in syntheses (5fe1f9d863d2e74d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions driven by WP-surface optimization and τ̂-conditioned action gaps for real-time coaching audit. GSE Mapping: Rooted in syntheses (5fe1f9d863d2e74d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "prescriptive_layer",
+      "name": "WP-Optimal Action Selector",
+      "verbatim_quote": "- **Descriptive (1575):** per coach-team × region × WP-bin τ̂ predicting the action the coach will *actually* take — via the τ-optimal policy under quantile objective q^π̄_τ.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'a*(σ)': 'action selected from {GO, FGA, PUNT}', 'σ': 'state vector (score diff, time, down, distance, yardline, timeouts)', 'WP': 'win probability'}",
+      "assumptions": "Risk-neutral optimization over state space with known WP dynamics.",
+      "breakdown_regime": "When WP surface is insufficiently modeled or when τ̂ deviates from policy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps state σ to optimal action using shrinkage and MC search.",
+        "source_operator": "prescriptive_layer",
+        "telemetry": "Brier score improvement over MLE on held-out data."
+      }
+    },
+    {
+      "primitive_id": "descriptive_layer",
+      "name": "Behavior Prediction Model",
+      "verbatim_quote": "- **Descriptive (1575):** per coach-team × region × WP-bin τ̂ predicting the action the coach will *actually* take — via the τ-optimal policy under quantile objective q^π̄_τ.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'τ̂': 'risk preference parameter', 'q^π̄_τ': 'quantile objective function', 'a': 'actual coach action'}",
+      "assumptions": "Coaches' actions are rationalized by τ̂ under quantile-MDP framework.",
+      "breakdown_regime": "When τ̂ does not reflect true risk preferences due to temporal decay.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to τ̂-rationalized policy under quantile-MDP.",
+        "source_operator": "descriptive_layer",
+        "telemetry": "Observed vs predicted action alignment in 4th-down scenarios."
+      }
+    },
+    {
+      "primitive_id": "coach_decision_audit",
+      "name": "WP-Gap Auditor",
+      "verbatim_quote": "**Composition:** for each 4th-down state, the engine computes (a) WP-optimal action, (b) τ̂-predicted action, (c) the WP-points gap between them.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ΔWP': 'difference in win probability points', 'a_opt': 'optimal action', 'a_pred': 'predicted action'}",
+      "assumptions": "WP differences are measurable and actionable.",
+      "breakdown_regime": "When τ̂ and a_opt diverge beyond acceptable variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Computes ΔWP between prescribed and predicted actions.",
+        "source_operator": "coach_decision_audit",
+        "telemetry": "Coach decision audit score (WP point differential)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5fe1f9d863d2e74d_t0",
+      "think": "The synthesis integrates two distinct layers: a prescriptive layer (0207) that computes risk-neutral optimal actions based on win probability surfaces, and a descriptive layer (1575) that models actual coach behavior through quantile-MDP inverse learning. These layers form a dual system where the prescriptive layer provides an idealized recommendation, while the descriptive layer captures behavioral deviations. The composition of these layers enables the engine to compute a WP-gap between optimal and predicted actions, forming the basis for a coach decision audit. The τ̂ layer reflects risk preferences that vary across coaches and regions, necessitating dynamic re-fitting each season. This dualism mirrors the duality between theoretical optimization and empirical behavior, with the audit serving as a measure of deviation from rationality. Failure modes include static τ̂ values that do not adapt to changing environments, leading to misalignment between recommendations and actual decisions.\n\nDeep epistemic analysis for syntheses (5fe1f9d863d2e74d, domain=other, pages_read=2/2): Operator 'WP-Optimal Action Selector' (page 1, domain other) captures: - **Descriptive (1575):** per coach-team × region × WP-bin τ̂ predicting the action the coach will *actually* take — via the τ-optimal policy under quantile objective q^π̄_τ. Assumptions: Risk-neutral optimization over state space with known WP dynamics. Breakdown regime: When WP surface is insufficiently modeled or when τ̂ deviates from policy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps state σ to optimal action using shrinkage and MC search. Operator 'Behavior Prediction Model' (page 1, domain other) captures: - **Descriptive (1575):** per coach-team × region × WP-bin τ̂ predicting the action the coach will *actually* take — via the τ-optimal policy under quantile objective q^π̄_τ. Assumptions: Coaches' actions are rationalized by τ̂ under quantile-MDP framework. Breakdown regime: When τ̂ does not reflect true risk preferences due to temporal decay. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to τ̂-rationalized policy under quantile-MDP. Operator 'WP-Gap Auditor' (page 1, domain other) captures: **Composition:** for each 4th-down state, the engine computes (a) WP-optimal action, (b) τ̂-predicted action, (c) the WP-points gap between them. Assumptions: WP differences are measurable and actionable. Breakdown regime: When τ̂ and a_opt diverge beyond acceptable variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computes ΔWP between prescribed and predicted actions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for syntheses (5fe1f9d863d2e74d, domain=other, pages_read=2/2): Operator 'WP-Optimal Action Selector' (page 1, domain other) captures: - **Descriptive (1575):** per coach-team × region × WP-bin τ̂ predicting the action the coach will *actually* take — via the τ-optimal policy under quantile objective q^π̄_τ. Assumptions: Risk-neutral optimization over state space with known WP dynamics. Breakdown regime: When WP surface is insufficiently modeled or when τ̂ deviates from policy. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps state σ to optimal action using shrinkage and MC search. Operator 'Behavior Prediction Model' (page 1, domain other) captures: - **Descriptive (1575):** per coach-team × region × WP-bin τ̂ predicting the action the coach will *actually* take — via the τ-optimal policy under quantile objective q^π̄_τ. Assumptions: Coaches' actions are rationalized by τ̂ under quantile-MDP framework. Breakdown regime: When τ̂ does not reflect true risk preferences due to temporal decay. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to τ̂-rationalized policy under quantile-MDP. Operator 'WP-Gap Auditor' (page 1, domain other) captures: **Composition:** for each 4th-down state, the engine computes (a) WP-optimal action, (b) τ̂-predicted action, (c) the WP-points gap between them. Assumptions: WP differences are measurable and actionable. Breakdown regime: When τ̂ and a_opt diverge beyond acceptable variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Computes ΔWP between prescribed and predicted actions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in sequential decision theory and inverse reinforcement learning, with parallels to Bayesian decision-making frameworks and quantile regression techniques used in econometrics and behavioral modeling. Retrocausal Genealogy: Rooted in syntheses (5fe1f9d863d2e74d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in syntheses (5fe1f9d863d2e74d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models coaches as bounded rational agents whose decisions are influenced by risk preferences encoded in τ̂, while also acknowledging that optimal strategies may differ from observed behavior due to cognitive biases or strategic considerations. Theory of Mind & Decision Maker Model: Rooted in syntheses (5fe1f9d863d2e74d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents overfitting by ensuring τ̂ is updated dynamically rather than fixed, and avoids leakage by separating the prescriptive and descriptive layers through distinct data pipelines and temporal windows. Cross-Layer Veto & Anti-Leakage Check: Rooted in syntheses (5fe1f9d863d2e74d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in syntheses (5fe1f9d863d2e74d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

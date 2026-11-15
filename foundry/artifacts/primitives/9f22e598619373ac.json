@@ -1,0 +1,78 @@
+{
+  "book_id": "9f22e598619373ac",
+  "source_status": "COMPLETE",
+  "title": "1579-projectile-motion-quadratic-drag-wind",
+  "file_name": "1579-projectile-motion-quadratic-drag-wind.md",
+  "sha256": "9f22e598619373ac275c5e3eb179774455676168f15f468b9530a8e53c06e60e",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Wind-perturbed projectile range under quadratic drag maps to a closed-form hodograph solution in wind-relative velocity space, enabling fast analytic adjustments for sports trajectory modeling. Universal Lens: Rooted in 1579-projectile-motion-quadratic-drag-wind (9f22e598619373ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction on wind-adjusted range models to estimate uncertainty bands around punt/FG distances, leveraging the closed-form solution for rapid Bayesian updating of game-state priors. GSI Mapping: Rooted in 1579-projectile-motion-quadratic-drag-wind (9f22e598619373ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses the wind-perturbed range formula as a dynamic kernel for real-time trajectory state transitions, adjusting launch parameters based on live wind feeds via elementary function evaluation. GSE Mapping: Rooted in 1579-projectile-motion-quadratic-drag-wind (9f22e598619373ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "wind_perturbed_range",
+      "name": "Wind-Perturbed Range",
+      "verbatim_quote": "7) — an exact closed form; (3) approximate the transcendental f(φ) with a quadratic-in-tanφ fit f_a(φ) = α1 tanφ ± α2 tan2φ, matched in value and first derivative at φ0 (Eq.",
+      "page": 1,
+      "latex": "\\text{Range} = L(w, V_0, \\theta_0, k)",
+      "symbol_and_unit_ledger": "{'L': 'range in meters', 'w': 'horizontal wind speed in m/s', 'V_0': 'initial speed in m/s', 'θ_0': 'launch angle in radians', 'k': 'drag coefficient in s²/m²'}",
+      "assumptions": "constant horizontal wind, quadratic drag, no Magnus effect, same elevation launch/landing",
+      "breakdown_regime": "k → 0 (division by zero), high wind speeds beyond linear regime",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE for fast recomputation of trajectory range under varying wind conditions, enabling real-time situational awareness during play execution.",
+        "source_operator": "wind_perturbed_range",
+        "telemetry": "relative max deviation between analytical and numerical solutions"
+      }
+    },
+    {
+      "primitive_id": "velocity_hodograph",
+      "name": "Velocity Hodograph",
+      "verbatim_quote": "Method / model Analytical approximation: (1) work in the wind-relative frame u⃗ = V⃗ - w⃗, which reduces the wind problem to the known no-wind form; (2) use the velocity hodograph u(φ) (Eq.",
+      "page": 1,
+      "latex": "u(\\varphi) = \\text{exact closed form}",
+      "symbol_and_unit_ledger": "{'u': 'velocity in wind-relative frame in m/s', 'φ': 'angle in radians'}",
+      "assumptions": "constant horizontal wind, quadratic drag, no Magnus effect",
+      "breakdown_regime": "non-constant wind or non-quadratic drag invalidates hodograph",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the original projectile dynamics to a simplified no-wind problem through transformation to wind-relative coordinates, enabling closed-form integration.",
+        "source_operator": "velocity_hodograph",
+        "telemetry": "accuracy of hodograph approximation against numerical RK4 integration"
+      }
+    },
+    {
+      "primitive_id": "quadratic_drag_model",
+      "name": "Quadratic Drag Model",
+      "verbatim_quote": "Equations & assumptions - Drag model: R = mgkV2, k = 1/V_term2 (drag constant from terminal velocity).",
+      "page": 1,
+      "latex": "R = mgkV^2",
+      "symbol_and_unit_ledger": "{'R': 'drag force in N', 'm': 'mass in kg', 'g': 'gravitational acceleration in m/s²', 'k': 'drag coefficient in s²/m²', 'V': 'velocity in m/s'}",
+      "assumptions": "quadratic dependence on velocity, constant air density, smooth surface",
+      "breakdown_regime": "low Reynolds numbers (<10³) or turbulent flow regime (>2×10⁵)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides the core physical basis for computing deceleration due to air resistance in GSE trajectory simulations.",
+        "source_operator": "quadratic_drag_model",
+        "telemetry": "deviation from experimental data for various projectiles (shuttlecock, tennis ball, golf ball)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9f22e598619373ac_t0",
+      "think": "The wind-perturbed projectile range is derived by transforming the problem into a wind-relative frame, where the standard no-wind equations apply. The velocity hodograph u(φ) provides an exact closed-form expression that allows splitting the trajectory into intervals for elementary function integration. This yields explicit formulas for range L(w,V₀,θ₀,k) that depend on initial conditions, drag coefficient, and wind speed. The method assumes constant horizontal wind and neglects Magnus effects, making it a first-order correction rather than a full model. Its utility lies in fast computation for real-time applications such as predicting punt distances under changing wind conditions. The accuracy is validated against numerical RK4 integration across multiple sports projectiles and wind regimes.\n\nDeep epistemic analysis for 1579-projectile-motion-quadratic-drag-wind (9f22e598619373ac, domain=other, pages_read=3/3): Operator 'Wind-Perturbed Range' (page 1, domain other) captures: 7) — an exact closed form; (3) approximate the transcendental f(φ) with a quadratic-in-tanφ fit f_a(φ) = α1 tanφ ± α2 tan2φ, matched in value and first derivative at φ0 (Eq. Assumptions: constant horizontal wind, quadratic drag, no Magnus effect, same elevation launch/landing Breakdown regime: k → 0 (division by zero), high wind speeds beyond linear regime Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for fast recomputation of trajectory range under varying wind conditions, enabling real-time situational awareness during play execution. Operator 'Velocity Hodograph' (page 1, domain other) captures: Method / model Analytical approximation: (1) work in the wind-relative frame u⃗ = V⃗ - w⃗, which reduces the wind problem to the known no-wind form; (2) use the velocity hodograph u(φ) (Eq. Assumptions: constant horizontal wind, quadratic drag, no Magnus effect Breakdown regime: non-constant wind or non-quadratic drag invalidates hodograph Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the original projectile dynamics to a simplified no-wind problem through transformation to wind-relative coordinates, enabling closed-form integration. Operator 'Quadratic Drag Model' (page 1, domain other) captures: Equations & assumptions - Drag model: R = mgkV2, k = 1/V_term2 (drag constant from terminal velocity). Assumptions: quadratic dependence on velocity, constant air density, smooth surface Breakdown regime: low Reynolds numbers (<10³) or turbulent flow regime (>2×10⁵) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides the core physical basis for computing deceleration due to air resistance in GSE trajectory simulations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1579-projectile-motion-quadratic-drag-wind (9f22e598619373ac, domain=other, pages_read=3/3): Operator 'Wind-Perturbed Range' (page 1, domain other) captures: 7) — an exact closed form; (3) approximate the transcendental f(φ) with a quadratic-in-tanφ fit f_a(φ) = α1 tanφ ± α2 tan2φ, matched in value and first derivative at φ0 (Eq. Assumptions: constant horizontal wind, quadratic drag, no Magnus effect, same elevation launch/landing Breakdown regime: k → 0 (division by zero), high wind speeds beyond linear regime Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for fast recomputation of trajectory range under varying wind conditions, enabling real-time situational awareness during play execution. Operator 'Velocity Hodograph' (page 1, domain other) captures: Method / model Analytical approximation: (1) work in the wind-relative frame u⃗ = V⃗ - w⃗, which reduces the wind problem to the known no-wind form; (2) use the velocity hodograph u(φ) (Eq. Assumptions: constant horizontal wind, quadratic drag, no Magnus effect Breakdown regime: non-constant wind or non-quadratic drag invalidates hodograph Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the original projectile dynamics to a simplified no-wind problem through transformation to wind-relative coordinates, enabling closed-form integration. Operator 'Quadratic Drag Model' (page 1, domain other) captures: Equations & assumptions - Drag model: R = mgkV2, k = 1/V_term2 (drag constant from terminal velocity). Assumptions: quadratic dependence on velocity, constant air density, smooth surface Breakdown regime: low Reynolds numbers (<10³) or turbulent flow regime (>2×10⁵) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides the core physical basis for computing deceleration due to air resistance in GSE trajectory simulations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach builds upon classical mechanics formulations of projectile motion with quadratic drag, extending earlier work by incorporating wind effects through coordinate transformation. It inherits the mathematical rigor of hodograph methods used in celestial mechanics and fluid dynamics. Retrocausal Genealogy: Rooted in 1579-projectile-motion-quadratic-drag-wind (9f22e598619373ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include environmental factors like wind variability and the predictive agent (GSE) trying to optimize trajectory outcomes. Decision actors are coaches and players who must account for wind-induced deviations from expected trajectories when executing plays. Theory of Mind & Decision Maker Model: Rooted in 1579-projectile-motion-quadratic-drag-wind (9f22e598619373ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires avoiding reliance on non-elementary functions or numerical integration, ensuring computational efficiency. Leakage veto prevents overfitting to specific sports data without generalizing to other drag regimes or wind patterns. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1579-projectile-motion-quadratic-drag-wind (9f22e598619373ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "fdbbe53519eb3895",
+  "source_status": "COMPLETE",
+  "title": "injury-concussion-protocol",
+  "file_name": "injury-concussion-protocol.md",
+  "sha256": "fdbbe53519eb3895277699c4ec44a11435f7ef685e3dda5908d350040c12c3af",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Concussion protocols define a causal state-transition system where neurological symptoms act as failure predicates, enforcing temporal monotonicity in recovery steps. Universal Lens: Rooted in injury-concussion-protocol (fdbbe53519eb3895), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models player availability as a Bayesian belief network over symptom states, using protocol-derived likelihoods to infer return probabilities per game day. GSI Mapping: Rooted in injury-concussion-protocol (fdbbe53519eb3895), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes return-to-play decisions as a Markovian state machine transitioning between baseline, monitoring, and progression steps based on symptom recurrence thresholds. GSE Mapping: Rooted in injury-concussion-protocol (fdbbe53519eb3895), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ataxia_indicator",
+      "name": "Ataxia Indicator",
+      "verbatim_quote": "[CONFIRMED] Ataxia = \"abnormality of balance/stability, motor coordination or dysfunctional speech caused by a neurological issue.\" Added October 2022 after the Tua Tagovailoa investigation; it replaced \"gross motor instability\" and eliminated the \"alternative explanation\" loophole — ataxia observed at any point = no return, no exceptions.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Boolean indicator for ataxia presence (dimensionless)'}",
+      "assumptions": "Ataxia is a deterministic symptom marker; any observation triggers immediate exclusion.",
+      "breakdown_regime": "A = 1 ⇒ no return to play",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ataxia maps to a binary failure condition in GSE's symptom validation layer, triggering a halt in progression.",
+        "source_operator": "ataxia_indicator",
+        "telemetry": "Neurological assessment score"
+      }
+    },
+    {
+      "primitive_id": "madden_rule",
+      "name": "Madden Rule",
+      "verbatim_quote": "[REPORTED — widely documented, not on the printed checklist] **Key rules:** - Once a concussion is **diagnosed**, the player may not return to that game (\"Madden Rule\" — the league's standing rule that a diagnosed concussion ends the player's day).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Boolean diagnosis flag (dimensionless)'}",
+      "assumptions": "Diagnosis is a sufficient condition for game-day exclusion.",
+      "breakdown_regime": "D = 1 ⇒ DNP for game",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Madden Rule defines a hard constraint in GSI's probabilistic availability model, disabling further return calculations for the session.",
+        "source_operator": "madden_rule",
+        "telemetry": "Diagnosis timestamp and game-day flag"
+      }
+    },
+    {
+      "primitive_id": "gate_rule",
+      "name": "Gate Rule",
+      "verbatim_quote": "Return-to-Participation Protocol — the five steps [CONFIRMED] **Gate rule (applies to every step transition):** A player may advance ONLY after demonstrating tolerance of ALL activities in the current step **without recurrence of observed or reported concussion signs/symptoms**.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Boolean gate condition (dimensionless)', 'S_i': 'Symptom vector at step i (dimensionless)'}",
+      "assumptions": "All symptoms must remain stable for advancement.",
+      "breakdown_regime": "G = 1 ⇔ ∀ S_i = 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gate rule enforces a sequential logical conjunction in GSE’s state-transition engine, ensuring symptom-free progression.",
+        "source_operator": "gate_rule",
+        "telemetry": "Symptom recurrence log"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fdbbe53519eb3895_t0",
+      "think": "The concussion protocol operates as a discrete-event system with ordered symptom-based transitions. Each step requires validation of prior symptom absence, modeled as a logical conjunction. Ataxia acts as a terminal predicate, halting progression. The Madden Rule introduces a hard cutoff at diagnosis, disabling further state evolution. These primitives form a causal lattice where symptom states determine eligibility. Temporal monotonicity is enforced by requiring symptom resolution before advancing. The system exhibits a dual nature: deterministic exclusion rules (e.g., ataxia) and probabilistic recovery modeling (e.g., daily monitoring). Failure modes include symptom recurrence, which resets the process to the previous step. The protocol's structure aligns with a Markovian decision process, where each state transition depends only on the current symptom profile.\n\nDeep epistemic analysis for injury-concussion-protocol (fdbbe53519eb3895, domain=other, pages_read=7/7): Operator 'Ataxia Indicator' (page 2, domain other) captures: [CONFIRMED] Ataxia = \"abnormality of balance/stability, motor coordination or dysfunctional speech caused by a neurological issue.\" Added October 2022 after the Tua Tagovailoa investigation; it replaced \"gross motor instability\" and eliminated the \"alternative explanation\" loophole — ataxia observed at any point = no return, no exceptions. Assumptions: Ataxia is a deterministic symptom marker; any observation triggers immediate exclusion. Breakdown regime: A = 1 ⇒ no return to play Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ataxia maps to a binary failure condition in GSE's symptom validation layer, triggering a halt in progression. Operator 'Madden Rule' (page 2, domain other) captures: [REPORTED — widely documented, not on the printed checklist] **Key rules:** - Once a concussion is **diagnosed**, the player may not return to that game (\"Madden Rule\" — the league's standing rule that a diagnosed concussion ends the player's day). Assumptions: Diagnosis is a sufficient condition for game-day exclusion. Breakdown regime: D = 1 ⇒ DNP for game Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Madden Rule defines a hard constraint in GSI's probabilistic availability model, disabling further return calculations for the session. Operator 'Gate Rule' (page 2, domain other) captures: Return-to-Participation Protocol — the five steps [CONFIRMED] **Gate rule (applies to every step transition):** A player may advance ONLY after demonstrating tolerance of ALL activities in the current step **without recurrence of observed or reported concussion signs/symptoms**. Assumptions: All symptoms must remain stable for advancement. Breakdown regime: G = 1 ⇔ ∀ S_i = 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Gate rule enforces a sequential logical conjunction in GSE’s state-transition engine, ensuring symptom-free progression. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for injury-concussion-protocol (fdbbe53519eb3895, domain=other, pages_read=7/7): Operator 'Ataxia Indicator' (page 2, domain other) captures: [CONFIRMED] Ataxia = \"abnormality of balance/stability, motor coordination or dysfunctional speech caused by a neurological issue.\" Added October 2022 after the Tua Tagovailoa investigation; it replaced \"gross motor instability\" and eliminated the \"alternative explanation\" loophole — ataxia observed at any point = no return, no exceptions. Assumptions: Ataxia is a deterministic symptom marker; any observation triggers immediate exclusion. Breakdown regime: A = 1 ⇒ no return to play Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ataxia maps to a binary failure condition in GSE's symptom validation layer, triggering a halt in progression. Operator 'Madden Rule' (page 2, domain other) captures: [REPORTED — widely documented, not on the printed checklist] **Key rules:** - Once a concussion is **diagnosed**, the player may not return to that game (\"Madden Rule\" — the league's standing rule that a diagnosed concussion ends the player's day). Assumptions: Diagnosis is a sufficient condition for game-day exclusion. Breakdown regime: D = 1 ⇒ DNP for game Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Madden Rule defines a hard constraint in GSI's probabilistic availability model, disabling further return calculations for the session. Operator 'Gate Rule' (page 2, domain other) captures: Return-to-Participation Protocol — the five steps [CONFIRMED] **Gate rule (applies to every step transition):** A player may advance ONLY after demonstrating tolerance of ALL activities in the current step **without recurrence of observed or reported concussion signs/symptoms**. Assumptions: All symptoms must remain stable for advancement. Breakdown regime: G = 1 ⇔ ∀ S_i = 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Gate rule enforces a sequential logical conjunction in GSE’s state-transition engine, ensuring symptom-free progression. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in post-2005 neurology standards and NFL's evolving concussion awareness, this formalism traces back to early 2010s clinical risk models and the 2017 'Probable' injury label removal. Retrocausal Genealogy: Rooted in injury-concussion-protocol (fdbbe53519eb3895), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in injury-concussion-protocol (fdbbe53519eb3895), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The protocol reflects a dual-agent model: one agent (medical staff) evaluates symptoms, another (player) provides self-reporting data. The system assumes rational compliance and symmetric information flow between these agents. Theory of Mind & Decision Maker Model: Rooted in injury-concussion-protocol (fdbbe53519eb3895), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when symptom thresholds conflict across layers (e.g., subjective vs. objective measures). Leakage occurs if symptom logs are not synchronized across GSI and GSE, leading to inconsistent availability predictions. Cross-Layer Veto & Anti-Leakage Check: Rooted in injury-concussion-protocol (fdbbe53519eb3895), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

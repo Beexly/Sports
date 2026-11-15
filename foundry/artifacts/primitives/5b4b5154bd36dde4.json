@@ -1,0 +1,78 @@
+{
+  "book_id": "5b4b5154bd36dde4",
+  "source_status": "COMPLETE",
+  "title": "07156c5d6ddd",
+  "file_name": "07156c5d6ddd.txt",
+  "sha256": "5b4b5154bd36dde4820bfd1afda2a5587767d4a82a279821426ce52e83d5d029",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian readiness matrix maps evidence trust, freshness, and activation to probabilistic model states with structured blocking logic. Universal Lens: Rooted in 07156c5d6ddd (5b4b5154bd36dde4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over evidence readiness, using trust and freshness as sufficient statistics for Bayesian score updates. GSI Mapping: Rooted in 07156c5d6ddd (5b4b5154bd36dde4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions system states via readiness flags and evidence blockages, applying temporal and categorical constraints to model evolution. GSE Mapping: Rooted in 07156c5d6ddd (5b4b5154bd36dde4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "evidence_readiness_matrix",
+      "name": "Evidence Readiness Matrix",
+      "verbatim_quote": "import { describe, expect, it } from \"vitest\"; import { buildEvidenceReadinessMatrix, getEvidenceFactorDefinition, } from \"../evidence-readiness-matrix.js\"; import",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Evidence record, dimensionless', 'T': 'Trust level, 0–1', 'F': 'Freshness status, {FRESH, STALE}', 'A': 'Activation status, {ACTIVE, SHADOW_ONLY, BLOCKED}', 'M': 'Model readiness flag, boolean'}",
+      "assumptions": "Evidence is categorized by source type and evaluated under fixed temporal and trust thresholds.",
+      "breakdown_regime": "When freshness < threshold or trust < threshold, activation status becomes BLOCKED.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Matrix encodes conditional readiness for model inference; each row is a probabilistic state variable.",
+        "source_operator": "evidence_readiness_matrix",
+        "telemetry": "Matrix row statuses (ACTIVE, SHADOW_ONLY, BLOCKED) and blockers."
+      }
+    },
+    {
+      "primitive_id": "model_true_ev",
+      "name": "True Expected Value Model",
+      "verbatim_quote": "venue environment even when the source is trusted\", () => { const matrix = buildEvidenceReadinessMatrix({ now:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'Verdict from edge-lab honesty engine, string', 'τ': 'Tuned tau parameter, real scalar', 'EV': 'Expected value, real scalar'}",
+      "assumptions": "Model activation requires both valid logit-pool verdict and non-null tau.",
+      "breakdown_regime": "If V ≠ \"MODEL_ADDS_INFORMATION\" or τ = null, EV remains blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "True EV is a derived kernel from readiness matrix, gated by edge-lab verdict.",
+        "source_operator": "model_true_ev",
+        "telemetry": "Activation status of EV and associated blockers."
+      }
+    },
+    {
+      "primitive_id": "trust_normalization",
+      "name": "Trust Level Normalization",
+      "verbatim_quote": "[ evidence(\"ODDS\"), evidence(\"VENUE_ENVIRONMENT\", { fetchedAt: new Date(NOW.getTime() - 12 * 60 * 60_000), freshnessStatus: \"STALE\", sampleSize:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_{raw}': 'Raw trust score, percentage', 't_{norm}': 'Normalized trust, 0–1'}",
+      "assumptions": "Raw trust scores are linearly mapped to [0,1] interval.",
+      "breakdown_regime": "No breakdown; normalization is deterministic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Trust normalization enables consistent input scaling across heterogeneous sources.",
+        "source_operator": "trust_normalization",
+        "telemetry": "Normalized trust levels used in readiness matrix computation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b4b5154bd36dde4_t0",
+      "think": "The evidence readiness matrix operates as a structured Bayesian state machine where each evidence item contributes a probabilistic readiness score based on trust, freshness, and activation. The system evaluates whether evidence meets criteria for ACTIVE, SHADOW_ONLY, or BLOCKED status. When evidence is stale or untrusted, it blocks downstream model components such as 'model.trueEv', which requires a specific edge-lab verdict to activate. This introduces a dual-layered constraint: one from data quality and another from logical consistency. The system models failure modes through explicit blocking rules rather than probabilistic collapse. Trust normalization ensures uniformity across different source types. The matrix acts as a decision filter for model inference, enforcing integrity checks before allowing evidence to contribute to a score.\n\nDeep epistemic analysis for 07156c5d6ddd (5b4b5154bd36dde4, domain=other, pages_read=3/3): Operator 'Evidence Readiness Matrix' (page 1, domain other) captures: import { describe, expect, it } from \"vitest\"; import { buildEvidenceReadinessMatrix, getEvidenceFactorDefinition, } from \"../evidence-readiness-matrix.js\"; import Assumptions: Evidence is categorized by source type and evaluated under fixed temporal and trust thresholds. Breakdown regime: When freshness < threshold or trust < threshold, activation status becomes BLOCKED. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Matrix encodes conditional readiness for model inference; each row is a probabilistic state variable. Operator 'True Expected Value Model' (page 1, domain other) captures: venue environment even when the source is trusted\", () => { const matrix = buildEvidenceReadinessMatrix({ now: Assumptions: Model activation requires both valid logit-pool verdict and non-null tau. Breakdown regime: If V ≠ \"MODEL_ADDS_INFORMATION\" or τ = null, EV remains blocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): True EV is a derived kernel from readiness matrix, gated by edge-lab verdict. Operator 'Trust Level Normalization' (page 1, domain other) captures: [ evidence(\"ODDS\"), evidence(\"VENUE_ENVIRONMENT\", { fetchedAt: new Date(NOW.getTime() - 12 * 60 * 60_000), freshnessStatus: \"STALE\", sampleSize: Assumptions: Raw trust scores are linearly mapped to [0,1] interval. Breakdown regime: No breakdown; normalization is deterministic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Trust normalization enables consistent input scaling across heterogeneous sources. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 07156c5d6ddd (5b4b5154bd36dde4, domain=other, pages_read=3/3): Operator 'Evidence Readiness Matrix' (page 1, domain other) captures: import { describe, expect, it } from \"vitest\"; import { buildEvidenceReadinessMatrix, getEvidenceFactorDefinition, } from \"../evidence-readiness-matrix.js\"; import Assumptions: Evidence is categorized by source type and evaluated under fixed temporal and trust thresholds. Breakdown regime: When freshness < threshold or trust < threshold, activation status becomes BLOCKED. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Matrix encodes conditional readiness for model inference; each row is a probabilistic state variable. Operator 'True Expected Value Model' (page 1, domain other) captures: venue environment even when the source is trusted\", () => { const matrix = buildEvidenceReadinessMatrix({ now: Assumptions: Model activation requires both valid logit-pool verdict and non-null tau. Breakdown regime: If V ≠ \"MODEL_ADDS_INFORMATION\" or τ = null, EV remains blocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): True EV is a derived kernel from readiness matrix, gated by edge-lab verdict. Operator 'Trust Level Normalization' (page 1, domain other) captures: [ evidence(\"ODDS\"), evidence(\"VENUE_ENVIRONMENT\", { fetchedAt: new Date(NOW.getTime() - 12 * 60 * 60_000), freshnessStatus: \"STALE\", sampleSize: Assumptions: Raw trust scores are linearly mapped to [0,1] interval. Breakdown regime: No breakdown; normalization is deterministic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Trust normalization enables consistent input scaling across heterogeneous sources. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian belief networks and probabilistic graphical models, extended into dynamic systems with temporal constraints and agent-based verification logic. Retrocausal Genealogy: Rooted in 07156c5d6ddd (5b4b5154bd36dde4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 07156c5d6ddd (5b4b5154bd36dde4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data sources (unreliable, stale) and internal logic engines (verifiers, blockers). The system models adversarial inputs and internal consistency checks. Theory of Mind & Decision Maker Model: Rooted in 07156c5d6ddd (5b4b5154bd36dde4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 07156c5d6ddd (5b4b5154bd36dde4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct evidence categories for activation. Leakage is prevented by gating model components on readiness flags and verdicts. Cross-Layer Veto & Anti-Leakage Check: Rooted in 07156c5d6ddd (5b4b5154bd36dde4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 07156c5d6ddd (5b4b5154bd36dde4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

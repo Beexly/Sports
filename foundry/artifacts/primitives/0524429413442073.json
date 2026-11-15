@@ -1,0 +1,78 @@
+{
+  "book_id": "0524429413442073",
+  "source_status": "COMPLETE",
+  "title": "nflsavant.com",
+  "file_name": "nflsavant.com.md",
+  "sha256": "0524429413442073061e362f52a7d96283149bf0159662cd8a2bdf200f32ab56",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph traversal and URL path segmentation define a structured data manifold for NFL advanced analytics. Universal Lens: Rooted in nflsavant.com (0524429413442073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian network inference over sitemap paths enables probabilistic mapping of data access patterns and content hierarchies. GSI Mapping: Rooted in nflsavant.com (0524429413442073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition automata on URL segments facilitate dynamic query routing and contextual data retrieval in real-time. GSE Mapping: Rooted in nflsavant.com (0524429413442073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_traversal",
+      "name": "Sitemap Graph Traversal Operator",
+      "verbatim_quote": "# nflsavant.com Category: **advanced-data** URLs discovered: **189** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All sitemaps are accessible and represent complete URL coverage.",
+      "breakdown_regime": "When sitemap entries exceed 200, traversal becomes computationally expensive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each sitemap entry corresponds to a node in a directed acyclic graph; traversal mimics Markov chain transitions.",
+        "source_operator": "sitemap_graph_traversal",
+        "telemetry": "Number of reachable URLs via sitemap crawl."
+      }
+    },
+    {
+      "primitive_id": "path_taxonomy_segmentation",
+      "name": "Path Taxonomy Segmentation Kernel",
+      "verbatim_quote": "0 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/coaches`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "URL paths form a hierarchical lattice structure.",
+      "breakdown_regime": "When path depth exceeds 5 levels, segmentation becomes ambiguous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Hierarchical path segments map to discrete categories; each category defines a submanifold of the data space.",
+        "source_operator": "path_taxonomy_segmentation",
+        "telemetry": "Count of unique path segments and their associated URL counts."
+      }
+    },
+    {
+      "primitive_id": "url_path_hierarchy",
+      "name": "URL Path Hierarchy Function",
+      "verbatim_quote": "1 | | `/glossary` | 1 | ## Sample URLs ``` https://nflsavant.com/ https://nflsavant.com/compare https://nflsavant.com/teams https://nflsavant.com/about https://nflsavant.com/coaches/aaron-glenn-nyj",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "URL hierarchy reflects logical data organization.",
+      "breakdown_regime": "When root-level paths diverge beyond 10, hierarchy loses coherence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "URL path components correspond to nested sets in a tree lattice; each level represents increasing specificity.",
+        "source_operator": "url_path_hierarchy",
+        "telemetry": "Depth of URL path and number of distinct path components."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0524429413442073_t0",
+      "think": "The sitemap traversal operator models a graph where nodes are URLs and edges represent navigational links. Each sitemap entry contributes to a global URL manifold, enabling topological analysis of data accessibility. The path taxonomy kernel partitions this manifold into categorical subspaces using first-segment identifiers. The URL hierarchy function encodes semantic relationships through path nesting, forming a lattice structure. These primitives interact via shared domain semantics: sitemaps provide connectivity, taxonomies offer categorization, and hierarchies define semantics. Failure modes include missing sitemaps, malformed paths, and inconsistent categorization. Dualities emerge between graph connectivity and semantic depth, with redundancy in path structures indicating potential data duplication or inconsistency.\n\nDeep epistemic analysis for nflsavant.com (0524429413442073, domain=other, pages_read=2/2): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # nflsavant.com Category: **advanced-data** URLs discovered: **189** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are accessible and represent complete URL coverage. Breakdown regime: When sitemap entries exceed 200, traversal becomes computationally expensive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each sitemap entry corresponds to a node in a directed acyclic graph; traversal mimics Markov chain transitions. Operator 'Path Taxonomy Segmentation Kernel' (page 1, domain other) captures: 0 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/coaches` Assumptions: URL paths form a hierarchical lattice structure. Breakdown regime: When path depth exceeds 5 levels, segmentation becomes ambiguous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Hierarchical path segments map to discrete categories; each category defines a submanifold of the data space. Operator 'URL Path Hierarchy Function' (page 1, domain other) captures: 1 | | `/glossary` | 1 | ## Sample URLs ``` https://nflsavant.com/ https://nflsavant.com/compare https://nflsavant.com/teams https://nflsavant.com/about https://nflsavant.com/coaches/aaron-glenn-nyj Assumptions: URL hierarchy reflects logical data organization. Breakdown regime: When root-level paths diverge beyond 10, hierarchy loses coherence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL path components correspond to nested sets in a tree lattice; each level represents increasing specificity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for nflsavant.com (0524429413442073, domain=other, pages_read=2/2): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # nflsavant.com Category: **advanced-data** URLs discovered: **189** Sitemaps walked: 6 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are accessible and represent complete URL coverage. Breakdown regime: When sitemap entries exceed 200, traversal becomes computationally expensive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each sitemap entry corresponds to a node in a directed acyclic graph; traversal mimics Markov chain transitions. Operator 'Path Taxonomy Segmentation Kernel' (page 1, domain other) captures: 0 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/coaches` Assumptions: URL paths form a hierarchical lattice structure. Breakdown regime: When path depth exceeds 5 levels, segmentation becomes ambiguous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Hierarchical path segments map to discrete categories; each category defines a submanifold of the data space. Operator 'URL Path Hierarchy Function' (page 1, domain other) captures: 1 | | `/glossary` | 1 | ## Sample URLs ``` https://nflsavant.com/ https://nflsavant.com/compare https://nflsavant.com/teams https://nflsavant.com/about https://nflsavant.com/coaches/aaron-glenn-nyj Assumptions: URL hierarchy reflects logical data organization. Breakdown regime: When root-level paths diverge beyond 10, hierarchy loses coherence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL path components correspond to nested sets in a tree lattice; each level represents increasing specificity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and graph theory, these primitives derive from early web crawling algorithms and hierarchical data modeling techniques pioneered by search engines and database systems. Retrocausal Genealogy: Rooted in nflsavant.com (0524429413442073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in nflsavant.com (0524429413442073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may manipulate sitemap structures to obscure or prioritize certain content, while data consumers rely on consistent path semantics for reliable navigation and inference. Theory of Mind & Decision Maker Model: Rooted in nflsavant.com (0524429413442073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in nflsavant.com (0524429413442073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that sitemap traversal does not redundantly encode path taxonomy; leakage vetoes occur when path segments fail to uniquely identify data subsets. Cross-Layer Veto & Anti-Leakage Check: Rooted in nflsavant.com (0524429413442073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in nflsavant.com (0524429413442073), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

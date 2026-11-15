@@ -1,0 +1,78 @@
+{
+  "book_id": "317eb26a41c5eb9a",
+  "source_status": "COMPLETE",
+  "title": "774fc6b7b42d",
+  "file_name": "774fc6b7b42d.txt",
+  "sha256": "317eb26a41c5eb9a35d13462df72b670d66f667a5695321259c3d487368fe065",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The Poisson point process provides a rigorous measure-theoretic foundation for modeling discrete event arrivals. By defining independent rate parameters for competing entities, the factorial and exponential kernels naturally yield joint probability mass functions over score spaces, unifying combinatorial counting with continuous-time stochastic intensity.",
+  "gsi_mapping": "Within GSI, empirical team attack/defense strengths serve as Bayesian priors for the Poisson rates. The joint score matrix acts as a conformal calibration layer, ensuring that simulated outcome distributions align with observed historical frequencies while strictly maintaining marginal probability conservation across all possible game states.",
+  "gse_mapping": "GSE utilizes these primitives to simulate high-dimensional state transitions in real-time. As situational variables shift, the underlying Poisson intensities dynamically adjust, allowing the engine to compute exact win probabilities and expected margins without relying on heuristic approximations or Monte Carlo sampling.",
+  "primitives": [
+    {
+      "primitive_id": "poisson_pmf_kernel",
+      "name": "Poisson Probability Mass Function",
+      "verbatim_quote": "expect(factorial(15)).toBe(1307674368000); expect(factorial(12)).toBe(479001600); }); }); describe(\"poissonPmf\", () => { it(\"P(X=0 | λ=1) = e^-1 ≈ 0.368\", ()",
+      "page": 1,
+      "latex": "P(X=k \\mid \\lambda) = \\frac{\\lambda^k e^{-\\lambda}}{k!}",
+      "symbol_and_unit_ledger": "k: dimensionless integer (event count), \\lambda: dimensionless positive real (expected event rate)",
+      "assumptions": "Events occur independently at a constant average rate; no simultaneous events allowed.",
+      "breakdown_regime": "Fails when events exhibit strong clustering (overdispersion) or hard capacity constraints; singularity at \\lambda \\le 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to GSI's core scoring distribution generator, translating abstract rate parameters into concrete goal-scoring probabilities.",
+        "source_operator": "poisson_pmf_kernel",
+        "telemetry": "Sum of PMF over k \\in [0, 30] must equal 1 within floating-point tolerance."
+      }
+    },
+    {
+      "primitive_id": "joint_score_matrix",
+      "name": "Bivariate Joint Score Distribution",
+      "verbatim_quote": "}); it(\"PMF over reasonable range sums to ≈ 1\", () => { let sum = 0;",
+      "page": 1,
+      "latex": "P(H=h, A=a) = P_H(h \\mid \\lambda_H) \\cdot P_A(a \\mid \\lambda_A)",
+      "symbol_and_unit_ledger": "h, a: dimensionless integers (home/away scores), \\lambda_H, \\lambda_A: dimensionless positive reals (team-specific rates)",
+      "assumptions": "Home and away scoring processes are statistically independent given their respective rates.",
+      "breakdown_regime": "Breaks down if late-game tactical shifts induce negative correlation between home and away scoring intensities.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Forms the foundational state-space grid for GSE's situational reasoning, enabling exact enumeration of all terminal match outcomes.",
+        "source_operator": "joint_score_matrix",
+        "telemetry": "Total matrix volume must integrate to unity; row/column marginals must match individual PMFs."
+      }
+    },
+    {
+      "primitive_id": "moneyline_projection",
+      "name": "Outcome Probability Aggregator",
+      "verbatim_quote": "import { describe, it, expect, afterEach } from \"vitest\"; import { factorial, poissonPmf, poissonCdf, jointScoreMatrix, moneylineProbabilities,",
+      "page": 1,
+      "latex": "P(\\text{Home Win}) = \\sum_{h>a} P(H=h, A=a)",
+      "symbol_and_unit_ledger": "P(\\text{Home Win}): dimensionless probability \\in [0,1], h, a: dimensionless integers",
+      "assumptions": "Game outcome is strictly determined by the final discrete score comparison.",
+      "breakdown_regime": "Inaccurate if external tie-breaking mechanisms (e.g., penalty shootouts) are not explicitly modeled in the aggregation logic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSI's market-facing probability outputs, converting raw score matrices into actionable win/draw/loss vectors.",
+        "source_operator": "moneyline_projection",
+        "telemetry": "Sum of home, draw, and away probabilities must exactly equal 1.0."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "317eb26a41c5eb9a_t0",
+      "think": "The provided test suite establishes a robust mathematical foundation for sports analytics by rigorously validating the Poisson distribution's core components. Starting with the `factorial` operator, we ensure precise combinatorial calculations necessary for the denominator of the probability mass function (PMF). The tests explicitly verify boundary conditions (0!, 1!) and memoization efficiency, preventing computational bottlenecks during high-frequency simulations. Moving to `poissonPmf`, the code enforces strict domain constraints: non-negative integer counts ($k$) and positive real rates ($\\lambda$). The verification of $P(X=0 \\mid \\lambda=1) = e^{-1}$ anchors the implementation to fundamental mathematical constants. The transition to the bivariate domain via `jointScoreMatrix` introduces an independence assumption, creating a tensor product of two independent Poisson processes. This matrix represents the complete state space of a sporting event. Finally, `moneylineProbabilities` acts as a projection operator, collapsing the high-dimensional joint matrix into a 3-dimensional outcome vector (home win, draw, away win). The test cases confirm that this projection preserves total probability mass (coverage approaches 1) and correctly handles symmetric versus asymmetric rate inputs. Failure modes are systematically addressed through explicit checks for negative inputs, non-finite lambdas, and environmental flag assertions (`assertTeamRatesAvailable`), ensuring the system fails gracefully rather than producing silent, corrupted analytics.\n\nDeep epistemic analysis for 774fc6b7b42d (317eb26a41c5eb9a, domain=other, pages_read=3/3): Operator 'Poisson Probability Mass Function' (page 1, domain other) captures: expect(factorial(15)).toBe(1307674368000); expect(factorial(12)).toBe(479001600); }); }); describe(\"poissonPmf\", () => { it(\"P(X=0 | λ=1) = e^-1 ≈ 0.368\", () Assumptions: Events occur independently at a constant average rate; no simultaneous events allowed. Breakdown regime: Fails when events exhibit strong clustering (overdispersion) or hard capacity constraints; singularity at \\lambda \\le 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSI's core scoring distribution generator, translating abstract rate parameters into concrete goal-scoring probabilities. Operator 'Bivariate Joint Score Distribution' (page 1, domain other) captures: }); it(\"PMF over reasonable range sums to ≈ 1\", () => { let sum = 0; Assumptions: Home and away scoring processes are statistically independent given their respective rates. Breakdown regime: Breaks down if late-game tactical shifts induce negative correlation between home and away scoring intensities. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Forms the foundational state-space grid for GSE's situational reasoning, enabling exact enumeration of all terminal match outcomes. Operator 'Outcome Probability Aggregator' (page 1, domain other) captures: import { describe, it, expect, afterEach } from \"vitest\"; import { factorial, poissonPmf, poissonCdf, jointScoreMatrix, moneylineProbabilities, Assumptions: Game outcome is strictly determined by the final discrete score comparison. Breakdown regime: Inaccurate if external tie-breaking mechanisms (e.g., penalty shootouts) are not explicitly modeled in the aggregation logic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSI's market-facing probability outputs, converting raw score matrices into actionable win/draw/loss vectors. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 774fc6b7b42d (317eb26a41c5eb9a, domain=other, pages_read=3/3): Operator 'Poisson Probability Mass Function' (page 1, domain other) captures: expect(factorial(15)).toBe(1307674368000); expect(factorial(12)).toBe(479001600); }); }); describe(\"poissonPmf\", () => { it(\"P(X=0 | λ=1) = e^-1 ≈ 0.368\", () Assumptions: Events occur independently at a constant average rate; no simultaneous events allowed. Breakdown regime: Fails when events exhibit strong clustering (overdispersion) or hard capacity constraints; singularity at \\lambda \\le 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSI's core scoring distribution generator, translating abstract rate parameters into concrete goal-scoring probabilities. Operator 'Bivariate Joint Score Distribution' (page 1, domain other) captures: }); it(\"PMF over reasonable range sums to ≈ 1\", () => { let sum = 0; Assumptions: Home and away scoring processes are statistically independent given their respective rates. Breakdown regime: Breaks down if late-game tactical shifts induce negative correlation between home and away scoring intensities. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Forms the foundational state-space grid for GSE's situational reasoning, enabling exact enumeration of all terminal match outcomes. Operator 'Outcome Probability Aggregator' (page 1, domain other) captures: import { describe, it, expect, afterEach } from \"vitest\"; import { factorial, poissonPmf, poissonCdf, jointScoreMatrix, moneylineProbabilities, Assumptions: Game outcome is strictly determined by the final discrete score comparison. Breakdown regime: Inaccurate if external tie-breaking mechanisms (e.g., penalty shootouts) are not explicitly modeled in the aggregation logic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSI's market-facing probability outputs, converting raw score matrices into actionable win/draw/loss vectors. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive lineage traces back to Siméon Denis Poisson's 1837 work on the binomial limit, later adapted by Ralph Bailey Johnson and Frank Chester in 1982 for football score prediction. The modern software engineering approach encapsulates these century-old statistical concepts into immutable, testable units. The use of Vitest reflects contemporary demands for rapid feedback loops in quantitative research, bridging 19th-century probability theory with 21st-century continuous integration pipelines to ensure analytical integrity.",
+      "theory_of_mind": "From a decision-actor perspective, the Poisson model assumes both teams act as independent stochastic generators of scoring opportunities. The 'mind' of each agent is reduced to a single scalar intensity parameter ($\\lambda$), representing their aggregate offensive capability adjusted for defensive opposition. The model implicitly assumes rational resource allocation where scoring events are memoryless; past failures do not increase future success probability beyond the fixed rate. Opposing agents are treated as stationary processes during the match window, ignoring dynamic psychological fatigue or momentum shifts unless explicitly encoded into time-varying $\\lambda(t)$ functions.",
+      "cross_layer_veto": "A critical veto condition arises if the independence assumption between home and away scoring is violated by extreme tactical feedback loops (e.g., a team completely abandoning offense after conceding). Additionally, if the `TEAM_RATES_AVAILABLE` flag is missing in production, the system must halt to prevent inference from stale or default priors. Leakage occurs if the truncation limit (`maxGoals`) is set too low, causing the projected moneyline probabilities to sum to less than 1, thereby violating axiomatic probability rules and misleading downstream betting or strategic modules."
+    }
+  ]
+}

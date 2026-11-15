@@ -1,0 +1,95 @@
+{
+  "book_id": "b49ac9bb58db0d4a",
+  "source_status": "COMPLETE",
+  "title": "BUILD_GATE_FIX",
+  "file_name": "BUILD_GATE_FIX.md",
+  "sha256": "b49ac9bb58db0d4a8977acf3de4c62c71447d02824d8eef82b2ff517a55426e8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in BUILD_GATE_FIX (b49ac9bb58db0d4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in BUILD_GATE_FIX (b49ac9bb58db0d4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in BUILD_GATE_FIX (b49ac9bb58db0d4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in BUILD_GATE_FIX (b49ac9bb58db0d4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in BUILD_GATE_FIX (b49ac9bb58db0d4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in BUILD_GATE_FIX (b49ac9bb58db0d4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "font_fetch_failure",
+      "name": "Webpack Font Fetch Failure Isomorphism",
+      "verbatim_quote": "# Build Gate Fix ## Original failure `npm run build` failed in Codex because `next/font/google` attempted to fetch Google Fonts from the network during compile.",
+      "page": 1,
+      "latex": "F_{\\text{fetch}}(t) = \\begin{cases} 1, & \\text{network request timed out at } t \\\\ 0, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'F_{\\\\text{fetch}}': 'Boolean indicator function', 't': 'Time variable'}",
+      "assumptions": "Assumes deterministic webpack compilation under controlled environment",
+      "breakdown_regime": "Failure occurs when network latency exceeds webpack's timeout threshold",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Webpack's synchronous compile pipeline maps to a deterministic finite-state machine",
+        "source_operator": "font_fetch_failure",
+        "telemetry": "Network request latency distribution as primary verification metric"
+      }
+    },
+    {
+      "primitive_id": "google_preconnect_links",
+      "name": "DNS Preconnection Latency Reduction",
+      "verbatim_quote": "## Cause `apps/web/app/layout.tsx` imported `Big_Shoulders_Display`, `Instrument_Serif`, `Inter`, `JetBrains_Mono`, and `Syne` from `next/font/google`.",
+      "page": 1,
+      "latex": "\\Delta T_{\\text{preconnect}} = T_{\\text{DNS}} + T_{\\text{TCP}} + T_{\\text{TLS}}",
+      "symbol_and_unit_ledger": "{'\\\\Delta T_{\\\\text{preconnect}}': 'Latency reduction through preconnection', 'T_{\\\\text{DNS}}': 'DNS lookup time', 'T_{\\\\text{TCP}}': 'TCP handshake time', 'T_{\\\\text{TLS}}': 'TLS negotiation time'}",
+      "assumptions": "Preconditioning assumes prior knowledge of remote hostname",
+      "breakdown_regime": "Effective only when DNS cache misses occur frequently",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "DNS prefetching maps to predictive caching in conformal prediction",
+        "source_operator": "google_preconnect_links",
+        "telemetry": "Reduced DNS resolution counts per page load as empirical metric"
+      }
+    },
+    {
+      "primitive_id": "css_font_fallback",
+      "name": "System Fallback Font Stack Optimization",
+      "verbatim_quote": "The design-token file already defines the doctrine stacks for `--f-arch`, `--f-display`, `--f-body`, `--f-mono`, `--f-numerals`, and `--f-editorial`, so the app now uses self-contained CSS font-family stacks with system fallbacks.",
+      "page": 1,
+      "latex": "F_{\\text{stack}}(n) = f_1, f_2, \\dots, f_n, \"serif\"",
+      "symbol_and_unit_ledger": "{'F_{\\\\text{stack}}': 'Font stack sequence', 'n': 'Number of custom fonts in stack', 'f_i': 'Specific font family names'}",
+      "assumptions": "Assumes all fonts are locally hosted or available via CDN",
+      "breakdown_regime": "Stack fails when none of the listed fonts are installed on the user's system",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CSS font stack resolution maps to Bayesian model averaging over font availability distributions",
+        "source_operator": "css_font_fallback",
+        "telemetry": "Percentage of users falling back to generic serif/family as telemetry metric"
+      }
+    },
+    {
+      "primitive_id": "webpack_build_failure",
+      "name": "Webpack Compilation Termination Condition",
+      "verbatim_quote": "The environment could not fetch `fonts.googleapis.com`, so webpack failed before completing the build.",
+      "page": 1,
+      "latex": "B_{\\text{success}}(\\mathcal{F}) = \\bigwedge_{f \\in \\mathcal{F}} R(f) = 1",
+      "symbol_and_unit_ledger": "{'B_{\\\\text{success}}': 'Build success boolean', '\\\\mathcal{F}': 'Set of all font resources', 'R(f)': 'Resource loading indicator function'}",
+      "assumptions": "Assumes webpack's module resolution is complete and deterministic",
+      "breakdown_regime": "Build fails if any resource loading indicator evaluates to zero",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Webpack's error-handling monad maps to conformal prediction's validity constraint",
+        "source_operator": "webpack_build_failure",
+        "telemetry": "Build completion time and error count as verification metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b49ac9bb58db0d4a_t0",
+      "think": "The core issue is that Next.js's server-side rendering (SSR) pipeline attempts to execute client-side JavaScript during static generation, which cannot make network requests to fetch remote Google Fonts. This creates a hard dependency violation: the build process requires network connectivity, which is unavailable in CI/CD environments. By removing the `next/font/google` import and replacing it with CSS font stacks, we decouple the build-time environment from runtime network dependencies. Mathematically, this transforms a conditional build failure P(Failure | NetworkAvailable) into a deterministic success P(BuildSuccess) = 1, regardless of network state. The fix ensures that the CSS rules for `--f-display`, etc., are statically analyzable by webpack, eliminating the runtime exception.\n\nDeep epistemic analysis for BUILD_GATE_FIX (b49ac9bb58db0d4a, domain=other, pages_read=1/1): Operator 'Webpack Font Fetch Failure Isomorphism' (page 1, domain other) captures: # Build Gate Fix ## Original failure `npm run build` failed in Codex because `next/font/google` attempted to fetch Google Fonts from the network during compile. Assumptions: Assumes deterministic webpack compilation under controlled environment Breakdown regime: Failure occurs when network latency exceeds webpack's timeout threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Webpack's synchronous compile pipeline maps to a deterministic finite-state machine Operator 'DNS Preconnection Latency Reduction' (page 1, domain other) captures: ## Cause `apps/web/app/layout.tsx` imported `Big_Shoulders_Display`, `Instrument_Serif`, `Inter`, `JetBrains_Mono`, and `Syne` from `next/font/google`. Assumptions: Preconditioning assumes prior knowledge of remote hostname Breakdown regime: Effective only when DNS cache misses occur frequently Layer-2 GSI/GSE mapping ([ISOMORPHISM]): DNS prefetching maps to predictive caching in conformal prediction Operator 'System Fallback Font Stack Optimization' (page 1, domain other) captures: The design-token file already defines the doctrine stacks for `--f-arch`, `--f-display`, `--f-body`, `--f-mono`, `--f-numerals`, and `--f-editorial`, so the app now uses self-contained CSS font-family stacks with system fallbacks. Assumptions: Assumes all fonts are locally hosted or available via CDN Breakdown regime: Stack fails when none of the listed fonts are installed on the user's system Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CSS font stack resolution maps to Bayesian model averaging over font availability distributions Operator 'Webpack Compilation Termination Condition' (page 1, domain other) captures: The environment could not fetch `fonts.googleapis.com`, so webpack failed before completing the build. Assumptions: Assumes webpack's module resolution is complete and deterministic Breakdown regime: Build fails if any resource loading indicator evaluates to zero Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Webpack's error-handling monad maps to conformal prediction's validity constraint Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BUILD_GATE_FIX (b49ac9bb58db0d4a, domain=other, pages_read=1/1): Operator 'Webpack Font Fetch Failure Isomorphism' (page 1, domain other) captures: # Build Gate Fix ## Original failure `npm run build` failed in Codex because `next/font/google` attempted to fetch Google Fonts from the network during compile. Assumptions: Assumes deterministic webpack compilation under controlled environment Breakdown regime: Failure occurs when network latency exceeds webpack's timeout threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Webpack's synchronous compile pipeline maps to a deterministic finite-state machine Operator 'DNS Preconnection Latency Reduction' (page 1, domain other) captures: ## Cause `apps/web/app/layout.tsx` imported `Big_Shoulders_Display`, `Instrument_Serif`, `Inter`, `JetBrains_Mono`, and `Syne` from `next/font/google`. Assumptions: Preconditioning assumes prior knowledge of remote hostname Breakdown regime: Effective only when DNS cache misses occur frequently Layer-2 GSI/GSE mapping ([ISOMORPHISM]): DNS prefetching maps to predictive caching in conformal prediction Operator 'System Fallback Font Stack Optimization' (page 1, domain other) captures: The design-token file already defines the doctrine stacks for `--f-arch`, `--f-display`, `--f-body`, `--f-mono`, `--f-numerals`, and `--f-editorial`, so the app now uses self-contained CSS font-family stacks with system fallbacks. Assumptions: Assumes all fonts are locally hosted or available via CDN Breakdown regime: Stack fails when none of the listed fonts are installed on the user's system Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CSS font stack resolution maps to Bayesian model averaging over font availability distributions Operator 'Webpack Compilation Termination Condition' (page 1, domain other) captures: The environment could not fetch `fonts.googleapis.com`, so webpack failed before completing the build. Assumptions: Assumes webpack's module resolution is complete and deterministic Breakdown regime: Build fails if any resource loading indicator evaluates to zero Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Webpack's error-handling monad maps to conformal prediction's validity constraint Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in BUILD_GATE_FIX (b49ac9bb58db0d4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BUILD_GATE_FIX (b49ac9bb58db0d4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The framework authors assumed developers would always have network access during builds, ignoring air-gapped development environments common in enterprises. The fix reveals a mismatch between the library's operational assumptions and typical deployment pipelines. Theory of Mind & Decision Maker Model: Rooted in BUILD_GATE_FIX (b49ac9bb58db0d4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If the application later requires dynamic font switching based on user preferences, this CSS-only approach would leak state across page transitions unless coupled with JavaScript-driven class toggling. Additionally, font-display swap strategies become harder to enforce without the layout-throttle API provided by `next/font/google`. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUILD_GATE_FIX (b49ac9bb58db0d4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "5bd62e2fbb9e35f1",
+  "source_status": "COMPLETE",
+  "title": "EDGE-004-edgeball-lab-scoring-model",
+  "file_name": "EDGE-004-edgeball-lab-scoring-model.md",
+  "sha256": "5bd62e2fbb9e35f14072172d45f26efd16e058f7fa067621dcdc8783405746de",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "EdgeBall Lab scoring model extends CONTEST-003; operates under fake-data-first constraint with no real-money flows, enabling controlled experimentation via disabled-by-default feature flags. Universal Lens: Rooted in EDGE-004-edgeball-lab-scoring-model (5bd62e2fbb9e35f1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on contest outcomes uses mock data to calibrate scoring likelihoods; conforms to GSI's probabilistic state-space for predictive modeling without live risk exposure. GSI Mapping: Rooted in EDGE-004-edgeball-lab-scoring-model (5bd62e2fbb9e35f1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE enforces state transitions through doc-driven artifacts; transitions gated by feature flags and data boundary constraints to prevent unauthorized real-money engagement. GSE Mapping: Rooted in EDGE-004-edgeball-lab-scoring-model (5bd62e2fbb9e35f1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "duplicate_gate",
+      "name": "Duplicate Gate Verification",
+      "verbatim_quote": "# EDGE-004: EdgeBall Lab scoring model ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: CONTEST-003 relation_to_existing: Extends existing growth-os-v2 or contest-format-lab work.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Model assumes prior contest format exists and is extendable.",
+      "breakdown_regime": "When duplicate_check_status ≠ EXTENSION, triggers conflict resolution protocol.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's document versioning logic; GSE's artifact dependency graph mirrors this structure.",
+        "source_operator": "duplicate_gate",
+        "telemetry": "Verification of matched_existing_ids and relation_to_existing fields."
+      }
+    },
+    {
+      "primitive_id": "legal_boundary",
+      "name": "Legal Risk Constraint",
+      "verbatim_quote": "Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All financial flows must be explicitly authorized before activation.",
+      "breakdown_regime": "Failure to comply results in immediate rollback and audit trigger.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces GSI's legal compliance kernel within GSE's runtime context.",
+        "source_operator": "legal_boundary",
+        "telemetry": "Feature flag status and authorization log entries."
+      }
+    },
+    {
+      "primitive_id": "data_boundary",
+      "name": "Data Integrity Isolation",
+      "verbatim_quote": "Do not import real friend-history data without explicit consent and deletion controls.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "User privacy is paramount; all data must be synthetic or anonymized.",
+      "breakdown_regime": "Any attempt to access real user data triggers data leakage alert.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Aligns with GSI’s data governance layer and GSE’s sandboxed execution model.",
+        "source_operator": "data_boundary",
+        "telemetry": "Real-time monitoring of data access patterns and consent logs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5bd62e2fbb9e35f1_t0",
+      "think": "The EdgeBall Lab scoring model is structured as an extension of CONTEST-003, operating under a controlled environment defined by fake-data-first principles. The model's core operators—duplicate gate, legal boundary, and data boundary—are designed to ensure isolation from real-world financial and personal data risks. These primitives form a dualistic system where the logical structure of contest design is decoupled from operational risk. The legal boundary ensures no unauthorized monetization occurs, while the data boundary enforces synthetic data usage. The duplicate gate prevents redundant development by verifying alignment with prior contest formats. Together, these primitives define a failure mode space where unauthorized real-money or real-user data access triggers rollback and audit protocols.\n\nDeep epistemic analysis for EDGE-004-edgeball-lab-scoring-model (5bd62e2fbb9e35f1, domain=other, pages_read=1/1): Operator 'Duplicate Gate Verification' (page 1, domain other) captures: # EDGE-004: EdgeBall Lab scoring model ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: CONTEST-003 relation_to_existing: Extends existing growth-os-v2 or contest-format-lab work. Assumptions: Model assumes prior contest format exists and is extendable. Breakdown regime: When duplicate_check_status ≠ EXTENSION, triggers conflict resolution protocol. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's document versioning logic; GSE's artifact dependency graph mirrors this structure. Operator 'Legal Risk Constraint' (page 1, domain other) captures: Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval. Assumptions: All financial flows must be explicitly authorized before activation. Breakdown regime: Failure to comply results in immediate rollback and audit trigger. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces GSI's legal compliance kernel within GSE's runtime context. Operator 'Data Integrity Isolation' (page 1, domain other) captures: Do not import real friend-history data without explicit consent and deletion controls. Assumptions: User privacy is paramount; all data must be synthetic or anonymized. Breakdown regime: Any attempt to access real user data triggers data leakage alert. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Aligns with GSI’s data governance layer and GSE’s sandboxed execution model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for EDGE-004-edgeball-lab-scoring-model (5bd62e2fbb9e35f1, domain=other, pages_read=1/1): Operator 'Duplicate Gate Verification' (page 1, domain other) captures: # EDGE-004: EdgeBall Lab scoring model ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: CONTEST-003 relation_to_existing: Extends existing growth-os-v2 or contest-format-lab work. Assumptions: Model assumes prior contest format exists and is extendable. Breakdown regime: When duplicate_check_status ≠ EXTENSION, triggers conflict resolution protocol. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's document versioning logic; GSE's artifact dependency graph mirrors this structure. Operator 'Legal Risk Constraint' (page 1, domain other) captures: Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval. Assumptions: All financial flows must be explicitly authorized before activation. Breakdown regime: Failure to comply results in immediate rollback and audit trigger. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces GSI's legal compliance kernel within GSE's runtime context. Operator 'Data Integrity Isolation' (page 1, domain other) captures: Do not import real friend-history data without explicit consent and deletion controls. Assumptions: User privacy is paramount; all data must be synthetic or anonymized. Breakdown regime: Any attempt to access real user data triggers data leakage alert. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Aligns with GSI’s data governance layer and GSE’s sandboxed execution model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in contest design frameworks from growth-os-v2 and contest-format-lab, evolving into a formalized edgeball scoring abstraction with layered safety mechanisms. Retrocausal Genealogy: Rooted in EDGE-004-edgeball-lab-scoring-model (5bd62e2fbb9e35f1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in EDGE-004-edgeball-lab-scoring-model (5bd62e2fbb9e35f1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include unauthorized developers who may attempt real-money integration and users whose data integrity is at risk. The model anticipates these threats through explicit constraints and telemetry. Theory of Mind & Decision Maker Model: Rooted in EDGE-004-edgeball-lab-scoring-model (5bd62e2fbb9e35f1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates independently across GSI (Bayesian inference), GSE (state transition), and operational layers. Leakage vetoes occur when any primitive detects deviation from prescribed boundaries. Cross-Layer Veto & Anti-Leakage Check: Rooted in EDGE-004-edgeball-lab-scoring-model (5bd62e2fbb9e35f1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

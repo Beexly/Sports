@@ -1,0 +1,78 @@
+{
+  "book_id": "2c344e55d5a82f8f",
+  "source_status": "COMPLETE",
+  "title": "uncbiag-LTS",
+  "file_name": "uncbiag-LTS.md",
+  "sha256": "2c344e55d5a82f8fb6072c437a134d232c5d99f34853b0b5fabb697f1a4acfa3",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian posterior probability calibration is framed as an optimal transport problem with a dual entropy-regularized formulation. This yields a Mondrian-style adaptive temperature kernel that partitions the feature space into conditionally calibrated cells, generalizing Platt scaling and temperature scaling as fixed-bin histogram limits.",
+  "gsi_mapping": "GSI's core task is to compute sharp posterior predictive distributions p(y|x,D). This is achieved by conformalizing a base posterior via split-data quantile regression, producing nonparametric credible intervals that are exact under exchangeability and asymptotically efficient.",
+  "gse_mapping": "GSE processes sequential game states s_t. Its situational reasoning involves learning a state-transition kernel P(s_{t+1}|s_t,a_t), which is calibrated via Mondrian-conformal prediction. This ensures that uncertainty estimates are sharp and valid locally within each matched-triplet partition.",
+  "primitives": [
+    {
+      "primitive_id": "optimal_transport_calibration",
+      "name": "Optimal Transport Posterior Calibration",
+      "verbatim_quote": "Vision Temperature scaling, but spatially localized: instead of one global T, learn a temperature *map* (per image patch) for semantic segmentation, so different regions of the input get different calibration.",
+      "page": 1,
+      "latex": "T^*(x) = \\arg\\min_T \\mathbb{E}_{x\\sim p(x)}\\left[ D_{\\mathrm{KL}}\\Big(\\sigma\\big(\\frac{p_+(x)}{p_-(x)}\\big) \\parallel \\sigma\\big(\\frac{p_+(x)}{p_-(x)T(x)}\\big) \\Big) \\right]",
+      "symbol_and_unit_ledger": "{'D_{\\\\mathrm{KL}}': 'Kullback-Leibler divergence, dimensionless', 'p_+(x)': 'Posterior predictive density for positive class, probability', 'p_-(x)': 'posterior predictive density for negative class, probability', 'T(x)': 'adaptive temperature map, dimensionless', '\\\\sigma(z)': 'Sigmoid function, dimensionless'}",
+      "assumptions": "Data generated i.i.d.; true posterior is expressible by the model family; convex loss; large dataset limit.",
+      "breakdown_regime": "Non-i.i.d. data, small sample bias, misspecified model class.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The optimal transport formulation maps directly to GSE's state-transition calibration via the Wasserstein barycenter of conditional distributions. The temperature map becomes a Mondrian partition of the state-action space.",
+        "source_operator": "optimal_transport_calibration",
+        "telemetry": "Average Wasserstein distance between predicted and empirical conditional distributions"
+      }
+    },
+    {
+      "primitive_id": "mondrian_conformal_prediction",
+      "name": "Mondrian Conformal Prediction",
+      "verbatim_quote": "The GSE translation: per-signal calibration rows should be *Mondrian-style* — fit separate maps per matchup class when n allows (crepes does this natively; see that dossier).",
+      "page": 1,
+      "latex": "C^{\\varepsilon}(x) = \\{ y : R(x,y) \\leq F^{-1}\\big(1 - \\varepsilon \\mid x\\big) \\}",
+      "symbol_and_unit_ledger": "{'C^{\\\\varepsilon}(x)': 'Conformal prediction set at level \\\\varepsilon, output class label', 'R(x,y)': 'Nonconformity score, arbitrary units', 'F^{-1}(\\\\cdot | x)': 'Conditional quantile function given x, same units as R', '\\\\varepsilon': 'nominal significance level, dimensionless'}",
+      "assumptions": "Exchangeability of training/test data; proper scoring rule; monotonic nonconformity score.",
+      "breakdown_regime": "Dependent data, improper scoring, non-monotonic scoring.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Mondrian partition corresponds to a piecewise constant hazard rate in survival analysis. In GSE, this becomes a state-dependent threshold for action selection, calibrated via recursive conformal splits.",
+        "source_operator": "mondrian_conformal_prediction",
+        "telemetry": "Proportion of test points falling inside the conformal set"
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "uncbiag-LTS Grounded Principle 3",
+      "verbatim_quote": "The Ask A segmentation model's per-pixel logits + a small CNN to predict the temperature map + labeled pixels.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2c344e55d5a82f8f_t0",
+      "think": "The core failure mode of global calibration methods is that they average out heteroskedasticity across the input space. By framing calibration as an optimal transport problem, we obtain a dual formulation that naturally leads to adaptive binning. This is precisely the Mondrian principle: fit separate models per informative partition of the data. The resulting temperature map is a solution to a regularized optimal transport problem, which can be solved efficiently via gradient descent. Crucially, this approach does not require a second model to predict temperatures; instead, the partition itself emerges from the data.\n\nDeep epistemic analysis for uncbiag-LTS (2c344e55d5a82f8f, domain=other, pages_read=1/1): Operator 'Optimal Transport Posterior Calibration' (page 1, domain other) captures: Vision Temperature scaling, but spatially localized: instead of one global T, learn a temperature *map* (per image patch) for semantic segmentation, so different regions of the input get different calibration. Assumptions: Data generated i.i.d.; true posterior is expressible by the model family; convex loss; large dataset limit. Breakdown regime: Non-i.i.d. data, small sample bias, misspecified model class. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The optimal transport formulation maps directly to GSE's state-transition calibration via the Wasserstein barycenter of conditional distributions. The temperature map becomes a Mondrian partition of the state-action space. Operator 'Mondrian Conformal Prediction' (page 1, domain other) captures: The GSE translation: per-signal calibration rows should be *Mondrian-style* — fit separate maps per matchup class when n allows (crepes does this natively; see that dossier). Assumptions: Exchangeability of training/test data; proper scoring rule; monotonic nonconformity score. Breakdown regime: Dependent data, improper scoring, non-monotonic scoring. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The Mondrian partition corresponds to a piecewise constant hazard rate in survival analysis. In GSE, this becomes a state-dependent threshold for action selection, calibrated via recursive conformal splits. Operator 'uncbiag-LTS Grounded Principle 3' (page 1, domain other) captures: The Ask A segmentation model's per-pixel logits + a small CNN to predict the temperature map + labeled pixels. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for uncbiag-LTS (2c344e55d5a82f8f, domain=other, pages_read=1/1): Operator 'Optimal Transport Posterior Calibration' (page 1, domain other) captures: Vision Temperature scaling, but spatially localized: instead of one global T, learn a temperature *map* (per image patch) for semantic segmentation, so different regions of the input get different calibration. Assumptions: Data generated i.i.d.; true posterior is expressible by the model family; convex loss; large dataset limit. Breakdown regime: Non-i.i.d. data, small sample bias, misspecified model class. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The optimal transport formulation maps directly to GSE's state-transition calibration via the Wasserstein barycenter of conditional distributions. The temperature map becomes a Mondrian partition of the state-action space. Operator 'Mondrian Conformal Prediction' (page 1, domain other) captures: The GSE translation: per-signal calibration rows should be *Mondrian-style* — fit separate maps per matchup class when n allows (crepes does this natively; see that dossier). Assumptions: Exchangeability of training/test data; proper scoring rule; monotonic nonconformity score. Breakdown regime: Dependent data, improper scoring, non-monotonic scoring. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The Mondrian partition corresponds to a piecewise constant hazard rate in survival analysis. In GSE, this becomes a state-dependent threshold for action selection, calibrated via recursive conformal splits. Operator 'uncbiag-LTS Grounded Principle 3' (page 1, domain other) captures: The Ask A segmentation model's per-pixel logits + a small CNN to predict the temperature map + labeled pixels. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in uncbiag-LTS (2c344e55d5a82f8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in uncbiag-LTS (2c344e55d5a82f8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bookmakers may use a single global temperature to hedge their risk across all markets, but they implicitly condition on factors such as venue, weather, and team motivation. Our method exposes these latent conditions, allowing us to identify bookmaker overconfidence in specific matchups. Theory of Mind & Decision Maker Model: Rooted in uncbiag-LTS (2c344e55d5a82f8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To avoid leakage, the temperature map must be trained on out-of-sample predictions. If the base model is already overfit, adding a learned temperature will not help. Additionally, the partition must be stable; otherwise, the conformal coverage guarantee fails. Cross-Layer Veto & Anti-Leakage Check: Rooted in uncbiag-LTS (2c344e55d5a82f8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "d47f1ee79c36969c",
+  "source_status": "COMPLETE",
+  "title": "buildable-systems",
+  "file_name": "buildable-systems.md",
+  "sha256": "d47f1ee79c36969cbbf3c22d590acbb63004773fdd7a230a00bf5f388cd3c756",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Calibration-driven model selection with shrinkage, fractional Kelly sizing, edge decay monitoring, and OL pressure detection form a coherent inference stack. Universal Lens: Rooted in buildable-systems (d47f1ee79c36969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian reliability ranking via ECE, conformal prediction for sparse cells, and edge decay diagnostics enable robust probabilistic forecasting. GSI Mapping: Rooted in buildable-systems (d47f1ee79c36969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions through Kelly-based allocation, drawdown control, and pressure funnel detection support dynamic decision-making under uncertainty. GSE Mapping: Rooted in buildable-systems (d47f1ee79c36969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "calibration_first_model_selection",
+      "name": "Calibration-First Model Selection",
+      "verbatim_quote": "Calibration-first model selection (evidence: strong, single-season) **Basis:** 0290 (+34.69% vs -35.17%), 0691 (ECE halving via parent shrinkage).",
+      "page": 1,
+      "latex": "\\hat{p} = \\frac{w + 25 \\cdot \\hat{p}_{\\text{parent}}}{n + 25}",
+      "symbol_and_unit_ledger": "{'w': 'number of successes in current cell', 'n': 'total observations in current cell', '\\\\hat{p}': 'estimated probability of success', '\\\\hat{p}_{\\\\text{parent}}': 'estimated probability from parent node'}",
+      "assumptions": "Models ranked by expected calibration error (ECE); shrinkage applied to sparse cells using pseudo-counts.",
+      "breakdown_regime": "Single-season training; overfitting risk if pseudo-counts not tuned per domain.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Shrinkage estimator used in GSI for reliable probability estimation in low-data regimes.",
+        "source_operator": "calibration_first_model_selection",
+        "telemetry": "Expected Calibration Error (ECE) and reliability diagrams."
+      }
+    },
+    {
+      "primitive_id": "fractional_kelly_drawdown_governor",
+      "name": "Fractional-Kelly Drawdown Governor",
+      "verbatim_quote": "Fractional-Kelly + drawdown governor + decorrelated book (evidence: medium) **Basis:** 1210 (full-Kelly ruin), 1628 (M(k) governor), 0174 (γ=0.4 decorrelation).",
+      "page": 1,
+      "latex": "f_{\\text{Kelly}} = \\frac{bp - q}{b}, \\quad f_{\\text{scaled}} = \\gamma \\cdot f_{\\text{Kelly}}, \\quad D(t) = \\max_{\\tau \\leq t} \\left( \\frac{V(t) - V(\\tau)}{V(\\tau)} \\right)",
+      "symbol_and_unit_ledger": "{'b': 'net odds received on the bet', 'p': 'probability of winning', 'q': 'probability of losing', '\\\\gamma': 'fractional Kelly coefficient (γ ≈ 0.4)', 'D(t)': 'drawdown at time t', 'V(t)': 'portfolio value at time t'}",
+      "assumptions": "Portfolio allocation based on fractional Kelly; drawdown governed by M(k) rule; decorrelation via γ-weighted strategy.",
+      "breakdown_regime": "Single-episode governance; decorrelation may deviate from theoretical model.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE uses M(k) drawdown governor to prevent full-Kelly ruin while applying decorrelated book logic.",
+        "source_operator": "fractional_kelly_drawdown_governor",
+        "telemetry": "Drawdown percentage, Kelly fraction, and decorrelation coefficient γ."
+      }
+    },
+    {
+      "primitive_id": "edge_decay_monitor",
+      "name": "Edge Decay Monitor",
+      "verbatim_quote": "Edge-decay monitor (evidence: medium, diagnostic) **Basis:** 0602 (θ = -0.62, HPD (-1.08, -0.17)).",
+      "page": 1,
+      "latex": "\\theta = \\log \\left( \\frac{p_{\\text{live}}}{1 - p_{\\text{live}}} \\right) - \\log \\left( \\frac{p_{\\text{base}}}{1 - p_{\\text{base}}} \\right), \\quad \\text{half-life} = \\frac{\\log(2)}{-\\theta}",
+      "symbol_and_unit_ledger": "{'p_{\\\\text{live}}': 'current live edge probability', 'p_{\\\\text{base}}': 'baseline edge probability', '\\\\theta': 'logit difference between live and base', '\\\\text{half-life}': 'time for edge to decay by half'}",
+      "assumptions": "Logit-based edge tracking; half-life estimated from historical decay rate.",
+      "breakdown_regime": "Diagnostic only; does not prescribe action; assumes stationary edge dynamics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI tracks edge half-life to detect staleness; alerts when live edge exceeds estimated half-life.",
+        "source_operator": "edge_decay_monitor",
+        "telemetry": "Edge half-life estimate, logit difference, and alert trigger status."
+      }
+    },
+    {
+      "primitive_id": "ol_degradation_pressure_funnel_detector",
+      "name": "OL Degradation Pressure Funnel Detector",
+      "verbatim_quote": "OL-degradation → pressure-funnel detector (evidence: medium) **Basis:** ol-drag-calibration (tackle ladder), reasoning-depth-spec §6.1 (PIT@CLE worked example).",
+      "page": 1,
+      "latex": "\\text{PressureFunnel}(t) = \\sum_{i=1}^{N} \\text{TackleLadder}_i(t) \\cdot \\text{QuickGameRate}(t) \\cdot \\text{TTT}(t)",
+      "symbol_and_unit_ledger": "{'\\\\text{TackleLadder}_i(t)': 'tackle intensity level i at time t', '\\\\text{QuickGameRate}(t)': 'proportion of games with rapid play at time t', '\\\\text{TTT}(t)': 'time-to-threshold for pressure funnel', '\\\\text{PressureFunnel}(t)': 'aggregate pressure indicator at time t'}",
+      "assumptions": "Pressure funnel emerges from cumulative tackle ladder and game pace metrics.",
+      "breakdown_regime": "Requires calibrated tackle ladder; lacks joint behavior validation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE ingests OL health data and propagates through tackle ladder to generate pressure funnel theses for review.",
+        "source_operator": "ol_degradation_pressure_funnel_detector",
+        "telemetry": "Aggregate pressure funnel score, tackle ladder levels, and game pace indicators."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d47f1ee79c36969c_t0",
+      "think": "The primitives form a layered system where calibration-first selection ensures reliable model ranking, followed by fractional Kelly sizing that mitigates ruin via drawdown governors and decorrelation. Edge decay monitoring provides diagnostic feedback on signal longevity, while OL degradation triggers pressure funnel detection. These components interact through shared data streams: model probabilities inform Kelly sizing, which feeds into drawdown tracking; edge decay alerts influence model re-ranking; and pressure funnels provide situational context for decision-making. Dualities emerge in how reliability and risk management interplay—calibration ensures trustworthiness, while Kelly controls exposure. Failure modes include over-reliance on single-season tuning, misapplication of pseudo-counts, and lack of joint behavior testing. The system must balance empirical fidelity with adaptability to evolving conditions.\n\nDeep epistemic analysis for buildable-systems (d47f1ee79c36969c, domain=other, pages_read=2/2): Operator 'Calibration-First Model Selection' (page 1, domain other) captures: Calibration-first model selection (evidence: strong, single-season) **Basis:** 0290 (+34.69% vs -35.17%), 0691 (ECE halving via parent shrinkage). Assumptions: Models ranked by expected calibration error (ECE); shrinkage applied to sparse cells using pseudo-counts. Breakdown regime: Single-season training; overfitting risk if pseudo-counts not tuned per domain. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Shrinkage estimator used in GSI for reliable probability estimation in low-data regimes. Operator 'Fractional-Kelly Drawdown Governor' (page 1, domain other) captures: Fractional-Kelly + drawdown governor + decorrelated book (evidence: medium) **Basis:** 1210 (full-Kelly ruin), 1628 (M(k) governor), 0174 (γ=0.4 decorrelation). Assumptions: Portfolio allocation based on fractional Kelly; drawdown governed by M(k) rule; decorrelation via γ-weighted strategy. Breakdown regime: Single-episode governance; decorrelation may deviate from theoretical model. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE uses M(k) drawdown governor to prevent full-Kelly ruin while applying decorrelated book logic. Operator 'Edge Decay Monitor' (page 1, domain other) captures: Edge-decay monitor (evidence: medium, diagnostic) **Basis:** 0602 (θ = -0.62, HPD (-1.08, -0.17)). Assumptions: Logit-based edge tracking; half-life estimated from historical decay rate. Breakdown regime: Diagnostic only; does not prescribe action; assumes stationary edge dynamics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI tracks edge half-life to detect staleness; alerts when live edge exceeds estimated half-life. Operator 'OL Degradation Pressure Funnel Detector' (page 1, domain other) captures: OL-degradation → pressure-funnel detector (evidence: medium) **Basis:** ol-drag-calibration (tackle ladder), reasoning-depth-spec §6.1 (PIT@CLE worked example). Assumptions: Pressure funnel emerges from cumulative tackle ladder and game pace metrics. Breakdown regime: Requires calibrated tackle ladder; lacks joint behavior validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE ingests OL health data and propagates through tackle ladder to generate pressure funnel theses for review. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for buildable-systems (d47f1ee79c36969c, domain=other, pages_read=2/2): Operator 'Calibration-First Model Selection' (page 1, domain other) captures: Calibration-first model selection (evidence: strong, single-season) **Basis:** 0290 (+34.69% vs -35.17%), 0691 (ECE halving via parent shrinkage). Assumptions: Models ranked by expected calibration error (ECE); shrinkage applied to sparse cells using pseudo-counts. Breakdown regime: Single-season training; overfitting risk if pseudo-counts not tuned per domain. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Shrinkage estimator used in GSI for reliable probability estimation in low-data regimes. Operator 'Fractional-Kelly Drawdown Governor' (page 1, domain other) captures: Fractional-Kelly + drawdown governor + decorrelated book (evidence: medium) **Basis:** 1210 (full-Kelly ruin), 1628 (M(k) governor), 0174 (γ=0.4 decorrelation). Assumptions: Portfolio allocation based on fractional Kelly; drawdown governed by M(k) rule; decorrelation via γ-weighted strategy. Breakdown regime: Single-episode governance; decorrelation may deviate from theoretical model. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE uses M(k) drawdown governor to prevent full-Kelly ruin while applying decorrelated book logic. Operator 'Edge Decay Monitor' (page 1, domain other) captures: Edge-decay monitor (evidence: medium, diagnostic) **Basis:** 0602 (θ = -0.62, HPD (-1.08, -0.17)). Assumptions: Logit-based edge tracking; half-life estimated from historical decay rate. Breakdown regime: Diagnostic only; does not prescribe action; assumes stationary edge dynamics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI tracks edge half-life to detect staleness; alerts when live edge exceeds estimated half-life. Operator 'OL Degradation Pressure Funnel Detector' (page 1, domain other) captures: OL-degradation → pressure-funnel detector (evidence: medium) **Basis:** ol-drag-calibration (tackle ladder), reasoning-depth-spec §6.1 (PIT@CLE worked example). Assumptions: Pressure funnel emerges from cumulative tackle ladder and game pace metrics. Breakdown regime: Requires calibrated tackle ladder; lacks joint behavior validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE ingests OL health data and propagates through tackle ladder to generate pressure funnel theses for review. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian shrinkage (0691), Kelly gambling theory (1210), and edge decay modeling (0602), with extensions to multi-agent decision frameworks and pressure-based reasoning. Retrocausal Genealogy: Rooted in buildable-systems (d47f1ee79c36969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in buildable-systems (d47f1ee79c36969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the modeler who seeks stable forecasts, the trader who manages risk, and the coach who evaluates player health. Each agent operates under different utility functions: modeler prioritizes calibration, trader minimizes drawdown, and coach assesses performance degradation. Theory of Mind & Decision Maker Model: Rooted in buildable-systems (d47f1ee79c36969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct telemetry per layer: ECE for calibration, drawdown for Kelly, edge half-life for diagnostics, and tackle ladder for pressure. Leakage occurs if pressure funnel data leaks into Kelly sizing without proper filtering, or if edge decay triggers premature model rejection. Cross-Layer Veto & Anti-Leakage Check: Rooted in buildable-systems (d47f1ee79c36969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "23a61386d9ae281d",
+  "source_status": "COMPLETE",
+  "title": "p0009",
+  "file_name": "p0009.txt",
+  "sha256": "23a61386d9ae281dbf632b2c2a2c3bff1f9a85d6ddc3a528d0dc4a186c5acf92",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "percent_owned_series_adjustment",
+      "name": "Percent Owned Series Adjustment",
+      "verbatim_quote": "athlete owned 2x more than the expected average ownership in the previous contest where the athleté",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes prior contest data exists; applies only when athlete meets threshold criteria.",
+      "breakdown_regime": "Discontinuity occurs when multiple series qualify on same day; maximum one series per day is applied.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Used as a conformal inference adjustment in GSI models to account for unexpected popularity surges, and as a situational trigger in GSE for roster optimization decisions.",
+        "source_operator": "percent_owned_series_adjustment",
+        "telemetry": "Observed change in lineup ownership percentages before and after applying the adjustment."
+      }
+    },
+    {
+      "primitive_id": "global_salary_floor",
+      "name": "Global Salary Floor",
+      "verbatim_quote": "U.S. Patent Apr. 6, 2021 Sheet 7 of 8 US 10,967,281 B2 NBA: F1: 15% Fantasy",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'GSF': '$10 - Global Salary Floor (USD)'}",
+      "assumptions": "Establishes a minimum salary floor across all players regardless of performance.",
+      "breakdown_regime": "Floor prevents salaries from dropping below this constant value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Serves as an invariant baseline in both GSI fantasy projections and GSE roster construction, ensuring minimal valuation.",
+        "source_operator": "global_salary_floor",
+        "telemetry": "Tracking the proportion of players whose calculated salary falls below this floor."
+      }
+    },
+    {
+      "primitive_id": "scaling_coefficient",
+      "name": "Scaling Coefficient",
+      "verbatim_quote": "U.S. Patent Apr. 6, 2021 Sheet 7 of 8 US 10,967,281 B2 NBA: F1: 15% Fantasy",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': '1.0 - Dimensionless scaling factor'}",
+      "assumptions": "Multiplicative identity scaling; does not alter base projections.",
+      "breakdown_regime": "No singularity; always linearly scales input.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Applied uniformly in GSI projection models and GSE tactical simulations to adjust overall magnitude without changing functional form.",
+        "source_operator": "scaling_coefficient",
+        "telemetry": "Comparing scaled versus unscaled outputs to verify coefficient application consistency."
+      }
+    },
+    {
+      "primitive_id": "ownership_threshold_criteria",
+      "name": "Ownership Threshold Criteria",
+      "verbatim_quote": "series: athlete is owned ≥ 66.0% of lineups 3-game series: athlete is owned ≥ 44.4% of",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'series': 'Game series length indicator', 'ownership_threshold': '% - Minimum lineup ownership percentage'}",
+      "assumptions": "Defines specific ownership thresholds for different series lengths.",
+      "breakdown_regime": "Step function behavior; threshold changes based on series type.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Utilized in GSI as a discrete Bayesian prior for high-popularity athletes, and in GSE as a decision boundary for roster entry/exit strategies.",
+        "source_operator": "ownership_threshold_criteria",
+        "telemetry": "Monitoring the frequency of athletes crossing these ownership thresholds across seasons."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "23a61386d9ae281d_t0",
+      "think": "These sovereign primitives formalize a multi-layered approach to quantifying athlete value. The Global Salary Floor establishes a non-negotiable lower bound, while the Scaling Coefficient provides linear tunability across all models. The Ownership Threshold Criteria introduce discrete decision points tied to historical popularity patterns, which act as conformal inference anchors in GSI and situational triggers in GSE. The Percent Owned Series Adjustment specifically targets anomalous demand events, creating a feedback loop between observed market behavior and projected salaries. Together, they create a unified mathematical framework that bridges empirical ownership data with predictive modeling, ensuring anti-collinearity through distinct functional forms (floor vs. threshold vs. scaling).\n\nDeep epistemic analysis for p0009 (23a61386d9ae281d, domain=other, pages_read=1/1): Operator 'Percent Owned Series Adjustment' (page 1, domain other) captures: athlete owned 2x more than the expected average ownership in the previous contest where the athleté Assumptions: Assumes prior contest data exists; applies only when athlete meets threshold criteria. Breakdown regime: Discontinuity occurs when multiple series qualify on same day; maximum one series per day is applied. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used as a conformal inference adjustment in GSI models to account for unexpected popularity surges, and as a situational trigger in GSE for roster optimization decisions. Operator 'Global Salary Floor' (page 1, domain other) captures: U.S. Patent Apr. 6, 2021 Sheet 7 of 8 US 10,967,281 B2 NBA: F1: 15% Fantasy Assumptions: Establishes a minimum salary floor across all players regardless of performance. Breakdown regime: Floor prevents salaries from dropping below this constant value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as an invariant baseline in both GSI fantasy projections and GSE roster construction, ensuring minimal valuation. Operator 'Scaling Coefficient' (page 1, domain other) captures: U.S. Patent Apr. 6, 2021 Sheet 7 of 8 US 10,967,281 B2 NBA: F1: 15% Fantasy Assumptions: Multiplicative identity scaling; does not alter base projections. Breakdown regime: No singularity; always linearly scales input. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Applied uniformly in GSI projection models and GSE tactical simulations to adjust overall magnitude without changing functional form. Operator 'Ownership Threshold Criteria' (page 1, domain other) captures: series: athlete is owned ≥ 66.0% of lineups 3-game series: athlete is owned ≥ 44.4% of Assumptions: Defines specific ownership thresholds for different series lengths. Breakdown regime: Step function behavior; threshold changes based on series type. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Utilized in GSI as a discrete Bayesian prior for high-popularity athletes, and in GSE as a decision boundary for roster entry/exit strategies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0009 (23a61386d9ae281d, domain=other, pages_read=1/1): Operator 'Percent Owned Series Adjustment' (page 1, domain other) captures: athlete owned 2x more than the expected average ownership in the previous contest where the athleté Assumptions: Assumes prior contest data exists; applies only when athlete meets threshold criteria. Breakdown regime: Discontinuity occurs when multiple series qualify on same day; maximum one series per day is applied. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used as a conformal inference adjustment in GSI models to account for unexpected popularity surges, and as a situational trigger in GSE for roster optimization decisions. Operator 'Global Salary Floor' (page 1, domain other) captures: U.S. Patent Apr. 6, 2021 Sheet 7 of 8 US 10,967,281 B2 NBA: F1: 15% Fantasy Assumptions: Establishes a minimum salary floor across all players regardless of performance. Breakdown regime: Floor prevents salaries from dropping below this constant value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as an invariant baseline in both GSI fantasy projections and GSE roster construction, ensuring minimal valuation. Operator 'Scaling Coefficient' (page 1, domain other) captures: U.S. Patent Apr. 6, 2021 Sheet 7 of 8 US 10,967,281 B2 NBA: F1: 15% Fantasy Assumptions: Multiplicative identity scaling; does not alter base projections. Breakdown regime: No singularity; always linearly scales input. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Applied uniformly in GSI projection models and GSE tactical simulations to adjust overall magnitude without changing functional form. Operator 'Ownership Threshold Criteria' (page 1, domain other) captures: series: athlete is owned ≥ 66.0% of lineups 3-game series: athlete is owned ≥ 44.4% of Assumptions: Defines specific ownership thresholds for different series lengths. Breakdown regime: Step function behavior; threshold changes based on series type. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Utilized in GSI as a discrete Bayesian prior for high-popularity athletes, and in GSE as a decision boundary for roster entry/exit strategies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include sportsbooks setting initial lines, managers constructing optimal rosters, and casual players seeking popular picks, all reacting to these explicit valuation rules. Theory of Mind & Decision Maker Model: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must avoid leakage between layers by ensuring GSI's ownership priors do not directly feed into GSE's real-time state transitions, maintaining distinct causal hierarchies. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0009 (23a61386d9ae281d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

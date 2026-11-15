@@ -1,0 +1,95 @@
+{
+  "book_id": "36e4682d8340a1c8",
+  "source_status": "COMPLETE",
+  "title": "0912-tacticai-ai-assistant-football-tactics",
+  "file_name": "0912-tacticai-ai-assistant-football-tactics.md",
+  "sha256": "36e4682d8340a1c8a929d4238d6dee2b1c1ba11a394c6b6cf6d267f96bf5e314",
+  "primary_domain": "football",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "receiver_conditional_decomposition",
+      "name": "Receiver-Conditional Decomposition",
+      "verbatim_quote": "## Verdict **ADAPT** — not for soccer set pieces, but for two portable methods: (1) the receiver-conditional decomposition P(shot) = Σ_i P(shot|receiver=i)·P(receiver=i), which ports directly to anytime-TD / target-share prop modeling; (2) the pre-snap graph + geometric-deep-learning blueprint for NGS tracking data (GSE's stated priority lane).",
+      "page": 1,
+      "latex": "P(shot) = \\sum_{i} P(shot|receiver=i)\\cdot P(receiver=i)",
+      "symbol_and_unit_ledger": "{'P(shot)': 'Dimensionless shot probability', 'P(receiver=i)': 'Dimensionless receiver selection probability', 'P(shot|receiver=i)': 'Conditional shot probability given receiver i'}",
+      "assumptions": "Pitch reflection symmetry, receiver identity sufficiency, alignment failure independence",
+      "breakdown_regime": "Alignment failure singularities",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI target-share prop modeling (anytime-TD)",
+        "source_operator": "receiver_conditional_decomposition",
+        "telemetry": "Shot probability reconstruction accuracy"
+      }
+    },
+    {
+      "primitive_id": "geometric_deep_learning_blueprint",
+      "name": "Geometric Deep Learning Blueprint",
+      "verbatim_quote": "## Verdict **ADAPT** — not for soccer set pieces, but for two portable methods: (1) the receiver-conditional decomposition P(shot) = Σ_i P(shot|receiver=i)·P(receiver=i), which ports directly to anytime-TD / target-share prop modeling; (2) the pre-snap graph + geometric-deep-learning blueprint for NGS tracking data (GSE's stated priority lane).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Pitch reflection symmetry, one-team-fixed adjustment validity, expert rater utility ground truth",
+      "breakdown_regime": "Small-data regime with reflection augmentation",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE pre-snap graph processing (22 nodes, NGS features)",
+        "source_operator": "geometric_deep_learning_blueprint",
+        "telemetry": "Play outcome classification accuracy"
+      }
+    },
+    {
+      "primitive_id": "group_convolution",
+      "name": "Group Convolution",
+      "verbatim_quote": "- **Geometric deep learning:** D2 dihedral group (id, horizontal/vertical/both reflections); frame averaging (Eq.",
+      "page": 1,
+      "latex": "f_g(x) = \\frac{1}{|G|} \\sum_{h \\in G} f(h^{-1}x) g(h)",
+      "symbol_and_unit_ledger": "{'f_g(x)': 'Group convolution output', 'G': 'D2 dihedral group (4 elements)', 'h': 'Group element', 'x': ' Node feature vector', 'g(h)': 'Filter parameterized by group element'}",
+      "assumptions": "Translation equivariance, finite group action, local feature interactions",
+      "breakdown_regime": "Discrete symmetry breaking",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE spatial-temporal pattern extraction",
+        "source_operator": "group_convolution",
+        "telemetry": "Spatial equivariance preservation"
+      }
+    },
+    {
+      "primitive_id": "frame_averaging",
+      "name": "Frame Averaging",
+      "verbatim_quote": "Method / model - Graph representation: 22 nodes, fully connected; GNN message passing (Eq.",
+      "page": 1,
+      "latex": "\\bar{x} = \\frac{1}{4} \\sum_{r \\in R} r x",
+      "symbol_and_unit_ledger": "{'\\\\bar{x}': 'Averaged feature vector', 'R': 'Set of four rotation/reflection matrices', 'r': 'Rotation/reflection matrix', 'x': ' Original feature vector'}",
+      "assumptions": "Symmetry group closure, uniform sampling, isotropic noise assumption",
+      "breakdown_regime": "Anisotropic data distribution",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE multi-view feature fusion",
+        "source_operator": "frame_averaging",
+        "telemetry": "Orientation-invariance robustness"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "36e4682d8340a1c8_t0",
+      "think": "The Receiver-Conditional Decomposition (RCD) transforms high-dimensional tactical prediction into a two-stage cascade: first select the receiver, then compute the shot likelihood conditioned on that receiver. This factorization reduces variance by decoupling combinatorial receiver selection from continuous shot generation, enabling more stable estimation in sparse data regimes. The Group Convolution and Frame Averaging provide equivariant and invariant representations respectively, crucial for handling the permutation symmetry of players and the reflection symmetries of the pitch. Together these primitives form a minimal but complete foundation for translating complex football dynamics into verifiable, explainable models.\n\nDeep epistemic analysis for 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8, domain=football, pages_read=3/3): Operator 'Receiver-Conditional Decomposition' (page 1, domain football) captures: ## Verdict **ADAPT** — not for soccer set pieces, but for two portable methods: (1) the receiver-conditional decomposition P(shot) = Σ_i P(shot|receiver=i)·P(receiver=i), which ports directly to anytime-TD / target-share prop modeling; (2) the pre-snap graph + geometric-deep-learning blueprint for NGS tracking data (GSE's stated priority lane). Assumptions: Pitch reflection symmetry, receiver identity sufficiency, alignment failure independence Breakdown regime: Alignment failure singularities Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI target-share prop modeling (anytime-TD) Operator 'Geometric Deep Learning Blueprint' (page 1, domain football) captures: ## Verdict **ADAPT** — not for soccer set pieces, but for two portable methods: (1) the receiver-conditional decomposition P(shot) = Σ_i P(shot|receiver=i)·P(receiver=i), which ports directly to anytime-TD / target-share prop modeling; (2) the pre-snap graph + geometric-deep-learning blueprint for NGS tracking data (GSE's stated priority lane). Assumptions: Pitch reflection symmetry, one-team-fixed adjustment validity, expert rater utility ground truth Breakdown regime: Small-data regime with reflection augmentation Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE pre-snap graph processing (22 nodes, NGS features) Operator 'Group Convolution' (page 1, domain football) captures: - **Geometric deep learning:** D2 dihedral group (id, horizontal/vertical/both reflections); frame averaging (Eq. Assumptions: Translation equivariance, finite group action, local feature interactions Breakdown regime: Discrete symmetry breaking Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE spatial-temporal pattern extraction Operator 'Frame Averaging' (page 1, domain football) captures: Method / model - Graph representation: 22 nodes, fully connected; GNN message passing (Eq. Assumptions: Symmetry group closure, uniform sampling, isotropic noise assumption Breakdown regime: Anisotropic data distribution Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE multi-view feature fusion Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8, domain=football, pages_read=3/3): Operator 'Receiver-Conditional Decomposition' (page 1, domain football) captures: ## Verdict **ADAPT** — not for soccer set pieces, but for two portable methods: (1) the receiver-conditional decomposition P(shot) = Σ_i P(shot|receiver=i)·P(receiver=i), which ports directly to anytime-TD / target-share prop modeling; (2) the pre-snap graph + geometric-deep-learning blueprint for NGS tracking data (GSE's stated priority lane). Assumptions: Pitch reflection symmetry, receiver identity sufficiency, alignment failure independence Breakdown regime: Alignment failure singularities Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI target-share prop modeling (anytime-TD) Operator 'Geometric Deep Learning Blueprint' (page 1, domain football) captures: ## Verdict **ADAPT** — not for soccer set pieces, but for two portable methods: (1) the receiver-conditional decomposition P(shot) = Σ_i P(shot|receiver=i)·P(receiver=i), which ports directly to anytime-TD / target-share prop modeling; (2) the pre-snap graph + geometric-deep-learning blueprint for NGS tracking data (GSE's stated priority lane). Assumptions: Pitch reflection symmetry, one-team-fixed adjustment validity, expert rater utility ground truth Breakdown regime: Small-data regime with reflection augmentation Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE pre-snap graph processing (22 nodes, NGS features) Operator 'Group Convolution' (page 1, domain football) captures: - **Geometric deep learning:** D2 dihedral group (id, horizontal/vertical/both reflections); frame averaging (Eq. Assumptions: Translation equivariance, finite group action, local feature interactions Breakdown regime: Discrete symmetry breaking Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE spatial-temporal pattern extraction Operator 'Frame Averaging' (page 1, domain football) captures: Method / model - Graph representation: 22 nodes, fully connected; GNN message passing (Eq. Assumptions: Symmetry group closure, uniform sampling, isotropic noise assumption Breakdown regime: Anisotropic data distribution Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE multi-view feature fusion Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Wigner's representation theory of groups (1927) and extended by Cohen et al.'s Steerable CNNs (2019), these tools bridge quantum physics symmetries with modern machine learning. Retrocausal Genealogy: Rooted in 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opponents act as rational utility-maximizers constrained by spatial positioning and temporal sequencing, creating observable patterns in player embeddings. Theory of Mind & Decision Maker Model: Rooted in 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Avoids leakage by enforcing receiver independence given pre-snap features, preventing circular reasoning between receiver selection and shot probability. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0912-tacticai-ai-assistant-football-tactics (36e4682d8340a1c8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

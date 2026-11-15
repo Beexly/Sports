@@ -17,7 +17,7 @@ export default function FantasyHubPage(): JSX.Element {
       <main id="main-content" className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
         <div
           data-testid="under-construction-notice"
-          className="rounded-2xl border-2 border-caution/30/50 bg-obsidian p-8 sm:p-12 text-center shadow-2xl"
+          className="rounded-2xl border-2 border-caution/50 bg-obsidian p-8 sm:p-12 text-center shadow-2xl"
         >
           <span className="inline-block rounded-md bg-caution/20 border border-caution/30 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-caution">
             🚧 Under Construction · Galaxy Picks &amp; DFS Only

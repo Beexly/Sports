@@ -1,0 +1,783 @@
+{
+ "book_id": "245420e2572b1a38",
+ "source_status": "COMPLETE",
+ "source_note": "Frank Hutter, Lars Kotthoff and Joaquin Vanschoren (eds.), Automated Machine Learning: Methods, Systems, Challenges, Springer, The Springer Series on Challenges in Machine Learning, 2019, open access (CC BY 4.0), ISBN 978-3-030-05317-8, DOI 10.1007/978-3-030-05318-5. Ten chapters in three parts (methods, systems, challenges) plus foreword and preface. Local file is the publisher PDF in books-d-models under the filename HutterKotthoffVanschoren-2019-AutomatedMachineLearning.pdf (the tasking name HutterEtAl-2019-AutomatedMachineLearning.pdf refers to the same work), 6499860 bytes, full sha256 245420e2572b1a38876402d0a9f22667a881308f03b5e3dd992b539288d28659, book_id is the first 16 hex chars of that digest computed over size plus file bytes. Text extraction is clean publisher text for prose; some mathematical glyphs (primes, summation signs) are dropped or spaced in the extracted text, so verbatim quotes were chosen from intact prose passages and equations were transcribed from the printed equations. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "hpo_problem_formalization",
+   "name": "HPO: find the configuration minimizing expected validation loss over the data distribution (Eq. 1.1)",
+   "verbatim_quote": "Every machine learning system has hyperparameters, and the most basic task in automated machine learning (AutoML) is to automatically set these hyperparameters to optimize performance.",
+   "page": "Chap. 1, Sects. 1.1-1.2, text lines 343-455 (printed pp. 3-5)",
+   "latex": "\\lambda^* = \\arg\\min_{\\lambda \\in \\Lambda} \\mathbb{E}_{(D_{train}, D_{valid}) \\sim \\mathcal{D}} \\mathcal{V}(\\mathcal{L}, A_\\lambda, D_{train}, D_{valid})",
+   "symbol_and_unit_ledger": {
+    "lambda*": "optimal hyperparameter configuration (mixed units by component)",
+    "Lambda": "configuration space, Cartesian product of the hyperparameter domains",
+    "D (script)": "underlying data distribution",
+    "V(L, A_lambda, D_train, D_valid)": "validation protocol: loss L of algorithm A with configuration lambda trained on D_train and evaluated on D_valid (loss units)",
+    "A_lambda": "learning algorithm A instantiated with hyperparameters lambda"
+   },
+   "assumptions": [
+    "A validation protocol (holdout or cross-validation) stands in for the unavailable expectation over the data distribution",
+    "Hyperparameter domains are mostly bounded in practice, with real-valued, integer, binary and categorical types mixed in one space"
+   ],
+   "breakdown_regime": "Breaks when the finite validation sample is unrepresentative: the optimizer then minimizes validation noise rather than generalization loss, the hyperparameter overfitting problem of Sect. 1.6.4.",
+   "domain": "hyperparameter optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every model family it can fit as A and every design choice as lambda, so model building becomes one explicit argmin over an expected-loss objective with a declared validation protocol instead of ad hoc hand tuning.",
+    "source_operator": "hpo_problem_formalization",
+    "telemetry": "Logged configuration, validation protocol identifier, fold losses, and wall-clock cost for every evaluation"
+   }
+  },
+  {
+   "primitive_id": "conditional_configuration_space",
+   "name": "Configuration spaces are conditional: a hyperparameter is active only when its parent takes certain values, forming a DAG",
+   "verbatim_quote": "Furthermore, the configuration space can contain conditionality, i.e., a hyperparameter may only be relevant if another hyperparameter (or some combination of hyperparameters) takes on a certain value.",
+   "page": "Chap. 1, Sect. 1.2, text lines 425-440 (printed p. 5)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Parent-child relations between hyperparameters are known or can be declared when the space is defined",
+    "Inactive hyperparameters can be imputed with default values for surrogate fitting without changing the evaluated pipeline"
+   ],
+   "breakdown_regime": "Flat vector optimizers waste evaluations on inactive dimensions and can propose invalid combinations; the failure grows with pipeline depth and when algorithm choice itself is a categorical parent.",
+   "domain": "hyperparameter optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pipeline and architecture choices in the engine are represented as one conditional space whose root selects the model family and whose children activate only under that choice, so a single search process covers model selection and tuning jointly.",
+    "source_operator": "conditional_configuration_space",
+    "telemetry": "Configuration tree with active and inactive flags per node for every proposed candidate"
+   }
+  },
+  {
+   "primitive_id": "random_search_budget_advantage",
+   "name": "Random search beats grid search under a fixed budget when few hyperparameters matter: grid affords B^(1/N) values per hyperparameter, random search tries B",
+   "verbatim_quote": "This works better than grid search when some hyperparameters are much more important than others (a property that holds in many cases [13, 61]).",
+   "page": "Chap. 1, Sect. 1.3.1, text lines 520-560 (printed p. 7)",
+   "latex": "B^{1/N}",
+   "symbol_and_unit_ledger": {
+    "B": "total function evaluation budget (count)",
+    "N": "number of hyperparameters (count)",
+    "B^(1/N)": "distinct values per hyperparameter that grid search can afford under budget B, as stated in the text"
+   },
+   "assumptions": [
+    "Only a subset of hyperparameters strongly affects performance, which the chapter notes holds in many cases",
+    "Configurations can be sampled independently, which also makes the method embarrassingly parallel"
+   ],
+   "breakdown_regime": "Pure random search has no guidance: with N Boolean hyperparameters and no interaction effects it needs an expected 2^N - 1 evaluations to find the optimum, where the guided coordinate search in the chapter needs N + 1.",
+   "domain": "hyperparameter optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Random search is the engine's mandatory baseline and interleaved explorer: any guided search must beat parallel random search at matched budget, and random proposals keep a minimal convergence guarantee inside guided methods.",
+    "source_operator": "random_search_budget_advantage",
+    "telemetry": "Budget-matched random search control runs logged beside every guided search result"
+   }
+  },
+  {
+   "primitive_id": "expected_improvement_bo_loop",
+   "name": "Bayesian optimization loop: fit a probabilistic surrogate to all observations, then evaluate the point maximizing expected improvement (Eq. 1.3)",
+   "verbatim_quote": "In each iteration, the surrogate model is fitted to all observations of the target function made so far.",
+   "page": "Chap. 1, Sect. 1.3.2.1, text lines 610-640 (printed p. 9)",
+   "latex": "E[I(\\lambda)] = (f_{min} - \\mu(\\lambda)) \\Phi\\left(\\frac{f_{min} - \\mu(\\lambda)}{\\sigma}\\right) + \\sigma \\phi\\left(\\frac{f_{min} - \\mu(\\lambda)}{\\sigma}\\right)",
+   "symbol_and_unit_ledger": {
+    "E[I(lambda)]": "expected improvement of configuration lambda (loss units)",
+    "f_min": "best observed loss so far (loss units)",
+    "mu(lambda)": "surrogate predictive mean at lambda (loss units)",
+    "sigma": "surrogate predictive standard deviation at lambda (loss units)",
+    "phi, Phi": "standard normal density and distribution functions (dimensionless)"
+   },
+   "assumptions": [
+    "The surrogate prediction at a configuration is approximately normally distributed, which makes expected improvement computable in closed form",
+    "The acquisition function is cheap to compute relative to the blackbox evaluation, so it can be thoroughly optimized"
+   ],
+   "breakdown_regime": "Fails when the surrogate is misspecified or its uncertainty is miscalibrated: expected improvement then exploits model error, and Gaussian process fits grow cubically in the number of observations.",
+   "domain": "bayesian optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's search controller is exactly this loop over its own evaluation log: the surrogate proposes, the budget decides, the result appends, and acquisition values are recorded so proposal quality itself can be audited later.",
+    "source_operator": "expected_improvement_bo_loop",
+    "telemetry": "Surrogate mean and variance per candidate, acquisition values, chosen candidate, realized loss"
+   }
+  },
+  {
+   "primitive_id": "gp_surrogate_posterior_scaling",
+   "name": "GP surrogate gives closed-form posterior mean and variance (Eq. 1.4) but scales cubically in the number of observations",
+   "verbatim_quote": "One downside of standard Gaussian processes is that they scale cubically in the number of data points, limiting their applicability when one can afford many function evaluations (e.g., with many parallel workers, or when function evaluations are cheap due to the use of lower fidelities).",
+   "page": "Chap. 1, Sect. 1.3.2.2, text lines 645-685 (printed pp. 10-11)",
+   "latex": "\\mu(\\lambda) = k_*^T K^{-1} y, \\quad \\sigma^2(\\lambda) = k(\\lambda, \\lambda) - k_*^T K^{-1} k_*",
+   "symbol_and_unit_ledger": {
+    "mu(lambda)": "posterior predictive mean at lambda (loss units)",
+    "sigma^2(lambda)": "posterior predictive variance at lambda (loss units squared)",
+    "k_*": "covariance vector between lambda and all evaluated configurations (kernel units)",
+    "K": "covariance matrix of the evaluated configurations (kernel units)",
+    "y": "observed loss values (loss units)"
+   },
+   "assumptions": [
+    "A covariance function (a common choice is the Matern 5/2 kernel) captures similarity between configurations",
+    "The stated posterior form is for the noise-free case"
+   ],
+   "breakdown_regime": "Cubic scaling caps the observation count, and standard kernels degrade in high dimensions and on categorical or conditional spaces, where the chapter prefers random forests or TPE.",
+   "domain": "bayesian optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For low-dimensional continuous subproblems inside the engine, a GP surrogate supplies both the estimate and its uncertainty, and the uncertainty is a first-class input to whether another evaluation is worth its cost.",
+    "source_operator": "gp_surrogate_posterior_scaling",
+    "telemetry": "Observation count per surrogate, kernel hyperparameters, predictive variance at proposed points"
+   }
+  },
+  {
+   "primitive_id": "tree_parzen_estimator",
+   "name": "TPE models the densities of good and bad configurations separately and proposes candidates by their density ratio, which is related to expected improvement",
+   "verbatim_quote": "Given a percentile α (usually set to 15%), the observations are divided in good observations and bad observations and simple 1-d Parzen windows are used to model the two distributions.",
+   "page": "Chap. 1, Sect. 1.3.2.2, text lines 725-748 (printed p. 12)",
+   "latex": "\\frac{p(\\lambda \\mid y < \\alpha)}{p(\\lambda \\mid y \\geq \\alpha)}",
+   "symbol_and_unit_ledger": {
+    "p(lambda | y < alpha)": "density of configurations among the good fraction of observations (probability density)",
+    "p(lambda | y >= alpha)": "density of configurations among the remaining observations (probability density)",
+    "alpha": "percentile threshold separating good from bad observations, usually 15 percent (dimensionless)",
+    "y": "observed loss of a configuration (loss units)"
+   },
+   "assumptions": [
+    "A percentile split (usually 15 percent) separates good from bad observations",
+    "One-dimensional Parzen windows per hyperparameter, arranged in a tree, suffice for conditional spaces"
+   ],
+   "breakdown_regime": "The factorized windows capture interactions only weakly, and the good fraction must contain enough observations for the density estimate to be meaningful.",
+   "domain": "bayesian optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For the engine's structured, partly categorical configuration spaces, TPE-style density modeling proposes candidates without forcing the space into a continuous vector, matching how pipeline choices actually branch.",
+    "source_operator": "tree_parzen_estimator",
+    "telemetry": "Good and bad density estimates per hyperparameter and the density ratio of each proposed candidate"
+   }
+  },
+  {
+   "primitive_id": "freeze_thaw_bo",
+   "name": "Freeze-thaw Bayesian optimization pauses partially trained configurations and thaws the most promising instead of terminating or restarting them",
+   "verbatim_quote": "Instead of terminating a configuration, the machine learning models are trained iteratively for a few iterations and then frozen. Bayesian optimization can then decide to thaw one of the frozen models, which means to continue training it.",
+   "page": "Chap. 1, Sect. 1.4.1, text lines 838-852 (printed p. 15)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Training is iterative, so a configuration can be paused and resumed at low cost",
+    "Learning curves are modeled with a special covariance function corresponding to exponentially decaying functions, one Gaussian process per learning curve"
+   ],
+   "breakdown_regime": "Requires checkpointable training and a learning-curve model that matches the algorithm family; a misspecified decay kernel misranks slow-starting configurations.",
+   "domain": "multi-fidelity optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Expensive engine fits are managed as freezable jobs: the scheduler thaws the partial run whose extrapolated curve is most promising instead of restarting from zero or discarding the work already spent.",
+    "source_operator": "freeze_thaw_bo",
+    "telemetry": "Partial learning curves with resource consumed, freeze and thaw decisions, extrapolated final loss per frozen run"
+   }
+  },
+  {
+   "primitive_id": "successive_halving",
+   "name": "Successive halving: evaluate all candidates on a small budget, drop the worst half, double the budget, repeat until one remains",
+   "verbatim_quote": "Successive halving is an extremely simple, yet powerful, and therefore popular strategy for multi-fidelity algorithm selection: for a given initial budget, query all algorithms for that budget; then, remove the half that performed worst, double the budget 2 and successively repeat until only a single algorithm is left.",
+   "page": "Chap. 1, Sect. 1.4.2, text lines 902-925 (printed p. 16)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Low-budget rankings correlate with full-budget rankings often enough that early dropping is safe",
+    "Budget can be allocated in discrete rungs such as data subsets, iterations, or cross-validation folds"
+   ],
+   "breakdown_regime": "The breadth versus budget tradeoff is fixed in advance: too small an initial budget kills slow starters, too large a budget wastes resources on poor candidates; the halving factor (default later changed from 2 to 3) trades these off.",
+   "domain": "multi-fidelity optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine races candidate model configurations on small data slices first and only promotes survivors to full evaluations, the default allocation rule whenever a cheap proxy of final quality exists.",
+    "source_operator": "successive_halving",
+    "telemetry": "Per-rung candidate losses, survivor sets, and budget consumed per rung"
+   }
+  },
+  {
+   "primitive_id": "hyperband_hedging",
+   "name": "Hyperband hedges the unknown tradeoff between number of configurations and per-configuration budget by running successive halving under several brackets",
+   "verbatim_quote": "HyperBand [90] is a hedging strategy designed to combat this problem when selecting from randomly sampled configurations.",
+   "page": "Chap. 1, Sect. 1.4.2, text lines 928-945 (printed p. 17)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Candidates are randomly sampled configurations",
+    "At least one bracket approximately matches the unknown best tradeoff between breadth and budget"
+   ],
+   "breakdown_regime": "Still model-free: it cannot learn from evaluations which regions of the space deserve more candidates, which is exactly the limitation BOHB addresses; worst case it costs at most a constant factor more than random search at maximal budget.",
+   "domain": "multi-fidelity optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When the engine does not know whether a task rewards broad shallow search or narrow deep search, Hyperband brackets run both, bounding the worst case to a constant factor over random search at maximal budget.",
+    "source_operator": "hyperband_hedging",
+    "telemetry": "Bracket definitions, per-bracket survivor curves, total budget split across brackets"
+   }
+  },
+  {
+   "primitive_id": "bohb",
+   "name": "BOHB combines Bayesian optimization with Hyperband: strong anytime performance from low fidelities, strong final performance from a TPE-like density model",
+   "verbatim_quote": "To overcome this limitation, the recent approach BOHB [33] combines Bayesian optimization and HyperBand to achieve the best of both worlds: strong anytime performance (quick improvements in the beginning by using low fidelities in HyperBand) and strong final performance (good performance in the long run by replacing HyperBand's random search by Bayesian optimization).",
+   "page": "Chap. 1, Sect. 1.4.2, text lines 945-968 (printed p. 17)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A model is fitted only on the highest fidelity that has at least as many evaluations as hyperparameters plus one, so early models are trained on low fidelities",
+    "Multidimensional kernel density estimators describe the good region of the space"
+   ],
+   "breakdown_regime": "Model guidance only helps once enough evaluations exist at some fidelity; before that BOHB behaves like Hyperband, and kernel density estimates degrade in very high dimensions.",
+   "domain": "multi-fidelity optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "BOHB is the engine's default searcher for expensive model families: bandit scheduling controls cost while the density model steers new proposals toward regions that produced good low-fidelity results.",
+    "source_operator": "bohb",
+    "telemetry": "Per-fidelity evaluation counts, model-based versus random proposals, anytime incumbent curve"
+   }
+  },
+  {
+   "primitive_id": "hypergradient_hpo",
+   "name": "Hypergradients: exact gradients of validation performance through the entire training procedure allow tuning hundreds of continuous hyperparameters",
+   "verbatim_quote": "Maclaurin et al. [99] described a procedure to compute the exact gradients of validation performance with respect to all continuous hyperparameters of a neural network by backpropagating through the entire training procedure of stochastic gradient descent with momentum (using a novel, memory-efficient algorithm).",
+   "page": "Chap. 1, Sect. 1.6.2, text lines 1180-1215 (printed p. 22)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The training procedure is differentiable and the hyperparameters of interest are continuous",
+    "A memory-efficient reverse-mode procedure through training is available"
+   ],
+   "breakdown_regime": "Model-specific and roughly doubles the time complexity of training; it does not apply to categorical choices such as algorithm selection.",
+   "domain": "hyperparameter optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Where the engine's inner training is differentiable, validation-loss gradients flow to continuous design parameters such as per-layer learning rates or per-parameter penalties instead of treating them as blackbox coordinates.",
+    "source_operator": "hypergradient_hpo",
+    "telemetry": "Hypergradient vectors per evaluation and validation loss before and after hyperparameter steps"
+   }
+  },
+  {
+   "primitive_id": "hpo_overfitting",
+   "name": "Hyperparameters overfit the finite validation set just as model parameters overfit training data",
+   "verbatim_quote": "Similarly to overfitting a machine learning algorithm to training data, this problem is about overfitting the hyperparameters to the finite validation set; this was also demonstrated to happen experimentally [20, 81].",
+   "page": "Chap. 1, Sect. 1.6.4, text lines 1240-1265 (printed p. 23)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Validation data are finite, so the optimized objective is a noisy estimate of generalization performance",
+    "Many configurations are compared against the same validation data during search"
+   ],
+   "breakdown_regime": "Mitigations exist (reshuffled splits per evaluation, a separate holdout, stable rather than sharp optima, choosing by the surrogate mean) but the chapter reports no commonly agreed best strategy, and the best strategy may vary across problems.",
+   "domain": "hyperparameter optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine separates the data used to search configurations from the data used to certify the final choice, and treats a suspiciously good validation score as selection bias until a fresh holdout confirms it.",
+    "source_operator": "hpo_overfitting",
+    "telemetry": "Number of configurations compared per validation set and the gap between the search validation score and the fresh holdout score"
+   }
+  },
+  {
+   "primitive_id": "meta_learning_definition",
+   "name": "Meta-learning: systematically observe how approaches perform across many tasks and learn from that meta-data to learn new tasks faster",
+   "verbatim_quote": "Meta-learning, or learning to learn, is the science of systematically observing how different machine learning approaches perform on a wide range of learning tasks, and then learning from this experience, or meta-data, to learn new tasks much faster than otherwise possible.",
+   "page": "Chap. 2, Abstract and Sect. 2.1, text lines 1790-1855 (printed p. 35)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Prior tasks share structure with the new task; the chapter is explicit that completely unrelated phenomena or random noise give no leverage (no free lunch)",
+    "Meta-data (configurations, evaluations, task properties, learned parameters) are collected systematically"
+   ],
+   "breakdown_regime": "Fails exactly when task similarity fails: experience from dissimilar tasks can mislead warm starts and recommendations instead of helping.",
+   "domain": "meta-learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps a permanent meta-data store of its own past prediction tasks and treats every new task as a query against that store before any fresh search begins.",
+    "source_operator": "meta_learning_definition",
+    "telemetry": "Meta-data records per task: configurations tried, evaluations, task descriptors, final chosen configuration"
+   }
+  },
+  {
+   "primitive_id": "relative_landmarks_active_testing",
+   "name": "Relative landmarks: pairwise performance differences between configurations define empirical task similarity, exploited by tournament-style active testing",
+   "verbatim_quote": "deems tasks to be similar if the relative landmarks of all evaluated configurations are similar, i.e., if the configurations perform similarly on both tj and tnew then the tasks are deemed similar.",
+   "page": "Chap. 2, Sect. 2.2.3.1, text lines 1970-1995 (printed pp. 38-39)",
+   "latex": "RL_{a,b,j} = P_{a,j} - P_{b,j}",
+   "symbol_and_unit_ledger": {
+    "RL_{a,b,j}": "relative landmark of configurations a and b on task j (performance units)",
+    "P_{a,j}": "evaluation of configuration a on task j (performance units)",
+    "P_{b,j}": "evaluation of configuration b on task j (performance units)"
+   },
+   "assumptions": [
+    "Candidate configurations were evaluated on many prior tasks, which the chapter notes is a limitation of the method",
+    "Similar landmark profiles imply similar configuration rankings on the new task"
+   ],
+   "breakdown_regime": "Only configurations with dense prior evaluations can enter the tournament, so sparse meta-data shrinks the usable portfolio.",
+   "domain": "meta-learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Task similarity inside the engine is measured behaviorally: two prediction tasks are similar if the same model configurations win and lose by similar margins on both, not because their surface descriptions look alike.",
+    "source_operator": "relative_landmarks_active_testing",
+    "telemetry": "Pairwise performance differences per configuration pair per task and the tournament rounds of active testing"
+   }
+  },
+  {
+   "primitive_id": "defaults_and_tunability",
+   "name": "Learned defaults plus tunability: hyperparameter importance is the gain from tuning away from a learned default, not the raw variance explained",
+   "verbatim_quote": "An alternative approach is to first learn an optimal hyperparameter default setting, and then define hyperparameter importance as the performance gain that can be achieved by tuning the hyperparameter instead of leaving it at that default value.",
+   "page": "Chap. 2, Sect. 2.2.2, text lines 1930-1960 (printed p. 38)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Large evaluation corpora exist (the cited studies used about 118,000 to 500,000 OpenML experiments across dozens of datasets)",
+    "A single default can be near-optimal across tasks for a low-tunability hyperparameter"
+   ],
+   "breakdown_regime": "A hyperparameter can explain much variance yet have one universally good setting; defaults learned on a dissimilar task collection transfer poorly.",
+   "domain": "meta-learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine fixes low-tunability choices at learned defaults and spends its search budget only where measured tunability is high, shrinking the effective configuration space per task family.",
+    "source_operator": "defaults_and_tunability",
+    "telemetry": "Per-hyperparameter tunability estimates, the default configuration registry, and the measured gain from tuning each hyperparameter"
+   }
+  },
+  {
+   "primitive_id": "meta_features",
+   "name": "Meta-features characterize a task (simple, statistical, information-theoretic, complexity, model-based, and landmarker groups) so similarity and meta-models become computable",
+   "verbatim_quote": "Table 2.1 provides a concise overview of the most commonly used meta-features, together with a short rationale for why they are indicative of model performance.",
+   "page": "Chap. 2, Sect. 2.3.1 and Table 2.1, text lines 2095-2195 (printed pp. 41-43)",
+   "latex": "H(X) = -\\sum_i \\pi_{i+} \\log_2(\\pi_{i+})",
+   "symbol_and_unit_ledger": {
+    "H(X)": "entropy of a categorical feature, as defined in Table 2.1 (bits)",
+    "pi_{i+}": "marginal probability of value i of the feature (dimensionless, sums to 1)"
+   },
+   "assumptions": [
+    "Meta-features are cheap to compute relative to model evaluation and are normalized before distance computations",
+    "Per-feature quantities are aggregated into a fixed-length task vector by summary statistics such as min, max, mean, standard deviation and quartiles"
+   ],
+   "breakdown_regime": "The optimal meta-feature set depends on the application (shown on OpenML data in the chapter), and landmarker meta-features can be too expensive to compute in the online phase.",
+   "domain": "meta-learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every prediction task entering the engine is fingerprinted with the same descriptor battery (size, dimensionality, class balance, entropies, cheap probe-model scores), and that fingerprint is the join key for all transfer and warm starting.",
+    "source_operator": "meta_features",
+    "telemetry": "Meta-feature vector per task, with the computation cost of each feature group"
+   }
+  },
+  {
+   "primitive_id": "surrogate_model_transfer",
+   "name": "Per-task surrogate models transfer knowledge: if the surrogate of a prior task predicts the new task's evaluations accurately, the tasks are intrinsically similar",
+   "verbatim_quote": "A more flexible way to transfer information is to build surrogate models sj (θi ) = Pi,j for all prior tasks tj , trained using all available P.",
+   "page": "Chap. 2, Sect. 2.2.3.2, text lines 2000-2035 (printed p. 39)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Surrogates for prior tasks are trained on all available prior evaluations",
+    "Combination weights (kernel-weighted averages or agnostic Bayesian ensemble weights) reflect measured predictive accuracy on the new task"
+   ],
+   "breakdown_regime": "Weight estimates are noisy with few evaluations on the new task; the acquisition-transfer variant mitigates this by increasing the new task's own weight as evidence accumulates.",
+   "domain": "meta-learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Instead of one global model of what works, the engine keeps one surrogate per historical task and blends them by proven predictive accuracy on the current task, so transfer strength is earned empirically per task pair.",
+    "source_operator": "surrogate_model_transfer",
+    "telemetry": "Per-task surrogate prediction error on current-task evaluations and the blend weights over search iterations"
+   }
+  },
+  {
+   "primitive_id": "maml_initialization",
+   "name": "MAML learns a model parameter initialization that fine-tunes well across a distribution of similar tasks, rather than learning an update rule",
+   "verbatim_quote": "Model-Agnostic Meta-Learning (MAML) [51], on the other hand, does not try to learn an update rule, but instead learns a model parameter initialization Winit that generalizes better to similar tasks.",
+   "page": "Chap. 2, Sect. 2.4.3, text lines 2560-2595 (printed pp. 50-51)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tasks are drawn from a shared distribution, so one initialization can be close to good parameters for each of them",
+    "A few gradient steps on a few examples are the adaptation mechanism at test time"
+   ],
+   "breakdown_regime": "Meta-gradients through inner training are costly, and the initialization only helps within the task family it was meta-trained on; REPTILE, described in the same section, is the cheaper first-order approximation.",
+   "domain": "meta-learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For recurring families of similar prediction tasks, the engine maintains meta-trained initial weights so a new task in the family reaches useful performance from a handful of examples instead of full training.",
+    "source_operator": "maml_initialization",
+    "telemetry": "Few-shot adaptation curves: loss versus number of examples and gradient steps taken from the shared initialization"
+   }
+  },
+  {
+   "primitive_id": "learned_optimizer_lstm",
+   "name": "Learned optimizers: an LSTM meta-learner replaces hand-designed update rules such as SGD and is trained on the summed losses of its optimizees",
+   "verbatim_quote": "Andrychowicz et al. [6] also replace the optimizer, e.g. stochastic gradient descent, with an LSTM trained on multiple prior tasks. The loss of the meta-learner (optimizer) is defined as the sum of the losses of the base-learners (optimizees), and optimized using gradient descent.",
+   "page": "Chap. 2, Sect. 2.4.2, text lines 2470-2495 (printed p. 49)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At every step the meta-learner sees the previous model weights and the current performance gradient",
+    "Optimizees across tasks share enough structure for one learned update rule to generalize"
+   ],
+   "breakdown_regime": "Learned optimizers can fail to generalize to longer training horizons or to architectures unlike those meta-trained on, and they are difficult to train.",
+   "domain": "meta-learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's update rule itself is a learnable component: for repeated similar fitting jobs, a learned optimizer proposes parameter updates conditioned on gradient history rather than applying a fixed hand-tuned rule.",
+    "source_operator": "learned_optimizer_lstm",
+    "telemetry": "Optimizee loss trajectories under learned versus hand-designed optimizers on held-out tasks"
+   }
+  },
+  {
+   "primitive_id": "prototypical_networks",
+   "name": "Prototypical networks classify new examples by distance to per-class prototype means in a learned embedding space",
+   "verbatim_quote": "It then calculates a prototype (mean vector) for every class. New test instances are mapped to the same vector space and a distance metric is used to create a softmax over all possible classes.",
+   "page": "Chap. 2, Sect. 2.4.3, text lines 2540-2565 (printed p. 50)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A shared embedding maps examples of a class close together across tasks",
+    "A few examples per new class suffice to estimate a prototype, the class mean in embedding space"
+   ],
+   "breakdown_regime": "Mean prototypes blur multimodal classes, and the embedding transfers only within the task family used for episodic training.",
+   "domain": "meta-learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "New rare categories in the engine's tasks are handled by embedding and prototype matching instead of training a classifier head, giving usable predictions from a handful of labeled examples.",
+    "source_operator": "prototypical_networks",
+    "telemetry": "Embedding distances of new examples to class prototypes and prototype quality versus examples per class"
+   }
+  },
+  {
+   "primitive_id": "nas_three_dimensions",
+   "name": "NAS decomposes into three dimensions: search space, search strategy, and performance estimation strategy",
+   "verbatim_quote": "We categorize methods for NAS according to three dimensions: search space, search strategy, and performance estimation strategy",
+   "page": "Chap. 3, Abstract and Sect. 3.1, text lines 3138-3235 (printed pp. 63-64)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Architectures can be enumerated from a declared space of operations and connections",
+    "A performance estimate, however cheap, ranks architectures usefully enough to guide search"
+   ],
+   "breakdown_regime": "Each axis can silently dominate results: a biased space caps achievable performance, a weak estimator misleads any strategy, and benchmark comparisons confound all three axes.",
+   "domain": "neural architecture search",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's architecture work is managed on the same three axes explicitly, so a disappointing result is attributed to space, strategy, or estimator before more compute is spent.",
+    "source_operator": "nas_three_dimensions",
+    "telemetry": "Search space size and coverage notes, strategy budget consumed, estimator versus full-training rank correlation"
+   }
+  },
+  {
+   "primitive_id": "cell_search_space",
+   "name": "Cell-based search: optimize a normal cell and a reduction cell once, then build full architectures by stacking them",
+   "verbatim_quote": "Zoph et al. [75] optimize two different kind of cells: a normal cell that preservers the dimensionality of the input and a reduction cell which reduces the spatial dimension.",
+   "page": "Chap. 3, Sect. 3.2, text lines 3290-3315 (printed p. 66)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Good architectures repeat motifs, as in hand-designed residual and dense networks",
+    "Cells transfer across datasets by adapting how many are stacked (the chapter reports transfer from CIFAR-10 to ImageNet at state-of-the-art performance)"
+   ],
+   "breakdown_regime": "The meta-architecture (how cells are stacked and connected) stays hand-designed, so part of the engineering burden moves rather than disappears; the chapter estimates a sevenfold speedup over searching whole architectures.",
+   "domain": "neural architecture search",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine searches reusable processing motifs once and composes task-specific models by stacking, instead of searching a monolithic architecture for every task.",
+    "source_operator": "cell_search_space",
+    "telemetry": "Cell evaluation results and the transfer performance of the same cell across tasks at different stack depths"
+   }
+  },
+  {
+   "primitive_id": "rl_controller_nas",
+   "name": "RL-based NAS: a recurrent controller sequentially samples an architecture description and is trained by the validation reward of the trained architecture",
+   "verbatim_quote": "Zoph and Le [74] use a recurrent neural network (RNN) policy to sequentially sample a string that in turn encodes the neural architecture.",
+   "page": "Chap. 3, Sect. 3.3, text lines 3380-3405 (printed p. 67)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Architecture generation is a sequential decision process whose reward arrives only after the full architecture is trained and evaluated",
+    "Policy gradient methods (REINFORCE, and PPO in follow-up work) can assign credit to good design decisions"
+   ],
+   "breakdown_regime": "The original result used 800 GPUs for three to four weeks; reward is sparse and noisy, and the chapter argues the process is more intuitively a stateless multi-armed bandit problem.",
+   "domain": "neural architecture search",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Architecture proposals in the engine can be generated by a learned controller whose sampling distribution shifts toward design patterns that previously produced high validation performance.",
+    "source_operator": "rl_controller_nas",
+    "telemetry": "Controller-sampled architectures, their validation rewards, and policy entropy over the search"
+   }
+  },
+  {
+   "primitive_id": "aging_evolution_nas",
+   "name": "Aging evolution removes the oldest population member rather than the worst, reducing greediness; it matched RL with better anytime performance in the cited case study",
+   "verbatim_quote": "Real et al. [50] remove the worst individual from a population, while Real et al. [49] found it beneficial to remove the oldest individual (which decreases greediness), and Liu et al. [38] do not remove individuals at all.",
+   "page": "Chap. 3, Sect. 3.3, text lines 3440-3465 (printed p. 69)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tournament selection samples parents, and mutations (adding or removing a layer, altering hyperparameters, adding skip connections) generate offspring",
+    "Removing the oldest individual preserves population diversity better than removing the worst"
+   ],
+   "breakdown_regime": "Random search trailed evolution and RL only slightly in the cited study (about 4 percent versus about 3.5 percent test error on CIFAR-10), so population machinery must justify its overhead per problem.",
+   "domain": "neural architecture search",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's population-based search uses age-based removal to keep exploring: incumbents cannot permanently block the population, mirroring the aging rule that outperformed worst-individual removal.",
+    "source_operator": "aging_evolution_nas",
+    "telemetry": "Population age and fitness distribution per generation and the anytime best-fitness curve versus a random search control"
+   }
+  },
+  {
+   "primitive_id": "darts_continuous_relaxation",
+   "name": "DARTS relaxes operation choice into a convex mixture over candidate operations, making the architecture differentiable and optimizable by gradient descent",
+   "verbatim_quote": "In contrast to the gradient-free optimization methods above, Liu et al. [39] propose a continuous relaxation of the search space to enable gradient-based optimization",
+   "page": "Chap. 3, Sect. 3.3, text lines 3488-3503 (printed p. 70)",
+   "latex": "y = \\sum_{i=1}^{m} \\lambda_i o_i(x), \\quad \\lambda_i \\geq 0, \\quad \\sum_{i=1}^{m} \\lambda_i = 1",
+   "symbol_and_unit_ledger": {
+    "y": "layer output (activation units)",
+    "x": "layer input (activation units)",
+    "o_i": "candidate operation i, for example a convolution or a pooling operation",
+    "lambda_i": "architecture weight of operation i (dimensionless convex coefficient)",
+    "m": "number of candidate operations (count)"
+   },
+   "assumptions": [
+    "A convex combination of operations is a useful proxy for the discrete choice during search",
+    "Network weights are optimized on training data while architecture weights are optimized on validation data in alternating steps; the discrete architecture is recovered by argmax over the mixture weights"
+   ],
+   "breakdown_regime": "The discretized architecture can perform worse than the relaxed supernet suggests, and the entire supergraph must fit in GPU memory during search, which restricts it to relatively small, usually cell-based, spaces.",
+   "domain": "neural architecture search",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Discrete design choices inside the engine can be relaxed into mixture weights and optimized by gradient descent on validation loss, then discretized, whenever the underlying model is differentiable end to end.",
+    "source_operator": "darts_continuous_relaxation",
+    "telemetry": "Mixture weights per edge over training and the validation loss of the relaxed versus the discretized architecture"
+   }
+  },
+  {
+   "primitive_id": "network_morphisms",
+   "name": "Network morphisms modify an architecture while leaving the represented function unchanged, so capacity grows without retraining from scratch",
+   "verbatim_quote": "One way of achieving this, dubbed network morphisms [64], allows modifying an architecture while leaving the function represented by the network unchanged [10, 11, 21, 22].",
+   "page": "Chap. 3, Sect. 3.4, text lines 3530-3548 (printed p. 71)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Function-preserving widening and deepening operators exist for the layer types used",
+    "A few epochs of continued training exploit the added capacity"
+   ],
+   "breakdown_regime": "Strict morphisms can only make architectures larger, biasing search toward overly complex models; approximate morphisms that also allow shrinking are the chapter's noted remedy.",
+   "domain": "neural architecture search",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Model capacity in the engine grows by function-preserving edits to a working model instead of retraining from scratch, so performance never resets when the architecture search takes a step.",
+    "source_operator": "network_morphisms",
+    "telemetry": "Performance before and after each morphism, added parameter count, and epochs of continued training used to exploit new capacity"
+   }
+  },
+  {
+   "primitive_id": "one_shot_weight_sharing",
+   "name": "One-shot NAS treats all architectures as subgraphs of one supergraph with shared weights, so candidates are evaluated by inheritance without separate training",
+   "verbatim_quote": "One-Shot Architecture Search is another promising approach for speeding up performance estimation, which treats all architectures as different subgraphs of a supergraph (the one-shot model) and shares weights between architectures that have edges of this supergraph in common [6, 9, 39, 46, 52].",
+   "page": "Chap. 3, Sect. 3.4, text lines 3545-3570 (printed pp. 71-72)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Shared-weight scores rank architectures consistently with fully trained performance; the chapter reports strong correlation despite severely underestimated absolute values",
+    "The a priori supergraph contains the architectures worth finding"
+   ],
+   "breakdown_regime": "Optimizing the architecture sampling distribution jointly with the one-shot model can create a self-reinforcing bias toward early-explored regions and premature convergence; a fixed sampling distribution is one reported remedy.",
+   "domain": "neural architecture search",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine evaluates candidate architectures by inheritance from one trained supergraph when ranking is all that is needed, reserving full training for the few finalists.",
+    "source_operator": "one_shot_weight_sharing",
+    "telemetry": "Shared-weight score versus fully trained score for sampled architectures and the rank correlation of the estimator"
+   }
+  },
+  {
+   "primitive_id": "cash_problem",
+   "name": "CASH: algorithm selection and hyperparameter optimization are a single hierarchical HPO problem, with algorithm choice as a root hyperparameter (Eq. 4.1)",
+   "verbatim_quote": "In what follows, we demonstrate that CASH can be viewed as a single hierarchical hyperparameter optimization problem, in which even the choice of algorithm itself is considered a hyperparameter.",
+   "page": "Chap. 4, Sects. 4.1 and 4.3, text lines 3925-3960 and 4191-4215 (printed pp. 82-84)",
+   "latex": "A^*_{\\lambda^*} \\in \\arg\\min_{A^{(j)} \\in \\mathcal{A}, \\lambda \\in \\Lambda^{(j)}} \\frac{1}{k} \\sum_{i=1}^{k} \\mathcal{L}(A^{(j)}_\\lambda, D^{(i)}_{train}, D^{(i)}_{valid})",
+   "symbol_and_unit_ledger": {
+    "A^(j)": "candidate learning algorithm j",
+    "Lambda^(j)": "hyperparameter space of algorithm j",
+    "lambda": "hyperparameter configuration within Lambda^(j)",
+    "L": "loss on one cross-validation fold (loss units)",
+    "k": "number of cross-validation folds (count)",
+    "D^(i)_train, D^(i)_valid": "training and validation parts of fold i"
+   },
+   "assumptions": [
+    "The combined space is the union of the per-algorithm spaces under one root choice variable, with per-algorithm hyperparameters conditional on that choice",
+    "Cross-validation loss is the shared currency for comparing algorithms"
+   ],
+   "breakdown_regime": "The combined space is high-dimensional, mixed categorical and continuous, and noisy; the chapter's Auto-WEKA space reached 786 dimensions once ensembles of up to five base learners were allowed.",
+   "domain": "automl systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine never separates which model family from how it is tuned: one root variable picks the family and one search optimizes the joint space, which is the CASH formulation applied verbatim.",
+    "source_operator": "cash_problem",
+    "telemetry": "Root-level algorithm choice distribution over the search and the per-family best cross-validation loss"
+   }
+  },
+  {
+   "primitive_id": "smac_intensification",
+   "name": "SMAC intensification: a challenger becomes incumbent only after beating the incumbent at every fold count the incumbent has survived, so weak candidates are discarded after a single fold",
+   "verbatim_quote": "In order for a new configuration to become a new incumbent, it must outperform the previous incumbent in every comparison made: considering only one fold, two folds, and so on up to the total number of folds previously used to evaluate the incumbent.",
+   "page": "Chap. 4, Sect. 4.3.1, text lines 4240-4262 (printed p. 86)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cross-validation folds can be evaluated one at a time and partial means are informative about the full mean",
+    "A random forest surrogate supplies predictive mean and variance from its trees' predictions, modeled as Gaussian for the expected improvement criterion"
+   ],
+   "breakdown_regime": "Aggressive early discarding can kill configurations that start slowly on particular folds; SMAC therefore also selects every second configuration at random as a diversification safeguard.",
+   "domain": "automl systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Candidate promotion inside the engine follows the same rule: no configuration becomes the incumbent on partial evidence unless it dominates the current incumbent at every matched evidence level.",
+    "source_operator": "smac_intensification",
+    "telemetry": "Folds evaluated per configuration, incumbent challenge outcomes, and evaluations saved by early discards"
+   }
+  },
+  {
+   "primitive_id": "autosklearn_meta_warmstart",
+   "name": "Auto-sklearn warm-starts Bayesian optimization with the stored best configurations of the 25 nearest datasets by L1 distance in meta-feature space",
+   "verbatim_quote": "Then, given a new dataset D, we compute its meta-features, rank all datasets by their L1 distance to D in meta-feature space and select the stored ML framework instantiations for the k = 25 nearest datasets for evaluation before starting Bayesian optimization with their results.",
+   "page": "Chap. 6, Sect. 6.3.1, text lines 5450-5485 (printed p. 117)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An offline repository (140 OpenML datasets in the chapter) stores strong configurations found by long SMAC runs, 24 hours per dataset in the described setup",
+    "38 meta-features characterize datasets; the effective landmarker category was excluded as too expensive for the online phase"
+   ],
+   "breakdown_regime": "Warm starting inherits the repository's coverage: task types absent from the repository get generic starts, and meta-learning supplies good starting points but no fine-grained performance model.",
+   "domain": "automl systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's cold-start procedure is this recipe: fingerprint the new task, take the stored best configurations of its nearest historical neighbors, evaluate them first, and only then let the general search run.",
+    "source_operator": "autosklearn_meta_warmstart",
+    "telemetry": "Neighbor task distances and the warm-start configurations' initial losses versus the search's later incumbent curve"
+   }
+  },
+  {
+   "primitive_id": "ensemble_selection",
+   "name": "Ensemble selection greedily builds an ensemble, with replacement, from the models Bayesian optimization already trained, adding whichever model most reduces validation loss",
+   "verbatim_quote": "In a nutshell, ensemble selection (introduced by Caruana et al. [10]) is a greedy procedure that starts from an empty ensemble and then iteratively adds the model that minimizes ensemble validation loss (with uniform weight, but allowing for repetitions).",
+   "page": "Chap. 6, Sect. 6.3.2, text lines 5490-5535 (printed pp. 117-118)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Models evaluated during optimization are stored together with their validation predictions",
+    "Greedy selection with replacement approximates model weighting; the chapter found stacking and numerical weight optimization overfit the validation set and cost more (the experiments built ensembles of size 50)"
+   ],
+   "breakdown_regime": "Selection uses the same validation set as the search itself, so ensemble gains still need confirmation on held-out data.",
+   "domain": "automl systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "No evaluated model in the engine is thrown away: the search log is post-processed into an ensemble whose members earn weight by reducing validation loss, converting search waste into robustness.",
+    "source_operator": "ensemble_selection",
+    "telemetry": "Ensemble membership with repetition counts, validation loss per greedy addition, and the ensemble versus best-single-model gap on holdout data"
+   }
+  },
+  {
+   "primitive_id": "tpot_pareto_gp",
+   "name": "TPOT evolves tree-structured pipelines by genetic programming under NSGA-II, jointly maximizing accuracy and minimizing the number of operators in the pipeline",
+   "verbatim_quote": "where pipelines are selected to simultaneously maximize classification accuracy on the dataset while minimizing the number of operators in the pipeline.",
+   "page": "Chap. 8, Sect. 8.2.3, text lines 7180-7205 (printed p. 154)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pipelines are genetic programming trees over preprocessing, feature selection, and classification operators, with a classifier as the final operator",
+    "In the described setup, populations of 100 pipelines evolve for 100 generations, each selected pipeline producing five offspring with 5 percent crossover and 90 percent mutation among the remaining offspring"
+   ],
+   "breakdown_regime": "On 150 benchmarks TPOT beat a 500-tree random forest significantly on 21 benchmarks, lost on 4, and tied on 125, and random pipeline search often matched its accuracy while producing needlessly complex pipelines.",
+   "domain": "automl systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pipeline construction in the engine is a multi-objective search where complexity is a priced objective rather than an afterthought: a slightly weaker but much simpler pipeline can win the Pareto tradeoff.",
+    "source_operator": "tpot_pareto_gp",
+    "telemetry": "Pareto front of accuracy versus operator count per generation and the complexity of the finally selected pipeline"
+   }
+  },
+  {
+   "primitive_id": "compositional_kernel_grammar",
+   "name": "ABCD searches a compositional grammar over Gaussian process kernels whose expressions also translate into natural-language descriptions",
+   "verbatim_quote": "The base kernels in the grammar are: C (constant), LIN (linear), SE (squared exponential), PER (periodic), and WN (white noise).",
+   "page": "Chap. 9, Sect. 9.3.1, text lines 7629-7665 (printed p. 165)",
+   "latex": "CP(k_1, k_2)(x, x') = k_1(x, x') \\sigma(x) \\sigma(x') + k_2(x, x') (1 - \\sigma(x)) (1 - \\sigma(x'))",
+   "symbol_and_unit_ledger": {
+    "k_1, k_2": "component kernels (covariance units)",
+    "x, x'": "input points (input units)",
+    "sigma(x)": "sigmoidal gate of the changepoint operator, parameterized by location l and scale s (dimensionless, between 0 and 1)",
+    "CP": "changepoint operator composing two kernels across a soft switch"
+   },
+   "assumptions": [
+    "Data patterns decompose into interpretable kernel components (constant, linear, smooth, periodic, noise) combined by addition, multiplication, and changepoints",
+    "Each grammar expression reduces to a canonical sum-of-products form that maps to a fixed natural-language description scheme"
+   ],
+   "breakdown_regime": "Greedy expansion can miss better models hiding in unexpanded subtrees, and restricting the language to explainable kernels can cost predictive accuracy, a tradeoff the chapter states explicitly.",
+   "domain": "statistical model discovery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For time-series style signals, the engine searches compositions of interpretable components and reports the winning composition in words, so the model itself is the explanation rather than a post hoc story.",
+    "source_operator": "compositional_kernel_grammar",
+    "telemetry": "Kernel expressions proposed and their scores per round, and the variance explained per additive component"
+   }
+  },
+  {
+   "primitive_id": "bic_model_evaluation",
+   "name": "BIC scores a model by fit penalized by its parameter count and approximates the marginal likelihood (Eq. 9.1)",
+   "verbatim_quote": "The Bayesian Information Criterion trades off model complexity and fit to the data, and approximates the full marginal likelihood (which integrates out latent functions and hyperparameters).",
+   "page": "Chap. 9, Sect. 9.3.2, text lines 7660-7685 (printed pp. 165-166)",
+   "latex": "BIC(M) = -2 \\log p(D \\mid M) + |M| \\log N",
+   "symbol_and_unit_ledger": {
+    "BIC(M)": "score of model M (nats; lower is better)",
+    "p(D | M)": "marginal likelihood of the data D under M with the latent Gaussian process function integrated out (probability density)",
+    "|M|": "number of kernel parameters in M (count)",
+    "N": "size of the dataset (count)"
+   },
+   "assumptions": [
+    "For Gaussian process models the marginal likelihood with latent functions integrated out is computable",
+    "A parameter-count penalty adequately prices complexity for comparing models in the grammar"
+   ],
+   "breakdown_regime": "BIC only approximates the full marginal likelihood, and greedy search around the best-scoring model is not guaranteed to find the best model in the language for a dataset.",
+   "domain": "statistical model discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Competing explanations inside the engine are scored with an explicit complexity price in the same units as fit, so a more complex model must buy its parameters with likelihood.",
+    "source_operator": "bic_model_evaluation",
+    "telemetry": "Per-model log marginal likelihood, parameter count, BIC, and the BIC gap between the top two models"
+   }
+  },
+  {
+   "primitive_id": "bilevel_hypermodel",
+   "name": "Model selection is bilevel optimization: a lower objective trains the parameters, an upper objective trains the hyperparameters, and the upper level itself needs regularization (Eq. 10.1)",
+   "verbatim_quote": "As an optimization problem, model selection is a bi-level optimization program [7, 18, 19]; there is a lower objective J1 to train the parameters α of the model, and an upper objective J2 to train the hyper-parameters θ , both optimized simultaneously",
+   "page": "Chap. 10, Sect. 10.2.2, text lines 8380-8425 (printed p. 182)",
+   "latex": "y = f(x; \\theta) = f(x; \\alpha(\\theta), \\theta)",
+   "symbol_and_unit_ledger": {
+    "y": "model prediction (target units)",
+    "x": "input feature vector",
+    "theta": "hyperparameter vector of the hyper-model (mixed units)",
+    "alpha(theta)": "parameter vector produced by the trainer at fixed theta (parameter units)",
+    "f": "predictive model form"
+   },
+   "assumptions": [
+    "Model parameters are an implicit function of the hyperparameters through the training procedure",
+    "The upper-level objective, typically a cross-validation estimate, can itself overfit as the number of tried hyper-models grows"
+   ],
+   "breakdown_regime": "Each added level multiplies data-splitting needs (nested cross-validation) and compute; the challenge analysis notes that in practice the computational constraints bound participants harder than overfitting did.",
+   "domain": "model selection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's governance is bilevel by design: inner fitting and outer selection are separate objectives with separate data, and the outer objective is regularized and audited rather than trusted raw.",
+    "source_operator": "bilevel_hypermodel",
+    "telemetry": "Upper-level objective value per hyperparameter trial, nested validation estimates, and compute spent per level"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "245420e2572b1a38-t1",
+   "think": "This edited volume, the first comprehensive book on automated machine learning, is organized as methods, systems, and challenges, but its chapters share one object: the logged pair of a configuration and its measured performance. Chapter 1 defines the atomic problem. A learning algorithm A with configuration lambda is scored by a validation protocol standing in for an expectation over the data distribution, and hyperparameter optimization is the argmin of that score. Everything else in the book is machinery for making that argmin affordable and informed. The machinery comes in layers of increasing memory. Memoryless methods, grid and random search, already contain a lesson: under a fixed budget B, a grid affords only B to the power 1 over N distinct values per hyperparameter while random search tries B values for each, which is why random search wins whenever importance is concentrated in a few hyperparameters. Population methods add selection pressure. Bayesian optimization adds a model: a surrogate fitted to all observations so far, an acquisition function such as expected improvement that prices exploration against exploitation in closed form, and a loop that spends the expensive blackbox only where the model says improvement or information is likely. The choice of surrogate is dictated by the space: Gaussian processes for small continuous spaces, random forests for large categorical and conditional spaces, density ratios in the tree Parzen estimator for structured spaces. The second layer attacks cost directly. Because one full evaluation can take days, multi-fidelity methods evaluate cheap approximations first: learning curves are extrapolated and hopeless runs are terminated early, freeze-thaw optimization pauses runs rather than killing them, successive halving races many candidates on small budgets and promotes survivors, Hyperband hedges the unknown breadth-versus-depth tradeoff across brackets, and BOHB steers the racing with a learned model so that anytime performance and final performance are both strong. Gradient-based hyperparameter optimization leaves the blackbox view entirely when training is differentiable, computing exact hypergradients through the whole training run. The third layer is memory across tasks, the subject of Chapter 2. Meta-learning is organized by what is remembered: raw evaluations, which support portfolios, rankings, learned defaults, and tunability analysis; task properties, encoded as meta-features from simple counts to landmarkers, which support similarity measures, warm starting, and meta-models; and prior models themselves, whose parameters transfer, whose initializations can be meta-learned as in MAML, and whose update rules can be replaced by learned optimizers. The unifying move is that experience becomes data, and the design of the next experiment becomes a learned function of all previous experiments. Chapter 3 points the same stack at architectures: a search space encoding human prior knowledge, a strategy ranging from random search through reinforcement learning controllers and aging evolution to differentiable relaxations, and a performance estimation strategy whose cost collapsed from thousands of GPU days to a few once network morphisms and one-shot weight sharing let candidates inherit training instead of repeating it. The same chapter records the honest counterweight: random search trailed reinforcement learning and evolution only slightly on the standard benchmark, a standing warning that search sophistication must pay for itself rather than be assumed superior. Part II turns the stack into systems by collapsing two problems into one: CASH observes that choosing the algorithm is itself a categorical hyperparameter, so model selection and tuning become a single hierarchical optimization, solved by SMAC with fold-by-fold intensification in Auto-WEKA, by TPE over scikit-learn in Hyperopt-Sklearn, and in Auto-sklearn by adding the two ideas that recur throughout the book, meta-learning warm starts from the 25 nearest datasets and ensemble selection that harvests the models Bayesian optimization would otherwise discard. Auto-Net carries the pattern to neural networks and switches the optimizer to BOHB; TPOT replaces the fixed pipeline template with genetic programming over tree-structured pipelines under a Pareto objective that prices complexity; the Automatic Statistician replaces accuracy-only search with a compositional grammar of interpretable Gaussian process kernels scored by BIC and rendered into natural-language reports. Hyperopt-Sklearn shows the same stack from the space-design side: its search domain is a stochastic expression graph that composes preprocessing and classification choices conditionally, so pipelines are generated by a program rather than picked from a fixed list of templates. Part III closes the loop with evaluation discipline: the challenge series formalizes model selection as bilevel optimization, runs blind tests under fixed time budgets, and normalizes scores so that random performance is zero and optimal performance is one. For a reasoning engine, the transferable core is not any single optimizer. It is the discipline of treating one's own model building as an experiment that generates meta-data: log every configuration and evaluation, fingerprint every task, spend cheap fidelities before expensive ones, warm start from behaviorally similar tasks, ensemble what the search produces, and keep a fresh holdout that the search never sees, because the book's negative results are as load-bearing as its methods. Hyperparameters overfit validation sets. Low-fidelity rankings can invert when the fidelity gap grows too large. One-shot scores are biased estimates that merely rank well. Transfer fails on unrelated tasks. Conditional spaces punish flat optimizers that pretend every coordinate is always active. Surrogate uncertainty that is not calibrated turns the acquisition function into self-deception. Ensembles selected on the same validation data that chose their members inherit the selection bias they were meant to average away. Each negative result is a veto on a class of shortcuts, and the vetoes compose: a pipeline that ignores any one of them will eventually publish a number it cannot defend. A system that internalizes both the methods and their failure modes searches less blindly each time it runs, which is precisely the book's definition of learning to learn.",
+   "retrocausal_genealogy": "The lineage runs from 1990s hyperparameter optimization and experimental algorithm configuration, through Bayesian optimization's expected improvement machinery, to three converging developments the book documents. First, the random search analysis of Bergstra and Bengio and the SMAC line of work made Bayesian optimization practical for the conditional, mixed spaces of real machine learning pipelines. Second, Auto-WEKA's 2013 formulation of the CASH problem collapsed algorithm selection into hyperparameter optimization and created the template that the systems in Part II all follow. Third, the reinforcement learning result of Zoph and Le made architecture search a mainstream problem almost overnight, triggering the cost collapse through network morphisms, weight sharing, and differentiable relaxation that Chapter 3 records. The ChaLearn challenges running since 2015 supplied selection pressure and blind evaluation, and repositories such as OpenML supplied the shared memory of evaluations that meta-learning feeds on.",
+   "theory_of_mind": "The editors write for builders who are tired of hand tuning and suspicious of folklore. Their model of the domain is that machine learning performance is an empirical property of configuration and task jointly, that expertise is largely compressed experience which can be decompressed into data, and that the scarce resource is not ideas but evaluations. They assume that tasks recur with exploitable similarity, that defaults and grid searches are what ignorance looks like, and that an honest benchmark with a clock and a blind test set settles arguments better than intuition does. The book's open access license and its reliance on public repositories show a further belief: the field's memory should be shared infrastructure rather than private craft, and automation should democratize expertise instead of hiding it behind paid black-box services.",
+   "cross_layer_veto": "Several findings veto signals that other layers might naively trust. Hyperparameter overfitting vetoes the raw best validation score: a winner selected against the same finite validation set is biased until fresh data confirms it. Rank instability at low fidelity vetoes cheap proxy leaderboards: when the gap between proxy and full evaluation grows too large, the ordering itself changes, so promotion across fidelities must be gradual. The one-shot analysis vetoes shared-weight scores as performance estimates; they are biased downward and only their ranking is usable, and jointly optimizing the sampling distribution can manufacture its own confirming evidence. The no free lunch discussion vetoes transfer by surface resemblance: meta-learning helps only when tasks are genuinely similar, and similarity must be measured behaviorally. Finally, the challenge analysis vetoes budget-free comparisons: a method that wins without a time limit has not answered the practical question the field actually faces."
+  }
+ ],
+ "universal_lens": "Any craft that maps situations to settings of a parameterized procedure can be automated in this book's pattern: keep every trial as data, describe each new situation with cheap measurements, search the setting space with a surrogate model instead of folklore, test candidates on cheap approximations before expensive confirmations, warm start from the most similar past situations, and assemble an ensemble from what the search produced instead of discarding all but the winner. The pattern holds wherever experts currently tune by feel and outcomes can be scored honestly.",
+ "gsi_mapping": "The Institute takes the meta-learning stance as a method for improving instruction and research programs. A course, a training protocol, or a study design is a configuration; a cohort is a task with measurable meta-features; outcomes are evaluations to be logged rather than anecdotes to be repeated. Tunability analysis separates the choices worth adapting per cohort from those that should stay at strong learned defaults, and the challenge protocol of blind tasks, fixed budgets, and normalized scores is a ready template for honestly evaluating any educational intervention before it is scaled.",
+ "gse_mapping": "The engine adopts the book's full operating loop for its own model building. Model families and their settings form one CASH space searched by Bayesian optimization with multi-fidelity racing, so expensive fits earn their budget through cheap approximations first. Every evaluation is written to a meta-data store keyed by task meta-features, enabling warm starts from behaviorally similar past tasks and learned defaults for low-tunability settings. Models evaluated during search are harvested by ensemble selection rather than discarded. Final choices are certified on holdout data the search never touched, because the book demonstrates that the search objective itself overfits."
+}

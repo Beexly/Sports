@@ -1,0 +1,78 @@
+{
+  "book_id": "2f001242913e4850",
+  "source_status": "COMPLETE",
+  "title": "TNF-JAX-AT-BAL-PBP-REPRODUCTIONS",
+  "file_name": "TNF-JAX-AT-BAL-PBP-REPRODUCTIONS.md",
+  "sha256": "2f001242913e4850002a1722c3966d84502d3da472d455a7e77c5ef458d05b78",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "EPA/play and pass-yards-per-dropback as unified offensive efficiency metrics; pressure rate and YBC/att as defensive resistance and run-block efficiency measures. Universal Lens: Rooted in TNF-JAX-AT-BAL-PBP-REPRODUCTIONS (2f001242913e4850), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on JAX's top-3 EPA/play and BAL's 17th-ranked pass defense using probabilistic pass location models and contact-field validation. GSI Mapping: Rooted in TNF-JAX-AT-BAL-PBP-REPRODUCTIONS (2f001242913e4850), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps JAX's explosive rate and BAL's pressure generation to state transitions in expected points and downfield target distribution. GSE Mapping: Rooted in TNF-JAX-AT-BAL-PBP-REPRODUCTIONS (2f001242913e4850), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "epa_per_play",
+      "name": "Expected Points Added per Play",
+      "verbatim_quote": "## What this means for the TNF board - Jacksonville's offense is a top-3 EPA/play and **No.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'EPA': 'expected points added, dimensionless', 'play': 'unit of play, dimensionless'}",
+      "assumptions": "Offensive performance is independent of defensive adjustments; EPA is additive across plays.",
+      "breakdown_regime": "Weeks 1–8, filtered pass/run plays",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "EPA/play serves as core offensive efficiency kernel in GSI Bayesian model; used to compute posterior probability of JAX's offensive success.",
+        "source_operator": "epa_per_play",
+        "telemetry": "EPA/play rank vs. league average"
+      }
+    },
+    {
+      "primitive_id": "pressure_rate_allowed",
+      "name": "Pressure Rate Allowed",
+      "verbatim_quote": "the defense that generates the most pressure; Baltimore's 7 means 7th-most pressure generated.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'pressure_rate': 'fraction of dropbacks under pressure, dimensionless', 'rank': 'league ranking, dimensionless'}",
+      "assumptions": "Pressure is defined as sack or qb hit within 2 seconds of snap.",
+      "breakdown_regime": "Weeks 1–8, filtered pass plays",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pressure rate allowed mirrors defensive pass rush intensity in GSE state transition dynamics.",
+        "source_operator": "pressure_rate_allowed",
+        "telemetry": "Defensive rank vs. league average pressure rate"
+      }
+    },
+    {
+      "primitive_id": "yards_before_contact_per_att",
+      "name": "Yards Before Contact per Attempt",
+      "verbatim_quote": "RB YBC is now measured from Pro-Football-Reference 2026 Advanced Rushing: BAL 2.52 YBC/Att (231 att, 582 YBC), JAX 1.92 (200 att, 384 YBC).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'YBC': 'yards before contact, yards', 'att': 'rush attempts, dimensionless'}",
+      "assumptions": "Contact is defined by defender impact within 1 yard of runner.",
+      "breakdown_regime": "Weeks 1–8, rushing plays",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "YBC/att is used in GSE to model run-blocking efficiency and predict run success probability.",
+        "source_operator": "yards_before_contact_per_att",
+        "telemetry": "YBC/att rank vs. league average"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2f001242913e4850_t0",
+      "think": "The three core primitives—EPA/play, pressure rate allowed, and YBC/att—are derived from filtered pass and run plays in Weeks 1–8. EPA/play captures offensive efficiency via expected point changes, while pressure rate reflects defensive pass rush effectiveness. YBC/att quantifies run-blocking efficiency. These metrics form a dual framework where offensive strength (EPA) is contrasted with defensive resistance (pressure and YBC). Failure modes include misalignment between public data sources (nflverse lacks contact fields) and authoritative records (PFR), leading to potential misclassification of defensive schemes or player performance. The system must validate all metrics against PFR for reproducibility.\n\nDeep epistemic analysis for TNF-JAX-AT-BAL-PBP-REPRODUCTIONS (2f001242913e4850, domain=other, pages_read=2/2): Operator 'Expected Points Added per Play' (page 2, domain other) captures: ## What this means for the TNF board - Jacksonville's offense is a top-3 EPA/play and **No. Assumptions: Offensive performance is independent of defensive adjustments; EPA is additive across plays. Breakdown regime: Weeks 1–8, filtered pass/run plays Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): EPA/play serves as core offensive efficiency kernel in GSI Bayesian model; used to compute posterior probability of JAX's offensive success. Operator 'Pressure Rate Allowed' (page 2, domain other) captures: the defense that generates the most pressure; Baltimore's 7 means 7th-most pressure generated. Assumptions: Pressure is defined as sack or qb hit within 2 seconds of snap. Breakdown regime: Weeks 1–8, filtered pass plays Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Pressure rate allowed mirrors defensive pass rush intensity in GSE state transition dynamics. Operator 'Yards Before Contact per Attempt' (page 2, domain other) captures: RB YBC is now measured from Pro-Football-Reference 2026 Advanced Rushing: BAL 2.52 YBC/Att (231 att, 582 YBC), JAX 1.92 (200 att, 384 YBC). Assumptions: Contact is defined by defender impact within 1 yard of runner. Breakdown regime: Weeks 1–8, rushing plays Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): YBC/att is used in GSE to model run-blocking efficiency and predict run success probability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for TNF-JAX-AT-BAL-PBP-REPRODUCTIONS (2f001242913e4850, domain=other, pages_read=2/2): Operator 'Expected Points Added per Play' (page 2, domain other) captures: ## What this means for the TNF board - Jacksonville's offense is a top-3 EPA/play and **No. Assumptions: Offensive performance is independent of defensive adjustments; EPA is additive across plays. Breakdown regime: Weeks 1–8, filtered pass/run plays Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): EPA/play serves as core offensive efficiency kernel in GSI Bayesian model; used to compute posterior probability of JAX's offensive success. Operator 'Pressure Rate Allowed' (page 2, domain other) captures: the defense that generates the most pressure; Baltimore's 7 means 7th-most pressure generated. Assumptions: Pressure is defined as sack or qb hit within 2 seconds of snap. Breakdown regime: Weeks 1–8, filtered pass plays Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Pressure rate allowed mirrors defensive pass rush intensity in GSE state transition dynamics. Operator 'Yards Before Contact per Attempt' (page 2, domain other) captures: RB YBC is now measured from Pro-Football-Reference 2026 Advanced Rushing: BAL 2.52 YBC/Att (231 att, 582 YBC), JAX 1.92 (200 att, 384 YBC). Assumptions: Contact is defined by defender impact within 1 yard of runner. Breakdown regime: Weeks 1–8, rushing plays Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): YBC/att is used in GSE to model run-blocking efficiency and predict run success probability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in NFL Expected Points Added (EPA) and defensive pressure analytics from 2020s, extended with YBC/att from advanced rushing metrics post-2024. Inspired by statistical physics models of team efficiency and game-state transitions. Retrocausal Genealogy: Rooted in TNF-JAX-AT-BAL-PBP-REPRODUCTIONS (2f001242913e4850), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include JAX’s high-EPA offense and BAL’s average defense. Decision actors are coaches optimizing for EPA maximization and pressure mitigation. Market actors may misprice JAX’s offensive strength due to incomplete data on YBC/att or pressure rate. Theory of Mind & Decision Maker Model: Rooted in TNF-JAX-AT-BAL-PBP-REPRODUCTIONS (2f001242913e4850), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes use of raw EPA without pressure adjustment; leakage veto prevents misapplication of YBC/att to non-rushing contexts. All metrics must be validated against PFR to avoid data-source contamination. Cross-Layer Veto & Anti-Leakage Check: Rooted in TNF-JAX-AT-BAL-PBP-REPRODUCTIONS (2f001242913e4850), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

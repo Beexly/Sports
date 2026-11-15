@@ -1,0 +1,78 @@
+{
+  "book_id": "f359ad5e9177c03c",
+  "source_status": "COMPLETE",
+  "title": "07-homepage-rebuild-plan",
+  "file_name": "07-homepage-rebuild-plan.md",
+  "sha256": "f359ad5e9177c03c66ca09e6735eda4219b6987fc5e4b007eb0fb10cab01d8e2",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Homepage structure as a contextual decision engine mapping user intent to probabilistic outcome spaces via layered semantic affordances. Universal Lens: Rooted in 07-homepage-rebuild-plan (f359ad5e9177c03c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating over homepage sections using conformal predictive distributions for trust, risk, and upgrade likelihood estimation. GSI Mapping: Rooted in 07-homepage-rebuild-plan (f359ad5e9177c03c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning framework modeling user progression through homepage states using Markovian state transitions conditioned on engagement telemetry. GSE Mapping: Rooted in 07-homepage-rebuild-plan (f359ad5e9177c03c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "homepage_intent_vector",
+      "name": "Homepage Intent Vector",
+      "verbatim_quote": "# Homepage Rebuild Plan As of: 2026-06-09 Homepage answers: what is this, why trust it, what is free, why upgrade, what is different, how it protects from bad decisions, where to go next.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'dimensionless intent score vector', 't': 'time in seconds since session start'}",
+      "assumptions": "User intent is modeled as a time-varying vector in a semantic embedding space.",
+      "breakdown_regime": "At t=0, I is undefined; at t>0, I converges to stable attractor states.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's belief update mechanism maps I to posterior probability distributions over user actions.",
+        "source_operator": "homepage_intent_vector",
+        "telemetry": "Clickstream entropy and dwell time per section."
+      }
+    },
+    {
+      "primitive_id": "section_semantic_affordance",
+      "name": "Section Semantic Affordance",
+      "verbatim_quote": "Sections: cinematic fast hero, product promise, GSE Rating preview, what-changed panel, no-bet/risk panel, Track Record receipts, Player Lab preview, Rating Movers teaser, FREE/PRO/ELITE ladder, compliance-safe promotions teaser, Daily Brief teaser, human support/trust footer.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'set of semantic affordance types', 'A(s)': 'affordance strength for section s ∈ S'}",
+      "assumptions": "Each section provides a distinct affordance that influences user decision-making.",
+      "breakdown_regime": "When A(s) < threshold, s becomes non-informative.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's state transition kernel derives action probabilities from A(s) across S.",
+        "source_operator": "section_semantic_affordance",
+        "telemetry": "Conversion rate per section and click-through ratio."
+      }
+    },
+    {
+      "primitive_id": "trust_risk_balance",
+      "name": "Trust-Risk Balance",
+      "verbatim_quote": "why upgrade, what is different, how it protects from bad decisions, where to go next. Sections:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'trust score ∈ [0,1]', 'R': 'risk exposure ∈ [0,1]', 'B(T,R)': 'balance function'}",
+      "assumptions": "Trust and risk are inversely correlated in user perception.",
+      "breakdown_regime": "When T → 1 and R → 0, B(T,R) maximizes utility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's calibration layer maps B(T,R) to confidence intervals for decision outcomes.",
+        "source_operator": "trust_risk_balance",
+        "telemetry": "User retention post-decision and feedback loop consistency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f359ad5e9177c03c_t0",
+      "think": "The homepage functions as a dynamic decision architecture integrating semantic affordances into a probabilistic belief system. Each section contributes an affordance strength A(s), which is aggregated into an intent vector I(t). This vector evolves under a Bayesian update rule, where prior beliefs are refined by observed user behavior. The trust-risk balance B(T,R) acts as a scalar utility function that modulates the influence of each affordance on downstream actions. The GSE interprets these dynamics as a Markov process over user states, where transitions depend on the current value of B(T,R) and the entropy of I(t). Failure modes include overfitting to early clicks, underweighting of trust signals, and collapse of I(t) into deterministic attractors. The system must maintain a balance between exploration and exploitation while ensuring that all transformations remain within the bounds of empirical observability.\n\nDeep epistemic analysis for 07-homepage-rebuild-plan (f359ad5e9177c03c, domain=other, pages_read=1/1): Operator 'Homepage Intent Vector' (page 1, domain other) captures: # Homepage Rebuild Plan As of: 2026-06-09 Homepage answers: what is this, why trust it, what is free, why upgrade, what is different, how it protects from bad decisions, where to go next. Assumptions: User intent is modeled as a time-varying vector in a semantic embedding space. Breakdown regime: At t=0, I is undefined; at t>0, I converges to stable attractor states. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's belief update mechanism maps I to posterior probability distributions over user actions. Operator 'Section Semantic Affordance' (page 1, domain other) captures: Sections: cinematic fast hero, product promise, GSE Rating preview, what-changed panel, no-bet/risk panel, Track Record receipts, Player Lab preview, Rating Movers teaser, FREE/PRO/ELITE ladder, compliance-safe promotions teaser, Daily Brief teaser, human support/trust footer. Assumptions: Each section provides a distinct affordance that influences user decision-making. Breakdown regime: When A(s) < threshold, s becomes non-informative. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's state transition kernel derives action probabilities from A(s) across S. Operator 'Trust-Risk Balance' (page 1, domain other) captures: why upgrade, what is different, how it protects from bad decisions, where to go next. Sections: Assumptions: Trust and risk are inversely correlated in user perception. Breakdown regime: When T → 1 and R → 0, B(T,R) maximizes utility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's calibration layer maps B(T,R) to confidence intervals for decision outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 07-homepage-rebuild-plan (f359ad5e9177c03c, domain=other, pages_read=1/1): Operator 'Homepage Intent Vector' (page 1, domain other) captures: # Homepage Rebuild Plan As of: 2026-06-09 Homepage answers: what is this, why trust it, what is free, why upgrade, what is different, how it protects from bad decisions, where to go next. Assumptions: User intent is modeled as a time-varying vector in a semantic embedding space. Breakdown regime: At t=0, I is undefined; at t>0, I converges to stable attractor states. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's belief update mechanism maps I to posterior probability distributions over user actions. Operator 'Section Semantic Affordance' (page 1, domain other) captures: Sections: cinematic fast hero, product promise, GSE Rating preview, what-changed panel, no-bet/risk panel, Track Record receipts, Player Lab preview, Rating Movers teaser, FREE/PRO/ELITE ladder, compliance-safe promotions teaser, Daily Brief teaser, human support/trust footer. Assumptions: Each section provides a distinct affordance that influences user decision-making. Breakdown regime: When A(s) < threshold, s becomes non-informative. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's state transition kernel derives action probabilities from A(s) across S. Operator 'Trust-Risk Balance' (page 1, domain other) captures: why upgrade, what is different, how it protects from bad decisions, where to go next. Sections: Assumptions: Trust and risk are inversely correlated in user perception. Breakdown regime: When T → 1 and R → 0, B(T,R) maximizes utility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's calibration layer maps B(T,R) to confidence intervals for decision outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and cognitive science, this model builds upon Shannon's entropy and Kahneman’s dual-process theory, extended into temporal belief dynamics. Retrocausal Genealogy: Rooted in 07-homepage-rebuild-plan (f359ad5e9177c03c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 07-homepage-rebuild-plan (f359ad5e9177c03c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may be adversarial users seeking misinformation or algorithmic bias, or internal noise sources such as data drift. The system models these as perturbations to the trust-ratio and intent vector. Theory of Mind & Decision Maker Model: Rooted in 07-homepage-rebuild-plan (f359ad5e9177c03c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that trust and risk metrics do not co-vary linearly. Leakage vetoes occur when I(t) fails to converge or when B(T,R) becomes invariant across sessions. Cross-Layer Veto & Anti-Leakage Check: Rooted in 07-homepage-rebuild-plan (f359ad5e9177c03c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

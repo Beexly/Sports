@@ -1,0 +1,248 @@
+{
+  "book_id": "6248826bf3fbd9b7",
+  "source_status": "COMPLETE",
+  "title": "0618-deep-gamblers-learning-to-abstain",
+  "file_name": "0618-deep-gamblers-learning-to-abstain.md",
+  "sha256": "6248826bf3fbd9b74b70f922bce9c6cfee433d853a446c20c56e16e2771eaa8e",
+  "primary_domain": "cs",
+  "pages_total": 3,
+  "pages_read": 3,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 3,
+  "windows_extracted": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'name': 'GamblerAbstention', 'description': 'Portfolio-theoretic abstention via a reservation-classifier.', 'math': 'A deep classifier with m classes is augmented with an (m+1)th \"reservation\" class. During training, the network maximizes the expected log wealth of a Kelly gambler who can bet on any of the m classes or hold cash (reservation). At test time, the network abstains when the reservation probability exceeds the maximum class probability.'} Coverage-vs-selective-error trade-off formalized as a parametric risk-utility optimization over abstention thresholds, mapping decision confidence to predictive accuracy.",
+  "gsi_mapping": "{'name': 'BayesianOptimalAbstainer', 'description': \"Maps the gambler's reservation class to a posterior-coverage guarantee under Bayesian predictive distributions. The reward parameter o translates into a credible-set width, enabling conformal prediction-style coverage calibration.\", 'isomorphism': 'The reservation threshold corresponds to the Bayes-optimal decision rule for minimizing weighted misclassification error, where the weight on abstention equals the prior probability of the reservation class.'} Bayesian selective inference maps abstention to posterior uncertainty; conformal prediction aligns with coverage-error duality for probabilistic risk control.",
+  "gse_mapping": "{'name': 'SelectiveFiringEngine', 'description': 'Repurposes the reservation-classifier as a trigger for selective prediction. The reward parameter o becomes a tunable firing rate control, allowing the GSE to dynamically adjust the trade-off between coverage and selective error.', 'state_transition': \"The network's output distribution over m+1 classes (including reservation) serves as the input state. The decision to predict or abstain triggers a discrete transition to either the prediction action (argmax class) or the abstain action (no prediction), updating the system's operational state accordingly.\"} Situational reasoning encodes abstention as state-transition cost; state-space dynamics model edge-value drift across coverage regimes.",
+  "primitives": [
+    {
+      "primitive_id": "portfolio_abstention",
+      "name": "Portfolio Abstention",
+      "verbatim_quote": "Method / model Add one extra output neuron to the classifier: f_w(x)_{m+1} is the \"reservation\" (abstention) probability, alongside the m class probabilities f_w(x)_1..f_w(x)_m.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Standard deep classification assumptions (i.i.d. data, smooth loss landscape)",
+      "breakdown_regime": "None identified",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The reservation-classifier implements a form of risk-sensitive decision-making, similar to robust control policies used in sequential decision problems.",
+        "source_operator": "portfolio_abstention",
+        "telemetry": "Reservation probability vs. maximum class probability"
+      }
+    },
+    {
+      "primitive_id": "gambler_loss",
+      "name": "Gambler Loss",
+      "verbatim_quote": "At inference, the network abstains when the reservation probability exceeds the largest class probability; otherwise it predicts the argmax class.",
+      "page": 1,
+      "latex": "\\mathcal{L}_{\\text{gamble}}(w) = -\\frac{1}{n}\\sum_{i=1}^n \\log\\Bigl( f_w(x_i)_{j(i)} \\cdot o + f_w(x_i)_{m+1} \\Bigr)",
+      "symbol_and_unit_ledger": "{'o': 'Reward parameter (dimensionless)', 'f_w(x_i)_k': 'Probability of class k (dimensionless)', 'm+1': 'Reservation class index (dimensionless)'}",
+      "assumptions": "Kelly growth-rate optimality, constant investment fraction",
+      "breakdown_regime": "o → 0 causes gradient vanishing",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The gambler loss is mathematically equivalent to a cross-entropy loss with a modified target distribution that places mass o on the reservation class.",
+        "source_operator": "gambler_loss",
+        "telemetry": "Gamble loss value, Kelly-optimal o estimate"
+      }
+    },
+    {
+      "primitive_id": "abstention_decision",
+      "name": "Abstention Decision",
+      "verbatim_quote": "Low reward values required a cross-entropy warmup phase before the gambler loss was stable (stated practical caveat).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Deterministic decision rule, fixed o",
+      "breakdown_regime": "Flat decision boundary at f_w(x)_{m+1} = 0.5",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This threshold rule implements a likelihood-ratio test for selecting between prediction and abstention, analogous to Neyman-Pearson hypothesis testing.",
+        "source_operator": "abstention_decision",
+        "telemetry": "Abstention rate, accuracy on predictions"
+      }
+    },
+    {
+      "primitive_id": "reward_parameter",
+      "name": "Reward Parameter",
+      "verbatim_quote": "Comparisons run against softmax-response thresholding, Bayesian (MC) dropout, and SelectiveNet.",
+      "page": 1,
+      "latex": "o \\in (0, \\infty): \\text{reward parameter tuning } (\\rightarrow \\text{adaptive warmup scheme})",
+      "symbol_and_unit_ledger": "{'o': 'Dimensionless reward scaling factor'}",
+      "assumptions": "Stochastic optimization convergence guarantees",
+      "breakdown_regime": "o → ∞ causes overfitting to reservation",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The reward parameter acts as a regularization hyperparameter, balancing exploration (reservation) versus exploitation (prediction).",
+        "source_operator": "reward_parameter",
+        "telemetry": "Validation accuracy vs. o, training loss trajectory"
+      }
+    },
+    {
+      "primitive_id": "coverage_selective_error_tradeoff",
+      "name": "Coverage-Selective Error Trade-off",
+      "verbatim_quote": "Validation design Coverage-vs-selective-error curves: sweep o (or the abstention threshold) and report error on the non-abstained subset.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'o': 'abstention threshold (dimensionless)', 'C': 'coverage rate (dimensionless)', 'E_{sel}': 'selective error rate (dimensionless)'}",
+      "assumptions": "Error is measured only on non-abstained samples; abstention is deterministic based on threshold o.",
+      "breakdown_regime": "At o=0, full coverage; at o→1, zero coverage.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian inference maps o to posterior credible interval width; GSE state transition models decision confidence as edge-value.",
+        "source_operator": "coverage_selective_error_tradeoff",
+        "telemetry": "Coverage vs selective error curve slope indicates risk sensitivity."
+      }
+    },
+    {
+      "primitive_id": "abstention_threshold_optimization",
+      "name": "Abstention Threshold Optimization",
+      "verbatim_quote": "(Paper's claim; exact CIFAR table values not extracted — see full text.) - Key trade-off stated by the authors: tuning o trades full-coverage error against low-coverage selective error; no single o dominates everywhere.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'o': 'abstention threshold (dimensionless)', 'E_{full}': 'full coverage error (dimensionless)', 'E_{sel}(o)': 'selective error at threshold o (dimensionless)'}",
+      "assumptions": "Optimal o varies per task; no universal rule exists for o selection.",
+      "breakdown_regime": "At low o, E_{sel} decreases but E_{full} increases; at high o, E_{sel} increases.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE policy kernel computes optimal o via empirical risk minimization over coverage-error space; GSI uses Bayesian posterior to derive o.",
+        "source_operator": "abstention_threshold_optimization",
+        "telemetry": "Cross-validation error surface identifies optimal o per dataset."
+      }
+    },
+    {
+      "primitive_id": "selective_inference_baselines",
+      "name": "Selective Inference Baselines",
+      "verbatim_quote": "Baselines: softmax response, Bayesian dropout, SelectiveNet, all evaluated on the same coverage grid.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_{softmax}': 'baseline softmax error (dimensionless)', 'B_{dropout}': 'Bayesian dropout error (dimensionless)', 'B_{SelectiveNet}': 'SelectiveNet error (dimensionless)'}",
+      "assumptions": "All baselines evaluated under identical coverage conditions.",
+      "breakdown_regime": "Baseline performance varies with coverage level; Deep Gamblers outperforms at low coverage.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI compares baseline posteriors to Deep Gamblers' selective posterior; GSE evaluates policy kernels against baselines.",
+        "source_operator": "selective_inference_baselines",
+        "telemetry": "Coverage-error comparison shows relative performance gain of Deep Gamblers."
+      }
+    },
+    {
+      "primitive_id": "temporal_distribution_shift_limitation",
+      "name": "Temporal Distribution Shift Limitation",
+      "verbatim_quote": "by construction, so the method has never been stress-tested under temporal distribution shift — exactly the regime that matters for sports betting, where the data-generating process (teams, books, market efficiency) drifts season to season.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Δ_{t}': 'temporal drift in data-generating process (dimensionless)', 'T_{season}': 'seasonal time interval (time unit)'}",
+      "assumptions": "Vision tasks are static; sports tasks evolve over time.",
+      "breakdown_regime": "Method fails under non-stationary data; requires adaptive learning.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE temporal adaptation kernel models drift; GSI Bayesian update adjusts priors for non-stationarity.",
+        "source_operator": "temporal_distribution_shift_limitation",
+        "telemetry": "Performance degradation under out-of-distribution temporal shifts signals need for dynamic calibration."
+      }
+    },
+    {
+      "primitive_id": "gambler_loss_filter",
+      "name": "Gambler Loss Filter",
+      "verbatim_quote": "Implement the loss exactly as the appendix snippet: log(p_true·o + p_reserve), with p from softmax over (classes + reserve).",
+      "page": 3,
+      "latex": "\\mathcal{L} = \\log(p_{\\text{true}} \\cdot o + p_{\\text{reserve}})",
+      "symbol_and_unit_ledger": "{'p_true': 'probability of true class (dimensionless)', 'o': 'learnable abstention parameter (dimensionless)', 'p_reserve': 'probability of reserve class (dimensionless)'}",
+      "assumptions": "The model uses a softmax over classes plus a reserve class; loss is optimized to balance accuracy and abstention.",
+      "breakdown_regime": "When p_reserve approaches max class probability, the system abstains from making a pick.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's pick-state transition logic where reserve probability triggers abstention; aligns with GSI's probabilistic confidence thresholding.",
+        "source_operator": "gambler_loss_filter",
+        "telemetry": "ROI of retained picks vs. all picks, retention rate"
+      }
+    },
+    {
+      "primitive_id": "abstention_threshold_gate",
+      "name": "Abstention Threshold Gate",
+      "verbatim_quote": "- Serving: at inference, if p_reserve ≥ max class probability, the engine withholds the pick (no publish, no bet); otherwise it fires with the standard stake.",
+      "page": 3,
+      "latex": "\\text{if } p_{\\text{reserve}} \\geq \\max(p_1, ..., p_n) \\Rightarrow \\text{abstain}",
+      "symbol_and_unit_ledger": "{'p_reserve': 'reserve class probability (dimensionless)', 'p_i': 'class i probability (dimensionless)'}",
+      "assumptions": "Decision-making is based on relative confidence between classes and reserve.",
+      "breakdown_regime": "System abstains when uncertainty exceeds predictive confidence.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's confidence-based rejection criterion; GSE uses it to define valid pick states.",
+        "source_operator": "abstention_threshold_gate",
+        "telemetry": "Fraction of picks withheld, ROI of retained picks"
+      }
+    },
+    {
+      "primitive_id": "roi_optimized_abstention",
+      "name": "ROI-Optimized Abstention",
+      "verbatim_quote": "m in steps); pick o by ROI on retained picks, not by error rate.",
+      "page": 3,
+      "latex": "o^* = \\arg\\max_o \\text{ROI}_{\\text{retained}}(o)",
+      "symbol_and_unit_ledger": "{'o': 'abstention parameter (dimensionless)', 'ROI_retained': 'return on retained picks (dimensionless)'}",
+      "assumptions": "Abstention parameter is tuned via empirical ROI rather than classification accuracy.",
+      "breakdown_regime": "Parameter tuning occurs through backtesting on historical picks.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's optimization loop for o aligns with GSI's policy gradient framework for adaptive abstention.",
+        "source_operator": "roi_optimized_abstention",
+        "telemetry": "ROI lift over baseline, retention rate"
+      }
+    },
+    {
+      "primitive_id": "adaptive_abstention_parameter",
+      "name": "Adaptive Abstention Parameter",
+      "verbatim_quote": "Improvement experiment Make the reward o a learnable function of market features (e.g., line movement, market liquidity) instead of a global constant: reserve more aggressively in thin/volatile markets where the engine's edge is least trustworthy.",
+      "page": 3,
+      "latex": "o = f(\\text{market features})",
+      "symbol_and_unit_ledger": "{'o': 'learnable abstention parameter (dimensionless)', 'market_features': 'vector of market indicators (dimensionless)'}",
+      "assumptions": "Abstention behavior varies dynamically with market conditions.",
+      "breakdown_regime": "Dynamic adaptation of o based on real-time market volatility and liquidity.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Extends GSE's state-dependent decision logic to include market context; GSI models this as conditional uncertainty.",
+        "source_operator": "adaptive_abstention_parameter",
+        "telemetry": "Market-sensitive ROI, retention rate under varying conditions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6248826bf3fbd9b7_t0",
+      "think": "The core insight is that abstention can be cast as a sequential decision problem where the agent chooses between making a prediction and holding cash. By interpreting the reservation class as cash, the authors leverage Kelly's portfolio theory to derive an end-to-end trainable objective. This yields a natural trade-off: low rewards encourage more abstentions (conservative behavior), while high rewards favor aggressive prediction. Empirically, the method outperforms threshold-based baselines on SVHN, CIFAR-100, and cats-vs-dogs datasets. Window 1 Synthesis: Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 3/3 pages of 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7): [portfolio_abstention p.1]: Method / model Add one extra output neuron to the classifier: f_w(x)_{m+1} is the \"reservation\" (abstention) probability, alongside the m class probabilities f_w(x)_1..f_w(x)_m. (The reservation-classifier implements a form of risk-sensitive decision-making, similar to robust control policies used in sequential decision problems.) [gambler_loss p.1]: At inference, the network abstains when the reservation probability exceeds the largest class probability; otherwise it predicts the argmax class. (The gambler loss is mathematically equivalent to a cross-entropy loss with a modified target distribution that places mass o on the reservation class.) [abstention_decision p.1]: Low reward values required a cross-entropy warmup phase before the gambler loss was stable (stated practical caveat). (This threshold rule implements a likelihood-ratio test for selecting between prediction and abstention, analogous to Neyman-Pearson hypothesis testing.) [reward_parameter p.1]: Comparisons run against softmax-response thresholding, Bayesian (MC) dropout, and SelectiveNet. (The reward parameter acts as a regularization hyperparameter, balancing exploration (reservation) versus exploitation (prediction).) [coverage_selective_error_tradeoff p.2]: Validation design Coverage-vs-selective-error curves: sweep o (or the abstention threshold) and report error on the non-abstained subset. (GSI Bayesian inference maps o to posterior credible interval width; GSE state transition models decision confidence as edge-value.) [abstention_threshold_optimization p.2]: (Paper's claim; exact CIFAR table values not extracted — see full text.) - Key trade-off stated by the authors: tuning o trades full-coverage error against low-coverage selective error; no single o dominates everywhere. (GSE policy kernel computes optimal o via empirical risk minimization over coverage-error space; GSI uses Bayesian posterior to derive o.) [selective_inference_baselines p.2]: Baselines: softmax response, Bayesian dropout, SelectiveNet, all evaluated on the same coverage grid. (GSI compares baseline posteriors to Deep Gamblers' selective posterior; GSE evaluates policy kernels against baselines.) [temporal_distribution_shift_limitation p.2]: by construction, so the method has never been stress-tested under temporal distribution shift — exactly the regime that matters for sports betting, where the data-generating process (teams, books, market efficiency) drifts season to season. (GSE temporal adaptation kernel models drift; GSI Bayesian update adjusts priors for non-stationarity.) [gambler_loss_filter p.3]: Implement the loss exactly as the appendix snippet: log(p_true·o + p_reserve), with p from softmax over (classes + reserve). (Maps to GSE's pick-state transition logic where reserve probability triggers abstention; aligns with GSI's probabilistic confidence thresholding.) [abstention_threshold_gate p.3]: - Serving: at inference, if p_reserve ≥ max class probability, the engine withholds the pick (no publish, no bet); otherwise it fires with the standard stake. (Isomorphic to GSI's confidence-based rejection criterion; GSE uses it to define valid pick states.) [roi_optimized_abstention p.3]: m in steps); pick o by ROI on retained picks, not by error rate. (GSE's optimization loop for o aligns with GSI's policy gradient framework for adaptive abstention.) [adaptive_abstention_parameter p.3]: Improvement experiment Make the reward o a learnable function of market features (e.g., line movement, market liquidity) instead of a global constant: reserve more aggressively in thin/volatile markets where the engine's edge is least trustworthy. (Extends GSE's state-dependent decision logic to include market context; GSI models this as conditional uncertainty.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opponents may exploit predictable abstention patterns; thus, the adaptive nature of the reward parameter is crucial for robustness. Theory of Mind (Window 1): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must avoid leakage between the reservation class and true classes (e.g., using temperature scaling or separate feature extractors). Cross-Layer Veto (Window 1): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6248826bf3fbd9b7_t1",
+      "think": "Chapter 2 introduces the core concept of selective inference through abstention, where a model learns to decline predictions when confidence is low. This is formalized using a parameter 'o', the abstention threshold, which trades off full coverage error against selective error. The validation design sweeps 'o' to generate coverage-vs-selective-error curves, enabling evaluation of how well models generalize under varying levels of abstention. The paper evaluates several baselines including softmax, Bayesian dropout, and SelectiveNet, showing that Deep Gamblers excels at low coverage (high abstention), indicating robustness to ambiguity. However, the method lacks temporal adaptability, a critical limitation for domains like sports intelligence where data-generating processes evolve seasonally. The key insight is that abstention is not just about uncertainty but also about expected value—this distinction is crucial for GSI's probabilistic reasoning and GSE’s decision-making under uncertainty. The trade-off between full coverage and selective error is central to designing systems that can reliably abstain when needed, rather than making costly mistakes. Window 2 Synthesis: Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical statistical hypothesis testing and modern Bayesian decision theory, selective inference builds upon earlier work in active learning and uncertainty quantification. It extends beyond traditional classification to incorporate decision-theoretic frameworks where abstention is an explicit action. Retrocausal Genealogy (Window 2): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents in this context include traditional classifiers that always predict, and adversarial environments where data distribution shifts. The model must balance between overconfidence (leading to high full-coverage error) and underconfidence (leading to high selective error). For sports intelligence, this translates into identifying when a bet is too risky to take, even if the model is confident in its outcome.",
+      "cross_layer_veto": "Anti-collinearity vetoes reliance on fixed abstention thresholds without empirical validation. Leakage veto prevents use of future information in training, ensuring that the abstention mechanism reflects true uncertainty rather than spurious correlations. These conditions ensure that GSI and GSE operate within principled bounds of probabilistic and strategic reasoning. Cross-Layer Veto (Window 2): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6248826bf3fbd9b7_t2",
+      "think": "This chapter introduces a principled approach to incorporating abstention into probabilistic prediction systems, particularly in gambling contexts. The core idea is to augment a standard classifier with a reserve class that represents uncertainty or lack of confidence. This is formalized through a modified loss function: log(p_true·o + p_reserve), where o is a learnable parameter controlling how much the system should abstain. At inference, if the probability of the reserve class exceeds that of any predicted class, the system abstains from making a pick. The method is evaluated via time-ordered backtests on 3,411 picks, with performance measured by ROI of retained picks and retention rate. The system is accepted only if it improves ROI by at least 2 percentage points while retaining at least 60% of picks. This approach aligns with Bayesian principles of uncertainty quantification and conforms to GSI’s framework of probabilistic decision-making. It also maps to GSE’s state-transition logic, where decisions are made based on confidence thresholds. The adaptive version further enhances robustness by allowing o to vary with market conditions, reflecting the idea that uncertainty is not static but context-dependent. Window 3 Synthesis: Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on conformal prediction and Bayesian decision theory, this formulation builds upon prior research in active learning and uncertainty-aware classification. Retrocausal Genealogy (Window 3): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents in this framework are modeled as having bounded confidence in their predictions. The system learns to abstain when uncertainty is high, mimicking expert behavior in real-world betting environments. Theory of Mind (Window 3): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that the reserve class does not simply mirror one of the outcome classes. Leakage is prevented by enforcing that the loss function explicitly penalizes misalignment between p_true and p_reserve. Cross-Layer Veto (Window 3): Rooted in 0618-deep-gamblers-learning-to-abstain (6248826bf3fbd9b7, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

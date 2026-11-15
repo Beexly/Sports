@@ -1,0 +1,95 @@
+{
+  "book_id": "43e71156ae6597ca",
+  "source_status": "COMPLETE",
+  "title": "narrative-contract-2026-09-27",
+  "file_name": "narrative-contract-2026-09-27.md",
+  "sha256": "43e71156ae6597cab848eac8406d20bdded48737fc66af6e93cf2776758b304d",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in narrative-contract-2026-09-27 (43e71156ae6597ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in narrative-contract-2026-09-27 (43e71156ae6597ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in narrative-contract-2026-09-27 (43e71156ae6597ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in narrative-contract-2026-09-27 (43e71156ae6597ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in narrative-contract-2026-09-27 (43e71156ae6597ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in narrative-contract-2026-09-27 (43e71156ae6597ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "narrative_contract",
+      "name": "Narrative Contract",
+      "verbatim_quote": "# narrative_contract: DARK -> STORED, and the exact steps to reach LIVE 2026-09-27.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes NFL player roster data is complete and accurate, and that the crosswalk mapping between NFL ID and GSIS ID is validated.",
+      "breakdown_regime": "Applies to the transition from DARK (unverified) to LIVE (promoted) status for predictive features.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the concept of a 'narrative contract' to a formalized process for promoting machine learning features in Galaxy Sports Engine (GSE) and Galaxy Sports Intelligence (GSI). Specifically, it aligns with the LiveEdgePart registry update and the WEEK3_ENGINE_READINGS dataset.",
+        "source_operator": "narrative_contract",
+        "telemetry": "Verification metrics include holdout accuracy, regression tests, and typechecks to ensure no unintended side effects."
+      }
+    },
+    {
+      "primitive_id": "crosswalk_fix",
+      "name": "Crosswalk Fix",
+      "verbatim_quote": "The crosswalk fix made this family measurable for the first time, and it clears both honesty bars out of sample.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Relies on the availability of a validated mapping between NFL-specific identifiers (nfl_id) and GSIS identifiers (gsis_id).",
+      "breakdown_regime": "Breaks down when the crosswalk mapping contains errors or when new player IDs appear without corresponding mappings.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents the alignment of data schemas across different systems (e.g., NFLVerse to GSE). It ensures that entities can be consistently tracked over time, enabling reliable holdout testing.",
+        "source_operator": "crosswalk_fix",
+        "telemetry": "Measures success through improved joinability rates and reduced data discrepancies in holdout samples."
+      }
+    },
+    {
+      "primitive_id": "roster_joinability",
+      "name": "Roster Joinability",
+      "verbatim_quote": "## Why it was unmeasurable before Only 2023-2025 were roster-joinable, which left two training seasons.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that roster data from 2023-2025 is sufficient for training models, and that joinability is necessary for holdout evaluation.",
+      "breakdown_regime": "Breaks down when insufficient historical roster data exists, leading to small training sets that cannot generalize well.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives from the requirement for temporal consistency in player tracking. It is a prerequisite for applying the crosswalk fix and achieving measurable performance.",
+        "source_operator": "roster_joinability",
+        "telemetry": "Evaluated by the number of successfully joined roster records and the stability of holdout statistics."
+      }
+    },
+    {
+      "primitive_id": "holdout_accuracy",
+      "name": "Holdout Accuracy",
+      "verbatim_quote": "The validated `nfl_id -> gsis_id` crosswalk made 2018-2024 joinable, giving seven seasons of training history and 2025 as a clean holdout.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that the holdout sample (2025) is independent and identically distributed with respect to the training data.",
+      "breakdown_regime": "Breaks down when the holdout period contains anomalies or distribution shifts that violate the i.i.d. assumption.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to the empirical evaluation of predictive models using a held-out test set. It provides an unbiased estimate of generalization error.",
+        "source_operator": "holdout_accuracy",
+        "telemetry": "Monitored through metrics such as correlation (`r`), slope, standard error, and coverage thresholds (e.g., `|r| >= 0.08`)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "43e71156ae6597ca_t0",
+      "think": "The narrative contract formalizes the transition from DARK to LIVE status for predictive features in GSE/GSI. It hinges on the crosswalk fix, which enables roster joinability across multiple seasons. This joinability allows for robust holdout accuracy testing, ensuring that promoted features have cleared both honesty bars out of sample. However, adding a new family to the LiveEdgePart registry risks widening a type the reasoning layer is built on, necessitating careful vetting to avoid anti-collinearity and leakage.\n\nDeep epistemic analysis for narrative-contract-2026-09-27 (43e71156ae6597ca, domain=other, pages_read=2/2): Operator 'Narrative Contract' (page 1, domain other) captures: # narrative_contract: DARK -> STORED, and the exact steps to reach LIVE 2026-09-27. Assumptions: Assumes NFL player roster data is complete and accurate, and that the crosswalk mapping between NFL ID and GSIS ID is validated. Breakdown regime: Applies to the transition from DARK (unverified) to LIVE (promoted) status for predictive features. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the concept of a 'narrative contract' to a formalized process for promoting machine learning features in Galaxy Sports Engine (GSE) and Galaxy Sports Intelligence (GSI). Specifically, it aligns with the LiveEdgePart registry update and the WEEK3_ENGINE_READINGS dataset. Operator 'Crosswalk Fix' (page 1, domain other) captures: The crosswalk fix made this family measurable for the first time, and it clears both honesty bars out of sample. Assumptions: Relies on the availability of a validated mapping between NFL-specific identifiers (nfl_id) and GSIS identifiers (gsis_id). Breakdown regime: Breaks down when the crosswalk mapping contains errors or when new player IDs appear without corresponding mappings. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents the alignment of data schemas across different systems (e.g., NFLVerse to GSE). It ensures that entities can be consistently tracked over time, enabling reliable holdout testing. Operator 'Roster Joinability' (page 1, domain other) captures: ## Why it was unmeasurable before Only 2023-2025 were roster-joinable, which left two training seasons. Assumptions: Assumes that roster data from 2023-2025 is sufficient for training models, and that joinability is necessary for holdout evaluation. Breakdown regime: Breaks down when insufficient historical roster data exists, leading to small training sets that cannot generalize well. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from the requirement for temporal consistency in player tracking. It is a prerequisite for applying the crosswalk fix and achieving measurable performance. Operator 'Holdout Accuracy' (page 1, domain other) captures: The validated `nfl_id -> gsis_id` crosswalk made 2018-2024 joinable, giving seven seasons of training history and 2025 as a clean holdout. Assumptions: Assumes that the holdout sample (2025) is independent and identically distributed with respect to the training data. Breakdown regime: Breaks down when the holdout period contains anomalies or distribution shifts that violate the i.i.d. assumption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to the empirical evaluation of predictive models using a held-out test set. It provides an unbiased estimate of generalization error. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for narrative-contract-2026-09-27 (43e71156ae6597ca, domain=other, pages_read=2/2): Operator 'Narrative Contract' (page 1, domain other) captures: # narrative_contract: DARK -> STORED, and the exact steps to reach LIVE 2026-09-27. Assumptions: Assumes NFL player roster data is complete and accurate, and that the crosswalk mapping between NFL ID and GSIS ID is validated. Breakdown regime: Applies to the transition from DARK (unverified) to LIVE (promoted) status for predictive features. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the concept of a 'narrative contract' to a formalized process for promoting machine learning features in Galaxy Sports Engine (GSE) and Galaxy Sports Intelligence (GSI). Specifically, it aligns with the LiveEdgePart registry update and the WEEK3_ENGINE_READINGS dataset. Operator 'Crosswalk Fix' (page 1, domain other) captures: The crosswalk fix made this family measurable for the first time, and it clears both honesty bars out of sample. Assumptions: Relies on the availability of a validated mapping between NFL-specific identifiers (nfl_id) and GSIS identifiers (gsis_id). Breakdown regime: Breaks down when the crosswalk mapping contains errors or when new player IDs appear without corresponding mappings. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents the alignment of data schemas across different systems (e.g., NFLVerse to GSE). It ensures that entities can be consistently tracked over time, enabling reliable holdout testing. Operator 'Roster Joinability' (page 1, domain other) captures: ## Why it was unmeasurable before Only 2023-2025 were roster-joinable, which left two training seasons. Assumptions: Assumes that roster data from 2023-2025 is sufficient for training models, and that joinability is necessary for holdout evaluation. Breakdown regime: Breaks down when insufficient historical roster data exists, leading to small training sets that cannot generalize well. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from the requirement for temporal consistency in player tracking. It is a prerequisite for applying the crosswalk fix and achieving measurable performance. Operator 'Holdout Accuracy' (page 1, domain other) captures: The validated `nfl_id -> gsis_id` crosswalk made 2018-2024 joinable, giving seven seasons of training history and 2025 as a clean holdout. Assumptions: Assumes that the holdout sample (2025) is independent and identically distributed with respect to the training data. Breakdown regime: Breaks down when the holdout period contains anomalies or distribution shifts that violate the i.i.d. assumption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to the empirical evaluation of predictive models using a held-out test set. It provides an unbiased estimate of generalization error. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Emerges from the need to operationalize feature promotion pipelines in high-stakes prediction markets, drawing on concepts from statistical learning theory and database integration. Retrocausal Genealogy: Rooted in narrative-contract-2026-09-27 (43e71156ae6597ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in narrative-contract-2026-09-27 (43e71156ae6597ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling the decision actor (engineer) requires understanding their preference for minimal regressions and strong empirical validation, while also considering the opposing agent's (stakeholder) demand for rapid innovation. Theory of Mind & Decision Maker Model: Rooted in narrative-contract-2026-09-27 (43e71156ae6597ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each new family does not introduce redundant information with existing kernels. Leakage is prevented by maintaining strict separation between training and holdout periods, verified through the WEEK3_ENGINE_READINGS dataset. Cross-Layer Veto & Anti-Leakage Check: Rooted in narrative-contract-2026-09-27 (43e71156ae6597ca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

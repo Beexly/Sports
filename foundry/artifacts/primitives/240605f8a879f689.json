@@ -1,0 +1,78 @@
+{
+  "book_id": "240605f8a879f689",
+  "source_status": "COMPLETE",
+  "title": "SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE",
+  "file_name": "SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE.md",
+  "sha256": "240605f8a879f689e78174072e528f27b18e1d15c7951e209f192c01fd69a354",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "FREE_QUOTE_PRECEDENCE defines a hierarchical merge protocol for SituationSnapshot assembly, enforcing tier-based conflict resolution and exclusion of non-book inputs. Universal Lens: Rooted in SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE (240605f8a879f689), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference over merged quote tiers to compute posterior market-state distributions, with Tier-A sources driving belief updates and Tier-B sources providing gap-filling constraints. GSI Mapping: Rooted in SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE (240605f8a879f689), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes the precedence hierarchy to transition between situational states, applying deterministic rule sets to resolve line conflicts while maintaining causal integrity across quote layers. GSE Mapping: Rooted in SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE (240605f8a879f689), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "tier_based_merge_protocol",
+      "name": "Tier-Based Merge Protocol",
+      "verbatim_quote": "## Hard wall — reject non-book inputs `freeTier` label alone is **not** trusted.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Only book-market-state lines are valid for inclusion in SituationSnapshot.",
+      "breakdown_regime": "When a `freeTier` lacks `book` qualification, it is rejected outright.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic belief update mechanism where each tier contributes a likelihood weight based on provenance grade.",
+        "source_operator": "tier_based_merge_protocol",
+        "telemetry": "Source rejection rate and tier validation success metrics."
+      }
+    },
+    {
+      "primitive_id": "conflict_resolution_rule",
+      "name": "Conflict Resolution Rule",
+      "verbatim_quote": "**Apify last** — **Tier-B market-state only** (never cite as provenance; never live-gate) **Rule:** earlier tier **always keeps** the line on conflict; later tiers fill gaps only.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Earlier tiers have higher authority in case of conflicting lines.",
+      "breakdown_regime": "Conflicts between tiers result in retention of earlier-tier line.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives into GSE's state-transition function that resolves inconsistencies by prioritizing temporal and hierarchical precedence.",
+        "source_operator": "conflict_resolution_rule",
+        "telemetry": "Frequency of conflict events and resolution outcomes per tier."
+      }
+    },
+    {
+      "primitive_id": "stale_divergence_flag",
+      "name": "Stale Divergence Flag",
+      "verbatim_quote": "A substantially fresher later tier only emits a `stale_higher_tier` divergence flag — **no overwrite**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Later tiers may indicate staleness but do not override earlier data.",
+      "breakdown_regime": "Freshness-based divergence triggers alert without altering existing state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to detect temporal inconsistency in quote streams and trigger revalidation protocols.",
+        "source_operator": "stale_divergence_flag",
+        "telemetry": "Number of stale flags emitted and time-delta between tiers."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "240605f8a879f689_t0",
+      "think": "The FREE_QUOTE_PRECEDENCE protocol establishes a formalized hierarchy for integrating free-market quotes into a SituationSnapshot. It enforces a strict ordering where each tier contributes to a cumulative market-state bundle. Tier-A sources (e.g., licensed APIs) are authoritative and allow citation, whereas Tier-B sources (e.g., scrapers) are excluded from provenance tracking. Conflict resolution is deterministic: earlier tiers always retain their lines, and later tiers only fill gaps or emit divergence flags. This structure ensures robustness against data contamination and maintains logical consistency in state transitions within GSE. The system avoids overwriting by design, which prevents erroneous consensus formation from lower-quality sources. The protocol also excludes certain synthetic or model-derived inputs via explicit rejection rules, ensuring that only validated book-market-state lines contribute to inference in GSI.\n\nDeep epistemic analysis for SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE (240605f8a879f689, domain=other, pages_read=2/2): Operator 'Tier-Based Merge Protocol' (page 1, domain other) captures: ## Hard wall — reject non-book inputs `freeTier` label alone is **not** trusted. Assumptions: Only book-market-state lines are valid for inclusion in SituationSnapshot. Breakdown regime: When a `freeTier` lacks `book` qualification, it is rejected outright. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic belief update mechanism where each tier contributes a likelihood weight based on provenance grade. Operator 'Conflict Resolution Rule' (page 1, domain other) captures: **Apify last** — **Tier-B market-state only** (never cite as provenance; never live-gate) **Rule:** earlier tier **always keeps** the line on conflict; later tiers fill gaps only. Assumptions: Earlier tiers have higher authority in case of conflicting lines. Breakdown regime: Conflicts between tiers result in retention of earlier-tier line. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives into GSE's state-transition function that resolves inconsistencies by prioritizing temporal and hierarchical precedence. Operator 'Stale Divergence Flag' (page 1, domain other) captures: A substantially fresher later tier only emits a `stale_higher_tier` divergence flag — **no overwrite**. Assumptions: Later tiers may indicate staleness but do not override earlier data. Breakdown regime: Freshness-based divergence triggers alert without altering existing state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to detect temporal inconsistency in quote streams and trigger revalidation protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE (240605f8a879f689, domain=other, pages_read=2/2): Operator 'Tier-Based Merge Protocol' (page 1, domain other) captures: ## Hard wall — reject non-book inputs `freeTier` label alone is **not** trusted. Assumptions: Only book-market-state lines are valid for inclusion in SituationSnapshot. Breakdown regime: When a `freeTier` lacks `book` qualification, it is rejected outright. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic belief update mechanism where each tier contributes a likelihood weight based on provenance grade. Operator 'Conflict Resolution Rule' (page 1, domain other) captures: **Apify last** — **Tier-B market-state only** (never cite as provenance; never live-gate) **Rule:** earlier tier **always keeps** the line on conflict; later tiers fill gaps only. Assumptions: Earlier tiers have higher authority in case of conflicting lines. Breakdown regime: Conflicts between tiers result in retention of earlier-tier line. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives into GSE's state-transition function that resolves inconsistencies by prioritizing temporal and hierarchical precedence. Operator 'Stale Divergence Flag' (page 1, domain other) captures: A substantially fresher later tier only emits a `stale_higher_tier` divergence flag — **no overwrite**. Assumptions: Later tiers may indicate staleness but do not override earlier data. Breakdown regime: Freshness-based divergence triggers alert without altering existing state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to detect temporal inconsistency in quote streams and trigger revalidation protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in layered architecture principles from early 2020s financial data fusion models, adapted for real-time sports intelligence systems with emphasis on provenance and temporal consistency. Retrocausal Genealogy: Rooted in SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE (240605f8a879f689), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE (240605f8a879f689), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors with varying degrees of integrity and freshness, and internal systems that must balance speed of integration with accuracy of representation. Each agent operates under distinct trust levels defined by tier classification. Theory of Mind & Decision Maker Model: Rooted in SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE (240605f8a879f689), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through strict exclusion of non-book inputs and prohibition of citing Tier-B sources. Leakage is prevented by ensuring no cross-tier influence beyond gap-filling and divergence signaling. Cross-Layer Veto & Anti-Leakage Check: Rooted in SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE (240605f8a879f689), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in SITUATION_SNAPSHOT_FREE_QUOTE_PRECEDENCE (240605f8a879f689), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

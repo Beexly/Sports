@@ -32,6 +32,11 @@
  */
 
 import { createHash } from "node:crypto";
+import {
+  applyCorpusGroundingToFamilyDeltas,
+  type GameGrounding,
+  type FamilyGroundingAdjustment,
+} from "../literature/corpus-grounding.js";
 import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname, isAbsolute, resolve } from "node:path";
 import {
@@ -96,6 +101,13 @@ import {
   type MegaSweepPipelineInput,
   type MegaSweepPipelineOutput,
 } from "../engine/mega-sweep-2026-11-06-reasoning-engine.js";
+import {
+  CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX,
+  CORPUS_SNAPSHOT_METADATA,
+  evaluateFoundryCorpusSituationalPriors,
+  type FoundryCorpusSituationalInput,
+  type FoundryCorpusSituationalReceipt,
+} from "./foundry-corpus-situational-priors.js";
 
 export const FAMILY_NAMES = [
   "pressure",
@@ -621,6 +633,15 @@ export interface OverlayInput {
   universal360Overrides?: UniversalNfl360DossierOverrides;
   /** Optional Mega-Sweep 2026-11-06 Reasoning & Hardware-Aware Pipeline input. */
   megaSweepPipelineInput?: MegaSweepPipelineInput;
+  /**
+   * Optional corpus grounding (literature/corpus-grounding.ts groundGame),
+   * computed by the async caller. Shrinks undocumented family deltas only.
+   */
+  corpusGrounding?: GameGrounding;
+  /** Optional 6x6 correlation matrix for Cholesky whitening (defaults to corpus-regularized SPD matrix). */
+  correlationMatrix?: readonly (readonly number[])[];
+  /** Optional Wave 15 Stage-2 Empirical-Bayes Foundry corpus situational priors input (Stream 15L). */
+  foundryCorpusModulation?: FoundryCorpusSituationalInput;
 }
 
 export interface OverlayResult {
@@ -653,6 +674,8 @@ export interface OverlayResult {
   publishAllowed: boolean;
   feedRecord: MindFeedEmission;
   fwlResidual?: readonly number[];
+  corpusGrounding?: { grounding: GameGrounding; adjustments: FamilyGroundingAdjustment[] };
+  foundryCorpusPriors?: FoundryCorpusSituationalReceipt;
 }
 
 /**
@@ -677,6 +700,29 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     const mean = fwlResidual.reduce((sum, v) => sum + v, 0) / fwlResidual.length;
     familyDeltas = { ...input.familyDeltas, pressure: mean };
   }
+  let corpusAdjustments: FamilyGroundingAdjustment[] = [];
+  if (input.corpusGrounding) {
+    const applied = applyCorpusGroundingToFamilyDeltas(familyDeltas, input.corpusGrounding);
+    familyDeltas = applied.deltas as FamilyDeltas;
+    corpusAdjustments = applied.adjustments;
+  }
+  let foundryCorpusPriors: FoundryCorpusSituationalReceipt | undefined;
+  if (input.foundryCorpusModulation) {
+    foundryCorpusPriors = evaluateFoundryCorpusSituationalPriors(input.foundryCorpusModulation);
+    const modulated: Record<string, number | readonly number[] | undefined> = { ...familyDeltas };
+    for (const fam of FAMILY_NAMES) {
+      const mod = foundryCorpusPriors.familyProbModulations[fam];
+      const existing = familyDeltas[fam];
+      if (typeof existing === "number") {
+        modulated[fam] = Number((existing + mod).toFixed(6));
+      } else if (Array.isArray(existing)) {
+        modulated[fam] = existing.map((v) => Number((v + mod).toFixed(6)));
+      } else if (mod !== 0) {
+        modulated[fam] = mod;
+      }
+    }
+    familyDeltas = modulated as FamilyDeltas;
+  }
   const result: OverlayResult = {
     streamCalls: calls,
     universal360AndDeepKernels: evaluateUniversalNfl360MetricAndSituationalDossier(
@@ -685,14 +731,32 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     megaSweep20261106Pipeline: evaluateMegaSweep20261106Pipeline(
       input.megaSweepPipelineInput,
     ),
-    orthogonalization: orthogonalizeAndShrink(familyDeltas, input.marketAnchorProb),
+    orthogonalization: orthogonalizeAndShrink(familyDeltas, input.marketAnchorProb, {
+      correlationMatrix:
+        input.correlationMatrix ?? CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX,
+    }),
     ...(fwlResidual ? { fwlResidual } : {}),
+    ...(input.corpusGrounding
+      ? { corpusGrounding: { grounding: input.corpusGrounding, adjustments: corpusAdjustments } }
+      : {}),
+    ...(foundryCorpusPriors ? { foundryCorpusPriors } : {}),
     independentEdgeDecision: input.independentEdgeDecision,
     publishAllowed: input.independentEdgeDecision === "SPEAK",
     feedRecord: { feedPath: "", lineBytes: 0, inputHash: "", streamId: "", scrubbed: false },
   };
 
   const mark = (stream: string, called: boolean, detail: string) => calls.push({ stream, called, detail });
+
+  if (input.corpusGrounding) {
+    mark(
+      "corpus:applyCorpusGroundingToFamilyDeltas",
+      true,
+      `coverage=${input.corpusGrounding.coverage} support=${input.corpusGrounding.overallSupport}; ` +
+        corpusAdjustments.map((a) => `${a.family}x${a.multiplier}`).join(" "),
+    );
+  } else {
+    mark("corpus:applyCorpusGroundingToFamilyDeltas", false, "no corpus grounding supplied");
+  }
 
   if (input.coverageFrames && input.coverageFrames.length > 0) {
     result.coverage = runNgsAwsCnnAttentionCoveragePipeline({ frames: input.coverageFrames });
@@ -839,6 +903,19 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     true,
     "5-Track L1-L5 + 7-Step Weekly Cycle + Double-DQN/PER/CPC + gse-ml-service 5-Model + 30 CSVs/10 Kernels evaluated",
   );
+  if (foundryCorpusPriors) {
+    mark(
+      "15L:evaluateFoundryCorpusSituationalPriors",
+      true,
+      `combinedLogOdds=${foundryCorpusPriors.combinedLogOddsDelta} n=${foundryCorpusPriors.effectiveSampleSizeN}`,
+    );
+  } else {
+    mark(
+      "15L:evaluateFoundryCorpusSituationalPriors",
+      false,
+      "no foundryCorpusModulation supplied",
+    );
+  }
 
   const canonicalInputs = {
     familyDeltas: input.familyDeltas,
@@ -1023,6 +1100,16 @@ export function computePreProjectionAndSimulationConditionedOverlay(
     independentEdgeDecision,
     universal360Overrides: matchupInput.universal360Overrides,
     megaSweepPipelineInput: matchupInput.megaSweepPipelineInput,
+    correlationMatrix: CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX,
+    foundryCorpusModulation: {
+      pressureSignalZ: pressureDelta * 25,
+      weatherDisruptionZ: weatherDelta * 25,
+      restFatigueZ: restFatigueDelta * 25,
+      coverageMismatchZ: coveragePersonnelDelta * 25,
+      qbScriptStabilityZ: qbSkillScriptDelta * 25,
+      microstructureDislocationZ: marketMicrostructureDelta * 25,
+      observedSampleSizeN: CORPUS_SNAPSHOT_METADATA.oofNRows,
+    },
   });
 
   const simulationTrajectoryConditioners: SimulationTrajectoryConditioners = {

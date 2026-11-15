@@ -1,0 +1,78 @@
+{
+  "book_id": "77156c39b4c21828",
+  "source_status": "COMPLETE",
+  "title": "fnf-sdk",
+  "file_name": "fnf-sdk.md",
+  "sha256": "77156c39b4c218282624e63a08a3de366f713177c1dd8776404f2f9d25d1384f",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "FNF SDK enforces end-to-end product integrity via singular workflow platform adapter and mandatory D1 persistence. Universal Lens: Rooted in fnf-sdk (77156c39b4c21828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers real-time generation state through D1-backed profile and job metadata, conformally tracking SDK usage patterns. GSI Mapping: Rooted in fnf-sdk (77156c39b4c21828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions using the single bundled adapter, ensuring backend consistency and preventing mock fallbacks. GSE Mapping: Rooted in fnf-sdk (77156c39b4c21828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "workflow_platform_adapter",
+      "name": "Workflow Platform Adapter",
+      "verbatim_quote": "Before coding, read: - `app/packages/fnf/ai/AGENTS.md` - `references/auth.md` ## Template Rules - Adapter location: `@higgsfield/fnf` ships the SDK core, the backend ports, and exactly ONE bundled adapter — `createWorkflowPlatformAdapter`, at the `@higgsfield/fnf/workflow-platform` subpath (implementation: `app/packages/fnf/src/workflow-platform/`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Only one adapter per generated website; no external adapter imports allowed.",
+      "breakdown_regime": "Build-time error on deprecated `@higgsfield/fnf/adapters` import.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps SDK client requests to backend services via unified port interface.",
+        "source_operator": "workflow_platform_adapter",
+        "telemetry": "Adapter invocation frequency and success rate."
+      }
+    },
+    {
+      "primitive_id": "d1_persistence_layer",
+      "name": "D1 Persistence Layer",
+      "verbatim_quote": "It MUST have a real backend (server functions/routes) AND real persistence: opt into D1 (`\"db\": true` in `app/app.manifest.json`) and store the app's own product state — saved/favorited generations, collections, projects, prompt presets, share records, in-app user data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All product data must be stored in D1, not localStorage or in-memory structures.",
+      "breakdown_regime": "Runtime failure if D1 is disabled or misconfigured.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives application state from persistent D1 tables, enabling session continuity.",
+        "source_operator": "d1_persistence_layer",
+        "telemetry": "Database query latency and transaction success rates."
+      }
+    },
+    {
+      "primitive_id": "sdk_backend_guard",
+      "name": "SDK Backend Guard",
+      "verbatim_quote": "- If the website has any real SDK-backed generation/media/profile/credits feature, it must require auth.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Authentication is mandatory for all SDK-dependent features.",
+      "breakdown_regime": "Server-side auth check prevents unauthorized access to SDK endpoints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ensures SDK operations are gated by valid authentication tokens.",
+        "source_operator": "sdk_backend_guard",
+        "telemetry": "Auth token validation frequency and rejection rates."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "77156c39b4c21828_t0",
+      "think": "The FNF SDK enforces a strict architectural duality between frontend SDK clients and backend services. The single bundled adapter ensures consistent communication paths, while D1 persistence mandates real data storage rather than ephemeral mocks. Authentication becomes the primary gatekeeper for SDK access, preventing misuse of backend resources. These primitives form a closed-loop system where each component depends on others for correctness and security. Failure modes include unauthorized SDK usage due to missing auth checks, incorrect adapter imports leading to build errors, and reliance on mock backends violating end-to-end requirements. The system's robustness stems from its minimalism—only one adapter, one backend, and one persistence layer ensure coherence across all generated websites.\n\nDeep epistemic analysis for fnf-sdk (77156c39b4c21828, domain=other, pages_read=12/12): Operator 'Workflow Platform Adapter' (page 1, domain other) captures: Before coding, read: - `app/packages/fnf/ai/AGENTS.md` - `references/auth.md` ## Template Rules - Adapter location: `@higgsfield/fnf` ships the SDK core, the backend ports, and exactly ONE bundled adapter — `createWorkflowPlatformAdapter`, at the `@higgsfield/fnf/workflow-platform` subpath (implementation: `app/packages/fnf/src/workflow-platform/`). Assumptions: Only one adapter per generated website; no external adapter imports allowed. Breakdown regime: Build-time error on deprecated `@higgsfield/fnf/adapters` import. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps SDK client requests to backend services via unified port interface. Operator 'D1 Persistence Layer' (page 1, domain other) captures: It MUST have a real backend (server functions/routes) AND real persistence: opt into D1 (`\"db\": true` in `app/app.manifest.json`) and store the app's own product state — saved/favorited generations, collections, projects, prompt presets, share records, in-app user data. Assumptions: All product data must be stored in D1, not localStorage or in-memory structures. Breakdown regime: Runtime failure if D1 is disabled or misconfigured. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives application state from persistent D1 tables, enabling session continuity. Operator 'SDK Backend Guard' (page 1, domain other) captures: - If the website has any real SDK-backed generation/media/profile/credits feature, it must require auth. Assumptions: Authentication is mandatory for all SDK-dependent features. Breakdown regime: Server-side auth check prevents unauthorized access to SDK endpoints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures SDK operations are gated by valid authentication tokens. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for fnf-sdk (77156c39b4c21828, domain=other, pages_read=12/12): Operator 'Workflow Platform Adapter' (page 1, domain other) captures: Before coding, read: - `app/packages/fnf/ai/AGENTS.md` - `references/auth.md` ## Template Rules - Adapter location: `@higgsfield/fnf` ships the SDK core, the backend ports, and exactly ONE bundled adapter — `createWorkflowPlatformAdapter`, at the `@higgsfield/fnf/workflow-platform` subpath (implementation: `app/packages/fnf/src/workflow-platform/`). Assumptions: Only one adapter per generated website; no external adapter imports allowed. Breakdown regime: Build-time error on deprecated `@higgsfield/fnf/adapters` import. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps SDK client requests to backend services via unified port interface. Operator 'D1 Persistence Layer' (page 1, domain other) captures: It MUST have a real backend (server functions/routes) AND real persistence: opt into D1 (`\"db\": true` in `app/app.manifest.json`) and store the app's own product state — saved/favorited generations, collections, projects, prompt presets, share records, in-app user data. Assumptions: All product data must be stored in D1, not localStorage or in-memory structures. Breakdown regime: Runtime failure if D1 is disabled or misconfigured. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives application state from persistent D1 tables, enabling session continuity. Operator 'SDK Backend Guard' (page 1, domain other) captures: - If the website has any real SDK-backed generation/media/profile/credits feature, it must require auth. Assumptions: Authentication is mandatory for all SDK-dependent features. Breakdown regime: Server-side auth check prevents unauthorized access to SDK endpoints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures SDK operations are gated by valid authentication tokens. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s microservices architecture principles, this design reflects modern backend-as-a-service paradigms where SDKs abstract away infrastructure complexity. Retrocausal Genealogy: Rooted in fnf-sdk (77156c39b4c21828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in fnf-sdk (77156c39b4c21828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include developers who might shortcut backend requirements and malicious actors seeking unauthorized access. The system models these risks through mandatory auth and immutable adapter contracts. Theory of Mind & Decision Maker Model: Rooted in fnf-sdk (77156c39b4c21828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by prohibiting memory-based state, localStorage, and mock adapters. Leakage vetoes occur when sensitive data like tokens or prompts are exposed to the client. Cross-Layer Veto & Anti-Leakage Check: Rooted in fnf-sdk (77156c39b4c21828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in fnf-sdk (77156c39b4c21828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

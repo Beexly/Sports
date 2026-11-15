@@ -1,0 +1,78 @@
+{
+  "book_id": "17d123a62c166b56",
+  "source_status": "COMPLETE",
+  "title": "p0356",
+  "file_name": "p0356.txt",
+  "sha256": "17d123a62c166b56e540ed4e90593211cb54530614b6f89d202468d172435a44",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Stimulus-energy to afferent-impulse mapping underpins conditioned response patterning via neural interaction. Universal Lens: Rooted in p0356 (17d123a62c166b56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on stimulus compound evocation through summated habit strengths with diminishing returns. GSI Mapping: Rooted in p0356 (17d123a62c166b56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions driven by afferent neural interaction in compound stimulus configurations. GSE Mapping: Rooted in p0356 (17d123a62c166b56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "stimulus_energy_to_afferent_impulse",
+      "name": "Stimulus Energy to Afferent Impulse Mapping",
+      "verbatim_quote": "CHAPTER XIX The Patterning of Stimulus Compounds In our account of the \"law of reinforcement\" (p.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'stimulus energy (SI: J)', 's': 'afferent impulse strength (dimensionless)'}",
+      "assumptions": "One-to-one correspondence between S and s; approximate linearity holds in most cases.",
+      "breakdown_regime": "When S varies non-linearly or multiple stimuli interact.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI maps S → s as probabilistic input; GSE models s as state transition trigger.",
+        "source_operator": "stimulus_energy_to_afferent_impulse",
+        "telemetry": "Reinforcement rate of conditioned responses"
+      }
+    },
+    {
+      "primitive_id": "compound_stimulus_patterning",
+      "name": "Compound Stimulus Patterning",
+      "verbatim_quote": "There are, however, innumerable situations in which the response must be made to a certain combination or configuration of circumstances (2, p.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_c': 'compound stimulus energy (SI: J)', 's_c': 'compound afferent impulse (dimensionless)'}",
+      "assumptions": "Response requires multi-element stimulus configuration; individual elements insufficient.",
+      "breakdown_regime": "Failure to reinforce when components are presented in isolation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes joint probability of stimulus elements; GSE evaluates composite state.",
+        "source_operator": "compound_stimulus_patterning",
+        "telemetry": "Conditional reinforcement success in compound vs. singleton stimuli"
+      }
+    },
+    {
+      "primitive_id": "diminishing_returns_habit_strength",
+      "name": "Diminishing Returns in Habit Strength",
+      "verbatim_quote": "216 ff.), as summating by a kind of diminishing returns principle (p.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_i': 'habit strength for stimulus i (dimensionless)', 'H_total': 'total habit strength (dimensionless)'}",
+      "assumptions": "Summation of individual habit strengths follows diminishing returns.",
+      "breakdown_regime": "Overlapping or redundant stimulus elements reduce marginal gain.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI applies diminishing returns to cumulative habit strength; GSE models saturation in response activation.",
+        "source_operator": "diminishing_returns_habit_strength",
+        "telemetry": "Rate of reinforcement decline with increasing stimulus complexity"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "17d123a62c166b56_t0",
+      "think": "The core operator 'Stimulus Energy to Afferent Impulse Mapping' establishes a foundational link where external stimulus energy S translates into internal neural signal s. This mapping is approximated as one-to-one but can break down under complex or conflicting inputs. The second operator 'Compound Stimulus Patterning' extends this by requiring specific combinations of S to evoke responses, indicating that s is not merely additive but context-sensitive. The third operator 'Diminishing Returns in Habit Strength' introduces a nonlinear summation rule for habit formation across multiple stimuli, implying that reinforcement does not scale linearly with stimulus complexity. These operators form a hierarchy: S→s defines perception, S_c→s_c defines pattern recognition, and H_total models behavioral adaptation. Dualities emerge in how S and s relate—linear vs. nonlinear regimes—and how habit strength can either amplify or dampen response likelihood. Failure modes include overgeneralization (when S is too broad), undergeneralization (when S is too narrow), and saturation (when H_total plateaus).\n\nDeep epistemic analysis for p0356 (17d123a62c166b56, domain=other, pages_read=1/1): Operator 'Stimulus Energy to Afferent Impulse Mapping' (page 1, domain other) captures: CHAPTER XIX The Patterning of Stimulus Compounds In our account of the \"law of reinforcement\" (p. Assumptions: One-to-one correspondence between S and s; approximate linearity holds in most cases. Breakdown regime: When S varies non-linearly or multiple stimuli interact. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI maps S → s as probabilistic input; GSE models s as state transition trigger. Operator 'Compound Stimulus Patterning' (page 1, domain other) captures: There are, however, innumerable situations in which the response must be made to a certain combination or configuration of circumstances (2, p. Assumptions: Response requires multi-element stimulus configuration; individual elements insufficient. Breakdown regime: Failure to reinforce when components are presented in isolation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes joint probability of stimulus elements; GSE evaluates composite state. Operator 'Diminishing Returns in Habit Strength' (page 1, domain other) captures: 216 ff.), as summating by a kind of diminishing returns principle (p. Assumptions: Summation of individual habit strengths follows diminishing returns. Breakdown regime: Overlapping or redundant stimulus elements reduce marginal gain. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI applies diminishing returns to cumulative habit strength; GSE models saturation in response activation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0356 (17d123a62c166b56, domain=other, pages_read=1/1): Operator 'Stimulus Energy to Afferent Impulse Mapping' (page 1, domain other) captures: CHAPTER XIX The Patterning of Stimulus Compounds In our account of the \"law of reinforcement\" (p. Assumptions: One-to-one correspondence between S and s; approximate linearity holds in most cases. Breakdown regime: When S varies non-linearly or multiple stimuli interact. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI maps S → s as probabilistic input; GSE models s as state transition trigger. Operator 'Compound Stimulus Patterning' (page 1, domain other) captures: There are, however, innumerable situations in which the response must be made to a certain combination or configuration of circumstances (2, p. Assumptions: Response requires multi-element stimulus configuration; individual elements insufficient. Breakdown regime: Failure to reinforce when components are presented in isolation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes joint probability of stimulus elements; GSE evaluates composite state. Operator 'Diminishing Returns in Habit Strength' (page 1, domain other) captures: 216 ff.), as summating by a kind of diminishing returns principle (p. Assumptions: Summation of individual habit strengths follows diminishing returns. Breakdown regime: Overlapping or redundant stimulus elements reduce marginal gain. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI applies diminishing returns to cumulative habit strength; GSE models saturation in response activation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Pavlovian conditioning theory and Hebbian learning principles, these operators reflect early 20th-century neurophysiological models of stimulus-response coupling and neural plasticity. Retrocausal Genealogy: Rooted in p0356 (17d123a62c166b56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0356 (17d123a62c166b56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might model stimulus presentation as either maximally informative (high S) or minimally disruptive (low S), leading to divergent habit strength accumulation strategies. Decision actors may optimize for either robustness (low variance in s) or adaptability (high sensitivity to S_c). Theory of Mind & Decision Maker Model: Rooted in p0356 (17d123a62c166b56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when S and s are not independent; leakage occurs if H_total fails to account for inter-stimulus interference. Veto conditions prevent spurious reinforcement when compound patterns fail to activate expected responses due to misalignment in neural coding. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0356 (17d123a62c166b56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

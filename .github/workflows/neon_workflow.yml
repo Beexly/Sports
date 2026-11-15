@@ -98,12 +98,21 @@ jobs:
   delete_neon_branch:
     name: Delete Neon Branch
     needs: setup
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    # 2026-11-13: `always()` is load-bearing. Without it, any failure in the
+    # setup job (tj-actions/branch-names regularly fails on closed fork PRs
+    # whose head branch was already deleted) silently skipped this job and
+    # orphaned the preview branch — 29 orphans (pr-1219..pr-1271) were found
+    # billing on 2026-11-13. The branch-name fallback below keeps the delete
+    # target correct even when setup produced no output.
+    if: always() && github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: Delete Neon Branch
+        # A branch that already expired (14-day TTL) or was never created must
+        # not red-X the workflow — the delete is best-effort cleanup.
+        continue-on-error: true
         uses: neondatabase/delete-branch-action@v3
         with:
           project_id: ${{ vars.NEON_PROJECT_ID }}
-          branch: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
+          branch: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch || github.event.pull_request.head.ref }}
           api_key: ${{ secrets.NEON_API_KEY }}

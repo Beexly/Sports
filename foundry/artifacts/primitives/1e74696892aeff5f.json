@@ -1,0 +1,78 @@
+{
+  "book_id": "1e74696892aeff5f",
+  "source_status": "COMPLETE",
+  "title": "dtsong-sleeper-api-wrapper",
+  "file_name": "dtsong-sleeper-api-wrapper.md",
+  "sha256": "1e74696892aeff5f03fe48053027f5f279c65bdcb7f090c0c8aa89de66710f55",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sleeper API wrapper as a canonical HTTP-to-JSON translator; mathematically models data ingestion via isomorphic type conversion. Universal Lens: Rooted in dtsong-sleeper-api-wrapper (1e74696892aeff5f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian signal processing for Sleeper market data; maps raw JSON to probabilistic belief states using conformal predictive distributions. GSI Mapping: Rooted in dtsong-sleeper-api-wrapper (1e74696892aeff5f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine consumes Sleeper signals through state-transition logic; GSE adapts via deterministic path selection from signal registry. GSE Mapping: Rooted in dtsong-sleeper-api-wrapper (1e74696892aeff5f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "http_json_translator",
+      "name": "HTTP-to-JSON Translator",
+      "verbatim_quote": "# dtsong / sleeper-api-wrapper - **Stars:** 101 | **License:** MIT | **Pushed:** 2026-09-30 (alive) | **Lang:** Python (pip: `sleeper-api-wrapper`) ## Vision A maintained Python wrapper over Sleeper's full read-only API (users, leagues, rosters, matchups, drafts, transactions, traded picks), converting raw JSON into Python types.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'HTTP request object (dimensionless)', 'J': 'JSON payload (dimensionless)', 'T': 'Type conversion function (dimensionless)'}",
+      "assumptions": "API responses are consistent; JSON structure adheres to documented schema.",
+      "breakdown_regime": "When API returns malformed or unexpected JSON structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps HTTP response objects to typed Python structures via JSON deserialization; enables compositional signal processing in GSI.",
+        "source_operator": "http_json_translator",
+        "telemetry": "Response time, error count, schema validation success rate"
+      }
+    },
+    {
+      "primitive_id": "keyless_api_access",
+      "name": "Keyless API Access",
+      "verbatim_quote": "- No API key needed — Sleeper's read endpoints are keyless.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'Authentication token (dimensionless)', 'R': 'Read-only access flag (boolean)'}",
+      "assumptions": "All read operations are publicly accessible without authentication.",
+      "breakdown_regime": "If API enforces key-based access in future.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables open data ingestion pipeline; reduces friction in signal acquisition for GSE.",
+        "source_operator": "keyless_api_access",
+        "telemetry": "Access frequency, unauthorized access attempts"
+      }
+    },
+    {
+      "primitive_id": "rate_limit_compliance",
+      "name": "Rate Limit Compliance",
+      "verbatim_quote": "The Sleeper API itself is rate-limited (roughly 1000 calls/min across the community; wrapper does not enforce it).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'Rate limit threshold (calls per minute)', 'C': 'Call counter (dimensionless)', 'T_{\\\\text{wait}}': 'Wait time between calls (seconds)'}",
+      "assumptions": "Rate limiting is enforced at API level; wrapper does not implement enforcement.",
+      "breakdown_regime": "Exceeding 1000 calls/minute leads to throttling or blocking.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Determines optimal polling intervals for GSE; informs backoff strategies.",
+        "source_operator": "rate_limit_compliance",
+        "telemetry": "Call frequency, throttling events, latency spikes"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1e74696892aeff5f_t0",
+      "think": "The core insight is that the Sleeper API wrapper acts as a foundational data ingestion layer. It abstracts away raw HTTP complexity into structured Python types, enabling downstream systems like GSI to perform probabilistic inference on market signals. The absence of an API key simplifies deployment and aligns with open data principles. However, the lack of built-in rate-limiting enforcement implies that GSE must manage concurrency externally. This creates a dual role for the wrapper: it is both a translator and a conduit, requiring careful integration to avoid bottlenecks or data corruption. The wrapper’s minimalism ensures modularity, but also means GSE must build its own caching or analytics layers if needed. The mathematical duality lies in the isomorphism between raw HTTP responses and typed data structures, which underpins all further reasoning in GSI.\n\nDeep epistemic analysis for dtsong-sleeper-api-wrapper (1e74696892aeff5f, domain=other, pages_read=1/1): Operator 'HTTP-to-JSON Translator' (page 1, domain other) captures: # dtsong / sleeper-api-wrapper - **Stars:** 101 | **License:** MIT | **Pushed:** 2026-09-30 (alive) | **Lang:** Python (pip: `sleeper-api-wrapper`) ## Vision A maintained Python wrapper over Sleeper's full read-only API (users, leagues, rosters, matchups, drafts, transactions, traded picks), converting raw JSON into Python types. Assumptions: API responses are consistent; JSON structure adheres to documented schema. Breakdown regime: When API returns malformed or unexpected JSON structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps HTTP response objects to typed Python structures via JSON deserialization; enables compositional signal processing in GSI. Operator 'Keyless API Access' (page 1, domain other) captures: - No API key needed — Sleeper's read endpoints are keyless. Assumptions: All read operations are publicly accessible without authentication. Breakdown regime: If API enforces key-based access in future. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables open data ingestion pipeline; reduces friction in signal acquisition for GSE. Operator 'Rate Limit Compliance' (page 1, domain other) captures: The Sleeper API itself is rate-limited (roughly 1000 calls/min across the community; wrapper does not enforce it). Assumptions: Rate limiting is enforced at API level; wrapper does not implement enforcement. Breakdown regime: Exceeding 1000 calls/minute leads to throttling or blocking. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Determines optimal polling intervals for GSE; informs backoff strategies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for dtsong-sleeper-api-wrapper (1e74696892aeff5f, domain=other, pages_read=1/1): Operator 'HTTP-to-JSON Translator' (page 1, domain other) captures: # dtsong / sleeper-api-wrapper - **Stars:** 101 | **License:** MIT | **Pushed:** 2026-09-30 (alive) | **Lang:** Python (pip: `sleeper-api-wrapper`) ## Vision A maintained Python wrapper over Sleeper's full read-only API (users, leagues, rosters, matchups, drafts, transactions, traded picks), converting raw JSON into Python types. Assumptions: API responses are consistent; JSON structure adheres to documented schema. Breakdown regime: When API returns malformed or unexpected JSON structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps HTTP response objects to typed Python structures via JSON deserialization; enables compositional signal processing in GSI. Operator 'Keyless API Access' (page 1, domain other) captures: - No API key needed — Sleeper's read endpoints are keyless. Assumptions: All read operations are publicly accessible without authentication. Breakdown regime: If API enforces key-based access in future. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables open data ingestion pipeline; reduces friction in signal acquisition for GSE. Operator 'Rate Limit Compliance' (page 1, domain other) captures: The Sleeper API itself is rate-limited (roughly 1000 calls/min across the community; wrapper does not enforce it). Assumptions: Rate limiting is enforced at API level; wrapper does not implement enforcement. Breakdown regime: Exceeding 1000 calls/minute leads to throttling or blocking. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Determines optimal polling intervals for GSE; informs backoff strategies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early 2000s RESTful API design principles, evolving through Python's requests library and JSON parsing conventions. Influenced by functional programming paradigms emphasizing immutability and composition. Retrocausal Genealogy: Rooted in dtsong-sleeper-api-wrapper (1e74696892aeff5f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in dtsong-sleeper-api-wrapper (1e74696892aeff5f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent is GSE, which may consider reinventing the wheel due to NIH syndrome. The wrapper represents a pragmatic solution, while GSE might err toward over-engineering. Decision-making hinges on whether GSE prioritizes control or reuse. Theory of Mind & Decision Maker Model: Rooted in dtsong-sleeper-api-wrapper (1e74696892aeff5f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists if GSE duplicates wrapper functionality; leakage occurs if rate limits are ignored or improperly handled. Veto condition: any deviation from standard HTTP semantics in wrapper usage. Cross-Layer Veto & Anti-Leakage Check: Rooted in dtsong-sleeper-api-wrapper (1e74696892aeff5f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in dtsong-sleeper-api-wrapper (1e74696892aeff5f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "313cb485d1e4ca0b",
+  "source_status": "COMPLETE",
+  "title": "ACTIVATION_RUNBOOK",
+  "file_name": "ACTIVATION_RUNBOOK.md",
+  "sha256": "313cb485d1e4ca0b79e4fcb59dde968a38568d1b29040cf0fc910f847d27d08a",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Affiliate activation operates as a constrained optimization over operator compliance, state licensing, and trust-layer validation, with structural separation enforcing deterministic partner approval. Universal Lens: Rooted in ACTIVATION_RUNBOOK (313cb485d1e4ca0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers operator eligibility and compliance risk using Bayesian belief nets over state matrices and disclosure verifications, conditioning on trust-layer invariants. GSI Mapping: Rooted in ACTIVATION_RUNBOOK (313cb485d1e4ca0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state-specific activation workflows via conformal prediction of regulatory readiness, transitioning between zero-license and full-license regimes based on volume thresholds. GSE Mapping: Rooted in ACTIVATION_RUNBOOK (313cb485d1e4ca0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "operator_compliance_validation",
+      "name": "Operator Compliance Validation",
+      "verbatim_quote": "# Affiliate Activation Runbook — founder go-live sequence **Status: not started.** Zero `APPROVED_PARTNER` rows exist in the operator registry (`apps/web/lib/cockpit/operator-registry.ts`) as of this writing, and this runbook does not change that — approving a partner is a founder action via code review, not something an agent does.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Partner approval status (binary)', 'R': 'Registry state (boolean)'}",
+      "assumptions": "Approvals are deterministic and require founder-level intervention.",
+      "breakdown_regime": "P = 1 iff R = 1 and founder review passes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI validates P using a binary classifier trained on operator data; GSE enforces R via code review gateways.",
+        "source_operator": "operator_compliance_validation",
+        "telemetry": "Registry row count and approval timestamp"
+      }
+    },
+    {
+      "primitive_id": "state_licensing_matrix",
+      "name": "State Licensing Matrix",
+      "verbatim_quote": "Reference the full matrix in `PROGRAM_LANDSCAPE.md` §\"State matrix.\" Key points: - **NJ and PA are operator-initiated filings.** NJ is a free vendor registration the operator files (a supplemental affiliate filing is due within 30 days); PA's gaming-service-provider tier is likewise something the operator initiates on your behalf.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{s,o}': 'License requirement for state s and operator o (dimensionless)', 'F_{o,s}': 'Filing obligation for operator o in state s (boolean)'}",
+      "assumptions": "Each operator-state pair requires independent compliance.",
+      "breakdown_regime": "L_{s,o} ∈ {0, 1, 2} where 0 = no license, 1 = low-cost, 2 = high-cost.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE computes F_{o,s} as a function of L_{s,o}; GSI uses L_{s,o} to derive risk scores.",
+        "source_operator": "state_licensing_matrix",
+        "telemetry": "Compliance check status per operator-state pair"
+      }
+    },
+    {
+      "primitive_id": "commission_model_constraint",
+      "name": "Commission Model Constraint",
+      "verbatim_quote": "Do not accept a rev-share deal shape at this stage even if offered.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Commission model (binary: CPA=0, RevShare=1)', 'V': 'Volume threshold for rev-share eligibility (dimensionless)'}",
+      "assumptions": "Rev-share is deferred until proven volume justifies cost.",
+      "breakdown_regime": "C = 0 when V < V_threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE enforces C = 0 constraint via contract validation; GSI models C as a stochastic process conditioned on V.",
+        "source_operator": "commission_model_constraint",
+        "telemetry": "Contractual commission type and volume metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "313cb485d1e4ca0b_t0",
+      "think": "The activation runbook defines a dual system: operator validation (P) and state compliance (L_{s,o}), both constrained by a trust layer. The system enforces a structural separation (R) between agent actions and founder approvals. Each operator-state pair incurs a licensing cost (L_{s,o}) that determines regulatory regime. Commission models (C) are restricted to CPA-only initially, deferring rev-share until volume (V) exceeds a threshold. This creates a layered control system where GSI evaluates risk through Bayesian inference on L_{s,o} and C, while GSE enforces constraints via state machines and code reviews. Failure modes include bypassing R (unauthorized partners), ignoring L_{s,o} (non-compliant states), and accepting C=1 prematurely (violating volume constraints).\n\nDeep epistemic analysis for ACTIVATION_RUNBOOK (313cb485d1e4ca0b, domain=other, pages_read=4/4): Operator 'Operator Compliance Validation' (page 1, domain other) captures: # Affiliate Activation Runbook — founder go-live sequence **Status: not started.** Zero `APPROVED_PARTNER` rows exist in the operator registry (`apps/web/lib/cockpit/operator-registry.ts`) as of this writing, and this runbook does not change that — approving a partner is a founder action via code review, not something an agent does. Assumptions: Approvals are deterministic and require founder-level intervention. Breakdown regime: P = 1 iff R = 1 and founder review passes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI validates P using a binary classifier trained on operator data; GSE enforces R via code review gateways. Operator 'State Licensing Matrix' (page 2, domain other) captures: Reference the full matrix in `PROGRAM_LANDSCAPE.md` §\"State matrix.\" Key points: - **NJ and PA are operator-initiated filings.** NJ is a free vendor registration the operator files (a supplemental affiliate filing is due within 30 days); PA's gaming-service-provider tier is likewise something the operator initiates on your behalf. Assumptions: Each operator-state pair requires independent compliance. Breakdown regime: L_{s,o} ∈ {0, 1, 2} where 0 = no license, 1 = low-cost, 2 = high-cost. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE computes F_{o,s} as a function of L_{s,o}; GSI uses L_{s,o} to derive risk scores. Operator 'Commission Model Constraint' (page 2, domain other) captures: Do not accept a rev-share deal shape at this stage even if offered. Assumptions: Rev-share is deferred until proven volume justifies cost. Breakdown regime: C = 0 when V < V_threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE enforces C = 0 constraint via contract validation; GSI models C as a stochastic process conditioned on V. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ACTIVATION_RUNBOOK (313cb485d1e4ca0b, domain=other, pages_read=4/4): Operator 'Operator Compliance Validation' (page 1, domain other) captures: # Affiliate Activation Runbook — founder go-live sequence **Status: not started.** Zero `APPROVED_PARTNER` rows exist in the operator registry (`apps/web/lib/cockpit/operator-registry.ts`) as of this writing, and this runbook does not change that — approving a partner is a founder action via code review, not something an agent does. Assumptions: Approvals are deterministic and require founder-level intervention. Breakdown regime: P = 1 iff R = 1 and founder review passes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI validates P using a binary classifier trained on operator data; GSE enforces R via code review gateways. Operator 'State Licensing Matrix' (page 2, domain other) captures: Reference the full matrix in `PROGRAM_LANDSCAPE.md` §\"State matrix.\" Key points: - **NJ and PA are operator-initiated filings.** NJ is a free vendor registration the operator files (a supplemental affiliate filing is due within 30 days); PA's gaming-service-provider tier is likewise something the operator initiates on your behalf. Assumptions: Each operator-state pair requires independent compliance. Breakdown regime: L_{s,o} ∈ {0, 1, 2} where 0 = no license, 1 = low-cost, 2 = high-cost. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE computes F_{o,s} as a function of L_{s,o}; GSI uses L_{s,o} to derive risk scores. Operator 'Commission Model Constraint' (page 2, domain other) captures: Do not accept a rev-share deal shape at this stage even if offered. Assumptions: Rev-share is deferred until proven volume justifies cost. Breakdown regime: C = 0 when V < V_threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE enforces C = 0 constraint via contract validation; GSI models C as a stochastic process conditioned on V. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in regulatory compliance frameworks of 2025–2026, evolving from pre-existing FTC disclosure norms and affiliate marketing governance models. Retrocausal Genealogy: Rooted in ACTIVATION_RUNBOOK (313cb485d1e4ca0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ACTIVATION_RUNBOOK (313cb485d1e4ca0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the operator seeking revenue, the regulator demanding compliance, and the founder enforcing structural integrity. Each actor's behavior is modeled as a probabilistic response to incentive structures and constraints. Theory of Mind & Decision Maker Model: Rooted in ACTIVATION_RUNBOOK (313cb485d1e4ca0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If GSE detects unauthorized partner entries (P ≠ 1), or GSI flags non-compliant states (L_{s,o} ≠ 0), then activation halts. Similarly, if C=1 is accepted before V_threshold, the system vetoes further progression. Cross-Layer Veto & Anti-Leakage Check: Rooted in ACTIVATION_RUNBOOK (313cb485d1e4ca0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

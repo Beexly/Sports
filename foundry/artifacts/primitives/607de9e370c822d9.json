@@ -1,0 +1,78 @@
+{
+  "book_id": "607de9e370c822d9",
+  "source_status": "COMPLETE",
+  "title": "FULL_STACK_DELIVERY (2)",
+  "file_name": "FULL_STACK_DELIVERY (2).md",
+  "sha256": "607de9e370c822d971602f7b00fd1c54cbfb1326ee501199e091d9fcecdd3530",
+  "primary_domain": "other",
+  "pages_total": 76,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A self-contained stack of Python engines leveraging standard library math for sports prediction, with zero external dependencies and full internal validation. Universal Lens: Rooted in FULL_STACK_DELIVERY (2) (607de9e370c822d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference through hierarchical models and conformal prediction ensures calibrated uncertainty estimates across NFL/EPL datasets using least-squares and Gaussian processes. GSI Mapping: Rooted in FULL_STACK_DELIVERY (2) (607de9e370c822d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning via state transitions in game contexts (travel, weather, referee effects) enables dynamic risk-adjusted betting strategies with Kelly criterion optimization. GSE Mapping: Rooted in FULL_STACK_DELIVERY (2) (607de9e370c822d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "spread_convention",
+      "name": "Spread Convention",
+      "verbatim_quote": "Spread convention (all files in this packet): listed_spread = the book home number (favorite negative, -3.5).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'listed_spread': 'dimensionless', 'mu_margin': 'dimensionless'}",
+      "assumptions": "Book home line represents favorite's point differential; negative values indicate favorite strength.",
+      "breakdown_regime": "When listed_spread approaches zero, marginal utility of spread becomes undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps book odds to probabilistic margin via linear transformation; used in Brier decomposition and calibration.",
+        "source_operator": "spread_convention",
+        "telemetry": "Empirical coverage of predicted margins against actual outcomes."
+      }
+    },
+    {
+      "primitive_id": "brier_decomposition",
+      "name": "Brier Decomposition",
+      "verbatim_quote": "BRIER + ISOTONIC ============ def brier_decompose(pairs): \"\"\"Murphy: BS = reliability - resolution + uncertainty.",
+      "page": 5,
+      "latex": "\\text{BS} = \\text{reliability} - \\text{resolution} + \\text{uncertainty}",
+      "symbol_and_unit_ledger": "{'BS': 'unitless', 'reliability': 'unitless', 'resolution': 'unitless', 'uncertainty': 'unitless'}",
+      "assumptions": "Forecast probabilities are binary and bounded between 0 and 1; pairs consist of forecasts and outcomes.",
+      "breakdown_regime": "When forecasts are perfectly reliable but lack resolution, Brier score increases due to high uncertainty.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used to evaluate forecast quality in calibration engines; decomposes into components for interpretability.",
+        "source_operator": "brier_decomposition",
+        "telemetry": "Post-calibration Brier scores compared to pre-calibration baseline."
+      }
+    },
+    {
+      "primitive_id": "dixon_coles_model",
+      "name": "Dixon-Coles Model",
+      "verbatim_quote": "market_strengths is least squares (normal equations), not a square Gaussian elimination.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'market_strengths': 'dimensionless', 'lambda': 'rate parameter'}",
+      "assumptions": "Goals follow a Poisson process; time decay applied to recent matches; home advantage modeled as fixed effect.",
+      "breakdown_regime": "Model fails under extreme imbalance in team strength or insufficient data for estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Applies maximum likelihood estimation to fit goal-scoring rates; integrates with context engine for richer features.",
+        "source_operator": "dixon_coles_model",
+        "telemetry": "Log-likelihood improvement over baseline Poisson model on held-out test set."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "607de9e370c822d9_t0",
+      "think": "The stack operates under a modular architecture where each engine performs distinct yet interrelated tasks. The spread convention defines how book lines map to internal parameters, enabling consistent interpretation of favorites and underdogs. The Brier decomposition provides a framework for evaluating forecast accuracy by separating reliability, resolution, and uncertainty components. The Dixon-Coles model estimates goal-scoring rates using least-squares fitting, incorporating time decay and home field advantage. These primitives form a coherent system where predictions inform betting decisions through Kelly optimization, while calibration ensures robustness against miscalibration. Dualities emerge between deterministic models (e.g., least squares) and stochastic processes (e.g., Poisson), with failure modes including data scarcity, model misspecification, and overfitting. Each engine validates itself independently, ensuring integrity of the entire pipeline.\n\nDeep epistemic analysis for FULL_STACK_DELIVERY (2) (607de9e370c822d9, domain=other, pages_read=18/76): Operator 'Spread Convention' (page 3, domain other) captures: Spread convention (all files in this packet): listed_spread = the book home number (favorite negative, -3.5). Assumptions: Book home line represents favorite's point differential; negative values indicate favorite strength. Breakdown regime: When listed_spread approaches zero, marginal utility of spread becomes undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps book odds to probabilistic margin via linear transformation; used in Brier decomposition and calibration. Operator 'Brier Decomposition' (page 5, domain other) captures: BRIER + ISOTONIC ============ def brier_decompose(pairs): \"\"\"Murphy: BS = reliability - resolution + uncertainty. Assumptions: Forecast probabilities are binary and bounded between 0 and 1; pairs consist of forecasts and outcomes. Breakdown regime: When forecasts are perfectly reliable but lack resolution, Brier score increases due to high uncertainty. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used to evaluate forecast quality in calibration engines; decomposes into components for interpretability. Operator 'Dixon-Coles Model' (page 3, domain other) captures: market_strengths is least squares (normal equations), not a square Gaussian elimination. Assumptions: Goals follow a Poisson process; time decay applied to recent matches; home advantage modeled as fixed effect. Breakdown regime: Model fails under extreme imbalance in team strength or insufficient data for estimation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Applies maximum likelihood estimation to fit goal-scoring rates; integrates with context engine for richer features. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FULL_STACK_DELIVERY (2) (607de9e370c822d9, domain=other, pages_read=18/76): Operator 'Spread Convention' (page 3, domain other) captures: Spread convention (all files in this packet): listed_spread = the book home number (favorite negative, -3.5). Assumptions: Book home line represents favorite's point differential; negative values indicate favorite strength. Breakdown regime: When listed_spread approaches zero, marginal utility of spread becomes undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps book odds to probabilistic margin via linear transformation; used in Brier decomposition and calibration. Operator 'Brier Decomposition' (page 5, domain other) captures: BRIER + ISOTONIC ============ def brier_decompose(pairs): \"\"\"Murphy: BS = reliability - resolution + uncertainty. Assumptions: Forecast probabilities are binary and bounded between 0 and 1; pairs consist of forecasts and outcomes. Breakdown regime: When forecasts are perfectly reliable but lack resolution, Brier score increases due to high uncertainty. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used to evaluate forecast quality in calibration engines; decomposes into components for interpretability. Operator 'Dixon-Coles Model' (page 3, domain other) captures: market_strengths is least squares (normal equations), not a square Gaussian elimination. Assumptions: Goals follow a Poisson process; time decay applied to recent matches; home advantage modeled as fixed effect. Breakdown regime: Model fails under extreme imbalance in team strength or insufficient data for estimation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Applies maximum likelihood estimation to fit goal-scoring rates; integrates with context engine for richer features. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference and modern machine learning paradigms, drawing from Murphy’s Brier scoring rule, Dixon-Coles’ time-weighted Poisson model, and conformal prediction theory. Retrocausal Genealogy: Rooted in FULL_STACK_DELIVERY (2) (607de9e370c822d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in FULL_STACK_DELIVERY (2) (607de9e370c822d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational agents with bounded information processing, optimizing expected utility under uncertainty. Agents may misestimate probabilities due to cognitive biases or incomplete data, leading to suboptimal decisions unless corrected via calibration. Theory of Mind & Decision Maker Model: Rooted in FULL_STACK_DELIVERY (2) (607de9e370c822d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by orthogonalizing features such as travel distance and weather impact. Leakage occurs when context variables leak into predictive models without proper control, violating independence assumptions. Cross-Layer Veto & Anti-Leakage Check: Rooted in FULL_STACK_DELIVERY (2) (607de9e370c822d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

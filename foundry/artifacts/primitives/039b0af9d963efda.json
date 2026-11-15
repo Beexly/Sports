@@ -1,0 +1,439 @@
+{
+  "book_id": "039b0af9d963efda",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_QUALITATIVE_NMA_CLEAN_OCR",
+  "source_note": "Song et al., 'Comparative Efficacy of Different Aquatic Exercise Modalities on Cognitive Function in The Elderly: A Systematic Review and Network Meta-Analysis', Journal of Sports Science and Medicine (2026) 25:381-394, DOI 10.52082/jssm.2026.381 (14 pages). Full frequentist network meta-analysis: 9 RCTs/324 participants, SMD effect sizes, SUCRA/P-score rankings (cognitive-motor best 85.36%), transitivity + node-splitting consistency (all p>0.05), CINeMA all-High confidence, I²=47.9% moderate; central finding cognitive engagement > intensity. Extracted faithfully (not a derivative summary). The source prints NO numbered display equations — SMD, I², SUCRA, P-score, CINeMA are named standard statistics described in prose — so primitives use latex:'' with breakdown_regime 'no_equation_domain' and the statistics are described in assumptions rather than fabricated as equations. Domain psych (cognitive/clinical) matches catalog; sport-science/geriatric context, not football. The NMA methodology (graph evidence network, transitivity/consistency, probabilistic ranking, confidence grading) is sport-agnostic and isomorphic to GSE's comparative evidence-synthesis/model-ranking layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE. Authors declare no generative AI used.",
+  "primitives": [
+    {
+      "primitive_id": "nma_integrates_direct_indirect",
+      "name": "NMA integrates direct and indirect evidence for multi-intervention comparison",
+      "verbatim_quote": "Network meta-analysis (NMA) addresses this by integrating direct and indirect evidence from RCTs",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Network meta-analysis integrates direct evidence (RCTs explicitly comparing two interventions) and indirect evidence (via a shared common comparator) to allow simultaneous multi-intervention comparisons, effect rankings, and precise insights despite sparse direct data, extending pairwise meta-analysis; no head-to-head RCTs had compared the aquatic modalities, motivating the NMA."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Direct+indirect evidence synthesis is the same comparative-ranking kernel GSE uses to order models without head-to-head tests.",
+        "source_operator": "nma_integrates_direct_indirect",
+        "telemetry": "NMA = direct + indirect via common comparator; multi-intervention ranking"
+      }
+    },
+    {
+      "primitive_id": "nine_rcts_324_participants",
+      "name": "Evidence base: 9 RCTs, 324 participants aged 60-90",
+      "verbatim_quote": "Nine RCTs (involving 324 participants) met the inclusion criteria",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Nine RCTs involving 324 participants aged 60-90 met inclusion (mean age >=60, aquatic intervention, no-intervention or other-exercise control, validated cognitive outcome, sufficient data); 903 records identified, 391 screened, 21 full texts evaluated; trials from China, South Korea, Thailand, Spain, US, Japan; PROSPERO CRD42025641350, PRISMA-NMA."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The small sparse evidence base is the same precision caveat GSE attaches to any ranking.",
+        "source_operator": "nine_rcts_324_participants",
+        "telemetry": "9 RCTs / 324 participants / 60-90y; 903->391->21->9; PROSPERO CRD42025641350"
+      }
+    },
+    {
+      "primitive_id": "cognitive_motor_highest_probability",
+      "name": "Aquatic cognitive-motor exercise highest probability of being most effective",
+      "verbatim_quote": "Aquatic cognitive-motor exercise showed the highest probability of being the most effective intervention",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Aquatic cognitive-motor exercise (combining cognitive tasks with motor activity) showed the highest probability of being the most effective intervention, followed by aquatic aerobic, aquatic strength, aquatic HIIT, and land-based exercise; only cognitive-motor showed statistically significant improvement versus non-exercising controls."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The top-ranked intervention is the same best-model selection GSE derives from comparative evidence.",
+        "source_operator": "cognitive_motor_highest_probability",
+        "telemetry": "cognitive-motor best; aerobic > strength > HIIT > land; only cognitive-motor significant vs control"
+      }
+    },
+    {
+      "primitive_id": "sucra_pscore_values",
+      "name": "SUCRA 85.36% / P-score 86.05% for cognitive-motor",
+      "verbatim_quote": "reached the highest probability of being the best treatment, with a SUCRA value of 85.36%",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Ranking metrics: cognitive-motor SUCRA 85.36% / P-score 86.05%, aerobic 61.44% / 65.71%, strength 51.80% / 50.72%, HIIT 49.12% / 46.99%, land 48.34% / 46.13%, non-exercising control 3.94% / 4.40%; SUCRA is the surface under the cumulative ranking curve (probability of being among the best) and P-score the average probability of being better than the others."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SUCRA/P-score probabilistic ranking is the same rank-confidence measure GSE reports for model comparison.",
+        "source_operator": "sucra_pscore_values",
+        "telemetry": "SUCRA/P-score: cog-motor 85.36/86.05, aerobic 61.44/65.71, strength 51.80/50.72, HIIT 49.12/46.99, land 48.34/46.13, control 3.94/4.40"
+      }
+    },
+    {
+      "primitive_id": "only_cognitive_motor_significant",
+      "name": "Only cognitive-motor CI excludes zero vs control",
+      "verbatim_quote": "only Aquatic cognitive-motor exercise (C) demonstrated a statistically significant difference, as its confidence interval did not include zero",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fixed-effect SMD versus control: strength -0.13 (-1.00, 0.74), land 0.24 (-0.58, 1.06), HIIT 0.40 (-0.46, 1.25), cognitive-motor 0.48 (0.02, 0.95), aerobic 0.51 (-0.08, 1.11); only cognitive-motor's confidence interval excludes zero, the rest non-significant; aerobic has the largest point estimate but its CI crosses zero."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The CI-excludes-zero significance test is the same effect-credibility gate GSE applies before trusting a ranking.",
+        "source_operator": "only_cognitive_motor_significant",
+        "telemetry": "SMD vs control: cog-motor 0.48 (0.02,0.95) only significant; aerobic 0.51 (-0.08,1.11) ns"
+      }
+    },
+    {
+      "primitive_id": "smd_effect_size",
+      "name": "SMD with 95% CIs as the continuous-outcome effect size",
+      "verbatim_quote": "the SMD with 95% CIs was selected as the effect size metric",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because all cognitive outcomes are continuous, the standardized mean difference (SMD) with 95% confidence intervals is the effect-size metric; outcomes include MMSE, MMSE-K, MoCA T-score, DSST, HDS-R, SDMT, Raven's Progressive Matrices, and Stroop color-word test; analyses in R 4.2.2 with netmeta/meta/metafor/igraph."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The standardized effect size is the same commensurable scale GSE uses to pool heterogeneous outcomes.",
+        "source_operator": "smd_effect_size",
+        "telemetry": "SMD + 95% CI; continuous outcomes; R netmeta/meta/metafor"
+      }
+    },
+    {
+      "primitive_id": "transitivity_assumption",
+      "name": "Transitivity checked via clinical/methodological feature comparison",
+      "verbatim_quote": "the assumption of transitivity was examined through comparison of clinical and methodological features across included studies, and no major violations were observed",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The transitivity assumption (that indirect comparisons are valid because studies are comparable in effect modifiers) was examined by comparing clinical and methodological features across included studies, with no major violations observed; this underpins the validity of indirect evidence."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The transitivity check is the same comparability precondition GSE verifies before borrowing strength across studies.",
+        "source_operator": "transitivity_assumption",
+        "telemetry": "transitivity: clinical/methodological features comparable; no major violations"
+      }
+    },
+    {
+      "primitive_id": "network_graph_nodes_edges",
+      "name": "Evidence network as graph: interventions=nodes, comparisons=edges",
+      "verbatim_quote": "The network structure was grounded in graph theory, where interventions are represented as nodes and direct trial comparisons as edges, forming a connected evidence network",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The network is grounded in graph theory: interventions are nodes, direct trial comparisons are edges, forming a connected evidence network; nodes are weighted by the number of trials including the treatment (larger node/thicker line = more studies); the network here has six interventions and seven direct pairwise comparisons, all two-arm trials."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The graph-structured evidence network is the same comparison topology GSE builds for model ranking.",
+        "source_operator": "network_graph_nodes_edges",
+        "telemetry": "graph: nodes=interventions, edges=comparisons; 6 nodes / 7 edges; node size ~ trial count"
+      }
+    },
+    {
+      "primitive_id": "connectivity_requirement",
+      "name": "Network connectivity: a path between any two nodes",
+      "verbatim_quote": "The network must satisfy connectivity, ensuring that at least one path exists between any two nodes",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The network must satisfy connectivity, ensuring at least one path exists between any two nodes, so every intervention pair can be compared directly or indirectly; participant distribution: control 39, land 57, cognitive-motor 43, aerobic 64, HIIT 83, strength 38."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The connectivity requirement is the same comparability-completeness condition GSE enforces on its evidence graph.",
+        "source_operator": "connectivity_requirement",
+        "telemetry": "connectivity: path between any two nodes; participants 39/57/43/64/83/38"
+      }
+    },
+    {
+      "primitive_id": "indirect_common_comparator",
+      "name": "Indirect effects from two comparisons sharing a common comparator",
+      "verbatim_quote": "indirect effect estimates are obtained from effect estimates from two comparisons sharing a common comparator",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Indirect comparisons rest on the premise that an indirect effect estimate is obtained from two comparisons sharing a common comparator, constructed within a frequentist framework by modeling the network as a connected graph where interventions are linked via direct or indirect pathways; direct comparisons pool RCT effects into relative-efficacy distributions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The common-comparator indirect estimate is the same transitive inference GSE uses to rank untested pairs.",
+        "source_operator": "indirect_common_comparator",
+        "telemetry": "indirect = two comparisons sharing common comparator; frequentist connected graph"
+      }
+    },
+    {
+      "primitive_id": "node_splitting_incoherence",
+      "name": "Node-splitting tests direct-indirect incoherence",
+      "verbatim_quote": "A node-splitting analysis was applied to evaluate potential incoherence between direct and indirect evidence",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A node-splitting analysis evaluates potential incoherence between direct and indirect evidence; in the global analysis no pairwise comparison showed significant direct-indirect differences (all p>0.05), with direct estimates -1.77 to 1.72, indirect -1.34 to 1.89, and network -1.26 to 1.76, supporting consistency."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Node-splitting consistency is the same direct-vs-indirect agreement audit GSE runs on synthesized evidence.",
+        "source_operator": "node_splitting_incoherence",
+        "telemetry": "node-splitting: all p>0.05; direct -1.77..1.72 / indirect -1.34..1.89 / network -1.26..1.76"
+      }
+    },
+    {
+      "primitive_id": "cinema_six_domains",
+      "name": "CINeMA rates confidence across six domains",
+      "verbatim_quote": "This framework evaluates six domains (within-study bias, reporting bias, indirectness, imprecision, heterogeneity, and incoherence)",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The CINeMA framework assesses confidence in each pairwise comparison across six domains (within-study bias, reporting bias, indirectness, imprecision, heterogeneity, incoherence), rating confidence High/Moderate/Low/Very low; here all comparisons were rated High; risk of bias used Cochrane RoB 2.0 (five domains), no study high risk, six some concerns, three low risk."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The multi-domain confidence rating is the same evidence-quality grading GSE attaches to each comparison.",
+        "source_operator": "cinema_six_domains",
+        "telemetry": "CINeMA 6 domains -> High/Moderate/Low/Very low; all High here; RoB 2.0 no high risk"
+      }
+    },
+    {
+      "primitive_id": "i2_heterogeneity_thresholds",
+      "name": "I² thresholds: <30% nonimportant, 30-50 moderate, 50-75 substantial, >=75 high",
+      "verbatim_quote": "An I² less than 30% was considered nonimportant heterogeneity",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Heterogeneity is evaluated with the I² statistic and Cochran's Q p-value, with thresholds I²<30% nonimportant, 30-50% moderate, 50-75% substantial, >=75% high; funnel plots assess publication bias/small-study effects."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The I² heterogeneity grading is the same between-study inconsistency measure GSE uses before pooling.",
+        "source_operator": "i2_heterogeneity_thresholds",
+        "telemetry": "I² <30 nonimportant / 30-50 moderate / 50-75 substantial / >=75 high; Cochran Q; funnel plot"
+      }
+    },
+    {
+      "primitive_id": "consistency_no_significant_diff",
+      "name": "No significant direct-indirect differences (all p>0.05)",
+      "verbatim_quote": "The pairwise comparisons in the global analysis revealed no significant differences between direct and indirect evidence",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The consistency assumption was tested by comparing direct and indirect evidence via a node-splitting model; pairwise comparisons in the global analysis revealed no significant differences (all p>0.05), and the overlapping direct/indirect/network estimate ranges further support consistency across comparisons."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The consistency confirmation is the same coherence veto GSE requires before trusting indirect rankings.",
+        "source_operator": "consistency_no_significant_diff",
+        "telemetry": "consistency: all pairwise p>0.05; direct/indirect/network ranges overlap"
+      }
+    },
+    {
+      "primitive_id": "sucra_relative_not_absolute",
+      "name": "SUCRA ranks relative probability, not absolute clinical effect",
+      "verbatim_quote": "Although SUCRA rankings indicate relative probability of being the best intervention, they do not quantify absolute clinical effect",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "SUCRA rankings indicate the relative probability of being the best intervention but do not quantify absolute clinical effect, so they are paired with P-scores and the SMD-versus-control forest plot; a high SUCRA does not guarantee a clinically meaningful or statistically significant effect."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The relative-vs-absolute distinction is the same rank-vs-effect-size caveat GSE flags in model selection.",
+        "source_operator": "sucra_relative_not_absolute",
+        "telemetry": "SUCRA = relative best-probability, NOT absolute effect; pair with P-score + SMD"
+      }
+    },
+    {
+      "primitive_id": "pscore_average_better_probability",
+      "name": "P-score = average probability of being better than others",
+      "verbatim_quote": "which estimates the average probability of one treatment being better than the others",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The P-score estimates the average probability of one treatment being better than the others, complementing SUCRA (the probability of being among the best); both are frequentist ranking metrics derived from the network's relative-effect estimates."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The P-score is the same pairwise-superiority probability GSE computes for model ordering.",
+        "source_operator": "pscore_average_better_probability",
+        "telemetry": "P-score = avg P(treatment better than others); complements SUCRA"
+      }
+    },
+    {
+      "primitive_id": "cinema_all_high",
+      "name": "All comparisons rated High confidence via CINeMA",
+      "verbatim_quote": "Confidence in the evidence for all comparisons in this network meta-analysis was rated as High using the CINeMA framework",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Confidence in the evidence for all comparisons was rated High using CINeMA, despite the small network; this confidence rating reflects the framework's domain assessment rather than the precision of individual effect estimates, which remain wide."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The High-confidence rating is the same evidence-grade GSE records alongside (not instead of) effect precision.",
+        "source_operator": "cinema_all_high",
+        "telemetry": "CINeMA: all comparisons High; distinct from wide individual CIs"
+      }
+    },
+    {
+      "primitive_id": "cognitive_engagement_critical",
+      "name": "Cognitive engagement, not intensity alone, drives benefit",
+      "verbatim_quote": "cognitive engagement appears critical for maximizing cognitive benefits",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The conclusion is that cognitive engagement appears critical for maximizing cognitive benefits: popular aquatic HIIT showed only modest effects (SUCRA 49.12%), suggesting intensity alone may be insufficient, while cognitive-motor exercise (dual-task) ranked highest; this is the paper's central substantive insight."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engagement-over-intensity finding is the same cognitive-load emphasis GSE carries into dual-task training design.",
+        "source_operator": "cognitive_engagement_critical",
+        "telemetry": "cognitive engagement critical; HIIT modest (49.12%); intensity alone insufficient"
+      }
+    },
+    {
+      "primitive_id": "prefrontal_dual_task_activation",
+      "name": "Cognitive-motor exercise activates prefrontal cortex more than aerobic alone",
+      "verbatim_quote": "the transition from exercise to cognitive-motor exercise induces significantly greater activation of the prefrontal cortex",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The proposed mechanism is that transitioning from exercise to cognitive-motor exercise induces significantly greater prefrontal cortex activation, requiring greater cognitive engagement than aerobic exercise alone (Ding et al. fNIRS); combined physical+cognitive training synergistically induces neuroplasticity, neurogenesis, and synaptogenesis; aquatic buoyancy/resistance enable safer dual-tasking with less fall risk and fatigue."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The prefrontal dual-task activation is the same cognitive-engagement mechanism GSE models for skill acquisition.",
+        "source_operator": "prefrontal_dual_task_activation",
+        "telemetry": "cognitive-motor > aerobic prefrontal activation (fNIRS); synergistic neuroplasticity; safer dual-task in water"
+      }
+    },
+    {
+      "primitive_id": "composite_smd_conceptual_heterogeneity",
+      "name": "Composite SMD across distinct cognitive constructs introduces conceptual heterogeneity",
+      "verbatim_quote": "the aggregation of diverse cognitive outcomes into a single composite effect size using (SMD) introduces conceptual heterogeneity",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Aggregating diverse cognitive outcomes into one composite SMD introduces conceptual heterogeneity because the instruments assess overlapping but distinct constructs (global screening MMSE/MoCA/HDS-R versus processing speed DSST/SDMT versus fluid reasoning Raven versus executive function Stroop), which statistical indices do not fully capture, potentially compromising construct validity and interpretability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The composite-outcome construct heterogeneity is the same aggregation-validity veto GSE flags when pooling distinct metrics.",
+        "source_operator": "composite_smd_conceptual_heterogeneity",
+        "telemetry": "composite SMD mixes global/speed/reasoning/executive constructs; conceptual heterogeneity"
+      }
+    },
+    {
+      "primitive_id": "wide_ci_insufficient_power",
+      "name": "Wide CIs reflect insufficient power, not true null effects",
+      "verbatim_quote": "most individual effect estimates were imprecise, as reflected by wide confidence intervals, suggesting insufficient statistical power rather than true null effects",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Most individual effect estimates were imprecise with wide confidence intervals, suggesting insufficient statistical power rather than true null effects; the small sparse network also constrains funnel-plot detection of publication bias, and the absence of long-term follow-up precludes assessing sustainability of benefits."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The power-vs-null distinction is the same precision veto GSE applies before declaring an effect absent.",
+        "source_operator": "wide_ci_insufficient_power",
+        "telemetry": "wide CIs = insufficient power, not true null; sparse network limits funnel plot; no long-term follow-up"
+      }
+    },
+    {
+      "primitive_id": "limited_evidence_caution",
+      "name": "Findings cautious: limited size and density of evidence network",
+      "verbatim_quote": "as only nine RCTs were included, these findings should be interpreted with caution given the limited size and density of the evidence network",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The authors explicitly caution that with only nine RCTs the findings should be interpreted cautiously given the limited size and density of the evidence network; limitations include small samples reducing SUCRA precision, no long-term follow-up or MCI subgroup analysis, post-intervention sample disparities, exercise-parameter variation, and unexamined clinical heterogeneity (healthy/MCI/type-2-diabetes)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The explicit small-network caution is the same epistemic humility GSE attaches to sparse-evidence rankings.",
+        "source_operator": "limited_evidence_caution",
+        "telemetry": "9 RCTs -> caution; small samples / no follow-up / parameter variation / clinical heterogeneity"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "aquaticnma2026_trace",
+      "think": "The retrocausal genealogy of this paper is the extension of pairwise meta-analysis into network meta-analysis to answer a comparative-effectiveness question that no head-to-head trial had addressed. Song and colleagues, writing in the Journal of Sports Science and Medicine in 2026, observe that cognitive decline is a major challenge of aging populations, that physical exercise can mitigate it through neurogenesis, cerebral blood flow, reduced inflammation, and synaptic plasticity, and that aquatic exercise offers these benefits with reduced injury risk via buoyancy, hydrostatic pressure, and resistance. Four aquatic modalities, aerobic, high-intensity interval training, strength, and cognitive-motor, had each shown promise, but no randomized trial had compared them directly, leaving clinicians without a basis for choosing among them. Network meta-analysis fills that gap by integrating direct and indirect evidence. The study is a frequentist network meta-analysis registered in PROSPERO and reported under PRISMA-NMA. Searching five databases from inception to January 2026, the authors screened 903 records down to 391, evaluated 21 full texts, and included nine randomized controlled trials involving 324 participants aged 60 to 90. The primary outcome is the pre-to-post change in global cognition measured by validated instruments such as MMSE, MoCA, DSST, and the Stroop test, pooled as standardized mean differences with 95 percent confidence intervals. Risk of bias was assessed with Cochrane RoB 2.0, with no study rated high risk, six some concerns, and three low risk. The recursive theory of mind is the evidence network itself, grounded in graph theory. Interventions are nodes and direct trial comparisons are edges, forming a connected network of six interventions and seven pairwise comparisons, with node size weighted by the number of trials. The method rests on two assumptions: transitivity, that studies are comparable in their effect modifiers so indirect comparisons are valid, examined here by comparing clinical and methodological features with no major violations; and consistency, that direct and indirect evidence agree, tested by node-splitting. Indirect effects are derived from two comparisons sharing a common comparator, and the whole network is modeled within a frequentist framework using the R netmeta package. Cross-layer veto adjudication is the ranking and its confidence grading. The surface under the cumulative ranking curve, SUCRA, and the P-score together rank the interventions: cognitive-motor exercise highest at SUCRA 85.36 percent and P-score 86.05 percent, then aerobic 61.44, strength 51.80, HIIT 49.12, land-based 48.34, and the non-exercising control last at 3.94. Crucially, SUCRA measures the relative probability of being best, not absolute clinical effect, so it is paired with the SMD-versus-control forest plot, where only cognitive-motor exercise has a confidence interval excluding zero, SMD 0.48 with interval 0.02 to 0.95. The CINeMA framework rates confidence across six domains, within-study bias, reporting bias, indirectness, imprecision, heterogeneity, and incoherence, and all comparisons were rated High; node-splitting found no significant direct-indirect differences, all p above 0.05. The implementation invariants map onto GSE's evidence-synthesis layer. The graph-structured network is GSE's comparison topology; transitivity and connectivity are GSE's comparability preconditions; node-splitting consistency is GSE's direct-versus-indirect agreement audit; SUCRA and P-score are GSE's probabilistic model-ranking measures; the CI-excludes-zero test is GSE's effect-credibility gate; and CINeMA is GSE's multi-domain evidence-quality grade. The substantive finding, that cognitive engagement rather than exercise intensity alone drives benefit, is a dual-task training insight GSE carries into skill-acquisition design. The outputs are intervention rankings and confidence grades from published trials; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The limitations close the account with appropriate humility. Heterogeneity was moderate, I-squared 47.9 percent with a wide interval from 0 to 75.8 percent and a Cochran Q p-value of 0.0525, not statistically significant. The authors caution that only nine small trials limit the precision and reliability of the SUCRA rankings; there is no long-term follow-up to assess sustainability, no subgroup analysis for mild cognitive impairment, and clinical heterogeneity across healthy, MCI, and type-2-diabetes populations was not formally examined. Aggregating distinct cognitive constructs, global screening, processing speed, fluid reasoning, and executive function, into one composite SMD introduces conceptual heterogeneity that statistical indices do not fully capture, and most individual estimates are imprecise with wide intervals reflecting insufficient power rather than true null effects. The invariant for GSE is to carry the network-meta-analysis ranking machinery and its consistency and confidence audits while recording that a high SUCRA is a relative ranking, not a guarantee of a significant or clinically meaningful effect, before any quantitative reuse. Two further sovereign details deserve recording. First, the authors chose a frequentist rather than Bayesian network meta-analysis, deriving P-scores and SUCRA from the relative-effect estimates without prior distributions, which makes the ranking reproducible from the published trial data alone but also means the confidence grades come from CINeMA's separate domain assessment rather than from posterior credible intervals. Second, the clinical translation is deliberately conservative: because every aquatic modality performed at least comparably to land-based exercise, the authors recommend aquatic programs as a safe alternative for older adults with mobility limitations or fear of falling, and suggest a hybrid water-land model to combine complementary stimuli, rather than declaring a single winner. For GSE the lesson is that a comparative ranking should drive a menu of viable options graded by confidence, not a forced single choice, especially when the evidence network is sparse and the individual effects are imprecise.",
+      "retrocausal_genealogy": "Pairwise -> network meta-analysis for comparative effectiveness no head-to-head RCT addressed. Song et al., J Sports Sci Med 2026;25:381-394, DOI 10.52082/jssm.2026.381, PROSPERO CRD42025641350, PRISMA-NMA. Aging cognitive decline; exercise mitigates via neurogenesis/cerebral blood flow/reduced inflammation/synaptic plasticity; aquatic reduces injury (buoyancy/hydrostatic pressure/resistance). 4 modalities (aerobic/HIIT/strength/cognitive-motor) promising but never compared directly. 5 databases to Jan 2026: 903->391->21->9 RCTs/324 participants 60-90y. Outcome pre-post global cognition (MMSE/MoCA/DSST/Stroop etc), SMD+95% CI. RoB 2.0: no high risk, 6 some concerns, 3 low. R 4.2.2 netmeta/meta/metafor/igraph. No generative AI used (declared).",
+      "theory_of_mind": "Frequentist NMA as graph: nodes=interventions, edges=direct comparisons, 6 nodes/7 edges, node size~trial count; connectivity (path between any two nodes). Transitivity (comparable effect modifiers) checked via clinical/methodological features, no major violations. Indirect effects from two comparisons sharing common comparator. Consistency via node-splitting: all pairwise p>0.05; direct -1.77..1.72 / indirect -1.34..1.89 / network -1.26..1.76. SMD continuous effect size. I² thresholds <30/30-50/50-75/>=75; observed I²=47.9% (0-75.8%), Q=15.36 df=8 p=0.0525 moderate ns. Source prints no numbered equations (named statistics only).",
+      "cross_layer_veto": "Ranking SUCRA/P-score: cognitive-motor 85.36/86.05, aerobic 61.44/65.71, strength 51.80/50.72, HIIT 49.12/46.99, land 48.34/46.13, control 3.94/4.40. SUCRA=relative best-probability NOT absolute effect. Fixed-effect SMD vs control: strength -0.13(-1.00,0.74)/land 0.24(-0.58,1.06)/HIIT 0.40(-0.46,1.25)/cognitive-motor 0.48(0.02,0.95) ONLY significant/aerobic 0.51(-0.08,1.11). CINeMA 6 domains (within-study bias/reporting bias/indirectness/imprecision/heterogeneity/incoherence) -> all High. Mechanism: cognitive-motor > aerobic prefrontal activation (fNIRS Ding), synergistic neuroplasticity, safer dual-task in water; cognitive engagement critical, intensity alone insufficient (HIIT modest). Limits: 9 small trials reduce SUCRA precision, no long-term follow-up/MCI subgroup, clinical heterogeneity (healthy/MCI/T2D) unexamined, composite SMD conceptual heterogeneity (global/speed/reasoning/executive), wide CIs=insufficient power not null, sparse network limits funnel plot. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "Comparative effectiveness of multiple interventions with no head-to-head trials is estimated by a frequentist network meta-analysis that models interventions as a connected graph, synthesizes direct and indirect evidence under transitivity and node-splitting consistency, ranks them by SUCRA and P-score, tests significance via SMD confidence intervals, and grades confidence with CINeMA — here finding aquatic cognitive-motor exercise best (SUCRA 85.36%) and cognitive engagement, not intensity, the key driver.",
+  "gsi_mapping": "GSI treats the NMA as a graph (6 intervention nodes / 7 comparison edges, node size~trial count, connectivity required), transitivity checked via clinical/methodological features (no violations), indirect effects via common comparator, consistency via node-splitting (all p>0.05; direct -1.77..1.72/indirect -1.34..1.89/network -1.26..1.76); SMD+95% CI continuous effect size; I²=47.9% (0-75.8%) Q=15.36 p=0.0525 moderate; SUCRA/P-score cognitive-motor 85.36/86.05 > aerobic 61.44/65.71 > strength 51.80/50.72 > HIIT 49.12/46.99 > land 48.34/46.13 > control 3.94/4.40; only cognitive-motor SMD 0.48 (0.02,0.95) significant; CINeMA 6 domains all High; 9 RCTs/324 participants 60-90y, PROSPERO CRD42025641350, R netmeta; no printed equations (named statistics).",
+  "gse_mapping": "GSE lifts the network-meta-analysis evidence-synthesis machinery — graph comparison topology, transitivity/connectivity preconditions, node-splitting consistency audit, SUCRA/P-score probabilistic ranking, the CI-excludes-zero significance gate, and CINeMA multi-domain confidence grading — as its comparative model-ranking layer, plus the cognitive-engagement-over-intensity dual-task insight; records that SUCRA is relative not absolute, the network is sparse (9 trials) with wide imprecise CIs and composite-outcome conceptual heterogeneity; all outputs are rankings and confidence grades from published trials, never sportsbook lines."
+}

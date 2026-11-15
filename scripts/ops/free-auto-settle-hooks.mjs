@@ -23,6 +23,14 @@ export async function resolve(specifier, context, nextResolve) {
   let base = null;
   if (specifier.startsWith("@/")) {
     base = pathResolve(WEB_ROOT, specifier.slice(2));
+  } else if (specifier.startsWith("@sports/")) {
+    // Package subpath imports (e.g. @sports/prediction-engine/src/foo.js)
+    // point at TS sources under the workspace packages; the .js suffix is
+    // the TS emit convention, so map to the real file like relative imports.
+    const rest = specifier.slice("@sports/".length);
+    const slash = rest.indexOf("/");
+    if (slash === -1) return nextResolve(specifier, context);
+    base = pathResolve(REPO_ROOT, "packages", rest.slice(0, slash), rest.slice(slash + 1));
   } else if (specifier.startsWith("./") || specifier.startsWith("../")) {
     if (!context.parentURL || !context.parentURL.startsWith("file:")) {
       return nextResolve(specifier, context);

@@ -1,0 +1,95 @@
+{
+  "book_id": "2eb75a8292a8325a",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "2eb75a8292a8325a37e838d594963b7aa8c3df137de8f1db47f9fa0f2300d2d9",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fabricated_parent_link",
+      "name": "Fabricated Parent Link",
+      "verbatim_quote": "**`parent_seal_hash` is fabricated.** Both files carry `faab2827c4e9b8a1d2f3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5` — 64 characters of *sequential hex*, not a SHA-256 digest over any payload.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a deterministic function `hash(payload)` exists, where `payload` is the previous seal's content.",
+      "breakdown_regime": "When `parent_seal_hash` is set to a constant string instead of a valid digest, the Merkle tree integrity check fails, causing the seal chain to diverge from the true history.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual to GSI's conformal prediction interval nesting, where a wrong nominal coverage leads to disjoint prediction sets.",
+        "source_operator": "fabricated_parent_link",
+        "telemetry": "Detectable via `assertParentDigestIsHashOfPayload()` failing."
+      }
+    },
+    {
+      "primitive_id": "tau_parameter_confusion",
+      "name": "Tau Parameter Confusion",
+      "verbatim_quote": "**Tau contradicts the seal center.** Both candidates carry `params.tau = 0.001`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes two distinct tau parameters (`coach_tau` vs `pooling_tau`) exist within the same model instance.",
+      "breakdown_regime": "When both taus are forced to the same value without proper synchronization, the coach's mindset becomes decoupled from the pooled posterior, leading to inconsistent decision-making.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state-transition veto logic, where conflicting constraints on action probabilities cause deadlocks.",
+        "source_operator": "tau_parameter_confusion",
+        "telemetry": "Monitored via `coachTau === poolingTau` assertion in `verify_engine.py`."
+      }
+    },
+    {
+      "primitive_id": "untracked_artifact",
+      "name": "Untagged Artifact",
+      "verbatim_quote": "**Neither file was ever tracked by git.** `git status` reports `??",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a version control system tracks all seal artifacts deterministically.",
+      "breakdown_regime": "If an artifact is created outside the VCS workflow, its provenance becomes uncertain, undermining trust in the seal chain's completeness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to missing data in GSI's cross-validation folds, where incomplete observability introduces selection bias.",
+        "source_operator": "untracked_artifact",
+        "telemetry": "Verified by checking `git log` for the file's existence."
+      }
+    },
+    {
+      "primitive_id": "regeneration_defect",
+      "name": "Regeneration Defect",
+      "verbatim_quote": "## Operational consequence (documented, not hidden) `packages/prediction-engine/src/gse-pre-seal/candidate-baseline.ts` resolves `CANDIDATE_PATH = candidates/2026-10-25-week7-candidate.json`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes the regeneration process correctly identifies and corrects the underlying bugs.",
+      "breakdown_regime": "After defect correction, the new candidate becomes the authoritative root of the seal chain, replacing the faulty predecessors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Similar to GSE's repair of broken transitions, where a failed state is overwritten with a consistent successor.",
+        "source_operator": "regeneration_defect",
+        "telemetry": "Confirmed by passing all invariant checks in `verify_engine.py`."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2eb75a8292a8325a_t0",
+      "think": "The core issue is a mismatch between operational expectations and implementation reality. The fabricated parent link breaks the Merkle consistency guarantee, treating the seal chain as a linear list rather than a cryptographically secured ledger. The tau confusion creates a dual-model situation where the coach's strategic intent (coach_tau) conflicts with the statistical pooling (pooling_tau), leading to potential decision instability. The untracked artifact problem exposes a gap in the version control discipline, allowing rogue files to enter the system without auditability. Finally, the regeneration defect represents a corrective action that restores the system to a known-good state by eliminating the root causes. Together, these primitives form a diagnostic framework for understanding seal-chain integrity and preventing future divergence.\n\nDeep epistemic analysis for README (2eb75a8292a8325a, domain=other, pages_read=3/3): Operator 'Fabricated Parent Link' (page 1, domain other) captures: **`parent_seal_hash` is fabricated.** Both files carry `faab2827c4e9b8a1d2f3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5` — 64 characters of *sequential hex*, not a SHA-256 digest over any payload. Assumptions: Assumes a deterministic function `hash(payload)` exists, where `payload` is the previous seal's content. Breakdown regime: When `parent_seal_hash` is set to a constant string instead of a valid digest, the Merkle tree integrity check fails, causing the seal chain to diverge from the true history. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSI's conformal prediction interval nesting, where a wrong nominal coverage leads to disjoint prediction sets. Operator 'Tau Parameter Confusion' (page 1, domain other) captures: **Tau contradicts the seal center.** Both candidates carry `params.tau = 0.001`. Assumptions: Assumes two distinct tau parameters (`coach_tau` vs `pooling_tau`) exist within the same model instance. Breakdown regime: When both taus are forced to the same value without proper synchronization, the coach's mindset becomes decoupled from the pooled posterior, leading to inconsistent decision-making. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition veto logic, where conflicting constraints on action probabilities cause deadlocks. Operator 'Untagged Artifact' (page 1, domain other) captures: **Neither file was ever tracked by git.** `git status` reports `?? Assumptions: Assumes a version control system tracks all seal artifacts deterministically. Breakdown regime: If an artifact is created outside the VCS workflow, its provenance becomes uncertain, undermining trust in the seal chain's completeness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to missing data in GSI's cross-validation folds, where incomplete observability introduces selection bias. Operator 'Regeneration Defect' (page 1, domain other) captures: ## Operational consequence (documented, not hidden) `packages/prediction-engine/src/gse-pre-seal/candidate-baseline.ts` resolves `CANDIDATE_PATH = candidates/2026-10-25-week7-candidate.json`. Assumptions: Assumes the regeneration process correctly identifies and corrects the underlying bugs. Breakdown regime: After defect correction, the new candidate becomes the authoritative root of the seal chain, replacing the faulty predecessors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Similar to GSE's repair of broken transitions, where a failed state is overwritten with a consistent successor. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (2eb75a8292a8325a, domain=other, pages_read=3/3): Operator 'Fabricated Parent Link' (page 1, domain other) captures: **`parent_seal_hash` is fabricated.** Both files carry `faab2827c4e9b8a1d2f3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5` — 64 characters of *sequential hex*, not a SHA-256 digest over any payload. Assumptions: Assumes a deterministic function `hash(payload)` exists, where `payload` is the previous seal's content. Breakdown regime: When `parent_seal_hash` is set to a constant string instead of a valid digest, the Merkle tree integrity check fails, causing the seal chain to diverge from the true history. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSI's conformal prediction interval nesting, where a wrong nominal coverage leads to disjoint prediction sets. Operator 'Tau Parameter Confusion' (page 1, domain other) captures: **Tau contradicts the seal center.** Both candidates carry `params.tau = 0.001`. Assumptions: Assumes two distinct tau parameters (`coach_tau` vs `pooling_tau`) exist within the same model instance. Breakdown regime: When both taus are forced to the same value without proper synchronization, the coach's mindset becomes decoupled from the pooled posterior, leading to inconsistent decision-making. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition veto logic, where conflicting constraints on action probabilities cause deadlocks. Operator 'Untagged Artifact' (page 1, domain other) captures: **Neither file was ever tracked by git.** `git status` reports `?? Assumptions: Assumes a version control system tracks all seal artifacts deterministically. Breakdown regime: If an artifact is created outside the VCS workflow, its provenance becomes uncertain, undermining trust in the seal chain's completeness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to missing data in GSI's cross-validation folds, where incomplete observability introduces selection bias. Operator 'Regeneration Defect' (page 1, domain other) captures: ## Operational consequence (documented, not hidden) `packages/prediction-engine/src/gse-pre-seal/candidate-baseline.ts` resolves `CANDIDATE_PATH = candidates/2026-10-25-week7-candidate.json`. Assumptions: Assumes the regeneration process correctly identifies and corrects the underlying bugs. Breakdown regime: After defect correction, the new candidate becomes the authoritative root of the seal chain, replacing the faulty predecessors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Similar to GSE's repair of broken transitions, where a failed state is overwritten with a consistent successor. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in blockchain theory's emphasis on linked cryptographic hashes and the separation of parameters in hierarchical models, with historical precedent in early Git misconfiguration debates about repository immutability. Retrocausal Genealogy: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling the development team as having internal models of system behavior, where the fabricated parent reflects a simplifying assumption that later proved incorrect, while tau confusion indicates a lack of clear interface contracts between subsystems. Theory of Mind & Decision Maker Model: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Ensures that telemetry from GSI's conformal predictions does not leak into GSE's tactical state transitions, maintaining orthogonality between uncertainty quantification and action planning. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (2eb75a8292a8325a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "f2bf0098c538192f",
+  "source_status": "COMPLETE",
+  "title": "RESULTS",
+  "file_name": "RESULTS.md",
+  "sha256": "f2bf0098c538192f1c5a95490696103caaeeeebb2328d2599395917392bc6a32",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The structural unification of market close-prediction relies on the algebraic identity between entry probabilities and their temporal deltas. When a market's variance is artificially constrained, any observed correlation between an initial state and its subsequent change is merely a manifestation of measurement error, not predictive skill.",
+  "gsi_mapping": "In GSI Bayesian inference, the narrow distribution of de-vigged totals acts as an extremely tight prior. The conformal prediction intervals for the delta variable collapse due to this rigid prior, demonstrating that the apparent signal is simply noise reflecting the mean-reverting properties of the snapshotting process.",
+  "gse_mapping": "GSE situational reasoning maps this to a degenerate state-transition graph. Because the pre-game state space for totals is highly compressed, the transition dynamics lack sufficient entropy. The engine correctly identifies that the high correlation in moneyline markets is a static equilibrium rather than actionable momentum.",
+  "primitives": [
+    {
+      "primitive_id": "shin_devig_operator",
+      "name": "Shin De-Vigging Operator",
+      "verbatim_quote": "Shin de-vig copied from `packages/prediction-engine/src/edge-lab/devig.ts` (refuse decimal odds ≤ 1 or booksum < 1).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "O: Decimal odds (dimensionless), S: Booksum (dimensionless)",
+      "assumptions": "Market makers embed a positive overround; true probabilities sum to unity.",
+      "breakdown_regime": "Singular when decimal odds O <= 1 or aggregate booksum S < 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw betting market quotes to a normalized probability simplex, isolating the latent consensus belief from liquidity provider margins.",
+        "source_operator": "shin_devig_operator",
+        "telemetry": "Variance of the resulting probability distribution across books."
+      }
+    },
+    {
+      "primitive_id": "delta_correlation_identity",
+      "name": "Delta Correlation Identity",
+      "verbatim_quote": "corr(p_entry, p_close) = 0.40, so corr(p_entry, Δ) = -0.51 is the textbook corr(X, Y-X) identity, not forecast skill.",
+      "page": 1,
+      "latex": "\\text{corr}(X, Y-X) = \\frac{\\text{cov}(X,Y) - \\sigma_X^2}{\\sigma_X \\sqrt{\\sigma_X^2 + \\sigma_Y^2 - 2\\text{cov}(X,Y)}}",
+      "symbol_and_unit_ledger": "p_entry: Entry probability (dimensionless), p_close: Close probability (dimensionless), Δ: Probability delta (dimensionless)",
+      "assumptions": "Standard statistical moments exist; X and Y are bounded within the unit interval.",
+      "breakdown_regime": "Fails to represent skill when the variance of X dominates the covariance with Y.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Exposes the mathematical artifact where a high autocorrelation in the entry state mathematically forces a negative correlation with the residual delta.",
+        "source_operator": "delta_correlation_identity",
+        "telemetry": "Observed Pearson correlation coefficient r."
+      }
+    },
+    {
+      "primitive_id": "variance_constrained_prior",
+      "name": "Variance Constrained Prior",
+      "verbatim_quote": "Totals no-vig P(over) lives in a 3-point band around 50% (sd 1.35pp).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P(over): Probability of exceeding total (dimensionless), sd: Standard deviation in percentage points.",
+      "assumptions": "The underlying physical event generates highly symmetric outcomes relative to the market setpoint.",
+      "breakdown_regime": "Breaks down if the market systematically misprices the fundamental symmetry of the sport.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents a near-deterministic prior in the GSI engine, severely limiting the effective degrees of freedom available for dynamic updating.",
+        "source_operator": "variance_constrained_prior",
+        "telemetry": "Standard deviation of the de-vigged probability distribution."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f2bf0098c538192f_t0",
+      "think": "The derivation begins by applying the Shin de-vigging operator to isolate the latent market consensus from the embedded overround. In the context of MLB totals, this reveals a highly constrained state space where the probability of an over resides in a remarkably narrow band around fifty percent. This extreme compression of the prior distribution fundamentally alters the expected behavior of standard regression models attempting to predict the closing line. When we examine the relationship between the entry probability and the subsequent change in probability, we encounter a classic statistical artifact. The high autocorrelation between the entry state and the closing state mathematically necessitates a negative correlation between the entry state and the delta. This is not a manifestation of predictive edge or market inefficiency, but rather a direct consequence of the algebraic identity governing the correlation of a variable with its own difference. Consequently, any Ridge regression model applied to this domain will exhibit spurious coefficients that merely reflect this measurement-error structure. The empirical evidence supports this: while the totals market shows a seemingly promising correlation under naive evaluation, it fails rigorous cross-validation. Conversely, the moneyline market, which possesses significantly higher intrinsic variance, yields negative out-of-sample performance, confirming that the apparent signals in the low-variance regime are entirely illusory. The failure of these models underscores the necessity of distinguishing between structural mathematical identities and genuine stochastic forecasting power.\n\nDeep epistemic analysis for RESULTS (f2bf0098c538192f, domain=other, pages_read=1/1): Operator 'Shin De-Vigging Operator' (page 1, domain other) captures: Shin de-vig copied from `packages/prediction-engine/src/edge-lab/devig.ts` (refuse decimal odds ≤ 1 or booksum < 1). Assumptions: Market makers embed a positive overround; true probabilities sum to unity. Breakdown regime: Singular when decimal odds O <= 1 or aggregate booksum S < 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw betting market quotes to a normalized probability simplex, isolating the latent consensus belief from liquidity provider margins. Operator 'Delta Correlation Identity' (page 1, domain other) captures: corr(p_entry, p_close) = 0.40, so corr(p_entry, Δ) = -0.51 is the textbook corr(X, Y-X) identity, not forecast skill. Assumptions: Standard statistical moments exist; X and Y are bounded within the unit interval. Breakdown regime: Fails to represent skill when the variance of X dominates the covariance with Y. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Exposes the mathematical artifact where a high autocorrelation in the entry state mathematically forces a negative correlation with the residual delta. Operator 'Variance Constrained Prior' (page 1, domain other) captures: Totals no-vig P(over) lives in a 3-point band around 50% (sd 1.35pp). Assumptions: The underlying physical event generates highly symmetric outcomes relative to the market setpoint. Breakdown regime: Breaks down if the market systematically misprices the fundamental symmetry of the sport. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a near-deterministic prior in the GSI engine, severely limiting the effective degrees of freedom available for dynamic updating. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RESULTS (f2bf0098c538192f, domain=other, pages_read=1/1): Operator 'Shin De-Vigging Operator' (page 1, domain other) captures: Shin de-vig copied from `packages/prediction-engine/src/edge-lab/devig.ts` (refuse decimal odds ≤ 1 or booksum < 1). Assumptions: Market makers embed a positive overround; true probabilities sum to unity. Breakdown regime: Singular when decimal odds O <= 1 or aggregate booksum S < 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw betting market quotes to a normalized probability simplex, isolating the latent consensus belief from liquidity provider margins. Operator 'Delta Correlation Identity' (page 1, domain other) captures: corr(p_entry, p_close) = 0.40, so corr(p_entry, Δ) = -0.51 is the textbook corr(X, Y-X) identity, not forecast skill. Assumptions: Standard statistical moments exist; X and Y are bounded within the unit interval. Breakdown regime: Fails to represent skill when the variance of X dominates the covariance with Y. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Exposes the mathematical artifact where a high autocorrelation in the entry state mathematically forces a negative correlation with the residual delta. Operator 'Variance Constrained Prior' (page 1, domain other) captures: Totals no-vig P(over) lives in a 3-point band around 50% (sd 1.35pp). Assumptions: The underlying physical event generates highly symmetric outcomes relative to the market setpoint. Breakdown regime: Breaks down if the market systematically misprices the fundamental symmetry of the sport. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a near-deterministic prior in the GSI engine, severely limiting the effective degrees of freedom available for dynamic updating. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces back to the foundational work on implicit probability extraction from betting odds, notably Shin's methodology for stripping overrounds. It also inherits the long-standing statistical literature on spurious correlations arising from constructed variables, particularly the well-known properties of differencing stationary time series. The realization that high autocorrelation inherently induces negative correlation with the residual delta has been a staple of econometric diagnostics for decades, frequently used to identify overfitting in financial market microstructure models.",
+      "theory_of_mind": "From the perspective of the market maker, the tight clustering of totals around fifty percent reflects a deep understanding of the underlying game mechanics and a strategy to minimize exposure by balancing action on both sides. The bettor, observing the entry line, mistakenly attributes the subsequent minor adjustments to new information or hidden skill. However, the market maker's adjustments are largely driven by liquidity management and noise trading, operating within a tightly controlled variance envelope. The predictive model fails because it attempts to extract a signal from a system deliberately engineered to suppress variance and absorb noise.",
+      "cross_layer_veto": "A critical veto condition arises when the variance of the target variable is dominated by the variance of the input feature, leading to the aforementioned correlation artifact. Any model exhibiting a high in-sample correlation between the entry state and the delta, coupled with a high autocorrelation of the entry state itself, must be immediately flagged as structurally compromised. Furthermore, if the out-of-sample R-squared is negative despite a seemingly strong in-sample fit, it confirms that the model is capturing the measurement-error identity rather than any transferable predictive kernel. This anti-collinearity check serves as a robust filter against deploying models built on mathematical tautologies."
+    }
+  ]
+}

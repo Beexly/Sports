@@ -1,0 +1,78 @@
+{
+  "book_id": "1ce6c8392496478e",
+  "source_status": "COMPLETE",
+  "title": "CUTOFF_CLAIM",
+  "file_name": "CUTOFF_CLAIM.md",
+  "sha256": "1ce6c8392496478e6a601a6fd4ee0ca87690116ef4ed34e480a0218219cc0d15",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Quotient-type control lattice for invocation-class concurrency, bounded at N*=8 via TLC-checked finite model. Universal Lens: Rooted in CUTOFF_CLAIM (1ce6c8392496478e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on pending-class states maps to conformal prediction of invocation concurrency risk. GSI Mapping: Rooted in CUTOFF_CLAIM (1ce6c8392496478e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions through ZERO→ONE→GE2 pending classes under controlled admission guards. GSE Mapping: Rooted in CUTOFF_CLAIM (1ce6c8392496478e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "cutoff_claim",
+      "name": "Cutoff Family Claim",
+      "verbatim_quote": "# Cutoff / family claim — `SpecC ⇒ []AtMostOne` for `|InvIds| ≤ N*` This is the **load-bearing, actually-verified** artifact of the quotient → cutoff ladder.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'InvIds': 'set of invocation identifiers, dimensionless', 'N*': 'maximum cardinality verified, dimensionless'}",
+      "assumptions": "SpecC implies AtMostOne for all |InvIds| ≤ N*; system modeled as finite-state.",
+      "breakdown_regime": "For |InvIds| > N*, no formal guarantee exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Runtime pendingClass ∈ {ZERO, ONE, GE2} corresponds to TLC-checked quotient system.",
+        "source_operator": "cutoff_claim",
+        "telemetry": "TLC model-checking result: No error found for n=1..8."
+      }
+    },
+    {
+      "primitive_id": "pending_class_quotient",
+      "name": "Pending Class Quotient System",
+      "verbatim_quote": "## What was machine-checked `AtMostOneFamily.tla` is the CONTROLLED pending-class quotient system (`StartControlled(i)` admits a new pending attempt **only** from the `ZERO` class; `End(i)` drains `GE2 → ONE → ZERO`), generalized over the size of the invocation-id set `InvIds`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'pendingClass[i]': 'class of invocation i ∈ InvIds, ∈ {ZERO, ONE, GE2}', 'StartControlled(i)': 'admission guard, boolean', 'End(i)': 'drain transition, boolean'}",
+      "assumptions": "Each invocation follows a deterministic class transition path.",
+      "breakdown_regime": "Transition paths are constrained to ZERO → ONE → GE2.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Abstract control state derived from runtime projection of invocation concurrency.",
+        "source_operator": "pending_class_quotient",
+        "telemetry": "Model-checking confirms valid class transitions for n=1..8."
+      }
+    },
+    {
+      "primitive_id": "runtime_correspondence",
+      "name": "Runtime State Correspondence",
+      "verbatim_quote": "## Runtime correspondence The runtime type `AbstractControlState.pendingCountClass ∈ {\"ZERO\",\"ONE\",\"GE2\"}` (produced per invocation by `apps/web/lib/ai-control-plane/srqc-projection.ts`'s `projectWindow`) **is** this quotient's `PendingClass`, with α(0)=ZERO, α(1)=ONE, α(k≥2)=GE2 (single absorbing class).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'AbstractControlState.pendingCountClass': 'runtime class ∈ {ZERO, ONE, GE2}', 'α(k)': 'state mapping function, k ∈ ℕ'}",
+      "assumptions": "Projection function α preserves class semantics across abstraction layers.",
+      "breakdown_regime": "α(k≥2) collapses to single absorbing GE2 class.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Runtime projection aligns with formal quotient semantics.",
+        "source_operator": "runtime_correspondence",
+        "telemetry": "Consistency between projected and abstracted pending classes confirmed."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1ce6c8392496478e_t0",
+      "think": "The cutoff claim establishes a finite, verifiable bound N* = 8 for the number of concurrent invocations under the constraint AtMostOne. This is achieved via a quotient system that models invocation concurrency using a three-class state space: ZERO, ONE, GE2. The system enforces that new attempts can only begin from ZERO, and transitions proceed as GE2 → ONE → ZERO. This structure is encoded in `AtMostOneFamily.tla` and verified via exhaustive TLC model checking for n = 1 to 8. The runtime state is mapped via `projectWindow` to the same quotient, ensuring consistency. The formal proof does not extend beyond N*, meaning higher cardinalities remain unverified. The system’s correctness relies on the assumption that the quotient captures all relevant concurrency behavior within the bounded domain. Failure modes include unchecked concurrency beyond N* and potential misalignment between runtime projection and abstract semantics.\n\nDeep epistemic analysis for CUTOFF_CLAIM (1ce6c8392496478e, domain=other, pages_read=1/1): Operator 'Cutoff Family Claim' (page 1, domain other) captures: # Cutoff / family claim — `SpecC ⇒ []AtMostOne` for `|InvIds| ≤ N*` This is the **load-bearing, actually-verified** artifact of the quotient → cutoff ladder. Assumptions: SpecC implies AtMostOne for all |InvIds| ≤ N*; system modeled as finite-state. Breakdown regime: For |InvIds| > N*, no formal guarantee exists. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Runtime pendingClass ∈ {ZERO, ONE, GE2} corresponds to TLC-checked quotient system. Operator 'Pending Class Quotient System' (page 1, domain other) captures: ## What was machine-checked `AtMostOneFamily.tla` is the CONTROLLED pending-class quotient system (`StartControlled(i)` admits a new pending attempt **only** from the `ZERO` class; `End(i)` drains `GE2 → ONE → ZERO`), generalized over the size of the invocation-id set `InvIds`. Assumptions: Each invocation follows a deterministic class transition path. Breakdown regime: Transition paths are constrained to ZERO → ONE → GE2. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Abstract control state derived from runtime projection of invocation concurrency. Operator 'Runtime State Correspondence' (page 1, domain other) captures: ## Runtime correspondence The runtime type `AbstractControlState.pendingCountClass ∈ {\"ZERO\",\"ONE\",\"GE2\"}` (produced per invocation by `apps/web/lib/ai-control-plane/srqc-projection.ts`'s `projectWindow`) **is** this quotient's `PendingClass`, with α(0)=ZERO, α(1)=ONE, α(k≥2)=GE2 (single absorbing class). Assumptions: Projection function α preserves class semantics across abstraction layers. Breakdown regime: α(k≥2) collapses to single absorbing GE2 class. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Runtime projection aligns with formal quotient semantics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CUTOFF_CLAIM (1ce6c8392496478e, domain=other, pages_read=1/1): Operator 'Cutoff Family Claim' (page 1, domain other) captures: # Cutoff / family claim — `SpecC ⇒ []AtMostOne` for `|InvIds| ≤ N*` This is the **load-bearing, actually-verified** artifact of the quotient → cutoff ladder. Assumptions: SpecC implies AtMostOne for all |InvIds| ≤ N*; system modeled as finite-state. Breakdown regime: For |InvIds| > N*, no formal guarantee exists. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Runtime pendingClass ∈ {ZERO, ONE, GE2} corresponds to TLC-checked quotient system. Operator 'Pending Class Quotient System' (page 1, domain other) captures: ## What was machine-checked `AtMostOneFamily.tla` is the CONTROLLED pending-class quotient system (`StartControlled(i)` admits a new pending attempt **only** from the `ZERO` class; `End(i)` drains `GE2 → ONE → ZERO`), generalized over the size of the invocation-id set `InvIds`. Assumptions: Each invocation follows a deterministic class transition path. Breakdown regime: Transition paths are constrained to ZERO → ONE → GE2. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Abstract control state derived from runtime projection of invocation concurrency. Operator 'Runtime State Correspondence' (page 1, domain other) captures: ## Runtime correspondence The runtime type `AbstractControlState.pendingCountClass ∈ {\"ZERO\",\"ONE\",\"GE2\"}` (produced per invocation by `apps/web/lib/ai-control-plane/srqc-projection.ts`'s `projectWindow`) **is** this quotient's `PendingClass`, with α(0)=ZERO, α(1)=ONE, α(k≥2)=GE2 (single absorbing class). Assumptions: Projection function α preserves class semantics across abstraction layers. Breakdown regime: α(k≥2) collapses to single absorbing GE2 class. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Runtime projection aligns with formal quotient semantics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal methods and model checking traditions, particularly TLA+ and its application to distributed systems concurrency control, tracing back to Lamport's work on temporal logic and state machines. Retrocausal Genealogy: Rooted in CUTOFF_CLAIM (1ce6c8392496478e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CUTOFF_CLAIM (1ce6c8392496478e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exceed N* or exploit projection inconsistencies. The system assumes rational, bounded agents adhering to the admitted state transitions, while adversarial agents could introduce unmodeled concurrency or corrupt projections. Theory of Mind & Decision Maker Model: Rooted in CUTOFF_CLAIM (1ce6c8392496478e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises from mismatch between abstract and runtime semantics. Leakage occurs if projection fails to capture actual invocation behavior. Veto conditions require full alignment of α(k) and runtime pendingClass, and validation of all n ≤ N*. Cross-Layer Veto & Anti-Leakage Check: Rooted in CUTOFF_CLAIM (1ce6c8392496478e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

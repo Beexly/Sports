@@ -1,0 +1,78 @@
+{
+  "book_id": "1067d08226243b5a",
+  "source_status": "COMPLETE",
+  "title": "TR_2008_07",
+  "file_name": "TR_2008_07.pdf",
+  "sha256": "1067d08226243b5aea245d9da402f93eab46af54be76328942f529a62be80257",
+  "primary_domain": "other",
+  "pages_total": 34,
+  "pages_read": 31,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sabermetrics unifies baseball outcomes via linear regression of offensive, pitching, and defensive stats; captures stochastic win prediction through statistical inference. Universal Lens: Rooted in TR_2008_07 (1067d08226243b5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian hierarchical models to infer championship likelihood from multivariate MLB statistics, using conformal prediction for uncertainty quantification. GSI Mapping: Rooted in TR_2008_07 (1067d08226243b5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes team state transitions using Markov chains over win probabilities, incorporating dynamic squad composition and performance drift via temporal kernels. GSE Mapping: Rooted in TR_2008_07 (1067d08226243b5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "linear_winning_percentage_model",
+      "name": "Linear Winning Percentage Model",
+      "verbatim_quote": "2 Chapter 2: Winning Percentage Prediction 2.1 Linear Winning Percentage Models One of the simplest approaches when modeling data is linear regression.",
+      "page": 2,
+      "latex": "\\hat{Y}_i = \\beta_0 + \\beta_1 x_{i1} + \\cdots + \\beta_p x_{ip} + \\epsilon_i",
+      "symbol_and_unit_ledger": "{'\\\\hat{Y}_i': 'Predicted winning percentage (dimensionless)', '\\\\beta_0': 'Intercept term (dimensionless)', '\\\\beta_j': 'Coefficient for predictor j (dimensionless)', 'x_{ij}': 'Value of predictor j for team i (dimensionless)', '\\\\epsilon_i': 'Residual error (normal distribution, mean 0, variance \\\\sigma^2)'}",
+      "assumptions": "Linearity, independence of errors, homoscedasticity, normality of residuals.",
+      "breakdown_regime": "When predictor variables are highly collinear or non-linear relationships dominate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw MLB statistics to predicted win rates via least squares estimation; enables GSI's probabilistic forecasting.",
+        "source_operator": "linear_winning_percentage_model",
+        "telemetry": "Mean squared error between predicted and actual winning percentages."
+      }
+    },
+    {
+      "primitive_id": "sabermetric_statistical_analysis",
+      "name": "Sabermetric Statistical Analysis",
+      "verbatim_quote": "Sabermetrics is defined as the analysis of baseball through objective evidence, especially statistics.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Statistics are reliable proxies for player/team performance; data is representative.",
+      "breakdown_regime": "When subjective factors like morale or injuries significantly alter outcomes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphs traditional scouting with quantitative metrics; supports GSE's situational reasoning engine.",
+        "source_operator": "sabermetric_statistical_analysis",
+        "telemetry": "Correlation between derived stats and championship success."
+      }
+    },
+    {
+      "primitive_id": "championship_team_determinants",
+      "name": "Championship Team Determinants",
+      "verbatim_quote": "Then, I intend to try to discover what statistics determine a championship team.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Certain combinations of stats correlate strongly with championship wins.",
+      "breakdown_regime": "When external factors like rule changes or economic constraints shift team dynamics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Identifies key performance indicators for elite teams; informs GSI’s risk-adjusted win projections.",
+        "source_operator": "championship_team_determinants",
+        "telemetry": "Statistical significance of predictors in championship vs. non-championship teams."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1067d08226243b5a_t0",
+      "think": "The core mathematical framework centers on linear regression applied to Major League Baseball data, where the dependent variable is winning percentage and predictors include 18 raw statistics categorized as offensive, pitching, and defensive. The model assumes normally distributed residuals and independent observations. This formulation allows for empirical estimation of coefficients via least squares minimization. The regression serves as a foundational kernel for GSI’s Bayesian inference pipeline, enabling probabilistic forecasts of team performance. Dualities emerge in how linear models approximate complex non-linear phenomena—such as the interplay between runs scored and allowed—which are captured through additive contributions. Failure modes arise when multicollinearity undermines coefficient stability or when non-linear dependencies are ignored. These limitations inform cross-layer veto conditions ensuring robustness across varying regimes of team performance.\n\nDeep epistemic analysis for TR_2008_07 (1067d08226243b5a, domain=other, pages_read=31/34): Operator 'Linear Winning Percentage Model' (page 2, domain other) captures: 2 Chapter 2: Winning Percentage Prediction 2.1 Linear Winning Percentage Models One of the simplest approaches when modeling data is linear regression. Assumptions: Linearity, independence of errors, homoscedasticity, normality of residuals. Breakdown regime: When predictor variables are highly collinear or non-linear relationships dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw MLB statistics to predicted win rates via least squares estimation; enables GSI's probabilistic forecasting. Operator 'Sabermetric Statistical Analysis' (page 1, domain other) captures: Sabermetrics is defined as the analysis of baseball through objective evidence, especially statistics. Assumptions: Statistics are reliable proxies for player/team performance; data is representative. Breakdown regime: When subjective factors like morale or injuries significantly alter outcomes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs traditional scouting with quantitative metrics; supports GSE's situational reasoning engine. Operator 'Championship Team Determinants' (page 1, domain other) captures: Then, I intend to try to discover what statistics determine a championship team. Assumptions: Certain combinations of stats correlate strongly with championship wins. Breakdown regime: When external factors like rule changes or economic constraints shift team dynamics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Identifies key performance indicators for elite teams; informs GSI’s risk-adjusted win projections. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for TR_2008_07 (1067d08226243b5a, domain=other, pages_read=31/34): Operator 'Linear Winning Percentage Model' (page 2, domain other) captures: 2 Chapter 2: Winning Percentage Prediction 2.1 Linear Winning Percentage Models One of the simplest approaches when modeling data is linear regression. Assumptions: Linearity, independence of errors, homoscedasticity, normality of residuals. Breakdown regime: When predictor variables are highly collinear or non-linear relationships dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw MLB statistics to predicted win rates via least squares estimation; enables GSI's probabilistic forecasting. Operator 'Sabermetric Statistical Analysis' (page 1, domain other) captures: Sabermetrics is defined as the analysis of baseball through objective evidence, especially statistics. Assumptions: Statistics are reliable proxies for player/team performance; data is representative. Breakdown regime: When subjective factors like morale or injuries significantly alter outcomes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs traditional scouting with quantitative metrics; supports GSE's situational reasoning engine. Operator 'Championship Team Determinants' (page 1, domain other) captures: Then, I intend to try to discover what statistics determine a championship team. Assumptions: Certain combinations of stats correlate strongly with championship wins. Breakdown regime: When external factors like rule changes or economic constraints shift team dynamics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Identifies key performance indicators for elite teams; informs GSI’s risk-adjusted win projections. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical regression theory initiated by Gauss and developed further by Fisher. Influenced by early actuarial science and econometrics, it evolved into modern machine learning paradigms. The application to sports analytics traces back to Bill James' pioneering work in the 1970s, laying groundwork for sabermetric methodology. Retrocausal Genealogy: Rooted in TR_2008_07 (1067d08226243b5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents—teams—optimize their strategies within constraints imposed by roster construction, salary caps (where applicable), and managerial decisions. Each agent seeks to maximize expected utility under uncertainty, modeled via stochastic processes. The system must account for both strategic adaptation and inherent randomness in game outcomes. Theory of Mind & Decision Maker Model: Rooted in TR_2008_07 (1067d08226243b5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures predictors do not redundantly encode similar information; leakage veto prevents overfitting by enforcing generalizability across seasons. These conditions prevent spurious correlations from dominating predictive accuracy and maintain interpretability in GSI’s inference engine. Cross-Layer Veto & Anti-Leakage Check: Rooted in TR_2008_07 (1067d08226243b5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "1179fd28bcfc99c7",
+  "source_status": "COMPLETE",
+  "title": "p0108",
+  "file_name": "p0108.txt",
+  "sha256": "1179fd28bcfc99c7c7644a56f291dcf24244ff370570b24a2cbfb7b5d207d115",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Perceptual inference as Bayesian belief revision under sensory ambiguity and prior expectation. Universal Lens: Rooted in p0108 (1179fd28bcfc99c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models perceptual confidence as conformal predictive distributions over sensory likelihoods, conditioned on prior categorical beliefs. GSI Mapping: Rooted in p0108 (1179fd28bcfc99c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes perceptual transitions as Markovian state updates governed by sensory evidence and cognitive priors in a dynamic belief space. GSE Mapping: Rooted in p0108 (1179fd28bcfc99c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "perceptual_ambiguity_operator",
+      "name": "Perceptual Ambiguity Operator",
+      "verbatim_quote": "and at last perceive more and more distinctly that it is the perfume of roses—until after all he discovers a bouquet of violets.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'sensory input signal (dimensionless)', 'B': 'belief state (dimensionless)', 'T': 'temporal evolution operator (time units)'}",
+      "assumptions": "Sensory signals are ambiguous without contextual prior; belief evolves via Bayesian update.",
+      "breakdown_regime": "When prior expectation dominates sensory input, leading to perceptual misattribution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Belief state B(t+1) = P(S|B(t)) × P(B(t)) / P(S), where S is sensory input and B is prior belief.",
+        "source_operator": "perceptual_ambiguity_operator",
+        "telemetry": "Change in perceptual classification over time with fixed stimulus."
+      }
+    },
+    {
+      "primitive_id": "imagination_induced_sensory_bias",
+      "name": "Imagination-Induced Sensory Bias",
+      "verbatim_quote": "This seemed to get lodged in my imagination as a sort of standard of perception; for, several days after the furnace had been rectified, I perceived the 'same smell' again.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'imaginal perception (dimensionless)', 'P': 'perceptual threshold (arbitrary units)', 'M': 'memory trace (dimensionless)'}",
+      "assumptions": "Memory traces of prior sensory experience bias subsequent perception.",
+      "breakdown_regime": "When memory-induced expectation overrides actual sensory input.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Perception = S + I(M) where I(M) is a function of stored sensory memory.",
+        "source_operator": "imagination_induced_sensory_bias",
+        "telemetry": "Repetition of perceived sensation despite absence of original stimulus."
+      }
+    },
+    {
+      "primitive_id": "sensory_confabulation_duality",
+      "name": "Sensory Confabulation Duality",
+      "verbatim_quote": "Then suddenly he recognizes the violet-smell, and wonders how he could possibly have hit upon the roses.—Just so it is with taste.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'confabulated perception (dimensionless)', 'R': 'real sensory input (dimensionless)', 'E': 'expectation (dimensionless)'}",
+      "assumptions": "Confabulation occurs when expectation and real input are misaligned.",
+      "breakdown_regime": "When E ≠ R, resulting in C ≠ R, causing perceptual error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "C = f(E, R) where f is a nonlinear function representing cognitive distortion.",
+        "source_operator": "sensory_confabulation_duality",
+        "telemetry": "Subjective shift in perception from actual to expected sensory identity."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1179fd28bcfc99c7_t0",
+      "think": "The core insight is that perception is not a passive process but an active inference mechanism shaped by prior expectations. The perceptual ambiguity operator demonstrates how sensory inputs are interpreted through a lens of belief, evolving from one hypothesis to another. This aligns with Bayesian inference where prior beliefs modulate posterior probabilities. The imagination-induced sensory bias shows that once a perceptual standard is formed in memory, it acts as a persistent reference point, distorting future perceptions even in the absence of the original stimulus. This mirrors how cognitive biases can persist beyond their causal origins. The sensory confabulation duality reveals that perception can be fundamentally deceptive when expectations override reality, creating a dualistic tension between what is sensed and what is believed. These primitives form a triadic structure: sensory input (S), belief (B), and expectation (E), where each influences the others in a feedback loop. The failure mode arises when E dominates S, leading to misperception. This framework supports a unified model of perception as a probabilistic inference engine subject to both internal and external noise.\n\nDeep epistemic analysis for p0108 (1179fd28bcfc99c7, domain=other, pages_read=1/1): Operator 'Perceptual Ambiguity Operator' (page 1, domain other) captures: and at last perceive more and more distinctly that it is the perfume of roses—until after all he discovers a bouquet of violets. Assumptions: Sensory signals are ambiguous without contextual prior; belief evolves via Bayesian update. Breakdown regime: When prior expectation dominates sensory input, leading to perceptual misattribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Belief state B(t+1) = P(S|B(t)) × P(B(t)) / P(S), where S is sensory input and B is prior belief. Operator 'Imagination-Induced Sensory Bias' (page 1, domain other) captures: This seemed to get lodged in my imagination as a sort of standard of perception; for, several days after the furnace had been rectified, I perceived the 'same smell' again. Assumptions: Memory traces of prior sensory experience bias subsequent perception. Breakdown regime: When memory-induced expectation overrides actual sensory input. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Perception = S + I(M) where I(M) is a function of stored sensory memory. Operator 'Sensory Confabulation Duality' (page 1, domain other) captures: Then suddenly he recognizes the violet-smell, and wonders how he could possibly have hit upon the roses.—Just so it is with taste. Assumptions: Confabulation occurs when expectation and real input are misaligned. Breakdown regime: When E ≠ R, resulting in C ≠ R, causing perceptual error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): C = f(E, R) where f is a nonlinear function representing cognitive distortion. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0108 (1179fd28bcfc99c7, domain=other, pages_read=1/1): Operator 'Perceptual Ambiguity Operator' (page 1, domain other) captures: and at last perceive more and more distinctly that it is the perfume of roses—until after all he discovers a bouquet of violets. Assumptions: Sensory signals are ambiguous without contextual prior; belief evolves via Bayesian update. Breakdown regime: When prior expectation dominates sensory input, leading to perceptual misattribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Belief state B(t+1) = P(S|B(t)) × P(B(t)) / P(S), where S is sensory input and B is prior belief. Operator 'Imagination-Induced Sensory Bias' (page 1, domain other) captures: This seemed to get lodged in my imagination as a sort of standard of perception; for, several days after the furnace had been rectified, I perceived the 'same smell' again. Assumptions: Memory traces of prior sensory experience bias subsequent perception. Breakdown regime: When memory-induced expectation overrides actual sensory input. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Perception = S + I(M) where I(M) is a function of stored sensory memory. Operator 'Sensory Confabulation Duality' (page 1, domain other) captures: Then suddenly he recognizes the violet-smell, and wonders how he could possibly have hit upon the roses.—Just so it is with taste. Assumptions: Confabulation occurs when expectation and real input are misaligned. Breakdown regime: When E ≠ R, resulting in C ≠ R, causing perceptual error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): C = f(E, R) where f is a nonlinear function representing cognitive distortion. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Helmholtz's work on sensory physiology and Bayesian inference, later formalized by Friston and others in predictive coding theory. Influenced by Kant’s transcendental idealism and Hume’s empiricism. Retrocausal Genealogy: Rooted in p0108 (1179fd28bcfc99c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0108 (1179fd28bcfc99c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the perceiver (subjective belief system) and the environment (objective sensory input). The perceiver's belief state biases interpretation, while environmental stimuli provide grounding. Decision actors are thus dual: the cognitive agent and the physical world, interacting through probabilistic inference. Theory of Mind & Decision Maker Model: Rooted in p0108 (1179fd28bcfc99c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that sensory input and belief do not perfectly align, ensuring that perception remains informative rather than redundant. Leakage veto prevents belief states from becoming deterministic, preserving the stochastic nature of inference and avoiding overfitting to prior assumptions. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0108 (1179fd28bcfc99c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

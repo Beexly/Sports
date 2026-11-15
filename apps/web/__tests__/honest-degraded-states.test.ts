@@ -124,24 +124,20 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-// ── /board: structurally unable to render a dishonest live state ─────────────
+// ── /board: WP5 doctrine board shell with fail-closed honesty invariants ─────
 
-describe("/board - the parked stub renders no board state at all", () => {
-  it("renders the under-construction notice and no live-board UI", async () => {
+describe("/board - WP5 live doctrine board shell", () => {
+  it("renders The Board shell and links to /packages, /record, and /board/gate without retired sample banners", async () => {
     const tree = await BoardPage();
     const ids = testIdsOf(tree);
     const text = textOf(tree);
 
-    // The stub's one honesty surface: it names the construction state and
-    // routes to the two live surfaces instead of pretending to be a board.
-    expect(ids.has("under-construction-notice")).toBe(true);
-    expect(text).toMatch(/under construction/i);
+    expect(text).toContain("The Board");
     expect(text).toContain("/packages");
-    expect(text).toContain("/fantasy/dfs");
+    expect(text).toContain("/record");
+    expect(text).toContain("/board/gate");
 
-    // The retired live-board surfaces must not exist on the stub: no
-    // suppression banner, no board-class banner, no freshness tile, and
-    // none of the dead sample/preview/demo copy.
+    expect(ids.has("under-construction-notice")).toBe(false);
     expect(ids.has("board-suppression-banner")).toBe(false);
     expect(ids.has("board-class-banner")).toBe(false);
     expect(ids.has("board-freshness")).toBe(false);
@@ -151,11 +147,12 @@ describe("/board - the parked stub renders no board state at all", () => {
     expect(text).not.toContain("Last refresh");
   });
 
-  it("imports no board loader - there is no data path to feed a fake healthy state", () => {
+  it("imports loadDoctrineBoard and DoctrineBoardView without sealed-board or calibration report fallbacks", () => {
     const src = readWeb("app/board/page.tsx");
-    expect(src).not.toContain("loadBoardState");
-    expect(src).not.toContain("loadBoardPasses");
+    expect(src).toContain("loadDoctrineBoard");
+    expect(src).toContain("DoctrineBoardView");
     expect(src).not.toContain("loadPublicCalibrationReport");
+    expect(src).not.toContain("sealed-board.json");
   });
 });
 

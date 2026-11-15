@@ -1,0 +1,78 @@
+{
+  "book_id": "7fa950c16cb71eee",
+  "source_status": "COMPLETE",
+  "title": "p0021",
+  "file_name": "p0021.txt",
+  "sha256": "7fa950c16cb71eee07d894e8ed05dc11667cfeb0540dbdbf95baacaeb26a8502",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Fantasy data analysis engine integrates real-time athlete performance factors into probabilistic salary models via modularized computational kernels. Universal Lens: Rooted in p0021 (7fa950c16cb71eee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework maps athlete-specific factors to fantasy salary distributions using conformal predictive intervals for risk-adjusted scoring. GSI Mapping: Rooted in p0021 (7fa950c16cb71eee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions between pre-game, live-play, and post-event states by updating factor weights dynamically through state-dependent kernel updates. GSE Mapping: Rooted in p0021 (7fa950c16cb71eee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fantasy_point_projection",
+      "name": "Fantasy Point Projection",
+      "verbatim_quote": "At step 404, a set of factors is determined for each athlete of a plurality of athletes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{fantasy}': 'dimensionless fantasy point estimate', 'O_{opp}': 'dimensionless opponent strength index', 'H_{loc}': 'binary home/away indicator'}",
+      "assumptions": "Projection assumes static player skill and deterministic environmental influence.",
+      "breakdown_regime": "When P_{fantasy} exceeds observed variance threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps historical performance and contextual variables to stochastic fantasy point estimates via regression-based kernel density estimation.",
+        "source_operator": "fantasy_point_projection",
+        "telemetry": "Mean squared error between projected and actual fantasy points."
+      }
+    },
+    {
+      "primitive_id": "past_performance_factor",
+      "name": "Past Performance Factor",
+      "verbatim_quote": "6A and 6B, the database may store data identifying (or defining) which factors are to be used in determining an athlete's fantasy score.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{past}(t_i)': 'past performance factor at time t_i', 'T_{window}': 'time window in days or games'}",
+      "assumptions": "Performance trends are stationary over defined temporal windows.",
+      "breakdown_regime": "When F_{past}(t_i) deviates beyond 2σ confidence interval.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to moving average filters applied to multi-variate time-series data representing athlete metrics.",
+        "source_operator": "past_performance_factor",
+        "telemetry": "Correlation coefficient between F_{past}(t_i) and actual fantasy output."
+      }
+    },
+    {
+      "primitive_id": "ownership_factor",
+      "name": "Ownership Factor",
+      "verbatim_quote": "In one example and as described in more detail below in connection with FIGS.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'O_{own}': 'fractional ownership percentage across all lineups'}",
+      "assumptions": "Ownership distribution follows inverse power law with respect to salary rank.",
+      "breakdown_regime": "When O_{own} approaches 100% for top-tier players.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from ensemble distribution of user lineup selections; modeled as entropy-weighted probability mass function.",
+        "source_operator": "ownership_factor",
+        "telemetry": "Shannon entropy of lineup composition across contest pools."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7fa950c16cb71eee_t0",
+      "think": "The fantasy data analysis engine operates under a dual-modular architecture where factor determination module 302 computes athlete-specific inputs (e.g., fantasy point projections, past performance, ownership) while fantasy salary determination module 304 synthesizes these into actionable salary values. These primitives form a hierarchical Bayesian network where each factor contributes to a posterior distribution over fantasy outcomes. The engine's robustness depends on accurate real-time data ingestion and modular extensibility. Failure modes include overfitting due to stale data, incorrect factor weighting leading to mispricing, and insufficient granularity in factor definitions causing systemic bias. Dualities emerge between deterministic projections and probabilistic modeling, with the latter enabling risk-adjusted inference. The engine must maintain consistency across multiple concurrent contests and adapt to evolving player dynamics.\n\nDeep epistemic analysis for p0021 (7fa950c16cb71eee, domain=other, pages_read=3/3): Operator 'Fantasy Point Projection' (page 1, domain other) captures: At step 404, a set of factors is determined for each athlete of a plurality of athletes. Assumptions: Projection assumes static player skill and deterministic environmental influence. Breakdown regime: When P_{fantasy} exceeds observed variance threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps historical performance and contextual variables to stochastic fantasy point estimates via regression-based kernel density estimation. Operator 'Past Performance Factor' (page 1, domain other) captures: 6A and 6B, the database may store data identifying (or defining) which factors are to be used in determining an athlete's fantasy score. Assumptions: Performance trends are stationary over defined temporal windows. Breakdown regime: When F_{past}(t_i) deviates beyond 2σ confidence interval. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to moving average filters applied to multi-variate time-series data representing athlete metrics. Operator 'Ownership Factor' (page 1, domain other) captures: In one example and as described in more detail below in connection with FIGS. Assumptions: Ownership distribution follows inverse power law with respect to salary rank. Breakdown regime: When O_{own} approaches 100% for top-tier players. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from ensemble distribution of user lineup selections; modeled as entropy-weighted probability mass function. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0021 (7fa950c16cb71eee, domain=other, pages_read=3/3): Operator 'Fantasy Point Projection' (page 1, domain other) captures: At step 404, a set of factors is determined for each athlete of a plurality of athletes. Assumptions: Projection assumes static player skill and deterministic environmental influence. Breakdown regime: When P_{fantasy} exceeds observed variance threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps historical performance and contextual variables to stochastic fantasy point estimates via regression-based kernel density estimation. Operator 'Past Performance Factor' (page 1, domain other) captures: 6A and 6B, the database may store data identifying (or defining) which factors are to be used in determining an athlete's fantasy score. Assumptions: Performance trends are stationary over defined temporal windows. Breakdown regime: When F_{past}(t_i) deviates beyond 2σ confidence interval. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to moving average filters applied to multi-variate time-series data representing athlete metrics. Operator 'Ownership Factor' (page 1, domain other) captures: In one example and as described in more detail below in connection with FIGS. Assumptions: Ownership distribution follows inverse power law with respect to salary rank. Breakdown regime: When O_{own} approaches 100% for top-tier players. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from ensemble distribution of user lineup selections; modeled as entropy-weighted probability mass function. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical forecasting models of the 1980s, extended through machine learning frameworks of the 2000s, and adapted for real-time sports analytics in the 2010s. Retrocausal Genealogy: Rooted in p0021 (7fa950c16cb71eee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0021 (7fa950c16cb71eee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models competing user strategies including risk-averse vs. risk-seeking preferences, lineup construction heuristics, and dynamic adaptation to changing game states. Theory of Mind & Decision Maker Model: Rooted in p0021 (7fa950c16cb71eee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0021 (7fa950c16cb71eee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents collinearity among factors by enforcing orthogonalization constraints; vetoes leakage when ownership data conflicts with performance projections. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0021 (7fa950c16cb71eee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0021 (7fa950c16cb71eee), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

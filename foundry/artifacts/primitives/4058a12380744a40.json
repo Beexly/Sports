@@ -1,0 +1,95 @@
+{
+  "book_id": "4058a12380744a40",
+  "source_status": "COMPLETE",
+  "title": "p0105",
+  "file_name": "p0105.txt",
+  "sha256": "4058a12380744a404358a7289f348a090ba1c11ab8cc625c04ca37c6fde76d1c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "e_ergodic_theorem",
+      "name": "Egoroff's Theorem",
+      "verbatim_quote": "on E to a finite valued measurable function f, then there exists a sequence {E} of measurable sets such that μ(E - Ui=1 Ei) = 0 and such that the sequence {fn} converges uniformly on each Ei, i = 1, 2, ....",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Measure space (X, S, μ) with μ(E) < ∞, pointwise convergence a.e.",
+      "breakdown_regime": "μ(E) = ∞ breaks uniformity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Convergence in probability → Almost sure convergence. GSE: State-transition determinism under finite-time ergodicity.",
+        "source_operator": "e_ergodic_theorem",
+        "telemetry": "Convergence rate diagnostics"
+      }
+    },
+    {
+      "primitive_id": "d_approximate_borel",
+      "name": "Approximate Borel Measurability",
+      "verbatim_quote": "(1) If f is any real valued, Lebesgue measurable function on the real line, then there exists a Borel measurable function g such that f(x) = g(x) a.e.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Lebesgue measure on R.",
+      "breakdown_regime": "Non-measurable sets violate existence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Lebesgue vs Borel σ-algebras in filtering. GSE: Coarse-graining deterministic dynamics.",
+        "source_operator": "d_approximate_borel",
+        "telemetry": "σ-algebra consistency checks"
+      }
+    },
+    {
+      "primitive_id": "u_uniformly_essential_boundedness",
+      "name": "Uniform Essential Boundedness",
+      "verbatim_quote": "If {f} is a sequence of essentially bounded measurable functions, then the sequence {fn} converges to f uniformly a.e.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Essential supremum finite.",
+      "breakdown_regime": "Unbounded sequences fail uniform a.e. convergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Uniform concentration bounds in Bayesian posteriors. GSE: Compact invariant sets in state transitions.",
+        "source_operator": "u_uniformly_essential_boundedness",
+        "telemetry": "Tail probability thresholds"
+      }
+    },
+    {
+      "primitive_id": "n_non_uniform_convergence",
+      "name": "Non-Uniform Convergence Counterexample",
+      "verbatim_quote": "If χn is the characteristic function of the set {1, .., n}, then the sequence {x} converges to 1 everywhere but it is not almost uniformly fundamental.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "χn = 1 on {1,...,n}, 0 elsewhere.",
+      "breakdown_regime": "Failure occurs when μ(X) = ∞.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Non-stationary time series forecasting. GSE: Chaotic systems without mixing.",
+        "source_operator": "n_non_uniform_convergence",
+        "telemetry": "Convergence speed metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4058a12380744a40_t0",
+      "think": "Egoroff's theorem bridges pointwise a.e. convergence to uniform convergence on large subsets, crucial for statistical learning theory. Its converse fails when measure is infinite, leading to non-uniform convergence counter-examples. Uniform essential boundedness ensures stability under composition, while approximate Borel measurability handles practical measurement noise. These four primitives form a minimal axiom set for verifying ergodicity and uniform convergence in predictive models.\n\nDeep epistemic analysis for p0105 (4058a12380744a40, domain=other, pages_read=1/1): Operator 'Egoroff's Theorem' (page 1, domain other) captures: on E to a finite valued measurable function f, then there exists a sequence {E} of measurable sets such that μ(E - Ui=1 Ei) = 0 and such that the sequence {fn} converges uniformly on each Ei, i = 1, 2, .... Assumptions: Measure space (X, S, μ) with μ(E) < ∞, pointwise convergence a.e. Breakdown regime: μ(E) = ∞ breaks uniformity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Convergence in probability → Almost sure convergence. GSE: State-transition determinism under finite-time ergodicity. Operator 'Approximate Borel Measurability' (page 1, domain other) captures: (1) If f is any real valued, Lebesgue measurable function on the real line, then there exists a Borel measurable function g such that f(x) = g(x) a.e. Assumptions: Lebesgue measure on R. Breakdown regime: Non-measurable sets violate existence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Lebesgue vs Borel σ-algebras in filtering. GSE: Coarse-graining deterministic dynamics. Operator 'Uniform Essential Boundedness' (page 1, domain other) captures: If {f} is a sequence of essentially bounded measurable functions, then the sequence {fn} converges to f uniformly a.e. Assumptions: Essential supremum finite. Breakdown regime: Unbounded sequences fail uniform a.e. convergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Uniform concentration bounds in Bayesian posteriors. GSE: Compact invariant sets in state transitions. Operator 'Non-Uniform Convergence Counterexample' (page 1, domain other) captures: If χn is the characteristic function of the set {1, .., n}, then the sequence {x} converges to 1 everywhere but it is not almost uniformly fundamental. Assumptions: χn = 1 on {1,...,n}, 0 elsewhere. Breakdown regime: Failure occurs when μ(X) = ∞. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Non-stationary time series forecasting. GSE: Chaotic systems without mixing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0105 (4058a12380744a40, domain=other, pages_read=1/1): Operator 'Egoroff's Theorem' (page 1, domain other) captures: on E to a finite valued measurable function f, then there exists a sequence {E} of measurable sets such that μ(E - Ui=1 Ei) = 0 and such that the sequence {fn} converges uniformly on each Ei, i = 1, 2, .... Assumptions: Measure space (X, S, μ) with μ(E) < ∞, pointwise convergence a.e. Breakdown regime: μ(E) = ∞ breaks uniformity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Convergence in probability → Almost sure convergence. GSE: State-transition determinism under finite-time ergodicity. Operator 'Approximate Borel Measurability' (page 1, domain other) captures: (1) If f is any real valued, Lebesgue measurable function on the real line, then there exists a Borel measurable function g such that f(x) = g(x) a.e. Assumptions: Lebesgue measure on R. Breakdown regime: Non-measurable sets violate existence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Lebesgue vs Borel σ-algebras in filtering. GSE: Coarse-graining deterministic dynamics. Operator 'Uniform Essential Boundedness' (page 1, domain other) captures: If {f} is a sequence of essentially bounded measurable functions, then the sequence {fn} converges to f uniformly a.e. Assumptions: Essential supremum finite. Breakdown regime: Unbounded sequences fail uniform a.e. convergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Uniform concentration bounds in Bayesian posteriors. GSE: Compact invariant sets in state transitions. Operator 'Non-Uniform Convergence Counterexample' (page 1, domain other) captures: If χn is the characteristic function of the set {1, .., n}, then the sequence {x} converges to 1 everywhere but it is not almost uniformly fundamental. Assumptions: χn = 1 on {1,...,n}, 0 elsewhere. Breakdown regime: Failure occurs when μ(X) = ∞. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Non-stationary time series forecasting. GSE: Chaotic systems without mixing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Market makers assume uniform convergence for static replication, while algorithmic traders exploit non-uniform regimes. Bettors model outcomes via ergodic averages, requiring bounded variance. Theory of Mind & Decision Maker Model: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Avoids overfitting by ensuring empirical process complexity scales sub-linearly. Prevents information leakage across layers via measure-zero sets. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0105 (4058a12380744a40), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

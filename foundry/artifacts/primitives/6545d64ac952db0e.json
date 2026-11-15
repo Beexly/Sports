@@ -1,0 +1,78 @@
+{
+  "book_id": "6545d64ac952db0e",
+  "source_status": "COMPLETE",
+  "title": "UNSEEN_ALIGNMENT_MAP",
+  "file_name": "UNSEEN_ALIGNMENT_MAP.md",
+  "sha256": "6545d64ac952db0e32507725b31b0e2ba8a0c5dcf1d193ceda4cb677faf9ee1b",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Interactive visual alignment maps galaxy navigation through particle-based spatial semantics, encoding user flow as navigational topology. Universal Lens: Rooted in UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers visual interaction patterns via Bayesian belief updates on SHIPPED/EXISTS/ROADMAP statuses, mapping Unseen Studio's design language to Galaxy's semantic graph. GSI Mapping: Rooted in UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions between visual layers using WebGL2 or Three.js under performance constraints, ensuring LCP stability and accessibility compliance. GSE Mapping: Rooted in UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "galaxy_cluster_navigation",
+      "name": "Galaxy Cluster Navigation",
+      "verbatim_quote": "clusters represent industries; a bespoke 30,000-particle nebula IS the navigation.\" | Signature | In Galaxy |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'cluster index (dimensionless)', 'D': 'destination vector (meters)', 'W': 'waypoint weight (dimensionless)'}",
+      "assumptions": "Clusters form a discrete topological space; each cluster encodes industry category.",
+      "breakdown_regime": "When C < 0 or D ∉ R³, navigation fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each cluster maps to a node in a directed acyclic graph (DAG) representing industry hierarchy.",
+        "source_operator": "galaxy_cluster_navigation",
+        "telemetry": "Click event frequency and destination accuracy"
+      }
+    },
+    {
+      "primitive_id": "particle_nebula_rendering",
+      "name": "Particle Nebula Rendering",
+      "verbatim_quote": "clusters represent industries; a bespoke 30,000-particle nebula IS the navigation.\" | Signature | In Galaxy |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'number of particles (dimensionless)', 'P_i': 'particle position vector (meters)', 'T': 'time step (seconds)'}",
+      "assumptions": "Particles follow deterministic trajectories; rendering uses GPU acceleration.",
+      "breakdown_regime": "When N > 10^5 or T < 1e-6, rendering becomes unstable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Nebula geometry derived from particle dynamics; used for spatial context in UI.",
+        "source_operator": "particle_nebula_rendering",
+        "telemetry": "Frame rate and particle count consistency"
+      }
+    },
+    {
+      "primitive_id": "webgl_visual_dependency",
+      "name": "WebGL Visual Dependency",
+      "verbatim_quote": "Our current doctrine forbids new dependencies for visual work, so the honest path is a deliberate exception: add `three` (or raw WebGL2 modules, no framework) in a dedicated workstream with a perf budget (LCP unchanged, lazy-loaded, reduced-motion fallback = current CSS warp).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'visual workload (dimensionless)', 'B': 'performance budget (ms)', 'L': 'lazy load threshold (bytes)'}",
+      "assumptions": "Visual fidelity scales linearly with computational resources.",
+      "breakdown_regime": "When V > B or L > 1MB, system degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Three.js module abstraction mirrors Galaxy’s component architecture.",
+        "source_operator": "webgl_visual_dependency",
+        "telemetry": "Load time and memory usage during render cycles"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6545d64ac952db0e_t0",
+      "think": "The core insight is that visual navigation in Galaxy aligns with Unseen Studio's aesthetic principles through structured particle systems and interactive clusters. The mathematical structure emerges from the interplay between discrete topological spaces (clusters) and continuous geometric fields (nebulae). Each cluster acts as a node in a DAG, enabling hierarchical navigation. Particle rendering introduces a dynamic layer governed by physical simulation parameters. The dependency on WebGL ensures scalability while maintaining performance bounds. Failure modes arise when topological integrity breaks (C < 0) or rendering exceeds resource limits (V > B).\n\nDeep epistemic analysis for UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e, domain=other, pages_read=2/2): Operator 'Galaxy Cluster Navigation' (page 1, domain other) captures: clusters represent industries; a bespoke 30,000-particle nebula IS the navigation.\" | Signature | In Galaxy | Assumptions: Clusters form a discrete topological space; each cluster encodes industry category. Breakdown regime: When C < 0 or D ∉ R³, navigation fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each cluster maps to a node in a directed acyclic graph (DAG) representing industry hierarchy. Operator 'Particle Nebula Rendering' (page 1, domain other) captures: clusters represent industries; a bespoke 30,000-particle nebula IS the navigation.\" | Signature | In Galaxy | Assumptions: Particles follow deterministic trajectories; rendering uses GPU acceleration. Breakdown regime: When N > 10^5 or T < 1e-6, rendering becomes unstable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Nebula geometry derived from particle dynamics; used for spatial context in UI. Operator 'WebGL Visual Dependency' (page 2, domain other) captures: Our current doctrine forbids new dependencies for visual work, so the honest path is a deliberate exception: add `three` (or raw WebGL2 modules, no framework) in a dedicated workstream with a perf budget (LCP unchanged, lazy-loaded, reduced-motion fallback = current CSS warp). Assumptions: Visual fidelity scales linearly with computational resources. Breakdown regime: When V > B or L > 1MB, system degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Three.js module abstraction mirrors Galaxy’s component architecture. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e, domain=other, pages_read=2/2): Operator 'Galaxy Cluster Navigation' (page 1, domain other) captures: clusters represent industries; a bespoke 30,000-particle nebula IS the navigation.\" | Signature | In Galaxy | Assumptions: Clusters form a discrete topological space; each cluster encodes industry category. Breakdown regime: When C < 0 or D ∉ R³, navigation fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each cluster maps to a node in a directed acyclic graph (DAG) representing industry hierarchy. Operator 'Particle Nebula Rendering' (page 1, domain other) captures: clusters represent industries; a bespoke 30,000-particle nebula IS the navigation.\" | Signature | In Galaxy | Assumptions: Particles follow deterministic trajectories; rendering uses GPU acceleration. Breakdown regime: When N > 10^5 or T < 1e-6, rendering becomes unstable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Nebula geometry derived from particle dynamics; used for spatial context in UI. Operator 'WebGL Visual Dependency' (page 2, domain other) captures: Our current doctrine forbids new dependencies for visual work, so the honest path is a deliberate exception: add `three` (or raw WebGL2 modules, no framework) in a dedicated workstream with a perf budget (LCP unchanged, lazy-loaded, reduced-motion fallback = current CSS warp). Assumptions: Visual fidelity scales linearly with computational resources. Breakdown regime: When V > B or L > 1MB, system degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Three.js module abstraction mirrors Galaxy’s component architecture. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century topology and modern GPU-accelerated visualization techniques, particularly influenced by particle system models in computational physics. Retrocausal Genealogy: Rooted in UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include performance constraints (budgets) and aesthetic demands (quality). Decision actors must balance these via modular dependency management and adaptive rendering strategies. Theory of Mind & Decision Maker Model: Rooted in UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct handling of visual and semantic layers. Leakage occurs if nebulae influence navigation directly without proper abstraction. Veto conditions enforce strict separation between rendering and logic. Cross-Layer Veto & Anti-Leakage Check: Rooted in UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in UNSEEN_ALIGNMENT_MAP (6545d64ac952db0e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

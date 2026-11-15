@@ -203,6 +203,81 @@ def _normalize_team_abbr(tm: str, away: str, home: str) -> str:
     return u
 
 
+def apply_stage0_qb1_live_starter_resolutions(
+    stage0_cfg: dict[str, Any], week: int
+) -> dict[str, Any]:
+    """Honor the Stage-0 preflight LIVE-starter QB1 resolutions (simulation scope).
+
+    ``require_week()`` returns the DFS rostering gate config: a banned QB (e.g.
+    CLE Deshaun Watson) is replaced by the backup in ``confirmed_qb1``. The
+    regenerated Stage-0 preflight config
+    (``data/engine/week{week}_stage0_preflight_config.json``) records
+    ``qb1_ban_conflicts``: when the latest nflverse depth chart ranks the banned
+    QB as QB1 and the week's injury report carries no Out/Doubtful/IR row, that
+    player is the verified LIVE starter for simulation (e.g. ESPN 2026-11-11
+    announcement for CLE Watson). The ban is retained for DFS rostering — the
+    on-disk gate config is never modified.
+
+    Returns a copy of ``stage0_cfg`` with ``confirmed_qb1`` overridden, the
+    resolved player removed from the simulation excluded set, and a
+    ``qb1_ban_conflict_resolutions`` provenance list. No-op when the preflight
+    config is absent or carries no conflicts. Only conflicts the preflight
+    config actually resolved as ``confirmed_qb1`` are honored.
+    """
+    preflight_path = (
+        REPO_ROOT / "data" / "engine" / f"week{int(week)}_stage0_preflight_config.json"
+    )
+    if not preflight_path.is_file():
+        return stage0_cfg
+    try:
+        preflight = json.loads(preflight_path.read_text(encoding="utf-8"))
+    except Exception:
+        return stage0_cfg
+    conflicts = preflight.get("qb1_ban_conflicts") or []
+    if not conflicts:
+        return stage0_cfg
+    pre_qb1 = preflight.get("confirmed_qb1") or {}
+
+    cfg = dict(stage0_cfg)
+    cfg["confirmed_qb1"] = dict(stage0_cfg.get("confirmed_qb1") or {})
+    cfg["excluded_players"] = [dict(ep) for ep in (stage0_cfg.get("excluded_players") or [])]
+    resolutions = list(cfg.get("qb1_ban_conflict_resolutions") or [])
+    alias = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
+    for c in conflicts:
+        tm = str(c.get("team") or "").strip().upper()
+        tm = alias.get(tm, tm)
+        name = str(c.get("qb1") or "").strip()
+        if not tm or not name:
+            continue
+        if str(pre_qb1.get(tm) or "").strip().lower() != name.lower():
+            continue  # preflight did not resolve this player as the live QB1
+        if str(cfg["confirmed_qb1"].get(tm) or "").strip().lower() == name.lower():
+            continue  # already aligned
+        cfg["confirmed_qb1"][tm] = name
+        name_low = name.lower()
+        cfg["excluded_players"] = [
+            ep
+            for ep in cfg["excluded_players"]
+            if str(ep.get("name") or "").strip().lower() != name_low
+        ]
+        resolutions.append(
+            {
+                "team": tm,
+                "qb1": name,
+                "scope": "simulation_live_starter",
+                "dfs_ban_retained": True,
+                "note": str(c.get("note") or ""),
+                "source": (
+                    f"data/engine/week{int(week)}_stage0_preflight_config.json"
+                    "#qb1_ban_conflicts"
+                ),
+            }
+        )
+    if resolutions:
+        cfg["qb1_ban_conflict_resolutions"] = resolutions
+    return cfg
+
+
 def build_dynamic_league_wide_denylist_for_matchup(
     away: str = "JAX",
     home: str = "BAL",
@@ -542,6 +617,9 @@ def load_stage0_game_roster_allowlist(
     usage allowlist for (away, home, week).
     """
     stage0_cfg = require_week(week)
+    # Simulation QB1s must honor the Stage-0 preflight live-starter resolutions
+    # (qb1_ban_conflicts), not just the DFS rostering gate's backup substitution.
+    stage0_cfg = apply_stage0_qb1_live_starter_resolutions(stage0_cfg, week)
     matchup_key = f"{away}@{home}"
 
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
@@ -623,18 +701,30 @@ def load_stage0_game_roster_allowlist(
             "primary_injury": "Ankle (FP, no game designation; confirmed Week 9 QB1 starter)",
         }
 
+    # nflverse/Neon store the Rams as 'LA'; canonical display stays 'LAR'
+    # (same alias T-00 uses). Resolve QB1 + exclusions through both forms.
+    _qb1_cfg = stage0_cfg.get("confirmed_qb1", {})
+
+    def _qb1_for(tm: str) -> Any:
+        return _qb1_cfg.get(tm) or _qb1_cfg.get({"LAR": "LA", "LA": "LAR"}.get(tm, tm))
+
     confirmed_qb1 = {
-        away: stage0_cfg.get("confirmed_qb1", {}).get(away),
-        home: stage0_cfg.get("confirmed_qb1", {}).get(home),
+        away: _qb1_for(away),
+        home: _qb1_for(home),
     }
     if not confirmed_qb1[away] or not confirmed_qb1[home]:
         raise Stage0RosterContaminationError(
             f"STAGE0_FAIL: Missing confirmed_qb1 for {away} or {home} in week{week} config: {confirmed_qb1}"
         )
 
+    def _team_forms(tm: str) -> set[str]:
+        alias = {"LAR": "LA", "LA": "LAR", "WSH": "WAS", "WAS": "WSH"}.get(tm)
+        return {tm, alias} if alias else {tm}
+
+    _match_teams = _team_forms(away) | _team_forms(home)
     excluded_players = [
         ep for ep in stage0_cfg.get("excluded_players", [])
-        if ep.get("team") in (away, home)
+        if ep.get("team") in _match_teams
     ]
     excluded_names_lower = {str(ep["name"]).strip().lower(): ep for ep in excluded_players}
 
@@ -809,6 +899,7 @@ def load_stage0_game_roster_allowlist(
         "away": away,
         "home": home,
         "confirmed_qb1": confirmed_qb1,
+        "qb1_ban_conflict_resolutions": stage0_cfg.get("qb1_ban_conflict_resolutions", []),
         "traded_players": traded_players,
         "excluded_players": excluded_players,
         "off_roster_hallucination_denylist": OFF_ROSTER_HALLUCINATION_DENYLIST,

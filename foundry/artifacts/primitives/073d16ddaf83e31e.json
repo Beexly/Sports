@@ -1,0 +1,95 @@
+{
+  "book_id": "073d16ddaf83e31e",
+  "source_status": "COMPLETE",
+  "title": "photo-guide",
+  "file_name": "photo-guide.md",
+  "sha256": "073d16ddaf83e31e40f3e41d167c182c43b9f2261479c56e715b5e8981730604",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Photo metadata as structured manifold: {quantity, content, variety, quality} → {identity, robustness, fidelity}. Universal Lens: Rooted in photo-guide (073d16ddaf83e31e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian identity likelihood P(identity|photo_set) via variational inference on {angle, lighting, expression, distance} features. GSI Mapping: Rooted in photo-guide (073d16ddaf83e31e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition graph over {pose, lighting, expression} space; actions: {capture, reject, reframe} based on perceptual entropy. GSE Mapping: Rooted in photo-guide (073d16ddaf83e31e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "photo_quantity",
+      "name": "Photo Set Cardinality",
+      "verbatim_quote": "# Photo Guide What to upload for Soul training. ## Quantity - Minimum 5, maximum 20.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{photos}}': '\\\\text{dimensionless integer}'}",
+      "assumptions": "Photos are independent and identically distributed samples of identity.",
+      "breakdown_regime": "N_{\\text{photos}} < 5 or N_{\\text{photos}} > 20",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expected information gain H(I; \\mathbf{X}) increases logarithmically with N_{\\text{photos}} until saturation at ~12.",
+        "source_operator": "photo_quantity",
+        "telemetry": "Perceptual entropy of identity embedding"
+      }
+    },
+    {
+      "primitive_id": "photo_content_clarity",
+      "name": "Face Visibility Criterion",
+      "verbatim_quote": "is the sweet spot. ## Content - Clear face, eyes visible. - Single person per photo.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{face}}': '\\\\text{boolean}', 'C_{\\\\text{single}}': '\\\\text{boolean}'}",
+      "assumptions": "Face region is bounded and detectable by standard CNNs.",
+      "breakdown_regime": "!C_{\\text{face}} or !C_{\\text{single}}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to binary classification of image validity under face detection constraints.",
+        "source_operator": "photo_content_clarity",
+        "telemetry": "CNN-based face bounding box confidence score"
+      }
+    },
+    {
+      "primitive_id": "photo_variety",
+      "name": "Photographic Diversity Index",
+      "verbatim_quote": "3/4 right, slight up/down. - Different lighting: indoor, outdoor, soft, harsh. - Different expressions: neutral, smiling,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_{\\\\text{angle}}': '\\\\text{dimensionless}', 'V_{\\\\text{light}}': '\\\\text{dimensionless}', 'V_{\\\\text{expr}}': '\\\\text{dimensionless}', 'V_{\\\\text{dist}}': '\\\\text{dimensionless}'}",
+      "assumptions": "Each diversity component contributes additively to total identity robustness.",
+      "breakdown_regime": "V_{\\text{angle}} \\to 0 or V_{\\text{light}} \\to 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Multivariate diversity vector \\mathbf{V} = (V_{\\text{angle}}, V_{\\text{light}}, V_{\\text{expr}}, V_{\\text{dist}}) maps to identity embedding variance.",
+        "source_operator": "photo_variety",
+        "telemetry": "Embedding variance across angle/light/expression/dist bins"
+      }
+    },
+    {
+      "primitive_id": "photo_quality",
+      "name": "Image Fidelity Metric",
+      "verbatim_quote": "Different distances: head shot, head-and-shoulders, full body. ## Quality - Sharp, in-focus. - Resolution ≥ 1024×1024",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q_{\\\\text{sharp}}': '\\\\text{boolean}', 'Q_{\\\\text{res}}': '\\\\text{pixels}^2', 'Q_{\\\\text{format}}': '\\\\text{string} \\\\in \\\\{\\\\text{JPEG}, \\\\text{PNG}\\\\}'}",
+      "assumptions": "Resolution and sharpness are sufficient for CNN feature extraction.",
+      "breakdown_regime": "Q_{\\text{res}} < 1024^2 or !Q_{\\text{sharp}}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to image signal-to-noise ratio (SNR) in spatial domain.",
+        "source_operator": "photo_quality",
+        "telemetry": "Peak Signal-to-Noise Ratio (PSNR) of image patch"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "073d16ddaf83e31e_t0",
+      "think": "The photo guide defines a structured data manifold where each photo contributes to an identity model through four primary dimensions: quantity, content clarity, variety, and quality. The quantity constraint ensures sufficient samples for statistical inference, while content clarity enforces minimal visual integrity for recognition. Variety introduces dimensionality to the feature space, enhancing robustness against adversarial perturbations. Quality ensures that the input signal is sufficiently informative for downstream processing. These primitives form a dual structure: one for probabilistic modeling (GSI) and one for action selection (GSE). Failure modes arise when any dimension violates its constraints—e.g., low quantity leads to underfitting, poor clarity causes misidentification, lack of variety results in brittle embeddings, and low quality degrades SNR. Each primitive maps to a distinct layer in the system architecture, enabling modular reasoning and error propagation analysis.\n\nDeep epistemic analysis for photo-guide (073d16ddaf83e31e, domain=other, pages_read=1/1): Operator 'Photo Set Cardinality' (page 1, domain other) captures: # Photo Guide What to upload for Soul training. ## Quantity - Minimum 5, maximum 20. Assumptions: Photos are independent and identically distributed samples of identity. Breakdown regime: N_{\\text{photos}} < 5 or N_{\\text{photos}} > 20 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Expected information gain H(I; \\mathbf{X}) increases logarithmically with N_{\\text{photos}} until saturation at ~12. Operator 'Face Visibility Criterion' (page 1, domain other) captures: is the sweet spot. ## Content - Clear face, eyes visible. - Single person per photo. Assumptions: Face region is bounded and detectable by standard CNNs. Breakdown regime: !C_{\\text{face}} or !C_{\\text{single}} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to binary classification of image validity under face detection constraints. Operator 'Photographic Diversity Index' (page 1, domain other) captures: 3/4 right, slight up/down. - Different lighting: indoor, outdoor, soft, harsh. - Different expressions: neutral, smiling, Assumptions: Each diversity component contributes additively to total identity robustness. Breakdown regime: V_{\\text{angle}} \\to 0 or V_{\\text{light}} \\to 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Multivariate diversity vector \\mathbf{V} = (V_{\\text{angle}}, V_{\\text{light}}, V_{\\text{expr}}, V_{\\text{dist}}) maps to identity embedding variance. Operator 'Image Fidelity Metric' (page 1, domain other) captures: Different distances: head shot, head-and-shoulders, full body. ## Quality - Sharp, in-focus. - Resolution ≥ 1024×1024 Assumptions: Resolution and sharpness are sufficient for CNN feature extraction. Breakdown regime: Q_{\\text{res}} < 1024^2 or !Q_{\\text{sharp}} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to image signal-to-noise ratio (SNR) in spatial domain. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for photo-guide (073d16ddaf83e31e, domain=other, pages_read=1/1): Operator 'Photo Set Cardinality' (page 1, domain other) captures: # Photo Guide What to upload for Soul training. ## Quantity - Minimum 5, maximum 20. Assumptions: Photos are independent and identically distributed samples of identity. Breakdown regime: N_{\\text{photos}} < 5 or N_{\\text{photos}} > 20 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Expected information gain H(I; \\mathbf{X}) increases logarithmically with N_{\\text{photos}} until saturation at ~12. Operator 'Face Visibility Criterion' (page 1, domain other) captures: is the sweet spot. ## Content - Clear face, eyes visible. - Single person per photo. Assumptions: Face region is bounded and detectable by standard CNNs. Breakdown regime: !C_{\\text{face}} or !C_{\\text{single}} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to binary classification of image validity under face detection constraints. Operator 'Photographic Diversity Index' (page 1, domain other) captures: 3/4 right, slight up/down. - Different lighting: indoor, outdoor, soft, harsh. - Different expressions: neutral, smiling, Assumptions: Each diversity component contributes additively to total identity robustness. Breakdown regime: V_{\\text{angle}} \\to 0 or V_{\\text{light}} \\to 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Multivariate diversity vector \\mathbf{V} = (V_{\\text{angle}}, V_{\\text{light}}, V_{\\text{expr}}, V_{\\text{dist}}) maps to identity embedding variance. Operator 'Image Fidelity Metric' (page 1, domain other) captures: Different distances: head shot, head-and-shoulders, full body. ## Quality - Sharp, in-focus. - Resolution ≥ 1024×1024 Assumptions: Resolution and sharpness are sufficient for CNN feature extraction. Breakdown regime: Q_{\\text{res}} < 1024^2 or !Q_{\\text{sharp}} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to image signal-to-noise ratio (SNR) in spatial domain. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical information theory (Shannon, 1948) and computer vision (Fisher, 1995), these primitives reflect modern deep learning paradigms of feature engineering and data augmentation. Retrocausal Genealogy: Rooted in photo-guide (073d16ddaf83e31e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in photo-guide (073d16ddaf83e31e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to maximize identity capture with minimal effort, leading to overfitting on trivial variations or adversarial misalignment in quality standards. Theory of Mind & Decision Maker Model: Rooted in photo-guide (073d16ddaf83e31e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in photo-guide (073d16ddaf83e31e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive operates independently; leakage occurs if variety is conflated with quality or if content clarity is ignored in favor of quantity. Cross-Layer Veto & Anti-Leakage Check: Rooted in photo-guide (073d16ddaf83e31e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in photo-guide (073d16ddaf83e31e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

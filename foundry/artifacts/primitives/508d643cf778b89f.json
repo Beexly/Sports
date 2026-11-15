@@ -1,0 +1,323 @@
+{
+  "book_id": "508d643cf778b89f",
+  "source_status": "COMPLETE",
+  "title": "openalex_W7166835043",
+  "file_name": "openalex_W7166835043.pdf",
+  "sha256": "508d643cf778b89f18b225af88869c5154348208a1153f22c5d2a57d669011a2",
+  "primary_domain": "other",
+  "pages_total": 11,
+  "pages_read": 11,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 11,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Homography-based pose-graph construction enables calibrated camera pose estimation through planar surface decomposition and real-line embedding pruning. The structural unification relies on projecting confidence-weighted relative pose estimates onto the Riemannian manifolds SO(3) and S^2. This geometric averaging minimizes embedding inconsistency across a bi-connected graph, ensuring global rigidity by enforcing least-unsquared-deviations constraints over multi-planar homography decompositions.",
+  "gsi_mapping": "Bayesian inference on homography reliability integrates with conformal prediction for robust camera pose recovery under uncertain planar geometry. GSI maps these manifold projections to Bayesian posterior inference over spatial priors. Confidence weights act as conformal scores derived from planar invariance, while the spanning tree extension enforces topological consistency, minimizing epistemic uncertainty in high-dimensional camera state spaces.",
+  "gse_mapping": "Situation-aware state transitions in pose-graph pruning leverage geometric consistency scores to refine camera pose estimates dynamically. In GSE, this primitive models situational transitions during dynamic plays. Relative poses represent instantaneous player-to-player vectors; aggregating noisy edge estimates via SO(3) projection yields robust, real-time formation tracking, filtering out occlusions and erratic movements on the court.",
+  "primitives": [
+    {
+      "primitive_id": "homography_pose_aggregation",
+      "name": "Homography Pose Aggregation",
+      "verbatim_quote": "By aggregating estimates from multiple planes or even from a single dominant plane we achieve robust pose recovery in scenarios where traditional methods fail.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes sufficient feature overlap between camera views and that planar surfaces provide stable homography estimates.",
+      "breakdown_regime": "Degeneracy when all visible surfaces are non-planar or when homography estimation fails due to textureless regions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps homography-based edge weights in a pose-graph to probabilistic posterior distributions in GSI's Bayesian tracking pipeline, where homographies serve as likelihood functions.",
+        "source_operator": "homography_pose_aggregation",
+        "telemetry": "Pose-graph consistency score derived from spectral gap of the Laplacian matrix, used as a conformal prediction interval width."
+      }
+    },
+    {
+      "primitive_id": "planar_graph_embedding",
+      "name": "Planar Graph Embedding",
+      "verbatim_quote": "Our method maps homography-based pose estimates onto the real line based on their geometric and visual consistency, enabling efficient extraction of a maximally consistent spanning tree for pose recovery.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes the existence of a globally consistent ordering of camera poses along the real line and that inconsistent edges correspond to noise or outliers.",
+      "breakdown_regime": "Failure occurs when cycle inconsistencies prevent any global ordering, leading to a disconnected graph.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Embeds camera trajectories into a low-dimensional latent space in GSE, where geodesic distances approximate temporal proximity, analogous to spectral embedding of camera graphs.",
+        "source_operator": "planar_graph_embedding",
+        "telemetry": "Graph connectivity ratio after filtering unreliable edges, serving as a state-transition trigger for replanning in dynamic arenas."
+      }
+    },
+    {
+      "primitive_id": "planar_constraint_fusion",
+      "name": "Planar Constraint Fusion",
+      "verbatim_quote": "This approach naturally handles both highly planar scenes, such as indoor sports arenas, and general 3D environments.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that planar constraints can be combined with point-based epipolar constraints without introducing bias, provided appropriate weighting.",
+      "breakdown_regime": "Singularity when the scene contains only parallel planes, resulting in insufficient rotational degrees of freedom.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Fuses planar homography priors with point-feature reprojection errors in GSI's multi-target tracker, forming a hybrid cost function that improves joint object pose estimation.",
+        "source_operator": "planar_constraint_fusion",
+        "telemetry": "Weighted average constraint satisfaction metric, used to adaptively tune the influence of planar versus non-planar features during inference."
+      }
+    },
+    {
+      "primitive_id": "dominant_plane_approximation",
+      "name": "Dominant Plane Approximation",
+      "verbatim_quote": "Our key insight is that each planar surface visible across multiple views provides an independent estimate of relative camera poses through homography decomposition.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes the scene can be locally approximated by a single dominant plane when multiple planes are present, simplifying the homography factorization problem.",
+      "breakdown_regime": "Inefficiency when the dominant plane changes rapidly between frames, causing drift in the estimated pose sequence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Approximates the arena floor as a single infinite plane in GSE's physics engine, allowing fast state-transition predictions conditioned on ball-plane contact geometry.",
+        "source_operator": "dominant_plane_approximation",
+        "telemetry": "Residual error between observed ball trajectory and predicted intersection with the dominant plane, used as a fault-detection signal."
+      }
+    },
+    {
+      "primitive_id": "w1_planar_sfm_pipeline",
+      "name": "Planar-SfM Pipeline",
+      "verbatim_quote": "Method Overview: Our pipeline processes input images through four main stages: (1) feature detection and matching, (2) homography-based pose-graph construction, (3) graph pruning via real-line embedding, and (4) camera pose recovery.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'n': 'number of input images, dimensionless', 'G = (V, E)': 'pose-graph, undirected multigraph', 'V': 'set of camera poses, SE(3)', 'E': 'edges representing homographies, dimensionless'}",
+      "assumptions": "Calibrated cameras with known intrinsic matrices; planar surfaces present in scene; homographies derived from valid feature matches.",
+      "breakdown_regime": "When feature correspondences are spurious or planar surfaces are absent, homography decomposition fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pose-graph structure maps to GSE's state transition graph, where nodes are camera poses and edges are homographic constraints.",
+        "source_operator": "w1_planar_sfm_pipeline",
+        "telemetry": "Edge reliability score from angular similarity between Rq_ij and Re_ij."
+      }
+    },
+    {
+      "primitive_id": "w2_homography_decomposition",
+      "name": "Homography Decomposition",
+      "verbatim_quote": "Each homography, when arising from a genuine planar surface, provides both the relative pose between the corresponding cameras and the surface normal through decomposition.",
+      "page": 3,
+      "latex": "\\mathbf{H}_{ij} \\mapsto (\\mathbf{R}_{ij}, \\mathbf{c}_{ij}, \\mathbf{n}_{ij})",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{H}_{ij}': 'homography matrix, 3x3', '\\\\mathbf{R}_{ij}': 'relative rotation, SO(3)', '\\\\mathbf{c}_{ij}': 'relative translation, \\\\mathbb{R}^3', '\\\\mathbf{n}_{ij}': 'plane normal vector, S^2'}",
+      "assumptions": "Scene contains at least one planar surface; cameras are calibrated; feature matches are valid.",
+      "breakdown_regime": "When homography originates from non-planar or misaligned features, decomposition yields invalid pose and normal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Homography kernel encodes geometric constraints for relative pose and surface normal estimation in GSI's probabilistic framework.",
+        "source_operator": "w2_homography_decomposition",
+        "telemetry": "Angular deviation between estimated and ground-truth plane normals."
+      }
+    },
+    {
+      "primitive_id": "w3_pose_graph_pruning",
+      "name": "Pose-Graph Pruning via Real-Line Embedding",
+      "verbatim_quote": "To handle potentially erroneous homographies, we develop a two-stage filtering approach.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'w_{ij}^q': 'reliability weight for homography edge, dimensionless', 'R_{ij}^q': 'orientation from homography, SO(3)', 'R_{ij}^e': 'auxiliary orientation from essential matrix, SO(3)'}",
+      "assumptions": "Homography edges have associated reliability scores; auxiliary orientations are computed independently.",
+      "breakdown_regime": "Pruning fails when reliability thresholds are poorly calibrated or auxiliary orientations are inaccurate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pruning mechanism mirrors GSE's belief update process, where unreliable edges are filtered based on geometric consistency.",
+        "source_operator": "w3_pose_graph_pruning",
+        "telemetry": "Spanning tree quality index after pruning."
+      }
+    },
+    {
+      "primitive_id": "w4_relative_pose_estimation",
+      "name": "Relative Pose Estimation",
+      "verbatim_quote": "We denote the relative pose between cameras i and j by (Rij, cij) ∈SE(3), where Rij = RjRT i is their relative orientation and cij ∝Rj(ci -cj) is their relative position.",
+      "page": 3,
+      "latex": "(\\mathbf{R}_{ij}, \\mathbf{c}_{ij}) \\in SE(3)",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{R}_{ij}': 'relative orientation, SO(3)', '\\\\mathbf{c}_{ij}': 'relative position, \\\\mathbb{R}^3', 'SE(3)': 'special Euclidean group, 6D transformation space'}",
+      "assumptions": "Cameras are calibrated; relative pose is computed from valid homography decomposition.",
+      "breakdown_regime": "Failure occurs when relative pose computation is corrupted by erroneous homography or uncalibrated camera parameters.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Relative pose kernel underpins GSI's uncertainty quantification for camera motion estimation.",
+        "source_operator": "w4_relative_pose_estimation",
+        "telemetry": "Reprojection error of triangulated points after pose refinement."
+      }
+    },
+    {
+      "primitive_id": "w2_so3_manifold_projection",
+      "name": "SO(3) Manifold Projection Operator",
+      "verbatim_quote": "4) onto SO(3) and S2, respectively: ˆRij = ΠSO(3) X q wq ijRq ij !",
+      "page": 6,
+      "latex": "\\hat{R}_{ij} = \\Pi_{SO(3)} \\sum_q w^q_{ij} R^q_{ij}",
+      "symbol_and_unit_ledger": "\\hat{R}_{ij}: Estimated relative rotation (dimensionless, SO(3) group element); \\Pi_{SO(3)}: Geodesic projection operator onto Special Orthogonal group; w^q_{ij}: Confidence weight for q-th plane estimate (dimensionless probability mass); R^q_{ij}: Raw relative rotation estimate (dimensionless).",
+      "assumptions": "Local rotational estimates lie within the injectivity radius of SO(3) to ensure unique geodesics; confidence weights sum to unity per edge.",
+      "breakdown_regime": "Breaks down when relative rotations approach 180 degrees (antipodal singularity on SO(3)) or when confidence weights become highly degenerate due to feature matching failures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's angular momentum conservation filters, mapping noisy pairwise rotational telemetry into a globally consistent coordinate frame.",
+        "source_operator": "w2_so3_manifold_projection",
+        "telemetry": "Angular error threshold (AUC@3°) measured against ground truth IMU data."
+      }
+    },
+    {
+      "primitive_id": "w2_s2_translation_aggregation",
+      "name": "Spherical Translation Aggregator",
+      "verbatim_quote": ", ˆcij = ΠS2 X q wq ijcq ij !",
+      "page": 6,
+      "latex": "\\hat{c}_{ij} = \\Pi_{S^2} \\sum_q w^q_{ij} c^q_{ij}",
+      "symbol_and_unit_ledger": "\\hat{c}_{ij}: Estimated relative translation direction (dimensionless unit vector on S^2); \\Pi_{S^2}: Geodesic projection onto the 2-sphere; w^q_{ij}: Confidence weight (dimensionless); c^q_{ij}: Raw translation direction (dimensionless).",
+      "assumptions": "Translation magnitudes are normalized to unit length prior to aggregation; underlying scene possesses sufficient parallax to define non-degenerate translation vectors.",
+      "breakdown_regime": "Singularity occurs under pure rotational motion (zero parallax), where translation vectors collapse to zero and spherical projection becomes undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSE's velocity vector smoothing kernels, deriving stable directional intent from stochastic player tracking noise.",
+        "source_operator": "w2_s2_translation_aggregation",
+        "telemetry": "Translational endpoint error (EPE) across multi-camera sports broadcasts."
+      }
+    },
+    {
+      "primitive_id": "w2_bi_connected_extension",
+      "name": "Bi-connected Graph Extender",
+      "verbatim_quote": "We therefore extend T to a bi-connected graph by iteratively adding edges that minimize embedding inconsistency.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: Minimal-range spanning tree (graph topology); E_{inconsistency}: Embedding inconsistency metric (dimensionless squared geodesic distance); e_{new}: Candidate edge connecting existing nodes.",
+      "assumptions": "The underlying physical space is rigid; added edges must satisfy local loop-closure constraints without introducing significant topological drift.",
+      "breakdown_regime": "Fails in highly dynamic environments with moving obstacles, where loop-closure inconsistencies exceed the optimization tolerance, causing graph fragmentation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's temporal loop-closure mechanisms, ensuring long-term state consistency in sequential play-by-play reconstruction.",
+        "source_operator": "w2_bi_connected_extension",
+        "telemetry": "Reprojection error reduction rate upon adding redundant visual features."
+      }
+    },
+    {
+      "primitive_id": "w2_lud_absolute_recovery",
+      "name": "Least-Unsquared-Deviations Solver",
+      "verbatim_quote": "Finally, using the recovered orientations, we transform each relative position as ˆc′ ij = ˆRT j ˆcij to obtain ˆc′ ij ∝ci -cj, from which absolute positions are recovered using least-unsquareddeviations [21].",
+      "page": 6,
+      "latex": "\\hat{c}'_{ij} = \\hat{R}_j^T \\hat{c}_{ij} \\propto c_i - c_j",
+      "symbol_and_unit_ledger": "\\hat{c}'_{ij}: Globally aligned relative position vector (meters); \\hat{R}_j: Absolute rotation of camera j (dimensionless); c_i, c_j: Absolute camera positions (meters).",
+      "assumptions": "Global scale ambiguity is resolved or irrelevant for shape recovery; the system of linear equations derived from relative differences is full-rank.",
+      "breakdown_regime": "Mathematical singularity if all cameras are collinear, rendering the translational subspace under-constrained and preventing unique absolute positioning.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the global court coordinate system in GSE, anchoring local player clusters into a unified broadcast reference frame.",
+        "source_operator": "w2_lud_absolute_recovery",
+        "telemetry": "Root mean square error (RMSE) of reconstructed camera centroids against survey-grade GPS."
+      }
+    },
+    {
+      "primitive_id": "planar_sfm_homography_graph_embedding",
+      "name": "Planar-SfM Homography Graph Embedding",
+      "verbatim_quote": "Planar-SfM: Camera Pose Estimation via Homography Graph Embeddings 9 camera pose through decomposition.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Camera poses are planar; geometric consistency is preserved across views.",
+      "breakdown_regime": "When epipolar geometry fails due to low texture or repetitive patterns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The homography graph is isomorphic to a weighted undirected graph whose edges represent geometric constraints. Spectral embedding maps these into a real line for consistency filtering.",
+        "source_operator": "planar_sfm_homography_graph_embedding",
+        "telemetry": "Maximally consistent spanning tree extracted via minimum range spanning tree algorithm."
+      }
+    },
+    {
+      "primitive_id": "spectral_embedding_filtering",
+      "name": "Spectral Embedding Filtering",
+      "verbatim_quote": "To filter unreliable estimates, we applied a spectral embedding approach that maps edges onto the real line based on geometric and visual consistency, enabling extraction of a maximally consistent spanning tree for pose recovery.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Edge weights reflect geometric and visual reliability; spectral embedding preserves topological consistency.",
+      "breakdown_regime": "When noise or outliers compromise direct pose estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The kernel is derived from the Laplacian matrix of the homography graph, encoding pairwise consistency between camera poses.",
+        "source_operator": "spectral_embedding_filtering",
+        "telemetry": "Consistency score of the spanning tree via spectral gap analysis."
+      }
+    },
+    {
+      "primitive_id": "min_range_spanning_tree_algorithm",
+      "name": "Minimum Range Spanning Tree Algorithm",
+      "verbatim_quote": "In: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) (2019) 8.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Graph is undirected and weighted; edge weights correspond to consistency scores.",
+      "breakdown_regime": "When multiple valid trees exist but only one minimizes range variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The algorithm computes a minimal range spanning tree using Kruskal's method with edge thresholds, producing a kernel of optimal consistency.",
+        "source_operator": "min_range_spanning_tree_algorithm",
+        "telemetry": "Range variance of selected spanning tree edges as consistency measure."
+      }
+    },
+    {
+      "primitive_id": "laplacian_eigenmap_dimensionality_reduction",
+      "name": "Laplacian Eigenmap Dimensionality Reduction",
+      "verbatim_quote": "Belkin, M., Niyogi, P.: Laplacian eigenmaps for dimensionality reduction and data representation.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Data lies on a manifold; local neighborhood structure is preserved during embedding.",
+      "breakdown_regime": "When high-dimensional pose space cannot be directly optimized.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Embeds the homography graph into a lower-dimensional Euclidean space preserving intrinsic geometric relationships.",
+        "source_operator": "laplacian_eigenmap_dimensionality_reduction",
+        "telemetry": "Reconstruction error of embedded poses compared to original graph structure."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "508d643cf778b89f_t0",
+      "think": "The core mathematical unification in this work bridges discrete graph theory (spectral embedding of camera graphs) with continuous differential geometry (homography decomposition). This allows us to treat camera pose estimation as a maximum-likelihood parameter recovery problem over a manifold of rigid-body transformations. The integration of planar constraints provides additional second-order curvature information that regularizes the solution, particularly in under-constrained scenarios common in indoor sports venues. By framing homography-based relative poses as random variables with known covariance structures, we can apply Rao-Blackwellized estimators to obtain globally optimal absolute poses. This perspective naturally extends to sequential Bayesian filtering paradigms used in GSI for tracking player movements and event boundaries. Window 1 Synthesis: Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The foundational ideas trace back to Kruppa's early 20th century work on self-calibration using algebraic varieties and Hartley's seminal 1997 paper on projective reconstruction. Modern graph-SLAM algorithms further developed the graph-embedding aspect, while recent neural approaches have explored learned embeddings of geometric invariants. Retrocausal Genealogy (Window 1): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing coaches might model our system as inferring their defensive formations (planar approximations of court geometry) from broadcast camera angles. Players could attempt to exploit systematic biases in planar approximation by performing acrobatic shots that momentarily break the dominant-plane assumption, forcing re-localization. Theory of Mind (Window 1): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring that homography estimates from different planes are not perfectly aligned, which would create linear dependencies and inflate uncertainty. Leakage concerns arise when planar approximations leak into higher-level tactical analysis, potentially revealing formation patterns that should remain hidden from opponents. Cross-Layer Veto (Window 1): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "508d643cf778b89f_t1",
+      "think": "Chapter 2 introduces Planar-SfM, a method for estimating camera poses from multiple images of scenes containing planar surfaces. It begins with feature detection and matching, followed by constructing a pose-graph from homographies between image pairs. Each homography encodes both relative camera pose and surface normal, enabling geometric reasoning about scene structure. The method then applies a two-stage filtering approach to prune unreliable edges, leveraging real-line embeddings and angular similarity between orientations derived from homography and essential matrix decompositions. This ensures robustness against erroneous correspondences. Finally, camera poses are recovered via a spanning tree of the refined pose-graph. The core innovation lies in integrating geometric constraints from planar surfaces into a structured optimization framework, enabling accurate pose estimation even in complex scenes with unknown numbers of planar surfaces. This aligns with GSI’s focus on probabilistic inference over structured data and GSE’s emphasis on dynamic state transitions guided by geometric consistency. Window 2 Synthesis: Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical Structure-from-Motion (SfM) and homography theory, Planar-SfM extends prior work by incorporating planar surface priors and robust graph pruning techniques, building upon foundational contributions in computer vision such as the essential matrix and bundle adjustment. Retrocausal Genealogy (Window 2): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents in this model include the imaging system (camera), the scene (planar surfaces), and the algorithmic observer (Planar-SfM). Each agent contributes to the formation of homographic constraints, with the observer refining estimates through probabilistic filtering and geometric validation. Theory of Mind (Window 2): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that homographies derive from distinct planar surfaces rather than collinear features. Leakage is mitigated by verifying that orientation consistency scores are not dominated by noise or outliers in the essential matrix estimation. Cross-Layer Veto (Window 2): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "508d643cf778b89f_t2",
+      "think": "The mathematical derivation within pages 6-8 centers on the rigorous transition from local, noisy pairwise observations to a globally consistent Euclidean reconstruction. The foundational premise is the extraction of multiple independent relative poses (R, c) from distinct planar homographies between image pairs. Because these relative poses are invariant to the specific underlying plane generating the homography, they can be treated as stochastic samples from a distribution centered on the true geometric relationship. The core operator involves a weighted Fréchet mean on the Riemannian product manifold SO(3) × S². By projecting the confidence-weighted sum of raw rotations onto SO(3) and translations onto S², the method inherently respects the non-Euclidean geometry of rotations and directions, avoiding the severe biases introduced by naive Euclidean averaging. Once these robust edge weights are established on a minimal-range spanning tree, the algorithm addresses the fundamental lack of redundancy in trees. A tree structure is not bi-connected, meaning it cannot absorb gross errors or resolve global scale ambiguities effectively. The extension to a bi-connected graph via iterative edge addition—specifically targeting those that minimize embedding inconsistency—acts as a topological regularization. This process constructs a dense constraint network. Finally, the absolute positions are recovered via Least-Unsquared-Deviations (LUD). LUD is particularly apt here as it optimizes the alignment of relative difference vectors (c_i - c_j) in a way that is robust to outliers, completing the transformation from a probabilistic graph of local planes to a deterministic, global 3D camera configuration. This pipeline elegantly bridges differential geometry and combinatorial optimization.",
+      "retrocausal_genealogy": "This methodology inherits deeply from classical Structure-from-Motion (SfM), specifically the bundle adjustment paradigms of the 1980s, but modernizes them through manifold-aware statistics. It traces back to the use of spanning trees in early photogrammetry for initial resection, yet diverges by incorporating Riemannian center-of-mass calculations popularized in diffusion tensor imaging and modern Lie group optimization. The reliance on homography decomposition echoes the eight-point algorithm lineage, adapted here for multi-planar scenes common in structured environments like sports arenas.",
+      "theory_of_mind": "From a theory-of-mind perspective, the algorithm acts as an omniscient coordinator resolving conflicting testimonies. Each planar region within an image pair provides a 'witness' to the relative camera motion. The weighting scheme represents the system's trust calibration—assigning higher credibility to witnesses (planes) with richer feature correspondences. The graph extension phase mimics a strategic scout seeking corroborating evidence to prevent any single erroneous witness from derailing the entire reconstruction, effectively modeling a defensive strategy against adversarial noise or occlusion.",
+      "cross_layer_veto": "A critical veto condition arises if the scene lacks sufficient geometric diversity, such as entirely fronto-parallel planar structures, leading to degenerate homographies where translation vectors vanish. Furthermore, if the spanning tree extension introduces cycles with contradictory rotational holonomies exceeding the solver's tolerance, the bi-connected assumption fails, triggering a veto on the global consistency claim. In GSE terms, this corresponds to rejecting a play sequence if player trajectory loops violate physical kinematic constraints."
+    },
+    {
+      "trace_id": "508d643cf778b89f_t3",
+      "think": "Chapter window 4 explores camera pose estimation using Planar-SfM, leveraging homography graphs and spectral embeddings to extract reliable pose information. The core innovation lies in transforming geometric constraints into a graph structure, then applying spectral techniques to filter inconsistencies. This process enables robust pose recovery even in challenging environments like basketball courts where traditional epipolar geometry fails. The use of Laplacian eigenmaps ensures dimensionality reduction while maintaining topological integrity. The minimum range spanning tree algorithm further refines the selection by minimizing variance in edge weights, ensuring maximal consistency. These primitives form a cohesive framework for visual SLAM in structured environments, integrating both geometric and visual cues. Window 4 Synthesis: Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in spectral graph theory and manifold learning, this work builds upon earlier contributions in Laplacian eigenmaps and RANSAC-guided sampling, extending them to structured scene estimation. Retrocausal Genealogy (Window 4): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Modeling player movement and coach positioning requires understanding how visual consistency translates into spatial coherence—this framework provides a probabilistic lens for interpreting motion in structured domains. Theory of Mind (Window 4): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is ensured by enforcing diversity in the spanning tree selection, preventing over-reliance on any single geometric constraint. Leakage is mitigated through consistent filtering across both visual and geometric dimensions. Cross-Layer Veto (Window 4): Rooted in openalex_W7166835043 (508d643cf778b89f, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

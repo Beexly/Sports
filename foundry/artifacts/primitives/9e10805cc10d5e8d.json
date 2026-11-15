@@ -1,0 +1,764 @@
+{
+ "book_id": "9e10805cc10d5e8d",
+ "source_status": "COMPLETE",
+ "source_note": "Geoffrey Grimmett, Probability on Graphs: Random Processes on Graphs and Lattices, 2nd edition, 2018, Cambridge University Press (Cambridge Series in Statistical and Probabilistic Mathematics). Local file is the publisher PDF at library/books-must-have/Grimmett-2018-ProbabilityOnGraphs2.pdf, 1918017 bytes; scan digest sha256(str(size) + file bytes) = 9e10805cc10d5e8d9a1c727c9122b691214b9f96b46268b1ab79040e449b7fc0, book_id is its first 16 hex characters. Extracted text (717917 characters, about 102245 words) is a real, usable extraction; front matter carries interleaved copyright watermark fragments and stacked fractions render as digits (one half appears as 21), so quotes were chosen from clean single-page passages and verified as contiguous substrings of the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "thomson_principle_variational",
+   "name": "Thomson principle: the Kirchhoff current is the unique unit flow minimizing dissipated energy",
+   "verbatim_quote": "Amongst all unit flows through G from s to t, the flow that satisfies the Kirchhoff laws is the unique s/t flow i that minimizes the dissipated energy.",
+   "page": "Chapter 1, Section 1.3, Theorem 1.28 (book p. 9)",
+   "latex": "E(i) = \\inf \\{ E(j) : j \\text{ a unit flow from } s \\text{ to } t \\}",
+   "symbol_and_unit_ledger": {
+    "E(j)": "energy of flow j, sum over edges of j_e^2 r_e, in resistance-weighted squared-current units",
+    "i": "the unit flow satisfying the Kirchhoff laws",
+    "s, t": "source and sink vertices"
+   },
+   "assumptions": [
+    "G is connected",
+    "conductances are strictly positive",
+    "flows are unit flows from s to t"
+   ],
+   "breakdown_regime": "Fails for disconnected graphs or zero and negative conductances; on infinite graphs the infimum need not be attained by a finite-energy flow.",
+   "domain": "electrical networks / random walks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any engine quantity built as a flow over a graph of states can be scored by a variational principle: the realized explanation is the minimum-energy feasible flow, and excess energy over the infimum measures how far a candidate account sits from the Kirchhoff-consistent one.",
+    "source_operator": "thomson_principle_variational",
+    "telemetry": "Edge conductances and flow volumes on the engine state graph; dissipated energy per candidate path."
+   }
+  },
+  {
+   "primitive_id": "rayleigh_monotonicity",
+   "name": "Rayleigh principle: effective resistance is non-decreasing in each edge resistance",
+   "verbatim_quote": "The Thomson 'variational principle' leads to a proof of the 'obvious' fact that the effective resistance of a network is a non-decreasing function of the resistances of individual edges.",
+   "page": "Chapter 1, Section 1.3, Theorem 1.29 (book p. 10)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Network has strictly positive edge resistances",
+    "Comparison is edgewise: every resistance weakly increases"
+   ],
+   "breakdown_regime": "Monotonicity gives bounds, not values; it says nothing when some resistances rise and others fall, and it does not quantify the size of the change.",
+   "domain": "electrical networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Monotone comparative statics for the reasoning engine: if every channel feeding a conclusion becomes harder to traverse, the effective difficulty of reaching that conclusion cannot fall; any signal claiming the opposite is internally inconsistent and gets flagged.",
+    "source_operator": "rayleigh_monotonicity",
+    "telemetry": "Per-edge resistance estimates in the evidence graph before and after an information update."
+   }
+  },
+  {
+   "primitive_id": "return_probability_resistance_formula",
+   "name": "Return probability of a reversible chain equals one minus the reciprocal of W0 times effective resistance",
+   "verbatim_quote": "The return probability is non-decreasing as W0 Reff increases.",
+   "page": "Chapter 1, Section 1.4, Theorem 1.30 (book p. 11)",
+   "latex": "P_0(Z_n = 0 \\text{ for some } n \\ge 1) = 1 - \\frac{1}{W_0 R_{\\mathrm{eff}}}",
+   "symbol_and_unit_ledger": {
+    "P_0": "probability starting the chain at the origin 0",
+    "Z_n": "position of the reversible chain at step n",
+    "W_0": "total conductance at the origin, sum of w_{0v} over neighbours v of 0, in conductance units",
+    "R_eff": "effective resistance between the origin and infinity, in resistance units"
+   },
+   "assumptions": [
+    "Chain is reversible with strictly positive conductances",
+    "Graph is infinite and connected with finite vertex degrees",
+    "Origin is a distinguished vertex"
+   ],
+   "breakdown_regime": "The formula is exact only for the first-return event as stated; it does not give the full return-time distribution, and it degenerates when W0 Reff is infinite, where it only reports recurrence.",
+   "domain": "random walks on graphs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Revisit propensity in any state graph the engine walks, such as a line of reasoning returning to an earlier hypothesis, is priced exactly by local conductance times global effective resistance rather than by intuition about how central the state looks.",
+    "source_operator": "return_probability_resistance_formula",
+    "telemetry": "Transition counts between reasoning states; estimated conductances on revisited hypotheses."
+   }
+  },
+  {
+   "primitive_id": "recurrence_resistance_criterion",
+   "name": "A reversible chain is recurrent if and only if the effective resistance to infinity is infinite",
+   "verbatim_quote": "The chain Z is recurrent if and only if Reff = ∞.",
+   "page": "Chapter 1, Section 1.4, Corollary 1.31 (book p. 11)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reversible chain on an infinite connected graph",
+    "Conductances strictly positive",
+    "Effective resistance defined as the limit over exhausting finite subgraphs"
+   ],
+   "breakdown_regime": "The criterion is qualitative: infinite resistance certifies recurrence but gives no rate; finite resistance certifies transience only together with the finite-energy flow condition of the same corollary.",
+   "domain": "random walks on graphs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A decision procedure pattern for the engine: a yes or no property of a huge system is decided by whether one scalar quantity diverges, so the engine should hunt for the scalar whose divergence settles the question instead of simulating forever.",
+    "source_operator": "recurrence_resistance_criterion",
+    "telemetry": "Computed effective-resistance estimates over growing windows of the state graph."
+   }
+  },
+  {
+   "primitive_id": "wilson_algorithm_ust",
+   "name": "Wilson's algorithm: loop-erased random walks grown from unvisited vertices generate a uniform spanning tree",
+   "verbatim_quote": "The graph T is a uniform spanning tree of G.",
+   "page": "Chapter 2, Section 2.3, Theorem 2.6 (book p. 24)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "G is finite and connected",
+    "Vertices are processed until all are visited",
+    "Each walk is loop-erased chronologically"
+   ],
+   "breakdown_regime": "Finite graphs only in this form; the output law does not depend on the vertex ordering, but the running time does, and infinite-volume versions need weak limits.",
+   "domain": "uniform spanning trees",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A sampling kernel for the engine: to draw an unbiased global structure from local walks, erase loops chronologically and graft each new branch onto what already exists; the result is uniform over all spanning structures, not biased toward the order of exploration.",
+    "source_operator": "wilson_algorithm_ust",
+    "telemetry": "Random-walk traces over the engine dependency graph; loop-erasure points."
+   }
+  },
+  {
+   "primitive_id": "ust_negative_association",
+   "name": "Uniform spanning tree edges are negatively associated, proved through monotonicity of effective resistance",
+   "verbatim_quote": "The proof makes striking use of the Thomson principle via the monotonicity of effective resistance.",
+   "page": "Chapter 2, Section 2.1, Theorem 2.1 and equation (2.2) (book p. 21)",
+   "latex": "P(f \\in T \\mid g \\in T) \\le P(f \\in T)",
+   "symbol_and_unit_ledger": {
+    "P": "probability under the uniform spanning tree law",
+    "T": "uniform spanning tree of G",
+    "f, g": "distinct edges of G"
+   },
+   "assumptions": [
+    "G is finite",
+    "f and g are distinct edges",
+    "Each edge carries unit resistance in the electrical proof"
+   ],
+   "breakdown_regime": "Negative association is proved here for the uniform spanning tree; it is an open matter for several related measures, and the inequality reverses for positively associated models such as the random-cluster model with q above 1.",
+   "domain": "uniform spanning trees",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A dependence sign discipline: including one piece of structure can only lower the chance of including a competing piece when the underlying selection is a global uniform choice; the engine must not treat co-occurrence of two supports as independent evidence in such regimes.",
+    "source_operator": "ust_negative_association",
+    "telemetry": "Co-inclusion frequencies of edges or factors across sampled global structures."
+   }
+  },
+  {
+   "primitive_id": "percolation_critical_point_interior",
+   "name": "Bond percolation on the d-dimensional lattice with d at least 2 has a critical probability strictly between 0 and 1",
+   "verbatim_quote": "It is fundamental that 0 < pc < 1, and we state this as a theorem.",
+   "page": "Chapter 3, Section 3.1, Theorem 3.2 (book p. 43)",
+   "latex": "0 < p_c < 1",
+   "symbol_and_unit_ledger": {
+    "p_c": "critical probability of bond percolation, dimensionless",
+    "d": "lattice dimension, at least 2"
+   },
+   "assumptions": [
+    "Edges are open independently with probability p",
+    "Lattice dimension d is at least 2"
+   ],
+   "breakdown_regime": "False in one dimension, where pc equals 1; the theorem gives existence of a nontrivial threshold, not its value, which is known only for special lattices.",
+   "domain": "percolation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Threshold existence as a design axiom: a connectivity-driven system with independent local chances has a genuine interior tipping point, so the engine should estimate where the threshold sits rather than assume response is gradual everywhere.",
+    "source_operator": "percolation_critical_point_interior",
+    "telemetry": "Local open probabilities and global connectivity rates across parameter sweeps."
+   }
+  },
+  {
+   "primitive_id": "site_percolation_variant",
+   "name": "Site percolation designates vertices rather than edges as open or closed, with a parallel theory",
+   "verbatim_quote": "If, instead, we designate the vertices (or 'sites') to be open or closed, the ensuing model is termed site percolation.",
+   "page": "Chapter 3, Section 3.1 (book p. 43)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Vertices are declared open or closed independently",
+    "Connectivity is through open vertices and their adjacencies"
+   ],
+   "breakdown_regime": "Critical values differ between the site and bond versions on the same lattice; results transfer only with model-specific proofs, as the triangular-lattice site value shows.",
+   "domain": "percolation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Node failure versus link failure are different models with different thresholds: the engine keeps separate calibrations for an entity being unavailable and for a connection between entities being unavailable, and never borrows one threshold for the other.",
+    "source_operator": "site_percolation_variant",
+    "telemetry": "Node availability rates and link availability rates tracked as separate telemetry streams."
+   }
+  },
+  {
+   "primitive_id": "connective_constant_subadditivity",
+   "name": "The connective constant of a lattice exists by subadditivity and bounds self-avoiding walk counts",
+   "verbatim_quote": "The constant κ is called the connective constant of the lattice.",
+   "page": "Chapter 3, Section 3.2, Theorem 3.10 (book p. 46)",
+   "latex": "\\kappa = \\lim_{n \\to \\infty} (\\sigma_n)^{1/n}, \\qquad d \\le \\kappa \\le 2d - 1",
+   "symbol_and_unit_ledger": {
+    "kappa": "connective constant of the lattice, dimensionless growth rate",
+    "sigma_n": "number of self-avoiding walks of length n from the origin",
+    "d": "lattice dimension"
+   },
+   "assumptions": [
+    "Walks are self-avoiding on the lattice",
+    "Counts satisfy the sub-multiplicative inequality of Lemma 3.9"
+   ],
+   "breakdown_regime": "The exact value is unknown for the cubic lattices in dimension 2 and above; only the hexagonal lattice value is proved, via the parafermionic observable.",
+   "domain": "self-avoiding walks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Growth-rate extraction for combinatorial explosion: when the engine counts self-avoiding lines of argument, the per-step growth factor exists and is estimable from finite counts by subadditivity, giving an honest ceiling on how fast the search space expands.",
+    "source_operator": "connective_constant_subadditivity",
+    "telemetry": "Counts of non-repeating reasoning paths by length; fitted per-step growth factors."
+   }
+  },
+  {
+   "primitive_id": "fkg_inequality",
+   "name": "FKG inequality: a measure satisfying the lattice condition is positively associated, so increasing observables correlate non-negatively",
+   "verbatim_quote": "It is explained in [112] how the condition of (strict) positivity can be removed.",
+   "page": "Chapter 4, Section 4.2, Theorem 4.11 and equation (4.13) (book p. 62)",
+   "latex": "\\mu(fg) \\ge \\mu(f)\\,\\mu(g)",
+   "symbol_and_unit_ledger": {
+    "mu": "probability measure satisfying the FKG lattice condition (4.12)",
+    "f, g": "increasing real-valued functions of the configuration"
+   },
+   "assumptions": [
+    "Measure satisfies the lattice condition mu(omega1 join omega2) mu(omega1 meet omega2) at least mu(omega1) mu(omega2)",
+    "f and g are increasing"
+   ],
+   "breakdown_regime": "Association fails for non-increasing observables and for measures violating the lattice condition; strict positivity is a proof convenience that the cited work removes, not a modelling licence.",
+   "domain": "association of random variables",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A correlation floor for the engine: when two signals are both increasing functions of one positively associated state, their agreement is partly structural and must be discounted before being counted as independent confirmation.",
+    "source_operator": "fkg_inequality",
+    "telemetry": "Joint and marginal firing rates of monotone signals over shared latent states."
+   }
+  },
+  {
+   "primitive_id": "bk_reimer_inequality",
+   "name": "BK and Reimer inequalities: the probability of disjoint occurrence is at most the product of the separate probabilities",
+   "verbatim_quote": "The conclusion of the BK inequality is in fact valid for all pairs A, B of events, regardless of whether they are increasing.",
+   "page": "Chapter 4, Section 4.3, Theorems 4.17 and 4.19 (book p. 63)",
+   "latex": "P(A \\circ B) \\le P(A)\\,P(B)",
+   "symbol_and_unit_ledger": {
+    "P": "product probability measure on configurations",
+    "A circ B": "event that A and B occur on disjoint sets of edges",
+    "A, B": "events, increasing for BK and arbitrary for Reimer"
+   },
+   "assumptions": [
+    "Underlying measure is a product measure",
+    "Disjoint occurrence means the two events are witnessed on disjoint edge sets"
+   ],
+   "breakdown_regime": "The inequality can fail for non-product measures; whether the random-cluster measure with q between 0 and 1 satisfies it is stated as unknown in the text.",
+   "domain": "association and disjoint occurrence",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Resource-disjoint evidence accounting: two conclusions that need disjoint supporting evidence cannot jointly be more likely than the product of their separate chances, which caps how much combined confidence the engine may claim from shared inputs.",
+    "source_operator": "bk_reimer_inequality",
+    "telemetry": "Witness sets recorded per conclusion; overlap sizes between witness sets."
+   }
+  },
+  {
+   "primitive_id": "russo_formula_pivotality",
+   "name": "Russo's formula: the derivative of an event's probability in p equals the expected number of pivotal elements",
+   "verbatim_quote": "The element e ∈ E is called pivotal for the event A if the occurrence or not of A depends on the state of e",
+   "page": "Chapter 4, Section 4.6, Theorem 4.66 (book p. 79)",
+   "latex": "\\frac{d}{dp} \\varphi_p(A) = \\sum_{e \\in E} \\left[ \\varphi_p(A_e) - \\varphi_p(A^e) \\right]",
+   "symbol_and_unit_ledger": {
+    "phi_p": "product measure with density p, and also its expectation notation in the text",
+    "A": "event depending on finitely many edges",
+    "A_e, A^e": "event A with edge e forced open, respectively forced closed"
+   },
+   "assumptions": [
+    "Event depends on finitely many coordinates",
+    "Coordinates are independent with common density p"
+   ],
+   "breakdown_regime": "For non-product or strongly dependent measures the formula needs the generalized versions developed later in the chapter; pivotality is defined per configuration, so the identity is about expectations, not single cases.",
+   "domain": "influence and sensitivity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Exact sensitivity accounting: the rate at which a conclusion responds to a global confidence dial equals the total pivotality of its inputs, so the engine can rank which single facts, if flipped, would move the output.",
+    "source_operator": "russo_formula_pivotality",
+    "telemetry": "Per-input pivotal counts estimated by forced-open and forced-closed reruns."
+   }
+  },
+  {
+   "primitive_id": "sharp_threshold_theorem",
+   "name": "Sharp threshold theorem: a transitive-symmetric increasing event has derivative at least c phi (1 minus phi) log N, so its transition window shrinks",
+   "verbatim_quote": "Let A ∈ F be an increasing event, and suppose there exists a subgroup A of 5 acting transitively on E such that A is A-invariant.",
+   "page": "Chapter 4, Section 4.6, Theorem 4.69 and equation (4.70) (book p. 81)",
+   "latex": "\\frac{d}{dp} \\varphi_p(A) \\ge c\\, \\varphi_p(A)\\left(1 - \\varphi_p(A)\\right) \\log N",
+   "symbol_and_unit_ledger": {
+    "phi_p(A)": "probability of the increasing event A at density p",
+    "c": "universal positive constant",
+    "N": "number of edges, |E|",
+    "A (script)": "subgroup of the permutation group acting transitively on E, rendered as 5 in the text extraction"
+   },
+   "assumptions": [
+    "Event is increasing",
+    "A transitive group of symmetries leaves the event invariant",
+    "N is at least 1 and grows"
+   ],
+   "breakdown_regime": "Without transitive symmetry the threshold can be coarse; the theorem bounds steepness in terms of log N and says nothing when the event lacks the stated invariance.",
+   "domain": "sharp thresholds",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Transition-width forecasting: when a system-level event is symmetric across many interchangeable inputs, the engine expects a sharp flip over a narrow parameter window and plans monitoring density accordingly, instead of spreading attention evenly.",
+    "source_operator": "sharp_threshold_theorem",
+    "telemetry": "Symmetry group size of the input set; observed transition widths across sweeps."
+   }
+  },
+  {
+   "primitive_id": "uniqueness_infinite_cluster",
+   "name": "Uniqueness of the infinite open cluster: whenever the percolation probability is positive, there is almost surely exactly one infinite open cluster",
+   "verbatim_quote": "The principal result of this section is the following: for any value of p for which θ( p) > 0, there exists (almost surely) a unique infinite open cluster.",
+   "page": "Chapter 5, Section 5.4, Theorem 5.14 (book p. 97)",
+   "latex": "P_p(N = 1) = 1 \\quad \\text{whenever } \\theta(p) > 0",
+   "symbol_and_unit_ledger": {
+    "N": "number of infinite open clusters",
+    "theta(p)": "probability that the origin lies in an infinite open cluster",
+    "P_p": "percolation measure at density p"
+   },
+   "assumptions": [
+    "Measure is translation-invariant",
+    "Finite-energy property holds for the generalization beyond product measure"
+   ],
+   "breakdown_regime": "Uniqueness is a supercritical statement only; at and below criticality there is no infinite cluster to count, and non-translation-invariant measures can support several infinite clusters.",
+   "domain": "percolation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Consolidation expectation: once a connected body of evidence passes critical mass, separate large clusters should merge into one dominant structure; persistent multiple giant clusters signal a broken symmetry assumption in the model, not a richer truth.",
+    "source_operator": "uniqueness_infinite_cluster",
+    "telemetry": "Sizes of the largest connected evidence components over time."
+   }
+  },
+  {
+   "primitive_id": "pc_square_lattice_harris_kesten",
+   "name": "Harris-Kesten theorem: the critical probability of bond percolation on the square lattice is exactly one half, with no percolation at criticality",
+   "verbatim_quote": "The critical probability of bond percolation on the square lattice equals 21 . Furthermore, θ( 21 ) = 0.",
+   "page": "Chapter 5, Section 5.6, Theorem 5.25 (book p. 107)",
+   "latex": "p_c = \\tfrac{1}{2}, \\qquad \\theta\\left(\\tfrac{1}{2}\\right) = 0",
+   "symbol_and_unit_ledger": {
+    "p_c": "critical probability on the square lattice, dimensionless",
+    "theta": "percolation probability",
+    "21 in the quote": "the stacked fraction one half as rendered by the text extraction"
+   },
+   "assumptions": [
+    "Bond percolation on the square lattice",
+    "Self-duality of the square lattice at p equal to one half"
+   ],
+   "breakdown_regime": "The exact value is lattice-specific; the proof route through duality and RSW does not transfer unchanged to non-planar or non-self-dual graphs.",
+   "domain": "percolation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Self-duality as a calibration anchor: when a system and its complement are structurally identical, the tipping point sits at the symmetric value, giving the engine an exact benchmark case against which approximate threshold estimators are validated.",
+    "source_operator": "pc_square_lattice_harris_kesten",
+    "telemetry": "Estimator outputs on synthetic self-dual test networks versus the known exact threshold."
+   }
+  },
+  {
+   "primitive_id": "cardy_formula",
+   "name": "Cardy's formula: critical crossing probabilities on the triangular lattice converge to the cross-ratio given by the conformal map, proved by Smirnov",
+   "verbatim_quote": "The limit was proved in 2001 by Stanislav Smirnov [266, 267].",
+   "page": "Chapter 5, Section 5.7, Theorem 5.38 and equation (5.39) (book p. 117)",
+   "latex": "P_\\delta(ac \\leftrightarrow bx \\text{ in } D) \\to |BX| \\quad \\text{as } \\delta \\to 0",
+   "symbol_and_unit_ledger": {
+    "P_delta": "crossing probability on the triangular lattice rescaled by delta",
+    "ac, bx": "boundary arcs of the domain D",
+    "|BX|": "length determined by the conformal image of the domain in the equilateral triangle"
+   },
+   "assumptions": [
+    "Critical site percolation on the triangular lattice",
+    "Domain is simply connected with marked boundary points",
+    "Scaling limit taken as mesh delta tends to 0"
+   ],
+   "breakdown_regime": "Two dimensions and the triangular lattice are essential to the proof as presented; no comparable exact formula is available in three dimensions.",
+   "domain": "conformal invariance / SLE",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Continuum-limit thinking: discrete grid answers can converge to a quantity fixed by one global invariant, the conformal cross-ratio, so the engine should look for the invariant that survives refinement instead of trusting any single discretization.",
+    "source_operator": "cardy_formula",
+    "telemetry": "Crossing statistics computed at several grid resolutions; drift of the estimates under refinement."
+   }
+  },
+  {
+   "primitive_id": "rsw_theorem",
+   "name": "RSW theorem: at criticality, annulus-crossing probabilities stay bounded away from zero at every scale",
+   "verbatim_quote": "There exists σ > 0 such that P(On ) > σ for all n ≥ 1.",
+   "page": "Chapter 5, Section 5.5, Theorem 5.23 (book p. 105)",
+   "latex": "P(O_n) > \\sigma > 0 \\quad \\text{for all } n \\ge 1",
+   "symbol_and_unit_ledger": {
+    "O_n": "event that the annulus A_n contains a black cycle surrounding the origin",
+    "sigma": "scale-free positive lower bound",
+    "n": "annulus scale index"
+   },
+   "assumptions": [
+    "Critical percolation in two dimensions",
+    "FKG inequality available for gluing crossings"
+   ],
+   "breakdown_regime": "The statement as proved here is two-dimensional; higher-dimensional analogues need different arguments and the bound is about cycles in annuli, not about cluster sizes.",
+   "domain": "percolation / RSW theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Scale-free lower bounds as a robustness tool: if a crossing-type event keeps a fixed positive chance at every scale, the engine can chain scales multiplicatively and convert local reliability into global reachability estimates.",
+    "source_operator": "rsw_theorem",
+    "telemetry": "Crossing success rates measured at nested scales of the same system."
+   }
+  },
+  {
+   "primitive_id": "pc_triangular_via_sharp_threshold",
+   "name": "The sharp-threshold theorem plus a block argument proves pc equals one half for site percolation on the triangular lattice",
+   "verbatim_quote": "We use the sharp-threshold Theorem 4.68 to prove the following.",
+   "page": "Chapter 5, Section 5.8, Theorem 5.56 (book p. 126)",
+   "latex": "p_c = \\tfrac{1}{2}, \\qquad \\theta\\left(\\tfrac{1}{2}\\right) = 0",
+   "symbol_and_unit_ledger": {
+    "p_c": "critical probability of site percolation on the triangular lattice",
+    "theta": "percolation probability"
+   },
+   "assumptions": [
+    "Site percolation on the triangular lattice",
+    "RSW input at p equal to one half giving rectangle crossings with probability at least tau above 0",
+    "Block renormalization onto a rescaled copy of the same lattice"
+   ],
+   "breakdown_regime": "The route packages steepness through influences; where influences cannot be bounded by cluster radii, the integration step fails and elementary arguments are needed instead.",
+   "domain": "percolation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A reusable proof pattern for the engine: establish a weak positive signal at the symmetric point, prove the response curve is steep, then renormalize blocks so the steep response becomes a global phase conclusion.",
+    "source_operator": "pc_triangular_via_sharp_threshold",
+    "telemetry": "Block-level success rates at increasing block sizes; fitted steepness of response curves."
+   }
+  },
+  {
+   "primitive_id": "contact_process_definition",
+   "name": "Contact process: vertices of a graph are healthy or infected; infected vertices recover at rate delta and infect each neighbour at rate lambda",
+   "verbatim_quote": "In the contact model, the members of the population inhabit the vertex-set of a given graph. Infection takes place between neighbours, and recovery is permitted.",
+   "page": "Chapter 6, Section 6.1 (book p. 131)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Graph has bounded vertex degrees",
+    "Infection and recovery are Markovian with constant rates",
+    "State space is the set of 0/1 configurations on the vertex set"
+   ],
+   "breakdown_regime": "Total-mixing epidemic equations do not apply; spatial locality changes thresholds, and the Markov assumption excludes memory effects such as immunity periods.",
+   "domain": "interacting particle systems / epidemics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Spread modelling on the real adjacency structure: anything contagious in the engine domain, from a narrative to a failure mode, propagates along actual neighbour relations with recovery, not through a well-mixed average.",
+    "source_operator": "contact_process_definition",
+    "telemetry": "Adjacency lists of entities; observed infection and recovery event times."
+   }
+  },
+  {
+   "primitive_id": "graphical_representation_coupling",
+   "name": "Graphical representation: the contact process is built from independent Poisson processes of cures and infection arrows, coupling all initial states and parameters at once",
+   "verbatim_quote": "The contact model can be constructed in terms of families of Poisson processes.",
+   "page": "Chapter 6, Section 6.2 (book p. 133)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One Poisson process of rate delta per vertex for cures",
+    "One Poisson process of rate lambda per ordered neighbour pair for infection arrows",
+    "All processes independent"
+   ],
+   "breakdown_regime": "The construction couples processes across parameters by thinning; conclusions drawn from it are pathwise, and reversing conclusions requires the duality argument, not the coupling alone.",
+   "domain": "interacting particle systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "One-noise-source simulation design: drive every scenario variant from a single shared stream of primitive events so differences between scenarios are attributable to parameters, not to resampled luck; this is the correct way to compare engine settings.",
+    "source_operator": "graphical_representation_coupling",
+    "telemetry": "Shared event streams reused across scenario reruns; divergence points between parameter settings."
+   }
+  },
+  {
+   "primitive_id": "contact_process_duality",
+   "name": "Duality: the probability that the process started from A ever meets B equals the same probability with A and B interchanged, by time reversal of the graphical representation",
+   "verbatim_quote": "This may be termed 'weak' duality, in that it involves probabilities.",
+   "page": "Chapter 6, Section 6.2, Theorem 6.1 and equation (6.2) (book p. 134)",
+   "latex": "P_{\\lambda,\\delta}\\left( \\xi_t^A \\cap B \\ne \\emptyset \\right) = P_{\\lambda,\\delta}\\left( \\xi_t^B \\cap A \\ne \\emptyset \\right)",
+   "symbol_and_unit_ledger": {
+    "xi_t^A": "contact process at time t started from infected set A",
+    "B": "test set of vertices",
+    "lambda, delta": "infection and recovery rates"
+   },
+   "assumptions": [
+    "Graphical representation with time-reversible Poisson structure",
+    "A and B are subsets of the vertex set"
+   ],
+   "breakdown_regime": "Weak duality equates probabilities, not paths; the strong pathwise version needs the reversed graphical representation, and both are specific to the contact process structure.",
+   "domain": "interacting particle systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Forward-backward symmetry checks: a reachability question asked forward from sources must give the same answer asked backward from targets; the engine can run whichever direction is cheaper and use the other as an audit.",
+    "source_operator": "contact_process_duality",
+    "telemetry": "Forward reach sets and backward reach sets computed on the same event stream."
+   }
+  },
+  {
+   "primitive_id": "upper_invariant_measure",
+   "name": "The upper invariant measure is the weak limit of the process started from the fully infected configuration, and it dominates every invariant measure",
+   "verbatim_quote": "Since ν is a limiting measure for the Markov process, it is invariant, and it is called the upper invariant measure.",
+   "page": "Chapter 6, Section 6.3, Proposition 6.3 (book p. 136)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Process started from the maximal configuration",
+    "Monotonicity of the coupling in the initial set",
+    "Compactness of the configuration space"
+   ],
+   "breakdown_regime": "The construction gives the maximal invariant measure; when it differs from the point mass on the empty set there are multiple invariant measures and long-run behaviour depends on the initial state.",
+   "domain": "interacting particle systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Extremal initialization as a bound: starting the engine dynamics from the most favourable possible state yields a limiting distribution that bounds every other stationary answer, giving a defensible ceiling without solving the full system.",
+    "source_operator": "upper_invariant_measure",
+    "telemetry": "Long-run state frequencies under maximal and minimal initializations."
+   }
+  },
+  {
+   "primitive_id": "survival_equals_density",
+   "name": "The survival probability of the contact process started from one infected vertex equals the density of infected vertices under the upper invariant measure",
+   "verbatim_quote": "The density of ill vertices under ν equals θ(λ).",
+   "page": "Chapter 6, Section 6.3, Proposition 6.5 (book p. 136)",
+   "latex": "\\theta(\\lambda) = \\bar{\\nu}\\left( \\{ \\sigma : \\sigma_x = 1 \\} \\right)",
+   "symbol_and_unit_ledger": {
+    "theta(lambda)": "probability that the process started from the origin alone survives for all time",
+    "nu bar": "upper invariant measure",
+    "sigma_x": "state at vertex x under a configuration sigma",
+    "lambda": "infection rate with recovery rate set to 1"
+   },
+   "assumptions": [
+    "Recovery rate rescaled to delta equal to 1",
+    "Duality relation of Theorem 6.1",
+    "Translation invariance of the lattice"
+   ],
+   "breakdown_regime": "The identity ties a transient quantity to an equilibrium one only for this self-dual structure; it does not hold for general interacting systems without a duality relation.",
+   "domain": "interacting particle systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Transient-to-equilibrium conversion: a hard question about whether a spark survives forever is exactly a question about equilibrium density under the most favourable stationary law, which is often the easier quantity to estimate from long runs.",
+    "source_operator": "survival_equals_density",
+    "telemetry": "Equilibrium densities from long simulations used as survival-probability estimates."
+   }
+  },
+  {
+   "primitive_id": "hammersley_clifford_theorem",
+   "name": "Hammersley-Clifford theorem: a positive measure is a Markov random field if and only if it is a Gibbs random field with a clique potential",
+   "verbatim_quote": "A positive probability measure π on 6 is a Markov random field if and only if it is a Gibbs random field.",
+   "page": "Chapter 7, Section 7.2, Theorem 7.12 (book p. 150)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Measure is strictly positive on all configurations",
+    "Neighbourhood structure is fixed in advance",
+    "Potential is defined over cliques of the neighbourhood graph"
+   ],
+   "breakdown_regime": "Positivity is essential; measures with forbidden configurations can be Markov without a finite Gibbs potential, and the potential is not unique without further normalization.",
+   "domain": "Gibbs states / Markov random fields",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Local-global equivalence for structured beliefs: a global distribution is consistent exactly when it factorizes over local cliques, so the engine can specify global behaviour through local compatibility scores and audit global claims by checking local factors.",
+    "source_operator": "hammersley_clifford_theorem",
+    "telemetry": "Clique-level compatibility scores; conditional distributions given neighbourhoods."
+   }
+  },
+  {
+   "primitive_id": "edwards_sokal_coupling",
+   "name": "Edwards-Sokal coupling: colouring open clusters of a random-cluster configuration uniformly gives the Potts model, and forgetting colours returns the random-cluster model",
+   "verbatim_quote": "For given ω, the constraint on σ is that it be constant on open clusters.",
+   "page": "Chapter 8, Section 8.1, equations (8.2) to (8.5) (book p. 157)",
+   "latex": "p = 1 - e^{-\\beta}",
+   "symbol_and_unit_ledger": {
+    "p": "edge parameter of the random-cluster marginal",
+    "beta": "inverse-temperature parameter of the Potts marginal",
+    "omega": "edge configuration",
+    "sigma": "spin configuration constant on open clusters"
+   },
+   "assumptions": [
+    "Joint measure proportional to the percolation weight times the indicator that spins are constant on open clusters",
+    "q is a positive integer for the spin marginal"
+   ],
+   "breakdown_regime": "The spin interpretation needs integer q; for non-integer q the random-cluster model still exists but the coupled spin system does not.",
+   "domain": "random-cluster model / Potts model",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Latent-cluster labelling: introduce cluster identities as latent variables so that a hard correlated system becomes two easy conditional steps, colour the clusters, then forget the colours; the engine uses the same augmentation to sample correlated states.",
+    "source_operator": "edwards_sokal_coupling",
+    "telemetry": "Cluster assignments per sample; within-cluster label agreement rates."
+   }
+  },
+  {
+   "primitive_id": "random_cluster_self_duality",
+   "name": "Random-cluster measures on the square lattice are self-dual, fixing the critical value pc(q) equals root q over one plus root q",
+   "verbatim_quote": "Random-cluster measures on L2 have a property of self-duality that generalizes that of bond percolation.",
+   "page": "Chapter 8, Section 8.6, Theorem 8.25 (book p. 165)",
+   "latex": "p_c(q) = \\frac{\\sqrt{q}}{1 + \\sqrt{q}}",
+   "symbol_and_unit_ledger": {
+    "p_c(q)": "critical value of the random-cluster model with cluster weight q",
+    "q": "cluster-weighting factor, at least 1 in the theorem",
+    "L2": "square lattice"
+   },
+   "assumptions": [
+    "Square lattice",
+    "Cluster weight q at least 1 for the theorem as proved in the cited work",
+    "Planar duality between the lattice and its dual"
+   ],
+   "breakdown_regime": "The explicit formula is a planar square-lattice result; in higher dimensions pc(q) is known only to lie strictly between 0 and 1, and the order of the transition changes with q.",
+   "domain": "random-cluster model",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Generalized symmetry anchoring: weighting global configurations by a factor per component deforms the threshold in a computable way at the self-dual point, teaching the engine how component-count penalties shift tipping points.",
+    "source_operator": "random_cluster_self_duality",
+    "telemetry": "Component counts per configuration; threshold shifts under component penalties."
+   }
+  },
+  {
+   "primitive_id": "continuum_random_cluster_model",
+   "name": "Continuum random-cluster model: bridges and cuts on a graph crossed with a time interval, weighted by q to the number of clusters against a Poisson reference",
+   "verbatim_quote": "The continuum random-cluster model may be studied in much the same way as the random-cluster model on a (discrete) graph; see Chapter 8.",
+   "page": "Chapter 9, Section 9.2, equation (9.4) (book p. 191)",
+   "latex": "\\frac{d\\varphi^3_{\\lambda,\\delta,q}}{dP^3_{\\lambda,\\delta}}(\\omega) = \\frac{1}{Z} q^{k(\\omega)}",
+   "symbol_and_unit_ledger": {
+    "phi^3": "continuum random-cluster measure on configurations of bridges and cuts",
+    "P^3": "Poisson reference measure with intensities lambda and delta",
+    "k(omega)": "number of clusters of the configuration omega",
+    "Z": "partition function, the normalizing constant"
+   },
+   "assumptions": [
+    "Underlying space is a graph crossed with a time interval",
+    "Bridges and cuts arrive as Poisson processes",
+    "q is positive"
+   ],
+   "breakdown_regime": "The continuum model inherits ordering and association only as assumed from the cited literature in this text; its quantum application needs the specific Ising Hamiltonians of the chapter.",
+   "domain": "quantum Ising model / continuum percolation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Continuous-time version of component weighting: when events arrive in continuous time rather than on a fixed grid, the same cluster-weighting machinery applies with a Poisson reference, so the engine need not discretize time to reason about connectivity.",
+    "source_operator": "continuum_random_cluster_model",
+    "telemetry": "Event arrival intensities; cluster counts over sliding time windows."
+   }
+  },
+  {
+   "primitive_id": "voter_model_duality_recurrence",
+   "name": "Voter model: each site adopts a weighted average of others' states, and its analysis hinges on recurrence or transience of an associated random walk",
+   "verbatim_quote": "In the voter model, each element of V may be in either of two states, and its state flips at a rate that is a weighted average of the states of the other elements.",
+   "page": "Chapter 10, chapter introduction and Section 10.2 (book p. 204)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "State space is two states per site",
+    "Flip rates are weighted averages of other sites' states",
+    "Associated coalescing random walks govern duality"
+   ],
+   "breakdown_regime": "On Z2 with symmetric walk generation the only invariant measures are the two unanimity point masses; in dimension 3 and above nontrivial invariant measures appear, so dimension changes the conclusion.",
+   "domain": "interacting particle systems / opinion dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Opinion and consensus dynamics reduced to a walk problem: whether disagreement survives is decided by whether an associated walk is recurrent, so the engine tests consensus questions by analysing the dual walk instead of simulating the full population.",
+    "source_operator": "voter_model_duality_recurrence",
+    "telemetry": "Pairwise coalescence times of dual walks started from disagreeing sites."
+   }
+  },
+  {
+   "primitive_id": "exclusion_process_invariant_measures",
+   "name": "Symmetric exclusion process: for translation-invariant motion on Zd the product measures are exactly the extremal invariant measures",
+   "verbatim_quote": "In the exclusion model, a set of particles moves about V according to a 'symmetric' Markov chain, subject to exclusion.",
+   "page": "Chapter 10, chapter introduction and Section 10.4 (book p. 204)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Particles move by a symmetric Markov chain",
+    "At most one particle per site (exclusion)",
+    "Motion is translation-invariant on Zd"
+   ],
+   "breakdown_regime": "Asymmetric exclusion has different invariant structure; boundary-driven versions carry non-product stationary states with long-range correlations.",
+   "domain": "interacting particle systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Conservation plus symmetry forces product-form equilibria: when the engine models indistinguishable units moving under symmetric rules with a hard occupancy cap, it can start from independent marginals as the exact stationary answer rather than an approximation.",
+    "source_operator": "exclusion_process_invariant_measures",
+    "telemetry": "Site occupancy marginals; pair correlations under the stationary regime."
+   }
+  },
+  {
+   "primitive_id": "giant_component_branching_correspondence",
+   "name": "Erdos-Renyi giant component: the fraction of vertices in the giant component equals the survival probability of a Poisson branching process",
+   "verbatim_quote": "where α(λ) is the survival probability of a branching process with a single progenitor and family-size distribution Po(λ).",
+   "page": "Chapter 11, Section 11.1, Theorem 11.1 (book p. 221)",
+   "latex": "\\frac{X_n}{n} = \\alpha(\\lambda)\\left(1 + o_p(1)\\right) \\quad \\text{if } \\lambda > 1",
+   "symbol_and_unit_ledger": {
+    "X_n": "number of vertices in the largest component of the random graph",
+    "n": "number of vertices",
+    "alpha(lambda)": "survival probability of the Poisson(lambda) branching process",
+    "lambda": "mean degree parameter"
+   },
+   "assumptions": [
+    "Random graph with edge probability lambda over n",
+    "Local neighbourhoods are asymptotically tree-like",
+    "lambda is above 1 for the giant component statement"
+   ],
+   "breakdown_regime": "At and below lambda equal to 1 the largest component is sublinear; the branching approximation degrades for graphs with heavy clustering or degree heterogeneity.",
+   "domain": "random graphs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Local branching approximation for global connectivity: explore outward from one node as if the neighbourhood were a branching process, and its survival probability predicts the macroscopic connected mass; the engine uses this for fast connectivity forecasts before any global computation.",
+    "source_operator": "giant_component_branching_correspondence",
+    "telemetry": "Empirical offspring distributions of neighbourhood explorations; largest-component fractions."
+   }
+  },
+  {
+   "primitive_id": "lorentz_gas_return_scarcity",
+   "name": "Lorentz gas on Z2 with random mirrors: almost nothing is proved beyond the full-density return theorem, an explicit honesty marker in the text",
+   "verbatim_quote": "There are almost no mathematical results about this process beyond Theorem 12.1.",
+   "page": "Chapter 12, Section 12.1, Theorem 12.1 (book p. 233)",
+   "latex": "\\eta(1) = 1",
+   "symbol_and_unit_ledger": {
+    "eta(p)": "probability that a light ray among mirrors of density p returns to the origin",
+    "p": "mirror density, with p equal to 1 the full-density case"
+   },
+   "assumptions": [
+    "Mirrors are placed on the square lattice with density p",
+    "Light reflects deterministically from mirrors"
+   ],
+   "breakdown_regime": "Even monotonicity of eta in p is stated as unproved; the chapter records conjectures from the physics literature that are not entirely self-consistent.",
+   "domain": "Lorentz gas / billiards",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Calibrated ignorance as a first-class output: the engine should be able to report that a deterministic-looking system has almost no proved results, and mark every claim about it as conjecture, rather than filling the gap with simulation confidence.",
+    "source_operator": "lorentz_gas_return_scarcity",
+    "telemetry": "Counts of proved versus conjectured claims attached to each model in the registry."
+   }
+  },
+  {
+   "primitive_id": "unbounded_light_rays_trichotomy",
+   "name": "The number of unbounded light rays in the mirror model is almost surely constant and one of 0, 1, or infinity, with superdiffusive motion when infinitely many exist",
+   "verbatim_quote": "We mention the paper [246], where it is proved that the number N ( p) of unbounded light rays on Z2 is almost surely constant, and is equal to one of 0, 1, ∞.",
+   "page": "Chapter 12, Section 12.1 (book p. 234)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mirror environment on Z2 with density p",
+    "Light rays follow the deterministic reflection dynamics"
+   ],
+   "breakdown_regime": "The trichotomy classifies the count but does not determine which case holds for a given p in the interior of the range.",
+   "domain": "Lorentz gas / billiards",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Zero-one-infinity trichotomies as a reasoning template: for translation-invariant random environments, global counts of exceptional objects are often forced to be constant and extreme, so the engine should test for ergodicity before estimating such counts from samples.",
+    "source_operator": "unbounded_light_rays_trichotomy",
+    "telemetry": "Ergodicity diagnostics on environment samples; counts of unbounded trajectories per sample."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "9e10805cc10d5e8d-t1",
+   "think": "This book is a single sustained argument that the right way to understand random structure on graphs is to find the variational principle, the coupling, or the duality that makes a global question collapse into a local or one-dimensional one. It opens with electrical networks, and that choice is programmatic rather than decorative. A random walk on a graph is reversible, its transition probabilities are conductances normalized at each vertex, and so every question about the walk becomes a question about currents, potentials, and energy. The Thomson principle says the true current is the energy minimizer among all unit flows; the Rayleigh principle says resistance is monotone in the edge resistances; and from those two facts Grimmett extracts the return probability formula, the recurrence criterion in terms of effective resistance to infinity, and Pólya's theorem. The lesson for a reasoning engine is that monotonicity plus a variational characterization is a complete decision procedure for a class of questions that simulation would only sample. Chapter 2 then shows the same electrical machinery proving negative association for the uniform spanning tree and powering Wilson's algorithm, where loop-erased walks generate an exactly uniform global object. Sampling uniformly from a combinatorial family by erasing loops is a mechanism the engine can reuse whenever it must draw unbiased global structures from local exploration. Chapters 3 to 5 build percolation theory as the study of one order parameter, the percolation probability, and one threshold. Subadditivity gives the connective constant; coupling gives monotonicity; the FKG and BK inequalities discipline what may be concluded from correlated and disjointly witnessed events; Russo's formula turns sensitivity into expected pivotality; and the sharp-threshold theorems explain why symmetric events flip over narrow windows. With those tools the book proves uniqueness of the infinite cluster, the Harris-Kesten value one half on the square lattice, the RSW crossing estimates, and finally Cardy's formula, where a discrete crossing probability converges to a conformally invariant limit identified through Smirnov's discrete analyticity. The arc matters: exact results arrive exactly where a symmetry, self-duality or conformal invariance, pins the answer, and the text is explicit about where such structure is absent. Chapters 6 and 10 move to dynamics. The contact process is constructed once, graphically, from Poisson processes of cures and infection arrows, and that single construction yields couplings in the initial state and in the parameters, the duality with its time-reversed self, the upper invariant measure as a monotone limit, and the identity between survival probability and equilibrium density. The voter and exclusion models are treated by the same pattern: find the dual process, here coalescing random walks, and let recurrence or transience decide the phase. Chapters 7 to 9 generalize the statics: Gibbs and Markov random fields are the same objects under positivity, the random-cluster model interpolates between percolation and the Potts and Ising models through the Edwards-Sokal coupling, self-duality fixes its square-lattice threshold, and the continuum version represents the quantum Ising model. Chapters 11 and 12 close with the two poles of the subject: random graphs, where a branching-process heuristic becomes a theorem about the giant component, and the Lorentz gas, where the author states plainly that almost nothing is proved. For a reasoning engine the transferable machinery is a short list of moves: replace simulation with a variational bound when one exists; prove dependence signs before combining evidence; count pivotality to allocate sensitivity; expect sharp transitions under symmetry; use duality to answer the cheaper direction; build one coupling that serves all parameter values; and label the regimes where no theorem exists as conjecture rather than knowledge. The book also disciplines ambition: mean-field exponents are proved only in high dimension, several headline statements remain conjectures, and the final chapter is a catalogue of ignorance.  Two further mechanisms deserve emphasis because they generalize far beyond percolation. The first is the proof of sharpness in Theorem 5.1 through the quantity phi_p(S), a sum over boundary edges of connection probabilities inside a finite set. Differentiating that quantity produces a differential inequality, and the inequality integrates to exponential decay below the threshold; sharpness is therefore not an accident of one lattice but a consequence of a self-referential bound that any similar system might support. An engine facing a new threshold phenomenon should ask whether an analogous boundary functional exists whose derivative controls itself. The second is the renormalization or block argument, used both for the slab theorem and for the triangular-lattice threshold: prove a modest crossing estimate at one scale, define good blocks, and let a cruder percolation problem on the blocks carry the conclusion to all scales. This is the rigorous ancestor of every coarse-graining scheme, and it tells the engine exactly what must be measured at each scale for a multiscale claim to be sound, namely a block success probability driven close enough to one, plus a dependence range short enough that disjoint blocks stay independent. The treatment of critical exponents makes the complementary point about universality: scaling relations between exponents are expected generally, the values themselves are proved in two dimensions through SLE and in high dimensions through the lace expansion, and in intermediate dimensions they remain open, so the same quantity can be a theorem, a numerically certain value, and a conjecture depending on the regime. Finally, the random-graph chapter shows the healthiest possible relationship between heuristic and proof: the branching-process calculation is presented first as the reason the answer should be the survival probability, and the theorem then certifies the heuristic in the regime where neighbourhoods are locally tree-like, while naming clustering and degree heterogeneity as the features that break it. That ordering, heuristic first, regime of validity second, failure modes third, is exactly the format in which the engine should store every borrowed method from this book. An engine that internalizes both the machinery and the honesty will know which of its outputs are theorems, which are bounds, and which are hopes.",
+   "retrocausal_genealogy": "The lineage runs from Kirchhoff's circuit laws and Thomson's variational principle in the nineteenth century, through Pólya's 1921 recurrence theorem, to the percolation model of Broadbent and Hammersley in 1957. Hammersley also co-created the Hammersley-Clifford theorem and the coupling method that pervades the book. Harris and Kesten settled the square-lattice threshold by 1980, Russo and Seymour and Welsh supplied the crossing technology, and Burton and Keane proved uniqueness of the infinite cluster in 1989. The modern layer is Duminil-Copin, Smirnov, and Tassion: discrete holomorphicity, Cardy's formula proved in 2001, and sharpness of the phase transition proved by a boundary observable argument that replaced decades of partial results.",
+   "theory_of_mind": "Grimmett writes for a reader who is expected to verify: nearly every chapter states a theorem, gives a proof or a proof outline with the hard step isolated, and then lists precisely what remains conjectural. His model of the domain is that random graph phenomena are governed by a few robust mechanisms, monotonicity, duality, and renormalization, and that lattice-specific miracles such as conformal invariance are bonuses to be exploited where they exist, never assumed where they do not. He trusts the reader with the frontier: exercises carry real open problems, and conjectures are numbered alongside theorems with their status unmistakable.",
+   "cross_layer_veto": "Several results in this book veto common engine habits. Negative association for the spanning tree and positive association under FKG forbid treating all dependence as if it had one sign. The BK and Reimer inequalities cap the confidence obtainable from events that must be witnessed disjointly. The sharp-threshold theorem vetoes gradualist expectations for symmetric events. Uniqueness of the infinite cluster vetoes reporting multiple dominant connected structures above threshold. And the Lorentz gas chapter vetoes confidence itself where no theorem exists: there, the correct output is an explicit statement of ignorance, not a number."
+  }
+ ],
+ "universal_lens": "Read any complex system by hunting for its variational principle, its monotone quantities, its dual description, and its threshold. Where a symmetry pins the answer, compute exactly; where only inequalities survive, report bounds; where nothing is proved, say so. The book is a template for converting global questions about huge random structures into local checks, pivotal counts, and coupling arguments that a finite reasoner can actually execute and audit.",
+ "gsi_mapping": "The Institute takes the book as core curriculum for probabilistic reasoning on networks: electrical-network duality for flows, percolation thresholds for connectivity claims, influence and pivotality for sensitivity analysis, and graphical constructions for interacting systems. Its conjecture labelling is adopted as scholarly practice: every claim in Institute material carries its status, theorem, bound, heuristic, or open problem, with the seeding result named, so students learn the frontier as part of the subject rather than as an afterthought.",
+ "gse_mapping": "The engine takes concrete mechanisms: effective resistance as an exact revisit and difficulty measure on state graphs, Russo pivotality for ranking which inputs move an output, sharp-threshold expectations for symmetric multi-input events, BK caps on confidence from disjointly witnessed evidence, FKG sign discipline before combining correlated signals, and duality checks that run reachability in whichever direction is cheaper. Equally important is the honesty layer: outputs inherit the book's status labels, so a bound is never displayed as an equality and a conjecture is never displayed as a result."
+}

@@ -63,11 +63,28 @@ from jevkit import client as jev_client  # noqa: E402
 _OPS = str(Path(__file__).resolve().parent)
 if _OPS not in sys.path:
     sys.path.insert(0, _OPS)
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 from week8_forensic_kernels import degraded_jev_publication_block  # noqa: E402
+from intelligence.foundry_bridge.decisions_api_dual_oracle import (  # noqa: E402
+    ask_dual_oracle,
+)
 
 TRENDS_JSON_PATH = REPO_ROOT / "data" / "engine" / "nfl_2026_w1_w7_trends_and_usage.json"
 INJURIES_CSV_PATH = REPO_ROOT / "data" / "nflverse" / "injuries_2026.csv"
 DEFAULT_OUT_PATH = REPO_ROOT / "data" / "engine" / "nfl_2026_w8_jev_full_game_spine.json"
+
+# Week-aware simulation context (2026-11-13): WP-8 runs Week 10 with w1_w9
+# trends (schema superset of w1_w7) and week 9+10 injury designations.
+SIM_WEEK = 10
+
+
+def trends_path_for_week(week: int) -> Path:
+    if int(week) >= 10:
+        p9 = REPO_ROOT / "data" / "engine" / "nfl_2026_w1_w9_trends_and_usage.json"
+        if p9.is_file():
+            return p9
+    return TRENDS_JSON_PATH
 
 WEEK8_ALL_MATCHUPS: list[tuple[str, str]] = [
     ("CAR", "GB"),
@@ -277,7 +294,7 @@ def normalize_team_tendencies(team: str, trends_teams: dict[str, Any]) -> dict[s
 
 
 def load_team_injury_summary(team: str) -> list[str]:
-    """Load real Week 8 practice statuses + Week 7 Out/Doubtful/Questionable from injuries_2026.csv."""
+    """Load real current-week practice statuses + prior-week Out/Doubtful/Questionable from injuries_2026.csv (week-aware via SIM_WEEK)."""
     if not INJURIES_CSV_PATH.is_file():
         return []
     out: list[str] = []
@@ -288,7 +305,7 @@ def load_team_injury_summary(team: str) -> list[str]:
     if team in ("LAR", "LA"):
         target_teams.update(("LAR", "LA"))
     with open(INJURIES_CSV_PATH, "r", encoding="utf-8") as f:
-        rows = [r for r in csv.DictReader(f) if str(r.get("week", "")) in ("7", "8")]
+        rows = [r for r in csv.DictReader(f) if str(r.get("week", "")) in (str(SIM_WEEK - 1), str(SIM_WEEK))]
     rows.sort(key=lambda r: int(r.get("week", 0)), reverse=True)
     for r in rows:
         tm = str(r.get("team", "")).strip()
@@ -670,6 +687,7 @@ def simulate_full_game_with_jev(
     trends_teams: dict[str, Any],
     model: str = "~typesafe/jev-latest",
     seed: int = 20261029,
+    dual_oracle_high_leverage: bool = False,
 ) -> dict[str, Any]:
     """Run an entire 60-minute NFL game from Snap 1 (Q1 15:00) to Q4 0:00 through live Jev."""
     rng = np.random.default_rng(seed)
@@ -695,6 +713,8 @@ def simulate_full_game_with_jev(
     total_input_tokens = 0
     total_output_tokens = 0
     total_latency_ms = 0
+    dual_oracle_snaps = 0
+    dual_oracle_epistemic_veto_snaps = 0
 
     # Aggregators for team/player box score & state-conditioned Jev posteriors
     box: dict[str, dict[str, Any]] = {
@@ -813,6 +833,33 @@ def simulate_full_game_with_jev(
         total_output_tokens += int(usage.get("output_tokens", 0))
         total_cost_usd += float(usage.get("cost", 0.0) or 0.0)
 
+        dual_oracle_audit: Optional[dict[str, Any]] = None
+        is_high_leverage = (
+            (down == 4)
+            or (yardline_100 <= 20)
+            or (qtr == 4 and clock_sec <= 300.0 and abs(scores[away] - scores[home]) <= 8)
+        )
+        if dual_oracle_high_leverage and is_high_leverage:
+            dual_oracle_snaps += 1
+            try:
+                dual_res = ask_dual_oracle(state_payload, questions, timeout=15.0)
+                total_cost_usd += float(dual_res.get("total_cost_usd", 0.0) or 0.0)
+                if dual_res.get("any_epistemic_veto"):
+                    dual_oracle_epistemic_veto_snaps += 1
+                dual_oracle_audit = {
+                    "status": "ok",
+                    "models": ["~typesafe/jev-latest", "google/gemini-decision-1"],
+                    "max_js_divergence": dual_res["max_js_divergence"],
+                    "any_epistemic_veto": dual_res["any_epistemic_veto"],
+                    "comparisons": dual_res["comparisons"],
+                    "consensus": dual_res["consensus"],
+                }
+            except Exception as err:
+                dual_oracle_audit = {
+                    "status": "degraded",
+                    "error": str(err),
+                }
+
         trans = resolve_snap_transition(rng, down, ydstogo, yardline_100, answers, off_tend, def_tend)
 
         # Update team/player box score & Jev posterior trackers
@@ -911,6 +958,8 @@ def simulate_full_game_with_jev(
             "score_after": {away: scores[away], home: scores[home]},
             "latency_ms": lat_ms,
         }
+        if dual_oracle_audit is not None:
+            snap_record["dual_oracle_audit"] = dual_oracle_audit
         snap_log.append(snap_record)
 
         if snap_num % 40 == 0 or trans["points_scored"] > 0:
@@ -982,6 +1031,11 @@ def simulate_full_game_with_jev(
             "total_cost_usd": round(total_cost_usd, 6),
         },
         "active_injuries_ingested": {away: aw_inj, home: hm_inj},
+        "dual_oracle_summary": {
+            "enabled": bool(dual_oracle_high_leverage),
+            "high_leverage_snaps": dual_oracle_snaps,
+            "epistemic_veto_snaps": dual_oracle_epistemic_veto_snaps,
+        },
         "box_score_spine": box,
         "jev_posterior_overrides_for_10k_mc": {
             "away": jev_posteriors[away],
@@ -999,9 +1053,17 @@ def main() -> None:
     ap.add_argument("--workers", type=int, default=7)
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--out", default=str(DEFAULT_OUT_PATH))
+    ap.add_argument("--week", type=int, default=10, help="NFL week context for trends + injuries (default 10)")
+    ap.add_argument(
+        "--dual-oracle-high-leverage",
+        action="store_true",
+        help="Audit high-leverage snaps (4th down, red zone, Q4 1-score <=5:00) with Jev + google/gemini-decision-1",
+    )
     args = ap.parse_args()
 
-    trends_raw = json.loads(TRENDS_JSON_PATH.read_text(encoding="utf-8"))
+    global SIM_WEEK
+    SIM_WEEK = int(args.week)
+    trends_raw = json.loads(trends_path_for_week(SIM_WEEK).read_text(encoding="utf-8"))
     trends_teams = trends_raw.get("teams", {})
 
     out_path = Path(args.out)
@@ -1067,7 +1129,14 @@ def main() -> None:
             idx, aw, hm = item
             m_key = f"{aw}@{hm}"
             game_seed = 20261029 + idx * 101
-            spine = simulate_full_game_with_jev(aw, hm, trends_teams, model=args.model, seed=game_seed)
+            spine = simulate_full_game_with_jev(
+                aw,
+                hm,
+                trends_teams,
+                model=args.model,
+                seed=game_seed,
+                dual_oracle_high_leverage=bool(args.dual_oracle_high_leverage),
+            )
             with save_lock:
                 games_map[m_key] = spine
             persist_games_map()

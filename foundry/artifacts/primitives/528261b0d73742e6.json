@@ -1,0 +1,173 @@
+{
+  "book_id": "528261b0d73742e6",
+  "source_status": "COMPLETE",
+  "title": "evidence-source-strategy-2026-05-21",
+  "file_name": "evidence-source-strategy-2026-05-21.md",
+  "sha256": "528261b0d73742e62bac921a32104554f73e74c2a8b370f5cb5fd515aba4b075",
+  "primary_domain": "history",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Evidence readiness as a dynamic Bayesian belief update over temporal and spatial event manifolds, conditioned on source trust and freshness. Universal Lens: Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over evidence streams, using trust-weighted likelihoods to compute posterior probabilities of game states. GSI Mapping: Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "GSE applies Markov decision processes over situational state transitions, leveraging readiness matrices to select optimal policy actions under uncertainty. GSE Mapping: Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "market_odds_shadow",
+      "name": "Market Odds Shadow",
+      "verbatim_quote": "## Provider Fit ### Market Odds Start here because the paid key is already present and deploy-readiness confirms the plan has 20,000 requests remaining.",
+      "page": 1,
+      "latex": "\\text{Shadow}_t = \\mathbb{E}[O_t | \\mathcal{F}_{t-1}] - O_t",
+      "symbol_and_unit_ledger": "{'\\\\text{Shadow}_t': 'Dimensionless', 'O_t': 'USD per unit wagered', '\\\\mathcal{F}_{t-1}': 'Information set at time t-1'}",
+      "assumptions": "Market efficiency hypothesis, no-arbitrage condition, finite liquidity.",
+      "breakdown_regime": "Large order flow, illiquid markets, extreme volatility.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction bands for adversarial robustness.",
+        "source_operator": "market_odds_shadow",
+        "telemetry": "Residual variance of market mid-price against prior expectation."
+      }
+    },
+    {
+      "primitive_id": "official_assignment_shadow",
+      "name": "Official Assignment Shadow",
+      "verbatim_quote": "### Officials / Referees Use only licensed assignment and historical same-sport trend feeds.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Licensed data integrity, ergodicity of assignment patterns.",
+      "breakdown_regime": "Small sample sizes, playoff season, rare crew compositions.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conforms to GSE's situational reasoning via referee bias matrices.",
+        "source_operator": "official_assignment_shadow",
+        "telemetry": "Historical win-rate differentials by assigned official crews."
+      }
+    },
+    {
+      "primitive_id": "venue_environment_state",
+      "name": "Venue Environment State",
+      "verbatim_quote": "### Venue Environment Use venue coordinates plus game-time weather/roof/surface state.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Spatial homogeneity, temporal stationarity of environmental effects.",
+      "breakdown_regime": "Extreme weather anomalies, stadium renovations, daylight saving transitions.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Integrates into GSE's state-transition logic for environmental covariates.",
+        "source_operator": "venue_environment_state",
+        "telemetry": "Game-time temperature, wind speed, roof status binary indicator."
+      }
+    },
+    {
+      "primitive_id": "evidence_readiness_matrix",
+      "name": "Evidence Readiness Matrix",
+      "verbatim_quote": "Evidence Readiness Matrix decides whether each factor is ACTIVE, SHADOW_READY, SHADOW_COLLECTING, BLOCKED, or ABSENT.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Discrete event classification, monotonic information flow.",
+      "breakdown_regime": "Transition points between readiness states, threshold crossings.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Serves as a control variable in GSI's scoring algorithms for active factors.",
+        "source_operator": "evidence_readiness_matrix",
+        "telemetry": "Binary indicators of source availability and compliance status."
+      }
+    },
+    {
+      "primitive_id": "weather_ageout",
+      "name": "Weather Signal Decay",
+      "verbatim_quote": "decisions - wind shifts near first pitch/kickoff - incorrectly geocoded stadiums Matrix posture: - weather can be useful quickly, but it must age out aggressively.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time in minutes since event start', 'w(t)': 'weather influence factor (dimensionless)', 'τ': 'decay time constant (minutes)'}",
+      "assumptions": "Weather impact decays exponentially with time; initial influence is deterministic but diminishes rapidly.",
+      "breakdown_regime": "t → ∞ implies w(t) → 0",
+      "domain": "history",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Weather signal strength is modeled as an exponential decay kernel applied to temporal proximity of game start.",
+        "source_operator": "weather_ageout",
+        "telemetry": "Observed deviation from expected outcome due to weather misalignment"
+      }
+    },
+    {
+      "primitive_id": "pace_team_rates",
+      "name": "Pace-Based Team Rate Estimation",
+      "verbatim_quote": "### Pace / Team Rates Use league/team stat feeds, not LLM summaries.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r_i(t)': \"team i's rate of action at time t (actions/minute)\", 'S_i': \"team i's statistical baseline (actions/minute)\"}",
+      "assumptions": "League/team statistics provide stable, unbiased estimates of team behavior patterns.",
+      "breakdown_regime": "r_i(t) ≈ S_i when t is within normal season range",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pace rates are mapped to stochastic process intensity functions in GSE's temporal state space.",
+        "source_operator": "pace_team_rates",
+        "telemetry": "Deviation between predicted and actual action frequency during game"
+      }
+    },
+    {
+      "primitive_id": "shadow_source_validation",
+      "name": "Shadow Source Validation Protocol",
+      "verbatim_quote": "Candidate source class: - SportsDataIO, Sportradar, or league APIs where legally allowed Risks: - early-season samples - injuries changing tempo - garbage-time distortion Matrix posture: - SHADOW_ONLY until bucket-level Brier improvement is measured.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B(t)': 'Brier score at time t (unitless)', 'β': 'validation threshold (unitless)', 'S_{sh}(t)': 'shadow source reliability indicator (0 to 1)'}",
+      "assumptions": "Early data is unreliable; validation occurs only after sufficient sample size and performance metrics.",
+      "breakdown_regime": "S_{sh}(t) < β ⇒ SHADOW_ONLY",
+      "domain": "history",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Source validation uses Brier score thresholds to gate real-time integration into prediction models.",
+        "source_operator": "shadow_source_validation",
+        "telemetry": "Accuracy gain in model calibration post-validation"
+      }
+    },
+    {
+      "primitive_id": "aggressive_safety_boundary",
+      "name": "Aggressive Safety Boundary",
+      "verbatim_quote": "It is the layer that lets the product become aggressive later without becoming sloppy now.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A(t)': 'aggressiveness level at time t (unitless)', 'S(t)': 'safety constraint at time t (unitless)', 'T': 'transition time point (time units)'}",
+      "assumptions": "Safety constraints must be maintained while allowing strategic aggression to emerge over time.",
+      "breakdown_regime": "t ≤ T ⇒ A(t) ≤ S(t); t > T ⇒ A(t) ≥ S(t)",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The boundary enforces a control-theoretic constraint on policy exploration vs exploitation trade-offs.",
+        "source_operator": "aggressive_safety_boundary",
+        "telemetry": "Change in decision variance before and after transition time"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "528261b0d73742e6_t0",
+      "think": "The foundational challenge is constructing an intelligence layer that respects evidentiary provenance while delivering actionable edge. This requires isolating sovereign primitives—mathematical operators that map directly to verifiable data sources without leaking spurious correlation. Market odds serve as a baseline but remain shadowed until independently justified. Official assignments and venue environments provide structured covariates with high doctrinal vetting. The readiness matrix formalizes a governance framework that prevents overfitting to incomplete or biased signals. Together, these primitives establish a modular architecture where each component's contribution is precisely quantified and auditable. Window 1 Synthesis: Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 2/2 pages of evidence-source-strategy-2026-05-21 (528261b0d73742e6): [market_odds_shadow p.1]: ## Provider Fit ### Market Odds Start here because the paid key is already present and deploy-readiness confirms the plan has 20,000 requests remaining. (Maps to GSI's conformal prediction bands for adversarial robustness.) [official_assignment_shadow p.1]: ### Officials / Referees Use only licensed assignment and historical same-sport trend feeds. (Conforms to GSE's situational reasoning via referee bias matrices.) [venue_environment_state p.1]: ### Venue Environment Use venue coordinates plus game-time weather/roof/surface state. (Integrates into GSE's state-transition logic for environmental covariates.) [evidence_readiness_matrix p.1]: Evidence Readiness Matrix decides whether each factor is ACTIVE, SHADOW_READY, SHADOW_COLLECTING, BLOCKED, or ABSENT. (Serves as a control variable in GSI's scoring algorithms for active factors.) [weather_ageout p.2]: decisions - wind shifts near first pitch/kickoff - incorrectly geocoded stadiums Matrix posture: - weather can be useful quickly, but it must age out aggressively. (Weather signal strength is modeled as an exponential decay kernel applied to temporal proximity of game start.) [pace_team_rates p.2]: ### Pace / Team Rates Use league/team stat feeds, not LLM summaries. (Pace rates are mapped to stochastic process intensity functions in GSE's temporal state space.) [shadow_source_validation p.2]: Candidate source class: - SportsDataIO, Sportradar, or league APIs where legally allowed Risks: - early-season samples - injuries changing tempo - garbage-time distortion Matrix posture: - SHADOW_ONLY until bucket-level Brier improvement is measured. (Source validation uses Brier score thresholds to gate real-time integration into prediction models.) [aggressive_safety_boundary p.2]: It is the layer that lets the product become aggressive later without becoming sloppy now. (The boundary enforces a control-theoretic constraint on policy exploration vs exploitation trade-offs.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of evidence-source-strategy-2026-05-21 (528261b0d73742e6): [market_odds_shadow p.1]: ## Provider Fit ### Market Odds Start here because the paid key is already present and deploy-readiness confirms the plan has 20,000 requests remaining. (Maps to GSI's conformal prediction bands for adversarial robustness.) [official_assignment_shadow p.1]: ### Officials / Referees Use only licensed assignment and historical same-sport trend feeds. (Conforms to GSE's situational reasoning via referee bias matrices.) [venue_environment_state p.1]: ### Venue Environment Use venue coordinates plus game-time weather/roof/surface state. (Integrates into GSE's state-transition logic for environmental covariates.) [evidence_readiness_matrix p.1]: Evidence Readiness Matrix decides whether each factor is ACTIVE, SHADOW_READY, SHADOW_COLLECTING, BLOCKED, or ABSENT. (Serves as a control variable in GSI's scoring algorithms for active factors.) [weather_ageout p.2]: decisions - wind shifts near first pitch/kickoff - incorrectly geocoded stadiums Matrix posture: - weather can be useful quickly, but it must age out aggressively. (Weather signal strength is modeled as an exponential decay kernel applied to temporal proximity of game start.) [pace_team_rates p.2]: ### Pace / Team Rates Use league/team stat feeds, not LLM summaries. (Pace rates are mapped to stochastic process intensity functions in GSE's temporal state space.) [shadow_source_validation p.2]: Candidate source class: - SportsDataIO, Sportradar, or league APIs where legally allowed Risks: - early-season samples - injuries changing tempo - garbage-time distortion Matrix posture: - SHADOW_ONLY until bucket-level Brier improvement is measured. (Source validation uses Brier score thresholds to gate real-time integration into prediction models.) [aggressive_safety_boundary p.2]: It is the layer that lets the product become aggressive later without becoming sloppy now. (The boundary enforces a control-theoretic constraint on policy exploration vs exploitation trade-offs.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Roots in 1950s decision theory and 1970s information economics; modernized through Kahneman-Tversky behavioral biases and Knightian uncertainty. Retrocausal Genealogy (Window 1): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opponents may exploit perceived edges from incomplete data; coaches adjust strategies based on known officiating tendencies; weather forecasts are subject to systematic errors. Theory of Mind (Window 1): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents cross-layer leakage by ensuring that primitives operating at the GSI level do not inadvertently calibrate GSE state variables, thus avoiding circular reasoning. Cross-Layer Veto (Window 1): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "528261b0d73742e6_t1",
+      "think": "Chapter window 2 introduces foundational principles for managing evidence readiness in probabilistic forecasting systems. The core idea revolves around temporal dynamics of data utility—specifically, how weather signals degrade over time, necessitating rapid aging-out mechanisms. This aligns with Bayesian updating where prior beliefs are adjusted based on new evidence, but also requires explicit handling of signal decay. The emphasis on using league/team stat feeds rather than LLM summaries reflects a preference for empirically grounded data over speculative inference, which is critical for maintaining model integrity. The shadow validation protocol ensures that only validated sources contribute to real-time predictions, mitigating risk from noisy or biased inputs. Finally, the concept of an 'aggressive safety boundary' establishes a principled framework for balancing risk and reward in decision-making processes, ensuring that strategic aggression emerges only after sufficient confidence has been established through early-stage conservative behavior. Window 2 Synthesis: Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical control theory and Bayesian decision theory, this chapter builds upon earlier work in adaptive forecasting systems and probabilistic reasoning frameworks developed in the 1980s–2000s. Retrocausal Genealogy (Window 2): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents must model both their own evolving strategies and those of opponents, accounting for how environmental factors like weather and team pace influence decision-making dynamics across time. Theory of Mind (Window 2): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each primitive operates independently on distinct dimensions of evidence, preventing redundancy and leakage between layers. Cross-Layer Veto (Window 2): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in evidence-source-strategy-2026-05-21 (528261b0d73742e6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

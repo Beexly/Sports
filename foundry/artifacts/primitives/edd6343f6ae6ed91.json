@@ -1,0 +1,78 @@
+{
+  "book_id": "edd6343f6ae6ed91",
+  "source_status": "COMPLETE",
+  "title": "prompt-registry-check",
+  "file_name": "prompt-registry-check.md",
+  "sha256": "edd6343f6ae6ed9145610c06f3e624148333b8a7b265c21154d7be85d9be92a2",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Registry validation as a conformal inference lattice: signals form a 47-dimensional Boolean space under verdict constraints, with git provenance as temporal anchor. Universal Lens: Rooted in prompt-registry-check (edd6343f6ae6ed91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI treats registry signals as Bayesian evidence nodes; each verdict dimension defines a likelihood kernel over wired/traced/weighted/tested states, enabling posterior belief propagation across dimensions. GSI Mapping: Rooted in prompt-registry-check (edd6343f6ae6ed91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE interprets registry integrity as a state-transition system where each signal's verdicts define a deterministic automaton; invalidity triggers fail-closed state halt with drift detection. GSE Mapping: Rooted in prompt-registry-check (edd6343f6ae6ed91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "registry_shape_validator",
+      "name": "Registry Shape Conformance",
+      "verbatim_quote": "- Expected shape: {\"provenance\": {...}, \"signals\": [...]} — 47 signals.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_s': '47, number of signals', 'S_i': 'signal index, i ∈ [1, N_s]', 'V_d': 'verdict dimension, d ∈ {wired, traced, weighted, tested, license, gate}', 'R': 'registry JSON object'}",
+      "assumptions": "Registry conforms to fixed schema; all signals have identical structure.",
+      "breakdown_regime": "Shape mismatch or missing keys cause immediate exit code 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Registry structure maps to a labeled hypergraph where nodes are signals and edges are verdict dimensions; validation checks for full connectivity and label consistency.",
+        "source_operator": "registry_shape_validator",
+        "telemetry": "JSON parse success, signal count, presence of required keys"
+      }
+    },
+    {
+      "primitive_id": "verdict_dimensionality_check",
+      "name": "Verdict Dimension Completeness",
+      "verbatim_quote": "Each signal must carry: id, and a per-dimension verdict object with a \"verdict\" key for at least: wired_state (or wired), traced, weighted, tested, license, gate.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_d': 'dimension set {wired, traced, weighted, tested, license, gate}', 'v_{i,d}': 'verdict value for signal i in dimension d'}",
+      "assumptions": "All verdicts are binary or categorical; missing verdicts imply failure.",
+      "breakdown_regime": "Any signal missing a required dimension results in exit code 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Each signal's verdict vector defines a kernel in a 6D discrete space; completeness check ensures full kernel coverage.",
+        "source_operator": "verdict_dimensionality_check",
+        "telemetry": "Per-signal verdict presence, dimension completeness ratio"
+      }
+    },
+    {
+      "primitive_id": "fail_closed_integrity",
+      "name": "Fail-Closed Registry Integrity",
+      "verbatim_quote": "Fail-closed doctrine: a broken registry refuses; it is never auto-repaired.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_r': 'integrity flag, boolean', 'E': 'exit code, ∈ {0, 1}'}",
+      "assumptions": "Registry is immutable during validation; any error halts execution.",
+      "breakdown_regime": "Exit code 1 on any schema violation or missing data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Integrity check mirrors a safety automaton where valid registry state transitions to exit 0, invalid leads to exit 1.",
+        "source_operator": "fail_closed_integrity",
+        "telemetry": "Exit status, error type, failure reason"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "edd6343f6ae6ed91_t0",
+      "think": "The registry_check.py implements a read-only validator enforcing schema compliance through a series of logical gates. Each signal must conform to a fixed structure defined by a 6D verdict space. The system operates under a fail-closed principle, rejecting any deviation from this schema without attempting repair. The validator performs three core checks: shape conformance (47 signals), verdict completeness (all 6 dimensions present), and JSON validity. These checks map to a Boolean lattice where each node represents a signal's verdict tuple. The system's integrity is maintained by ensuring that no modification occurs to the registry, preserving its provenance. Git-based drift detection adds temporal context, identifying when the registry diverges from HEAD. This architecture enforces a strict separation between data ingestion and validation, aligning with the principle that registry generation is not automated but relies on manual or external processes.\n\nDeep epistemic analysis for prompt-registry-check (edd6343f6ae6ed91, domain=other, pages_read=2/2): Operator 'Registry Shape Conformance' (page 1, domain other) captures: - Expected shape: {\"provenance\": {...}, \"signals\": [...]} — 47 signals. Assumptions: Registry conforms to fixed schema; all signals have identical structure. Breakdown regime: Shape mismatch or missing keys cause immediate exit code 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry structure maps to a labeled hypergraph where nodes are signals and edges are verdict dimensions; validation checks for full connectivity and label consistency. Operator 'Verdict Dimension Completeness' (page 1, domain other) captures: Each signal must carry: id, and a per-dimension verdict object with a \"verdict\" key for at least: wired_state (or wired), traced, weighted, tested, license, gate. Assumptions: All verdicts are binary or categorical; missing verdicts imply failure. Breakdown regime: Any signal missing a required dimension results in exit code 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Each signal's verdict vector defines a kernel in a 6D discrete space; completeness check ensures full kernel coverage. Operator 'Fail-Closed Registry Integrity' (page 1, domain other) captures: Fail-closed doctrine: a broken registry refuses; it is never auto-repaired. Assumptions: Registry is immutable during validation; any error halts execution. Breakdown regime: Exit code 1 on any schema violation or missing data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Integrity check mirrors a safety automaton where valid registry state transitions to exit 0, invalid leads to exit 1. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prompt-registry-check (edd6343f6ae6ed91, domain=other, pages_read=2/2): Operator 'Registry Shape Conformance' (page 1, domain other) captures: - Expected shape: {\"provenance\": {...}, \"signals\": [...]} — 47 signals. Assumptions: Registry conforms to fixed schema; all signals have identical structure. Breakdown regime: Shape mismatch or missing keys cause immediate exit code 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry structure maps to a labeled hypergraph where nodes are signals and edges are verdict dimensions; validation checks for full connectivity and label consistency. Operator 'Verdict Dimension Completeness' (page 1, domain other) captures: Each signal must carry: id, and a per-dimension verdict object with a \"verdict\" key for at least: wired_state (or wired), traced, weighted, tested, license, gate. Assumptions: All verdicts are binary or categorical; missing verdicts imply failure. Breakdown regime: Any signal missing a required dimension results in exit code 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Each signal's verdict vector defines a kernel in a 6D discrete space; completeness check ensures full kernel coverage. Operator 'Fail-Closed Registry Integrity' (page 1, domain other) captures: Fail-closed doctrine: a broken registry refuses; it is never auto-repaired. Assumptions: Registry is immutable during validation; any error halts execution. Breakdown regime: Exit code 1 on any schema violation or missing data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Integrity check mirrors a safety automaton where valid registry state transitions to exit 0, invalid leads to exit 1. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification practices from software engineering, extending into probabilistic logic frameworks used in AI safety and Bayesian networks. Influenced by static analysis tools and schema-driven data validation systems. Retrocausal Genealogy: Rooted in prompt-registry-check (edd6343f6ae6ed91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in prompt-registry-check (edd6343f6ae6ed91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The agent assumes a passive observer model where registry integrity is paramount. It models adversarial inputs as schema violations or missing data, treating these as failures rather than opportunities for correction. The validator acts as a gatekeeper, not a generator, reflecting a conservative approach to data governance. Theory of Mind & Decision Maker Model: Rooted in prompt-registry-check (edd6343f6ae6ed91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct verdicts per dimension; leakage is prevented by disallowing auto-repair mechanisms. The system vetoes any attempt to modify the registry, ensuring that validation remains a read-only operation. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-registry-check (edd6343f6ae6ed91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

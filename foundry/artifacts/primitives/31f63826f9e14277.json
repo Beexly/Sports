@@ -1,0 +1,765 @@
+{
+ "book_id": "31f63826f9e14277",
+ "source_status": "COMPLETE",
+ "source_note": "Nassim Nicholas Taleb, with coauthors Yaneer Bar-Yam (Ch. 12), Pasquale Cirillo (Chs. 15, 17, 18), Raphael Douady (Ch. 16), Andrea Fontanari (Ch. 15), Donald Geman and Hélyette Geman (Ch. 30), Espen Haug (Ch. 26), the Universa Investments team (Chs. 27, 29), and the Uncertainty Reading Group (Ch. 13): Statistical Consequences of Fat Tails: Real World Preasymptotics, Epistemology, and Applications, STEM Academic Press, The Technical Incerto Collection. Catalog correction: the work is cataloged as 2020 (first edition), but the local file is the Third Edition, copyright 2025 per its title pages, ISBN 979-8-218-24803-1, with a free version posted on arXiv as arXiv:2001.10488. Local PDF: 34,102,041 bytes. Scan sha256 over (str(size) encoded plus full file bytes): 31f63826f9e142774a72252d2635382b7817faf6e384b29afe2eb16e2d9a22d5; book_id is its first 16 hex characters. Text quality: clean machine extraction, 25,849 lines; prose is intact, while display mathematics is glyph-flattened in places (superscripts set inline, some symbols spaced), so equations were taken only from passages whose printed form could be read unambiguously, and every quote was chosen from an unhyphenated passage inside a single page and verified contiguous in the text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "paretianity_moment_absence",
+   "name": "Paretianity is defined by a missing higher moment: some moment is infinite or undefined, shown by non-convergence under the law of large numbers",
+   "verbatim_quote": "Paretianity is clearly defined by the absence of some higher moment, exhibited by lack of convergence under LLN.",
+   "page": "Ch. 10, §10.1, printed p. 194",
+   "latex": "\\exists p \\in \\mathbb{N}^+ \\text{ s.t. } E[X^p] \\text{ is undefined or } \\infty \\iff X \\in \\mathcal{P}",
+   "symbol_and_unit_ledger": {
+    "X": "the random variable under study, in its own units",
+    "p": "moment order, positive integer, dimensionless",
+    "E[X^p]": "p-th moment of X, units of X raised to p",
+    "\\mathcal{P}": "the power law (regularly varying) class"
+   },
+   "assumptions": [
+    "The variable belongs to a class where moment existence is decided by a single tail exponent.",
+    "Sample moments are always finite, so infiniteness is inferred from non-convergence, never observed directly."
+   ],
+   "breakdown_regime": "For multimodal distributions the fourth moment can drop while tail risk stays extreme (the war and peace case of Appendix A), so a finite kurtosis reading does not clear a variable of tail risk.",
+   "domain": "tail classification"
+  },
+  {
+   "primitive_id": "preasymptotics_medium_numbers",
+   "name": "Preasymptotics (law of medium numbers): inference lives at finite n, where convergence speed is a property of the distribution, not of n alone",
+   "verbatim_quote": "We are interested in the behavior of the random variable for n large but not too large or asymptotic. While it is not a big deal for the Gaussian owing to extremely rapid convergence (by both LLN and CLT), this is not the case for other random variables.",
+   "page": "Glossary, §2.2.5, printed p. 11",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Limit theorems (LLN, CLT) are exact only as n grows without bound.",
+    "The analyst's actual sample size is fixed and usually small relative to the convergence requirement."
+   ],
+   "breakdown_regime": "In the Gaussian basin convergence is so fast that the finite-n correction is negligible; the concept binds only outside that basin, which is most of the social and economic world.",
+   "domain": "preasymptotics"
+  },
+  {
+   "primitive_id": "kappa_metric",
+   "name": "The kappa metric: a [0,1] gauge of preasymptotic convergence built from the growth of the mean absolute deviation of partial sums; 0 for the Gaussian, 1 when no mean exists",
+   "verbatim_quote": "Kappa, in [0, 1], developed by this author here, in Chapter 8, and in a paper [281], gauges the preasymptotic behavior or a random variable; it is 0 for the Gaussian considered as benchmark, and 1 for a Cauchy or a r.v. that has no mean.",
+   "page": "Glossary, §2.2.6, printed p. 11; definition restated as Definition 8.1, Ch. 8, printed p. 157",
+   "latex": "\\kappa_{n_0,n} = 2 - \\frac{\\log n - \\log n_0}{\\log M(n) - \\log M(n_0)}, \\quad M(n) = E\\left| S_n - E[S_n] \\right|",
+   "symbol_and_unit_ledger": {
+    "\\kappa_{n_0,n}": "convergence rate over the window from n_0 to n summands, dimensionless, in [0,1]",
+    "M(n)": "expected mean absolute deviation of the sum of n i.i.d. variables, in units of X",
+    "S_n": "partial sum of n i.i.d. copies of X",
+    "n_0, n": "observation counts, dimensionless"
+   },
+   "assumptions": [
+    "Observations are i.i.d. with a finite mean, E(X) < +infinity.",
+    "Dispersion is measured in L1 (mean absolute deviation around the mean), not L2, so the metric stays defined without a finite variance."
+   ],
+   "breakdown_regime": "Requires a finite first moment; at and below tail exponent 1 kappa saturates at 1 and stops discriminating. Empirical kappa from data is itself an estimate and inherits sampling noise.",
+   "domain": "preasymptotics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Kappa becomes the engine's sample sufficiency gauge: every averaged signal carries an estimated kappa, and the count of observations behind it is converted into a Gaussian-equivalent count before the signal is allowed to move a projection. Signals whose kappa is high relative to their n are held at low weight by construction, not by discretion.",
+    "source_operator": "kappa_metric",
+    "telemetry": "Per-signal observation counts, rolling mean absolute deviation of partial sums at several window lengths, and the resulting empirical kappa path."
+   }
+  },
+  {
+   "primitive_id": "kappa_threshold_normal_approximation",
+   "name": "Kappa above 0.15 marks the normal approximation as unreliable",
+   "verbatim_quote": "Any value of κ above .15 effectively indicates a high degree of unreliability",
+   "page": "Ch. 8, §8.3.2, printed p. 159",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The 0.15 line is a stated heuristic from the chapter, not a derived constant.",
+    "It applies to confidence intervals and significance claims built on the normal approximation."
+   ],
+   "breakdown_regime": "It is a one-sided screen: above the line the normal approximation is doubted; below it nothing is guaranteed, since dependence or nonstationarity can still break the approximation.",
+   "domain": "sample sufficiency",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The 0.15 line works as a hard veto inside the reasoning layer: any sub-model whose inputs sit above it cannot ship a Gaussian confidence statement; it must either gather more data, switch to a tail-aware estimator, or report an honest wide interval.",
+    "source_operator": "kappa_threshold_normal_approximation",
+    "telemetry": "Empirical kappa per input series, flagged against the 0.15 line at evaluation time."
+   }
+  },
+  {
+   "primitive_id": "kappa_sample_size_equivalence",
+   "name": "Sample size equivalence under kappa: a Student T with 3 degrees of freedom needs 120 observations to match the averaging effect of 30 Gaussian ones; a one-tailed Pareto with the same exponent needs 543",
+   "verbatim_quote": "a Student T with 3 degrees of freedom (α = 3) requires 120 observations to get the same drop in variance from averaging (hence confidence level) as the Gaussian with 30, that is 4 times as much.",
+   "page": "Ch. 8, §8.3.2, printed p. 160",
+   "latex": "n_\\nu \\approx n_g^{\\frac{1}{1 - \\kappa_{1, n_g - 1}}}",
+   "symbol_and_unit_ledger": {
+    "n_\\nu": "observations required from the fat-tailed variable, count",
+    "n_g": "observations of the Gaussian benchmark, count",
+    "\\kappa_{1,n_g-1}": "kappa of the target distribution over the matching window, dimensionless"
+   },
+   "assumptions": [
+    "Both variables are scaled to the same M(1), the mean absolute deviation of a single observation.",
+    "The closed form uses the slow-convergence approximation of Eq. 8.8 in the book."
+   ],
+   "breakdown_regime": "The formula is an approximation that degrades for very small n_g and says nothing about dependence between observations, which raises the required count further.",
+   "domain": "sample sufficiency",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the conversion rule the engine applies before trusting any rate or average: raw counts are translated into Gaussian-equivalent counts, so a metric built on 30 games in a fat-tailed class is treated as far weaker evidence than the same count in a thin-tailed class.",
+    "source_operator": "kappa_sample_size_equivalence",
+    "telemetry": "Observation counts per metric, estimated tail class per metric, and published league or player baselines for calibration."
+   }
+  },
+  {
+   "primitive_id": "pareto_8020_portfolio_underestimation",
+   "name": "A Pareto near the 80/20 point needs up to 10^9 more observations than a Gaussian, and Gaussian portfolio criteria can underestimate its risk by at least 8 orders of magnitude",
+   "verbatim_quote": "We mentioned earlier that a Pareto distribution close to the \"80/20\" requires up to 109 more observations than a Gaussian",
+   "page": "Ch. 8, §8.5.1, printed p. 163",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The 80/20 Pareto corresponds to a tail exponent near 1.14 to 1.16.",
+    "The comparison holds the Gaussian benchmark at a modest sample (tens of observations)."
+   ],
+   "breakdown_regime": "The figures are for the extreme low-alpha region; at alpha near 3 the penalty collapses to single-digit multiples, so the primitive must be applied with the estimated exponent, not as a blanket constant.",
+   "domain": "sample sufficiency"
+  },
+  {
+   "primitive_id": "mean_deviation_robustness",
+   "name": "Mean absolute deviation is the robust dispersion measure under power laws; variance is unstable and uninformative there, and mean deviation is more efficient than standard deviation except at Gaussian kurtosis",
+   "verbatim_quote": "(Mean absolute deviation can be shown to be more \"efficient\" except in the narrow case of kurtosis equals 3 (the Gaussian), see a longer discussion in [283]; for other advantages, see [220].)",
+   "page": "Ch. 8, §8.2, printed p. 158",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Dispersion is measured around the mean, in L1.",
+    "The comparison class is power law regimes, with or without finite variance."
+   ],
+   "breakdown_regime": "At exactly Gaussian kurtosis the standard deviation is the more efficient estimator; the primitive governs the fat-tailed case, which the book argues is the empirically common one.",
+   "domain": "dispersion measurement"
+  },
+  {
+   "primitive_id": "max_tail_exponent_conservation",
+   "name": "The tail exponent of the maximum of i.i.d. variables equals the tail exponent of the variables themselves (Property 9.1)",
+   "verbatim_quote": "The tail exponent of the maximum of i.i.d random variables is the same as that of the random variables themselves.",
+   "page": "Ch. 9, §9.1.1, Property 9.1, printed p. 174",
+   "latex": "P(X_{\\max} \\le x) = F(x)^n",
+   "symbol_and_unit_ledger": {
+    "X_{\\max}": "maximum of n i.i.d. variables, units of X",
+    "F(x)": "common cumulative distribution function of one variable, dimensionless probability",
+    "n": "sample count, dimensionless"
+   },
+   "assumptions": [
+    "Variables are independent and identically distributed.",
+    "The statement is about the tail region above the Karamata point, where the slowly varying function is effectively constant."
+   ],
+   "breakdown_regime": "Dependence between observations (clustering, common shocks) breaks the exact F(x)^n form; bounded variables leave the Frechet class for the Weibull class.",
+   "domain": "extreme value theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Extremes inherit the class of the ordinary observations, so the engine can read tail behavior off record values and season maxima directly: a record-breaking performance is evidence about the same exponent that governs weekly variation, which lets small samples of extremes inform the tail model used for ordinary projections.",
+    "source_operator": "max_tail_exponent_conservation",
+    "telemetry": "Historical maxima and minima per metric, record progressions, and exceedance counts above high thresholds."
+   }
+  },
+  {
+   "primitive_id": "hidden_tail_underestimation",
+   "name": "The hidden tail: the part of a moment lying above the sample maximum is invisible to empirical methods, which underestimate tail payoffs for U.S. equity indices by a factor between 5 and 70",
+   "verbatim_quote": "using the second method leads to an underestimation of the payoff in the tails of between 5 and 70 times, as can be shown in Figure 9.11.",
+   "page": "Ch. 9, §9.3, printed p. 181",
+   "latex": "E(\\mu_{K,p}) = \\frac{\\alpha L^p - L^\\alpha K^{p-\\alpha}}{\\alpha - p}",
+   "symbol_and_unit_ledger": {
+    "\\mu_{K,p}": "the hidden p-th moment above the sample maximum K, units of X raised to p",
+    "\\alpha": "tail exponent, dimensionless",
+    "L": "scale (minimum) of the Pareto tail, units of X",
+    "K": "sample maximum or threshold, units of X",
+    "p": "moment order, dimensionless, with p > alpha in the stated density result"
+   },
+   "assumptions": [
+    "Above a point K* the survival function is well approximated by a pure Pareto form.",
+    "The sample maximum K is treated as a random (Frechet distributed) bound."
+   ],
+   "breakdown_regime": "The correction needs a credible tail exponent; with alpha misestimated the hidden moment is misestimated in the same direction. For thin-tailed variables the hidden part is negligible and the correction is unnecessary.",
+   "domain": "extreme value theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every empirical tail integral the engine computes gets a hidden tail companion term: the mass above the largest observed value is added back analytically from the fitted exponent instead of being silently set to zero, which is the correction that separates a tail-aware projection from a rescaled average of the past.",
+    "source_operator": "hidden_tail_underestimation",
+    "telemetry": "Sample maxima per metric, fitted tail exponents, and the ratio of corrected to naive tail integrals."
+   }
+  },
+  {
+   "primitive_id": "ms_plot_moment_existence_test",
+   "name": "The maximum-to-sum (MS) plot tests whether a moment exists: the ratio of the largest p-th power to the sum of p-th powers must fall to zero; for the SP500 it does not, even over 16,000 observations",
+   "verbatim_quote": "We observe that the SP500 show the typical characteristics of a steep power law, as in 16,000 observations (50 years) it does not appear to drop to the point of allowing the functioning of the law of large numbers.",
+   "page": "Ch. 10, §10.2.6, printed pp. 200-201",
+   "latex": "R_n^p = \\frac{M_n^p}{S_n^p} \\to 0 \\text{ a.s. as } n \\to \\infty \\iff E[X^p] < \\infty",
+   "symbol_and_unit_ledger": {
+    "R_n^p": "max-to-sum ratio at order p, dimensionless",
+    "M_n": "partial maximum of the sample, units of X",
+    "S_n^p": "sum of p-th powers of the sample, units of X raised to p",
+    "p": "moment order tested, dimensionless"
+   },
+   "assumptions": [
+    "Observations are non-negative (absolute values are used for two-sided variables) and i.i.d.",
+    "The test reads non-convergence over the available sample as evidence against the moment's existence."
+   ],
+   "breakdown_regime": "Strong serial dependence can mimic or mask non-convergence; the SP500 kurtosis verdict partly reflects volatility clustering, which the chapter itself flags by comparing raw and reshuffled series.",
+   "domain": "moment diagnostics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The MS plot becomes a standing diagnostic in the engine's data intake: before a metric's variance or kurtosis is used anywhere, its max-to-sum path at orders 2, 3, and 4 is plotted, and a non-falling path revokes permission to use that moment downstream.",
+    "source_operator": "ms_plot_moment_existence_test",
+    "telemetry": "Full history per metric, reshuffled control series, and the ratio paths at p = 2, 3, 4."
+   }
+  },
+  {
+   "primitive_id": "single_day_kurtosis_dominance",
+   "name": "One observation can carry the fourth moment: in 50 years of SP500 data a single day accounts for more than 80 percent of the kurtosis, so the fourth moment has no stability and does not exist as a usable statistic",
+   "verbatim_quote": "A main argument in [274] is that in 50 years of SP500 observations, a single one represents >80 % of the Kurtosis.",
+   "page": "Ch. 10, §10.2.5, printed p. 200",
+   "latex": "Q(n) := \\frac{\\max_{0 \\le i \\le n} X_i^4}{\\sum_{i=0}^{n} X_i^4}",
+   "symbol_and_unit_ledger": {
+    "Q(n)": "share of the sample fourth moment contributed by the single largest quartic observation, dimensionless, in [0,1]",
+    "X_i": "i-th observation (log return in the book's dataset), dimensionless",
+    "n": "sample count"
+   },
+   "assumptions": [
+    "Kurtosis is computed from daily log returns over the stated window.",
+    "The Gaussian benchmark for the same quantity is about 0.008 at n = 10^4 (Appendix F)."
+   ],
+   "breakdown_regime": "The identity of the dominant observation changes with the window, which is itself the point: the statistic is unstable across samples, so no single window's kurtosis should be reported as a property of the process.",
+   "domain": "moment diagnostics"
+  },
+  {
+   "primitive_id": "excess_conditional_expectation_test",
+   "name": "The excess conditional expectation test (van der Wijk): under a power law the expected value beyond a threshold stays proportional to the threshold instead of falling toward it",
+   "verbatim_quote": "The verdict from this test is that, as we can see in Figure 10.4, that the conditional expectation of X (and − X), conditional on X is greater than some arbitrary value K, remains proportional to K.",
+   "page": "Ch. 10, §10.2.4, printed p. 199",
+   "latex": "\\varphi_K^+ \\triangleq \\frac{E[X \\mid X > K]}{K}",
+   "symbol_and_unit_ledger": {
+    "\\varphi_K^+": "relative excess conditional expectation above K, dimensionless",
+    "K": "threshold, units of X",
+    "E[X \\mid X > K]": "mean of the variable given exceedance of K, units of X"
+   },
+   "assumptions": [
+    "The ratio is examined as K grows into the tail.",
+    "Outside the power law class the ratio tends to 0; inside it tends to a constant set by the exponent, alpha/(alpha-1) in the Pareto case."
+   ],
+   "breakdown_regime": "Finite samples truncate the observable K range, and bounded variables bend the ratio down near the bound, so the test is read jointly with the shadow moment construction for capped quantities.",
+   "domain": "tail classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine uses the excess ratio as a scale-free classifier for player and team metrics: if expected performance beyond a high threshold grows in proportion to the threshold, the metric is modeled in the power law class and its extremes are extrapolated by the exponent rather than by the sample.",
+    "source_operator": "excess_conditional_expectation_test",
+    "telemetry": "Conditional means above a ladder of thresholds for each metric, computed on rolling histories."
+   }
+  },
+  {
+   "primitive_id": "binary_probability_correction",
+   "name": "Binary probability understates payoff probability under fat tails: for the Pareto 80/20 (alpha = 1.16) the payoff-equivalent probability is more than 7 times the naive binary one, with ratio alpha/(alpha-1)",
+   "verbatim_quote": "The most commonly known distribution among the public, the \"Pareto 80/20\" (based on Pareto discovering that 20 percent of the people in Italy owned 80 percent of the land), maps to a tail index α = 1.16, so the adjusted probability is > 7 times the naive one.",
+   "page": "Ch. 11, §11.2, printed p. 228",
+   "latex": "\\frac{p^*}{p} = \\frac{\\alpha}{\\alpha - 1}",
+   "symbol_and_unit_ledger": {
+    "p^*": "corrected (payoff-equivalent) probability, dimensionless",
+    "p": "naive binary probability of exceeding the threshold, dimensionless",
+    "\\alpha": "tail exponent, dimensionless, greater than 1 for a finite mean"
+   },
+   "assumptions": [
+    "The underlying tail is Paretian above the threshold K_p.",
+    "The comparison is made at the same threshold for the binary event and the continuous payoff."
+   ],
+   "breakdown_regime": "The ratio explodes as alpha approaches 1 and the formula presumes the exponent is known; under parameter uncertainty the discrepancy grows further (the chapter's Jensen argument, Eqs. 11.8-11.9).",
+   "domain": "forecast evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Whenever the engine converts between how likely an outcome is and how much the outcome matters, this correction is the conversion factor: threshold events in fat-tailed performance distributions carry payoff weight several times their raw frequency, and the factor is computed from the fitted exponent rather than assumed to be one.",
+    "source_operator": "binary_probability_correction",
+    "telemetry": "Fitted tail exponents per outcome distribution and the thresholds at which binary summaries are produced."
+   }
+  },
+  {
+   "primitive_id": "brier_score_thin_tailed",
+   "name": "Calibration scores are thin-tailed by construction: the Brier score has all moments regardless of the underlying variable, so it cannot certify forecasting skill for fat-tailed payoffs",
+   "verbatim_quote": "At the core, calibration metrics such as the Brier score are always thin-tailed, when the variable under measurement is fat-tailed, which worsens the tractability.",
+   "page": "Ch. 11, §11.3, printed p. 230",
+   "latex": "\\lambda_n^{(B)} = \\frac{1}{n} \\sum_{t \\le n} \\left( f_t - \\mathbf{1}_{X_t \\in \\chi} \\right)^2",
+   "symbol_and_unit_ledger": {
+    "\\lambda_n^{(B)}": "Brier score over n forecasts, dimensionless, in [0,1]",
+    "f_t": "forecaster's stated probability for event t, dimensionless",
+    "\\mathbf{1}_{X_t \\in \\chi}": "indicator that the event occurred, 0 or 1"
+   },
+   "assumptions": [
+    "Forecasts are scored against binary realizations.",
+    "The theorem in the chapter (Theorem 3) needs no independence assumption for the moment result."
+   ],
+   "breakdown_regime": "For genuinely binary payoffs with truncated outcomes (a coin flip, a win/loss with fixed stakes) the Brier score is appropriate; the failure appears when it is used as a proxy for performance on continuous, fat-tailed payoffs.",
+   "domain": "scoring rules",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's evaluation layer inherits this split: probability forecasts are scored for calibration, but model selection and promotion decisions run on payoff-weighted scores in the variable's own distribution class, so a model cannot win promotion by being well calibrated on events whose magnitudes it gets wrong.",
+    "source_operator": "brier_score_thin_tailed",
+    "telemetry": "Forecast logs with stated probabilities, realized outcomes, and realized magnitudes for payoff-weighted rescoring."
+   }
+  },
+  {
+   "primitive_id": "probability_payoff_inseparability",
+   "name": "Probability is inseparable from the payoff function: an event's probability is its expected payoff only for a Heaviside payoff, by Jensen's inequality (Remark 11.5)",
+   "verbatim_quote": "Probability is just a kernel inside an integral or a summation, not a real thing on its own. The economic world is about quantitative payoffs.",
+   "page": "Ch. 11, §11.5, Commentary 11.6, printed p. 235",
+   "latex": "\\sum_{x \\in A'} \\pi(x) g(x) \\neq \\left( \\sum_{x \\in A'} \\pi(x) \\right) g\\left( \\frac{1}{n} \\sum_{x \\in A'} x \\right)",
+   "symbol_and_unit_ledger": {
+    "\\pi(x)": "probability mass of outcome x, dimensionless",
+    "g(x)": "payoff function applied to outcome x, in payoff units",
+    "A'": "the event set under consideration"
+   },
+   "assumptions": [
+    "The payoff function g is nonlinear; for linear g the two sides coincide.",
+    "The result is Jensen's inequality applied to the expectation operator."
+   ],
+   "breakdown_regime": "Collapses to equality only for indicator (Heaviside) payoffs, which is precisely the artificial case of binary bets and laboratory experiments.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine stores distributions and payoff-relevant functionals, not bare probabilities: a projection is a full predictive distribution plus the functionals that will be computed from it, so no downstream consumer can mistake the probability of an event for its expected consequence.",
+    "source_operator": "probability_payoff_inseparability",
+    "telemetry": "Predictive distributions per event and the payoff functionals (threshold exceedances, expected shortfalls, quantiles) computed from them."
+   }
+  },
+  {
+   "primitive_id": "survival_conditioned_pl",
+   "name": "Real performance is cumulative payoff under a survival (absorbing barrier) condition; measured that way it keeps the distribution class of the underlying variable, unlike tallies and scores",
+   "verbatim_quote": "P/L tautologically corresponds to the real world distribution, with an absorbing barrier at the survival condition.",
+   "page": "Ch. 11, §11.4, Commentary 11.5, printed p. 232",
+   "latex": "P^{(r)}(T) = P^{(r)}(0) + \\sum_{t \\le n} \\mathbf{1}\\left( \\sum_{\\tau < t} g(x_\\tau) > b \\right) g(x_t)",
+   "symbol_and_unit_ledger": {
+    "P^{(r)}(T)": "cumulative payoff up to time T, in payoff units",
+    "g(x_t)": "payoff of realization t, in payoff units",
+    "b": "survival mark (absorbing barrier level), in payoff units",
+    "\\mathbf{1}(.)": "indicator that the process is still above the survival mark"
+   },
+   "assumptions": [
+    "The payoff sequence is path dependent through the survival indicator.",
+    "The barrier b is arbitrary but fixed for a given evaluation."
+   ],
+   "breakdown_regime": "Without the survival condition the formula reduces to a plain sum and the class statement is immediate; with ruin possible, ensemble averages that ignore the barrier overstate what any single trajectory can earn.",
+   "domain": "scoring rules",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Evaluation of any engine strategy runs as a path with an absorbing floor: sequences are graded on the trajectory they actually produce, including near-ruin excursions, rather than on the average of independent one-step scores, which is the difference between time performance and ensemble performance.",
+    "source_operator": "survival_conditioned_pl",
+    "telemetry": "Ordered outcome sequences per strategy, cumulative payoff paths, and minimum excursion depths."
+   }
+  },
+  {
+   "primitive_id": "pandemics_unforecastable_alpha_le_1",
+   "name": "Power law variables with tail exponent at or below 1 are not forecastable at the level of single outcomes: they do not obey the law of large numbers, though their tail properties remain knowable (Remark 12.3)",
+   "verbatim_quote": "Random variables in the power law class with tail exponent α ≤ 1 are, simply, not forecastable. They do not obey the LLN. But we can still understand their properties.",
+   "page": "Ch. 12, §12.3, Remark 12.3, printed p. 243",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The claim concerns point forecasts of realizations, not estimates of distributional properties.",
+    "Pandemic fatalities are the motivating case, fitted with exponent patently below 1 by extreme value methods."
+   ],
+   "breakdown_regime": "The chapter's heuristic extends practical unforecastability up to about alpha = 2.5, because the mean, though it exists, needs infeasible sample sizes to stabilize.",
+   "domain": "epidemic risk"
+  },
+  {
+   "primitive_id": "pk_gk_class_mismatch",
+   "name": "Exceedance probability P_K is always thin-tailed while the conditional payoff G_K need not be; quantities in different probability classes cannot proxy for each other (Remarks 13.1-13.2)",
+   "verbatim_quote": "If PK and GK are not in the same probability class, that is, while PK is always thin tailed, if GK is not thin-tailed, then one cannot be a practical proxy for the other.",
+   "page": "Ch. 13, §13.2, Remark 13.2, printed p. 256",
+   "latex": "K = L \\left( P_K \\right)^{-1/\\alpha}",
+   "symbol_and_unit_ledger": {
+    "P_K": "probability of exceeding threshold K, dimensionless, in [0,1]",
+    "G_K": "expected payoff conditional on exceeding K, units of X",
+    "K": "threshold (quantile), units of X",
+    "L": "tail scale constant, units of X",
+    "\\alpha": "tail exponent, dimensionless"
+   },
+   "assumptions": [
+    "Above the threshold the tail is Paretian, P(X > K) = L^alpha K^{-alpha} in the book's parametrization.",
+    "P_K, being bounded in [0,1], has all moments finite by the probability integral transform."
+   ],
+   "breakdown_regime": "When the payoff is itself bounded and thin-tailed, the two classes coincide and probability is a legitimate proxy; the mismatch is a fat-tail phenomenon.",
+   "domain": "probability theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine keeps two ledgers for every risk quantity: the frequency ledger (how often a threshold is crossed) and the magnitude ledger (what crossing is worth). No report may substitute one for the other, and any threshold probability that is surfaced must travel with its conditional magnitude.",
+    "source_operator": "pk_gk_class_mismatch",
+    "telemetry": "Threshold exceedance frequencies and conditional mean exceedances for the same thresholds, per distribution."
+   }
+  },
+  {
+   "primitive_id": "error_propagation_infinite",
+   "name": "Error propagation through the quantile map: a small, controlled error in an exceedance probability can become an infinite error in the corresponding quantity under Paretian tails (Remark 13.5)",
+   "verbatim_quote": "While the error on the probability can be small and controlled, the error on the corresponding quantity under consideration can be infinite.",
+   "page": "Ch. 13, §13.3, Remark 13.5, printed p. 258",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The probability estimate is modeled as Beta distributed, covering the uniform case of no information.",
+    "The underlying variable has a strong Pareto tail; the n-th moment of the implied quantity exists only under the chapter's stated conditions on alpha and the Beta parameters."
+   ],
+   "breakdown_regime": "For thin-tailed underlyings the quantile map is tame and errors stay proportional; the explosion is specific to power law tails and worsens as alpha falls.",
+   "domain": "probability theory"
+  },
+  {
+   "primitive_id": "forecast_volatility_arbitrage_bound",
+   "name": "Probability forecasts are martingales subject to arbitrage bounds: excessively volatile revisions can be arbitraged, and rising uncertainty pulls a binary price toward one half",
+   "verbatim_quote": "Under these conditions, binary forecasting belongs to the rules of arbitrage and derivative pricing, well mapped in quantitative finance.",
+   "page": "Ch. 14, §14.4 addendum, printed p. 273",
+   "latex": "\\int_0^T 2 (B_0 - B_t) \\, dB_t = \\sigma^2 T - (B_T - B_0)^2",
+   "symbol_and_unit_ledger": {
+    "B_t": "the forecast (binary price) at time t, dimensionless, bounded in [0,1]",
+    "\\sigma": "volatility of the forecast process, per square root of time",
+    "T": "time to resolution"
+   },
+   "assumptions": [
+    "The forecast is treated as a tradable price, so a counterparty can buy low and sell high against the forecaster.",
+    "The underlying process for the bounded forecast is an arithmetic Brownian motion between its bounds in the local argument."
+   ],
+   "breakdown_regime": "Non-tradable, purely verbal forecasts face no arbitrageur; the bound is a discipline the forecaster must self-impose, which is the chapter's point about skin in the game.",
+   "domain": "forecast evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Published engine probabilities get a revision budget: the path of a probability over time is monitored like a price, and jumpy revisions that violate the arbitrage bound trigger review of the model rather than a new publication, exactly as a market maker would be arbitraged for the same behavior.",
+    "source_operator": "forecast_volatility_arbitrage_bound",
+    "telemetry": "Time series of published probabilities per event, their revision sizes, and time to resolution."
+   }
+  },
+  {
+   "primitive_id": "gini_stable_limit_bias",
+   "name": "Under infinite variance the nonparametric Gini estimator's limit law becomes a right-skewed alpha-stable law, which is the mechanism behind its downward bias; maximum likelihood reaches efficiency with far fewer observations",
+   "verbatim_quote": "As we prove in Section 15.2, when the data generating process is in the domain of attraction of a fat-tailed distribution, the asymptotic distribution of the Gini index becomes a skewed-to-the-right α-stable law. This change of behavior is responsible of the downward bias of the nonparametric Gini under fat tails.",
+   "page": "Ch. 15, §15.1, printed p. 280",
+   "latex": "E[X^\\delta] < \\infty \\text{ if } \\delta \\le \\alpha; \\quad E[X^\\delta] = \\infty \\text{ if } \\delta > \\alpha",
+   "symbol_and_unit_ledger": {
+    "\\delta": "moment order under examination, dimensionless",
+    "\\alpha": "tail exponent of the data generating process, here in (1,2): finite mean, infinite variance",
+    "X": "income or wealth variable, in currency units"
+   },
+   "assumptions": [
+    "The data generating process is regularly varying with tail index in (1,2).",
+    "The Monte Carlo benchmark in the chapter uses a Pareto with alpha = 1.1, whose true Gini is 0.8333."
+   ],
+   "breakdown_regime": "In the thin-tailed domain of attraction the classical normal, symmetric limit returns and the bias vanishes; the chapter's correction (mode to mean distance of the limit law) is built for the fat-tailed case.",
+   "domain": "inequality measurement"
+  },
+  {
+   "primitive_id": "quantile_contribution_superadditivity",
+   "name": "Top-share (quantile contribution) measures are downward biased, sample-size sensitive, and superadditive: the pooled concentration exceeds the weighted average of subgroup concentrations, and the measure is convex in the tail exponent",
+   "verbatim_quote": "are downward biased, unstable estimators, extremely sensitive to sample size and concave in accounting for large deviations.",
+   "page": "Ch. 16, abstract, printed p. 297",
+   "latex": "\\kappa_q(X_\\alpha) = q^{1 - \\frac{1}{\\alpha}}",
+   "symbol_and_unit_ledger": {
+    "\\kappa_q": "share of the total held by the top q fraction, dimensionless",
+    "q": "top fraction of the population, in (0,1)",
+    "\\alpha": "Pareto tail exponent, dimensionless"
+   },
+   "assumptions": [
+    "The variable is one-tailed, bounded on the left and unbounded on the right.",
+    "Theorem 4 of the chapter assumes sub-samples drawn from the same distribution for the clean weighted form."
+   ],
+   "breakdown_regime": "The bias shrinks as alpha grows and as samples become exhaustive; the chapter notes a standard error of 0.3 in alpha alone moves the measured concentration by about 0.25, so exponent uncertainty dominates.",
+   "domain": "inequality measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Aggregation inside the engine follows the superadditivity rule: a concentration or share computed on pooled data is not the average of the shares computed on parts, and the pooled figure is the one reported. Local summaries are stored with their sample sizes so the direction and rough size of the bias stay visible.",
+    "source_operator": "quantile_contribution_superadditivity",
+    "telemetry": "Subgroup shares with their sample sizes, pooled shares, and the fitted exponent used for bias assessment."
+   }
+  },
+  {
+   "primitive_id": "shadow_mean_dual_distribution",
+   "name": "Shadow moments for bounded variables: map a variable capped at H to an unbounded dual variable by a logarithmic transform, fit the Frechet tail there, and transform back to get the true (shadow) mean that naive fitting would call infinite",
+   "verbatim_quote": "But while Y is bounded, Z is not. Therefore we can safely model the unbounded dual distribution of Z as belonging to the Fréchet class, study its tail, and then come back to Y and its moments, which under the dual distribution of Z could not exist.",
+   "page": "Ch. 17, §17.2, printed p. 315",
+   "latex": "\\varphi(Y) = L - H \\log \\left( \\frac{H - Y}{H - L} \\right)",
+   "symbol_and_unit_ledger": {
+    "Y": "bounded variable with support [L, H], in its own units",
+    "Z = \\varphi(Y)": "dual unbounded variable, same units",
+    "H": "finite upper bound of Y",
+    "L": "lower bound of Y",
+    "\\varphi": "the dual transform, smooth and one-to-one"
+   },
+   "assumptions": [
+    "The bound H is known or estimable (world population for casualties, capitalization for operational losses).",
+    "Excesses of the dual variable above a threshold follow a generalized Pareto form (Pickands-Balkema-de Haan)."
+   ],
+   "breakdown_regime": "If the bound is soft or moving (a cap that itself grows with the number of contracts, as in reinsurance), the single-H construction understates the true exposure and the bound must be modeled as variable.",
+   "domain": "bounded variables",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Capped quantities in the engine (season totals, counting stats with structural ceilings, minutes-limited production) are estimated through the dual transform: fit the tail on the unbounded dual, then map back, so a capped metric gets a finite, honest mean instead of either a naive sample mean or a spurious infinite one.",
+    "source_operator": "shadow_mean_dual_distribution",
+    "telemetry": "Known structural caps per metric, exceedances above high thresholds, and generalized Pareto fits on the dual scale."
+   }
+  },
+  {
+   "primitive_id": "war_casualties_true_mean",
+   "name": "Violent conflict casualties are Paretian with exponent near 0.53 (GPD shape xi near 1.88 rescaled, 1.59 actual): the maximum likelihood mean is 3 to 4 times the sample mean, and inter-arrival times of large events are memoryless, contradicting decline-of-violence readings",
+   "verbatim_quote": "\"True\" or maximum likelihood, or \"statistical\" mean is between 3 and 4 times observed mean.",
+   "page": "Ch. 18, §18.2.1, printed p. 326",
+   "latex": "G(y) = 1 - \\left( 1 + \\frac{\\xi y}{\\beta} \\right)^{-1/\\xi}",
+   "symbol_and_unit_ledger": {
+    "G(y)": "generalized Pareto distribution of excesses over a threshold, dimensionless",
+    "\\xi": "shape parameter, equal to 1/alpha; fitted 1.5886 for actual casualties above 50k, standard error 0.1467",
+    "\\beta": "scale parameter, in casualty units",
+    "y": "excess over the threshold, in casualty units"
+   },
+   "assumptions": [
+    "Casualties are rescaled to today's world population and capped by it, using the dual distribution method of Chapter 17.",
+    "Threshold of 50k victims gives the best compromise between fit and observation count; ratios in Table 18.1 span thresholds from 10K to 500K."
+   ],
+   "breakdown_regime": "Historical casualty figures are unreliable; the chapter answers with bootstrap over high and low estimates (100,000 resamples) and jackknifing, and the exponent stays in the same range, but the method cannot repair systematically missing conflicts.",
+   "domain": "conflict data"
+  },
+  {
+   "primitive_id": "recursive_epistemic_uncertainty",
+   "name": "Recursive epistemic uncertainty manufactures fat tails: layering uncertainty about a parameter, then about that uncertainty, with no principled stopping point, fattens a Gaussian's tails toward power law behavior (with error rate a = 1/100 and 25 layers, the probability of exceeding 10 sigma is overstated relative to the Gaussian by a factor of 3.62 x 10^18 in the chapter's table)",
+   "verbatim_quote": "And there is no reason to stop there: we can keep nesting these uncertainties into higher orders, with the uncertainty rate of the uncertainty rate of the uncertainty rate, and so forth. There is no reason to have certainty anywhere in the process.",
+   "page": "Ch. 20, §20.1.1, printed p. 368",
+   "latex": "f_N(x) = \\int_0^\\infty \\cdots \\int_0^\\infty \\phi(\\mu, \\sigma, x) \\, f(\\bar{\\sigma}, \\sigma_1; \\sigma) \\cdots f(\\sigma_{N-1}, \\sigma_N; \\sigma_{N-1}) \\, d\\sigma \\, d\\sigma_1 \\cdots d\\sigma_N",
+   "symbol_and_unit_ledger": {
+    "f_N(x)": "density after N layers of parameter uncertainty",
+    "\\phi(\\mu, \\sigma, x)": "Gaussian density with mean mu and standard deviation sigma",
+    "\\sigma_i": "scale parameter at layer i",
+    "N": "number of nested uncertainty layers, count"
+   },
+   "assumptions": [
+    "Each layer's parameter is itself uncertain with a stated relative error rate.",
+    "The two-state discretization (sigma times (1 plus or minus a)) is the tractable special case used for the tables."
+   ],
+   "breakdown_regime": "If the error rates decay geometrically across layers (the bleed regime, rate lambda below 1), moments stay finite and capped; the chapter computes that limit explicitly. The power law conclusion needs non-decaying higher-order uncertainty.",
+   "domain": "epistemic uncertainty",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats parameter uncertainty as a tail-generating input, not a footnote: a projection whose key parameter is itself uncertain is computed under the layered distribution, which mechanically widens the tails of the output before any decision is taken on it.",
+    "source_operator": "recursive_epistemic_uncertainty",
+    "telemetry": "Parameter estimates with their own error rates, model disagreement across estimation methods, and the depth of defensible uncertainty layers per parameter."
+   }
+  },
+  {
+   "primitive_id": "stochastic_alpha_moment_bias",
+   "name": "Stochastic tail exponent: making alpha random (mean preserved) raises every finite moment and the conditional shortfall of a one-tailed power law variable, and the bias survives summation to the stable limit (Propositions 21.1-21.2)",
+   "verbatim_quote": "This has consequences on sampling error as uncertainty about α translates into a higher expected mean.",
+   "page": "Ch. 21, abstract, printed p. 379",
+   "latex": "E\\left[ (X')^p \\right] \\ge E\\left[ X^p \\right]",
+   "symbol_and_unit_ledger": {
+    "X'": "the variable with stochastic tail exponent, units of X",
+    "X": "the same variable with constant exponent at the mean value alpha-bar",
+    "p": "moment order, with all realizations of alpha above p",
+    "E[(X')^p]": "p-th moment under exponent uncertainty, units of X raised to p"
+   },
+   "assumptions": [
+    "The stochastic exponent preserves the mean exponent and stays above the moment order p.",
+    "For left-asymmetric variables the inequality reverses, as the chapter's abstract states."
+   ],
+   "breakdown_regime": "For capped (compact support) variables the same convexity raises the shadow mean, as the chapter shows for the violence application; the effect vanishes only when the exponent is known exactly.",
+   "domain": "epistemic uncertainty",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Exponent uncertainty is carried through the engine's tail calculations as a distribution over alpha, never a point plug-in: the expected magnitude of extreme outcomes is computed under the mixture, which is systematically larger than the magnitude at the average exponent.",
+    "source_operator": "stochastic_alpha_moment_bias",
+    "telemetry": "Posterior or bootstrap distributions of fitted tail exponents per metric, not just their point estimates."
+   }
+  },
+  {
+   "primitive_id": "pvalue_metadistribution",
+   "name": "The meta-distribution of p-values is extremely skewed at any sample size: 75 percent of realizations of a true p of .05 fall below .05, and 60 percent of realizations of a true p of .12 fall below .05, so a single study's p-value is a weak measurement of itself",
+   "verbatim_quote": "to the point where 75% of the realizations of a \"true\" p-value of .05 will be <.05 (a borderline situation is 3× as likely to pass than fail a given protocol), and, what is worse, 60% of the true p-value of .12 will be below .05.",
+   "page": "Ch. 22, introduction, printed p. 390",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Realizations are drawn across statistically identical repetitions of the same protocol (paired t-test setting of the derivation).",
+    "The parsimonious limiting form is parametrized by the median p-value alone."
+   ],
+   "breakdown_regime": "Raising power helps little; the chapter's remedy is markedly larger samples or thresholds at least an order of magnitude stricter. The result concerns sampling variability of the p-value itself, separate from publication bias.",
+   "domain": "statistical inference"
+  },
+  {
+   "primitive_id": "lindy_absorbing_barrier",
+   "name": "Lindy as distance from an absorbing barrier: a driftless arithmetic process has a power law (Lindy) exit-time distribution with hazard falling as alpha over t, and any negative drift removes it from that class",
+   "verbatim_quote": "Here we model it as the exit time of a stochastic process (arithmetic) with drift µ and show how the force of mortality behaves with respect to the distance from absorption. We show that, while a process with a drift µ = 0 produces a Lindy survival function, any amount of negative drift makes it exit that class.",
+   "page": "Ch. 23, abstract, printed p. 405",
+   "latex": "\\mu(\\tau) = -\\frac{S'(\\tau)}{S(\\tau)} = -\\frac{d}{d\\tau} \\log S(\\tau)",
+   "symbol_and_unit_ledger": {
+    "\\mu(\\tau)": "force of mortality (hazard rate) at age tau, per unit time",
+    "S(\\tau)": "survival function, probability of not yet being absorbed, dimensionless",
+    "\\tau": "age or elapsed time"
+   },
+   "assumptions": [
+    "The process is arithmetic Brownian motion with an absorbing barrier below the current level.",
+    "Feller's result used in the chapter: first passage time for driftless Brownian motion is stable with exponent 1/2."
+   ],
+   "breakdown_regime": "Positive drift changes the picture again (a positive probability of never being absorbed); mean-reverting or jump processes need their own first-passage analysis and do not inherit the 1/2 exponent.",
+   "domain": "survival analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Survival type quantities in the engine (streaks, tenure, droughts, time between extreme events) are read through the hazard lens: if expected additional life grows with age, the quantity sits in the power law class and its future is extrapolated by the declining hazard, not by an average lifetime.",
+    "source_operator": "lindy_absorbing_barrier",
+    "telemetry": "Ages and durations of ongoing spells, historical spell-length distributions, and distances from absorbing thresholds."
+   }
+  },
+  {
+   "primitive_id": "dynamic_hedging_moment_failure",
+   "name": "Dynamic hedging needs every moment finite: the Taylor expansion behind the Black-Scholes-Merton hedge collapses under a power law, whose moments above alpha are all infinite, and simulated hedging errors under a Student T with alpha = 3 have infinite variance",
+   "verbatim_quote": "And the annoyance is that a power law will have every moment higher than α infinite, causing the equation of the Black-Scholes-Merton portfolio to fail.",
+   "page": "Ch. 24, §24.1.1, printed p. 419",
+   "latex": "\\Delta \\pi = -\\frac{\\partial C}{\\partial t} \\Delta t - \\frac{1}{2} \\frac{\\partial^2 C}{\\partial S^2} (\\Delta S)^2 + O\\left( (\\Delta S)^3 \\right)",
+   "symbol_and_unit_ledger": {
+    "\\pi": "hedged portfolio value, in currency units",
+    "C": "option value, in currency units",
+    "S": "underlying price, in currency units",
+    "\\Delta t": "time step between hedges",
+    "\\Delta S": "price change over the step"
+   },
+   "assumptions": [
+    "The derivation assumes frictionless trading, no price impact, a known constant-parameter Gaussian, and no scalable jumps.",
+    "Merton's jump extension keeps all moments finite, which is why it does not repair the power law case."
+   ],
+   "breakdown_regime": "The failure is asymptotic in the moment sense: at very small scales the expansion can look adequate, which is why the method survives in calm data and fails exactly in the tail events it was meant to cover.",
+   "domain": "derivatives pricing"
+  },
+  {
+   "primitive_id": "put_call_parity_static_pricing",
+   "name": "Option pricing without dynamic hedging: put-call parity alone forces a unique risk-neutral measure, recovered from the strike derivative of call prices (Breeden-Litzenberger), turning pricing into an interpolation problem valid for any distribution with a finite first moment",
+   "verbatim_quote": "We have replaced the complexity and intractability of dynamic hedging with a simple, more benign interpolation problem, and explained the performance of pre-Black-Scholes option operators using simple heuristics and rules, bypassing the structure of the theorems of financial economics.",
+   "page": "Ch. 25, §25.4, printed p. 427",
+   "latex": "\\frac{\\partial C}{\\partial K} = -P(S_T > K)",
+   "symbol_and_unit_ledger": {
+    "C": "European call price, in currency units",
+    "K": "strike price, in currency units",
+    "S_T": "underlying price at maturity T, in currency units",
+    "P(S_T > K)": "risk-neutral probability of finishing above the strike, dimensionless"
+   },
+   "assumptions": [
+    "Put-call parity holds for all strikes (static arbitrage), and a tradable forward exists.",
+    "Proofs are stated at zero rates for clarity; premia are discounted at the operator's rate otherwise."
+   ],
+   "breakdown_regime": "The recovered measure is only pinned down between traded strikes; sparse strike grids leave interpolation freedom, though the chapter shows each gap's effect on the measure and its first moment is bounded by neighboring strike differences.",
+   "domain": "derivatives pricing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The static replication idea transfers to any setting where a family of threshold prices or threshold frequencies is observable: the full distribution can be recovered by differentiating across thresholds instead of assuming a parametric form, which is how the engine builds empirical distributions from exceedance data.",
+    "source_operator": "put_call_parity_static_pricing",
+    "telemetry": "Exceedance frequencies across a dense ladder of thresholds for each metric, differenced to recover densities."
+   }
+  },
+  {
+   "primitive_id": "barbell_from_tail_constraints_maxent",
+   "name": "Under maximum entropy with left-tail risk constraints, the constraints override conventional portfolio theory and the barbell portfolio (maximal certainty in one part, maximal uncertainty in another) emerges from the construction rather than being imposed",
+   "verbatim_quote": "are exhibited: (i) the left-tail constraints are sufficiently powerful to override all other considerations in the conventional theory; (ii) the “barbell portfolio”",
+   "page": "Ch. 30, introduction, printed p. 469",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The joint distribution of returns is treated as unknown and represented by maximum entropy given the stated constraints.",
+    "Risk is expressed as tail constraints (VaR or expected shortfall limits) of the kind regulators and clearing firms impose."
+   ],
+   "breakdown_regime": "If the true distribution were known and thin-tailed, the conventional mean-variance solution reasserts itself; the result depends on genuine ignorance plus binding tail constraints.",
+   "domain": "portfolio construction"
+  },
+  {
+   "primitive_id": "growth_rate_outcome_class_split",
+   "name": "Growth rate and outcome live in different distribution classes: an exponentially (Laplace) distributed growth rate exponentiates into a Pareto outcome, so small errors in the rate become explosive errors in the outcome (Remark C.1)",
+   "verbatim_quote": "Implication: One cannot naively translate properties between the rate of growth r and XT because errors in r could be small (but nonzero) for r but explosive in translation owing to the exponentiation.",
+   "page": "Appendix C, Remark C.1, printed p. 185",
+   "latex": "X_t = X_0 e^{r (t - t_0)}",
+   "symbol_and_unit_ledger": {
+    "X_t": "outcome at time t (pandemic fatalities in the application), count",
+    "X_0": "initial outcome, count",
+    "r": "average growth rate over the interval, per unit time; thin-tailed, Laplace with scale b = 1/alpha",
+    "t - t_0": "elapsed time"
+   },
+   "assumptions": [
+    "The outcome X_T is Paretian with exponent alpha below 1 in the pandemic application.",
+    "The rate is the time average of instantaneous rates over the interval (Eq. C.3)."
+   ],
+   "breakdown_regime": "The split is a property of exponentiation; for additive accumulation the rate and the outcome share a class and the warning does not apply.",
+   "domain": "growth processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any engine quantity built by compounding (form curves, cumulative production, growth-adjusted ratings) is audited on both scales: uncertainty is stated for the rate and separately for the compounded outcome, since a well-estimated rate still yields a fat-tailed outcome.",
+    "source_operator": "growth_rate_outcome_class_split",
+    "telemetry": "Growth-rate series and compounded outcome series for the same quantity, with errors tracked on both scales."
+   }
+  },
+  {
+   "primitive_id": "alpha_estimation_inverse_gamma",
+   "name": "Estimate the tail exponent by likelihood, not by moments: the maximum likelihood alpha has an inverse gamma sampling law that converges rapidly to Gaussian, while matching its accuracy with a sample mean at alpha = 1.2 takes 10^7 times more data",
+   "verbatim_quote": "The happy result is that the parameter α obeys an inverse gamma distribution that converges rapidly to a Gaussian and does not require a large n to get a good estimate.",
+   "page": "Appendix E, introduction, printed pp. 189-190",
+   "latex": "\\phi_X(x) = \\alpha L^\\alpha x^{-\\alpha - 1}, \\quad x > L",
+   "symbol_and_unit_ledger": {
+    "\\phi_X(x)": "Pareto density at x, per unit of X",
+    "\\alpha": "tail exponent, dimensionless",
+    "L": "scale (minimum value), units of X, set to 1 by rescaling in the appendix"
+   },
+   "assumptions": [
+    "The tail is standard Pareto above L.",
+    "The comparison is Monte Carlo based (10^5 simulations) at alpha = 1.2 with n = 100 and n = 1000."
+   ],
+   "breakdown_regime": "Likelihood estimation inherits model risk: if the true tail is only approximately Pareto, the estimator converges to the best Pareto approximation, and the chapter's Hill estimator discussion covers threshold choice sensitivity.",
+   "domain": "estimation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "All tail exponents inside the engine are fitted by likelihood on exceedances, with the inverse gamma sampling law supplying their uncertainty, which then feeds the stochastic-alpha correction instead of a single fragile point estimate.",
+    "source_operator": "alpha_estimation_inverse_gamma",
+    "telemetry": "Exceedance samples per metric, likelihood fits at several thresholds, and the sampling distribution of the fitted exponent."
+   }
+  },
+  {
+   "primitive_id": "ergodicity_time_vs_ensemble",
+   "name": "Ergodicity warning: time probability and ensemble probability are different objects, and when they diverge the ensemble average must be ignored for a single trajectory exposed to absorption",
+   "verbatim_quote": "Time probability and ensemble probability are not the same.",
+   "page": "Ch. 3, §3.11",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The setting is multiplicative dynamics with an absorbing state (ruin), where the ensemble includes trajectories that no longer exist.",
+    "The chapter's exception is a log-based (Kelly compatible) allocation policy, under which the two can be reconciled."
+   ],
+   "breakdown_regime": "For additive, ergodic processes without absorption the two probabilities coincide and the warning is moot; the book's claim is that most real risk exposures are not in that case.",
+   "domain": "survival and ergodicity"
+  },
+  {
+   "primitive_id": "ml_relu_option_basis",
+   "name": "Nonlinear payoffs decompose into ramp (ReLU) building blocks, the same objects as call options at strikes; unlike sigmoid sums, a finite ramp sum can represent an open, unbounded payoff, which is why ramps extrapolate into tails",
+   "verbatim_quote": "We can express all nonlinear univariate functions using a weighted sum of call options of different strikes, which in machine learning applications maps to the tails better than a sum of sigmoids (themselves a net of a long and a short options of neighboring strikes).",
+   "page": "Appendix G, Summary, printed p. 216",
+   "latex": "g(x) = \\sum_i \\omega_i \\, \\rho_{K_i, p}(x), \\quad \\rho_{K, p}(x) = k + \\frac{\\log \\left( e^{p (x - K)} + 1 \\right)}{p}",
+   "symbol_and_unit_ledger": {
+    "g(x)": "target nonlinear payoff or response function, in payoff units",
+    "\\omega_i": "weight of block i, dimensionless",
+    "\\rho_{K,p}(x)": "smoothed ramp (softplus) with knot K and smoothing p",
+    "K_i": "knot or strike of block i, units of x",
+    "p": "smoothing parameter, per unit of x"
+   },
+   "assumptions": [
+    "Univariate functions; the multivariate case needs products or deeper compositions.",
+    "A sigmoid sum needs infinitely many terms for an unbounded target (Remark G.1), while ramps do not."
+   ],
+   "breakdown_regime": "In-sample fit is not the claim; the advantage is extrapolation behavior outside the observed range, and it does not protect against a wrongly specified target inside the range.",
+   "domain": "machine learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's function approximators for fat-tailed responses are built from unbounded ramp blocks rather than saturating sigmoids, so a learned response can keep growing in regions beyond the training data instead of flattening exactly where the tail risk lives.",
+    "source_operator": "ml_relu_option_basis",
+    "telemetry": "Training ranges per learned response, knot placements, and out-of-range behavior checks against held-out extremes."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "31f63826f9e14277-t1",
+   "think": "The book is a single argument developed across thirty chapters and seven appendices: most real world random variables are fat tailed, and fat tails are not a cosmetic change of shape but a change of probability class that invalidates the default machinery of statistics. The core object is the power law class P, defined by a survival function decaying as a slowly varying function times x to the minus alpha, where alpha, the tail exponent, decides which moments exist. A variable is Paretian exactly when some moment is infinite or undefined, and that one fact reorganizes everything downstream: convergence rates, estimator behavior, scoring rules, aggregation, and even what a forecast can mean. The unifying technical lens is preasymptotics. Limit theorems describe behavior as n goes to infinity, but practice lives at finite n, and the distance between the finite sample and the asymptote is itself a property of the distribution. The kappa metric makes that distance operational: built from the growth of the mean absolute deviation of partial sums, it is 0 for the Gaussian and approaches 1 as the mean itself disappears. Kappa converts vague warnings about slow convergence into arithmetic. A Student T with three degrees of freedom needs about four times the Gaussian sample for the same reduction in dispersion from averaging; a one tailed Pareto with the same exponent needs 543 observations against the Gaussian 30; the popular 80/20 Pareto needs up to 10 to the 9 more observations in one comparison and 10 to the 14 in another. Sample sufficiency is therefore a property of the pair (distribution, n), never of n alone, and any inference that does not state its convergence rate is incomplete. From that base the book derives a sequence of vetoes. Variance based tools fail twice over: the second moment may not exist, and even when it does, its own sampling error is governed by the fourth moment, which is typically infinite, as the maximum to sum plots show and as the single day dominance of kurtosis in equity data confirms. Correlation and the whole elliptical apparatus fail when joint distributions are not elliptical, which stochastic volatility and regime switching already guarantee. Probability statements fail when they are confused with payoff statements: a binary event carries only the zeroth moment, a real exposure carries all moments, and the correction factor between a binary probability and its payoff equivalent grows without bound as alpha approaches 1. Scoring rules inherit the same defect, because tallies of correct calls and the Brier score are thin tailed by construction, so they certify forecasters in exactly the domains where certification is meaningless, while cumulative payoff under a survival constraint keeps the true distribution class. Even the p-value fails as a self measurement, since its meta-distribution across identical repetitions is so skewed that a reported .02 is likely a true value above .1. The constructive half of the book is a replacement toolkit. Estimate the tail exponent by likelihood, because alpha has a well behaved inverse gamma sampling law while sample moments do not converge. Measure dispersion with mean absolute deviation rather than variance. Use extreme value theory for maxima and exceedances, where the tail exponent is conserved and the generalized Pareto form holds above a threshold. Correct the invisible part of every moment that lies above the sample maximum instead of pretending the empirical distribution is the distribution. For bounded variables whose apparent tail suggests an infinite mean, pass to the dual unbounded variable, estimate there, and transform back to obtain shadow moments. Treat concentration measures as superadditive and downward biased in samples. And treat uncertainty about parameters as itself a tail generating mechanism: stochastic volatility fattens a Gaussian, stochastic alpha raises every finite moment of a power law, and recursively layered epistemic uncertainty manufactures power law behavior out of thin tailed ingredients, which is the book's explanation for why the class is so common in the wild. For a reasoning engine the consequences are architectural. Classification precedes computation: before any signal is averaged, regressed, or scored, the engine must establish which probability class it inhabits, using diagnostics that work preasymptotically, namely the maximum to sum path, the excess expectation ratio, and the empirical kappa path. Quantities that cannot converge at the available n must be refused as inputs, not merely discounted. Uncertainty about parameters must be propagated as a distribution, because the Jensen gaps here are first order effects, not corrections. Aggregation must respect superadditivity and the hidden tail correction, so pooled evidence is never the plain average of local summaries. And every published probability must carry the class of the payoff it will be judged against, with its revision dynamics bounded the way arbitrage bounds a traded binary price. The book also marks its own boundaries honestly. The machinery is strongest for univariate, roughly independent observations in the regularly varying class; dependence, nonstationarity, and multivariate tails are handled only partially, through the ellipticality critique and the covariance discussion. Several chapters are position papers built around one dataset each, the SP500 diagnostics, the war casualty fits, the pandemic fatality fits, and their parameter values should be read as demonstrations of method rather than universal constants. Where the author cannot compute, he says so: the Pareto convergence to the stable law is numerical, the lognormal kappa is bracketed rather than closed form, and the war calibration leans on population rescaling conventions a reader may contest. The lasting content is the discipline: name the class, state the rate, refuse the statistic that cannot exist at your sample size, and never let a probability travel without its payoff.",
+   "retrocausal_genealogy": "The lineage is explicit in the references and chapter credits. The ruin tradition comes from Filip Lundberg and Harald Cramer, whose 1930 work supplies the Cramer condition on exponential moments that separates insurable from uninsurable tails. Extreme value theory descends from Fisher and Tippett through Gnedenko to Pickands, Balkema, and de Haan, whose exceedance theorem the book uses repeatedly. Mandelbrot contributes the Paretian research program, fractal roughness, and the Lindy effect, and is memorialized in Chapter 20. Option pricing is re-derived from Bachelier (1900) and Thorp rather than from Black, Scholes, and Merton, with Breeden and Litzenberger supplying the strike derivative result. De Finetti supplies the scoring framework the book criticizes, and Jaynes supplies the maximum entropy construction behind the portfolio chapters. The author's own Dynamic Hedging (1997) and the Incerto volumes are the practitioner substrate, and the research chapters are coauthored with Cirillo (inequality, shadow moments, wars), Douady (concentration), Bar-Yam (forecasting), Fontanari (Gini), Haug, and the Gemans.",
+   "theory_of_mind": "The author models his reader as a trained practitioner whose defaults are Gaussian and whose language is verbalistic: someone who says an event is likely and believes he has said something about what to do. His diagnosis is that the field's errors are category errors, confusing probability with payoff, limits with finite samples, ensemble averages with single trajectories, and the body of a distribution with its tails. He also models incentives as part of the epistemology: methods that are wrong in the tails survive because the people who publish them bear no cost when the tail arrives, the skin in the game argument developed in Appendix F. Against this he sets traders' heuristics, the 1/n rule, Bachelier-Thorp pricing, survival based risk management, as knowledge that was selected by exposure to ruin. The intended readerly transformation is from asking how accurate a number is to asking which class the phenomenon belongs to and whether the number can exist at the available sample size.",
+   "cross_layer_veto": "The work vetoes across layers in both directions. Class membership vetoes statistics: if the needed moment does not exist, variance, correlation, regression, and kurtosis are not weak evidence, they are non-evidence, and any layer consuming them must be stopped. Kappa vetoes confidence: above 0.15 the normal approximation is revoked, and every averaging layer inherits a required sample size from the layer beneath it. The probability and payoff split vetoes evaluation: a calibration score earned in binary space cannot promote a model whose real exposures are fat tailed. The arbitrage bound vetoes communication: a probability that revises too violently is not a bolder forecast, it is an arbitrageable price. Superadditivity vetoes aggregation shortcuts, the hidden tail vetoes trusting empirical tail integrals, the shadow moment construction vetoes declaring infinite means for bounded quantities, and the stochastic alpha results veto plugging in a point estimate of the exponent anywhere downstream."
+  }
+ ],
+ "universal_lens": "As a general template the book teaches a discipline for any measurement science: classify the phenomenon before choosing statistics, because the class decides which summaries exist; quantify how much data a conclusion needs as a function of that class, not as a universal rule of thumb; separate the probability of an event from the magnitude of its consequences and never let the first stand in for the second; propagate uncertainty about your own parameters, since that uncertainty changes the class of the answer; and distrust any summary whose sampling behavior you have not examined at your actual sample size, because the distance between a finite sample and its asymptote is where most real world error lives.",
+ "gsi_mapping": "The Institute takes a methods curriculum and a publication standard. Every empirical claim in its research program should carry its tail classification, its convergence gauge, and the sample size the claim requires, so readers can see what the evidence can and cannot support. Tail exponents are estimated by likelihood with their sampling distributions reported; extremes are analyzed with extreme value methods rather than averages; bounded quantities are reported through shadow moments; and replication standards are set by the p-value meta-distribution, which shows that a single study's significance is a draw from a wide, skewed law. The war, pandemic, and inequality chapters double as worked exemplars of the full pipeline, from raw and unreliable data to a defensible tail statement.",
+ "gse_mapping": "The Edge engine takes an intake discipline and an evaluation discipline. On intake, every input distribution is classified before use, its kappa is estimated, and its observation count is converted into a Gaussian-equivalent count; metrics whose required moments fail the maximum to sum test are barred from variance or correlation based features. Tail magnitudes are computed with hidden tail corrections, capped quantities through the dual transform, and exponent uncertainty is carried as a distribution because it raises expected extremes. On evaluation, models are promoted on payoff-weighted, survival aware performance in the variable's own class rather than on binary hit tallies or calibration scores alone, pooled evidence follows the superadditivity rule instead of plain averaging, and published probabilities are monitored for revision paths that stay inside arbitrage-consistent bounds."
+}

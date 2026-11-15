@@ -1,0 +1,78 @@
+{
+  "book_id": "2817de89a793cd1f",
+  "source_status": "COMPLETE",
+  "title": "p0297",
+  "file_name": "p0297.txt",
+  "sha256": "2817de89a793cd1f59555e42199a307348739a0c490e20c28ed11ad47046c42a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Scrimmage initiation and jurisdictional demarcation define play commencement under dual referee/umpire authority. Universal Lens: Rooted in p0297 (2817de89a793cd1f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models scrimmage validity via snapper-back positioning and opponent deception signals using probabilistic state transitions. GSI Mapping: Rooted in p0297 (2817de89a793cd1f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally resolves scrimmage onset through temporal logic of ball movement and positional compliance, enabling state-machine evolution. GSE Mapping: Rooted in p0297 (2817de89a793cd1f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "feint_to_snap_ball",
+      "name": "Feint to Snap Ball",
+      "verbatim_quote": "(b) If, after the snapper-back has taken his position, he should voluntarily move the ball as if to snap it, whether he withholds it altogether or only momentarily, the ball is in play, and the scrimmage has begun.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_s': 'time of scrimmage initiation (s)', 'M_b': 'ball motion vector (m/s)', 'P_s': 'snapper-back position (m)', 'S_f': 'snap feint signal (dimensionless)'}",
+      "assumptions": "Snapper-back is on-side; voluntary motion implies intent to begin play.",
+      "breakdown_regime": "When T_s < 0 or P_s is off-side, scrimmage invalid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feint maps to stochastic process where M_b triggers T_s, modeled as Markovian transition from pre-snap to post-snap state.",
+        "source_operator": "feint_to_snap_ball",
+        "telemetry": "Ball motion detection and timing validation"
+      }
+    },
+    {
+      "primitive_id": "snapper_back_offside",
+      "name": "Snapper-back Off-side",
+      "verbatim_quote": "(c) When snapping the ball back, the player so doing must be on-side, the hand or foot used in snapping the ball excepted.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_s': 'snapper-back position (m)', 'L_o': 'off-side line (m)', 'D_p': 'player displacement (m)'}",
+      "assumptions": "Player must be on-side at moment of snap; exception applies to snapping limb.",
+      "breakdown_regime": "If D_p > L_o, penalty enforced.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Off-side condition derived from spatial kernel of player position relative to boundary, triggering penalty kernel.",
+        "source_operator": "snapper_back_offside",
+        "telemetry": "Positional tracking and boundary crossing detection"
+      }
+    },
+    {
+      "primitive_id": "false_start_deception",
+      "name": "False Start Deception",
+      "verbatim_quote": "(d) If any player of the side in possession of the ball other than the snapper-back makes any deliberate attempt, by a false start or otherwise, to draw the opponents off-side, the ball, if then snapped, shall not be regarded as in play nor the scrimmage as begun.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_d': 'deception attempt amplitude (dimensionless)', 'T_d': 'deception duration (s)', 'S_b': 'snap signal (dimensionless)', 'I_p': 'opponent positional shift (m)'}",
+      "assumptions": "Deception must be deliberate; snap invalid if deception occurs.",
+      "breakdown_regime": "If A_d > threshold and I_p > 0, scrimmage fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Deception modeled as adversarial signal injection into opponent state estimation, causing misalignment in I_p.",
+        "source_operator": "false_start_deception",
+        "telemetry": "Opponent movement deviation and deception signal correlation"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2817de89a793cd1f_t0",
+      "think": "The core dynamics of scrimmage initiation are governed by three interrelated primitives: feint-to-snap, off-side positioning, and false-start deception. These form a triadic constraint system where each primitive defines a boundary condition on the validity of play commencement. The feint-to-snap primitive establishes a temporal and kinematic trigger for scrimmage onset, modeled as a stochastic event with probabilistic outcomes based on snapper-back behavior. The off-side primitive introduces a geometric constraint that must be satisfied for the snap to be valid, forming a spatial kernel in the state space. The false-start deception primitive introduces an adversarial element, where intentional misrepresentation disrupts the equilibrium between players, leading to a failure mode in scrimmage initiation. Together, these primitives define a structured game-theoretic framework where each action has a deterministic consequence within a probabilistic domain. The referee's jurisdiction over these events ensures enforcement of rules, while the umpire handles specific player interactions. This structure enables formal modeling of scrimmage dynamics through Bayesian inference and temporal logic.\n\nDeep epistemic analysis for p0297 (2817de89a793cd1f, domain=other, pages_read=1/1): Operator 'Feint to Snap Ball' (page 1, domain other) captures: (b) If, after the snapper-back has taken his position, he should voluntarily move the ball as if to snap it, whether he withholds it altogether or only momentarily, the ball is in play, and the scrimmage has begun. Assumptions: Snapper-back is on-side; voluntary motion implies intent to begin play. Breakdown regime: When T_s < 0 or P_s is off-side, scrimmage invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Feint maps to stochastic process where M_b triggers T_s, modeled as Markovian transition from pre-snap to post-snap state. Operator 'Snapper-back Off-side' (page 1, domain other) captures: (c) When snapping the ball back, the player so doing must be on-side, the hand or foot used in snapping the ball excepted. Assumptions: Player must be on-side at moment of snap; exception applies to snapping limb. Breakdown regime: If D_p > L_o, penalty enforced. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Off-side condition derived from spatial kernel of player position relative to boundary, triggering penalty kernel. Operator 'False Start Deception' (page 1, domain other) captures: (d) If any player of the side in possession of the ball other than the snapper-back makes any deliberate attempt, by a false start or otherwise, to draw the opponents off-side, the ball, if then snapped, shall not be regarded as in play nor the scrimmage as begun. Assumptions: Deception must be deliberate; snap invalid if deception occurs. Breakdown regime: If A_d > threshold and I_p > 0, scrimmage fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Deception modeled as adversarial signal injection into opponent state estimation, causing misalignment in I_p. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0297 (2817de89a793cd1f, domain=other, pages_read=1/1): Operator 'Feint to Snap Ball' (page 1, domain other) captures: (b) If, after the snapper-back has taken his position, he should voluntarily move the ball as if to snap it, whether he withholds it altogether or only momentarily, the ball is in play, and the scrimmage has begun. Assumptions: Snapper-back is on-side; voluntary motion implies intent to begin play. Breakdown regime: When T_s < 0 or P_s is off-side, scrimmage invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Feint maps to stochastic process where M_b triggers T_s, modeled as Markovian transition from pre-snap to post-snap state. Operator 'Snapper-back Off-side' (page 1, domain other) captures: (c) When snapping the ball back, the player so doing must be on-side, the hand or foot used in snapping the ball excepted. Assumptions: Player must be on-side at moment of snap; exception applies to snapping limb. Breakdown regime: If D_p > L_o, penalty enforced. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Off-side condition derived from spatial kernel of player position relative to boundary, triggering penalty kernel. Operator 'False Start Deception' (page 1, domain other) captures: (d) If any player of the side in possession of the ball other than the snapper-back makes any deliberate attempt, by a false start or otherwise, to draw the opponents off-side, the ball, if then snapped, shall not be regarded as in play nor the scrimmage as begun. Assumptions: Deception must be deliberate; snap invalid if deception occurs. Breakdown regime: If A_d > threshold and I_p > 0, scrimmage fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Deception modeled as adversarial signal injection into opponent state estimation, causing misalignment in I_p. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century American football rulebooks, these primitives reflect foundational principles of game theory and control systems, evolving from static rule enforcement to dynamic state-based adjudication. Retrocausal Genealogy: Rooted in p0297 (2817de89a793cd1f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0297 (2817de89a793cd1f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams model each other's strategic intent through deception detection and positional anticipation. Each team seeks to exploit or mitigate the three primitives' constraints, creating a dual-agent博弈 environment. Theory of Mind & Decision Maker Model: Rooted in p0297 (2817de89a793cd1f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple primitives conflict—e.g., a feint combined with off-side positioning. Leakage occurs if deception is undetected, allowing invalid scrimmage initiation. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0297 (2817de89a793cd1f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0297 (2817de89a793cd1f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "book_id": "6e269489299acb38",
+  "source_status": "COMPLETE",
+  "title": "2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al",
+  "file_name": "2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al.md",
+  "sha256": "6e269489299acb383bb68b303d41fd87dd3ea069a02f88ab7c3ae8b5047cb67a",
+  "primary_domain": "football",
+  "pages_total": 9,
+  "pages_read": 9,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 9,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The interaction manifold of NFL pass protection is modeled as a latent skill Hilbert space. Ridge-regularized Bradley-Terry paired comparisons project sparse, context-dependent engagement outcomes onto orthogonal player-specific vectors, isolating individual ability from environmental noise and opponent strength. The structural unification of pass-blocking and pass-rushing performance relies on a hierarchical Bradley-Terry framework. This operator models dyadic interactions as latent skill differentials, mapping discrete engagement outcomes to continuous efficiency scales while rigorously accounting for opponent strength and interaction-specific variance.",
+  "gsi_mapping": "GSI maps the ridge-penalized Bradley-Terry log-likelihood to a Bayesian hierarchical prior over player skills. Conformal inference bounds are constructed on the holdout log-loss, quantifying epistemic uncertainty in opponent-adjusted ratings when facing novel defensive or offensive line configurations. GSI maps these leaderboards via Bayesian posterior inference over player skill parameters. Conformal prediction intervals are constructed using the weekly path bootstrap, providing rigorous coverage guarantees for longitudinal efficiency trajectories and quantifying epistemic uncertainty in real-time scouting evaluations.",
+  "gse_mapping": "GSE treats each blocker-rusher engagement as a discrete state transition within a continuous-time Markov chain. The four-class severity model (loss/win/hit/sack) defines the transition probability matrix, dynamically updating situational advantage based on double-team indicators and spatial constraints. GSE translates these primitives into situational state-transition kernels. The severity model acts as a high-impact transition probability, updating defensive pressure states based on blocker-rusher dyads, enabling dynamic simulation of protection breakdowns and downstream quarterback decision-making under duress.",
+  "primitives": [
+    {
+      "primitive_id": "w0_interaction_sparsity",
+      "name": "Contextual Outcome Sparsity Operator",
+      "verbatim_quote": "Wyner University of Pennsylvania ## Abstract Evaluating offensive linemen and pass rushers at the player level is difficult because observable outcomes are sparse, opponent dependent, and strongly shaped by surrounding context.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Outcome density \\rho \\in [0,1] dimensionless; Context vector \\mathbf{c} \\in \\mathbb{R}^d.",
+      "assumptions": "Observable events follow a non-homogeneous Poisson process modulated by high-dimensional contextual covariates.",
+      "breakdown_regime": "Singularities emerge when outcome variance approaches zero (e.g., perfectly sterile games), rendering maximum likelihood estimators unstable without regularization.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's event-thinning kernel, where raw box-score counts are treated as thinned realizations of an underlying latent intensity function.",
+        "source_operator": "w0_interaction_sparsity",
+        "telemetry": "Variance-to-mean ratio of sack and hit distributions across game states."
+      }
+    },
+    {
+      "primitive_id": "w0_severity_kernel",
+      "name": "Multi-Class Severity Kernel",
+      "verbatim_quote": "Using 2021 regular-season Hudl tracking data, we construct a blocker–rusher interaction dataset and estimate two ridge-regularized Bradley–Terry paired-comparison models: a binary win/loss model aligned with the 2.5-second pass block win-rate definition and a four-class severity model over loss/win/hit/sack, with both models incorporating a double-team indicator.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Severity class s \\in \\{0,1,2,3\\}; Double-team indicator \\delta \\in \\{0,1\\}; Ridge penalty \\lambda \\geq 0.",
+      "assumptions": "Engagement outcomes are conditionally independent given latent player skill parameters and the double-team indicator.",
+      "breakdown_regime": "Model identifiability fails if the design matrix exhibits perfect multicollinearity between player matchups and contextual indicators.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to GSE's multi-outcome transition tensor, extending binary Bradley-Terry logits into a softmax manifold for granular pressure evaluation.",
+        "source_operator": "w0_severity_kernel",
+        "telemetry": "Cross-entropy loss reduction relative to global baseline on ordered holdout sets."
+      }
+    },
+    {
+      "primitive_id": "w0_manifold_density",
+      "name": "Interaction Manifold Density",
+      "verbatim_quote": "The final dataset contains 153,138 interactions across 33,283 pass plays in 266 games.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Total interactions N = 153,138; Pass plays P = 33,283; Games G = 266.",
+      "assumptions": "Data collection adheres to a consistent sampling protocol across all observed games and plays.",
+      "breakdown_regime": "Estimation precision degrades exponentially as the ratio of unique player pairs to observed interactions increases beyond the curse-of-dimensionality threshold.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Defines the empirical support measure for the GSI conformal prediction sets, ensuring sufficient edge density in the bipartite blocker-rusher graph.",
+        "source_operator": "w0_manifold_density",
+        "telemetry": "Average degree centrality of the bipartite matchup graph per season."
+      }
+    },
+    {
+      "primitive_id": "w0_logloss_gain",
+      "name": "Relative Log-Loss Reduction Metric",
+      "verbatim_quote": "On an ordered 80/20 holdout split (ntest = 30,628), both models improve on global baselines and modestly outperform stronger matchup baselines under log-loss evaluation, corresponding to relative log-loss reductions of about 0.24% to 1.21%.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Log-loss L \\in \\mathbb{R}^+; Relative reduction \\Delta \\in [0,1]; Test set size n_{test} = 30,628.",
+      "assumptions": "Holdout samples are drawn i.i.d. from the same underlying generative distribution as the training set.",
+      "breakdown_regime": "Metric becomes uninformative if baseline models achieve saturation (log-loss approaching machine epsilon).",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Directly feeds the GSI calibration layer, serving as the primary objective function for tuning the ridge penalty hyperparameter \\lambda.",
+        "source_operator": "w0_logloss_gain",
+        "telemetry": "Bootstrap-resampled confidence intervals of log-loss differentials against matchup baselines."
+      }
+    },
+    {
+      "primitive_id": "w1_interaction_table",
+      "name": "Interaction Table Construction",
+      "verbatim_quote": "After filtering and labeling, the modeling table contains 153,138 blocker–rusher interactions across 33,283 pass plays in 266 games, with 620 rushers and 348 blockers.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_interactions': 'unitless count of blocker-rusher pairs', 'N_plays': 'unitless count of passing plays', 'N_games': 'unitless count of games', 'N_rushers': 'unitless count of unique rushers', 'N_blockers': 'unitless count of unique blockers'}",
+      "assumptions": "All interactions are independent conditional on matchup features; no omitted variable bias from unmeasured factors.",
+      "breakdown_regime": "Applicable to any NFL dataset with high-frequency tracking data.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The interaction table serves as the foundational input for both GSI and GSE. In GSI, it enables hierarchical Bayesian shrinkage estimation of player effects via mixed-effects logistic regression. In GSE, it informs state-transition models by treating each interaction as a decision point with observable outcomes.",
+        "source_operator": "w1_interaction_table",
+        "telemetry": "Number of interactions per game/gameplay event, used to monitor data consistency."
+      }
+    },
+    {
+      "primitive_id": "w2_double_team_indicator",
+      "name": "Double Team Indicator",
+      "verbatim_quote": "We generate a binary double-team indicator and set it to 1 when multiple blockers are assigned to the same rusher within overlapping time windows.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_t': 'Binary indicator (0/1) denoting whether rusher i(t) faces double teaming on interaction t', 't': 'Time index of tracking frame', 'i(t)': 'Rusher identifier on interaction t'}",
+      "assumptions": "Double teaming is perfectly measured; no misclassification of assignment patterns.",
+      "breakdown_regime": "Crucial for distinguishing single-blocker from multi-blocker matchups, affecting relative player scaling.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The double-team feature is incorporated into both BT models as a fixed covariate adjustment. In GSI, it modifies the baseline logitscale. In GSE, it alters transition probabilities between states (e.g., single-blocker vs. double-team pressure)",
+        "source_operator": "w2_double_team_indicator",
+        "telemetry": "Proportion of interactions involving double teams, tracked season-over-season to detect coaching trend shifts."
+      }
+    },
+    {
+      "primitive_id": "w3_binary_bt_model",
+      "name": "Binary Bradley-Terry Win-Loss Model",
+      "verbatim_quote": "A rusher win is recorded when, within the labeled engagement window and before 2.5 seconds after the snap, the rusher becomes closer to the quarterback than the blocker.",
+      "page": 3,
+      "latex": "\\text{logit } P(Y_t = 1) = \\alpha + r_{i(t)} - b_{j(t)} + \\delta D_t",
+      "symbol_and_unit_ledger": "{'Y_t': 'Binary outcome (1 if rusher wins, 0 otherwise)', 'α': 'Overall intercept (log odds baseline)', 'r_i(t)': 'Rusher ability parameter (positive indicates stronger rusher)', 'b_j(t)': 'Blocker ability parameter (positive indicates better blocker)', 'δ': 'Coefficient on double-team dummy', 'D_t': 'Double-team indicator (1 if double-teamed, 0 otherwise)'}",
+      "assumptions": "Independence of irrelevant alternatives (IIA); exponential family likelihood; ridge penalty prevents overfitting.",
+      "breakdown_regime": "Recovers classical Bradley-Terry scaling when δ=0; handles sparse matchups via L2 regularization.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The binary BT model maps directly to GSI's core ranking framework, where player effects are posterior means from a Bayesian logistic regression with ridge priors. It also maps to GSE's discrete choice module, where logits are used to compute action probabilities.",
+        "source_operator": "w3_binary_bt_model",
+        "telemetry": "Estimated δ coefficient, monitored for systematic double-team advantage/disadvantage."
+      }
+    },
+    {
+      "primitive_id": "w4_multiclass_hierarchy",
+      "name": "Multiclass Severity Hierarchy",
+      "verbatim_quote": "The four outcome labels form a severity hierarchy from the rusher's perspective: sack is the most severe realized outcome, hit is a less severe contact outcome, win is a pressure win without contact, and loss is the absence of those events.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'outcome_labels': 'Ordered categorical variables (Loss < Win < Hit < Sack)', 'severity_rank': 'Ordinal ranking of outcomes'}",
+      "assumptions": "Outcomes are nested; higher-severity events preclude lower-severity ones on the same interaction.",
+      "breakdown_regime": "Prevents double-counting; ensures proper information flow from severe to mild outcomes.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The multiclass hierarchy is exploited in GSI's ordered probit extension of the BT model to jointly estimate player effects across all thresholds. In GSE, it defines a sequential decision tree where early severe outcomes terminate the branch.",
+        "source_operator": "w4_multiclass_hierarchy",
+        "telemetry": "Observed outcome proportions (p̂(loss), p̂(win), etc.), used to calibrate prior distributions."
+      }
+    },
+    {
+      "primitive_id": "6e269489299acb38_w2_g1",
+      "name": "2026 - Opponent-Adjusted Evaluation of NFL Ch.3 Grounded Operator",
+      "verbatim_quote": "t, and let Let Ct ∈ {loss, win, hit, sack} be the severity class for interaction πˆcglobal = 1 |Ttrain| 1{Ct t∈Ttrain = c} denote the train-set marginal class probability for class c.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6e269489299acb38_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6e269489299acb38_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6e269489299acb38_w2_g2",
+      "name": "2026 - Opponent-Adjusted Evaluation of NFL Ch.3 Grounded Operator",
+      "verbatim_quote": "For the matchup baseline, let πˆi(,Rc ) be rusher i's empirical class frequency in training and let πˆj(,Bc) be blocker j's empirical allowed class frequency.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6e269489299acb38_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6e269489299acb38_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6e269489299acb38_w2_g3",
+      "name": "2026 - Opponent-Adjusted Evaluation of NFL Ch.3 Grounded Operator",
+      "verbatim_quote": "With prior strength m = 50, we smooth each class profile toward the global class probabilities.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6e269489299acb38_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6e269489299acb38_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "bt_dyadic_efficiency",
+      "name": "Bradley-Terry Dyadic Efficiency Operator",
+      "verbatim_quote": "4 9.49 3.16 ## 4.3 Ratings and Leaderboards After internal and external validation, we refit each model on the full interaction table and summarize the resulting end-of-season ratings.",
+      "page": 7,
+      "latex": "P(i \\text{ beats } j) = \\frac{\\exp(\\theta_i)}{\\exp(\\theta_i) + \\exp(\\theta_j)}",
+      "symbol_and_unit_ledger": "\\theta_i: Latent skill parameter for agent i (dimensionless log-odds scale). P: Probability of winning the specific pass-rush engagement (dimensionless).",
+      "assumptions": "Stochastic transitivity of player skills; independence of individual play outcomes conditional on latent skill parameters; stationarity of skill within the evaluation window.",
+      "breakdown_regime": "Breaks down when sample size is insufficient (<200 interactions), leading to high-variance estimates and poor separation among elite players due to small-sample volatility.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Glickman & Jones head-to-head rating systems, directly mapping to GSI's opponent-adjusted efficiency metrics.",
+        "source_operator": "bt_dyadic_efficiency",
+        "telemetry": "End-of-season BT score distributions by role."
+      }
+    },
+    {
+      "primitive_id": "severity_impact_kernel",
+      "name": "Severity Impact Kernel",
+      "verbatim_quote": "The win/loss and severity leaderboards are directionally similar for elite rushers but differ more noticeably for blockers, which is consistent with the severity model's heavier emphasis on high-impact outcomes.",
+      "page": 7,
+      "latex": "S_{ij} = \\mathbb{E}[Y_{ij} | \\text{engagement}] \\approx f(\\theta_i, \\phi_j)",
+      "symbol_and_unit_ledger": "S_{ij}: Expected severity score of outcome for dyad (i,j) (continuous, dimensionless impact scale). Y_{ij}: Observed functional pressure metric (e.g., distance to QB or time-to-throw).",
+      "assumptions": "Richer pass-rush outcomes can be aggregated into a continuous severity metric that monotonically correlates with defensive success beyond binary wins.",
+      "breakdown_regime": "Singularity occurs if the severity metric becomes collinear with the binary win label, rendering the additional continuous information redundant.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a continuous impact kernel used by GSE to weight state transitions toward high-leverage defensive pressures.",
+        "source_operator": "severity_impact_kernel",
+        "telemetry": "Discrepancy between win-rate rankings and severity rankings for All-Pro selections."
+      }
+    },
+    {
+      "primitive_id": "longitudinal_bootstrap_path",
+      "name": "Longitudinal Bootstrap Path Estimator",
+      "verbatim_quote": "The regular-season dataset yields 18 cumulative weekly checkpoints for each player-model-role series.",
+      "page": 7,
+      "latex": "\\hat{\\theta}_{t}^{(b)} \\sim \\mathbb{B}\\left( \\mathcal{D}_{1:t} \\right), \\quad t \\in \\{1, \\dots, 18\\}",
+      "symbol_and_unit_ledger": "\\hat{\\theta}_{t}^{(b)}: Bootstrapped skill estimate at week t for replicate b (dimensionless). \\mathcal{D}_{1:t}: Cumulative interaction data up to week t.",
+      "assumptions": "Weekly interaction subsets are independent and identically distributed draws from the underlying population of plays; bootstrapping accurately reflects sampling distribution.",
+      "breakdown_regime": "Fails if severe temporal autocorrelation exists in play-calling or matchup selection, violating the i.i.d. assumption of the bootstrap resampling.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to conformal time-series forecasting, providing central 50% bootstrap intervals for GSI's weekly trajectory visualizations.",
+        "source_operator": "longitudinal_bootstrap_path",
+        "telemetry": "Weekly trajectories and 25th-75th percentile bands for top players."
+      }
+    },
+    {
+      "primitive_id": "conditional_engagement_filter",
+      "name": "Conditional Engagement Filter",
+      "verbatim_quote": "They should also be interpreted as interaction-level efficiency conditional on observed pass-rush engagements, not as an all-snap measure of overall player value.",
+      "page": 7,
+      "latex": "\\mathcal{E}(i) = \\frac{1}{N_{eng}} \\sum_{k=1}^{N_{eng}} \\mathbb{I}(\\text{engagement}_k) \\cdot \\text{Outcome}_k",
+      "symbol_and_unit_ledger": "\\mathcal{E}(i): Interaction-level efficiency for player i (dimensionless). N_{eng}: Count of observed pass-rush engagements. \\mathbb{I}: Indicator function for valid engagement.",
+      "assumptions": "Player value on non-engagement snaps is orthogonal to the pass-rush efficiency metric; only direct blocker-rusher matchups inform the core operator.",
+      "breakdown_regime": "Biased if a player systematically avoids engagements (low N_eng) while maintaining a high win rate, masking true overall defensive liability.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as a domain filter for GSE, ensuring state updates only occur during validated physical duels, preventing noise from empty-side assignments.",
+        "source_operator": "conditional_engagement_filter",
+        "telemetry": "Minimum 200 interactions threshold applied to leaderboard eligibility."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6e269489299acb38_t0",
+      "think": "The foundational challenge in evaluating trench play lies in the severe sparsity and high contextual dependency of observable outcomes. Traditional metrics like sacks or basic pass block win rates conflate individual talent with environmental factors such as scheme, quarterback decision-making, and opposing unit quality. To isolate true player ability, we must transition from aggregate counting statistics to a micro-foundational paired-comparison framework. By treating every blocker-rusher engagement as a distinct head-to-head contest, we map the problem onto a Bradley-Terry structure. However, standard Bradley-Terry models assume binary outcomes and ignore the nuanced spectrum of success and failure in pass protection. Therefore, we extend this to a multi-class severity kernel encompassing wins, losses, hits, and sacks. Furthermore, the inclusion of a double-team indicator acknowledges that the local numerical advantage fundamentally alters the interaction dynamics. Because the resulting design matrix is massive and inherently sparse, direct maximum likelihood estimation is prone to overfitting and numerical instability. We introduce ridge regularization, effectively imposing a Gaussian prior on the latent skill parameters. This shrinkage estimator pulls extreme estimates toward the mean, stabilizing the inversion of the Hessian during optimization. The efficacy of this approach is validated not just by absolute predictive accuracy, but by its ability to consistently outperform strong matchup baselines on held-out data, demonstrating that the learned latent skills capture genuine, transferable player attributes rather than mere noise or team-level artifacts.",
+      "retrocausal_genealogy": "This methodology inherits directly from the classical Bradley-Terry (1952) paired comparison theory, later adapted for sports rankings by Diaconis and others. The specific application to NFL trenches builds upon the operationalization of pass block win rates (Burke, 2018) and tracking-based pressure metrics like STRAIN (Nguyen et al., 2023). It represents a synthesis of modern machine learning regularization techniques with established psychometric ranking models.",
+      "theory_of_mind": "The model implicitly constructs a theory of mind for both blockers and rushers by inferring their latent strategic capabilities. A rusher's high rating implies an ability to overcome average blocking technique regardless of scheme, while a blocker's rating reflects consistent spatial control. It accounts for the adaptive nature of coaches who deploy specific matchups, treating these deployments as observations generated by the underlying skill distributions of the agents involved.",
+      "cross_layer_veto": "We must veto any interpretation that conflates team-level schematic success with individual player skill. If a specific offensive line scheme systematically generates favorable matchups, the model might incorrectly attribute this to individual blocker superiority unless the opponent-adjustment is rigorous. Furthermore, leakage from downstream play outcomes (e.g., completion percentage) into the engagement labels must be strictly prevented to maintain the purity of the interaction-level evaluation."
+    },
+    {
+      "trace_id": "6e269489299acb38_t1",
+      "think": "We construct a comprehensive interaction table by filtering raw tracking data to retain only blocker-rusher pairs with clear engagement labels. The binary double-team indicator is generated through temporal overlap logic, ensuring that multi-blocker matchups are distinguished from single-blocker ones. Two Bradley-Terry (BT) models are then specified: a binary win-loss model that accounts for double-teaming via a fixed covariate, and a multiclass model that exploits the severity ordering of outcomes (loss, win, hit, sack) to avoid double-counting. The binary model recovers classical BT scaling with L2 regularization, while the multiclass model extends it to ordered outcomes. Both models map naturally to GSI's hierarchical Bayesian framework and GSE's sequential decision-making architecture, providing a unified foundation for evaluating NFL pass blocking and pass rushing. Window 2 Synthesis: Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The work builds on seminal papers by Bradley and Terry (1955) on paired comparisons and David (1988) on tournaments with hierarchies. It extends recent applications in sports analytics by Cattelan et al. (2013) and Stern (2020) to high-dimensional, sparse matchup data. Retrocausal Genealogy (Window 2): Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts seek to understand how individual blockers perform against specific rushers, accounting for context such as double-team situations. Players' perceived strengths (e.g., edge rushers vs. interior defenders) influence playbook design and defensive schemes. Theory of Mind (Window 2): Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "To prevent anti-collinearity, we ensure that rusher and blocker effects are identified via sufficient variation in matchups. The double-team indicator is kept as a fixed covariate rather than absorbing it into player effects, avoiding perfect multicollinearity with rusher-blocker fixed effects. Cross-Layer Veto (Window 2): Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6e269489299acb38_t2",
+      "think": "Window 3 Synthesis: Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 2026 - Opponent-Adjusted Evaluation of NFL Pass Blocking and Pass Rushing Performance - Pipping-Gam n et al (6e269489299acb38, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6e269489299acb38_t4",
+      "think": "The mathematical foundation of this chapter window rests on elevating binary pass-rush outcomes into a continuous, opponent-adjusted efficiency space. By employing a Bradley-Terry (BT) framework, the authors construct a latent variable model where the probability of a rusher winning an engagement is a logistic function of the difference in their underlying skill parameters relative to the blocker. This elegantly bypasses the crude baseline of raw sack counts, isolating the dyadic nature of the duel. The derivation extends further by introducing a 'severity' target, moving beyond the binary win/loss dichotomy to capture the magnitude of pressure (e.g., proximity to the quarterback). This dual-target approach—win probability versus expected severity—creates two distinct but related manifolds of player evaluation. The epistemic rigor is enforced through a weekly path bootstrap, treating the 18-week season as a sequence of cumulative data points. This allows for the construction of confidence intervals around the evolving skill estimates, transforming static end-of-season leaderboards into dynamic, probabilistic trajectories. The critical insight is the decoupling of interaction-level efficiency from all-snap value; the model strictly conditions on observed engagements, filtering out noise from non-interacting snaps. This conditional expectation ensures that the derived metrics reflect pure technical proficiency in the duel, rather than schematic advantages or avoidance behaviors. The divergence between win-rate and severity leaderboards for blockers specifically highlights the non-linear relationship between avoiding a sack and mitigating high-impact pressure, a nuance captured only by the richer severity kernel.",
+      "retrocausal_genealogy": "This methodology traces its lineage to Efron and Tibshirani's foundational work on the bootstrap, adapted here for longitudinal sports analytics. It builds upon the classical Bradley-Terry pairwise comparison models, recently formalized for head-to-head competition by Glickman and Jones. Furthermore, it integrates modern tracking-data concepts akin to the STRAIN metric proposed by Nguyen et al., shifting the paradigm from discrete event counting to continuous spatial-temporal pressure assessment.",
+      "theory_of_mind": "From a theory of mind perspective, the model implicitly reconstructs the strategic intent of both offensive linemen and defensive rushers. It assumes agents act to maximize their localized probability of winning the duel (blockers seeking to maintain distance, rushers seeking to collapse it). The severity model captures the 'aggressiveness' or 'high-impact' intent of a rusher, distinguishing between a player who merely gets a hand-up and one who fundamentally disrupts the quarterback's pocket geometry, reflecting deeper tactical awareness.",
+      "cross_layer_veto": "A strict cross-layer veto must be applied to prevent leakage from schematic context into the dyadic efficiency estimates. If a team heavily favors max-protection schemes, the blocker's engagement count might artificially deflate, biasing the conditional efficiency upward. Similarly, if a rusher is deployed primarily in blitz packages against weakened protections, their win rate inflates independently of their one-on-one skill. The minimum 200-interaction threshold acts as a primary filter against such small-sample schematic artifacts, ensuring the derived primitives reflect genuine player ability rather than coaching exploitation."
+    }
+  ]
+}

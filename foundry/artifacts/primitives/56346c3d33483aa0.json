@@ -1,0 +1,231 @@
+{
+  "book_id": "56346c3d33483aa0",
+  "source_status": "COMPLETE",
+  "title": "0626-kelly-criterion-under-probability-uncertainty",
+  "file_name": "0626-kelly-criterion-under-probability-uncertainty.md",
+  "sha256": "56346c3d33483aa024ee97b46ed679b6988b15197c8324f03ba6d2b23daf6e58",
+  "primary_domain": "math",
+  "pages_total": 3,
+  "pages_read": 3,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 3,
+  "windows_extracted": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Expected log wealth maximization under parameter uncertainty integrates posterior probability distributions over betting proportions, yielding robust stake sizing via Bayesian risk adjustment. A Bayesian robust optimization framework for Kelly sizing under logistic regression uncertainty, integrating worst-case probability envelopes via logit quantiles and Monte Carlo posterior sampling.",
+  "gsi_mapping": "GSI employs conformal predictive distributions to quantify uncertainty in estimated outcome probabilities, enabling probabilistic inference on optimal bet sizes through posterior integration. GSI employs conformal predictive distributions over estimated logit coefficients to generate robust probabilistic bounds, enabling decision-theoretic stake allocation under epistemic risk.",
+  "gse_mapping": "GSE applies adaptive state transitions based on realized vs. expected log wealth, dynamically adjusting stake weights when estimation error exceeds acceptable thresholds. GSE models dynamic wealth evolution through stochastic state transitions governed by Kelly-optimal stakes, conditioned on posterior uncertainty in outcome likelihoods and odds.",
+  "primitives": [
+    {
+      "primitive_id": "expected_log_wealth_kelly",
+      "name": "Expected Log Wealth Kelly",
+      "verbatim_quote": "- **(Elb)/(Emc)** Expected log wealth: maximize E_β[log wealth] with the expectation over β ~ N(β̂, Σ) computed by lower-bound approximation (Elb) or Monte Carlo (Emc).",
+      "page": 1,
+      "latex": "\\max_{x} \\mathbb{E}_{\\beta \\sim \\mathcal{N}(\\hat{\\beta}, \\Sigma)} [\\log(w + \\sum_h x_h O_h)]",
+      "symbol_and_unit_ledger": "{'x_h': 'bet proportion for outcome h (dimensionless)', 'O_h': 'odds for outcome h (dimensionless)', 'w': 'initial wealth (currency)', 'β': 'vector of logistic regression coefficients (dimensionless)', 'Σ': 'covariance matrix of β estimates (dimensionless)', 'E_β': 'expectation over β distribution (dimensionless)'}",
+      "assumptions": "Outcomes follow multinomial distribution; estimated coefficients β are normally distributed with known covariance Σ; wealth grows multiplicatively.",
+      "breakdown_regime": "When posterior variance of β becomes large, standard Kelly fails due to overfitting; uncertainty-aware Kelly stabilizes performance.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The derived kernel computes expected log wealth across parameter posteriors, replacing point-estimate Kelly with Bayesian risk-adjusted optimization.",
+        "source_operator": "expected_log_wealth_kelly",
+        "telemetry": "Mean squared error between estimated and true log wealth across simulation trials."
+      }
+    },
+    {
+      "primitive_id": "plug_in_kelly",
+      "name": "Plug-In Kelly",
+      "verbatim_quote": "- **(S)** Plug-in (\"standard\" with estimated probabilities — the paper's baseline for what practitioners actually do).",
+      "page": 1,
+      "latex": "\\max_{x} \\sum_h \\pi_h \\log(x_h O_h + w - \\sum_i x_i)",
+      "symbol_and_unit_ledger": "{'π_h': 'estimated probability of outcome h (dimensionless)', 'x_h': 'bet proportion for outcome h (dimensionless)', 'O_h': 'odds for outcome h (dimensionless)', 'w': 'initial wealth (currency)'}",
+      "assumptions": "Estimated probabilities π_h are accurate and fixed; no uncertainty in parameter estimation.",
+      "breakdown_regime": "When estimation error is significant, plug-in Kelly leads to suboptimal or unstable betting strategies.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to standard Kelly but with fixed estimates instead of integrated posteriors; serves as baseline for comparison.",
+        "source_operator": "plug_in_kelly",
+        "telemetry": "Cumulative loss relative to true optimal strategy under varying estimation noise."
+      }
+    },
+    {
+      "primitive_id": "fractional_kelly",
+      "name": "Fractional Kelly",
+      "verbatim_quote": "- **(F)** Fractional Kelly (fixed fraction of the (P) wager).",
+      "page": 1,
+      "latex": "x^*_h = f \\cdot \\frac{\\pi_h O_h - 1}{O_h}",
+      "symbol_and_unit_ledger": "{'f': 'fractional factor (0 < f ≤ 1, dimensionless)', 'π_h': 'estimated probability of outcome h (dimensionless)', 'O_h': 'odds for outcome h (dimensionless)'}",
+      "assumptions": "Fixed fraction f reduces exposure to estimation error; assumes linear relationship between probability and payout.",
+      "breakdown_regime": "Under high uncertainty, even fractional Kelly may fail if f is not calibrated to estimation risk.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from standard Kelly by scaling optimal bets by a fixed fraction f, reducing variance at cost of growth rate.",
+        "source_operator": "fractional_kelly",
+        "telemetry": "Sharpe ratio of wealth trajectory normalized by volatility of estimated probabilities."
+      }
+    },
+    {
+      "primitive_id": "adaptive_kelly_with_chance_constraint",
+      "name": "Adaptive Kelly with Chance Constraint",
+      "verbatim_quote": "**Verdict:** ADAPT — the expected-log-wealth Kelly (integrating over parameter uncertainty) with a mild chance constraint beats both standard and fractional Kelly in the paper's simulations; GSE should replace its plug-in Kelly sizing with uncertainty-aware sizing before touching any other staking change.",
+      "page": 1,
+      "latex": "\\max_{x} \\mathbb{E}_{\\beta}[\\log(w + \\sum_h x_h O_h)] \\quad \\text{s.t.} \\quad \\Pr(\\log(w + \\sum_h x_h O_h) > 0) \\geq \\alpha",
+      "symbol_and_unit_ledger": "{'x_h': 'bet proportion for outcome h (dimensionless)', 'O_h': 'odds for outcome h (dimensionless)', 'w': 'initial wealth (currency)', 'α': 'minimum acceptable probability threshold (dimensionless)'}",
+      "assumptions": "Posterior uncertainty is modeled via normal distribution; chance constraint ensures minimal risk of negative returns.",
+      "breakdown_regime": "When α approaches zero, the constraint becomes negligible; when α nears one, risk aversion dominates.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Integrates Bayesian expected log wealth with probabilistic safety margin, balancing growth and stability.",
+        "source_operator": "adaptive_kelly_with_chance_constraint",
+        "telemetry": "Probability of achieving positive log return within specified confidence level across trials."
+      }
+    },
+    {
+      "primitive_id": "worst_case_probabilistic_envelope",
+      "name": "Worst-Case Probabilistic Envelope",
+      "verbatim_quote": "Two-outcome exact reformulation (CC2) uses the normal quantiles of the logit to build worst-case probabilities π^H/π^L (appendix derivation).",
+      "page": 2,
+      "latex": "\\pi^{H/L} = \\Phi^{-1}(1-\\alpha) \\cdot \\sigma_{\\beta}",
+      "symbol_and_unit_ledger": "{'π^H': 'probability of high outcome, dimensionless', 'π^L': 'probability of low outcome, dimensionless', 'Φ^{-1}': 'inverse normal CDF, dimensionless', 'α': 'confidence level, dimensionless', 'σ_β': 'standard deviation of β, dimensionless'}",
+      "assumptions": "Logit model correctly specified; β uncertainty is Gaussian; odds are known and fixed; MC sample adequately represents posterior.",
+      "breakdown_regime": "When posterior variance exceeds threshold, leading to non-convergence of optimization.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction envelope for probabilistic uncertainty quantification.",
+        "source_operator": "worst_case_probabilistic_envelope",
+        "telemetry": "Expected exponential return under worst-case probability distribution."
+      }
+    },
+    {
+      "primitive_id": "monte_carlo_posterior_sampling",
+      "name": "Monte Carlo Posterior Sampling",
+      "verbatim_quote": "- Assumptions: logit model correctly specified; β uncertainty is Gaussian with known covariance; odds O_h fixed and known; the MC sample (1–2M draws) adequately represents the posterior.",
+      "page": 2,
+      "latex": "β^{(i)} \\sim \\mathcal{N}(\\hat{\\beta}, \\Sigma)",
+      "symbol_and_unit_ledger": "{'β^{(i)}': 'sampled coefficient vector, dimensionless', 'Σ': 'covariance matrix of β, dimensionless', 'i': 'index of MC draw, integer'}",
+      "assumptions": "Model is correctly specified; β follows multivariate Gaussian; odds are fixed; sufficient samples for convergence.",
+      "breakdown_regime": "When MC sample size insufficient or posterior is multimodal.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides kernel for GSE's stochastic state transition dynamics.",
+        "source_operator": "monte_carlo_posterior_sampling",
+        "telemetry": "Variance of estimated logit coefficients across draws."
+      }
+    },
+    {
+      "primitive_id": "kelly_stake_optimization",
+      "name": "Kelly Stake Optimization",
+      "verbatim_quote": "- Target: the stake vector x* maximizing the chosen objective.",
+      "page": 2,
+      "latex": "x^* = \\arg\\max_x \\mathbb{E}[\\log(w + \\sum_i x_i O_i)]",
+      "symbol_and_unit_ledger": "{'x^*': 'optimal stake vector, currency', 'O_i': 'decimal odds, dimensionless', 'w': 'current wealth, currency', 'i': 'outcome index, integer'}",
+      "assumptions": "Outcome features and odds are known; wealth evolves stochastically.",
+      "breakdown_regime": "When optimization constraints are violated or utility function is non-concave.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's policy gradient optimization for wealth maximization.",
+        "source_operator": "kelly_stake_optimization",
+        "telemetry": "Expected logarithmic wealth growth rate."
+      }
+    },
+    {
+      "primitive_id": "simulation_validation_framework",
+      "name": "Simulation Validation Framework",
+      "verbatim_quote": "Validation design - Four simulation experiments (E1–E4) × 2,500 trials; true probabilities known; models compared on expected exponential return under truth.",
+      "page": 2,
+      "latex": "\\mathbb{E}[\\log(w + \\sum_i x_i O_i)]_{\\text{truth}}",
+      "symbol_and_unit_ledger": "{'E[·]': 'expectation operator, dimensionless', 'w': 'wealth, currency', 'x_i': 'stake, currency', 'O_i': 'odds, dimensionless'}",
+      "assumptions": "True probabilities are known; simulations replicate real-world conditions.",
+      "breakdown_regime": "When true probabilities are unknown or simulation does not reflect reality.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides empirical benchmark for GSE's performance evaluation.",
+        "source_operator": "simulation_validation_framework",
+        "telemetry": "Average exponential return across 2,500 trials."
+      }
+    },
+    {
+      "primitive_id": "56346c3d33483aa0_w2_g1",
+      "name": "0626-kelly-criterion-under-probability-unc Ch.3 Grounded Operator",
+      "verbatim_quote": "only computable in simulation — on real data you're back to noisy realized wealth.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 56346c3d33483aa0_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "56346c3d33483aa0_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "56346c3d33483aa0_w2_g2",
+      "name": "0626-kelly-criterion-under-probability-unc Ch.3 Grounded Operator",
+      "verbatim_quote": "Direct overlap: prediction-market-ecosystem-triage-2026-08-09.md documents **oracle3 (Wang Transform + Kelly)** — GSE already has a Kelly sizing lane.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 56346c3d33483aa0_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "56346c3d33483aa0_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "56346c3d33483aa0_w2_g3",
+      "name": "0626-kelly-criterion-under-probability-unc Ch.3 Grounded Operator",
+      "verbatim_quote": "This paper is an **extension** of that lane: oracle3 covers the transform + point-estimate Kelly; this adds the missing piece — *parameter uncertainty* in the probability inputs.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 56346c3d33483aa0_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "56346c3d33483aa0_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "56346c3d33483aa0_t0",
+      "think": "This chapter introduces the core problem of applying the Kelly criterion under uncertainty in estimated probabilities. The standard Kelly approach assumes perfect knowledge of outcome probabilities, which is rarely true in practice. The paper explores two main solutions: integrating over the posterior distribution of parameters (expected log wealth Kelly), and incorporating a chance constraint to ensure a minimum probability of positive return. These methods address the fundamental issue of estimation error destroying Kelly’s optimality. Simulations show that the adaptive Kelly with chance constraints outperforms both standard and fractional Kelly in terms of long-term wealth growth while maintaining robustness against estimation uncertainty. This has direct implications for GSE's stake sizing logic, suggesting a shift from plug-in Kelly to Bayesian uncertainty-aware sizing. The framework also highlights the importance of empirical validation through repeated trials with known data-generating processes. The four experimental setups (E1–E4) vary in number of outcomes and odds, allowing for generalization across betting environments. Each experiment uses multinomial logistic regression to simulate estimation error, ensuring realistic modeling of uncertainty. The use of lower-bound approximations and Monte Carlo sampling reflects computational trade-offs in handling high-dimensional posteriors. Ultimately, this chapter supports a principled move toward Bayesian decision-making in GSE's risk management layer.\n\nFull-book synthesis across 3/3 pages of 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0): [expected_log_wealth_kelly p.1]: - **(Elb)/(Emc)** Expected log wealth: maximize E_β[log wealth] with the expectation over β ~ N(β̂, Σ) computed by lower-bound approximation (Elb) or Monte Carlo (Emc). (The derived kernel computes expected log wealth across parameter posteriors, replacing point-estimate Kelly with Bayesian risk-adjusted optimization.) [plug_in_kelly p.1]: - **(S)** Plug-in (\"standard\" with estimated probabilities — the paper's baseline for what practitioners actually do). (Isomorphic to standard Kelly but with fixed estimates instead of integrated posteriors; serves as baseline for comparison.) [fractional_kelly p.1]: - **(F)** Fractional Kelly (fixed fraction of the (P) wager). (Derived from standard Kelly by scaling optimal bets by a fixed fraction f, reducing variance at cost of growth rate.) [adaptive_kelly_with_chance_constraint p.1]: **Verdict:** ADAPT — the expected-log-wealth Kelly (integrating over parameter uncertainty) with a mild chance constraint beats both standard and fractional Kelly in the paper's simulations; GSE should replace its plug-in Kelly sizing with uncertainty-aware sizing before touching any other staking change. (Integrates Bayesian expected log wealth with probabilistic safety margin, balancing growth and stability.) [worst_case_probabilistic_envelope p.2]: Two-outcome exact reformulation (CC2) uses the normal quantiles of the logit to build worst-case probabilities π^H/π^L (appendix derivation). (Maps to GSI's conformal prediction envelope for probabilistic uncertainty quantification.) [monte_carlo_posterior_sampling p.2]: - Assumptions: logit model correctly specified; β uncertainty is Gaussian with known covariance; odds O_h fixed and known; the MC sample (1–2M draws) adequately represents the posterior. (Provides kernel for GSE's stochastic state transition dynamics.) [kelly_stake_optimization p.2]: - Target: the stake vector x* maximizing the chosen objective. (Maps to GSE's policy gradient optimization for wealth maximization.) [simulation_validation_framework p.2]: Validation design - Four simulation experiments (E1–E4) × 2,500 trials; true probabilities known; models compared on expected exponential return under truth. (Provides empirical benchmark for GSE's performance evaluation.) [56346c3d33483aa0_w2_g1 p.3]: only computable in simulation — on real data you're back to noisy realized wealth. (Binds verbatim proposition 56346c3d33483aa0_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.) [56346c3d33483aa0_w2_g2 p.3]: Direct overlap: prediction-market-ecosystem-triage-2026-08-09.md documents **oracle3 (Wang Transform + Kelly)** — GSE already has a Kelly sizing lane. (Binds verbatim proposition 56346c3d33483aa0_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.) [56346c3d33483aa0_w2_g3 p.3]: This paper is an **extension** of that lane: oracle3 covers the transform + point-estimate Kelly; this adds the missing piece — *parameter uncertainty* in the probability inputs. (Binds verbatim proposition 56346c3d33483aa0_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in Kelly's original work on logarithmic utility maximization, extended by later developments in Bayesian decision theory and robust optimization under uncertainty. Retrocausal Genealogy (Window 1): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents assume imperfect information about outcome probabilities, leading to strategic overfitting in standard Kelly. The adaptive approach models uncertainty explicitly, simulating how rational agents might adjust behavior under epistemic risk. Theory of Mind (Window 1): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity: Avoids conflating estimation error with market inefficiency. Leakage veto: Ensures no reliance on real-world data; all conclusions drawn from simulated datasets only. Cross-Layer Veto (Window 1): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "56346c3d33483aa0_t1",
+      "think": "Chapter 2 introduces a robust extension of the Kelly criterion under uncertainty in logistic regression parameters. It formulates a worst-case probabilistic envelope using normal quantiles derived from the logit model, ensuring conservative betting strategies even when model parameters are uncertain. The framework assumes a correctly specified logit model with Gaussian uncertainty in coefficients, and leverages Monte Carlo sampling to approximate the posterior distribution. The optimization targets a stake vector that maximizes expected logarithmic wealth growth, subject to constraints derived from the worst-case probabilities. This approach avoids reliance on point estimates of probabilities, instead incorporating uncertainty into the decision-making process. Simulation experiments validate the method against baselines such as true-probability Kelly and plug-in Kelly, demonstrating that robust variants like (ECCx) outperform standard methods in terms of long-term growth. The analysis reveals that estimation error costs nearly a third of achievable growth, underscoring the importance of robustness in practical applications. Window 2 Synthesis: Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in Kelly’s original work on optimal growth, extended by robust optimization principles and Bayesian uncertainty quantification, building upon prior literature on logit-based decision frameworks. Retrocausal Genealogy (Window 2): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents are modeled as optimizing wealth under uncertainty, with competing strategies including plug-in Kelly, fractional Kelly, and robust variants. Each agent's behavior reflects different degrees of risk aversion and estimation confidence. Theory of Mind (Window 2): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that the probabilistic envelope and optimization layers do not redundantly encode uncertainty. Leakage veto prevents overfitting of the Monte Carlo posterior to spurious patterns in simulated data. Cross-Layer Veto (Window 2): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "56346c3d33483aa0_t2",
+      "think": "Window 3 Synthesis: Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 0626-kelly-criterion-under-probability-uncertainty (56346c3d33483aa0, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

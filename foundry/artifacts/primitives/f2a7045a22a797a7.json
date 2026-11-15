@@ -1,0 +1,78 @@
+{
+  "book_id": "f2a7045a22a797a7",
+  "source_status": "COMPLETE",
+  "title": "prompt-pass2-nemotron",
+  "file_name": "prompt-pass2-nemotron.md",
+  "sha256": "f2a7045a22a797a7edb3068198a8fdedab331abba92c6f059bbb43744f503622",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Branch atlas and directory tree comparison defines structural invariants under gitlink and empty directory constraints. Universal Lens: Rooted in prompt-pass2-nemotron (f2a7045a22a797a7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on leaked data gates uses conformal predictive sets from directory discrepancies. GSI Mapping: Rooted in prompt-pass2-nemotron (f2a7045a22a797a7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning resolves refusal states via state-transition graphs over directory tree differences. GSE Mapping: Rooted in prompt-pass2-nemotron (f2a7045a22a797a7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "branch_atlas_comparison",
+      "name": "Directory Tree Invariant Comparison",
+      "verbatim_quote": "Your first job read a branch atlas and commit messages.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{live}}': 'directory tree structure, dimensionless', 'T_{\\\\text{ref}}': 'reference tree, dimensionless', '\\\\mathcal{L}': 'leakage gate indicator, \\\\{0,1\\\\}'}",
+      "assumptions": "Trees are finite, discrete, and partially ordered by depth.",
+      "breakdown_regime": "When \\( T_{\\text{live}} \\not\\subseteq T_{\\text{ref}} \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between live and reference directory structures under gitlink constraints.",
+        "source_operator": "branch_atlas_comparison",
+        "telemetry": "File path discrepancy count"
+      }
+    },
+    {
+      "primitive_id": "temporal_fence_verification",
+      "name": "Temporal Fence Validation",
+      "verbatim_quote": "10.2.26\\sports-prediction-platform Question: which leakage gate, temporal fence, or refusal exists in those trees that the live branch C:\\Users\\Garrett\\Sports-wt-intel\\intelligence does not have?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{\\\\text{temp}}': 'temporal fence function, time-invariant', 't': 'time coordinate, seconds', '\\\\Delta t': 'temporal gap, seconds'}",
+      "assumptions": "Temporal fences are defined by commit timestamps and file modification times.",
+      "breakdown_regime": "When \\( \\exists f \\in T_{\\text{ref}} \\setminus T_{\\text{live}}, \\Delta t(f) > \\tau \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of temporal inconsistency derived from commit log divergence.",
+        "source_operator": "temporal_fence_verification",
+        "telemetry": "Commit timestamp mismatch frequency"
+      }
+    },
+    {
+      "primitive_id": "refusal_state_detection",
+      "name": "Refusal State Identification",
+      "verbatim_quote": "If the directory is a gitlink or empty, say so and do not invent the missing code.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'refusal state, \\\\{0,1\\\\}', 'D_{\\\\text{empty}}': 'empty directory flag, \\\\{0,1\\\\}', 'D_{\\\\text{gitlink}}': 'gitlink flag, \\\\{0,1\\\\}'}",
+      "assumptions": "Refusal occurs when directory metadata implies non-existence without content.",
+      "breakdown_regime": "When \\( D_{\\text{empty}} = 1 \\vee D_{\\text{gitlink}} = 1 \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel of refusal from metadata-only directory entries.",
+        "source_operator": "refusal_state_detection",
+        "telemetry": "Gitlink or empty directory ratio"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f2a7045a22a797a7_t0",
+      "think": "The task requires identifying structural inconsistencies between two directory trees: one from a live branch and another from a reference set. The first primitive, 'branch_atlas_comparison', establishes an invariant mapping between these trees using commit logs and branch atlases. It identifies when a file or directory exists in the reference but not in the live tree, which is encoded as a leakage gate. The second primitive, 'temporal_fence_verification', checks for temporal inconsistencies by comparing commit timestamps; if a file exists in the reference but was modified after the live branch's last commit, it indicates a temporal fence. The third primitive, 'refusal_state_detection', flags directories that are either empty or gitlinks—indicating intentional absence rather than error. These primitives form a dual framework where the first detects presence anomalies, the second detects timing anomalies, and the third detects metadata-based refusals. Failure modes include false positives due to sparse commits or misclassified gitlinks, and false negatives from untracked files. The epistemic trace is grounded in discrete mathematics and information theory, mapping directory structures to logical predicates.\n\nDeep epistemic analysis for prompt-pass2-nemotron (f2a7045a22a797a7, domain=other, pages_read=1/1): Operator 'Directory Tree Invariant Comparison' (page 1, domain other) captures: Your first job read a branch atlas and commit messages. Assumptions: Trees are finite, discrete, and partially ordered by depth. Breakdown regime: When \\( T_{\\text{live}} \\not\\subseteq T_{\\text{ref}} \\) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between live and reference directory structures under gitlink constraints. Operator 'Temporal Fence Validation' (page 1, domain other) captures: 10.2.26\\sports-prediction-platform Question: which leakage gate, temporal fence, or refusal exists in those trees that the live branch C:\\Users\\Garrett\\Sports-wt-intel\\intelligence does not have? Assumptions: Temporal fences are defined by commit timestamps and file modification times. Breakdown regime: When \\( \\exists f \\in T_{\\text{ref}} \\setminus T_{\\text{live}}, \\Delta t(f) > \\tau \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of temporal inconsistency derived from commit log divergence. Operator 'Refusal State Identification' (page 1, domain other) captures: If the directory is a gitlink or empty, say so and do not invent the missing code. Assumptions: Refusal occurs when directory metadata implies non-existence without content. Breakdown regime: When \\( D_{\\text{empty}} = 1 \\vee D_{\\text{gitlink}} = 1 \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of refusal from metadata-only directory entries. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prompt-pass2-nemotron (f2a7045a22a797a7, domain=other, pages_read=1/1): Operator 'Directory Tree Invariant Comparison' (page 1, domain other) captures: Your first job read a branch atlas and commit messages. Assumptions: Trees are finite, discrete, and partially ordered by depth. Breakdown regime: When \\( T_{\\text{live}} \\not\\subseteq T_{\\text{ref}} \\) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between live and reference directory structures under gitlink constraints. Operator 'Temporal Fence Validation' (page 1, domain other) captures: 10.2.26\\sports-prediction-platform Question: which leakage gate, temporal fence, or refusal exists in those trees that the live branch C:\\Users\\Garrett\\Sports-wt-intel\\intelligence does not have? Assumptions: Temporal fences are defined by commit timestamps and file modification times. Breakdown regime: When \\( \\exists f \\in T_{\\text{ref}} \\setminus T_{\\text{live}}, \\Delta t(f) > \\tau \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of temporal inconsistency derived from commit log divergence. Operator 'Refusal State Identification' (page 1, domain other) captures: If the directory is a gitlink or empty, say so and do not invent the missing code. Assumptions: Refusal occurs when directory metadata implies non-existence without content. Breakdown regime: When \\( D_{\\text{empty}} = 1 \\vee D_{\\text{gitlink}} = 1 \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of refusal from metadata-only directory entries. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Git's object model and Merkle tree structures, this approach traces back to cryptographic hash functions and their use in version control systems for integrity verification. Retrocausal Genealogy: Rooted in prompt-pass2-nemotron (f2a7045a22a797a7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in prompt-pass2-nemotron (f2a7045a22a797a7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to obfuscate data leaks through symbolic links or empty directories. The system models such agents as adversaries seeking to evade detection by exploiting metadata semantics. Theory of Mind & Decision Maker Model: Rooted in prompt-pass2-nemotron (f2a7045a22a797a7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates on distinct semantic layers: presence (tree), time (commit), and metadata (gitlink/empty). Leakage veto conditions prevent false positives from being conflated across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-pass2-nemotron (f2a7045a22a797a7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

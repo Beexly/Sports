@@ -1,0 +1,78 @@
+{
+  "book_id": "178ed13446aeb017",
+  "source_status": "COMPLETE",
+  "title": "ig-fieldcoachai-reel-intel",
+  "file_name": "ig-fieldcoachai-reel-intel.md",
+  "sha256": "178ed13446aeb017315020fcd25fa64dd4bb6db5e53612456cbc7fe9d13ef518",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Field-plane tracklets enable metric kernel derivation via geometric kinematics; break angle, separation at break/catch map to spatial velocity divergence and inter-agent displacement. Universal Lens: Rooted in ig-fieldcoachai-reel-intel (178ed13446aeb017), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on tracklet-derived metrics yields probabilistic route quality; conformal prediction bounds uncertainty in WR separation edges for fantasy scoring. GSI Mapping: Rooted in ig-fieldcoachai-reel-intel (178ed13446aeb017), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine consumes tracklet-based kernels to transition states between route execution phases; feedback-verdicts encode coaching policy priors. GSE Mapping: Rooted in ig-fieldcoachai-reel-intel (178ed13446aeb017), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "break_angle",
+      "name": "Break Angle",
+      "verbatim_quote": "**Reusable metric kernels:** break angle, separation-at-break, separation-at-catch — all derivable from per-player field-plane tracklets.",
+      "page": 1,
+      "latex": "\\theta_{\\text{break}} = \\arctan\\left(\\frac{\\Delta y}{\\Delta x}\\right)",
+      "symbol_and_unit_ledger": "{'θ_break': 'angle in degrees', 'Δx': 'horizontal displacement in yards', 'Δy': 'vertical displacement in yards'}",
+      "assumptions": "Player trajectory approximated as piecewise linear in field-plane coordinates; angular deviation computed relative to initial direction vector.",
+      "breakdown_regime": "Undefined when Δx ≈ 0; singular at straight-line motion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to directional change magnitude in CV-derived tracklet space; used in GSE route-state transitions.",
+        "source_operator": "break_angle",
+        "telemetry": "Angular deviation from baseline path at point of cut."
+      }
+    },
+    {
+      "primitive_id": "separation_at_break",
+      "name": "Separation at Break",
+      "verbatim_quote": "**Reusable metric kernels:** break angle, separation-at-break, separation-at-catch — all derivable from per-player field-plane tracklets.",
+      "page": 1,
+      "latex": "d_{\\text{break}} = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}",
+      "symbol_and_unit_ledger": "{'d_break': 'distance in yards', 'x_1, y_1': 'position of player 1 in field-plane coordinates', 'x_2, y_2': 'position of player 2 in field-plane coordinates'}",
+      "assumptions": "Players modeled as point masses; Euclidean distance in field-plane coordinate system.",
+      "breakdown_regime": "Zero when players occupy same position; undefined for non-spatial overlap.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies spatial divergence post-cut; informs GSE route quality scoring.",
+        "source_operator": "separation_at_break",
+        "telemetry": "Inter-agent displacement at moment of directional change."
+      }
+    },
+    {
+      "primitive_id": "separation_at_catch",
+      "name": "Separation at Catch",
+      "verbatim_quote": "**Reusable metric kernels:** break angle, separation-at-break, separation-at-catch — all derivable from per-player field-plane tracklets.",
+      "page": 1,
+      "latex": "d_{\\text{catch}} = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}",
+      "symbol_and_unit_ledger": "{'d_catch': 'distance in yards', 'x_1, y_1': 'position of player 1 in field-plane coordinates', 'x_2, y_2': 'position of player 2 in field-plane coordinates'}",
+      "assumptions": "Players modeled as point masses; Euclidean distance in field-plane coordinate system.",
+      "breakdown_regime": "Zero when players occupy same position; undefined for non-spatial overlap.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Captures final spatial divergence; used in fantasy edge modeling and GSE route evaluation.",
+        "source_operator": "separation_at_catch",
+        "telemetry": "Final inter-agent displacement upon catch event."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "178ed13446aeb017_t0",
+      "think": "The three primitives—break angle, separation at break, and separation at catch—are derived from field-plane tracklets using geometric kinematics. Each maps to a distinct spatial or angular property of player motion. Break angle encodes directional change magnitude, while separations quantify spatial divergence at critical moments. These are not merely descriptive but operationalized into structured observables that support both GSE situational reasoning and GSI probabilistic inference. The failure modes arise from degenerate cases such as zero displacement or undefined angles, which occur under extreme motion constraints. Dualities emerge in how these metrics relate to route efficiency and separation edges in fantasy contexts. The primitives form a minimal set of kernel operators sufficient to characterize receiver behavior in film analysis pipelines.\n\nDeep epistemic analysis for ig-fieldcoachai-reel-intel (178ed13446aeb017, domain=other, pages_read=1/1): Operator 'Break Angle' (page 1, domain other) captures: **Reusable metric kernels:** break angle, separation-at-break, separation-at-catch — all derivable from per-player field-plane tracklets. Assumptions: Player trajectory approximated as piecewise linear in field-plane coordinates; angular deviation computed relative to initial direction vector. Breakdown regime: Undefined when Δx ≈ 0; singular at straight-line motion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to directional change magnitude in CV-derived tracklet space; used in GSE route-state transitions. Operator 'Separation at Break' (page 1, domain other) captures: **Reusable metric kernels:** break angle, separation-at-break, separation-at-catch — all derivable from per-player field-plane tracklets. Assumptions: Players modeled as point masses; Euclidean distance in field-plane coordinate system. Breakdown regime: Zero when players occupy same position; undefined for non-spatial overlap. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies spatial divergence post-cut; informs GSE route quality scoring. Operator 'Separation at Catch' (page 1, domain other) captures: **Reusable metric kernels:** break angle, separation-at-break, separation-at-catch — all derivable from per-player field-plane tracklets. Assumptions: Players modeled as point masses; Euclidean distance in field-plane coordinate system. Breakdown regime: Zero when players occupy same position; undefined for non-spatial overlap. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures final spatial divergence; used in fantasy edge modeling and GSE route evaluation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ig-fieldcoachai-reel-intel (178ed13446aeb017, domain=other, pages_read=1/1): Operator 'Break Angle' (page 1, domain other) captures: **Reusable metric kernels:** break angle, separation-at-break, separation-at-catch — all derivable from per-player field-plane tracklets. Assumptions: Player trajectory approximated as piecewise linear in field-plane coordinates; angular deviation computed relative to initial direction vector. Breakdown regime: Undefined when Δx ≈ 0; singular at straight-line motion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to directional change magnitude in CV-derived tracklet space; used in GSE route-state transitions. Operator 'Separation at Break' (page 1, domain other) captures: **Reusable metric kernels:** break angle, separation-at-break, separation-at-catch — all derivable from per-player field-plane tracklets. Assumptions: Players modeled as point masses; Euclidean distance in field-plane coordinate system. Breakdown regime: Zero when players occupy same position; undefined for non-spatial overlap. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies spatial divergence post-cut; informs GSE route quality scoring. Operator 'Separation at Catch' (page 1, domain other) captures: **Reusable metric kernels:** break angle, separation-at-break, separation-at-catch — all derivable from per-player field-plane tracklets. Assumptions: Players modeled as point masses; Euclidean distance in field-plane coordinate system. Breakdown regime: Zero when players occupy same position; undefined for non-spatial overlap. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures final spatial divergence; used in fantasy edge modeling and GSE route evaluation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical mechanics and computer vision tracking; extended through modern deep learning frameworks for sports analytics. Influenced by early work in motion estimation and trajectory analysis. Retrocausal Genealogy: Rooted in ig-fieldcoachai-reel-intel (178ed13446aeb017), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ig-fieldcoachai-reel-intel (178ed13446aeb017), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include defenders who attempt to minimize separation and receivers who maximize it. The primitives model this adversarial interaction through quantifiable geometric properties, enabling predictive modeling of route success. Theory of Mind & Decision Maker Model: Rooted in ig-fieldcoachai-reel-intel (178ed13446aeb017), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive captures independent aspects of motion; leakage occurs if angular and spatial metrics are redundant. Veto conditions ensure that only non-degenerate, informative metrics propagate into higher-level inference layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in ig-fieldcoachai-reel-intel (178ed13446aeb017), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

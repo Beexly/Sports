@@ -1,0 +1,78 @@
+{
+  "book_id": "49a4187092a49f7c",
+  "source_status": "COMPLETE",
+  "title": "p0077",
+  "file_name": "p0077.txt",
+  "sha256": "49a4187092a49f7c1f434bd44e0e5f988521d8ae86da3f3ce1a340598145ded8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Conflict-relativity of utilities underpins decision-making; diminishing marginal utility reflects resource allocation trade-offs across satisfiers. Universal Lens: Rooted in p0077 (49a4187092a49f7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on utility distributions conditioned on intertemporal choice structures and preference volatility. GSI Mapping: Rooted in p0077 (49a4187092a49f7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models agent behavior through state transitions governed by utility thresholds and satisfier scarcity dynamics. GSE Mapping: Rooted in p0077 (49a4187092a49f7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "conflict_relational_utility",
+      "name": "Conflict-Relational Utility",
+      "verbatim_quote": "The essential relation of conflict and relativity of utilities is somewhat obscured by the existence of intermediate \"means\" of satisfaction, and even of series of such.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U_i': 'dimensionless utility of good i', 'C_{ij}': 'conflict coefficient between goods i and j'}",
+      "assumptions": "Utilities are relational; satisfiers compete for limited resources.",
+      "breakdown_regime": "When intermediate means obscure direct utility comparison.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Conflict-relational utility maps to Bayesian likelihood over preference states. GSE: Maps to state transition probabilities among satisfier alternatives.",
+        "source_operator": "conflict_relational_utility",
+        "telemetry": "Preference shift entropy and satisfier substitution rate"
+      }
+    },
+    {
+      "primitive_id": "intermittent_want_wave",
+      "name": "Intermittent Want Wave",
+      "verbatim_quote": "The intermittence of wants, with wave-like alternation of desire and satisfaction, tends to give a false conception of diminishing utility.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W(t)': 'want intensity at time t', 'T_w': 'period of want oscillation'}",
+      "assumptions": "Want intensity varies periodically; satisfaction does not linearly reduce utility.",
+      "breakdown_regime": "At equilibrium points where desire and satisfaction align.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Models temporal variance in utility via stochastic processes. GSE: Encodes cyclical decision-making patterns in satisfier prioritization.",
+        "source_operator": "intermittent_want_wave",
+        "telemetry": "Want oscillation frequency and satisfaction lag"
+      }
+    },
+    {
+      "primitive_id": "unitary_utility_equivalence",
+      "name": "Unitary Utility Equivalence",
+      "verbatim_quote": "The utility of any one unit is, in its effect on conduct, which is the only relevant consideration, exactly like that of any other; the essential fact is that as there are more units relatively, the utility per unit or·utility of any unit is relatively less.",
+      "page": 1,
+      "latex": "\\frac{dU}{dN} < 0 \\quad \\text{where } U \\text{ is total utility, } N \\text{ is number of units}",
+      "symbol_and_unit_ledger": "{'U(N)': 'total utility function of N units', 'dU/dN': 'marginal utility per unit'}",
+      "assumptions": "Marginal utility decreases with quantity; individual units have equal impact on behavior.",
+      "breakdown_regime": "At saturation point where additional units yield negligible utility gain.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Marginal utility maps to posterior update sensitivity. GSE: Maps to consumption state transitions with diminishing returns.",
+        "source_operator": "unitary_utility_equivalence",
+        "telemetry": "Marginal utility slope and consumption threshold"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "49a4187092a49f7c_t0",
+      "think": "The core insight is that utility is not additive but relational—conflicts arise from shared, finite means of satisfaction. This leads to a dual structure: immediate wants and their wave-like alternation suggest temporal utility fluctuations, while the equivalence of units implies a uniform marginal contribution. These primitives form a kernel of decision-making under uncertainty, where agents navigate between conflicting satisfiers and oscillating desires. The failure mode occurs when static models assume constant utility or ignore intertemporal conflict. The mathematical framework must encode both the relational nature of utility and its temporal dynamics, using differential equations to model marginal utility decline and stochastic processes for want oscillations. This dualism underpins rational choice theory's limitations in capturing behavioral complexity.\n\nDeep epistemic analysis for p0077 (49a4187092a49f7c, domain=other, pages_read=1/1): Operator 'Conflict-Relational Utility' (page 1, domain other) captures: The essential relation of conflict and relativity of utilities is somewhat obscured by the existence of intermediate \"means\" of satisfaction, and even of series of such. Assumptions: Utilities are relational; satisfiers compete for limited resources. Breakdown regime: When intermediate means obscure direct utility comparison. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conflict-relational utility maps to Bayesian likelihood over preference states. GSE: Maps to state transition probabilities among satisfier alternatives. Operator 'Intermittent Want Wave' (page 1, domain other) captures: The intermittence of wants, with wave-like alternation of desire and satisfaction, tends to give a false conception of diminishing utility. Assumptions: Want intensity varies periodically; satisfaction does not linearly reduce utility. Breakdown regime: At equilibrium points where desire and satisfaction align. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Models temporal variance in utility via stochastic processes. GSE: Encodes cyclical decision-making patterns in satisfier prioritization. Operator 'Unitary Utility Equivalence' (page 1, domain other) captures: The utility of any one unit is, in its effect on conduct, which is the only relevant consideration, exactly like that of any other; the essential fact is that as there are more units relatively, the utility per unit or·utility of any unit is relatively less. Assumptions: Marginal utility decreases with quantity; individual units have equal impact on behavior. Breakdown regime: At saturation point where additional units yield negligible utility gain. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Marginal utility maps to posterior update sensitivity. GSE: Maps to consumption state transitions with diminishing returns. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0077 (49a4187092a49f7c, domain=other, pages_read=1/1): Operator 'Conflict-Relational Utility' (page 1, domain other) captures: The essential relation of conflict and relativity of utilities is somewhat obscured by the existence of intermediate \"means\" of satisfaction, and even of series of such. Assumptions: Utilities are relational; satisfiers compete for limited resources. Breakdown regime: When intermediate means obscure direct utility comparison. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conflict-relational utility maps to Bayesian likelihood over preference states. GSE: Maps to state transition probabilities among satisfier alternatives. Operator 'Intermittent Want Wave' (page 1, domain other) captures: The intermittence of wants, with wave-like alternation of desire and satisfaction, tends to give a false conception of diminishing utility. Assumptions: Want intensity varies periodically; satisfaction does not linearly reduce utility. Breakdown regime: At equilibrium points where desire and satisfaction align. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Models temporal variance in utility via stochastic processes. GSE: Encodes cyclical decision-making patterns in satisfier prioritization. Operator 'Unitary Utility Equivalence' (page 1, domain other) captures: The utility of any one unit is, in its effect on conduct, which is the only relevant consideration, exactly like that of any other; the essential fact is that as there are more units relatively, the utility per unit or·utility of any unit is relatively less. Assumptions: Marginal utility decreases with quantity; individual units have equal impact on behavior. Breakdown regime: At saturation point where additional units yield negligible utility gain. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Marginal utility maps to posterior update sensitivity. GSE: Maps to consumption state transitions with diminishing returns. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Jevons' marginal utility theory and Pareto efficiency, evolving into modern Bayesian decision theory and dynamic programming frameworks. Retrocausal Genealogy: Rooted in p0077 (49a4187092a49f7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0077 (49a4187092a49f7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents optimize under bounded rationality, balancing precise calculation against cognitive ease. They exhibit irrationality not from flawed logic but from structural constraints in utility perception and temporal preference. Theory of Mind & Decision Maker Model: Rooted in p0077 (49a4187092a49f7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires disentangling relational utility from temporal oscillation. Leakage occurs if marginal utility is treated as absolute rather than relative. Veto conditions ensure that utility models do not conflate satisfaction with utility value. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0077 (49a4187092a49f7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

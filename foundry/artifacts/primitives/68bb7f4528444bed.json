@@ -1,0 +1,78 @@
+{
+  "book_id": "68bb7f4528444bed",
+  "source_status": "COMPLETE",
+  "title": "p0255",
+  "file_name": "p0255.txt",
+  "sha256": "68bb7f4528444bedef8212b714949bc3a0debb426b7422674aa0ea9a3441dd1c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Risk-uncertainty-profit as subjective human judgment variation vs. scientific natural law variation. Universal Lens: Rooted in p0255 (68bb7f4528444bed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating over subjective uncertainty with conative confidence priors. GSI Mapping: Rooted in p0255 (68bb7f4528444bed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions driven by conative attitudes toward perceived uncertainty. GSE Mapping: Rooted in p0255 (68bb7f4528444bed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "risk_uncertainty_profit_variation",
+      "name": "Risk-Uncertainty-Profit Variation",
+      "verbatim_quote": "242 RISK, UNCERTAINTY, AND PROFIT is the variation in the power of reading human nature, of forecasting the conduct of other men, as contrasted with scientific judgment in regard to natural phenomena.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'RUP': 'dimensionless variation index'}",
+      "assumptions": "Human behavior varies more than natural phenomena; judgment quality is subjective.",
+      "breakdown_regime": "When predictive models fail due to non-stationary human behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "RUP variation maps to Bayesian model uncertainty in GSI; GSE models it as dynamic state space transitions.",
+        "source_operator": "risk_uncertainty_profit_variation",
+        "telemetry": "Confidence intervals in behavioral forecasts vs. physical measurements."
+      }
+    },
+    {
+      "primitive_id": "judgment_execution_capacity",
+      "name": "Judgment-Execution Capacity",
+      "verbatim_quote": "(5) Distinct from confidence felt is the conative attitude to a situation upon which judgment is passed with a given degree of confidence.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'JEC': 'dimensionless capacity index'}",
+      "assumptions": "Capacity to act differs from capacity to judge; both are subjectively valued.",
+      "breakdown_regime": "When judgment exceeds execution capability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "JEC is derived from confidence and execution variance in GSI; GSE uses it to model action-state feedback loops.",
+        "source_operator": "judgment_execution_capacity",
+        "telemetry": "Decision latency vs. execution success rate."
+      }
+    },
+    {
+      "primitive_id": "conative_attitude_toward_uncertainty",
+      "name": "Conative Attitude Toward Uncertainty",
+      "verbatim_quote": "It is clear that we may speak in some sense of the \"true value\" of judgment and of capacity to act, but it is the person's own opinion of these values which controls his activities.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'CAU': 'dimensionless conative attitude index'}",
+      "assumptions": "Attitude toward uncertainty is distinct from confidence level.",
+      "breakdown_regime": "When attitude overrides rational judgment in decision-making.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CAU maps to GSI's risk preference priors; GSE models it as a policy parameter in state transition functions.",
+        "source_operator": "conative_attitude_toward_uncertainty",
+        "telemetry": "Behavioral choice consistency under uncertainty scenarios."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "68bb7f4528444bed_t0",
+      "think": "The core insight is that risk, uncertainty, and profit are not merely statistical constructs but reflect the variability in human judgment and behavior. The first primitive, Risk-Uncertainty-Profit Variation, establishes a foundational distinction between human judgment and natural phenomena. This variation is not just about prediction accuracy but about the subjective capacity to read and anticipate human behavior. The second primitive, Judgment-Execution Capacity, introduces a dualism: one can judge well but fail to execute, or vice versa. This duality implies a bifurcation in decision-making systems—where cognitive and operational capabilities diverge. The third primitive, Conative Attitude Toward Uncertainty, adds a motivational layer: individuals do not simply assess uncertainty but react to it with varying degrees of risk-seeking or risk-averse behavior. These three primitives form a triadic structure where each element interacts with the others. For instance, high judgment capacity without strong execution leads to paralysis; low confidence but high conative attitude may lead to reckless action. The failure mode occurs when these dimensions are misaligned—such as when overconfidence in judgment leads to poor execution, or when aversion to uncertainty blocks adaptive responses. The epistemic structure thus reflects a layered cognitive architecture: perception (judgment), action (execution), and motivation (attitude). Each layer has its own variability and interaction dynamics, forming a multi-dimensional space of decision-making behavior.\n\nDeep epistemic analysis for p0255 (68bb7f4528444bed, domain=other, pages_read=1/1): Operator 'Risk-Uncertainty-Profit Variation' (page 1, domain other) captures: 242 RISK, UNCERTAINTY, AND PROFIT is the variation in the power of reading human nature, of forecasting the conduct of other men, as contrasted with scientific judgment in regard to natural phenomena. Assumptions: Human behavior varies more than natural phenomena; judgment quality is subjective. Breakdown regime: When predictive models fail due to non-stationary human behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RUP variation maps to Bayesian model uncertainty in GSI; GSE models it as dynamic state space transitions. Operator 'Judgment-Execution Capacity' (page 1, domain other) captures: (5) Distinct from confidence felt is the conative attitude to a situation upon which judgment is passed with a given degree of confidence. Assumptions: Capacity to act differs from capacity to judge; both are subjectively valued. Breakdown regime: When judgment exceeds execution capability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): JEC is derived from confidence and execution variance in GSI; GSE uses it to model action-state feedback loops. Operator 'Conative Attitude Toward Uncertainty' (page 1, domain other) captures: It is clear that we may speak in some sense of the \"true value\" of judgment and of capacity to act, but it is the person's own opinion of these values which controls his activities. Assumptions: Attitude toward uncertainty is distinct from confidence level. Breakdown regime: When attitude overrides rational judgment in decision-making. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CAU maps to GSI's risk preference priors; GSE models it as a policy parameter in state transition functions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0255 (68bb7f4528444bed, domain=other, pages_read=1/1): Operator 'Risk-Uncertainty-Profit Variation' (page 1, domain other) captures: 242 RISK, UNCERTAINTY, AND PROFIT is the variation in the power of reading human nature, of forecasting the conduct of other men, as contrasted with scientific judgment in regard to natural phenomena. Assumptions: Human behavior varies more than natural phenomena; judgment quality is subjective. Breakdown regime: When predictive models fail due to non-stationary human behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RUP variation maps to Bayesian model uncertainty in GSI; GSE models it as dynamic state space transitions. Operator 'Judgment-Execution Capacity' (page 1, domain other) captures: (5) Distinct from confidence felt is the conative attitude to a situation upon which judgment is passed with a given degree of confidence. Assumptions: Capacity to act differs from capacity to judge; both are subjectively valued. Breakdown regime: When judgment exceeds execution capability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): JEC is derived from confidence and execution variance in GSI; GSE uses it to model action-state feedback loops. Operator 'Conative Attitude Toward Uncertainty' (page 1, domain other) captures: It is clear that we may speak in some sense of the \"true value\" of judgment and of capacity to act, but it is the person's own opinion of these values which controls his activities. Assumptions: Attitude toward uncertainty is distinct from confidence level. Breakdown regime: When attitude overrides rational judgment in decision-making. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CAU maps to GSI's risk preference priors; GSE models it as a policy parameter in state transition functions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Knightian uncertainty (1921) and Keynes' notion of 'animal spirits', later formalized in behavioral economics and decision theory. The triadic structure mirrors the cognitive architecture of prospect theory and bounded rationality frameworks. Retrocausal Genealogy: Rooted in p0255 (68bb7f4528444bed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents differ in how they map uncertainty to action. Some are risk-averse, others risk-seeking. Their internal models of judgment and execution vary, leading to divergent strategies. Modeling requires distinguishing between meta-cognitive beliefs (confidence) and affective dispositions (attitude). Theory of Mind & Decision Maker Model: Rooted in p0255 (68bb7f4528444bed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when judgment and execution are conflated, or when conative attitude overrides rational assessment. Leakage occurs if subjective uncertainty is treated as objective variance. Veto conditions require explicit separation of belief, capability, and attitude dimensions. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0255 (68bb7f4528444bed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

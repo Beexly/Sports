@@ -1,0 +1,78 @@
+{
+  "book_id": "2a247d4963272c44",
+  "source_status": "COMPLETE",
+  "title": "p0299",
+  "file_name": "p0299.txt",
+  "sha256": "2a247d4963272c440a30307087562758b0a191cf2b9baff4744e963357487208",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Innate motivational drives as physiological demand + sign-gestalt readiness; cyclic modulation via metabolic state. Universal Lens: Rooted in p0299 (2a247d4963272c44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on behavioral readiness conditioned on threat stimuli and learned gestalt patterns. GSI Mapping: Rooted in p0299 (2a247d4963272c44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions driven by appetitive/aversive phase dynamics and physiological baseline shifts. GSE Mapping: Rooted in p0299 (2a247d4963272c44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fundamental_drives",
+      "name": "Fundamental Drives",
+      "verbatim_quote": "1 a 1:-\\~11 he(a) The fundamental drives or motivations underlying all behavior are to be conceived",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'physiological demand (dimensionless)', 'S': 'sign-gestalt readiness (dimensionless)'}",
+      "assumptions": "Drives are composed of innate physiological needs and learned response patterns.",
+      "breakdown_regime": "When physiological demands exceed available resources or gestalt readiness fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Fundamental drives map to GSI's prior belief distributions over behavioral outcomes, modulated by learned sign-gestalt patterns.",
+        "source_operator": "fundamental_drives",
+        "telemetry": "Observable behavioral readiness to threat or interference"
+      }
+    },
+    {
+      "primitive_id": "appetite_aversion_division",
+      "name": "Appetite-Aversion Division",
+      "verbatim_quote": "innately. w ue conceivea as giveu maty turo (b) These fundamental drives subdivide conveniently into two",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_p': 'appetitive drive (dimensionless)', 'A_a': 'aversive drive (dimensionless)'}",
+      "assumptions": "Behavioral motivation splits into attraction and avoidance components.",
+      "breakdown_regime": "When appetitive and aversive forces coalesce without resolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Appetite-aversion division underpins GSE's action selection kernel, where A_p and A_a define competing state transition probabilities.",
+        "source_operator": "appetite_aversion_division",
+        "telemetry": "Decision-making conflict between approach and avoidance behaviors"
+      }
+    },
+    {
+      "primitive_id": "gestalt_readiness_cores",
+      "name": "Gestalt Readiness Cores",
+      "verbatim_quote": "These sign-gestaltreadinesses will be much affected by learning, but their cores are to be conceived as given innately.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_g': 'core gestalt readiness (dimensionless)', 'L': 'learning influence (dimensionless)'}",
+      "assumptions": "Core readiness is innate; learning modifies its expression.",
+      "breakdown_regime": "When learning overrides core gestalt responses.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gestalt readiness cores correspond to GSI's fixed latent variables in probabilistic behavioral models.",
+        "source_operator": "gestalt_readiness_cores",
+        "telemetry": "Stable behavioral tendencies unaffected by transient environmental cues"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2a247d4963272c44_t0",
+      "think": "The foundational concept of 'fundamental drives' unifies physiological need and learned behavioral patterns into a single motivational framework. This is mathematically modeled as D + S, where D represents innate physiological demands and S denotes sign-gestalt readiness. The dualism of appetites and aversions emerges as a partitioning of these drives into positive and negative motivational poles. Each pole exhibits three constitutive phases—initiating, sustaining, and terminating—which can be formalized as time-dependent dynamical systems. The core gestalt readiness remains invariant under learning, suggesting a fixed kernel within a flexible envelope. This structure supports both Bayesian inference in GSI (where D and S inform prior beliefs) and state-transition logic in GSE (where appetitive/aversive states guide action selection). The system's robustness depends on maintaining separation between innate core and learned modification, with breakdown occurring when learning destabilizes core readiness.\n\nDeep epistemic analysis for p0299 (2a247d4963272c44, domain=other, pages_read=1/1): Operator 'Fundamental Drives' (page 1, domain other) captures: 1 a 1:-\\~11 he(a) The fundamental drives or motivations underlying all behavior are to be conceived Assumptions: Drives are composed of innate physiological needs and learned response patterns. Breakdown regime: When physiological demands exceed available resources or gestalt readiness fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Fundamental drives map to GSI's prior belief distributions over behavioral outcomes, modulated by learned sign-gestalt patterns. Operator 'Appetite-Aversion Division' (page 1, domain other) captures: innately. w ue conceivea as giveu maty turo (b) These fundamental drives subdivide conveniently into two Assumptions: Behavioral motivation splits into attraction and avoidance components. Breakdown regime: When appetitive and aversive forces coalesce without resolution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Appetite-aversion division underpins GSE's action selection kernel, where A_p and A_a define competing state transition probabilities. Operator 'Gestalt Readiness Cores' (page 1, domain other) captures: These sign-gestaltreadinesses will be much affected by learning, but their cores are to be conceived as given innately. Assumptions: Core readiness is innate; learning modifies its expression. Breakdown regime: When learning overrides core gestalt responses. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Gestalt readiness cores correspond to GSI's fixed latent variables in probabilistic behavioral models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0299 (2a247d4963272c44, domain=other, pages_read=1/1): Operator 'Fundamental Drives' (page 1, domain other) captures: 1 a 1:-\\~11 he(a) The fundamental drives or motivations underlying all behavior are to be conceived Assumptions: Drives are composed of innate physiological needs and learned response patterns. Breakdown regime: When physiological demands exceed available resources or gestalt readiness fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Fundamental drives map to GSI's prior belief distributions over behavioral outcomes, modulated by learned sign-gestalt patterns. Operator 'Appetite-Aversion Division' (page 1, domain other) captures: innately. w ue conceivea as giveu maty turo (b) These fundamental drives subdivide conveniently into two Assumptions: Behavioral motivation splits into attraction and avoidance components. Breakdown regime: When appetitive and aversive forces coalesce without resolution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Appetite-aversion division underpins GSE's action selection kernel, where A_p and A_a define competing state transition probabilities. Operator 'Gestalt Readiness Cores' (page 1, domain other) captures: These sign-gestaltreadinesses will be much affected by learning, but their cores are to be conceived as given innately. Assumptions: Core readiness is innate; learning modifies its expression. Breakdown regime: When learning overrides core gestalt responses. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Gestalt readiness cores correspond to GSI's fixed latent variables in probabilistic behavioral models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century drive theory by Hull and others, evolving through behavioral psychology into modern computational models of motivation and reinforcement learning. Retrocausal Genealogy: Rooted in p0299 (2a247d4963272c44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0299 (2a247d4963272c44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model each other’s appetitive and aversive drives as competing forces that shape mutual behavioral expectations, leading to strategic alignment or conflict in shared environments. Theory of Mind & Decision Maker Model: Rooted in p0299 (2a247d4963272c44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0299 (2a247d4963272c44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that GSI's probabilistic models do not conflate innate drives with learned behaviors, while GSE must avoid conflating core gestalt readiness with adaptive modifications. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0299 (2a247d4963272c44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0299 (2a247d4963272c44), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

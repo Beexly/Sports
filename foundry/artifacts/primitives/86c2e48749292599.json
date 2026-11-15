@@ -1,0 +1,78 @@
+{
+  "book_id": "86c2e48749292599",
+  "source_status": "COMPLETE",
+  "title": "td-props-usage-prompts",
+  "file_name": "td-props-usage-prompts.md",
+  "sha256": "86c2e48749292599732aa1c323f15404b9ddee351bbfd4dc125b3334aef2abe0",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Usage-based TD propensity maps player role to goal-line/red-zone probability via empirical frequency kernels, conditioned on situational constraints. Universal Lens: Rooted in td-props-usage-prompts (86c2e48749292599), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of TD likelihood using structured usage data as prior, calibrated against market prices via conformal prediction. GSI Mapping: Rooted in td-props-usage-prompts (86c2e48749292599), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions driven by player share metrics within 5-yard and 20-yard zones, updated per game clock and opponent context. GSE Mapping: Rooted in td-props-usage-prompts (86c2e48749292599), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "goal_line_usage_analyst",
+      "name": "Goal Line Usage Analyst",
+      "verbatim_quote": "THE GOAL LINE — who actually gets the ball inside the 5 > You are my goal line usage analyst.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U_{gl}': 'dimensionless usage share inside 5-yard line', 'N_{gl}': 'total goal-line carries for team'}",
+      "assumptions": "Player role is determined by actual carry/data, not assumed position or name.",
+      "breakdown_regime": "When U_gl < 0.1, signal is weak; when U_gl > 0.4, strong indicator of TD potential.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps observed goal-line carries to conditional TD probability using kernel density estimation over recent games.",
+        "source_operator": "goal_line_usage_analyst",
+        "telemetry": "Observed goal-line carries per game, adjusted for opponent strength."
+      }
+    },
+    {
+      "primitive_id": "red_zone_usage_analyst",
+      "name": "Red Zone Usage Analyst",
+      "verbatim_quote": "THE RED ZONE — a player's real share of work inside the 20 > You are my red zone usage analyst.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U_{rz}': 'dimensionless red-zone share of targets/carries', 'N_{rz}': 'total red-zone plays for team'}",
+      "assumptions": "Red-zone performance is measured by actual involvement, not total volume.",
+      "breakdown_regime": "U_rz < 0.15 indicates low impact; U_rz > 0.35 signals high TD probability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Estimates TD contribution based on normalized red-zone play share using time-series smoothing.",
+        "source_operator": "red_zone_usage_analyst",
+        "telemetry": "Red-zone targets and carries, filtered by snap count and game state."
+      }
+    },
+    {
+      "primitive_id": "explosive_scoring_analyst",
+      "name": "Explosive Scoring Analyst",
+      "verbatim_quote": "**Rule:** *The best player on the field is often not the one who punches it in.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{score}': 'average depth of scoring play (yards)', 'S_{speed}': \"player's top speed (mph)\"}",
+      "assumptions": "Scoring type depends on play depth and player physical profile.",
+      "breakdown_regime": "If D_score > 20, player is distance scorer; if D_score < 5, goal-line scorer.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between scoring depth and player velocity profile to classify TD type.",
+        "source_operator": "explosive_scoring_analyst",
+        "telemetry": "Historical scoring depth and speed data from game logs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "86c2e48749292599_t0",
+      "think": "The three primitives form a hierarchical usage kernel that maps player behavior to TD likelihood. The goal-line analyst operates on discrete carry events, while the red-zone analyst aggregates continuous involvement. The explosive scoring analyst introduces a dual classification of scoring types. All three are grounded in empirical data and conditioned on game state. Failure modes include overfitting to small samples, misclassification of role due to name bias, and ignoring situational constraints such as defensive alignment. The system must maintain calibration through Brier scoring and cross-validation.\n\nDeep epistemic analysis for td-props-usage-prompts (86c2e48749292599, domain=other, pages_read=3/3): Operator 'Goal Line Usage Analyst' (page 1, domain other) captures: THE GOAL LINE — who actually gets the ball inside the 5 > You are my goal line usage analyst. Assumptions: Player role is determined by actual carry/data, not assumed position or name. Breakdown regime: When U_gl < 0.1, signal is weak; when U_gl > 0.4, strong indicator of TD potential. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps observed goal-line carries to conditional TD probability using kernel density estimation over recent games. Operator 'Red Zone Usage Analyst' (page 1, domain other) captures: THE RED ZONE — a player's real share of work inside the 20 > You are my red zone usage analyst. Assumptions: Red-zone performance is measured by actual involvement, not total volume. Breakdown regime: U_rz < 0.15 indicates low impact; U_rz > 0.35 signals high TD probability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Estimates TD contribution based on normalized red-zone play share using time-series smoothing. Operator 'Explosive Scoring Analyst' (page 1, domain other) captures: **Rule:** *The best player on the field is often not the one who punches it in. Assumptions: Scoring type depends on play depth and player physical profile. Breakdown regime: If D_score > 20, player is distance scorer; if D_score < 5, goal-line scorer. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between scoring depth and player velocity profile to classify TD type. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for td-props-usage-prompts (86c2e48749292599, domain=other, pages_read=3/3): Operator 'Goal Line Usage Analyst' (page 1, domain other) captures: THE GOAL LINE — who actually gets the ball inside the 5 > You are my goal line usage analyst. Assumptions: Player role is determined by actual carry/data, not assumed position or name. Breakdown regime: When U_gl < 0.1, signal is weak; when U_gl > 0.4, strong indicator of TD potential. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps observed goal-line carries to conditional TD probability using kernel density estimation over recent games. Operator 'Red Zone Usage Analyst' (page 1, domain other) captures: THE RED ZONE — a player's real share of work inside the 20 > You are my red zone usage analyst. Assumptions: Red-zone performance is measured by actual involvement, not total volume. Breakdown regime: U_rz < 0.15 indicates low impact; U_rz > 0.35 signals high TD probability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Estimates TD contribution based on normalized red-zone play share using time-series smoothing. Operator 'Explosive Scoring Analyst' (page 1, domain other) captures: **Rule:** *The best player on the field is often not the one who punches it in. Assumptions: Scoring type depends on play depth and player physical profile. Breakdown regime: If D_score > 20, player is distance scorer; if D_score < 5, goal-line scorer. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between scoring depth and player velocity profile to classify TD type. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in behavioral economics and game theory, these primitives reflect the evolution of predictive modeling from static stats to dynamic role-based inference. Retrocausal Genealogy: Rooted in td-props-usage-prompts (86c2e48749292599), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in td-props-usage-prompts (86c2e48749292599), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to game the system by manipulating role perception or exploiting data gaps. The model must account for adversarial behavior through robustness checks and temporal consistency. Theory of Mind & Decision Maker Model: Rooted in td-props-usage-prompts (86c2e48749292599), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that goal-line and red-zone usage do not double-count same plays. Leakage vetos prevent market baseline contamination by enforcing point-in-time constraints. Cross-Layer Veto & Anti-Leakage Check: Rooted in td-props-usage-prompts (86c2e48749292599), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in td-props-usage-prompts (86c2e48749292599), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

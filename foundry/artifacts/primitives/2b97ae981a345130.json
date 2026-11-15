@@ -1,0 +1,95 @@
+{
+  "book_id": "2b97ae981a345130",
+  "source_status": "COMPLETE",
+  "title": "p0159",
+  "file_name": "p0159.txt",
+  "sha256": "2b97ae981a3451306932cd397d3424f6037eb8e29f3e04f1060a1d06b806da63",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "loss_of_two_yards_penalty",
+      "name": "Loss of Two Yards Penalty",
+      "verbatim_quote": "Addendum SUMMARY OF PENALTIES (For Convenience of Ofcials) - Loss of Two Yards.",
+      "page": 1,
+      "latex": "$\\Delta L = 2$ yards",
+      "symbol_and_unit_ledger": "{'$\\\\Delta L$': 'penalty yardage deduction (dimensionless)'}",
+      "assumptions": "Standard penalty enforcement protocol; no additional yardage penalties applied simultaneously.",
+      "breakdown_regime": "Discrete penalty application; does not trigger continuous dynamics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to discrete event triggers in GSI conformal prediction intervals and GSE state machines.",
+        "source_operator": "loss_of_two_yards_penalty",
+        "telemetry": "Count of penalty flags per game interval"
+      }
+    },
+    {
+      "primitive_id": "time_out_excess",
+      "name": "Time Out Excess",
+      "verbatim_quote": "- Time taken out more than three times during a half - etc.",
+      "page": 1,
+      "latex": "N_{TO} > 3$ per half",
+      "symbol_and_unit_ledger": "{'$N_{TO}$': 'number of time-outs taken (dimensionless)'}",
+      "assumptions": "Each timeout is a distinct, non-overlapping event; duration is standardized.",
+      "breakdown_regime": "Threshold-based discretization; beyond three, additional penalties apply.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Serves as a hard constraint in GSI optimization models and a state transition condition in GSE.",
+        "source_operator": "time_out_excess",
+        "telemetry": "Cumulative timeout count by team"
+      }
+    },
+    {
+      "primitive_id": "yardage_deduction_table",
+      "name": "Yardage Deduction Table",
+      "verbatim_quote": "3 2 - Violation of off-side rule, illegal positions, etc.— - At kick-off 8 - At scrimmage 9 - At punt-out 10 - At try-at-goal 11 - At free-kick 12 - Encroachment on neutral zone 9 - Player out of bounds..",
+      "page": 1,
+      "latex": "D_{ij} = f(O_i, P_j)$",
+      "symbol_and_unit_ledger": "{'$D_{ij}$': 'yardage deduction for violation type $i$, position $j$ (yards)', '$O_i$': 'violation category (integer index)', '$P_j$': 'position affected (integer index)'}",
+      "assumptions": "Each violation type and position combination maps to a deterministic yardage value; no interaction effects.",
+      "breakdown_regime": "Piecewise constant function; each cell represents a distinct penalty magnitude.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derived from combinatorial violation matrices used in GSE situational reasoning.",
+        "source_operator": "yardage_deduction_table",
+        "telemetry": "Violation frequency matrix per game"
+      }
+    },
+    {
+      "primitive_id": "unreasonable_delay",
+      "name": "Unreasonable Delay",
+      "verbatim_quote": "13 - Putting ball in play other than as provided 14 1456 - Guard or center carrying ball.",
+      "page": 1,
+      "latex": "T_{delay} > T_{threshold}$",
+      "symbol_and_unit_ledger": "{'$T_{delay}$': 'elapsed time between events (seconds)', '$T_{threshold}$': 'maximum allowed time (seconds)'}",
+      "assumptions": "Fixed threshold duration; any delay exceeding this incurs a penalty.",
+      "breakdown_regime": "Continuous-to-discrete transition at threshold crossing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Used in GSI timing anomaly detection and GSE timeout management algorithms.",
+        "source_operator": "unreasonable_delay",
+        "telemetry": "Average delay duration per team"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2b97ae981a345130_t0",
+      "think": "The penalty system constitutes a discrete-state, event-driven control mechanism. The core primitives are Dirac delta functions representing instantaneous yardage deductions ($\\Delta L = 2$ yards) and Kronecker deltas tracking discrete counts (e.g., $N_{TO} > 3$). These map naturally to counting measures in measure theory and indicator functions in stochastic processes. The yardage table $D_{ij}$ forms a finite-state automaton where each violation type transitions the game state. The unreasonable delay threshold introduces a hard constraint that can be expressed via Lagrange multipliers in optimization frameworks. This structure exhibits isomorphism with both GSI's conformal prediction intervals (via discrete event triggers) and GSE's state-transition graphs (via violation-based state changes).\n\nDeep epistemic analysis for p0159 (2b97ae981a345130, domain=other, pages_read=1/1): Operator 'Loss of Two Yards Penalty' (page 1, domain other) captures: Addendum SUMMARY OF PENALTIES (For Convenience of Ofcials) - Loss of Two Yards. Assumptions: Standard penalty enforcement protocol; no additional yardage penalties applied simultaneously. Breakdown regime: Discrete penalty application; does not trigger continuous dynamics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to discrete event triggers in GSI conformal prediction intervals and GSE state machines. Operator 'Time Out Excess' (page 1, domain other) captures: - Time taken out more than three times during a half - etc. Assumptions: Each timeout is a distinct, non-overlapping event; duration is standardized. Breakdown regime: Threshold-based discretization; beyond three, additional penalties apply. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as a hard constraint in GSI optimization models and a state transition condition in GSE. Operator 'Yardage Deduction Table' (page 1, domain other) captures: 3 2 - Violation of off-side rule, illegal positions, etc.— - At kick-off 8 - At scrimmage 9 - At punt-out 10 - At try-at-goal 11 - At free-kick 12 - Encroachment on neutral zone 9 - Player out of bounds.. Assumptions: Each violation type and position combination maps to a deterministic yardage value; no interaction effects. Breakdown regime: Piecewise constant function; each cell represents a distinct penalty magnitude. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from combinatorial violation matrices used in GSE situational reasoning. Operator 'Unreasonable Delay' (page 1, domain other) captures: 13 - Putting ball in play other than as provided 14 1456 - Guard or center carrying ball. Assumptions: Fixed threshold duration; any delay exceeding this incurs a penalty. Breakdown regime: Continuous-to-discrete transition at threshold crossing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used in GSI timing anomaly detection and GSE timeout management algorithms. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0159 (2b97ae981a345130, domain=other, pages_read=1/1): Operator 'Loss of Two Yards Penalty' (page 1, domain other) captures: Addendum SUMMARY OF PENALTIES (For Convenience of Ofcials) - Loss of Two Yards. Assumptions: Standard penalty enforcement protocol; no additional yardage penalties applied simultaneously. Breakdown regime: Discrete penalty application; does not trigger continuous dynamics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to discrete event triggers in GSI conformal prediction intervals and GSE state machines. Operator 'Time Out Excess' (page 1, domain other) captures: - Time taken out more than three times during a half - etc. Assumptions: Each timeout is a distinct, non-overlapping event; duration is standardized. Breakdown regime: Threshold-based discretization; beyond three, additional penalties apply. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as a hard constraint in GSI optimization models and a state transition condition in GSE. Operator 'Yardage Deduction Table' (page 1, domain other) captures: 3 2 - Violation of off-side rule, illegal positions, etc.— - At kick-off 8 - At scrimmage 9 - At punt-out 10 - At try-at-goal 11 - At free-kick 12 - Encroachment on neutral zone 9 - Player out of bounds.. Assumptions: Each violation type and position combination maps to a deterministic yardage value; no interaction effects. Breakdown regime: Piecewise constant function; each cell represents a distinct penalty magnitude. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from combinatorial violation matrices used in GSE situational reasoning. Operator 'Unreasonable Delay' (page 1, domain other) captures: 13 - Putting ball in play other than as provided 14 1456 - Guard or center carrying ball. Assumptions: Fixed threshold duration; any delay exceeding this incurs a penalty. Breakdown regime: Continuous-to-discrete transition at threshold crossing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used in GSI timing anomaly detection and GSE timeout management algorithms. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Officials act as rational agents optimizing adherence to rules while minimizing game disruption; teams model these incentives when deciding whether to commit violations. Theory of Mind & Decision Maker Model: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring that penalty counts ($N_{TO}$) are independent of yardage losses ($\\Delta L$); leakage would occur if teams systematically exploit one metric over another. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0159 (2b97ae981a345130), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

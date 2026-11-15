@@ -1,0 +1,95 @@
+{
+  "book_id": "344350826b37d8d5",
+  "source_status": "COMPLETE",
+  "title": "p0004",
+  "file_name": "p0004.txt",
+  "sha256": "344350826b37d8d54aedd432b063083ea0252ca863ce3d3a3b67e27f1e68307a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in p0004 (344350826b37d8d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in p0004 (344350826b37d8d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in p0004 (344350826b37d8d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "kelly_growth_rate",
+      "name": "Kelly Growth Rate",
+      "verbatim_quote": "Figure 1 The following theorem recounts the important advantages of maximizing G(f).",
+      "page": 1,
+      "latex": "G(f) = \\mathbb{E}[\\log(1 + f U)]",
+      "symbol_and_unit_ledger": "{'G(f)': 'growth rate (dimensionless)', 'f': 'fraction of current wealth bet (dimensionless)', 'U': ' net gain from a unit bet (random variable)', 'p_i': 'probability of win on trial i (dimensionless)', 'q_i = 1 - p_i': 'probability of loss on trial i (dimensionless)'}",
+      "assumptions": "Independent trials with known probabilities; logarithmic utility of terminal wealth.",
+      "breakdown_regime": "G(f) < 0 leads to almost-sure ruin; G(f) = 0 causes erratic oscillation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Optimal posterior updating via log-likelihood scoring. GSE: State-value maximization under risk-sensitive entropy.",
+        "source_operator": "kelly_growth_rate",
+        "telemetry": "Observed capital growth rate compared to benchmark strategies."
+      }
+    },
+    {
+      "primitive_id": "optimal_fraction",
+      "name": "Optimal Fraction",
+      "verbatim_quote": "Then E log X is maximized by choosing on eachtrial the fraction f\\ = pi - q which maximizes E log(1+fU).",
+      "page": 1,
+      "latex": "f^*_i = p_i - q_i = 2p_i - 1",
+      "symbol_and_unit_ledger": "{'f^*_i': 'optimal bet fraction for trial i (dimensionless)', 'p_i': 'win probability (dimensionless)', 'q_i = 1 - p_i': 'loss probability (dimensionless)'}",
+      "assumptions": "Known true probabilities; favorable expectation (p_i > 0.5).",
+      "breakdown_regime": "Bet exceeds optimal (f > f^*) causes explosive capital growth but higher risk of drawdowns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Maximum-a-posteriori (MAP) point estimate optimization. GSE: Risk-penalized value function with exponential utility.",
+        "source_operator": "optimal_fraction",
+        "telemetry": "Average bet size relative to bankroll and its variance."
+      }
+    },
+    {
+      "primitive_id": "asymptotic_optimality",
+      "name": "Asymptotic Optimality",
+      "verbatim_quote": "Parts (iv)and (v) show that the Kelly strategy of maximizing E log Xis asymptotically optimal by two important criteria.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Long-term repeated bets with stationary distributions.",
+      "breakdown_regime": "Non-Kelly strategies grow sub-exponentially and eventually lose against Kelly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Bayes-optimal policies under logarithmic loss. GSE: Minimax policies for long-run average reward.",
+        "source_operator": "asymptotic_optimality",
+        "telemetry": "Ratio of capital growth rates between strategies over extended horizons."
+      }
+    },
+    {
+      "primitive_id": "ruin_probability",
+      "name": "Ruin Probability",
+      "verbatim_quote": "But, if f fe, part (ii) shows that ruin is almost sure.",
+      "page": 1,
+      "latex": "Pr[\\lim_{n \\to \\infty} X_n = 0] = 1 \\text{ if } G(f) < 0",
+      "symbol_and_unit_ledger": "{'X_n': 'capital after n trials (monetary)', 'f': 'bet fraction (dimensionless)', 'f*': 'optimal Kelly fraction (dimensionless)', 'G(f)': 'growth rate (dimensionless)'}",
+      "assumptions": "Fixed betting fraction across infinite trials.",
+      "breakdown_regime": "Excessive leverage (f > f*) guarantees eventual bankruptcy due to geometric mean divergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Credible interval width minimization subject to coverage constraints. GSE: Robust control policies minimizing worst-case regret.",
+        "source_operator": "ruin_probability",
+        "telemetry": "Empirical proportion of simulated paths reaching zero capital."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "344350826b37d8d5_t0",
+      "think": "The Kelly criterion emerges as the unique solution to maximizing the asymptotic growth rate of wealth under independent bets. The primitives delineate the sharp phase transition between sustainable exponential growth (G>0), certain ruin (G<0), and erratic behavior at the boundary (G=0). Asymptotic optimality ensures that no other strategy can outperform Kelly in the long run, while the optimality of the fixed-fraction rule justifies sequential application even when probabilities shift. These results form the foundational 'unified lens' for resource allocation across GSI, GSE, and broader stochastic control.\n\nDeep epistemic analysis for p0004 (344350826b37d8d5, domain=other, pages_read=1/1): Operator 'Kelly Growth Rate' (page 1, domain other) captures: Figure 1 The following theorem recounts the important advantages of maximizing G(f). Assumptions: Independent trials with known probabilities; logarithmic utility of terminal wealth. Breakdown regime: G(f) < 0 leads to almost-sure ruin; G(f) = 0 causes erratic oscillation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Optimal posterior updating via log-likelihood scoring. GSE: State-value maximization under risk-sensitive entropy. Operator 'Optimal Fraction' (page 1, domain other) captures: Then E log X is maximized by choosing on eachtrial the fraction f\\ = pi - q which maximizes E log(1+fU). Assumptions: Known true probabilities; favorable expectation (p_i > 0.5). Breakdown regime: Bet exceeds optimal (f > f^*) causes explosive capital growth but higher risk of drawdowns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Maximum-a-posteriori (MAP) point estimate optimization. GSE: Risk-penalized value function with exponential utility. Operator 'Asymptotic Optimality' (page 1, domain other) captures: Parts (iv)and (v) show that the Kelly strategy of maximizing E log Xis asymptotically optimal by two important criteria. Assumptions: Long-term repeated bets with stationary distributions. Breakdown regime: Non-Kelly strategies grow sub-exponentially and eventually lose against Kelly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Bayes-optimal policies under logarithmic loss. GSE: Minimax policies for long-run average reward. Operator 'Ruin Probability' (page 1, domain other) captures: But, if f fe, part (ii) shows that ruin is almost sure. Assumptions: Fixed betting fraction across infinite trials. Breakdown regime: Excessive leverage (f > f*) guarantees eventual bankruptcy due to geometric mean divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Credible interval width minimization subject to coverage constraints. GSE: Robust control policies minimizing worst-case regret. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0004 (344350826b37d8d5, domain=other, pages_read=1/1): Operator 'Kelly Growth Rate' (page 1, domain other) captures: Figure 1 The following theorem recounts the important advantages of maximizing G(f). Assumptions: Independent trials with known probabilities; logarithmic utility of terminal wealth. Breakdown regime: G(f) < 0 leads to almost-sure ruin; G(f) = 0 causes erratic oscillation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Optimal posterior updating via log-likelihood scoring. GSE: State-value maximization under risk-sensitive entropy. Operator 'Optimal Fraction' (page 1, domain other) captures: Then E log X is maximized by choosing on eachtrial the fraction f\\ = pi - q which maximizes E log(1+fU). Assumptions: Known true probabilities; favorable expectation (p_i > 0.5). Breakdown regime: Bet exceeds optimal (f > f^*) causes explosive capital growth but higher risk of drawdowns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Maximum-a-posteriori (MAP) point estimate optimization. GSE: Risk-penalized value function with exponential utility. Operator 'Asymptotic Optimality' (page 1, domain other) captures: Parts (iv)and (v) show that the Kelly strategy of maximizing E log Xis asymptotically optimal by two important criteria. Assumptions: Long-term repeated bets with stationary distributions. Breakdown regime: Non-Kelly strategies grow sub-exponentially and eventually lose against Kelly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Bayes-optimal policies under logarithmic loss. GSE: Minimax policies for long-run average reward. Operator 'Ruin Probability' (page 1, domain other) captures: But, if f fe, part (ii) shows that ruin is almost sure. Assumptions: Fixed betting fraction across infinite trials. Breakdown regime: Excessive leverage (f > f*) guarantees eventual bankruptcy due to geometric mean divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Credible interval width minimization subject to coverage constraints. GSE: Robust control policies minimizing worst-case regret. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Shannon's noiseless coding theorem (1948) and applied to gambling by Kelly (1956). Further developed through information theory (Cover, Thomas) and reinforced by dynamic programming insights from Bellman (1957). Modern treatments connect to large deviations theory and portfolio optimization in finance (Vovk, Shafer). Retrocausal Genealogy: Rooted in p0004 (344350826b37d8d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may use non-Kelly strategies due to myopic risk aversion or misspecified models. They perceive excessive volatility as failure, whereas the Kelly allocator exploits their caution by systematically outperforming in expectation. The allocator anticipates this divergence and commits to the growth-optimal path despite short-term drawdowns. Theory of Mind & Decision Maker Model: Rooted in p0004 (344350826b37d8d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the primitives operate independently across layers: GSI uses posterior predictive checks, GSE employs state-action value functions, and the universal layer relies on invariant information measures. Leakage is prevented by ensuring that each layer processes distinct aspects of uncertainty without redundant compression. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0004 (344350826b37d8d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "book_id": "5c99e733df5d6adf",
+  "source_status": "COMPLETE",
+  "title": "2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors",
+  "file_name": "2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors.md",
+  "sha256": "5c99e733df5d6adfd62bae28fe5c1d82f6f51a89118bc2fef186bf272929d7e3",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian ensemble framework unifies FBS game dynamics through recursive cumulative averages and recruiting composite ratings. Universal Lens: Rooted in 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over game outcomes using historical box scores and recruiting data via Gaussian processes. GSI Mapping: Rooted in 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "GSE models team state transitions using Markovian cumulative performance kernels and inter-team ranking differentials as stochastic inputs. GSE Mapping: Rooted in 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "data_volume_accumulator",
+      "name": "Cumulative Game Data Accumulator",
+      "verbatim_quote": "## **<u>Data:</u>** The data used for this college football forecast consisted of 4,339 games between Football Bowl Subdivision (FBS) teams between the 2011 and 2016 seasons<sup>3</sup> .",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{games}}': '\\\\text{dimensionless count of observed games}', 'T_{\\\\text{seasons}}': '\\\\text{time interval in years}'}",
+      "assumptions": "Data is stationary and representative of FBS team performance over time.",
+      "breakdown_regime": "When \\( T_{\\text{seasons}} \\to \\infty \\), convergence to empirical distribution occurs.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps temporal game data into a kernel space for regression modeling.",
+        "source_operator": "data_volume_accumulator",
+        "telemetry": "Accuracy of cumulative average predictions against actual outcomes."
+      }
+    },
+    {
+      "primitive_id": "recruiting_composite_rating",
+      "name": "Recruiting Composite Rating Kernel",
+      "verbatim_quote": "The data set was augmented with composite team ratings<sup>4</sup> for each recruiting class dating back to 2008 to account for seniors in the 2011 season.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{\\\\text{comp}}': '\\\\text{composite rating scalar}', 't_{\\\\text{class}}': '\\\\text{recruiting class timestamp}'}",
+      "assumptions": "Composite ratings are linearly correlated with future team performance.",
+      "breakdown_regime": "When \\( t_{\\text{class}} \\to 2011 \\), recruitment impact diminishes due to aging players.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphs to latent variable models in Bayesian hierarchical structures.",
+        "source_operator": "recruiting_composite_rating",
+        "telemetry": "Correlation between \\( R_{\\text{comp}} \\) and \\( \\Delta P_{\\text{win}} \\)."
+      }
+    },
+    {
+      "primitive_id": "matchup_number_generator",
+      "name": "Matchup Number Generator",
+      "verbatim_quote": "Create matchup numbers to combat issue of the Recompile data set with same game repeating cumulative averages.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_{ij}': '\\\\text{matchup scalar between teams } i,j', 'A_{i}(t)': '\\\\text{average performance of team } i \\\\text{ at time } t'}",
+      "assumptions": "Each matchup number is unique per game pair and independent of prior repetitions.",
+      "breakdown_regime": "When \\( M_{ij} \\to \\text{constant} \\), model overfitting risk increases.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates pairwise interaction features for machine learning classifiers.",
+        "source_operator": "matchup_number_generator",
+        "telemetry": "Reduction in repeated game data variance post-generation."
+      }
+    },
+    {
+      "primitive_id": "lagged_ranking_differential",
+      "name": "Lagged Ranking Differential Operator",
+      "verbatim_quote": "Cre <mark>ate covariates related Me</mark> rge recruiting data, to relative differences add 4 lags of composite between the teams rather rankings as well as than absolute averages of previous 2, 3, performance.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\Delta R_{ij}(t)': '\\\\text{relative ranking difference between teams } i,j \\\\text{ at time } t', 'L_{k}': '\\\\text{lagged performance vector of length } k'}",
+      "assumptions": "Rankings are stable across short-term lags and reflect true competitive strength.",
+      "breakdown_regime": "When \\( L_{k} \\to \\text{stationary} \\), differential signal becomes negligible.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to time-series forecasting operators in econometrics.",
+        "source_operator": "lagged_ranking_differential",
+        "telemetry": "Improvement in prediction accuracy when lagged differentials are included."
+      }
+    },
+    {
+      "primitive_id": "op_decision_rule",
+      "name": "Intuitive binary prediction fusion",
+      "verbatim_quote": "Our decision rule was designed to be as intuitive as possible – if both predictions resulted in the same team being favored, the favored team was deemed the predicted winner.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes two independent predictive models; assumes equal weightage to each model's directionality; assumes no prior knowledge of model reliabilities.",
+      "breakdown_regime": "Applies when only two models disagree on direction; breaks down if models have different reliabilities or if more than two models are used.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction ensemble calibration, where individual model outputs are treated as exchangeable under the non-iid null hypothesis, and majority voting serves as a robust aggregation mechanism.",
+        "source_operator": "op_decision_rule",
+        "telemetry": "Agreement rate between individual model predictions (binary indicator)"
+      }
+    },
+    {
+      "primitive_id": "op_point_differential_winner",
+      "name": "Point differential dominance",
+      "verbatim_quote": "If the predictions diverged, the team with the larger predicted point differential was deemed the predicted winner.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that magnitude of predicted margin carries additional information beyond sign; assumes linear utility for point spreads; assumes no threshold effects.",
+      "breakdown_regime": "Breaks down when point differentials are on vastly different scales; requires careful normalization or rescaling of disparate model outputs.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state-transition logic for handling conflicting action signals, where the 'strongest' signal (largest magnitude) overrides weaker ones in high-conflict states; also maps to GSI's conformal score-based selection, prioritizing the model with the lowest empirical loss.",
+        "source_operator": "op_point_differential_winner",
+        "telemetry": "Absolute difference in predicted point spreads between models"
+      }
+    },
+    {
+      "primitive_id": "op_model_comparison",
+      "name": "Multi-model performance benchmarking",
+      "verbatim_quote": "|**Summary of Results:**|||| |---|---|---|---| |**Model**|**Overall**<br>**Prediction**|**PPV**|**NPV**| |**Lasso**|**75.0%**|**77.3%**|**72.4%**| |Random Forest|74.1%|**78.9%**|69.0%| |Gradient Boosting|72.9%|76.9%|68.5%| |K-Nearest Neighbors|69.0%|71.3%|66.3%| |Neural Network|71.6%|75.8%|66.4%| |Bayesian|74.1%|76.5%|71.5%| # **Conclusions/Future Work:** • The lasso was the top performer, slightly edging out the Bayesian model and random forests.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes balanced class distribution in test set; assumes stable future performance equal to observed holdout performance; assumes accuracy as sole metric.",
+      "breakdown_regime": "Breaks down when test data distribution shifts significantly from training data; requires recalibration for imbalanced classes.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's model selection pipeline using cross-validated calibration error as the primary metric for choosing the final predictive system, with PPV and NPV serving as key validation statistics.",
+        "source_operator": "op_model_comparison",
+        "telemetry": "Holdout accuracy, positive predictive value (precision), negative predictive value (specificity)"
+      }
+    },
+    {
+      "primitive_id": "op_variable_importance",
+      "name": "Recruit ranking lag analysis",
+      "verbatim_quote": "• In terms of variable importance, composite recruit rankings are important, though it appears it takes at least 2 years for players to develop.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes recruit rankings are exogenous; assumes linear relationship between recruit quality and player development; assumes no interaction effects.",
+      "breakdown_regime": "Breaks down when recruit rankings are endogenous (e.g., influenced by coaching changes); requires dynamic lag structures if development follows non-linear trajectories.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's situational reasoning framework for evaluating talent acquisition impact, where lagged recruit rankings serve as state variables influencing future performance; also maps to GSI's variable importance metrics used in model diagnostics.",
+        "source_operator": "op_variable_importance",
+        "telemetry": "Lagged recruit ranking (CR) values and their corresponding regression coefficients"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5c99e733df5d6adf_t0",
+      "think": "This chapter introduces foundational elements for forecasting college football outcomes by leveraging large-scale FBS game datasets spanning 2011–2016. It emphasizes the integration of box score statistics, point spreads, and recruiting data within a Bayesian and machine learning framework. The methodology begins with defining the scope of data volume, which includes 4,339 games, establishing a robust empirical basis for modeling. The augmentation of this dataset with composite team ratings from recruiting classes dating back to 2008 allows for capturing long-term trends in team development, particularly relevant for evaluating the impact of incoming classes on future performance. The process of creating training data cycles through annual iterations, where each team's data from 2011–2014 is used to predict outcomes in 2015, enables temporal consistency checks and validation of model generalization. To mitigate issues arising from repeated game instances in recompiled datasets, the paper proposes generating unique matchup numbers that encapsulate team-specific interactions. Covariates derived from recruiting data include relative differences in rankings and lagged performance metrics, enhancing the model’s ability to capture nuanced competitive dynamics. These primitives collectively support a probabilistic approach to forecasting, integrating both static and dynamic variables to improve predictive fidelity.\n\nFull-book synthesis across 2/2 pages of 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf): [data_volume_accumulator p.1]: ## **<u>Data:</u>** The data used for this college football forecast consisted of 4,339 games between Football Bowl Subdivision (FBS) teams between the 2011 and 2016 seasons<sup>3</sup> . (Maps temporal game data into a kernel space for regression modeling.) [recruiting_composite_rating p.1]: The data set was augmented with composite team ratings<sup>4</sup> for each recruiting class dating back to 2008 to account for seniors in the 2011 season. (Isomorphs to latent variable models in Bayesian hierarchical structures.) [matchup_number_generator p.1]: Create matchup numbers to combat issue of the Recompile data set with same game repeating cumulative averages. (Generates pairwise interaction features for machine learning classifiers.) [lagged_ranking_differential p.1]: Cre <mark>ate covariates related Me</mark> rge recruiting data, to relative differences add 4 lags of composite between the teams rather rankings as well as than absolute averages of previous 2, 3, performance. (Maps to time-series forecasting operators in econometrics.) [op_decision_rule p.2]: Our decision rule was designed to be as intuitive as possible – if both predictions resulted in the same team being favored, the favored team was deemed the predicted winner. (Maps to GSI's conformal prediction ensemble calibration, where individual model outputs are treated as exchangeable under the non-iid null hypothesis, and majority voting serves as a robust aggregation mechanism.) [op_point_differential_winner p.2]: If the predictions diverged, the team with the larger predicted point differential was deemed the predicted winner. (Maps to GSE's state-transition logic for handling conflicting action signals, where the 'strongest' signal (largest magnitude) overrides weaker ones in high-conflict states; also maps to GSI's conformal score-based selection, prioritizing the model with the lowest empirical loss.) [op_model_comparison p.2]: |**Summary of Results:**|||| |---|---|---|---| |**Model**|**Overall**<br>**Prediction**|**PPV**|**NPV**| |**Lasso**|**75.0%**|**77.3%**|**72.4%**| |Random Forest|74.1%|**78.9%**|69.0%| |Gradient Boosting|72.9%|76.9%|68.5%| |K-Nearest Neighbors|69.0%|71.3%|66.3%| |Neural Network|71.6%|75.8%|66.4%| |Bayesian|74.1%|76.5%|71.5%| # **Conclusions/Future Work:** • The lasso was the top performer, slightly edging out the Bayesian model and random forests. (Maps to GSI's model selection pipeline using cross-validated calibration error as the primary metric for choosing the final predictive system, with PPV and NPV serving as key validation statistics.) [op_variable_importance p.2]: • In terms of variable importance, composite recruit rankings are important, though it appears it takes at least 2 years for players to develop. (Maps to GSE's situational reasoning framework for evaluating talent acquisition impact, where lagged recruit rankings serve as state variables influencing future performance; also maps to GSI's variable importance metrics used in model diagnostics.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf): [data_volume_accumulator p.1]: ## **<u>Data:</u>** The data used for this college football forecast consisted of 4,339 games between Football Bowl Subdivision (FBS) teams between the 2011 and 2016 seasons<sup>3</sup> . (Maps temporal game data into a kernel space for regression modeling.) [recruiting_composite_rating p.1]: The data set was augmented with composite team ratings<sup>4</sup> for each recruiting class dating back to 2008 to account for seniors in the 2011 season. (Isomorphs to latent variable models in Bayesian hierarchical structures.) [matchup_number_generator p.1]: Create matchup numbers to combat issue of the Recompile data set with same game repeating cumulative averages. (Generates pairwise interaction features for machine learning classifiers.) [lagged_ranking_differential p.1]: Cre <mark>ate covariates related Me</mark> rge recruiting data, to relative differences add 4 lags of composite between the teams rather rankings as well as than absolute averages of previous 2, 3, performance. (Maps to time-series forecasting operators in econometrics.) [op_decision_rule p.2]: Our decision rule was designed to be as intuitive as possible – if both predictions resulted in the same team being favored, the favored team was deemed the predicted winner. (Maps to GSI's conformal prediction ensemble calibration, where individual model outputs are treated as exchangeable under the non-iid null hypothesis, and majority voting serves as a robust aggregation mechanism.) [op_point_differential_winner p.2]: If the predictions diverged, the team with the larger predicted point differential was deemed the predicted winner. (Maps to GSE's state-transition logic for handling conflicting action signals, where the 'strongest' signal (largest magnitude) overrides weaker ones in high-conflict states; also maps to GSI's conformal score-based selection, prioritizing the model with the lowest empirical loss.) [op_model_comparison p.2]: |**Summary of Results:**|||| |---|---|---|---| |**Model**|**Overall**<br>**Prediction**|**PPV**|**NPV**| |**Lasso**|**75.0%**|**77.3%**|**72.4%**| |Random Forest|74.1%|**78.9%**|69.0%| |Gradient Boosting|72.9%|76.9%|68.5%| |K-Nearest Neighbors|69.0%|71.3%|66.3%| |Neural Network|71.6%|75.8%|66.4%| |Bayesian|74.1%|76.5%|71.5%| # **Conclusions/Future Work:** • The lasso was the top performer, slightly edging out the Bayesian model and random forests. (Maps to GSI's model selection pipeline using cross-validated calibration error as the primary metric for choosing the final predictive system, with PPV and NPV serving as key validation statistics.) [op_variable_importance p.2]: • In terms of variable importance, composite recruit rankings are important, though it appears it takes at least 2 years for players to develop. (Maps to GSE's situational reasoning framework for evaluating talent acquisition impact, where lagged recruit rankings serve as state variables influencing future performance; also maps to GSI's variable importance metrics used in model diagnostics.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in early 2000s sports analytics literature, this work builds upon statistical methods pioneered in baseball and basketball forecasting, extending them to college football through enhanced data aggregation and temporal modeling. Retrocausal Genealogy (Window 1): Rooted in 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Modeling assumes rationality in team behavior and coaching decisions, with player development and strategic adjustments being key drivers of outcome variation. Coaches and players act as optimizing agents within bounded information environments. Theory of Mind (Window 1): Rooted in 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that lagged performance and ranking differentials do not redundantly encode similar temporal signals. Leakage is mitigated by excluding overlapping data points in training sets and validating against holdout samples. Cross-Layer Veto (Window 1): Rooted in 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5c99e733df5d6adf_t1",
+      "think": "This chapter window introduces foundational predictive fusion methods and variable importance analysis for college football outcomes. The core challenge is combining multiple probabilistic forecasts while accounting for heterogeneity across models and features. The decision rule operates as a simple majority vote, which is statistically optimal under certain exchangeability assumptions but ignores model reliability. Point differential dominance extends this by incorporating magnitude, aligning with risk-seeking behavior in betting markets. The performance comparison uses standard classification metrics (accuracy, precision, recall) on a held-out test set, assuming future data will mirror past distributions—a strong ergodicity assumption. Finally, the recruit ranking analysis highlights temporal dependencies and development lags, requiring careful feature engineering to avoid lookahead bias. These primitives collectively form a pipeline from raw data to actionable predictions, with each step introducing distinct mathematical structures: combinatorial rules, metric aggregation, statistical testing, and time-series decomposition. Window 2 Synthesis: Rooted in 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The fusion rules trace back to early committee-based prediction systems in sports analytics, evolving into modern machine learning ensembles. Variable importance methods descend from LASSO regression introduced by Tibshirani in 1996, which itself builds on earlier work in regularization and subset selection. The use of recruit rankings as proxies for player quality reflects the broader trend of integrating scouting data with objective statistics, following seminal papers on player evaluation in basketball and baseball.",
+      "theory_of_mind": "Coaches and scouts implicitly perform similar fusion—balancing expert judgment (like random forests) with tactical analysis (like lasso). Players respond to predicted margins, adjusting effort based on perceived game flow. Bookmakers calibrate odds using these models, creating a feedback loop where model performance influences market efficiency. Theory of Mind (Window 2): Rooted in 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions include removing highly correlated recruit rankings (e.g., 2-year vs. 3-year averages) to prevent overfitting. Leakage vetoes require ensuring that any lagged variables do not contain information about future outcomes, such as post-season rankings being used as pre-season predictors. Cross-Layer Veto (Window 2): Rooted in 2017 - A survey of advanced modeling techniques for forecasting college football game outcomes - Unknown Authors (5c99e733df5d6adf, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

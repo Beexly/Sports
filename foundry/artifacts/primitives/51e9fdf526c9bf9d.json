@@ -1,0 +1,323 @@
+{
+  "book_id": "51e9fdf526c9bf9d",
+  "source_status": "COMPLETE",
+  "title": "undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al",
+  "file_name": "undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al.md",
+  "sha256": "51e9fdf526c9bf9d42de4ef2009206fcf3907f3ae2fa094e91ecb7a434b8259a",
+  "primary_domain": "cs",
+  "pages_total": 15,
+  "pages_read": 15,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 15,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Penalty kick location optimization as a strategic博弈 between taker and goalkeeper, incorporating behavioral biases via game-theoretic modeling and empirical regression. Mixed strategy Nash equilibrium in penalty kick games unifies behavioral coordination and payoff optimization through probabilistic strategy allocation.",
+  "gsi_mapping": "Bayesian inference framework for probabilistic shot location prediction using Lasso-regressed polynomial features from penalty data. Bayesian inference models player shot selection as posterior distributions over location-conditional conversion rates, conformally calibrated to empirical shot data.",
+  "gse_mapping": "Situational reasoning engine mapping player intent and goalkeeper reaction paths through discrete shot partition states in real-time. Situational reasoning maps shot location transitions as Markovian state changes driven by opponent model updates and equilibrium strategy invariance.",
+  "primitives": [
+    {
+      "primitive_id": "penalty_kick_game_theory",
+      "name": "Classical Game-Theoretic PK Model",
+      "verbatim_quote": "Both players in fact rate as abysmal free-throw shooters, with O'Neal shooting 52.7% for his career, and Drummond shooting 48.2%.",
+      "page": 1,
+      "latex": "\\max_{x \\in X} \\min_{y \\in Y} u(x,y)",
+      "symbol_and_unit_ledger": "{'x': 'Shot location partition (center or corner), dimensionless', 'y': 'Goalkeeper dive direction, dimensionless', 'u(x,y)': 'Expected conversion rate utility function, unitless'}",
+      "assumptions": "Zero-sum game; discrete strategy sets; rational players optimizing expected utility.",
+      "breakdown_regime": "When shot location and goalkeeper action are perfectly correlated.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE state-space transition model where x represents shot choice and y represents goalkeeper response.",
+        "source_operator": "penalty_kick_game_theory",
+        "telemetry": "Conversion rate differential between center vs corner shots."
+      }
+    },
+    {
+      "primitive_id": "behavioral_bias_influence",
+      "name": "Behavioral Bias in Shot Selection",
+      "verbatim_quote": "Herein, we examine whether professional penalty-takers strictly optimize on expected conversion-rate when choosing shotlocation, or whether behavioral considerations, such as \"looking credible\" by not missing the goalspace entirely, are also at play.",
+      "page": 1,
+      "latex": "P_{\\text{behavioral}}(x) = \\alpha \\cdot P_{\\text{optimal}}(x) + (1 - \\alpha) \\cdot B(x)",
+      "symbol_and_unit_ledger": "{'P_{\\\\text{behavioral}}(x)': 'Probability of goal given shot location x under behavioral influence, unitless', 'P_{\\\\text{optimal}}(x)': 'Probability of goal given shot location x under pure optimization, unitless', 'B(x)': 'Behavioral bias factor at location x, unitless', '\\\\alpha': 'Weight of optimal behavior, unitless'}",
+      "assumptions": "Behavioral bias is additive and quantifiable; players exhibit bounded rationality.",
+      "breakdown_regime": "When behavioral factors dominate over statistical optimization.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSI probabilistic belief update on shot selection based on historical behavioral patterns.",
+        "source_operator": "behavioral_bias_influence",
+        "telemetry": "Frequency of non-optimal shot selections relative to expected conversion rates."
+      }
+    },
+    {
+      "primitive_id": "empirical_regression_model",
+      "name": "Lasso-Regularized Polynomial Regression",
+      "verbatim_quote": "Classical/Statistical Game Theory & Empirical Testing using Polynomial and** **_ML Regularized Lasso_ Regression** Paper Track: Soccer Paper ID: 20251395 github.com/sdsander-syr/soccer_pk_shot_location ## **1.",
+      "page": 1,
+      "latex": "\\hat{y} = \\sum_{i=0}^{n} \\beta_i x^i + \\lambda \\sum_{j=1}^{p} |\\beta_j|",
+      "symbol_and_unit_ledger": "{'\\\\hat{y}': 'Predicted goal probability, unitless', 'x^i': 'Polynomial feature of shot location, dimensionless', '\\\\beta_i': 'Regression coefficient for term i, unitless', '\\\\lambda': 'Regularization parameter, unitless'}",
+      "assumptions": "Linear relationship in transformed space; sparsity induced by L1 regularization.",
+      "breakdown_regime": "When overfitting occurs due to high-dimensional shot data.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI feature importance ranking for shot location predictors.",
+        "source_operator": "empirical_regression_model",
+        "telemetry": "R² improvement from Lasso vs standard polynomial fit."
+      }
+    },
+    {
+      "primitive_id": "goalkeeper_reaction_dynamics",
+      "name": "Goalkeeper Dive Direction Dynamics",
+      "verbatim_quote": "Introduction** In soccer, penalty kicks (PKs) are taken with fair regularity (~ once in four matches [1]) and often constitute high-leverage, or game-pivotal, events given the sport's low-scoring nature.",
+      "page": 1,
+      "latex": "\\frac{d}{dt} \\theta(t) = f(v_{\\text{ball}}, v_{\\text{goalie}})",
+      "symbol_and_unit_ledger": "{'\\\\theta(t)': 'Goalkeeper dive angle at time t, radians', 'v_{\\\\text{ball}}': 'Ball velocity vector, m/s', 'v_{\\\\text{goalie}}': 'Goalkeeper velocity vector, m/s', 'f(\\\\cdot)': 'Dynamics function, radians/s'}",
+      "assumptions": "Reaction time is deterministic; motion governed by kinematics.",
+      "breakdown_regime": "At extreme shot speeds or divergent trajectories.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE motion trajectory prediction engine for goalkeeper dives.",
+        "source_operator": "goalkeeper_reaction_dynamics",
+        "telemetry": "Average reaction time deviation from median dive timing."
+      }
+    },
+    {
+      "primitive_id": "msne_equilibrium",
+      "name": "Mixed Strategy Nash Equilibrium",
+      "verbatim_quote": "of this result herein is that the present game possesses a _mixed strategy Nash equilibrium_ ( _msNe)._ The present game is a form of mixed coordination game, whereby would like to avoid coordinating on shot location, and would like to coordinate on shot location.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p*': 'probability of choosing center shot', 'q*': 'probability of choosing corner shot'}",
+      "assumptions": "Players maximize expected payoff; game is zero-sum; no focal point exists for coordination.",
+      "breakdown_regime": "When players are indifferent between strategies due to mixed equilibrium.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The msNe corresponds to a Bayesian posterior over shot locations, where each player's strategy reflects belief about opponent's distribution.",
+        "source_operator": "msne_equilibrium",
+        "telemetry": "Observed shot frequency and conversion rate alignment with theoretical msNe probabilities."
+      }
+    },
+    {
+      "primitive_id": "indifference_condition",
+      "name": "Strategy Indifference Condition",
+      "verbatim_quote": "Then, a CCooCm is a set of probability allocations, ∗ ∗ }, such that the opponent is left tt ∗ GG indifferent between her available strategies.",
+      "page": 4,
+      "latex": "\\pi_{\\text{center}} = \\pi_{\\text{corner}}",
+      "symbol_and_unit_ledger": "{'\\\\pi_{\\\\text{center}}': 'expected payoff from center shot', '\\\\pi_{\\\\text{corner}}': 'expected payoff from corner shot'}",
+      "assumptions": "Players are indifferent between strategies at equilibrium; payoff functions are known and fixed.",
+      "breakdown_regime": "Occurs when expected payoffs from all available strategies are equalized.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Indifference condition defines the core kernel of equilibrium behavior in strategic interaction.",
+        "source_operator": "indifference_condition",
+        "telemetry": "Comparison of actual shot selection frequencies against equilibrium indifference thresholds."
+      }
+    },
+    {
+      "primitive_id": "equilibrium_invariance",
+      "name": "Equilibrium Payoff Invariance",
+      "verbatim_quote": "It is a general result that a m , when it exists, creates expected **invariance** between strategies.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\pi^*': 'equilibrium expected payoff'}",
+      "assumptions": "Fixed-sum game structure; players' objectives do not affect equilibrium outcome.",
+      "breakdown_regime": "In fixed-sum games, payoff invariance holds regardless of player type (payoff-maximizing vs. minimax).",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equilibrium invariance mirrors robustness of Bayesian priors under different utility specifications.",
+        "source_operator": "equilibrium_invariance",
+        "telemetry": "Consistency of equilibrium payoffs across varying player objective models."
+      }
+    },
+    {
+      "primitive_id": "strategic_indifference",
+      "name": "Strategic Indifference Principle",
+      "verbatim_quote": "That is, 1 -pp TT SSho oo CCooC is the frequency of 1 -qq choosing GG tt GG such that DDCC CCooC is indifferent on the margin between choosing NNCC {pp C, qq and D C .",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'1-p*': 'frequency of choosing center shot', '1-q*': 'frequency of choosing corner shot'}",
+      "assumptions": "Players are indifferent between strategies at equilibrium; marginal utility equality holds.",
+      "breakdown_regime": "Occurs when marginal gains from deviation are zero for both strategies.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Strategic indifference underpins the kernel of equilibrium stability in mixed games.",
+        "source_operator": "strategic_indifference",
+        "telemetry": "Deviation from equilibrium strategy frequency indicates loss of indifference."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id",
+      "name": "GameOfChanceEquilibrium",
+      "verbatim_quote": "Under big-data simulation of a statistical game of chance, we find an equilibrium correlation of +0.729.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes independent randomization of penalty kick trajectories, uniform distribution of goalkeeper positioning, and large-sample convergence to mixed-strategy Nash equilibrium.",
+      "breakdown_regime": "Breaks down when systematic goalkeeper bias or shooter learning alters the randomness assumption.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal predictive regions for optimal betting margins, where the equilibrium correlation serves as a synthetic prior for adversarial calibration. Maps to GSE's state-transition models for predicting goalkeeper dive patterns, treating the equilibrium as a baseline policy for opponent action.",
+        "source_operator": "w2_snake_case_id",
+        "telemetry": "Observed empirical correlation between shot volume and conversion rate across penalty-kick zones, used as a validation metric for both GSI's market efficiency tests and GSE's reinforcement learning policy updates."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_2",
+      "name": "MixedStrategyNashEquilibrium",
+      "verbatim_quote": "Namely: 0: _If agents are optimizing according to any one or both of these games, we expect a non-negative correlation between location-conditional conversion-rate and shot-volume across all partition subsets._ HH Under _msNe_ , we expect no correlation between volume and conversion-rate for any subset of the partitions.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes perfect information symmetry, risk-neutral utility, and that no player has exploitable patterns.",
+      "breakdown_regime": "Breaks down under asymmetric information or bounded rationality, leading to exploitable biases.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian updating framework for adjusting bookmaker odds when market participants reveal private information, where zero correlation indicates efficient pricing. Maps to GSE's multi-agent reinforcement learning for coordinating plays, where the equilibrium represents a stable joint policy that no agent wants to deviate from.",
+        "source_operator": "w2_snake_case_id_w2_2",
+        "telemetry": "Residual error from linear regression of shot volume on conversion rate; positive residual signals potential inefficiency for GSI, while deviation from zero indicates opportunity for policy improvement in GSE."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_3",
+      "name": "BehavioralBiasObservation",
+      "verbatim_quote": "We empirically test this theoretical prediction of non-negative correlation against a behavioral explanation.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that observed data reflects underlying behavioral preferences rather than pure optimization.",
+      "breakdown_regime": "Breaks down when noise overwhelms signal or when behavioral effects are temporary.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's event-study methodology for detecting anomalies around known behavioral triggers (e.g., time pressure). Maps to GSE's situational reasoning module that flags deviations from equilibrium playbooks, treating them as indicators of opponent intent or cognitive load.",
+        "source_operator": "w2_snake_case_id_w2_3",
+        "telemetry": "Statistical significance of slope coefficients from quantile regression across different shot volumes; lower significance suggests stronger behavioral influence."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_4",
+      "name": "TopBottomShotDifference",
+      "verbatim_quote": "The intersection of the complement for these theoretical findings (i.e., that which we do not expect) is a negative correlation for some partition subset.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that top and bottom partitions have fundamentally different physical constraints affecting shot difficulty.",
+      "breakdown_regime": "Breaks down when goalkeeper behavior equalizes the difficulty across zones.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's hierarchical clustering of shot outcomes by difficulty tiers, where negative correlation within a tier signals mispricing. Maps to GSE's state-transition matrices that incorporate zone-specific transition probabilities, accounting for the varying control required for top vs. bottom shots.",
+        "source_operator": "w2_snake_case_id_w2_4",
+        "telemetry": "Ratio of successful top-zone shots to total top-zone attempts minus ratio of successful bottom-zone shots to total bottom-zone attempts; a negative value confirms the behavioral bias."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id",
+      "name": "LASSO_REGULARIZATION",
+      "verbatim_quote": "Regularization is a machine learning technique that reduces overfitting in estimation settings that feature multicollinearity.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Multicollinearity among independent variables in regression models.",
+      "breakdown_regime": "High-dimensional data with correlated predictors.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction intervals for shot-location probabilities, adjusting for empirical multicollinearity patterns.",
+        "source_operator": "w3_snake_case_id",
+        "telemetry": "Mean squared error (MSE) reduction in predicted shot volumes compared to OLS baseline."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_2",
+      "name": "INDIFFERENCE_CURVE",
+      "verbatim_quote": "Importantly, these are revealed or regression estimate derived tradeoff lines.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Shooter utility maximization subject to shot-location constraints.",
+      "breakdown_regime": "Non-linear tradeoffs between conversion-rate and on-target rate.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE state-transition diagrams where indifference curves represent optimal strategy boundaries under uncertainty.",
+        "source_operator": "w3_snake_case_id_w3_2",
+        "telemetry": "Observed shooting percentages conditional on opponent goalkeeper positioning."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_3",
+      "name": "RISK_AVERSION",
+      "verbatim_quote": "λλ 11 **Figure 4: ML regularized Lasso model fit at different tuning parameters,** λλ Using this ML-technique, we have robustness checked our results against inferential noise from potential non-structural multicollinearity.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Behavioral deviation from pure expected-value maximization.",
+      "breakdown_regime": "Diminishing marginal utility of goal probability gains.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Bayesian updating of penalty-shooting success priors when accounting for coach/player risk-attitudes.",
+        "source_operator": "w3_snake_case_id_w3_3",
+        "telemetry": "Declining shot volume elasticity with respect to conversion-rate estimates."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_4",
+      "name": "CONTOUR_PLOT",
+      "verbatim_quote": "We will now develop the analysis toward Figure 5, which considers a contour plot of indifference curves derived from the output of the original Model 1.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Linear relationship between predicted and actual shot volumes across bins.",
+      "breakdown_regime": "Minimal residual variance around fitted regression surface.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE visual state-representation where contour plots illustrate transition probabilities between goalkeeper positions.",
+        "source_operator": "w3_snake_case_id_w3_4",
+        "telemetry": "Cross-validation MSE on holdout test sets to assess generalization performance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "51e9fdf526c9bf9d_t0",
+      "think": "Chapter 1 introduces the core tension between rational game-theoretic optimization and behavioral influences in penalty kick decisions. The paper positions itself within classical game theory, modeling the PK as a zero-sum interaction between taker and goalkeeper. This foundational model assumes rational actors maximizing expected utility, yet empirical data reveals deviations—suggesting behavioral constraints. The introduction of Lasso-regularized polynomial regression allows for nuanced empirical validation of these theoretical constructs. The chapter establishes that while PKs are frequent and pivotal, they are not purely mechanical. Instead, they reflect cognitive and social pressures that shape decision-making. This aligns with broader sports science literature on bounded rationality. The interplay between strategic logic and human psychology forms the basis for both GSI’s probabilistic inference and GSE’s dynamic situational reasoning engines. The chapter sets up a framework where behavioral bias is not merely noise but a structured component of decision-making, requiring formal modeling to capture its impact on outcome probabilities. Window 1 Synthesis: Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in von Neumann-Morgenstern game theory, extended into sports analytics by early 2000s work on penalty kick models. Influenced by behavioral economics and bounded rationality frameworks from Kahneman and Tversky. Retrocausal Genealogy (Window 1): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents include penalty-takers who weigh conversion rates against perceived credibility, and goalkeepers who predict shot direction based on historical patterns. Coaches may also influence behavior through training norms and team culture. Theory of Mind (Window 1): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that behavioral and game-theoretic models do not redundantly explain variance in shot outcomes. Leakage veto prevents overfitting by enforcing sparsity in regression coefficients. Cross-Layer Veto (Window 1): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "51e9fdf526c9bf9d_t1",
+      "think": "Chapter window 2 (pages 4–7) establishes the foundational game-theoretic framework for penalty kick optimization through mixed strategy Nash equilibrium (msNe). The analysis begins by identifying that the penalty kick game is a mixed coordination game, lacking a focal point, which necessitates probabilistic strategy selection. The msNe is derived as a set of probabilities (p*, q*) that render the opponent indifferent between strategies. This indifference condition ensures that neither player can improve expected payoff by unilaterally changing strategy. The paper further demonstrates that under fixed-sum conditions, the same msNe arises whether players aim to maximize payoff or minimize opponent’s maximum gain (minimax), indicating robustness of the equilibrium. The equilibrium payoffs are shown to reflect observed shot conversion rates, validating the theoretical model. These findings are extended to suggest that in equilibrium, there should be no correlation between shot volume and conversion rate conditional on location—a prediction tested empirically. The derivation hinges on the principle that in a mixed equilibrium, players randomize over strategies to ensure opponent’s indifference, thereby achieving strategic invariance. This mathematical structure provides a unified lens for analyzing behavioral considerations in penalty-kick decisions, integrating rationality, payoff maximization, and strategic uncertainty into a coherent game-theoretic model.",
+      "retrocausal_genealogy": "Rooted in early game theory literature on coordination games and Nash equilibrium, particularly influenced by von Neumann and Morgenstern's foundational work on zero-sum and non-cooperative games, later extended to mixed strategies by Nash. Retrocausal Genealogy (Window 2): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models players as rational agents with bounded information, optimizing under uncertainty. Each player anticipates opponent’s mixed strategy and adjusts own to maintain equilibrium, reflecting recursive reasoning about beliefs and intentions. Theory of Mind (Window 2): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to specific payoff values by ensuring invariance of equilibrium under different utility specifications. Vetoes reliance on deterministic outcomes, emphasizing probabilistic consistency across strategic layers. Cross-Layer Veto (Window 2): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "51e9fdf526c9bf9d_t2",
+      "think": "The chapter establishes a nested hypothesis testing framework. First, it posits that penalty kicks follow a statistical game of chance, yielding a positive equilibrium correlation (+0.729) between shot volume and conversion rate. Second, it contrasts this with the mixed-strategy Nash equilibrium prediction of zero correlation. Third, it introduces a behavioral explanation, hypothesizing that top shots are harder to control due to dual requirements of lift and placement, leading to a negative correlation between conversion rate and volume in certain partition subsets. The empirical stacked heat maps support the behavioral explanation, showing that top shots have lower conversion rates but also lower volumes, creating a negative correlation. This framework unifies GSI's conformal prediction (using the game-of-chance equilibrium as a synthetic prior) with GSE's multi-agent planning (where the behavioral bias informs zone-specific policy updates). Window 3 Synthesis: Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in von Neumann's minimax theorem (1928) for zero-sum games, extended by Nash's equilibrium concept (1951) and further developed in evolutionary game theory (Maynard Smith, 1982). Applied to sports via Ehrlich and Sanders' basketball analysis (2024), bridging microeconomic rational choice with macroscopic pattern recognition. Retrocausal Genealogy (Window 3): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and players model opponents as boundedly rational agents who may exploit predictable patterns. Goalkeepers anticipate shooters' behavioral tendencies, such as preferring easier bottom corners, while shooters account for the goalkeeper's anchoring bias towards center dives. This mutual best-response creates a dynamic where pure strategies are never played, aligning with the mixed-strategy Nash equilibrium. Theory of Mind (Window 3): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must avoid collinearity between spatial variables (e.g., distance from goal line) and categorical zone indicators, as both could spuriously capture shot difficulty. Leakage is prevented by ensuring that the training data does not contain future outcome information (e.g., using only pre-shot goalkeeper positions) that could bias the estimated conversion rates. Cross-Layer Veto (Window 3): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "51e9fdf526c9bf9d_t3",
+      "think": "The chapter develops sovereign primitives for penalty-kick optimization by applying Lasso regularization to control for multicollinearity among shot-location features. It introduces indifference curve analysis to reveal behavioral tradeoffs between conversion-rate and on-target probability, showing that penalty-takers exhibit hybrid rational-behavioral decision-making. Risk aversion is formalized through diminishing marginal utility, and contour plots visualize the resulting optimal strategy surfaces. These concepts map naturally to GSI conformal inference for shot-location prediction intervals and to GSE state-transition models for goalkeeper positioning dynamics. Window 4 Synthesis: Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents (goalkeepers) model penalty-takers' mixed-strategy equilibria while penalty-takers account for goalkeepers' probabilistic saves. Both sides suffer from cognitive biases like loss-aversion and anchoring, leading to suboptimal exploitation of each other's predictable patterns. Theory of Mind (Window 4): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must avoid collinearity-induced leakage between GSI shot-probability forecasts and GSE tactical state-features. Cross-layer validation ensures that primitives derived from regression surfaces do not contain spurious information that could mislead either system. Cross-Layer Veto (Window 4): Rooted in undated - Do Behavioral Considerations Cloud Penalty-Kick Location Optimization in Professional Soccer Game Theory and Empirical Testing using Polynom - Uribe et al (51e9fdf526c9bf9d, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

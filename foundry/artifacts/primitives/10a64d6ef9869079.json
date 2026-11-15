@@ -1,0 +1,78 @@
+{
+  "book_id": "10a64d6ef9869079",
+  "source_status": "COMPLETE",
+  "title": "openalex_W4317933942",
+  "file_name": "openalex_W4317933942.pdf",
+  "sha256": "10a64d6ef9869079f692dbbc165309f3dc0339db84fe8d21a4659b3d05d4a937",
+  "primary_domain": "other",
+  "pages_total": 8,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Transfer learning via ResNet152 encoder-decoder architecture enables robust scene classification in cricket video streams through labeled dataset integration and accuracy optimization. Universal Lens: Rooted in openalex_W4317933942 (10a64d6ef9869079), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework maps scene categories to probabilistic state transitions using ResNet152 posterior distributions over cricket scenes, enabling dynamic video summarization. GSI Mapping: Rooted in openalex_W4317933942 (10a64d6ef9869079), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models scene evolution as Markovian state transitions between batting, bowling, boundary, crowd, and close-up states based on temporal frame clustering. GSE Mapping: Rooted in openalex_W4317933942 (10a64d6ef9869079), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "scene_classification_operator",
+      "name": "Scene Classification Operator",
+      "verbatim_quote": "This article proposes a strategy to accomplish high-quality scene classification and focuses on several practical implementation gaps over the previous methodologies.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Scene classification relies on distinct visual features and temporal consistency in sports video.",
+      "breakdown_regime": "Failure occurs when scene boundaries are ambiguous or feature overlap exceeds discriminative capacity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scene classification maps to a categorical probability distribution over five predefined classes using ResNet152 feature embeddings.",
+        "source_operator": "scene_classification_operator",
+        "telemetry": "Mean accuracy of 99.15% on labeled dataset."
+      }
+    },
+    {
+      "primitive_id": "resnet152_encoder_decoder",
+      "name": "ResNet152 Encoder-Decoder",
+      "verbatim_quote": "For scene categorization, we use the ResNet152 model which is pre-trained on imagenet.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Pretrained ResNet152 captures hierarchical visual representations sufficient for scene discrimination.",
+      "breakdown_regime": "Performance degrades under domain shift or insufficient fine-tuning data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "ResNet152 encodes spatial-temporal features into compact latent vectors for downstream classification.",
+        "source_operator": "resnet152_encoder_decoder",
+        "telemetry": "Model trained on 6000 labeled frames across 5 scene classes."
+      }
+    },
+    {
+      "primitive_id": "five_scene_types",
+      "name": "Five Scene Types",
+      "verbatim_quote": "We identify five scene types, including batting, bowling, boundary, crowd, and close-up, using cricket as a case study.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each scene type corresponds to a unique set of visual and motion characteristics.",
+      "breakdown_regime": "Misclassification arises when scene semantics are not well-defined or overlapping.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scene types are modeled as discrete categories in a categorical distribution derived from ResNet152 outputs.",
+        "source_operator": "five_scene_types",
+        "telemetry": "Dataset contains 6000 frames distributed among five scene classes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "10a64d6ef9869079_t0",
+      "think": "Scene classification in sports video leverages transfer learning from ResNet152, which encodes visual features into a learned latent space. The model's architecture allows for efficient feature extraction and classification of five distinct cricket scenes—batting, bowling, boundary, crowd, and close-up. These scenes are defined by unique combinations of visual cues such as player positioning, ball trajectory, and crowd activity. The use of a pre-trained model ensures robustness against variations in lighting and camera angle while maintaining high accuracy (99.15%). The classification process is framed as a probabilistic mapping from image features to scene labels, enabling downstream applications like video summarization and automated highlight generation. The system's reliance on labeled datasets introduces a dependency on manual annotation quality and dataset representativeness. Failure modes include misclassification due to ambiguous scene boundaries or domain-specific variations not captured during training.\n\nDeep epistemic analysis for openalex_W4317933942 (10a64d6ef9869079, domain=other, pages_read=7/8): Operator 'Scene Classification Operator' (page 2, domain other) captures: This article proposes a strategy to accomplish high-quality scene classification and focuses on several practical implementation gaps over the previous methodologies. Assumptions: Scene classification relies on distinct visual features and temporal consistency in sports video. Breakdown regime: Failure occurs when scene boundaries are ambiguous or feature overlap exceeds discriminative capacity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scene classification maps to a categorical probability distribution over five predefined classes using ResNet152 feature embeddings. Operator 'ResNet152 Encoder-Decoder' (page 2, domain other) captures: For scene categorization, we use the ResNet152 model which is pre-trained on imagenet. Assumptions: Pretrained ResNet152 captures hierarchical visual representations sufficient for scene discrimination. Breakdown regime: Performance degrades under domain shift or insufficient fine-tuning data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): ResNet152 encodes spatial-temporal features into compact latent vectors for downstream classification. Operator 'Five Scene Types' (page 2, domain other) captures: We identify five scene types, including batting, bowling, boundary, crowd, and close-up, using cricket as a case study. Assumptions: Each scene type corresponds to a unique set of visual and motion characteristics. Breakdown regime: Misclassification arises when scene semantics are not well-defined or overlapping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scene types are modeled as discrete categories in a categorical distribution derived from ResNet152 outputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W4317933942 (10a64d6ef9869079, domain=other, pages_read=7/8): Operator 'Scene Classification Operator' (page 2, domain other) captures: This article proposes a strategy to accomplish high-quality scene classification and focuses on several practical implementation gaps over the previous methodologies. Assumptions: Scene classification relies on distinct visual features and temporal consistency in sports video. Breakdown regime: Failure occurs when scene boundaries are ambiguous or feature overlap exceeds discriminative capacity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scene classification maps to a categorical probability distribution over five predefined classes using ResNet152 feature embeddings. Operator 'ResNet152 Encoder-Decoder' (page 2, domain other) captures: For scene categorization, we use the ResNet152 model which is pre-trained on imagenet. Assumptions: Pretrained ResNet152 captures hierarchical visual representations sufficient for scene discrimination. Breakdown regime: Performance degrades under domain shift or insufficient fine-tuning data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): ResNet152 encodes spatial-temporal features into compact latent vectors for downstream classification. Operator 'Five Scene Types' (page 2, domain other) captures: We identify five scene types, including batting, bowling, boundary, crowd, and close-up, using cricket as a case study. Assumptions: Each scene type corresponds to a unique set of visual and motion characteristics. Breakdown regime: Misclassification arises when scene semantics are not well-defined or overlapping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scene types are modeled as discrete categories in a categorical distribution derived from ResNet152 outputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical computer vision and extended through deep learning paradigms, this work builds upon earlier optical flow and low-level feature extraction methods for shot boundary detection and classification. Retrocausal Genealogy: Rooted in openalex_W4317933942 (10a64d6ef9869079), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in openalex_W4317933942 (10a64d6ef9869079), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include adversarial variations in camera angles, lighting, or player behavior that could degrade classification performance. Decision actors include the model’s internal representation learning and the human annotator’s labeling consistency. Theory of Mind & Decision Maker Model: Rooted in openalex_W4317933942 (10a64d6ef9869079), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by distinct feature spaces per scene type; leakage is mitigated through targeted fine-tuning of ResNet152 layers and explicit label encoding. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W4317933942 (10a64d6ef9869079), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W4317933942 (10a64d6ef9869079), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

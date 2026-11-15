@@ -1,0 +1,273 @@
+import { describe, expect, it } from "vitest";
+import {
+  computePositivePartJamesSteinShrinkage,
+  CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX,
+  CORPUS_SITUATIONAL_FAMILIES,
+  CORPUS_SNAPSHOT_METADATA,
+  evaluateFoundryCorpusSituationalPriors,
+  evaluateRulebookAndPsychologyOverlay,
+  evaluateSplitFieldCoverageOverlay,
+  evaluateUnifiedCorpusSituationalStack,
+  FOUNDRY_CORPUS_BASELINE_SNAPSHOT,
+  MAX_ABS_CORPUS_LOG_ODDS,
+  MAX_CORPUS_FAMILY_PROB_MODULATION,
+  NFL_2026_PLAYING_RULES_OPERATORS,
+  reconcileWeek10EntityAndAvailability,
+  SPLIT_FIELD_QUARTERS_COVERAGE_OPERATORS,
+  SPORTS_PSYCHOLOGY_PRESSURE_OPERATORS,
+} from "../nfl/foundry-corpus-situational-priors.js";
+import {
+  choleskyDecompose,
+  DEFAULT_SIX_FAMILY_CORRELATION_MATRIX,
+} from "../nfl/master-situational-reasoning-aggregator.js";
+import {
+  evaluateZeroOrphanExpectedMetricsOverlay,
+  REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES,
+} from "../nfl/zero-orphan-expected-metrics-bridge.js";
+
+describe("foundry-corpus-situational-priors", () => {
+  it("is registered in zero-orphan engine bridge and respects |Delta log-odds| <= 0.35", () => {
+    expect(REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES).toContain(
+      "nfl/foundry-corpus-situational-priors.ts",
+    );
+
+    const lowSample = computePositivePartJamesSteinShrinkage(6);
+    const highSample = computePositivePartJamesSteinShrinkage(120);
+    expect(highSample).toBeGreaterThan(lowSample);
+    expect(computePositivePartJamesSteinShrinkage(Number.NaN)).toBe(0);
+
+    const extreme = evaluateFoundryCorpusSituationalPriors({
+      pressureSignalZ: 20,
+      weatherDisruptionZ: 20,
+      restFatigueZ: 20,
+      coverageMismatchZ: 20,
+      qbScriptStabilityZ: 20,
+      microstructureDislocationZ: 20,
+      observedSampleSizeN: 500,
+      collinearCrossLayerVetoes: 0,
+    });
+    expect(extreme.allFiniteNonNan).toBe(true);
+    expect(Math.abs(extreme.combinedLogOddsDelta)).toBeLessThanOrEqual(MAX_ABS_CORPUS_LOG_ODDS);
+
+    for (const fam of CORPUS_SITUATIONAL_FAMILIES) {
+      expect(FOUNDRY_CORPUS_BASELINE_SNAPSHOT[fam].shardBDocs).toBeGreaterThan(0);
+      expect(Math.abs(extreme.familyProbModulations[fam])).toBeLessThanOrEqual(
+        MAX_CORPUS_FAMILY_PROB_MODULATION,
+      );
+    }
+  });
+
+  it("integrates cleanly into evaluateZeroOrphanExpectedMetricsOverlay", () => {
+    const res = evaluateZeroOrphanExpectedMetricsOverlay({
+      cleanBadThrows: 12,
+      cleanAttempts: 180,
+      pressuredBadThrows: 10,
+      pressuredAttempts: 42,
+      wrTargetSuccessRate: 0.62,
+      wrTargetShare: 0.31,
+      qbMofCompletionRate: 0.75,
+      defZoneRate: 0.69,
+      ryoePerCarry: 0.78,
+      yardsBeforeContactPerCarry: 1.4,
+      underCenterEpa: 0.14,
+      shotgunEpa: 0.01,
+      neutralSnapShare: 0.6,
+      winPlayoffProb: 0.68,
+      lossPlayoffProb: 0.39,
+      opponentWinPlayoffSwing: 0.12,
+      restDaysOffense: 10,
+      restDaysDefense: 6,
+    });
+    expect(res.foundryCorpusPriorsReceipt.allFiniteNonNan).toBe(true);
+    expect(
+      Math.abs(res.foundryCorpusPriorsReceipt.combinedLogOddsDelta),
+    ).toBeLessThanOrEqual(MAX_ABS_CORPUS_LOG_ODDS);
+  });
+
+  it("wires 2026 NFL Rulebook and sports psychology situational operators deterministically", () => {
+    expect(NFL_2026_PLAYING_RULES_OPERATORS.sourceBookId).toBe("64f765ba0a849b1d");
+    expect(NFL_2026_PLAYING_RULES_OPERATORS.rules.map((r) => r.code)).toEqual([
+      "6-1-3",
+      "6-1-5",
+      "6-1-6",
+      "19-2",
+    ]);
+    expect(SPORTS_PSYCHOLOGY_PRESSURE_OPERATORS.sourceBookIds).toEqual([
+      "4f750a0c8577fe9a",
+      "7e5b2d626cb5c46f",
+      "aad3618821cc9e26",
+      "e2e0f698eee97fdc",
+      "6cf36a29e51c0a02",
+      "d38c2cd65c3f310d",
+    ]);
+
+    const receipt = evaluateRulebookAndPsychologyOverlay({
+      kickoffReturnVolatilityZ: 2.0,
+      declaredOnsideComebackNeedZ: 1.5,
+      yerkesDodsonArousalZ: 1.8,
+      firstCareerStartFlag: true,
+      hostileRoadNoiseZ: 1.4,
+      clutchComposureEdgeZ: -0.5,
+    });
+    expect(receipt.allFiniteNonNan).toBe(true);
+    expect(receipt.activeRuleCodes).toContain("6-1-6");
+    expect(receipt.psychologyDeltaLogOdds).toBeLessThan(0);
+    expect(Math.abs(receipt.combinedProbDelta)).toBeLessThanOrEqual(MAX_CORPUS_FAMILY_PROB_MODULATION);
+
+    const nanSafe = evaluateRulebookAndPsychologyOverlay({
+      kickoffReturnVolatilityZ: Number.NaN,
+      yerkesDodsonArousalZ: Number.POSITIVE_INFINITY,
+    });
+    expect(nanSafe.allFiniteNonNan).toBe(true);
+    expect(nanSafe.combinedProbDelta).toBe(0);
+  });
+
+  it("evaluates bounded [DERIVED KERNEL] split-field quarters coverage operators cleanly", () => {
+    expect(SPLIT_FIELD_QUARTERS_COVERAGE_OPERATORS.derivationTag).toBe("[DERIVED KERNEL]");
+    expect(SPLIT_FIELD_QUARTERS_COVERAGE_OPERATORS.refusedStubBookIds).toEqual([
+      "527e4d714a574106",
+      "c3eb423c8b9f92fc",
+    ]);
+    const res = evaluateSplitFieldCoverageOverlay({
+      offense3x1TripsRateZ: 1.6,
+      defenseSplitFieldQuartersRateZ: 1.8,
+      slotHorizontalStressZ: 1.2,
+      boundaryIsoExposureZ: -0.4,
+      verticalShotMismatchZ: 0.7,
+    });
+    expect(res.derivationTag).toBe("[DERIVED KERNEL]");
+    expect(res.allFiniteNonNan).toBe(true);
+    expect(res.activeChecks).toEqual([
+      "MOD",
+      "MEG",
+      "Palms_2Read",
+      "Poach_Solo_3x1",
+      "Stubbie_Special",
+      "Cover6_QQH_Cover8_HQQ",
+    ]);
+    expect(Math.abs(res.coverageShellDeltaLogOdds)).toBeLessThanOrEqual(MAX_ABS_CORPUS_LOG_ODDS);
+    expect(Math.abs(res.probModulation)).toBeLessThanOrEqual(MAX_CORPUS_FAMILY_PROB_MODULATION);
+    expect(evaluateSplitFieldCoverageOverlay({ offense3x1TripsRateZ: Number.NaN }).probModulation).toBe(0);
+  });
+
+  it("composes corpus priors, 2026 rulebook/psychology, and [DERIVED KERNEL] split-field checks with spectral attenuation and |Delta log-odds| <= 0.35", () => {
+    const unified = evaluateUnifiedCorpusSituationalStack({
+      corpusPriors: {
+        pressureSignalZ: 1.5,
+        coverageMismatchZ: 1.8,
+        qbScriptStabilityZ: 1.2,
+        observedSampleSizeN: 96,
+        collinearCrossLayerVetoes: 1,
+      },
+      rulebookAndPsychology: {
+        kickoffReturnVolatilityZ: 1.4,
+        declaredOnsideComebackNeedZ: 0.9,
+        yerkesDodsonArousalZ: -0.6,
+        clutchComposureEdgeZ: 1.1,
+      },
+      splitFieldCoverage: {
+        offense3x1TripsRateZ: 1.7,
+        defenseSplitFieldQuartersRateZ: 1.9,
+        slotHorizontalStressZ: 1.1,
+      },
+    });
+
+    expect(unified.allFiniteNonNan).toBe(true);
+    expect(Math.abs(unified.spectralAttenuatedCoverageLogOdds)).toBeLessThan(
+      Math.abs(unified.splitFieldCoverageReceipt.coverageShellDeltaLogOdds),
+    );
+    expect(unified.jamesSteinShrinkageFactor).toBeGreaterThan(0);
+    expect(unified.jamesSteinShrinkageFactor).toBeLessThanOrEqual(1);
+    expect(Math.abs(unified.unifiedClampedLogOddsDelta)).toBeLessThanOrEqual(
+      MAX_ABS_CORPUS_LOG_ODDS,
+    );
+    expect(Math.abs(unified.unifiedClampedProbModulation)).toBeLessThanOrEqual(
+      MAX_CORPUS_FAMILY_PROB_MODULATION,
+    );
+
+    const saturated = evaluateUnifiedCorpusSituationalStack({
+      corpusPriors: {
+        pressureSignalZ: 30,
+        weatherDisruptionZ: 30,
+        restFatigueZ: 30,
+        coverageMismatchZ: 30,
+        qbScriptStabilityZ: 30,
+        microstructureDislocationZ: 30,
+        observedSampleSizeN: 1000,
+      },
+      rulebookAndPsychology: {
+        kickoffReturnVolatilityZ: 30,
+        declaredOnsideComebackNeedZ: 30,
+        clutchComposureEdgeZ: 30,
+      },
+      splitFieldCoverage: {
+        offense3x1TripsRateZ: 30,
+        defenseSplitFieldQuartersRateZ: 30,
+        slotHorizontalStressZ: 30,
+        boundaryIsoExposureZ: Number.NaN,
+      },
+    });
+    expect(saturated.allFiniteNonNan).toBe(true);
+    expect(Math.abs(saturated.unifiedClampedLogOddsDelta)).toBeLessThanOrEqual(
+      MAX_ABS_CORPUS_LOG_ODDS,
+    );
+    expect(Math.abs(saturated.unifiedClampedProbModulation)).toBeLessThanOrEqual(
+      MAX_CORPUS_FAMILY_PROB_MODULATION,
+    );
+  });
+
+  it("reconciles Week 10 stale sfdata tags, blocks OUT/IR players, and quarantines source anomalies fail-closed", () => {
+    const murray = reconcileWeek10EntityAndAvailability("K.Murray", "ARI");
+    expect(murray.canonicalPlayer).toBe("Kyler Murray");
+    expect(murray.authoritativeTeam).toBe("MIN");
+    expect(murray.disposition).toBe("REMAPPED_ACTIVE_TEAM");
+    expect(murray.eligibleForStage0).toBe(true);
+
+    const cousins = reconcileWeek10EntityAndAvailability("K.Cousins", "LV");
+    expect(cousins.canonicalPlayer).toBe("Kirk Cousins");
+    expect(cousins.authoritativeTeam).toBe("MIN");
+    expect(cousins.disposition).toBe("REMAPPED_ACTIVE_TEAM");
+
+    const brissett = reconcileWeek10EntityAndAvailability("J.Brissett", "ARI");
+    expect(brissett.authoritativeTeam).toBe("BAL");
+
+    const mccarthy = reconcileWeek10EntityAndAvailability("J.McCarthy", "MIN");
+    expect(mccarthy.authoritativeTeam).toBe("NYG");
+
+    const downs = reconcileWeek10EntityAndAvailability("Josh Downs", "IND");
+    expect(downs.authoritativeTeam).toBe("KC");
+    expect(downs.disposition).toBe("REMAPPED_ACTIVE_TEAM");
+
+    const parsons = reconcileWeek10EntityAndAvailability("Micah Parsons", "GB");
+    expect(parsons.disposition).toBe("BLOCKED_UNAVAILABLE");
+    expect(parsons.eligibleForStage0).toBe(false);
+
+    const anomaly = reconcileWeek10EntityAndAvailability(
+      "J.Daniels (second entry as printed)",
+      "TB",
+    );
+    expect(anomaly.disposition).toBe("QUARANTINED_SOURCE_ANOMALY");
+    expect(anomaly.eligibleForStage0).toBe(false);
+  });
+
+  it("exposes Wave 15 empirical-Bayes snapshot counts and SPD corpus-regularized 6-family correlation matrix", () => {
+    expect(FOUNDRY_CORPUS_BASELINE_SNAPSHOT.pressure.sovereignPrimitives).toBeGreaterThanOrEqual(560);
+    expect(FOUNDRY_CORPUS_BASELINE_SNAPSHOT.weather.shardBDocs).toBeGreaterThanOrEqual(5197);
+    expect(FOUNDRY_CORPUS_BASELINE_SNAPSHOT.qbSkillScript.sovereignPrimitives).toBeGreaterThanOrEqual(9231);
+    expect(FOUNDRY_CORPUS_BASELINE_SNAPSHOT.marketMicrostructure.driveMasterRecords).toBeGreaterThanOrEqual(1024762);
+
+    expect(CORPUS_SNAPSHOT_METADATA.sovereignBooksLoaded).toBeGreaterThanOrEqual(1064);
+    expect(CORPUS_SNAPSHOT_METADATA.oofNRows).toBeGreaterThanOrEqual(4823);
+    expect(CORPUS_SNAPSHOT_METADATA.oofBrierCalibrated).toBeLessThan(
+      CORPUS_SNAPSHOT_METADATA.oofBrierRaw,
+    );
+    expect(CORPUS_SNAPSHOT_METADATA.calibrationVerified).toBe(true);
+
+    expect(CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX).toHaveLength(6);
+    const L = choleskyDecompose(CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX);
+    expect(L).toHaveLength(6);
+    expect(CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX[0]![1]!).not.toBe(
+      DEFAULT_SIX_FAMILY_CORRELATION_MATRIX[0]![1]!,
+    );
+  });
+});

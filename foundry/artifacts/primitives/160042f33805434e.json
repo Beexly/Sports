@@ -1,0 +1,211 @@
+{
+  "book_id": "160042f33805434e",
+  "shard": "1",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PRESENTATION_QUALITATIVE_NO_EQUATION",
+  "source_note": "Chaoyi Gu, Varuna De Silva, Mike Caine & Ben Smith (Loughborough University, Institute for Digital Technologies / Machine Learning Lab), 'Contextualized Generative Ghosting Model as Benchmark for Evaluating Player Movement in Football', NESSIS 2023 presentation slide deck (12 slides). This is a conference PRESENTATION, not the full paper: the architecture and equations are in slide figures and the companion paper Gu & De Silva 2023, arXiv:2303.13323 ('Deep Generative Multi-Agent Imitation Model as a Computational Benchmark...'). Extracted honestly as qualitative framework primitives (latex empty, no_equation_domain); NO equations fabricated. Slide bullets are separated by a Wingdings glyph (U+F075) normalized to whitespace for verbatim matching. Subject is soccer (association football); catalog primary_domain='football' retained. Zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "supervised_distribution_dependence",
+      "name": "Supervised performance depends on training distribution",
+      "verbatim_quote": "Model performance heavily relies on the distribution of training data",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "xG (Rathke 2017), Expected Possession Value (Fernandez-Bornn-Cervone 2019), and VAEP (Decroos 2021) are the cited supervised baselines; out-of-distribution contexts degrade the estimate. No equations printed on the slide."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Distribution dependence is the same covariate-shift fragility GSE guards against when a game state leaves the training support.",
+        "source_operator": "supervised_distribution_dependence",
+        "telemetry": "performance ~ training distribution"
+      }
+    },
+    {
+      "primitive_id": "what_if_generative_advantage",
+      "name": "Generative ghosting answers what-if that supervised models cannot",
+      "verbatim_quote": "Cannot answer what-if questions in given context Generative Ghosting model: Features: Combination of unsupervised learning and supervised learning More likely to capture the generative patterns within the data Can answer what-if questions in given context",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The slide contrasts supervised models (cannot answer what-if) with the generative ghosting model (combines unsupervised+supervised, captures generative patterns, can answer what-if). Quote spans consecutive slide bullets; the Wingdings bullet glyph is normalized to whitespace. Architecture detail is in slide figures and arXiv:2303.13323."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The discriminative-vs-generative counterfactual contrast is the same gap GSE's simulation layer fills beyond a point-estimate value model: a generative world model can roll out alternatives a supervised scorer cannot.",
+        "source_operator": "what_if_generative_advantage",
+        "telemetry": "supervised: no what-if / generative: what-if"
+      }
+    },
+    {
+      "primitive_id": "generative_captures_patterns",
+      "name": "Generative models capture the data's generative patterns",
+      "verbatim_quote": "More likely to capture the generative patterns within the data",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Learning the data-generating process rather than a decision boundary lets the model synthesize plausible alternative trajectories."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Modeling the generative process is the same world-model choice GSE makes to simulate plausible play evolution rather than only score it.",
+        "source_operator": "generative_captures_patterns",
+        "telemetry": "learn generative patterns"
+      }
+    },
+    {
+      "primitive_id": "vrnn_latent_background",
+      "name": "Background: recurrent latent-variable model for sequences",
+      "verbatim_quote": "Deep Generative Model on Time Series Data (Chung et al., 2015)",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The slide cites the VRNN (Chung et al. 2015) with a latent space encoding movement modes (keep walking / start jogging / start sprinting); the latent-variable equations are in the cited paper, not printed here."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A recurrent latent-variable sequence model is the same temporal generative backbone GSE uses for trajectory priors.",
+        "source_operator": "vrnn_latent_background",
+        "telemetry": "VRNN latent space: walk/jog/sprint"
+      }
+    },
+    {
+      "primitive_id": "pitch_control_frames_representation",
+      "name": "Convert tracking + event data into pitch-control frames",
+      "verbatim_quote": "Instead of directly analyzing tracking and event data, we convert them to another form of representation – pitch control frames",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The representation change maps raw tracking/event streams to pitch-control frames before modeling. Background slide cites Spearman 2018 'Beyond expected goals' pitch control; the surface equations are in the cited paper, depicted as a slide figure here."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Re-representing raw tracking as a control surface is the same feature transformation GSE applies before learning movement models; pitch control is the spatial-control value field GSE uses to reason about region ownership.",
+        "source_operator": "pitch_control_frames_representation",
+        "telemetry": "tracking+event -> pitch-control frames"
+      }
+    },
+    {
+      "primitive_id": "two_part_ghosting_framework",
+      "name": "Two-part framework: generative model + contextualized CNN",
+      "verbatim_quote": "Deep Generative Multi-Agent Imitation Model as a Computational Benchmark for Evaluating Human Performance in Complex Interactive Tasks: A Case Study in Football.",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The framework slide (p8) depicts Part 1 a trained generative model and Part 2 a trained contextualized CNN producing players' positions, citing the companion arXiv:2303.13323; the quote is that companion paper's title as printed in the references. Architecture equations are in the companion paper, not this deck."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A generative movement model coupled to a contextualized CNN is the same two-stage generator-plus-conditioner GSE uses to produce context-aware player positions.",
+        "source_operator": "two_part_ghosting_framework",
+        "telemetry": "Part1 generative + Part2 contextual CNN"
+      }
+    },
+    {
+      "primitive_id": "ghosting_benchmark_movement",
+      "name": "Ghosting model benchmarks player movement performance",
+      "verbatim_quote": "Our deep generative ghosting model can be used as a benchmark for evaluating soccer players' performance on the pitch.",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The stated contribution is a computational benchmark for player performance via ghosting (predicting where a player should be); no metric formula is printed on the slide."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A ghosting benchmark scores a player against a generated ideal trajectory; GSE uses the same deviation-from-expected-movement evaluation.",
+        "source_operator": "ghosting_benchmark_movement",
+        "telemetry": "benchmark = deviation from ghost"
+      }
+    },
+    {
+      "primitive_id": "open_space_utilization",
+      "name": "Evaluate team movement and open-space utilization",
+      "verbatim_quote": "This model can be applied in analyzing team movement and individual player's ability of utilizing open space.",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Applications named on the slide: team movement analysis and an individual's ability to exploit open space; quantification method is in the companion paper."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Open-space utilization is the same off-ball value creation GSE measures for receivers and runners.",
+        "source_operator": "open_space_utilization",
+        "telemetry": "team movement + open-space use"
+      }
+    },
+    {
+      "primitive_id": "future_xg_decision_value",
+      "name": "Future: combine ghosting with xG to value each decision",
+      "verbatim_quote": "The future research direction can be combining our method with expected goal model to quantify the value of each decision made within the game",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The stated future direction couples the movement generator with an expected-goal model to value decisions; this is prospective, not a result in the deck."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Coupling a movement model to a scoring-value model to value decisions is the same EP-bridging GSE does between trajectory and outcome value.",
+        "source_operator": "future_xg_decision_value",
+        "telemetry": "ghosting + xG -> decision value"
+      }
+    },
+    {
+      "primitive_id": "ml_for_tactical_decisions",
+      "name": "Research goal: ML insights for coaching tactical decisions",
+      "verbatim_quote": "My research is mainly about how to use machine learning methods to analyze big data in soccer to gain insights that can be used to help coaching staff make better tactical decisions.",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The presenter's stated aim is translating soccer big-data ML into coaching tactical insight; this frames the deck's purpose."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Translating model output into coaching decisions is the same decision-support endpoint GSE targets.",
+        "source_operator": "ml_for_tactical_decisions",
+        "telemetry": "ML -> coaching tactical insight"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ghosting2023_trace",
+      "think": "The retrocausal genealogy of this presentation is the limitation of supervised action-valuation in soccer and the turn toward generative counterfactual models. The deck, delivered at the 2023 New England Symposium on Statistics in Sports by Chaoyi Gu and colleagues at Loughborough University, positions the established supervised models, expected goals, expected possession value, and VAEP, as input-output maps whose performance depends heavily on the training distribution and which cannot answer what-if questions in a given context. The generative ghosting model is offered as the alternative: a combination of unsupervised and supervised learning that is more likely to capture the generative patterns within the data and can answer contextual what-if questions. The intellectual lineage runs through Chung and colleagues' 2015 recurrent latent-variable model for sequential data, whose latent space encodes movement modes such as walking, jogging, and sprinting, and through Spearman's 2018 pitch-control surface. It is important to record that this artifact is a conference slide deck, not the full paper: the substantive architecture and equations live in the slide figures and in the companion arXiv paper 2303.13323, so the primitives here are qualitative framework descriptions with no fabricated equations. The method's central move is a change of representation. Rather than analyzing tracking and event data directly, the authors convert them into pitch-control frames, a spatial surface that becomes the input to the model. The framework is two-part: a trained generative model in part one and a trained contextualized convolutional network in part two, which together produce players' positions. The generative component learns a prior over plausible multi-agent movement, while the contextualized CNN conditions that prior on the current game context, so the system can generate where players should be rather than merely score where they were. This is the ghosting idea: a computational ghost of the ideal movement against which a real player can be compared. The recursive theory of mind is the model's capacity to reason counterfactually about agents. Because it learns the data-generating process rather than a decision boundary, it can roll out alternative trajectories under a fixed context and ask what would happen if a player moved differently. The deck frames this as evaluating a player's performance on the pitch, analyzing team movement, and measuring an individual's ability to utilize open space. The model thus reasons about each agent's movement relative to a generated expectation, and about the team's collective spatial behavior, from the partial observable of tracking and event data re-expressed as pitch control. Cross-layer veto adjudication here is the contrast between discriminative valuation and generative evaluation. A supervised value model passes judgment on observed actions but fails the counterfactual test: it cannot say whether a different movement would have been better, and it degrades outside its training distribution. The generative ghosting model passes that test by construction, because it can synthesize the alternative. The stated contribution is a benchmark for evaluating player movement, and the stated future direction is to combine the method with an expected-goal model to quantify the value of each decision made within the game, which would bridge movement generation to outcome value. The honest limitation is that the deck provides no printed metric formula or quantitative result; those reside in the companion paper, so this extraction claims only the framework concepts that the slides actually state. The implementation invariants map onto GSE even at this qualitative level. Re-representing raw tracking as a control surface before modeling, learning a generative movement prior and conditioning it on context with a separate network, and evaluating players by deviation from a generated ideal are all design choices GSE shares. The what-if capability is precisely the simulation layer GSE uses to evaluate a decision against its alternatives, and the prospective coupling to a scoring-value model mirrors GSE's bridge between trajectory and expected points. The outputs described are tactical and movement evaluations for coaching staff, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the presentation. The parameter ledger and the limitations close the account. The data are professional soccer matches with event and tracking feeds, converted to pitch-control frames; the background models are the VRNN and pitch control; the companion method is arXiv 2303.13323. The deck's own stated future work is the expected-goal coupling, and its results slide carries figures rather than extractable numbers. The invariant for GSE is to carry the generative-ghosting paradigm, the pitch-control representation, the two-part generator-plus-conditioner architecture, and the counterfactual benchmark idea, while recording explicitly that this is a presentation-level source whose equations and metrics must be drawn from the companion paper before any quantitative use. No equation is invented here; every primitive is a faithful qualitative description of what the slides state, flagged as no-equation domain. The deeper invariant is that a benchmark must be generative to be counterfactual: scoring a player against a fixed historical average cannot reveal whether a novel movement would have succeeded, whereas a generative ghost can imagine the novel movement and evaluate it. This is why the deck treats ghosting not as a descriptive statistic but as a computational benchmark, and why GSE treats its simulation layer as the adjudicator between competing decisions rather than a mere reporting tool.",
+      "retrocausal_genealogy": "The deck originates in supervised soccer valuation's limits: xG (Rathke 2017), EPV (Fernandez-Bornn-Cervone 2019), and VAEP (Decroos 2021) are input-output maps dependent on training distribution and unable to answer what-if questions. Generative ghosting combines unsupervised and supervised learning to capture generative patterns and answer contextual what-ifs. Lineage: Chung et al. 2015 VRNN (latent movement modes) and Spearman 2018 pitch control. This is a NESSIS 2023 slide deck (Gu/De Silva/Caine/Smith, Loughborough); equations and metrics live in slide figures and companion arXiv:2303.13323, so primitives are qualitative with no fabricated equations.",
+      "theory_of_mind": "The model reasons counterfactually about agents: learning the data-generating process lets it roll out alternative trajectories under fixed context and ask what a different movement would yield. It evaluates a player against a generated ideal (ghosting), analyzes team movement, and measures open-space utilization. Tracking and event data are re-expressed as pitch-control frames; a two-part framework (trained generative model + trained contextualized CNN) produces players' positions, reasoning about each agent relative to a generated expectation from a partial observable.",
+      "cross_layer_veto": "Discriminative valuation fails the counterfactual test (cannot compare alternative movements, degrades out of distribution); generative ghosting passes it by synthesizing alternatives. Stated contribution: a benchmark for player movement performance. Stated future: couple with an expected-goal model to value each decision, bridging movement to outcome value. Honest limit: the deck prints no metric formula or quantitative result (figures only); those are in arXiv:2303.13323, so this extraction claims only stated framework concepts, no invented equations."
+    }
+  ],
+  "universal_lens": "A generative ghosting model benchmarks soccer player movement by learning a multi-agent movement prior, conditioning it on game context through a contextualized CNN, and evaluating players against generated ideal trajectories on a pitch-control representation, enabling counterfactual what-if evaluation that supervised value models cannot provide.",
+  "gsi_mapping": "GSI treats this as a qualitative framework: tracking+event data re-expressed as pitch-control frames, a two-part generative-model-plus-contextualized-CNN architecture producing player positions, VRNN-style latent movement priors and Spearman pitch control as background, and a ghosting benchmark measuring deviation from generated ideal movement; equations deferred to companion arXiv:2303.13323.",
+  "gse_mapping": "GSE lifts the generative-ghosting paradigm (movement prior + context conditioner), the pitch-control representation, the counterfactual what-if simulation layer, and the deviation-from-ideal movement benchmark, with the prospective xG coupling mirroring GSE's trajectory-to-EP bridge; all outputs are tactical movement evaluations, never sportsbook lines."
+}

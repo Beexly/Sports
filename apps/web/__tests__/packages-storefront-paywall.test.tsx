@@ -182,7 +182,7 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     }
   });
 
-  it("gates inactive routes with Under Construction notice (/picks, /board, /calibration, /sgp-projections un-gated to live verified cards), and keeps app/page.tsx free of DoorCard, FieldBoardTicker, NoBetGateChapter, and FieldRecordPanel", () => {
+  it("gates inactive routes with Under Construction notice (/picks, /board, /calibration, /sgp-projections live on WP5), and keeps app/page.tsx free of DoorCard, FieldBoardTicker, NoBetGateChapter, and FieldRecordPanel", async () => {
     const gatedPages = [
       PlayersPage,
       IntelligenceEnginesPage,
@@ -204,32 +204,23 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
       unmount();
     }
 
-    // /board is a deliberately dark route under the founder doctrine
-    // (2026-10-29): the public site serves ONLY GALAXY PICKS (PAID)
-    // (/packages) and DFS (/fantasy/dfs). /picks, /calibration and
-    // /sgp-projections stay live, so they must NOT wear the stub notice.
-    const { container: boardDom, unmount: unmountBoard } = render(<BoardPage />);
-    expect(boardDom.querySelector('[data-testid="under-construction-notice"]')).not.toBeNull();
-    expect(boardDom.textContent).toMatch(/Under Construction/i);
-    expect(boardDom.textContent).toContain("GALAXY PICKS (PAID)");
-    const boardHrefs = Array.from(boardDom.querySelectorAll("a")).map((a) =>
-      a.getAttribute("href"),
-    );
-    expect(boardHrefs).toContain("/packages");
-    expect(boardHrefs).toContain("/fantasy/dfs");
+    // /board, /picks, /calibration, /sgp-projections are live under WP5.
+    const { container: boardDom, unmount: unmountBoard } = render(await BoardPage());
+    expect(boardDom.querySelector('[data-testid="under-construction-notice"]')).toBeNull();
+    expect(boardDom.textContent).not.toMatch(/Under Construction/i);
+    expect(boardDom.textContent).toContain("The Board");
     unmountBoard();
 
-    // /picks, /calibration, /sgp-projections are restored to live production:
-    // Pin that they are NOT wearing the stub notice.
-    const { container: picksDom, unmount: unmountPicks } = render(<PicksPage />);
+    const { container: picksDom, unmount: unmountPicks } = render(await PicksPage());
     expect(picksDom.textContent).not.toContain("Under Construction");
-    expect(picksDom.textContent).toContain("sealed card");
+    expect(picksDom.textContent).toContain("The Picks");
+    expect(picksDom.querySelector('[data-testid="verified-record-strip"]')).not.toBeNull();
     unmountPicks();
 
     const { container: calDom, unmount: unmountCal } = render(<CalibrationProofRoomPage />);
     expect(calDom.textContent).not.toContain("Under Construction");
     expect(calDom.textContent).toContain("Calibration Proof Room");
-    expect(calDom.textContent).toContain("Brier Calibration Score");
+    expect(calDom.textContent).toContain("Brier score benchmark");
     unmountCal();
 
     const { container: sgpDom, unmount: unmountSgp } = render(<SgpProjectionsPage />);
@@ -247,19 +238,17 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
       resolve(__dirname, "..", "app", "packages", "page.tsx"),
       "utf8",
     );
-    // The storefront hero was reworded by the humanize pass; pin the current
-    // stable promise (the pack chooser) instead of the retired sentence.
+    expect(packagesSrc).toContain("Two doors. One standard.");
     expect(packagesSrc).toContain("Choose Your Football Pack");
-    expect(packagesSrc).toContain(
-      "One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card below.",
-    );
+    expect(packagesSrc).toContain("Five stages. No shortcuts.");
+    expect(packagesSrc).toContain("/record");
     expect(packagesSrc).not.toMatch(/10,000|simulation|dropbacks/i);
-    expect(packagesSrc).toContain("47-19-1");
 
-    const { container: pkgPageDom, unmount: unmountPkgPage } = render(<PackagesPage />);
+    const { container: pkgPageDom, unmount: unmountPkgPage } = render(await PackagesPage());
     const pkgText = pkgPageDom.textContent ?? "";
-    expect(pkgText).toContain("Free Game-Environment Preview");
-    expect(pkgText).toContain("BUF @ MIN");
+    expect(pkgText).toContain("Two doors. One standard.");
+    expect(pkgText).toContain("Choose Your Football Pack");
+    expect(pkgText).toContain("Five stages. No shortcuts.");
     expect(pkgText).not.toContain("Sunday Spotlight Game Pack (Panthers @ Packers)");
     expect(pkgText).not.toContain("Tonight");
     expect(pkgText).not.toMatch(/TONIGHT\s*·\s*TNF/i);

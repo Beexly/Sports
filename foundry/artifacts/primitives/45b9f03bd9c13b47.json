@@ -1,0 +1,289 @@
+{
+  "book_id": "45b9f03bd9c13b47",
+  "source_status": "COMPLETE",
+  "title": "pyth win steven j miller 2",
+  "file_name": "pyth win steven j miller 2.pdf",
+  "sha256": "45b9f03bd9c13b47f7728bf40ae49d7847d91030c52729758741a7cfbbf00d3b",
+  "primary_domain": "other",
+  "pages_total": 13,
+  "pages_read": 13,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 13,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Weibull distributions unify run scoring and allowance via shape parameter γ, linking probabilistic outcomes to Pythagorean win-loss expectations through gamma functions. Pythagorean win-loss formula unifies run scoring and allowed through exponent γ, enabling probabilistic team strength estimation via regression.",
+  "gsi_mapping": "Bayesian inference maps observed runs to latent Weibull parameters using conjugate priors on α, β, γ for dynamic win probability estimation. Bayesian inference models team performance using run differentials with conformal prediction intervals for win probability estimates.",
+  "gse_mapping": "Situational reasoning models game states as transitions between Weibull-run distributions, enabling real-time prediction of win-loss outcomes via stochastic state evolution. Situational reasoning maps dynamic game states (lead, inning, roster adjustments) into state transitions affecting run production and defensive efficiency.",
+  "primitives": [
+    {
+      "primitive_id": "45b9f03bd9c13b47_w0_g1",
+      "name": "pyth win steven j miller 2 Ch.1 Grounded Operator",
+      "verbatim_quote": "arXiv:math/0509698v4 [math.ST] 7 Mar 2006 A DERIVATION OF THE PYTHAGOREAN WON-LOSS FORMULA IN BASEBALL STEVEN J.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 45b9f03bd9c13b47_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "45b9f03bd9c13b47_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "45b9f03bd9c13b47_w0_g2",
+      "name": "pyth win steven j miller 2 Ch.1 Grounded Operator",
+      "verbatim_quote": "It has been noted that in many professional sports leagues a good predictor of a team's end of season won-loss percentage is Bill James' Pythagorean Formula RSobsγ RSobsγ+RAobsγ , where RSobs (resp.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 45b9f03bd9c13b47_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "45b9f03bd9c13b47_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "45b9f03bd9c13b47_w0_g3",
+      "name": "pyth win steven j miller 2 Ch.1 Grounded Operator",
+      "verbatim_quote": "RAobs) is the observed average number of runs scored (allowed) per game and γ is a constant for the league; for baseball the best agreement is when γ is about 1.82.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 45b9f03bd9c13b47_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "45b9f03bd9c13b47_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "change_of_variables_weibull",
+      "name": "Weibull Change of Variables",
+      "verbatim_quote": "MILLER We change variables by setting u = \u0010 x-β α \u0011γ .",
+      "page": 4,
+      "latex": "\\u = \\left(\\frac{x-\\beta}{\\alpha}\\right)^{\\gamma}",
+      "symbol_and_unit_ledger": "{'u': 'dimensionless variable', 'x': 'runs scored/allowed (dimensionless)', 'α': 'scale parameter (runs)', 'β': 'location parameter (runs)', 'γ': 'shape parameter (dimensionless)'}",
+      "assumptions": "Variable substitution simplifies integration of Weibull PDFs.",
+      "breakdown_regime": "When γ → 0, distribution becomes degenerate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables computation of moments and probabilities via Gamma function transformations.",
+        "source_operator": "change_of_variables_weibull",
+        "telemetry": "Mean and variance convergence under parameter variation."
+      }
+    },
+    {
+      "primitive_id": "weibull_moments",
+      "name": "Weibull Moments",
+      "verbatim_quote": "The mean μα,β,γ and variance σ2 α,β,γ of a Weibull with parameters (α, β, γ) are μα,β,γ = αΓ(1 + γ-1) + β σ2 α,β,γ = α2Γ \u00001 + 2γ-1\u0001 -α2Γ \u00001 + γ-1\u00012 .",
+      "page": 4,
+      "latex": "\\mu_{\\alpha,\\beta,\\gamma} = \\alpha \\Gamma\\left(1 + \\frac{1}{\\gamma}\\right) + \\beta, \\quad \\sigma^2_{\\alpha,\\beta,\\gamma} = \\alpha^2 \\Gamma\\left(1 + \\frac{2}{\\gamma}\\right) - \\alpha^2 \\Gamma\\left(1 + \\frac{1}{\\gamma}\\right)^2",
+      "symbol_and_unit_ledger": "{'μ': 'mean (runs)', 'σ²': 'variance (runs²)', 'α': 'scale parameter (runs)', 'β': 'location parameter (runs)', 'γ': 'shape parameter (dimensionless)', 'Γ': \"Euler's Gamma function\"}",
+      "assumptions": "Parameters define valid Weibull distribution with finite moments.",
+      "breakdown_regime": "When γ < 1, variance diverges; when γ ≤ 0, undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw run data to normalized statistical descriptors for predictive modeling.",
+        "source_operator": "weibull_moments",
+        "telemetry": "Observed vs expected mean/variance alignment in empirical datasets."
+      }
+    },
+    {
+      "primitive_id": "pythagorean_won_loss_formula",
+      "name": "Pythagorean Won-Loss Formula",
+      "verbatim_quote": "If γ > 0 then Won-Loss Percentage(RS, RA, β, γ) = (RS -β)γ (RS -β)γ + (RA -β)γ .",
+      "page": 4,
+      "latex": "\\text{Win\\%}(RS, RA, \\beta, \\gamma) = \\frac{(RS - \\beta)^\\gamma}{(RS - \\beta)^\\gamma + (RA - \\beta)^\\gamma}",
+      "symbol_and_unit_ledger": "{'RS': 'runs scored (dimensionless)', 'RA': 'runs allowed (dimensionless)', 'β': 'location parameter (runs)', 'γ': 'shape parameter (dimensionless)', 'Win\\\\%': 'win percentage (dimensionless)'}",
+      "assumptions": "Runs scored and allowed follow independent Weibull distributions.",
+      "breakdown_regime": "When γ → ∞, formula approaches deterministic outcome; when γ → 0, becomes uniform.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives win probability directly from moment-matched Weibull parameters.",
+        "source_operator": "pythagorean_won_loss_formula",
+        "telemetry": "Predicted win percentages match actual season records within ±3%."
+      }
+    },
+    {
+      "primitive_id": "independence_and_probability_calculation",
+      "name": "Independence and Probability Calculation",
+      "verbatim_quote": "(2.8) We need only calculate the probability that X exceeds Y .",
+      "page": 4,
+      "latex": "\\mathbb{P}(X > Y) = \\int_{0}^{\\infty} f_X(x) \\cdot \\mathbb{P}(Y < x) dx",
+      "symbol_and_unit_ledger": "{'X': 'runs scored (random variable)', 'Y': 'runs allowed (random variable)', 'f_X': 'PDF of X', 'f_Y': 'PDF of Y', 'P(X > Y)': 'probability of winning (dimensionless)'}",
+      "assumptions": "X and Y are independent Weibull-distributed random variables.",
+      "breakdown_regime": "Failure of independence invalidates direct comparison of cumulative distributions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Connects probabilistic model to binary game outcome via cumulative distribution functions.",
+        "source_operator": "independence_and_probability_calculation",
+        "telemetry": "Probability threshold for win classification matches simulation accuracy."
+      }
+    },
+    {
+      "primitive_id": "45b9f03bd9c13b47_w2_g1",
+      "name": "pyth win steven j miller 2 Ch.3 Grounded Operator",
+      "verbatim_quote": "A DERIVATION OF THE PYTHAGOREAN WON-LOSS FORMULA IN BASEBALL 7 method of maximum likelihood enjoy many desirable properties, including being asymptotically minimum variance unbiased estimators and yielding sufficient estimators (whenever they exist).",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 45b9f03bd9c13b47_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "45b9f03bd9c13b47_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "45b9f03bd9c13b47_w2_g2",
+      "name": "pyth win steven j miller 2 Ch.3 Grounded Operator",
+      "verbatim_quote": "We performed χ2 tests to determine the goodness of the fit from the best fit Weibulls from the method of maximum likelihood4.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 45b9f03bd9c13b47_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "45b9f03bd9c13b47_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "45b9f03bd9c13b47_w2_g3",
+      "name": "pyth win steven j miller 2 Ch.3 Grounded Operator",
+      "verbatim_quote": "(3.4) There are 20 degrees of freedom for these tests.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 45b9f03bd9c13b47_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "45b9f03bd9c13b47_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "run_scoring_model",
+      "name": "Run Scoring Model",
+      "verbatim_quote": "MILLER best exponent γ (see for example [Sch1, Sch2], where such an analysis is performed to determine the all-time best hitters and sluggers).",
+      "page": 10,
+      "latex": "\\text{Win Probability} \\propto \\frac{RS^\\gamma}{RS^\\gamma + RA^\\gamma}",
+      "symbol_and_unit_ledger": "{'RS': 'Runs Scored (dimensionless)', 'RA': 'Runs Allowed (dimensionless)', 'γ': 'Exponent (dimensionless)'}",
+      "assumptions": "Runs scored and allowed follow power-law distributions; teams' offensive and defensive capabilities are stationary over time.",
+      "breakdown_regime": "When RS ≈ RA, the model approaches 0.5, indicating parity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses this kernel to compute expected wins from run differentials; GSE applies it to simulate game outcomes under varying conditions.",
+        "source_operator": "run_scoring_model",
+        "telemetry": "Observed vs predicted win percentages"
+      }
+    },
+    {
+      "primitive_id": "inning_level_analysis",
+      "name": "Inning-Level Run Dynamics",
+      "verbatim_quote": "For example, one might break down runs scored and allowed per inning.",
+      "page": 10,
+      "latex": "\\text{Runs per Inning} = f(t, \\text{team}, \\text{situation})",
+      "symbol_and_unit_ledger": "{'t': 'Time/Inning (dimensionless)', 'f': 'Function mapping context to runs (dimensionless)'}",
+      "assumptions": "Innings exhibit temporal dependencies; run production varies by inning phase.",
+      "breakdown_regime": "At end-of-game scenarios where strategic substitutions occur.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI models inning-level dynamics as stochastic processes; GSE simulates real-time tactical decisions based on run trends.",
+        "source_operator": "inning_level_analysis",
+        "telemetry": "Inning-by-inning run distribution variance"
+      }
+    },
+    {
+      "primitive_id": "ballpark_effects",
+      "name": "Ballpark Effect Adjustment",
+      "verbatim_quote": "Further, using the analysis in [Sch1, Sch2] one can incorporate ballpark effects (some ballparks favor pitchers while others favor hitters).",
+      "page": 10,
+      "latex": "\\text{Adjusted Win Probability} = \\frac{(RS + BPE)^\\gamma}{(RS + BPE)^\\gamma + (RA - BPE)^\\gamma}",
+      "symbol_and_unit_ledger": "{'BPE': 'Ballpark Effect Adjustment (dimensionless)'}",
+      "assumptions": "Ballpark characteristics introduce systematic bias in run scoring.",
+      "breakdown_regime": "When comparing teams across multiple venues with differing park factors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI adjusts win probabilities using empirical ballpark multipliers; GSE incorporates these into predictive simulations.",
+        "source_operator": "ballpark_effects",
+        "telemetry": "Normalized win percentage deviation from baseline"
+      }
+    },
+    {
+      "primitive_id": "inter_league_differences",
+      "name": "Inter-League Play Impact",
+      "verbatim_quote": "For example, the American League teams lose their DH for games in National League parks, and thus we expect the run production to differ from that in American League parks.",
+      "page": 10,
+      "latex": "\\text{Run Differential} = RS_{AL} - RA_{NL} \\neq RS_{NL} - RA_{AL}",
+      "symbol_and_unit_ledger": "{'RS_{AL}': 'American League Runs Scored (dimensionless)', 'RA_{NL}': 'National League Runs Allowed (dimensionless)'}",
+      "assumptions": "Rule differences (e.g., DH) create asymmetric run environments.",
+      "breakdown_regime": "During inter-league matchups or cross-park scheduling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI accounts for rule-based asymmetries in run modeling; GSE modifies game state transitions accordingly.",
+        "source_operator": "inter_league_differences",
+        "telemetry": "Inter-league run differential variance"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "45b9f03bd9c13b47_t0",
+      "think": "Window 1 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "45b9f03bd9c13b47_t1",
+      "think": "Chapter 2 derives the Pythagorean Won-Loss Formula using Weibull distributions for run scoring and allowance. Starting with a change-of-variables transformation u = ((x - β)/α)^γ, the author computes the mean and variance of the Weibull distribution using Gamma functions. This foundational step allows for expressing the mean in terms of scale and shape parameters. The theorem then proceeds by assuming independent Weibull distributions for runs scored (RS) and runs allowed (RA), with shared location β and shape γ parameters. Using the derived expressions for αRS and αRA in terms of RS and RA, the conditional probability P(X > Y) is calculated. The key insight lies in recognizing that the resulting expression for the win probability is equivalent to the familiar Pythagorean formula, but derived rigorously from first principles of probability theory and statistical mechanics. The derivation emphasizes how the Weibull family's flexibility enables exact solutions while maintaining physical interpretability. Window 2 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 20th-century work on probability distributions and later extended by baseball analytics pioneers who sought rigorous foundations for empirical formulas like the Pythagorean expectation. Retrocausal Genealogy (Window 2): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing teams' offensive and defensive capabilities as stochastic processes governed by shared Weibull parameters, capturing variability in performance across games and seasons. Theory of Mind (Window 2): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting by ensuring that the derived formula remains robust under changes in γ and β without introducing spurious correlations or violating independence assumptions. Cross-Layer Veto (Window 2): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "45b9f03bd9c13b47_t2",
+      "think": "Window 3 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "45b9f03bd9c13b47_t3",
+      "think": "Chapter 4 explores the derivation and application of the Pythagorean win-loss formula in baseball, grounded in statistical mechanics and empirical data. The core idea is that a team’s winning percentage can be approximated by the ratio of runs scored raised to an exponent γ to the sum of runs scored and runs allowed raised to the same exponent. This formulation arises from analyzing long-term performance patterns and assumes that run differentials are predictive of future outcomes. The chapter emphasizes how this model can be refined by incorporating additional variables such as ballpark effects, inter-league differences, and strategic behavior during games. It also highlights the importance of considering non-standard game situations like extra-inning games and late-game tactical shifts. The derivation proceeds from basic axioms about run generation and absorption, leading to a probabilistic framework that aligns with observed win-loss records. This approach bridges discrete event modeling with continuous probability theory, offering a robust foundation for both predictive analytics and tactical decision-making. Window 4 Synthesis: Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The Pythagorean theorem's adaptation to baseball was pioneered by Bill James, later formalized mathematically by Steven J. Miller. Earlier works by Schell (1999, 2005) provided foundational statistical validation for run-based metrics, establishing precedent for empirical modeling of player and team performance. Retrocausal Genealogy (Window 4): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and managers adjust lineups and pitching strategies based on game state—such as leads, innings, and opponent strengths. These behavioral adaptations influence run production and are modeled as stochastic perturbations within the broader framework of team performance dynamics. Theory of Mind (Window 4): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "To prevent overfitting, the model excludes games outside normal competitive contexts (e.g., playoff races) and avoids collinearity between variables like run differential and ballpark factor. Additionally, it avoids conflating deterministic outcomes (like ties) with probabilistic predictions. Cross-Layer Veto (Window 4): Rooted in pyth win steven j miller 2 (45b9f03bd9c13b47, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

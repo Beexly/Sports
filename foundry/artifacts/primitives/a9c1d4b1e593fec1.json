@@ -1,0 +1,78 @@
+{
+  "book_id": "a9c1d4b1e593fec1",
+  "source_status": "COMPLETE",
+  "title": "CORPUS-WIRING-STATUS",
+  "file_name": "CORPUS-WIRING-STATUS.md",
+  "sha256": "a9c1d4b1e593fec169ced4582982da1ef73e093e99d0f3a48e78fe9a64b5514e",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Corpus indexing and retrieval wiring status maps to a knowledge integration problem: \\( \\mathcal{I} \\rightarrow \\mathcal{R} \\) where \\( \\mathcal{I} \\) is indexed information and \\( \\mathcal{R} \\) is reasoning engine consumption. Wiring integrity requires \\( \\mathcal{I} \\) to be \\( \\mathcal{R} \\)-accessible.",
+  "gsi_mapping": "Bayesian inference in GSI is mapped via corpus hit likelihood \\( P(H|h) \\) where \\( H \\) is hypothesis and \\( h \\) is retrieved evidence. Current wiring fails due to \\( \\mathcal{R} \\)-side null consumption of \\( \\mathcal{I} \\).",
+  "gse_mapping": "Situational reasoning in GSE transitions states via \\( \\Delta S = \\mathcal{F}(\\mathcal{I}) \\) where \\( \\mathcal{F} \\) is a functional mapping from corpus hits. Absent \\( \\mathcal{R} \\) wiring, \\( \\Delta S \\) remains inert.",
+  "primitives": [
+    {
+      "primitive_id": "index_wiring_status",
+      "name": "Index Wiring Status",
+      "verbatim_quote": "# Research Corpus → Reasoning Engine: Wiring Status **Date:** 2026-11-03 **Manifest:** `C:/Users/Garrett/AppData/Local/hermes/cache/scratch/research_corpus/manifest.jsonl` (77.35 MB, 2,883 records) **Index rebuilt:** 2026-11-03T20:13:32-0600, after the manifest's 19:28 write — stats are current, not stale.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{records}}': 'dimensionless, 2883', 't_{\\\\text{rebuilt}}': 'timestamp, 2026-11-03T20:13:32-0600'}",
+      "assumptions": "Index is complete and up-to-date with manifest.",
+      "breakdown_regime": "Index rebuild time \\( t_{\\text{rebuilt}} \\) must precede query execution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Index structure \\( \\mathcal{I} \\) is isomorphic to \\( \\mathcal{R} \\) input space when consumed.",
+        "source_operator": "index_wiring_status",
+        "telemetry": "Index completeness and freshness metrics."
+      }
+    },
+    {
+      "primitive_id": "engine_consumption_status",
+      "name": "Engine Consumption Status",
+      "verbatim_quote": "Engine consumption **NOT WIRED** — the extension points are dead fields.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{consumed}}': 'boolean, false'}",
+      "assumptions": "Extension points are defined but unused in reasoning logic.",
+      "breakdown_regime": "When \\( C_{\\text{consumed}} = \\text{false} \\), knowledge is stored but not integrated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine consumption kernel \\( \\mathcal{K}_{\\text{engine}} \\) is derived from index wiring but currently inactive.",
+        "source_operator": "engine_consumption_status",
+        "telemetry": "Usage count of \\( \\mathcal{I} \\) in reasoning paths."
+      }
+    },
+    {
+      "primitive_id": "retrieval_quality_regression",
+      "name": "Retrieval Quality Regression",
+      "verbatim_quote": "The target paper appears to have dropped out of the top-10 for pose queries after the rebuild — a genuine retrieval-quality regression, not just token ambiguity.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q_{\\\\text{retrieval}}': 'dimensionless, normalized score', 't_{\\\\text{query}}': 'timestamp, post-rebuild'}",
+      "assumptions": "Retrieval quality is a function of index content and query semantics.",
+      "breakdown_regime": "Drop in \\( Q_{\\text{retrieval}} \\) indicates degradation in semantic alignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Retrieval quality kernel \\( \\mathcal{K}_{\\text{retrieval}} \\) is derived from index coverage and query resolution.",
+        "source_operator": "retrieval_quality_regression",
+        "telemetry": "Top-k hit ranking consistency pre/post rebuild."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a9c1d4b1e593fec1_t0",
+      "think": "The system exhibits a wiring asymmetry: the index is fully built and queryable, yet the reasoning engine lacks consumption pathways. This creates a knowledge storage artifact rather than a knowledge integration layer. The retrieval quality regression signals a semantic drift in the index post-rebuild, indicating that while indexing is functional, the engine's ability to extract and reason over retrieved data is compromised. The presence of retracted records further complicates trustworthiness. The core failure lies in the disconnection between \\( \\mathcal{I} \\) and \\( \\mathcal{R} \\), where \\( \\mathcal{I} \\) is the indexed corpus and \\( \\mathcal{R} \\) is the reasoning module. This disjunction implies that even if \\( \\mathcal{I} \\) is accurate and complete, \\( \\mathcal{R} \\) will remain oblivious unless explicitly wired.\n\nDeep epistemic analysis for CORPUS-WIRING-STATUS (a9c1d4b1e593fec1, domain=other, pages_read=3/3): Operator 'Index Wiring Status' (page 1, domain other) captures: # Research Corpus → Reasoning Engine: Wiring Status **Date:** 2026-11-03 **Manifest:** `C:/Users/Garrett/AppData/Local/hermes/cache/scratch/research_corpus/manifest.jsonl` (77.35 MB, 2,883 records) **Index rebuilt:** 2026-11-03T20:13:32-0600, after the manifest's 19:28 write — stats are current, not stale. Assumptions: Index is complete and up-to-date with manifest. Breakdown regime: Index rebuild time \\( t_{\\text{rebuilt}} \\) must precede query execution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Index structure \\( \\mathcal{I} \\) is isomorphic to \\( \\mathcal{R} \\) input space when consumed. Operator 'Engine Consumption Status' (page 1, domain other) captures: Engine consumption **NOT WIRED** — the extension points are dead fields. Assumptions: Extension points are defined but unused in reasoning logic. Breakdown regime: When \\( C_{\\text{consumed}} = \\text{false} \\), knowledge is stored but not integrated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Engine consumption kernel \\( \\mathcal{K}_{\\text{engine}} \\) is derived from index wiring but currently inactive. Operator 'Retrieval Quality Regression' (page 1, domain other) captures: The target paper appears to have dropped out of the top-10 for pose queries after the rebuild — a genuine retrieval-quality regression, not just token ambiguity. Assumptions: Retrieval quality is a function of index content and query semantics. Breakdown regime: Drop in \\( Q_{\\text{retrieval}} \\) indicates degradation in semantic alignment. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Retrieval quality kernel \\( \\mathcal{K}_{\\text{retrieval}} \\) is derived from index coverage and query resolution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CORPUS-WIRING-STATUS (a9c1d4b1e593fec1, domain=other, pages_read=3/3): Operator 'Index Wiring Status' (page 1, domain other) captures: # Research Corpus → Reasoning Engine: Wiring Status **Date:** 2026-11-03 **Manifest:** `C:/Users/Garrett/AppData/Local/hermes/cache/scratch/research_corpus/manifest.jsonl` (77.35 MB, 2,883 records) **Index rebuilt:** 2026-11-03T20:13:32-0600, after the manifest's 19:28 write — stats are current, not stale. Assumptions: Index is complete and up-to-date with manifest. Breakdown regime: Index rebuild time \\( t_{\\text{rebuilt}} \\) must precede query execution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Index structure \\( \\mathcal{I} \\) is isomorphic to \\( \\mathcal{R} \\) input space when consumed. Operator 'Engine Consumption Status' (page 1, domain other) captures: Engine consumption **NOT WIRED** — the extension points are dead fields. Assumptions: Extension points are defined but unused in reasoning logic. Breakdown regime: When \\( C_{\\text{consumed}} = \\text{false} \\), knowledge is stored but not integrated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Engine consumption kernel \\( \\mathcal{K}_{\\text{engine}} \\) is derived from index wiring but currently inactive. Operator 'Retrieval Quality Regression' (page 1, domain other) captures: The target paper appears to have dropped out of the top-10 for pose queries after the rebuild — a genuine retrieval-quality regression, not just token ambiguity. Assumptions: Retrieval quality is a function of index content and query semantics. Breakdown regime: Drop in \\( Q_{\\text{retrieval}} \\) indicates degradation in semantic alignment. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Retrieval quality kernel \\( \\mathcal{K}_{\\text{retrieval}} \\) is derived from index coverage and query resolution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This mirrors the historical challenge of semantic indexing in AI systems, particularly in early NLP pipelines where retrieval was decoupled from downstream reasoning modules. The issue reflects a persistent tension between data infrastructure and cognitive architecture. Retrocausal Genealogy: Rooted in CORPUS-WIRING-STATUS (a9c1d4b1e593fec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the indexing system (which builds and maintains \\( \\mathcal{I} \\)) and the reasoning engine (which should consume \\( \\mathcal{I} \\)). The reasoning engine acts as a passive observer, while the indexing system is active but isolated. A third agent, the user, is left to observe the disconnect. Theory of Mind & Decision Maker Model: Rooted in CORPUS-WIRING-STATUS (a9c1d4b1e593fec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is violated when \\( \\mathcal{I} \\) and \\( \\mathcal{R} \\) are misaligned. Leakage occurs when \\( \\mathcal{I} \\) is queried but not consumed, leading to false confidence in system capability. A veto condition requires \\( \\mathcal{R} \\) to actively engage \\( \\mathcal{I} \\) before any inference is considered valid. Cross-Layer Veto & Anti-Leakage Check: Rooted in CORPUS-WIRING-STATUS (a9c1d4b1e593fec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

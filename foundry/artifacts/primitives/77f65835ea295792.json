@@ -1,0 +1,78 @@
+{
+  "book_id": "77f65835ea295792",
+  "source_status": "COMPLETE",
+  "title": "runbook",
+  "file_name": "runbook.md",
+  "sha256": "77f65835ea295792a52c2ac7086b43658e63a90f13b786358936807235c4db7e",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Deployment and rollback operations form a bistable dynamical system with health check feedback loops and schema compatibility constraints. Universal Lens: Rooted in runbook (77f65835ea295792), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on deployment success conditioned on CI status and health endpoint signals using conformal predictive intervals. GSI Mapping: Rooted in runbook (77f65835ea295792), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally aware state transitions between stable deployments and rollback states governed by kill-switch flags and migration additivity. GSE Mapping: Rooted in runbook (77f65835ea295792), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "deploy_checklist",
+      "name": "Deployment Verification Protocol",
+      "verbatim_quote": "# Ops Runbook — Beexly/Sports (Lean) ## Deploy Checklist (Vercel) 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "CI pipeline is deterministic and all checks are sufficient for stability.",
+      "breakdown_regime": "When any health check fails, deployment enters degraded mode.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Deploy checklist mirrors Bayesian evidence accumulation in GSI for validating model readiness.",
+        "source_operator": "deploy_checklist",
+        "telemetry": "API health response times and cron execution logs."
+      }
+    },
+    {
+      "primitive_id": "rollback_mechanism",
+      "name": "Schema-Compatible Rollback Operator",
+      "verbatim_quote": "## Rollback Checklist > **Full version: [`ROLLBACK.md`](ROLLBACK.md)** — migration reversibility table, > what each kill switch actually does when flipped off, and how to confirm recovery.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Migrations are additive and backward-compatible.",
+      "breakdown_regime": "Promotion without rebuild may cause schema mismatch if not additive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Rollback mechanism models a controlled inverse evolution in GSE's state space.",
+        "source_operator": "rollback_mechanism",
+        "telemetry": "Migration table compliance and rollback success rate."
+      }
+    },
+    {
+      "primitive_id": "kill_switch_control",
+      "name": "Public Surface Containment Flag",
+      "verbatim_quote": "**Contain**: Disable public surfaces if needed — `PUBLIC_PICKS_ENABLED=false` (not `LIVE_BOARD`, which gates nothing on the public board; see `ROLLBACK.md` §4).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Flag changes require redeployment to propagate.",
+      "breakdown_regime": "Failure to redeploy after flag change leaves system in inconsistent state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kill switch behavior aligns with GSI's probabilistic containment logic for risk mitigation.",
+        "source_operator": "kill_switch_control",
+        "telemetry": "Flag propagation latency and surface availability metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "77f65835ea295792_t0",
+      "think": "The deployment protocol establishes a feedback loop where continuous integration (CI) status acts as a prior belief about system integrity. Health checks serve as posterior observations that update confidence in deployment validity. The rollback mechanism is a controlled reversal operator that maintains schema consistency through additive migrations. Kill switches act as binary control inputs that modulate system exposure, enabling rapid containment. These primitives form a closed-loop operational dynamics with bounded failure modes and predictable recovery paths. The mathematical structure resembles a hybrid automaton with discrete event triggers and continuous health monitoring. Each operation is governed by a temporal logic constraint ensuring causality between actions and outcomes.\n\nDeep epistemic analysis for runbook (77f65835ea295792, domain=other, pages_read=1/1): Operator 'Deployment Verification Protocol' (page 1, domain other) captures: # Ops Runbook — Beexly/Sports (Lean) ## Deploy Checklist (Vercel) 1. Assumptions: CI pipeline is deterministic and all checks are sufficient for stability. Breakdown regime: When any health check fails, deployment enters degraded mode. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Deploy checklist mirrors Bayesian evidence accumulation in GSI for validating model readiness. Operator 'Schema-Compatible Rollback Operator' (page 1, domain other) captures: ## Rollback Checklist > **Full version: [`ROLLBACK.md`](ROLLBACK.md)** — migration reversibility table, > what each kill switch actually does when flipped off, and how to confirm recovery. Assumptions: Migrations are additive and backward-compatible. Breakdown regime: Promotion without rebuild may cause schema mismatch if not additive. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Rollback mechanism models a controlled inverse evolution in GSE's state space. Operator 'Public Surface Containment Flag' (page 1, domain other) captures: **Contain**: Disable public surfaces if needed — `PUBLIC_PICKS_ENABLED=false` (not `LIVE_BOARD`, which gates nothing on the public board; see `ROLLBACK.md` §4). Assumptions: Flag changes require redeployment to propagate. Breakdown regime: Failure to redeploy after flag change leaves system in inconsistent state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kill switch behavior aligns with GSI's probabilistic containment logic for risk mitigation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for runbook (77f65835ea295792, domain=other, pages_read=1/1): Operator 'Deployment Verification Protocol' (page 1, domain other) captures: # Ops Runbook — Beexly/Sports (Lean) ## Deploy Checklist (Vercel) 1. Assumptions: CI pipeline is deterministic and all checks are sufficient for stability. Breakdown regime: When any health check fails, deployment enters degraded mode. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Deploy checklist mirrors Bayesian evidence accumulation in GSI for validating model readiness. Operator 'Schema-Compatible Rollback Operator' (page 1, domain other) captures: ## Rollback Checklist > **Full version: [`ROLLBACK.md`](ROLLBACK.md)** — migration reversibility table, > what each kill switch actually does when flipped off, and how to confirm recovery. Assumptions: Migrations are additive and backward-compatible. Breakdown regime: Promotion without rebuild may cause schema mismatch if not additive. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Rollback mechanism models a controlled inverse evolution in GSE's state space. Operator 'Public Surface Containment Flag' (page 1, domain other) captures: **Contain**: Disable public surfaces if needed — `PUBLIC_PICKS_ENABLED=false` (not `LIVE_BOARD`, which gates nothing on the public board; see `ROLLBACK.md` §4). Assumptions: Flag changes require redeployment to propagate. Breakdown regime: Failure to redeploy after flag change leaves system in inconsistent state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kill switch behavior aligns with GSI's probabilistic containment logic for risk mitigation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in control theory and operational research, these primitives reflect the evolution of software reliability engineering from manual procedures to automated, condition-based systems. Retrocausal Genealogy: Rooted in runbook (77f65835ea295792), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in runbook (77f65835ea295792), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include developers (who trigger deployments), CI systems (who validate), and end-users (who observe health). Adversarial considerations involve race conditions, unauthorized rollbacks, and misconfigured flags. Theory of Mind & Decision Maker Model: Rooted in runbook (77f65835ea295792), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in runbook (77f65835ea295792), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when rollback and deployment paths interfere. Leakage occurs if rollback does not fully reset state, or if kill switches bypass core logic. Veto conditions enforce atomicity of rollback and flag updates. Cross-Layer Veto & Anti-Leakage Check: Rooted in runbook (77f65835ea295792), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

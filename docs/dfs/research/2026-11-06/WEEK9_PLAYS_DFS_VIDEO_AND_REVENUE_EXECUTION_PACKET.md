@@ -1,6 +1,6 @@
 # Week 9 Plays, 360-Degree Board, DraftKings/FanDuel DFS, Short-Form Video & Multi-Stream Revenue Execution Packet
 
-- **Generated At (UTC):** `2026-11-07T21:21:04.844107+00:00`
+- **Generated At (UTC):** `2026-11-14T02:41:18.067775+00:00`
 - **Official New Engine Verified Record:** **`47-19-1` (`71.2%`, `+24.92 Units` | Base `38-13-1`, `+22.85 Units`)**
 - **Paywall & Copy Compliance:** `0` Free Paid Picks Leaked · `0` Robotic Math Jargon on Public Surfaces · Official Plays & Full DFS Lineups Gated at `https://www.galaxysportsedge.com/packages` and `/fantasy/dfs`
 

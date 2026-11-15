@@ -118,12 +118,13 @@ describe("public claim surface contract (T-1)", () => {
     }
   });
 
-  it("/picks renders sealed rows only and makes no bookmaker claim", async () => {
+  it("/picks renders DoctrineBoardView + verifiedLedger and makes no bookmaker claim", async () => {
     const { readFileSync } = await import("node:fs");
     const { resolve } = await import("node:path");
     const src = readFileSync(resolve(__dirname, "../app/picks/page.tsx"), "utf8");
-    expect(src).toMatch(/sealed-board\.json/);
-    expect(src).toMatch(/publishAllowed/);
+    expect(src).toMatch(/loadDoctrineBoard/);
+    expect(src).toMatch(/DoctrineBoardView/);
+    expect(src).toMatch(/verifiedLedger/);
     expect(src).not.toMatch(/bindPublicConsensusClaim/);
     expect(src).not.toMatch(/bookmaker consensus/i);
   });

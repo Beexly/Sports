@@ -1,0 +1,726 @@
+{
+ "book_id": "6e380ace520cdafa",
+ "source_status": "COMPLETE",
+ "source_note": "Robert M. Gray, Entropy and Information Theory, Information Systems Laboratory, Electrical Engineering Department, Stanford University. Catalog correction: the assigned catalog entry names the Springer second edition (2011); the local PDF is Gray's corrected first edition lineage of the same work (title page: First Edition, Corrected, June 26, 2023; copyright note: original copyright 1990 by Springer Verlag, corrected first edition copyright 2011 by Robert M. Gray following publication of the Second Edition, revised 2013 and 2023). Same author, same work, twelve chapters from information sources through noisy channel coding. PDF size 1,419,631 bytes; full sha256 6e380ace520cdafae530529df9932d75f9be599a3cd2269da5c9a78065cdf873. Extracted text (882,227 bytes, 16,191 lines, about 126,800 words) is clean and complete, with formulas preserved as Unicode mathematics; verbatim quotes were verified as contiguous substrings of that text file under the fleet normalization. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "entropy_definition",
+   "name": "Entropy of a discrete random variable: H_P(f) = -sum_a p_f(a) ln p_f(a), with 0 ln 0 = 0; nats for natural log, bits for base 2",
+   "verbatim_quote": "The units for entropy are “nats” when the natural logarithm is used and “bits” for base 2 logarithms.",
+   "page": "Sec 2.2, printed p. 18 (eq. 2.1)",
+   "latex": "H_P(f) = -\\sum_{a \\in A} p_f(a) \\ln p_f(a)",
+   "symbol_and_unit_ledger": {
+    "H_P(f)": "entropy of measurement f under measure P, in nats (ln) or bits (log base 2)",
+    "p_f(a)": "probability mass function, p_f(a) = P(f = a), dimensionless",
+    "A": "finite alphabet of f"
+   },
+   "assumptions": [
+    "f has a finite alphabet",
+    "0 ln 0 is defined as 0",
+    "the measure P is fixed and understood"
+   ],
+   "breakdown_regime": "Not defined by this formula for nondiscrete alphabets; the book later rebuilds entropy for general alphabets out of relative entropy. Infinite alphabets can give infinite entropy.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Entropy is the engine's base uncertainty unit: every signal family entering the reasoning layer carries an entropy figure for its outcome distribution, so downstream combination rules compare like with like instead of mixing raw scores on incompatible scales.",
+    "source_operator": "entropy_definition",
+    "telemetry": "Empirical outcome distributions per signal family, logged as histograms over rolling windows."
+   }
+  },
+  {
+   "primitive_id": "entropy_partition_form",
+   "name": "Entropy as a function of the induced partition: H_P(Q) = -sum_i P(Q_i) ln P(Q_i); different mappings with the same partition have the same entropy",
+   "verbatim_quote": "It is often convenient to consider the entropy not as a function of the particular outputs of f but as a function of the partition that f induces on Ω.",
+   "page": "Sec 2.2, printed p. 18 (eq. 2.2)",
+   "latex": "H_P(Q) = -\\sum_{i=1}^{\\|A\\|} P(Q_i) \\ln P(Q_i)",
+   "symbol_and_unit_ledger": {
+    "Q = {Q_i}": "partition of the sample space induced by f, Q_i = {omega : f(omega) = a_i}",
+    "P(Q_i)": "probability of cell i, dimensionless"
+   },
+   "assumptions": [
+    "the partition cells are disjoint and cover the space",
+    "only the partition matters, not the labels assigned to cells"
+   ],
+   "breakdown_regime": "Two codings with different partitions are not comparable through this identity; refinement changes entropy (monotone under refinement by the chain rule).",
+   "domain": "ergodic theory"
+  },
+  {
+   "primitive_id": "nth_order_entropy",
+   "name": "nth order entropy: H^(n)(f) = (1/n) H(f^n) for the block f^n = (f, fT, ..., fT^(n-1)); partition form uses the join of shifted partitions",
+   "verbatim_quote": "The nth order entropy of a discrete alphabet measurement f with respect to T is defined as",
+   "page": "Sec 2.2, printed p. 19",
+   "latex": "H_P^{(n)}(f) = \\frac{1}{n} H_P(f^n), \\quad f^n = (f, fT, \\ldots, fT^{n-1})",
+   "symbol_and_unit_ledger": {
+    "H_P^{(n)}(f)": "per-sample entropy of blocks of length n, nats per sample",
+    "T": "the shift (time) transformation of the dynamical system",
+    "n": "block length, positive integer"
+   },
+   "assumptions": [
+    "blocks are formed by successive shifts of one fixed measurement",
+    "finite alphabet"
+   ],
+   "breakdown_regime": "For fixed n it overestimates the true rate whenever the process has memory longer than the block; it is an upper bound that only tightens as n grows.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "entropy_rate_definition",
+   "name": "Entropy rate (mean entropy) of a measurement: limit superior of the nth order entropies",
+   "verbatim_quote": "The entropy rate or mean entropy of a discrete alphabet measurement f with respect to the transformation T is defined by",
+   "page": "Sec 2.2, printed p. 20",
+   "latex": "\\bar{H}_P(f) = \\limsup_{n \\to \\infty} H_P^{(n)}(f)",
+   "symbol_and_unit_ledger": {
+    "\\bar{H}_P(f)": "entropy rate, nats per sample",
+    "limsup": "used because the limit need not exist without stationarity"
+   },
+   "assumptions": [
+    "defined for any process, stationary or not, via limsup",
+    "finite alphabet measurement"
+   ],
+   "breakdown_regime": "Without stationarity the limit may not exist and the limsup can hide oscillation; the rate is then an optimistic summary, not an achieved per-sample cost.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Entropy rate is the correct way to price a stream of forecasts rather than a single forecast: the engine evaluates signal families by their per-event uncertainty over long sequences, which is exactly the quantity that decides whether a family's output compresses the future or merely redescribes the past.",
+    "source_operator": "entropy_rate_definition",
+    "telemetry": "Long logged sequences of family outputs with realized outcomes, scored per event."
+   }
+  },
+  {
+   "primitive_id": "kolmogorov_sinai_entropy",
+   "name": "Entropy of a dynamical system: H(P, T) = sup over all finite alphabet measurements of the entropy rate; an isomorphism invariant (Kolmogorov-Sinai)",
+   "verbatim_quote": "The entropy of a system is also called the Kolmogorov-Sinai invariant of the system because of the generalization by Kolmogorov [89] and Sinai [136] of Shannon’s entropy rate concept to dynamical systems and the demonstration that equal entropy was a necessary condition for two dynamical systems to be isomorphic.",
+   "page": "Sec 2.2, printed p. 20",
+   "latex": "H(P, T) = \\sup_f \\bar{H}_P(f) = \\sup_Q \\bar{H}_P(Q)",
+   "symbol_and_unit_ledger": {
+    "H(P, T)": "system entropy, nats per step",
+    "sup": "supremum over all finite partitions Q or measurements f of every finite size"
+   },
+   "assumptions": [
+    "supremum ranges over alphabets of all finite sizes",
+    "equal entropy is necessary, not sufficient, for isomorphism of systems"
+   ],
+   "breakdown_regime": "The supremum can be infinite and is generally not attained by any single measurement; a single coding gives only a lower bound on system entropy.",
+   "domain": "ergodic theory"
+  },
+  {
+   "primitive_id": "entropy_rate_limit_subadditivity",
+   "name": "For a stationary source the entropy rate limit exists and equals the infimum of (1/n) H(X^n), because block entropy is subadditive",
+   "verbatim_quote": "A basic property of subadditive sequences is that the limit h(n)/n as n → ∞ exists and equals the infimum of h(n)/n over n.",
+   "page": "Sec 2.4, printed p. 31 (Lemma 2.4.1)",
+   "latex": "\\bar{H}_m(X) = \\lim_{n \\to \\infty} \\frac{1}{n} H_m(X^n) = \\inf_{n \\ge 1} \\frac{1}{n} H_m(X^n)",
+   "symbol_and_unit_ledger": {
+    "h(n) = H_m(X^n)": "block entropy sequence, subadditive: h(k+n) <= h(k) + h(n)",
+    "m": "stationary process distribution"
+   },
+   "assumptions": [
+    "stationarity of the process distribution",
+    "subadditivity h(k+n) <= h(k) + h(n) from the entropy chain properties"
+   ],
+   "breakdown_regime": "Fails without stationarity; for AMS sources the result is recovered only through the stationary mean (Chapters 1 and 3).",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "relative_entropy_measurement",
+   "name": "Relative entropy of a measurement: H_{P||M}(f) = sum_a p(a) ln(p(a)/m(a)); infinite unless the P-distribution is absolutely continuous with respect to the M-distribution",
+   "verbatim_quote": "Observe that this only makes sense if p(a) is 0 whenever m(a) is, that is, if Pf is absolutely continuous with respect to Mf or Mf ≫ Pf .",
+   "page": "Sec 2.3, printed p. 21",
+   "latex": "H_{P \\Vert M}(f) = \\sum_{a \\in A} p(a) \\ln \\frac{p(a)}{m(a)}",
+   "symbol_and_unit_ledger": {
+    "p(a), m(a)": "pmfs of f under measures P and M",
+    "M": "reference measure",
+    "absolute continuity": "p(a) = 0 whenever m(a) = 0, else the value is infinity"
+   },
+   "assumptions": [
+    "common measurable space and common measurement f",
+    "absolute continuity Pf << Mf for a finite value"
+   ],
+   "breakdown_regime": "A single outcome possible under P but impossible under the reference M makes the relative entropy infinite: the reference model is vetoed outright, not merely penalized.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Relative entropy is the engine's model-comparison kernel: a candidate world model is scored by the divergence between the distribution it asserts and the distribution the evidence supports, and a support violation (asserting zero probability for an observed event) returns infinity and kills the candidate rather than discounting it.",
+    "source_operator": "relative_entropy_measurement",
+    "telemetry": "Asserted predictive distributions per model versus realized outcome frequencies."
+   }
+  },
+  {
+   "primitive_id": "divergence_definition",
+   "name": "Divergence: D(P||M) = sum_omega P(omega) ln(P(omega)/M(omega)), the relative entropy of the identity mapping; Kullback-Leibler number",
+   "verbatim_quote": "we define the divergence of P with respect to M as the relative entropy of the identity mapping with respect to the two measures:",
+   "page": "Sec 2.3, printed p. 22",
+   "latex": "D(P \\Vert M) = \\sum_{\\omega} P(\\omega) \\ln \\frac{P(\\omega)}{M(\\omega)}",
+   "symbol_and_unit_ledger": {
+    "D(P||M)": "divergence of P with respect to M, nats",
+    "omega": "point of the finite sample space"
+   },
+   "assumptions": [
+    "finite sample space for this form",
+    "P absolutely continuous with respect to M for finiteness"
+   ],
+   "breakdown_regime": "Asymmetric and not a metric; D(P||M) and D(M||P) answer different questions and are not interchangeable.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "divergence_inequality",
+   "name": "Divergence inequality: D(P||M) >= 0 with equality if and only if P = M; divergence is a directed dissimilarity, not a distance",
+   "verbatim_quote": "It is not a true distance or metric in the usual sense since it is not a symmetric function of the two measures and it does not satisfy the triangle inequality.",
+   "page": "Sec 2.3, printed p. 23 (Theorem 2.3.1, eq. 2.6)",
+   "latex": "D(P \\Vert M) \\ge 0",
+   "symbol_and_unit_ledger": {
+    "D(P||M)": "divergence, nats",
+    "equality condition": "equality holds if and only if P = M"
+   },
+   "assumptions": [
+    "both P and M are probability measures on a common space",
+    "follows from ln x <= x - 1 or Jensen's inequality"
+   ],
+   "breakdown_regime": "If M is allowed to be a general measure rather than a probability measure, the inequality need not hold (the counting-measure case gives minus entropy).",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "divergence_generates_information_measures",
+   "name": "Every information measure in the book (entropy, relative entropy, mutual information, and their conditional forms) can be expressed as a divergence; e.g. H_P(f) = D(P' || P x P) for the diagonal measure P'",
+   "verbatim_quote": "entropy, relative entropy, mutual information, and the conditional forms of these information measures– can be expressed as a divergence.",
+   "page": "Sec 2.3, printed p. 23",
+   "latex": "H_P(f) = D(P' \\Vert P \\times P)",
+   "symbol_and_unit_ledger": {
+    "P'": "diagonal measure on the product space, P'(F x G) = P(F intersect G)",
+    "P x P": "product measure making the two coordinates independent with the same marginals"
+   },
+   "assumptions": [
+    "product space construction with the diagonal and product measures sharing marginals",
+    "P' is the extreme of deterministic dependence, P x P the extreme of independence"
+   ],
+   "breakdown_regime": "The representation is a bookkeeping identity, not a computation shortcut; it pays off when proving properties once for divergence instead of separately per measure.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "conditional_entropy",
+   "name": "Conditional entropy: H(X|Y) = H(X, Y) - H(Y) = -sum p(x, y) ln p(x|y), an average of entropies of conditional distributions; 0 <= H(X|Y) <= H(X)",
+   "verbatim_quote": "Thus conditional entropy is an average of entropies with respect to conditional pmf’s.",
+   "page": "Sec 2.5, printed p. 35 (eq. 2.22)",
+   "latex": "H(X|Y) = -\\sum_{x,y} p_{X,Y}(x,y) \\ln p_{X|Y}(x|y), \\quad 0 \\le H(X|Y) \\le H(X)",
+   "symbol_and_unit_ledger": {
+    "p_{X|Y}(x|y)": "conditional pmf p(x, y)/p(y)",
+    "H(X|Y = y)": "entropy of the conditional distribution at a fixed y; H(X|Y) averages it over p_Y"
+   },
+   "assumptions": [
+    "finite alphabets for X and Y",
+    "upper bound equality holds if and only if X and Y are independent"
+   ],
+   "breakdown_regime": "Conditioning on a coarsened measurement of Y gives a larger value than conditioning on Y itself; the conditioning variable must be the real one, not a summary, for the bound to be tight.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Conditional entropy is how the engine prices context: a situational variable earns its place in the reasoning stack only by the amount it reduces uncertainty about the outcome, H(outcome) minus H(outcome given the variable), measured on logged history rather than asserted by narrative.",
+    "source_operator": "conditional_entropy",
+    "telemetry": "Joint logs of candidate context variables and realized outcomes."
+   }
+  },
+  {
+   "primitive_id": "mutual_information_divergence",
+   "name": "Average mutual information: I(X; Y) = H(X) + H(Y) - H(X, Y) = D(P_{X,Y} || P_X x P_Y); entropy is the special case H(X) = I(X; X)",
+   "verbatim_quote": "Note also that mutual information can be expressed as a divergence by",
+   "page": "Sec 2.5, printed p. 36",
+   "latex": "I(X; Y) = D(P_{X,Y} \\Vert P_X \\times P_Y) = \\sum_{x,y} p_{X,Y}(x,y) \\ln \\frac{p_{X,Y}(x,y)}{p_X(x) p_Y(y)}",
+   "symbol_and_unit_ledger": {
+    "I(X; Y)": "average mutual information, nats or bits",
+    "P_X x P_Y": "product of the true marginals, the independence reference"
+   },
+   "assumptions": [
+    "finite alphabets",
+    "the reference measure keeps the true marginals and imposes independence"
+   ],
+   "breakdown_regime": "Zero mutual information is independence, but the measure is symmetric and unsigned: it cannot say which variable drives which, and it misses dependence that cancels in the log average only in degenerate constructions.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Mutual information as divergence from independence is the engine's dependence detector between a candidate signal and the outcome: it is computed against the product of marginals, so a signal that merely echoes the base rate scores zero no matter how confident its presentation is.",
+    "source_operator": "mutual_information_divergence",
+    "telemetry": "Joint empirical distributions of signal values and outcomes versus their marginals."
+   }
+  },
+  {
+   "primitive_id": "data_processing_inequality",
+   "name": "Data processing: all information measures are reduced by taking measurements or by coding; in particular I(f(X); g(Y)) <= I(X; Y) and entropy falls under measurement",
+   "verbatim_quote": "The above lemmas along with Lemma 2.3.3 show that all of the information measures thus far considered are reduced by taking measurements or by coding.",
+   "page": "Sec 2.5, printed p. 39 (Lemma 2.3.3 and corollaries)",
+   "latex": "I(f(X); g(Y)) \\le I(X; Y)",
+   "symbol_and_unit_ledger": {
+    "f, g": "finite valued measurements (codings) applied to X and Y",
+    "I": "average mutual information"
+   },
+   "assumptions": [
+    "measurements are functions of the underlying variables",
+    "applies to entropy, relative entropy, and mutual information alike"
+   ],
+   "breakdown_regime": "The conditional form is a trap: the analogous inequality for I(f(X); g(Y) | r(Z)) does NOT hold in general, as the book's counterexample discussion shows; conditioning on a coarsened variable can spuriously inflate conditional information.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Data processing is a hard veto inside the engine: any pipeline stage that only re-encodes an upstream signal (a summary, a rating derived from other ratings, a narrative built from the same numbers) cannot add information about the outcome, so the engine caps its credited value at the information content of its inputs and refuses double counting.",
+    "source_operator": "data_processing_inequality",
+    "telemetry": "Provenance graph of every feature: which raw observations each derived signal was computed from."
+   }
+  },
+  {
+   "primitive_id": "chain_rules",
+   "name": "Chain rules: joint entropy, relative entropy, and mutual information all decompose as sums of conditional terms over coordinates",
+   "verbatim_quote": "Results of this type are referred to as chain rules for information and entropy.",
+   "page": "Sec 2.5, printed p. 41 (Corollary 2.5.1)",
+   "latex": "H(X_1, \\ldots, X_n) = \\sum_{i=1}^{n} H(X_i | X_1, \\ldots, X_{i-1})",
+   "symbol_and_unit_ledger": {
+    "H(X_i | X_1..X_{i-1})": "conditional entropy of coordinate i given all previous coordinates",
+    "analogous sums": "the same decomposition holds for H_{p||m} and for I(Y; (X_1..X_n))"
+   },
+   "assumptions": [
+    "finite alphabet variables",
+    "ordering of coordinates is arbitrary; the total is order independent though the terms are not"
+   ],
+   "breakdown_regime": "The relative entropy version needs care: conditional relative entropies are not monotone in the conditioning set, so limit arguments that work for entropy fail for relative entropy without extra (Markov reference) assumptions.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "conditional_mutual_information_markov",
+   "name": "Conditional mutual information I(X; Y | Z) >= 0, and it is zero if and only if X and Y are conditionally independent given Z, i.e. Y - Z - X is a Markov chain; Kolmogorov's formula I(X; Y|Z) + I(Y; Z) = I(Y; (X, Z))",
+   "verbatim_quote": "Thus the conditional mutual information is 0 if and only if the variables form a Markov chain with the conditioning variable in the middle.",
+   "page": "Sec 2.5, printed p. 41 (Lemma 2.5.5, eqs. 2.29-2.30)",
+   "latex": "I(X; Y | Z) = D(P_{XYZ} \\Vert P_{X \\times Y | Z})",
+   "symbol_and_unit_ledger": {
+    "P_{X x Y | Z}": "measure with the true conditionals given Z but X, Y conditionally independent given Z",
+    "Markov chain Y - Z - X": "p_{X|YZ} = p_{X|Z}"
+   },
+   "assumptions": [
+    "finite alphabet X, Y, Z",
+    "the reference measure is built from the true conditional distributions given Z"
+   ],
+   "breakdown_regime": "Conditional independence is destroyed by conditioning on a function of Z rather than Z itself; the book warns the naive data processing analog fails here.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "mutual_information_convexity",
+   "name": "Mutual information is convex in the channel (conditional distribution) for fixed input, and concave in the input distribution for fixed channel (the book's convex-cup notation); this is what makes capacity a tractable maximization",
+   "verbatim_quote": "The following lemma provides similar properties of mutual information considered as a function of either a marginal or a conditional distribution.",
+   "page": "Sec 2.5, printed p. 39 (Lemma 2.5.4)",
+   "latex": "I_{\\mu \\bar{q}} \\le \\lambda I_{\\mu q_1} + (1 - \\lambda) I_{\\mu q_2}, \\quad \\bar{q} = \\lambda q_1 + (1 - \\lambda) q_2",
+   "symbol_and_unit_ledger": {
+    "mu": "input pmf",
+    "q, q_1, q_2": "conditional pmfs (channels) from X to Y",
+    "lambda in [0, 1]": "mixture weight"
+   },
+   "assumptions": [
+    "fixed alphabet and fixed marginal when varying the channel; fixed channel when varying the input",
+    "proof uses only the log-sum inequality (2.5)"
+   ],
+   "breakdown_regime": "The two convexity directions oppose each other: mixing channels loses information, mixing inputs can gain it; confusing the directions inverts optimization conclusions.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "donsker_varadhan_variational",
+   "name": "Variational (Donsker-Varadhan) description of divergence: D(P||M) = sup over test functions Phi of E_P Phi - ln E_M exp(Phi); the engine behind large deviations applications",
+   "verbatim_quote": "The following theorem provides a variational description of divergence in terms of the cumulant generating function.",
+   "page": "Sec 2.3, printed p. 30 (Theorem 2.3.2, eq. 2.17)",
+   "latex": "D(P \\Vert M) = \\sup_{\\Phi} \\left( E_P \\Phi - \\ln E_M e^{\\Phi} \\right)",
+   "symbol_and_unit_ledger": {
+    "Phi": "real valued test function on the space",
+    "E_M e^Phi": "cumulant generating function of Phi under M",
+    "sup": "attained at Phi = ln(P/M)"
+   },
+   "assumptions": [
+    "discrete probability space in this treatment",
+    "the optimizer is the log likelihood ratio"
+   ],
+   "breakdown_regime": "Any restricted class of test functions gives only a lower bound on divergence; the supremum is exact only over all (bounded) Phi.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The variational form turns divergence into an optimization the engine can actually run: a learned critic function Phi supplies a certified lower bound on how far a candidate model's distribution sits from the evidence distribution, which is a usable training signal where direct density ratios are unavailable.",
+    "source_operator": "donsker_varadhan_variational",
+    "telemetry": "Sample batches from model and evidence distributions; critic scores on held out samples."
+   }
+  },
+  {
+   "primitive_id": "binomial_entropy_tail_bound",
+   "name": "Entropy bounds on binomial tails: sums of binomial coefficients are at most exp(M h_2(delta)), and binomial tail probabilities decay as exp(-M h_2(delta || p)), the binary divergence rate",
+   "verbatim_quote": "The next result presents an interesting connection between combinatorics and binomial sums with a particular entropy.",
+   "page": "Sec 2.3, printed p. 28 (Lemma 2.3.5, eqs. 2.14-2.15)",
+   "latex": "\\sum_{i \\le \\delta M} \\binom{M}{i} p^i (1-p)^{M-i} \\le e^{-M h_2(\\delta \\Vert p)}, \\quad h_2(\\delta \\Vert p) = \\delta \\ln \\frac{\\delta}{p} + (1-\\delta) \\ln \\frac{1-\\delta}{1-p}",
+   "symbol_and_unit_ledger": {
+    "M": "number of trials",
+    "delta in (0, 1/2]": "fraction threshold, with delta <= p for the probability bound",
+    "h_2(delta || p)": "binary relative entropy, nats"
+   },
+   "assumptions": [
+    "independent Bernoulli trials",
+    "delta <= p for the tail probability form"
+   ],
+   "breakdown_regime": "The bounds are exponential-rate statements; for small M the prefactors matter and the entropy exponent alone misleads.",
+   "domain": "probability"
+  },
+  {
+   "primitive_id": "ams_stationary_mean",
+   "name": "Asymptotically mean stationary (AMS) sources: Cesaro limits of shifted distributions exist, defining a stationary mean that agrees with the source on invariant and tail events and asymptotically dominates it",
+   "verbatim_quote": "The tail σ-field can be thought of as events that are determinable by looking only at samples of the sequence in the arbitrarily distant future.",
+   "page": "Sec 1.7, printed p. 14 (Theorems 1.7.1-1.7.2, eq. 1.27)",
+   "latex": "\\bar{P}(G) = \\lim_{n \\to \\infty} \\frac{1}{n} \\sum_{k=0}^{n-1} P(T^{-k} G)",
+   "symbol_and_unit_ledger": {
+    "\\bar{P}": "stationary mean of P",
+    "T^{-k} G": "event G shifted back by k steps",
+    "tail sigma-field": "intersection over n of sigma(X_n, X_{n+1}, ...)"
+   },
+   "assumptions": [
+    "the Cesaro limit exists for every event G",
+    "standard sequence space"
+   ],
+   "breakdown_regime": "AMS is strictly weaker than stationarity: finite initial segments can behave arbitrarily, and conclusions transfer from the stationary mean only for invariant or tail events, not for all events.",
+   "domain": "ergodic theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "AMS is the right model for a sports season or a market regime that is not stationary from day one but settles into stable long run behavior: the engine judges such a process by its stationary mean (its long run regime) and only trusts conclusions about tail behavior, discarding transient early samples instead of averaging them in as if the process had always been stable.",
+    "source_operator": "ams_stationary_mean",
+    "telemetry": "Time shifted empirical distributions over a season; Cesaro averages monitored for convergence."
+   }
+  },
+  {
+   "primitive_id": "ergodic_decomposition",
+   "name": "Ergodic decomposition: every stationary measure is a mixture (integral) of stationary ergodic components from one universal family {p_x}; sample behavior is governed by the component in effect",
+   "verbatim_quote": "The basic idea of the ergodic decomposition is that any stationary source which is not ergodic can be represented as a mixture of stationary ergodic components or subsources.",
+   "page": "Sec 1.8, printed p. 15 (Theorem 1.8.2)",
+   "latex": "m(G) = \\int p_x(G) \\, dm(x)",
+   "symbol_and_unit_ledger": {
+    "{p_x}": "family of stationary ergodic measures, the ergodic components",
+    "dm(x)": "mixing distribution induced by m on the component index"
+   },
+   "assumptions": [
+    "standard sequence space with the shift transformation",
+    "the same component family serves every stationary measure (strong form)"
+   ],
+   "breakdown_regime": "A nonergodic source has no single entropy rate or limiting average; reporting the mixture average as if it were a component value is a category error the decomposition exists to prevent.",
+   "domain": "ergodic theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Ergodic decomposition is the engine's regime discipline: a pooled data stream is treated as a mixture of ergodic regimes, estimates are formed per component, and only then mixed with explicit weights, so a strong regime cannot be silently diluted by a weak one and a regime shift shows up as a weight change rather than a smeared average.",
+    "source_operator": "ergodic_decomposition",
+    "telemetry": "Per-regime sample paths long enough for within-regime averages to stabilize; mixture weights tracked over time."
+   }
+  },
+  {
+   "primitive_id": "pointwise_ergodic_theorem",
+   "name": "Pointwise ergodic theorem for AMS systems: time averages of an integrable f converge almost surely to the conditional expectation of f under the stationary mean given the invariant sigma-field",
+   "verbatim_quote": "The ergodic theorem states that AMS dynamical systems (and hence also sources) have convergent sample averages, and it characterizes the limits.",
+   "page": "Sec 1.8, printed p. 15 (Theorem 1.8.1)",
+   "latex": "\\lim_{n \\to \\infty} \\frac{1}{n} \\sum_{i=0}^{n-1} f T^i = E_{\\bar{m}}(f | \\mathcal{I})",
+   "symbol_and_unit_ledger": {
+    "f T^i": "f composed with the i-fold shift",
+    "\\mathcal{I}": "sigma-field of invariant events",
+    "E_{\\bar m}(f | I)": "conditional expectation under the stationary mean; a constant when the system is ergodic"
+   },
+   "assumptions": [
+    "f integrable under the stationary mean",
+    "AMS system"
+   ],
+   "breakdown_regime": "For nonergodic systems the limit is a random variable (the component conditional expectation), not the grand mean; quoting the grand mean as the limit is wrong.",
+   "domain": "ergodic theory"
+  },
+  {
+   "primitive_id": "shannon_mcmillan_breiman_theorem",
+   "name": "Entropy ergodic theorem (Shannon-McMillan-Breiman): for a finite alphabet AMS source, -(1/n) ln m(X^n) converges almost everywhere and in L1 to h(x) = entropy rate of the ergodic component of the stationary mean in effect",
+   "verbatim_quote": "The theorem states that the sample entropy using the AMS measure m converges to the entropy rate of the underlying ergodic component of the stationary mean.",
+   "page": "Sec 3.1, printed p. 48 (Theorem 3.1.1, eqs. 3.1-3.4)",
+   "latex": "\\lim_{n \\to \\infty} \\frac{-\\ln m(X^n)}{n} = h(x) = \\bar{H}_{\\bar{m}_x}(X)",
+   "symbol_and_unit_ledger": {
+    "m(X^n)": "probability the source assigns to the realized block",
+    "{\\bar m_x}": "ergodic decomposition of the stationary mean",
+    "h(x)": "invariant limit function, constant for ergodic sources"
+   },
+   "assumptions": [
+    "finite alphabet AMS source",
+    "uniform integrability of sample entropy (Lemma 2.3.6) for the L1 conclusion"
+   ],
+   "breakdown_regime": "Shannon's original form was convergence in probability for ergodic Markov sources; the almost everywhere form needs the full ergodic machinery, and for nonergodic sources the limit is component dependent, not a single number.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The SMB theorem is the license for the engine's whole evaluation practice: the per-sample log score of a long realized sequence converges to a stable rate, so ranking forecasting systems by accumulated log score over long horizons is measuring a real invariant of the system, not noise, provided the sequence is long enough and the regime decomposition is respected.",
+    "source_operator": "shannon_mcmillan_breiman_theorem",
+    "telemetry": "Accumulated per-event log scores over long horizons, split by regime component."
+   }
+  },
+  {
+   "primitive_id": "aep_typical_sequences",
+   "name": "Asymptotic equipartition property: for large n there is a good (typical) set of about exp(n H) sequences each of probability about exp(-n H), carrying total probability above 1 - epsilon; this is what makes entropy-rate block coding work",
+   "verbatim_quote": "The set of good sequences are often referred to as “typical sequences” in the information theory literature and in this form the theorem is called the asymptotic equipartition property or the AEP.",
+   "page": "Sec 3.5, printed p. 67",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "AMS ergodic source with entropy rate strictly below log alphabet size for the coding application",
+    "block length n large enough for the AEP set to have probability above 1 - epsilon"
+   ],
+   "breakdown_regime": "The error probability can be made small but not zero at fixed rate; atypical sequences are simply declared errors by the scheme, so the method is lossy in the worst case even when average performance is controlled.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "fano_inequality",
+   "name": "Fano's inequality: entropy is continuous in partition distance; H(f|g) <= h_2(P_e) + P_e ln(|A| - 1) where P_e = Pr(f != g), bounding how much two codes that usually agree can differ in entropy",
+   "verbatim_quote": "The following lemma shows that entropy of partitions or measurements is continuous with respect to this distance.",
+   "page": "Sec 4.2, printed p. 72 (Lemma 4.2.1)",
+   "latex": "H(f|g) \\le h_2(P_e) + P_e \\ln(\\|A\\| - 1), \\quad P_e = \\Pr(f \\ne g)",
+   "symbol_and_unit_ledger": {
+    "P_e": "error probability, equal to the partition distance |Q - R|",
+    "h_2": "binary entropy function",
+    "|A|": "alphabet size"
+   },
+   "assumptions": [
+    "f and g share a common finite alphabet and probability space",
+    "partition distance is the probability the two measurements disagree"
+   ],
+   "breakdown_regime": "The bound is vacuous when P_e is large or the alphabet is huge; it is a small-disagreement continuity statement, not a general stability guarantee.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fano's inequality gives the engine a quantitative leash between disagreement and uncertainty: if two model variants disagree on a fraction P_e of cases, the residual uncertainty attributable to the disagreement is at most h_2(P_e) plus P_e log(|A| - 1), so ensemble spread is converted into an explicit uncertainty budget instead of a vibe.",
+    "source_operator": "fano_inequality",
+    "telemetry": "Pairwise disagreement rates between model variants over logged cases; alphabet size of the outcome space."
+   }
+  },
+  {
+   "primitive_id": "markov_source_entropy_rate",
+   "name": "Entropy rate of a stationary kth order Markov source is exactly the one-step conditional entropy given the last k symbols: H-bar(X) = H(X_k | X^k)",
+   "verbatim_quote": "First suppose that the source is a stationary kth order Markov process, that is, for any m > k",
+   "page": "Sec 2.6, printed p. 42 (Lemma 2.6.1)",
+   "latex": "\\bar{H}(X) = H(X_k | X^k)",
+   "symbol_and_unit_ledger": {
+    "X^k": "the k-symbol context (X_0..X_{k-1})",
+    "X_k": "the next symbol after the context",
+    "k": "Markov order"
+   },
+   "assumptions": [
+    "stationary kth order Markov source",
+    "chain rule plus Cesaro mean of eventually constant terms"
+   ],
+   "breakdown_regime": "If the true memory exceeds k, the formula returns the entropy rate of the kth order approximation, an overestimate of the true rate.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "entropy_rate_infinite_past",
+   "name": "Entropy rate of a two-sided stationary source is the limit of conditional entropy given a growing past: H-bar(X) = lim_n H(X_0 | X_{-1}, ..., X_{-n}), interpretable as entropy given the infinite past",
+   "verbatim_quote": "It is tempting to identify the above limit as the conditional entropy given the infinite past",
+   "page": "Sec 2.6, printed p. 42 (Lemma 2.6.2)",
+   "latex": "\\bar{H}(X) = \\lim_{n \\to \\infty} H(X_0 | X_{-1}, \\ldots, X_{-n})",
+   "symbol_and_unit_ledger": {
+    "X_0": "present sample",
+    "X_{-1}..X_{-n}": "the n most recent past samples",
+    "monotonicity": "conditional entropy is nonincreasing as the past grows, so the limit exists"
+   },
+   "assumptions": [
+    "two-sided stationary source",
+    "the infinite-past interpretation is justified later once conditional entropy is generalized"
+   ],
+   "breakdown_regime": "The relative entropy analog fails: conditional relative entropy is not monotone in the conditioning set, so no such limit exists for relative entropy rates without a Markov reference measure.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "relative_entropy_rate_markov_reference",
+   "name": "Relative entropy rate against a kth order Markov reference: H-bar_{p||m}(X) = -H-bar_p(X) - E_p[ln m(X_k | X^k)], a per-sample cross entropy decomposition that holds when the reference (not the source) is Markov",
+   "verbatim_quote": "It is important to note that the relative entropy analogs to entropy properties often require kth order Markov assumptions on the reference measure (but not on the original measure).",
+   "page": "Sec 2.6, printed p. 43 (Lemma 2.6.3)",
+   "latex": "\\bar{H}_{p \\Vert m}(X) = -\\bar{H}_p(X) - E_p[\\ln m(X_k | X^k)]",
+   "symbol_and_unit_ledger": {
+    "p": "true (stationary) process distribution",
+    "m": "kth order Markov reference with stationary transitions",
+    "E_p[ln m(X_k|X^k)]": "expected log conditional likelihood of the next symbol under the reference model"
+   },
+   "assumptions": [
+    "p stationary",
+    "m kth order Markov with stationary transitions",
+    "absolute continuity of finite dimensional distributions"
+   ],
+   "breakdown_regime": "With a non-Markov reference the conditional relative entropies need not be monotone and the limit formula can fail; the Markov assumption sits on the model being scored, which is the part the analyst controls.",
+   "domain": "information theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This decomposition is the engine's scoring identity for a probabilistic model against reality: the model's per-event penalty splits into the irreducible entropy rate of the process plus a divergence term driven by the model's own conditional log likelihoods, so model quality is read directly off logged conditional probabilities without a separate evaluation harness.",
+    "source_operator": "relative_entropy_rate_markov_reference",
+    "telemetry": "Per-event conditional probabilities assigned by the model to realized next outcomes."
+   }
+  },
+  {
+   "primitive_id": "distortion_rate_function",
+   "name": "Shannon distortion-rate function: D(R, mu) = limsup_N (1/N) D_N(R, mu^N), where D_N minimizes expected distortion over all joint distributions with the source marginal fixed and per-letter mutual information at most R",
+   "verbatim_quote": "We close this chapter on distortion, approximation, and performance with the introduction and discussion of Shannon’s distortion-rate function.",
+   "page": "Sec 10.6, printed p. 209",
+   "latex": "D(R, \\mu) = \\limsup_{N \\to \\infty} \\frac{1}{N} D_N(R, \\mu^N), \\quad D_N(R, \\mu^N) = \\inf_{p^N \\in \\mathcal{R}_N(R, \\mu^N)} E_{p^N} \\rho_N(X^N, Y^N)",
+   "symbol_and_unit_ledger": {
+    "R": "rate, nats per letter",
+    "\\rho_N": "block fidelity criterion (distortion measure)",
+    "\\mathcal{R}_N(R, mu^N)": "joint distributions with source marginal mu^N and (1/N) I(X^N; Y^N) <= R",
+    "Y^N": "reproduction block over the reproduction alphabet"
+   },
+   "assumptions": [
+    "source and fidelity criterion given in advance",
+    "if the feasible set is empty, D_N is defined as infinity"
+   ],
+   "breakdown_regime": "D(R, mu) is an information theoretic optimum (OPTA benchmark): no code can beat it, but achievability by actual codes is a separate theorem requiring stationarity or ergodicity hypotheses.",
+   "domain": "rate distortion theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The distortion-rate function is the template for every fidelity-versus-bandwidth tradeoff in the engine: given a fixed budget of transmitted or stored information R about a game state, D(R) is the floor on achievable description error, so any scouting summary, feature set, or compressed representation can be graded against the optimal curve rather than against a rival's ad hoc summary.",
+    "source_operator": "distortion_rate_function",
+    "telemetry": "Distortion measured between full state records and their compressed representations at several information budgets."
+   }
+  },
+  {
+   "primitive_id": "drf_convexity_continuity",
+   "name": "The distortion-rate function is a nonnegative convex function of R (mixtures of feasible channels are feasible at the mixed rate), hence continuous for R > 0; for stationary sources with subadditive fidelity criteria the defining limit is an infimum",
+   "verbatim_quote": "It is well known from real analysis that convex functions are continuous except possibly at their end points.",
+   "page": "Sec 10.6, printed pp. 210-211 (Lemmas 10.6.1-10.6.2)",
+   "latex": "D_N(\\lambda R_1 + (1-\\lambda) R_2) \\le \\lambda D_N(R_1, \\mu) + (1-\\lambda) D_N(R_2, \\mu)",
+   "symbol_and_unit_ledger": {
+    "lambda in [0,1]": "time sharing weight between two feasible test channels",
+    "convexity source": "mutual information is convex in the conditional distribution (Corollary 5.5.5)"
+   },
+   "assumptions": [
+    "mixtures of joint distributions preserve the source marginal",
+    "continuity can fail at the endpoint R = 0"
+   ],
+   "breakdown_regime": "Convexity is in R for fixed source and distortion measure; it says nothing about varying the source, and the endpoint behavior at zero rate must be checked separately.",
+   "domain": "rate distortion theory"
+  },
+  {
+   "primitive_id": "source_coding_theorem_ams",
+   "name": "Source coding theorem content: the operational block distortion-rate function of an AMS source equals that of its stationary mean, delta(R, mu) = delta(R, mu-bar), and for AMS ergodic sources the operational DRF equals the Shannon DRF D(R, mu)",
+   "verbatim_quote": "We are now prepared to demonstrate the fundamental fact that the block source coding operational distortion rate function for an AMS source with an additive fidelity criterion is the same as that of the stationary mean process.",
+   "page": "Sec 11.2, printed p. 228 (Theorem 11.2.1); Sec 11.4 (Theorem 11.4.1)",
+   "latex": "\\delta(R, \\mu) = \\delta(R, \\bar{\\mu})",
+   "symbol_and_unit_ledger": {
+    "delta(R, mu)": "operational distortion-rate function: best achievable average distortion at rate R by block codes",
+    "\\bar mu": "stationary mean of the AMS source mu",
+    "additive fidelity criterion with a reference letter": "standing hypothesis"
+   },
+   "assumptions": [
+    "AMS source",
+    "additive (subadditive) fidelity criterion possessing a reference letter of finite expected distortion"
+   ],
+   "breakdown_regime": "Without a reference letter or with nonadditive fidelity criteria the operational and information theoretic functions can separate; the theorem is an equality of limits, not a finite blocklength guarantee.",
+   "domain": "rate distortion theory"
+  },
+  {
+   "primitive_id": "feinstein_lemma",
+   "name": "Feinstein's lemma: from any channel hookup one can select M codewords with disjoint decoding regions whose conditional error satisfies nu(Gamma_i^c | x_i) <= M exp(-a) + P_{XY}(i <= a), the information density threshold construction behind channel coding theorems",
+   "verbatim_quote": "The generalization of Feinstein’s original proof for finite alphabets to general measurable spaces is due to Kadota [70] and the following proof is based on his.",
+   "page": "Sec 12.2, printed pp. 254-255 (Lemma 12.2.1)",
+   "latex": "\\nu(\\Gamma_i^c | x_i) \\le M e^{-a} + P_{XY}(i \\le a), \\quad i(x, y) = \\ln \\frac{dP_{XY}}{d(P_X \\times P_Y)}(x, y)",
+   "symbol_and_unit_ledger": {
+    "i(x, y)": "information density, log Radon-Nikodym derivative of the hookup against the product of marginals",
+    "a": "information threshold parameter",
+    "M": "number of codewords",
+    "Gamma_i": "decoding region for codeword x_i"
+   },
+   "assumptions": [
+    "P_{XY} absolutely continuous with respect to P_X x P_Y so the information density exists",
+    "general measurable input and output spaces"
+   ],
+   "breakdown_regime": "The bound trades code size against the lower tail of the information density; for channels whose information density has a heavy lower tail the achievable M at small error is far below exp of the mean information.",
+   "domain": "channel coding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Feinstein's construction teaches the engine to judge a communication or classification scheme by the lower tail of its information density, not its mean: a scheme is only as reliable as the probability that a single case carries too little information to decode, which is the correct way to size confidence for rare, high stakes cases.",
+    "source_operator": "feinstein_lemma",
+    "telemetry": "Per-case information density values (log likelihood ratios) across logged predictions; their empirical lower tail."
+   }
+  },
+  {
+   "primitive_id": "channel_capacity_information_rate",
+   "name": "Channel capacity as information rate capacity: C = sup over input processes of the mutual information rate through the channel; for stationary finite alphabet channels all process definitions (stationary, ergodic, AMS inputs) coincide in one number C",
+   "verbatim_quote": "Because of the equivalence of the various forms of information rate capacity for stationary channels, we shall use the symbol C to represent the information rate capacity of a stationary channel",
+   "page": "Sec 12.4, printed p. 262 (Lemma 12.4.2)",
+   "latex": "C = \\sup_{\\mu} \\bar{I}_{\\mu \\nu}(X; Y)",
+   "symbol_and_unit_ledger": {
+    "nu": "channel (conditional probability from input to output process)",
+    "mu": "input process distribution",
+    "\\bar I_{mu nu}": "mutual information rate of the input/output pair process"
+   },
+   "assumptions": [
+    "stationary channel; finite alphabet for the equality of all forms",
+    "supremum over AMS inputs equals supremum over stationary and over ergodic inputs"
+   ],
+   "breakdown_regime": "For nonergodic stationary channels the single number C can hide component dependence; the book then introduces the quantile capacity C* because the mean information rate no longer tells the whole story.",
+   "domain": "channel coding"
+  },
+  {
+   "primitive_id": "shannon_capacity_equality",
+   "name": "Shannon capacity equals the process capacities: for a finite alphabet stationary channel with no input memory or anticipation, C = C_AMS = C_s = C_{s,e} = C_Shannon, where C_Shannon = lim (1/n) max I(X^n; Y^n); rates R < C admit Feinstein codes with vanishing error",
+   "verbatim_quote": "The Shannon capacity is of interest because it can be numerically computed while the process definitions are not always amenable to such computation.",
+   "page": "Sec 12.4, printed p. 263 (Lemma 12.4.3, Corollary 12.4.1)",
+   "latex": "C_{\\mathrm{Shannon}} = \\lim_{n \\to \\infty} \\frac{1}{n} \\max_{\\mu^n} I_{\\mu^n \\hat{\\nu}^n}(X^n; Y^n)",
+   "symbol_and_unit_ledger": {
+    "\\hat nu^n": "nth order finite dimensional channel (no input memory or anticipation)",
+    "max over mu^n": "best nth order input distribution",
+    "coding content": "for R < C and any epsilon there exist (floor(e^{nR}), n, epsilon) codes for large n"
+   },
+   "assumptions": [
+    "finite alphabet stationary channel",
+    "no input memory or anticipation for the Shannon form"
+   ],
+   "breakdown_regime": "The limit defining C_Shannon need not exist for channels with memory; then only the process definitions survive and computability is lost.",
+   "domain": "channel coding"
+  },
+  {
+   "primitive_id": "quantile_capacity",
+   "name": "Information quantile capacity C*: defined from quantiles of the limiting information density i_infinity rather than its mean; C >= C* always, with equality for ergodic channels; the right capacity notion for nonergodic channels",
+   "verbatim_quote": "The information quantile capacity was introduced by Winkelbauer [151] and its properties were developed by him and by Kieffer [76].",
+   "page": "Sec 12.4, printed pp. 263-264 (Lemmas 12.4.5-12.4.6)",
+   "latex": "C^*(\\lambda) = \\sup_{\\mu} \\sup \\{ r : \\mu \\nu (i_\\infty \\le r) < \\lambda \\}, \\quad C^* = \\lim_{\\lambda \\to 0} C^*(\\lambda)",
+   "symbol_and_unit_ledger": {
+    "i_infinity": "limiting information density of the hookup, exists for AMS finite alphabet hookups",
+    "lambda in (0, 1)": "tolerated quantile level",
+    "mu nu": "joint input/output process measure"
+   },
+   "assumptions": [
+    "AMS channel",
+    "finite alphabet so the limiting information density exists"
+   ],
+   "breakdown_regime": "For nonergodic channels C* < C is possible: the mean based capacity overpromises because a positive fraction of ergodic components carry less information than the mean.",
+   "domain": "channel coding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Quantile capacity is the engine's correction to mean based confidence: capacity is quoted at a quantile of the information density distribution across regimes, so a system that is brilliant on average but information starved in one recurring regime is rated by that regime's level, which is the level its worst recurring cases actually experience.",
+    "source_operator": "quantile_capacity",
+    "telemetry": "Distribution of per-regime information rates; lower quantiles tracked explicitly."
+   }
+  },
+  {
+   "primitive_id": "information_density_tail_lemma",
+   "name": "Information density between a fixed prefix and the future vanishes per sample: (1/n) i(X^k; X^n shifted) tends to 0 almost everywhere for any finite k, with no stationarity assumption; sample entropy limits are unaffected by the starting time",
+   "verbatim_quote": "The lemma states that with probability 1 the per-sample mutual information density between the first k samples and future samples goes to zero in the limit.",
+   "page": "Sec 3.4, printed p. 64 (Lemma 3.4.1)",
+   "latex": "i(X^k; X^n_k) = \\ln \\frac{m(X^n)}{m(X^k) m(X^n_k)}, \\quad \\lim_{n \\to \\infty} \\frac{1}{n} i(X^k; X^n_k) = 0 \\ \\ m\\text{-a.e.}",
+   "symbol_and_unit_ledger": {
+    "X^n_k": "the block of samples from time k to n-1",
+    "i(.; .)": "mutual information density (log density ratio of joint to product of marginals)",
+    "key step": "a joint distribution is dominated by the product of its marginals when one marginal is discrete"
+   },
+   "assumptions": [
+    "finite alphabet source",
+    "no AMS or stationarity hypothesis needed"
+   ],
+   "breakdown_regime": "The statement is per sample: the unnormalized density need not vanish, and the result says nothing about dependence between two growing blocks.",
+   "domain": "ergodic theory"
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "6e380ace520cdafa-t1",
+   "think": "This book is the ergodic theory foundation underneath classical information theory, and reading it as an engine builder changes what counts as a definition. Gray starts from a dynamical system, a probability space with a transformation, and treats a random process as what you get when you apply one fixed finite alphabet measurement again and again under the shift. That single move reorganizes everything. Entropy is first a property of a measurement or a partition, then of blocks of measurements, then a rate, and finally, by taking a supremum over all finite measurements, a property of the system itself, the Kolmogorov-Sinai invariant. The practical consequence is that no single coding of a process owns its entropy: every feature extraction is one measurement among many, and the system's true information rate is the supremum over all of them, so a pipeline that reports the entropy of its favorite representation is reporting a lower bound and should say so.\n\nThe second organizing idea is that divergence is the primitive object and everything else is a special case. Entropy is minus a divergence against counting measure, or log alphabet size minus divergence against the uniform, or a divergence between the diagonal measure and the product measure. Mutual information is divergence between the joint and the product of marginals. Conditional mutual information is divergence against a stitched measure that keeps the conditionals and imposes conditional independence. Once this is seen, the proofs collapse into a handful of moves: the log sum inequality, Jensen, chain rules, and monotonicity under measurement. For an engine this is an architectural instruction: implement one well tested divergence kernel with explicit absolute continuity checks, and derive entropy, information, and conditional information views from it, instead of maintaining parallel formulas that can drift apart numerically and conceptually.\n\nThe third idea is that the long run is governed by ergodic theorems, and the book is honest about the hypotheses. Stationarity gives the entropy rate as a limit by subadditivity. Asymptotic mean stationarity, a Cesaro weakening, is enough to inherit almost everything through the stationary mean, provided the conclusions concern invariant or tail events. The ergodic decomposition then says a nonergodic stationary source is a mixture of ergodic components, and the Shannon-McMillan-Breiman theorem makes sample entropy converge to the entropy rate of whichever component is in effect. So the correct output of an evaluation is often a component indexed family of numbers, not a scalar. Any system that pools regimes and reports one rate has silently assumed ergodicity it has not checked.\n\nThe fourth idea is the split between information theoretic optima and operational quantities, and the theorems that reunite them. The distortion-rate function is defined by an optimization over test channels; the operational distortion-rate function is defined by what codes achieve; the source coding theorems prove them equal for AMS ergodic sources with a reference letter. Capacity gets the same treatment twice over: process definitions for generality, Shannon's finite dimensional definition for computability, an equality lemma joining them, and then the quantile capacity C* as a repair for the nonergodic case where the mean based number overpromises. Feinstein's lemma is the hinge: code existence is read off the lower tail of the information density, not its mean. Taken together the book is a discipline for anyone building a reasoning engine: define quantities as rates, prove which regime class they belong to, never let a processing stage claim information it cannot contain, and grade every summary against an optimization floor rather than against a rival's summary.\n\nA fifth idea, easy to miss because it arrives as a technical lemma, is that relative entropy behaves worse than entropy and the book refuses to pretend otherwise. Conditional entropy is monotone in the conditioning set, which is what makes the infinite past characterization of entropy rate a one line Cesaro argument. Conditional relative entropy is not monotone, so the relative entropy rate against a general reference measure has no such characterization, and the theory only recovers one when the reference measure is kth order Markov. That asymmetry is a design rule with teeth: the tractable object is cross entropy against a model the analyst chose, and the choice should be made Markov precisely so that per sample scores decompose into a true entropy term plus an expected log conditional likelihood term. Evaluation code that scores a model by accumulated conditional log likelihood is, knowingly or not, living inside Lemma 2.6.3, and it inherits the lemma's hypotheses.\n\nFinally there is the variational thread. The Donsker-Varadhan formula writes divergence as a supremum over test functions of a difference between an expectation under the true measure and a log moment generating function under the reference. In Gray's hands this is a bridge to large deviations, but structurally it says something an engine builder should not ignore: a divergence can be certified from below by any critic function, and estimated by optimizing critics, long before densities are available in closed form. Paired with the variational characterizations of the distortion-rate function and the convexity of mutual information in the channel, it shows the book's recurring move: every quantity that matters is either an optimization or a limit of optimizations, which is why the theory stays computable in principle even when closed forms disappear. The coding theorems of the final chapters are then almost bookkeeping: Feinstein supplies codes from information density tails, capacity collects the suprema, and the joint source and channel results say the source and channel optimizations can be solved separately without loss, a separation principle whose hypotheses Gray states as carefully as its conclusion.",
+   "retrocausal_genealogy": "The lineage runs Shannon 1948 for entropy rate and the coding theorems, McMillan 1953 for L1 convergence, Breiman 1957 for almost everywhere convergence, and Billingsley for the nonergodic extension, with the AMS generalizations due to Jacobs and to Gray and Kieffer. Behind the entropy of a system stand Kolmogorov 1958 and Sinai 1959, who turned Shannon's rate into a dynamical invariant. Kullback and Leibler supply divergence, Donsker and Varadhan its variational form, Feinstein the direct coding lemma, and Winkelbauer and Kieffer the quantile repair for nonergodic channels. Gray, a central figure in source coding and quantization, writes the book as the mature synthesis of that line, deliberately rebuilding finite alphabet results so they survive the passage to general alphabets and processes.",
+   "theory_of_mind": "Gray believes the reader is a mathematician in training and that information theory done loosely will eventually contradict itself, so he pays for rigor up front: standard spaces, regular conditional probabilities, partitions, and measures instead of densities wherever possible. His model of the domain is that a source is fundamentally a dynamical system and a code is a measurement on it, so intuition from communication engineering must be re-earned inside ergodic theory. He also believes the finite alphabet case is the honest core: prove it there with full hypotheses visible, and the generalizations become engineering rather than new mysteries. Brevity is sacrificed without apology whenever a suppressed hypothesis would change a conclusion.",
+   "cross_layer_veto": "Several results in this book veto habits that other layers of a reasoning stack encourage. Data processing vetoes any claim that a derived representation contains more information about an outcome than its inputs did. The ergodic decomposition vetoes pooled averages over mixed regimes presented as if they were properties of one process. The divergence definition vetoes, with an infinite value, any model that assigns probability zero to an event that occurs. The quantile capacity vetoes mean based confidence for channels whose information density has a weak lower tail. And the AEP vetoes zero error promises at rates near entropy: at fixed rate the atypical set can be made improbable, never impossible, which caps what any downstream guarantee may claim."
+  }
+ ],
+ "universal_lens": "Read as a general template, this book is about any system that turns a stream of observations into decisions under a bandwidth limit. Its method is portable: model the stream as a process on a state space, define uncertainty per unit time rather than per event, compare candidate descriptions by divergence from what the evidence supports, decompose mixed streams into stable regimes before averaging anything, and grade every compressed summary against the optimal fidelity achievable at its information budget. The same skeleton organizes sensor networks, scientific data pipelines, organizational reporting, and machine perception: wherever summaries travel upward and decisions travel down, entropy rates, data processing bounds, and distortion-rate floors describe what can and cannot survive the trip.",
+ "gsi_mapping": "The Galaxy Sports Institute takes from this book its measurement discipline. Research claims about sports information should be stated as rates and divergences with named hypotheses: which regime class the data stream belongs to, whether the reported average is a component value or a mixture, and what processing stages could only have destroyed information between the raw record and the published statistic. The ergodic decomposition becomes a standing research method for separating eras, rule regimes, and competition contexts before estimating anything, and the distortion-rate function becomes the benchmark for judging scouting and tracking summaries: a summary is good insofar as it approaches the optimal fidelity for the information it retains, not insofar as it is long or detailed.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes four load-bearing tools. First, a single divergence kernel with absolute continuity vetoes, from which entropy, mutual information, and conditional information views are derived rather than separately coded. Second, regime aware evaluation: forecasts are scored per ergodic component using accumulated per-event log scores, whose long run meaning is guaranteed by the Shannon-McMillan-Breiman theorem, and pooled scores are reported as mixtures with explicit weights. Third, data processing accounting on the feature provenance graph, so a derived signal can never be credited with more outcome information than its inputs contained. Fourth, quantile based confidence: a signal family's reliability is quoted from the lower tail of its information density across recurring situations, following the quantile capacity correction, instead of from its average performance alone."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "6060096d2f276c97",
+  "source_status": "COMPLETE",
+  "title": "p0002",
+  "file_name": "p0002.txt",
+  "sha256": "6060096d2f276c974f0d5473781429cfd430957574aecf2dab42aaf72a704a08",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0002 (6060096d2f276c97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0002 (6060096d2f276c97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0002 (6060096d2f276c97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0002 (6060096d2f276c97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0002 (6060096d2f276c97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0002 (6060096d2f276c97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "poisson_regression_model",
+      "name": "Poisson Regression Model",
+      "verbatim_quote": "The technique is based on a Poisson regression model but is complicated by the data structure and the dynamic nature of teams' performances.",
+      "page": 1,
+      "latex": "Y_{ij} \\sim \\text{Poisson}(\\lambda_{ij})",
+      "symbol_and_unit_ledger": "{'Y_{ij}': 'Number of goals scored by team i against team j (dimensionless)', '\\\\lambda_{ij}': 'Expected number of goals scored by team i against team j (dimensionless)', 'e^{\\\\beta_i + \\\\gamma_j + \\\\delta_t}}': 'Exponential of linear combination of parameters (dimensionless)', '\\\\beta_i': 'Attack strength parameter for team i (dimensionless)', '\\\\gamma_j': 'Defense strength parameter for team j (dimensionless)', '\\\\delta_t': 'Time-varying performance adjustment factor (dimensionless)'}",
+      "assumptions": "Poisson distribution assumption, independence of goals scored by each team, log-linear link function, overdispersion ignored.",
+      "breakdown_regime": "Under-dispersed or over-dispersed goal counts cause model misspecification.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Conformal Inference",
+        "source_operator": "poisson_regression_model",
+        "telemetry": "Residual calibration test on holdout data"
+      }
+    },
+    {
+      "primitive_id": "maximum_likelihood_estimation",
+      "name": "Maximum Likelihood Estimation",
+      "verbatim_quote": "Maximum likelihood estimates are shown to be computationally obtainable, and the model is shown to have a positive return when used as the basis of a betting strategy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Large sample approximation, correct model specification, ergodicity of team performance.",
+      "breakdown_regime": "Non-convergence of optimization algorithm due to multicollinearity among parameters.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE - Situational Reasoning",
+        "source_operator": "maximum_likelihood_estimation",
+        "telemetry": "Training stability metrics, gradient norm checks"
+      }
+    },
+    {
+      "primitive_id": "betting_strategy",
+      "name": "Betting Strategy",
+      "verbatim_quote": "In making bets the challenge then is to find 'good bets', in which the considered probability of occurrence is higher than the corresponding probability determined by the bookmakers' odds, so that there is a positive expected return.",
+      "page": 1,
+      "latex": "E[R] = \\sum_{s \\in S} p(s) o(s) - 1 > 0",
+      "symbol_and_unit_ledger": "{'E[R]': 'Expected return on bet (dimensionless)', 'p(s)': 'Model-estimated probability of outcome s (dimensionless)', 'o(s)': \"Bookmaker's decimal odds for outcome s (dimensionless)\", 'S': 'Set of all possible match outcomes (dimensionless)'}",
+      "assumptions": "Risk-neutral utility maximization, perfect liquidity, no transaction costs.",
+      "breakdown_regime": "Negative expected return due to overfitting or biased bookmaker margins.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Bayesian Inference",
+        "source_operator": "betting_strategy",
+        "telemetry": "Out-of-sample Sharpe ratio of betting portfolio"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6060096d2f276c97_t0",
+      "think": "The core challenge is to map time-series goal data into stationary latent variables that predict future match outcomes. The Poisson GLM provides a parsimonious link between team-specific attack/defense effects and scoring intensity. However, the dynamic updating of these parameters via maximum likelihood introduces a feedback loop where model parameters become functions of betting volumes, leading to potential overfitting. To mitigate this, we apply regularization techniques such as ridge penalties on the temporal parameters, ensuring that the model does not memorize noise but instead captures persistent skill trends. The betting strategy then exploits the residual mispricing after accounting for these learned skills, assuming bookmakers incorporate public information imperfectly.\n\nDeep epistemic analysis for p0002 (6060096d2f276c97, domain=other, pages_read=1/1): Operator 'Poisson Regression Model' (page 1, domain other) captures: The technique is based on a Poisson regression model but is complicated by the data structure and the dynamic nature of teams' performances. Assumptions: Poisson distribution assumption, independence of goals scored by each team, log-linear link function, overdispersion ignored. Breakdown regime: Under-dispersed or over-dispersed goal counts cause model misspecification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Conformal Inference Operator 'Maximum Likelihood Estimation' (page 1, domain other) captures: Maximum likelihood estimates are shown to be computationally obtainable, and the model is shown to have a positive return when used as the basis of a betting strategy. Assumptions: Large sample approximation, correct model specification, ergodicity of team performance. Breakdown regime: Non-convergence of optimization algorithm due to multicollinearity among parameters. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - Situational Reasoning Operator 'Betting Strategy' (page 1, domain other) captures: In making bets the challenge then is to find 'good bets', in which the considered probability of occurrence is higher than the corresponding probability determined by the bookmakers' odds, so that there is a positive expected return. Assumptions: Risk-neutral utility maximization, perfect liquidity, no transaction costs. Breakdown regime: Negative expected return due to overfitting or biased bookmaker margins. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Bayesian Inference Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0002 (6060096d2f276c97, domain=other, pages_read=1/1): Operator 'Poisson Regression Model' (page 1, domain other) captures: The technique is based on a Poisson regression model but is complicated by the data structure and the dynamic nature of teams' performances. Assumptions: Poisson distribution assumption, independence of goals scored by each team, log-linear link function, overdispersion ignored. Breakdown regime: Under-dispersed or over-dispersed goal counts cause model misspecification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Conformal Inference Operator 'Maximum Likelihood Estimation' (page 1, domain other) captures: Maximum likelihood estimates are shown to be computationally obtainable, and the model is shown to have a positive return when used as the basis of a betting strategy. Assumptions: Large sample approximation, correct model specification, ergodicity of team performance. Breakdown regime: Non-convergence of optimization algorithm due to multicollinearity among parameters. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - Situational Reasoning Operator 'Betting Strategy' (page 1, domain other) captures: In making bets the challenge then is to find 'good bets', in which the considered probability of occurrence is higher than the corresponding probability determined by the bookmakers' odds, so that there is a positive expected return. Assumptions: Risk-neutral utility maximization, perfect liquidity, no transaction costs. Breakdown regime: Negative expected return due to overfitting or biased bookmaker margins. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Bayesian Inference Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0002 (6060096d2f276c97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0002 (6060096d2f276c97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bookmakers act as market makers who set prices to balance their books, often incorporating public sentiment and recent news flows rather than pure statistical projections. This creates exploitable biases when their models fail to adjust smoothly to new evidence. Theory of Mind & Decision Maker Model: Rooted in p0002 (6060096d2f276c97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent leakage between training and testing sets, we ensure that the maximum likelihood estimation uses only past data up to the match date, and cross-validation is performed within a rolling window scheme. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0002 (6060096d2f276c97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

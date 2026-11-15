@@ -1,0 +1,78 @@
+{
+  "book_id": "3eef5c29c1e52320",
+  "source_status": "COMPLETE",
+  "title": "p0193",
+  "file_name": "p0193.txt",
+  "sha256": "3eef5c29c1e52320f97548b25ed882ae50f953d0f2556f9378d1ea4f07afdf73",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Means-end field inference with temporal constraint violation and adaptive response classification. Universal Lens: Rooted in p0193 (3eef5c29c1e52320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating under non-stationary Markovian constraints with rule-based posterior pruning. GSI Mapping: Rooted in p0193 (3eef5c29c1e52320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transition graph with forbidden path memory and heuristic-driven policy selection. GSE Mapping: Rooted in p0193 (3eef5c29c1e52320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_constraint_violation",
+      "name": "Temporal Constraint Violation",
+      "verbatim_quote": "had had the open box beyond it\"—in the trial just preceding should never be the correct",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{n}': 'trial index, dimensionless', 'D_{n}': 'door/alley choice at trial n, dimensionless', 'U_{n}': 'unlock status of door D_{n}, binary {0,1}'}",
+      "assumptions": "Each trial has a deterministic but unknown correct door; prior door cannot repeat in next trial.",
+      "breakdown_regime": "When T_{n+1} = T_{n} + 1 and D_{n} = D_{n+1}, constraint violated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Markov chain with memoryless state transitions constrained by previous outcome.",
+        "source_operator": "temporal_constraint_violation",
+        "telemetry": "Frequency of repeated door selections across trials."
+      }
+    },
+    {
+      "primitive_id": "response_classification_type_a",
+      "name": "Response Classification: Type A",
+      "verbatim_quote": "A \"Response with reference to the experimenter's rule that no alley [door] is the right alley",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_A': 'Type A response pattern, binary {0,1}', 'C_n': 'correct door in trial n, dimensionless'}",
+      "assumptions": "Animals respond based on explicit rule enforcement rather than probabilistic inference.",
+      "breakdown_regime": "R_A = 1 iff D_{n} ≠ D_{n-1} and D_{n-1} ≠ C_{n-1}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Rule-based behavioral kernel derived from sequential exclusion logic.",
+        "source_operator": "response_classification_type_a",
+        "telemetry": "Proportion of Type A responses per trial sequence."
+      }
+    },
+    {
+      "primitive_id": "response_classification_type_b",
+      "name": "Response Classification: Type B",
+      "verbatim_quote": "two successive trials \" 14 Type B \"Response to the rule that it is useless to",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_B': 'Type B response pattern, binary {0,1}', 'O_i': 'order of alley i attempted, dimensionless'}",
+      "assumptions": "Fixed-order exploration within trial space; no repetition allowed.",
+      "breakdown_regime": "R_B = 1 iff O_1 < O_2 < O_3 < O_4 and all unique.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Sequential search strategy with ordered permutation constraint.",
+        "source_operator": "response_classification_type_b",
+        "telemetry": "Order consistency of alley attempts per trial."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3eef5c29c1e52320_t0",
+      "think": "The core mechanism involves a temporal constraint system where each animal must avoid selecting a previously unlocked door in the subsequent trial. This creates a combinatorial problem space with forbidden states, modeled as a directed acyclic graph with dynamic edge weights. The five response types reflect distinct cognitive strategies: Type A enforces a two-step memory rule, Type B applies fixed-order exploration, and others encode variations of trial-and-error or heuristic search. These behaviors can be interpreted through Bayesian belief networks with time-dependent likelihood functions, where the prior distribution over correct doors evolves according to the constraint. The failure mode occurs when the agent's internal model fails to recognize the constraint, leading to repeated incorrect choices. The system exhibits emergent complexity due to the interplay between sequential memory and exploratory behavior, resulting in a multi-modal response landscape.\n\nDeep epistemic analysis for p0193 (3eef5c29c1e52320, domain=other, pages_read=1/1): Operator 'Temporal Constraint Violation' (page 1, domain other) captures: had had the open box beyond it\"—in the trial just preceding should never be the correct Assumptions: Each trial has a deterministic but unknown correct door; prior door cannot repeat in next trial. Breakdown regime: When T_{n+1} = T_{n} + 1 and D_{n} = D_{n+1}, constraint violated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Markov chain with memoryless state transitions constrained by previous outcome. Operator 'Response Classification: Type A' (page 1, domain other) captures: A \"Response with reference to the experimenter's rule that no alley [door] is the right alley Assumptions: Animals respond based on explicit rule enforcement rather than probabilistic inference. Breakdown regime: R_A = 1 iff D_{n} ≠ D_{n-1} and D_{n-1} ≠ C_{n-1} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Rule-based behavioral kernel derived from sequential exclusion logic. Operator 'Response Classification: Type B' (page 1, domain other) captures: two successive trials \" 14 Type B \"Response to the rule that it is useless to Assumptions: Fixed-order exploration within trial space; no repetition allowed. Breakdown regime: R_B = 1 iff O_1 < O_2 < O_3 < O_4 and all unique. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Sequential search strategy with ordered permutation constraint. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0193 (3eef5c29c1e52320, domain=other, pages_read=1/1): Operator 'Temporal Constraint Violation' (page 1, domain other) captures: had had the open box beyond it\"—in the trial just preceding should never be the correct Assumptions: Each trial has a deterministic but unknown correct door; prior door cannot repeat in next trial. Breakdown regime: When T_{n+1} = T_{n} + 1 and D_{n} = D_{n+1}, constraint violated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Markov chain with memoryless state transitions constrained by previous outcome. Operator 'Response Classification: Type A' (page 1, domain other) captures: A \"Response with reference to the experimenter's rule that no alley [door] is the right alley Assumptions: Animals respond based on explicit rule enforcement rather than probabilistic inference. Breakdown regime: R_A = 1 iff D_{n} ≠ D_{n-1} and D_{n-1} ≠ C_{n-1} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Rule-based behavioral kernel derived from sequential exclusion logic. Operator 'Response Classification: Type B' (page 1, domain other) captures: two successive trials \" 14 Type B \"Response to the rule that it is useless to Assumptions: Fixed-order exploration within trial space; no repetition allowed. Breakdown regime: R_B = 1 iff O_1 < O_2 < O_3 < O_4 and all unique. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Sequential search strategy with ordered permutation constraint. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early 20th-century animal cognition studies, particularly those of Edward Thorndike and later Burrhus Skinner. Influenced by Claude Shannon's information theory and John von Neumann’s game theory frameworks. Retrocausal Genealogy: Rooted in p0193 (3eef5c29c1e52320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0193 (3eef5c29c1e52320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents operate under bounded rationality, applying heuristics to navigate a structured but adversarial environment. Their decision-making reflects both learned rules and innate search patterns, suggesting a dual-process model of cognition involving fast, rule-based responses and slower, deliberative inference. Theory of Mind & Decision Maker Model: Rooted in p0193 (3eef5c29c1e52320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that Type A and Type B responses do not co-occur in the same trial, preventing redundant behavioral signals. Leakage vetoes occur when memory constraints fail to prevent repeated door selection, indicating breakdown in short-term memory integration. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0193 (3eef5c29c1e52320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

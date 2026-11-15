@@ -1,0 +1,843 @@
+{
+ "book_id": "b6476d8715b01a7b",
+ "source_status": "COMPLETE",
+ "source_note": "Greg W. Anderson (University of Minnesota), Alice Guionnet (ENS Lyon), Ofer Zeitouni (University of Minnesota and Weizmann Institute of Science), An Introduction to Random Matrices, Cambridge University Press, 2010 (Cambridge Studies in Advanced Mathematics). Local file: PDF at library/books-must-have/AndersonGuionnetZeitouni-2010-IntroductionToRandomMatrices.pdf (the task's guessed books-d-models path does not hold this book; it lives in books-must-have), 3096648 bytes. Scan digest (sha256 over str(size) encoded plus full file bytes, gatekeeper scan formula): b6476d8715b01a7ba616535b794bc0f05e6bbc7c87065711e76dfa3763faa84a, whose first 16 hex chars are the book_id. Plain file sha256: f4a7357f092445d4e8f2e8a97e6c1d9e08982259f00142986f4cdb0fa9a30cf6. Extracted text at text/books-must-have/AndersonGuionnetZeitouni-2010-IntroductionToRandomMatrices.pdf.txt (1388015 characters, 24689 lines), clean born-digital extraction: prose and theorem statements read cleanly, displayed formulas are linearized with some glyph dislocation, so verbatim quotes were taken from prose passages and every quote was verified as a contiguous normalized substring of the text file. Contents as printed: Preface p. xiii, Ch. 1 Introduction, Ch. 2 Wigner matrices, Ch. 3 Spacings for Gaussian ensembles, Ch. 4 Some generalities, Ch. 5 Free probability, Appendices A-H, References p. 468. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "wigner_matrix_model",
+   "name": "Wigner matrix: symmetric/Hermitian matrix with i.i.d. centered entries scaled by 1/sqrt(N)",
+   "verbatim_quote": "We call such a matrix a Wigner matrix, and if the random variables Zi, j and Yi are Gaussian, we use the term Gaussian Wigner matrix.",
+   "page": "Section 2.1 (book p. 6), text lines 450-480",
+   "latex": "X_N(i,j) = X_N(j,i) = \\begin{cases} Z_{ij}/\\sqrt{N}, & i < j, \\\\ Y_i/\\sqrt{N}, & i = j. \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "Z_{ij}": "i.i.d. real (or complex) off-diagonal entries, mean 0, variance 1, dimensionless",
+    "Y_i": "i.i.d. diagonal entries, dimensionless",
+    "N": "matrix dimension, count"
+   },
+   "assumptions": [
+    "Entries on and above the diagonal are independent, with EZ_{1,2}^2 = 1",
+    "All moments r_k = max(E|Z_{1,2}|^k, E|Y_1|^k) are finite in the basic treatment (2.1.1)",
+    "The 1/sqrt(N) scaling keeps the spectrum of order 1 as N grows"
+   ],
+   "breakdown_regime": "Independence of entries is essential to the elementary proofs; correlated entries, heavy tails with infinite variance, or variance profiles varying with position all leave this exact model class and need separate theorems.",
+   "domain": "random matrix models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any large symmetric array of noisy pairwise interactions (a correlation matrix, a Gram matrix, a Hessian of a fitted model) is structurally a Wigner-type object once centered and scaled; the engine reads such arrays through this model first, before trusting any structure claimed on top of the noise.",
+    "source_operator": "wigner_matrix_model",
+    "telemetry": "Entry histograms, entry variance and kurtosis, and independence diagnostics of large symmetric data arrays (correlation matrices, similarity matrices) computed from raw observations."
+   }
+  },
+  {
+   "primitive_id": "empirical_spectral_measure",
+   "name": "Empirical spectral measure L_N: the eigenvalue counting measure (1/N) sum of Dirac masses",
+   "verbatim_quote": "Let λiN denote the (real) eigenvalues of XN , with λ1N ≤ λ2N ≤ . . . ≤ λNN , and define the empirical distribution of the eigenvalues as the (random) probability measure on R defined by",
+   "page": "Section 2.1 (book p. 6), text lines 480-492",
+   "latex": "L_N = \\frac{1}{N} \\sum_{i=1}^{N} \\delta_{\\lambda_i^N}",
+   "symbol_and_unit_ledger": {
+    "L_N": "random probability measure on R, dimensionless mass",
+    "\\lambda_i^N": "i-th ordered eigenvalue of X_N, same units as matrix entries times sqrt(N) scaling already applied",
+    "\\delta_{\\lambda}": "Dirac unit mass at lambda"
+   },
+   "assumptions": [
+    "The matrix is self-adjoint so eigenvalues are real and orderable",
+    "Weak convergence of measures is the mode of convergence used throughout"
+   ],
+   "breakdown_regime": "For non-normal or non-Hermitian matrices eigenvalues leave the real line and the one-dimensional empirical measure must be replaced by a planar one; the book treats that case only in passing.",
+   "domain": "spectral statistics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine summarizes any large spectrum (of a covariance estimate, a kernel matrix, a network adjacency) as an empirical measure and compares measures, not individual eigenvalues; this is the compression that makes spectral reasoning stable under noise.",
+    "source_operator": "empirical_spectral_measure",
+    "telemetry": "Full eigenvalue lists of estimated matrices per observation window, retained as histograms of L_N rather than as point clouds."
+   }
+  },
+  {
+   "primitive_id": "wigner_semicircle_theorem",
+   "name": "Wigner's semicircle law: L_N converges weakly in probability to the semicircle distribution",
+   "verbatim_quote": "For a Wigner matrix, the empirical measure LN converges weakly, in probability, to the standard semicircle distribution.",
+   "page": "Section 2.1 (book pp. 6-7), text lines 490-505",
+   "latex": "\\sigma(x) = \\frac{1}{2\\pi} \\sqrt{4 - x^2}\\, \\mathbf{1}_{|x| \\le 2}",
+   "symbol_and_unit_ledger": {
+    "\\sigma(x)": "limiting eigenvalue density, mass per unit eigenvalue",
+    "x": "eigenvalue location in scaled units, support [-2, 2]"
+   },
+   "assumptions": [
+    "Wigner matrix model with unit entry variance and the moment condition (2.1.1)",
+    "Convergence is weak convergence of measures, in probability"
+   ],
+   "breakdown_regime": "The limit is the same for all entry laws with matching first two moments, so the semicircle alone cannot identify the entry distribution; sparse matrices, heavy tails, or a nonzero mean entry (creating a rank-one spike) break the plain statement.",
+   "domain": "limit laws",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The semicircle is the engine's null geometry for unstructured symmetric noise: any empirical spectrum is first scored by its distance to a (possibly rescaled and shifted) semicircle, and only the residual is treated as candidate signal.",
+    "source_operator": "wigner_semicircle_theorem",
+    "telemetry": "Eigenvalue histograms of noise-only calibration windows, used to fix the semicircle radius 2s where s is the measured entry scale."
+   }
+  },
+  {
+   "primitive_id": "catalan_semicircle_moments",
+   "name": "Semicircle moments are Catalan numbers: m_{2k} = C_k, odd moments vanish",
+   "verbatim_quote": "Define the moments mk := hσ , xk i . Recall the Catalan numbers",
+   "page": "Section 2.1.1 (book p. 7), text lines 511-530",
+   "latex": "m_{2k} = C_k = \\frac{1}{k+1} \\binom{2k}{k} = \\frac{(2k)!}{(k+1)!\\, k!}, \\qquad m_{2k+1} = 0",
+   "symbol_and_unit_ledger": {
+    "m_k": "k-th moment of the semicircle law, in (eigenvalue units)^k",
+    "C_k": "k-th Catalan number, count"
+   },
+   "assumptions": [
+    "Moments taken against the standard semicircle law of radius 2",
+    "Catalan generating function converges for |z| < 1/4 as in (2.1.6)"
+   ],
+   "breakdown_regime": "Moment sequences grow like 4^k, so moment matching is numerically ill conditioned at high order; truncated moment information does not determine edge behavior.",
+   "domain": "combinatorics of moments",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Trace moments of a data matrix, tr(X^k)/N, are computable without eigendecomposition; matching their first several values against Catalan numbers is a cheap spectral fingerprint test the engine runs before any expensive decomposition.",
+    "source_operator": "catalan_semicircle_moments",
+    "telemetry": "Normalized trace powers tr(X^k)/N for k = 1..8 computed from raw Gram and covariance matrices."
+   }
+  },
+  {
+   "primitive_id": "noncrossing_partitions",
+   "name": "Non-crossing partitions: partitions with no a<c in one block and b<d in another for a<b<c<d",
+   "verbatim_quote": "A partition of the set Kk := {1, 2, . . . , k} is called crossing if there exists a quadruple (a, b, c, d) with 1 ≤ a < b < c < d ≤ k such that a, c belong to one part while b, d belong to another part.",
+   "page": "Section 2.1.1 (book p. 9), text lines 565-580",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ground set carries a total order (points on a circle in cyclic order)",
+    "C_k counts the non-crossing partitions of a k-element set"
+   ],
+   "breakdown_regime": "Replacing all partitions by non-crossing ones is exactly what distinguishes free from classical probability; for dependent structures whose combinatorics is crossing (for example fixed permutations with crossings), the non-crossing calculus undercounts.",
+   "domain": "combinatorics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Non-crossing partitions are the dependency grammar of the free calculus: when the engine composes blocks whose interactions are planar (nested or disjoint, never interleaved), free cumulant bookkeeping applies verbatim; detected crossings are a veto on using free formulas.",
+    "source_operator": "noncrossing_partitions",
+    "telemetry": "Dependency structure annotations on composed model blocks: which factors are nested, disjoint, or interleaved in time and in conditioning."
+   }
+  },
+  {
+   "primitive_id": "trace_moment_method",
+   "name": "Trace moment method: E tr(X_N^k) counted by closed walks on graphs proves spectral limit laws",
+   "verbatim_quote": "The first, in Section 2.1, involves a combinatorial machinery, that is also exploited to yield central limit theorems and estimates on the spectral radius of XN .",
+   "page": "Chapter 1 (book p. 3), text lines 338-350",
+   "latex": "\\mathbb{E} \\langle \\bar{L}_N, x^k \\rangle = \\frac{1}{N} \\mathbb{E}\\, \\mathrm{tr}(X_N^k) = \\frac{1}{N} \\sum_{i_1, \\dots, i_k} \\mathbb{E}[X_N(i_1, i_2) \\cdots X_N(i_k, i_1)]",
+   "symbol_and_unit_ledger": {
+    "\\bar{L}_N": "expected empirical measure EL_N",
+    "tr(X_N^k)": "trace of the k-th power, sum over closed walks of length k, in (scaled entry units)^k"
+   },
+   "assumptions": [
+    "Independence makes expectations of entry products factor over distinct edges",
+    "Only walks whose every edge is used at least twice survive in expectation; tree walks dominate the limit"
+   ],
+   "breakdown_regime": "The method controls fixed k as N grows; it does not directly give local statistics or edge behavior at scale N^{2/3}, and constants deteriorate when entries lack high moments.",
+   "domain": "proof technology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Closed-walk counting is the engine's template for turning any product of random quantities into a graph enumeration problem: expectation survives only on paired edges, which is the same pairing logic used to audit Monte Carlo estimates of high order statistics.",
+    "source_operator": "trace_moment_method",
+    "telemetry": "Walk counts and pairing structures from sampled products of model components, logged during variance estimation of composite scores."
+   }
+  },
+  {
+   "primitive_id": "maximal_eigenvalue_convergence",
+   "name": "Largest eigenvalue of a Wigner matrix converges to 2, the semicircle edge (Furedi-Komlós)",
+   "verbatim_quote": "Consider a Wigner matrix XN satisfying rk ≤ kCk for some constant C and all integers k. Then, λNN converges to 2 in probability.",
+   "page": "Section 2.1.6 (book p. 23), text lines 1337-1355",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Moment growth control r_k <= kCk for some constant C, implied for instance by a finite exponential moment of the entries",
+    "The proof runs the moment method with k growing slowly with N and the Furedi-Komlós parsing bound |W_{k,t}| <= 2^k k^{3(k-2t+2)}"
+   ],
+   "breakdown_regime": "Convergence in probability to the edge says nothing about the N^{-2/3} fluctuation scale; heavy tailed entries produce outliers far beyond 2 and the conclusion fails.",
+   "domain": "spectral edge",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The largest eigenvalue is the engine's spike detector: an observed top eigenvalue materially above the semicircle edge 2s is evidence of a genuine low rank component, while one at the edge is consistent with pure noise, and this primitive fixes the threshold logic.",
+    "source_operator": "maximal_eigenvalue_convergence",
+    "telemetry": "Top eigenvalues of rolling covariance and similarity matrices, tracked against the fitted noise edge 2s per window."
+   }
+  },
+  {
+   "primitive_id": "clt_linear_statistics",
+   "name": "CLT for linear statistics: N(<L_N, x^k> - <Lbar_N, x^k>) is asymptotically Gaussian",
+   "verbatim_quote": "Our goal here is to derive a simple version of a central limit theorem (CLT) for linear statistics of the eigenvalues of Wigner matrices.",
+   "page": "Section 2.1.7 (book p. 29), text lines 1673-1695",
+   "latex": "W_{N,k} := N \\left[ \\langle L_N, x^k \\rangle - \\langle \\bar{L}_N, x^k \\rangle \\right], \\qquad \\frac{W_{N,k}}{\\sigma_k} \\Rightarrow \\mathcal{N}(0, 1)",
+   "symbol_and_unit_ledger": {
+    "W_{N,k}": "rescaled fluctuation of the k-th spectral moment, dimensionless",
+    "\\sigma_k^2": "limiting variance from (2.1.44) of the book, depends on entry fourth moments",
+    "\\Phi(x)": "standard Gaussian distribution function"
+   },
+   "assumptions": [
+    "Wigner entries with enough finite moments for the variance computation",
+    "The limiting variance depends on the entry law beyond its variance (fourth cumulant enters), unlike the semicircle limit itself"
+   ],
+   "breakdown_regime": "Fluctuations of smooth linear statistics are order 1/N and Gaussian, but statistics of individual eigenvalues or of the maximum are not covered and fluctuate on larger, non-Gaussian scales.",
+   "domain": "fluctuations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine attaches Gaussian error bars of width sigma_k/N to any averaged spectral statistic it reports; a deviation of the empirical spectrum from its fitted limit is only promoted to a finding when it exceeds this fluctuation scale.",
+    "source_operator": "clt_linear_statistics",
+    "telemetry": "Repeated-window estimates of spectral moments, whose empirical spread is checked against the predicted sigma_k/N scaling."
+   }
+  },
+  {
+   "primitive_id": "marchenko_pastur_law",
+   "name": "Marchenko-Pastur law: limiting spectral law of Wishart sample covariance matrices",
+   "verbatim_quote": "Prove the analog of Lemma 2.1.7 for Wishart matrices, and deduce that LN → Fα weakly, in probability.",
+   "page": "Section 2.1.4 exercises (book p. 21), text lines 1218-1232",
+   "latex": "f_\\alpha(x) = \\frac{\\sqrt{(x - b_-)(b_+ - x)}}{2\\pi x}, \\qquad b_\\pm = (1 \\pm \\sqrt{\\alpha})^2, \\quad x \\in [b_-, b_+]",
+   "symbol_and_unit_ledger": {
+    "f_\\alpha(x)": "limiting eigenvalue density of the Wishart matrix, mass per unit eigenvalue",
+    "\\alpha": "aspect ratio parameter of the rectangular data matrix in the book's parametrization, dimensionless",
+    "b_\\pm": "support edges of the limiting law"
+   },
+   "assumptions": [
+    "Wishart matrix built from a rectangular Gaussian (or i.i.d. entry) data matrix with fixed aspect ratio as both dimensions grow",
+    "Stated in the book as an exercise built on the Wigner moment analysis with bipartite Dyck paths"
+   ],
+   "breakdown_regime": "Population covariance different from a multiple of the identity deforms the law (it becomes the free multiplicative convolution of Marchenko-Pastur with the population law); heavy tails and dependence across samples break it.",
+   "domain": "sample covariance spectra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's null law for sample covariance eigenvalues: given p variables and n observations, the bulk of a pure noise covariance spectrum must fill [b_-, b_+] with the Marchenko-Pastur shape, and eigenvalues outside the support are the candidate true factors.",
+    "source_operator": "marchenko_pastur_law",
+    "telemetry": "Eigenvalues of sample covariance and correlation matrices with their (p, n) aspect ratios, per estimation window."
+   }
+  },
+  {
+   "primitive_id": "stieltjes_transform_and_convergence",
+   "name": "Stieltjes (Cauchy) transform of a measure, with inversion formula and convergence criterion",
+   "verbatim_quote": "Let µ be a positive, finite measure on the real line. The Stieltjes transform of µ is the function",
+   "page": "Section 2.4 (book p. 43), text lines 2411-2425",
+   "latex": "S_\\mu(z) := \\int \\frac{\\mu(dx)}{x - z}, \\qquad z \\in \\mathbb{C} \\setminus \\mathbb{R}",
+   "symbol_and_unit_ledger": {
+    "S_\\mu(z)": "Stieltjes transform, analytic on C minus the real line, units of 1/(eigenvalue unit)",
+    "\\mu": "finite measure on R",
+    "z": "complex spectral parameter off the real axis"
+   },
+   "assumptions": [
+    "|S_mu(z)| <= mu(R)/|Im z|, so the transform is controlled by the distance to the real axis",
+    "Theorem 2.4.4: weak convergence of measures is equivalent to pointwise convergence of their Stieltjes transforms; part (c) gives the in-probability version used for random measures"
+   ],
+   "breakdown_regime": "Inversion (2.4.1) recovers the measure only as a boundary limit Im z to 0; at fixed positive Im z the transform sees a Cauchy-smoothed version of the measure, so fine structure below that smoothing scale is invisible.",
+   "domain": "analytic methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For a matrix, S_{L_N}(z) = (1/N) tr (X_N - zI)^{-1}: the engine works with resolvents rather than raw spectra, because resolvent traces are stable, differentiable in the data, and determine the spectrum by inversion; convergence of spectra is audited in transform space.",
+    "source_operator": "stieltjes_transform_and_convergence",
+    "telemetry": "Resolvent traces (1/N) tr (X - zI)^{-1} evaluated on a grid of z values with Im z > 0 for each estimated matrix."
+   }
+  },
+  {
+   "primitive_id": "stein_lemma_gaussian_ibp",
+   "name": "Stein identity: E[zeta f(zeta)] = E[f'(zeta)] E[zeta^2] for centered Gaussian zeta",
+   "verbatim_quote": "Recall first the following identity, characterizing the Gaussian distribution, which is proved by integration by parts.",
+   "page": "Section 2.4.1 (book p. 46), text lines 2525-2540",
+   "latex": "\\mathbb{E}[\\zeta f(\\zeta)] = \\mathbb{E}[f'(\\zeta)] \\, \\mathbb{E}[\\zeta^2]",
+   "symbol_and_unit_ledger": {
+    "\\zeta": "centered Gaussian random variable",
+    "f": "differentiable test function of polynomial growth, with f' also of polynomial growth"
+   },
+   "assumptions": [
+    "zeta is exactly Gaussian with mean zero",
+    "f and f' have polynomial growth so boundary terms vanish"
+   ],
+   "breakdown_regime": "The identity characterizes the Gaussian law: for non-Gaussian entries it fails and acquires correction terms involving higher cumulants, which is why Gaussian proofs via Stein do not transfer verbatim to general Wigner matrices.",
+   "domain": "gaussian analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Stein integration by parts is the engine's differentiability trick for expectations over Gaussian noise: derivatives of expected scores with respect to noise inputs are rewritten as correlations, which is how sensitivity of a fitted system to its noise floor is computed without resampling.",
+    "source_operator": "stein_lemma_gaussian_ibp",
+    "telemetry": "Gaussian perturbation responses: changes in expected model scores under injected Gaussian noise of known variance."
+   }
+  },
+  {
+   "primitive_id": "goe_gue_invariance",
+   "name": "GOE/GUE laws: Gaussian densities depending only on tr H^2, invariant under orthogonal/unitary conjugation",
+   "verbatim_quote": "The latter formula clarifies the symmetry of PN . The main thing to notice is that the density at H depends only on the eigenvalues of H.",
+   "page": "Section 2.5.1 (book pp. 51-52), text lines 2870-2895",
+   "latex": "\\frac{dP_N^{(\\beta)}}{d\\ell_N}(H) = \\begin{cases} 2^{-N/2} (2\\pi)^{-N(N+1)/4} e^{-\\mathrm{tr} H^2 / 4}, & \\beta = 1, \\\\ 2^{-N/2} \\pi^{-N^2/2} e^{-\\mathrm{tr} H^2 / 2}, & \\beta = 2. \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "P_N^{(\\beta)}": "GOE (beta=1) or GUE (beta=2) law on self-adjoint matrices",
+    "\\ell_N": "Lebesgue measure on the matrix space in on-and-above-diagonal coordinates",
+    "tr H^2": "sum of squared eigenvalues, in (eigenvalue units)^2"
+   },
+   "assumptions": [
+    "Entries Gaussian with the specific variances of Section 2.5.1 (diagonal variance twice the off-diagonal in the book's normalization)",
+    "Invariance: UXU* has the same law for orthogonal (beta=1) or unitary (beta=2) U"
+   ],
+   "breakdown_regime": "The conjugation invariance is special to the Gaussian law (and to Haar-type ensembles); general Wigner matrices share the semicircle limit but not the exact eigenvalue density, so Gaussian formulas are exact only here.",
+   "domain": "gaussian ensembles",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rotational invariance is the engine's symmetry test for a noise model: if a fitted noise law is truly isotropic Gaussian, its spectrum must be independent of the eigenbasis, so basis-dependent spectral artifacts are evidence of structure or of a misspecified noise law.",
+    "source_operator": "goe_gue_invariance",
+    "telemetry": "Eigenbasis stability diagnostics: spectra recomputed under random orthogonal rotations of the data coordinates."
+   }
+  },
+  {
+   "primitive_id": "vandermonde_repulsion",
+   "name": "Vandermonde determinant: Delta(x) = prod_{i<j} (x_j - x_i), the algebraic source of eigenvalue repulsion",
+   "verbatim_quote": "(For an easy verification of the second equality in (2.5.2), note that the determinant is a polynomial that must vanish when xi = x j for any pair i 6= j.)",
+   "page": "Section 2.5.1 (book p. 52), text lines 2890-2900",
+   "latex": "\\Delta(x) = \\det\\left( x_i^{\\, j-1} \\right)_{i, j = 1}^{N} = \\prod_{i < j} (x_j - x_i)",
+   "symbol_and_unit_ledger": {
+    "\\Delta(x)": "Vandermonde determinant of the eigenvalue vector, in (eigenvalue units)^{N(N-1)/2}",
+    "x_i": "eigenvalue coordinates"
+   },
+   "assumptions": [
+    "Eigenvalues of a self-adjoint matrix, viewed as coordinates on R^N",
+    "Raised to the power beta it becomes the interaction factor of the joint eigenvalue density"
+   ],
+   "breakdown_regime": "The determinant vanishes on every diagonal x_i = x_j, which forces eigenvalue collisions to have probability zero in the Gaussian ensembles (Theorem 2.5.2 corollary: eigenvalues are a.s. all distinct); ensembles without this Jacobian factor (for example Poisson point processes) show no repulsion.",
+   "domain": "eigenvalue interaction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats |Delta|^beta as a pairwise repulsion potential between levels: any point process model for ordered outcomes (ranked scores, arrival times, spectral lines) can be scored for repulsion by comparing its gap statistics against the Vandermonde-weighted null.",
+    "source_operator": "vandermonde_repulsion",
+    "telemetry": "Gap and spacing histograms of ordered outputs, tested for the small-gap suppression that a Vandermonde factor predicts."
+   }
+  },
+  {
+   "primitive_id": "joint_density_beta_ensembles",
+   "name": "Joint eigenvalue density of the Gaussian beta ensembles: |Delta(x)|^beta prod e^{-beta x_i^2/4}",
+   "verbatim_quote": "We are going to calculate the joint distribution of eigenvalues of a random symmetric or Hermitian matrix under a special type of probability law which displays a high degree of symmetry but still makes on-or-above-diagonal entries independent so that the theory of Wigner matrices applies.",
+   "page": "Section 2.5 (book p. 51), text lines 2811-2820",
+   "latex": "\\frac{dP_N^{(\\beta)}}{d\\mathrm{Leb}_N}(x) = \\bar{C}_N^{(\\beta)} |\\Delta(x)|^\\beta \\prod_{i=1}^{N} e^{-\\beta x_i^2 / 4}",
+   "symbol_and_unit_ledger": {
+    "\\beta": "Dyson index: 1, 2, 4 for real, complex, quaternionic self-adjoint matrices (dimension of the field over R)",
+    "|\\Delta(x)|^\\beta": "repulsion factor between eigenvalues",
+    "\\bar{C}_N^{(\\beta)}": "normalization given in closed form by (2.5.4) via the Selberg integral"
+   },
+   "assumptions": [
+    "Gaussian ensemble law of Section 2.5.1; eigenvalues ordered x_1 <= ... <= x_N in (2.5.3)",
+    "The same density with general confining potential V in place of x^2/4 defines the beta ensembles of Section 2.6"
+   ],
+   "breakdown_regime": "Exact solvability rests on the Gaussian weight; changing the potential preserves the Gibbs form (2.6.1) but closed forms for normalizations and local statistics are lost except in special cases.",
+   "domain": "gaussian ensembles",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine reads any system of interacting ordered levels as a Gibbs ensemble: a confining potential (cost of extreme values) times a Vandermonde repulsion (cost of crowding); fitting these two pieces separately is how spectral anomalies are attributed to drift versus interaction.",
+    "source_operator": "joint_density_beta_ensembles",
+    "telemetry": "Joint histograms of ordered eigenvalues from repeated windows, fit against the two factor form (potential times repulsion)."
+   }
+  },
+  {
+   "primitive_id": "log_sobolev_herbst_concentration",
+   "name": "Logarithmic Sobolev inequality plus Herbst argument: Lipschitz functionals have sub-Gaussian tails",
+   "verbatim_quote": "The interest in the logarithmic Sobolev inequality, in the context of concentration inequalities, lies in the following argument, that among other things, shows that LSI implies sub-Gaussian tails.",
+   "page": "Section 2.3.2 (book pp. 40-41), text lines 2225-2245",
+   "latex": "P\\left( |G - \\mathbb{E}_P G| \\ge \\delta \\right) \\le 2 e^{-\\delta^2 / (2 c |G|_L^2)}",
+   "symbol_and_unit_ledger": {
+    "c": "logarithmic Sobolev constant of the entry law (c = 1 for the standard Gaussian, Lemma 2.3.2)",
+    "|G|_L": "Lipschitz constant of the functional G in the Euclidean entry coordinates",
+    "\\delta": "deviation threshold, same units as G"
+   },
+   "assumptions": [
+    "Entry law satisfies the LSI, tensorizing to product measures with the same constant (2.3.1)",
+    "G is Lipschitz; for spectral functionals Lemma 2.3.1 supplies the constant, e.g. tr f(X) has constant at most sqrt(2N) |f|_L in the unnormalized scaling",
+    "The weaker Poincaré inequality (Definition 4.4.2) still yields sub-exponential tails (Lemma 4.4.3) when LSI fails"
+   ],
+   "breakdown_regime": "Constants degrade with the Lipschitz constant of the statistic: functionals of individual eigenvalues are not uniformly Lipschitz, and entry laws with heavy tails satisfy neither LSI nor a dimension-free Poincaré inequality.",
+   "domain": "concentration of measure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Concentration is the engine's license to trust a single realization: any reported statistic that is a Lipschitz function of many independent inputs comes with an explicit sub-Gaussian error budget computed from its Lipschitz constant, and statistics failing the Lipschitz audit are flagged as unstable.",
+    "source_operator": "log_sobolev_herbst_concentration",
+    "telemetry": "Lipschitz audits of pipeline statistics: empirical sensitivity of each reported number to single-input perturbations, compared with the tail bound."
+   }
+  },
+  {
+   "primitive_id": "ldp_empirical_measure_speed_n2",
+   "name": "Large deviation principle for L_N at speed N^2 with rate function I_V^beta built from logarithmic energy",
+   "verbatim_quote": "Then, the family of random measures LN satisfies, in M1 (R) equipped with the weak topology, a large deviation principle with speed N 2 and good rate function IβV .",
+   "page": "Section 2.6.1 (book pp. 72-73), text lines 4025-4050",
+   "latex": "I_V^\\beta(\\mu) = \\int V(x) \\, d\\mu(x) - \\frac{\\beta}{2} \\Sigma(\\mu) - c_V^\\beta, \\qquad \\Sigma(\\mu) = \\iint \\log |x - y| \\, d\\mu(x) d\\mu(y)",
+   "symbol_and_unit_ledger": {
+    "I_V^\\beta": "good rate function on probability measures, dimensionless (log probability per N^2)",
+    "V": "confining potential of the beta ensemble (2.6.1), satisfying the growth condition (2.6.2)",
+    "\\Sigma(\\mu)": "logarithmic energy (noncommutative entropy) of mu",
+    "c_V^\\beta": "normalizing constant, the infimum of the unnormalized functional (2.6.6)"
+   },
+   "assumptions": [
+    "Eigenvalues distributed by the Gibbs law (2.6.1) with potential V growing faster than log|x| in the sense of (2.6.2)",
+    "Speed N^2 reflects the pairwise (two-body) nature of the Vandermonde interaction"
+   ],
+   "breakdown_regime": "The principle prices deviations of the whole empirical measure; deviations of a single eigenvalue (for example pulling the top eigenvalue out) occur at the slower speed N and need the separate analysis of Section 2.6.2.",
+   "domain": "large deviations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rare spectral regimes are exponentially unlikely at rate N^2 times a computable energy gap: the engine prices 'the whole spectrum moved' scenarios with this rate function instead of treating them as generic model error, and uses the energy gap to rank which alternative spectra are plausible.",
+    "source_operator": "ldp_empirical_measure_speed_n2",
+    "telemetry": "Empirical spectra from stressed or anomalous windows, scored by the rate functional I_V^beta relative to the fitted equilibrium."
+   }
+  },
+  {
+   "primitive_id": "equilibrium_measure_logarithmic_energy",
+   "name": "Equilibrium measure: the unique minimizer of the rate function, characterized by a constant effective potential on its support",
+   "verbatim_quote": "IβV achieves its minimum value at unique σβV ∈ M1 (R). The measure σβV is compactly supported, and is characterized by the equality",
+   "page": "Section 2.6.1 (book p. 73), text lines 4050-4065",
+   "latex": "V(x) - \\beta \\langle \\sigma_V^\\beta, \\log |\\cdot - x| \\rangle = C_V^\\beta \\quad \\text{for } \\sigma_V^\\beta\\text{-a.e. } x, \\qquad V(x) - \\beta \\langle \\sigma_V^\\beta, \\log |\\cdot - x| \\rangle > C_V^\\beta \\quad \\text{off the support}",
+   "symbol_and_unit_ledger": {
+    "\\sigma_V^\\beta": "equilibrium (minimizing) probability measure",
+    "C_V^\\beta": "constant value of the effective potential on the support, related to c_V^beta by C = 2c - <sigma, V>",
+    "\\langle \\sigma, \\log|\\cdot - x|\\rangle": "logarithmic potential of sigma at x"
+   },
+   "assumptions": [
+    "I_V^beta is strictly convex (Lemma 2.6.2(d)), hence the minimizer is unique",
+    "Corollary 2.6.3: under the Gibbs law, L_N converges almost surely to sigma_V^beta, recovering limit laws such as the semicircle (quadratic V) as corollaries"
+   ],
+   "breakdown_regime": "The variational characterization presumes the Gibbs form with a fixed potential; multi-cut regimes and potentials with flat directions make support determination delicate, and non-Gibbs entry laws are outside the statement.",
+   "domain": "variational principles",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Limit spectra in the engine are computed as energy minimizers, not by simulation: given a confining cost and a repulsion strength, the predicted spectrum is the unique measure equalizing the effective potential on its support, and the equality-versus-inequality split tells the engine where mass may and may not sit.",
+    "source_operator": "equilibrium_measure_logarithmic_energy",
+    "telemetry": "Fitted potentials from observed spectra: the effective potential V(x) - beta <sigma, log|.-x|> is checked for constancy on the empirical support."
+   }
+  },
+  {
+   "primitive_id": "determinantal_correlation_kernel_hermite",
+   "name": "GUE correlation functions are determinants of the Hermite kernel K^(N)(x,y) = sum of oscillator wave-functions",
+   "verbatim_quote": "We now show that the joint distribution of the eigenvalues following the GUE has a nice determinantal form, see Lemma 3.2.2 below.",
+   "page": "Section 3.2.1 (book p. 95), text lines 5288-5300",
+   "latex": "\\rho_{p,N}^{(2)}(\\theta_1, \\dots, \\theta_p) = \\frac{(N-p)!}{N!} \\det_{k,l=1}^{p} K^{(N)}(\\theta_k, \\theta_l), \\qquad K^{(N)}(x, y) = \\sum_{k=0}^{N-1} \\psi_k(x) \\psi_k(y)",
+   "symbol_and_unit_ledger": {
+    "\\rho_{p,N}^{(2)}": "density of the law of p unordered GUE eigenvalues, mass per (eigenvalue unit)^p",
+    "K^{(N)}(x,y)": "correlation kernel built from normalized oscillator wave-functions psi_k, units of 1/(eigenvalue unit)",
+    "\\psi_k": "k-th normalized oscillator wave-function of Definition 3.2.1, satisfying the orthogonality relations (3.2.2)"
+   },
+   "assumptions": [
+    "GUE entries: complex Gaussian of unit variance as in Theorem 2.5.2",
+    "Hermite polynomials defined by the Rodrigues formula (3.2.1); orthogonality (3.2.2) is what collapses the density to a determinant"
+   ],
+   "breakdown_regime": "The determinantal form is special to beta = 2; the GOE and GSE have only a Pfaffian analogue (Section 3.9), and general Wigner matrices have no exact finite-N kernel at all.",
+   "domain": "determinantal processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Whenever the engine models a set of interacting ordered points (levels, ranks, arrival slots), a determinantal kernel is the exact solvable benchmark: all joint intensities factor through one two-point kernel, so multi-point questions reduce to kernel algebra instead of simulation.",
+    "source_operator": "determinantal_correlation_kernel_hermite",
+    "telemetry": "Empirical two-point correlation functions of ordered outputs, compared against determinants of a fitted kernel."
+   }
+  },
+  {
+   "primitive_id": "sine_kernel_bulk_limit",
+   "name": "Bulk scaling limit: rescaled GUE eigenvalue spacings converge to the sine kernel determinantal process (Gaudin-Mehta)",
+   "verbatim_quote": "As a consequence of Theorem 3.1.1, we will show that the theory of integrable systems applies and yields the following fundamental result concerning the behavior of spacings between eigenvalues in the bulk.",
+   "page": "Section 3.1 (book p. 91), text lines 5085-5110",
+   "latex": "K^{\\mathrm{sine}}(x, y) = \\frac{\\sin(x - y)}{\\pi (x - y)} \\quad (x \\ne y), \\qquad K^{\\mathrm{sine}}(x, x) = \\frac{1}{\\pi}",
+   "symbol_and_unit_ledger": {
+    "K^{sine}": "limiting bulk correlation kernel at unit mean spacing, 1/(spacing unit)",
+    "x, y": "eigenvalue locations rescaled by sqrt(N) about a bulk point, so that mean spacing is of order 1"
+   },
+   "assumptions": [
+    "GUE; the limit is taken at a fixed bulk location with |c| < 2 in the book's normalization (Theorem 3.1.1 and Exercise 3.7.5)",
+    "Convergence is of the full point process on compact sets, not only of one-point densities"
+   ],
+   "breakdown_regime": "The sine kernel describes the bulk only; near the spectral edge the Airy kernel takes over, and for real symmetric matrices the corresponding limits are Pfaffian, not determinantal.",
+   "domain": "local statistics, bulk",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Bulk universality is the engine's license to reuse one local spacing law across many different large systems: once a spectrum is in the bulk regime and properly rescaled, its spacing statistics are predicted by the sine kernel regardless of microscopic details.",
+    "source_operator": "sine_kernel_bulk_limit",
+    "telemetry": "Rescaled spacing histograms from the interior of empirical spectra, tested against sine kernel gap distributions."
+   }
+  },
+  {
+   "primitive_id": "painleve_v_bulk_gap",
+   "name": "Bulk gap distribution is governed by the sigma form of the Painlevé V equation (Jimbo-Miwa-Môri-Sato)",
+   "verbatim_quote": "The differential equation satisfied by σ is the σ -form of Painlevé V.",
+   "page": "Section 3.1 (book p. 92), text lines 5105-5125",
+   "latex": "(t \\sigma'')^2 + 4 (t \\sigma' - \\sigma)(t \\sigma' - \\sigma + (\\sigma')^2) = 0, \\qquad 1 - F(t) = \\exp\\left( \\int_0^t \\frac{\\sigma(x)}{x} dx \\right)",
+   "symbol_and_unit_ledger": {
+    "\\sigma": "auxiliary function whose logarithmic integral gives the gap distribution F of Theorem 3.1.2",
+    "F(t)": "limiting distribution function of bulk spacings on the rescaled scale",
+    "t": "gap length in units of mean spacing"
+   },
+   "assumptions": [
+    "GUE bulk scaling limit of Theorem 3.1.1",
+    "sigma is the solution singled out in Theorem 3.1.2 by its small t behavior recorded in (3.1.2)"
+   ],
+   "breakdown_regime": "The Painlevé V description is exact only in the scaling limit; at finite N there are corrections, and the GOE/GSE gap laws obey different (Pfaffian) equations.",
+   "domain": "integrable systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats distinguished nonlinear ODEs as compressed encodings of distribution laws: a gap law that would need a large simulation table is carried as one Painlevé transcendent with boundary conditions, and evaluated on demand.",
+    "source_operator": "sine_kernel_bulk_limit",
+    "telemetry": "Tail frequencies of large spacings in rescaled empirical spectra, compared with the Painlevé V gap law."
+   }
+  },
+  {
+   "primitive_id": "airy_kernel_edge_scaling",
+   "name": "Edge scaling: eigenvalues near the spectral edge, blown up by N^{2/3}, converge to the Airy kernel process",
+   "verbatim_quote": "The fundamental result concerning the eigenvalues of the GUE at the edge of the spectrum is the following.",
+   "page": "Section 3.1 (book pp. 93-94), text lines 5170-5190",
+   "latex": "K^{\\mathrm{Airy}}(x, y) = \\frac{\\mathrm{Ai}(x) \\mathrm{Ai}'(y) - \\mathrm{Ai}'(x) \\mathrm{Ai}(y)}{x - y}, \\qquad \\lim_{N \\to \\infty} P\\left[ N^{2/3} \\left( \\frac{\\lambda_i^N}{\\sqrt{N}} - 2 \\right) \\notin [t, t'], \\ i = 1, \\dots, N \\right] = 1 + \\sum_{k=1}^{\\infty} \\frac{(-1)^k}{k!} \\int_t^{t'} \\cdots \\int_t^{t'} \\det_{i,j=1}^{k} A(x_i, x_j) \\prod_{j=1}^{k} dx_j",
+   "symbol_and_unit_ledger": {
+    "Ai": "Airy function of Definition 3.1.3, satisfying the Airy equation (3.1.4)",
+    "A(x,y)": "Airy kernel, limiting edge correlation kernel",
+    "N^{2/3}": "edge fluctuation scale in the book's normalization where eigenvalues are of order sqrt(N)",
+    "\\lambda_i^N": "eigenvalues of the unnormalized GUE matrix"
+   },
+   "assumptions": [
+    "GUE; Theorem 3.1.4 gives vague convergence of the rescaled edge process",
+    "The Airy function is defined by the contour integral (3.1.3)"
+   ],
+   "breakdown_regime": "The N^{2/3} scaling and Airy limit are edge phenomena; they fail in the bulk (sine kernel regime) and the theorem as stated does not by itself give weak convergence of the largest eigenvalue, which needs Theorem 3.1.5.",
+   "domain": "local statistics, edge",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Extremes of large noisy systems live on a different scale than the bulk: the engine budgets fluctuations of maxima with the N^{2/3} edge scaling and Airy statistics, not with bulk Gaussian intuition, whenever it reasons about best-case or worst-case outcomes of many comparable components.",
+    "source_operator": "airy_kernel_edge_scaling",
+    "telemetry": "Top order statistics of repeated large-system outputs, rescaled and compared with Airy process predictions."
+   }
+  },
+  {
+   "primitive_id": "tracy_widom_painleve_ii",
+   "name": "Tracy-Widom law: the limiting distribution of the largest GUE eigenvalue, expressed through Painlevé II",
+   "verbatim_quote": "The function F2 (·) is a distribution function that admits the representation \u0012 Z∞ \u0013 F2 (t) = exp − (x − t)q(x)2 dx , (3.1.7) t where q satisfies q′′ = tq + 2q3 , q(t) ∼ Ai(t) , as t → +∞. (3.1.8) The function F2 (·) is the Tracy-Widom distribution. Equation (3.1.8) is the Painlevé II equation.",
+   "page": "Section 3.1 (book p. 94), text lines 5198-5215",
+   "latex": "F_2(t) = \\exp\\left( - \\int_t^{\\infty} (x - t) q(x)^2 dx \\right), \\qquad q'' = t q + 2 q^3, \\quad q(t) \\sim \\mathrm{Ai}(t) \\text{ as } t \\to +\\infty",
+   "symbol_and_unit_ledger": {
+    "F_2(t)": "Tracy-Widom distribution function for beta = 2",
+    "q": "the Hastings-McLeod type solution of Painlevé II selected by the Airy boundary condition in (3.1.8)"
+   },
+   "assumptions": [
+    "GUE, with the edge rescaling of Theorem 3.1.4",
+    "Theorem 3.1.5 upgrades the vague convergence of Theorem 3.1.4 to a genuine distribution function"
+   ],
+   "breakdown_regime": "F_2 is the beta = 2 law; beta = 1 and beta = 4 have different Tracy-Widom distributions, and non-Gaussian Wigner matrices require universality arguments beyond the book's Gaussian proof to inherit the same limit.",
+   "domain": "extreme value statistics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The largest eigenvalue of a pure noise matrix is Tracy-Widom, not Gaussian and not semicircle: the engine uses F_2 (and its beta = 1 analogue) as the null law when deciding whether an observed top component is a real spike or the expected extreme of noise.",
+    "source_operator": "airy_kernel_edge_scaling",
+    "telemetry": "Empirical distributions of rescaled top eigenvalues across many windows, tested against F_2 quantiles."
+   }
+  },
+  {
+   "primitive_id": "weyl_integration_formula",
+   "name": "Weyl integration formula: integrals of eigenvalue functions over self-adjoint matrices pick up the factor |Delta(x)|^beta",
+   "verbatim_quote": "According to Corollary E.12, the hypothesis that ϕ (X) depends only on the eigenvalues of X could be restated as the condition that ϕ (UXU ∗) = ϕ (X) for all X ∈ Hn (F) and U ∈ Un (F).",
+   "page": "Section 4.1.1 (book pp. 190-191), text lines 10315-10330",
+   "latex": "\\int \\phi \\, d\\rho_{H_n(\\mathbb{F})} = \\frac{\\rho[U_n(\\mathbb{F})]}{(\\rho[U_1(\\mathbb{F})])^n \\, n!} \\int_{\\mathbb{R}^n} \\phi(x) |\\Delta(x)|^\\beta \\prod_{i=1}^{n} dx_i",
+   "symbol_and_unit_ledger": {
+    "\\phi": "nonnegative Borel function on self-adjoint matrices depending only on the eigenvalues (Proposition 4.1.1)",
+    "\\rho_{H_n(\\mathbb{F})}": "volume measure on the self-adjoint matrices over F",
+    "\\rho[U_n(\\mathbb{F})]": "total volume of the unitary group U_n(F)",
+    "\\beta": "1, 2, 4 according as F = R, C, H"
+   },
+   "assumptions": [
+    "phi is conjugation invariant, equivalently a function of the eigenvalues alone (Corollary E.12 restatement)",
+    "F is one of the (skew) fields R, C, H with the matrix theory of Appendix E"
+   ],
+   "breakdown_regime": "The formula is a change of variables, not a probabilistic statement: it produces the Jacobian |Delta|^beta for any invariant law, but probability content enters only after a specific invariant density (Gaussian, Wishart, Haar) is inserted.",
+   "domain": "integration on matrix spaces",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every spectral density the engine writes down is audited for its Jacobian: passing from matrix entries to eigenvalues always costs the Vandermonde factor, and a model that omits it has implicitly assumed independent eigenvalues, which the engine treats as a modeling error.",
+    "source_operator": "weyl_integration_formula",
+    "telemetry": "Change-of-variables checks in derived spectral models: presence and power of the Vandermonde factor in each density the engine adopts."
+   }
+  },
+  {
+   "primitive_id": "dyson_brownian_motion",
+   "name": "Dyson Brownian motion: eigenvalues of a matrix Brownian motion follow an SDE with pairwise repulsion drift",
+   "verbatim_quote": "Note that in Theorem 4.3.2, we do not assume that λ N (0) ∈ ∆N . The fact that λ N (t) ∈ ∆ N for all t > 0 is due to the natural repulsion of the eigenvalues.",
+   "page": "Section 4.3.1 (book p. 252), text lines 13357-13382",
+   "latex": "d\\lambda_i(t) = \\sqrt{\\frac{2}{\\beta N}} \\, dW_i(t) + \\frac{1}{N} \\sum_{j: j \\ne i} \\frac{dt}{\\lambda_i(t) - \\lambda_j(t)}, \\qquad i = 1, \\dots, N",
+   "symbol_and_unit_ledger": {
+    "\\lambda_i(t)": "i-th ordered eigenvalue at time t, eigenvalue units",
+    "W_i": "independent standard Brownian motions driving the matrix entries",
+    "\\beta": "1 or 2 in the setup of Section 4.3.1 (Dyson's observation), with the SDE well posed for beta >= 1 by Lemma 4.3.3",
+    "1/(lambda_i - lambda_j)": "repulsion drift between eigenvalue pairs, singular at collisions"
+   },
+   "assumptions": [
+    "The matrix process is X^{N,beta}(t) = X^{N,beta}(0) + H^{N,beta}(t), a Hermitian Brownian motion perturbation as in (4.3.2)",
+    "Eigenvalues stay in the open simplex of strictly ordered vectors for all t > 0 almost surely"
+   ],
+   "breakdown_regime": "The drift is singular at collisions and the equation is understood as the unique weak solution of Theorem 4.3.2; for beta < 1 collisions can occur and the non-intersecting picture fails.",
+   "domain": "stochastic dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Spectra evolve as repelling particles: when the engine tracks how a spectrum moves as data accumulates, it models eigenvalue paths with a noise term plus a 1/(gap) repulsion drift, which explains why levels avoid crossing and why near-degeneracies are transient.",
+    "source_operator": "dyson_brownian_motion",
+    "telemetry": "Time series of ordered eigenvalues across successive data windows, with gap dynamics compared to the repulsion drift prediction."
+   }
+  },
+  {
+   "primitive_id": "dumitriu_edelman_tridiagonal",
+   "name": "Dumitriu-Edelman tridiagonal model: a sparse tridiagonal matrix realizes the beta ensemble for every beta > 0",
+   "verbatim_quote": "We consider in this section a class of random matrices that are tri-diagonal and possess joint distribution of eigenvalues that generalize the classical GOE, GUE and GSE matrices.",
+   "page": "Section 4.5 (book p. 305), text lines 16185-16195",
+   "latex": "C_N(\\beta) \\, |\\Delta(\\lambda)|^\\beta \\, e^{-\\frac{\\beta}{4} \\sum_{i=1}^{N} \\lambda_i^2}",
+   "symbol_and_unit_ledger": {
+    "H_N": "tridiagonal symmetric matrix with diagonal entries sqrt(2/beta) xi_i (xi_i standard Gaussian) and off-diagonals Y_{N-i}/sqrt(beta) with Y_i distributed as chi_{i beta} (Section 4.5.1 construction)",
+    "C_N(\\beta)": "normalization constant, read off from (2.5.11) per Theorem 4.5.35",
+    "\\lambda": "eigenvalue vector of H_N"
+   },
+   "assumptions": [
+    "Independent Gaussian diagonal variables and independent chi off-diagonal variables with the degrees of freedom of the construction",
+    "Theorem 4.5.35 (Edelman-Dumitriu): the eigenvalue law of H_N is exactly the beta ensemble density (4.5.1)"
+   ],
+   "breakdown_regime": "The tridiagonal representative has the right eigenvalue law but not the right eigenvectors or entries of the dense ensembles; conclusions about eigenvectors drawn from the tridiagonal model do not transfer.",
+   "domain": "beta ensembles, sparse models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A dense interacting system can have a sparse exact representative for its spectrum: the engine uses tridiagonal reductions to simulate and test beta ensemble spectra at O(N) cost per sample instead of O(N^3) dense decompositions, while remembering that eigenvector information is not preserved.",
+    "source_operator": "dumitriu_edelman_tridiagonal",
+    "telemetry": "Tridiagonal coefficients (Gaussian diagonals, chi off-diagonals) generated per simulation run, with spectra checked against the target beta ensemble law."
+   }
+  },
+  {
+   "primitive_id": "noncommutative_probability_space",
+   "name": "Noncommutative probability space: a unital algebra with a normalized linear functional (a state) playing the role of expectation",
+   "verbatim_quote": "A noncommutative probability space is a pair (A , φ ) where A is a unital algebra over C and φ is a linear functional φ : A →C so that φ (1) = 1.",
+   "page": "Section 5.2.1 (book p. 328), text lines 17290-17295",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A is a unital algebra over C; phi(1) = 1",
+    "Leading examples from Example 5.2.2: classical L-infinity with expectation, group algebras, matrices with the normalized trace N^{-1} tr, and bounded operators on a Hilbert space"
+   ],
+   "breakdown_regime": "Algebraic freeness needs no positivity, but spectral conclusions need the stronger C* and tracial settings of Sections 5.2.2 and 5.5; a non-tracial or non-positive phi breaks the link between laws and measures.",
+   "domain": "free probability foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine abstracts any system whose observables form an algebra with an averaging functional: matrices with normalized trace, classical random variables with expectation, and operator models all become instances of one object, so results proved once in the abstract setting transfer to each concrete system.",
+    "source_operator": "noncommutative_probability_space",
+    "telemetry": "Averaging functionals actually computed in the pipeline: normalized traces of matrix polynomials and empirical means of observables, logged with the algebra they act on."
+   }
+  },
+  {
+   "primitive_id": "free_independence",
+   "name": "Free independence: alternating products of centered elements from distinct free subalgebras have phi equal to zero",
+   "verbatim_quote": "Note that in contrast to the classical notion of independence, repetition of indices is allowed provided they are not consecutive; thus, free independence is a truly noncommutative notion.",
+   "page": "Section 5.3.1 (book p. 351), text lines 18323-18340",
+   "latex": "\\varphi(a_1 \\cdots a_n) = 0 \\quad \\text{whenever } \\varphi(a_j) = 0 \\text{ for all } j \\text{ and consecutive factors come from distinct subalgebras}",
+   "symbol_and_unit_ledger": {
+    "a_j": "elements of subalgebras A_{k(j)} with k(j) different from k(j+1)",
+    "\\varphi(a_j) = 0": "the centering condition of Definition 5.3.1"
+   },
+   "assumptions": [
+    "Each subalgebra contains the unit of A",
+    "Remark 5.3.2(i): freeness differs from commuting independence already at the word XYXY, which vanishes under freeness for centered X, Y but factorizes to a nonzero value under classical independence"
+   ],
+   "breakdown_regime": "Freeness is not implied by entrywise independence of coordinates in a fixed basis, nor by classical independence of commuting variables; it is an asymptotic property of large matrices in generic relative position, and finite systems satisfy it only approximately.",
+   "domain": "free probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Freeness is the engine's model of independence for noncommuting components: when two large subsystems are in generic relative position (for example related by a random rotation), their mixed moments are computed by the free rule, not the classical tensor rule, and the choice changes predicted variances of composite scores.",
+    "source_operator": "free_independence",
+    "telemetry": "Mixed moment audits: phi of alternating words in subsystem observables, compared against the free prediction (zero after centering) and the classical prediction."
+   }
+  },
+  {
+   "primitive_id": "free_cumulants_moment_formula",
+   "name": "Free cumulants: multilinear functionals defined by the moment-cumulant formula summed over non-crossing partitions only",
+   "verbatim_quote": "Whereas classical cumulants are related to moments via a sum on the whole set of partitions, free cumulants are defined with the help of non-crossing partitions (recall Definition 2.1.4).",
+   "page": "Section 5.3.2 (book p. 357), text lines 18565-18575",
+   "latex": "\\varphi(a_1 \\cdots a_n) = \\sum_{\\pi \\in NC(n)} k_\\pi(a_1, \\dots, a_n)",
+   "symbol_and_unit_ledger": {
+    "k_n": "n-th free cumulant functional, multilinear (Definition 5.3.13)",
+    "NC(n)": "lattice of non-crossing partitions of {1, ..., n}",
+    "k_\\pi": "product of cumulants over the blocks of pi"
+   },
+   "assumptions": [
+    "The system (5.3.5) has a unique solution because its coefficient matrix is triangular with ones on the diagonal (Lemma 5.3.14)",
+    "Classical cumulants use the full partition lattice; restricting to NC(n) is the single change that produces free probability"
+   ],
+   "breakdown_regime": "Free cumulants linearize free addition only; for classically independent summands the classical cumulants are the additive ones, and mixing the two calculi gives wrong moment predictions.",
+   "domain": "free probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine keeps two cumulant calculi and chooses by dependency structure: sums over all partitions for classical independence, sums over non-crossing partitions for free independence; the partition lattice used is recorded with every derived moment so the choice is auditable.",
+    "source_operator": "free_cumulants_moment_formula",
+    "telemetry": "Moment-to-cumulant conversions in both calculi for composite observables, with the lattice choice logged per computation."
+   }
+  },
+  {
+   "primitive_id": "freeness_iff_mixed_cumulants_vanish",
+   "name": "Characterization of freeness: subalgebras are free if and only if all mixed free cumulants vanish",
+   "verbatim_quote": "We now turn to the description of freeness in terms of cumulants, which is analogous to the characterization of independence by cumulants in classical probability.",
+   "page": "Section 5.3.2 (book p. 359), text lines 18655-18675",
+   "latex": "k_n(a_1, \\dots, a_n) = 0 \\quad \\text{if there exist } 1 \\le l, k \\le n \\text{ with } j(l) \\ne j(k)",
+   "symbol_and_unit_ledger": {
+    "j(i)": "index of the subalgebra A_{j(i)} containing a_i",
+    "k_n": "n-th free cumulant",
+    "n \\ge 2": "range of the characterization in Theorem 5.3.15"
+   },
+   "assumptions": [
+    "A_1, ..., A_m are unital subalgebras of one noncommutative probability space",
+    "Proposition 5.3.16: cumulants with a unit entry vanish for n >= 2, so no centering is needed in the criterion"
+   ],
+   "breakdown_regime": "The criterion is exact in the abstract algebra; for finite random matrices it holds only in the limit, so empirical mixed cumulants are small but nonzero and need a size threshold before freeness is declared.",
+   "domain": "free probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's testable certificate of freeness: estimate mixed free cumulants of two subsystems; if they vanish to within the finite-size noise floor, free formulas are licensed for the pair, and if a mixed cumulant is materially nonzero, free reasoning about that pair is vetoed.",
+    "source_operator": "free_cumulants_moment_formula",
+    "telemetry": "Estimated mixed cumulants k_n across subsystem pairs for n = 2, 3, 4, tracked against the noise floor as system size grows."
+   }
+  },
+  {
+   "primitive_id": "free_additive_convolution",
+   "name": "Free additive convolution: the law of a sum of free variables, with free cumulants adding term by term",
+   "verbatim_quote": "Our goal is to determine the law of a + b or of ab when a, b are free.",
+   "page": "Section 5.3.3 (book p. 362), text lines 18830-18845",
+   "latex": "k_n(a + b) = k_n(a) + k_n(b) \\quad \\text{for all } n \\ge 1, \\qquad \\mu_{a+b} = \\mu_a \\boxplus \\mu_b",
+   "symbol_and_unit_ledger": {
+    "\\boxplus": "free additive convolution of laws (Definition 5.3.20)",
+    "\\mu_a, \\mu_b": "laws of the free variables a and b",
+    "k_n(a)": "n-th free cumulant of a alone, k_n(a, ..., a)"
+   },
+   "assumptions": [
+    "a and b are free and bounded in the treatment of Section 5.3.3 (unbounded case in Section 5.3.5)",
+    "The law of the pair (a, b) is determined by the marginal laws under freeness (Remark 5.3.2, part 2)"
+   ],
+   "breakdown_regime": "If a and b are classically independent and commuting, the sum's law is the classical convolution, not the free one; applying boxplus to commuting summands distorts the predicted spectrum.",
+   "domain": "free convolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Adding two freely independent noise or signal components corresponds spectrally to free additive convolution: the engine predicts the spectrum of a sum of large matrices by boxplus of the component spectra, which correctly produces effects like semicircle widening that classical convolution misses.",
+    "source_operator": "free_additive_convolution",
+    "telemetry": "Spectra of sums of model components, compared with the free additive convolution of the separately measured component spectra."
+   }
+  },
+  {
+   "primitive_id": "r_transform_linearization",
+   "name": "R-transform: the generating series of free cumulants, additive under free additive convolution",
+   "verbatim_quote": "By Lemma 5.3.21, the R-transform is to free probability what the log-Fourier transform is to classical probability in the sense that it is linear for free additive convolution as stated by the next corollary.",
+   "page": "Section 5.3.3 (book p. 363), text lines 18865-18880",
+   "latex": "R_a(z) = \\sum_{n \\ge 0} k_{n+1}(a) z^n, \\qquad R_{\\mu_a \\boxplus \\mu_b} = R_{\\mu_a} + R_{\\mu_b}",
+   "symbol_and_unit_ledger": {
+    "R_a(z)": "R-transform of the law of a (Definition 5.3.22), a formal power series in z",
+    "k_{n+1}(a)": "free cumulants of a",
+    "z": "formal (later analytic) spectral variable"
+   },
+   "assumptions": [
+    "a, b bounded and free (Corollary 5.3.23, equalities between formal series)",
+    "The book then gives a more tractable definition of the R-transform through the Stieltjes transform"
+   ],
+   "breakdown_regime": "As formal series the identity is algebraic; analytic use requires the measures to have compact support (or the extensions of Section 5.3.5), and the transform of a sum of non-free variables is not the sum of transforms.",
+   "domain": "free harmonic analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The R-transform is the engine's addition table for spectra: component spectra are converted once to R-transforms, combined by plain addition, and converted back, replacing expensive spectral simulations of sums with series arithmetic.",
+    "source_operator": "free_additive_convolution",
+    "telemetry": "R-transform series coefficients (free cumulants) estimated per component, with sums checked against directly measured spectra of combined systems."
+   }
+  },
+  {
+   "primitive_id": "s_transform_multiplicative",
+   "name": "S-transform: multiplicative analogue of the R-transform, multiplicative under free multiplicative convolution",
+   "verbatim_quote": "We next prove that the S-transform plays the same role in free probability that Mellin's transform does in classical probability.",
+   "page": "Section 5.3.3 (book p. 369), text lines 19155-19175",
+   "latex": "S_{\\mu_a}(z) := \\frac{1 + z}{z} m_a^{-1}(z), \\qquad S_{ab}(z) = S_a(z) S_b(z)",
+   "symbol_and_unit_ledger": {
+    "S_{\\mu_a}": "S-transform of the law of a (Definition 5.3.29)",
+    "m_a": "moment generating series of a, inverted as a formal power series",
+    "\\varphi(a) \\ne 0": "required for m_a to be invertible as a formal series"
+   },
+   "assumptions": [
+    "a, b free and bounded with phi(a), phi(b) nonzero (Lemma 5.3.30); extensions when a mean vanishes are in Exercise 5.3.31",
+    "The product law mu_a boxtimes mu_b is the free multiplicative convolution"
+   ],
+   "breakdown_regime": "Variables with phi(a) = 0 fall outside the basic definition; products of non-free or commuting variables follow the classical Mellin rule instead, and confusing the two misprices compounded effects.",
+   "domain": "free harmonic analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Multiplicative composition of free components (a signal passed through an independent random channel, a covariance times a rotation) is handled by multiplying S-transforms: the engine's tool for predicting spectra of products, where naive eigenvalue multiplication is wrong.",
+    "source_operator": "free_cumulants_moment_formula",
+    "telemetry": "Spectra of products of model components, compared with free multiplicative convolution computed from component S-transforms."
+   }
+  },
+  {
+   "primitive_id": "free_central_limit_theorem",
+   "name": "Free central limit theorem: normalized sums of free centered variables converge to the semicircle law",
+   "verbatim_quote": "One of the most important of such generalizations is the free central limit theorem.",
+   "page": "Section 5.3.4 (book p. 371), text lines 19278-19295",
+   "latex": "X_N = \\frac{1}{\\sqrt{N}} \\sum_{i=1}^{N} a_i \\ \\longrightarrow\\ \\text{standard semicircle distribution in law}",
+   "symbol_and_unit_ledger": {
+    "a_i": "free self-adjoint variables in a tracial noncommutative probability space, with phi(a_i) = 0 and phi(a_i^2) = 1",
+    "X_N": "normalized sum of Lemma 5.3.32",
+    "sup_j |phi(a_k^j)| bounded": "uniform moment condition (5.3.23) of the lemma (indices as printed there)"
+   },
+   "assumptions": [
+    "The a_i are free, identically normalized to mean 0 and second moment 1, in a space with a tracial state",
+    "Proof mechanism: by Lemma 5.3.21 the cumulants of X_N of order p >= 3 scale away, leaving only k_2 = 1, the cumulant sequence of the semicircle"
+   ],
+   "breakdown_regime": "The attractor is the semicircle, not the Gaussian: using Gaussian tails for sums of free variables is a category error; dependence that breaks freeness, or infinite second moments, changes or destroys the limit.",
+   "domain": "limit laws",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Aggregation changes the limit law with the dependency type: the engine classifies an aggregate as classical (Gaussian limit) or free (semicircle limit) before assigning tail behavior, because the two limits have different supports, tails, and extreme value behavior.",
+    "source_operator": "free_central_limit_theorem",
+    "telemetry": "Limit-shape diagnostics on aggregates: fitted support and tail shape of normalized sums, classified as Gaussian-like or semicircle-like."
+   }
+  },
+  {
+   "primitive_id": "asymptotic_freeness_wigner",
+   "name": "Asymptotic freeness: independent Wigner matrices converge in law to free semicircular variables (Voiculescu)",
+   "verbatim_quote": "Random matrices played a central role in free probability since Voiculescu's seminal observation that independent Gaussian Wigner matrices converge in distribution as their size goes to infinity to free semi-circular variables (see Theorem 5.4.2).",
+   "page": "Section 5.4 (book p. 377), text lines 19561-19580",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Theorem 5.4.2: finitely many independent Wigner matrices (beta = 1 or 2) with uniformly bounded entry moments (5.4.1), centered entries of unit second moment",
+    "Convergence in law means convergence of phi_N of every noncommutative polynomial in the matrices"
+   ],
+   "breakdown_regime": "The convergence is in law (moments), not in norm; it also requires the matrices to be independent with generic eigenbases, and fails for matrices sharing eigenvectors or built from common components.",
+   "domain": "free probability and random matrices",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This theorem is the bridge the engine stands on: large independent matrix components may be replaced by abstract free variables, and all mixed quantities computed in the free algebra, with an explicit error expectation that the replacement is asymptotic, not exact.",
+    "source_operator": "free_independence",
+    "telemetry": "Mixed trace moments of independent matrix components at increasing sizes, checked for convergence to the free predictions."
+   }
+  },
+  {
+   "primitive_id": "strong_convergence_operator_norm",
+   "name": "Strong convergence: operator norms of polynomials in independent GUE matrices converge to the norms of the free limits",
+   "verbatim_quote": "The goal of this section is to show that not only do the traces of polynomials in Gaussian Wigner matrices converge to the traces of polynomials in free semicircular variables, as shown in Theorem 5.4.2, but that this convergence extends to the operator norm",
+   "page": "Section 5.5 (book p. 396), text lines 20510-20530",
+   "latex": "\\lim_{N \\to \\infty} \\left\\| P\\left( \\frac{X_1^N}{\\sqrt{N}}, \\dots, \\frac{X_m^N}{\\sqrt{N}} \\right) \\right\\| = \\| P(S_1, \\dots, S_m) \\| \\quad \\text{a.s.}",
+   "symbol_and_unit_ledger": {
+    "X_i^N": "independent GUE matrices",
+    "S_i": "free semicircular variables in a C* probability space with faithful tracial state",
+    "P": "noncommutative polynomial in m variables",
+    "\\| \\cdot \\|": "operator norm (largest singular value) on the matrix side, C* norm on the free side"
+   },
+   "assumptions": [
+    "Gaussian (GUE) entries; Theorem 5.5.1 as stated covers the Gaussian case (Haagerup-Thorbjørnsen theorem)",
+    "The limit is almost sure, strengthening the in-law convergence of Theorem 5.4.2"
+   ],
+   "breakdown_regime": "Norm convergence is strictly stronger than moment convergence and can fail where moment convergence holds; outliers in a single realization are exactly what the moment method cannot see and this theorem controls, for Gaussian matrices.",
+   "domain": "strong convergence",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Extremes of composite systems are predicted from the free model only under strong convergence: the engine distinguishes conclusions licensed by moment convergence (averages, spectra) from conclusions needing norm convergence (worst case behavior of polynomials of components), and does not promote the second kind without this theorem's hypotheses.",
+    "source_operator": "asymptotic_freeness_wigner",
+    "telemetry": "Largest singular values of polynomial combinations of components across repeated trials, compared with the C* norm of the free limit."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "b6476d8715b01a7b-t1",
+   "think": "This book is a systematic construction of one claim: the eigenvalues of a large random matrix are not a disorderly cloud but a structured statistical system whose laws can be computed at three distinct scales, and those laws are far more universal than the matrix entries that generate them. The architecture runs from the concrete to the abstract. Chapter 2 builds the Wigner model, a symmetric or Hermitian matrix with independent centered entries scaled by one over root N, and proves Wigner's semicircle law twice over, first by counting closed walks in the trace moment method, where only pairings survive and non-crossing pairings dominate, and then by resolvent methods built on the Stieltjes transform. The Catalan numbers appear as the moments of the limit, which is the first sign that combinatorics, not analysis, is the engine room of the subject: the same Dyck paths and non-crossing partitions return in Chapter 5 as the definition of free cumulants. Around the global law the book layers the corrections: a central limit theorem for linear statistics at scale one over N, concentration of Lipschitz spectral functionals from logarithmic Sobolev inequalities, and the Furedi-Komlós control of the largest eigenvalue, where the moment method is pushed to growing order. Chapter 2 closes by replacing fixed finite N reasoning with a large deviation principle at speed N squared, whose rate function is an energy with a logarithmic interaction term; the semicircle law falls out as the minimizer of that energy, which reframes a limit theorem as a variational principle. Chapter 3 turns to the local scale for the Gaussian ensembles, where the joint eigenvalue density is exact: a confining Gaussian weight times the Vandermonde determinant raised to the Dyson index beta. Orthogonal polynomial machinery, concretely the Hermite functions for the GUE, collapses every correlation function to a determinant of one kernel, gap probabilities become Fredholm determinants, and scaling limits split into two universality classes: the sine kernel in the bulk, with gap laws governed by Painlevé V, and the Airy kernel at the edge, with the largest eigenvalue governed by the Tracy-Widom law through Painlevé II. Chapter 4 generalizes the geometry: Weyl integration formulas over the classical groups explain where the Vandermonde factor comes from, Wishart matrices get their Laguerre form, eigenvalues are recast as a determinantal point process with correlation functions, Dyson Brownian motion shows the spectrum evolving as repelling particles under an explicit stochastic differential equation, and the Dumitriu-Edelman tridiagonal model realizes every beta ensemble with a sparse matrix. Chapter 5 then performs the conceptual inversion: instead of matrices approximating an abstract limit, Voiculescu's free probability is presented as the limit theory itself. A noncommutative probability space replaces a probability space, the normalized trace makes a matrix into a variable whose law is its spectral measure, free independence replaces independence with a rule phrased on alternating centered words, free cumulants sum over non-crossing partitions only, the R-transform linearizes free addition exactly as the log Fourier transform linearizes classical convolution, the S-transform does the same for free multiplication, and the free central limit theorem returns the semicircle as the free Gaussian. The bridge theorem, asymptotic freeness of independent Wigner matrices, certifies that the abstract calculus is the correct large N description of concrete matrices, and strong convergence upgrades moment convergence to operator norm convergence for polynomials in GUE matrices. For a reasoning engine the transferable content is a discipline: know which scale a question lives at, global law, fluctuation, large deviation, or local spacing, because each scale has its own limit object and its own error budget; treat spectra through transforms and resolvents rather than raw eigenvalues; model pairwise repulsion explicitly through the Vandermonde factor; and classify independence before computing, since classical and free independence give different convolutions, different cumulants, and different limit laws. The book also teaches what not to trust: moment methods say nothing about single eigenvalues, determinantal formulas are special to beta equal to two, freeness is asymptotic and basis dependent, and every universality claim has hypotheses on moments and tails that heavy tailed or correlated data will violate. A second lesson is how the book handles universality as a theorem shaped claim rather than a slogan. The semicircle law holds for every entry law with matching variance and enough moments, so the limit forgets the entries; the Tracy-Widom law is proved here only for the Gaussian case, and the text is careful to separate what is proved from what is expected, which is exactly the discipline a reasoning engine needs when it transports a result from a benchmark ensemble to real data. The general potential beta ensembles of Chapter 2 and Chapter 4 make the same point variationally: change the confining potential and the equilibrium measure changes, but the method, minimize the energy, check the variational inequalities on and off the support, does not. The book also insists on the difference between convergence in law and almost sure convergence, and between the two upgrades again to norm convergence in Chapter 5, because each mode licenses different conclusions downstream: moments license averages, almost sure convergence licenses single realization claims in the limit, and norm convergence licenses worst case claims about composite systems. A third lesson is computational. Resolvents and Stieltjes transforms turn spectral questions into complex analysis; orthogonal polynomials turn correlation functions into determinants; tridiagonalization turns a dense beta ensemble into a sparse simulation primitive; and cumulant transforms turn the convolution of spectra into addition or multiplication of series. Each is a reduction of an expensive object to a cheaper exact surrogate, with the reduction's hypotheses printed next to it.",
+   "retrocausal_genealogy": "The lineage starts outside mathematics: Wigner introduced random matrices in the 1950s to model the resonance spectra of heavy nuclei, guessing that complex quantum systems have universal level statistics. Marchenko and Pastur supplied the sample covariance law in 1967 from the data analysis side. Dyson classified the three symmetry classes and invented the Brownian motion picture of eigenvalues as a Coulomb gas, while Mehta and Gaudin made the Gaussian ensembles exactly solvable. Tracy and Widom closed the edge problem in the 1990s by connecting the largest eigenvalue to Painlevé equations. In parallel, Voiculescu built free probability in the 1980s from operator algebras, and his 1991 observation that large random matrices realize it fused the two lines into one theory, which this 2010 treatise codifies.",
+   "theory_of_mind": "The authors believe the reader is a probabilist who distrusts physics style heuristics and wants every universality claim earned by a proof with stated hypotheses. Their model of the domain is that random matrix theory is one subject, not three: the combinatorics of moments, the analysis of orthogonal polynomials and integrable systems, and the algebra of free probability are presented as three coordinate systems on the same object, and the book keeps translating between them so the reader learns to choose coordinates per problem. They assume the field has matured enough for a canonical graduate exposition, and they write as systematizers: definitions first, exact Gaussian case second, generalizations marked with their precise costs.",
+   "cross_layer_veto": "This work vetoes several tempting shortcuts in any larger reasoning stack. It vetoes Gaussian intuition for extremes: the largest eigenvalue is Tracy-Widom and bulk spacings are sine kernel, so tail layers must not reuse central limit calibrations. It vetoes independence assumptions between eigenvalues: the Vandermonde repulsion factor means spectral points are never independent, and any layer treating them as independent Poisson points is overruled. It vetoes applying free convolution formulas to commuting or classically independent components, and classical convolution to freely independent ones; the cumulant certificate decides which calculus is legal. It also vetoes reading structure into spectra inside the Marchenko-Pastur or semicircle bulk: mass inside the null support is noise by default, and only out of support mass may pass upward as signal."
+  }
+ ],
+ "universal_lens": "Read as a general template, the book says that any large system of weakly distinguished components develops a statistical mechanics of its own: a global equilibrium law set by an energy minimization, Gaussian fluctuations around it at a smaller scale, exponentially rare deviations priced by the same energy, and universal local statistics that forget the microscopic details. The practical template is to identify the three scales before modeling, to find the interaction term that couples the components, here the logarithmic Vandermonde repulsion, and to expect the limit objects to be variational and transform based rather than closed form densities.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the take is methodological: this is the reference construction for how a mature quantitative field organizes itself, from exactly solvable benchmark cases to universality classes with explicit hypotheses. It supplies the Institute's standard for spectral reasoning about large noisy systems: null laws first (semicircle, Marchenko-Pastur), fluctuation budgets second (central limit and concentration), rare regime pricing third (large deviations), and local statistics last. It also supplies the free probability curriculum: states, laws, free independence, cumulants, and the R and S transforms as the correct algebra for composing large independent components.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the direct imports are the null models and the composition rules. Sample covariance and correlation spectra are screened against the Marchenko-Pastur support so that only out of bulk eigenvalues are treated as factors; top components are judged against Tracy-Widom rather than Gaussian extremes; sums of large independent model components are composed by free additive convolution through the R-transform and products by the S-transform; mixed cumulant estimates act as the certificate that licenses free reasoning about a pair of components; and every reported spectral statistic carries the concentration based error budget this book makes explicit."
+}

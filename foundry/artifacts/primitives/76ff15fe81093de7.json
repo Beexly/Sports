@@ -1,0 +1,78 @@
+{
+  "book_id": "76ff15fe81093de7",
+  "source_status": "COMPLETE",
+  "title": "nextgenstats",
+  "file_name": "nextgenstats.md",
+  "sha256": "76ff15fe81093de79278e8f1b1460eea5290d284e7b668f266673dc035a9d841",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Next Gen Stats (NGS) pass-rush charts encode defensive pressure dynamics via time-to-pressure distributions, pressure counts, and sack incidence—mapping to Bayesian inference over expected vs observed pressure rates. Universal Lens: Rooted in nextgenstats (76ff15fe81093de7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers player pressure efficiency using NGS-derived metrics (pressure%, get-off time, quick-pressure counts) as probabilistic priors in conformal predictive models for defensive performance. GSI Mapping: Rooted in nextgenstats (76ff15fe81093de7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE processes NGS pressure data into state-transition graphs capturing rush arc efficacy, enabling real-time situational reasoning on defensive win probability and opponent pressure mitigation. GSE Mapping: Rooted in nextgenstats (76ff15fe81093de7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pressure_rate_over_expected",
+      "name": "Pressure Rate Over Expected",
+      "verbatim_quote": "- Text (verbatim): \"Lukas Van Ness generated a career-high nine pressures against the Jets in Week 2, recording five in under 2.5 seconds, tied for the third-most by a Packers defender since 2020.",
+      "page": 1,
+      "latex": "\\mathcal{P}_{\\text{obs}} = \\frac{\\text{Actual Pressures}}{\\text{Total Rushes}}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{P}_{\\\\text{obs}}': 'dimensionless pressure rate'}",
+      "assumptions": "NGS data is temporally aligned and spatially accurate; pressures are defined as successful disruption within 2.5s.",
+      "breakdown_regime": "When \\mathcal{P}_{\\text{obs}} > \\mathcal{P}_{\\text{exp}}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes \\mathcal{P}_{\\text{obs}} as a deviation from \\mathcal{P}_{\\text{exp}}, derived from historical player and team baseline models.",
+        "source_operator": "pressure_rate_over_expected",
+        "telemetry": "Observed pressure percentage relative to expected pressure rate"
+      }
+    },
+    {
+      "primitive_id": "get_off_time_distribution",
+      "name": "Get-Off Time Distribution",
+      "verbatim_quote": "- Stat boxes (verbatim): PASS RUSHES: 30; PRESSURES (%): 9 (30.0%); SACKS: 1.5; GET OFF (SECONDS): 0.70.",
+      "page": 1,
+      "latex": "\\tau_{\\text{get-off}} \\sim \\mathcal{N}(\\mu, \\sigma^2)",
+      "symbol_and_unit_ledger": "{'\\\\tau_{\\\\text{get-off}}': 'seconds'}",
+      "assumptions": "Defensive players' get-off times follow a normal distribution around mean \\mu.",
+      "breakdown_regime": "When \\tau_{\\text{get-off}} < 0.70s",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE maps \\tau_{\\text{get-off}} to a dynamic state transition model for rush effectiveness.",
+        "source_operator": "get_off_time_distribution",
+        "telemetry": "Average time from snap to pressure initiation"
+      }
+    },
+    {
+      "primitive_id": "quick_pressure_count",
+      "name": "Quick Pressure Count",
+      "verbatim_quote": "- Text (verbatim): \"Lukas Van Ness generated a career-high nine pressures against the Jets in Week 2, recording five in under 2.5 seconds, tied for the third-most by a Packers defender since 2020.",
+      "page": 1,
+      "latex": "N_{<2.5s} = \\sum_{t < 2.5} \\mathbb{I}(\\text{pressure}_t)",
+      "symbol_and_unit_ledger": "{'N_{<2.5s}': 'count of pressures within 2.5 seconds'}",
+      "assumptions": "Pressures are binary events occurring at discrete time steps.",
+      "breakdown_regime": "When N_{<2.5s} > 5",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses N_{<2.5s} to distinguish between coverage sacks and true rush wins in defensive efficiency scoring.",
+        "source_operator": "quick_pressure_count",
+        "telemetry": "Number of pressures achieved in under 2.5 seconds"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "76ff15fe81093de7_t0",
+      "think": "The NGS pass-rush chart encodes a temporal and spatial vector field of defensive pressure generation. The core operators are \\mathcal{P}_{\\text{obs}}, \\tau_{\\text{get-off}}, and N_{<2.5s}. These map to a dual space of expected vs observed pressure behavior, where \\mathcal{P}_{\\text{obs}} is a ratio of actual to possible pressures. The \\tau_{\\text{get-off}} distribution provides a stochastic model of rush initiation, while N_{<2.5s} isolates high-efficiency pressure events. These combine into a Bayesian likelihood function that updates player performance models in GSI. Failure modes include misalignment of tracking data, non-linear pressure propagation, and temporal lag in data capture. The dual nature of these metrics—observable and expected—enables retroactive validation of defensive strategy efficacy.\n\nDeep epistemic analysis for nextgenstats (76ff15fe81093de7, domain=other, pages_read=1/1): Operator 'Pressure Rate Over Expected' (page 1, domain other) captures: - Text (verbatim): \"Lukas Van Ness generated a career-high nine pressures against the Jets in Week 2, recording five in under 2.5 seconds, tied for the third-most by a Packers defender since 2020. Assumptions: NGS data is temporally aligned and spatially accurate; pressures are defined as successful disruption within 2.5s. Breakdown regime: When \\mathcal{P}_{\\text{obs}} > \\mathcal{P}_{\\text{exp}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes \\mathcal{P}_{\\text{obs}} as a deviation from \\mathcal{P}_{\\text{exp}}, derived from historical player and team baseline models. Operator 'Get-Off Time Distribution' (page 1, domain other) captures: - Stat boxes (verbatim): PASS RUSHES: 30; PRESSURES (%): 9 (30.0%); SACKS: 1.5; GET OFF (SECONDS): 0.70. Assumptions: Defensive players' get-off times follow a normal distribution around mean \\mu. Breakdown regime: When \\tau_{\\text{get-off}} < 0.70s Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps \\tau_{\\text{get-off}} to a dynamic state transition model for rush effectiveness. Operator 'Quick Pressure Count' (page 1, domain other) captures: - Text (verbatim): \"Lukas Van Ness generated a career-high nine pressures against the Jets in Week 2, recording five in under 2.5 seconds, tied for the third-most by a Packers defender since 2020. Assumptions: Pressures are binary events occurring at discrete time steps. Breakdown regime: When N_{<2.5s} > 5 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI uses N_{<2.5s} to distinguish between coverage sacks and true rush wins in defensive efficiency scoring. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for nextgenstats (76ff15fe81093de7, domain=other, pages_read=1/1): Operator 'Pressure Rate Over Expected' (page 1, domain other) captures: - Text (verbatim): \"Lukas Van Ness generated a career-high nine pressures against the Jets in Week 2, recording five in under 2.5 seconds, tied for the third-most by a Packers defender since 2020. Assumptions: NGS data is temporally aligned and spatially accurate; pressures are defined as successful disruption within 2.5s. Breakdown regime: When \\mathcal{P}_{\\text{obs}} > \\mathcal{P}_{\\text{exp}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes \\mathcal{P}_{\\text{obs}} as a deviation from \\mathcal{P}_{\\text{exp}}, derived from historical player and team baseline models. Operator 'Get-Off Time Distribution' (page 1, domain other) captures: - Stat boxes (verbatim): PASS RUSHES: 30; PRESSURES (%): 9 (30.0%); SACKS: 1.5; GET OFF (SECONDS): 0.70. Assumptions: Defensive players' get-off times follow a normal distribution around mean \\mu. Breakdown regime: When \\tau_{\\text{get-off}} < 0.70s Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps \\tau_{\\text{get-off}} to a dynamic state transition model for rush effectiveness. Operator 'Quick Pressure Count' (page 1, domain other) captures: - Text (verbatim): \"Lukas Van Ness generated a career-high nine pressures against the Jets in Week 2, recording five in under 2.5 seconds, tied for the third-most by a Packers defender since 2020. Assumptions: Pressures are binary events occurring at discrete time steps. Breakdown regime: When N_{<2.5s} > 5 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI uses N_{<2.5s} to distinguish between coverage sacks and true rush wins in defensive efficiency scoring. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s tracking technologies and NFL's adoption of advanced analytics, evolving through StatRankings' pressure modeling and NGS's granular data integration. Retrocausal Genealogy: Rooted in nextgenstats (76ff15fe81093de7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in nextgenstats (76ff15fe81093de7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing offensive coordinators optimize for timing and gap integrity, while defensive coordinators maximize \\mathcal{P}_{\\text{obs}} and minimize \\tau_{\\text{get-off}} to gain strategic advantage. Theory of Mind & Decision Maker Model: Rooted in nextgenstats (76ff15fe81093de7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in nextgenstats (76ff15fe81093de7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that \\mathcal{P}_{\\text{obs}} not be conflated with raw sack count; leakage occurs when \\tau_{\\text{get-off}} is treated as deterministic rather than probabilistic. Cross-Layer Veto & Anti-Leakage Check: Rooted in nextgenstats (76ff15fe81093de7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in nextgenstats (76ff15fe81093de7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

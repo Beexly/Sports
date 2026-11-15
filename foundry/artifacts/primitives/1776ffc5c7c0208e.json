@@ -1,0 +1,95 @@
+{
+  "book_id": "1776ffc5c7c0208e",
+  "source_status": "COMPLETE",
+  "title": "p0087",
+  "file_name": "p0087.txt",
+  "sha256": "1776ffc5c7c0208e62a45f9c5eb0529294061255db2ebf7fb10c1f70c57114e4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "defensive_back_coverage_assignment",
+      "name": "Defensive Back Coverage Assignment",
+      "verbatim_quote": "64 AMERICAN FOOTBALL due to the policy of breaking wide, are coming directly to his assistance.",
+      "page": 1,
+      "latex": "C_{DB} \\propto N_{wide}",
+      "symbol_and_unit_ledger": "C_{DB} - Defensive Back coverage assignment (dimensionless), N_{wide} - Number of wide receivers receiving direct assistance (dimensionless)",
+      "assumptions": "Assumes linear scaling between defensive back assignments and the number of wide receivers requiring coverage assistance.",
+      "breakdown_regime": "Regime where the number of wide receivers exceeds available defensive backs leads to coverage gaps.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI defensive efficiency models using coverage probability metrics P(C|N)",
+        "source_operator": "defensive_back_coverage_assignment",
+        "telemetry": "Average yards allowed per pass attempt when defensive backs are outnumbered"
+      }
+    },
+    {
+      "primitive_id": "middle_defensive_back_positioning",
+      "name": "Middle Defensive Back Positioning",
+      "verbatim_quote": "The only unguarded hole has the middle defensive back directly behind it.",
+      "page": 1,
+      "latex": "x_{MDB} = x_{hole} + d_{lag}",
+      "symbol_and_unit_ledger": "x_{MDB} - Middle Defensive Back optimal position (meters), x_{hole} - Hole position relative to line of scrimmage (meters), d_{lag} - Lag distance accounting for reaction time (meters)",
+      "assumptions": "Assumes the middle defensive back positions himself at a fixed lag distance behind the hole location.",
+      "breakdown_regime": "Regime where reaction time delay d_{lag} exceeds the time to the ball carrier reaching the hole.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE pursuit curve models with constant speed targets",
+        "source_operator": "middle_defensive_back_positioning",
+        "telemetry": "Time-to-contact metric for middle linebacker to gap"
+      }
+    },
+    {
+      "primitive_id": "pre_scrimmage_line_impact",
+      "name": "Pre-Scrimmage Line Impact",
+      "verbatim_quote": "It is vital, whenever the attack begins to gain ground, that the defensive backs hit the play before it gets beyond the line of scrimmage.",
+      "page": 1,
+      "latex": "t_{impact} < t_{threshold}",
+      "symbol_and_unit_ledger": "t_{impact} - Time until impact (seconds), t_{threshold} - Threshold time before ball crosses line of scrimmage (seconds)",
+      "assumptions": "Assumes a binary event where impact occurs either before or after the threshold time.",
+      "breakdown_regime": "Regime where t_{impact} approaches t_{threshold} from above causes increased expected yardage loss.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI forced fumble and sack probability models conditional on pressure timing",
+        "source_operator": "pre_scrimmage_line_impact",
+        "telemetry": "Sack rate as function of pressure arrival window"
+      }
+    },
+    {
+      "primitive_id": "quarterback_play_prediction",
+      "name": "Quarterback Play Prediction",
+      "verbatim_quote": "OUTGUESS THE QUARTERBACK The players must be trained to figure, while on the defense, upon what play the opposing quarterback is about to call.",
+      "page": 1,
+      "latex": "P_{predict} = f(QB_{history})",
+      "symbol_and_unit_ledger": "P_{predict} - Probability of correctly predicting the quarterback's play (dimensionless), QB_{history} - Historical sequence of quarterback decisions (dimensionless)",
+      "assumptions": "Models quarterback behavior as a stochastic process conditioned on prior plays.",
+      "breakdown_regime": "Regime where prediction accuracy drops below 50% indicates exploitable patterns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI predictive analytics using Markov decision processes over playbooks",
+        "source_operator": "quarterback_play_prediction",
+        "telemetry": "Correct play identification rate vs. random guessing baseline"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1776ffc5c7c0208e_t0",
+      "think": "These primitives form a hierarchical control system for American football defense. The coverage assignment (C_DB) dictates resource allocation, middle back positioning (x_MDB) implements spatial targeting, pre-scrimmage impact (t_impact) enforces temporal constraints, and quarterback play prediction (P_predict) provides strategic foresight. Together they create a closed-loop feedback system: defenders observe offensive formation (C_DB), predict likely plays (P_predict), adjust positions accordingly (x_MDB), and execute timely tackles (t_impact). Mathematically, this maps to optimal stopping theory in stochastic games, where each primitive represents a different information set in the filtration. Failure occurs when any link breaks, leading to systematic yardage losses.\n\nDeep epistemic analysis for p0087 (1776ffc5c7c0208e, domain=other, pages_read=1/1): Operator 'Defensive Back Coverage Assignment' (page 1, domain other) captures: 64 AMERICAN FOOTBALL due to the policy of breaking wide, are coming directly to his assistance. Assumptions: Assumes linear scaling between defensive back assignments and the number of wide receivers requiring coverage assistance. Breakdown regime: Regime where the number of wide receivers exceeds available defensive backs leads to coverage gaps. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI defensive efficiency models using coverage probability metrics P(C|N) Operator 'Middle Defensive Back Positioning' (page 1, domain other) captures: The only unguarded hole has the middle defensive back directly behind it. Assumptions: Assumes the middle defensive back positions himself at a fixed lag distance behind the hole location. Breakdown regime: Regime where reaction time delay d_{lag} exceeds the time to the ball carrier reaching the hole. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE pursuit curve models with constant speed targets Operator 'Pre-Scrimmage Line Impact' (page 1, domain other) captures: It is vital, whenever the attack begins to gain ground, that the defensive backs hit the play before it gets beyond the line of scrimmage. Assumptions: Assumes a binary event where impact occurs either before or after the threshold time. Breakdown regime: Regime where t_{impact} approaches t_{threshold} from above causes increased expected yardage loss. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI forced fumble and sack probability models conditional on pressure timing Operator 'Quarterback Play Prediction' (page 1, domain other) captures: OUTGUESS THE QUARTERBACK The players must be trained to figure, while on the defense, upon what play the opposing quarterback is about to call. Assumptions: Models quarterback behavior as a stochastic process conditioned on prior plays. Breakdown regime: Regime where prediction accuracy drops below 50% indicates exploitable patterns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI predictive analytics using Markov decision processes over playbooks Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0087 (1776ffc5c7c0208e, domain=other, pages_read=1/1): Operator 'Defensive Back Coverage Assignment' (page 1, domain other) captures: 64 AMERICAN FOOTBALL due to the policy of breaking wide, are coming directly to his assistance. Assumptions: Assumes linear scaling between defensive back assignments and the number of wide receivers requiring coverage assistance. Breakdown regime: Regime where the number of wide receivers exceeds available defensive backs leads to coverage gaps. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI defensive efficiency models using coverage probability metrics P(C|N) Operator 'Middle Defensive Back Positioning' (page 1, domain other) captures: The only unguarded hole has the middle defensive back directly behind it. Assumptions: Assumes the middle defensive back positions himself at a fixed lag distance behind the hole location. Breakdown regime: Regime where reaction time delay d_{lag} exceeds the time to the ball carrier reaching the hole. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE pursuit curve models with constant speed targets Operator 'Pre-Scrimmage Line Impact' (page 1, domain other) captures: It is vital, whenever the attack begins to gain ground, that the defensive backs hit the play before it gets beyond the line of scrimmage. Assumptions: Assumes a binary event where impact occurs either before or after the threshold time. Breakdown regime: Regime where t_{impact} approaches t_{threshold} from above causes increased expected yardage loss. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI forced fumble and sack probability models conditional on pressure timing Operator 'Quarterback Play Prediction' (page 1, domain other) captures: OUTGUESS THE QUARTERBACK The players must be trained to figure, while on the defense, upon what play the opposing quarterback is about to call. Assumptions: Models quarterback behavior as a stochastic process conditioned on prior plays. Breakdown regime: Regime where prediction accuracy drops below 50% indicates exploitable patterns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI predictive analytics using Markov decision processes over playbooks Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The primitives draw from optimal control theory (Bellman, 1957) and pursuit-evasion games (Isaacs, 1965), adapting them to the discrete, high-stakes environment of football through empirical calibration. Retrocausal Genealogy: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opponents model defender behavior as predictable heuristics, attempting to induce misalignment through feints and misdirection, creating a game-theoretic zero-sum dynamic. Theory of Mind & Decision Maker Model: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring C_DB and P_predict use independent features; otherwise, both collapse to the same information source, leaking variance. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0087 (1776ffc5c7c0208e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

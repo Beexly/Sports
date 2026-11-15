@@ -1,0 +1,95 @@
+{
+  "book_id": "7145d7fbaf88a95d",
+  "source_status": "COMPLETE",
+  "title": "2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al",
+  "file_name": "2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al.pdf",
+  "sha256": "7145d7fbaf88a95d4cdd978c2bbae2e128c5dbbff5b263d708a20a944fe09b2a",
+  "primary_domain": "football",
+  "pages_total": 13,
+  "pages_read": 13,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-kimi-k2.7-code:kimi-k2.7-code",
+  "ocr_rescued": false,
+  "universal_lens": "Offensive efficiency is an additive expected-points functor over a filtered sample space of run/pass plays; weather enters as a static covariate, and summary statistics operate on the resulting EPA distribution, with graphical representations subject to scaling singularities.",
+  "gsi_mapping": "Weather-aware play filtering defines a prior over offensive states; EPA likelihoods are conditioned on temperature and wind covariates, while conformal bands around per-play EPA capture epistemic uncertainty and out-of-distribution regimes such as missing weather or extreme events.",
+  "gse_mapping": "Each run/pass play is a state transition parameterized by down, distance, and field position; temperature and wind covariates modify transition rewards through EPA, while pre-play filtering removes special-teams and penalty actions, yielding a Markov-like decision process for situational play selection.",
+  "primitives": [
+    {
+      "primitive_id": "expected_points_added_operator",
+      "name": "Expected Points Added Operator",
+      "verbatim_quote": "EPA is calculated by taking the Expected Points at the beginning of the play and subtracting it from the Expected Points of the situation resulting from the play, hence the phrase Expected Points Added.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "EP: Expected Points, dimensionless; EPA: Expected Points Added, dimensionless; subscripts denote play state (begin/end).",
+      "assumptions": "Expected Points depend only on down, distance, and field position; EPA is additive across plays; weather does not enter the EP model; run and pass are the only offensive actions under study.",
+      "breakdown_regime": "Extreme EPA outliers such as long touchdowns or turnovers stretch box-plot whiskers and can obscure small mean differences between weather bins.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "In GSE, EPA is the reward kernel of the Markov decision process whose states are (down, distance, field position) and whose actions are run/pass; in GSI, it is the log-likelihood surrogate for offensive efficiency conditioned on weather covariates.",
+        "source_operator": "expected_points_added_operator",
+        "telemetry": "Per-play EPA distribution and mean EPA by play type and weather bin."
+      }
+    },
+    {
+      "primitive_id": "weather_state_encoder",
+      "name": "Weather State Encoder",
+      "verbatim_quote": "● nflfastR tracks 4 different weather conditions in 1 single column as shown below: ● The way nflfastR records this data makes it impossible to graph it without manipulation",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "Weather record: a single concatenated string containing temperature, wind speed, and other conditions, dimensionless categorical; after parsing, T (temperature) and W (wind speed) are dimensionless covariates in the recorded units.",
+      "assumptions": "nflfastR stores four weather fields in one concatenated column; the record is parseable into separate covariates; the pre-game weather snapshot is representative of the entire game.",
+      "breakdown_regime": "Malformed or missing entries; no weather data before 2014; static snapshot fails if conditions change during the game; parsing ambiguities.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The raw nflfastR weather string is isomorphic to the product space of temperature, wind speed, and other conditions after parsing; in GSE it labels each transition, and in GSI it parameterizes the prior over game conditions.",
+        "source_operator": "weather_state_encoder",
+        "telemetry": "Fraction of plays with parseable weather; distribution of temperature and wind bins."
+      }
+    },
+    {
+      "primitive_id": "play_type_filter",
+      "name": "Offensive Play-Type Filter",
+      "verbatim_quote": "○ All plays that were not runs and passes (takes out all special teams plays and plays resulting in penalties so we can just study runs and passes)",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "P: full set of plays, dimensionless index set; P_run/pass ⊆ P: retained run/pass plays, dimensionless; excluded plays are special-teams and penalty plays.",
+      "assumptions": "Only runs and passes reflect offensive strategy; special-teams plays and plays resulting in penalties are irrelevant to the run/pass efficiency question; weather information is available for retained plays.",
+      "breakdown_regime": "Selection bias if missing weather correlates with play type or venue; removal of penalties may discard informative offensive attempts; run/pass classification errors.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The filter is a projection kernel from the full play space to the offensive subspace of runs and passes; in GSE it defines the admissible action set, and in GSI it restricts the support of the EPA likelihood.",
+        "source_operator": "play_type_filter",
+        "telemetry": "Counts and proportions of run/pass versus excluded plays by weather condition."
+      }
+    },
+    {
+      "primitive_id": "graphical_summary_operator",
+      "name": "Graphical Summary Operator",
+      "verbatim_quote": "However, due to box plots' property of extending out to capture all the extreme and irregular points, the plots don't do a great job of illustrating the seemingly small but actually impactful difference, which is why we display the means.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "Box-plot quartiles and whiskers: dimensionless order statistics of EPA; mean EPA: dimensionless first moment of the per-bin EPA distribution.",
+      "assumptions": "Box plots display median, quartiles, and extremes; means capture central tendency; a common scale is used across weather bins for comparability.",
+      "breakdown_regime": "Outliers extend whiskers and compress the visual scale, hiding small but impactful mean differences; choice of bin width affects perceived patterns.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The graphical summary is a lossy visualization kernel from the EPA distribution to box plots and means; in GSE it determines which reward differences are perceptible to decision makers, and in GSI it controls the empirical risk surface used for inference.",
+        "source_operator": "graphical_summary_operator",
+        "telemetry": "Visual range of box plots; mean EPA values per weather bin; outlier count."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7145d7fbaf88a95d_t0",
+      "think": "The study treats each offensive play as a transition between game states, with reward measured by EPA as the Expected Points after the play minus the Expected Points before the play. Because Expected Points are a function of down, distance, and field position, EPA is an additive, state-conditioned reward that can be aggregated by play type and weather bin. The first primitive is therefore the EPA operator itself: a derived kernel that maps every run/pass transition to a real-valued reward. The second primitive is the weather-state encoder, an isomorphism that parses nflfastR’s single-column weather record into temperature and wind covariates; it is valid only under the assumption that the pre-game snapshot is representative of the whole game. The third primitive is the play-type filter, a projection kernel that removes special-teams and penalty plays so that the remaining sample reflects offensive choices. The fourth primitive is the graphical summary operator, which maps the EPA distribution to box plots and means; it highlights the breakdown regime where outliers stretch the plot and obscure small but meaningful mean differences. Together, these operators form a pipeline: filter, encode weather, compute EPA, summarize. The duality is between the raw event space of all plays and the analytic space of run/pass EPA conditional on weather. Failure modes include missing weather data before 2014, static-weather mismeasurement, selection bias from excluding penalties, and visual scaling that can hide or exaggerate effects. The operators are not independent: the filter changes the support of the EPA distribution, the encoder assigns covariates, and the summary operator determines which differences are visible to a decision maker.\n\nDeep epistemic analysis for 2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al (7145d7fbaf88a95d, domain=football, pages_read=13/13): Operator 'Expected Points Added Operator' (page 5, domain football) captures: EPA is calculated by taking the Expected Points at the beginning of the play and subtracting it from the Expected Points of the situation resulting from the play, hence the phrase Expected Points Added. Assumptions: Expected Points depend only on down, distance, and field position; EPA is additive across plays; weather does not enter the EP model; run and pass are the only offensive actions under study. Breakdown regime: Extreme EPA outliers such as long touchdowns or turnovers stretch box-plot whiskers and can obscure small mean differences between weather bins. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): In GSE, EPA is the reward kernel of the Markov decision process whose states are (down, distance, field position) and whose actions are run/pass; in GSI, it is the log-likelihood surrogate for offensive efficiency conditioned on weather covariates. Operator 'Weather State Encoder' (page 5, domain football) captures: ● nflfastR tracks 4 different weather conditions in 1 single column as shown below: ● The way nflfastR records this data makes it impossible to graph it without manipulation Assumptions: nflfastR stores four weather fields in one concatenated column; the record is parseable into separate covariates; the pre-game weather snapshot is representative of the entire game. Breakdown regime: Malformed or missing entries; no weather data before 2014; static snapshot fails if conditions change during the game; parsing ambiguities. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The raw nflfastR weather string is isomorphic to the product space of temperature, wind speed, and other conditions after parsing; in GSE it labels each transition, and in GSI it parameterizes the prior over game conditions. Operator 'Offensive Play-Type Filter' (page 4, domain football) captures: ○ All plays that were not runs and passes (takes out all special teams plays and plays resulting in penalties so we can just study runs and passes) Assumptions: Only runs and passes reflect offensive strategy; special-teams plays and plays resulting in penalties are irrelevant to the run/pass efficiency question; weather information is available for retained plays. Breakdown regime: Selection bias if missing weather correlates with play type or venue; removal of penalties may discard informative offensive attempts; run/pass classification errors. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The filter is a projection kernel from the full play space to the offensive subspace of runs and passes; in GSE it defines the admissible action set, and in GSI it restricts the support of the EPA likelihood. Operator 'Graphical Summary Operator' (page 7, domain football) captures: However, due to box plots' property of extending out to capture all the extreme and irregular points, the plots don't do a great job of illustrating the seemingly small but actually impactful difference, which is why we display the means. Assumptions: Box plots display median, quartiles, and extremes; means capture central tendency; a common scale is used across weather bins for comparability. Breakdown regime: Outliers extend whiskers and compress the visual scale, hiding small but impactful mean differences; choice of bin width affects perceived patterns. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The graphical summary is a lossy visualization kernel from the EPA distribution to box plots and means; in GSE it determines which reward differences are perceptible to decision makers, and in GSI it controls the empirical risk surface used for inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The lineage descends from expected-value decision theory and Markov game models of football, through nflfastR’s play-by-play codification, to modern conditional-EPA and weather-impact studies; box-plot diagnostics trace back to Tukey’s exploratory data analysis, while conformal uncertainty quantification continues the program of robust nonparametric inference. Retrocausal Genealogy: Rooted in 2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al (7145d7fbaf88a95d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Coaches choose run/pass mixtures under weather constraints while anticipating defensive adjustments; the EPA operator encodes their implicit reward model, and the summary operator shapes what analysts and front offices perceive, so modelers must account for strategic adaptation and reporting biases in nflfastR weather records. Theory of Mind & Decision Maker Model: Rooted in 2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al (7145d7fbaf88a95d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Veto conditions activate when weather covariates are collinear with home-field or seasonal effects, when the play-type filter leaks special-teams information, when static weather mislabels late-game transitions, or when box-plot scaling induces spurious inference from outliers; any such leakage invalidates downstream EPA conditioning. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2022 - Whether Weather, Wind Speed and Temperature, Impacts Offensive Success in the NFL - Parks et al (7145d7fbaf88a95d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

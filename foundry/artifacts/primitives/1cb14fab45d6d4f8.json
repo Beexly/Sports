@@ -1,0 +1,78 @@
+{
+  "book_id": "1cb14fab45d6d4f8",
+  "source_status": "COMPLETE",
+  "title": "p0089",
+  "file_name": "p0089.txt",
+  "sha256": "1cb14fab45d6d4f83eccf10fde77ad52bfd45abd76bb6caca2f0fc7d225189f9",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural unification of hierarchical organizational roles and functional mappings across institutional teams. Universal Lens: Rooted in p0089 (1cb14fab45d6d4f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian role assignment with conformal predictive inference over team hierarchies using rank-ordered leadership indices. GSI Mapping: Rooted in p0089 (1cb14fab45d6d4f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models team state transitions via sequential role activation and positional interdependencies. GSE Mapping: Rooted in p0089 (1cb14fab45d6d4f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "hierarchical_role_assignment",
+      "name": "Hierarchical Role Assignment Operator",
+      "verbatim_quote": "Mgr.; 2, Ewing, Student Mgr.; 3, Metheny, Coach; 4, Weir, Asst.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_i': 'Role index for individual i, dimensionless', 'T': 'Team identifier, categorical'}",
+      "assumptions": "Roles are strictly ordered and mutually exclusive within team T.",
+      "breakdown_regime": "When R_i = 0, role ambiguity occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic role inference kernel where each R_i is a latent variable in a Bayesian network.",
+        "source_operator": "hierarchical_role_assignment",
+        "telemetry": "Observable: role assignment consistency score across team members."
+      }
+    },
+    {
+      "primitive_id": "sequential_position_indexing",
+      "name": "Sequential Position Indexing Kernel",
+      "verbatim_quote": "PA. 1, Bush; 2, Weicksel; 3, Kuffner; 4, Lynch; 5, Snyder; 6, Gerberding; 7, Bachman; 8,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_j': 'Position j in sequence, dimensionless', 'S': 'Sequence length, integer'}",
+      "assumptions": "Each P_j corresponds to a unique functional role in a linear progression.",
+      "breakdown_regime": "When S < j, undefined position mapping.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's temporal state transition model where P_j represents a discrete time-step in role evolution.",
+        "source_operator": "sequential_position_indexing",
+        "telemetry": "Observable: deviation from expected positional order in team roster."
+      }
+    },
+    {
+      "primitive_id": "institutional_team_structure",
+      "name": "Institutional Team Structure Mapping",
+      "verbatim_quote": "24, Wylie; 25, Park, Capt.; 26, Clyde; 27, McCarter; 28, Jamison; 29, R. Downie. GENEVA COLLEGE,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_k': 'Institution k, categorical', 'N_k': 'Number of individuals in institution k, integer'}",
+      "assumptions": "Each I_k defines a distinct operational domain with N_k members.",
+      "breakdown_regime": "When N_k = 0, institutional structure collapses.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's multi-institutional team alignment framework, where I_k maps to a node in a relational graph.",
+        "source_operator": "institutional_team_structure",
+        "telemetry": "Observable: institutional membership overlap ratio between teams."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1cb14fab45d6d4f8_t0",
+      "think": "The primitives define a structured hierarchy of roles and sequential indexing that reflects institutional organization. The hierarchical role assignment operator encodes positional authority through ranked identifiers, while the sequential indexing kernel captures temporal progression of roles. The institutional team structure mapping ties these elements to specific educational entities. Dualities emerge in how roles are both assigned and evolved over time. Failure modes include ambiguous role definitions (R_i = 0), missing positions (S < j), and collapsed institutions (N_k = 0). These structures support a Bayesian inference model where each role is a latent variable with prior probabilities based on institutional norms and historical precedence.\n\nDeep epistemic analysis for p0089 (1cb14fab45d6d4f8, domain=other, pages_read=1/1): Operator 'Hierarchical Role Assignment Operator' (page 1, domain other) captures: Mgr.; 2, Ewing, Student Mgr.; 3, Metheny, Coach; 4, Weir, Asst. Assumptions: Roles are strictly ordered and mutually exclusive within team T. Breakdown regime: When R_i = 0, role ambiguity occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic role inference kernel where each R_i is a latent variable in a Bayesian network. Operator 'Sequential Position Indexing Kernel' (page 1, domain other) captures: PA. 1, Bush; 2, Weicksel; 3, Kuffner; 4, Lynch; 5, Snyder; 6, Gerberding; 7, Bachman; 8, Assumptions: Each P_j corresponds to a unique functional role in a linear progression. Breakdown regime: When S < j, undefined position mapping. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's temporal state transition model where P_j represents a discrete time-step in role evolution. Operator 'Institutional Team Structure Mapping' (page 1, domain other) captures: 24, Wylie; 25, Park, Capt.; 26, Clyde; 27, McCarter; 28, Jamison; 29, R. Downie. GENEVA COLLEGE, Assumptions: Each I_k defines a distinct operational domain with N_k members. Breakdown regime: When N_k = 0, institutional structure collapses. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's multi-institutional team alignment framework, where I_k maps to a node in a relational graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0089 (1cb14fab45d6d4f8, domain=other, pages_read=1/1): Operator 'Hierarchical Role Assignment Operator' (page 1, domain other) captures: Mgr.; 2, Ewing, Student Mgr.; 3, Metheny, Coach; 4, Weir, Asst. Assumptions: Roles are strictly ordered and mutually exclusive within team T. Breakdown regime: When R_i = 0, role ambiguity occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic role inference kernel where each R_i is a latent variable in a Bayesian network. Operator 'Sequential Position Indexing Kernel' (page 1, domain other) captures: PA. 1, Bush; 2, Weicksel; 3, Kuffner; 4, Lynch; 5, Snyder; 6, Gerberding; 7, Bachman; 8, Assumptions: Each P_j corresponds to a unique functional role in a linear progression. Breakdown regime: When S < j, undefined position mapping. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's temporal state transition model where P_j represents a discrete time-step in role evolution. Operator 'Institutional Team Structure Mapping' (page 1, domain other) captures: 24, Wylie; 25, Park, Capt.; 26, Clyde; 27, McCarter; 28, Jamison; 29, R. Downie. GENEVA COLLEGE, Assumptions: Each I_k defines a distinct operational domain with N_k members. Breakdown regime: When N_k = 0, institutional structure collapses. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's multi-institutional team alignment framework, where I_k maps to a node in a relational graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early 20th-century organizational theory and formal logic systems, particularly those developed by Wiener and von Neumann for control systems and game theory. Retrocausal Genealogy: Rooted in p0089 (1cb14fab45d6d4f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0089 (1cb14fab45d6d4f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to manipulate role assignments for strategic advantage, leading to misalignment between stated roles and actual influence. Decision actors must balance institutional norms against personal ambition. Theory of Mind & Decision Maker Model: Rooted in p0089 (1cb14fab45d6d4f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple roles share identical identifiers or when sequential indices do not reflect functional differences. Leakage occurs if institutional boundaries are ignored during role inference, causing cross-contamination of team dynamics. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0089 (1cb14fab45d6d4f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

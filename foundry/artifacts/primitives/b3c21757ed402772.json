@@ -1,0 +1,78 @@
+{
+  "book_id": "b3c21757ed402772",
+  "source_status": "COMPLETE",
+  "title": "02-plan",
+  "file_name": "02-plan.pdf",
+  "sha256": "b3c21757ed40277234ddd9874318fc7689d58c8a9acb76f79f9c805305312a16",
+  "primary_domain": "other",
+  "pages_total": 13,
+  "pages_read": 13,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "GSE native iOS app as a conformal inference engine over HTTP API, with design token reskinning and constraint-driven state transitions. Universal Lens: Rooted in 02-plan (b3c21757ed402772), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on GSE API states via contextual telemetry; design tokens map to probabilistic priors over UI affordances. GSI Mapping: Rooted in 02-plan (b3c21757ed402772), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine for mobile context switching; state transitions governed by App Store guidelines and design contract compliance. GSE Mapping: Rooted in 02-plan (b3c21757ed402772), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mobile_app_rebuild_constraint",
+      "name": "Mobile App Rebuild Constraint",
+      "verbatim_quote": "Decision on OPEN-P6-3 (reskin vs rebuild): Rebuild as a native client over the existing HTTP API.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The web app is not suitable for direct WebView embedding due to UI/UX and App Store compliance issues.",
+      "breakdown_regime": "When a WebView-based repackaging violates guideline 4.2 (repackaged website).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces a native client architecture as a kernel constraint over HTTP API access, ensuring design contract integrity.",
+        "source_operator": "mobile_app_rebuild_constraint",
+        "telemetry": "App Store approval rate and UI/UX compliance metrics."
+      }
+    },
+    {
+      "primitive_id": "design_token_reskinning",
+      "name": "Design Token Reskinning",
+      "verbatim_quote": "The design language is reskinned (tokens ported 1:1); the implementation is native.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Design tokens are canonical and fully portable across platforms without loss of fidelity.",
+      "breakdown_regime": "When design system divergence occurs between web and mobile implementations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps UI token sets from web to mobile using 1:1 semantic equivalence.",
+        "source_operator": "design_token_reskinning",
+        "telemetry": "UI consistency score across web and mobile interfaces."
+      }
+    },
+    {
+      "primitive_id": "server_as_single_source_of_truth",
+      "name": "Server as Single Source of Truth",
+      "verbatim_quote": "Decision on OPEN-P6-3 (reskin vs rebuild): Rebuild as a native client over the existing HTTP API.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Client-side logic duplication introduces inconsistency and security risk.",
+      "breakdown_regime": "When client-side logic diverges from server-side state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces a centralized data model where all client actions are validated server-side.",
+        "source_operator": "server_as_single_source_of_truth",
+        "telemetry": "Data synchronization error rate and client-server state alignment."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b3c21757ed402772_t0",
+      "think": "The core derivation centers on the GSE mobile app’s architectural choice to rebuild rather than reskin. This decision is grounded in a dual constraint: App Store compliance (4.2) and design contract fidelity. The reskinning primitive ensures visual continuity through token portability, while the rebuild enforces a native stack. The server-as-single-source-of-truth primitive prevents logic duplication, which could lead to inconsistent behavior. These primitives form a kernel of operational consistency under non-negotiable constraints such as the ban on AI framing. The failure mode arises when design tokens are misapplied or client logic diverges from server state, violating the integrity of the system.\n\nDeep epistemic analysis for 02-plan (b3c21757ed402772, domain=other, pages_read=13/13): Operator 'Mobile App Rebuild Constraint' (page 4, domain other) captures: Decision on OPEN-P6-3 (reskin vs rebuild): Rebuild as a native client over the existing HTTP API. Assumptions: The web app is not suitable for direct WebView embedding due to UI/UX and App Store compliance issues. Breakdown regime: When a WebView-based repackaging violates guideline 4.2 (repackaged website). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces a native client architecture as a kernel constraint over HTTP API access, ensuring design contract integrity. Operator 'Design Token Reskinning' (page 4, domain other) captures: The design language is reskinned (tokens ported 1:1); the implementation is native. Assumptions: Design tokens are canonical and fully portable across platforms without loss of fidelity. Breakdown regime: When design system divergence occurs between web and mobile implementations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps UI token sets from web to mobile using 1:1 semantic equivalence. Operator 'Server as Single Source of Truth' (page 4, domain other) captures: Decision on OPEN-P6-3 (reskin vs rebuild): Rebuild as a native client over the existing HTTP API. Assumptions: Client-side logic duplication introduces inconsistency and security risk. Breakdown regime: When client-side logic diverges from server-side state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces a centralized data model where all client actions are validated server-side. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 02-plan (b3c21757ed402772, domain=other, pages_read=13/13): Operator 'Mobile App Rebuild Constraint' (page 4, domain other) captures: Decision on OPEN-P6-3 (reskin vs rebuild): Rebuild as a native client over the existing HTTP API. Assumptions: The web app is not suitable for direct WebView embedding due to UI/UX and App Store compliance issues. Breakdown regime: When a WebView-based repackaging violates guideline 4.2 (repackaged website). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces a native client architecture as a kernel constraint over HTTP API access, ensuring design contract integrity. Operator 'Design Token Reskinning' (page 4, domain other) captures: The design language is reskinned (tokens ported 1:1); the implementation is native. Assumptions: Design tokens are canonical and fully portable across platforms without loss of fidelity. Breakdown regime: When design system divergence occurs between web and mobile implementations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps UI token sets from web to mobile using 1:1 semantic equivalence. Operator 'Server as Single Source of Truth' (page 4, domain other) captures: Decision on OPEN-P6-3 (reskin vs rebuild): Rebuild as a native client over the existing HTTP API. Assumptions: Client-side logic duplication introduces inconsistency and security risk. Breakdown regime: When client-side logic diverges from server-side state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces a centralized data model where all client actions are validated server-side. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in the historical tension between web-based repackaging and native app quality, tracing back to early mobile OS design principles and App Store policy evolution. Retrocausal Genealogy: Rooted in 02-plan (b3c21757ed402772), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 02-plan (b3c21757ed402772), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the autonomous Minis agent, which may favor expedient WebView solutions, and the founder, who enforces strategic platform bets. The system balances these by enforcing architectural discipline. Theory of Mind & Decision Maker Model: Rooted in 02-plan (b3c21757ed402772), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that design tokens do not leak into client-side logic, and that the server remains the authoritative source. Leakage vetoes occur if client-side logic deviates from server state or if UI tokens are inconsistently applied. Cross-Layer Veto & Anti-Leakage Check: Rooted in 02-plan (b3c21757ed402772), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

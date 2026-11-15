@@ -1,0 +1,78 @@
+{
+  "book_id": "b77d6722db82393d",
+  "source_status": "COMPLETE",
+  "title": "RESULTS",
+  "file_name": "RESULTS.md",
+  "sha256": "b77d6722db82393df4fd10d29f21c9304a3e50b060dccc905a8fae38efe02bea",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Verification fidelity as binary entropy minimization over repo existence space; hallucination rate as information-theoretic divergence from ground truth. Universal Lens: Rooted in RESULTS (b77d6722db82393d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on repo existence using GitHub API likelihood; conformal prediction intervals for match confidence. GSI Mapping: Rooted in RESULTS (b77d6722db82393d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition from 'unverified' to 'validated' or 'hallucinated' based on empirical telemetry; action policy conditioned on verification score. GSE Mapping: Rooted in RESULTS (b77d6722db82393d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "repo_existence_verification",
+      "name": "Repository Existence Boolean Function",
+      "verbatim_quote": "# L-11 Affiliate Tooling Verification — Results **Date:** 2026-08-19 **Source:** Founder-pasted DeepSeek research summary **Method:** GitHub API (direct repo checks + org enumeration + search API) **No adoption decisions — just ground truth.** ## Verification table | Name | Exists?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Boolean variable indicating repository existence (1 = exists, 0 = does not exist)'}",
+      "assumptions": "Repository metadata is accessible via public GitHub API; verification is deterministic within API response.",
+      "breakdown_regime": "E = 0 when API returns 404 or no match; E = 1 otherwise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Boolean function E maps to GSI's probabilistic model of repository validity; GSE transitions between states based on E's output.",
+        "source_operator": "repo_existence_verification",
+        "telemetry": "API response code and metadata fields"
+      }
+    },
+    {
+      "primitive_id": "hallucination_signature_detection",
+      "name": "Hallucination Signature Classifier",
+      "verbatim_quote": "**Plausible-sounding names that don't exist** — Income Generator Hub, SponsorFit (as described), ClawMarketing/growth-os, xAmplify PRM, prathammahajan/affiliate-management-system.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'Binary indicator for hallucination signature (1 = plausible but non-existent, 0 = verified)'}",
+      "assumptions": "Names with high semantic similarity to real systems but no repository match are classified as hallucinations.",
+      "breakdown_regime": "H = 1 when name matches plausible domain but repository lookup fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "H derived from E and semantic similarity metrics; used in GSI to filter false positives.",
+        "source_operator": "hallucination_signature_detection",
+        "telemetry": "Name pattern match score vs. repository existence"
+      }
+    },
+    {
+      "primitive_id": "repository_scale_inflation",
+      "name": "Repository Scale Inflation Metric",
+      "verbatim_quote": "**Repos with inflated stats** — DeepSeek's descriptions imply significant scale, but most matched repos have 0-23 stars, stale commits (2021 for Analytify), or no license.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Normalized scale inflation factor (0 to 1); S = 1 implies accurate description, S < 1 implies underreporting.'}",
+      "assumptions": "Scale is inferred from star count, commit activity, and license presence.",
+      "breakdown_regime": "S = 0 when repo has 0 stars or no license; S > 0 when metadata aligns with claimed scale.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "S derived from E and metadata; GSE uses S to assess risk of adopting inflated systems.",
+        "source_operator": "repository_scale_inflation",
+        "telemetry": "Star count, last commit date, license presence"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b77d6722db82393d_t0",
+      "think": "The core operators define a verification lattice where E (existence) acts as a primary predicate. H (hallucination) is a derived kernel from E and semantic heuristics, capturing false positives in naming. S (scale inflation) is a secondary metric that evaluates discrepancy between claimed and observed system maturity. These form a triadic structure: E ⊕ H ⊕ S. The failure mode occurs when E is misclassified due to API latency or misattribution, leading to cascading errors in H and S. Dualities emerge in the distinction between real vs. fabricated entities and between claimed vs. actual performance. The system must maintain consistency across these dimensions to avoid adoption of unreliable tools.\n\nDeep epistemic analysis for RESULTS (b77d6722db82393d, domain=other, pages_read=2/2): Operator 'Repository Existence Boolean Function' (page 1, domain other) captures: # L-11 Affiliate Tooling Verification — Results **Date:** 2026-08-19 **Source:** Founder-pasted DeepSeek research summary **Method:** GitHub API (direct repo checks + org enumeration + search API) **No adoption decisions — just ground truth.** ## Verification table | Name | Exists? Assumptions: Repository metadata is accessible via public GitHub API; verification is deterministic within API response. Breakdown regime: E = 0 when API returns 404 or no match; E = 1 otherwise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Boolean function E maps to GSI's probabilistic model of repository validity; GSE transitions between states based on E's output. Operator 'Hallucination Signature Classifier' (page 2, domain other) captures: **Plausible-sounding names that don't exist** — Income Generator Hub, SponsorFit (as described), ClawMarketing/growth-os, xAmplify PRM, prathammahajan/affiliate-management-system. Assumptions: Names with high semantic similarity to real systems but no repository match are classified as hallucinations. Breakdown regime: H = 1 when name matches plausible domain but repository lookup fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): H derived from E and semantic similarity metrics; used in GSI to filter false positives. Operator 'Repository Scale Inflation Metric' (page 2, domain other) captures: **Repos with inflated stats** — DeepSeek's descriptions imply significant scale, but most matched repos have 0-23 stars, stale commits (2021 for Analytify), or no license. Assumptions: Scale is inferred from star count, commit activity, and license presence. Breakdown regime: S = 0 when repo has 0 stars or no license; S > 0 when metadata aligns with claimed scale. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): S derived from E and metadata; GSE uses S to assess risk of adopting inflated systems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RESULTS (b77d6722db82393d, domain=other, pages_read=2/2): Operator 'Repository Existence Boolean Function' (page 1, domain other) captures: # L-11 Affiliate Tooling Verification — Results **Date:** 2026-08-19 **Source:** Founder-pasted DeepSeek research summary **Method:** GitHub API (direct repo checks + org enumeration + search API) **No adoption decisions — just ground truth.** ## Verification table | Name | Exists? Assumptions: Repository metadata is accessible via public GitHub API; verification is deterministic within API response. Breakdown regime: E = 0 when API returns 404 or no match; E = 1 otherwise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Boolean function E maps to GSI's probabilistic model of repository validity; GSE transitions between states based on E's output. Operator 'Hallucination Signature Classifier' (page 2, domain other) captures: **Plausible-sounding names that don't exist** — Income Generator Hub, SponsorFit (as described), ClawMarketing/growth-os, xAmplify PRM, prathammahajan/affiliate-management-system. Assumptions: Names with high semantic similarity to real systems but no repository match are classified as hallucinations. Breakdown regime: H = 1 when name matches plausible domain but repository lookup fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): H derived from E and semantic similarity metrics; used in GSI to filter false positives. Operator 'Repository Scale Inflation Metric' (page 2, domain other) captures: **Repos with inflated stats** — DeepSeek's descriptions imply significant scale, but most matched repos have 0-23 stars, stale commits (2021 for Analytify), or no license. Assumptions: Scale is inferred from star count, commit activity, and license presence. Breakdown regime: S = 0 when repo has 0 stars or no license; S > 0 when metadata aligns with claimed scale. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): S derived from E and metadata; GSE uses S to assess risk of adopting inflated systems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information retrieval theory and Bayesian falsifiability; extends Shannon’s entropy to repository validation spaces. Influenced by early work on semantic search and machine learning hallucination detection. Retrocausal Genealogy: Rooted in RESULTS (b77d6722db82393d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in RESULTS (b77d6722db82393d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include DeepSeek’s generative model (which hallucinates) and the GSI verification engine (which confirms). Decision actors are adopters who must weigh risk against utility. The system models uncertainty through probabilistic assertions rather than deterministic truths. Theory of Mind & Decision Maker Model: Rooted in RESULTS (b77d6722db82393d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Veto conditions prevent adoption if E=0 or H=1; S < 0.5 triggers caution. Anti-collinearity ensures E, H, and S are not redundant. Leakage is mitigated by isolating telemetry per operator and enforcing cross-validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in RESULTS (b77d6722db82393d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

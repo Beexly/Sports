@@ -1,0 +1,78 @@
+{
+  "book_id": "2e2c36ffc44d393a",
+  "source_status": "COMPLETE",
+  "title": "sports-analytics-feed",
+  "file_name": "sports-analytics-feed.md",
+  "sha256": "2e2c36ffc44d393abc2eda197b9abc3fc144f1c76c621712102348e036c7f1d6",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sports analytics feeds as structured information manifolds with dual research-opportunity layers, modeled via Bayesian belief updates on probabilistic journal and competition streams. Universal Lens: Rooted in sports-analytics-feed (2e2c36ffc44d393a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers posterior belief distributions over research quality and opportunity timing using conformal predictive intervals on journal impact and competition submission success rates. GSI Mapping: Rooted in sports-analytics-feed (2e2c36ffc44d393a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states based on dynamic risk-adjusted utility functions over research feed signals, updating internal models of journal credibility and opportunity value through recursive Bayesian inference. GSE Mapping: Rooted in sports-analytics-feed (2e2c36ffc44d393a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "research_paper_feed",
+      "name": "Research Paper Feed",
+      "verbatim_quote": "# Sports Analytics Research Feed Last verified: 2026-07-12 This directory is a seed catalog for two related feeds: - Research paper feed: journals, proceedings, preprints, books, and article indexes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Feed sources are static or periodic; each publication contributes independent evidence to a cumulative knowledge base.",
+      "breakdown_regime": "When journal coverage drops below threshold or metadata becomes stale.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each journal entry maps to a node in a Bayesian network where edge weights represent citation likelihood and signal-to-noise ratio.",
+        "source_operator": "research_paper_feed",
+        "telemetry": "Citation count, journal impact factor, and open-access status."
+      }
+    },
+    {
+      "primitive_id": "opportunity_feed",
+      "name": "Opportunity Feed",
+      "verbatim_quote": "- Opportunity feed: conference calls, paper competitions, posters, presentations, hackathons, data challenges, and Kaggle competitions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Opportunities are time-sensitive and probabilistically linked to research output quality.",
+      "breakdown_regime": "When deadlines pass or competition entries exceed capacity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Opportunity nodes are derived from research feed nodes via temporal and categorical filters, forming a dual kernel of actionable insights.",
+        "source_operator": "opportunity_feed",
+        "telemetry": "Submission volume, deadline proximity, and participant engagement metrics."
+      }
+    },
+    {
+      "primitive_id": "core_journal_set",
+      "name": "Core Journal Set",
+      "verbatim_quote": "## Core Journals The core journal set starts with JQAS, Journal of Sports Analytics, IJCSS, JSSM, and International Journal of Sports Science and Engineering.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Core journals define the signal space for high-quality research within the domain.",
+      "breakdown_regime": "When journal rankings shift or publishers change policies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each journal is mapped to a probabilistic model of research output quality, with parameters derived from historical citation and acceptance rates.",
+        "source_operator": "core_journal_set",
+        "telemetry": "Impact factor, acceptance rate, and open-access compliance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2e2c36ffc44d393a_t0",
+      "think": "The dual nature of sports analytics feeds—research and opportunity—is formalized as a layered probabilistic system. The research feed operates as a Bayesian belief network where each journal node contributes to a global posterior over research validity and impact. The opportunity feed acts as a derived kernel, filtering and transforming research signals into actionable timelines. Both layers are governed by temporal constraints and signal integrity checks. Failure modes include stale metadata, journal deprecation, and missed deadlines. The system must maintain coherence across these layers through recursive update mechanisms and cross-layer validation.\n\nDeep epistemic analysis for sports-analytics-feed (2e2c36ffc44d393a, domain=other, pages_read=3/3): Operator 'Research Paper Feed' (page 1, domain other) captures: # Sports Analytics Research Feed Last verified: 2026-07-12 This directory is a seed catalog for two related feeds: - Research paper feed: journals, proceedings, preprints, books, and article indexes. Assumptions: Feed sources are static or periodic; each publication contributes independent evidence to a cumulative knowledge base. Breakdown regime: When journal coverage drops below threshold or metadata becomes stale. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each journal entry maps to a node in a Bayesian network where edge weights represent citation likelihood and signal-to-noise ratio. Operator 'Opportunity Feed' (page 1, domain other) captures: - Opportunity feed: conference calls, paper competitions, posters, presentations, hackathons, data challenges, and Kaggle competitions. Assumptions: Opportunities are time-sensitive and probabilistically linked to research output quality. Breakdown regime: When deadlines pass or competition entries exceed capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Opportunity nodes are derived from research feed nodes via temporal and categorical filters, forming a dual kernel of actionable insights. Operator 'Core Journal Set' (page 1, domain other) captures: ## Core Journals The core journal set starts with JQAS, Journal of Sports Analytics, IJCSS, JSSM, and International Journal of Sports Science and Engineering. Assumptions: Core journals define the signal space for high-quality research within the domain. Breakdown regime: When journal rankings shift or publishers change policies. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each journal is mapped to a probabilistic model of research output quality, with parameters derived from historical citation and acceptance rates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sports-analytics-feed (2e2c36ffc44d393a, domain=other, pages_read=3/3): Operator 'Research Paper Feed' (page 1, domain other) captures: # Sports Analytics Research Feed Last verified: 2026-07-12 This directory is a seed catalog for two related feeds: - Research paper feed: journals, proceedings, preprints, books, and article indexes. Assumptions: Feed sources are static or periodic; each publication contributes independent evidence to a cumulative knowledge base. Breakdown regime: When journal coverage drops below threshold or metadata becomes stale. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each journal entry maps to a node in a Bayesian network where edge weights represent citation likelihood and signal-to-noise ratio. Operator 'Opportunity Feed' (page 1, domain other) captures: - Opportunity feed: conference calls, paper competitions, posters, presentations, hackathons, data challenges, and Kaggle competitions. Assumptions: Opportunities are time-sensitive and probabilistically linked to research output quality. Breakdown regime: When deadlines pass or competition entries exceed capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Opportunity nodes are derived from research feed nodes via temporal and categorical filters, forming a dual kernel of actionable insights. Operator 'Core Journal Set' (page 1, domain other) captures: ## Core Journals The core journal set starts with JQAS, Journal of Sports Analytics, IJCSS, JSSM, and International Journal of Sports Science and Engineering. Assumptions: Core journals define the signal space for high-quality research within the domain. Breakdown regime: When journal rankings shift or publishers change policies. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each journal is mapped to a probabilistic model of research output quality, with parameters derived from historical citation and acceptance rates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the evolution of academic publishing and data science competitions, tracing back to early sports statistics and modern open-access repositories like arXiv and Kaggle. Retrocausal Genealogy: Rooted in sports-analytics-feed (2e2c36ffc44d393a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sports-analytics-feed (2e2c36ffc44d393a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include publishers seeking maximal citations, researchers optimizing for impact, and organizers balancing accessibility with quality. Each agent influences the signal landscape through their own decision logic. Theory of Mind & Decision Maker Model: Rooted in sports-analytics-feed (2e2c36ffc44d393a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that research and opportunity feeds do not redundantly signal the same event. Leakage is mitigated by maintaining distinct temporal and categorical boundaries between layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in sports-analytics-feed (2e2c36ffc44d393a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

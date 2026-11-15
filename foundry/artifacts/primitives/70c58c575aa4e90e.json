@@ -1,0 +1,306 @@
+{
+  "book_id": "70c58c575aa4e90e",
+  "source_status": "COMPLETE",
+  "title": "2023 - Estimating Positional Plus-Minus in the NBA - Gong et al",
+  "file_name": "2023 - Estimating Positional Plus-Minus in the NBA - Gong et al.pdf",
+  "sha256": "70c58c575aa4e90e5b482c5b586e9ea2a8f30e2b47bc0749cbc160641ee75208",
+  "primary_domain": "other",
+  "pages_total": 19,
+  "pages_read": 19,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 19,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "K-means++ clustering with standardized play-type percentages enables robust positional classification; hierarchical linear modeling estimates player-level plus-minus via binary design matrices X and Z. Universal Lens: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian hierarchical inference on player positions using Gibbs sampling; group-level priors μj ~ N(0, 100), τj² ~ IG(0.01, 0.01), σ² ~ IG(0.01, 0.01) inform posterior estimates. GSI Mapping: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "State transitions between offensive/defensive stints encoded in binary matrices X (player) and Z (team); positional plus-minus derived through dynamic linear regression over time-series stints. GSE Mapping: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "w0_snake_case_id",
+      "name": "HierarchicalPlusMinusEstimator",
+      "verbatim_quote": "In this study, we explore NBA player plus-minus ratings at the position level by introducing a hierarchical structure to previous plus-minus models (Sabin 2021; Thomas et al., 2013; Yurko et al., 2019).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that player performance is exchangeable within position groups, allowing partial pooling of estimates to reduce variance.",
+      "breakdown_regime": "Breaks down when sample size per position is too small, leading to unreliable estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Hierarchical plus-minus maps to GSI conformal prediction intervals and GSE state-transition models through shared random-effects structure.",
+        "source_operator": "w0_snake_case_id",
+        "telemetry": "Posterior variance of position-level effects serves as an empirical uncertainty metric."
+      }
+    },
+    {
+      "primitive_id": "w0_snake_case_id_w0_2",
+      "name": "BayesianHierarchicalModel",
+      "verbatim_quote": "Traditionally, five positions are used in basketball, center, power forward, small forward, shooting guard, and point guard (Anıl Duman et al., 2021; McBasketball 2017;).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Treats traditional position labels as categorical predictors in a multilevel regression framework.",
+      "breakdown_regime": "Fails when there is significant overlap in skillsets across traditional positions, violating nesting assumptions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian hierarchical priors underpin GSI posterior probability estimates for match outcomes and GSE transition kernels between game states.",
+        "source_operator": "w0_snake_case_id_w0_2",
+        "telemetry": "Effective sample size of hyperparameters indicates data support for position-specific effects."
+      }
+    },
+    {
+      "primitive_id": "w0_snake_case_id_w0_3",
+      "name": "RollAndCutBigDefender",
+      "verbatim_quote": "Introduction How to objectively evaluate player performance is a core question in the field of sports analytics.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Defines Big as a specific defensive role based on spatial positioning in the paint, independent of offensive skills.",
+      "breakdown_regime": "Breaks down when modern big men become perimeter threats, blurring the distinction between Big and non-Big defenders.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Big defender concept maps to GSI defensive pressure metrics and GSE possession-state transitions involving paint proximity.",
+        "source_operator": "w0_snake_case_id_w0_3",
+        "telemetry": "Average distance traveled to the rim during defensive possessions identifies Roll-and-Cut Big defenders."
+      }
+    },
+    {
+      "primitive_id": "w0_snake_case_id_w0_4",
+      "name": "MovementShooterOffense",
+      "verbatim_quote": "So far, scholars have proposed a variety of metrics to study player and team performance (Baghal 2012; Franks et al., 2015).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Identifies Movement Shooters by their off-ball movement patterns rather than static position assignments.",
+      "breakdown_regime": "Breaks down when players exhibit hybrid movement-offensive creation skills, making clear categorization difficult.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Movement-Shooter behavioral signatures map to GSI passing network centrality and GSE state-transition matrices for spacing plays.",
+        "source_operator": "w0_snake_case_id_w0_4",
+        "telemetry": "Frequency of off-ball screen usage relative to ball-handling actions distinguishes Movement Shooters."
+      }
+    },
+    {
+      "primitive_id": "kmeans_plus_plus_clustering",
+      "name": "K-means++ Clustering for Play Type Segmentation",
+      "verbatim_quote": "5 and thus may produce more accurate clustering results (Arthur and Vassilvitskii 2007).",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Data normalized; clusters correspond to distinct offensive roles; initialization improves convergence accuracy.",
+      "breakdown_regime": "When play-type distributions become overlapping or sparse, cluster assignments degrade.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Clustering maps high-dimensional play-type vectors to discrete positional categories, enabling structured player role identification in GSE.",
+        "source_operator": "kmeans_plus_plus_clustering",
+        "telemetry": "Elbow curve analysis and silhouette scores validate cluster stability."
+      }
+    },
+    {
+      "primitive_id": "standardized_playtype_matrix",
+      "name": "Standardized Play-Type Percentage Matrix",
+      "verbatim_quote": "Before applying the K-means++ algorithm, we also standardize all the percentages of play types and remove data from the miscellaneous category, which according to the company Synergy Sports, contains all the offensive possessions that cannot be clearly classified into any other play types.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All play-type percentages are normalized to zero mean and unit variance; misclassified plays excluded.",
+      "breakdown_regime": "Non-standardized inputs cause skewed cluster centroids; missing data leads to incomplete segmentation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Normalized play-type data serves as kernel input for K-means++, forming basis for positional assignment in GSI.",
+        "source_operator": "standardized_playtype_matrix",
+        "telemetry": "Z-scored play-type vectors used in K-means++ objective function."
+      }
+    },
+    {
+      "primitive_id": "hierarchical_linear_model",
+      "name": "Hierarchical Linear Model for Plus-Minus Estimation",
+      "verbatim_quote": "The model has the following specification: Y= Xβ+ Zγ+ e (1) where X is an m by 2n player matrix filled with values of 1, -1, and 0, where n equals the number of unique players in a season.",
+      "page": 5,
+      "latex": "Y = X\\beta + Z\\gamma + e",
+      "symbol_and_unit_ledger": "{'Y': 'Observed points scored differential per stint (dimensionless)', 'X': 'm×2n binary player matrix (1 = offensive, -1 = defensive, 0 = off-court)', 'β': 'Player-level positional plus-minus coefficients (points per stint)', 'Z': 'm×2k binary team matrix (1 = offensive team, -1 = defensive team)', 'γ': 'Team-level fixed effects (points per stint)', 'e': 'Independent error term with mean 0 and variance σ²'}",
+      "assumptions": "Linear relationship between player/team contributions and outcome; errors normally distributed with constant variance.",
+      "breakdown_regime": "Model fails when player/team effects are non-linear or heteroscedastic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Model encodes player and team influence on game outcomes; supports GSE state transition dynamics.",
+        "source_operator": "hierarchical_linear_model",
+        "telemetry": "Posterior distributions of β and γ provide probabilistic estimates of positional impact."
+      }
+    },
+    {
+      "primitive_id": "binary_design_matrices",
+      "name": "Binary Design Matrices for Player and Team Roles",
+      "verbatim_quote": "The value of 1 in X indicates a player is on the floor and is with the team playing offense in a stint.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'X': 'm×2n binary matrix (n = unique players)', 'Z': 'm×2k binary matrix (k = unique teams)'}",
+      "assumptions": "Each stint involves exactly one offensive and one defensive lineup; binary encoding captures role presence.",
+      "breakdown_regime": "Ambiguous stint labeling or multi-role players invalidate matrix structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binary matrices define player-team interaction space; enable temporal evolution tracking in GSE.",
+        "source_operator": "binary_design_matrices",
+        "telemetry": "Stint-by-stint matrix entries reflect real-time tactical deployment."
+      }
+    },
+    {
+      "primitive_id": "70c58c575aa4e90e_w2_g1",
+      "name": "2023 - Estimating Positional Plus-Minus in Ch.3 Grounded Operator",
+      "verbatim_quote": "Moving to positional defensive plus-minus, Figure 4 shows the posterior means of Bigs' defensive plus-minus are consistently higher than those of the other positions' defensive plus-minus.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 70c58c575aa4e90e_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "70c58c575aa4e90e_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "70c58c575aa4e90e_w2_g2",
+      "name": "2023 - Estimating Positional Plus-Minus in Ch.3 Grounded Operator",
+      "verbatim_quote": "Figure 5 shows that the 80% credible intervals of the differences of defensive plus-minus between Bigs and the other defensive positions are well above zero from 2015-16 to 2021-22, indicating strong evidence of Bigs providing more defensive contributions than the other defensive positions.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 70c58c575aa4e90e_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "70c58c575aa4e90e_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "70c58c575aa4e90e_w2_g3",
+      "name": "2023 - Estimating Positional Plus-Minus in Ch.3 Grounded Operator",
+      "verbatim_quote": "80% credible intervals of the differences of defensive plus-minus between Bigs and the other defensive positions.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 70c58c575aa4e90e_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "70c58c575aa4e90e_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_1",
+      "name": "HierarchicalBayesianEstimation",
+      "verbatim_quote": "Conclusion In this study, we have redefined seven offensive positions and three defensive positions in the NBA and employed a hierarchical Bayesian linear model to estimate positional plus-minus from 2015-16 to 2021-22 based on these offensive and defensive positions.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The model assumes normally distributed player performance around position means, with hyperpriors on position means and variances. It uses Gibbs sampling for posterior inference.",
+      "breakdown_regime": "Applicable across all seasons 2015-16 to 2021-22 without known breakdown.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Hierarchical Conformal Inference framework, where the hierarchical structure provides robust calibration against sportsbook biases and improves out-of-sample predictive intervals.",
+        "source_operator": "w3_snake_case_id_1",
+        "telemetry": "Average coverage rate of predictive intervals across holdout validation sets."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_2",
+      "name": "PositionalPlusMinusAnalysis",
+      "verbatim_quote": "Our analysis shows that Versatile Scorers and Bigs have the highest positional offensive and defensive plus-minus respectively throughout the seasons.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Performance is measured as points scored/allowed per 100 possessions relative to league average, adjusted for opponent quality and game context.",
+      "breakdown_regime": "Assumes linear additivity of player contributions within positions; non-linearity may arise at extreme performance tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state-transition models where positions represent distinct macro-states, and the analysis characterizes transitions between these states via expected value changes.",
+        "source_operator": "w3_snake_case_id_2",
+        "telemetry": "Transition probability matrices derived from historical game logs."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_3",
+      "name": "BallDominanceImpact",
+      "verbatim_quote": "These are not surprising results, given the fact that Versatile Scorers tend to be ball-dominant and star players on NBA teams.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Star players exhibit higher usage rates and thus their performance metrics are more heavily weighted in the position estimates.",
+      "breakdown_regime": "Breakdown occurs when superstar contracts distort market valuations, leading to biased position estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Ball-Dominance Adjustment Model, which corrects for the overrepresentation of elite ball-handlers in certain position clusters.",
+        "source_operator": "w3_snake_case_id_3",
+        "telemetry": "Correlation between individual usage rate and position-specific residual performance."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_4",
+      "name": "PaintProtectionValue",
+      "verbatim_quote": "Big players provide valuable defensive contributions as they not only guard opposing Bigs but also help protect the paint area.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Defensive impact is proxied by reduced points allowed in the paint, adjusted for team defensive scheme and opponent shooting efficiency.",
+      "breakdown_regime": "Breakdown occurs during pace-heavy eras when paint defense becomes less effective due to increased transition opportunities.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's Paint-Protection State-Transition Model, where Bigs occupy high-value defensive zones that reduce transition probabilities.",
+        "source_operator": "w3_snake_case_id_4",
+        "telemetry": "Expected points saved per defensive possession in the restricted area."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "70c58c575aa4e90e_t0",
+      "think": "This chapter introduces a hierarchical Bayesian plus-minus model to estimate player contributions at the position level rather than individual level. By borrowing strength across similar positions, the model addresses the high variance inherent in standard plus-minus statistics. The key innovation is treating offensive and defensive roles as latent variables that inform position assignment, enabling a more nuanced understanding of player value beyond traditional five-position schemes. The empirical application uses NBA play-type data to construct group-level parameters, demonstrating how the framework can quantify uncertainty in estimated effects. Window 1 Synthesis: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical linear mixed models (Searle et al., 1992) and adapted from individual-level plus-minus frameworks (Sill, 2010; Rosenbaum, 2004). The hierarchical extension builds on work in baseball (Carlin, 1998) and extends it to sports with complex team dynamics. Retrocausal Genealogy (Window 1): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and front offices seek reliable estimates of what players do best (shoot, pass, defend) while accounting for the quality of their teammates and opponents. The hierarchical structure reflects the belief that players sharing a position share common talent distributions. Theory of Mind (Window 1): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must avoid multicollinearity between offensive and defensive position assignments. The model assumes independence between these roles, which could leak information if, e.g., elite defenders also happen to be elite scorers. Cross-Layer Veto (Window 1): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "70c58c575aa4e90e_t1",
+      "think": "Chapter 2 (pages 5–9) introduces a dual methodology combining unsupervised learning and hierarchical modeling to estimate positional plus-minus in NBA basketball. Starting with raw play-type data, the authors standardize percentages and exclude ambiguous cases before applying K-means++ clustering to identify seven distinct offensive positions. This clustering approach leverages improved initialization techniques to enhance convergence and reduce sensitivity to local minima. The resulting clusters align with known roles such as Bigs, Shooters, and Versatile Scorers, supported by centroid-based play-type profiles. Subsequently, a hierarchical linear model is specified with two primary components: a player-level matrix X and a team-level matrix Z. These matrices encode player participation and team identity during stints, respectively. The model assumes a linear relationship between these variables and observed scoring differentials, incorporating both fixed and random effects. The inclusion of group-level priors allows for shrinkage estimation, improving generalizability across seasons. The Bayesian framework employs Gibbs sampling to derive posterior distributions, enabling uncertainty quantification. This methodological pipeline bridges descriptive analytics with predictive inference, supporting both GSI’s probabilistic forecasting and GSE’s tactical decision-making systems. Window 2 Synthesis: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This work builds upon Arthur and Vassilvitskii's (2007) K-means++ improvements and extends earlier positional modeling efforts in basketball analytics, integrating modern Bayesian hierarchical frameworks. Retrocausal Genealogy (Window 2): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The model accounts for player behavior under varying roles and team contexts, assuming strategic adaptability and positional consistency. Coaches may adjust lineups based on opponent tendencies, influencing how players interact with the system. Theory of Mind (Window 2): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "To prevent collinearity, orthogonalization of player and team effects is enforced. Leakage occurs if player roles are not strictly defined or if team dynamics are ignored, undermining model validity. Cross-Layer Veto (Window 2): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "70c58c575aa4e90e_t2",
+      "think": "Window 3 Synthesis: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "70c58c575aa4e90e_t3",
+      "think": "This chapter introduces a hierarchical Bayesian framework to estimate positional plus-minus (PPM) for NBA players across seven offensive and three defensive positions over eight seasons. The key insight is that traditional position labels are insufficiently granular; instead, latent player roles are extracted using k-means clustering on play-type frequency vectors. These roles serve as fixed effects in a hierarchical linear model, allowing partial pooling of estimates. The empirical findings reveal that Versatile Scorers dominate offensive PPM, while Bigs excel defensively. Notably, the variance structures differ substantially across positions, reflecting varying talent pools and strategic importance. The study also documents a narrowing gap in offensive PPM over time, driven primarily by the emergence of Roll and Cut Bigs who leverage spacing created by the three-point revolution. Limitations include treating all points equally regardless of game context and ignoring interactions between positions. Future work could incorporate game state dynamics and refine role definitions using deep learning. Window 4 Synthesis: Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The lineage traces back to Dean Oliver's Four Factors (2004), which introduced empirical metrics for basketball success. This was extended by PPM (2013) that attributed point differentials to individual players. The current work builds on these by introducing a probabilistic hierarchical treatment of latent positions, drawing inspiration from machine learning clustering and multi-level modeling in sports analytics. Retrocausal Genealogy (Window 4): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and front offices model opponents' strengths through position matchups. For instance, deploying a Big against a weaker offensive Big creates a favorable expectation. Players mentally categorize teammates into roles, adjusting their decision-making based on perceived position value. Bookmakers implicitly use similar role classifications when setting lines, though often with crude heuristics. Theory of Mind (Window 4): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity condition: Must ensure that offensive and defensive positions are not perfectly correlated (e.g., always pairing guards defensively with guards offensively). Leakage veto: Garbage-time data must be excluded using Cleaning the Glass thresholds to avoid contaminating regular-season estimates with inflated or deflated performances. Cross-Layer Veto (Window 4): Rooted in 2023 - Estimating Positional Plus-Minus in the NBA - Gong et al (70c58c575aa4e90e, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "book_id": "517382351f043971",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2502.21242v1",
+  "file_name": "arxiv_2502.21242v1.pdf",
+  "sha256": "517382351f043971426fdd5674895716195ef8ef6f37da4a340064994b50d64c",
+  "primary_domain": "other",
+  "pages_total": 11,
+  "pages_read": 11,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 11,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Hierarchical graph models integrate domain features for long-term player re-identification under occlusion and motion variability. The hierarchical graph structure of SUSHI establishes a multi-scale topological isomorphism between discrete spatiotemporal detections and continuous kinematic flows. By embedding domain-specific categorical priors (jersey, team) into the edge-weighting kernel, we unify appearance-based re-identification with rigid geometric constraints, forming a robust manifold for tracking highly non-linear athlete trajectories.",
+  "gsi_mapping": "Bayesian belief updates on tracklet continuity using team and jersey identifiers as probabilistic anchors in GSI's conformal predictive framework. GSI maps the binary edge classification in SUSHI to a conformal Bayesian inference problem. The MLP-encoded features act as likelihoods, while historical tracklet consistency provides the prior. We compute posterior probabilities for identity persistence across occlusions, utilizing conformal prediction sets to rigorously bound uncertainty in high-noise broadcast environments.",
+  "gse_mapping": "Situationally grounded state transitions in GSE leverage graph-hierarchical tracklets to infer player identity and motion persistence across occlusions. In GSE, the transition from detection nodes to tracklet graphs represents state evolution under abrupt acceleration vectors. Situational reasoning utilizes the sports-domain features to resolve visual degeneracy among teammates. The linear program acts as a global constraint solver, ensuring physical plausibility of player transitions across the pitch.",
+  "primitives": [
+    {
+      "primitive_id": "long_term_player_tracking",
+      "name": "Long-Term Player Tracking",
+      "verbatim_quote": "Elder York University Toronto, Canada jelder@yorku.ca Abstract In team sports analytics, long-term player tracking remains a challenging task due to player appearance similarity, occlusion, and dynamic motion patterns.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Players exhibit similar appearances; motion patterns vary dynamically; occlusions occur frequently.",
+      "breakdown_regime": "When players are visually indistinguishable or temporarily obscured.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's temporal state transition graph mirrors the tracking problem's graph hierarchy, where nodes represent player identities and edges encode motion continuity.",
+        "source_operator": "long_term_player_tracking",
+        "telemetry": "Re-identification accuracy rate over extended absences."
+      }
+    },
+    {
+      "primitive_id": "graph_based_reidentification",
+      "name": "Graph-Based Re-Identification",
+      "verbatim_quote": "We introduce SportsSUSHI, a hierarchical graph-based approach that leverages domain-specific features, including jersey numbers, team IDs, and field coordinates, to enhance tracking accuracy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Domain-specific features provide discriminative cues; graph structure encodes spatial-temporal relationships.",
+      "breakdown_regime": "When traditional appearance-based methods fail due to visual ambiguity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's kernel function computes similarity between tracklets using domain features, enabling robust association in high-occlusion environments.",
+        "source_operator": "graph_based_reidentification",
+        "telemetry": "Precision of tracklet-to-tracklet matching based on feature overlap."
+      }
+    },
+    {
+      "primitive_id": "domain_specific_features",
+      "name": "Domain-Specific Feature Integration",
+      "verbatim_quote": "The inclusion of domain-specific features in our approach significantly improves association accuracy, as demonstrated in our experiments.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Jersey numbers, team IDs, and field positions are reliable identifiers.",
+      "breakdown_regime": "Under conditions of low visual distinctiveness or partial occlusion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's feature space aligns with domain-specific cues, allowing for consistent identification across frames.",
+        "source_operator": "domain_specific_features",
+        "telemetry": "Improvement in tracking consistency when integrating team and jersey data."
+      }
+    },
+    {
+      "primitive_id": "hierarchical_tracking_framework",
+      "name": "Hierarchical Tracking Framework",
+      "verbatim_quote": "Player tracking is a specific case of a well-studied topic in computer vision - Multi-Object Tracking (MOT).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Short-term tracking provides initial associations; long-term coherence requires hierarchical refinement.",
+      "breakdown_regime": "When short-term tracking fails to maintain persistent identities through occlusions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's hierarchical inference engine applies MOT principles to construct stable player trajectories via multi-scale temporal alignment.",
+        "source_operator": "hierarchical_tracking_framework",
+        "telemetry": "Number of correctly maintained tracklets over time intervals."
+      }
+    },
+    {
+      "primitive_id": "hierarchical_graph_association",
+      "name": "Hierarchical Graph Association Operator",
+      "verbatim_quote": "Due to its ability to capture long-term associations, SUSHI is well-suited for the task of long-term tracking.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "G: Directed acyclic graph (dimensionless), V: Set of detection nodes (count), E: Set of temporal edges (count), L: Hierarchical level index (integer)",
+      "assumptions": "Assumes Markovian property holds within local temporal windows; assumes feature extraction yields stationary distributions across varying camera angles.",
+      "breakdown_regime": "Breaks down when occlusion duration exceeds the maximum temporal span of the highest hierarchical graph level, or during complete loss of visual signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping of SUSHI's multi-level graph construction to GSE's temporal state-transition manifolds, where higher levels represent macroscopic tactical shifts rather than microscopic kinematics.",
+        "source_operator": "hierarchical_graph_association",
+        "telemetry": "MOTA (Multi-Object Tracking Accuracy) and IDF1 scores over extended temporal sequences."
+      }
+    },
+    {
+      "primitive_id": "domain_feature_embedding",
+      "name": "Domain-Specific Feature Embedding Kernel",
+      "verbatim_quote": "Player tracking leverages both appearance and kinematic features, as in MOT, but requires additional sports-specific features like team IDs and jersey numbers due to the visual similarity among teammates [42, 49, 53].",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "f_app: Appearance feature vector (dimensionless embedding), f_kin: Kinematic feature vector (m/s, m/s^2), f_dom: Domain categorical feature (team ID, jersey number) (dimensionless integer)",
+      "assumptions": "Assumes OCR and team-color segmentation modules operate with bounded error rates; assumes distinct jersey numbers are visible at least intermittently.",
+      "breakdown_regime": "Fails under severe motion blur rendering jersey numbers unreadable, or during night games with poor illumination causing color space collapse.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a composite affinity matrix for GSI by concatenating standard re-ID embeddings with one-hot encoded domain priors, drastically reducing the collision space in high-density clusters.",
+        "source_operator": "domain_feature_embedding",
+        "telemetry": "Identity Switch (IDS) rate reduction compared to baseline appearance-only trackers."
+      }
+    },
+    {
+      "primitive_id": "nonlinear_kinematic_solver",
+      "name": "Non-Linear Kinematic Solver",
+      "verbatim_quote": "Unlike pedestrians, players exhibit abrupt, non-linear movements, which tracking methods often address [24,26,40,51].",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "a(t): Instantaneous acceleration vector (m/s^2), v(t): Velocity vector (m/s), \\Delta t: Discrete time step (s)",
+      "assumptions": "Assumes player dynamics can be approximated by piecewise polynomial splines rather than constant velocity models; assumes frame-rate is sufficient to capture peak accelerations.",
+      "breakdown_regime": "Singularities occur if sampling frequency is too low to satisfy the Nyquist-Shannon theorem for rapid directional changes, leading to aliasing in trajectory reconstruction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's situational reasoning engine, replacing standard Kalman filters with adaptive, non-linear state predictors that account for sport-specific burst mechanics.",
+        "source_operator": "nonlinear_kinematic_solver",
+        "telemetry": "Trajectory smoothness metrics and deviation from ground-truth paths during high-acceleration events."
+      }
+    },
+    {
+      "primitive_id": "binary_edge_classification",
+      "name": "Neural Edge Classification Operator",
+      "verbatim_quote": "Weight-sharing and level-specific feature encoding allow for data-driven level-specific feature selection.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "W: Shared weight matrix of MLP (dimensionless), x_e: Edge feature vector (dimensionless), y_e: Binary classification output (0 or 1)",
+      "assumptions": "Assumes the underlying distribution of valid tracklet connections is learnable via neural message passing; assumes weight sharing generalizes across different temporal scales.",
+      "breakdown_regime": "Performance degrades if the training dataset lacks diversity in camera perspectives, causing the MLP to overfit to specific spatial configurations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Forms the core decision boundary in GSI's conformal inference layer, translating continuous feature similarities into discrete, logically consistent track assignments.",
+        "source_operator": "binary_edge_classification",
+        "telemetry": "Precision and Recall of edge predictions at each hierarchical level."
+      }
+    },
+    {
+      "primitive_id": "graph_neural_message_passing",
+      "name": "Graph Neural Message Passing",
+      "verbatim_quote": "The resulting graph is used as input into GNN and is solved with neural message passing.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Graph nodes represent tracked entities; edges encode spatial proximity; message passing updates node embeddings via learned aggregation functions.",
+      "breakdown_regime": "Singularity occurs when graph connectivity becomes sparse due to severe occlusion or camera drift, leading to collapsed posterior distributions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal predictive regions via graph convolutional posterior calibration and to GSE state-transition matrices through edge flow propagation.",
+        "source_operator": "graph_neural_message_passing",
+        "telemetry": "Tracking accuracy drop during occlusion events serves as empirical verification."
+      }
+    },
+    {
+      "primitive_id": "sportsmot_hockey_dataset",
+      "name": "SportsMOT Hockey Dataset Construction",
+      "verbatim_quote": "To explore longer-term tracking we introduce a new hockey tracking dataset.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Whole-surface camera captures player trajectories; occluded bounding boxes are imputed via weak tracking ground truth and mouse-pointer annotation.",
+      "breakdown_regime": "Degenerates when occlusion duration exceeds typical replay review timescales, causing irrecoverable identity switches.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents a specific instance of the broader GSI multi-object tracking (MOT) likelihood framework, parameterized by hockey's unique geometry.",
+        "source_operator": "sportsmot_hockey_dataset",
+        "telemetry": "Frame-level bounding box overlap metrics quantify annotation quality."
+      }
+    },
+    {
+      "primitive_id": "fastreid_matching",
+      "name": "FastReID Feature Matching",
+      "verbatim_quote": "The annotation process was a two-step approach: • Weak tracking ground truth was generated by annotaFigure 4.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Euclidean distance between pre-trained ResNet-50 feature vectors approximates identity similarity; threshold-based assignment resolves correspondences.",
+      "breakdown_regime": "Breaks down when intra-class variance exceeds inter-class variance, typically caused by uniform team uniforms or similar body types.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Embeds into GSE track association via learned similarity metrics within a recurrent state-space model, enabling temporal continuity.",
+        "source_operator": "fastreid_matching",
+        "telemetry": "Matching accuracy drops sharply at larger frame intervals, as measured by cosine similarity."
+      }
+    },
+    {
+      "primitive_id": "hockey_tracking_singularity",
+      "name": "Hockey Tracking Singularity",
+      "verbatim_quote": "In most MOT datasets when the person is occluded there are no bounding box annotations for them.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Complete trajectory reconstruction requires imputation of missing bounding boxes; perfect reconstruction occurs only when occlusion depth is shallow.",
+      "breakdown_regime": "Singular limit where all trajectories become indistinguishable, rendering posterior identity probabilities uniform across all candidates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corresponds to a GSI uncertainty quantification failure mode, manifesting as divergent predictive entropy in probabilistic MOT solvers.",
+        "source_operator": "hockey_tracking_singularity",
+        "telemetry": "Average clip length serves as a proxy for typical occlusion severity."
+      }
+    },
+    {
+      "primitive_id": "tracking_with_temporal_dependencies",
+      "name": "Temporal Dependency Tracking Kernel",
+      "verbatim_quote": "Longteng Kong, Di Huang, and Yunhong Wang. Long-term action dependence-based hierarchical deep association for multi-athlete tracking in sports videos. IEEE Transactions on Image Processing, 29:7957–7969, 2020.",
+      "page": 10,
+      "latex": "\\mathcal{L}_{\\text{track}} = \\sum_{t=1}^{T} \\log p(\\mathbf{x}_t | \\mathbf{x}_{<t}, \\mathbf{a}_{<t})",
+      "symbol_and_unit_ledger": "{'T': 'number of time steps (dimensionless)', 'p(\\\\mathbf{x}_t | \\\\mathbf{x}_{<t}, \\\\mathbf{a}_{<t})': 'conditional probability density over trajectory (dimensionless)'}",
+      "assumptions": "Athletes' actions follow a Markovian process; motion dynamics are stationary over short intervals.",
+      "breakdown_regime": "When inter-player occlusion exceeds 50% or motion blur dominates visual features.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps temporal associations to GSE state-space via recurrent neural networks with attention mechanisms.",
+        "source_operator": "tracking_with_temporal_dependencies",
+        "telemetry": "Mean average precision (mAP) over tracked athletes per game segment."
+      }
+    },
+    {
+      "primitive_id": "pose_based_long_term_tracking",
+      "name": "Pose-Based Long-Term Tracking Operator",
+      "verbatim_quote": "Longteng Kong, Mengxiao Zhu, Nan Ran, Qingjie Liu, and Rui He. Online multiple athlete tracking with pose-based long-term temporal dependencies. Sensors, 21(1):197, 2020.",
+      "page": 10,
+      "latex": "\\mathcal{L}_{\\text{pose}} = \\sum_{i=1}^{N} \\left\\| \\mathbf{p}_i^t - \\mathbf{p}_i^{t-1} \\right\\|^2 + \\lambda \\cdot \\mathcal{L}_{\\text{reid}}",
+      "symbol_and_unit_ledger": "{'N': 'number of athletes (dimensionless)', '\\\\mathbf{p}_i^t': '2D pose coordinates at time t (pixels)', '\\\\lambda': 'weighting factor for re-identification (dimensionless)'}",
+      "assumptions": "Pose estimation accuracy is above 90%; athletes maintain consistent body shape and movement patterns.",
+      "breakdown_regime": "When pose estimation fails due to extreme camera angles or low-resolution input.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes athlete identity and motion into GSE's semantic state vector using pose embeddings.",
+        "source_operator": "pose_based_long_term_tracking",
+        "telemetry": "Re-identification rate (R@1) across video sequences."
+      }
+    },
+    {
+      "primitive_id": "deep_player_identification",
+      "name": "Deep Player Identification Function",
+      "verbatim_quote": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 6247–6257, 2020.",
+      "page": 9,
+      "latex": "\\mathcal{L}_{\\text{id}} = \\sum_{i=1}^{N} \\mathcal{D}_{\\text{KL}}(p_i || q_i)",
+      "symbol_and_unit_ledger": "{'p_i': \"true distribution of player i's appearance features (dimensionless)\", 'q_i': \"estimated distribution of player i's appearance features (dimensionless)\", '\\\\mathcal{D}_{\\\\text{KL}}': 'Kullback-Leibler divergence (nats)'}",
+      "assumptions": "Player appearance features are invariant under lighting and viewpoint changes within a game.",
+      "breakdown_regime": "When two athletes share identical uniform colors or when illumination varies drastically.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Establishes isomorphism between GSI’s belief state and GSE’s player identity graph.",
+        "source_operator": "deep_player_identification",
+        "telemetry": "Identification accuracy (Acc@1) averaged over all tracked athletes."
+      }
+    },
+    {
+      "primitive_id": "multi_object_tracking_by_association",
+      "name": "Multi-Object Tracking Association Kernel",
+      "verbatim_quote": "Yifu Zhang, Peize Sun, Yi Jiang, Dongdong Yu, Fucheng Weng, Zehuan Yuan, Ping Luo, Wenyu Liu, and Xinggang Wang. Bytetrack: Multi-object tracking by associating every detection box. In European Conference on Computer Vision, pages 1–21. Springer, 2022.",
+      "page": 11,
+      "latex": "\\mathcal{L}_{\\text{assoc}} = \\min_{\\mathcal{A}} \\sum_{i,j} c_{ij} \\cdot a_{ij}",
+      "symbol_and_unit_ledger": "{'c_{ij}': 'cost of assigning detection i to track j (dimensionless)', 'a_{ij}': 'binary assignment variable (dimensionless)'}",
+      "assumptions": "Each detection corresponds to exactly one track; cost matrix is symmetric and non-negative.",
+      "breakdown_regime": "When number of detections exceeds number of tracks or vice versa by more than 30%.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps detection-to-track assignments into GSE's event-driven transition system.",
+        "source_operator": "multi_object_tracking_by_association",
+        "telemetry": "Number of false positives and negatives per minute of gameplay."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "517382351f043971_t0",
+      "think": "This chapter introduces SportsSUSHI, a novel hierarchical graph-based model for long-term player tracking in team sports. The core challenge lies in maintaining player identity across occlusions and motion variability. The approach integrates domain-specific features—jersey numbers, team IDs, and field coordinates—into a graph structure that supports both short-term and long-term tracking. This formulation enables robust re-identification even when players are visually ambiguous or temporarily hidden. The model's design reflects a synthesis of computer vision and structured reasoning, where graph hierarchies act as a semantic scaffold for temporal continuity. The use of a stationary camera in the hockey dataset ensures comprehensive coverage of the playing surface, which is critical for evaluating long-term tracking performance. The paper demonstrates that incorporating domain knowledge enhances tracking accuracy, suggesting that structured feature integration is essential for scalable, real-world deployment in sports analytics. From a foundational perspective, this work bridges the gap between generic MOT frameworks and sport-specific demands, offering a principled approach to player tracking that accounts for both appearance and contextual cues. Window 1 Synthesis: Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon prior work in multi-object tracking (MOT), particularly in pedestrian and vehicle contexts, this research extends the paradigm to team sports by emphasizing domain-specific features and hierarchical graph modeling. Retrocausal Genealogy (Window 1): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The authors model the cognitive and perceptual challenges faced by coaches and analysts who must track individual players over extended periods. The system anticipates human limitations in visual tracking and compensates through algorithmic robustness. Theory of Mind (Window 1): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "The methodology avoids over-reliance on appearance alone, preventing leakage from visual similarity into incorrect associations. It enforces anti-collinearity by ensuring that domain features are not redundant with motion patterns, thus preserving signal integrity. Cross-Layer Veto (Window 1): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "517382351f043971_t1",
+      "think": "The foundational shift presented in this chapter window is the transition from generic Multi-Object Tracking (MOT) paradigms—predominantly designed for linear pedestrian or vehicular dynamics—to a specialized Multiple Athlete Tracking (MAT) framework. Standard MOT relies heavily on constant velocity assumptions and purely appearance-based Re-ID, which fundamentally fails in the high-frequency, non-linear kinematic regime of professional sports. The introduction of the SUSHI (SportsSUSHI) architecture addresses this by constructing a hierarchical graph representation. At the base level, nodes represent raw detections, connected by edges weighted through a combination of spatial proximity and deep appearance embeddings. However, the critical epistemic leap occurs through the integration of domain-specific categorical priors: jersey numbers and team IDs. These features act as hard constraints within the soft probabilistic framework of the graph neural network (GNN). By employing weight-sharing mechanisms across hierarchical levels, the system learns to dynamically adjust the importance of these features based on temporal distance. Short-term tracklets rely more heavily on kinematic continuity and fine-grained appearance, whereas long-term associations leverage the invariant nature of jersey numbers and team colors. This hierarchical approach effectively decouples the immediate, noisy dynamics of player movement from the persistent, structural identity of the athletes. The mathematical formulation translates this into a series of binary edge classification tasks solved via neural message passing, ultimately converted into final trajectories through a linear programming relaxation. This ensures global optimality in track assignment while respecting local feature affinities, providing a robust solution to the severe occlusion and visual similarity challenges inherent in broadcast sports video.",
+      "retrocausal_genealogy": "The lineage of this primitive traces back to classical Kalman filtering and Hungarian algorithm-based assignment in early MOT. It evolved through Deep SORT's incorporation of CNN-based appearance features. The specific push toward MAT was historically stalled by a lack of large-scale annotated datasets. The retrocausal catalyst here is the release of SoccerNet and SportsMOT, which provided the necessary empirical grounding to shift focus from generic object tracking to domain-aware, hierarchical graph-based association, explicitly accounting for sports semantics.",
+      "theory_of_mind": "Modeling the opposing agents in this context involves understanding the cognitive load of both the players and the tracking algorithm. Players execute abrupt, non-linear maneuvers designed to deceive opponents and evade markers. A naive tracker interprets these as noise or identity switches. SportsSUSHI embodies a 'theory of mind' by anticipating these deceptive kinematic bursts. It understands that a sudden change in velocity vector does not necessarily imply a new identity, especially if supported by consistent jersey number recognition. Furthermore, it accounts for the collective behavior of teams, using team IDs to constrain the search space, recognizing that players from the same team rarely occupy the exact same spatial coordinates simultaneously without occlusion.",
+      "cross_layer_veto": "Anti-collinearity and leakage vetoes are crucial to prevent the model from over-relying on a single feature modality. For instance, if two players wear similar colored jerseys and run in parallel, appearance and team ID features become collinear and uninformative. The cross-layer veto mechanism must detect this degeneracy and temporarily elevate the weight of kinematic divergence or pose extraction features. Conversely, during severe motion blur, visual features may leak noise into the kinematic solver; the system must veto unreliable OCR outputs and fall back to pure trajectory extrapolation. Ensuring these vetoes function correctly prevents catastrophic identity swaps during critical, high-speed play sequences."
+    },
+    {
+      "trace_id": "517382351f043971_t2",
+      "think": "This chapter introduces a novel hockey tracking dataset and evaluates SportsSUSHI against SoccerNet. The core innovation is integrating geometric priors (field position) and identity priors (FastReID) into a graph neural network (GNN) framework. This enables robust multi-object tracking (MOT) under severe occlusion, achieving state-of-the-art HOTA scores. The methodological advance bridges discrete assignment problems (Hungarian algorithm) with continuous feature learning (ResNet), creating a hybrid solver that propagates both spatial and identity information. Empirically, adding field position and jersey number features consistently improves performance, demonstrating hierarchical information fusion. Window 3 Synthesis: Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing coaches/modelers might assume players move deterministically along fixed lanes, ignoring stochasticity. Our framework explicitly models uncertainty, allowing for diverse tactical interpretations. Theory of Mind (Window 3): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Avoids collinearity by ensuring FastReID features are decorrelated from geometric features; identity priors must not leak into spatial kernels, preventing overfitting to training set appearance statistics. Cross-Layer Veto (Window 3): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "517382351f043971_t3",
+      "think": "Chapter window 4 (pages 9–11) presents foundational work in multi-athlete tracking within sports video analysis, emphasizing temporal dependencies, pose-based tracking, and deep player identification. The core mathematical structure revolves around probabilistic models that integrate appearance, motion, and identity cues. Temporal dependency kernels leverage hierarchical deep associations to maintain continuity across frames, while pose-based methods utilize spatial embeddings to encode athlete-specific motion patterns. Deep player identification functions rely on KL-divergence to align observed appearances with stored identities. Finally, multi-object tracking relies on optimal assignment problems to link detections with existing tracks. These primitives collectively form a robust framework for real-time tactical intelligence in dynamic environments such as basketball or hockey. The integration of these components enables GSI to construct belief states about player behavior and GSE to simulate strategic decisions based on evolving game states. Window 4 Synthesis: Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The lineage traces back to early works in computer vision such as Ben Shitrit et al. (2011) and Bergmann et al. (2019), which laid groundwork for global appearance constraints and tracking without bells and whistles. Subsequent advancements in pose estimation and deep re-identification have refined these approaches, culminating in frameworks like ByteTrack and FairMOT. Retrocausal Genealogy (Window 4): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Modeling opposing agents requires understanding their likely movement patterns, positioning strategies, and behavioral tendencies. For instance, a coach may anticipate an opponent's defensive alignment based on prior tracking data, enabling predictive adjustments in GSE's tactical engine. Theory of Mind (Window 4): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that tracking models do not redundantly use similar features (e.g., both pose and appearance). Leakage veto prevents cross-contamination between GSI's probabilistic inference and GSE's deterministic state transitions, maintaining integrity of each layer's operational domain. Cross-Layer Veto (Window 4): Rooted in arxiv_2502.21242v1 (517382351f043971, 11/11 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

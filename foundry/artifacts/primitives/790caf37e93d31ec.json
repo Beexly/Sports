@@ -1,0 +1,306 @@
+{
+  "book_id": "790caf37e93d31ec",
+  "source_status": "COMPLETE",
+  "title": "openalex_W4393154539",
+  "file_name": "openalex_W4393154539.pdf",
+  "sha256": "790caf37e93d31ec82ba7e525b785a617bc67f8ac9fdffe43ec52c9a7a6c26d3",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 9,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Kalman filter provides recursive state estimation through prediction and update steps, integrating process and observation noise covariances for real-time object tracking. A unified tracking confidence metric Drda = μ(Ddist, Diou, Dscale) incorporating distance, IoU, and scale factors under threshold σ.",
+  "gsi_mapping": "Bayesian inference framework in GSI employs Kalman filter for probabilistic state estimation, incorporating uncertainty quantification via process and observation noise matrices. Bayesian inference framework maps Ddist, Diou, Dscale to posterior belief over object identity using conformal predictive distributions.",
+  "gse_mapping": "GSE utilizes Kalman transitions to model dynamic state evolution, enabling situational awareness through recursive prediction and update of object trajectories with noise-adaptive gains. Situational reasoning engine models state transitions via Drda thresholds to update object tracks in dynamic scenes with motion ambiguity.",
+  "primitives": [
+    {
+      "primitive_id": "790caf37e93d31ec_w0_g1",
+      "name": "openalex_W4393154539 Ch.1 Grounded Operator",
+      "verbatim_quote": "Sampling-Resilient Multi-Object Tracking Zepeng Li1, Dongxiang Zhang2*, Sai Wu2, Mingli Song2, Gang Chen2 1 The State Key Laboratory of Blockchain and Data Security, Zhejiang University 2 College of Computer Science and Technology, Zhejiang University {lizepeng,zhangdongxiang,wusai,brooksong,cg}@zju.edu.cn Abstract Multi-Object Tracking (MOT) is a cornerstone operator for video surveillance applications.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 790caf37e93d31ec_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "790caf37e93d31ec_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "790caf37e93d31ec_w0_g2",
+      "name": "openalex_W4393154539 Ch.1 Grounded Operator",
+      "verbatim_quote": "To enable real-time processing of large-scale live video streams, we study an interesting scenario called down-sampled MOT, which performs object tracking only on a small subset of video frames.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 790caf37e93d31ec_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "790caf37e93d31ec_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "790caf37e93d31ec_w0_g3",
+      "name": "openalex_W4393154539 Ch.1 Grounded Operator",
+      "verbatim_quote": "The problem is challenging for state-of-the-art MOT methods, which exhibit significant performance degradation under high frame reduction ratios.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 790caf37e93d31ec_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "790caf37e93d31ec_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "kalman_prediction_step",
+      "name": "Kalman Prediction Step",
+      "verbatim_quote": "In the prediction step, the state at the kth frame ˆx′ k and state estimated covariance matrix P ′ k are predicted via the following equations, where Qk is the process noise covariance matrix.",
+      "page": 3,
+      "latex": "\\hat{x}'_k = F \\hat{x}_{k-1} \\quad \\text{and} \\quad P'_k = F P_{k-1} F^\\top + Q_k",
+      "symbol_and_unit_ledger": "{'\\\\hat{x}_k': 'state vector at time k (dimensionless)', 'F': 'state transition matrix (dimensionless)', 'P_k': 'error covariance matrix (dimensionless)', 'Q_k': 'process noise covariance matrix (dimensionless)'}",
+      "assumptions": "Linear dynamics, Gaussian noise, known state transition model.",
+      "breakdown_regime": "Nonlinear systems or non-Gaussian noise invalidate standard Kalman predictions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Prediction kernel in GSE enables forward state estimation; in GSI, supports Bayesian prior generation for posterior inference.",
+        "source_operator": "kalman_prediction_step",
+        "telemetry": "Prediction error variance and cross-correlation between predicted and actual states."
+      }
+    },
+    {
+      "primitive_id": "kalman_update_step",
+      "name": "Kalman Update Step",
+      "verbatim_quote": "ˆx′ k = F ˆxk-1 (1) P ′ k = F P k-1F ⊤+ Qk (2) In the update step, KF blends the new observation with the old information from prior state with the Kalman gain matrix Kk.",
+      "page": 3,
+      "latex": "\\hat{x}_k = \\hat{x}'_k + K_k (z_k - H \\hat{x}'_k) \\quad \\text{and} \\quad P_k = (I - K_k H) P'_k",
+      "symbol_and_unit_ledger": "{'\\\\hat{x}_k': 'posterior state estimate (dimensionless)', 'K_k': 'Kalman gain matrix (dimensionless)', 'z_k': 'observation vector (dimensionless)', 'H': 'observation matrix (dimensionless)', 'P_k': 'posterior error covariance (dimensionless)'}",
+      "assumptions": "Linear observation model, additive Gaussian noise, known observation matrix.",
+      "breakdown_regime": "Nonlinear observations or non-Gaussian residuals compromise accuracy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Update mechanism mirrors Bayesian posterior computation in GSI; GSE uses it for adaptive trajectory refinement.",
+        "source_operator": "kalman_update_step",
+        "telemetry": "Residual magnitude and innovation consistency across frames."
+      }
+    },
+    {
+      "primitive_id": "process_noise_modeling",
+      "name": "Process Noise Modeling",
+      "verbatim_quote": "Qk consists of the errors caused in the motion process.",
+      "page": 3,
+      "latex": "Q_k = \\mathbb{E}[(\\Delta x)^2] \\quad \\text{where } \\Delta x \\text{ represents motion error}",
+      "symbol_and_unit_ledger": "{'Q_k': 'process noise covariance matrix (dimensionless)', '\\\\Delta x': 'motion error vector (dimensionless)'}",
+      "assumptions": "Motion errors are stationary and modeled as zero-mean Gaussian.",
+      "breakdown_regime": "Rapidly changing velocities or unpredictable motion patterns lead to underestimation of Qk.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSI to dynamically adjust belief uncertainty; GSE uses Qk to tune robustness against motion anomalies.",
+        "source_operator": "process_noise_modeling",
+        "telemetry": "Variance of motion-induced deviations over time windows."
+      }
+    },
+    {
+      "primitive_id": "kalman_gain_optimization",
+      "name": "Kalman Gain Optimization",
+      "verbatim_quote": "(5), the estimation state covariance matrix P ′ k is also updated according to the Kalman gain Kk.",
+      "page": 3,
+      "latex": "K_k = P'_k H^\\top (H P'_k H^\\top + R_k)^{-1}",
+      "symbol_and_unit_ledger": "{'K_k': 'Kalman gain matrix (dimensionless)', \"P'_k\": 'predicted error covariance (dimensionless)', 'H': 'observation matrix (dimensionless)', 'R_k': 'observation noise covariance (dimensionless)'}",
+      "assumptions": "Observation and process noises are independent and Gaussian distributed.",
+      "breakdown_regime": "Ill-conditioned or singular matrices in gain calculation cause numerical instability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gain optimization aligns with Bayesian evidence weighting in GSI; GSE applies it for optimal fusion of sensor data.",
+        "source_operator": "kalman_gain_optimization",
+        "telemetry": "Gain convergence rate and stability of recursive updates."
+      }
+    },
+    {
+      "primitive_id": "tracking_confidence_threshold",
+      "name": "Tracking Confidence Threshold Function",
+      "verbatim_quote": "If this value is smaller than a threshold σ, the tracking confidence is high and we directly set Drda = μ(Ddist, Diou).",
+      "page": 5,
+      "latex": "\\text{Drda} = \\mu(D_{\\text{dist}}, D_{\\text{iou}}) \\quad \\text{if } D_{\\text{dist}} < \\sigma",
+      "symbol_and_unit_ledger": "{'Drda': 'dimensionless tracking confidence score', 'Ddist': 'normalized Euclidean distance between predictions', 'Diou': 'IoU-based distance metric', 'σ': 'threshold parameter (dimensionless)'}",
+      "assumptions": "Objects are well-localized; tracking quality improves with lower Ddist and higher Diou.",
+      "breakdown_regime": "When Ddist ≥ σ, Dscale must be included to maintain robustness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's motion-aware tracking kernel through conditional logic on Ddist.",
+        "source_operator": "tracking_confidence_threshold",
+        "telemetry": "MOTA score reflects tracking consistency under varying confidence regimes."
+      }
+    },
+    {
+      "primitive_id": "multi_factor_tracking_score",
+      "name": "Multi-Factor Tracking Score Function",
+      "verbatim_quote": "Otherwise, we need to incorporate Dscale as a complementary factor and set Drda = μ(Ddist, Diou, Dscale).",
+      "page": 5,
+      "latex": "\\text{Drda} = \\mu(D_{\\text{dist}}, D_{\\text{iou}}, D_{\\text{scale}})",
+      "symbol_and_unit_ledger": "{'Drda': 'dimensionless tracking confidence score', 'Ddist': 'normalized Euclidean distance between predictions', 'Diou': 'IoU-based distance metric', 'Dscale': 'relative scale variation between frames'}",
+      "assumptions": "Scale variation introduces uncertainty; requires additional factor for accurate tracking.",
+      "breakdown_regime": "When Ddist ≥ σ, Dscale becomes essential for maintaining tracking integrity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Extends GSE's tracking kernel to include scale-awareness for occlusion handling.",
+        "source_operator": "multi_factor_tracking_score",
+        "telemetry": "IDF1 metric evaluates identity preservation under scale changes."
+      }
+    },
+    {
+      "primitive_id": "benchmark_dataset_splitting",
+      "name": "Benchmark Dataset Splitting Protocol",
+      "verbatim_quote": "For MOT17 and MOT20, we split the videos into two parts of equal length and used them for training and testing, respectively.",
+      "page": 5,
+      "latex": "\\text{Split}_{\\text{MOT17/20}} = \\frac{\\text{Video Length}}{2}",
+      "symbol_and_unit_ledger": "{'Split': 'video segment division protocol', 'Video Length': 'total frame count per video'}",
+      "assumptions": "Temporal uniformity ensures fair cross-validation across datasets.",
+      "breakdown_regime": "Applies only to MOT17 and MOT20 due to lack of public test annotations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's data partitioning strategy for model validation.",
+        "source_operator": "benchmark_dataset_splitting",
+        "telemetry": "Performance consistency across splits validates generalization capability."
+      }
+    },
+    {
+      "primitive_id": "motion_analysis_dataset",
+      "name": "Motion Analysis Dataset Specification",
+      "verbatim_quote": "DanceTrack is a recent dataset proposed to emphasize the importance of motion analysis.",
+      "page": 5,
+      "latex": "\\text{Dataset}_{\\text{DanceTrack}} = \\{v_i\\}_{i=1}^{100}, \\text{with } v_i \\in \\mathbb{R}^{T \\times H \\times W \\times C}",
+      "symbol_and_unit_ledger": "{'Dataset_DanceTrack': 'motion-centric video dataset', 'v_i': 'video sequence indexed by i', 'T': 'temporal resolution (frames)', 'H': 'height in pixels', 'W': 'width in pixels', 'C': 'channel count (RGB)'}",
+      "assumptions": "Motion patterns dominate object behavior in DanceTrack.",
+      "breakdown_regime": "Applicable when motion cues outweigh static appearance features.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSE’s motion signature extraction module.",
+        "source_operator": "motion_analysis_dataset",
+        "telemetry": "Validation set performance indicates motion-aware tracking efficacy."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_1",
+      "name": "ParallelProcessingComplexity",
+      "verbatim_quote": "ByteTrack can be viewed as a variant without these two components.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes standard Kalman filtering framework with linear-Gaussian approximations and idealized sensor noise.",
+      "breakdown_regime": "Breaks down when sensor noise becomes highly non-Gaussian or when computational constraints prevent real-time updates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's sequential Bayesian filtering paradigm for probabilistic track maintenance, where SOKF reduces telemetry load through selective update.",
+        "source_operator": "w3_snake_case_id_1",
+        "telemetry": "Reduction in computational complexity per frame, measured in GFLOPs or latency reduction."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_2",
+      "name": "DataAssociationLoss",
+      "verbatim_quote": "It is not surprising to find that when RDA is removed, the performance on the matching-related metrics, such as IDF1, drops significantly.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes optimal assignment via Hungarian algorithm or bipartite matching under idealized target dynamics.",
+      "breakdown_regime": "Breaks down when targets exhibit abrupt changes in appearance or geometry, causing assignment errors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's situation-aware state-transition logic, where data association loss triggers replanning or uncertainty recalculation.",
+        "source_operator": "w3_snake_case_id_2",
+        "telemetry": "Drop in IDF1 score serves as empirical veto signal for switching to alternative association strategies."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_3",
+      "name": "KalmanGainOptimization",
+      "verbatim_quote": "In contrast, SOKF is more important for the remaining metrics.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes stationary noise statistics and linear prediction models within Kalman filter framework.",
+      "breakdown_regime": "Breaks down when noise statistics are time-varying or non-stationary, leading to suboptimal gains.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction framework, where SOKF's adaptive gain scheduling provides tighter predictive intervals.",
+        "source_operator": "w3_snake_case_id_3",
+        "telemetry": "Improvement in overall HOTA metric reflects better coverage of true trajectories within predicted bounds."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_4",
+      "name": "PositionPredictionLSTM",
+      "verbatim_quote": "We also conduct a break-down analysis on the components of SOKF and examine the effect of our proposed LSTM-Based Position Prediction (LSTM), BNNBased Noise Estimation (BNN) and Optimal Kalman Gain (OKG).",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes Markovian property in target trajectories and uses recurrent neural networks for temporal feature extraction.",
+      "breakdown_regime": "Breaks down when long-term dependencies become critical and memory capacity of LSTM saturates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's recurrent belief propagation, where LSTM predicts latent states for enhanced situational awareness.",
+        "source_operator": "w3_snake_case_id_4",
+        "telemetry": "Reduction in position error variance quantifies improved state-transition prediction fidelity."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "790caf37e93d31ec_t0",
+      "think": "Window 1 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "790caf37e93d31ec_t1",
+      "think": "Chapter window 2 introduces the foundational Kalman filter methodology within the context of SR-Track, emphasizing its role in object tracking. The filter operates recursively through prediction and update steps, leveraging state transition and observation matrices to estimate object locations. Process noise Qk captures motion uncertainties, while observation noise Rk accounts for sensor inaccuracies. The Kalman gain Kk optimally balances prior estimates with new measurements. These components form a coherent mathematical structure enabling real-time tracking with minimal computational overhead. The integration of Bayesian neural networks for error prediction suggests an extension beyond classical KF, potentially enhancing robustness in complex environments such as multi-object tracking scenarios. Window 2 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The Kalman filter originates from Wiener's work on optimal filtering and was formalized by Kalman in 1960. Its application in tracking evolved from radar signal processing to modern computer vision and autonomous systems. Retrocausal Genealogy (Window 2): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Modeling opponents involves predicting their movement using similar probabilistic frameworks. Coaches may use these principles to anticipate player behavior based on past motion patterns and environmental constraints. Theory of Mind (Window 2): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that process and observation models do not redundantly encode the same information. Leakage veto prevents erroneous propagation of noise across layers, maintaining integrity of state estimates. Cross-Layer Veto (Window 2): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "790caf37e93d31ec_t2",
+      "think": "Chapter window 3 focuses on tracking confidence metrics and benchmark datasets. The core innovation lies in defining Drda as a function of Ddist, Diou, and optionally Dscale, depending on whether Ddist falls below threshold σ. This formulation enables adaptive tracking confidence that adjusts based on spatial alignment and scale consistency. The use of MOT17, MOT20, and DanceTrack datasets allows for comprehensive evaluation across indoor/outdoor, crowded, and motion-intensive scenarios. Each dataset's unique characteristics—such as pedestrian density in MOT20 or motion complexity in DanceTrack—inform how tracking algorithms should adapt their decision boundaries. The splitting protocol ensures reproducible results by dividing videos into equal-length segments for training/testing. These primitives form the foundation for GSI's probabilistic tracking inference and GSE's dynamic state transition modeling. Window 3 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical tracking frameworks like MOT17 and IoU-based metrics, evolving toward probabilistic and motion-aware approaches seen in modern trackers like ByteTrack and OC-SORT. Retrocausal Genealogy (Window 3): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing behaviors in tracking: one agent prioritizes spatial coherence while another emphasizes temporal continuity, reflecting real-world competition between static and dynamic tracking strategies. Theory of Mind (Window 3): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to any single modality by enforcing multi-factor integration in Drda. Ensures no leakage from appearance-only models into motion-sensitive domains. Cross-Layer Veto (Window 3): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "790caf37e93d31ec_t3",
+      "think": "The chapter introduces a hierarchical tracking pipeline leveraging sparse observation Kalman filters and robust data association to reduce computational load while maintaining high accuracy across MOT17 and DanceTrack datasets. The ablation study demonstrates that optimal Kalman gain scheduling and LSTM-based prediction are essential for handling diverse pedestrian motions, whereas traditional data association methods degrade performance under challenging scenarios. These primitives establish a foundational framework for scalable multi-object tracking in smart city environments, where real-time processing must balance precision with resource constraints. Window 4 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing coaches/models prioritize either computational efficiency (e.g., ByteTrack) or accuracy (e.g., BoT-SORT); the introduced method aims to create a cognitive model that anticipates both constraints and performance trade-offs in dynamic urban tracking. Theory of Mind (Window 4): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity condition requires independent innovation vectors; leakage veto occurs when LSTM hidden states leak information across disjoint tracks, violating conditional independence. Cross-Layer Veto (Window 4): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in openalex_W4393154539 (790caf37e93d31ec, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

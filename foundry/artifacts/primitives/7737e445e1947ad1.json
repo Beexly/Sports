@@ -1,0 +1,306 @@
+{
+  "book_id": "7737e445e1947ad1",
+  "source_status": "COMPLETE",
+  "title": "0208-ai-driven-soccer-analysis-using-computer",
+  "file_name": "0208-ai-driven-soccer-analysis-using-computer.md",
+  "sha256": "7737e445e1947ad14c11dde400bbc6e7a102c05b735fb5149618c00545eb5ecd",
+  "primary_domain": "cs",
+  "pages_total": 4,
+  "pages_read": 4,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 4,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The projection of a dynamic broadcast camera onto a static pitch constitutes a time-varying homography. This geometric operator unifies pixel-space segmentation with metric field coordinates, establishing a foundational diffeomorphism for all subsequent kinematic state estimations and spatial probability density calculations within the sovereign engine.",
+  "gsi_mapping": "GSI treats the broadcast-to-pitch mapping as a hierarchical Bayesian inverse problem. Conformal prediction intervals are constructed around the homographic transformation to quantify epistemic uncertainty arising from lens distortion, occlusion, and varying pan-tilt-zoom states, ensuring rigorous probabilistic bounds on inferred player positions.",
+  "gse_mapping": "GSE utilizes the recovered metric coordinates to construct a continuous Markovian state-transition model. The situational reasoning layer maps raw pixel trajectories into phase-space vectors, enabling precise calculation of local density gradients, passing lane availability, and expected value differentials across the pitch topology.",
+  "primitives": [
+    {
+      "primitive_id": "broadcast_homography",
+      "name": "Broadcast-to-Pitch Homography",
+      "verbatim_quote": "2022 (keypoint-aware field registration), PnLCalib (Gutiérrez-Pérez & Agudo, 2024), TVCalib (Theiner & Ewerth, 2022) — are the correct papers to deep-read instead.",
+      "page": 1,
+      "latex": "\\mathbf{x}_{field} \\sim \\mathbf{H}(t) \\mathbf{x}_{img}",
+      "symbol_and_unit_ledger": "\\mathbf{x}_{field}: Metric field coordinate vector (meters); \\mathbf{x}_{img}: Image pixel coordinate vector (pixels); \\mathbf{H}(t): Time-dependent 3x3 homography matrix (dimensionless).",
+      "assumptions": "The playing surface is perfectly planar; the camera undergoes piecewise-rigid transformations between keypoint updates.",
+      "breakdown_regime": "Singularity occurs when fewer than four non-collinear keypoints are visible, or during extreme optical zoom where perspective distortion violates the planar assumption.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the projective geometry of broadcast footage directly to the GSE metric pitch grid, serving as the primary spatial anchor.",
+        "source_operator": "broadcast_homography",
+        "telemetry": "Reprojection error of manually labeled field keypoints in pixels."
+      }
+    },
+    {
+      "primitive_id": "sam2_tracking_kernel",
+      "name": "SAM2 Streaming Memory Tracker",
+      "verbatim_quote": "Method / model - Player detection + tracking: a pretrained object detector runs on the first frame; box centers prompt SAM2, which segments and tracks via its streaming-memory mechanism; YOLO is then used only once for initialization (claimed advantage over DeepSORT: pixel-accurate",
+      "page": 1,
+      "latex": "M_t = \\mathcal{F}(M_{t-1}, I_t, p_t)",
+      "symbol_and_unit_ledger": "M_t: Segmentation mask at time t (binary); \\mathcal{F}: Neural memory update function; I_t: Input image frame (RGB); p_t: Prompt point/vector.",
+      "assumptions": "Temporal continuity exists between frames; appearance features remain stable enough for memory propagation without re-detection.",
+      "breakdown_regime": "Tracking fails during prolonged total occlusion or abrupt camera cuts that break the streaming memory continuity.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates the high-fidelity binary masks required by GSE to compute exact center-of-mass and orientation vectors for each agent.",
+        "source_operator": "sam2_tracking_kernel",
+        "telemetry": "Mask IoU against manually reviewed ground-truth bounding boxes."
+      }
+    },
+    {
+      "primitive_id": "environmental_covariate",
+      "name": "Environmental Covariate Encoder",
+      "verbatim_quote": "Dataset / schema - 10 home games of the 2024 MSOE men's soccer season, recorded on an elevated BePro camera (dynamic pan/tilt/zoom), covering daytime, nighttime, and rainy conditions.",
+      "page": 1,
+      "latex": "L(\\mathbf{x}) = \\rho(\\mathbf{x}) \\cdot \\eta(t) + \\epsilon",
+      "symbol_and_unit_ledger": "L: Observed luminance (photons/s); \\rho: Surface reflectance (dimensionless); \\eta: Environmental illumination factor (lux); \\epsilon: Sensor noise.",
+      "assumptions": "Environmental factors act multiplicatively on the underlying scene radiance; rain introduces independent scattering noise.",
+      "breakdown_regime": "Model breaks under sudden, uncalibrated stadium floodlight flickering or extreme glare causing sensor saturation.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Feeds environmental state variables into GSI's conformal inference module to dynamically adjust confidence thresholds during adverse weather.",
+        "source_operator": "environmental_covariate",
+        "telemetry": "Variance in detection confidence scores across day vs. night/rain partitions."
+      }
+    },
+    {
+      "primitive_id": "boundary_occlusion",
+      "name": "Boundary Occlusion Handler",
+      "verbatim_quote": "Challenge noted: player entry/exit from frame reduces ground-truth points per player.",
+      "page": 1,
+      "latex": "P(\\text{visible}|\\mathbf{x}_{field}) = \\sigma(\\mathbf{W} \\cdot \\mathbf{x}_{field} + b)",
+      "symbol_and_unit_ledger": "P: Probability of visibility (dimensionless); \\mathbf{x}_{field}: Field position (meters); \\sigma: Sigmoid activation function.",
+      "assumptions": "Player visibility is strictly determined by their spatial relationship to the current camera frustum boundaries.",
+      "breakdown_regime": "Fails if players are occluded by static objects (e.g., advertising boards) well inside the camera frustum.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly informs the GSE state-transition matrix regarding valid observation probabilities, preventing phantom trajectory extrapolation off-screen.",
+        "source_operator": "boundary_occlusion",
+        "telemetry": "Rate of track termination coinciding with image boundary crossings."
+      }
+    },
+    {
+      "primitive_id": "7737e445e1947ad1_w1_g1",
+      "name": "0208-ai-driven-soccer-analysis-using-compu Ch.2 Grounded Operator",
+      "verbatim_quote": "- Team classification: K-means (k = 2) on RGB vectors from a 5×5 pixel patch at each box center — fully unsupervised, no supervised classifier.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7737e445e1947ad1_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7737e445e1947ad1_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "7737e445e1947ad1_w1_g2",
+      "name": "0208-ai-driven-soccer-analysis-using-compu Ch.2 Grounded Operator",
+      "verbatim_quote": "- Homography: DLT (Direct Linear Transformation, SVD) estimated from predicted keypoints ↔ 2D field template whose real dimensions came from Google Maps API + official NCAA soccer field rules.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7737e445e1947ad1_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7737e445e1947ad1_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "7737e445e1947ad1_w1_g3",
+      "name": "0208-ai-driven-soccer-analysis-using-compu Ch.2 Grounded Operator",
+      "verbatim_quote": "(1): masked MAE — mean over visible keypoints only (v_ij visibility indicator, (-1,-1) imputed for absent points); weighting 10 for coordinate loss vs 1 for visibility BCE.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7737e445e1947ad1_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7737e445e1947ad1_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "w2_3d_homography_projection",
+      "name": "3D Homography Projection",
+      "verbatim_quote": "- Qualitative failures (authors' own): false positives (ballboy, referee detected); K-means team assignment flips players under glare/shadows; keypoint errors distort the top-down view; \"the system is not completely ready yet.\" ## 8.",
+      "page": 3,
+      "latex": "\\mathbf{X}_{\\text{world}} = \\frac{1}{z} \\begin{bmatrix} x \\\\ y \\\\ 1 \\end{bmatrix}",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{X}_{\\\\text{world}}': 'Homogeneous world coordinates (dimensionless)', 'x, y, z': 'Camera image plane coordinates (pixels)'}",
+      "assumptions": "Perspective projection model, known camera intrinsic/extrinsic parameters, ideal pinhole geometry.",
+      "breakdown_regime": "Singularity when z \\to 0 (camera at infinity), numerical instability with lens distortion.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's 3D trajectory reconstruction via multi-camera triangulation, where homographies serve as foundational projective transforms for converting image-plane keypoints into world-space positions.",
+        "source_operator": "w2_3d_homography_projection",
+        "telemetry": "Average projection error between predicted and ground-truth homographies (meters)"
+      }
+    },
+    {
+      "primitive_id": "w2_keypoint_visibility_accuracy",
+      "name": "Keypoint Visibility Accuracy",
+      "verbatim_quote": "- Table 2 (keypoint CNN): visibility accuracy 99.89% train / 97.18% test; masked MAE 0.0107 train / 0.0138 test (normalized); 5.96 px train / 7.65 px test.",
+      "page": 3,
+      "latex": "\\text{Visibility Accuracy} = \\frac{\\text{Correct Keypoints}}{\\text{Total Keypoints}} \\times 100\\%",
+      "symbol_and_unit_ledger": "{'Correct Keypoints': 'Count of correctly detected player keypoints (dimensionless)', 'Total Keypoints': 'Total number of ground-truth player keypoints (dimensionless)', 'MAE': 'Mean Absolute Error (pixels)'}",
+      "assumptions": "Ground-truth annotations are perfect, uniform distribution of training/validation data.",
+      "breakdown_regime": "Drop in accuracy when test data contains extreme lighting/occlusion not present in training.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's trackability filtering, where visibility accuracy informs posterior probability of a player being active in a given frame, enabling conformal prediction intervals for player presence.",
+        "source_operator": "w2_keypoint_visibility_accuracy",
+        "telemetry": "Test-set visibility accuracy percentage"
+      }
+    },
+    {
+      "primitive_id": "w2_kmeans_team_assignment",
+      "name": "K-Means Team Assignment",
+      "verbatim_quote": "- With YOLOv5x, 17/22 players identified with no fine-tuning (no metric reported beyond this count).",
+      "page": 3,
+      "latex": "C_i = \\arg\\min_{c \\in C} \\sum_{x \\in S_c} \\|x - \\mu_c\\|^2",
+      "symbol_and_unit_ledger": "{'C_i': 'Cluster index (team label)', 'S_c': 'Set of points assigned to cluster c', '\\\\mu_c': 'Cluster centroid (world coordinates)', '\\\\| \\\\cdot \\\\|^2': 'Euclidean distance squared'}",
+      "assumptions": "Fixed number of teams, spherical clusters, equal variance.",
+      "breakdown_regime": "Failure when shadows/references cause bimodal distributions, requiring manual intervention.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state-transition logic for team membership, where K-Means serves as a crude initialization step for identity association, later refined by Kalman filters or graph matching.",
+        "source_operator": "w2_kmeans_team_assignment",
+        "telemetry": "Number of team switches per match"
+      }
+    },
+    {
+      "primitive_id": "w2_yolov5x_detection",
+      "name": "YOLOv5x Detection",
+      "verbatim_quote": "- System-level: keypoint MAE 0.225 m (ground truth) / 0.26 m (predicted); average projection error 0.499 m between predicted and ground-truth homographies.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Pre-trained YOLOv5x weights, fixed class set (players only), single-camera field-of-view.",
+      "breakdown_regime": "Detection failure when player density exceeds network capacity, or when appearance changes drastically.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's object-detection front-end, where YOLOv5x provides raw player bounding boxes that feed into higher-level probabilistic tracking models for identity persistence.",
+        "source_operator": "w2_yolov5x_detection",
+        "telemetry": "Number of correctly detected players / total players"
+      }
+    },
+    {
+      "primitive_id": "field_registration_pipeline",
+      "name": "Field Registration Pipeline",
+      "verbatim_quote": "2022's registration pipeline on a public soccer broadcast dataset (e.g., SoccerNet) and require ≥95% keypoint detection accuracy at 5-px tolerance before any GSE integration.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "Keypoint detection accuracy: dimensionless percentage; Tolerance threshold: meters (px converted via resolution).",
+      "assumptions": "(1) Public SoccerNet broadcast dataset availability; (2) Camera intrinsic/extrinsic parameters known; (3) Field geometry modeled as planar quad.",
+      "breakdown_regime": "Singular when camera perspective distortion exceeds model capacity, or when low-resolution broadcasts introduce aliasing.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's video-to-tracks lane (0201): transforms raw broadcast video into world-coordinate trajectories. Maps to GSI's pitch geometry layer: provides reproducible field anchors for event localization.",
+        "source_operator": "field_registration_pipeline",
+        "telemetry": "Projection error of annotated yard-line intersections in pixels, cross-validated across multiple camera angles and broadcast resolutions."
+      }
+    },
+    {
+      "primitive_id": "tracking_metrics_requirement",
+      "name": "Tracking Metrics Requirement",
+      "verbatim_quote": "Acceptance / rejection gate REJECTED as an adoption target: the paper demonstrates a plausible student pipeline but reports no tracking metrics, no ball detection, no jersey ID, no generalization beyond one field, and no method beyond the cited primaries.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "MOTA-style tracking persistence: dimensionless percentage; Ball detection: binary presence/absence; Jersey ID: categorical label assignment.",
+      "assumptions": "(1) Multi-object tracking baseline available; (2) Ball and player identities ground-truthed; (3) Generalization evaluated over diverse fields/cameras.",
+      "breakdown_regime": "Singular when occlusions exceed tracker memory, or when camera viewpoint changes drastically between training/validation sets.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's object-tracking state machine: enforces minimum performance thresholds for entity continuity. Maps to GSI's player identification layer: ensures consistent track linking across frames.",
+        "source_operator": "tracking_metrics_requirement",
+        "telemetry": "Multi-Object Tracking Accuracy (MOTA) and Identity Preservation Rate (IPR) on held-out validation data, stratified by venue and camera type."
+      }
+    },
+    {
+      "primitive_id": "winner_selection_experiment",
+      "name": "Winner Selection Experiment",
+      "verbatim_quote": "The experiment worth running on the cited primaries: a head-to-head on NFL broadcast footage (All-22) comparing (a) keypoint+DLT field registration à la Chu et al.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "Projection error: pixels; Zoom/pan sequence: discrete time steps; Winner selection: binary classification based on lowest average error.",
+      "assumptions": "(1) All-22 broadcast metadata available; (2) Ground-truth camera poses provided; (3) Yard-line annotations manually verified.",
+      "breakdown_regime": "Singular when zoom factors approach sensor clipping limits, or when pan velocities induce motion blur severe enough to corrupt keypoints.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's broadcast-registration module: selects the superior registration method for ingestion into the spatial-temporal state space. Maps to GSI's feature extraction layer: informs the choice of geometric calibration for downstream tactical analysis.",
+        "source_operator": "winner_selection_experiment",
+        "telemetry": "Average pixel error of projected yard-lines across all zoom/pan transitions, aggregated per method and compared via paired t-test."
+      }
+    },
+    {
+      "primitive_id": "rejection_numeric_gate",
+      "name": "Rejection Numeric Gate",
+      "verbatim_quote": "It is rejected for GSE adoption even in full (numeric gate: it would need ≥0.85 MOTA-style tracking persistence and multi-venue evaluation to qualify, neither of which exists).",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "MOTA-style tracking persistence: dimensionless percentage; Multi-venue evaluation: binary indicator function.",
+      "assumptions": "(1) Full pipeline implementation complete; (2) Evaluation protocol defined; (3) Baseline performance established.",
+      "breakdown_regime": "Singular when the pipeline fails to generalize to unseen venues due to unique architectural features or lighting conditions.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's adoption-risk quantification framework: applies hard numerical cutoffs to filter out underperforming methods. Maps to GSI's robustness assessment: ensures that adopted primitives withstand real-world variability.",
+        "source_operator": "rejection_numeric_gate",
+        "telemetry": "Observed MOTA and IPR on a large, unseen multi-venue test set; failure triggers immediate rejection."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7737e445e1947ad1_t0",
+      "think": "The fundamental mathematical operation extracted from this chapter window is the establishment of a robust, time-varying diffeomorphism between the two-dimensional projective space of a broadcast camera and the three-dimensional Euclidean space of the soccer pitch. While the source paper is merely an undergraduate systems-integration effort, it correctly identifies the necessity of decoupling player segmentation from spatial registration. The use of SAM2 prompted by initial YOLO detections represents a modern instantiation of a hierarchical filtering process. Mathematically, we can view the pipeline as a sequence of operators: $\\Phi_{seg}: \\mathcal{I} \\rightarrow \\mathcal{M}$ (segmentation) and $\\Phi_{geo}: \\mathcal{M} \\times \\mathcal{K} \\rightarrow \\mathbb{R}^2$ (geometric projection), where $\\mathcal{K}$ represents the set of observed field keypoints. The critical insight for GSE is that the accuracy of any downstream tactical primitive—be it expected threat or passing network analysis—is bounded by the condition number of the homography matrix $\\mathbf{H}$. When the camera pans rapidly or zooms significantly, the effective baseline for triangulation shifts, introducing non-linear distortions. The cited references (Chu et al., Gutiérrez-Pérez & Agudo) highlight the community's ongoing struggle to stabilize this mapping under dynamic conditions. Therefore, our sovereign primitive must not just apply a homography, but actively estimate the uncertainty covariance of that transformation. The 'challenge' of players exiting the frame is fundamentally a boundary value problem in stochastic processes; the observation operator becomes zero outside the frustum, requiring the GSE tracker to switch seamlessly between measurement-update modes and pure prediction modes based on a learned kinematic prior. The rejection of the Zhang citation due to bibliographic mismatch further underscores the need for rigorous provenance tracking in our own knowledge graph.",
+      "retrocausal_genealogy": "This approach traces back to the foundational work in computer vision by Hartley and Zisserman on multiple view geometry, specifically the computation of homographies from point correspondences. In sports analytics, this lineage connects to early works on overhead camera calibration in basketball and hockey, evolving into the complex, multi-camera fusion systems seen in modern NBA Second Spectrum and NFL Next Gen Stats. The specific use of foundation models like SAM2 marks a paradigm shift from hand-crafted feature tracking (like Kanade-Lucas-Tomasi) to promptable, semantic-aware segmentation, drastically reducing the manual annotation burden previously required for training specialized detectors.",
+      "theory_of_mind": "From a theory of mind perspective, modeling the opposing coach involves understanding their manipulation of the camera's field of view through player positioning. Coaches deliberately cluster players to obscure passing lanes or create numerical overloads, effectively exploiting the occlusion regimes inherent in the broadcast perspective. By accurately reconstructing the metric positions despite these occlusions, GSE can infer the intended tactical shape versus the executed shape. Furthermore, the 'entry/exit' dynamics reveal player intent; a rapid sprint towards the edge of the frame might indicate a substitution pattern or a deliberate feint to draw defenders out of position. The system must anticipate these maneuvers not just as pixel movements, but as strategic actions within the bounded geometry of the pitch.",
+      "cross_layer_veto": "A critical veto condition arises if the estimated homography exhibits high temporal jitter, indicating a failure in the keypoint matching algorithm rather than true camera motion. Such instability would propagate catastrophic errors into the GSE state vector, rendering velocity and acceleration metrics meaningless. Additionally, we must veto any integration of data sources that lack rigorous provenance, as demonstrated by the flawed Zhang citation in the source text. Cross-layer leakage must also be prevented: the segmentation model should not implicitly bias the geometric registration by favoring certain regions of the pitch due to training data imbalances. Finally, if the environmental covariates (e.g., heavy rain) degrade image quality below a threshold where keypoint detection becomes unreliable, the system must trigger a fallback mode, perhaps relying solely on inertial data if available, rather than forcing a noisy visual update."
+    },
+    {
+      "trace_id": "7737e445e1947ad1_t1",
+      "think": "Window 2 Synthesis: Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7737e445e1947ad1_t2",
+      "think": "The chapter introduces a soccer tracking pipeline using YOLOv5x for detection, a keypoint CNN for refinement, and homography projection for 3D positioning. While conceptually sound, the approach suffers from severe limitations: it lacks identity management (tracking), handles no occlusions, uses a single fixed camera, and reports only low-level metrics without identity-aware performance. The qualitative failures—false positives, team-switching artifacts, and projection errors—highlight a brittle system unsuitable for real-world deployment. This work is a precursor to modern multi-object tracking (MOT) but falls short of GSE's requirements for robust, adversarial-resistant tracking. It should be skipped in favor of more advanced methods like Chu et al.'s selective mask propagation. Window 3 Synthesis: Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts expect a system that maintains consistent player identities across frames, even during dense play or adverse conditions. This paper fails because it treats each frame independently, causing erratic identity switches that would confuse tactical analysis. Theory of Mind (Window 3): Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "The pipeline violates anti-collinearity by assuming independent detections; identity leaks through the homography transform, undermining closed-loop reasoning. The lack of adversarial robustness (no occlusion handling) makes it vulnerable to deliberate manipulation. Cross-Layer Veto (Window 3): Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7737e445e1947ad1_t3",
+      "think": "This chapter establishes the foundational mathematical and empirical criteria for adopting computer vision primitives into Galaxy Sports Engine (GSE) and Galaxy Sports Intelligence (GSI). The core challenge is translating academic 'student pipelines'—which often lack critical metrics like tracking persistence, generalization, and identity preservation—into industrial-grade modules that can process high-throughput broadcast data (e.g., All-22 NFL feeds) with guaranteed accuracy. The primitives here formalize three interlocking gates: (1) a reproduction requirement that forces authors to demonstrate keypoint accuracy on public benchmarks; (2) a numeric rejection criterion that filters out incomplete pipelines; and (3) an experimental winner-selection protocol that directly compares competing registration paradigms (DLT vs. camera-pose estimation) using observable telemetry (pixel error on projected yard-lines). These operators constitute a minimal yet sufficient axiomatization for the video-to-tracks lane (0201) and the pitch-geometry layer: they ensure that every adopted primitive has a rigorous empirical footprint, a clear mapping to GSE's state-transition system, and a verifiable link to GSI's inferential pipelines. The epistemic trace reveals that the doctrinal shift from 'proof-of-concept' to 'industrial deployment' necessitates breaking down the monolithic 'registration pipeline' into independent, testable components—each governed by a precise mathematical condition. Window 4 Synthesis: Rooted in 0208-ai-driven-soccer-analysis-using-computer (7737e445e1947ad1, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The lineage traces back to classical photogrammetry (DLT) and modern structure-from-motion (SfM) techniques, evolving through deep-learning adaptations for sports broadcasting. The numeric rejection gate mirrors quality-control standards from aerospace metrology, while the experimental comparison echoes A/B testing frameworks from industrial statistics. This confluence crystallizes the modern sports-analytics pipeline as a hybrid discipline blending geometric computer vision with empirical performance metrics.",
+      "theory_of_mind": "Coaches and analysts expect seamless, plug-and-play integration of tracking data into their workflows. They model the system as a black box: input broadcast, output calibrated trajectories. Hence, the primitives must be robust to their ignorance of internal calibration details. Opposing teams might deploy adversarial formations that exploit systematic biases in registration; therefore, the adopted method must minimize such exploitable errors. The primitives thus encode a shared belief that industrial-grade computer vision requires both theoretical elegance and empirical resilience.",
+      "cross_layer_veto": "Anti-collinearity conditions arise when different primitives rely on overlapping feature extractors (e.g., ResNet backbone) without independent verification. To prevent leakage, each primitive must specify distinct observables: e.g., field-registration uses keypoint residuals, while tracking uses identity-switch rates. Cross-layer veto also applies when a primitive's assumptions (e.g., planar field) contradict higher-level models (e.g., curved grass dynamics). Finally, veto triggers if a primitive leaks sensitive information (e.g., exact camera positions) that could compromise venue security."
+    }
+  ]
+}

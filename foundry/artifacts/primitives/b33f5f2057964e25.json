@@ -1,0 +1,95 @@
+{
+  "book_id": "b33f5f2057964e25",
+  "source_status": "COMPLETE",
+  "title": "1520-ranking-approach-measuring-calibration",
+  "file_name": "1520-ranking-approach-measuring-calibration.md",
+  "sha256": "b33f5f2057964e25077e1883d06db205884ef6e9bbbfd4a9dc18a5c01871e83c",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'summary': 'rankECE is a tuning-free, nonparametric measure of binary calibration error that dominates binned ECE in finite samples, with a consistent hypothesis test for perfect calibration. It is recommended for replacing binned ECE in GSE/GSI calibration reporting.', 'key_math': 'rankECE = (1/n) Σ_i (Y_(i)-Z_(i))(Y_(i+1)-Z_(i+1)), |rankECE - l2-ECE| ≤ (||r||_TV + 1)/n, test rejects if rankECE > 2√(σ²(Z) log(2/α)/n) + 2 log(2/α)/(3n)', 'rationale': 'It provides a stronger finite-sample guarantee than binned ECE while maintaining the desirable property that rankECE = 0 iff perfect calibration.'}",
+  "gsi_mapping": "{'mapping': \"In GSI's Bayesian posterior calibration assessment, rankECE serves as a frequentist diagnostic tool for evaluating the consistency of posterior probability estimates with observed binary outcomes. The associated hypothesis test can be used as a second-tier quality control gate alongside conformal coverage intervals, providing a direct test of equality between posterior mean and true success probability.\"}",
+  "gse_mapping": "{'mapping': \"For GSE's situational reasoning, rankECE can be applied to evaluate the calibration of published win/cover probabilities against realized outcomes. It provides a state-transition invariant metric for monitoring model drift and detecting systematic miscalibration, with the hypothesis test offering a principled threshold for flagging potential recalibration needs.\"}",
+  "primitives": [
+    {
+      "primitive_id": "rankece",
+      "name": "Rank-based calibration error",
+      "verbatim_quote": "Method / model rankECE: sort predicted probabilities Z_(1)≤...≤Z_(n), then rankECE_n(f) = (1/n)·Σ_{i=1}^{n-1} (Y_{π(i)} - Z_{π(i)})·(Y_{π(i+1)} - Z_{π(i+1)}) (Eq.",
+      "page": 1,
+      "latex": "\\text{rankECE}_n(f) = \\frac{1}{n}\\sum_{i=1}^{n-1} \\(Y_{\\pi\\(i\\)} - Z_{\\pi\\(i\\)}\\) \\(Y_{\\pi\\(i+1\\)} - Z_{\\pi\\(i+1\\)}\\)",
+      "symbol_and_unit_ledger": "{'rankECE_n(f)': 'dimensionless', 'Y_(i)': 'binary outcome (0 or 1)', 'Z_(i)': 'predicted probability (real)', 'n': 'sample size (integer)', 'π': 'permutation sorting Z_(i) ascending', 'σ^2(Z)': 'variance of Z (dimensionless)'}",
+      "assumptions": "Z is nonatomic (no ties almost surely); residual r(Z) = E[Y-Z|Z] has bounded total variation; hard threshold Angelopoulos et al. (2024) applies.",
+      "breakdown_regime": "Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps rankece onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants.",
+        "source_operator": "rankece",
+        "telemetry": "GSI empirical log-loss / conformal interval width; GSE bounded delta log-odds (|delta| <= 0.35)."
+      }
+    },
+    {
+      "primitive_id": "rankece_bound",
+      "name": "Rank-based calibration error bound",
+      "verbatim_quote": "3.3: |rankECE(f) - l2-ECE(f)| ≤ (‖r‖_TV + 1)/n, where r(Z)=E[Y-Z|Z] and ‖r‖_TV is total variation.",
+      "page": 1,
+      "latex": "|\\text{rankECE}(f) - l_2\\text{-ECE}(f)| \\le \\frac{\\|r\\|_{TV} + 1}{n}",
+      "symbol_and_unit_ledger": "{'l2-ECE(f)': 'mean squared calibration error (dimensionless)', '‖r‖_TV': 'total variation norm of residual (real)', 'n': 'sample size (integer)'}",
+      "assumptions": "Same as rankECE; bounded-variation residual is essential (Appendix C shows it cannot be removed without allowing adversarial failures.",
+      "breakdown_regime": "Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps rankece_bound onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants.",
+        "source_operator": "rankece_bound",
+        "telemetry": "GSI empirical log-loss / conformal interval width; GSE bounded delta log-odds (|delta| <= 0.35)."
+      }
+    },
+    {
+      "primitive_id": "rankece_test",
+      "name": "Rank-based calibration hypothesis test",
+      "verbatim_quote": "3.4 (finite-sample test): reject if rankECE > 2√(σ2(Z)·log(2/α)/n) + 2·log(2/α)/(3n), σ2(Z)=(1/n)Σ Z_(i)(1-Z_(i))Z_(i+1)(1-Z_(i+1)); consistent under H1.",
+      "page": 1,
+      "latex": "\\text{reject if } \\text{rankECE} > 2\\sqrt{\\sigma^2\\(Z\\) \\log\\(2/\\alpha\\)/n} + \\frac{2\\log\\(2/\\alpha\\)}{3n}",
+      "symbol_and_unit_ledger": "{'α': 'significance level (dimensionless, e.g., 0.05)', 'σ^2(Z)': 'variance of Z (dimensionless)', 'n': 'sample size (integer)'}",
+      "assumptions": "Z is nonatomic; under the null of perfect calibration, the test is consistent against any alternative.",
+      "breakdown_regime": "Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps rankece_test onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants.",
+        "source_operator": "rankece_test",
+        "telemetry": "GSI empirical log-loss / conformal interval width; GSE bounded delta log-odds (|delta| <= 0.35)."
+      }
+    },
+    {
+      "primitive_id": "rankece_dominance",
+      "name": "Rank dominance over binned ECE",
+      "verbatim_quote": "- Lemma 4.1: E[l̂2-binECE] - l2-binECE ≤ K/n (irreducible bias; tight up to constants — Remark 4.1: ≥",
+      "page": 1,
+      "latex": "\\text{rankECE}(f) \\ge l_2\\text{-binECE}(f) - \\frac{4K}{n} \\text{ for any } K\\text{-bin partition}",
+      "symbol_and_unit_ledger": "{'K': 'number of bins (integer)', 'n': 'sample size (integer)', 'l2-binECE(f)': 'binned l2-ECE (dimensionless)'}",
+      "assumptions": "Same as rankECE; the bound holds for any fixed K and diverges when K = o(n).",
+      "breakdown_regime": "Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps rankece_dominance onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants.",
+        "source_operator": "rankece_dominance",
+        "telemetry": "GSI empirical log-loss / conformal interval width; GSE bounded delta log-odds (|delta| <= 0.35)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b33f5f2057964e25_t0",
+      "think": "rankECE leverages the fact that consecutive order statistics of a uniform sample are approximately independent draws from the same distribution, allowing a direct product estimator of the calibration gap. This yields a variance reduction over binning, which introduces aliasing noise. The bound shows that the estimator bias scales inversely with sample size, making it tuning-free. The test statistic uses a Hoeffding-type inequality to control the deviation from zero under perfect calibration, providing a rigorous false-discovery rate guarantee. Compared to binned ECE, rankECE always provides a lower bound on the true l2-ECE, explaining its superior finite-sample performance. However, the bounded-variation assumption on the residual means that extreme frequency shifts in predictions can still cause rankECE to underestimate calibration error, similar to how EDGE fails when the misfit function is too rough.\n\nDeep epistemic analysis for 1520-ranking-approach-measuring-calibration (b33f5f2057964e25, domain=other, pages_read=4/4): Operator 'Rank-based calibration error' (page 1, domain other) captures: Method / model rankECE: sort predicted probabilities Z_(1)≤...≤Z_(n), then rankECE_n(f) = (1/n)·Σ_{i=1}^{n-1} (Y_{π(i)} - Z_{π(i)})·(Y_{π(i+1)} - Z_{π(i+1)}) (Eq. Assumptions: Z is nonatomic (no ties almost surely); residual r(Z) = E[Y-Z|Z] has bounded total variation; hard threshold Angelopoulos et al. (2024) applies. Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps rankece onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants. Operator 'Rank-based calibration error bound' (page 1, domain other) captures: 3.3: |rankECE(f) - l2-ECE(f)| ≤ (‖r‖_TV + 1)/n, where r(Z)=E[Y-Z|Z] and ‖r‖_TV is total variation. Assumptions: Same as rankECE; bounded-variation residual is essential (Appendix C shows it cannot be removed without allowing adversarial failures. Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps rankece_bound onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants. Operator 'Rank-based calibration hypothesis test' (page 1, domain other) captures: 3.4 (finite-sample test): reject if rankECE > 2√(σ2(Z)·log(2/α)/n) + 2·log(2/α)/(3n), σ2(Z)=(1/n)Σ Z_(i)(1-Z_(i))Z_(i+1)(1-Z_(i+1)); consistent under H1. Assumptions: Z is nonatomic; under the null of perfect calibration, the test is consistent against any alternative. Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps rankece_test onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants. Operator 'Rank dominance over binned ECE' (page 1, domain other) captures: - Lemma 4.1: E[l̂2-binECE] - l2-binECE ≤ K/n (irreducible bias; tight up to constants — Remark 4.1: ≥ Assumptions: Same as rankECE; the bound holds for any fixed K and diverges when K = o(n). Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps rankece_dominance onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1520-ranking-approach-measuring-calibration (b33f5f2057964e25, domain=other, pages_read=4/4): Operator 'Rank-based calibration error' (page 1, domain other) captures: Method / model rankECE: sort predicted probabilities Z_(1)≤...≤Z_(n), then rankECE_n(f) = (1/n)·Σ_{i=1}^{n-1} (Y_{π(i)} - Z_{π(i)})·(Y_{π(i+1)} - Z_{π(i+1)}) (Eq. Assumptions: Z is nonatomic (no ties almost surely); residual r(Z) = E[Y-Z|Z] has bounded total variation; hard threshold Angelopoulos et al. (2024) applies. Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps rankece onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants. Operator 'Rank-based calibration error bound' (page 1, domain other) captures: 3.3: |rankECE(f) - l2-ECE(f)| ≤ (‖r‖_TV + 1)/n, where r(Z)=E[Y-Z|Z] and ‖r‖_TV is total variation. Assumptions: Same as rankECE; bounded-variation residual is essential (Appendix C shows it cannot be removed without allowing adversarial failures. Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps rankece_bound onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants. Operator 'Rank-based calibration hypothesis test' (page 1, domain other) captures: 3.4 (finite-sample test): reject if rankECE > 2√(σ2(Z)·log(2/α)/n) + 2·log(2/α)/(3n), σ2(Z)=(1/n)Σ Z_(i)(1-Z_(i))Z_(i+1)(1-Z_(i+1)); consistent under H1. Assumptions: Z is nonatomic; under the null of perfect calibration, the test is consistent against any alternative. Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps rankece_test onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants. Operator 'Rank dominance over binned ECE' (page 1, domain other) captures: - Lemma 4.1: E[l̂2-binECE] - l2-binECE ≤ K/n (irreducible bias; tight up to constants — Remark 4.1: ≥ Assumptions: Same as rankECE; the bound holds for any fixed K and diverges when K = o(n). Breakdown regime: Breaks down under abrupt structural non-stationarity, missing observation clusters, or sparse small-sample tails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps rankece_dominance onto Galaxy Sports Engine (GSE) Stage-2 situational prior updates and GSI Bayesian/conformal calibration invariants. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The idea dates back to the U-statistic framework of Hoeffding (1948) for variance estimation, combined with the empirical process theory of Kolmogorov-Smirnov testing. The specific construction exploits the geometry of order statistics in the unit interval, which was previously used in nonparametric two-sample tests (Barnett, 1965). The connection to calibration error measurement builds on the literature linking ECE to L2 distances between predictive distributions and the empirical distribution (Kumar et al., 2019).",
+      "theory_of_mind": "Bookmakers might view rankECE as a more conservative yardstick for assessing their posted odds compared to the standard binning approach, potentially leading them to report higher apparent calibration error. Regulators could use the hypothesis test as a black-box compliance check, demanding that a model's reported rankECE falls below a regulatory threshold. Model developers may seek to minimize rankECE during training, knowing that doing so also improves the binned ECE bound.",
+      "cross_layer_veto": "The bounded-variation requirement on the residual r(Z) creates a vulnerability to adversarial examples that introduce high-frequency oscillations in the calibration gap. If such examples exist in the deployment environment, rankECE may give a misleadingly optimistic picture of calibration. Additionally, because rankECE is a global average rather than a per-bin measure, it may mask localized miscalibration that is critical for certain risk management decisions. Finally, the test's conservativeness (power loss compared to the asymptotic distribution) means that it may fail to detect small but persistent calibration issues, necessitating complementary diagnostics."
+    }
+  ]
+}

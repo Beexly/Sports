@@ -1,0 +1,78 @@
+{
+  "book_id": "0a8cc36834046efd",
+  "source_status": "COMPLETE",
+  "title": "nfl-historical-odds-50-links",
+  "file_name": "nfl-historical-odds-50-links.md",
+  "sha256": "0a8cc36834046efde1d7d6b235f546f9500cab46409cb65a354b6085b3973796",
+  "primary_domain": "football",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Historical NFL odds datasets form a structured manifold of temporal market states, parameterized by season, team, and game context, enabling probabilistic inference over line movement and closing value distributions. Universal Lens: Rooted in nfl-historical-odds-50-links (0a8cc36834046efd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian belief updates on multivariate odds trajectories, using conformal predictive intervals to assess uncertainty in closing-line estimates derived from heterogeneous data sources. GSI Mapping: Rooted in nfl-historical-odds-50-links (0a8cc36834046efd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models situational dynamics through state transitions governed by line-movement kernels, where each game state evolves according to stochastic drifts in spread, total, and moneyline values across bookmakers. GSE Mapping: Rooted in nfl-historical-odds-50-links (0a8cc36834046efd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "closing_line_value",
+      "name": "Closing Line Value",
+      "verbatim_quote": "Multi-season closing-odds archives (Covers Sports Odds History — free) 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_c': 'dimensionless scalar representing closing line value'}",
+      "assumptions": "Market efficiency implies L_c reflects true game outcome probability distribution.",
+      "breakdown_regime": "When data integrity fails due to missing or inconsistent archival practices.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "L_c serves as input to GSI's conformal prediction framework, enabling uncertainty quantification in game outcome forecasts.",
+        "source_operator": "closing_line_value",
+        "telemetry": "Accuracy of predicted outcomes vs actual closing lines."
+      }
+    },
+    {
+      "primitive_id": "line_movement_kernel",
+      "name": "Line Movement Kernel",
+      "verbatim_quote": "Flancast90's pre-scraped SportsbookReview archive (2011-2021): real opening-to-closing spread/total pairs and closing moneylines across books — the single best free open/close dataset.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{\"K(t, t')\": \"stochastic kernel mapping time points t to t' in line evolution\"}",
+      "assumptions": "Kernel is stationary and Markovian over short time horizons.",
+      "breakdown_regime": "When volatility exceeds kernel support or external shocks disrupt temporal consistency.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "K(t, t') maps to GSE's transition matrix for modeling dynamic game states under evolving market sentiment.",
+        "source_operator": "line_movement_kernel",
+        "telemetry": "Temporal correlation between opening and closing odds across multiple books."
+      }
+    },
+    {
+      "primitive_id": "market_frequency_profile",
+      "name": "Market Frequency Profile",
+      "verbatim_quote": "Bobby King's 2025-2026 market-movement tracker: 1.8M+ rows, 636 snapshots, 30+ operators at 4x daily — the only high-frequency movement dataset in the pool.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f(t)': 'frequency profile of market activity at time t'}",
+      "assumptions": "f(t) captures aggregate trader attention and liquidity flow patterns.",
+      "breakdown_regime": "When sampling frequency drops below Nyquist rate or data becomes sparse.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "f(t) informs GSE's adaptive state-space model for real-time adjustment of game-state priors based on trading intensity.",
+        "source_operator": "market_frequency_profile",
+        "telemetry": "Number of price changes per minute during critical game moments."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0a8cc36834046efd_t0",
+      "think": "The primitives define a coherent mathematical structure for analyzing NFL historical odds. Closing Line Value (L_c) represents the terminal point of a stochastic process, modeled as a random variable with known distributional properties. Line Movement Kernel (K(t,t')) encodes temporal dynamics of market consensus, capturing how initial odds evolve into final values. Market Frequency Profile (f(t)) introduces a measure of temporal resolution and activity level, which modulates the kernel’s influence. These operators interact within a dual framework: GSI uses them for probabilistic forecasting via Bayesian inference, while GSE applies them in state-transition logic to simulate evolving game contexts. Failure modes include data inconsistency in early eras, lack of coverage in certain periods, and non-stationarity in high-frequency datasets. Dualities emerge in the correspondence between temporal kernels and information entropy, where higher f(t) correlates with lower uncertainty in L_c. The interplay of these structures enables robust empirical validation of betting strategies across decades of NFL data.\n\nDeep epistemic analysis for nfl-historical-odds-50-links (0a8cc36834046efd, domain=football, pages_read=4/4): Operator 'Closing Line Value' (page 1, domain football) captures: Multi-season closing-odds archives (Covers Sports Odds History — free) 1. Assumptions: Market efficiency implies L_c reflects true game outcome probability distribution. Breakdown regime: When data integrity fails due to missing or inconsistent archival practices. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L_c serves as input to GSI's conformal prediction framework, enabling uncertainty quantification in game outcome forecasts. Operator 'Line Movement Kernel' (page 4, domain football) captures: Flancast90's pre-scraped SportsbookReview archive (2011-2021): real opening-to-closing spread/total pairs and closing moneylines across books — the single best free open/close dataset. Assumptions: Kernel is stationary and Markovian over short time horizons. Breakdown regime: When volatility exceeds kernel support or external shocks disrupt temporal consistency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): K(t, t') maps to GSE's transition matrix for modeling dynamic game states under evolving market sentiment. Operator 'Market Frequency Profile' (page 4, domain football) captures: Bobby King's 2025-2026 market-movement tracker: 1.8M+ rows, 636 snapshots, 30+ operators at 4x daily — the only high-frequency movement dataset in the pool. Assumptions: f(t) captures aggregate trader attention and liquidity flow patterns. Breakdown regime: When sampling frequency drops below Nyquist rate or data becomes sparse. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): f(t) informs GSE's adaptive state-space model for real-time adjustment of game-state priors based on trading intensity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for nfl-historical-odds-50-links (0a8cc36834046efd, domain=football, pages_read=4/4): Operator 'Closing Line Value' (page 1, domain football) captures: Multi-season closing-odds archives (Covers Sports Odds History — free) 1. Assumptions: Market efficiency implies L_c reflects true game outcome probability distribution. Breakdown regime: When data integrity fails due to missing or inconsistent archival practices. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L_c serves as input to GSI's conformal prediction framework, enabling uncertainty quantification in game outcome forecasts. Operator 'Line Movement Kernel' (page 4, domain football) captures: Flancast90's pre-scraped SportsbookReview archive (2011-2021): real opening-to-closing spread/total pairs and closing moneylines across books — the single best free open/close dataset. Assumptions: Kernel is stationary and Markovian over short time horizons. Breakdown regime: When volatility exceeds kernel support or external shocks disrupt temporal consistency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): K(t, t') maps to GSE's transition matrix for modeling dynamic game states under evolving market sentiment. Operator 'Market Frequency Profile' (page 4, domain football) captures: Bobby King's 2025-2026 market-movement tracker: 1.8M+ rows, 636 snapshots, 30+ operators at 4x daily — the only high-frequency movement dataset in the pool. Assumptions: f(t) captures aggregate trader attention and liquidity flow patterns. Breakdown regime: When sampling frequency drops below Nyquist rate or data becomes sparse. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): f(t) informs GSE's adaptive state-space model for real-time adjustment of game-state priors based on trading intensity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in stochastic processes and financial econometrics, particularly the work of Hull and White on option pricing and the development of historical volatility models in sports analytics. Retrocausal Genealogy: Rooted in nfl-historical-odds-50-links (0a8cc36834046efd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in nfl-historical-odds-50-links (0a8cc36834046efd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include market makers adjusting for risk, bettors seeking arbitrage, and regulatory bodies enforcing transparency. Each agent contributes to the stochastic evolution of odds, creating a multi-agent system where individual actions aggregate into collective behavior reflected in K(t,t'). Theory of Mind & Decision Maker Model: Rooted in nfl-historical-odds-50-links (0a8cc36834046efd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring L_c, K(t,t'), and f(t) are derived from independent data streams. Leakage occurs when temporal dependencies in K(t,t') are not properly accounted for in GSI’s Bayesian updates, leading to overconfident predictions. Cross-Layer Veto & Anti-Leakage Check: Rooted in nfl-historical-odds-50-links (0a8cc36834046efd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

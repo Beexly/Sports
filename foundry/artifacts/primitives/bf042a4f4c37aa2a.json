@@ -1,0 +1,900 @@
+{
+ "book_id": "bf042a4f4c37aa2a",
+ "source_status": "COMPLETE",
+ "source_note": "Daniel A. Spielman, Spectral and Algebraic Graph Theory. The local file is Spielman-2023-SpectralAndAlgebraicGraphTheory.pdf in books-must-have, 2,902,506 bytes; scan digest sha256(str(size) + file bytes) = bf042a4f4c37aa2a6b135c54884cac162c52dce6a80440d7045b7435cab2c47e, book_id bf042a4f4c37aa2a. Catalog correction: although the filename says 2023, the draft itself is dated April 2, 2025, carries a 2025 copyright, and is marked Incomplete Draft, Yale University; the current version is posted at cs-www.cs.yale.edu/homes/spielman/sagt with companion Julia code in the sagt_code repository using Laplacians.jl. The work has 45 chapters in 7 parts with the bibliography at book page 363. The extracted text file has 968,356 bytes, 951,883 characters, and 18,944 lines. Text quality is good for prose; displayed formulas suffer spacing and radical glyph displacement in places, so verbatim quotes were chosen from clean prose passages and every equation was checked against its surrounding derivation. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "laplacian_quadratic_form_smoothness",
+   "name": "The Laplacian quadratic form measures variation of a vertex function across weighted edges",
+   "verbatim_quote": "This form measures the smoothness of the function x . It will be small if the function x does not vary too much between the vertices connected by any edge.",
+   "page": "Chapter 1, Section 1.2.3, book p. 5; text lines 987-1000",
+   "latex": "x^{T} L_G x = \\sum_{(a,b)\\in E} w_{a,b}\\,(x(a)-x(b))^2",
+   "symbol_and_unit_ledger": {
+    "x": "real valued function on vertices, dimensionless state units",
+    "L_G": "weighted graph Laplacian, units of edge weight",
+    "w_{a,b}": "nonnegative edge weight, conductance like units",
+    "E": "edge set of the graph"
+   },
+   "assumptions": [
+    "The graph is weighted with positive edge weights in the defining passage.",
+    "x assigns one real number to each vertex."
+   ],
+   "breakdown_regime": "The smoothness reading fails as a complete objective by itself because constant functions give zero and because signed or negative weights break the positive semidefinite interpretation.",
+   "domain": "spectral graph theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Treat any entity state estimate as a function on an interaction graph. The quadratic form becomes a consistency energy: strongly connected entities with very different states incur a measurable penalty, and the size of that penalty can be reported as evidence tension rather than hidden inside an average.",
+    "source_operator": "laplacian_quadratic_form_smoothness",
+    "telemetry": "Timestamped interaction edges with weights, per entity state estimates, and the edge wise state differences that produce the energy."
+   }
+  },
+  {
+   "primitive_id": "courant_fischer_rayleigh_minmax",
+   "name": "Courant-Fischer characterizes every eigenvalue by constrained Rayleigh quotient optimization",
+   "verbatim_quote": "The Courant-Fischer Theorem tells us that the vectors that maximize the Rayleigh quotient are exactly the eigenvectors of the largest eigenvalue of M .",
+   "page": "Chapter 2, opening and Theorem 2.0.1, book pp. 21-22; text lines 1659-1680",
+   "latex": "\\mu_k = \\max_{\\dim S=k}\\ \\min_{x\\in S,\\,x\\ne 0} \\frac{x^{T}Mx}{x^{T}x} = \\min_{\\dim T=n-k+1}\\ \\max_{x\\in T,\\,x\\ne 0} \\frac{x^{T}Mx}{x^{T}x}",
+   "symbol_and_unit_ledger": {
+    "M": "real symmetric matrix",
+    "\\mu_k": "kth eigenvalue of M in decreasing order",
+    "S, T": "subspaces of R^n of the stated dimensions",
+    "x": "nonzero trial vector"
+   },
+   "assumptions": [
+    "M is real and symmetric.",
+    "Eigenvalues are ordered from largest to smallest in this chapter."
+   ],
+   "breakdown_regime": "The variational characterization does not directly apply to nonsymmetric operators, and numerically it is only as reliable as the trial subspaces or test vectors supplied.",
+   "domain": "linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Use test vectors as auditable bounds inside the reasoning engine. A proposed latent factor can be scored by its Rayleigh quotient, and a hand built contrast vector gives a rigorous one sided bound on the relevant eigenvalue instead of an unsupported importance score.",
+    "source_operator": "courant_fischer_rayleigh_minmax",
+    "telemetry": "Candidate factor vectors, their quadratic form values, norms, and the orthogonality constraints used in each bound."
+   }
+  },
+  {
+   "primitive_id": "laplacian_operator_action_and_constants",
+   "name": "L equals D minus A, and constant vectors are exactly the zero modes of a connected graph",
+   "verbatim_quote": "From (3.4), we can immediately see that L1 = 0, so the constant vectors are eigenvectors of eigenvalue zero.",
+   "page": "Chapter 3, Section 3.1, book p. 30; text lines 2137-2155",
+   "latex": "L_G = D_G - A_G, \\qquad (L_G x)(a) = \\sum_{(a,b)\\in E} w_{a,b}\\,(x(a)-x(b))",
+   "symbol_and_unit_ledger": {
+    "L_G": "graph Laplacian",
+    "D_G": "diagonal weighted degree matrix",
+    "A_G": "weighted adjacency matrix",
+    "1": "all ones vector on vertices",
+    "x": "vertex function"
+   },
+   "assumptions": [
+    "The graph is weighted and the degree of a vertex is the sum of its incident edge weights.",
+    "The zero mode statement beyond constants uses connectedness, proved in Lemma 3.1.1."
+   ],
+   "breakdown_regime": "For disconnected graphs the zero eigenspace has one dimension per component, so a single global constant no longer describes the nullspace.",
+   "domain": "spectral graph theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Build every relational operator in the engine from explicit degree and adjacency parts. The constant mode is the global level that must be removed before contrasts, clusters, or change scores are interpreted, which prevents a league wide shift from being mistaken for a local signal.",
+    "source_operator": "laplacian_operator_action_and_constants",
+    "telemetry": "Adjacency and degree tables for each snapshot, component counts, and projections of state vectors onto the constant mode."
+   }
+  },
+  {
+   "primitive_id": "fiedler_value_algebraic_connectivity",
+   "name": "The second Laplacian eigenvalue is positive exactly when the graph is connected",
+   "verbatim_quote": "Then, λ2 > 0 if and only if G is connected.",
+   "page": "Chapter 3, Lemma 3.1.1, book p. 30; text lines 2207-2208",
+   "latex": "\\lambda_2 > 0 \\iff G \\text{ is connected}",
+   "symbol_and_unit_ledger": {
+    "\\lambda_2": "second smallest Laplacian eigenvalue, units of edge weight",
+    "G": "weighted graph with Laplacian eigenvalues 0 = lambda_1 <= lambda_2 <= ... <= lambda_n"
+   },
+   "assumptions": [
+    "G is a weighted graph.",
+    "Eigenvalues are ordered from smallest to largest for the Laplacian."
+   ],
+   "breakdown_regime": "Positivity is only a yes or no connectivity test. A tiny positive lambda_2 still means a weakly connected graph with slow diffusion and fragile partitions.",
+   "domain": "spectral graph theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Use lambda_2 as an algebraic connectivity diagnostic for any relational network the engine builds. Near zero values flag a network that splits into weakly linked groups, so downstream factors computed on it should carry a fragility warning and a component level breakdown.",
+    "source_operator": "fiedler_value_algebraic_connectivity",
+    "telemetry": "Laplacian spectra of successive network snapshots, lambda_2 values, and the Fiedler vectors that localize weak connections."
+   }
+  },
+  {
+   "primitive_id": "cauchy_interlacing_principal_submatrices",
+   "name": "Deleting one vertex interlaces the spectrum of the principal submatrix with the original spectrum",
+   "verbatim_quote": "Let A be an n-by-n symmetric matrix and let B be a principal submatrix of A of dimension n − 1 (that is, B is obtained by deleting the same row and column from A).",
+   "page": "Chapter 4, Theorem 4.3.1, book p. 37; text lines 2577-2585",
+   "latex": "\\alpha_1 \\ge \\beta_1 \\ge \\alpha_2 \\ge \\beta_2 \\ge \\cdots \\ge \\alpha_{n-1} \\ge \\beta_{n-1} \\ge \\alpha_n",
+   "symbol_and_unit_ledger": {
+    "A": "n by n symmetric matrix",
+    "B": "principal submatrix of A of dimension n minus 1",
+    "\\alpha_i": "eigenvalues of A in decreasing order",
+    "\\beta_i": "eigenvalues of B in decreasing order"
+   },
+   "assumptions": [
+    "A is symmetric.",
+    "B is formed by deleting the same row and column from A."
+   ],
+   "breakdown_regime": "Interlacing bounds movement but does not identify which eigenvector changed, and repeated deletion still leaves gaps that can hide large eigenvector rotation.",
+   "domain": "linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When an entity leaves a network, interlacing bounds how far every spectral factor can move. The engine can separate changes that are mathematically forced by removal from changes that carry new information, instead of treating every post removal shift as a discovery.",
+    "source_operator": "cauchy_interlacing_principal_submatrices",
+    "telemetry": "Spectra before and after entity removal, the removed entity identity, and per eigenvalue movement against the interlacing envelope."
+   }
+  },
+  {
+   "primitive_id": "perron_frobenius_and_bipartite_symmetry",
+   "name": "A connected graph has a simple dominant adjacency eigenvalue with a positive eigenvector, and the spectrum is symmetric exactly in the bipartite case",
+   "verbatim_quote": "Finally, we show that for a connected graph G, µn = −µ1 if and only if G is bipartite.",
+   "page": "Chapter 4, Section 4.5, book pp. 40-41; text lines 2763-2791",
+   "latex": "\\mu_1 > \\mu_2, \\qquad \\mu_n = -\\mu_1 \\iff G \\text{ is bipartite}",
+   "symbol_and_unit_ledger": {
+    "\\mu_1": "largest adjacency eigenvalue",
+    "\\mu_n": "smallest adjacency eigenvalue",
+    "G": "connected graph",
+    "adjacency eigenvector of mu_1": "can be chosen strictly positive by Theorem 4.5.1"
+   },
+   "assumptions": [
+    "G is connected.",
+    "The symmetric Perron-Frobenius statement is proved for adjacency matrices plus nonnegative diagonal shifts."
+   ],
+   "breakdown_regime": "Disconnected graphs lose simplicity of the dominant eigenvalue, and directed or signed networks need different theory because positivity of the dominant eigenvector can fail.",
+   "domain": "spectral graph theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A dominant positive eigenvector gives a principled centrality or load factor for a connected interaction network. A spectrum that is symmetric about zero is a structural alarm for a two sided interaction pattern, which changes how factors should be grouped and compared.",
+    "source_operator": "perron_frobenius_and_bipartite_symmetry",
+    "telemetry": "Adjacency spectra, dominant eigenvector entries, and bipartiteness checks on each interaction network."
+   }
+  },
+  {
+   "primitive_id": "loewner_order_graph_comparison",
+   "name": "Comparing Laplacian quadratic forms compares graphs and monotonically orders all their eigenvalues",
+   "verbatim_quote": "It is clear that dropping edges can only decrease the value of the quadratic form, because all edges weights are positive.",
+   "page": "Chapter 6, Sections 6.2-6.3, book p. 55; text lines 3325-3345",
+   "latex": "G \\prec c\\cdot H \\implies \\lambda_k(G) \\ge c\\,\\lambda_k(H) \\quad \\text{for all } k",
+   "symbol_and_unit_ledger": {
+    "G, H": "graphs compared through their Laplacian quadratic forms, in the order used in Lemma 6.2.1",
+    "c": "positive scaling constant",
+    "\\lambda_k": "kth Laplacian eigenvalue in increasing order"
+   },
+   "assumptions": [
+    "Edge weights are positive.",
+    "The comparison is the book's quadratic form order on Laplacians."
+   ],
+   "breakdown_regime": "Comparison bounds are only as good as the simpler graph chosen for comparison, and a loose comparison graph yields loose eigenvalue bounds even when the method is valid.",
+   "domain": "spectral graph theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sandwich an unknown network between simpler reference networks whose spectra are known. The engine then inherits rigorous factor bounds from the references, and the width of the sandwich is an explicit uncertainty measure for any conclusion drawn from the spectrum.",
+    "source_operator": "loewner_order_graph_comparison",
+    "telemetry": "Quadratic form ratios against reference graphs, the scaling constants achieved, and eigenvalue bounds inherited from each reference."
+   }
+  },
+  {
+   "primitive_id": "cayley_graph_character_eigenbasis",
+   "name": "Characters of an abelian group give a complete eigenbasis for its Cayley graphs before the generators are known",
+   "verbatim_quote": "The wonderful thing about Cayley graphs of Abelian groups is that we can construct an orthornormal basis of eigenvectors for these graphs without even knowing the set of generators S.",
+   "page": "Chapter 7, Section 7.8, book p. 66; text lines 4038-4042; eigenvalue formula in Lemma 7.4.1, book p. 65",
+   "latex": "\\lambda_b = k - \\sum_{i=1}^{k} (-1)^{\\,b^{T} g_i}",
+   "symbol_and_unit_ledger": {
+    "b": "binary index vector for a character of the group {0,1}^d",
+    "g_i": "ith generator of the Cayley graph",
+    "k": "number of generators, equal to the degree",
+    "\\lambda_b": "Laplacian eigenvalue for the character indexed by b"
+   },
+   "assumptions": [
+    "The group is abelian, presented for {0,1}^d and Z/n in the chapter.",
+    "The graph is the Cayley graph generated by the listed generator set."
+   ],
+   "breakdown_regime": "Nonabelian groups need representation theory beyond characters, and the eigenbasis being known does not make the eigenvalues small: generator choice still decides expansion.",
+   "domain": "algebraic graph theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When a state space has a group structure, such as cyclic schedules, rotations, or translation invariant matchup patterns, diagonalize with the group characters first. The engine gets exact spectral factors for the symmetric part of the problem and can isolate the genuinely asymmetric residue.",
+    "source_operator": "cayley_graph_character_eigenbasis",
+    "telemetry": "Group generators for each structured state space, character indexed eigenvalues, and residuals after the character basis fit."
+   }
+  },
+  {
+   "primitive_id": "strongly_regular_adjacency_algebra",
+   "name": "Strong regularity forces the adjacency matrix to satisfy a quadratic equation, so the graph has only three eigenvalues",
+   "verbatim_quote": "We will use this fact to write A2 as a linear combination of A, I and J.",
+   "page": "Chapter 9, Section 9.6, book p. 85; text lines 4786-4794",
+   "latex": "A^2 = (\\lambda - \\mu)A + \\mu J + (k - \\mu)I",
+   "symbol_and_unit_ledger": {
+    "A": "adjacency matrix of the strongly regular graph",
+    "k": "common degree of every vertex",
+    "\\lambda": "common neighbors of an adjacent pair",
+    "\\mu": "common neighbors of a nonadjacent pair",
+    "I": "identity matrix",
+    "J": "all ones matrix"
+   },
+   "assumptions": [
+    "The graph is connected, k regular, and not complete in the chapter's standing assumptions.",
+    "Every adjacent pair has lambda common neighbors and every nonadjacent pair has mu common neighbors."
+   ],
+   "breakdown_regime": "The algebra collapses when common neighbor counts vary by pair, and the integrality conditions rule out most parameter sets, so near regular data should not be forced into this exact model.",
+   "domain": "algebraic graph theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Use the quadratic adjacency algebra as a template test for highly structured interaction data. If an empirical network nearly satisfies a low degree matrix polynomial, its powers can be summarized by a few scalars, which compresses walk counts of every length into a small auditable parameter set.",
+    "source_operator": "strongly_regular_adjacency_algebra",
+    "telemetry": "Common neighbor count distributions for adjacent and nonadjacent pairs, residuals of the quadratic matrix identity, and the two nontrivial eigenvalues."
+   }
+  },
+  {
+   "primitive_id": "normalized_laplacian_and_walk_mixing",
+   "name": "The normalized Laplacian rescales spectral analysis by degree and its second eigenvalue controls random walk mixing",
+   "verbatim_quote": "The normalized Laplacian is positive semidefinite and has the same rank as the ordinary (sometimes called “combinatorial”) Laplacian.",
+   "page": "Chapter 10, Section 10.5, book pp. 97-98; text lines 5450-5500",
+   "latex": "N = D^{-1/2} L D^{-1/2} = I - A, \\qquad \\nu_i = 2 - 2\\omega_i",
+   "symbol_and_unit_ledger": {
+    "N": "normalized Laplacian",
+    "D": "diagonal degree matrix",
+    "L": "combinatorial Laplacian",
+    "A": "normalized adjacency matrix D^{-1/2} M D^{-1/2}",
+    "\\nu_i": "eigenvalues of N in increasing order",
+    "\\omega_i": "eigenvalues of the lazy walk matrix in decreasing order"
+   },
+   "assumptions": [
+    "Degrees are positive for vertices in the walk analysis.",
+    "The mixing bound quoted in the chapter is for the lazy random walk."
+   ],
+   "breakdown_regime": "Degree normalization hides absolute volume: a low degree vertex can look well mixed while carrying almost no mass, and isolated vertices break the construction.",
+   "domain": "random walks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Normalize relational factors by activity level before comparing them. The second normalized eigenvalue then measures how fast influence, attention, or probability mass equilibrates across the network, which is a comparable mixing time across networks of very different sizes and densities.",
+    "source_operator": "normalized_laplacian_and_walk_mixing",
+    "telemetry": "Degree sequences, normalized spectra, walk distributions over time, and empirical mixing times against the spectral prediction."
+   }
+  },
+  {
+   "primitive_id": "harmonic_dirichlet_energy_minimization",
+   "name": "Boundary values extend uniquely to the energy minimizing harmonic function, computed by a Schur style linear solve",
+   "verbatim_quote": "Given x (B), E (x ) is minimized by setting x (S) so that x is harmonic on S.",
+   "page": "Chapter 11, Theorem 11.6.1, book p. 107; text lines 5838-5845",
+   "latex": "x(S) = -L(S,S)^{-1} L(S,B)\\, f",
+   "symbol_and_unit_ledger": {
+    "B": "boundary vertex set with prescribed values f",
+    "S": "interior vertex set, the complement of B",
+    "x(S)": "harmonic extension of the boundary values to the interior",
+    "L(S,S), L(S,B)": "blocks of the Laplacian under the B and S partition",
+    "f": "prescribed boundary values x(B)"
+   },
+   "assumptions": [
+    "G is connected and weighted.",
+    "Boundary values on B are fixed before the interior is solved.",
+    "L(S,S) is invertible, proved in Lemma 11.5.3."
+   ],
+   "breakdown_regime": "If the boundary is empty or fails to anchor every component, the extension is not unique, and nonlinear elements break the exact equivalence between harmonicity and quadratic energy minimization.",
+   "domain": "partial differential equations on graphs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fill missing entity states by harmonic extension from trusted observations on the same interaction graph. The solve is the least energy completion consistent with the anchors, and the resulting energy is a reported cost of the imputation rather than a silent fill.",
+    "source_operator": "harmonic_dirichlet_energy_minimization",
+    "telemetry": "Anchor sets and values, interior solve residuals, harmonicity errors per vertex, and the energy of each completed state."
+   }
+  },
+  {
+   "primitive_id": "laplacian_edge_factorization_and_currents",
+   "name": "The Laplacian factors as U transpose W U, so edge flows and vertex currents are two views of one operator",
+   "verbatim_quote": "Define W to be the diagonal matrix with rows and columns indexed by edges with the weights of the edges on the diagonals.",
+   "page": "Chapter 11, Section 11.7, book p. 109; text lines 5890-5935",
+   "latex": "L = U^{T} W U, \\qquad i_{ext} = U^{T} W U\\, v",
+   "symbol_and_unit_ledger": {
+    "U": "signed edge vertex incidence matrix, one row per oriented edge",
+    "W": "diagonal matrix of edge weights",
+    "v": "vertex voltage or potential vector",
+    "i_{ext}": "external current vector at vertices"
+   },
+   "assumptions": [
+    "Each edge is given an arbitrary orientation once, and the factorization is independent of that choice.",
+    "Edge current follows Ohm's law with resistance equal to the reciprocal of weight."
+   ],
+   "breakdown_regime": "The factorization is exact only for linear resistive edges. Saturating, directed, or history dependent edges need a different operator and the current interpretation is lost.",
+   "domain": "electrical networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Keep both vertex level and edge level representations of every relational signal. The factorization lets the engine move between entity states and pairwise flows without approximation, so an anomaly can be localized to specific edges instead of only to entities.",
+    "source_operator": "laplacian_edge_factorization_and_currents",
+    "telemetry": "Incidence matrices per snapshot, edge flow vectors W U v, vertex current residuals, and edge level anomaly rankings."
+   }
+  },
+  {
+   "primitive_id": "laplacian_pseudoinverse_electrical_solutions",
+   "name": "The Moore-Penrose pseudoinverse solves Laplacian systems on the zero sum subspace and gives voltages from currents",
+   "verbatim_quote": "If v satisfies v = L+ i ext , then v is the unique solution to the equation Lv = i ext , and v is harmonic everywhere i ext is zero.",
+   "page": "Chapter 11, Claim 11.8.2, book p. 110; text lines 5989-5996",
+   "latex": "L^{+} = \\sum_{i:\\lambda_i \\ne 0} \\frac{1}{\\lambda_i}\\, \\psi_i \\psi_i^{T}",
+   "symbol_and_unit_ledger": {
+    "L^{+}": "Moore-Penrose pseudoinverse of the Laplacian",
+    "\\lambda_i, \\psi_i": "eigenvalues and orthonormal eigenvectors of L",
+    "i_{ext}": "external current vector, required to sum to zero on a connected graph",
+    "v": "voltage vector L^{+} i_{ext}"
+   },
+   "assumptions": [
+    "The graph is connected, so the nullspace is exactly the constants.",
+    "Only current vectors in the span of L, equivalently zero sum vectors, are solvable."
+   ],
+   "breakdown_regime": "Components that are disconnected each carry their own constant ambiguity, and tiny nonzero eigenvalues make the pseudoinverse numerically explosive even when it exists mathematically.",
+   "domain": "linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Use the pseudoinverse as the canonical solver for potential from flow problems in the engine. Inputs that fail the zero sum condition are rejected with the imbalance reported, and small eigenvalues are surfaced as conditioning warnings attached to the solution.",
+    "source_operator": "laplacian_pseudoinverse_electrical_solutions",
+    "telemetry": "Current imbalance per solve, smallest nonzero eigenvalues, solution norms, and residuals of L v against the requested currents."
+   }
+  },
+  {
+   "primitive_id": "effective_resistance_euclidean_metric",
+   "name": "Effective resistance is a squared Euclidean distance under the pseudoinverse square root embedding and is a metric on vertices",
+   "verbatim_quote": "We claim that the effective resistance is a distance. The only non-trivial part to prove is the triangle inequality, (4).",
+   "page": "Chapter 12, Sections 12.1 and 12.9, book pp. 111-112 and 120; text lines 6013-6062 and 6536-6545",
+   "latex": "R_{eff}(a,b) = (\\delta_a - \\delta_b)^{T} L^{+} (\\delta_a - \\delta_b) = \\left\\| L^{+/2}\\delta_a - L^{+/2}\\delta_b \\right\\|^2",
+   "symbol_and_unit_ledger": {
+    "R_{eff}(a,b)": "effective resistance between vertices a and b, ohms in the resistor model",
+    "L^{+}": "Laplacian pseudoinverse",
+    "L^{+/2}": "symmetric square root of the pseudoinverse",
+    "\\delta_a": "elementary unit vector at vertex a"
+   },
+   "assumptions": [
+    "The network is a connected weighted graph with resistance equal to reciprocal weight.",
+    "The metric conclusion is Section 12.9; the distance representation is Section 12.1."
+   ],
+   "breakdown_regime": "Effective resistance ignores direction, capacity limits, and dynamics: two pairs with equal resistance can behave very differently under time varying or saturating flow.",
+   "domain": "electrical networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Embed entities by their pseudoinverse square root coordinates so that pairwise effective resistance becomes ordinary distance. Clusters, outliers, and bridge entities can then be found with geometric tools, and the distance has a physical meaning in the original network.",
+    "source_operator": "effective_resistance_euclidean_metric",
+    "telemetry": "All pairs or sampled effective resistances, embedding coordinates, and distance preservation errors for downstream geometric summaries."
+   }
+  },
+  {
+   "primitive_id": "rayleigh_monotonicity_principle",
+   "name": "Weakening edges can only decrease effective spring constants and can only increase effective resistances",
+   "verbatim_quote": "In terms of effective resistance, this says that if we increase the resistance of some resistors then the effective resistance can not decrease.",
+   "page": "Chapter 12, Theorem 12.3.1, book p. 113; text lines 6135-6165",
+   "latex": "\\widehat{w}_{a,b} \\le w_{a,b} \\ \\forall (a,b)\\in E \\implies \\widehat{c}_{s,t} \\le c_{s,t}",
+   "symbol_and_unit_ledger": {
+    "w, \\widehat{w}": "original and weakened edge weights on the same edge set",
+    "c_{s,t}, \\widehat{c}_{s,t}": "effective spring constants between s and t before and after weakening"
+   },
+   "assumptions": [
+    "Both graphs share the same vertices and edges; only weights change.",
+    "Elements are linear springs or resistors."
+   ],
+   "breakdown_regime": "Chapter 17 shows the principle fails for nonlinear elements and traffic networks, where removing or weakening a link can improve global behavior, as in Braess's paradox.",
+   "domain": "electrical networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Use monotonicity as a sanity veto on sensitivity analyses. If an engine update weakens a set of relationships and a computed closeness measure moves the wrong way, the computation or the model class is wrong, and the veto fires before the result is used.",
+    "source_operator": "rayleigh_monotonicity_principle",
+    "telemetry": "Paired before and after weight tables, effective resistance changes per pair, and any monotonicity violations flagged by the check."
+   }
+  },
+  {
+   "primitive_id": "schur_complement_laplacian_reduction",
+   "name": "Eliminating interior vertices from a Laplacian gives another Laplacian, the Schur complement, whose inverse is the restricted inverse",
+   "verbatim_quote": "The remarkable fact that we will discover is that LB is in fact a Laplacian matrix1 , and that it is obtained by performing Gaussian elimination to remove the internal vertices.",
+   "page": "Chapter 12, Sections 12.6-12.7, book pp. 115-119; text lines 6256-6265 and 6480-6495",
+   "latex": "M_B = M(B,B) - M(B,S)\\, M(S,S)^{-1}\\, M(S,B), \\qquad M^{-1}(B,B) = (M_B)^{-1}",
+   "symbol_and_unit_ledger": {
+    "M": "matrix being reduced, a Laplacian in the chapter's application",
+    "B": "kept boundary vertices",
+    "S": "eliminated interior vertices",
+    "M_B": "Schur complement of M with respect to S"
+   },
+   "assumptions": [
+    "M(S,S) is invertible, which holds for Laplacian interior blocks of a connected graph.",
+    "Internal vertices carry no external current after elimination."
+   ],
+   "breakdown_regime": "Elimination can densify the reduced graph severely, and for non Laplacian matrices the complement need not preserve the graph interpretation or sign pattern.",
+   "domain": "linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Compress a large relational system to the entities that matter for a question while keeping the reduced operator exact, not approximate. The engine can answer boundary level queries on the small Laplacian and know that interior effects are fully accounted for.",
+    "source_operator": "schur_complement_laplacian_reduction",
+    "telemetry": "Kept and eliminated vertex sets, fill in created by elimination, reduced edge weights, and inverse restriction checks on sampled boundary inputs."
+   }
+  },
+  {
+   "primitive_id": "matrix_tree_theorem",
+   "name": "The product of the nonzero Laplacian eigenvalues counts weighted spanning trees",
+   "verbatim_quote": "Thus, the eigenvalues allow us to count the sum over spanning trees of the product of the weights of edges in those trees.",
+   "page": "Chapter 13, Theorem 13.4.1, book p. 124; text lines 6691-6700",
+   "latex": "\\sigma_{n-1}(L_G) = n \\sum_{T \\text{ spanning tree}} \\prod_{e\\in T} w_e",
+   "symbol_and_unit_ledger": {
+    "\\sigma_{n-1}(L_G)": "product of the n minus 1 nonzero Laplacian eigenvalues",
+    "T": "a spanning tree of G",
+    "w_e": "weight of edge e",
+    "n": "number of vertices"
+   },
+   "assumptions": [
+    "G is connected and weighted.",
+    "With all weights equal to 1 the sum counts spanning trees."
+   ],
+   "breakdown_regime": "The count is astronomically large for dense graphs and is a single aggregate: it certifies total connectivity redundancy without identifying which trees or edges matter.",
+   "domain": "combinatorics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Use the weighted tree total as a redundancy index for a network hypothesis. Two candidate structures with similar spectra can be separated by how many independent spanning routes they support, which is a direct measure of how much damage the structure tolerates.",
+    "source_operator": "matrix_tree_theorem",
+    "telemetry": "Nonzero eigenvalue products, weighted tree totals per candidate network, and comparisons against edge deletion variants."
+   }
+  },
+  {
+   "primitive_id": "leverage_scores_spanning_tree_marginals",
+   "name": "An edge's leverage score, weight times effective resistance, is exactly its probability of appearing in a weighted random spanning tree",
+   "verbatim_quote": "Consider sampling a random spanning tree with probability proportional to the product of the weights of its edges. We will now show that the probability that edge e appears in the tree is exactly its leverage score.",
+   "page": "Chapter 13, Section 13.5, book pp. 126-127; text lines 6789-6850",
+   "latex": "\\ell_e = w_e\\, R_{eff}(e), \\qquad \\Pr[e \\in T] = \\ell_e, \\qquad \\sum_e \\ell_e = n - 1",
+   "symbol_and_unit_ledger": {
+    "\\ell_e": "leverage score of edge e, dimensionless and between 0 and 1",
+    "w_e": "edge weight",
+    "R_{eff}(e)": "effective resistance between the endpoints of e",
+    "T": "spanning tree sampled with probability proportional to the product of its edge weights"
+   },
+   "assumptions": [
+    "Trees are sampled with probability proportional to the product of edge weights.",
+    "The graph is connected and weighted."
+   ],
+   "breakdown_regime": "Leverage is a marginal under one specific tree distribution. It does not measure causal importance, and correlated edges can each carry moderate leverage while being jointly redundant or jointly critical.",
+   "domain": "random spanning trees",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Rank relationships by leverage when the engine must explain which connections hold a structure together. An edge with leverage near 1 is a near bridge whose removal changes the system, so its data quality and stability deserve priority checking.",
+    "source_operator": "leverage_scores_spanning_tree_marginals",
+    "telemetry": "Per edge leverage scores, effective resistances, sampled tree frequencies against theoretical marginals, and leverage concentration summaries."
+   }
+  },
+  {
+   "primitive_id": "hoffman_independence_and_chromatic_bounds",
+   "name": "Extreme adjacency eigenvalues bound independence number from above and chromatic number from below",
+   "verbatim_quote": "One of the first results in spectral graph theory was Hoffman’s [Hof70] proof the following upper bound on the size of an independent set in a graph G.",
+   "page": "Chapter 19, Sections 19.3 and 19.5, book pp. 167-168; text lines 8443-8460 and 8582-8600",
+   "latex": "\\alpha(G) \\le n\\,\\frac{-\\mu_n}{d - \\mu_n}, \\qquad \\chi(G) \\ge 1 + \\frac{\\mu_1}{-\\mu_n}",
+   "symbol_and_unit_ledger": {
+    "\\alpha(G)": "size of the largest independent set",
+    "\\chi(G)": "chromatic number",
+    "n": "number of vertices",
+    "d": "degree in the regular case of the independence bound",
+    "\\mu_1, \\mu_n": "largest and smallest adjacency eigenvalues"
+   },
+   "assumptions": [
+    "The independence bound as stated needs a d regular graph; the chromatic bound does not.",
+    "mu_n is negative for any graph with an edge."
+   ],
+   "breakdown_regime": "The bounds can be far from tight, as the chapter's clique with pendant vertices example shows for the chromatic bound, so they certify limits rather than estimate the true values.",
+   "domain": "spectral graph theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Bound how many mutually noninteracting entities a network can contain, and how many groups a conflict graph needs, directly from two eigenvalues. The engine can rule out proposed groupings that violate the bounds without running a combinatorial search.",
+    "source_operator": "hoffman_independence_and_chromatic_bounds",
+    "telemetry": "Extreme adjacency eigenvalues, independence and coloring bound values, and any proposed grouping that violates a bound."
+   }
+  },
+  {
+   "primitive_id": "cheeger_sweep_partitioning",
+   "name": "Cheeger's inequality ties the second normalized eigenvalue to conductance, and thresholding one vector finds the cut",
+   "verbatim_quote": "Cheeger’s inequality proves that if we have a vector y , orthogonal to d , for which the generalized Rayleigh quotient (20.1) is small, then one can obtain a set of small conductance from y .",
+   "page": "Chapter 21, Section 21.1, book pp. 176-177; text lines 9008-9016",
+   "latex": "\\frac{\\nu_2}{2} \\le \\varphi_G \\le \\sqrt{2\\nu_2}",
+   "symbol_and_unit_ledger": {
+    "\\nu_2": "second smallest eigenvalue of the normalized Laplacian",
+    "\\varphi_G": "minimum conductance over all vertex sets",
+    "y": "vector orthogonal to the degree vector d with small generalized Rayleigh quotient y^T L y / y^T D y",
+    "S_\\tau": "threshold set {a : y(a) <= tau}"
+   },
+   "assumptions": [
+    "The graph is weighted and conductance uses weighted degrees.",
+    "The sweep guarantee applies to vectors centered with respect to d in the chapter's proof."
+   ],
+   "breakdown_regime": "The square root gap is real: the sweep can return a cut whose conductance is quadratically worse than optimal, and a poor input vector gives a poor cut even though the inequality still holds.",
+   "domain": "graph partitioning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Turn a spectral embedding into an explicit partition by sweeping thresholds and scoring conductance at each one. The engine reports the best cut found together with the eigenvalue based lower bound, so the quality gap of the partition is part of the output.",
+    "source_operator": "cheeger_sweep_partitioning",
+    "telemetry": "Threshold sweep tables with set size, boundary weight, and conductance, plus the nu_2 lower bound for the same graph."
+   }
+  },
+  {
+   "primitive_id": "local_clustering_by_short_lazy_walks",
+   "name": "A short lazy walk from a good seed vertex plus a threshold sweep recovers a low conductance cluster in time depending on the cluster, not the graph",
+   "verbatim_quote": "Most local clustering algorithms can be implemented to run on unweighted graphs in time depending on d (S), rather that on the size of the graph.",
+   "page": "Chapter 22, introduction and Section 22.1, book pp. 181-182; text lines 9235-9249",
+   "latex": "d(T) \\le 16s, \\qquad \\varphi(T) \\le 8 \\ln(8s)\\, \\varphi",
+   "symbol_and_unit_ledger": {
+    "T": "cluster returned by the algorithm",
+    "S": "hidden target set with weighted degree volume at most s",
+    "d(T)": "sum of weighted degrees in T",
+    "\\varphi": "conductance bound assumed for S",
+    "t = 1/(2\\varphi)": "number of lazy walk steps used before sweeping"
+   },
+   "assumptions": [
+    "A set S exists with d(S) <= s <= d(V)/32 and conductance at most phi.",
+    "The seed vertex must be a good vertex of S, and the chapter proves such a vertex exists."
+   ],
+   "breakdown_regime": "A bad seed or a target set that violates the size and conductance hypotheses voids the guarantee, and the logarithmic factor means the recovered cluster can be noticeably worse than the hidden one.",
+   "domain": "graph algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Find the community around one entity of interest without processing the whole network. The engine can answer local questions, such as which group a new entity belongs with, at cost proportional to the answer, and can state the conductance guarantee that comes with the result.",
+    "source_operator": "local_clustering_by_short_lazy_walks",
+    "telemetry": "Seed identities, walk length, swept threshold sets with conductance, and the volume of the returned cluster against the target bound."
+   }
+  },
+  {
+   "primitive_id": "davis_kahan_eigenvector_perturbation",
+   "name": "Eigenvector stability is governed by perturbation size divided by the eigenvalue gap",
+   "verbatim_quote": "The Davis-Kahan theorem [DK70] says that ψ 2 will be close to φ2 , in angle, if the norm of R is significantly less than the distance between α2 and the other eigenvalues of A.",
+   "page": "Chapter 23, Theorem 23.2.1, book p. 193; text lines 9873-9880 and 9900-9915",
+   "latex": "\\sin 2\\theta_i \\le \\frac{2\\|R\\|}{\\min_{j\\ne i} |\\alpha_i - \\alpha_j|}",
+   "symbol_and_unit_ledger": {
+    "A, B": "symmetric matrices with R = A minus B",
+    "\\alpha_i": "eigenvalues of A",
+    "\\theta_i": "angle between the ith eigenspaces of A and B",
+    "\\|R\\|": "operator norm of the perturbation"
+   },
+   "assumptions": [
+    "Both matrices are symmetric.",
+    "The bound is meaningful only when the eigenvalue is separated from the rest of the spectrum."
+   ],
+   "breakdown_regime": "At a repeated or nearly repeated eigenvalue the bound explodes and individual eigenvectors are meaningless; only the eigenspace is stable, which the stochastic block model analysis must respect.",
+   "domain": "matrix perturbation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Attach a stability certificate to every spectral factor the engine publishes. The certificate combines measured data noise with the eigenvalue gap, and factors whose gap is too small are demoted to subspace level statements instead of named directions.",
+    "source_operator": "davis_kahan_eigenvector_perturbation",
+    "telemetry": "Perturbation norm estimates from data revisions, eigenvalue gap tables, and angle bounds per factor across snapshots."
+   }
+  },
+  {
+   "primitive_id": "fiedler_nodal_domain_theorem",
+   "name": "The kth Laplacian eigenvector splits the graph into at most k minus 1 nodal domains on each sign side",
+   "verbatim_quote": "Nodal domains are the connected parts of a graph on which an eigenvector is negative or positive.",
+   "page": "Chapter 24, introduction and Theorem 24.5.1, book pp. 200-202; text lines 10171-10175",
+   "latex": "\\#\\{\\text{connected components of } G[W_k]\\} \\le k - 1, \\qquad W_k = \\{i : \\psi_k(i) \\ge t\\},\\ t \\le 0",
+   "symbol_and_unit_ledger": {
+    "\\psi_k": "eigenvector of the kth smallest Laplacian eigenvalue",
+    "W_k": "superlevel set of psi_k at threshold t",
+    "G[W_k]": "subgraph induced by W_k",
+    "k": "eigenvalue index, at least 2 in the theorem"
+   },
+   "assumptions": [
+    "G is a connected weighted graph.",
+    "The theorem is stated for thresholds t <= 0 and eigenvalue index k >= 2."
+   ],
+   "breakdown_regime": "The bound counts components but does not control their sizes or conductance, and the strict superlevel variant fails, with star graphs as counterexamples noted in the chapter.",
+   "domain": "spectral graph theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Constrain how fragmented a spectral factor's sign pattern can be. If an empirical factor claims more sign regions than its eigenvalue index allows, the factor is numerically wrong or the graph changed, and the theorem gives the engine a hard structural check.",
+    "source_operator": "fiedler_nodal_domain_theorem",
+    "telemetry": "Per eigenvector sign region counts, eigenvalue indices, and violations of the k minus 1 component bound."
+   }
+  },
+  {
+   "primitive_id": "koebe_embedding_planar_lambda2_bound",
+   "name": "Koebe circle packing embeddings bound the second eigenvalue of planar graphs by 8d over n",
+   "verbatim_quote": "Let G = (V, E) be a planar graph. Then there exists a set of circles {C1 , . . . , Cn } in IR2 that are interior-disjoint such that circle Ci touches circle Cj if and only if (i, j) ∈ E.",
+   "page": "Chapter 25, Theorem 25.2.2 and Lemma 25.2.1, book pp. 205-207; text lines 10460-10560",
+   "latex": "\\lambda_2 \\le \\frac{8d}{n}",
+   "symbol_and_unit_ledger": {
+    "\\lambda_2": "second smallest Laplacian eigenvalue",
+    "d": "maximum degree of the planar graph in the chapter's derivation",
+    "n": "number of vertices",
+    "Ci": "circle assigned to vertex i in the Koebe embedding"
+   },
+   "assumptions": [
+    "G is planar.",
+    "The proof lifts the circle packing to the sphere by stereographic projection and recenters the embedding to satisfy the zero sum condition."
+   ],
+   "breakdown_regime": "Planarity is essential: general graphs can have lambda_2 bounded away from zero at any size, and the constant 8 is not sharp for special planar families.",
+   "domain": "geometric graph theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When a relational structure is planar or nearly planar, geometry gives an a priori ceiling on its connectivity eigenvalue. The engine can use the ceiling to detect when an estimated network has spurious extra structure, because a planar explanation cannot support a larger lambda_2.",
+    "source_operator": "koebe_embedding_planar_lambda2_bound",
+    "telemetry": "Planarity tests, maximum degree, vertex count, measured lambda_2 against the 8d/n ceiling, and embedding based test vectors."
+   }
+  },
+  {
+   "primitive_id": "expanders_as_complete_graph_approximations",
+   "name": "An expander is a sparse regular graph whose Laplacian approximates a scaled complete graph Laplacian in operator norm",
+   "verbatim_quote": "We say that a d-regular graph is a good expander if all of its adjacency matrix eigenvalues are small.",
+   "page": "Chapter 27, Sections 27.1-27.2, book pp. 218-220; text lines 10950-11060",
+   "latex": "\\left\\| L_G - \\frac{d}{n} L_{K_n} \\right\\| \\le \\epsilon d",
+   "symbol_and_unit_ledger": {
+    "G": "d regular graph on n vertices",
+    "L_G, L_{K_n}": "Laplacians of G and of the complete graph",
+    "d": "common degree",
+    "\\epsilon": "expansion quality parameter, with all nontrivial adjacency eigenvalues at most epsilon d in absolute value"
+   },
+   "assumptions": [
+    "G is d regular.",
+    "Approximation is measured in the Loewner order and operator norm senses developed in the chapter."
+   ],
+   "breakdown_regime": "The definition controls eigenvalues, not computation: a random regular graph is an expander with high probability but gives no explicit neighbor rule, and small epsilon forces larger degree.",
+   "domain": "expander graphs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Use expander quality as the design target for sparse communication and sampling structures inside the engine. A sparse graph that approximates the complete graph preserves cuts, walks, and quadratic forms, so computation can run on the sparse surrogate with a stated spectral error.",
+    "source_operator": "expanders_as_complete_graph_approximations",
+    "telemetry": "Nontrivial eigenvalue extremes of candidate sparse structures, operator norm distance to the scaled complete graph, and cut preservation samples."
+   }
+  },
+  {
+   "primitive_id": "nilli_alon_boppana_spectral_limit",
+   "name": "Two far apart edges force a quantitative Alon-Boppana limit: no regular graph beats the Ramanujan bound asymptotically",
+   "verbatim_quote": "Let G be a d-regular graph containing two edges (u0 , u1 ) and (v0 , v1 ) that are at distance at least 2k + 2.",
+   "page": "Chapter 27, Theorem 27.5.1, book p. 224; text lines 11280-11360",
+   "latex": "\\lambda_2 \\le d - 2\\sqrt{d-1} + \\frac{2\\sqrt{d-1}-1}{k+1}",
+   "symbol_and_unit_ledger": {
+    "\\lambda_2": "second smallest Laplacian eigenvalue of the d regular graph",
+    "d": "degree",
+    "k": "depth parameter set by the distance between the two edges",
+    "u0,u1 and v0,v1": "the two edges at distance at least 2k plus 2"
+   },
+   "assumptions": [
+    "G is d regular.",
+    "The graph contains two edges at distance at least 2k plus 2, so the bound sharpens as diameter grows."
+   ],
+   "breakdown_regime": "For fixed small graphs the correction term is large and the bound is weak; it is an asymptotic barrier, not a practical estimate for one small network.",
+   "domain": "expander graphs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Keep a hard feasibility ceiling in the engine's structure search. Any proposed sparse design whose claimed spectral gap beats the Nilli bound for its degree and diameter is impossible, so the claim is rejected on arithmetic grounds before further work is spent on it.",
+    "source_operator": "nilli_alon_boppana_spectral_limit",
+    "telemetry": "Degree and diameter of proposed structures, the Nilli ceiling for lambda_2, and claimed gaps that exceed it."
+   }
+  },
+  {
+   "primitive_id": "expander_construction_by_squaring_and_line_graphs",
+   "name": "Squaring improves expansion while line graphs grow the graph, and alternating the two with clique replacement builds explicit expanders of every size",
+   "verbatim_quote": "While this construction requires the choice of two expanders of constant size, it is explicit in the sense that we can obtain a simple implicit representation of the graph: if the name of a vertex in the graph is written using b bits, then we can compute its neighbors in time polynomial in b.",
+   "page": "Chapter 30, Sections 30.1-30.2 and 30.7, book pp. 243-249; text lines 12460-12560",
+   "latex": "M_{G^2} = M_G^{2} - d I_n, \\qquad \\text{eigenvalues of } G^2 \\text{ are } \\mu_i^{2} - d",
+   "symbol_and_unit_ledger": {
+    "M_G": "adjacency matrix of the d regular graph G",
+    "G^2": "graph square, with edge weights counting length 2 paths and self loops removed",
+    "\\mu_i": "adjacency eigenvalues of G",
+    "d": "degree of G"
+   },
+   "assumptions": [
+    "G is d regular in the squaring analysis.",
+    "The full construction also replaces cliques in the line graph by a constant size expander Z with matched parameters."
+   ],
+   "breakdown_regime": "Squaring alone explodes the degree, and the line graph step roughly halves the relative spectral gap, so the alternation and parameter matching are essential; naive repetition loses either sparsity or expansion.",
+   "domain": "expander graphs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Grow well connected sparse structures by a repeatable local rule instead of global optimization. The engine can scale a validated small design to larger state spaces while tracking exactly how degree and spectral gap change at each squaring and replacement step.",
+    "source_operator": "expander_construction_by_squaring_and_line_graphs",
+    "telemetry": "Per iteration degree, relative spectral gap, and neighbor computation cost for constructed structures at increasing sizes."
+   }
+  },
+  {
+   "primitive_id": "graph_sparsification_by_leverage_sampling",
+   "name": "Sampling edges with probability proportional to leverage score and reweighting preserves the Laplacian spectrum with O(n log n) edges",
+   "verbatim_quote": "In this chapter and the next, we will learn that every graph can be approximated by a sparse graph, just as an expander graph approximates a complete graph.",
+   "page": "Chapter 32, Sections 32.1-32.5, book pp. 257-261; text lines 12830-12960",
+   "latex": "(1-\\epsilon) L_G \\preceq L_H \\preceq (1+\\epsilon) L_G, \\qquad p_{a,b} = \\frac{\\ell_{a,b}}{R}, \\quad R = \\frac{\\epsilon^2}{3.5 \\ln n}",
+   "symbol_and_unit_ledger": {
+    "H": "random sparsifier of G",
+    "L_G, L_H": "Laplacians of the original and sampled graphs",
+    "p_{a,b}": "sampling probability of edge (a,b), with sampled weight w_{a,b}/p_{a,b}",
+    "\\ell_{a,b}": "leverage score of the edge",
+    "\\epsilon": "target relative spectral error"
+   },
+   "assumptions": [
+    "Sampling is independent across edges and sampled edges are reweighted by the reciprocal probability.",
+    "The analysis uses the matrix Chernoff bound of Theorem 32.3.1 after the pseudoinverse square root transformation."
+   ],
+   "breakdown_regime": "Edges with leverage too large must be kept or split specially, the log n factor is not optimal, and the guarantee is probabilistic: a single sample can fail with the small probability the bound allows.",
+   "domain": "graph algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Compress a dense interaction graph to a sparse surrogate that provably preserves every quadratic form, cut, and effective resistance within 1 plus or minus epsilon. The engine can run expensive spectral routines on the surrogate and quote the preservation factor with the result.",
+    "source_operator": "graph_sparsification_by_leverage_sampling",
+    "telemetry": "Per edge sampling probabilities, sampled edge counts, spectral approximation checks on test vectors, and effective resistance drift between original and surrogate."
+   }
+  },
+  {
+   "primitive_id": "batson_spielman_srivastava_barrier_sparsification",
+   "name": "Barrier potentials greedily select a reweighted subset of vectors that spectrally approximates the identity with only n over epsilon squared terms",
+   "verbatim_quote": "The problem of sparsification is then the problem of finding a small subset of these vectors, S ⊆ E, along with scaling factors, c : S → IR, so that",
+   "page": "Chapter 33, Sections 33.2-33.3, book pp. 264-265; text lines 13180-13260",
+   "latex": "(1-\\epsilon)^2 I \\preceq \\sum_{i\\in S} c_i\\, v_i v_i^{T} \\preceq (1+\\epsilon)^2 I, \\qquad |S| \\le \\frac{n}{\\epsilon^2}",
+   "symbol_and_unit_ledger": {
+    "v_i": "vectors in isotropic position, sum of v_i v_i^T equal to I",
+    "S": "selected subset of vectors",
+    "c_i": "positive scaling factors chosen by the barrier argument",
+    "\\epsilon": "approximation parameter",
+    "n": "dimension"
+   },
+   "assumptions": [
+    "The vectors are in isotropic position.",
+    "Applied to graphs, the vectors are the pseudoinverse square root edge vectors of Chapter 32."
+   ],
+   "breakdown_regime": "The proof gives existence with an algorithm that needs repeated barrier evaluations; constants in the lecture's simplified version are loose, and the method controls eigenvalues, not entrywise or path structure.",
+   "domain": "graph algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Select a small weighted subset of signals or relationships whose combined operator still approximates the full operator. The engine can justify each retained item by the barrier potential it controls, giving a deterministic alternative to random sampling when an audit trail is required.",
+    "source_operator": "batson_spielman_srivastava_barrier_sparsification",
+    "telemetry": "Barrier potential values per selection step, selected subset sizes, scaling factors, and extreme eigenvalues of the selected operator."
+   }
+  },
+  {
+   "primitive_id": "chebyshev_polynomial_iterative_solvers",
+   "name": "Chebyshev polynomials give near optimal polynomial approximations to the inverse, with error decaying like exp of minus t over root kappa",
+   "verbatim_quote": "These polynomials are as small as possible on [−1, 1], and grow quickly outside this interval.",
+   "page": "Chapter 34, Sections 34.6-34.7, book pp. 276-278; text lines 13815-13920",
+   "latex": "\\epsilon \\le 2\\left(1 + \\frac{2}{\\sqrt{\\kappa}}\\right)^{-t} \\le 2 e^{-2t/\\sqrt{\\kappa}}, \\qquad \\kappa = \\frac{\\lambda_{max}}{\\lambda_{min}}",
+   "symbol_and_unit_ledger": {
+    "t": "polynomial degree, equal to the iteration count",
+    "\\kappa": "condition number of the positive definite matrix",
+    "\\lambda_{min}, \\lambda_{max}": "extreme eigenvalues bounding the spectrum",
+    "\\epsilon": "relative error of the approximate inverse action"
+   },
+   "assumptions": [
+    "The matrix is symmetric positive definite, or positive semidefinite on the subspace of interest.",
+    "The spectrum is contained in the interval [lambda_min, lambda_max] used to build the polynomial."
+   ],
+   "breakdown_regime": "If the spectral interval is misestimated, especially lambda_min, the polynomial can fail badly on outlying eigenvalues, and clustered spectra are handled better by conjugate gradient than by a fixed polynomial.",
+   "domain": "numerical linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Solve engine linear systems with a polynomial whose error budget is set in advance from the condition number. Iteration counts become a computed quantity with a certificate, rather than a loop that runs until someone feels it converged.",
+    "source_operator": "chebyshev_polynomial_iterative_solvers",
+    "telemetry": "Spectral interval estimates, condition numbers, iteration counts against the Chebyshev prediction, and residual norms per solve."
+   }
+  },
+  {
+   "primitive_id": "low_stretch_tree_preconditioning",
+   "name": "A low stretch spanning tree is a fast solver and a good preconditioner because total stretch bounds the trace of the preconditioned operator",
+   "verbatim_quote": "Every weighted graph G has a spanning tree subgraph T such that the sum of the stretches of all edges of G with respect to T is at most",
+   "page": "Chapter 36, Theorem 36.5.1, book p. 291; text lines 14586-14620",
+   "latex": "\\sum_{(u,v)\\in E} w_{u,v} \\sum_{i=1}^{k} \\frac{1}{w_i} \\le O(m \\log n \\log \\log n)",
+   "symbol_and_unit_ledger": {
+    "T": "spanning tree of G",
+    "stretch of (u,v)": "w_{u,v} times the tree path resistance between u and v",
+    "w_1, ..., w_k": "weights of edges on the tree path from u to v",
+    "m": "number of edges of G",
+    "n": "number of vertices"
+   },
+   "assumptions": [
+    "G is a weighted graph.",
+    "Tree Laplacian systems are solvable in linear time, as the chapter recalls."
+   ],
+   "breakdown_regime": "Average stretch bounds the trace, hence the largest generalized eigenvalue only indirectly; worst case individual edges can still have huge stretch and dominate practical behavior.",
+   "domain": "numerical linear algebra",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Precondition big relational solves with the best spanning skeleton of the network itself. The total stretch is a single reportable number that predicts iteration counts, so solver performance becomes a property of the data that the engine can monitor over time.",
+    "source_operator": "low_stretch_tree_preconditioning",
+    "telemetry": "Per graph total and average stretch, preconditioned conjugate gradient iteration counts, and solve times against the stretch prediction."
+   }
+  },
+  {
+   "primitive_id": "expected_characteristic_polynomials_real_rooted",
+   "name": "The expected characteristic polynomial of a random permutation conjugate sum of symmetric matrices is real rooted",
+   "verbatim_quote": "Our goal for today is to prove that these expected polynomials are real rooted.",
+   "page": "Chapter 41, Sections 41.1-41.2, book pp. 325-326; text lines 16100-16170",
+   "latex": "\\mathbb{E}_{\\Pi}\\left[ \\chi_x\\!\\left(A + \\Pi B \\Pi^{T}\\right) \\right] \\text{ has only real roots}",
+   "symbol_and_unit_ledger": {
+    "A, B": "symmetric n by n matrices",
+    "\\Pi": "uniform random permutation matrix",
+    "\\chi_x(M)": "characteristic polynomial det(xI minus M) of M"
+   },
+   "assumptions": [
+    "A and B are symmetric.",
+    "The expectation is over a uniform random permutation; the chapter extends the result to sums of many matrices."
+   ],
+   "breakdown_regime": "Real rootedness of the expectation does not say any single random instance is well behaved; the method bounds roots of an average polynomial and needs the interlacing machinery to transfer conclusions to instances.",
+   "domain": "random matrix theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Analyze randomized combinations of evidence operators through their expected characteristic polynomial. If the averaged spectrum is provably real and bounded, the engine has a rigorous baseline for what a typical combination can do before it inspects individual draws.",
+    "source_operator": "expected_characteristic_polynomials_real_rooted",
+    "telemetry": "Expected polynomial coefficients for combined operators, root locations, and comparisons with spectra of sampled instances."
+   }
+  },
+  {
+   "primitive_id": "finite_free_convolution_quadrature",
+   "name": "Finite free convolution computes expected characteristic polynomials from coefficients alone, and a finite signed permutation group already gives the Haar average",
+   "verbatim_quote": "We describe this theorem as a quadrature result, because it obtains an integral over a continuous space as a sum over a finite number of points.",
+   "page": "Chapter 42, Theorems 42.2.1-42.2.3, book pp. 334-335; text lines 16449-16510",
+   "latex": "p(x) \\boxplus_n q(x) = \\sum_{k=0}^{n} x^{\\,n-k} (-1)^k \\sum_{i+j=k} \\frac{(n-i)!\\,(n-j)!}{n!\\,(n-i-j)!}\\, a_i b_j",
+   "symbol_and_unit_ledger": {
+    "p, q": "characteristic polynomials with coefficients a_i and b_j in the chapter's expansion",
+    "\\boxplus_n": "finite free convolution in dimension n",
+    "B(n)": "hyperoctahedral group of signed permutation matrices used for the quadrature"
+   },
+   "assumptions": [
+    "A and B are symmetric matrices; the clean formula for permutation averages uses constant row sums.",
+    "The quadrature identity equates Haar orthogonal averages with averages over the finite group B(n)."
+   ],
+   "breakdown_regime": "The coefficient formula is basis dependent bookkeeping that is easy to misapply, and the theory addresses sums of randomly rotated matrices, not arbitrary dependent combinations.",
+   "domain": "free probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Replace expensive random rotation averages over combined evidence operators with an exact coefficient computation. The engine can predict the spectrum of a symmetrized combination in closed form and reserve sampling for validation.",
+    "source_operator": "finite_free_convolution_quadrature",
+    "telemetry": "Coefficient vectors of combined operators, convolution outputs, and root comparisons against Monte Carlo rotation averages."
+   }
+  },
+  {
+   "primitive_id": "interlacing_families_select_good_instances",
+   "name": "In an interlacing family, some leaf instance has each ordered root no larger than the corresponding root of the averaged polynomial",
+   "verbatim_quote": "By Lemma 44.5.2, there is a child of the root whose label has a jth largest root that is smaller than the jth largest root of p∅ .",
+   "page": "Chapter 43, Lemma 43.3.2, book p. 343; text lines 16910-16925; applied to 2-lifts in Chapter 44, Lemma 44.5.3",
+   "latex": "\\lambda_j(p_i) \\le \\lambda_j(p_{\\emptyset}) \\quad \\text{for some leaf } i \\text{ and every } j",
+   "symbol_and_unit_ledger": {
+    "p_i": "real rooted polynomial labeling a leaf of the interlacing family tree",
+    "p_{\\emptyset}": "polynomial at the root, a nonnegative combination of its children",
+    "\\lambda_j": "jth largest root",
+    "siblings": "polynomials sharing a common interlacing"
+   },
+   "assumptions": [
+    "The polynomials form an interlacing family: siblings have a common interlacing and internal labels are nonnegative combinations of children.",
+    "All polynomials are real rooted."
+   ],
+   "breakdown_regime": "The method controls one ordered root at a time through the tree walk and, as Chapter 44 notes, cannot simultaneously control largest and smallest eigenvalues, which is why nonbipartite Ramanujan existence stays open in the book.",
+   "domain": "polynomial methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Prove existence of a good configuration by averaging instead of searching. When the engine needs one signing, ordering, or assignment with a bounded worst factor, an interlacing family argument can certify that a good choice exists and give a tree descent procedure to find it.",
+    "source_operator": "interlacing_families_select_good_instances",
+    "telemetry": "Family tree structure, root polynomial roots, per level root comparisons during descent, and the final leaf's certified root bound."
+   }
+  },
+  {
+   "primitive_id": "matching_polynomial_real_rootedness",
+   "name": "The matching polynomial is real rooted and every root is at most 2 root (d minus 1) in absolute value",
+   "verbatim_quote": "The coefficients of the matching polynomial of a graph count the numbers of matchings of various sizes in that graph.",
+   "page": "Chapter 45, Sections 45.1-45.2, book p. 357; text lines 17590-17640; root bound from Heilmann-Lieb as used in Chapter 44, Theorem 44.3.1",
+   "latex": "\\mu_x[G] = \\sum_{k=0}^{n/2} x^{\\,n-2k} (-1)^k\\, m_k(G)",
+   "symbol_and_unit_ledger": {
+    "\\mu_x[G]": "matching polynomial of G in variable x",
+    "m_k(G)": "number of matchings of G with exactly k edges",
+    "n": "number of vertices",
+    "d": "maximum degree, for the root bound 2 sqrt(d minus 1) stated in the chapter"
+   },
+   "assumptions": [
+    "m_0(G) is 1 by convention, making the polynomial degree n.",
+    "The root bound needs maximum degree at most d."
+   ],
+   "breakdown_regime": "Counting the coefficients is hard in general: counting perfect matchings is #P hard, so the polynomial is a theoretical instrument and a small graph tool, not a scalable counting method.",
+   "domain": "algebraic graph theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Use matching structure as a spectral certificate for pairing problems. The expected characteristic polynomial of a random signing equals the matching polynomial, so its root bound is what lets the engine certify that some pairing or signing keeps the worst factor under the Ramanujan threshold.",
+    "source_operator": "matching_polynomial_real_rootedness",
+    "telemetry": "Matching counts for small structures, matching polynomial roots, maximum degree, and root bound margins."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "bf042a4f4c37aa2a-t1",
+   "think": "This draft is best read as one long argument that a graph should be studied through its operators, and that the Laplacian is the central operator because it is simultaneously an energy, a diffusion generator, a resistor network, and a counting device. The opening chapters set the contract. A symmetric matrix has an orthonormal eigenbasis, the Rayleigh quotient turns eigenvalues into optimization problems, and the Laplacian quadratic form measures how much a vertex function varies across edges. Once that is in place, connectivity stops being a drawing property and becomes the positivity of the second eigenvalue. Interlacing then explains how spectra respond when vertices are removed, Perron-Frobenius explains why the dominant direction of a connected graph is positive and simple, and the Loewner order turns graph comparison into eigenvalue comparison. The zoo chapters are not a detour. Complete graphs, stars, paths, rings, products, hypercubes, Cayley graphs, Paley graphs, and strongly regular graphs are the calibration set: each one either supplies an exact spectrum, saturates a bound, or shows which structural feature a spectral quantity is really detecting. Random walks convert the same spectrum into dynamics. The normalized Laplacian rescales by degree so that mixing becomes comparable across irregular graphs, its second eigenvalue sets the mixing scale, and harmonic functions appear as hitting probabilities. That prepares the electrical reinterpretation, which is the conceptual center of the book. With L factored as U transpose W U, a voltage is a potential, an external current is a boundary input, the pseudoinverse is the solver, and effective resistance is a genuine metric that measures how well two vertices are connected through all paths at once. Energy minimization, harmonic extension, and Schur complements are then three descriptions of one operation: fix what is known on a boundary, let the interior relax, and keep the reduced operator exact. Matrix Tree and leverage scores close the loop from analysis to combinatorics, because the same effective resistances that define the metric also give spanning tree marginals and the right sampling probabilities for sparsification. The partitioning chapters show what the machinery buys. Conductance makes the cut objective precise, Cheeger ties it to the second eigenvalue with a constructive sweep, Lovasz-Simonovits explains the walk proof behind it, and local clustering shows the sweep idea can run in time proportional to the answer rather than the graph. Hoffman bounds show the extreme eigenvalues also control independence and coloring. The stochastic block model chapters add the statistical lesson: eigenvectors are only as trustworthy as their eigenvalue gaps, and Davis-Kahan turns that into a quantitative certificate. Nodal domains and the planar chapters add hard structural constraints: sign patterns of the kth eigenvector have bounded complexity, and planar graphs cannot have large second eigenvalues because Koebe embeddings and Colin de Verdiere theory tie spectra to geometry. Expanders are where the book's values become explicit. A good expander is a sparse object that behaves like a complete graph for every quadratic form at once, and the Alon-Boppana and Nilli bounds mark the exact point past which no construction can go. The Ramanujan graphs sit on that boundary. Spielman presents both sides of the subject: probabilistic and algebraic constructions, expander codes whose decoding is local alternating correction, a deliberately simple squaring and line graph construction, and pseudorandom generators from expander walks. The algorithmic part then reverses the direction. Instead of using graphs to build matrices, it uses spectral graph theory to solve matrices: sparsify by leverage scores, improve the sampling to linear size with barrier potentials, iterate with Chebyshev polynomials, precondition with low stretch trees and augmented trees, and recurse with sparsified Schur complements until nearly linear time Laplacian solvers emerge. The final part is the most surprising. Expected characteristic polynomials of random matrix sums are real rooted, finite free convolution computes them from coefficients, quadrature shows a finite group already captures a Haar average, and interlacing families convert an average case root bound into the existence of one good instance. Applied to random matchings and random signings, this proves Ramanujan quality graphs of every size and bipartite Ramanujan graphs of every degree, with the matching polynomial supplying the root bound. For a reasoning engine, the transferable lesson is discipline: every claim should carry its operator, its quadratic form, its gap or conditioning certificate, and its failure regime. Signals should be composed only through operations whose spectral effect is understood, approximations should state the factor they preserve, and existence arguments should be separated from constructions. The book also teaches taste. It prefers exact factorizations to heuristics, test vectors to hand waving, and bounds that name their constants. Its limits are equally instructive: linearity is doing heavy work everywhere, nonlinear networks break monotonicity, repeated eigenvalues break eigenvector identity, and several chapters are openly marked as drafts needing editing, so the results should be used with the same care the text itself models. Two methodological threads deserve emphasis because they recur in almost every part. The first is the test vector method: nearly every upper bound in the book is a Courant-Fischer quotient evaluated at a cleverly chosen vector, an embedding, or a distribution over threshold sets, and nearly every lower bound is a comparison, an interlacing step, or a counting argument such as the trace method. The second is duality between the continuous and the combinatorial. A cut is a quadratic form on an indicator vector, a random walk is a matrix power, a spanning tree probability is a diagonal entry of a projection, and a code is a constraint system on the edges of an expander. Nothing is allowed to stay at the level of metaphor; each interpretation is required to pay rent by proving something in one of the others. That discipline also explains the book's treatment of randomness. Random graphs, random walks, random signings, random permutations, and random samples are never invoked as decoration. Each random object is paired with the exact quantity that concentrates, the exact polynomial whose roots matter, or the exact potential function that improves, and the failure probability or root bound is carried through the argument to the final statement.",
+   "retrocausal_genealogy": "The lineage runs from Kirchhoff's matrix tree theorem and classical Perron-Frobenius positivity through Fiedler's algebraic connectivity and nodal domains in the 1970s, Cheeger's manifold inequality and its discrete forms, and Hoffman's eigenvalue bounds. Spielman layers on the expander tradition of Margulis, Lubotzky, Phillips, and Sarnak, the coding work of Sipser and Spielman, and the solver program he built with Teng. The final chapters import Marcus, Spielman, and Srivastava's interlacing polynomial method, itself descended from Godsil's matching polynomial theory and Heilmann and Lieb's root bounds. Each generation reuses the previous generation's objects as tools.",
+   "theory_of_mind": "Spielman writes as a lecturer who believes the reader should be able to recompute everything. He repeatedly chooses the proof that exposes structure over the shortest proof, names the exact place a constant comes from, and flags his own uncertainty in the text when a chapter is unfinished or a bound is probably loose. His model of the domain is that graphs are not pictures but operators, and that a theorem is only understood when it survives being read as algebra, as geometry, as physics, and as an algorithm. He expects the reader to hold all four readings at once.",
+   "cross_layer_veto": "Several results act as hard vetoes on other layers of any system built from this book. Davis-Kahan vetoes naming an eigenvector whose eigenvalue is not separated. Cheeger vetoes reporting a partition without its conductance and its eigenvalue lower bound side by side. Nilli vetoes any claimed spectral gap beyond the Ramanujan limit for the given degree. Rayleigh monotonicity vetoes sensitivity conclusions for linear networks when weakening edges appears to strengthen them, while Chapter 17 vetoes applying that same monotonicity intuition to nonlinear or strategic networks. Together they form a consistency layer that can reject outputs before they propagate."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a template for studying any relational system through a positive semidefinite operator built from its connections. Define the energy, factor it into local terms, solve boundary problems exactly, measure pairwise connection strength as a resistance, sample by leverage, and certify every spectral conclusion with a gap. The same sequence applies to meshes, circuits, markets of interacting agents, sensor networks, and learned representation graphs. Its deepest habit is to demand that an approximation state what it preserves, in which norm, and at what cost, which is a usable standard far beyond graph theory itself.",
+ "gsi_mapping": "The Institute takes three research programs from this work. First, a perturbation program: every published spectral factor ships with an eigenvalue gap and a Davis-Kahan style stability bound. Second, a compression program: leverage score sampling and barrier sparsification as the standard way to shrink relational datasets while preserving quadratic forms. Third, an existence program: interlacing families and expected characteristic polynomials as a method for proving that good configurations exist before searching for them. The nodal domain and Colin de Verdiere material also gives the Institute a bridge from spectra to geometry that most applied pipelines ignore.",
+ "gse_mapping": "The engine takes the Laplacian toolkit as infrastructure. Interaction graphs among teams, players, and situations get quadratic form energies for consistency checks, effective resistances for pairwise connectedness, harmonic extension for completing missing states from trusted anchors, and Schur complements for reducing a full system to the entities in a given matchup question. Cheeger sweeps produce candidate groupings with conductance attached, leverage scores rank which relationships hold a structure together, sparsifiers keep computation near linear, and every spectral factor carries a gap based stability certificate. Nothing here touches market mechanics; it is prediction and reasoning machinery only."
+}

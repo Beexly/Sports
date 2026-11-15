@@ -1,0 +1,78 @@
+{
+  "book_id": "e583f19a50053987",
+  "source_status": "COMPLETE",
+  "title": "JYNX_COST_STACK",
+  "file_name": "JYNX_COST_STACK.md",
+  "sha256": "e583f19a500539875cfd07a5c32e05b7461a6fcc41b0f2bbe20df99ac48af85d",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Jynx unifies multi-cloud AI routing via coherent stack decision logic, enabling intelligent fallback and credit-aware dispatch across heterogeneous compute lanes. Universal Lens: Rooted in JYNX_COST_STACK (e583f19a50053987), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers optimal model selection and cost allocation using Bayesian credit pools and conformal prediction over Jynx's multi-tiered decision lattice. GSI Mapping: Rooted in JYNX_COST_STACK (e583f19a50053987), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions through Jynx’s layered policy engine, dynamically routing requests based on surface type, credit availability, and cloud failover protocols. GSE Mapping: Rooted in JYNX_COST_STACK (e583f19a50053987), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "free_lane_dispatch",
+      "name": "Free-Lane Dispatch Operator",
+      "verbatim_quote": "free-lane eligible? ← free-lane-policy (content, brief) ├─ yes + env on → Cerebras $0 ← free-lane.ts",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{\\\\text{free}}': 'dimensionless boolean flag indicating eligibility', 'E_{\\\\text{env}}': 'environmental condition vector', 'C_{\\\\text{Cerebras}}': 'zero-cost compute resource identifier'}",
+      "assumptions": "Free-lane activation depends on surface type and environment configuration; no cost is incurred.",
+      "breakdown_regime": "When L_free = 0 or E_env ≠ active, fallback to cloud-based routing occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps surface-level intent to zero-cost compute lane via conditional policy logic in Jynx stack.",
+        "source_operator": "free_lane_dispatch",
+        "telemetry": "Observes whether free-lane was triggered during API call via creditStack.jynx"
+      }
+    },
+    {
+      "primitive_id": "cloud_fallback_sequence",
+      "name": "Cloud Fallback Sequence",
+      "verbatim_quote": "on error └─ no ──────────────────────────────┐ ↓ cloud attempt order ← jynx.cloudAttemptOrder bedrock → azure → vertex",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'O_{\\\\text{cloud}}': 'ordered set of cloud providers {bedrock, azure, vertex}', 'P_{\\\\text{primary}}': 'selected primary provider', 'F_{\\\\text{failover}}': 'boolean flag for enabled failover'}",
+      "assumptions": "Clouds are attempted sequentially; failover is enabled unless explicitly disabled.",
+      "breakdown_regime": "All clouds exhausted without success triggers Anthropic cash fallback.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Sequential cloud invocation kernel derived from Jynx's ordered cloud attempt list and error handling protocol.",
+        "source_operator": "cloud_fallback_sequence",
+        "telemetry": "Tracks cloud invocation sequence and error outcomes via jynx.cloudAttemptOrder"
+      }
+    },
+    {
+      "primitive_id": "credit_pool_allocation",
+      "name": "Credit Pool Allocation",
+      "verbatim_quote": "modelName → credit pool ← credit-pool.ts ``` **Nothing pulls opposite:** free-lane never blocks clouds; clouds failover",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_{\\\\text{model}}': 'model identifier string', 'P_{\\\\text{pool}}': 'credit pool name {aws_activate, azure_foundry, ...}', 'C_{\\\\text{cost}}': 'cost in USD per token'}",
+      "assumptions": "Each model maps deterministically to a credit pool; cost is tracked per token.",
+      "breakdown_regime": "Model selection fails if no valid credit pool exists for given model.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Associates model identifiers with credit pools using Jynx's internal credit-pool.ts logic.",
+        "source_operator": "credit_pool_allocation",
+        "telemetry": "Logs model → pool mapping in usage ledger under creditStack.jynx"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e583f19a50053987_t0",
+      "think": "The Jynx system operates as a unified intelligence stack where decisions are made hierarchically across layers: surface type determines initial routing path, followed by model tier selection, then eligibility for free-lane resources. Free-lane dispatch is governed by a conditional policy that activates only for specific surfaces (content, brief) under defined environmental constraints. If activated, it routes directly to Cerebras at zero cost. Otherwise, the system proceeds to a sequential cloud fallback mechanism governed by a configurable order (bedrock → azure → vertex), with failover enabled by default. Each cloud request is associated with a credit pool, ensuring cost accountability. The entire process is encapsulated within a coherent stack that avoids competition between components—each layer feeds into the next without conflict. Failure modes include exhaustion of free-lane eligibility, full cloud outage, or invalid model-to-pool mappings, triggering fallback behaviors such as Anthropic cash routing or error propagation.\n\nDeep epistemic analysis for JYNX_COST_STACK (e583f19a50053987, domain=other, pages_read=2/2): Operator 'Free-Lane Dispatch Operator' (page 1, domain other) captures: free-lane eligible? ← free-lane-policy (content, brief) ├─ yes + env on → Cerebras $0 ← free-lane.ts Assumptions: Free-lane activation depends on surface type and environment configuration; no cost is incurred. Breakdown regime: When L_free = 0 or E_env ≠ active, fallback to cloud-based routing occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps surface-level intent to zero-cost compute lane via conditional policy logic in Jynx stack. Operator 'Cloud Fallback Sequence' (page 1, domain other) captures: on error └─ no ──────────────────────────────┐ ↓ cloud attempt order ← jynx.cloudAttemptOrder bedrock → azure → vertex Assumptions: Clouds are attempted sequentially; failover is enabled unless explicitly disabled. Breakdown regime: All clouds exhausted without success triggers Anthropic cash fallback. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Sequential cloud invocation kernel derived from Jynx's ordered cloud attempt list and error handling protocol. Operator 'Credit Pool Allocation' (page 1, domain other) captures: modelName → credit pool ← credit-pool.ts ``` **Nothing pulls opposite:** free-lane never blocks clouds; clouds failover Assumptions: Each model maps deterministically to a credit pool; cost is tracked per token. Breakdown regime: Model selection fails if no valid credit pool exists for given model. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Associates model identifiers with credit pools using Jynx's internal credit-pool.ts logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for JYNX_COST_STACK (e583f19a50053987, domain=other, pages_read=2/2): Operator 'Free-Lane Dispatch Operator' (page 1, domain other) captures: free-lane eligible? ← free-lane-policy (content, brief) ├─ yes + env on → Cerebras $0 ← free-lane.ts Assumptions: Free-lane activation depends on surface type and environment configuration; no cost is incurred. Breakdown regime: When L_free = 0 or E_env ≠ active, fallback to cloud-based routing occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps surface-level intent to zero-cost compute lane via conditional policy logic in Jynx stack. Operator 'Cloud Fallback Sequence' (page 1, domain other) captures: on error └─ no ──────────────────────────────┐ ↓ cloud attempt order ← jynx.cloudAttemptOrder bedrock → azure → vertex Assumptions: Clouds are attempted sequentially; failover is enabled unless explicitly disabled. Breakdown regime: All clouds exhausted without success triggers Anthropic cash fallback. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Sequential cloud invocation kernel derived from Jynx's ordered cloud attempt list and error handling protocol. Operator 'Credit Pool Allocation' (page 1, domain other) captures: modelName → credit pool ← credit-pool.ts ``` **Nothing pulls opposite:** free-lane never blocks clouds; clouds failover Assumptions: Each model maps deterministically to a credit pool; cost is tracked per token. Breakdown regime: Model selection fails if no valid credit pool exists for given model. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Associates model identifiers with credit pools using Jynx's internal credit-pool.ts logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in distributed computing principles and modern microservices architecture, Jynx builds upon prior work in dynamic load balancing, multi-cloud orchestration, and credit-based resource management systems. Retrocausal Genealogy: Rooted in JYNX_COST_STACK (e583f19a50053987), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in JYNX_COST_STACK (e583f19a50053987), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include competing cloud providers (AWS/Azure/Google) and internal policies (free-lane vs. paid). The system models these as dual constraints: one optimizing for cost efficiency (free-lane), another for reliability (cloud failover). These interact through a shared decision lattice that balances both. Theory of Mind & Decision Maker Model: Rooted in JYNX_COST_STACK (e583f19a50053987), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring free-lane does not block cloud access, and vice versa. Leakage vetoes occur when a model is incorrectly routed due to misaligned credit pool associations or misconfigured cloud orders. Cross-Layer Veto & Anti-Leakage Check: Rooted in JYNX_COST_STACK (e583f19a50053987), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

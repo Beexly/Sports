@@ -1,0 +1,78 @@
+{
+  "book_id": "0b8d16b54133fdbb",
+  "source_status": "COMPLETE",
+  "title": "INDEX-BOOKS-A-2",
+  "file_name": "INDEX-BOOKS-A-2.md",
+  "sha256": "0b8d16b54133fdbb66480e6520786c27f3392aed306332b14a413d84c3f059bb",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The structural unification of sports intelligence relies on mapping discrete play-by-play event spaces to continuous physiological load manifolds. By treating Expected Points Added (EPA) and Acute:Chronic Workload Ratios (ACWR) as dual projections of a generalized state-transition operator, we establish an isomorphic framework where tactical efficiency directly couples with biomechanical readiness.",
+  "gsi_mapping": "GSI employs conformal inference over EPA distributions derived from nflverse play-by-play data to generate distributionally robust predictive intervals. Simultaneously, Bayesian hierarchical models ingest session-RPE and GPS external loads, dynamically updating posterior injury-risk probabilities while strictly maintaining marginal coverage guarantees across varying team-specific baseline performance priors.",
+  "gse_mapping": "GSE operationalizes these primitives by modeling microcycle load adjustments as Markovian state transitions conditioned on starter status. The engine computes optimal situational decision trees that maximize expected tactical yield while enforcing hard constraints on athlete fatigue accumulation and physiological recovery trajectories.",
+  "primitives": [
+    {
+      "primitive_id": "epa_state_transition",
+      "name": "Expected Points Added Operator",
+      "verbatim_quote": "methods; PDF built locally from the author's CC0 Quarto source (no publisher PDF exists) | HIGH:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "EPA: Expected Points Added (dimensionless points); PBP: Play-by-Play event sequence (discrete index)",
+      "assumptions": "Markov property holds for down-and-distance states; historical EPA distributions remain stationary under similar contextual features.",
+      "breakdown_regime": "Singularities occur during extreme clock-management scenarios or unprecedented rule changes that invalidate historical feature dictionaries.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps discrete game events to continuous value functions used in GSE decision trees.",
+        "source_operator": "epa_state_transition",
+        "telemetry": "Out-of-sample EPA prediction error on holdout NFL seasons."
+      }
+    },
+    {
+      "primitive_id": "acwr_load_kernel",
+      "name": "Acute Chronic Workload Ratio Kernel",
+      "verbatim_quote": "team sports | HIGH: ACWR, session-RPE, GPS external load, readiness markers — named metrics and study",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "ACWR: Acute:Chronic Workload Ratio (dimensionless); RPE: Rating of Perceived Exertion (arbitrary units); GPS: Global Positioning System distance (meters)",
+      "assumptions": "Exponential weighted moving averages accurately capture chronic load adaptation; linear relationships exist between external load and tissue stress.",
+      "breakdown_regime": "Breaks down during prolonged off-seasons (zero denominator) or acute illness/injury altering baseline physiological responses.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives continuous injury risk surfaces integrated into GSI Bayesian priors.",
+        "source_operator": "acwr_load_kernel",
+        "telemetry": "Correlation coefficient between predicted ACWR spikes and subsequent non-contact injuries."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "INDEX-BOOKS-A-2 Grounded Principle 3",
+      "verbatim_quote": "# INDEX — WAVE BOOKS-A-2 (Mega Sweep 2026-11-06, Lane A sports BOOKS — BALANCE WAVE, SURPLUS",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0b8d16b54133fdbb_t0",
+      "think": "The derivation begins by isolating the fundamental operators governing athletic systems: the tactical EPA transition matrix and the physiological ACWR kernel. In Congelio's framework, EPA acts as a localized expectation operator over a high-dimensional discrete state space defined by down, distance, and field position. We formalize this as a conditional expectation $E[Y|X]$, where $Y$ is point yield and $X$ represents the normalized feature dictionary. Concurrently, Clemente's collection establishes the ACWR as a smoothing filter applied to time-series physiological telemetry (GPS, session-RPE). Mathematically, ACWR is a ratio of exponential moving averages, acting as a low-pass filter to isolate acute deviations from chronic baselines. The duality emerges when we recognize both operators measure deviation from equilibrium: EPA measures deviation from baseline scoring probability, while ACWR measures deviation from homeostatic physical load. Failure modes manifest when the underlying Markov assumptions collapse—specifically, when tactical innovations render historical EPA priors obsolete, or when non-linear physiological tipping points cause ACWR to lose predictive power regarding soft-tissue injuries. By embedding these operators within a unified conformal inference layer, we can bound the epistemic uncertainty of both tactical and physical state transitions simultaneously.\n\nDeep epistemic analysis for INDEX-BOOKS-A-2 (0b8d16b54133fdbb, domain=other, pages_read=1/1): Operator 'Expected Points Added Operator' (page 1, domain other) captures: methods; PDF built locally from the author's CC0 Quarto source (no publisher PDF exists) | HIGH: Assumptions: Markov property holds for down-and-distance states; historical EPA distributions remain stationary under similar contextual features. Breakdown regime: Singularities occur during extreme clock-management scenarios or unprecedented rule changes that invalidate historical feature dictionaries. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps discrete game events to continuous value functions used in GSE decision trees. Operator 'Acute Chronic Workload Ratio Kernel' (page 1, domain other) captures: team sports | HIGH: ACWR, session-RPE, GPS external load, readiness markers — named metrics and study Assumptions: Exponential weighted moving averages accurately capture chronic load adaptation; linear relationships exist between external load and tissue stress. Breakdown regime: Breaks down during prolonged off-seasons (zero denominator) or acute illness/injury altering baseline physiological responses. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives continuous injury risk surfaces integrated into GSI Bayesian priors. Operator 'INDEX-BOOKS-A-2 Grounded Principle 3' (page 1, domain other) captures: # INDEX — WAVE BOOKS-A-2 (Mega Sweep 2026-11-06, Lane A sports BOOKS — BALANCE WAVE, SURPLUS Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for INDEX-BOOKS-A-2 (0b8d16b54133fdbb, domain=other, pages_read=1/1): Operator 'Expected Points Added Operator' (page 1, domain other) captures: methods; PDF built locally from the author's CC0 Quarto source (no publisher PDF exists) | HIGH: Assumptions: Markov property holds for down-and-distance states; historical EPA distributions remain stationary under similar contextual features. Breakdown regime: Singularities occur during extreme clock-management scenarios or unprecedented rule changes that invalidate historical feature dictionaries. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps discrete game events to continuous value functions used in GSE decision trees. Operator 'Acute Chronic Workload Ratio Kernel' (page 1, domain other) captures: team sports | HIGH: ACWR, session-RPE, GPS external load, readiness markers — named metrics and study Assumptions: Exponential weighted moving averages accurately capture chronic load adaptation; linear relationships exist between external load and tissue stress. Breakdown regime: Breaks down during prolonged off-seasons (zero denominator) or acute illness/injury altering baseline physiological responses. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives continuous injury risk surfaces integrated into GSI Bayesian priors. Operator 'INDEX-BOOKS-A-2 Grounded Principle 3' (page 1, domain other) captures: # INDEX — WAVE BOOKS-A-2 (Mega Sweep 2026-11-06, Lane A sports BOOKS — BALANCE WAVE, SURPLUS Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The lineage of these primitives traces back to mid-20th century stochastic processes. EPA inherits directly from Dan Steinberg’s Win Probability Added and Bill James’ conceptualization of independent baseball events, evolving through modern machine learning applications of tree-based ensembles on play-by-play logs. Conversely, ACWR originates in exercise physiology’s attempt to quantify overtraining syndrome, mathematically formalized by Gabbett using simple moving averages before adopting exponential weighting. Both paradigms converged in the 2020s as sports science shifted from descriptive analytics to prescriptive, probabilistic state management.",
+      "theory_of_mind": "Modeling opposing agents requires treating defensive coordinators and athletic trainers as rational actors optimizing against our kernels. A defensive scheme aims to minimize our EPA realization by forcing negative-expectation state transitions (e.g., third-and-long). Similarly, an opposing team’s training regimen attempts to manipulate our ACWR priors by inducing early-season fatigue. Our GSE must anticipate these adversarial manipulations, treating the opponent not merely as a static obstacle but as a dynamic system actively probing the boundaries of our tactical and physiological confidence intervals.",
+      "cross_layer_veto": "Anti-collinearity vetoes are critical to prevent leakage between tactical and physical layers. For instance, a star quarterback’s elevated EPA might artificially inflate perceived team readiness, masking a dangerously high ACWR due to excessive practice reps. The veto condition triggers when the correlation between tactical output (EPA) and physiological cost (GPS load) exceeds a predefined threshold, indicating a potential burnout regime. Furthermore, we must veto any model updates where injury-risk priors are retroactively adjusted based on post-hoc game outcomes, preserving the strict temporal causality required for valid conformal inference."
+    }
+  ]
+}

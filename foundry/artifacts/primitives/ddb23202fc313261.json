@@ -1,0 +1,78 @@
+{
+  "book_id": "ddb23202fc313261",
+  "source_status": "COMPLETE",
+  "title": "kalshi-nfl-digest",
+  "file_name": "kalshi-nfl-digest.md",
+  "sha256": "ddb23202fc313261d2739a23c58c627b95e1568c67c14e9041028f103dd9dc9f",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Probabilistic market states for NFL outcomes mapped via bid-ask spreads and volume as stochastic processes on discrete time intervals. Universal Lens: Rooted in kalshi-nfl-digest (ddb23202fc313261), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on team win probabilities using Kalshi price data as likelihood priors; conformal prediction bounds on outcome confidence intervals. GSI Mapping: Rooted in kalshi-nfl-digest (ddb23202fc313261), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in game prediction models driven by evolving market prices; dynamic policy updates based on volatility-adjusted probability shifts. GSE Mapping: Rooted in kalshi-nfl-digest (ddb23202fc313261), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "team_win_probability",
+      "name": "Team Win Probability",
+      "verbatim_quote": "NFL Game (56 open markets) - KXNFLGAME-26OCT26DALPHI-PHI | Philadelphia | last=0.5100 bid=0.5000 ask=0.5100 vol=174.08 - KXNFLGAME-26OCT26DALPHI-DAL",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_win': 'probability of team winning, dimensionless'}",
+      "assumptions": "Market prices reflect rational expectations of team performance; bid-ask spread indicates liquidity risk.",
+      "breakdown_regime": "When P_win approaches 0 or 1, market inefficiency increases due to reduced trading volume.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kalshi price reflects posterior belief over binary outcome; GSI computes Bayesian update from prior to posterior using market data.",
+        "source_operator": "team_win_probability",
+        "telemetry": "Bid-ask midpoint as empirical estimate of true probability"
+      }
+    },
+    {
+      "primitive_id": "market_liquidity_index",
+      "name": "Market Liquidity Index",
+      "verbatim_quote": "NFL Game (56 open markets) - KXNFLGAME-26OCT26DALPHI-PHI | Philadelphia | last=0.5100 bid=0.5000 ask=0.5100 vol=174.08 - KXNFLGAME-26OCT26DALPHI-DAL",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'liquidity index, dimensionless'}",
+      "assumptions": "Volume correlates with information flow and trader conviction; higher volume implies lower uncertainty.",
+      "breakdown_regime": "When L < threshold, market may exhibit illiquidity-induced price distortion.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Volume-derived liquidity proxy used in GSE to adjust predictive model sensitivity to price shocks.",
+        "source_operator": "market_liquidity_index",
+        "telemetry": "Trading volume as measure of market engagement"
+      }
+    },
+    {
+      "primitive_id": "price_spread_risk",
+      "name": "Price Spread Risk",
+      "verbatim_quote": "NFL Game (56 open markets) - KXNFLGAME-26OCT26DALPHI-PHI | Philadelphia | last=0.5100 bid=0.5000 ask=0.5100 vol=174.08 - KXNFLGAME-26OCT26DALPHI-DAL",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'spread size, dimensionless'}",
+      "assumptions": "Bid-ask spread reflects transaction cost and market maker risk premium.",
+      "breakdown_regime": "When S exceeds threshold, arbitrage opportunities diminish and execution risk rises.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Spread quantifies market friction; GSE uses it to compute optimal trade timing and risk-adjusted return estimates.",
+        "source_operator": "price_spread_risk",
+        "telemetry": "Difference between best bid and ask as proxy for execution risk"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ddb23202fc313261_t0",
+      "think": "The primitives encode probabilistic forecasts through market prices, where each team's win probability is inferred from the Kalshi market's last traded price. The liquidity index derived from volume indicates how much information is being priced into the market, while the bid-ask spread reflects immediate transaction costs and risk. These three variables form a triadic structure that enables GSI to perform Bayesian inference on game outcomes, and GSE to simulate state transitions in predictive models. Failure modes include illiquid markets (low volume), wide spreads (high friction), and extreme probabilities (low entropy) which can distort inference. Dualities emerge in that high liquidity supports accurate pricing, but also introduces noise if too many traders act independently. The system must balance signal-to-noise ratio across these dimensions to maintain robustness.\n\nDeep epistemic analysis for kalshi-nfl-digest (ddb23202fc313261, domain=football, pages_read=2/2): Operator 'Team Win Probability' (page 1, domain football) captures: NFL Game (56 open markets) - KXNFLGAME-26OCT26DALPHI-PHI | Philadelphia | last=0.5100 bid=0.5000 ask=0.5100 vol=174.08 - KXNFLGAME-26OCT26DALPHI-DAL Assumptions: Market prices reflect rational expectations of team performance; bid-ask spread indicates liquidity risk. Breakdown regime: When P_win approaches 0 or 1, market inefficiency increases due to reduced trading volume. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kalshi price reflects posterior belief over binary outcome; GSI computes Bayesian update from prior to posterior using market data. Operator 'Market Liquidity Index' (page 1, domain football) captures: NFL Game (56 open markets) - KXNFLGAME-26OCT26DALPHI-PHI | Philadelphia | last=0.5100 bid=0.5000 ask=0.5100 vol=174.08 - KXNFLGAME-26OCT26DALPHI-DAL Assumptions: Volume correlates with information flow and trader conviction; higher volume implies lower uncertainty. Breakdown regime: When L < threshold, market may exhibit illiquidity-induced price distortion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Volume-derived liquidity proxy used in GSE to adjust predictive model sensitivity to price shocks. Operator 'Price Spread Risk' (page 1, domain football) captures: NFL Game (56 open markets) - KXNFLGAME-26OCT26DALPHI-PHI | Philadelphia | last=0.5100 bid=0.5000 ask=0.5100 vol=174.08 - KXNFLGAME-26OCT26DALPHI-DAL Assumptions: Bid-ask spread reflects transaction cost and market maker risk premium. Breakdown regime: When S exceeds threshold, arbitrage opportunities diminish and execution risk rises. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Spread quantifies market friction; GSE uses it to compute optimal trade timing and risk-adjusted return estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for kalshi-nfl-digest (ddb23202fc313261, domain=football, pages_read=2/2): Operator 'Team Win Probability' (page 1, domain football) captures: NFL Game (56 open markets) - KXNFLGAME-26OCT26DALPHI-PHI | Philadelphia | last=0.5100 bid=0.5000 ask=0.5100 vol=174.08 - KXNFLGAME-26OCT26DALPHI-DAL Assumptions: Market prices reflect rational expectations of team performance; bid-ask spread indicates liquidity risk. Breakdown regime: When P_win approaches 0 or 1, market inefficiency increases due to reduced trading volume. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kalshi price reflects posterior belief over binary outcome; GSI computes Bayesian update from prior to posterior using market data. Operator 'Market Liquidity Index' (page 1, domain football) captures: NFL Game (56 open markets) - KXNFLGAME-26OCT26DALPHI-PHI | Philadelphia | last=0.5100 bid=0.5000 ask=0.5100 vol=174.08 - KXNFLGAME-26OCT26DALPHI-DAL Assumptions: Volume correlates with information flow and trader conviction; higher volume implies lower uncertainty. Breakdown regime: When L < threshold, market may exhibit illiquidity-induced price distortion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Volume-derived liquidity proxy used in GSE to adjust predictive model sensitivity to price shocks. Operator 'Price Spread Risk' (page 1, domain football) captures: NFL Game (56 open markets) - KXNFLGAME-26OCT26DALPHI-PHI | Philadelphia | last=0.5100 bid=0.5000 ask=0.5100 vol=174.08 - KXNFLGAME-26OCT26DALPHI-DAL Assumptions: Bid-ask spread reflects transaction cost and market maker risk premium. Breakdown regime: When S exceeds threshold, arbitrage opportunities diminish and execution risk rises. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Spread quantifies market friction; GSE uses it to compute optimal trade timing and risk-adjusted return estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in stochastic market microstructure theory, extending earlier work on order book dynamics and agent-based modeling in financial forecasting. Retrocausal Genealogy: Rooted in kalshi-nfl-digest (ddb23202fc313261), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in kalshi-nfl-digest (ddb23202fc313261), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include informed traders who move prices, uninformed traders who provide liquidity, and market makers who set spreads. Their interplay shapes the observed price paths and volatility. Theory of Mind & Decision Maker Model: Rooted in kalshi-nfl-digest (ddb23202fc313261), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that liquidity and spread metrics do not co-vary linearly; leakage occurs when one primitive masks another’s signal. Veto conditions ensure that only independent risk factors influence final predictions. Cross-Layer Veto & Anti-Leakage Check: Rooted in kalshi-nfl-digest (ddb23202fc313261), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

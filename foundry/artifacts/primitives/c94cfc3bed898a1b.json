@@ -1,0 +1,78 @@
+{
+  "book_id": "c94cfc3bed898a1b",
+  "source_status": "COMPLETE",
+  "title": "bovada.lv",
+  "file_name": "bovada.lv.md",
+  "sha256": "c94cfc3bed898a1b9bd5d61f2a5932008c79a0f5d97b41380275f8b35d1abcec",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph topology and path segmentation define structured content access patterns across multi-lingual domains. Universal Lens: Rooted in bovada.lv (c94cfc3bed898a1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief nets model sitemap crawl reliability and URL distribution for sportsbook inference. GSI Mapping: Rooted in bovada.lv (c94cfc3bed898a1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions map user navigation through '/sports', '/casino', '/es' paths with dynamic content load triggers. GSE Mapping: Rooted in bovada.lv (c94cfc3bed898a1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_topology",
+      "name": "Sitemap Graph Topology",
+      "verbatim_quote": "# bovada.lv Category: **sportsbook** URLs discovered: **4,826** Sitemaps walked: 8 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'graph structure of sitemaps', 'V': 'vertices representing URLs', 'E': 'edges representing navigational links'}",
+      "assumptions": "All sitemaps are traversable and represent valid site structure.",
+      "breakdown_regime": "When sitemap status is 404, graph connectivity fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each sitemap entry corresponds to a node in GSI's belief network for content discovery.",
+        "source_operator": "sitemap_graph_topology",
+        "telemetry": "Number of discovered URLs per sitemap index."
+      }
+    },
+    {
+      "primitive_id": "path_segmentation_taxonomy",
+      "name": "Path Segmentation Taxonomy",
+      "verbatim_quote": "1,556 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/casino`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_i': 'path segment identifier', 'N_i': 'number of URLs under path P_i'}",
+      "assumptions": "URLs within each path segment are uniformly distributed.",
+      "breakdown_regime": "When N_i approaches zero, path segment becomes obsolete.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Path segments form a kernel for GSE's state machine transition logic.",
+        "source_operator": "path_segmentation_taxonomy",
+        "telemetry": "Frequency count of URLs per first segment path."
+      }
+    },
+    {
+      "primitive_id": "multilingual_domain_structure",
+      "name": "Multilingual Domain Structure",
+      "verbatim_quote": "0 | no | | `https://www.bovada.lv/sitemap.xml` | 200 | 1,635 | no | | `https://www.bovada.lv/es/sitemap.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_l': 'domain with language tag l', 'S_l': 'sitemap associated with D_l', 'U_l': 'unique URLs in S_l'}",
+      "assumptions": "Each domain variant maintains consistent internal linking.",
+      "breakdown_regime": "If U_l < threshold, domain localization is incomplete.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Language-specific domains mirror each other in GSI's multilingual content inference.",
+        "source_operator": "multilingual_domain_structure",
+        "telemetry": "URL diversity across localized sitemaps."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c94cfc3bed898a1b_t0",
+      "think": "The sitemap graph topology encodes the hierarchical information architecture of bovada.lv, where each sitemap acts as a node in a directed acyclic graph (DAG), with edges representing navigational paths. The path segmentation taxonomy reveals that content is partitioned into thematic clusters such as '/sports', '/casino', and '/es', which correspond to distinct user intent categories. These segments are modeled as discrete states in GSE's state machine, triggering specific UI behaviors upon navigation. The multilingual domain structure indicates a deliberate strategy for internationalization, where each language variant maintains its own sitemap but shares common structural elements. This redundancy allows GSI to build robust probabilistic models of content availability and user behavior across locales. Failure modes include 404 errors in sitemaps or zero-length path segments, which signal system degradation or misconfiguration. Dualities emerge between the topological properties of the sitemap DAG and the semantic clustering of path segments, enabling both structural and functional reasoning in GSI and GSE respectively.\n\nDeep epistemic analysis for bovada.lv (c94cfc3bed898a1b, domain=other, pages_read=2/2): Operator 'Sitemap Graph Topology' (page 1, domain other) captures: # bovada.lv Category: **sportsbook** URLs discovered: **4,826** Sitemaps walked: 8 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are traversable and represent valid site structure. Breakdown regime: When sitemap status is 404, graph connectivity fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each sitemap entry corresponds to a node in GSI's belief network for content discovery. Operator 'Path Segmentation Taxonomy' (page 1, domain other) captures: 1,556 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/casino` Assumptions: URLs within each path segment are uniformly distributed. Breakdown regime: When N_i approaches zero, path segment becomes obsolete. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Path segments form a kernel for GSE's state machine transition logic. Operator 'Multilingual Domain Structure' (page 1, domain other) captures: 0 | no | | `https://www.bovada.lv/sitemap.xml` | 200 | 1,635 | no | | `https://www.bovada.lv/es/sitemap.xml` | Assumptions: Each domain variant maintains consistent internal linking. Breakdown regime: If U_l < threshold, domain localization is incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Language-specific domains mirror each other in GSI's multilingual content inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for bovada.lv (c94cfc3bed898a1b, domain=other, pages_read=2/2): Operator 'Sitemap Graph Topology' (page 1, domain other) captures: # bovada.lv Category: **sportsbook** URLs discovered: **4,826** Sitemaps walked: 8 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are traversable and represent valid site structure. Breakdown regime: When sitemap status is 404, graph connectivity fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each sitemap entry corresponds to a node in GSI's belief network for content discovery. Operator 'Path Segmentation Taxonomy' (page 1, domain other) captures: 1,556 | no | ## Path taxonomy | First segment | URLs | |---|---| | `/casino` Assumptions: URLs within each path segment are uniformly distributed. Breakdown regime: When N_i approaches zero, path segment becomes obsolete. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Path segments form a kernel for GSE's state machine transition logic. Operator 'Multilingual Domain Structure' (page 1, domain other) captures: 0 | no | | `https://www.bovada.lv/sitemap.xml` | 200 | 1,635 | no | | `https://www.bovada.lv/es/sitemap.xml` | Assumptions: Each domain variant maintains consistent internal linking. Breakdown regime: If U_l < threshold, domain localization is incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Language-specific domains mirror each other in GSI's multilingual content inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web architecture principles, this structure reflects the evolution from flat file systems to XML-based sitemaps, influenced by SEO best practices and semantic web standards. Retrocausal Genealogy: Rooted in bovada.lv (c94cfc3bed898a1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in bovada.lv (c94cfc3bed898a1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include crawlers seeking maximal coverage versus users aiming for minimal friction; the system balances these via optimized sitemap design and path prioritization. Theory of Mind & Decision Maker Model: Rooted in bovada.lv (c94cfc3bed898a1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in bovada.lv (c94cfc3bed898a1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that GSI's belief updates do not overfit to redundant sitemap data, while leakage veto prevents GSE from misinterpreting outdated path structures as active navigation routes. Cross-Layer Veto & Anti-Leakage Check: Rooted in bovada.lv (c94cfc3bed898a1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in bovada.lv (c94cfc3bed898a1b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "b294e619af8e0e8f",
+  "source_status": "COMPLETE",
+  "title": "source-integrity-analyst",
+  "file_name": "source-integrity-analyst.md",
+  "sha256": "b294e619af8e0e8fc3f692f5a6056c56f09d5d808219982d37d54e4c76c3053d",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Source integrity as a Bayesian belief update over hierarchical document trees, where freshness and conflict resolution define posterior probabilities of truth. Universal Lens: Rooted in source-integrity-analyst (b294e619af8e0e8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers source validity through conformal predictive distributions over citation graphs and build-card equivalence classes. GSI Mapping: Rooted in source-integrity-analyst (b294e619af8e0e8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions system states by validating build-card uniqueness and enforcing access-control constraints on data flows. GSE Mapping: Rooted in source-integrity-analyst (b294e619af8e0e8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "source_hierarchy_freshness",
+      "name": "Source Hierarchy Freshness",
+      "verbatim_quote": "# Source Integrity Analyst Training Manual As of: 2026-06-09 ## Purpose Owns source hierarchy, freshness, conflicts, and citations.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'hierarchical document tree (dimensionless)', 'F(t)': 'freshness function over time (dimensionless)', 'C(H)': 'conflict measure in hierarchy (dimensionless)'}",
+      "assumptions": "Hierarchy is acyclic; freshness decays exponentially with time.",
+      "breakdown_regime": "When F(t) < threshold, H becomes stale.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI maps H to a Bayesian network where F(t) defines conditional probabilities of truth.",
+        "source_operator": "source_hierarchy_freshness",
+        "telemetry": "Git commit timestamps and citation counts."
+      }
+    },
+    {
+      "primitive_id": "duplicate_build_avoidance",
+      "name": "Duplicate Build Avoidance",
+      "verbatim_quote": "## Duplicate Avoidance Search for matching BUILD IDs, route/surface names, and semantic goal before creating anything.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'build card identifier (dimensionless)', 'S': 'semantic goal vector (dimensionless)', 'R': 'route surface name (dimensionless)'}",
+      "assumptions": "BUILD IDs are unique; S and R are embedded in a shared vector space.",
+      "breakdown_regime": "When ∃(B₁, B₂) such that B₁ ≠ B₂ but S₁ = S₂ ∧ R₁ = R₂, duplication occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses kernel similarity over B, S, and R to detect duplicates.",
+        "source_operator": "duplicate_build_avoidance",
+        "telemetry": "Build ID collision rate and semantic similarity scores."
+      }
+    },
+    {
+      "primitive_id": "proof_production_requirement",
+      "name": "Proof Production Requirement",
+      "verbatim_quote": "- Produces proof: files, tests, screenshots, sources, logs, or explicit blockers.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'proof object (dimensionless)', 'T(P)': 'testability of P (dimensionless)', 'E(P)': 'evidence strength of P (dimensionless)'}",
+      "assumptions": "Each P must satisfy T(P) > 0 and E(P) > 0.",
+      "breakdown_regime": "When T(P) = 0 or E(P) = 0, proof is invalid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI validates P via empirical verification metrics; GSE ensures P is executable.",
+        "source_operator": "proof_production_requirement",
+        "telemetry": "Test coverage, screenshot count, log completeness."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b294e619af8e0e8f_t0",
+      "think": "The core operators form a triadic structure: source hierarchy freshness (H) governs truth likelihood, duplicate avoidance (D) enforces uniqueness, and proof production (P) validates claims. These interact through a Bayesian lens where H influences P's reliability, and D prevents logical redundancy. The failure modes arise when H decays below a threshold, allowing stale data to propagate; when D fails, leading to redundant builds; or when P lacks verifiability. The epistemic closure requires that each operator is both necessary and sufficient within its domain, forming a closed-loop integrity system.\n\nDeep epistemic analysis for source-integrity-analyst (b294e619af8e0e8f, domain=other, pages_read=2/2): Operator 'Source Hierarchy Freshness' (page 1, domain other) captures: # Source Integrity Analyst Training Manual As of: 2026-06-09 ## Purpose Owns source hierarchy, freshness, conflicts, and citations. Assumptions: Hierarchy is acyclic; freshness decays exponentially with time. Breakdown regime: When F(t) < threshold, H becomes stale. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI maps H to a Bayesian network where F(t) defines conditional probabilities of truth. Operator 'Duplicate Build Avoidance' (page 1, domain other) captures: ## Duplicate Avoidance Search for matching BUILD IDs, route/surface names, and semantic goal before creating anything. Assumptions: BUILD IDs are unique; S and R are embedded in a shared vector space. Breakdown regime: When ∃(B₁, B₂) such that B₁ ≠ B₂ but S₁ = S₂ ∧ R₁ = R₂, duplication occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses kernel similarity over B, S, and R to detect duplicates. Operator 'Proof Production Requirement' (page 1, domain other) captures: - Produces proof: files, tests, screenshots, sources, logs, or explicit blockers. Assumptions: Each P must satisfy T(P) > 0 and E(P) > 0. Breakdown regime: When T(P) = 0 or E(P) = 0, proof is invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI validates P via empirical verification metrics; GSE ensures P is executable. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for source-integrity-analyst (b294e619af8e0e8f, domain=other, pages_read=2/2): Operator 'Source Hierarchy Freshness' (page 1, domain other) captures: # Source Integrity Analyst Training Manual As of: 2026-06-09 ## Purpose Owns source hierarchy, freshness, conflicts, and citations. Assumptions: Hierarchy is acyclic; freshness decays exponentially with time. Breakdown regime: When F(t) < threshold, H becomes stale. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI maps H to a Bayesian network where F(t) defines conditional probabilities of truth. Operator 'Duplicate Build Avoidance' (page 1, domain other) captures: ## Duplicate Avoidance Search for matching BUILD IDs, route/surface names, and semantic goal before creating anything. Assumptions: BUILD IDs are unique; S and R are embedded in a shared vector space. Breakdown regime: When ∃(B₁, B₂) such that B₁ ≠ B₂ but S₁ = S₂ ∧ R₁ = R₂, duplication occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses kernel similarity over B, S, and R to detect duplicates. Operator 'Proof Production Requirement' (page 1, domain other) captures: - Produces proof: files, tests, screenshots, sources, logs, or explicit blockers. Assumptions: Each P must satisfy T(P) > 0 and E(P) > 0. Breakdown regime: When T(P) = 0 or E(P) = 0, proof is invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI validates P via empirical verification metrics; GSE ensures P is executable. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal logic and information theory, this structure mirrors Bayesian belief networks and computational integrity models from early 21st-century software engineering. Retrocausal Genealogy: Rooted in source-integrity-analyst (b294e619af8e0e8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in source-integrity-analyst (b294e619af8e0e8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to bypass H by introducing false freshness signals, exploit D by crafting near-duplicates, or falsify P by omitting evidence—requiring adversarial robustness in all three primitives. Theory of Mind & Decision Maker Model: Rooted in source-integrity-analyst (b294e619af8e0e8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If any primitive violates its telemetry thresholds, the entire system state is vetoed until corrective action aligns with GSI's probabilistic validation and GSE's operational constraints. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-integrity-analyst (b294e619af8e0e8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-integrity-analyst (b294e619af8e0e8f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

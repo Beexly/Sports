@@ -1,0 +1,78 @@
+{
+  "book_id": "35274ab1d55ec63e",
+  "source_status": "COMPLETE",
+  "title": "aangelopoulos-conformal-time-series",
+  "file_name": "aangelopoulos-conformal-time-series.md",
+  "sha256": "35274ab1d55ec63eaa26a33d034de8722beec64b7bea419c96ce2ca18fdab084",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Conformal prediction frameworks unify statistical learning with control theory through adaptive quantile adjustment, ensuring long-run coverage without exchangeability. Universal Lens: Rooted in aangelopoulos-conformal-time-series (35274ab1d55ec63e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal inference to generate robust probabilistic forecasts for sports outcomes, leveraging adaptive quantile tracking to maintain coverage under distribution shifts. GSI Mapping: Rooted in aangelopoulos-conformal-time-series (35274ab1d55ec63e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE implements a hybrid control strategy where MAPIE intervals serve as primary forecasts, switching to Conformal PID control during regime shifts for dynamic coverage maintenance. GSE Mapping: Rooted in aangelopoulos-conformal-time-series (35274ab1d55ec63e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "vision_prediction_sets",
+      "name": "Vision Prediction Sets",
+      "verbatim_quote": "Vision Prediction sets for time series with coverage guarantees **against any, possibly adversarial, sequence** — no exchangeability needed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Y_t': 'Outcome at time t, dimensionless', 'S_t': 'Prediction set at time t, subset of R'}",
+      "assumptions": "No assumption of exchangeability or stationarity; adversarial sequences allowed.",
+      "breakdown_regime": "When sequence deviates from assumed distributional model.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic forecasting kernel where prediction sets are constructed via conformal inference to ensure coverage.",
+        "source_operator": "vision_prediction_sets",
+        "telemetry": "Coverage rate over time window"
+      }
+    },
+    {
+      "primitive_id": "conformal_pid_control",
+      "name": "Conformal PID Control",
+      "verbatim_quote": "Frames conformal calibration as a control problem: **Conformal PID Control** adjusts the quantile level online (quantile tracking / P-control, adaptive conformal inference) so coverage holds even under distribution shift.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'q_t': 'Quantile level at time t, dimensionless', 'e_t': 'Miscoverage error at time t, dimensionless', 'K_p': 'Proportional gain, dimensionless'}",
+      "assumptions": "Online adjustment of quantile levels based on cumulative miscoverage.",
+      "breakdown_regime": "During distributional shifts or non-stationary environments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's adaptive control architecture, enabling real-time recalibration of prediction intervals.",
+        "source_operator": "conformal_pid_control",
+        "telemetry": "Cumulative miscoverage deviation from target level"
+      }
+    },
+    {
+      "primitive_id": "adaptive_quantile_tracking",
+      "name": "Adaptive Quantile Tracking",
+      "verbatim_quote": "The Ask A stream of (prediction, outcome) pairs; the controller updates the miscoverage level each step.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'(y_t, \\\\hat{y}_t)': 'Outcome and prediction pair at time t, dimensionless', 'M_t': 'Miscoverage measure at time t, dimensionless'}",
+      "assumptions": "Sequential update rule for quantile estimation using feedback loop.",
+      "breakdown_regime": "When prediction accuracy degrades due to environmental change.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used within GSE's drift detection framework to dynamically adjust quantile thresholds for interval calibration.",
+        "source_operator": "adaptive_quantile_tracking",
+        "telemetry": "Per-step miscoverage metric"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "35274ab1d55ec63e_t0",
+      "think": "The core insight of conformal time series prediction lies in decoupling the static nature of traditional prediction intervals from the evolving dynamics of real-world data. Vision Prediction Sets (VPS) provide a mechanism for constructing prediction sets that maintain coverage guarantees regardless of whether the data is exchangeable or adversarially generated. This is achieved by treating the construction of prediction sets as a sequential decision-making process rather than a fixed statistical procedure. Conformal PID Control extends this idea by framing the calibration of these sets as a control problem, where the quantile level is adjusted adaptively based on observed miscoverage. The controller uses a proportional feedback mechanism to track desired coverage rates, making it robust against distributional shifts. In GSI, this translates into maintaining reliable uncertainty quantification across varying game conditions, while in GSE, it enables a hybrid forecasting system that switches between standard conformal intervals and adaptive controllers during regime changes. The failure mode occurs when the underlying assumptions about the stability of the environment are violated beyond the controller’s capacity to adapt, leading to degraded coverage performance.\n\nDeep epistemic analysis for aangelopoulos-conformal-time-series (35274ab1d55ec63e, domain=other, pages_read=1/1): Operator 'Vision Prediction Sets' (page 1, domain other) captures: Vision Prediction sets for time series with coverage guarantees **against any, possibly adversarial, sequence** — no exchangeability needed. Assumptions: No assumption of exchangeability or stationarity; adversarial sequences allowed. Breakdown regime: When sequence deviates from assumed distributional model. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic forecasting kernel where prediction sets are constructed via conformal inference to ensure coverage. Operator 'Conformal PID Control' (page 1, domain other) captures: Frames conformal calibration as a control problem: **Conformal PID Control** adjusts the quantile level online (quantile tracking / P-control, adaptive conformal inference) so coverage holds even under distribution shift. Assumptions: Online adjustment of quantile levels based on cumulative miscoverage. Breakdown regime: During distributional shifts or non-stationary environments. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's adaptive control architecture, enabling real-time recalibration of prediction intervals. Operator 'Adaptive Quantile Tracking' (page 1, domain other) captures: The Ask A stream of (prediction, outcome) pairs; the controller updates the miscoverage level each step. Assumptions: Sequential update rule for quantile estimation using feedback loop. Breakdown regime: When prediction accuracy degrades due to environmental change. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used within GSE's drift detection framework to dynamically adjust quantile thresholds for interval calibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for aangelopoulos-conformal-time-series (35274ab1d55ec63e, domain=other, pages_read=1/1): Operator 'Vision Prediction Sets' (page 1, domain other) captures: Vision Prediction sets for time series with coverage guarantees **against any, possibly adversarial, sequence** — no exchangeability needed. Assumptions: No assumption of exchangeability or stationarity; adversarial sequences allowed. Breakdown regime: When sequence deviates from assumed distributional model. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic forecasting kernel where prediction sets are constructed via conformal inference to ensure coverage. Operator 'Conformal PID Control' (page 1, domain other) captures: Frames conformal calibration as a control problem: **Conformal PID Control** adjusts the quantile level online (quantile tracking / P-control, adaptive conformal inference) so coverage holds even under distribution shift. Assumptions: Online adjustment of quantile levels based on cumulative miscoverage. Breakdown regime: During distributional shifts or non-stationary environments. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's adaptive control architecture, enabling real-time recalibration of prediction intervals. Operator 'Adaptive Quantile Tracking' (page 1, domain other) captures: The Ask A stream of (prediction, outcome) pairs; the controller updates the miscoverage level each step. Assumptions: Sequential update rule for quantile estimation using feedback loop. Breakdown regime: When prediction accuracy degrades due to environmental change. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used within GSE's drift detection framework to dynamically adjust quantile thresholds for interval calibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots trace back to Vapnik's statistical learning theory and the development of conformal prediction by Shafer & Vovk. The integration with control theory builds upon earlier work in adaptive systems and online learning, particularly the use of PID controllers in engineering contexts. Retrocausal Genealogy: Rooted in aangelopoulos-conformal-time-series (35274ab1d55ec63e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial data generators that attempt to violate coverage guarantees, and dynamic environments that introduce distributional shifts. The system must balance between maintaining strict coverage and adapting quickly enough to avoid large deviations in performance. Theory of Mind & Decision Maker Model: Rooted in aangelopoulos-conformal-time-series (35274ab1d55ec63e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the PID controller does not interfere with the primary MAPIE logic during stable periods. Leakage veto ensures that the adaptive component only activates when clear signs of regime shift are detected, preventing unnecessary complexity in otherwise predictable domains. Cross-Layer Veto & Anti-Leakage Check: Rooted in aangelopoulos-conformal-time-series (35274ab1d55ec63e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

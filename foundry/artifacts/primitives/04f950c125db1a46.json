@@ -1,0 +1,478 @@
+{
+ "book_id": "04f950c125db1a46",
+ "title": "To Crash or Not To Crash: A quantitative look at the relationship between offensive rebounding and transition defense in the NBA",
+ "author": "Jenna Wiens, Guha Balakrishnan, Joel Brooks, John Guttag (MIT)",
+ "year": 2013,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2013 To Crash or Not To Crash A quantitative look at the relationship between offensive rebounding and transition defense in the NBA.pdf",
+ "source_note": "MIT Sloan Sports Analytics Conference 2013 Research Paper Competition, 7 pages, full read via pymupdf. Identity confirmed (Wiens/Balakrishnan/Brooks/Guttag, MIT, jwiens@mit.edu). CATALOG DOMAIN MISMATCH: queue primary_domain='football' but content is NBA basketball; extracted under true domain math. The Net Gain (Eq 2) and Odds Ratio (Eq 1) print clean and are used directly; CI/RI definitions reconstructed as labeled LaTeX from clean prose. Data: STATS SportVU, 233 games 2011-12 (incl playoffs), 25 fps, 6,521 missed jump shots >=15 ft; reaction time mean 2.22s SD 0.65; 10,915 defensive possessions for MDET. Key numbers: Net Gain avg -0.549 pts/poss; single-player swap -0.62 to -0.45 (+0.17); ~25 missed jump shots/game -> ~4 pts/game; MDET no-score mean 9.05 ft vs score 9.63 (KS p<0.01); MDET 6->12 costs ~0.06 pts/poss; threat range 75th percentile (bimodal ~15/23 ft); effect transient beyond ~15s. No sportsbook lines used as model inputs.",
+ "domain": "math",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "decision_trichotomy",
+   "name": "The post-shot decision: crash, retreat, or hold",
+   "verbatim_quote": "Immediately following a missed shot an offensive player can choose to crash the boards for an offensive rebound, get back on defense, or hold their current position.",
+   "page": 1,
+   "latex": "a\\in\\{\\text{crash},\\text{retreat},\\text{hold}\\}\\ \\text{chosen in the reaction window}",
+   "symbol_and_unit_ledger": {
+    "a": "player action after shot release [discrete choice]"
+   },
+   "assumptions": [
+    "The decision is made in the ~2.2s reaction window after shot release",
+    "Each action trades offensive-rebound upside against transition-defense readiness"
+   ],
+   "breakdown_regime": "The decision is sequential and time-pressured; the optimal action depends on position, personnel, and game situation, none fully modeled here.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE post-event allocation decision IS this trichotomy: after an event the engine chooses whether to press the advantage (crash), secure against the counter (retreat), or hold, a time-pressured allocation under opposing risks. GSI: post-event commit/defend/hold decision.",
+    "source_operator": "decision_trichotomy",
+    "telemetry": "action choice distribution; reaction-window timing"
+   }
+  },
+  {
+   "primitive_id": "crash_retreat_tradeoff",
+   "name": "Crashing improves rebounding but impairs transition defense",
+   "verbatim_quote": "But sending too many players in to rebound might impede the ability of a team to get back quickly on defense.",
+   "page": 1,
+   "latex": "\\uparrow\\text{crashers}\\Rightarrow \\uparrow\\Pr(\\text{OREB})\\ \\land\\ \\downarrow\\text{transition defense}",
+   "symbol_and_unit_ledger": {
+    "crashers": "players pursuing the offensive rebound [count]",
+    "OREB": "offensive rebound [event]"
+   },
+   "assumptions": [
+    "More crashers raise offensive-rebound probability",
+    "But crashers must run farther to get back, worsening transition defense"
+   ],
+   "breakdown_regime": "The two effects oppose each other, so the optimum is interior, not all-crash or all-retreat; the tradeoff is the paper's core object.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE opposing-risk tradeoff IS this crash-retreat tension: pressing for upside (more offense/rebound) degrades defense against the counter (transition), so the engine balances the two rather than maximizing either, the risk-reward frontier. GSI: exploration upside versus exploitation safety tradeoff.",
+    "source_operator": "crash_retreat_tradeoff",
+    "telemetry": "crash count vs OREB probability; crash count vs transition defense"
+   }
+  },
+  {
+   "primitive_id": "getback_halves_oreb",
+   "name": "Getting back early can halve offensive-rebound probability",
+   "verbatim_quote": "tendencies to get back early on defense after a missed shot can reduce a team's probability of getting an offensive rebound by more than half.",
+   "page": 1,
+   "latex": "\\Pr(\\text{OREB}\\mid\\text{early retreat})<\\tfrac12\\,\\Pr(\\text{OREB}\\mid\\text{crash})",
+   "symbol_and_unit_ledger": {
+    "Pr(OREB)": "offensive rebound probability [probability]"
+   },
+   "assumptions": [
+    "Early retreat sacrifices offensive-rebound upside",
+    "The reduction can exceed 50%, quantifying the cost of the defensive choice"
+   ],
+   "breakdown_regime": "The halving is an empirical association from tracking data, not a controlled causal effect; it quantifies the opportunity cost of retreating.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE opportunity-cost quantification IS this halving: the engine quantifies what a defensive/conservative choice costs in foregone upside (here >50% of rebound probability), so the cost of caution is measured rather than assumed. GSI: measured opportunity cost of the safe action.",
+    "source_operator": "getback_halves_oreb",
+    "telemetry": "OREB probability under retreat vs crash; opportunity-cost ratio"
+   }
+  },
+  {
+   "primitive_id": "metrics_no_insight",
+   "name": "Aggregate outcome metrics hide the strategic choice",
+   "verbatim_quote": "Current popular metrics often quoted by analysts, such as offensive rebound rate and transition points allowed offer no insight into what strategic choices influence a team's performance.",
+   "page": 1,
+   "latex": "\\text{OREB rate},\\ \\text{transition pts allowed}\\not\\Rightarrow \\text{strategic cause}",
+   "symbol_and_unit_ledger": {
+    "OREB rate": "offensive rebound rate [probability]",
+    "transition pts": "transition points allowed [score]"
+   },
+   "assumptions": [
+    "Outcome metrics summarize results but not the decisions that produced them",
+    "Strategy-level metrics (CI/RI/MDET) are needed to explain performance"
+   ],
+   "breakdown_regime": "Without process metrics the engine cannot diagnose why a result occurred; outcome-only evaluation is the black-box trap the paper rejects.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE process-over-outcome metrics IS this critique: the engine measures the strategic choices (allocation, positioning) that drive outcomes, not just the outcomes, so performance is explainable and adjustable rather than a black box. GSI: decision-process metrics versus outcome-only metrics.",
+    "source_operator": "metrics_no_insight",
+    "telemetry": "outcome metric vs process metric; explanatory gap"
+   }
+  },
+  {
+   "primitive_id": "reaction_time",
+   "name": "Reaction window ~2.22s defines the decision horizon",
+   "verbatim_quote": "The mean reaction time in our dataset was approximately 2.22s (standard deviation of 0.65 seconds).",
+   "page": 2,
+   "latex": "t_{\\text{react}}=\\text{time(shot release}\\to\\text{rebound)};\\quad \\bar t=2.22\\text{ s},\\ \\sigma=0.65\\text{ s}",
+   "symbol_and_unit_ledger": {
+    "t_react": "reaction time [seconds]"
+   },
+   "assumptions": [
+    "Reaction time is measured from shot release to rebound secured",
+    "The ~2.2s window bounds how long players have to decide and move"
+   ],
+   "breakdown_regime": "The short window means decisions are near-instantaneous and position-dependent; the engine's analogue is the brief window after a market event to act.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE decision-horizon constraint IS this reaction window: the engine recognizes a bounded time horizon after an event within which allocation decisions must be made, so timing and pre-positioning matter as much as the choice itself. GSI: bounded decision latency after a triggering event.",
+    "source_operator": "reaction_time",
+    "telemetry": "reaction-time mean/SD; decision-window length"
+   }
+  },
+  {
+   "primitive_id": "crash_retreat_indices",
+   "name": "Crash Index and Retreat Index quantify strategy",
+   "verbatim_quote": "We defined two new metrics the Crash Index (CI) and Retreat Index (RI) that quantify the extent to which teams pursue an offensive rebound or ready themselves for transition defense.",
+   "page": 6,
+   "latex": "\\mathrm{CI}=\\mathrm{PI}+\\mathrm{NPC};\\quad \\mathrm{RI}=\\mathrm{PO}+\\mathrm{NPR}",
+   "symbol_and_unit_ledger": {
+    "PI": "players inside 8 ft at release [count]",
+    "PO": "players outside 33 ft at release [count]",
+    "NPC": "neutral players crashing >=5 ft toward [count]",
+    "NPR": "neutral players retreating >=5 ft away [count]"
+   },
+   "assumptions": [
+    "Players are partitioned by initial distance (inside 8 ft, neutral 8-33 ft, outside 33 ft)",
+    "Neutral players are classified by movement of at least 5 feet toward or away"
+   ],
+   "breakdown_regime": "The 8/33-foot and 5-foot thresholds are modeling choices; CI and RI summarize intent from positioning and movement, not just location.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE strategy-index construction IS CI/RI: the engine builds intent indices from agent positioning and movement relative to thresholds, summarizing whether a team is pressing or securing, so strategy is measurable from tracking data. GSI: posture indices from spatial state and motion.",
+    "source_operator": "crash_retreat_indices",
+    "telemetry": "CI and RI per possession; threshold partition; intent classification"
+   }
+  },
+  {
+   "primitive_id": "association_not_causation",
+   "name": "Crashing-rebounding link is association, not causation",
+   "verbatim_quote": "It does not show that crashing the boards causes offensive rebounds. It is possible that more players crash when it appears that getting an offensive rebound is there for the taking.",
+   "page": 2,
+   "latex": "\\mathrm{corr}(\\text{crash},\\text{OREB})>0\\ \\not\\Rightarrow\\ \\text{crash}\\to\\text{OREB};\\quad \\text{reverse causality possible}",
+   "symbol_and_unit_ledger": {
+    "corr": "association [dimensionless]"
+   },
+   "assumptions": [
+    "Players may crash because a rebound looks available, not cause it by crashing",
+    "Selection/reverse causality confounds the observational association"
+   ],
+   "breakdown_regime": "This is the core epistemic warning: observational tracking data shows association, and the engine must not infer causation without controlling for the selection that drives the choice.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE association-vs-causation veto IS this warning: the engine refuses to infer that a factor causes an outcome from observational co-occurrence, because agents select into the factor when success looks likely (reverse causality), the selection-bias discipline. GSI: causal identification under endogenous selection.",
+    "source_operator": "association_not_causation",
+    "telemetry": "crash-OREB association; reverse-causality flag; selection control"
+   }
+  },
+  {
+   "primitive_id": "dreb_always_more_likely",
+   "name": "Defensive rebound is always more likely than offensive",
+   "verbatim_quote": "following a missed jump shot, a defensive rebound by the other team is always more likely.",
+   "page": 3,
+   "latex": "\\Pr(\\text{DREB})>\\Pr(\\text{OREB})\\ \\text{even for the best rebounding teams }(<50\\%)",
+   "symbol_and_unit_ledger": {
+    "Pr(DREB)": "defensive rebound probability [probability]",
+    "Pr(OREB)": "offensive rebound probability [probability]"
+   },
+   "assumptions": [
+    "Even the best offensive-rebounding percentage is well below 50%",
+    "The base rate favors the defense, so crashing is a gamble against the odds"
+   ],
+   "breakdown_regime": "The base-rate asymmetry means the expected value of crashing must overcome a structural disadvantage; this anchors the Net Gain calculation.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE base-rate asymmetry IS this defensive-rebound dominance: the engine anchors any aggressive allocation against the structural base rate that favors the opponent/defense, so upside must be weighed against an unfavorable prior. GSI: base-rate-anchored expected value under asymmetric priors.",
+    "source_operator": "dreb_always_more_likely",
+    "telemetry": "OREB vs DREB base rates; best-team OREB ceiling <50%"
+   }
+  },
+  {
+   "primitive_id": "net_gain_equation",
+   "name": "Net Gain: expected value of the crash-retreat decision",
+   "verbatim_quote": "If an offensive rebound occurs, any points scored during this possession count as a gain. If a defensive rebound occurs, any points scored on the next possession count as a loss.",
+   "page": 4,
+   "latex": "\\text{Net Gain}=\\Pr(\\text{OREB})\\cdot\\overline{\\text{Pts}}_{\\text{for}}-\\Pr(\\text{DREB})\\cdot\\overline{\\text{Pts}}_{\\text{against}}",
+   "symbol_and_unit_ledger": {
+    "Pr(OREB),Pr(DREB)": "rebound probabilities [probability]",
+    "Pts_for": "points scored after offensive rebound [score]",
+    "Pts_against": "points allowed after defensive rebound [score]"
+   },
+   "assumptions": [
+    "Gain is points scored on the offensive-rebound possession",
+    "Loss is points allowed on the ensuing opponent possession",
+    "Averaging over possessions gives the net expected value of the strategy"
+   ],
+   "breakdown_regime": "Net Gain is always negative (missed shots are bad, avg -0.549 pts/poss); the decision minimizes the loss rather than producing a profit, and it ignores personnel and defensive positioning.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE expected-value pick decision IS the Net Gain equation: the engine values an allocation as P(success)*gain minus P(failure)*cost, exactly the crash-retreat expected value, and recognizes that some decisions only minimize expected loss rather than produce profit. GSI: two-outcome expected value with asymmetric gain/loss.",
+    "source_operator": "net_gain_equation",
+    "telemetry": "Net Gain by CI/RI; avg -0.549 pts/poss; gain/loss decomposition"
+   }
+  },
+  {
+   "primitive_id": "missed_shots_negative",
+   "name": "Missed shots have negative expected value",
+   "verbatim_quote": "In all cases, the net gain is negative, i.e., missed shots are bad. On average a missed shot results in -0.549 points per possession.",
+   "page": 4,
+   "latex": "\\text{Net Gain}<0\\ \\forall(\\mathrm{CI},\\mathrm{RI});\\quad \\mathbb{E}[\\text{Net Gain}]=-0.549\\ \\text{pts/poss}",
+   "symbol_and_unit_ledger": {
+    "Net Gain": "expected points per missed-shot possession [score]"
+   },
+   "assumptions": [
+    "Every crash-retreat configuration yields negative net gain",
+    "The strategy choice changes how negative, not the sign"
+   ],
+   "breakdown_regime": "The engine must recognize loss-minimization regimes where no action is profitable and the goal is to reduce expected loss, not to find a winning bet.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE loss-minimization regime IS this negative net gain: the engine identifies situations where every option has negative expected value and the rational goal is to minimize loss (or PASS), not to force a profitable-looking action. GSI: negative-EV regime detection and loss minimization.",
+    "source_operator": "missed_shots_negative",
+    "telemetry": "Net Gain sign across configurations; mean -0.549; loss-minimization flag"
+   }
+  },
+  {
+   "primitive_id": "single_player_swap",
+   "name": "Swapping one player from retreat to crash gains 0.17 pts/poss",
+   "verbatim_quote": "we can increase the net gain from -0.62 (CI=1 & RI=2) to -0.45 (CI=2 & RI=1) just by swapping the role of a single player.",
+   "page": 4,
+   "latex": "\\Delta\\text{Net Gain}=-0.45-(-0.62)=+0.17\\ \\text{pts/poss}\\ (\\text{one-player swap})",
+   "symbol_and_unit_ledger": {
+    "Delta Net Gain": "marginal expected-value change [score/possession]"
+   },
+   "assumptions": [
+    "Moving one player from retreat to crash (CI=1,RI=2 to CI=2,RI=1) raises net gain by 0.17",
+    "The marginal value of a single allocation change is measurable"
+   ],
+   "breakdown_regime": "The 0.17 is an aggregate average; it assumes the swapped player is an average rebounder, so personnel quality modulates the real marginal gain.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE marginal-allocation value IS this single-player swap: the engine computes the marginal expected-value change of reallocating one unit of resource (one player, one stake increment) from the safe to the aggressive use, the discrete marginal-value calculus of portfolio adjustment. GSI: marginal value of a discrete reallocation.",
+    "source_operator": "single_player_swap",
+    "telemetry": "marginal Net Gain per swap (+0.17); CI/RI transition"
+   }
+  },
+  {
+   "primitive_id": "per_game_scaling",
+   "name": "Per-possession gain scales to ~4 points per game",
+   "verbatim_quote": "If a team misses on average 25 jump shots per game this could translate to a possible gain of 4 points per game.",
+   "page": 4,
+   "latex": "\\text{game gain}=0.17\\ \\text{pts/poss}\\times25\\ \\text{missed jump shots/game}\\approx4\\ \\text{pts/game}",
+   "symbol_and_unit_ledger": {
+    "game gain": "per-game expected-value improvement [score/game]",
+    "25": "missed jump shots per game [count/game]"
+   },
+   "assumptions": [
+    "Per-possession marginal gains multiply by the frequency of the situation",
+    "~25 missed jump shots/game turns 0.17 pts/poss into ~4 pts/game"
+   ],
+   "breakdown_regime": "The scaling assumes the marginal gain holds across all 25 situations and ignores personnel; it is an upper-bound illustration, not a guaranteed improvement.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE frequency-scaled edge IS this per-game scaling: the engine multiplies a small per-opportunity edge by the opportunity frequency to estimate total impact, so a tiny per-possession gain becomes material at scale, the edge-times-volume calculus. GSI: per-event value times event frequency.",
+    "source_operator": "per_game_scaling",
+    "telemetry": "per-possession gain x frequency; per-game impact estimate"
+   }
+  },
+  {
+   "primitive_id": "mdet_definition",
+   "name": "MDET: maximum distance to early threats",
+   "verbatim_quote": "The first time an offensive player is within a threatening distance to the basket in the first five seconds of his team's possession, we measure his distance (in feet) to the closest defending player.",
+   "page": 5,
+   "latex": "\\mathrm{MDET}=\\max_{i\\in\\text{early threats}}\\ \\mathrm{dist}(\\text{offender}_i,\\ \\text{nearest defender})",
+   "symbol_and_unit_ledger": {
+    "MDET": "maximum distance to early threats [feet]",
+    "early threats": "offenders entering threat range in first 5 s [set]"
+   },
+   "assumptions": [
+    "A threat is an offensive player entering his threat range within the first 5 seconds",
+    "MDET is the maximum over threats of distance to the nearest defender (the most open player)"
+   ],
+   "breakdown_regime": "MDET measures the worst-case (most open) early threat, not the average; it captures transition vulnerability that mere retreat does not.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE worst-case exposure metric IS MDET: the engine measures defensive vulnerability as the worst-case (most exposed) early threat rather than an average, so a single open opponent defines the risk, the max-exposure discipline. GSI: worst-case rather than mean exposure measurement.",
+    "source_operator": "mdet_definition",
+    "telemetry": "MDET per possession; worst-case open-threat distance"
+   }
+  },
+  {
+   "primitive_id": "mdet_lower_better",
+   "name": "Lower MDET means better threat neutralization",
+   "verbatim_quote": "The maximum distance represents the most \"open\" player during the early portion of the possession. Note that a lower MDET score indicates better neutralization.",
+   "page": 5,
+   "latex": "\\downarrow\\mathrm{MDET}\\Rightarrow \\uparrow\\text{threat neutralization}\\Rightarrow \\downarrow\\text{transition points}",
+   "symbol_and_unit_ledger": {
+    "MDET": "max distance to early threats [feet]"
+   },
+   "assumptions": [
+    "A smaller maximum distance means defenders are closer to the most open threat",
+    "Better neutralization reduces transition scoring"
+   ],
+   "breakdown_regime": "MDET is a process metric of defensive positioning quality; it must be linked to outcome (points allowed) to confirm it matters, which the paper does via the KS test.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE exposure-to-outcome link IS this MDET semantics: the engine treats lower worst-case exposure as better prevention and validates that the exposure metric actually predicts the outcome, not just that it looks good. GSI: validated exposure-to-outcome relationship.",
+    "source_operator": "mdet_lower_better",
+    "telemetry": "MDET vs points allowed; neutralization quality"
+   }
+  },
+  {
+   "primitive_id": "threat_range_percentile",
+   "name": "Threat range is player-specific (75th percentile of shot distance)",
+   "verbatim_quote": "We found that using the 75th percentile of a player's shot distance distribution works well.",
+   "page": 5,
+   "latex": "\\text{threat range}_p=Q_{0.75}(\\text{shot distance distribution}_p)",
+   "symbol_and_unit_ledger": {
+    "threat range_p": "player p's offensive threat distance [feet]",
+    "Q_0.75": "75th percentile [feet]"
+   },
+   "assumptions": [
+    "A center is a threat closer to the basket than a three-point shooter",
+    "Threat range is set from each player's empirical shot-distance distribution (bimodal ~15 and 23 ft)"
+   ],
+   "breakdown_regime": "The 75th percentile is a modeling choice; a universal threat distance would misclassify players whose range differs, so the metric must be player-calibrated.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE agent-calibrated threat range IS this percentile rule: the engine calibrates each agent's threat/impact range from its own empirical behavior distribution rather than a universal constant, so a deep threat and a close-range agent are modeled differently. GSI: entity-calibrated range from empirical distribution.",
+    "source_operator": "threat_range_percentile",
+    "telemetry": "per-player threat range; shot-distance percentile; bimodal distribution"
+   }
+  },
+  {
+   "primitive_id": "transient_effect",
+   "name": "The retreat/neutralization effect is transient (short possessions only)",
+   "verbatim_quote": "Figure 5 implies that movement away from the basket immediately following the release of the shot has the greatest impact on short possessions. I.e., the effect is transient.",
+   "page": 4,
+   "latex": "\\text{effect}(\\text{retreat/MDET})\\ \\text{decays with possession length};\\quad \\approx0\\ \\text{for }>15\\text{ s}",
+   "symbol_and_unit_ledger": {
+    "possession length": "duration of the ensuing possession [seconds]"
+   },
+   "assumptions": [
+    "The defensive benefit of early retreat/neutralization fades as the possession lengthens",
+    "Beyond ~15 seconds the effect is negligible, so analysis restricts to short possessions"
+   ],
+   "breakdown_regime": "The time-decay means the metric only matters in the transition window; applying it to long half-court possessions would be a category error.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE time-decaying effect IS this transience: the engine recognizes that a factor's impact decays with elapsed time (transition advantage fades into half-court), so it applies the factor only within its effective window, the time-decay discipline. GSI: time-localized effect with decay.",
+    "source_operator": "transient_effect",
+    "telemetry": "effect vs possession length; ~15s cutoff; decay curve"
+   }
+  },
+  {
+   "primitive_id": "crashing_trumps",
+   "name": "Crashing generally trumps the head start on getting back",
+   "verbatim_quote": "our results suggest that in general focusing on the offensive rebound immediately after the shot goes up seems to trump the gain a team gets with a head start on getting back.",
+   "page": 4,
+   "latex": "\\mathbb{E}[\\text{Net Gain}\\mid\\text{crash}]>\\mathbb{E}[\\text{Net Gain}\\mid\\text{retreat}]\\ \\text{(in general)}",
+   "symbol_and_unit_ledger": {
+    "Net Gain": "expected points per possession [score]"
+   },
+   "assumptions": [
+    "The offensive-rebound upside generally outweighs the transition-defense head start",
+    "This is a general tendency, modulated by personnel and situation"
+   ],
+   "breakdown_regime": "The conclusion is aggregate and provisional; teams without two good rebounders may not benefit, so the engine must condition on personnel before applying it.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE upside-over-caution default IS this crashing-trumps finding: the engine's default leans toward pressing the upside when the expected value favors it over the safe head start, while conditioning on the specific resources available, the calibrated-aggression principle. GSI: expected-value-favored aggression with resource conditioning.",
+    "source_operator": "crashing_trumps",
+    "telemetry": "crash vs retreat expected Net Gain; personnel conditioning"
+   }
+  },
+  {
+   "primitive_id": "neutralization_not_just_back",
+   "name": "Threat neutralization, not merely getting back, limits transition",
+   "verbatim_quote": "early threat neutralization (as opposed to merely getting back early) can help limit the negative impact of transition baskets.",
+   "page": 6,
+   "latex": "\\text{neutralization}(\\mathrm{MDET})\\ne\\text{mere retreat};\\quad \\text{only neutralization limits transition pts}",
+   "symbol_and_unit_ledger": {
+    "MDET": "threat neutralization quality [feet]",
+    "retreat": "getting back early [action]"
+   },
+   "assumptions": [
+    "Simply retreating to the defensive end is insufficient",
+    "What matters is being close to the threatening players (neutralization), not just being back"
+   ],
+   "breakdown_regime": "Retreat without neutralization leaves threats open; the engine must distinguish occupying a defensive position from actually neutralizing the threat.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE effective-vs-nominal defense IS this neutralization distinction: the engine distinguishes nominally being in a defensive posture from actually neutralizing the threat (being close to the danger), so presence is not mistaken for protection. GSI: effective coverage versus nominal positioning.",
+    "source_operator": "neutralization_not_just_back",
+    "telemetry": "MDET vs mere retreat; neutralization effectiveness"
+   }
+  },
+  {
+   "primitive_id": "mdet_ri_ci_tradeoff",
+   "name": "MDET rises with retreat and falls with crash (confirms tradeoff)",
+   "verbatim_quote": "MDET tends to increase with an increase in RI and decrease with an increase in CI.",
+   "page": 6,
+   "latex": "\\frac{\\partial\\,\\mathrm{MDET}}{\\partial\\,\\mathrm{RI}}>0;\\quad \\frac{\\partial\\,\\mathrm{MDET}}{\\partial\\,\\mathrm{CI}}<0",
+   "symbol_and_unit_ledger": {
+    "MDET": "max distance to early threats [feet]",
+    "RI": "retreat index [count]",
+    "CI": "crash index [count]"
+   },
+   "assumptions": [
+    "More retreating worsens threat neutralization (higher MDET)",
+    "More crashing improves it (lower MDET), confirming the crash-retreat tradeoff"
+   ],
+   "breakdown_regime": "This appears to contradict the intuition that crashing worsens transition defense; the paper's hypothesis was that crashing worsens MDET, but the data shows the opposite association, itself a caution about observational direction.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE empirical-direction check IS this MDET-RI/CI relationship: the engine verifies the empirical direction of a tradeoff rather than assuming it, because the observed association can run counter to the hypothesized mechanism, the data-over-intuition discipline. GSI: empirically verified effect direction.",
+    "source_operator": "mdet_ri_ci_tradeoff",
+    "telemetry": "MDET partial slopes vs RI and CI; direction verification"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "wiens2013_crash_retreat",
+   "think": "This inline cycle extracts Wiens, Balakrishnan, Brooks and Guttag's 2013 MIT Sloan Research Paper Competition entry, To Crash or Not To Crash, a seven-page optical-tracking quantification of the offensive-rebounding versus transition-defense tradeoff that adds a decision-theoretic expected-value layer to the Foundry's sports-analytics stack. Two provenance notes are required: the corpus catalog tags the primary domain as football but the content is unambiguously NBA basketball, so it is extracted under its true domain and the mismatch recorded; and the paper's two core equations, the Net Gain expected value and the Odds Ratio, print in clean readable text and are used directly, while the Crash and Retreat Index definitions are reconstructed as labeled LaTeX from the clean prose. Nineteen primitives are extracted, each with a verified verbatim quote, page anchor, symbol-and-unit ledger, assumptions, breakdown regime, and a Layer-2 mapping with telemetry. No sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from the Patton-versus-Wellington philosophy of attack versus retreat through Dean Oliver's rebounding framework into this SportVU tracking application. The load-bearing object is a time-pressured allocation decision: immediately after a missed shot a player chooses to crash the boards, get back on defense, or hold, and the choice trades offensive-rebound upside against transition-defense readiness. The genealogy is precise that conventional outcome metrics, offensive rebound rate and transition points allowed, offer no insight into the strategic choices that produce them, so the paper builds process metrics, the Crash Index CI equals players inside plus neutral crashers and the Retreat Index RI equals players outside plus neutral retreaters, from positioning and movement in the roughly 2.2-second reaction window. The deeper contribution is the Net Gain equation, expected points equals probability of offensive rebound times average points for minus probability of defensive rebound times average points against, which casts the crash-retreat choice as a two-outcome expected-value decision, the exact structure of a bet.\n\nThe recursive theory of mind models the player as an agent making a near-instantaneous allocation under opposing risks, and the analyst as a reasoner who must resist the causal inversion the data invites. The paper's most important epistemic warning is that the crashing-rebounding link is association not causation: players may crash because a rebound looks available, not cause the rebound by crashing, so reverse causality and selection confound the observational association. The analyst must therefore reason about what the data can and cannot identify, and the engine inherits this as a hard veto against inferring causation from co-occurrence. The base-rate asymmetry anchors the reasoning, because even the best offensive-rebounding team converts under half its chances and a defensive rebound is always more likely, so crashing is a gamble against an unfavorable prior. The MDET metric, the maximum distance to early threats, then models the defensive side as worst-case exposure, the most open opponent in the first five seconds, with a player-specific threat range set at the 75th percentile of each player's shot-distance distribution, and the analyst learns that this effect is transient, fading beyond roughly fifteen seconds, so it applies only in the transition window.\n\nThe cross-layer veto adjudication is where this book earns its place beside the accounting, regression, network, and deterrence layers. The first veto is the association-versus-causation warning: the engine refuses to infer that a factor causes an outcome from observational co-occurrence because agents select into the factor when success looks likely, the reverse-causality discipline. The second veto is the base-rate anchor: any aggressive allocation is weighed against the structural prior that favors the defense, so upside must overcome an unfavorable base rate. The third veto is the loss-minimization regime: Net Gain is negative in every configuration, averaging minus 0.549 points per possession, so the engine recognizes situations where no action is profitable and the rational goal is to minimize loss or PASS rather than force a winning-looking bet. The fourth veto is the process-over-outcome requirement: outcome metrics hide the strategic choice, so the engine measures the allocation decision itself, the CI/RI discipline. The fifth veto is the time-decay and worst-case exposure discipline: the defensive effect is transient and measured as worst-case open threat, so the engine applies factors only within their effective window and measures exposure by the most dangerous case, not the average. The Net Gain equation links directly to the engine's pick expected-value calculus, the single-player swap to marginal allocation value, the per-game scaling to edge-times-volume, and the personnel limitation to the resource-conditioning requirement.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The marginal value of reallocating one player from retreat to crash is measurable, raising Net Gain from minus 0.62 to minus 0.45, a gain of 0.17 points per possession, which scaled by roughly 25 missed jump shots per game becomes about 4 points per game, the discrete marginal-value calculus multiplied by opportunity frequency. The threat range is player-calibrated rather than universal, bimodal around 15 and 23 feet, so a center like Dwight Howard is a threat much closer to the basket than a shooter like Ray Allen. The MDET effect is validated against outcome by a Kolmogorov-Smirnov test, with the no-score distribution shifted to lower MDET, mean 9.05 feet against 9.63, and an increase from 6 to 12 feet costing about 0.06 points allowed per possession. The authors are explicit that the analysis ignores personnel, defensive positioning, and game situation, and that the general conclusion, crashing trumps the head start on getting back, is provisional and resource-dependent. These invariants ground the engine's marginal-allocation valuation, frequency-scaled edge estimation, agent-calibrated threat ranges, validated exposure-to-outcome links, and resource-conditioned provisional conclusions, completing a sovereign decision-theoretic expected-value layer that sits beside the deterrence layer and above the regression attribution layer, all grounded in clean verbatim prose with honestly labeled definitions.",
+   "retrocausal_genealogy": "The genealogy runs from the Patton-versus-Wellington attack/retreat philosophy through Oliver's rebounding framework into this SportVU application. The load-bearing object is a time-pressured allocation: after a missed shot, crash, retreat, or hold, trading offensive-rebound upside against transition-defense readiness. Conventional outcome metrics (OREB rate, transition points allowed) hide the strategic choice, so the paper builds process metrics CI=PI+NPC and RI=PO+NPR from positioning and movement in the ~2.2s reaction window. The deeper contribution is the Net Gain expected-value equation, P(OREB)*PtsFor - P(DREB)*PtsAgainst, casting the choice as a two-outcome expected-value decision, the exact structure of a bet.",
+   "theory_of_mind": "The player makes a near-instantaneous allocation under opposing risks; the analyst must resist the causal inversion the data invites. The core epistemic warning is that crashing-rebounding is association not causation, players crash because a rebound looks available (reverse causality/selection), so the engine inherits a hard veto against inferring causation from co-occurrence. The base-rate asymmetry anchors reasoning, even the best OREB team converts under half and DREB is always more likely, so crashing gambles against an unfavorable prior. MDET models defense as worst-case exposure (most open early threat) with player-specific threat range at the 75th percentile of shot distance, and the effect is transient beyond ~15 seconds.",
+   "cross_layer_veto": "Five vetoes adjudicate against the accounting, regression, network, and deterrence layers. Association-versus-causation: refuse to infer causation from observational co-occurrence under endogenous selection. Base-rate anchor: weigh aggressive allocation against the structural prior favoring the defense. Loss-minimization regime: Net Gain is negative in every configuration (avg -0.549), so recognize when no action is profitable and minimize loss or PASS. Process-over-outcome: measure the allocation decision (CI/RI) not just outcomes. Time-decay and worst-case exposure: apply factors only within their effective window and measure exposure by the most dangerous case. Net Gain links to pick expected-value, the single-player swap to marginal allocation, per-game scaling to edge-times-volume, personnel limitation to resource conditioning."
+  }
+ ],
+ "universal_lens": "Wiens et al. 2013 contributes the decision-theoretic expected-value and tradeoff layer to the Foundry stack: the crash-retreat allocation as a two-outcome expected value (Net Gain = P(OREB)*PtsFor - P(DREB)*PtsAgainst), strategy process indices (Crash Index CI=PI+NPC, Retreat Index RI=PO+NPR), worst-case transition exposure (MDET, max distance to early threats with player-calibrated threat ranges), and the transient time-decay of defensive effects. Its load-bearing invariants are the association-versus-causation warning, the base-rate asymmetry, the loss-minimization regime, process-over-outcome measurement, marginal-allocation value, frequency-scaled edge, and time-localized worst-case exposure.",
+ "gsi_mapping": "For GSI these primitives are the general allocation-under-opposing-risk layer: cast a commit/defend/hold decision as a two-outcome expected value with asymmetric gain and loss, build posture indices from agent state and motion, measure worst-case rather than mean exposure, calibrate threat ranges per entity from empirical distributions, recognize negative-EV loss-minimization regimes, compute marginal value of discrete reallocation and scale by event frequency, respect time-decaying effects, and refuse causal inference from endogenous-selection co-occurrence. The base-rate anchor and resource conditioning keep the allocation honest.",
+ "gse_mapping": "For GSE this is the pick expected-value and allocation layer: the Net Gain equation IS the engine's P(win)*gain - P(loss)*cost pick calculus, the crash-retreat tradeoff IS the press-versus-secure allocation, the association-versus-causation warning IS the selection-bias veto, the negative Net Gain IS the loss-minimization/PASS regime, CI/RI IS process-over-outcome measurement, the single-player swap IS marginal stake reallocation, the per-game scaling IS edge-times-volume, MDET IS worst-case exposure with agent-calibrated ranges, and the transient effect IS the time-decay discipline. The base-rate anchor and personnel limitation link to resource conditioning. Equations are clean or labeled and no sportsbook line is a model input."
+}

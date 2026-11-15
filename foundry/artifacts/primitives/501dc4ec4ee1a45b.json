@@ -1,0 +1,78 @@
+{
+  "book_id": "501dc4ec4ee1a45b",
+  "source_status": "COMPLETE",
+  "title": "GITHUB_PUBLICATION_PATH",
+  "file_name": "GITHUB_PUBLICATION_PATH.md",
+  "sha256": "501dc4ec4ee1a45bf51103cd655bb40024e25ae6b1fc342e90eb462245b472ff",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Git branch synchronization and GitHub CLI authentication form a dual-state system where remote tracking and local commit integrity define operational readiness. Universal Lens: Rooted in GITHUB_PUBLICATION_PATH (501dc4ec4ee1a45b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models branch consistency and CLI auth status as prior probabilities for successful PR deployment. GSI Mapping: Rooted in GITHUB_PUBLICATION_PATH (501dc4ec4ee1a45b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition graph maps local git operations to remote branch tracking, with authentication as a gating condition for pull request initiation. GSE Mapping: Rooted in GITHUB_PUBLICATION_PATH (501dc4ec4ee1a45b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "branch_tracking_state",
+      "name": "Branch Tracking State",
+      "verbatim_quote": "# GitHub Publication Path Updated: 2026-07-03 ## Current State - Branch: `codex/fable-nfl-evidence-integration` - Branch pushed: yes; `git push -u origin codex/fable-nfl-evidence-integration` created the remote branch.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'Branch identifier (dimensionless)', 'T': 'Tracking state (boolean)'}",
+      "assumptions": "Branch exists locally and remotely with identical name.",
+      "breakdown_regime": "When T = false, synchronization fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Local branch B maps to remote branch B' under tracking protocol.",
+        "source_operator": "branch_tracking_state",
+        "telemetry": "Git branch -vv output"
+      }
+    },
+    {
+      "primitive_id": "cli_authentication_status",
+      "name": "CLI Authentication Status",
+      "verbatim_quote": "## Verified Commands ```bash git branch -vv git ls-remote --heads origin codex/fable-nfl-evidence-integration git push -u origin codex/fable-nfl-evidence-integration gh auth status ``` Push result: ```text codex/fable-nfl-evidence-integration -> codex/fable-nfl-evidence-integration branch 'codex/fable-nfl-evidence-integration' set up to track 'origin/codex/fable-nfl-evidence-integration' ``` `gh auth status` result: ```text You are not logged into any GitHub hosts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Authentication state (boolean)'}",
+      "assumptions": "GitHub CLI requires valid session for PR creation.",
+      "breakdown_regime": "When A = false, PR/issue creation blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Authentication kernel A derived from CLI session validity.",
+        "source_operator": "cli_authentication_status",
+        "telemetry": "gh auth status command output"
+      }
+    },
+    {
+      "primitive_id": "pull_request_initiation",
+      "name": "Pull Request Initiation",
+      "verbatim_quote": "To log in, run: gh auth login ``` ## Manual Commands ```bash gh auth login gh pr create --base main --head codex/fable-nfl-evidence-integration --title \"feat(fable): add evidence and AWS guardrails\" --body-file docs/fable/github/PR_BODY_FABLE_EVIDENCE.md ``` Do not force push.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Pull request trigger (boolean)', 'S': 'System readiness (boolean)'}",
+      "assumptions": "All prerequisites (auth, branch) satisfied before P = true.",
+      "breakdown_regime": "When S = false, P cannot be initiated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Initiation P isomorphic to system readiness S under conditional logic.",
+        "source_operator": "pull_request_initiation",
+        "telemetry": "PR creation attempt result"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "501dc4ec4ee1a45b_t0",
+      "think": "The system operates under a dual-state constraint: Git branch synchronization and GitHub CLI authentication. The branch tracking state B defines the operational domain, while authentication A acts as a binary gate. The pull request initiation P depends on both B and A being true. Failure occurs when either state transitions to invalid. This forms a logical conjunction model where P = B ∧ A. The epistemic trace reveals that the system's integrity hinges on maintaining consistent state across layers—local, remote, and CLI. The breakdown regime is defined by the conjunction failing, i.e., when ¬(B ∧ A), leading to a blocked PR creation path.\n\nDeep epistemic analysis for GITHUB_PUBLICATION_PATH (501dc4ec4ee1a45b, domain=other, pages_read=1/1): Operator 'Branch Tracking State' (page 1, domain other) captures: # GitHub Publication Path Updated: 2026-07-03 ## Current State - Branch: `codex/fable-nfl-evidence-integration` - Branch pushed: yes; `git push -u origin codex/fable-nfl-evidence-integration` created the remote branch. Assumptions: Branch exists locally and remotely with identical name. Breakdown regime: When T = false, synchronization fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Local branch B maps to remote branch B' under tracking protocol. Operator 'CLI Authentication Status' (page 1, domain other) captures: ## Verified Commands ```bash git branch -vv git ls-remote --heads origin codex/fable-nfl-evidence-integration git push -u origin codex/fable-nfl-evidence-integration gh auth status ``` Push result: ```text codex/fable-nfl-evidence-integration -> codex/fable-nfl-evidence-integration branch 'codex/fable-nfl-evidence-integration' set up to track 'origin/codex/fable-nfl-evidence-integration' ``` `gh auth status` result: ```text You are not logged into any GitHub hosts. Assumptions: GitHub CLI requires valid session for PR creation. Breakdown regime: When A = false, PR/issue creation blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Authentication kernel A derived from CLI session validity. Operator 'Pull Request Initiation' (page 1, domain other) captures: To log in, run: gh auth login ``` ## Manual Commands ```bash gh auth login gh pr create --base main --head codex/fable-nfl-evidence-integration --title \"feat(fable): add evidence and AWS guardrails\" --body-file docs/fable/github/PR_BODY_FABLE_EVIDENCE.md ``` Do not force push. Assumptions: All prerequisites (auth, branch) satisfied before P = true. Breakdown regime: When S = false, P cannot be initiated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Initiation P isomorphic to system readiness S under conditional logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GITHUB_PUBLICATION_PATH (501dc4ec4ee1a45b, domain=other, pages_read=1/1): Operator 'Branch Tracking State' (page 1, domain other) captures: # GitHub Publication Path Updated: 2026-07-03 ## Current State - Branch: `codex/fable-nfl-evidence-integration` - Branch pushed: yes; `git push -u origin codex/fable-nfl-evidence-integration` created the remote branch. Assumptions: Branch exists locally and remotely with identical name. Breakdown regime: When T = false, synchronization fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Local branch B maps to remote branch B' under tracking protocol. Operator 'CLI Authentication Status' (page 1, domain other) captures: ## Verified Commands ```bash git branch -vv git ls-remote --heads origin codex/fable-nfl-evidence-integration git push -u origin codex/fable-nfl-evidence-integration gh auth status ``` Push result: ```text codex/fable-nfl-evidence-integration -> codex/fable-nfl-evidence-integration branch 'codex/fable-nfl-evidence-integration' set up to track 'origin/codex/fable-nfl-evidence-integration' ``` `gh auth status` result: ```text You are not logged into any GitHub hosts. Assumptions: GitHub CLI requires valid session for PR creation. Breakdown regime: When A = false, PR/issue creation blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Authentication kernel A derived from CLI session validity. Operator 'Pull Request Initiation' (page 1, domain other) captures: To log in, run: gh auth login ``` ## Manual Commands ```bash gh auth login gh pr create --base main --head codex/fable-nfl-evidence-integration --title \"feat(fable): add evidence and AWS guardrails\" --body-file docs/fable/github/PR_BODY_FABLE_EVIDENCE.md ``` Do not force push. Assumptions: All prerequisites (auth, branch) satisfied before P = true. Breakdown regime: When S = false, P cannot be initiated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Initiation P isomorphic to system readiness S under conditional logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Git's distributed version control and GitHub's CLI-based automation protocols, this structure mirrors the evolution of decentralized software development workflows since early 2000s. Retrocausal Genealogy: Rooted in GITHUB_PUBLICATION_PATH (501dc4ec4ee1a45b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in GITHUB_PUBLICATION_PATH (501dc4ec4ee1a45b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the developer (intent to merge) and the system (enforced constraints). The system enforces a deterministic sequence: authenticate → synchronize → initiate PR. Any deviation triggers a rollback or halt. Theory of Mind & Decision Maker Model: Rooted in GITHUB_PUBLICATION_PATH (501dc4ec4ee1a45b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if local changes conflict with remote state or if authentication is bypassed. Leakage occurs when telemetry misrepresents state, e.g., reporting authenticated when unauthenticated. Cross-Layer Veto & Anti-Leakage Check: Rooted in GITHUB_PUBLICATION_PATH (501dc4ec4ee1a45b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in GITHUB_PUBLICATION_PATH (501dc4ec4ee1a45b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

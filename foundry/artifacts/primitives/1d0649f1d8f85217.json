@@ -1,0 +1,78 @@
+{
+  "book_id": "1d0649f1d8f85217",
+  "source_status": "COMPLETE",
+  "title": "BUILD-NRT-013-pfr-historical-identity-reference-policy",
+  "file_name": "BUILD-NRT-013-pfr-historical-identity-reference-policy.md",
+  "sha256": "1d0649f1d8f85217e50a4171601427ac7c0aeef839304922e9ed38ee5110418b",
+  "primary_domain": "history",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Roster identity as a structured truth space with source evidence, reconciliation kernels, and validation gates. Universal Lens: Rooted in BUILD-NRT-013-pfr-historical-identity-reference-policy (1d0649f1d8f85217), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over player facts using source likelihoods and conflict resolution via posterior inference on roster truth. GSI Mapping: Rooted in BUILD-NRT-013-pfr-historical-identity-reference-policy (1d0649f1d8f85217), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine applies state transitions on roster facts based on reconciliation outcomes and telemetry feedback loops. GSE Mapping: Rooted in BUILD-NRT-013-pfr-historical-identity-reference-policy (1d0649f1d8f85217), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "roster_evidence_kernel",
+      "name": "Roster Evidence Kernel",
+      "verbatim_quote": "# BUILD-NRT-013: PFR historical identity reference policy ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-081 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Evidence set, dimensionless', 'T': 'Timestamp, seconds since epoch', 'S': 'Source identifier, categorical'}",
+      "assumptions": "Each roster fact is associated with a unique source snapshot and timestamp.",
+      "breakdown_regime": "When E ∩ S ≠ ∅ and T₁ < T₂, evidence is stale.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps each player fact to a source-truth tuple (S, T, E) under a partial order of temporal precedence.",
+        "source_operator": "roster_evidence_kernel",
+        "telemetry": "Number of conflicting evidence entries per player."
+      }
+    },
+    {
+      "primitive_id": "conflict_resolution_gate",
+      "name": "Conflict Resolution Gate",
+      "verbatim_quote": "## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Conflicting facts, dimensionless', 'O': 'Official record, boolean', 'F': 'Fallback record, boolean'}",
+      "assumptions": "Official records override fallbacks when current and uncontradicted.",
+      "breakdown_regime": "When O = false and F = true, fallback is used.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives truth value from fact comparison using official precedence rule.",
+        "source_operator": "conflict_resolution_gate",
+        "telemetry": "Percentage of resolved conflicts per reconciliation cycle."
+      }
+    },
+    {
+      "primitive_id": "validation_audit_operator",
+      "name": "Validation Audit Operator",
+      "verbatim_quote": "## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Audit pass/fail, boolean', 'V': 'Verification score, [0,1]', 'S': 'Stale flag, boolean'}",
+      "assumptions": "All facts must pass audit before rendering in public surfaces.",
+      "breakdown_regime": "When A = false or S = true, fact is marked invalid.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applies composite validation logic across audit types to produce final fact status.",
+        "source_operator": "validation_audit_operator",
+        "telemetry": "Proportion of facts passing all validation checks."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1d0649f1d8f85217_t0",
+      "think": "The core operator is the roster evidence kernel, which defines a truth space where each player fact is anchored to a source snapshot with timestamp and evidence ID. This forms a partially ordered set under temporal precedence. Conflict resolution is modeled as a binary choice between official and fallback records, governed by a precedence rule. Validation is a derived kernel applying multiple audit functions to determine fact integrity. Failure modes include stale evidence, unresolvable conflicts, and audit failures. Dualities emerge in how truth is propagated through source links versus direct observation. The system's robustness depends on maintaining consistency across these layers while allowing for incremental updates without disrupting downstream consumers.\n\nDeep epistemic analysis for BUILD-NRT-013-pfr-historical-identity-reference-policy (1d0649f1d8f85217, domain=history, pages_read=2/2): Operator 'Roster Evidence Kernel' (page 1, domain history) captures: # BUILD-NRT-013: PFR historical identity reference policy ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-081 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules. Assumptions: Each roster fact is associated with a unique source snapshot and timestamp. Breakdown regime: When E ∩ S ≠ ∅ and T₁ < T₂, evidence is stale. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps each player fact to a source-truth tuple (S, T, E) under a partial order of temporal precedence. Operator 'Conflict Resolution Gate' (page 1, domain history) captures: ## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact. Assumptions: Official records override fallbacks when current and uncontradicted. Breakdown regime: When O = false and F = true, fallback is used. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives truth value from fact comparison using official precedence rule. Operator 'Validation Audit Operator' (page 1, domain history) captures: ## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented. Assumptions: All facts must pass audit before rendering in public surfaces. Breakdown regime: When A = false or S = true, fact is marked invalid. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applies composite validation logic across audit types to produce final fact status. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BUILD-NRT-013-pfr-historical-identity-reference-policy (1d0649f1d8f85217, domain=history, pages_read=2/2): Operator 'Roster Evidence Kernel' (page 1, domain history) captures: # BUILD-NRT-013: PFR historical identity reference policy ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-081 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules. Assumptions: Each roster fact is associated with a unique source snapshot and timestamp. Breakdown regime: When E ∩ S ≠ ∅ and T₁ < T₂, evidence is stale. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps each player fact to a source-truth tuple (S, T, E) under a partial order of temporal precedence. Operator 'Conflict Resolution Gate' (page 1, domain history) captures: ## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact. Assumptions: Official records override fallbacks when current and uncontradicted. Breakdown regime: When O = false and F = true, fallback is used. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives truth value from fact comparison using official precedence rule. Operator 'Validation Audit Operator' (page 1, domain history) captures: ## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented. Assumptions: All facts must pass audit before rendering in public surfaces. Breakdown regime: When A = false or S = true, fact is marked invalid. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applies composite validation logic across audit types to produce final fact status. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal logic and database theory, evolving from early data integration models to modern truth maintenance systems in sports analytics. Retrocausal Genealogy: Rooted in BUILD-NRT-013-pfr-historical-identity-reference-policy (1d0649f1d8f85217), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BUILD-NRT-013-pfr-historical-identity-reference-policy (1d0649f1d8f85217), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data sources with varying reliability, internal validators enforcing consistency, and external users seeking accurate information. Each agent operates under different constraints and objectives, leading to potential misalignments in truth representation. Theory of Mind & Decision Maker Model: Rooted in BUILD-NRT-013-pfr-historical-identity-reference-policy (1d0649f1d8f85217), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that no single layer dominates truth determination; leakage vetoes prevent stale or invalid data from propagating into public-facing systems. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUILD-NRT-013-pfr-historical-identity-reference-policy (1d0649f1d8f85217), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUILD-NRT-013-pfr-historical-identity-reference-policy (1d0649f1d8f85217), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

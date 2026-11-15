@@ -1,0 +1,78 @@
+{
+  "book_id": "4f81b0938fb218d5",
+  "source_status": "COMPLETE",
+  "title": "C12-06-HANDOFF",
+  "file_name": "C12-06-HANDOFF.md",
+  "sha256": "4f81b0938fb218d5a7a955e0fbbb5523ddaadee2d217ad65360d5bf30280c4d0",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Server-side conditional logic governs feature activation; free surface integrity ensures safety; paid checkout remains gated by external validation. Universal Lens: Rooted in C12-06-HANDOFF (4f81b0938fb218d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on feature readiness using test suite outcomes and legal compliance signals; conformal prediction bounds on shipping risk. GSI Mapping: Rooted in C12-06-HANDOFF (4f81b0938fb218d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State machine transitions driven by flag flips and environmental variables; conditional execution paths for free/paid surfaces based on runtime assertions. GSE Mapping: Rooted in C12-06-HANDOFF (4f81b0938fb218d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "free_surface_integrity",
+      "name": "Free Surface Integrity",
+      "verbatim_quote": "What is true right now (five sentences) The repo is on `hermes/c12-close-the-pass` with every C12 fix committed, verified (typecheck 0, lint 0, lint:brand 0, 151 tests green), and pushed to origin.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_free': 'dimensionless indicator function'}",
+      "assumptions": "All fixes pass static analysis and tests; no regression in free functionality.",
+      "breakdown_regime": "When I_free ≠ 1, implies unverified or broken free features.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Free surface state maps to a binary assertion of correctness under test suite validation.",
+        "source_operator": "free_surface_integrity",
+        "telemetry": "Test suite pass/fail counts and typecheck results."
+      }
+    },
+    {
+      "primitive_id": "paid_checkout_gate",
+      "name": "Paid Checkout Gate",
+      "verbatim_quote": "New paid checkouts are closed server-side by one switch; the free product — board, stats, records — is intact.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G_paid': 'dimensionless gate variable'}",
+      "assumptions": "Gate is controlled by a single boolean switch; no external dependencies for closure.",
+      "breakdown_regime": "When G_paid = false, paid checkout is disabled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Paid checkout state derived from server-side control variable and legal readiness.",
+        "source_operator": "paid_checkout_gate",
+        "telemetry": "Environment variable value and E2E test status."
+      }
+    },
+    {
+      "primitive_id": "legal_compliance_signal",
+      "name": "Legal Compliance Signal",
+      "verbatim_quote": "Two things remain genuinely unknown: whether Neon backups/PITR exist, and whether ESPN's public feed may legally be displayed commercially.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_legit': 'dimensionless legal compliance flag'}",
+      "assumptions": "Legal risks are quantified as binary outcomes; unknowns block release.",
+      "breakdown_regime": "When L_legit ≠ 1, implies incomplete legal clearance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Legal readiness maps to a probabilistic signal in GSI belief space.",
+        "source_operator": "legal_compliance_signal",
+        "telemetry": "Confirmation from counsel or system audit."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4f81b0938fb218d5_t0",
+      "think": "The handoff document encodes a dual-state system: free features are validated and safe for immediate deployment, whereas paid features are gated by a server-side switch and external legal confirmation. The logical structure mirrors a conditional probability model where P(deployment|free_validated) = 1, but P(deployment|paid_unvetted) < 1. The system's integrity hinges on the consistency of test results and the absence of regressions. The unknowns—Neon backups and ESPN rights—are modeled as latent variables in a Bayesian framework, influencing posterior beliefs about system readiness. Failure modes include unchecked legal exposure and untested paid pathways. The state transition from 'safe to ship' to 'not safe yet' is governed by discrete flags and environmental checks.\n\nDeep epistemic analysis for C12-06-HANDOFF (4f81b0938fb218d5, domain=other, pages_read=3/3): Operator 'Free Surface Integrity' (page 1, domain other) captures: What is true right now (five sentences) The repo is on `hermes/c12-close-the-pass` with every C12 fix committed, verified (typecheck 0, lint 0, lint:brand 0, 151 tests green), and pushed to origin. Assumptions: All fixes pass static analysis and tests; no regression in free functionality. Breakdown regime: When I_free ≠ 1, implies unverified or broken free features. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Free surface state maps to a binary assertion of correctness under test suite validation. Operator 'Paid Checkout Gate' (page 1, domain other) captures: New paid checkouts are closed server-side by one switch; the free product — board, stats, records — is intact. Assumptions: Gate is controlled by a single boolean switch; no external dependencies for closure. Breakdown regime: When G_paid = false, paid checkout is disabled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Paid checkout state derived from server-side control variable and legal readiness. Operator 'Legal Compliance Signal' (page 1, domain other) captures: Two things remain genuinely unknown: whether Neon backups/PITR exist, and whether ESPN's public feed may legally be displayed commercially. Assumptions: Legal risks are quantified as binary outcomes; unknowns block release. Breakdown regime: When L_legit ≠ 1, implies incomplete legal clearance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Legal readiness maps to a probabilistic signal in GSI belief space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for C12-06-HANDOFF (4f81b0938fb218d5, domain=other, pages_read=3/3): Operator 'Free Surface Integrity' (page 1, domain other) captures: What is true right now (five sentences) The repo is on `hermes/c12-close-the-pass` with every C12 fix committed, verified (typecheck 0, lint 0, lint:brand 0, 151 tests green), and pushed to origin. Assumptions: All fixes pass static analysis and tests; no regression in free functionality. Breakdown regime: When I_free ≠ 1, implies unverified or broken free features. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Free surface state maps to a binary assertion of correctness under test suite validation. Operator 'Paid Checkout Gate' (page 1, domain other) captures: New paid checkouts are closed server-side by one switch; the free product — board, stats, records — is intact. Assumptions: Gate is controlled by a single boolean switch; no external dependencies for closure. Breakdown regime: When G_paid = false, paid checkout is disabled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Paid checkout state derived from server-side control variable and legal readiness. Operator 'Legal Compliance Signal' (page 1, domain other) captures: Two things remain genuinely unknown: whether Neon backups/PITR exist, and whether ESPN's public feed may legally be displayed commercially. Assumptions: Legal risks are quantified as binary outcomes; unknowns block release. Breakdown regime: When L_legit ≠ 1, implies incomplete legal clearance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Legal readiness maps to a probabilistic signal in GSI belief space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in software engineering practices of feature gating and risk mitigation, tracing back to early CI/CD models and formal verification techniques used in aerospace and finance domains. Retrocausal Genealogy: Rooted in C12-06-HANDOFF (4f81b0938fb218d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in C12-06-HANDOFF (4f81b0938fb218d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents involved include engineers validating code, legal counsel assessing rights, and system administrators managing deployment flags. Each agent operates under distinct constraints: engineers seek correctness, lawyers seek compliance, and operators seek stability. Theory of Mind & Decision Maker Model: Rooted in C12-06-HANDOFF (4f81b0938fb218d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when legal uncertainty overrides technical readiness; leakage occurs if paid checkout is enabled without proper vetting. Veto conditions enforce that L_legit = 1 before G_paid can be toggled. Cross-Layer Veto & Anti-Leakage Check: Rooted in C12-06-HANDOFF (4f81b0938fb218d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

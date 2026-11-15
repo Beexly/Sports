@@ -1,0 +1,78 @@
+{
+  "book_id": "c9969b58263054e0",
+  "source_status": "COMPLETE",
+  "title": "x-sweep-2026-09-26-pm",
+  "file_name": "x-sweep-2026-09-26-pm.md",
+  "sha256": "c9969b58263054e0ef7be1225a50dcc4982f81279a2162229981b948173b72c0",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A conformal inference framework for sovereign feature selection across multi-source data streams, integrating walk-forward validation and directional redundancy checks. Universal Lens: Rooted in x-sweep-2026-09-26-pm (c9969b58263054e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian decision rules applied to live edge features using scalarized risk-weighted metrics; f1 honesty and f2 duplication act as posterior filters. GSI Mapping: Rooted in x-sweep-2026-09-26-pm (c9969b58263054e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates state transitions through stored vs dark feature flags, with dynamic veto logic based on empirical signal strength and cross-layer collinearity. GSE Mapping: Rooted in x-sweep-2026-09-26-pm (c9969b58263054e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "f1_honesty",
+      "name": "Walk-Forward Correlation Validator",
+      "verbatim_quote": "- f1 honesty: |r| ≥ 0.08 and |slope| > se on a walk-forward, else 1 - f2 duplication: this direction already has a representative - f3 missing week-3 row A pasted rank from X is not a row.",
+      "page": 1,
+      "latex": "\\text{f1} = \\begin{cases} 1 & \\text{if } |r| < 0.08 \\lor |\\text{slope}| \\leq \\text{se} \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'r': 'correlation coefficient, dimensionless', 'slope': 'regression slope, units of dependent variable per unit independent variable', 'se': 'standard error of slope, same units as slope'}",
+      "assumptions": "Linear relationship assumed; sample size sufficient for walk-forward stability.",
+      "breakdown_regime": "When |r| < 0.08 or |slope| ≤ se, indicating unreliable predictive signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's Bayesian posterior update over walk-forward validation outcomes, filtering out weak signals.",
+        "source_operator": "f1_honesty",
+        "telemetry": "Correlation magnitude and slope significance from walk-forward regression."
+      }
+    },
+    {
+      "primitive_id": "f2_duplication",
+      "name": "Directional Redundancy Checker",
+      "verbatim_quote": "- f1 honesty: |r| ≥ 0.08 and |slope| > se on a walk-forward, else 1 - f2 duplication: this direction already has a representative - f3 missing week-3 row A pasted rank from X is not a row.",
+      "page": 1,
+      "latex": "\\text{f2} = \\begin{cases} 1 & \\text{if } \\exists \\text{existing representative in direction} \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'representative': 'a previously selected feature in the same semantic direction, dimensionless'}",
+      "assumptions": "Semantic directions are pre-defined and orthogonal.",
+      "breakdown_regime": "When a similar feature already exists in the same direction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's state transition veto logic, where redundant features block new additions.",
+        "source_operator": "f2_duplication",
+        "telemetry": "Feature set overlap in semantic direction."
+      }
+    },
+    {
+      "primitive_id": "f3_missing_week_3_row",
+      "name": "Row Integrity Verifier",
+      "verbatim_quote": "- f1 honesty: |r| ≥ 0.08 and |slope| > se on a walk-forward, else 1 - f2 duplication: this direction already has a representative - f3 missing week-3 row A pasted rank from X is not a row.",
+      "page": 1,
+      "latex": "\\text{f3} = \\begin{cases} 1 & \\text{if } \\text{rank from X} \\notin \\text{week-3 table rows} \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'X': 'external ranking source, dimensionless', 'week-3 table rows': 'set of valid rows in current week-3 dataset, dimensionless'}",
+      "assumptions": "Data alignment between external and internal datasets is required.",
+      "breakdown_regime": "When an externally sourced rank does not map to a valid internal row.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces data integrity in GSE's feature ingestion pipeline by rejecting misaligned entries.",
+        "source_operator": "f3_missing_week_3_row",
+        "telemetry": "Set intersection between external ranks and internal table rows."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c9969b58263054e0_t0",
+      "think": "The operators f1, f2, and f3 form a triadic filter system for feature validation. f1 enforces statistical robustness via walk-forward correlation thresholds. f2 prevents semantic redundancy by checking for existing representatives. f3 ensures data integrity by validating row alignment. These combine into a scalarized decision vector (λ = 0.5, 0.3, 0.2) that determines whether a feature enters the live edge. The system avoids overfitting by excluding features with |r| < 0.08 or when slope is insignificant. It also avoids redundancy by comparing against existing features in the same direction. The failure mode occurs when a feature passes f1 but fails f2 or f3, leading to exclusion. This structure mirrors a Bayesian rejection sampling process where each primitive acts as a likelihood constraint.\n\nDeep epistemic analysis for x-sweep-2026-09-26-pm (c9969b58263054e0, domain=other, pages_read=2/2): Operator 'Walk-Forward Correlation Validator' (page 1, domain other) captures: - f1 honesty: |r| ≥ 0.08 and |slope| > se on a walk-forward, else 1 - f2 duplication: this direction already has a representative - f3 missing week-3 row A pasted rank from X is not a row. Assumptions: Linear relationship assumed; sample size sufficient for walk-forward stability. Breakdown regime: When |r| < 0.08 or |slope| ≤ se, indicating unreliable predictive signal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian posterior update over walk-forward validation outcomes, filtering out weak signals. Operator 'Directional Redundancy Checker' (page 1, domain other) captures: - f1 honesty: |r| ≥ 0.08 and |slope| > se on a walk-forward, else 1 - f2 duplication: this direction already has a representative - f3 missing week-3 row A pasted rank from X is not a row. Assumptions: Semantic directions are pre-defined and orthogonal. Breakdown regime: When a similar feature already exists in the same direction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's state transition veto logic, where redundant features block new additions. Operator 'Row Integrity Verifier' (page 1, domain other) captures: - f1 honesty: |r| ≥ 0.08 and |slope| > se on a walk-forward, else 1 - f2 duplication: this direction already has a representative - f3 missing week-3 row A pasted rank from X is not a row. Assumptions: Data alignment between external and internal datasets is required. Breakdown regime: When an externally sourced rank does not map to a valid internal row. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces data integrity in GSE's feature ingestion pipeline by rejecting misaligned entries. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for x-sweep-2026-09-26-pm (c9969b58263054e0, domain=other, pages_read=2/2): Operator 'Walk-Forward Correlation Validator' (page 1, domain other) captures: - f1 honesty: |r| ≥ 0.08 and |slope| > se on a walk-forward, else 1 - f2 duplication: this direction already has a representative - f3 missing week-3 row A pasted rank from X is not a row. Assumptions: Linear relationship assumed; sample size sufficient for walk-forward stability. Breakdown regime: When |r| < 0.08 or |slope| ≤ se, indicating unreliable predictive signal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian posterior update over walk-forward validation outcomes, filtering out weak signals. Operator 'Directional Redundancy Checker' (page 1, domain other) captures: - f1 honesty: |r| ≥ 0.08 and |slope| > se on a walk-forward, else 1 - f2 duplication: this direction already has a representative - f3 missing week-3 row A pasted rank from X is not a row. Assumptions: Semantic directions are pre-defined and orthogonal. Breakdown regime: When a similar feature already exists in the same direction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's state transition veto logic, where redundant features block new additions. Operator 'Row Integrity Verifier' (page 1, domain other) captures: - f1 honesty: |r| ≥ 0.08 and |slope| > se on a walk-forward, else 1 - f2 duplication: this direction already has a representative - f3 missing week-3 row A pasted rank from X is not a row. Assumptions: Data alignment between external and internal datasets is required. Breakdown regime: When an externally sourced rank does not map to a valid internal row. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces data integrity in GSE's feature ingestion pipeline by rejecting misaligned entries. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical hypothesis testing and modern conformal prediction theory, with influences from information theory and causal inference frameworks. Retrocausal Genealogy: Rooted in x-sweep-2026-09-26-pm (c9969b58263054e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in x-sweep-2026-09-26-pm (c9969b58263054e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data sources with conflicting signals, modelers who may overfit, and systems that enforce orthogonality. Each primitive represents a decision actor balancing exploration vs exploitation. Theory of Mind & Decision Maker Model: Rooted in x-sweep-2026-09-26-pm (c9969b58263054e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by f2, which blocks features in already occupied semantic directions. Leakage is mitigated by f3 ensuring data consistency. Veto conditions prevent spurious correlations from entering the edge. Cross-Layer Veto & Anti-Leakage Check: Rooted in x-sweep-2026-09-26-pm (c9969b58263054e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

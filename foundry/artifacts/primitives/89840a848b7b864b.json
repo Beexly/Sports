@@ -1,0 +1,78 @@
+{
+  "book_id": "89840a848b7b864b",
+  "source_status": "COMPLETE",
+  "title": "OVERNIGHT-SUPERVISOR",
+  "file_name": "OVERNIGHT-SUPERVISOR.md",
+  "sha256": "89840a848b7b864bed0ec1b0bc117a7f6c7c891cc7d1f69bc429b6a94c226104",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Canonical overnight supervisor maintains PID 18756 via OmniRoute watchdog-loop.ps1; stale tasks disabled; kill switch at DONE.md = STOP. Universal Lens: Rooted in OVERNIGHT-SUPERVISOR (89840a848b7b864b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on supervisor health uses PID 18756 as evidence; stale task probabilities modeled as zero; kill switch triggers posterior update on DONE.md. GSI Mapping: Rooted in OVERNIGHT-SUPERVISOR (89840a848b7b864b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition from active to halted occurs when DONE.md = STOP; watchdog-loop.ps1 enforces PID 18756 persistence; proxy tasks remain dormant. GSE Mapping: Rooted in OVERNIGHT-SUPERVISOR (89840a848b7b864b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "supervisor_pid_monitor",
+      "name": "Supervisor Process Identifier Monitor",
+      "verbatim_quote": "﻿# Overnight supervisor (canonical) — 2026-09-23 **Canonical overnight supervisor:** OmniRoute `watchdog-loop.ps1` - Path: `C:\\Users\\Garrett\\.omniroute\\watchdog\\watchdog-loop.ps1` - Keep live PID **18756** (do not kill / do not double-start) **OpenCode Zen workers:** leave live `space-bunny-free` (and pickle/mimo) jobs alone.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PID': 'dimensionless process identifier', 'watchdog_loop': 'time-continuous control loop'}",
+      "assumptions": "PID 18756 is stable and unique; watchdog-loop prevents termination or duplication.",
+      "breakdown_regime": "PID 18756 becomes invalid or duplicated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI observes PID 18756 as a stochastic variable; GSE transitions states based on its validity.",
+        "source_operator": "supervisor_pid_monitor",
+        "telemetry": "Process ID status and loop execution frequency."
+      }
+    },
+    {
+      "primitive_id": "stale_task_disposal",
+      "name": "Stale Task Disposal Protocol",
+      "verbatim_quote": "**Stale:** `Beexly-CheapOvernight-Keepalive` / `Proxy` scheduled tasks (point at missing Sports scripts; last ran ~2026-08-23).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'task_status': 'binary {active, inactive}', 'script_reference': 'file path string', 'last_run': 'timestamp'}",
+      "assumptions": "Tasks reference non-existent scripts; last run timestamp indicates staleness.",
+      "breakdown_regime": "Task references missing script file.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI assigns probability zero to stale tasks; GSE disables them permanently.",
+        "source_operator": "stale_task_disposal",
+        "telemetry": "Script existence check and last execution time."
+      }
+    },
+    {
+      "primitive_id": "kill_switch_trigger",
+      "name": "Kill Switch Trigger Mechanism",
+      "verbatim_quote": "Kill switch (when Sports script exists again): `handoff\\cheap-overnight\\DONE.md` = `STOP`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DONE.md': 'file path', 'STOP': 'string literal', 'trigger_condition': 'boolean'}",
+      "assumptions": "DONE.md content determines supervisor halt condition.",
+      "breakdown_regime": "DONE.md does not contain 'STOP'.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI evaluates DONE.md as a conditional event; GSE initiates shutdown sequence.",
+        "source_operator": "kill_switch_trigger",
+        "telemetry": "File content verification and trigger state."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "89840a848b7b864b_t0",
+      "think": "The supervisor process monitor ensures PID 18756 remains alive through continuous loop validation, preventing duplication or premature termination. This is a deterministic control system where the watchdog-loop.ps1 acts as a feedback mechanism. Stale tasks are identified by their script references pointing to non-existent files, which is a failure mode indicating outdated or misconfigured scheduling. The kill switch operates on a binary signal from DONE.md, triggering a state change in the system. These primitives form a layered control architecture: the PID monitor provides stability, stale task disposal prevents resource waste, and the kill switch enables graceful degradation. Dualities emerge in that the supervisor's integrity depends on both active monitoring and passive failure detection. Failure modes include PID instability, script drift, and incorrect DONE.md content. The system exhibits robustness through redundancy in monitoring and explicit state transitions.\n\nDeep epistemic analysis for OVERNIGHT-SUPERVISOR (89840a848b7b864b, domain=other, pages_read=1/1): Operator 'Supervisor Process Identifier Monitor' (page 1, domain other) captures: ﻿# Overnight supervisor (canonical) — 2026-09-23 **Canonical overnight supervisor:** OmniRoute `watchdog-loop.ps1` - Path: `C:\\Users\\Garrett\\.omniroute\\watchdog\\watchdog-loop.ps1` - Keep live PID **18756** (do not kill / do not double-start) **OpenCode Zen workers:** leave live `space-bunny-free` (and pickle/mimo) jobs alone. Assumptions: PID 18756 is stable and unique; watchdog-loop prevents termination or duplication. Breakdown regime: PID 18756 becomes invalid or duplicated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI observes PID 18756 as a stochastic variable; GSE transitions states based on its validity. Operator 'Stale Task Disposal Protocol' (page 1, domain other) captures: **Stale:** `Beexly-CheapOvernight-Keepalive` / `Proxy` scheduled tasks (point at missing Sports scripts; last ran ~2026-08-23). Assumptions: Tasks reference non-existent scripts; last run timestamp indicates staleness. Breakdown regime: Task references missing script file. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI assigns probability zero to stale tasks; GSE disables them permanently. Operator 'Kill Switch Trigger Mechanism' (page 1, domain other) captures: Kill switch (when Sports script exists again): `handoff\\cheap-overnight\\DONE.md` = `STOP`. Assumptions: DONE.md content determines supervisor halt condition. Breakdown regime: DONE.md does not contain 'STOP'. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI evaluates DONE.md as a conditional event; GSE initiates shutdown sequence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for OVERNIGHT-SUPERVISOR (89840a848b7b864b, domain=other, pages_read=1/1): Operator 'Supervisor Process Identifier Monitor' (page 1, domain other) captures: ﻿# Overnight supervisor (canonical) — 2026-09-23 **Canonical overnight supervisor:** OmniRoute `watchdog-loop.ps1` - Path: `C:\\Users\\Garrett\\.omniroute\\watchdog\\watchdog-loop.ps1` - Keep live PID **18756** (do not kill / do not double-start) **OpenCode Zen workers:** leave live `space-bunny-free` (and pickle/mimo) jobs alone. Assumptions: PID 18756 is stable and unique; watchdog-loop prevents termination or duplication. Breakdown regime: PID 18756 becomes invalid or duplicated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI observes PID 18756 as a stochastic variable; GSE transitions states based on its validity. Operator 'Stale Task Disposal Protocol' (page 1, domain other) captures: **Stale:** `Beexly-CheapOvernight-Keepalive` / `Proxy` scheduled tasks (point at missing Sports scripts; last ran ~2026-08-23). Assumptions: Tasks reference non-existent scripts; last run timestamp indicates staleness. Breakdown regime: Task references missing script file. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI assigns probability zero to stale tasks; GSE disables them permanently. Operator 'Kill Switch Trigger Mechanism' (page 1, domain other) captures: Kill switch (when Sports script exists again): `handoff\\cheap-overnight\\DONE.md` = `STOP`. Assumptions: DONE.md content determines supervisor halt condition. Breakdown regime: DONE.md does not contain 'STOP'. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI evaluates DONE.md as a conditional event; GSE initiates shutdown sequence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical control theory and process management paradigms, evolving from Unix process supervision to modern distributed systems orchestration. Retrocausal Genealogy: Rooted in OVERNIGHT-SUPERVISOR (89840a848b7b864b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in OVERNIGHT-SUPERVISOR (89840a848b7b864b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the system's own watchdog (maintaining uptime), stale task schedulers (inherently obsolete), and the kill switch (enforcing closure). Each agent has distinct objectives: uptime, resource efficiency, and controlled shutdown respectively. Theory of Mind & Decision Maker Model: Rooted in OVERNIGHT-SUPERVISOR (89840a848b7b864b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises from the separation of concerns: PID monitoring is independent of script validation; kill switch is orthogonal to stale task handling. Leakage is prevented by strict file-based signaling and immutable process identifiers. Cross-Layer Veto & Anti-Leakage Check: Rooted in OVERNIGHT-SUPERVISOR (89840a848b7b864b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

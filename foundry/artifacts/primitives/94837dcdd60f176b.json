@@ -1,0 +1,78 @@
+{
+  "book_id": "94837dcdd60f176b",
+  "source_status": "COMPLETE",
+  "title": "prompt-matchup-refusal",
+  "file_name": "prompt-matchup-refusal.md",
+  "sha256": "94837dcdd60f176b841ca217cc5d6ce7dececdef5bd4f7f41b2e112d821945e4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Matchup refusal logic in stale engine branches defines a conditional kernel failure mode under missing data ingestion. Universal Lens: Rooted in prompt-matchup-refusal (94837dcdd60f176b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on matchup source validity uses conformal predictive regions to flag refusal events in data streams. GSI Mapping: Rooted in prompt-matchup-refusal (94837dcdd60f176b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning detects refusal states via state-transition graphs; missing matchup sources trigger kernel halting protocols. GSE Mapping: Rooted in prompt-matchup-refusal (94837dcdd60f176b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "matchup_source_refusal",
+      "name": "Matchup Source Refusal Kernel",
+      "verbatim_quote": "stale-sports-engine.md says claude/edge-map-rebuild-2026-06-04 has a refusal when the matchup source is missing, in packages/data-ingestion/src/matchup.ts, and a hand-weighted delta that must not be wired.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'refusal indicator, dimensionless', 'M': 'matchup source, SI unit: event', 'Δ': 'hand-weighted delta, dimensionless'}",
+      "assumptions": "Refusal occurs when M is undefined; Δ is non-wireable.",
+      "breakdown_regime": "M → ∅ implies R = 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Refusal kernel maps to Bayesian rejection sampling in GSI; triggers state halt in GSE.",
+        "source_operator": "matchup_source_refusal",
+        "telemetry": "Observable refusal count per data batch"
+      }
+    },
+    {
+      "primitive_id": "stale_branch_isolation",
+      "name": "Stale Branch Isolation Protocol",
+      "verbatim_quote": "If the refusal is only on that stale branch, quote the branch function via gh api and say what a port would copy and what it must not copy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'branch identifier, dimensionless', 'F': 'function signature, SI unit: code block', 'C': 'copyable component, dimensionless', 'NC': 'non-copyable component, dimensionless'}",
+      "assumptions": "Only B = claude/edge-map-rebuild-2026-06-04 exhibits refusal.",
+      "breakdown_regime": "B ≠ current implies F ⊕ NC",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isolation protocol enables GSE to extract valid components from stale branches without propagating refusal.",
+        "source_operator": "stale_branch_isolation",
+        "telemetry": "Component validation rate across branches"
+      }
+    },
+    {
+      "primitive_id": "data_ingestion_gate",
+      "name": "Data Ingestion Gate Condition",
+      "verbatim_quote": "in packages/data-ingestion/src/matchup.ts, and a hand-weighted delta that must not be wired. Check whether C:\\Users\\Garrett\\Sports-wt-pick-gate already refuses",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'gate state, dimensionless', 'S': 'source presence, SI unit: boolean', 'F': 'failure flag, dimensionless'}",
+      "assumptions": "Gate G is active iff S = true; F = 1 if S = false.",
+      "breakdown_regime": "S = false ⇒ G = 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ingestion gate mirrors GSI's data validity check; GSE enforces conditional state transitions.",
+        "source_operator": "data_ingestion_gate",
+        "telemetry": "Gate activation frequency per ingestion cycle"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "94837dcdd60f176b_t0",
+      "think": "The core operator 'matchup_source_refusal' models a conditional kernel failure where R = 1 when M is undefined. This is a binary decision boundary in a data stream, modeled as a Boolean logic gate with input M and output R. The hand-weighted delta Δ introduces a non-linear perturbation that must remain unwired to preserve logical consistency. The 'stale_branch_isolation' protocol isolates this failure to a specific branch B, enabling selective copying of F(C) while excluding NC. The 'data_ingestion_gate' acts as a secondary filter, ensuring that only valid sources S = true proceed through G. These primitives form a layered causal structure: refusal → isolation → validation. The failure mode is a singularity at M = ∅, where the system transitions into a halted state. Dualities emerge between GSI's probabilistic rejection and GSE's deterministic state transition. The system's robustness depends on maintaining the integrity of these boundaries.\n\nDeep epistemic analysis for prompt-matchup-refusal (94837dcdd60f176b, domain=other, pages_read=1/1): Operator 'Matchup Source Refusal Kernel' (page 1, domain other) captures: stale-sports-engine.md says claude/edge-map-rebuild-2026-06-04 has a refusal when the matchup source is missing, in packages/data-ingestion/src/matchup.ts, and a hand-weighted delta that must not be wired. Assumptions: Refusal occurs when M is undefined; Δ is non-wireable. Breakdown regime: M → ∅ implies R = 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Refusal kernel maps to Bayesian rejection sampling in GSI; triggers state halt in GSE. Operator 'Stale Branch Isolation Protocol' (page 1, domain other) captures: If the refusal is only on that stale branch, quote the branch function via gh api and say what a port would copy and what it must not copy. Assumptions: Only B = claude/edge-map-rebuild-2026-06-04 exhibits refusal. Breakdown regime: B ≠ current implies F ⊕ NC Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isolation protocol enables GSE to extract valid components from stale branches without propagating refusal. Operator 'Data Ingestion Gate Condition' (page 1, domain other) captures: in packages/data-ingestion/src/matchup.ts, and a hand-weighted delta that must not be wired. Check whether C:\\Users\\Garrett\\Sports-wt-pick-gate already refuses Assumptions: Gate G is active iff S = true; F = 1 if S = false. Breakdown regime: S = false ⇒ G = 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ingestion gate mirrors GSI's data validity check; GSE enforces conditional state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prompt-matchup-refusal (94837dcdd60f176b, domain=other, pages_read=1/1): Operator 'Matchup Source Refusal Kernel' (page 1, domain other) captures: stale-sports-engine.md says claude/edge-map-rebuild-2026-06-04 has a refusal when the matchup source is missing, in packages/data-ingestion/src/matchup.ts, and a hand-weighted delta that must not be wired. Assumptions: Refusal occurs when M is undefined; Δ is non-wireable. Breakdown regime: M → ∅ implies R = 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Refusal kernel maps to Bayesian rejection sampling in GSI; triggers state halt in GSE. Operator 'Stale Branch Isolation Protocol' (page 1, domain other) captures: If the refusal is only on that stale branch, quote the branch function via gh api and say what a port would copy and what it must not copy. Assumptions: Only B = claude/edge-map-rebuild-2026-06-04 exhibits refusal. Breakdown regime: B ≠ current implies F ⊕ NC Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isolation protocol enables GSE to extract valid components from stale branches without propagating refusal. Operator 'Data Ingestion Gate Condition' (page 1, domain other) captures: in packages/data-ingestion/src/matchup.ts, and a hand-weighted delta that must not be wired. Check whether C:\\Users\\Garrett\\Sports-wt-pick-gate already refuses Assumptions: Gate G is active iff S = true; F = 1 if S = false. Breakdown regime: S = false ⇒ G = 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ingestion gate mirrors GSI's data validity check; GSE enforces conditional state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical control theory's error handling and modern machine learning's early stopping mechanisms. Influenced by Bayesian falsification and state-space models in robotics. Retrocausal Genealogy: Rooted in prompt-matchup-refusal (94837dcdd60f176b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in prompt-matchup-refusal (94837dcdd60f176b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the data ingestion system (seeking completeness) and the refusal kernel (enforcing consistency). Decision actors are the GSI inference engine and GSE state manager, both operating under bounded rationality constraints. Theory of Mind & Decision Maker Model: Rooted in prompt-matchup-refusal (94837dcdd60f176b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that refusal signals do not leak from GSE to GSI without explicit telemetry. Leakage vetoes are enforced via orthogonal projection of Δ onto valid subspaces. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-matchup-refusal (94837dcdd60f176b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in prompt-matchup-refusal (94837dcdd60f176b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

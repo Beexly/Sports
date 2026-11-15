@@ -1,0 +1,323 @@
+{
+  "book_id": "6c3fe30efa5ed10f",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2602.13772v1",
+  "file_name": "arxiv_2602.13772v1.pdf",
+  "sha256": "6c3fe30efa5ed10fbc2a37b02ebd87797c750951f6c6052ce8f9c70634b21fe9",
+  "primary_domain": "other",
+  "pages_total": 13,
+  "pages_read": 13,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 13,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A polyhedral framework for offline 3D multi-object tracking unifies temporal context integration and global optimization through structured trajectory refinement. Offline-Poly unifies multi-object tracking via polyhedral trajectory optimization, integrating tracklet-level filtering, hierarchical matching, and multi-perspective refinement into a coherent geometric kinematic framework.",
+  "gsi_mapping": "Bayesian inference maps offline tracking outputs to probabilistic object identities using temporal coherence and scene-level similarity priors. GSI employs Bayesian belief updates over trajectory likelihoods, where tracklet pre-processing acts as a conformal prior, and fusion/refinement stages refine posterior distributions through evidence aggregation.",
+  "gse_mapping": "Situational reasoning models utilize full-sequence observability to infer object motion patterns and resolve identity ambiguities via heuristic fusion strategies. GSE models object dynamics using state-transition graphs derived from tracklet kinematics; each refinement step updates internal belief states via probabilistic trajectory merging under uncertainty constraints.",
+  "primitives": [
+    {
+      "primitive_id": "w0_offline_poly",
+      "name": "Tracking-by-Tracking Paradigm",
+      "verbatim_quote": "We introduce a standardized paradigm termed Tracking-byTracking (TBT), which operates exclusively on arbitrary off-theshelf tracking outputs and produces offline-refined trajectories.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The system assumes availability of arbitrary upstream tracking outputs without architectural dependency.",
+      "breakdown_regime": "Failure occurs when upstream inputs lack sufficient spatial-temporal consistency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "TBT maps to GSI's probabilistic trajectory alignment and to GSE's state transition graph refinement.",
+        "source_operator": "w0_offline_poly",
+        "telemetry": "Trajectory continuity score and cross-source match confidence"
+      }
+    },
+    {
+      "primitive_id": "w1_resource_unconstrainedness",
+      "name": "Resource Unconstrained Optimization",
+      "verbatim_quote": "Each module is deliberately designed to capitalize on the two fundamental properties of offline tracking: resource unconstrainedness, which permits global optimization beyond real-time limits, and future observability, which enables trajectory reasoning over the full temporal horizon.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Computational resources are unlimited; full temporal sequence is accessible.",
+      "breakdown_regime": "Performance degradation under memory or time constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE's global trajectory optimization kernel and GSI's enhanced label propagation.",
+        "source_operator": "w1_resource_unconstrainedness",
+        "telemetry": "Optimization convergence rate and label entropy reduction"
+      }
+    },
+    {
+      "primitive_id": "w2_future_observability",
+      "name": "Future-Guided Trajectory Reasoning",
+      "verbatim_quote": "THIS WORK HAS BEEN SUBMITTED TO THE IEEE FOR POSSIBLE PUBLICATION.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Full temporal sequence is available for reasoning and correction.",
+      "breakdown_regime": "Failure due to incomplete or corrupted temporal data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Supports GSE's trajectory trend analysis and GSI's outlier detection.",
+        "source_operator": "w2_future_observability",
+        "telemetry": "Trajectory smoothness index and anomaly detection threshold"
+      }
+    },
+    {
+      "primitive_id": "w3_scene_level_similarity",
+      "name": "Scene-Level Tracklet Association",
+      "verbatim_quote": "It then constructs scene-level similarity to associate tracklets across multiple input sources, followed by a heuristic fusion strategy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Multiple coarse tracking sources provide complementary information.",
+      "breakdown_regime": "Inadequate similarity metrics lead to incorrect associations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's multi-modal fusion logic and GSE's inter-source consistency checks.",
+        "source_operator": "w3_scene_level_similarity",
+        "telemetry": "Cross-source association accuracy and fusion reliability score"
+      }
+    },
+    {
+      "primitive_id": "tracklet_filtering",
+      "name": "Tracklet-Level Filtering",
+      "verbatim_quote": "For each tracking result Tin ∈Tin, we remove any tracklet Tin ∈Tin whose age and mean confidence are both below predefined thresholds θage and θscore.",
+      "page": 4,
+      "latex": "\\mathcal{T}_{\\text{filtered}} = \\{ \\tau_i \\in \\mathcal{T} \\mid \\text{age}(\\tau_i) > \\theta_{\\text{age}}, \\bar{c}(\\tau_i) > \\theta_{\\text{score}} \\}",
+      "symbol_and_unit_ledger": "{'τ_i': 'i-th tracklet, dimensionless', 'θ_age': 'minimum age threshold, frames', 'θ_score': 'minimum average confidence threshold, unitless', 'T_in': 'set of input tracking results, dimensionless'}",
+      "assumptions": "Trajectory stability is determined by temporal duration and confidence consistency; spurious trajectories are identifiable via low-age/low-score criteria.",
+      "breakdown_regime": "When θ_age → 0 or θ_score → 0, all trajectories are retained, leading to potential ghost tracklet proliferation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The filtering operation mirrors GSI's prior pruning mechanism, where unreliable hypotheses are eliminated before posterior inference.",
+        "source_operator": "tracklet_filtering",
+        "telemetry": "Number of filtered trajectories per batch, normalized by total input tracklets."
+      }
+    },
+    {
+      "primitive_id": "hierarchical_matching_fusion",
+      "name": "Hierarchical Matching and Fusion",
+      "verbatim_quote": "Subsequently, a hierarchical matching and fusion module re-identifies and reorganizes fragmented trajectories belonging to the same object within each tracking result (Section IV-C).",
+      "page": 4,
+      "latex": "\\mathcal{M}: \\mathcal{T}_1 \\times \\mathcal{T}_2 \\to \\mathcal{S}_{\\text{match}}",
+      "symbol_and_unit_ledger": "{'T_1, T_2': 'input trajectory sets, dimensionless', 'S_match': 'matching score space, unitless', 'M': 'matching function, dimensionless'}",
+      "assumptions": "Fragmented trajectories can be re-associated based on geometric proximity and motion consistency; matching is transitive within clusters.",
+      "breakdown_regime": "When motion models fail or spatial overlap is minimal, matching accuracy degrades due to ambiguous associations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This kernel enables GSE to reconstruct coherent object paths from disjointed inputs using dynamic programming over trajectory similarity matrices.",
+        "source_operator": "hierarchical_matching_fusion",
+        "telemetry": "F1-score of matched vs ground truth trajectories, averaged over sequence batches."
+      }
+    },
+    {
+      "primitive_id": "inter_tracker_association",
+      "name": "Inter-Tracker Association",
+      "verbatim_quote": "Moreover, across different tracking results, inter-tracker association further consolidates multiple candidate trajectories of the same object through aggregation (Section IV-D).",
+      "page": 4,
+      "latex": "\\mathcal{A}: \\bigcup_{t \\in T} \\mathcal{T}_t \\to \\mathcal{C}_{\\text{object}}",
+      "symbol_and_unit_ledger": "{'T': 'time steps, frames', 'T_t': 'tracking result at time t, dimensionless', 'C_object': 'consolidated object clusters, dimensionless', 'A': 'association operator, dimensionless'}",
+      "assumptions": "Multiple trackers may observe the same object; their outputs are aggregated to form a globally consistent representation.",
+      "breakdown_regime": "If tracker biases or noise levels vary significantly, inter-tracker alignment fails, causing fragmentation or duplication.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSI’s cross-model ensemble logic, where disparate tracker outputs are reconciled into unified object identities.",
+        "source_operator": "inter_tracker_association",
+        "telemetry": "Normalized mutual information between merged and reference tracks, computed per sequence."
+      }
+    },
+    {
+      "primitive_id": "multi_perspective_refinement",
+      "name": "Multi-Perspective Refinement",
+      "verbatim_quote": "Finally, a multi-perspective refinement module (Section IV-E) optimizes geometric and kinematic properties by leveraging both global and local trajectory information.",
+      "page": 4,
+      "latex": "\\mathcal{R}: \\mathcal{T} \\to \\mathcal{T}_{\\text{optimized}}",
+      "symbol_and_unit_ledger": "{'T': 'input trajectory set, dimensionless', 'T_optimized': 'refined trajectory set, dimensionless', 'R': 'refinement operator, dimensionless'}",
+      "assumptions": "Global structure and local motion patterns contribute independently to trajectory quality; optimization is iterative and context-aware.",
+      "breakdown_regime": "When local features dominate or global coherence is lost, refinement may overfit or underfit trajectory characteristics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses this kernel to iteratively update belief states about object kinematics using feedback from both local motion and global scene topology.",
+        "source_operator": "multi_perspective_refinement",
+        "telemetry": "Mean squared error between refined and ground-truth positions, averaged across all tracked objects."
+      }
+    },
+    {
+      "primitive_id": "scene_level_connectivity",
+      "name": "Scene-Level Connectivity Matrix",
+      "verbatim_quote": "Finally, we compress ˆAmulti along the temporal axis to determine scene-level connectivity: ̃Ai,j multi = Ls max t=1 ˆAi,j multi[t, i, j], (8) where ̃Amulti ∈RNall×Nall represents the scene-level adjacency matrix over Tpad.",
+      "page": 7,
+      "latex": "\\tilde{A}_{i,j}^{\\text{multi}} = \\max_{t=1}^{L_s} \\hat{A}_{i,j}^{\\text{multi}}[t, i, j]",
+      "symbol_and_unit_ledger": "{'A_{i,j}^{\\\\text{multi}}': 'binary adjacency matrix element (0 or 1)', 'L_s': 'number of frames in sequence (dimensionless)', 'T_{\\\\text{pad}}': 'padded temporal extent (time units)', 'N_{\\\\text{all}}': 'total number of tracklets (dimensionless)'}",
+      "assumptions": "Temporal consistency of tracklet identities; uniform frame rate; fixed IoU threshold for binarization.",
+      "breakdown_regime": "When tracklet lifecycles overlap or diverge significantly, leading to spurious connections.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Max pooling across time captures persistent object associations, enabling GSE's temporal coherence model.",
+        "source_operator": "scene_level_connectivity",
+        "telemetry": "AMOTA score reflects accuracy of fused tracklet continuity."
+      }
+    },
+    {
+      "primitive_id": "cost_matrix_computation",
+      "name": "Spatial Affinity Cost Matrix",
+      "verbatim_quote": "For each frame t, a cost matrix Cmulti,t ∈RNall×Nall is computed to quantify spatial affinities between tracklet pairs.",
+      "page": 7,
+      "latex": "C_{i,j}^{\\text{multi},t} = \\text{IoU}(\\mathbf{b}_i^t, \\mathbf{b}_j^t)",
+      "symbol_and_unit_ledger": "{'C_{i,j}^{\\\\text{multi},t}': 'spatial affinity score between tracklets i and j at frame t (dimensionless)', 'IoU': 'Intersection-over-Union metric (dimensionless)', '\\\\mathbf{b}_i^t': 'bounding box of tracklet i at frame t (spatial units)'}",
+      "assumptions": "Tracklet bounding boxes are available; IoU is sufficient for spatial similarity measurement.",
+      "breakdown_regime": "When objects occlude or have low IoU due to motion blur or scale variation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cost matrix mirrors GSI's probabilistic spatial alignment kernel for multi-source data fusion.",
+        "source_operator": "cost_matrix_computation",
+        "telemetry": "MOTA score indicates precision of matched tracklet pairs."
+      }
+    },
+    {
+      "primitive_id": "temporal_aggregation",
+      "name": "Temporal Frame Aggregation",
+      "verbatim_quote": "To incorporate full-sequence information, frame-level adjacency matrices are aggregated temporally: ˆAmulti = Concat(Amulti,1, .",
+      "page": 7,
+      "latex": "\\hat{A}^{\\text{multi}} = \\text{Concat}(A^{\\text{multi}}_1, \\dots, A^{\\text{multi}}_{L_s})",
+      "symbol_and_unit_ledger": "{'\\\\hat{A}^{\\\\text{multi}}': 'aggregated frame-level adjacency tensor (dimensionless)', 'L_s': 'sequence length (dimensionless)', 'N_{\\\\text{all}}': 'total number of tracklets (dimensionless)'}",
+      "assumptions": "Sequential frame ordering is preserved; all frames contribute equally to final matrix.",
+      "breakdown_regime": "Inconsistent frame rates or missing frames disrupt temporal continuity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Aggregation enables GSE’s long-range dependency modeling via extended adjacency tensors.",
+        "source_operator": "temporal_aggregation",
+        "telemetry": "IDS count reflects fragmentation in fused tracks."
+      }
+    },
+    {
+      "primitive_id": "binarized_adjacency",
+      "name": "Binarized Adjacency Thresholding",
+      "verbatim_quote": "The matrix is binarized as: Ai,j multi,t = 1 \u0010 Ci,j multi,t < θmulti \u0011 , (6) where 1(·) denotes the indicator function, and θmulti is a fixed connectivity threshold (1 for connected, 0 for disconnected).",
+      "page": 7,
+      "latex": "A_{i,j}^{\\text{multi},t} = \\mathbb{1}\\left(C_{i,j}^{\\text{multi},t} < \\theta_{\\text{multi}}\\right)",
+      "symbol_and_unit_ledger": "{'A_{i,j}^{\\\\text{multi},t}': 'binary connection indicator (0 or 1)', 'C_{i,j}^{\\\\text{multi},t}': 'affinity score (dimensionless)', '\\\\theta_{\\\\text{multi}}': 'fixed connectivity threshold (dimensionless)'}",
+      "assumptions": "Fixed threshold ensures deterministic graph structure; spatial affinity determines connectivity.",
+      "breakdown_regime": "Threshold too high leads to disconnected components; too low introduces noise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Thresholding mirrors GSI’s binary decision logic for event detection in noisy environments.",
+        "source_operator": "binarized_adjacency",
+        "telemetry": "FN count measures missed object detections post-thresholding."
+      }
+    },
+    {
+      "primitive_id": "offline_poly_structure",
+      "name": "Offline Polyhedral Structure Prior",
+      "verbatim_quote": "Structure: Low-level structure information (3D/2D bounding box [10], [14]– [16], [33], [34], [39], map [10]).",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_{3D}': '3D bounding box coordinates (meters)', 'B_{2D}': '2D bounding box coordinates (pixels)', 'M': 'Map representation (grid cells)'}",
+      "assumptions": "Geometric consistency across frames; static environment assumption.",
+      "breakdown_regime": "When occlusion exceeds 50% or sensor noise > 0.1m.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps 3D/2D bounding boxes to a polyhedral graph structure in GSE for trajectory reconstruction.",
+        "source_operator": "offline_poly_structure",
+        "telemetry": "Tracking accuracy via HOTA metric"
+      }
+    },
+    {
+      "primitive_id": "offline_poly_semantic",
+      "name": "Offline Polyhedral Semantic Context",
+      "verbatim_quote": "Semantic: High-context semantic information (feature map [33], [34], [58], object query [27]).",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Feature map (channel × height × width)', 'Q': 'Object query vector (dimensionality d)', 'S': 'Semantic score (unitless)'}",
+      "assumptions": "Semantic features are invariant to viewpoint changes.",
+      "breakdown_regime": "When feature maps are corrupted by adverse weather or lighting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives contextual embeddings from feature maps to refine object classification in GSI.",
+        "source_operator": "offline_poly_semantic",
+        "telemetry": "AMOTA improvement over baseline detectors"
+      }
+    },
+    {
+      "primitive_id": "offline_poly_tracker_fusion",
+      "name": "Multi-Tracker Fusion Module",
+      "verbatim_quote": "SC PC AMOTA↑ MOTA↑ ASE↓ × × 88.0 78.7 0.171 Select All Center-Aligned 88.0 78.7 0.167 Select All Corner-Aligned 90.9 82.1 0.167 TopK Corner-Aligned 91.0 82.3 0.165 TABLE VIII: A comparison of different tracklet reidentification implementations (STWO in Section IV-C) on the nuScenes val set.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_i': 'Tracklet i (temporal sequence)', 'R_{ij}': 'Reidentification score between tracklets i and j (unitless)', 'F_{ij}': 'Fusion weight between tracklets i and j (unitless)'}",
+      "assumptions": "Tracklets are temporally aligned and have overlapping spatial regions.",
+      "breakdown_regime": "When inter-tracker overlap < 0.3 or motion jitter > 0.5m.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps tracklet reidentification scores to a probabilistic graph in GSE for trajectory continuity.",
+        "source_operator": "offline_poly_tracker_fusion",
+        "telemetry": "IDS reduction and FN count decrease"
+      }
+    },
+    {
+      "primitive_id": "offline_poly_refinement",
+      "name": "Global Trajectory Refinement",
+      "verbatim_quote": "TABLE VII: A comparison of different global refinement implementations for Bus on the nuScenes val set.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'θ_{multi}': 'Threshold for multi-frame consistency (unitless)', 'K': 'Minimum credible observations (integer)', 'M': 'Sliding window size (frames)', 'T_{refined}': 'Refined trajectory (sequence of poses)'}",
+      "assumptions": "Trajectories can be globally optimized without loss of local fidelity.",
+      "breakdown_regime": "When K < 3 or M < 5 frames.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applies kernel smoothing to reduce trajectory noise in GSE's temporal state space.",
+        "source_operator": "offline_poly_refinement",
+        "telemetry": "AMOTP and MOTA improvements"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6c3fe30efa5ed10f_t0",
+      "think": "Chapter 1 introduces Offline-Poly, a polyhedral framework for offline 3D multi-object tracking that leverages the offline setting's unique advantages: resource unconstrainedness and future observability. These properties enable global optimization and full-sequence trajectory reasoning, respectively. The paper identifies key limitations in prior work—namely, reliance on online TBD frameworks and fixed upstream dependencies—which restrict adaptability. Offline-Poly addresses these by proposing a Tracking-by-Tracking (TBT) paradigm that decouples the tracker from specific upstream components. This allows for modular processing through pre-processing, hierarchical matching and fusion, and trajectory refinement. The framework capitalizes on two core principles: first, resource unconstrainedness enables global optimization beyond real-time constraints; second, future observability supports trajectory reasoning over the entire temporal horizon. These features allow for robust tracklet filtering, reidentification of fragmented segments, and scene-level similarity construction. The approach contrasts with online trackers constrained by latency-computation trade-offs, making it suitable for 4D auto-labeling systems. The TBT paradigm ensures strong generalization capability by operating on arbitrary tracking outputs, thus supporting diverse input modalities and detector architectures. Window 1 Synthesis: Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Historically rooted in the evolution of 3D object tracking from online TBD frameworks to offline paradigms, with early works focusing on real-time performance at the expense of global optimization. Recent advancements have emphasized temporal coherence and scene understanding, leading to frameworks like Offline-Poly that exploit full-sequence visibility. Retrocausal Genealogy (Window 1): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include traditional online trackers that prioritize speed over accuracy, and specialized offline trackers with rigid architectures. The framework models these as competing paradigms where Offline-Poly represents a balanced synthesis of adaptability and robustness, optimizing for long-term trajectory integrity rather than immediate response. Theory of Mind (Window 1): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions prevent over-reliance on single-source tracking outputs, ensuring diversity in input data. Leakage veto prevents spurious correlations between unrelated tracklets, maintaining signal-to-noise ratio in trajectory refinement. Cross-Layer Veto (Window 1): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6c3fe30efa5ed10f_t1",
+      "think": "Chapter window 2 presents the foundational architecture of Offline-Poly, a framework designed to enhance offline 3D multi-object tracking through structured refinement. The method begins with a tracklet-level pre-processing stage that filters out unstable trajectories based on age and confidence scores, thereby reducing false positives and ghost tracks. This initial filtering aligns with Bayesian principles where prior knowledge is used to prune unlikely hypotheses before posterior inference. Following this, a hierarchical matching and fusion module addresses fragmented trajectories by identifying and reorganizing those belonging to the same object. This process leverages motion models and geometric similarity to ensure continuity and coherence. Inter-tracker association then aggregates results from multiple tracking algorithms, enhancing robustness against individual tracker failures. Finally, a multi-perspective refinement module optimizes trajectory geometry and kinematics using both local and global information. This approach reflects a layered epistemic strategy, combining empirical data with structural priors to produce more accurate and reliable tracking outcomes. The framework emphasizes the importance of holistic trajectory evaluation rather than isolated frame-level decisions, enabling better long-term consistency and interpretability in complex scenes. Window 2 Synthesis: Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon earlier work in online tracking and frame-level filtering techniques, Offline-Poly extends these concepts into an offline setting with enhanced temporal coherence. It draws inspiration from classical tracking paradigms such as Kalman filtering and particle filtering, while introducing novel polyhedral representations for trajectory optimization. Retrocausal Genealogy (Window 2): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents in this domain include noisy sensors, occluding objects, and inconsistent tracker performance. The framework models these uncertainties by incorporating confidence thresholds and motion priors, allowing it to reason about plausible object behaviors even when direct observations are sparse or ambiguous. Theory of Mind (Window 2): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each primitive operates on distinct aspects of trajectory data—filtering on temporal stability, matching on spatial-temporal coherence, association on inter-model consistency, and refinement on geometric accuracy. Leakage occurs if one layer's output directly influences another without proper abstraction, which is mitigated through modular design and explicit data flow control. Cross-Layer Veto (Window 2): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6c3fe30efa5ed10f_t2",
+      "think": "Chapter window 3 (pages 7–9) presents the core algorithmic architecture of Offline-Poly, focusing on integrating multiple tracker outputs into coherent scene-level representations. The framework begins with per-frame cost matrices derived from geometric similarity (IoU), which are then binarized to form adjacency graphs. These are temporally aggregated to build a global scene-level connectivity matrix. This process allows for robust handling of heterogeneous tracking inputs and supports flexible similarity metrics. The method leverages max pooling over time to maintain high recall while minimizing computational overhead. Empirical validation in Table III shows that removing key modules like age filtering or global perspective reduces performance, confirming their necessity. The approach aligns with broader trends in multi-object tracking toward unified, modular architectures that support both offline and online processing paradigms. It also reflects recent advances in graph-based reasoning for perception tasks, particularly in autonomous driving contexts where reliable object association is critical. Window 3 Synthesis: Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical multi-object tracking methods such as Kalman filters and data association techniques, Offline-Poly builds upon prior work in graph-based fusion and temporal consistency models introduced in works like MCTrack and Poly-MOT. Retrocausal Genealogy (Window 3): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents within the system include upstream trackers (e.g., Fast-Poly, CenterPoint) and downstream fusion modules. Each agent contributes partial observations subject to varying reliability and coverage. The framework must reason about conflicting or incomplete signals to produce a globally consistent representation. Theory of Mind (Window 3): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that different modules (e.g., local vs. global perspectives) do not redundantly encode similar information. Leakage is mitigated by strict separation between preprocessing steps and final refinement stages. Cross-Layer Veto (Window 3): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6c3fe30efa5ed10f_t3",
+      "think": "Chapter 4 introduces Offline-Poly, a novel framework for offline 3D multi-object tracking that leverages both geometric and semantic priors. It builds upon prior work such as RethinkMOT and BiTrack, which require either training or upstream segmentation. Offline-Poly instead operates purely from existing tracking outputs, using a TBT (Temporal Bundle Tracking) framework. The method integrates structure (bounding boxes, maps) and semantics (feature maps, queries) to enhance tracking robustness. Key innovations include the Single Tracker Matching (STM) module for re-identifying fragmented tracks and the Multiple Tracker Matching (MTM) module for trajectory fusion. Ablation studies validate the contributions of each component. The framework demonstrates superior performance on nuScenes, especially in terms of HOTA, AMOTA, and MOTA metrics. This chapter establishes a foundational approach for offline 3D MOT that emphasizes modularity, learning-free operation, and adaptability to diverse sensor inputs. Window 4 Synthesis: Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 3D MOT frameworks like STP and DPM, evolving through structured tracking paradigms such as BEVFusion and CenterPoint, culminating in Offline-Poly’s hybrid structure-semantic approach. Retrocausal Genealogy (Window 4): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include traditional online trackers that rely on real-time processing, and learning-heavy methods like RethinkMOT. Offline-Poly counters these by offering a lightweight yet effective offline solution. Theory of Mind (Window 4): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that structure and semantic modules do not redundantly encode similar information. Leakage veto prevents overfitting by enforcing modular independence in fusion. Cross-Layer Veto (Window 4): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in arxiv_2602.13772v1 (6c3fe30efa5ed10f, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

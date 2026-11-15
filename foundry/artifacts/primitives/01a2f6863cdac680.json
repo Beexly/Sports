@@ -1,0 +1,78 @@
+{
+  "book_id": "01a2f6863cdac680",
+  "source_status": "COMPLETE",
+  "title": "0869-price-formation-field-prediction-markets",
+  "file_name": "0869-price-formation-field-prediction-markets.md",
+  "sha256": "01a2f6863cdac680d7b047a2b4fe3db543135e9cd3b81064a75b8e6726d63641",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Price formation in field prediction markets emerges via informed trader amplification, not belief averaging, enabling signal detection through marginal price sensitivity. Universal Lens: Rooted in 0869-price-formation-field-prediction-markets (01a2f6863cdac680), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages price-sensitivity regression (eq. 2) to detect informed flows, mapping trader marginal prices to posterior belief updates via conformal prediction intervals. GSI Mapping: Rooted in 0869-price-formation-field-prediction-markets (01a2f6863cdac680), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies the ΔAUC-by-impact test to weight line movements by informedness, integrating temporal ROCs and KL divergence for regime-aware CLV modeling. GSE Mapping: Rooted in 0869-price-formation-field-prediction-markets (01a2f6863cdac680), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "price_sensitivity_regression",
+      "name": "Price Sensitivity Regression",
+      "verbatim_quote": "Traders with t-stat < -1.65 on β_i are \"price-sensitive\" (informed).",
+      "page": 1,
+      "latex": "\\beta_i = \\frac{\\partial p_m}{\\partial p_0} \\quad \\text{where } p_m \\text{ is final marginal price, } p_0 \\text{ is offer price}",
+      "symbol_and_unit_ledger": "{'β_i': 'dimensionless price sensitivity coefficient', 'p_m': 'final marginal price (currency)', 'p_0': 'offer price (currency)'}",
+      "assumptions": "Risk-neutral, myopic traders; belief approximated by final marginal price.",
+      "breakdown_regime": "When t-stat ≥ -1.65, trader is not price-sensitive; noise dominates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps trader behavior to information content; used in GSE's CLV weighting.",
+        "source_operator": "price_sensitivity_regression",
+        "telemetry": "t-statistic of β_i regression coefficient"
+      }
+    },
+    {
+      "primitive_id": "auc_informativeness_test",
+      "name": "AUC Informativeness Test",
+      "verbatim_quote": "**Informativeness test:** ΔAUC from offer price p_0 to final marginal price p_m vs settlement, stratified by minimum price impact (KL divergence, cumulative filtration to avoid derivative assumptions); 95% CIs via bootstrap.",
+      "page": 1,
+      "latex": "\\Delta \\text{AUC} = \\int_{p_0}^{p_m} \\text{ROC}(p) dp",
+      "symbol_and_unit_ledger": "{'ΔAUC': 'change in area under ROC curve (dimensionless)', 'p_0': 'initial offer price (currency)', 'p_m': 'final marginal price (currency)', 'ROC': 'receiver operating characteristic (dimensionless)'}",
+      "assumptions": "Stratification by KL divergence; bootstrap confidence intervals.",
+      "breakdown_regime": "When ΔAUC is low, trade contributes little informational value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equates price movement informativeness to predictive power of marginal price changes.",
+        "source_operator": "auc_informativeness_test",
+        "telemetry": "Bootstrap-stratified ΔAUC values per trade"
+      }
+    },
+    {
+      "primitive_id": "kl_divergence_impact_filter",
+      "name": "KL Divergence Impact Filter",
+      "verbatim_quote": "**Informativeness test:** ΔAUC from offer price p_0 to final marginal price p_m vs settlement, stratified by minimum price impact (KL divergence, cumulative filtration to avoid derivative assumptions); 95% CIs via bootstrap.",
+      "page": 1,
+      "latex": "\\text{KL}(p_m || p_0) = \\sum_i p_m(i) \\log \\left(\\frac{p_m(i)}{p_0(i)}\\right)",
+      "symbol_and_unit_ledger": "{'KL': 'Kullback-Leibler divergence (dimensionless)', 'p_m': 'final marginal price distribution (probability)', 'p_0': 'offer price distribution (probability)'}",
+      "assumptions": "Cumulative filtration avoids derivative assumptions; discrete probability distributions.",
+      "breakdown_regime": "Low KL divergence implies minimal price impact; noise-dominated trades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Filters trades by price impact magnitude to isolate informed flows.",
+        "source_operator": "kl_divergence_impact_filter",
+        "telemetry": "KL divergence of marginal price vs offer price"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "01a2f6863cdac680_t0",
+      "think": "The core insight is that prediction market prices reflect informed trader behavior rather than dispersed beliefs. The price-sensitivity regression (β_i) identifies traders whose actions are driven by private information, not noise. This is formalized through a linear model linking final marginal price to offer price. The ΔAUC test evaluates how much new information is added by a trade, using KL divergence to filter out low-impact trades. These primitives form a dual framework: one for detecting signal (informed traders) and another for quantifying its value (information gain). The failure mode occurs when noise traders mimic informed behavior, leading to false positives in β_i estimation. Additionally, the assumption of risk neutrality may fail in real-world settings with bounded rationality or heterogeneous beliefs.\n\nDeep epistemic analysis for 0869-price-formation-field-prediction-markets (01a2f6863cdac680, domain=other, pages_read=4/4): Operator 'Price Sensitivity Regression' (page 1, domain other) captures: Traders with t-stat < -1.65 on β_i are \"price-sensitive\" (informed). Assumptions: Risk-neutral, myopic traders; belief approximated by final marginal price. Breakdown regime: When t-stat ≥ -1.65, trader is not price-sensitive; noise dominates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps trader behavior to information content; used in GSE's CLV weighting. Operator 'AUC Informativeness Test' (page 1, domain other) captures: **Informativeness test:** ΔAUC from offer price p_0 to final marginal price p_m vs settlement, stratified by minimum price impact (KL divergence, cumulative filtration to avoid derivative assumptions); 95% CIs via bootstrap. Assumptions: Stratification by KL divergence; bootstrap confidence intervals. Breakdown regime: When ΔAUC is low, trade contributes little informational value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Equates price movement informativeness to predictive power of marginal price changes. Operator 'KL Divergence Impact Filter' (page 1, domain other) captures: **Informativeness test:** ΔAUC from offer price p_0 to final marginal price p_m vs settlement, stratified by minimum price impact (KL divergence, cumulative filtration to avoid derivative assumptions); 95% CIs via bootstrap. Assumptions: Cumulative filtration avoids derivative assumptions; discrete probability distributions. Breakdown regime: Low KL divergence implies minimal price impact; noise-dominated trades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Filters trades by price impact magnitude to isolate informed flows. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0869-price-formation-field-prediction-markets (01a2f6863cdac680, domain=other, pages_read=4/4): Operator 'Price Sensitivity Regression' (page 1, domain other) captures: Traders with t-stat < -1.65 on β_i are \"price-sensitive\" (informed). Assumptions: Risk-neutral, myopic traders; belief approximated by final marginal price. Breakdown regime: When t-stat ≥ -1.65, trader is not price-sensitive; noise dominates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps trader behavior to information content; used in GSE's CLV weighting. Operator 'AUC Informativeness Test' (page 1, domain other) captures: **Informativeness test:** ΔAUC from offer price p_0 to final marginal price p_m vs settlement, stratified by minimum price impact (KL divergence, cumulative filtration to avoid derivative assumptions); 95% CIs via bootstrap. Assumptions: Stratification by KL divergence; bootstrap confidence intervals. Breakdown regime: When ΔAUC is low, trade contributes little informational value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Equates price movement informativeness to predictive power of marginal price changes. Operator 'KL Divergence Impact Filter' (page 1, domain other) captures: **Informativeness test:** ΔAUC from offer price p_0 to final marginal price p_m vs settlement, stratified by minimum price impact (KL divergence, cumulative filtration to avoid derivative assumptions); 95% CIs via bootstrap. Assumptions: Cumulative filtration avoids derivative assumptions; discrete probability distributions. Breakdown regime: Low KL divergence implies minimal price impact; noise-dominated trades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Filters trades by price impact magnitude to isolate informed flows. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kyle (1985)’s model of informed trading and LMSR market mechanics, extended by Bossaerts et al. to empirical field data, bridging microstructure and macro-information aggregation. Retrocausal Genealogy: Rooted in 0869-price-formation-field-prediction-markets (01a2f6863cdac680), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 0869-price-formation-field-prediction-markets (01a2f6863cdac680), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as either informed (with significant β_i) or uninformed (noise traders). Informed agents act on private signals, while uninformed agents trade randomly or based on public information, diluting signal-to-noise ratio. Theory of Mind & Decision Maker Model: Rooted in 0869-price-formation-field-prediction-markets (01a2f6863cdac680), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If β_i is not significantly negative, the trade is considered noise. If KL divergence is below threshold, the trade is filtered out. Anti-collinearity ensures that only high-impact trades contribute to CLV models, avoiding overfitting to spurious correlations. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0869-price-formation-field-prediction-markets (01a2f6863cdac680), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

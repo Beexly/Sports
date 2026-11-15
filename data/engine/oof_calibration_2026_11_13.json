@@ -1,0 +1,56 @@
+{
+  "schema": "gse.oof_logit_temp_calibration.v1",
+  "fitted_at": "2026-11-13T09:31:10.832932+00:00",
+  "n_rows": 4823,
+  "window": [
+    "2026-06-03 00:24:12",
+    "2026-11-13 03:00:00"
+  ],
+  "purge_embargo_days": 7.0,
+  "ridge": {
+    "lambda": 25.0,
+    "a0": -0.22,
+    "b0": 0.78
+  },
+  "global_map": {
+    "a": -0.011191532823989596,
+    "b": 0.2911020331930505
+  },
+  "oof": {
+    "brier_raw": 0.2612086046029442,
+    "brier_oof": 0.24798333606468814,
+    "ece_oof": 0.02258073887393734
+  },
+  "raw70_calibrated": 0.5585941902467212,
+  "push_ev": {
+    "push_rate_by_type": {
+      "SPREAD": 0.005238649592549476,
+      "MONEYLINE": 0.0,
+      "TOTAL": 0.014619883040935672
+    },
+    "mean_ev_raw": 0.18410954239381194,
+    "mean_ev_cal": 0.011790972345019916
+  },
+  "clv_normalization": {
+    "POINTS_TO_PROB": 0.025,
+    "CENTS_TO_PROB": 0.004,
+    "ml_exact_implied_delta": true,
+    "breakeven": 0.5238
+  },
+  "real_time_selected_mean_clv": -0.000454009173036831,
+  "placebo": {
+    "runs": 100,
+    "valid_runs": 100,
+    "mean_abs_mean_clv": 0.0016357014888249439,
+    "max_abs_mean_clv": 0.001996245597269626,
+    "threshold": 0.005,
+    "pass": true
+  },
+  "acceptance": {
+    "brier_oof_lt_raw": true,
+    "ece_oof_lt_0_035": "True",
+    "placebo_pass": true,
+    "hard_pass": true,
+    "raw70_target_64_66": false
+  }
+}

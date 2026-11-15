@@ -1,0 +1,165 @@
+{
+ "book_id": "49ef6f06a351a3f7",
+ "source_status": "COMPLETE",
+ "pages_total": 488,
+ "pages_read": 488,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Hoeffding's inequality (bounded-variable concentration; Prop 1.2, eq 1.7)",
+   "verbatim_quote": "The simplest concentration inequality considers bounded real-valued random variables.",
+   "page": 26,
+   "latex": "\\mathbb{P}\\!\\left(\\frac{1}{n}\\sum_{i=1}^{n}Z_i-\\frac{1}{n}\\sum_{i=1}^{n}\\mathbb{E}[Z_i]\\geqslant t\\right)\\leqslant \\exp(-2nt^2)",
+   "symbol_and_unit_ledger": "Z_i in [0,1] almost surely [dimensionless bounded variables]; E[Z_i] expectation [dimensionless]; n sample count [dimensionless]; t deviation threshold [dimensionless, same units as Z_i]; P probability [dimensionless]; exp(-2 n t^2) tail bound with dimensionless exponent. Source eq (1.7), Proposition 1.2. Homogeneous: dimensionless = dimensionless.",
+   "assumptions": "Z_1..Z_n independent; each Z_i in [0,1] a.s.; proof bounds the cumulant generating function via var(tilde Z) <= 1/4 then Chernoff/Markov with optimal s=4nt. Two-sided version (Cor 1.1) adds factor 2; extends to [a,b] giving exp(-2nt^2/(a-b)^2) and to martingales (Azuma).",
+   "breakdown_regime": "Requires independence (martingale extension needs bounded increments); uses only an almost-sure bound, not the variance, so it is looser than Bernstein/CLT for small-variance variables; the CLT is asymptotically sharper; variables must be normalized to a bounded interval. The 1/sqrt(n) rate with logarithmic delta dependence is the operative scale.",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p1",
+    "mapping": "Binds to the 22-player football dynamical system as a confidence bound on sample-averaged drive statistics: the Coach-Mind's empirical mean of a bounded per-play outcome (e.g. normalized success indicator) concentrates around its true season tendency with deviation |a-b|*sqrt(log(2/delta)/(2n)). It quantifies how many plays are needed before a tendency read is trustworthy.",
+    "telemetry": "Source high-probability form: |mean - E| < |a-b|/sqrt(2n) * sqrt(log(2/delta)); rate 1/sqrt(n), logarithmic in 1/delta (pp.11-12). Sets the sample-size floor for any empirical tendency estimate in the sim."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "McDiarmid's bounded-difference inequality (Prop 1.3)",
+   "verbatim_quote": "Given n independent random variables, it may be useful to concentrate other quantities than their average.",
+   "page": 29,
+   "latex": "\\mathbb{P}\\!\\left(\\left|f(Z_1,\\ldots,Z_n)-\\mathbb{E}[f(Z_1,\\ldots,Z_n)]\\right|\\geqslant t\\right)\\leqslant 2\\exp\\!\\left(-\\frac{2t^2}{nc^2}\\right)",
+   "symbol_and_unit_ledger": "f: Z^n -> R [units u]; c bounded-difference constant [u] (changing any single coordinate z_i changes f by at most c); t deviation [u]; n count [dimensionless]; exponent -2t^2/(n c^2) dimensionless ([u^2]/[u^2]); P dimensionless. Source Proposition 1.3. Homogeneous.",
+   "assumptions": "Z_1..Z_n independent in any measurable space Z; f has bounded variation: for all i and all z_i,z_i', |f(...,z_i,...)-f(...,z_i',...)| <= c. Proof uses a Doob martingale telescoping sum V_i with bounded increments and the Hoeffding lemma. Generalizes Hoeffding (f=average, c=1/n).",
+   "breakdown_regime": "The bounded-difference condition must hold for every coordinate uniformly; a single influential observation (large c) destroys concentration; dependence among Z_i breaks the martingale argument. Used in the book to give high-probability estimation-error bounds for empirical risk minimization (section 4.4.1).",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p2",
+    "mapping": "Binds as a stability certificate for any game-state statistic the Coach-Mind computes: if swapping one play changes a margin estimator by at most c, the estimator concentrates as 2exp(-2t^2/(n c^2)). This is the formal reason a low-sensitivity (stable) read of a matchup generalizes from a finite play sample.",
+    "telemetry": "Source tail 2exp(-2t^2/(n c^2)); applied in section 4.4.1 to bound sup_f |R(f)-R_hat(f)| with c = ell_infty/n, giving the ell_infty/sqrt(2n)*sqrt(log(1/delta)) term."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Bernstein's inequality (variance-aware concentration; Prop 1.4, eq 1.11)",
+   "verbatim_quote": "Bernstein’s inequality allows the use of variance to get a ﬁner nonasymptotic result.",
+   "page": 30,
+   "latex": "\\mathbb{P}\\!\\left(\\left|\\frac{1}{n}\\sum_{i=1}^{n}Z_i\\right|\\geqslant t\\right)\\leqslant 2\\exp\\!\\left(-\\frac{nt^2}{2\\sigma^2+2ct/3}\\right)",
+   "symbol_and_unit_ledger": "Z_i independent, centered E[Z_i]=0, |Z_i|<=c a.s. [units u]; c almost-sure bound [u]; sigma^2 variance proxy [u^2]; t deviation [u]; n count [dimensionless]; exponent -n t^2/(2 sigma^2 + 2 c t/3): numerator n*[u^2], denominator [u^2] -> dimensionless; P dimensionless. Source eq (1.11), Proposition 1.4. Homogeneous.",
+   "assumptions": "Independent centered variables with a uniform almost-sure bound c and a variance proxy sigma^2; interpolates between the central limit theorem (variance-only, asymptotic) and Hoeffding (bound-only, nonasymptotic).",
+   "breakdown_regime": "Needs a usable variance proxy sigma^2; when sigma^2 is small the bound is much tighter than Hoeffding, but the linear-in-t term 2ct/3 dominates the denominator for large deviations; requires centering and independence. The book positions it strictly between CLT precision and Hoeffding generality.",
+   "domain": "math",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p3",
+    "mapping": "Binds as a variance-aware error bound on the Coach-Mind's average margin-error: when per-play errors have small variance sigma^2, the tail 2exp(-n t^2/(2 sigma^2+2ct/3)) certifies a tighter confidence interval than a worst-case bound, rewarding low-variance subsystem models in the ensemble.",
+    "telemetry": "Source exponent n t^2/(2 sigma^2 + 2 c t/3) (eq 1.11); the variance term sigma^2 is the lever that sharpens the bound relative to Hoeffding's bound-only form."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Finite-class uniform deviation bound (union bound + Hoeffding; section 4.4.3)",
+   "verbatim_quote": "Thus, according to the bound, learning is possible when the logarithm log(|F|) of the number of models is signiﬁcantly smaller than n.",
+   "page": 104,
+   "latex": "\\sup_{f\\in\\mathcal{F}}\\left|\\widehat{R}(f)-R(f)\\right|\\leqslant \\ell_\\infty\\sqrt{\\frac{\\log(2|\\mathcal{F}|)}{2n}}+\\frac{\\ell_\\infty}{\\sqrt{2n}}\\sqrt{\\log\\frac{1}{\\delta}}",
+   "symbol_and_unit_ledger": "R(f)=E[ell(y,f(x))] population risk [loss units L]; R_hat(f)=(1/n) sum ell(y_i,f(x_i)) empirical risk [L]; ell_infty loss upper bound (ell in [0,ell_infty]) [L]; |F| finite hypothesis-class cardinality [dimensionless]; n sample count [dimensionless]; delta in (0,1) failure probability [dimensionless]; logarithms dimensionless; RHS [L]. Holds with probability >= 1-delta. Source section 4.4.3. Homogeneous L = L.",
+   "assumptions": "Finite hypothesis class F; loss bounded in [0,ell_infty]; union bound over |F| models combined with Hoeffding per model; uses sqrt(a+b) <= sqrt(a)+sqrt(b). No convexity required.",
+   "breakdown_regime": "The bound is vacuous unless log|F| is significantly smaller than n (the source's explicit statement); for infinite or very large classes it must be replaced by Rademacher complexity (section 4.5); it is a worst-case union bound, looser than data-dependent capacity measures.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "p4",
+    "mapping": "Isomorphic to choosing among a finite menu of opponent-tendency models in the Coach-Mind: the generalization gap grows as sqrt(log|F|/n), so the sim may only entertain a model class whose log-cardinality is small relative to the observed play count. This is the formal capacity gate on the deception-model search.",
+    "telemetry": "Source: 'learning is possible when the logarithm log(|F|) of the number of models is significantly smaller than n'; gap scale ell_infty*sqrt(log(2|F|)/(2n)) (p.88)."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Rademacher complexity and symmetrization (eq 4.12; Prop 4.2)",
+   "verbatim_quote": "Two powerful tools that allow sharp bounds at a reasonable cost are Rademacher complexity (Boucheron et al., 2005) and Gaussian complexity (Bartlett and Mendelson, 2002).",
+   "page": 107,
+   "latex": "\\mathfrak{R}_n(\\mathcal{H})=\\mathbb{E}_{\\varepsilon,D}\\!\\left[\\sup_{h\\in\\mathcal{H}}\\frac{1}{n}\\sum_{i=1}^{n}\\varepsilon_i\\,h(z_i)\\right]",
+   "symbol_and_unit_ledger": "epsilon_i i.i.d. Rademacher (+/-1 with probability 1/2) [dimensionless], independent of data D={z_1..z_n}; h: Z -> R [units u] (here h(x,y)=ell(y,f(x)) is the loss class); n count [dimensionless]; R_n(H) deterministic capacity measure [u]; expectation over epsilon and D [u]. Source eq (4.12). Symmetrization (Prop 4.2): E[sup_h (E[h(z)] - (1/n) sum h(z_i))] <= 2 R_n(H). Homogeneous u = u.",
+   "assumptions": "z_1..z_n i.i.d.; H a class of real-valued functions (the loss class of F); Rademacher signs independent of the data; symmetrization introduces an independent ghost sample D' and uses sign symmetry. Empirical version R_hat_n (eq 4.13) is computable from data.",
+   "breakdown_regime": "Distribution-dependent and worst-case over the class; for overparameterized models the book notes the uniform ell_2-norm bound grows as D/sqrt(n) and can be large, and chapter 12 shows double descent means uniform ERM bounds miss the implicit-bias behavior of the specific GD minimizer. Capacity control via norm balls, not parameter count.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p5",
+    "mapping": "Binds as the capacity measure of the Coach-Mind's transition-kernel class: the uniform generalization gap is controlled by 2 R_n(H), the expected maximal correlation of the loss class with random labels. A model class that can fit random noise (high R_n) is vetoed regardless of training fit - the formal anti-overfitting gate for the football sim.",
+    "telemetry": "Source high-probability bound E[h] <= (1/n) sum h(z_i) + 2 R_n(H) + ell_infty/sqrt(2n)*sqrt(log(1/delta)) (p.93); double-descent caveat that the D/sqrt(n) norm bound grows with capacity (p.356)."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Representer theorem and kernel ridge reformulation (Prop 7.1 / Cor 7.1, eq 7.2)",
+   "verbatim_quote": "In this section, we show how the kernel function plays a crucial role in achieving lower-dimensional algorithms.",
+   "page": 197,
+   "latex": "\\inf_{\\alpha\\in\\mathbb{R}^n}\\frac{1}{n}\\sum_{i=1}^{n}\\ell\\!\\left(y_i,(K\\alpha)_i\\right)+\\frac{\\lambda}{2}\\,\\alpha^{\\top}K\\alpha",
+   "symbol_and_unit_ledger": "alpha in R^n kernel coefficients [dimensionless]; K in R^{n x n} Gram matrix K_ij=k(x_i,x_j)=<phi(x_i),phi(x_j)> [feature-inner-product units phi^2]; (K alpha)_i prediction [phi^2]; ell loss [L]; lambda>0 regularization weight [L*phi^-2] so (lambda/2) alpha^T K alpha [L]; theta=sum_i alpha_i phi(x_i) lies in span{phi(x_i)}. Source eq (7.2), Corollary 7.1. Homogeneous L = L + L. No convexity assumed on ell.",
+   "assumptions": "Feature map phi: X -> H into a Hilbert space; objective accesses data only through inner products <theta,phi(x_i)> and penalizes the Hilbert norm; functional Psi strictly increasing in its last (norm) argument; lambda>0 for the supervised corollary. Proof: orthogonal decomposition theta=theta_D+theta_perp and Pythagoras force theta_perp=0.",
+   "breakdown_regime": "Requires a Hilbertian norm penalty and strict monotonicity in the norm; reduces an infinite-dimensional problem to an n-dimensional one but the Gram matrix must be positive semidefinite (a valid kernel); without the norm penalty the span restriction need not hold. No convexity of the loss is needed (contrasted with duality in 7.4.4).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p6",
+    "mapping": "Binds the Coach-Mind's opponent model to a kernel machine over a play-memory bank: the learned predictor lies in the span of observed plays, theta=sum alpha_i phi(x_i), so prediction is f(x)=sum alpha_i k(x,x_i) and only the Gram matrix K is needed regardless of feature dimension. This is the kernel-trick foundation for situation-similarity retrieval in the sim.",
+    "telemetry": "Source finite reformulation inf_alpha (1/n) sum ell(y_i,(K alpha)_i) + (lambda/2) alpha^T K alpha (eq 7.2); prediction f(x)=sum alpha_i k(x,x_i); dimension reduced from dim(H) to n (pp.181-182)."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The sovereign invariant Bach hands the Foundry is the concentration-to-capacity-to-generalization chain, and it is the rigorous backbone the empirical NFL case study only gestured at. Where the Brandon paper showed overfitting as a numerical accident (test correlation collapsing from 0.5678 to 0.272), Bach gives the theorem that explains why: the gap between empirical risk R_hat and population risk R is controlled by the capacity of the hypothesis class, and capacity must be paid for in samples. The chain begins with concentration. Hoeffding's inequality (eq 1.7) bounds the deviation of an average of bounded independent variables by exp(-2nt^2), a 1/sqrt(n) rate with only logarithmic dependence on the confidence delta. McDiarmid (Prop 1.3) lifts this from averages to any stable statistic with bounded differences c, giving 2exp(-2t^2/(nc^2)); this is exactly the tool the book uses in section 4.4.1 to control the estimation error of empirical risk minimization. Bernstein (eq 1.11) sharpens the bound when a variance proxy sigma^2 is available, interpolating between the asymptotic central limit theorem and the bound-only Hoeffding. The next link is capacity. For a finite class the union bound gives a uniform deviation of order ell_infty*sqrt(log(2|F|)/(2n)), and Bach's plain-language verdict is that learning is possible only when log|F| is significantly smaller than n. For infinite classes the Rademacher complexity R_n(H) (eq 4.12) - the expected maximal correlation of the loss class with random +/-1 labels - replaces log|F|, and symmetrization (Prop 4.2) shows the expected uniform deviation is at most 2 R_n(H). This is the formal anti-overfitting gate: a class that can fit random noise has high R_n and is rejected no matter how well it fits training data. For the 22-player football dynamical system the binding is direct and honest. The margin M = home_points - away_points is estimated from a finite, nonstationary play sample, and every tendency read the Coach-Mind makes is an empirical risk whose generalization gap is bounded by these kernels. The finite-class bound is the capacity gate on the menu of opponent-tendency models; the Rademacher bound is the data-dependent gate on the transition-kernel class; McDiarmid is the stability certificate that a low-sensitivity margin estimator generalizes. The dimensional care is real: each bound is homogeneous - probabilities and exponents dimensionless, risk bounds in loss units L, the Bernstein exponent n t^2/(2 sigma^2 + 2ct/3) a ratio of like units. The retrocausal scar is that the uniform-convergence paradigm was built to tame empirical risk minimization, and chapter 12's double descent is the wound in that paradigm: the uniform D/sqrt(n) norm bound grows with capacity and misses the implicit bias of the specific gradient-descent minimizer, so test error can descend again past the interpolation threshold. The theory-of-mind point is that every decision-maker under pressure mistakes training fit for skill, while the No-Free-Lunch theorem (Prop 2.2) reminds us that for any algorithm and fixed n there is a distribution making it useless - learning is only possible with assumptions. The veto adjudication stacks: the capacity layer rejects a model whose log|F| or Rademacher complexity exceeds the sample budget, the variance layer prefers low-sigma^2 estimators via Bernstein, and the doctrine layer refuses sportsbook odds as inputs. The admissible object is the smallest stable model that survives every bound, calibrated to an honest error scale - the same lesson the NFL paper reached empirically, now grounded in theorem.",
+   "retrocausal_genealogy": "The hidden state was created by a precise mathematical lineage, not by football. Hoeffding's 1963 bounded-variable inequality and Bernstein's variance-aware bound gave the first nonasymptotic control of averages; McDiarmid's bounded-difference inequality generalized them to stable statistics; the symmetrization technique and Rademacher complexities (Bartlett and Mendelson 2002; Boucheron et al. 2005) then turned concentration into a capacity theory for empirical risk minimization. That lineage created the uniform-convergence paradigm. Its scar is chapter 12's double descent: uniform bounds over all ERM minimizers grow as D/sqrt(n) and cannot explain why the specific gradient-descent solution generalizes past the interpolation threshold, revealing that the paradigm's hidden assumption - worst-case over the class - was too coarse.",
+   "theory_of_mind": "The recursive belief clash is about complexity as confidence. The head coach models the analyst's high-capacity model as authoritative because it fits the film best; the analyst models the coach as wanting sophistication and supplies it; the defensive coordinator models the offense's tendencies as stable patterns. Under pressure each escalates capacity to signal rigor, while the quarterback's lived reality - a roster and scheme that change yearly - and the No-Free-Lunch theorem quietly invalidate the shared assumption that fit equals skill. Bach's capacity bounds are the objective referee: a class that correlates with random labels (high R_n) is exposed as noise-fitting, breaking the recursive comfort loop and forcing the simpler, stable read that the bounds actually certify.",
+   "cross_layer_veto": "Three vetoes stack against the tempting high-capacity model. The capacity layer vetoes any class whose log|F| (finite bound) or Rademacher complexity R_n(H) is large relative to n, because the uniform-deviation bound then exceeds any useful error scale. The variance layer vetoes high-sensitivity estimators: McDiarmid requires a small bounded-difference constant c, and Bernstein rewards a small variance proxy sigma^2. The doctrine layer vetoes importing sportsbook odds as features. A high-EV call that violates any of these is rejected; the admissible decision is the smallest stable model that survives the concentration and capacity bounds, accepting the honest 1/sqrt(n) error scale rather than a fabricated edge."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second invariant is finite reduction and the alignment of statistical with computational performance, and it answers how an infinite-dimensional model can be learned from finite plays at all. The representer theorem (Prop 7.1, Cor 7.1) is the keystone: when an objective accesses data only through inner products <theta,phi(x_i)> and penalizes the Hilbert norm, the minimizer lies in the span of the observed feature vectors, theta = sum alpha_i phi(x_i). The proof is elementary and rigorous - decompose theta into its projection theta_D onto the data span and an orthogonal remainder theta_perp; by Pythagoras the norm splits, and because the objective is strictly increasing in the norm, any nonzero theta_perp only worsens it, so theta_perp = 0. The consequence (eq 7.2) is that the infinite-dimensional problem collapses to an n-dimensional one over the Gram matrix K_ij = k(x_i,x_j), with prediction f(x) = sum alpha_i k(x,x_i); the feature map phi never needs to be computed explicitly - the kernel trick. Crucially Bach assumes no convexity of the loss, only strict monotonicity in the norm, which makes the result far more general than a duality argument. For the Coach-Mind this is the formal foundation of situation-similarity retrieval: the opponent model is a kernel machine over a play-memory bank, living in the span of observed plays, so a novel down-and-distance state is answered by a weighted similarity to past situations, and the model's effective dimension is the number of stored plays, not the ambient feature dimension. The second theme is that regularization buys both generalization and speed. Bach notes (chapter 5) that strong convexity most often comes from the regularizer, with mu decaying as n grows, and that the Lojasiewicz inequality (Lemma 5.1), ||F'(theta)||^2 >= 2 mu (F(theta)-F(eta*)), guarantees the gradient is large far from the optimum, yielding exponential convergence when paired with L-smoothness (Def 5.3). The regularizer added in section 3.6 to improve generalization thus also accelerates optimization - statistical and optimization performance are aligned. This is the rigorous version of the shrinkage gain the NFL boosting models used heuristically. The GSI compilation reads the representer theorem as a biological economy: a neural population need not represent every possible stimulus dimension, only the span of experienced inputs, and the norm penalty is a metabolic cost that prunes unused directions; the alignment of regularization and convergence mirrors how homeostatic constraints both stabilize and speed learning. The GSE compilation reads it as portfolio parsimony: the kernel coefficients alpha are position weights over a finite memory of situations, the lambda*alpha^T K alpha term is a concentration risk penalty, and the finite reduction is the guarantee that the strategy's complexity is bounded by the data, not by imagination. The No-Free-Lunch theorem frames the whole enterprise: learning is only possible with assumptions, so the kernel and the norm penalty are not optional decoration but the very priors that make generalization possible. The veto adjudication is layered: the representation layer admits only models in the data span with a valid PSD kernel, the optimization layer requires the strong-convexity/smoothness conditions for the claimed convergence rate, and the doctrine layer refuses odds as inputs. The sovereign lesson is that rigor is finite reduction under explicit priors - the smallest spanned model that survives every veto, never a free lunch.",
+   "retrocausal_genealogy": "The representer theorem's lineage is purely mathematical: Kimeldorf and Wahba (1971) proved the spline case, and Scholkopf, Herbrich and Smola (2001) gave the general form Bach presents as Proposition 7.1. The hidden state it created is the kernel paradigm - that an infinite-dimensional Hilbert model can be reduced to a finite Gram-matrix problem whenever the objective is norm-monotone. Its scar is the implicit requirement of a positive-semidefinite kernel and a Hilbertian norm penalty; without those, the span restriction fails, and the chapter-12 double-descent results show that even valid kernel models can behave non-monotonically in capacity, so the finite reduction guarantees representability, not generalization.",
+   "theory_of_mind": "The recursive belief clash here concerns priors as trust. The analyst models the coach as wanting a flexible model and supplies a high-dimensional one; the coach models the kernel's similarity scores as objective truth; the DFS player models the field as exploitable by a rich feature map. Under pressure each forgets that the No-Free-Lunch theorem makes learning impossible without assumptions, so the kernel and the norm penalty - the shared priors - are silently treated as neutral rather than as the very source of generalization. Bach's representer theorem refocuses the loop: the model can only live in the span of observed plays, so every agent's belief must be anchored to the finite memory of situations, not to an imagined infinite feature space.",
+   "cross_layer_veto": "Three vetoes stack against an unspanned, unregularized, or non-PSD model. The representation layer vetoes any predictor outside the data span or built from an indefinite kernel, because the representer theorem's finite reduction then does not hold. The optimization layer vetoes claimed exponential convergence unless the strong-convexity (mu) and L-smoothness conditions behind the Lojasiewicz inequality are actually satisfied. The doctrine layer vetoes sportsbook odds as inputs. A high-EV call violating any veto is rejected; the admissible object is the regularized kernel model in the span of observed plays, whose complexity is bounded by the data and whose convergence rate is certified, queued internally and never published."
+  }
+ ],
+ "universal_lens": "A polymath audit lens for any learned predictor: separate empirical fit from population risk, bound the gap by a concentration inequality and a capacity measure (log-cardinality or Rademacher complexity), prefer stable low-variance estimators, reduce infinite models to the span of observed data under a norm penalty, and remember No-Free-Lunch - generalization exists only because explicit priors are assumed, never as a free lunch.",
+ "gsi_mapping": "Concentration inequalities map to reliable averaging over noisy neural populations; the representer theorem maps to a neural code that spans only experienced stimuli rather than all possible dimensions; the Hilbert-norm penalty maps to a metabolic cost pruning unused directions; and the alignment of regularization with faster convergence (strong convexity plus Lojasiewicz) mirrors how homeostatic constraints both stabilize and accelerate learning.",
+ "gse_mapping": "For the Coach-Mind sim these are the generalization and capacity gates on learned transition kernels: finite-class and Rademacher bounds cap the opponent-model search, McDiarmid certifies stable margin estimators, and the representer theorem grounds situation-similarity retrieval as a kernel machine over a play-memory bank. For DFS/portfolio the lambda*alpha^T K alpha term is a concentration risk penalty and the finite span bounds strategy complexity. No sportsbook odds are used as inputs; the engine queues but never publishes."
+}

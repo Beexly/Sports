@@ -1,0 +1,323 @@
+{
+  "book_id": "7ae4b64a595f0717",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2007.12327v2",
+  "file_name": "arxiv_2007.12327v2.pdf",
+  "sha256": "7ae4b64a595f0717c6e57170f614e222935bac84b641c5a43a5cf0f4c3d4ddc6",
+  "primary_domain": "other",
+  "pages_total": 13,
+  "pages_read": 13,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 13,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Stochastic game-theoretic modeling of APT-DIFT interactions via information flow graphs unifies cybersecurity dynamics with dynamic programming and reinforcement learning frameworks. Game-theoretic modeling of adversarial information flow with stochastic transitions and payoff maximization under uncertainty.",
+  "gsi_mapping": "Bayesian inference over IFG states enables probabilistic threat assessment; conformal prediction bounds false-positive/negative rates for robust anomaly detection. Bayesian inference framework for threat detection using probabilistic state transitions and payoff-based decision rules.",
+  "gse_mapping": "Situationally-aware state transitions in IFG graph guide real-time DIFT policy selection; temporal logic constraints enforce secure path validation against APT strategies. Situation-aware state-transition engine modeling attacker-defender interactions through absorbing and non-absorbing game states.",
+  "primitives": [
+    {
+      "primitive_id": "stochastic_game_model",
+      "name": "Stochastic Game Model for APT-DIFT Interaction",
+      "verbatim_quote": "In this paper, we model the strategic interaction between APT and DIFT as a non-cooperative stochastic game.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'state space of IFG nodes', 'A_{apt}': 'action set for APT (transitions in IFG)', 'A_{dift}': 'action set for DIFT (analysis node selections)', 'R': 'reward function capturing detection success'}",
+      "assumptions": "Players act sequentially with imperfect information; transition probabilities are either known or unknown.",
+      "breakdown_regime": "When false-positive/negative rates are unknown, convergence to equilibrium requires supervised learning approximation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The stochastic game maps to a Markov decision process where APT chooses paths and DIFT selects nodes for analysis, enabling dynamic Bayesian updating of threat likelihood.",
+        "source_operator": "stochastic_game_model",
+        "telemetry": "IFG node visitation frequency and reward accumulation per episode"
+      }
+    },
+    {
+      "primitive_id": "information_flow_graph",
+      "name": "Information Flow Graph Construction",
+      "verbatim_quote": "Dynamic Information Flow Tracking (DIFT) has been proposed as one of the effective ways to detect APTs using the information flows.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G = (V, E)': 'Directed graph representing system call sequences', 'V': 'set of nodes (system calls or events)', 'E': 'set of edges (data/control dependencies)'}",
+      "assumptions": "System logs capture all relevant interactions; IFG construction uses RAIN framework with pruning.",
+      "breakdown_regime": "Graph becomes sparse after pruning; loss of fine-grained detail may reduce attack path visibility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "IFG serves as kernel for constructing state-space for stochastic games; each node represents a potential attack step or defensive action.",
+        "source_operator": "information_flow_graph",
+        "telemetry": "Node degree distribution, edge density, and path length statistics"
+      }
+    },
+    {
+      "primitive_id": "value_iteration_algorithm",
+      "name": "Value Iteration-Based Equilibrium Computation",
+      "verbatim_quote": "Case (i) translates to a game model with complete information and we propose a value iteration-based algorithm and prove the convergence.",
+      "page": 1,
+      "latex": "\\max_{a \\in A_{dift}} \\sum_{s' \\in S} P(s'|s,a) [r(s,a) + \\gamma \\max_{a'} V(s')] = V(s)",
+      "symbol_and_unit_ledger": "{'V(s)': 'value function at state s', \"P(s'|s,a)\": \"transition probability from s to s' under action a\", 'r(s,a)': 'immediate reward for action a in state s', '\\\\gamma': 'discount factor (0 < \\\\gamma < 1)'}",
+      "assumptions": "Transition probabilities are known; rewards are bounded and deterministic.",
+      "breakdown_regime": "Convergence guaranteed under contraction mapping; computational complexity grows exponentially with state space size.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Value iteration mirrors Bellman optimality principle applied to adversarial environment; equilibria correspond to Nash policies for both players.",
+        "source_operator": "value_iteration_algorithm",
+        "telemetry": "Convergence rate, number of iterations until stability, and policy entropy"
+      }
+    },
+    {
+      "primitive_id": "hierarchical_supervised_learning",
+      "name": "Hierarchical Supervised Learning for Unknown Transition Probabilities",
+      "verbatim_quote": "These interactions lead to information flows that are recorded in the form of a system log.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'HSL': 'Hierarchical Supervised Learning framework', 'X': 'input features from IFG', 'Y': 'output labels indicating optimal actions', 'L': 'loss function minimizing prediction error'}",
+      "assumptions": "Training data available through labeled IFG samples; learning algorithm adapts to changing attack patterns.",
+      "breakdown_regime": "Performance degrades when training data does not reflect current attack behavior; risk of overfitting without regularization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "HSL approximates unknown transition dynamics via supervised regression; enables adaptive DIFT policy generation without full knowledge of attack model.",
+        "source_operator": "hierarchical_supervised_learning",
+        "telemetry": "Accuracy of learned transition estimates, generalization error across test IFGs"
+      }
+    },
+    {
+      "primitive_id": "action_set_definition",
+      "name": "Action Set Definition",
+      "verbatim_quote": "The definition of action sets at v0 captures the fact that the adversarial flow originates at one of the entry points.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'AA(v0)': 'Set of adversary actions at initial state', 'AD(v0)': 'Set of defender actions at initial state'}",
+      "assumptions": "Adversary action set is constrained to entry point origins; defender's initial action set is empty.",
+      "breakdown_regime": "Initial state transition from entry point with zero defender activity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian belief update on adversarial origin nodes via action space constraints.",
+        "source_operator": "action_set_definition",
+        "telemetry": "Observed adversarial behavior at entry points."
+      }
+    },
+    {
+      "primitive_id": "absorbing_state_characterization",
+      "name": "Absorbing State Characterization",
+      "verbatim_quote": "The set of states {φ,τA,τB}∪D are referred to as the absorbing states of the game.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'{φ, τA, τB} ∪ D': 'Set of absorbing states', 'st': 'State of the game at time t'}",
+      "assumptions": "Once game reaches absorbing state, no further transitions occur.",
+      "breakdown_regime": "Terminal condition for game evolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE kernel for terminal state detection and policy stabilization.",
+        "source_operator": "absorbing_state_characterization",
+        "telemetry": "Detected terminal event in game trajectory."
+      }
+    },
+    {
+      "primitive_id": "transition_probability_model",
+      "name": "Transition Probability Model",
+      "verbatim_quote": "Transitions The transition probabilities of the game are governed by the uncertainty associated with DIFT.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{\"P(s, a, d, s')\": \"Transition probability from state s to s' given actions a and d\", 'DIFT': 'Detection and Information Flow Tracking system'}",
+      "assumptions": "Transition dynamics depend on DIFT's uncertain detection capabilities.",
+      "breakdown_regime": "Stochastic evolution under imperfect detection model.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic tracking of information flow paths.",
+        "source_operator": "transition_probability_model",
+        "telemetry": "Observed transition frequency between game states."
+      }
+    },
+    {
+      "primitive_id": "payoff_function_optimization",
+      "name": "Payoff Function Optimization",
+      "verbatim_quote": "Moreover, the game terminates at time t if the state of the game st ∈{φ,τA,τB}∪D.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'UA(v0, pA, pD)': 'Expected payoff for adversary', 'UD(v0, pA, pD)': 'Expected payoff for defender', 'rA(st)': 'Reward for adversary at state st', 'rD(st)': 'Reward for defender at state st'}",
+      "assumptions": "Players optimize expected cumulative reward over finite horizon.",
+      "breakdown_regime": "Optimization under bounded time and state-space.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE kernel for strategic policy optimization using Bellman equations.",
+        "source_operator": "payoff_function_optimization",
+        "telemetry": "Computed optimal strategies for both players."
+      }
+    },
+    {
+      "primitive_id": "monotone_convergence_theorem",
+      "name": "Monotone Convergence Theorem",
+      "verbatim_quote": "If a sequence is monotone increasing and bounded from above, then it is a convergent sequence.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V(k)(s)': 'value at iteration k for state s, dimensionless', 'V*(s)': 'optimal value for state s, dimensionless'}",
+      "assumptions": "Sequence is monotone increasing and bounded above.",
+      "breakdown_regime": "When sequence fails to be bounded or monotone.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's iterative value update mechanism where each step increases value estimates toward optimal policy.",
+        "source_operator": "monotone_convergence_theorem",
+        "telemetry": "Convergence rate of value estimates to optimal values."
+      }
+    },
+    {
+      "primitive_id": "bounded_state_value",
+      "name": "Bounded State Value",
+      "verbatim_quote": "The value of any state s ∈S is bounded above by β.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'β': 'upper bound on state values, dimensionless'}",
+      "assumptions": "State values are uniformly bounded by β.",
+      "breakdown_regime": "When β is exceeded or undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables finite approximation of infinite state spaces in GSI's probabilistic reasoning framework.",
+        "source_operator": "bounded_state_value",
+        "telemetry": "Deviation of estimated values from β upper bound."
+      }
+    },
+    {
+      "primitive_id": "value_iteration_convergence",
+      "name": "Value Iteration Convergence",
+      "verbatim_quote": "By the monotone convergence theorem [26], a bounded and monotone sequence converges to the supremum, i.e., limk→∞V (k)(s) →V ⋆(s), for all s ∈S.",
+      "page": 7,
+      "latex": "\\lim_{k \\to \\infty} V^{(k)}(s) = V^*(s)",
+      "symbol_and_unit_ledger": "{'V^{(k)}(s)': 'value estimate at iteration k, dimensionless', 'V^*(s)': 'optimal value, dimensionless'}",
+      "assumptions": "Monotonicity and boundedness hold across iterations.",
+      "breakdown_regime": "Failure of convergence due to non-monotonicity or unboundedness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to GSE's iterative policy refinement engine using Bellman updates.",
+        "source_operator": "value_iteration_convergence",
+        "telemetry": "Norm difference between successive value vectors."
+      }
+    },
+    {
+      "primitive_id": "optimal_defender_policy",
+      "name": "Optimal Defender Policy",
+      "verbatim_quote": "Further, the output of Algorithm 6.1, ˆpD, for δ →0, is an optimal defender policy.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ˆpD': 'estimated defender policy, probability distribution over actions'}",
+      "assumptions": "Algorithm 6.1 converges to optimal policy as δ approaches zero.",
+      "breakdown_regime": "When δ is not sufficiently small or convergence fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Supports GSI’s policy synthesis module by providing convergence guarantees for defender strategies.",
+        "source_operator": "optimal_defender_policy",
+        "telemetry": "Accuracy of defender policy against adversarial actions."
+      }
+    },
+    {
+      "primitive_id": "multi_stage_attack_graph",
+      "name": "Multi-Stage Attack Graph",
+      "verbatim_quote": "An illustrative diagram of the IFG G (Figure 1(b)) and the corresponding multi-stage IFG Gm (Figure 1(b)) that consists of three stages of the attack, i.e., m = 3.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Directed acyclic graph representing single-stage attack', 'Gm': 'Multi-stage attack graph with m stages', 'Dj': 'Set of destination nodes in stage j', 'λ': 'Initial set of nodes in first stage'}",
+      "assumptions": "Attack proceeds sequentially through stages with deterministic node transitions.",
+      "breakdown_regime": "When m > 1, paths must originate in λ and terminate in Dm to be valid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "IFG Gm is isomorphic to a sequence of directed graphs where each transition preserves attack semantics.",
+        "source_operator": "multi_stage_attack_graph",
+        "telemetry": "Path existence in Gm from λ to Dm indicates feasible attack."
+      }
+    },
+    {
+      "primitive_id": "attack_path_validation",
+      "name": "Attack Path Validation",
+      "verbatim_quote": "The construction of Gm guarantees that any path that originate in set λ in the first copy and terminate in D in the mth copy is a feasible attack path.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'λ': 'Initial node set in first stage', 'Dm': 'Final node set in last stage', 'path': 'Sequence of nodes from λ to Dm'}",
+      "assumptions": "Valid attack paths are those that begin in λ and end in Dm without violating stage ordering.",
+      "breakdown_regime": "Invalid paths occur when intermediate nodes do not match expected propagation rules.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of attack validation is defined by path connectivity in Gm.",
+        "source_operator": "attack_path_validation",
+        "telemetry": "Path count from λ to Dm determines attack feasibility."
+      }
+    },
+    {
+      "primitive_id": "ifg_propagation_rule",
+      "name": "IFG Propagation Rule",
+      "verbatim_quote": "The propagation of the attack from stage j of the attack to stage (j +1) is captured in Gm by connecting the destination nodes D j in stage j to their respective nodes in stage (j+1), for j = 1,2.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Dj': 'Destination nodes in stage j', 'Dj+1': 'Nodes in stage j+1 connected to Dj', 'j': 'Stage index, 1 ≤ j < m'}",
+      "assumptions": "Each stage's destination nodes connect deterministically to the next stage.",
+      "breakdown_regime": "Failure occurs if D j lacks connection to D j+1 in Gm.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Propagation rule defines isomorphism between consecutive IFG layers.",
+        "source_operator": "ifg_propagation_rule",
+        "telemetry": "Edge existence between Dj and Dj+1 confirms valid propagation."
+      }
+    },
+    {
+      "primitive_id": "feasible_attack_trajectory",
+      "name": "Feasible Attack Trajectory",
+      "verbatim_quote": "All the algorithm and results presented in this paper also apply to the case of multi-stage attack using Gm as the IFG.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'trajectory': 'Sequence of nodes forming a valid attack path', 'Gm': 'Multi-stage IFG', 'm': 'Number of attack stages'}",
+      "assumptions": "Trajectories are defined by valid paths in Gm under m-stage constraints.",
+      "breakdown_regime": "Trajectory invalidation occurs when path does not satisfy Gm structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Feasible trajectories form kernel of attack space under Gm.",
+        "source_operator": "feasible_attack_trajectory",
+        "telemetry": "Trajectory enumeration in Gm provides attack surface coverage."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7ae4b64a595f0717_t0",
+      "think": "Chapter 1 introduces a novel game-theoretic framework for modeling Advanced Persistent Threats (APTs) and Dynamic Information Flow Tracking (DIFT) mechanisms. It begins by acknowledging that while APTs are stealthy, their interactions leave traces in system logs, which can be captured via Information Flow Graphs (IFGs). This foundational premise allows for formalizing the interaction between attacker and defender as a stochastic game. The paper distinguishes between two scenarios: one where false-positive and false-negative rates are known (complete information), and another where these rates are unknown (incomplete information). In the former, it proposes a value iteration-based algorithm to compute equilibrium strategies, proving convergence and polynomial-time complexity. In the latter, it introduces Hierarchical Supervised Learning (HSL) to approximate equilibrium strategies when transition probabilities are not fully known. The core contribution lies in modeling the strategic interaction as a constant-sum stochastic game with total reward structure, incorporating information asymmetry, false alarms, and detection failures. This formulation bridges game theory, machine learning, and cybersecurity analytics, offering a principled approach to adaptive threat detection. Window 1 Synthesis: Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This work builds upon prior research in dynamic information flow tracking and stochastic games in cybersecurity. Earlier studies focused on static IFG analysis or basic anomaly detection methods. The introduction of game-theoretic modeling extends earlier work by incorporating strategic behavior of both attacker and defender, enabling more nuanced understanding of adversarial dynamics. Retrocausal Genealogy (Window 1): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The model treats APT as a rational agent seeking optimal paths through the IFG to reach its target, while DIFT acts as a defensive player aiming to minimize detection failure. Both players operate under uncertainty—APT lacks perfect knowledge of DIFT's actions, and DIFT must infer APT’s intentions from limited observations. This asymmetric information creates a complex interplay requiring sophisticated decision-making frameworks.",
+      "cross_layer_veto": "The framework avoids direct reliance on heuristic thresholds or fixed rule sets common in traditional IDS systems. Instead, it relies on principled game-theoretic reasoning and empirical learning. Anti-collinearity is ensured by separating the roles of APT and DIFT into distinct action spaces, preventing conflated modeling of both agents’ behaviors within a single policy. Cross-Layer Veto (Window 1): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7ae4b64a595f0717_t1",
+      "think": "Chapter window 2 (pages 4–6) introduces a formal game-theoretic model for adversarial information flow within a networked environment. It defines the game's structure including initial state, action sets for both adversary and defender, and transition dynamics governed by uncertainty in detection systems such as DIFT. The model incorporates absorbing states representing termination conditions, and establishes expected payoffs for each player based on their strategies. This formulation enables computation of Nash equilibria through minimax optimization principles, aligning with prior work in adversarial game theory. The framework supports dynamic decision-making under uncertainty, integrating elements of Bayesian inference and reinforcement learning principles into a structured game-theoretic paradigm. Window 2 Synthesis: Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical game theory and stochastic process modeling, this chapter extends earlier models of adversarial networks and information flow games by incorporating probabilistic detection uncertainty and payoff-based optimization. Retrocausal Genealogy (Window 2): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models the adversary (APT) as a rational agent maximizing payoff while the defender (DIFT) seeks to minimize loss, with both operating under bounded knowledge and computational constraints. Theory of Mind (Window 2): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Precludes direct collusion between layers due to conflicting objectives: APT seeks propagation, DIFT seeks interception. Anti-leakage mechanisms ensure no cross-layer information bypasses defined state transitions. Cross-Layer Veto (Window 2): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7ae4b64a595f0717_t2",
+      "think": "Chapter window 3 (pages 7–9) establishes theoretical foundations for convergence of value iteration in APT-DIFT games. It leverages the Monotone Convergence Theorem to assert that value sequences converge to optimal values under bounded and monotonic conditions. This convergence is critical for deriving the optimal defender policy through Algorithm 6.1. The bounded nature of state values ensures that the value iteration process remains stable and computationally tractable. The proof integrates prior lemmas and propositions to affirm that the algorithm terminates in an ε-Nash equilibrium. Neural network approximations are introduced to handle high-dimensional state spaces, ensuring practical applicability despite theoretical complexity. These elements collectively form a robust mathematical framework for strategic decision-making in adversarial environments. Window 3 Synthesis: Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical control theory and dynamic programming, particularly Bellman’s principle of optimality and fixed-point iteration methods developed in the 1950s. Retrocausal Genealogy (Window 3): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models the adversary as a rational agent minimizing expected loss while the defender maximizes utility, both operating under bounded information and computational constraints. Theory of Mind (Window 3): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting in neural approximations by enforcing convergence criteria; ensures no leakage from GSE’s state transition logic into GSI’s probabilistic inference layer. Cross-Layer Veto (Window 3): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7ae4b64a595f0717_t3",
+      "think": "Chapter window 4 (pages 10–13) introduces the formalism of multi-stage attack graphs (IFG) to model complex cyber intrusions. The core concept hinges on constructing a multi-stage IFG Gm from a base IFG G, where each stage represents a phase of an attack. This allows for modeling sequential propagation of malicious activity across system components. The paper emphasizes that while single-stage attacks are simpler to analyze, real-world threats often involve multiple stages, necessitating a more nuanced representation. The construction of Gm ensures that any path from an initial set λ to a final set Dm constitutes a feasible attack trajectory. This formulation supports rigorous analysis using tools like value iteration and neural network approximation for estimating payoff functions in adversarial settings. The practical application involves validating these models against real-world datasets—specifically, a nation-state attack and a ransomware incident—using system logs collected via the RAIN framework. These datasets inform the structure of the IFG, allowing for empirical testing of algorithms designed to detect and predict attack paths. The theoretical foundation rests on graph theory and game-theoretic principles, particularly in how adversaries navigate system states. By leveraging temporal logic and state transitions, the framework enables dynamic reasoning about evolving threats. The inclusion of simulation results demonstrates the effectiveness of applying reinforcement learning techniques to estimate value functions in high-dimensional attack spaces. Overall, this chapter establishes a robust mathematical foundation for analyzing and predicting multi-stage cyberattacks through structured graph representations.",
+      "retrocausal_genealogy": "This work builds upon foundational contributions in network security and adversarial modeling, including prior research on information flow graphs (IFGs), Markov games, and topological sorting methods. It extends earlier frameworks by incorporating temporal dynamics and multi-stage attack modeling, aligning with developments in cybersecurity analytics and machine learning applications. Retrocausal Genealogy (Window 4): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The framework models adversaries as rational agents who optimize attack paths within known system structures. It assumes attackers seek to minimize detection risk while maximizing impact, guided by internal payoff functions. Simultaneously, defenders aim to identify and block such trajectories using probabilistic inference and game-theoretic strategies. Theory of Mind (Window 4): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each stage's node set remains distinct yet connected to subsequent stages. Leakage veto conditions prevent spurious correlations between unrelated system components, maintaining fidelity in attack path inference. Cross-layer validation ensures that IFG models remain consistent with observed log data and do not overfit to noise. Cross-Layer Veto (Window 4): Rooted in arxiv_2007.12327v2 (7ae4b64a595f0717, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

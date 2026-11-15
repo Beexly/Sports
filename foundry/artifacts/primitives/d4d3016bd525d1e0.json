@@ -1,0 +1,78 @@
+{
+  "book_id": "d4d3016bd525d1e0",
+  "source_status": "COMPLETE",
+  "title": "patch-list",
+  "file_name": "patch-list.md",
+  "sha256": "d4d3016bd525d1e0e843f16a78ea18f19a77608d23fadf563aee771779209344",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for probabilistic inference and decision-making in GSE, where confidence and edge scores are derived from honest engine outputs without clamping. Universal Lens: Rooted in patch-list (d4d3016bd525d1e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference using calibrated edge scores and confidence bounds, with conformal prediction ensuring coverage guarantees over pick grades. GSI Mapping: Rooted in patch-list (d4d3016bd525d1e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally aware state transitions in pick publishing governed by gates and emission rules, enforcing consistency between internal engine logic and external exposure. GSE Mapping: Rooted in patch-list (d4d3016bd525d1e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "clamp_removal",
+      "name": "Honest Confidence Output",
+      "verbatim_quote": "# Suggested patch list — GSE reconciliation **Not applied.** These are staged as PR descriptions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'true_prob': 'dimensionless probability in [0,1]', 'raw_edge': 'dimensionless edge score', 'shrunk_edge': 'dimensionless adjusted edge', 'expected_clv': 'USD CLV estimate'}",
+      "assumptions": "Engine outputs are truthfully reported without artificial clamping.",
+      "breakdown_regime": "When true_prob < 0.6020 or true_prob > 0.6160, clamping would distort edge estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The removal of clamps enables accurate edge scoring and CLV computation via honest engine signals.",
+        "source_operator": "clamp_removal",
+        "telemetry": "Confidence and edge score values match engine-generated outputs."
+      }
+    },
+    {
+      "primitive_id": "publish_gate_consistency",
+      "name": "Consistent Publish Gate Enforcement",
+      "verbatim_quote": "Makes the emission gate apply to every emit path, not only `generate-signal-slate.ts:265`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'canExposePublicPicks': 'boolean flag indicating eligibility', 'isPublished': 'boolean flag for public visibility'}",
+      "assumptions": "All emission paths must respect the same gate logic for consistency.",
+      "breakdown_regime": "If any emit path bypasses the gate, inconsistent pick visibility occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gate enforcement ensures all pick emissions align with platform policy through shared conditional logic.",
+        "source_operator": "publish_gate_consistency",
+        "telemetry": "All picks pass through the same gate before being marked 'published'."
+      }
+    },
+    {
+      "primitive_id": "probability_clamp_avoidance",
+      "name": "Probability Clamp Avoidance",
+      "verbatim_quote": "**Acceptance** - No `max(`/`min(` on a published probability, score, or confidence in the script.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sig_attr[\"trueProb\"]': 'dimensionless true probability', 'play[\"market_fair_prob\"]': 'dimensionless fair market probability'}",
+      "assumptions": "Published probabilities reflect raw engine outputs without artificial truncation.",
+      "breakdown_regime": "Clamped probabilities introduce bias into downstream metrics like edge score and CLV.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Avoiding clamps preserves integrity of probabilistic forecasts used in risk-adjusted performance tracking.",
+        "source_operator": "probability_clamp_avoidance",
+        "telemetry": "Published probabilities equal engine-generated values without truncation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d4d3016bd525d1e0_t0",
+      "think": "The core operators derive from three key principles: (1) Honest reporting of engine outputs avoids distortion from clamping; (2) Consistent enforcement of publish gates ensures uniformity across data flows; (3) Probabilistic integrity requires avoiding artificial bounds on core variables. These form a dual structure where GSE's state transitions depend on GSI's probabilistic correctness. Failure modes include: clamped edge scores leading to misaligned CLV estimates, inconsistent gate application causing partial exposure, and truncated probabilities undermining calibration. The system must enforce closure under these constraints to maintain trustworthiness.\n\nDeep epistemic analysis for patch-list (d4d3016bd525d1e0, domain=other, pages_read=4/4): Operator 'Honest Confidence Output' (page 1, domain other) captures: # Suggested patch list — GSE reconciliation **Not applied.** These are staged as PR descriptions. Assumptions: Engine outputs are truthfully reported without artificial clamping. Breakdown regime: When true_prob < 0.6020 or true_prob > 0.6160, clamping would distort edge estimation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The removal of clamps enables accurate edge scoring and CLV computation via honest engine signals. Operator 'Consistent Publish Gate Enforcement' (page 1, domain other) captures: Makes the emission gate apply to every emit path, not only `generate-signal-slate.ts:265`. Assumptions: All emission paths must respect the same gate logic for consistency. Breakdown regime: If any emit path bypasses the gate, inconsistent pick visibility occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Gate enforcement ensures all pick emissions align with platform policy through shared conditional logic. Operator 'Probability Clamp Avoidance' (page 1, domain other) captures: **Acceptance** - No `max(`/`min(` on a published probability, score, or confidence in the script. Assumptions: Published probabilities reflect raw engine outputs without artificial truncation. Breakdown regime: Clamped probabilities introduce bias into downstream metrics like edge score and CLV. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Avoiding clamps preserves integrity of probabilistic forecasts used in risk-adjusted performance tracking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for patch-list (d4d3016bd525d1e0, domain=other, pages_read=4/4): Operator 'Honest Confidence Output' (page 1, domain other) captures: # Suggested patch list — GSE reconciliation **Not applied.** These are staged as PR descriptions. Assumptions: Engine outputs are truthfully reported without artificial clamping. Breakdown regime: When true_prob < 0.6020 or true_prob > 0.6160, clamping would distort edge estimation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The removal of clamps enables accurate edge scoring and CLV computation via honest engine signals. Operator 'Consistent Publish Gate Enforcement' (page 1, domain other) captures: Makes the emission gate apply to every emit path, not only `generate-signal-slate.ts:265`. Assumptions: All emission paths must respect the same gate logic for consistency. Breakdown regime: If any emit path bypasses the gate, inconsistent pick visibility occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Gate enforcement ensures all pick emissions align with platform policy through shared conditional logic. Operator 'Probability Clamp Avoidance' (page 1, domain other) captures: **Acceptance** - No `max(`/`min(` on a published probability, score, or confidence in the script. Assumptions: Published probabilities reflect raw engine outputs without artificial truncation. Breakdown regime: Clamped probabilities introduce bias into downstream metrics like edge score and CLV. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Avoiding clamps preserves integrity of probabilistic forecasts used in risk-adjusted performance tracking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and conformal prediction frameworks, this structure evolved from prior work on probabilistic forecasting and model calibration in high-stakes environments. Retrocausal Genealogy: Rooted in patch-list (d4d3016bd525d1e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in patch-list (d4d3016bd525d1e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the engine producing noisy signals and the platform enforcing transparency. Decision actors are the ingestion pipeline, prediction engine, and emission gate, each with distinct roles in maintaining signal fidelity. Theory of Mind & Decision Maker Model: Rooted in patch-list (d4d3016bd525d1e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that no layer introduces redundant or conflicting constraints. Leakage vetoes occur when clamps or inconsistent gates allow cross-layer contamination of probabilistic values. Cross-Layer Veto & Anti-Leakage Check: Rooted in patch-list (d4d3016bd525d1e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in patch-list (d4d3016bd525d1e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

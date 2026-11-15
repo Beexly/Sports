@@ -115,7 +115,7 @@ def build_dynamic_matchup_situational_context(
         prac_seq = "DNP/LP/LP" if rep_status in ("QUESTIONABLE", "DOUBTFUL") else "FP/FP/FP"
         body_part = str(wr1_inj.get("practice_primary_injury") or "none").lower()
     else:
-        wr1_name = f"{aw} WR1"
+        wr1_name = ""  # no verified WR1 -> no fabricated name (SG-0 contamination guard)
         rec_line = 56.5
         healthy_prior = 60.0
         prac_seq = "FP/FP/FP"
@@ -139,7 +139,7 @@ def build_dynamic_matchup_situational_context(
     if not depth_receivers:
         depth_receivers = [
             {
-                "name": f"{aw} WR2",
+                "name": "",
                 "role": "WR2_SLOT",
                 "base_target_share": 0.18,
                 "yprr": float(aw_360["fantasy_pts_data"]["yprr_overall"]),
@@ -149,13 +149,13 @@ def build_dynamic_matchup_situational_context(
             }
         ]
 
-    lead_rb_name = aw_rbs[0][0] if aw_rbs else f"{aw} RB1"
+    lead_rb_name = aw_rbs[0][0] if aw_rbs else ""
     comm_rb_name = aw_rbs[1][0] if len(aw_rbs) >= 2 else lead_rb_name
-    te_names = [hm_tes[0][0]] if hm_tes else ([aw_tes[0][0]] if aw_tes else [f"{hm} TE1"])
-    kicker_name = aw_ks[0] if aw_ks else f"{aw} PK1"
+    te_names = [hm_tes[0][0]] if hm_tes else ([aw_tes[0][0]] if aw_tes else [""])
+    kicker_name = aw_ks[0] if aw_ks else ""
 
     active_qb_tier = home_qb_tier if home_qb_tier != "QB1" else away_qb_tier
-    active_qb_name = home_qb1 if home_qb_tier != "QB1" else (away_qb1 or home_qb1 or f"{aw} QB1")
+    active_qb_name = home_qb1 if home_qb_tier != "QB1" else (away_qb1 or home_qb1 or "")
 
     # Dynamically construct team_stats for Q1–Q51 so every matchup yields unique Q1–Q51 values
     aw_sh = aw_360["sam_hoppen_sumersports"]
@@ -266,7 +266,7 @@ def build_dynamic_matchup_situational_context(
             "dc_name": f"{aw} Defensive Staff",
             "opp_12_13_personnel_rate": round(float(hm_sh["multi_te_12_13_pct"]) / 100.0, 4),
             "uses_guard_mug_and_2roll_fire_zones": float(aw_sh["blitz_pct"]) >= 28.0,
-            "primary_off_ball_blitzer": idp_lbs[0] if idp_lbs else f"{aw} LB1",
+            "primary_off_ball_blitzer": idp_lbs[0] if idp_lbs else "",
         },
         "te_funnel_context": {
             "te_names": te_names,
@@ -283,7 +283,7 @@ def build_dynamic_matchup_situational_context(
             "team_rz_fg_stall_rate": 0.42,
             "kicker_name": kicker_name,
             "kicker_fg_make_prob": 0.88,
-            "featured_idp_lbs": idp_lbs[:3] if idp_lbs else [f"{aw} LB1", f"{hm} LB1"],
+            "featured_idp_lbs": idp_lbs[:3] if idp_lbs else [],
         },
         "secondary_matchup_context": {
             "def_avg_cushion_yds": round(5.9 + 0.01 * float(hm_sh["zone_pct"]), 2),

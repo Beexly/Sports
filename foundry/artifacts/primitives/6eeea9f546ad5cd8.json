@@ -1,0 +1,78 @@
+{
+  "book_id": "6eeea9f546ad5cd8",
+  "source_status": "COMPLETE",
+  "title": "2015 Beyond runs expectancy - Jim Albert",
+  "file_name": "2015 Beyond runs expectancy - Jim Albert.md",
+  "sha256": "6eeea9f546ad5cd8ac80153b84274d1adcd7400fa7e3eb45b1e909fd92aa23ab",
+  "primary_domain": "other",
+  "pages_total": 19,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Multinomial run-scoring distributions modeled via hierarchical Bayesian frameworks to capture team-level variation and covariate effects. Universal Lens: Rooted in 2015 Beyond runs expectancy - Jim Albert (6eeea9f546ad5cd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian hierarchical modeling enables probabilistic inference over run-scoring outcomes, conditioning on contextual covariates like ballpark and pitcher quality. GSI Mapping: Rooted in 2015 Beyond runs expectancy - Jim Albert (6eeea9f546ad5cd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition dynamics of inning-based run scoring are encoded through ordinal regression kernels, enabling situational reasoning under uncertainty. GSE Mapping: Rooted in 2015 Beyond runs expectancy - Jim Albert (6eeea9f546ad5cd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "runs_expectancy_matrix",
+      "name": "Runs Expectancy Matrix",
+      "verbatim_quote": "Since there are three possible number of outs and eight possible runner configurations, there are 3 × 8 = 24 possible out/runner situations, and Lindsey focused on computing ### _Prob_ ( _R_ | _T, B_ ) _,_ the probability of scoring exactly _R_ run",
+      "page": 1,
+      "latex": "\\mathbb{P}(R \\mid T, B) = \\frac{\\text{count}(R \\text{ runs} \\mid T, B)}{\\text{total count}(T, B)}",
+      "symbol_and_unit_ledger": "{'R': 'number of runs scored (dimensionless)', 'T': 'number of outs (0, 1, 2)', 'B': 'runner configuration (binary vector indicating bases occupied)'}",
+      "assumptions": "Static environment, fixed runner configurations, uniform time intervals.",
+      "breakdown_regime": "When team performance deviates significantly from average baseline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes conditional run-scoring probabilities across inning states for strategic decision-making.",
+        "source_operator": "runs_expectancy_matrix",
+        "telemetry": "Observed run-scoring frequencies per out/base state"
+      }
+    },
+    {
+      "primitive_id": "multinomial_run_distribution",
+      "name": "Multinomial Run Distribution",
+      "verbatim_quote": "By use of exchangeable models over ordinal regression coefficients, one gets a better understanding which covariates represent meaningful differences between run-scoring of teams.",
+      "page": 1,
+      "latex": "P(R_1, R_2, ..., R_k) = \\frac{n!}{\\prod_{i=1}^k R_i!} \\prod_{i=1}^k p_i^{R_i}",
+      "symbol_and_unit_ledger": "{'R_i': 'number of runs scored in category i (dimensionless)', 'p_i': 'probability of scoring i runs (dimensionless)', 'n': 'total number of trials (inning events)'}",
+      "assumptions": "Fixed categories of runs, independent trial outcomes.",
+      "breakdown_regime": "When run-scoring variance exceeds multinomial assumptions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps team-specific run-scoring patterns to probabilistic distributions for predictive modeling.",
+        "source_operator": "multinomial_run_distribution",
+        "telemetry": "Team-level run-scoring frequency vectors"
+      }
+    },
+    {
+      "primitive_id": "ordinal_regression_coefficients",
+      "name": "Ordinal Regression Coefficients",
+      "verbatim_quote": "By use of exchangeable models over ordinal regression coefficients, one gets a better understanding which covariates represent meaningful differences between run-scoring of teams.",
+      "page": 1,
+      "latex": "\\log \\left( \\frac{\\mathbb{P}(Y \\leq j)}{\\mathbb{P}(Y > j)} \\right) = \\alpha_j - \\beta^T x",
+      "symbol_and_unit_ledger": "{'Y': 'ordinal outcome (runs scored)', 'j': 'threshold level (ordinal index)', 'x': 'covariate vector (e.g., ballpark, pitcher quality)', '\\\\beta': 'regression coefficient vector (dimensionless)'}",
+      "assumptions": "Ordered categories, proportional odds assumption holds.",
+      "breakdown_regime": "When ordinal structure fails due to non-proportional hazards.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables inference of covariate impact on run-scoring via ordered thresholds.",
+        "source_operator": "ordinal_regression_coefficients",
+        "telemetry": "Covariate effect sizes on run-scoring likelihood"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6eeea9f546ad5cd8_t0",
+      "think": "The core insight of runs expectancy lies in decomposing inning dynamics into discrete states defined by outs and runner configurations. Each state maps to a probability distribution over runs scored, forming a stochastic kernel. The multinomial framework extends this to model inter-team variability, assuming each team's run-scoring follows a distinct distribution parameterized by latent variables. Ordinal regression then introduces structured dependencies among these parameters, allowing inference on how external factors like park or pitcher quality alter run-scoring behavior. The failure mode occurs when the independence or stationarity assumptions break down—such as during high-leverage clutch moments or when teams exhibit non-stationary performance. These primitives form a dual system: one for static expectation and another for dynamic adaptation.\n\nDeep epistemic analysis for 2015 Beyond runs expectancy - Jim Albert (6eeea9f546ad5cd8, domain=other, pages_read=18/19): Operator 'Runs Expectancy Matrix' (page 1, domain other) captures: Since there are three possible number of outs and eight possible runner configurations, there are 3 × 8 = 24 possible out/runner situations, and Lindsey focused on computing ### _Prob_ ( _R_ | _T, B_ ) _,_ the probability of scoring exactly _R_ run Assumptions: Static environment, fixed runner configurations, uniform time intervals. Breakdown regime: When team performance deviates significantly from average baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes conditional run-scoring probabilities across inning states for strategic decision-making. Operator 'Multinomial Run Distribution' (page 1, domain other) captures: By use of exchangeable models over ordinal regression coefficients, one gets a better understanding which covariates represent meaningful differences between run-scoring of teams. Assumptions: Fixed categories of runs, independent trial outcomes. Breakdown regime: When run-scoring variance exceeds multinomial assumptions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps team-specific run-scoring patterns to probabilistic distributions for predictive modeling. Operator 'Ordinal Regression Coefficients' (page 1, domain other) captures: By use of exchangeable models over ordinal regression coefficients, one gets a better understanding which covariates represent meaningful differences between run-scoring of teams. Assumptions: Ordered categories, proportional odds assumption holds. Breakdown regime: When ordinal structure fails due to non-proportional hazards. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables inference of covariate impact on run-scoring via ordered thresholds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2015 Beyond runs expectancy - Jim Albert (6eeea9f546ad5cd8, domain=other, pages_read=18/19): Operator 'Runs Expectancy Matrix' (page 1, domain other) captures: Since there are three possible number of outs and eight possible runner configurations, there are 3 × 8 = 24 possible out/runner situations, and Lindsey focused on computing ### _Prob_ ( _R_ | _T, B_ ) _,_ the probability of scoring exactly _R_ run Assumptions: Static environment, fixed runner configurations, uniform time intervals. Breakdown regime: When team performance deviates significantly from average baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes conditional run-scoring probabilities across inning states for strategic decision-making. Operator 'Multinomial Run Distribution' (page 1, domain other) captures: By use of exchangeable models over ordinal regression coefficients, one gets a better understanding which covariates represent meaningful differences between run-scoring of teams. Assumptions: Fixed categories of runs, independent trial outcomes. Breakdown regime: When run-scoring variance exceeds multinomial assumptions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps team-specific run-scoring patterns to probabilistic distributions for predictive modeling. Operator 'Ordinal Regression Coefficients' (page 1, domain other) captures: By use of exchangeable models over ordinal regression coefficients, one gets a better understanding which covariates represent meaningful differences between run-scoring of teams. Assumptions: Ordered categories, proportional odds assumption holds. Breakdown regime: When ordinal structure fails due to non-proportional hazards. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables inference of covariate impact on run-scoring via ordered thresholds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in George Lindsey’s foundational 1963 work on empirical run-scoring matrices, later extended by modern Bayesian hierarchical modeling techniques to incorporate team heterogeneity and contextual covariates. Retrocausal Genealogy: Rooted in 2015 Beyond runs expectancy - Jim Albert (6eeea9f546ad5cd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing agents as teams with varying run-scoring strategies, influenced by environmental cues such as pitcher matchups, ballpark characteristics, and game context. Theory of Mind & Decision Maker Model: Rooted in 2015 Beyond runs expectancy - Jim Albert (6eeea9f546ad5cd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents overfitting by enforcing exchangeability constraints on regression coefficients, ensuring that inferred differences between teams are statistically significant rather than spurious. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2015 Beyond runs expectancy - Jim Albert (6eeea9f546ad5cd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2015 Beyond runs expectancy - Jim Albert (6eeea9f546ad5cd8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

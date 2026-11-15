@@ -144,6 +144,7 @@ def build_context_packet(
     as_of_utc: str = "2024-11-07T00:00:00Z",
     feature_overrides: Optional[Dict[str, float]] = None,
     persist: bool = True,
+    kickoff_utc: Optional[str] = None,
 ) -> Dict[str, Any]:
     from intelligence.reasoning.layers.layer_registry import (
         build_context_packet as _build_context_packet,
@@ -161,6 +162,10 @@ def build_context_packet(
             kickoff_default = "2026-11-06T01:15:00Z"
         else:
             kickoff_default = "2026-11-08T18:00:00Z"
+        # Real kickoff from the live slate overrides the historical default
+        # (Week 10+ games must not inherit the Week 9 pin -> temporal leakage).
+        if kickoff_utc:
+            kickoff_default = str(kickoff_utc)
         matchup_priors = {
             "2026_09_DET_GB": {
                 "home_epa_prior": 0.088,

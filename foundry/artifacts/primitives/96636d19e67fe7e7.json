@@ -1,0 +1,883 @@
+{
+ "book_id": "96636d19e67fe7e7",
+ "source_status": "COMPLETE",
+ "source_note": "Jonas Peters, Dominik Janzing, and Bernhard Schoelkopf, Elements of Causal Inference: Foundations and Learning Algorithms, MIT Press, Cambridge, MA, 2017, Adaptive Computation and Machine Learning series, ISBN 9780262037310 (hardcover), LCCN 2017020087, published under a CC BY-NC-ND 4.0 license. Local file: PDF at ~/workspace/full-library-2026-11-12/library/books-d-models/PetersJanzingScholkopf-2017-ElementsOfCausalInference.pdf, 2,909,390 bytes, plain sha256 98232e3216d65cdf5bb5ded0bd2291079cf41610f77ca92601df01c9c572791d, gatekeeper scan digest (sha256 of str(size) plus full file bytes) 96636d19e67fe7e75b04c6215e588550a8aa87b543742155eb5eeba85b4d33df, book_id 96636d19e67fe7e7. The extracted text at the matching path under ~/workspace/full-library-2026-11-12/text/ (11,055 lines, 634,961 bytes) was read in full, front matter through index. Text quality: prose extraction is clean; mathematical displays are OCR flattened, with independence symbols and subscripts split across lines, so all verbatim quotes were taken from prose passages and verified as contiguous substrings of the extracted text after normalization. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "reichenbach_common_cause",
+   "name": "Reichenbach's common cause principle: statistical dependence between X and Y implies a common cause Z that screens them off",
+   "verbatim_quote": "Furthermore, this variable Z screens X and Y from each other in the sense that given Z, they become independent,",
+   "page": "Chapter 1, Principle 1.1 (text lines 581-587)",
+   "latex": "X \\perp\\!\\!\\!\\perp Y \\mid Z",
+   "symbol_and_unit_ledger": {
+    "X, Y": "two statistically dependent observed variables (units as measured)",
+    "Z": "a third variable causally influencing both, possibly coinciding with X or Y",
+    "perp": "statistical independence; the displayed relation is conditional independence given Z (dimensionless)"
+   },
+   "assumptions": [
+    "observed dependence is real, not an artifact of selection bias or multiple testing without correction",
+    "the variables are not merely inheriting a shared time trend under a violated i.i.d. assumption"
+   ],
+   "breakdown_regime": "Fails as an inference rule when dependence is induced by conditioning on a common effect (selection bias) or by spurious correlation from uncorrected multiple testing, both named in the text as alternative sources of dependence.",
+   "domain": "causal-foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any two correlated signals in the engine must be routed through a latent or observed common driver node before either is allowed to explain the other; correlation alone never licenses a direct edge.",
+    "source_operator": "reichenbach_common_cause",
+    "telemetry": "pairwise dependence scans over tracking, usage, and health variables with candidate common drivers logged"
+   }
+  },
+  {
+   "primitive_id": "risk_empirical_risk_minimization",
+   "name": "Prediction is minimizing expected risk R[f] under the unknown joint distribution; practice replaces it with empirical risk minimization over a function class",
+   "verbatim_quote": "Since PX,Y is unknown, we cannot compute (1.2), let alone minimize it. Instead, we appeal to an induction principle, such as empirical risk minimization.",
+   "page": "Chapter 1, Section 1.2, equations (1.2)-(1.3) (text lines 440-460)",
+   "latex": "R[f] = \\int \\frac{1}{2} \\lvert f(x) - y \\rvert \\, dP_{X,Y}(x, y)",
+   "symbol_and_unit_ledger": {
+    "f": "candidate predictor from function class F",
+    "x, y": "covariate and target of one observation (units as measured)",
+    "P_{X,Y}": "unknown joint distribution generating i.i.d. observations",
+    "R[f]": "expected loss, in units of y"
+   },
+   "assumptions": [
+    "observations are i.i.d. from a fixed P_{X,Y}",
+    "the function class F is small enough for uniform convergence (Appendix A.3: finite VC dimension suffices)"
+   ],
+   "breakdown_regime": "Consistency fails when F is unrestricted (all functions Y^X): a function fitting the sample can disagree everywhere else, so no uniform law of large numbers holds. The whole framing is observational and says nothing about interventions.",
+   "domain": "learning-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's baseline scoring of any predictor is expected loss under the observational distribution; causal machinery in later primitives is layered on top of, and audited against, this risk baseline.",
+    "source_operator": "risk_empirical_risk_minimization",
+    "telemetry": "held-out prediction errors per model and per feature set"
+   }
+  },
+  {
+   "primitive_id": "independent_causal_mechanisms",
+   "name": "Principle 2.1 (independent mechanisms / ICM): the causal generative process decomposes into autonomous modules; the cause distribution does not inform the mechanism conditional",
+   "verbatim_quote": "In the probabilistic case, this means that the conditional distribution of each variable given its causes (i.e., its mechanism) does not inform or influence the other conditional distributions.",
+   "page": "Chapter 2, Principle 2.1 (text lines 1054-1060)",
+   "latex": "p(x, y) = p_X(x) \\cdot p_{Y \\mid X}(y \\mid x)",
+   "symbol_and_unit_ledger": {
+    "p_X": "distribution of the cause (density, per unit of x)",
+    "p_{Y|X}": "the mechanism: conditional distribution of the effect given its cause (per unit of y)",
+    "ICM": "the independence of these two factors as objects; changing one does not change the other"
+   },
+   "assumptions": [
+    "the system is composed of physically independent mechanisms",
+    "mechanisms have not been tuned to each other by design or evolution (the text's stated exception)"
+   ],
+   "breakdown_regime": "Violated when modules are co-adapted or jointly optimized, and under fine-tuned feedback; the anticausal factorization carries no such independence, which is what later identifiability results exploit.",
+   "domain": "causal-foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine features are stored as mechanism objects separate from input distributions, so a shift in input distribution (new opponent, new venue) triggers reweighting of inputs only, never a silent refit of the mechanism itself.",
+    "source_operator": "independent_causal_mechanisms",
+    "telemetry": "distribution shift logs per input variable across weeks and opponents"
+   }
+  },
+  {
+   "primitive_id": "bivariate_scm",
+   "name": "Definition 3.1: a bivariate structural causal model assigns C := N_C and E := f_E(C, N_E) with independent noises, entailing a joint distribution",
+   "verbatim_quote": "In this model, we call the random variables C the cause and E the effect. Furthermore, we call C a direct cause of E, and we refer to C → E as a causal graph.",
+   "page": "Chapter 3, Section 3.1, Definition 3.1, equations (3.1)-(3.2) (text lines 1545-1560)",
+   "latex": "C := N_C, \\qquad E := f_E(C, N_E), \\qquad N_E \\perp\\!\\!\\!\\perp N_C",
+   "symbol_and_unit_ledger": {
+    "C": "cause variable (units as measured)",
+    "E": "effect variable (units as measured)",
+    "f_E": "structural assignment (mechanism) mapping cause and noise to the effect",
+    "N_C, N_E": "independent noise variables (units of C and E respectively)"
+   },
+   "assumptions": [
+    "noise variables are jointly independent",
+    "the graph is acyclic in the bivariate case by construction (one directed edge)"
+   ],
+   "breakdown_regime": "The assignments are a modeling choice, not a property of data: Proposition 4.1 shows the same joint distribution admits the reversed model, so the SCM's causal content is an assumption until restricted (Chapter 4).",
+   "domain": "causal-foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine relationship is stored as an assignment with an explicit noise term, so unexplained variance is a named object that later denoising and counterfactual primitives can operate on.",
+    "source_operator": "bivariate_scm",
+    "telemetry": "per-relationship residual streams from fitted assignments"
+   }
+  },
+  {
+   "primitive_id": "hard_and_soft_interventions",
+   "name": "An intervention replaces one structural assignment and leaves the others untouched: hard intervention do(E := 4) fixes a value; soft interventions change a mechanism or noise law",
+   "verbatim_quote": "That is, we replace the assignment (3.2) by E := 4. This is called a (hard) intervention and is denoted by do (E := 4).",
+   "page": "Chapter 3, Section 3.2 (text lines 1566-1590)",
+   "latex": "E := 4 \\quad \\text{under} \\quad \\mathrm{do}(E := 4)",
+   "symbol_and_unit_ledger": {
+    "E": "intervened variable (units as measured)",
+    "4": "the fixed imposed value, in the units of E, used in the text's example",
+    "do(...)": "operator marking that the assignment was replaced, not conditioned on"
+   },
+   "assumptions": [
+    "the intervention is surgical: only the targeted assignment changes (modularity)",
+    "the remaining mechanisms stay invariant under the intervention"
+   ],
+   "breakdown_regime": "If an intervention is fat-handed and perturbs other mechanisms, the entailed intervention distribution no longer follows from the original SCM; in cyclic systems even defining the entailed distribution can fail.",
+   "domain": "causal-foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Scenario analysis in the engine (a player removed, a scheme forced) is implemented as assignment replacement inside the model, never as filtering historical rows to similar cases, which would be conditioning instead.",
+    "source_operator": "hard_and_soft_interventions",
+    "telemetry": "lineup and availability change events that define intervention scenarios"
+   }
+  },
+  {
+   "primitive_id": "nonidentifiability_prop_4_1",
+   "name": "Proposition 4.1: every bivariate joint distribution admits SCMs in both directions (via the inverse conditional CDF construction), so causal direction is not identifiable from observational data without restrictions",
+   "verbatim_quote": "The result can be applied to the case X = C and Y = E as well as to the case X = E and Y = C, thus every joint distribution PX,Y admits SCMs in both directions.",
+   "page": "Chapter 4, Section 4.1, Proposition 4.1 (text lines 1908-1935)",
+   "latex": "f_Y(x, n_Y) := F^{-1}_{Y \\mid x}(n_Y), \\qquad N_Y \\sim U[0, 1]",
+   "symbol_and_unit_ledger": {
+    "F_{Y|x}": "conditional cumulative distribution function of Y given X = x (dimensionless)",
+    "F^{-1}_{Y|x}": "its generalized inverse, mapping a uniform noise draw to a Y value (units of Y)",
+    "N_Y": "uniform noise on [0, 1], independent of X"
+   },
+   "assumptions": [
+    "none beyond a joint distribution of two real-valued variables; that is the point of the result"
+   ],
+   "breakdown_regime": "The result itself is the breakdown statement for unrestricted causal discovery: identifiability only returns after restricting function classes, noise families, or adding environments or interventions (Theorems 4.2, 4.5, 4.10, Chapter 7).",
+   "domain": "causal-discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Acts as a standing veto inside the engine: no directional claim may be emitted from a bivariate observational fit unless the record names the restriction that prices the direction.",
+    "source_operator": "nonidentifiability_prop_4_1",
+    "telemetry": "claim audit log pairing every directional assertion with its identifying restriction"
+   }
+  },
+  {
+   "primitive_id": "lingam_identifiability",
+   "name": "Theorem 4.2 (LiNGAM): a linear model Y = alpha X + N_Y with independent noise admits a reverse linear independent-noise model if and only if X and N_Y are Gaussian (Darmois-Skitovic); non-Gaussianity identifies direction, and the result lifts to multivariate LiNGAM",
+   "verbatim_quote": "With this result, the multivariate identifiability of LiNGAM then follows from Theorem 4.2.",
+   "page": "Chapter 4, Theorem 4.2, equation (4.1) (text lines 2093-2110, 2149-2156)",
+   "latex": "Y = \\alpha X + N_Y, \\qquad N_Y \\perp\\!\\!\\!\\perp X",
+   "symbol_and_unit_ledger": {
+    "alpha": "linear coefficient (units of Y per unit of X)",
+    "X": "cause variable",
+    "N_Y": "additive noise, independent of X (units of Y)"
+   },
+   "assumptions": [
+    "linearity of the mechanism",
+    "continuous variables with independent additive noise",
+    "non-Gaussianity of cause and noise for the identifiable direction"
+   ],
+   "breakdown_regime": "Exactly Gaussian data destroys identifiability: both directions fit, and the model collapses to the Proposition 4.1 situation. Hidden confounding also breaks the independence premise.",
+   "domain": "causal-discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For near-linear engine relationships, residual non-Gaussianity plus independence testing gives a direction score; Gaussian-looking residuals force the engine to abstain from a direction claim.",
+    "source_operator": "lingam_identifiability",
+    "telemetry": "residual normality statistics and independence tests per candidate pair"
+   }
+  },
+  {
+   "primitive_id": "additive_noise_model_identifiability",
+   "name": "Definition 4.4 and Theorem 4.5: an ANM Y = f_Y(X) + N_Y with independent noise is generically not fittable in the reverse direction; reverse-compatible input densities lie in a 3-dimensional affine family, so direction is identifiable",
+   "verbatim_quote": "The following theorem shows that “generically,” a distribution does not admit an ANM in both directions at the same time.",
+   "page": "Chapter 4, Definition 4.4 and Theorem 4.5, equation (4.3) (text lines 2172-2190)",
+   "latex": "Y = f_Y(X) + N_Y, \\qquad N_Y \\perp\\!\\!\\!\\perp X",
+   "symbol_and_unit_ledger": {
+    "f_Y": "measurable mechanism function (output in units of Y)",
+    "N_Y": "additive noise independent of the cause (units of Y)",
+    "smooth ANM": "the theorem's regularity case: strictly positive, three times differentiable densities and mechanism"
+   },
+   "assumptions": [
+    "additive noise structure",
+    "for Theorem 4.5: smoothness, strictly positive densities, and the stated nondegeneracy condition (4.4)"
+   ],
+   "breakdown_regime": "The exceptional reverse-compatible cases exist (the 3-dimensional family, including linear Gaussian models); discrete and post-nonlinear variants need their own theorems (4.6, 4.8). Confounded pairs violate the noise independence premise.",
+   "domain": "causal-discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Direction scoring by fit quality in both directions plus residual independence: the engine accepts a direction only when the reverse fit leaves dependent residuals, mirroring the genericity argument.",
+    "source_operator": "additive_noise_model_identifiability",
+    "telemetry": "forward and reverse residual independence statistics per candidate pair"
+   }
+  },
+  {
+   "primitive_id": "igci_model",
+   "name": "Definition 4.9 and Theorem 4.10 (IGCI): for a deterministic invertible relation Y = f(X), the independence condition cov[log f', p_X] = 0 holds in the causal direction and generically fails in reverse, identifying direction without noise",
+   "verbatim_quote": "Here, PX,Y is said to satisfy an IGCI model from X to Y if the following conditions hold: Y = f (X) for some diffeomorphism5 f of [0, 1] that is strictly monotonic and satisfies f (0) = 0 and f (1) = 1.",
+   "page": "Chapter 4, Definition 4.9 and Theorem 4.10, equations (4.10)-(4.11) (text lines 2366-2390)",
+   "latex": "\\mathrm{cov}[\\log f^{\\prime}, p_X] = 0",
+   "symbol_and_unit_ledger": {
+    "f": "strictly monotonic diffeomorphism of [0, 1] with f(0) = 0 and f(1) = 1",
+    "f'": "its derivative (dimensionless slope)",
+    "p_X": "density of the cause on [0, 1] (per unit of x)",
+    "cov": "covariance taken with log f' and p_X viewed as random variables under the uniform distribution on [0, 1]"
+   },
+   "assumptions": [
+    "deterministic, invertible, monotonic mechanism",
+    "cause density strictly positive and continuous",
+    "the independence condition (4.10) in the causal direction"
+   ],
+   "breakdown_regime": "Equality in (4.11) holds when f is the identity, and noisy or non-invertible relations fall outside the model; the condition is an assumption about nature's independence of input distribution and mechanism slope, not a testable property of one direction alone.",
+   "domain": "causal-discovery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For near-deterministic engine transforms (unit conversions, rating rescaling, deterministic tracking derivations), independence between input density and local slope flags which side is the natural input.",
+    "source_operator": "igci_model",
+    "telemetry": "empirical input densities and estimated local slopes of deterministic transforms"
+   }
+  },
+  {
+   "primitive_id": "algorithmic_independence_conditionals",
+   "name": "Principle 4.13: the cause distribution and the mechanism conditional are algorithmically independent, K(P_{C,E}) = K(P_C) + K(P_{E|C}); the joint has a shorter description in the causal direction than in the anticausal direction (4.17)",
+   "verbatim_quote": "The idea of Principle 4.13 is that PC and PE|C are causally unrelated objects of nature.",
+   "page": "Chapter 4, Principle 4.13, equations (4.15)-(4.17) (text lines 2603-2625)",
+   "latex": "K(P_{C,E}) = K(P_C) + K(P_{E \\mid C})",
+   "symbol_and_unit_ledger": {
+    "K(.)": "Kolmogorov complexity: length of the shortest description (bits)",
+    "P_C": "distribution of the cause",
+    "P_{E|C}": "mechanism conditional of effect given cause",
+    "I^+": "algorithmic mutual information in (4.15), zero under the principle"
+   },
+   "assumptions": [
+    "cause and mechanism are causally unrelated objects, so no description of one shortens the other",
+    "an idealized, uncomputable formalization: it justifies practical methods rather than running directly"
+   ],
+   "breakdown_regime": "Algorithmic mutual information is uncomputable and P_{X,Y} is unknown from finite data, so the principle cannot be applied literally; it underwrites ANM and IGCI style arguments instead.",
+   "domain": "causal-foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Compression based tie-breaking: when two engine factorizations fit equally, prefer the one whose factors compress independently, and record description lengths as the audit trail for the choice.",
+    "source_operator": "algorithmic_independence_conditionals",
+    "telemetry": "compressed sizes of stored factor objects (marginals and conditionals) per model"
+   }
+  },
+  {
+   "primitive_id": "causal_anticausal_ssl",
+   "name": "Chapter 5: a prediction problem is causal when predicting effect from cause and anticausal when predicting cause from effect; by ICM, semi-supervised learning can help in anticausal or confounded problems but not in purely causal ones",
+   "verbatim_quote": "In the simplest setting, where the causal graph has only two variables (cause and effect), a machine learning problem can either be causal (if we predict effect from cause) or anticausal (if we predict cause from effect).",
+   "page": "Chapter 5, Section 5.1.1 (text lines 3103-3110)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Principle 2.1 independence of cause distribution and mechanism",
+    "the meta-study pattern reported in the text: SSL gains appeared in anticausal, confounded, or unclear cases"
+   ],
+   "breakdown_regime": "Under covariate shift the causal conditional stays invariant while the anticausal one does not; methods that assume the input distribution informs the conditional silently break when deployed in the causal direction or under shift.",
+   "domain": "machine-learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine prediction task is labeled causal or anticausal at registration; unlabeled data pooling and domain adaptation tricks are enabled only where the label permits them.",
+    "source_operator": "causal_anticausal_ssl",
+    "telemetry": "task registry with prediction direction per model and unlabeled pool usage logs"
+   }
+  },
+  {
+   "primitive_id": "d_separation",
+   "name": "Definition 6.1: d-separation reads conditional independences off a DAG; a path is blocked when a conditioned non-collider sits on it, or an unconditioned collider (with no conditioned descendants) sits on it",
+   "verbatim_quote": "Furthermore, in a DAG G, we say that two disjoint subsets of vertices A and B are d-separated by a third (also disjoint) subset S if every path between nodes in A and B is blocked by S.",
+   "page": "Chapter 6, Section 6.1, Definition 6.1 (text lines 3525-3555)",
+   "latex": "A \\perp\\!\\!\\!\\perp_G B \\mid S",
+   "symbol_and_unit_ledger": {
+    "G": "directed acyclic graph over the variables",
+    "A, B, S": "pairwise disjoint vertex sets",
+    "path blocking": "chains and forks are blocked by conditioning on the middle node; colliders are blocked unless the collider or a descendant is conditioned on"
+   },
+   "assumptions": [
+    "the graph is a DAG",
+    "S contains neither endpoint set (A and B are disjoint from S)"
+   ],
+   "breakdown_regime": "d-separation is a property of the assumed graph, not of data: a wrong graph yields wrong independence claims, and conditioning on a collider creates dependence that naive adjustment mistakes for a real path.",
+   "domain": "causal-foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's graph layer computes d-separation before any statistical test is interpreted, so conditioning sets are chosen by graph logic (what to adjust, what never to condition on) rather than by correlation screening.",
+    "source_operator": "d_separation",
+    "telemetry": "query log of separation checks per analysis with the conditioning sets used"
+   }
+  },
+  {
+   "primitive_id": "multivariate_scm_entailed_distribution",
+   "name": "Definition 6.2 and Proposition 6.3: a multivariate SCM X_j := f_j(PA_j, N_j) with jointly independent noises entails a unique observational distribution, computable by recursive substitution (ancestral sampling), and additionally entails intervention and counterfactual distributions",
+   "verbatim_quote": "An SCM C defines a unique distribution over the variables X = (X1 , . . . , Xd ) such that X j = f j (PA j , N j ), in distribution, for j = 1, . . . , d.",
+   "page": "Chapter 6, Section 6.2, Proposition 6.3, equation (6.1) (text lines 3604-3610)",
+   "latex": "X_j := f_j(PA_j, N_j), \\qquad j = 1, \\ldots, d",
+   "symbol_and_unit_ledger": {
+    "X_j": "variable j (units as measured)",
+    "PA_j": "parent set of j in the causal graph",
+    "f_j": "structural assignment for variable j",
+    "N_j": "noise variable of j, jointly independent across j (units of X_j)"
+   },
+   "assumptions": [
+    "acyclicity of the underlying graph, so recursive substitution terminates",
+    "joint independence of all noise variables"
+   ],
+   "breakdown_regime": "For cyclic assignments an entailed observational distribution may not exist or may not be unique; the text treats cycles as a special, harder case (Remark 6.7, generalized SCMs in Section 6.9).",
+   "domain": "causal-foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's simulator is ancestral sampling over stored assignments: synthetic game states are generated source nodes first, then downstream, which keeps every simulated quantity traceable to its mechanism and noise draw.",
+    "source_operator": "multivariate_scm_entailed_distribution",
+    "telemetry": "simulation traces recording noise draws and assignment evaluations per run"
+   }
+  },
+  {
+   "primitive_id": "markov_properties_factorization",
+   "name": "Theorem 6.22 and Proposition 6.31: for distributions with a density, the local, global, and factorization forms of the Markov property are equivalent, every SCM-entailed distribution is Markovian to its graph, and the joint factorizes over parent sets",
+   "verbatim_quote": "If PX has a density p, then all Markov properties in Definition 6.21 are equivalent.",
+   "page": "Chapter 6, Theorem 6.22 (text lines 4346-4360); factorization as printed before equation (6.8) (text line 4725)",
+   "latex": "p(x) = \\prod_{j=1}^{d} p(x_j \\mid x_{pa(j)})",
+   "symbol_and_unit_ledger": {
+    "p(x)": "joint density of all variables (per unit volume of x)",
+    "pa(j)": "parent set of variable j in the graph",
+    "p(x_j | x_{pa(j)})": "the mechanism conditional of j given its parents"
+   },
+   "assumptions": [
+    "P_X has a density with respect to a product measure",
+    "the graph is the SCM's own graph for Proposition 6.31"
+   ],
+   "breakdown_regime": "Markovianity is only one direction: many non-causal graphs share the same factorization, and Markov equivalence (Lemma 6.25) means the factorization alone cannot orient edges within an equivalence class.",
+   "domain": "causal-foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine likelihoods are computed through the parent factorization, so any variable's contribution can be recomputed locally when one mechanism changes, without refitting the joint model.",
+    "source_operator": "markov_properties_factorization",
+    "telemetry": "per-node conditional log-likelihood contributions in model scoring"
+   }
+  },
+  {
+   "primitive_id": "truncated_factorization",
+   "name": "Equations (6.8)-(6.9): the intervention distribution is the observational factorization with the intervened node's factor removed and its value fixed (truncated factorization, G-computation formula)",
+   "verbatim_quote": "Equation (6.8) allows us to compute an interventional statement (left-hand side) from observational quantities (right-hand side).",
+   "page": "Chapter 6, equations (6.8)-(6.9) (text lines 4730-4755)",
+   "latex": "p^{C;\\, \\mathrm{do}(X_k := a)}(x_1, \\ldots, x_d) = \\prod_{j \\neq k} p^{C}(x_j \\mid x_{pa(j)}) \\quad \\text{if } x_k = a, \\text{ else } 0",
+   "symbol_and_unit_ledger": {
+    "k": "index of the intervened variable",
+    "a": "imposed value (units of X_k)",
+    "p^C": "observational density of the SCM C",
+    "truncation": "the factor for node k is dropped; all other mechanism factors are kept (invariance (6.7))"
+   },
+   "assumptions": [
+    "the SCM and its graph are known",
+    "mechanism invariance: non-intervened conditionals are unchanged by the intervention",
+    "positivity where densities are evaluated"
+   ],
+   "breakdown_regime": "Cumbersome when mechanisms are unknown and the graph is only partially known; then adjustment sets (Proposition 6.41) or the do-calculus must first establish that the quantity is identifiable at all.",
+   "domain": "causal-inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Scenario projections are computed by truncating the factor of the changed variable (a ruled-out player contributes no factor) and renormalizing the rest, which is exactly how the engine prices a lineup change.",
+    "source_operator": "truncated_factorization",
+    "telemetry": "factor tables per variable with intervention flags on truncated nodes"
+   }
+  },
+  {
+   "primitive_id": "total_causal_effect",
+   "name": "Definition 6.12 and Propositions 6.13-6.14: a total causal effect from X to Y exists exactly when some intervention distribution on X moves the distribution of Y; a directed path is necessary but not sufficient",
+   "verbatim_quote": "Not surprisingly, the existence of a total causal effect is related to the existence of a directed path in the corresponding graph. The correspondence, however, is not one-to-one. While a directed path is necessary for a total causal effect, it is not sufficient.",
+   "page": "Chapter 6, Definition 6.12, Propositions 6.13-6.14 (text lines 3922-3955)",
+   "latex": "X \\not\\perp Y \\quad \\text{in} \\quad P^{C;\\, \\mathrm{do}(X := \\tilde{N}_X)} \\quad \\text{for some } \\tilde{N}_X",
+   "symbol_and_unit_ledger": {
+    "tilde{N}_X": "a random intervention value for X (full-support variant in Proposition 6.13(iv))",
+    "P^{C; do(X := .)}_Y": "the marginal distribution of Y under the intervention",
+    "directed path": "graph condition: necessary, not sufficient, for an effect"
+   },
+   "assumptions": [
+    "an SCM C is given",
+    "randomized assignment of X (Example 6.15) is the operational special case used in trials"
+   ],
+   "breakdown_regime": "Effects can cancel along multiple paths, so a directed path with zero total effect is possible; conversely, dependence under randomization is the detectable signature the definition is built on.",
+   "domain": "causal-inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine effect claims are stated as distribution shifts under a named intervention, and a graph path alone never promotes a relationship to an effect claim without the intervention check.",
+    "source_operator": "total_causal_effect",
+    "telemetry": "pre and post intervention outcome distributions in scenario runs"
+   }
+  },
+  {
+   "primitive_id": "counterfactual_scm",
+   "name": "Definition 6.17: counterfactuals are do-statements inside a counterfactual SCM built by conditioning the noise distribution on the observed evidence, C^{X=x} := (S, P_N | X = x), then intervening",
+   "verbatim_quote": "Counterfactual statements can now be seen as do-statements in the new counterfactual SCM.",
+   "page": "Chapter 6, Section 6.4, Definition 6.17 (text lines 4131-4145)",
+   "latex": "C^{X=x} := \\left(S,\\, P_N^{C \\mid X=x}\\right), \\qquad P_N^{C \\mid X=x} := P_N \\mid X = x",
+   "symbol_and_unit_ledger": {
+    "S": "the structural assignments, kept unchanged",
+    "P_N": "joint noise distribution of the original SCM",
+    "P_N | X = x": "noise distribution conditioned on the observed evidence; noises need no longer be independent",
+    "x": "the observed value vector"
+   },
+   "assumptions": [
+    "the full SCM, including noise distributions, is specified",
+    "in continuous cases, conditioning on measure-zero evidence needs the care flagged in the text's footnote"
+   ],
+   "breakdown_regime": "Counterfactuals are the least identifiable level: they depend on the functional form of assignments and the noise law, not only on observational and interventional distributions, so two models agreeing on both can disagree counterfactually (Proposition 6.49 equivalence is the exception, not the rule).",
+   "domain": "causal-inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Post-game review in the engine reconstructs game-specific noise (the realized randomness of that day) before asking what a different decision would have produced, instead of rerunning the generic pre-game distribution.",
+    "source_operator": "counterfactual_scm",
+    "telemetry": "per-game reconstructed residual (noise) values stored with the game record"
+   }
+  },
+  {
+   "primitive_id": "faithfulness_causal_minimality",
+   "name": "Definition 6.33: faithfulness requires every independence in P_X to be implied by d-separation in G; causal minimality requires P_X to be Markovian to G but to no proper subgraph; Example 6.34 violates faithfulness by exact path cancellation (a*b + c = 0)",
+   "verbatim_quote": "This is achieved by making two paths cancel each other and creating an independence that is not implied by the graph structure.",
+   "page": "Chapter 6, Definition 6.33 and Example 6.34, equation (6.6) (text lines 4594-4620)",
+   "latex": "A \\perp\\!\\!\\!\\perp B \\mid C \\; \\Rightarrow \\; A \\perp\\!\\!\\!\\perp_G B \\mid C \\qquad \\text{(faithfulness)}",
+   "symbol_and_unit_ledger": {
+    "A, B, C": "pairwise disjoint vertex sets",
+    "left side": "statistical independence in the distribution P_X",
+    "right side": "d-separation in the graph G",
+    "a*b + c = 0": "the cancellation condition of Example 6.34 (path coefficients, units cancel)"
+   },
+   "assumptions": [
+    "for minimality: P_X is Markovian to G",
+    "faithfulness is an assumption about the parameter values, generically true but exactly false on a measure-zero set that includes cancellations"
+   ],
+   "breakdown_regime": "Near-cancellations are the practical failure: finite samples cannot distinguish exact cancellation from weak dependence, so constraint based discovery can delete real edges; this is the strong faithfulness problem.",
+   "domain": "causal-discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Edges removed by independence tests in the engine are stored as removed-under-faithfulness with the test statistic attached, so a near-zero statistic can be reinstated when more data arrives instead of being forgotten.",
+    "source_operator": "faithfulness_causal_minimality",
+    "telemetry": "independence test statistics and sample sizes behind every removed edge"
+   }
+  },
+  {
+   "primitive_id": "adjustment_formula_ace",
+   "name": "Equations (6.11)-(6.12) and Definition 6.38: with a valid adjustment set Z, the intervention density is p^{do(T:=t)}(r) = sum_z p(r|z,t) p(z), which differs from conditioning (p(z|t)) and can reverse the sign of the naive contrast; the contrast of intervention probabilities is the average causal effect",
+   "verbatim_quote": "This three-node example nicely highlights the difference between intervening and conditioning.",
+   "page": "Chapter 6, equations (6.11)-(6.12) and Definition 6.38 (text lines 4818-4850)",
+   "latex": "p^{C;\\, \\mathrm{do}(T := t)}(r) = \\sum_z p^{C}(r \\mid z, t) \\, p^{C}(z)",
+   "symbol_and_unit_ledger": {
+    "T": "treatment variable (values A and B in the text's example)",
+    "R": "outcome (binary recovery indicator in the example)",
+    "Z": "adjustment set: a common cause measured before treatment",
+    "ACE": "P^{do(T:=A)}(R = 1) - P^{do(T:=B)}(R = 1), equation (6.12) (dimensionless probability difference)"
+   },
+   "assumptions": [
+    "Z is a valid adjustment set for (T, R) in the sense of Definition 6.38 / Proposition 6.41",
+    "all quantities on the right side are observational and estimable"
+   ],
+   "breakdown_regime": "Adjusting for a wrong set (a mediator, a collider, or a descendant of treatment) biases the estimate; with an unobserved common cause no adjustment set exists and the formula has no valid input.",
+   "domain": "causal-inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine computes matchup effects by standardizing over the confounder distribution (opponent strength, rest, venue mix) rather than by raw conditional contrasts, which is the adjustment formula applied as a default.",
+    "source_operator": "adjustment_formula_ace",
+    "telemetry": "confounder distributions per comparison and the adjustment sets chosen"
+   }
+  },
+  {
+   "primitive_id": "do_calculus_frontdoor",
+   "name": "Theorem 6.45: Pearl's three do-calculus rules are complete for identifying intervention distributions, with a necessary and sufficient hedge criterion; the front-door formula (6.23) identifies an effect through a mediator Z even when an unobserved confounder U blocks every adjustment set",
+   "verbatim_quote": "The rules are complete; that is, all identifiable intervention distributions can be computed by an iterative application of these three rules [Huang and Valtorta, 2006, Shpitser and Pearl, 2006].",
+   "page": "Chapter 6, Theorem 6.45 and Example 6.46, equation (6.23) (text lines 5154-5185)",
+   "latex": "p^{C;\\, \\mathrm{do}(X := x)}(y) = \\sum_z p^{C}(z \\mid x) \\sum_{\\tilde{x}} p^{C}(y \\mid \\tilde{x}, z) \\, p^{C}(\\tilde{x})",
+   "symbol_and_unit_ledger": {
+    "X": "treatment variable",
+    "Y": "outcome variable",
+    "Z": "observed mediator carrying the effect from X to Y",
+    "U": "unobserved confounder of X and Y (the reason adjustment fails)",
+    "positivity": "the text requires p^C(x, z) > 0 for the formula"
+   },
+   "assumptions": [
+    "the causal graph, including the unobserved U, is correctly specified",
+    "Z intercepts all directed paths from X to Y and is itself unconfounded with X and with Y in the ways the front-door conditions require"
+   ],
+   "breakdown_regime": "When a hedge exists, no method can identify the effect from observational data; the completeness result makes that verdict final rather than a limitation of one estimator.",
+   "domain": "causal-inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Before any effect number is produced, the engine runs an identifiability verdict on the graph: adjustment if possible, front-door style mediation if the structure fits, otherwise an explicit not-identified status.",
+    "source_operator": "do_calculus_frontdoor",
+    "telemetry": "identifiability verdicts logged per requested effect with the rule path used"
+   }
+  },
+  {
+   "primitive_id": "potential_outcomes_sutva",
+   "name": "Section 6.9: the potential outcomes framework assigns each unit both outcomes B_u(t=0) and B_u(t=1), of which only one is observable; SUTVA requires no interference between units and no dependence on how treatment was received; the unit-level effect is B_u(1) - B_u(0)",
+   "verbatim_quote": "It states that the units do not interfere (e.g., the potential outcome of a unit does not depend on which treatment any other unit received) [Cox, 1958]; furthermore it requires that the potential outcomes do not depend on how or why the treatment has been received.",
+   "page": "Chapter 6, Section 6.9 (text lines 5299-5330)",
+   "latex": "B_u(t = 1) - B_u(t = 0)",
+   "symbol_and_unit_ledger": {
+    "u": "unit index (a patient in Example 3.4/6.9)",
+    "t": "treatment value in {0, 1}",
+    "B_u(t)": "potential outcome of unit u under treatment t (units of the outcome)",
+    "SUTVA": "stable unit treatment value assumption (Rubin) as quoted"
+   },
+   "assumptions": [
+    "SUTVA: no interference between units and a single version of each treatment",
+    "the text notes SUTVA is automatically satisfied when data are generated by an SCM (Section 6.9.2)"
+   ],
+   "breakdown_regime": "Interference (one unit's treatment changing another's outcome) breaks the framework's bookkeeping; the fundamental problem remains that the unobserved potential outcome is a counterfactual and needs a model or randomization to say anything about it.",
+   "domain": "causal-inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Player level effects in the engine are framed as potential outcomes with an interference warning: in team settings units plainly interfere, so unit effects are estimated inside the joint SCM instead of as isolated contrasts.",
+    "source_operator": "potential_outcomes_sutva",
+    "telemetry": "unit level outcome records with treatment assignment and exposure context"
+   }
+  },
+  {
+   "primitive_id": "cam_identifiability",
+   "name": "Theorem 7.7: multivariate SCMs with additive Gaussian noise and nonlinear mechanisms, including causal additive models X_j := sum_k f_{j,k}(X_k) + N_j, have identifiable graphs from the observational distribution",
+   "verbatim_quote": "In both cases (i) and (ii), we can identify the corresponding graph G0 from the distribution PX .",
+   "page": "Chapter 7, Theorem 7.7, equation (7.3) (text lines 6017-6045)",
+   "latex": "X_j := \\sum_{k \\in PA_j} f_{j,k}(X_k) + N_j, \\qquad N_j \\sim \\mathcal{N}(0, \\sigma_j^2)",
+   "symbol_and_unit_ledger": {
+    "f_{j,k}": "univariate component function of parent k in the assignment of j, three times differentiable and nonlinear",
+    "N_j": "Gaussian noise with variance sigma_j^2 (units of X_j squared)",
+    "PA_j": "parent set of j",
+    "G0": "the true causal graph, the identifiable object"
+   },
+   "assumptions": [
+    "additive noise with equal model structure across nodes",
+    "nonlinearity of each component in the stated sense; purely linear Gaussian models remain only Markov equivalent",
+    "causal sufficiency (no hidden confounders) in the stated result"
+   ],
+   "breakdown_regime": "Linear Gaussian special cases collapse back to equivalence classes; hidden confounding requires the ancestral graph machinery of Chapter 9 instead.",
+   "domain": "causal-discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For engine structure learning over continuous performance variables, additive fits with nonlinear components are the default function class precisely because this theorem prices full graph identification for that class.",
+    "source_operator": "cam_identifiability",
+    "telemetry": "additive component fits and residual diagnostics per variable"
+   }
+  },
+  {
+   "primitive_id": "invariant_causal_prediction",
+   "name": "Invariant causal prediction: the true parent set PA_Y leaves the conditional Y | PA_Y invariant across environments; intersecting all sets that pass an invariance test at level alpha yields a subset of the true parents with coverage at least 1 - alpha (7.8)",
+   "verbatim_quote": "The left-hand side of (7.8) is the output of a method called “invariant causal prediction” [Peters et al., 2016].",
+   "page": "Chapter 7, Section 7.1.6, equations (7.4)-(7.8) (text lines 6595-6612)",
+   "latex": "\\bigcap_{S \\in \\hat{S}} S \\subseteq PA_Y",
+   "symbol_and_unit_ledger": {
+    "e in E": "environments: data regimes differing by interventions or context shifts",
+    "S": "a candidate predictor set",
+    "hat{S}": "collection of sets not rejected by the invariance test",
+    "PA_Y": "true parents of the target Y",
+    "alpha": "test level controlling the coverage guarantee (dimensionless)"
+   },
+   "assumptions": [
+    "the conditional of Y given its true parents is invariant across the environments",
+    "environments differ enough to falsify wrong sets, but do not intervene directly on Y's mechanism"
+   ],
+   "breakdown_regime": "If environments are too similar, almost every set passes and the intersection is empty of content; if the invariance assumption itself fails (the mechanism changes), the true parent set can be rejected.",
+   "domain": "causal-discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Features earn parent status in the engine only by surviving invariance tests across environments (opponents, venues, weeks); pooled significance alone, as in the text's regression example, does not confer it.",
+    "source_operator": "invariant_causal_prediction",
+    "telemetry": "per-environment conditional fits and invariance test results per candidate feature set"
+   }
+  },
+  {
+   "primitive_id": "pc_algorithm",
+   "name": "PC algorithm and Lemma 7.8: adjacency in the true DAG is equivalent to not being d-separable by any set, and non-adjacent pairs are separated by a parent set; the algorithm grows conditioning sets over neighborhoods, then orients v-structures and applies Meek's rules",
+   "verbatim_quote": "The PC algorithm [Spirtes et al., 2000] starts with a fully connected undirected graph and step-by-step increases the size of the conditioning set A, starting with #A = 0.",
+   "page": "Chapter 7, Section 7.2, Lemma 7.8 (text lines 6205-6245)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "causal sufficiency (no latent confounders) in the basic version",
+    "faithfulness of the distribution to the true graph",
+    "correct conditional independence decisions (an oracle in the population version)"
+   ],
+   "breakdown_regime": "Finite sample test errors propagate into skeleton and orientation errors; latent confounding requires FCI style extensions (Chapter 9), and faithfulness failures delete true edges.",
+   "domain": "causal-discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's structure proposals from observational data start as equivalence class objects (skeleton plus v-structures), never as fully oriented graphs, matching exactly what this method can deliver.",
+    "source_operator": "pc_algorithm",
+    "telemetry": "conditional independence test results with conditioning sets per variable pair"
+   }
+  },
+  {
+   "primitive_id": "ges_bic_score",
+   "name": "Score based search with the BIC score (7.7): S(D, G) = log p(D | theta-hat, G) - (#parameters / 2) log n; greedy equivalence search (GES) optimizes it over Markov equivalence classes by adding then removing edges; the DAG space grows super-exponentially (10 variables: 4,175,098,976,430,598,143 DAGs)",
+   "verbatim_quote": "The greedy equivalence search (GES) [Chickering, 2002] optimizes the BIC criterion (7.7) and starts with the empty graph. It consists of two-phases: in the first phase, edges are added until a local maximum is reached; in the second phase, edges are removed until a local maximum is reached, which is then given as an output of the algorithm.",
+   "page": "Chapter 7, Section 7.2, equation (7.7) (text lines 6390-6400, 6455-6470)",
+   "latex": "S(D, G) = \\log p(D \\mid \\hat{\\theta}, G) - \\frac{\\#\\mathrm{parameters}}{2} \\log n",
+   "symbol_and_unit_ledger": {
+    "D": "the data set",
+    "G": "candidate DAG (or its equivalence class under GES)",
+    "theta-hat": "maximum likelihood parameter estimate for G",
+    "n": "sample size (count)",
+    "S(D, G)": "score in log-likelihood (nats) units"
+   },
+   "assumptions": [
+    "a parametric model class per graph (for example linear Gaussian or multinomial)",
+    "score equivalence is desirable: Markov equivalent graphs should score equally (the BDe discussion in the text)"
+   ],
+   "breakdown_regime": "Greedy search terminates at local optima without a global guarantee; exact optimization is NP-hard (Chickering), and in the linear Gaussian case no score can separate Markov equivalent graphs.",
+   "domain": "causal-discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine graph search uses penalized likelihood with the penalty term exposed, so model complexity decisions are auditable numbers rather than analyst taste; equivalence classes, not single graphs, are the search state.",
+    "source_operator": "ges_bic_score",
+    "telemetry": "score components (fit and penalty) logged per candidate graph"
+   }
+  },
+  {
+   "primitive_id": "resit_algorithm",
+   "name": "RESIT (regression with subsequent independence test): estimate a causal ordering by regressing each variable on its predecessors and testing whether the residual is independent of them; the true ordering passes, wrong orderings generically fail",
+   "verbatim_quote": "Alternatively, one can estimate the structure in an iterative way using independence tests. Mooij et al. [2009] and Peters et al. [2014] propose a regression with subsequent independence test (RESIT). The method is based on the property that the noise variables are independent of all preceding variables.",
+   "page": "Chapter 7, Section 7.2 (text lines 6530-6542)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "an additive noise model in the true ordering",
+    "a consistent regression estimator and a valid independence test (HSIC in the nonparametric version)",
+    "causal sufficiency"
+   ],
+   "breakdown_regime": "Weak dependence signals and finite samples make the independence test the bottleneck; with a known ordering the problem reduces to variable selection (Section 7.2.4), and with hidden confounders the residual independence premise fails.",
+   "domain": "causal-discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Candidate causal orderings inside the engine are accepted only with a residual independence pass attached; a failed test vetoes the ordering even when regression fit is excellent.",
+    "source_operator": "resit_algorithm",
+    "telemetry": "residual independence statistics per ordered variable"
+   }
+  },
+  {
+   "primitive_id": "half_sibling_regression",
+   "name": "Half-sibling regression (8.1): to denoise a measurement Y of an unobserved signal Q corrupted by systematic noise N, regress Y on other measurements X that share the same noise parent but are independent of Q, and subtract: Q-hat = Y - E[Y|X]; never worse than Y, and exact up to a shift when the noise is a function of X",
+   "verbatim_quote": "Intuitively, everything in Y that can be explained by X must be due to the systematic noise N and should therefore be removed.",
+   "page": "Chapter 8, Section 8.1, equation (8.1) (text lines 6680-6725)",
+   "latex": "\\mathbb{E}\\left[\\left(Q - \\mathbb{E}[Q] - \\hat{Q}\\right)^2\\right] = \\mathbb{E}\\left[\\mathrm{var}[f(N) \\mid X]\\right], \\qquad \\hat{Q} := Y - \\mathbb{E}[Y \\mid X]",
+   "symbol_and_unit_ledger": {
+    "Q": "unobserved signal of interest (units of the measurement)",
+    "Y": "corrupted measurement of Q",
+    "X": "half-sibling measurements: sharing the noise parent N, independent of Q",
+    "f(N)": "the systematic noise contribution (units of Y)",
+    "var[f(N)|X]": "residual noise variance after conditioning on X (units of Y squared)"
+   },
+   "assumptions": [
+    "the causal structure of Figure 8.1: X and Y share only the noise parent N, and Q is independent of X",
+    "for the exact form (8.1): additive action of the systematic noise, Y = Q + f(N)"
+   ],
+   "breakdown_regime": "If X carries any information about Q itself, the subtraction removes signal as well as noise; the guarantee is about squared error relative to the raw measurement, not about recovering Q exactly outside the stated conditions.",
+   "domain": "machine-learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tracking and sensor feeds in the engine are denoised with sibling channels that share the instrument but not the athlete: whatever the siblings explain in a target channel is treated as instrument noise and removed.",
+    "source_operator": "half_sibling_regression",
+    "telemetry": "multi-channel measurement streams from the same instrument or venue"
+   }
+  },
+  {
+   "primitive_id": "episodic_rl_ipw_estimator",
+   "name": "Equation (8.4): off-policy evaluation of a target strategy from episodes logged under a behavior strategy, by inverse probability weighting with the product of per-step action probability ratios (Horvitz-Thompson form); unbiased under full support, with variance that can be infinite in continuous settings",
+   "verbatim_quote": "This can be seen as a Monte Carlo method for off-policy evaluation [Sutton and Barto, 2015, Chapter 5.5]. In practice, the estimator (8.4) often has large variance; in continuous settings the variance may even be infinite.",
+   "page": "Chapter 8, Section 8.2, equation (8.4) (text lines 6935-6960)",
+   "latex": "\\hat{\\xi}_{n, ERL} := \\frac{1}{n} \\sum_{i=1}^{n} \\frac{\\prod_{j=1}^{K} \\tilde{\\pi}(A_j^i \\mid S_j^i)}{\\prod_{j=1}^{K} \\pi(A_j^i \\mid S_j^i)} \\, Y^i",
+   "symbol_and_unit_ledger": {
+    "pi": "behavior strategy that generated the logged episodes",
+    "pi-tilde": "target strategy being evaluated",
+    "A_j^i, S_j^i": "action and state at step j of episode i",
+    "Y^i": "episode outcome (units of reward)",
+    "K": "number of decisions per episode",
+    "n": "number of episodes; the weights are dimensionless probability ratios"
+   },
+   "assumptions": [
+    "the behavior strategy assigns positive probability to every action the target strategy may take (support condition)",
+    "the episode structure and the causal graph of Figure 8.3, including possible unobserved confounding H handled by the weighting argument"
+   ],
+   "breakdown_regime": "Variance explodes with horizon K and with divergent strategies; the text reports the practical fixes of reweighting or discarding the largest weights, trading bias for variance (Bottou et al.).",
+   "domain": "reinforcement-learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Historical game logs become evaluations of untried strategies only through explicit probability ratio weighting, with weight truncation rules logged; raw win rates of unlike strategies are never compared directly.",
+    "source_operator": "episodic_rl_ipw_estimator",
+    "telemetry": "per-decision action probabilities from logged strategy policies"
+   }
+  },
+  {
+   "primitive_id": "state_simplification_prop_8_1",
+   "name": "Proposition 8.1 (state simplification): if two states agree under an abstraction f, their optimal action values coincide, Q*(s, a) = Q*(s0, a); in the blackjack example, card suits can be dropped from the state because the rules depend only on card values (proof via the Bellman optimality equation, Appendix C.11)",
+   "verbatim_quote": "How does causality come into play? We have assumed that the player is unaware of the precise rules of blackjack; maybe he knows, however, that the win or loss is determined only by the values of the cards and not their suits; that is, the rules do not distinguish between a queen of clubs and a queen of hearts.",
+   "page": "Chapter 8, Section 8.2.3, Proposition 8.1 (text lines 6960-7000; proof in Appendix C.11)",
+   "latex": "Q^{*}(s, a) = Q^{*}(s^{\\circ}, a) \\qquad \\text{whenever} \\quad f(s) = f(s^{\\circ})",
+   "symbol_and_unit_ledger": {
+    "s, s-circ": "two full states identified by the abstraction",
+    "f": "state abstraction map (in the example: card values, ignoring suits)",
+    "Q*": "optimal action value function (units of reward; the text's blackjack benchmark is E[Y] approx -0.006 per unit bet)",
+    "a": "action"
+   },
+   "assumptions": [
+    "the abstraction respects the dynamics: transition and reward structure factor through f (the condition the Bellman proof verifies)",
+    "the agent knows which state components are irrelevant (here, suits)"
+   ],
+   "breakdown_regime": "A wrong abstraction merges states with different optimal actions and caps achievable performance; the proposition gives no way to learn f from data, it must come from knowledge of the rules.",
+   "domain": "reinforcement-learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine state spaces are compressed only along components certified irrelevant to outcomes (cosmetic identifiers, ordering artifacts), and each compression stores the invariance claim that licenses it.",
+    "source_operator": "state_simplification_prop_8_1",
+    "telemetry": "state feature usage audits comparing full and abstracted value estimates"
+   }
+  },
+  {
+   "primitive_id": "simpsons_paradox",
+   "name": "Simpson's paradox (9.1)-(9.2): the conditional contrast P(R=1|T=A) < P(R=1|T=B) and the interventional contrast P^{do(T:=A)}(R=1) > P^{do(T:=B)}(R=1) can point in opposite directions; a misspecified model that omits the confounder reverses the causal conclusion",
+   "verbatim_quote": "Summarizing, the Simpson’s paradox is not so much of a paradox but rather a warning of how sensitive causal reasoning can be with respect to model misspecifications.",
+   "page": "Chapter 9, Section 9.2, equations (9.1)-(9.2) (text lines 7379-7415)",
+   "latex": "P^{C}(R = 1 \\mid T = A) < P^{C}(R = 1 \\mid T = B) \\quad \\text{but} \\quad P^{C;\\, \\mathrm{do}(T := A)}(R = 1) > P^{C;\\, \\mathrm{do}(T := B)}(R = 1)",
+   "symbol_and_unit_ledger": {
+    "T": "treatment (A or B; the kidney stone treatments of Example 6.16)",
+    "R": "binary recovery outcome",
+    "Z": "the omitted common cause (stone size in the example)",
+    "probabilities": "dimensionless; left side is conditioning, right side is intervening"
+   },
+   "assumptions": [
+    "the reversal requires a confounder (or selection bias, Example 6.30) associated with both treatment and outcome",
+    "the example's numbers come from the kidney stone data of Example 6.16"
+   ],
+   "breakdown_regime": "The paradox is the breakdown of associational reasoning itself: in principle an unobserved further confounder can reverse the conclusion again (Problem 9.11), so only the data acquisition protocol or a defended graph settles the sign.",
+   "domain": "latent-structure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any engine comparison whose conditional and adjusted signs disagree is flagged as a Simpson risk and blocked from publication until the confounder set behind the adjusted number is named.",
+    "source_operator": "simpsons_paradox",
+    "telemetry": "sign comparison log between raw and adjusted contrasts per analysis"
+   }
+  },
+  {
+   "primitive_id": "instrumental_variables_2sls",
+   "name": "Instrumental variables: Z is an instrument for (X, Y) if it is independent of the confounder H, relevant for X, and affects Y only through X (exclusion); in the linear SCM, two-stage least squares (regress X on Z, then Y on the fitted values) consistently estimates the causal coefficient alpha",
+   "verbatim_quote": "we call a variable Z in an SCM an instrumental variable for (X,Y ) if (a) Z is independent of H, (b) Z is not independent of X (“relevance”), and (c) Z effects Y only through X (“exclusion restriction”).",
+   "page": "Chapter 9, Section 9.3 (text lines 7437-7470)",
+   "latex": "X := \\beta Z + \\gamma H + N_X, \\qquad Y := \\alpha X + \\delta H + N_Y = \\alpha (\\beta Z) + (\\alpha \\gamma + \\delta) H + N_Y",
+   "symbol_and_unit_ledger": {
+    "Z": "instrumental variable",
+    "H": "unobserved confounder of X and Y",
+    "alpha": "the target causal effect of X on Y (units of Y per unit of X)",
+    "beta": "relevance coefficient (units of X per unit of Z); near zero beta is the weak instrument case",
+    "gamma, delta": "confounder loadings in the two assignments"
+   },
+   "assumptions": [
+    "conditions (a) independence of Z and H, (b) relevance beta nonzero, (c) exclusion: no direct Z to Y path",
+    "in practice these are argued from domain knowledge, as the text states"
+   ],
+   "breakdown_regime": "Weak instruments (small beta) amplify bias and variance; beyond the linear case, identification survives only in specific forms (the text lists four, including the instrument inequality (9.4) for binary variables, which yields bounds rather than a point).",
+   "domain": "latent-structure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When a direct effect is confounded beyond adjustment, the engine searches for instrument shaped variables (exogenous shocks touching the cause but not the outcome) and reports the strength of the first stage with every estimate.",
+    "source_operator": "instrumental_variables_2sls",
+    "telemetry": "first stage fit statistics for candidate instruments per effect"
+   }
+  },
+  {
+   "primitive_id": "granger_causality",
+   "name": "Granger causality (10.6): X Granger-causes Y when Y_t depends on the past of X given the past of Y; Theorems 10.3-10.4 justify this as reading arrows of the time series SCM off conditional independences, under causal sufficiency and no instantaneous effects",
+   "verbatim_quote": "This idea already goes back to Wiener [1956, pages 189–190], who argued that X has a causal influence on Y if the prediction of Y from its own past is improved by additionally accounting for X.",
+   "page": "Chapter 10, Section 10.3.3, equation (10.6) (text lines 8588-8625)",
+   "latex": "X \\text{ Granger-causes } Y \\; :\\!\\Longleftrightarrow \\; Y_t \\not\\perp X_{\\mathrm{past}(t)} \\mid Y_{\\mathrm{past}(t)}",
+   "symbol_and_unit_ledger": {
+    "t": "time index (sampling steps)",
+    "X_{past(t)}, Y_{past(t)}": "the full past of each series before t",
+    "dependence": "conditional dependence given the target's own past; the linear version (10.7)-(10.8) compares residual variances"
+   },
+   "assumptions": [
+    "causal sufficiency of the observed series (Theorem 10.4's setting)",
+    "no instantaneous effects, or their explicit exclusion",
+    "the full time graph is acyclic by time ordering"
+   ],
+   "breakdown_regime": "Subsampling can create spurious instantaneous dependence and destroy the justification; hidden confounders and instantaneous effects make predictive precedence diverge from causal influence, as the text's limitations discussion states.",
+   "domain": "time-series",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Lead-lag signals in the engine are labeled predictive precedence, not causation, and are promoted only when the sufficiency and sampling conditions behind Theorems 10.3-10.4 are on record.",
+    "source_operator": "granger_causality",
+    "telemetry": "lagged conditional dependence tests between performance time series"
+   }
+  },
+  {
+   "primitive_id": "transfer_entropy",
+   "name": "Transfer entropy (10.9): TE(X to Y) := I(Y_t : X_{past(t)} | Y_{past(t)}), the conditional mutual information between the past of X and the present of Y given Y's own past; an information theoretic Granger measure that captures nonlinear influence but is not a calibrated measure of causal strength",
+   "verbatim_quote": "Estimating transfer entropy and inferring that X causes Y whenever it is significantly greater than 0 can thus be considered as an information theoretic implementation of Granger causality that accounts for arbitrary nonlinear influences.",
+   "page": "Chapter 10, equation (10.9) (text lines 8640-8660)",
+   "latex": "TE(X \\to Y) := I(Y_t : X_{\\mathrm{past}(t)} \\mid Y_{\\mathrm{past}(t)})",
+   "symbol_and_unit_ledger": {
+    "I(. : . | .)": "conditional Shannon mutual information (nats or bits, by log base)",
+    "Y_t": "present value of the target series",
+    "pasts": "histories of X and Y before t, as in (10.6)"
+   },
+   "assumptions": [
+    "stationarity sufficient for the information quantities to be well defined and estimable",
+    "the same sufficiency caveats as Granger causality for any causal reading"
+   ],
+   "breakdown_regime": "The text warns explicitly against reading TE as strength of influence: it measures predictive information flow, scales with the target's own entropy structure, and inherits every Granger caveat (confounding, subsampling, instantaneous effects).",
+   "domain": "time-series",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Information flow between engine time series is reported in bits with the strength warning attached: TE ranks candidate influences for investigation and never enters a projection as an effect size.",
+    "source_operator": "transfer_entropy",
+    "telemetry": "estimated conditional mutual informations between tracking and outcome series"
+   }
+  },
+  {
+   "primitive_id": "spectral_independence_criterion",
+   "name": "Spectral independence criterion (Definition 10.6, Theorem 10.7): for a linear filter model Y_t = sum_k h(k) X_{t-k}, the causal direction satisfies uncorrelatedness of the input spectrum S_XX and the squared transfer function |h-tilde|^2 across frequencies (10.13); the reverse direction then generically shows negative correlation (10.14)",
+   "verbatim_quote": "The idea is that for the causal direction, the power spectrum of the input time series carries no information about the transfer function of the filter.",
+   "page": "Chapter 10, Section 10.3.5, Definition 10.6 and Theorem 10.7, equations (10.10)-(10.14) (text lines 8816-8860)",
+   "latex": "\\langle S_{XX} \\cdot |\\tilde{h}|^2 \\rangle = \\langle S_{XX} \\rangle \\cdot \\langle |\\tilde{h}|^2 \\rangle",
+   "symbol_and_unit_ledger": {
+    "S_XX(nu)": "power spectral density of the input at frequency nu (units of X squared per cycle per sample)",
+    "h-tilde(nu)": "Fourier transform of the filter h (dimensionless gain)",
+    "angle brackets": "average over the frequency interval [-1/2, 1/2] cycles per sample",
+    "S_YY = |h-tilde|^2 S_XX": "the spectral factorization (10.11) the criterion operates on"
+   },
+   "assumptions": [
+    "weakly stationary bivariate series",
+    "a linear time invariant filter relation in one direction",
+    "decay conditions on h making (10.10) and the spectra well defined"
+   ],
+   "breakdown_regime": "If |h-tilde| is constant over all frequencies, the reverse inequality collapses and direction is not identifiable; nonlinear or time varying filters fall outside the criterion.",
+   "domain": "time-series",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For rhythm and tempo series in the engine (pace, play cadence, workload cycles), direction between a driver series and a response series is tested in the frequency domain where the mechanism is a filter.",
+    "source_operator": "spectral_independence_criterion",
+    "telemetry": "estimated power spectra and transfer functions of paired series"
+   }
+  },
+  {
+   "primitive_id": "hsic_independence_test",
+   "name": "Appendix A.2: the Hilbert-Schmidt Independence Criterion embeds distributions into an RKHS; for characteristic kernels HSIC(P_{X,Y}) = ||mu(P_{X,Y}) - mu(P_X tensor P_Y)||^2 is zero if and only if X and Y are independent, giving a nonparametric independence test (dHSIC extends it to joint independence)",
+   "verbatim_quote": "As test statistic Tn we can now use an estimator for HSIC(PX,Y ). If X and Y are independent, HSIC(PX,Y ) equals 0, and we expect its estimator Tn to be small.",
+   "page": "Appendix A.2 (book pages 216-218)",
+   "latex": "\\mathrm{HSIC}(P_{X,Y}) := \\lVert \\mu(P_{X,Y}) - \\mu(P_X \\otimes P_Y) \\rVert_{\\mathcal{H}}^2",
+   "symbol_and_unit_ledger": {
+    "mu": "kernel mean embedding of a distribution into the RKHS H",
+    "P_X tensor P_Y": "product of the marginal distributions (the independence reference)",
+    "characteristic kernel": "a kernel whose embedding is injective, for example the Gaussian kernel; bandwidth often set by the median heuristic",
+    "HSIC": "squared RKHS distance (kernel units); zero exactly under independence for characteristic kernels"
+   },
+   "assumptions": [
+    "a characteristic kernel is used",
+    "a finite sample test needs a threshold c controlling the type I error at level alpha, as the appendix's testing framework sets out"
+   ],
+   "breakdown_regime": "Conditional independence testing remains hard: with d binary conditioning variables, an unstructured test needs 2^d strata; kernel choices and bandwidths move finite sample power, and a non-rejection is not evidence of independence.",
+   "domain": "statistics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "HSIC is the engine's default nonparametric independence oracle behind skeleton search, RESIT vetoes, and direction scores, with kernel and bandwidth recorded per test for reproducibility.",
+    "source_operator": "hsic_independence_test",
+    "telemetry": "test statistics, thresholds, and sample sizes for every independence decision"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "96636d19e67fe7e7-t1",
+   "think": "This book builds a single formal object and then spends ten chapters learning what can and cannot be recovered from it. The object is the structural causal model: a set of assignments, one per variable, each computing a variable from its direct causes and an independent noise term. From that one object the authors derive three grades of statement. The entailed distribution describes passive observation. Intervention distributions describe what happens when one assignment is surgically replaced and the rest of the system is left untouched. Counterfactual distributions describe what would have happened for the very units observed, computed by first conditioning the noises on the evidence and then intervening inside the conditioned model. Keeping these three levels apart is the book's central discipline, and most of its warnings come from places where practice collapses them, for example when a conditional distribution is read as an intervention distribution and Simpson's paradox reverses the conclusion.\n\nThe second movement of the book is a theory of identifiability, meaning a map of exactly which extra assumptions buy which extra conclusions. With no restrictions at all, Proposition 4.1 shows that any bivariate joint distribution admits structural models in both directions, so direction is invisible in the data. Each later result is priced in assumptions. Linear models become identifiable when the noise is non-Gaussian, by the Darmois-Skitovic theorem. Additive noise models become identifiable because a reverse fit generically forces the input density into a thin three dimensional family. Deterministic relations become identifiable when the cause distribution is independent of the mechanism's slope profile in the IGCI sense. In the multivariate case, conditional independences alone identify only a Markov equivalence class, while restricted function classes such as causal additive models, or extra structure such as multiple environments in invariant causal prediction, can identify the full graph or at least the true parent set with coverage guarantees. The same pricing logic governs effects: the truncated factorization always computes intervention distributions from a known model, adjustment sets compute them from data when the graph cooperates, the do-calculus decides identifiability in general and is complete, and instrumental variables identify an effect precisely when relevance, exclusion, and independence from the confounder hold.\n\nThe third movement is estimation under honesty about failure modes. Constraint based search such as the PC algorithm is exactly as good as the independence tests and the faithfulness assumption behind it, and faithfulness fails by cancellation along competing paths. Score based search such as GES trades the problem for a penalized likelihood and a super-exponential search space that forces greedy moves and local optima. RESIT turns identifiability into a procedure: fit in a candidate order, test whether residuals are independent of the past, and let failed tests veto the order. Half-sibling regression shows the constructive side of a known graph, using measurements that share only the noise parent to subtract systematic error, with a guarantee of never doing worse than the raw measurement. The episodic reinforcement learning estimator shows the same weighting idea as survey sampling: reweight episodes by the ratio of target to behavior policy probabilities, accept the variance, and truncate the largest weights when the variance explodes.\n\nThe fourth movement extends the frame to what is not observed and to time. Latent projections, maximal ancestral graphs, tetrad constraints, and entropy inequalities extract testable implications when confounders cannot be measured, and interventional sufficiency marks exactly which questions survive marginalization. For time series, the full time graph restores acyclicity by unrolling time, Granger causality is justified as a conditional independence statement about the past given the process's own past under sufficiency and no instantaneous effects, transfer entropy is its information theoretic form, and the spectral independence criterion moves cause and mechanism independence into the frequency domain for linear filters. The same chapter's treatment of subsampling deserves emphasis: a causal relation sampled too slowly can look instantaneous or vanish, so the sampling process itself becomes part of the model, a point with direct consequences for any data collected at fixed polling intervals.\n\nFor a reasoning engine, the operational content is a discipline of typed claims. Every quantity the engine emits should carry its level: observed, intervened, or counterfactual. Every inferred edge should carry the assumption set that prices it, and every estimate should carry the failure mode that would reverse it. The book also supplies a working test battery: independence tests with HSIC for the nonparametric case, invariance tests across environments for parent selection, residual independence vetoes for candidate orders, and identifiability checks before any effect number is produced. Where the book breaks is equally clear. Kolmogorov complexity is uncomputable, so the algorithmic principles justify methods rather than run as methods. Faithfulness, sufficiency, and SUTVA are assumptions about the world that data alone cannot certify. Finite samples turn every population statement into a testing problem with error control, and cyclic or equilibrium systems sit at the edge of the formalism rather than inside it. The appendices are not filler: Appendix A supplies the testing substrate, with hypothesis tests, HSIC, and the VC dimension account of why function class capacity controls finite sample guarantees for the risk framework of Chapter 1. Appendix B supplies the combinatorics of the search space, where adjacency matrix powers count directed paths and the number of DAGs grows faster than any linear term in the number of nodes. Appendix C's proofs matter operationally too: the counterfactual equivalence argument and the Bellman argument behind state simplification show exactly which parts of a model carry each conclusion. A reader who skips them knows the claims but not their load paths.",
+   "retrocausal_genealogy": "The lineage is explicit in the text and its bibliography. Sewall Wright's path models of 1918 to 1934 introduced structural assignments and path coefficients in genetics. Haavelmo's 1943 and 1944 econometric work gave the assignments an intervention reading, the Cowles Commission turned them into simultaneous equation systems, and Herbert Simon's 1953 causal ordering supplied the asymmetry between equations and mere correlations. The potential outcomes line runs from Neyman in 1923 through Rubin's 1974 formalization and the SUTVA condition. Pearl's do-calculus and the Spirtes, Glymour, and Scheines constraint based program supplied the graphical calculus in the 1990s. The Tuebingen school then added the learning layer: Shimizu's LiNGAM in 2006, Hoyer's additive noise identifiability in 2009, Janzing and Schoelkopf's algorithmic independence, and Peters, Buehlmann, and Meinshausen's invariant causal prediction in 2016, which this book presents as its own research program reaching textbook form.",
+   "theory_of_mind": "The authors write for a reader trained in probability and machine learning who is suspected of one specific bad habit: treating a fitted conditional distribution as if it were knowledge about what happens under action. Their model of the domain is that nature consists of autonomous mechanisms that can be recombined, perturbed, and transported, while data sets are only shadows of one observational regime. They therefore distrust any method whose assumptions stay implicit. Every chapter restates what is assumed, what is identified, and what remains impossible, and the recurring counterexamples are aimed at readers who want algorithms without assumptions. The intended reader finishes the book able to say, for a given claim, exactly which assumption carries it and which observation would break it.",
+   "cross_layer_veto": "Several results in the book act as vetoes on other layers of an inference stack. Proposition 4.1 vetoes any causal direction read from an unrestricted bivariate fit, and Gaussianity vetoes the LiNGAM layer outright. A failed residual independence test vetoes a candidate causal ordering in RESIT regardless of fit quality. Loss of faithfulness, as in the cancellation example with path coefficients summing to zero, vetoes skeleton edges produced by constraint based search. A hedge in the graph vetoes point identification of an effect even when an adjustment set looks plausible, and the do-calculus is the arbiter. SUTVA vetoes unit level effect claims whenever units interfere. In time series, an unobserved confounder or an instantaneous effect vetoes the causal reading of Granger precedence, however strong the predictive gain. Invariance failure across environments vetoes a parent set that pooled regression found highly significant."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a template for reasoning about any system built from autonomous parts. Model each component as a mechanism with its own inputs and its own noise. Distinguish three questions that are often confused: what the system does when watched, what it does when one component is forced, and what it would have done for the same realized case under a different forcing. Then price every conclusion in explicit assumptions, and treat independence between a component and the distribution of its inputs as the signature that the decomposition is the natural one. The template applies wherever modular systems are observed passively but must be acted on deliberately.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the book as core methodology for studying sport as a system of mechanisms. Player performance, fatigue, tactics, and environment become variables in structural models rather than entries in a correlation table. The institute's research standard follows the book's pricing discipline: a claimed effect, such as a scheme change altering receiver output, must name its identifying assumptions, its adjustment set, and the observation that would falsify it. Invariant causal prediction supplies the design for multi season and multi team studies, where only relationships stable across environments earn causal status. Half-sibling regression supplies the denoising pattern for tracking and broadcast derived measurements that share instrument noise.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes three working rules from the book. First, every projection carries its claim level: observed form, intervention scenario such as a lineup change, or counterfactual review of a played game, and the three are never blended in one number. Second, features earn causal weight only through invariance: a driver that stays stable across opponents, venues, and weeks is treated as a parent of the outcome, while a driver that flips sign across environments is demoted to correlation. Third, effect questions run an identifiability check before estimation, using adjustment where the graph allows it, and the engine reports an honest not identified status instead of a number when confounding cannot be removed. Residual independence tests veto candidate matchup orderings, and half-sibling style denoising cleans shared measurement noise across tracking feeds."
+}

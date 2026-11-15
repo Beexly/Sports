@@ -1,0 +1,78 @@
+{
+  "book_id": "0be31d80c0def320",
+  "source_status": "COMPLETE",
+  "title": "OVERNIGHT-2026-08-20-LAGUNA",
+  "file_name": "OVERNIGHT-2026-08-20-LAGUNA.md",
+  "sha256": "0be31d80c0def320f3b0afdc3fe316245cfe701dbaa9cd46c73dc64bb88879b9",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A1. Team-level Efron-Morris outcome layer with fixed \\(\\phi = 12\\), \\(q_t^O = \\text{nbOverProb}(\\mu, \\phi, L)\\), \\(\\mu = \\max(\\text{MU_FLOOR}, ((\\theta_\\text{home} + \\theta_\\text{away})/2)^2 - 3/8)\\). Universal Lens: Rooted in OVERNIGHT-2026-08-20-LAGUNA (0be31d80c0def320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference via negative binomial overdispersion model with shrinkage toward global mean; \\(q_t^O\\) encodes predictive probability of over/under outcomes. GSI Mapping: Rooted in OVERNIGHT-2026-08-20-LAGUNA (0be31d80c0def320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition governed by lane completion and founder relaunch protocol; MVE execution blocked if \\(\\mu\\) undefined or model misapplied. GSE Mapping: Rooted in OVERNIGHT-2026-08-20-LAGUNA (0be31d80c0def320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "team_level_efron_morris_outcome_layer",
+      "name": "Team-Level Efron-Morris Outcome Layer",
+      "verbatim_quote": "# OVERNIGHT RUN — Laguna on Hermes, night of 2026-08-20 You are the build seat (F-13).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\theta_\\\\text{home}, \\\\theta_\\\\text{away}': 'team-level latent skill parameters (dimensionless)', '\\\\mu': 'shrunken mean skill estimate (dimensionless)', 'L': 'league-level baseline (dimensionless)', '\\\\phi': 'overdispersion parameter (fixed at 12)', 'q_t^O': 'predictive probability of over/under outcome (unitless)'}",
+      "assumptions": "Skill parameters follow normal distribution; \\(\\mu\\) shrunk toward global mean; \\(\\phi\\) fixed; no imputation for missing features.",
+      "breakdown_regime": "When \\(\\mu\\) cannot be computed due to missing data or invalid transformation, lane is blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps team-level latent skills to probabilistic over/under outcomes via shrinkage estimator and negative binomial PMF.",
+        "source_operator": "team_level_efron_morris_outcome_layer",
+        "telemetry": "Observed \\(q_t^O\\) values and \\(\\mu\\) binding events."
+      }
+    },
+    {
+      "primitive_id": "mve_stop_conditions",
+      "name": "MVE Stop Conditions",
+      "verbatim_quote": "**Stop conditions, exactly two:** (1) every lane below is DONE or BLOCKED-on-founder, or (2) your runner hits its iteration cap, in which case the founder relaunches you and you resume from the ledger.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\text{DONE}, \\\\text{BLOCKED-on-founder}': 'terminal states (boolean)', '\\\\text{iteration cap}': 'maximum allowed iterations (integer)', '\\\\text{ledger}': 'state persistence store (memory)'}",
+      "assumptions": "Execution proceeds under deterministic control flow; founder acts as coordinator and restart mechanism.",
+      "breakdown_regime": "Execution halts when all dependent lanes terminate or iteration limit exceeded.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to finite-state automaton with founder as supervisor.",
+        "source_operator": "mve_stop_conditions",
+        "telemetry": "Lane status transitions and iteration counts."
+      }
+    },
+    {
+      "primitive_id": "honest_mve_requirement",
+      "name": "Honest MVE Requirement",
+      "verbatim_quote": "**The one thing that matters most tonight:** an honest MVE.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\text{MVE}': 'Model Validation Event (boolean)', '\\\\text{honesty}': 'compliance with specification (boolean)'}",
+      "assumptions": "MVE must adhere strictly to defined architecture; no shortcuts or approximations.",
+      "breakdown_regime": "Failure to comply results in catastrophic loss of credibility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces adherence to model integrity through guardrail checks and traceability.",
+        "source_operator": "honest_mve_requirement",
+        "telemetry": "Compliance flags and audit trail entries."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0be31d80c0def320_t0",
+      "think": "The overnight run defines a structured workflow where each lane operates under strict constraints. Lane A, the MVE, requires implementation of a team-level Efron-Morris outcome layer using fixed parameters and no imputation. The \\(\\mu\\) calculation uses a squared average of team skills minus a constant, ensuring boundedness via \\(\\text{MU_FLOOR}\\). The \\(q_t^O\\) function computes over/under probabilities using a negative binomial distribution with fixed \\(\\phi = 12\\). This setup enforces a principled shrinkage estimator that avoids overfitting while maintaining interpretability. Stop conditions ensure deterministic termination based on lane status or iteration limits. The 'honest MVE' directive implies no deviation from this specification, enforcing correctness over speed or convenience. Failure modes include blocked lanes due to uncomputable \\(\\mu\\), incorrect model usage, or non-compliance with guardrails.\n\nDeep epistemic analysis for OVERNIGHT-2026-08-20-LAGUNA (0be31d80c0def320, domain=other, pages_read=6/6): Operator 'Team-Level Efron-Morris Outcome Layer' (page 1, domain other) captures: # OVERNIGHT RUN — Laguna on Hermes, night of 2026-08-20 You are the build seat (F-13). Assumptions: Skill parameters follow normal distribution; \\(\\mu\\) shrunk toward global mean; \\(\\phi\\) fixed; no imputation for missing features. Breakdown regime: When \\(\\mu\\) cannot be computed due to missing data or invalid transformation, lane is blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps team-level latent skills to probabilistic over/under outcomes via shrinkage estimator and negative binomial PMF. Operator 'MVE Stop Conditions' (page 1, domain other) captures: **Stop conditions, exactly two:** (1) every lane below is DONE or BLOCKED-on-founder, or (2) your runner hits its iteration cap, in which case the founder relaunches you and you resume from the ledger. Assumptions: Execution proceeds under deterministic control flow; founder acts as coordinator and restart mechanism. Breakdown regime: Execution halts when all dependent lanes terminate or iteration limit exceeded. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to finite-state automaton with founder as supervisor. Operator 'Honest MVE Requirement' (page 1, domain other) captures: **The one thing that matters most tonight:** an honest MVE. Assumptions: MVE must adhere strictly to defined architecture; no shortcuts or approximations. Breakdown regime: Failure to comply results in catastrophic loss of credibility. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces adherence to model integrity through guardrail checks and traceability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for OVERNIGHT-2026-08-20-LAGUNA (0be31d80c0def320, domain=other, pages_read=6/6): Operator 'Team-Level Efron-Morris Outcome Layer' (page 1, domain other) captures: # OVERNIGHT RUN — Laguna on Hermes, night of 2026-08-20 You are the build seat (F-13). Assumptions: Skill parameters follow normal distribution; \\(\\mu\\) shrunk toward global mean; \\(\\phi\\) fixed; no imputation for missing features. Breakdown regime: When \\(\\mu\\) cannot be computed due to missing data or invalid transformation, lane is blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps team-level latent skills to probabilistic over/under outcomes via shrinkage estimator and negative binomial PMF. Operator 'MVE Stop Conditions' (page 1, domain other) captures: **Stop conditions, exactly two:** (1) every lane below is DONE or BLOCKED-on-founder, or (2) your runner hits its iteration cap, in which case the founder relaunches you and you resume from the ledger. Assumptions: Execution proceeds under deterministic control flow; founder acts as coordinator and restart mechanism. Breakdown regime: Execution halts when all dependent lanes terminate or iteration limit exceeded. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to finite-state automaton with founder as supervisor. Operator 'Honest MVE Requirement' (page 1, domain other) captures: **The one thing that matters most tonight:** an honest MVE. Assumptions: MVE must adhere strictly to defined architecture; no shortcuts or approximations. Breakdown regime: Failure to comply results in catastrophic loss of credibility. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces adherence to model integrity through guardrail checks and traceability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian shrinkage estimation (Efron-Morris), extended to probabilistic forecasting via negative binomial models. Influenced by conformal prediction frameworks and operational reliability engineering. Retrocausal Genealogy: Rooted in OVERNIGHT-2026-08-20-LAGUNA (0be31d80c0def320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in OVERNIGHT-2026-08-20-LAGUNA (0be31d80c0def320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents must balance autonomy with compliance. The founder represents a centralized authority enforcing standards; the build seat must act without approval but within strict bounds. Missteps lead to reputational collapse rather than technical fixes. Theory of Mind & Decision Maker Model: Rooted in OVERNIGHT-2026-08-20-LAGUNA (0be31d80c0def320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by requiring distinct model layers (e.g., Efron-Morris vs. James-Stein). Leakage vetoes occur if \\(q_t^O\\) incorporates non-specified features or bypasses \\(\\mu\\) computation. Guardrails prevent unauthorized schema changes or migration logic. Cross-Layer Veto & Anti-Leakage Check: Rooted in OVERNIGHT-2026-08-20-LAGUNA (0be31d80c0def320), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

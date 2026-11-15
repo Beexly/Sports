@@ -1,0 +1,323 @@
+{
+  "book_id": "6dde95ff9ffd9614",
+  "source_status": "COMPLETE",
+  "title": "undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon",
+  "file_name": "undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon.pdf",
+  "sha256": "6dde95ff9ffd96146ea80bee782b0c12cb113a791f779b05b27efe2bbd301a0b",
+  "primary_domain": "other",
+  "pages_total": 30,
+  "pages_read": 30,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 30,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Risk of collusion in group stage matches modeled via probabilistic game theory, with competitive balance and goal difference as key variables. The 3-2-1-0 point system modifies goal difference impact on qualification, introducing penalty shootout risk where 2m ≤ n triggers aggravated collusion potential.",
+  "gsi_mapping": "Bayesian inference framework maps match outcome probabilities to collusion risk using conditional dependencies across team performance metrics. Bayesian risk models update posterior probabilities of match-fixing given observed goal differences and penalty outcomes using conformal prediction intervals.",
+  "gse_mapping": "Situational reasoning engine models state transitions between match outcomes and collusion likelihood based on dynamic team rankings and goal differences. Situational reasoning maps team states through goal difference thresholds and penalty outcome spaces to predict collusion zones via state-transition graphs.",
+  "primitives": [
+    {
+      "primitive_id": "w0_snake_case_id",
+      "name": "schedule_imbalance_analysis",
+      "verbatim_quote": "Abstract: In 2026, the FIFA World Cup will for the first time gather 48 men's national teams.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Teams are ranked based on points, goal difference, and goals scored.",
+      "breakdown_regime": "Schedule imbalance occurs when teams have uneven rest days between matches within a group.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Match scheduling optimization as a constrained combinatorial design problem.",
+        "source_operator": "w0_snake_case_id",
+        "telemetry": "Number of rest-day asymmetries per group, average gap in rest days between teams."
+      }
+    },
+    {
+      "primitive_id": "w1_match_fixing",
+      "name": "match_fixing_risk",
+      "verbatim_quote": "Using groups of three raises several fairness issues, including the risk of match fixing and schedule imbalance.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Two teams in the final group match know the exact result needed to advance together.",
+      "breakdown_regime": "Match-fixing equilibrium occurs when both teams prefer a specific tied or controlled-margin result.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Strategic manipulation detection via Bayesian network models of outcome probabilities.",
+        "source_operator": "w1_match_fixing",
+        "telemetry": "Observed vs. expected frequency of low-scoring draws in final group matches."
+      }
+    },
+    {
+      "primitive_id": "w2_collapse_to_groups_of_four",
+      "name": "collapse_to_groups_of_four",
+      "verbatim_quote": "Finally we describe alternate formats for a 48-team World Cup that would eliminate or strongly decrease the risk of collusion.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "A hypothetical 48-team format using 12 groups of 4 teams instead of 16 groups of 3.",
+      "breakdown_regime": "Group size expansion removes the 'last-match' information asymmetry entirely.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE: State-transition model where tournament progression depends on multi-team strategic interactions.",
+        "source_operator": "w2_collapse_to_groups_of_four",
+        "telemetry": "Probability of simultaneous advancement under Nash equilibrium versus dominant strategy."
+      }
+    },
+    {
+      "primitive_id": "w3_fair_play_tiebreaker",
+      "name": "fair_play_tiebreaker",
+      "verbatim_quote": "We also quantify how the risk of collusion depends on competitive balance.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Competitive balance refers to equal win probabilities among teams in a group.",
+      "breakdown_regime": "High competitive balance increases the likelihood of multiple teams sharing identical advancement scenarios.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Conformal prediction intervals for fair-play tiebreakers under varying team strength distributions.",
+        "source_operator": "w3_fair_play_tiebreaker",
+        "telemetry": "Standard deviation of win probabilities across teams in a group as a proxy for competitive balance."
+      }
+    },
+    {
+      "primitive_id": "perfect_competitive_balance",
+      "name": "Perfect Competitive Balance",
+      "verbatim_quote": "7 In the case of perfect competitive balance, p := pAB = pBA = pAC =pCA = pBC = pCB ≤ 1/2, and p≤0 > 1/2, typically close to 1/2.",
+      "page": 7,
+      "latex": "p := p_{AB} = p_{BA} = p_{AC} = p_{CA} = p_{BC} = p_{CB} \\leq 1/2, \\text{ and } p_{\\leq 0} > 1/2, \\text{ typically close to } 1/2.",
+      "symbol_and_unit_ledger": "{'p': 'probability of winning a match, dimensionless', 'p_{\\\\leq 0}': 'probability of losing or drawing, dimensionless'}",
+      "assumptions": "All teams have equal strength; match outcomes are independent and identically distributed.",
+      "breakdown_regime": "When p approaches 1/2, risk of collusion increases due to symmetric competitiveness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's state transition kernel for match outcomes under symmetric competition.",
+        "source_operator": "perfect_competitive_balance",
+        "telemetry": "Match result variance and expected collusion probability."
+      }
+    },
+    {
+      "primitive_id": "match_fixing_risk_maximal",
+      "name": "Maximal Match Fixing Risk",
+      "verbatim_quote": "The probability that there is a risk of match fixing is maximal, equal to 1, in the case where dAB = dAC = 1.",
+      "page": 8,
+      "latex": "d_{AB} = d_{AC} = 1 \\Rightarrow P_{\\text{risk}} = 1",
+      "symbol_and_unit_ledger": "{'d_{AB}': 'goal difference between teams A and B, dimensionless', 'P_{\\\\text{risk}}': 'probability of match fixing risk, dimensionless'}",
+      "assumptions": "Goal difference is fixed at unity; all other match outcomes are neutralized.",
+      "breakdown_regime": "When goal differences are maximized, teams are forced into predictable outcomes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's Bayesian risk model when goal differences are extreme.",
+        "source_operator": "match_fixing_risk_maximal",
+        "telemetry": "Observed match result predictability and collusion indicators."
+      }
+    },
+    {
+      "primitive_id": "match_schedule_impact",
+      "name": "Impact of Match Schedule",
+      "verbatim_quote": "pAB = 1 and (pCA = 0 or p≤0 = 0): A surely wins against B, and it cannot lose against C, or if it loses against C its global goal difference GDA can only be positive.",
+      "page": 8,
+      "latex": "p_{AB} = 1 \\text{ and } (p_{CA} = 0 \\text{ or } p_{\\leq 0} = 0) \\Rightarrow \\text{A wins against B, } G_{DA} > 0 \\text{ if } A \\text{ loses to } C",
+      "symbol_and_unit_ledger": "{'p_{AB}': 'probability A beats B, dimensionless', 'p_{CA}': 'probability C beats A, dimensionless', 'G_{DA}': 'global goal difference for team A, dimensionless'}",
+      "assumptions": "Fixed match order and deterministic outcomes for key games.",
+      "breakdown_regime": "When schedule favors early qualification, risk of collusion rises for weaker teams.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's scheduling logic to compute risk of collusion per game sequence.",
+        "source_operator": "match_schedule_impact",
+        "telemetry": "Collusion risk per match sequence and team qualification status."
+      }
+    },
+    {
+      "primitive_id": "banning_draws",
+      "name": "Effect of Banning Draws",
+      "verbatim_quote": "Note that forbidding draws does not eliminate the risk of collusion.",
+      "page": 8,
+      "latex": "\\text{Banning draws } \\nRightarrow \\text{ No elimination of collusion risk}",
+      "symbol_and_unit_ledger": "{'draws': 'match outcomes resulting in tie, dimensionless'}",
+      "assumptions": "Draws are eliminated from match outcomes; other factors remain unchanged.",
+      "breakdown_regime": "Elimination of draws does not prevent strategic manipulation in non-draw scenarios.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's risk model under constrained outcome space.",
+        "source_operator": "banning_draws",
+        "telemetry": "Probability of collusion under draw-free match outcomes."
+      }
+    },
+    {
+      "primitive_id": "aggravated_risk_penalty",
+      "name": "Aggravated Risk of Match Fixing on Penalties",
+      "verbatim_quote": "a) There is an aggravated risk of match fixing on penalties if and only if 2m ≤ n.",
+      "page": 14,
+      "latex": "2m \\leq n",
+      "symbol_and_unit_ledger": "{'m': 'goal margin of victory over B (dimensionless)', 'n': 'goal margin of defeat to C (dimensionless)'}",
+      "assumptions": "Teams A, B, C play under 3-2-1-0 system; draws forbidden; penalty shootouts determine final point allocation.",
+      "breakdown_regime": "When 2m = n, B and C must draw with sufficient goals to tie A's GD but exceed goal count.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian risk classifier for collusion likelihood based on goal differential thresholds.",
+        "source_operator": "aggravated_risk_penalty",
+        "telemetry": "Observed goal margins m and n during group stage games."
+      }
+    },
+    {
+      "primitive_id": "goal_difference_advantage",
+      "name": "Goal Difference Advantage Threshold",
+      "verbatim_quote": "If 2m > n, then if B and C draw, A has a strictly better goal difference than B so it cannot be eliminated after B and C draw.",
+      "page": 14,
+      "latex": "2m > n \\Rightarrow \\text{A cannot be eliminated}",
+      "symbol_and_unit_ledger": "{'m': \"margin of A's win vs B (dimensionless)\", 'n': \"margin of A's loss vs C (dimensionless)\", 'GDA': 'goal difference advantage = m - n'}",
+      "assumptions": "Teams compete under 3-2-1-0 scoring; B and C draw in second round.",
+      "breakdown_regime": "When 2m > n, A’s GD ensures advancement regardless of penalty results.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's state transition logic for group stage advancement rules.",
+        "source_operator": "goal_difference_advantage",
+        "telemetry": "Computed GDA values post-draws between B and C."
+      }
+    },
+    {
+      "primitive_id": "collusion_condition",
+      "name": "Collusion Condition for Draw-Outcomes",
+      "verbatim_quote": "b) If Team A drew twice and won one penalty shootout (say, against B) and lost the other (say, against C), then by drawing k - k with k large enough both B and C would advance if B wins the penalty shootout.",
+      "page": 14,
+      "latex": "\\text{If } A\\text{ draws with } B,C \\text{ and } 2m=n, \\text{ then } B,C\\text{ can tie } k-k \\text{ such that } B\\text{ advances}",
+      "symbol_and_unit_ledger": "{'k': 'goals scored in draw (dimensionless)', 'm': \"margin of A's win vs B (dimensionless)\", 'n': \"margin of A's loss vs C (dimensionless)\"}",
+      "assumptions": "A draws with both B and C; B wins penalty shootout; 2m = n condition holds.",
+      "breakdown_regime": "Occurs when A's GD allows B and C to tie with equal or superior goal counts post-penalty.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic collusion detection engine using draw outcomes and penalty scenarios.",
+        "source_operator": "collusion_condition",
+        "telemetry": "Frequency of draw-penalty combinations leading to shared advancement."
+      }
+    },
+    {
+      "primitive_id": "penalty_shootout_risk",
+      "name": "Penalty Shootout Risk Indicator",
+      "verbatim_quote": "There can be no aggravated risk of collusion on penalties as if B and C draw, A will finish ahead of B even if B wins the penalty shootout, due to a better goal difference.",
+      "page": 14,
+      "latex": "\\text{No risk if } GDA > 0 \\text{ and } B \\text{ beats } C \\text{ on penalties}",
+      "symbol_and_unit_ledger": "{'GDA': 'goal difference advantage = m - n', 'B_wins_penalties': 'Boolean indicator for B winning shootout'}",
+      "assumptions": "Draws occur between B and C; A has positive GDA.",
+      "breakdown_regime": "When A's GDA > 0, A remains ahead of B even if B wins penalties.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's strategic decision tree for penalty-based qualification paths.",
+        "source_operator": "penalty_shootout_risk",
+        "telemetry": "Outcome distribution of penalty shootouts affecting group standings."
+      }
+    },
+    {
+      "primitive_id": "risk_of_match_fixing_30",
+      "name": "Risk of Match Fixing Under 3-0 System",
+      "verbatim_quote": "Indeed, compared with the 3-0 point system (Table 8) a situation now leads to risk of match fixing: • Team A has two draws.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'pRMF30': 'probability of risk of match fixing under 3-0 system', 'dAB': 'draw probability between teams A and B', 'dAC': 'draw probability between teams A and C'}",
+      "assumptions": "Teams A, B, C have equal strength; match outcomes are independent except through shared group dynamics.",
+      "breakdown_regime": "When Team A achieves two draws, risk vanishes if A qualifies via penalty shootout.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI Bayesian update on match-fixing likelihood conditioned on draw outcomes and penalty performance.",
+        "source_operator": "risk_of_match_fixing_30",
+        "telemetry": "Observed frequency of match-fixing reports in groups with two draws."
+      }
+    },
+    {
+      "primitive_id": "aggravated_risk_penalty_3210",
+      "name": "Aggravated Risk of Match Fixing on Penalties",
+      "verbatim_quote": "But the 3-2-1-0 point system introduces a new, problematic aggravated risk of match fixing (on penalties), in which a team can decide to eliminate Team A at no cost by losing the penalty shootout if the last group game ends in a draw after 90 minutes.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'pRMF3210': 'probability of risk of match fixing under 3-2-1-0 system', 'dAB': 'draw probability between teams A and B', 'dAC': 'draw probability between teams A and C', 'pBA': 'probability that B beats A', 'pCA': 'probability that C beats A'}",
+      "assumptions": "Penalty shootout outcomes are strategic; teams can choose to lose to eliminate others without penalty.",
+      "breakdown_regime": "Occurs when final group game ends in draw and subsequent penalty shootout allows elimination without qualification impact.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE strategic state transition from draw → penalty shootout with payoff matrix reflecting qualification vs. collusion incentives.",
+        "source_operator": "aggravated_risk_penalty_3210",
+        "telemetry": "Frequency of penalty shootout decisions made post-draw in simulated group stages."
+      }
+    },
+    {
+      "primitive_id": "global_collusion_risk_comparison",
+      "name": "Global Collusion Risk Comparison Between Systems",
+      "verbatim_quote": "However, surprisingly, the global risk of collusion is higher in the 3-2-1-0 point system than in the 3-0 point system: pRMF3210 = pRMF30 + 1⁄4*dABdAC ≥ pRMF30.",
+      "page": 20,
+      "latex": "p_{\\text{RMF3210}} = p_{\\text{RMF30}} + \\frac{1}{4} d_{AB} d_{AC}",
+      "symbol_and_unit_ledger": "{'pRMF30': 'global risk of match fixing under 3-0 system', 'pRMF3210': 'global risk of match fixing under 3-2-1-0 system', 'dAB': 'probability of draw between teams A and B', 'dAC': 'probability of draw between teams A and C'}",
+      "assumptions": "All teams are equally likely to draw; global risk is additive across all groups.",
+      "breakdown_regime": "When draw probabilities are non-zero, 3-2-1-0 increases overall risk due to additional qualification paths.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI ensemble prediction of global collusion risk using cross-group conditional probabilities.",
+        "source_operator": "global_collusion_risk_comparison",
+        "telemetry": "Aggregate match-fixing incidence rate across 16 groups under each point system."
+      }
+    },
+    {
+      "primitive_id": "reduced_fixing_probability_with_draws",
+      "name": "Reduced Fixing Probability With Draws",
+      "verbatim_quote": "This decreases the probability that there is a risk of match fixing by 1/4 dABdAC.",
+      "page": 20,
+      "latex": "\\Delta p_{\\text{fixing}} = \\frac{1}{4} d_{AB} d_{AC}",
+      "symbol_and_unit_ledger": "{'dAB': 'probability of draw between teams A and B', 'dAC': 'probability of draw between teams A and C', '\\\\Delta p_{\\\\text{fixing}}': 'decrease in fixing risk probability'}",
+      "assumptions": "Draws reduce incentive to fix matches because outcomes are uncertain.",
+      "breakdown_regime": "Applies when two teams draw in a group, reducing potential collusion scenarios.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE state-space reduction in match-fixing possibilities via draw-induced uncertainty.",
+        "source_operator": "reduced_fixing_probability_with_draws",
+        "telemetry": "Proportion of groups where draw reduces fixing risk versus those where it doesn't."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6dde95ff9ffd9614_t0",
+      "think": "This chapter introduces the core problem of strategic manipulation in a 48-team World Cup format using 16 groups of three. The key insight is that the \"last-match\" scenario creates a perfect-information duopoly where two teams can coordinate to fix the result, harming the third team. The author quantifies this risk using game-theoretic models and shows that even eliminating draws or changing point systems does not fully solve the issue. The proposed solution is to revert to groups of four, which breaks the duopoly structure entirely. Window 1 Synthesis: Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents (teams) are assumed to be rational, utility-maximizing entities who will exploit any informational advantage. Coaches and federations are modeled as principals who may tacitly allow or actively encourage match-fixing if it maximizes their collective payoff. Fans and regulators are assumed to prioritize integrity over competitive excitement. Theory of Mind (Window 1): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "The model assumes independent Bernoulli outcomes for each match, which violates the Markov property required for accurate state-transition dynamics in GSE. Additionally, the assumption of perfect information about other matches' scores introduces spurious correlation, creating a leakage path from GSI's probabilistic forecasts into the tactical decision-making space. Cross-Layer Veto (Window 1): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6dde95ff9ffd9614_t1",
+      "think": "Chapter 2 explores how match outcomes in group stages influence the risk of collusion through probabilistic models. It begins by defining perfect competitive balance, where all teams have equal strength, leading to high risk of match fixing due to symmetric outcomes. The model uses probabilities such as pAB to represent win chances and incorporates goal differences (dAB) to assess risk. The paper argues that maximizing goal differences increases risk, suggesting that eliminating draws does not fully mitigate collusion threats. Instead, strategic scheduling and team strength disparities affect risk dynamics. The analysis reveals that even with structured schedules favoring stronger teams, collusion remains a concern. The implications suggest that risk management must account for both probabilistic match outcomes and strategic incentives within tournament structures. Window 2 Synthesis: Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in game theory and probabilistic risk modeling, building upon earlier studies of match-fixing in professional sports and tournament design principles. Retrocausal Genealogy (Window 2): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing strategies of teams aiming to maximize qualification chances while minimizing risk of detection, considering both direct match outcomes and indirect incentives. Theory of Mind (Window 2): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to specific match outcomes by ensuring risk models remain robust across varying team strengths and scheduling constraints. Cross-Layer Veto (Window 2): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6dde95ff9ffd9614_t2",
+      "think": "Chapter 3 explores how the 3-2-1-0 point system alters risk dynamics compared to traditional 3-1-0 systems. It introduces nuanced conditions for match-fixing risks, particularly concerning goal differences and penalty outcomes. The core insight lies in the interplay between goal margins (m and n) and the resulting group-stage standings. When 2m ≤ n, Team A becomes vulnerable to being eliminated by a draw between B and C, especially if C wins on penalties. This creates an 'aggravated risk' because A's position hinges on uncertain penalty outcomes. Conversely, when 2m > n, A's superior goal difference ensures advancement, eliminating collusion risk. These conditions are formalized through mathematical inequalities and mapped onto Bayesian inference frameworks within GSI for real-time risk assessment. Meanwhile, GSE employs these primitives to simulate strategic player behavior and predict collusion hotspots in group stages. Window 3 Synthesis: Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This analysis builds upon earlier work in 3-1-0 systems by Guyon (2020) and extends it to 3-2-1-0 configurations, incorporating penalty shootout mechanics and goal difference thresholds. Retrocausal Genealogy (Window 3): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents model each other's incentives to collude—teams B and C may coordinate draws to manipulate A’s advancement, while A seeks to maintain a strong GD to avoid elimination. Theory of Mind (Window 3): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity checks ensure that no single variable dominates risk calculation; leakage vetos prevent overfitting to specific goal differentials without considering broader match dynamics. Cross-Layer Veto (Window 3): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6dde95ff9ffd9614_t3",
+      "think": "Chapter 4 explores how FIFA's point system affects match-fixing risks in group stages. The core argument is that while forbidding draws (as in 3-0) reduces direct fixing opportunities, it increases aggravated risks—especially in penalty shootouts. The 3-2-1-0 system introduces a novel form of aggravated risk: teams can strategically lose penalties to eliminate opponents without affecting their own qualification. Despite this, the global risk of collusion rises under 3-2-1-0 due to increased qualification pathways. The mathematical framework models these risks using conditional probabilities of draws and penalty outcomes. The analysis reveals that although 3-2-1-0 lowers the chance of standard fixing, it raises the risk of strategic collusion on penalties. This suggests that while point system changes can mitigate some risks, they may introduce new vulnerabilities. The study also notes that the schedule of games (e.g., strongest team playing early) significantly impacts risk levels. Thus, optimizing point systems must consider not just immediate incentives but also long-term systemic effects on player behavior and group dynamics. Window 4 Synthesis: Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 20th-century football governance debates over scoring fairness and match integrity, evolving through post-WWII FIFA reforms and modern data-driven risk modeling. Retrocausal Genealogy (Window 4): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents (teams) weigh qualification benefits against collusion gains; coaches optimize for survival while considering rival strategies. Players may act rationally to avoid being eliminated by others' strategic losses. Theory of Mind (Window 4): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity requires that risk metrics do not co-vary linearly across point systems. Leakage veto ensures that penalty-related risks are not masked by draw-related reductions in risk. Cross-Layer Veto (Window 4): Rooted in undated - Risk of Collusion Will Groups of 3 Ruin the FIFA World Cup - Guyon (6dde95ff9ffd9614, 30/30 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

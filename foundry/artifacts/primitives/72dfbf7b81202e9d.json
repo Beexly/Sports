@@ -1,0 +1,78 @@
+{
+  "book_id": "72dfbf7b81202e9d",
+  "source_status": "COMPLETE",
+  "title": "p0014",
+  "file_name": "p0014.txt",
+  "sha256": "72dfbf7b81202e9d402792eeb7833a85fe24a4f765d813fa558341018b05e7f3",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The structural unification of probabilistic forecasting and market pricing relies on the expectation operator. The expected gain is a linear functional mapping model probabilities and market odds into a scalar return, establishing an isomorphism between statistical accuracy and economic arbitrage in competitive environments.",
+  "gsi_mapping": "GSI maps this by treating bookmaker odds as a prior distribution and model outputs as likelihoods. Bayesian updating yields posterior probabilities. Conformal inference provides rigorous prediction intervals for score outcomes, ensuring that our estimated probabilities maintain calibrated coverage against empirical frequencies.",
+  "gse_mapping": "GSE translates the expected value condition into a situational state-transition graph. A betting decision triggers a transition only if the divergence between internal belief states and external market priors exceeds a predefined threshold, optimizing resource allocation across dynamic game states.",
+  "primitives": [
+    {
+      "primitive_id": "expected_gain_operator",
+      "name": "Expected Gain Operator",
+      "verbatim_quote": "then the expected gain from a unit stake bet on a home win, for example, is",
+      "page": 1,
+      "latex": "E[G] = p_k (b_H - 1) - (1 - p_k)",
+      "symbol_and_unit_ledger": "p_k: dimensionless model probability of home win; b_H: dimensionless decimal odds offered by bookmaker; E[G]: dimensionless expected fractional return per unit stake.",
+      "assumptions": "The model probability p_k represents the true underlying frequency or a sufficiently accurate estimator thereof. The payout structure is fixed at decimal odds b_H without variable commission structures.",
+      "breakdown_regime": "Breaks down when market liquidity is insufficient to execute the wager at b_H, or when transaction costs and vig exceed the calculated positive edge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's Value Function V(s,a), where state s is the pre-match information set and action a is placing the wager.",
+        "source_operator": "expected_gain_operator",
+        "telemetry": "Realized Return on Investment (ROI) over a large ensemble of deployed wagers."
+      }
+    },
+    {
+      "primitive_id": "epistemic_edge_condition",
+      "name": "Epistemic Edge Condition",
+      "verbatim_quote": "In reality neither pk nor bH is the true probability, but we obtain a positive return if our estimates are sufficiently more accurate than the bookmakers'.",
+      "page": 1,
+      "latex": "p_k > \\frac{1}{b_H}",
+      "symbol_and_unit_ledger": "p_k: dimensionless model probability; b_H: dimensionless decimal odds; 1/b_H: implied market probability including overround.",
+      "assumptions": "Both the model and the bookmaker are biased estimators of the ground truth probability, but the model's bias-variance tradeoff yields lower overall error.",
+      "breakdown_regime": "Fails if the bookmaker employs superior real-time data pipelines, rendering the model's epistemic advantage negative or zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to GSI's KL-divergence thresholding, where betting occurs only when D_KL(p_model || p_market) exceeds a noise floor.",
+        "source_operator": "epistemic_edge_condition",
+        "telemetry": "Brier Score differential between the proprietary model and the closing market line."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "p0014 Grounded Principle 3",
+      "verbatim_quote": "MODELLING ASSOCIATION FOOTBALL SCORES 277 (a) Fig. 3. Model probability estimates plotted against odds for all",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "72dfbf7b81202e9d_t0",
+      "think": "The core mathematical derivation stems from the definition of expected value in a discrete outcome space. For a binary event like a home win, the payoff is a step function. If the event occurs with probability p_k, the net profit is (b_H - 1). If it fails, with probability (1 - p_k), the loss is exactly 1 unit. Summing these weighted outcomes yields the Expected Gain Operator: E[G] = p_k(b_H - 1) - (1 - p_k). Algebraically simplifying this expression reveals E[G] = p_k * b_H - 1. This elegant formulation demonstrates that a positive expected return is achieved strictly when the product of the estimated probability and the offered odds exceeds unity, or equivalently, when the estimated probability exceeds the inverse of the odds (the implied market probability). \n\nThe dualities here lie between the physical world (true unknown probabilities) and the financial world (market odds). The bookmaker's odds b_H inherently include a margin (overround), meaning the sum of implied probabilities across all outcomes exceeds one. Thus, even a perfectly calibrated model might struggle if it merely replicates the market's consensus. The Epistemic Edge Condition formalizes the requirement for arbitrage: the model must not just be correct, but structurally more accurate than the aggregated wisdom embedded in the market prices. \n\nFailure modes emerge primarily from estimation variance and regime shifts. If p_k is derived from a finite sample of historical football scores, sampling noise can create false positives where E[G] appears positive purely by chance. Furthermore, the assumption of static b_H ignores market dynamics; as capital flows, odds adjust, potentially eroding the edge before execution. Finally, the breakdown regime occurs when the underlying generative process of the sport changes (e.g., rule modifications, tactical evolutions), causing the historical p_k to diverge catastrophically from future realities, rendering the expected value calculation fundamentally flawed.\n\nDeep epistemic analysis for p0014 (72dfbf7b81202e9d, domain=other, pages_read=1/1): Operator 'Expected Gain Operator' (page 1, domain other) captures: then the expected gain from a unit stake bet on a home win, for example, is Assumptions: The model probability p_k represents the true underlying frequency or a sufficiently accurate estimator thereof. The payout structure is fixed at decimal odds b_H without variable commission structures. Breakdown regime: Breaks down when market liquidity is insufficient to execute the wager at b_H, or when transaction costs and vig exceed the calculated positive edge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's Value Function V(s,a), where state s is the pre-match information set and action a is placing the wager. Operator 'Epistemic Edge Condition' (page 1, domain other) captures: In reality neither pk nor bH is the true probability, but we obtain a positive return if our estimates are sufficiently more accurate than the bookmakers'. Assumptions: Both the model and the bookmaker are biased estimators of the ground truth probability, but the model's bias-variance tradeoff yields lower overall error. Breakdown regime: Fails if the bookmaker employs superior real-time data pipelines, rendering the model's epistemic advantage negative or zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to GSI's KL-divergence thresholding, where betting occurs only when D_KL(p_model || p_market) exceeds a noise floor. Operator 'p0014 Grounded Principle 3' (page 1, domain other) captures: MODELLING ASSOCIATION FOOTBALL SCORES 277 (a) Fig. 3. Model probability estimates plotted against odds for all Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0014 (72dfbf7b81202e9d, domain=other, pages_read=1/1): Operator 'Expected Gain Operator' (page 1, domain other) captures: then the expected gain from a unit stake bet on a home win, for example, is Assumptions: The model probability p_k represents the true underlying frequency or a sufficiently accurate estimator thereof. The payout structure is fixed at decimal odds b_H without variable commission structures. Breakdown regime: Breaks down when market liquidity is insufficient to execute the wager at b_H, or when transaction costs and vig exceed the calculated positive edge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's Value Function V(s,a), where state s is the pre-match information set and action a is placing the wager. Operator 'Epistemic Edge Condition' (page 1, domain other) captures: In reality neither pk nor bH is the true probability, but we obtain a positive return if our estimates are sufficiently more accurate than the bookmakers'. Assumptions: Both the model and the bookmaker are biased estimators of the ground truth probability, but the model's bias-variance tradeoff yields lower overall error. Breakdown regime: Fails if the bookmaker employs superior real-time data pipelines, rendering the model's epistemic advantage negative or zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to GSI's KL-divergence thresholding, where betting occurs only when D_KL(p_model || p_market) exceeds a noise floor. Operator 'p0014 Grounded Principle 3' (page 1, domain other) captures: MODELLING ASSOCIATION FOOTBALL SCORES 277 (a) Fig. 3. Model probability estimates plotted against odds for all Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This framework traces back to the foundational axioms of probability theory established by Kolmogorov, intersecting with the economic theories of efficient markets pioneered by Fama. In sports analytics, it directly inherits from the Poisson distribution models of Dixon and Coles, which estimate score probabilities to derive expected values against fixed-odds markets, formalizing the transition from descriptive statistics to prescriptive financial engineering.",
+      "theory_of_mind": "We model two primary opposing agents: the quantitative analyst (us) and the bookmaker (the market maker). The bookmaker acts as a risk-averse aggregator, setting odds to balance liability while extracting a guaranteed margin. Our model must anticipate their adjustments. We assume the bookmaker possesses vast capital and sophisticated syndicated information, meaning our strategy cannot rely on simple public data but must exploit subtle, non-linear feature interactions they overlook.",
+      "cross_layer_veto": "A strict veto is applied if the features driving p_k are highly collinear with publicly available metrics used by the bookmaker, indicating no unique informational edge. Additionally, if the conformal prediction intervals for the match score are excessively wide, the resulting probability mass is too diffuse to overcome the market overround, triggering a veto on deployment to prevent variance-induced ruin."
+    }
+  ]
+}

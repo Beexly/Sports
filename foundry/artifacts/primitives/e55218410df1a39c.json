@@ -1,0 +1,78 @@
+{
+  "book_id": "e55218410df1a39c",
+  "source_status": "COMPLETE",
+  "title": "LOCAL_BRINGUP",
+  "file_name": "LOCAL_BRINGUP.md",
+  "sha256": "e55218410df1a39c5b483f1fe46fca46ae932985107eaa2f31f9901a6ea58071",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Local bring-up protocol unifies dev environment setup, database path selection, and authentication bypasses into a coherent operational manifold. Universal Lens: Rooted in LOCAL_BRINGUP (e55218410df1a39c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference maps local dev paths to probabilistic data states using stub vs real DB regimes as prior distributions over live pick availability. GSI Mapping: Rooted in LOCAL_BRINGUP (e55218410df1a39c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning transitions through stub, seed, and live data states via conditional telemetry gates that define valid operational modes. GSE Mapping: Rooted in LOCAL_BRINGUP (e55218410df1a39c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "local_dev_setup",
+      "name": "Local Development Environment Setup",
+      "verbatim_quote": "Install dependencies ```bash git checkout -b local-bringup # never commit on `main` cd C:\\Users\\Garrett\\Sports npm install # workspace install — installs apps/web + all packages/ ``` The `postinstall` hook runs `npm run db:generate` automatically (Prisma client generation).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'git_branch': 'dimensionless', 'npm_install': 'dimensionless', 'prisma_client': 'dimensionless'}",
+      "assumptions": "Workspace isolation requires clean branch and package installation.",
+      "breakdown_regime": "Failure at npm install or postinstall hook indicates missing Node.js or npm versions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dev setup mirrors production deployment pipeline with local overrides.",
+        "source_operator": "local_dev_setup",
+        "telemetry": "Successful completion of npm install and prisma generation."
+      }
+    },
+    {
+      "primitive_id": "database_path_selection",
+      "name": "Database Path Selection Mechanism",
+      "verbatim_quote": "### Path A — Stub DB, no Postgres (fastest first run) All DB reads return empty; `DEMO_PICKS_ENABLED=true` makes `/picks` and `/dashboard` render a deterministic 10-pick sample slate (all `result=PENDING`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DATABASE_URL': 'string', 'DEMO_PICKS_ENABLED': 'boolean', 'stub_mode': 'boolean'}",
+      "assumptions": "Stub mode enables rapid prototyping without PostgreSQL dependency.",
+      "breakdown_regime": "When DATABASE_URL=stub, db:push and db:seed are skipped.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Path selection determines whether to initialize real or mock database layers.",
+        "source_operator": "database_path_selection",
+        "telemetry": "Verification of db:push/db:seed execution based on DATABASE_URL value."
+      }
+    },
+    {
+      "primitive_id": "admin_authentication_bypass",
+      "name": "Admin Authentication Bypass",
+      "verbatim_quote": "The seed creates the user row with `role=ADMIN`, so the Prisma adapter links the OAuth account and you land in `/cockpit` as admin.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DEV_FAKE_ADMIN': 'boolean', 'NODE_ENV': 'string', 'auth_call': 'dimensionless'}",
+      "assumptions": "Synthetic admin session is restricted to non-production environments.",
+      "breakdown_regime": "In production, DEV_FAKE_ADMIN is ignored due to NODE_ENV check.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Authentication bypass enables dev-only access control without external identity providers.",
+        "source_operator": "admin_authentication_bypass",
+        "telemetry": "Auth flow returns synthetic ADMIN role when DEV_FAKE_ADMIN=true."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e55218410df1a39c_t0",
+      "think": "The local bring-up process defines a structured operational space where development occurs under controlled constraints. Each primitive represents a distinct layer of abstraction: environment setup ensures reproducibility, database path selection governs data fidelity, and authentication bypass allows isolated testing. These primitives form a dualistic system—either stubbed or real—that supports both rapid iteration and full-stack validation. Failure modes arise from misalignment between these layers, such as attempting to seed a stubbed DB or running in production with fake auth. The interplay between them establishes a failure-safe manifold where each component's behavior is conditioned upon others' states.\n\nDeep epistemic analysis for LOCAL_BRINGUP (e55218410df1a39c, domain=other, pages_read=5/5): Operator 'Local Development Environment Setup' (page 1, domain other) captures: Install dependencies ```bash git checkout -b local-bringup # never commit on `main` cd C:\\Users\\Garrett\\Sports npm install # workspace install — installs apps/web + all packages/ ``` The `postinstall` hook runs `npm run db:generate` automatically (Prisma client generation). Assumptions: Workspace isolation requires clean branch and package installation. Breakdown regime: Failure at npm install or postinstall hook indicates missing Node.js or npm versions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dev setup mirrors production deployment pipeline with local overrides. Operator 'Database Path Selection Mechanism' (page 1, domain other) captures: ### Path A — Stub DB, no Postgres (fastest first run) All DB reads return empty; `DEMO_PICKS_ENABLED=true` makes `/picks` and `/dashboard` render a deterministic 10-pick sample slate (all `result=PENDING`). Assumptions: Stub mode enables rapid prototyping without PostgreSQL dependency. Breakdown regime: When DATABASE_URL=stub, db:push and db:seed are skipped. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Path selection determines whether to initialize real or mock database layers. Operator 'Admin Authentication Bypass' (page 2, domain other) captures: The seed creates the user row with `role=ADMIN`, so the Prisma adapter links the OAuth account and you land in `/cockpit` as admin. Assumptions: Synthetic admin session is restricted to non-production environments. Breakdown regime: In production, DEV_FAKE_ADMIN is ignored due to NODE_ENV check. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Authentication bypass enables dev-only access control without external identity providers. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LOCAL_BRINGUP (e55218410df1a39c, domain=other, pages_read=5/5): Operator 'Local Development Environment Setup' (page 1, domain other) captures: Install dependencies ```bash git checkout -b local-bringup # never commit on `main` cd C:\\Users\\Garrett\\Sports npm install # workspace install — installs apps/web + all packages/ ``` The `postinstall` hook runs `npm run db:generate` automatically (Prisma client generation). Assumptions: Workspace isolation requires clean branch and package installation. Breakdown regime: Failure at npm install or postinstall hook indicates missing Node.js or npm versions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dev setup mirrors production deployment pipeline with local overrides. Operator 'Database Path Selection Mechanism' (page 1, domain other) captures: ### Path A — Stub DB, no Postgres (fastest first run) All DB reads return empty; `DEMO_PICKS_ENABLED=true` makes `/picks` and `/dashboard` render a deterministic 10-pick sample slate (all `result=PENDING`). Assumptions: Stub mode enables rapid prototyping without PostgreSQL dependency. Breakdown regime: When DATABASE_URL=stub, db:push and db:seed are skipped. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Path selection determines whether to initialize real or mock database layers. Operator 'Admin Authentication Bypass' (page 2, domain other) captures: The seed creates the user row with `role=ADMIN`, so the Prisma adapter links the OAuth account and you land in `/cockpit` as admin. Assumptions: Synthetic admin session is restricted to non-production environments. Breakdown regime: In production, DEV_FAKE_ADMIN is ignored due to NODE_ENV check. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Authentication bypass enables dev-only access control without external identity providers. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Unix shell scripting traditions and modern monorepo practices, this structure reflects the evolution from simple build scripts to complex CI/CD pipelines with layered validation. Retrocausal Genealogy: Rooted in LOCAL_BRINGUP (e55218410df1a39c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in LOCAL_BRINGUP (e55218410df1a39c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the developer seeking fast feedback loops and the system enforcing correctness. The developer desires minimal friction; the system enforces safety through environment checks and conditional logic. Theory of Mind & Decision Maker Model: Rooted in LOCAL_BRINGUP (e55218410df1a39c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between stub and real DB paths, preventing concurrent initialization. Leakage occurs if DEV_FAKE_ADMIN is enabled in production, violating security boundaries. Cross-Layer Veto & Anti-Leakage Check: Rooted in LOCAL_BRINGUP (e55218410df1a39c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in LOCAL_BRINGUP (e55218410df1a39c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

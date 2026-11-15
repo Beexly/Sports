@@ -1,0 +1,95 @@
+{
+  "book_id": "3a2f11139054047b",
+  "source_status": "COMPLETE",
+  "title": "defense-matchup-2026-09-13",
+  "file_name": "defense-matchup-2026-09-13.md",
+  "sha256": "3a2f11139054047b2322ad3111b6a46a900edf7c303f835bbb4a40faf6e25b02",
+  "primary_domain": "football",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Defense performance metrics as stochastic processes over discrete time-series: sack rate = \\frac{\\text{sacks}}{\\text{dropbacks}}, yardage rate = \\frac{\\text{yards allowed}}{\\text{attempts}}, and TE fantasy points = \\sum_{i} (r_i \\cdot w_r + y_i \\cdot w_y + t_i \\cdot w_t) where weights \\{w_r, w_y, w_t\\} define scoring system.",
+  "gsi_mapping": "Bayesian belief update on defensive strength using observed metrics: P(\\text{defense} \\mid \\text{data}) \\propto P(\\text{data} \\mid \\text{defense}) \\cdot P(\\text{defense}), with prior over ranks and likelihood from 2025 season data. GSI Mapping: Rooted in defense-matchup-2026-09-13 (3a2f11139054047b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition model for DFS lineup optimization: \\Delta \\mathcal{S}_{\\text{lineup}} = \\sum_{\\text{players}} \\left( \\mathcal{F}(\\text{opp\\_def}) \\cdot \\mathcal{T}(\\text{matchup}) \\right), where \\mathcal{F} maps defense rank to expected fantasy yield and \\mathcal{T} encodes positional vulnerability.",
+  "primitives": [
+    {
+      "primitive_id": "sack_rate",
+      "name": "Sack Rate",
+      "verbatim_quote": "Saints 5th-ranked sack rate — CONFIRMED - New Orleans: 45 sacks on 536 opponent dropbacks = **8.40%**, ranked **5th**.",
+      "page": 1,
+      "latex": "\\text{Sack Rate} = \\frac{\\text{Sacks}}{\\text{Dropbacks}} = \\frac{45}{536} = 8.40\\%",
+      "symbol_and_unit_ledger": "{'Sacks': 'dimensionless count', 'Dropbacks': 'dimensionless count', 'Sack Rate': 'percentage'}",
+      "assumptions": "All sacks counted as pass attempts; dropbacks include sacks.",
+      "breakdown_regime": "Pass rush efficiency under defensive pressure",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sack rate is a normalized defensive pass-rush success metric, isomorphic to \\frac{\\text{events}}{\\text{opportunity}} in probabilistic defense models.",
+        "source_operator": "sack_rate",
+        "telemetry": "Observed sack frequency per defensive dropback"
+      }
+    },
+    {
+      "primitive_id": "overall_defense_ranking",
+      "name": "Overall Defense Ranking",
+      "verbatim_quote": "Washington worst overall defense — CONFIRMED (by yards) - 6,533 total yards allowed — **32nd of 32 (last)**.",
+      "page": 1,
+      "latex": "\\text{Rank}_{\\text{yards}} = 32",
+      "symbol_and_unit_ledger": "{'Total Yards Allowed': 'yards', 'Rank': 'ordinal'}",
+      "assumptions": "Total yards is standard measure of defensive effectiveness.",
+      "breakdown_regime": "Aggregate defensive performance across all phases",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Overall defense rank derived from cumulative yardage allowed, kernel of defensive failure in linear space.",
+        "source_operator": "overall_defense_ranking",
+        "telemetry": "Cumulative defensive yardage vs league average"
+      }
+    },
+    {
+      "primitive_id": "run_defense_ranking",
+      "name": "Run Defense Ranking",
+      "verbatim_quote": "Washington 30th versus the run — CONFIRMED - 2,411 rushing yards al",
+      "page": 1,
+      "latex": "\\text{Rank}_{\\text{run}} = 30",
+      "symbol_and_unit_ledger": "{'Rushing Yards Allowed': 'yards', 'Attempts': 'dimensionless count', 'Rank': 'ordinal'}",
+      "assumptions": "Rushing yards is direct proxy for run defense efficacy.",
+      "breakdown_regime": "Defensive ability against ground game",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Run defense rank is derived from average yards per rush attempt, kernel of ground game vulnerability.",
+        "source_operator": "run_defense_ranking",
+        "telemetry": "Yards allowed per rushing attempt vs league median"
+      }
+    },
+    {
+      "primitive_id": "tight_end_defense_ranking",
+      "name": "Tight End Defense Ranking",
+      "verbatim_quote": "Washington fourth-worst versus tight ends — CONFIRMED (half-PPR basis) - Computed TE production allowed from play-by-play with receiver positions joined from the official-style roster file: - **Half-PPR fantasy points allowed to TEs: 219.0 — 4th-most** (CIN 298.4, ARI 236.1, PIT 231.1, then WAS 219.0).",
+      "page": 2,
+      "latex": "\\text{Rank}_{\\text{TE}} = 4",
+      "symbol_and_unit_ledger": "{'TE Fantasy Points Allowed': 'fantasy points', 'Rank': 'ordinal'}",
+      "assumptions": "Half-PPR scoring reflects typical fantasy format.",
+      "breakdown_regime": "Positional defense against high-value targets",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "TE defense rank mirrors receiver defense in scoring-based vulnerability, isomorphic to \\sum_{\\text{TE plays}} \\text{scoring contribution}",
+        "source_operator": "tight_end_defense_ranking",
+        "telemetry": "Expected fantasy points per TE target"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3a2f11139054047b_t0",
+      "think": "The primitives form a coherent framework for evaluating defensive strength through three distinct but interrelated metrics: pass rush efficiency (sack rate), aggregate defensive capability (total yards), and positional vulnerability (TE defense). These metrics are derived from empirical play-by-play data and mapped into ordinal rankings that reflect real-world performance. Each metric exhibits a clear mathematical structure—sack rate as a ratio, rankings as order statistics, and TE scoring as a weighted sum. The failure modes lie in misinterpretation of raw counts vs rates (e.g., 45 sacks tied 10th in total but 5th in rate due to fewer dropbacks), or assuming uniformity in scoring systems (e.g., full vs half-PPR). Dualities emerge between yardage and point-based rankings, with each offering complementary insight into defensive frailty.\n\nDeep epistemic analysis for defense-matchup-2026-09-13 (3a2f11139054047b, domain=football, pages_read=3/3): Operator 'Sack Rate' (page 1, domain football) captures: Saints 5th-ranked sack rate — CONFIRMED - New Orleans: 45 sacks on 536 opponent dropbacks = **8.40%**, ranked **5th**. Assumptions: All sacks counted as pass attempts; dropbacks include sacks. Breakdown regime: Pass rush efficiency under defensive pressure Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Sack rate is a normalized defensive pass-rush success metric, isomorphic to \\frac{\\text{events}}{\\text{opportunity}} in probabilistic defense models. Operator 'Overall Defense Ranking' (page 1, domain football) captures: Washington worst overall defense — CONFIRMED (by yards) - 6,533 total yards allowed — **32nd of 32 (last)**. Assumptions: Total yards is standard measure of defensive effectiveness. Breakdown regime: Aggregate defensive performance across all phases Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Overall defense rank derived from cumulative yardage allowed, kernel of defensive failure in linear space. Operator 'Run Defense Ranking' (page 1, domain football) captures: Washington 30th versus the run — CONFIRMED - 2,411 rushing yards al Assumptions: Rushing yards is direct proxy for run defense efficacy. Breakdown regime: Defensive ability against ground game Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Run defense rank is derived from average yards per rush attempt, kernel of ground game vulnerability. Operator 'Tight End Defense Ranking' (page 2, domain football) captures: Washington fourth-worst versus tight ends — CONFIRMED (half-PPR basis) - Computed TE production allowed from play-by-play with receiver positions joined from the official-style roster file: - **Half-PPR fantasy points allowed to TEs: 219.0 — 4th-most** (CIN 298.4, ARI 236.1, PIT 231.1, then WAS 219.0). Assumptions: Half-PPR scoring reflects typical fantasy format. Breakdown regime: Positional defense against high-value targets Layer-2 GSI/GSE mapping ([ISOMORPHISM]): TE defense rank mirrors receiver defense in scoring-based vulnerability, isomorphic to \\sum_{\\text{TE plays}} \\text{scoring contribution} Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for defense-matchup-2026-09-13 (3a2f11139054047b, domain=football, pages_read=3/3): Operator 'Sack Rate' (page 1, domain football) captures: Saints 5th-ranked sack rate — CONFIRMED - New Orleans: 45 sacks on 536 opponent dropbacks = **8.40%**, ranked **5th**. Assumptions: All sacks counted as pass attempts; dropbacks include sacks. Breakdown regime: Pass rush efficiency under defensive pressure Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Sack rate is a normalized defensive pass-rush success metric, isomorphic to \\frac{\\text{events}}{\\text{opportunity}} in probabilistic defense models. Operator 'Overall Defense Ranking' (page 1, domain football) captures: Washington worst overall defense — CONFIRMED (by yards) - 6,533 total yards allowed — **32nd of 32 (last)**. Assumptions: Total yards is standard measure of defensive effectiveness. Breakdown regime: Aggregate defensive performance across all phases Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Overall defense rank derived from cumulative yardage allowed, kernel of defensive failure in linear space. Operator 'Run Defense Ranking' (page 1, domain football) captures: Washington 30th versus the run — CONFIRMED - 2,411 rushing yards al Assumptions: Rushing yards is direct proxy for run defense efficacy. Breakdown regime: Defensive ability against ground game Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Run defense rank is derived from average yards per rush attempt, kernel of ground game vulnerability. Operator 'Tight End Defense Ranking' (page 2, domain football) captures: Washington fourth-worst versus tight ends — CONFIRMED (half-PPR basis) - Computed TE production allowed from play-by-play with receiver positions joined from the official-style roster file: - **Half-PPR fantasy points allowed to TEs: 219.0 — 4th-most** (CIN 298.4, ARI 236.1, PIT 231.1, then WAS 219.0). Assumptions: Half-PPR scoring reflects typical fantasy format. Breakdown regime: Positional defense against high-value targets Layer-2 GSI/GSE mapping ([ISOMORPHISM]): TE defense rank mirrors receiver defense in scoring-based vulnerability, isomorphic to \\sum_{\\text{TE plays}} \\text{scoring contribution} Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century statistical football analysis, evolved via modern data science and probabilistic modeling, particularly through nflverse and PFR datasets. Retrocausal Genealogy: Rooted in defense-matchup-2026-09-13 (3a2f11139054047b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in defense-matchup-2026-09-13 (3a2f11139054047b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing DFS lineups will weight these primitives differently based on roster constraints and scoring formats; optimal strategies must account for both individual player matchups and team-level defensive liabilities. Theory of Mind & Decision Maker Model: Rooted in defense-matchup-2026-09-13 (3a2f11139054047b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that metrics like sack rate and run defense do not redundantly encode similar information; leakage vetoes prevent overfitting to single-dimensional proxies. Cross-Layer Veto & Anti-Leakage Check: Rooted in defense-matchup-2026-09-13 (3a2f11139054047b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in defense-matchup-2026-09-13 (3a2f11139054047b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

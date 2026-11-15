@@ -1,0 +1,78 @@
+{
+  "book_id": "6cbcffb05757a8d4",
+  "source_status": "COMPLETE",
+  "title": "p0020",
+  "file_name": "p0020.txt",
+  "sha256": "6cbcffb05757a8d4f610994517dd6669dc01f31c0c152d8f4172fcab074d0f8d",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Referral systems map customer selection to merchant transaction via hyperlink identifiers, enabling probabilistic attribution of sales to affiliates. Universal Lens: Rooted in p0020 (6cbcffb05757a8d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on affiliate performance using observed click-through and conversion data to infer causal impact of product recommendations. GSI Mapping: Rooted in p0020 (6cbcffb05757a8d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally aware state transitions in affiliate commerce model through hyperlink engagement, shopping cart formation, and referral credit assignment. GSE Mapping: Rooted in p0020 (6cbcffb05757a8d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "referral_linkage",
+      "name": "Referral Linkage Operator",
+      "verbatim_quote": "The hyperlink thus serves as a referral mechanism for referring the customer to the merchant Web site 106.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'link identifier (dimensionless)', 'C': 'customer session (dimensionless)', 'M': 'merchant site (dimensionless)'}",
+      "assumptions": "Each hyperlink uniquely identifies a product or group; customer action triggers redirect to merchant site.",
+      "breakdown_regime": "When L is malformed or C does not engage M, referral fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Linkage function maps customer intent to merchant transaction via persistent identifier.",
+        "source_operator": "referral_linkage",
+        "telemetry": "Click rate and conversion funnel metrics"
+      }
+    },
+    {
+      "primitive_id": "affiliate_attribution",
+      "name": "Affiliate Attribution Kernel",
+      "verbatim_quote": "A computer program 144 of the merchant Web site 106 uses this information to identify the associate that was the source of the referral, and to credit the sale (referral) to the associate if the customer subsequently purchases the product (or group of products).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'associate identifier (dimensionless)', 'P': 'product identifier (dimensionless)', 'S': 'sale event (dimensionless)'}",
+      "assumptions": "Sale event S is causally linked to prior referral A-P pair.",
+      "breakdown_regime": "When P is not found in database or A is invalid, attribution fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Attribution kernel computes conditional probability of referral success given prior link interaction.",
+        "source_operator": "affiliate_attribution",
+        "telemetry": "Conversion rate per affiliate and time-to-purchase distribution"
+      }
+    },
+    {
+      "primitive_id": "commission_calculation",
+      "name": "Commission Calculation Module",
+      "verbatim_quote": "The computer program 144 of the merchant site 106 uses this pricing information to calculate the proper commission or referral payment.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_p': 'commission per product ($)', 'P_p': 'product price ($)', 'R': 'referral rate (dimensionless)'}",
+      "assumptions": "Commission is proportional to product value; R is fixed or dynamic.",
+      "breakdown_regime": "When P_p is missing or R undefined, calculation fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Commission module applies pricing kernel to compute payout based on transaction value.",
+        "source_operator": "commission_calculation",
+        "telemetry": "Average commission per transaction and payout accuracy"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6cbcffb05757a8d4_t0",
+      "think": "The system models a two-layered feedback loop: first, the affiliate generates a hyperlink that encodes both product and associate identity; second, the merchant’s backend processes this linkage to attribute sales and compute commissions. The core operator is the referral linkage, which acts as a deterministic mapping from customer click to merchant site. The attribution kernel then probabilistically assigns credit to the affiliate based on subsequent purchase behavior. The commission calculation module applies a scalar multiplier to the product price to determine payout. These primitives form a closed-loop system where each step depends on the integrity of preceding steps. Failure modes include broken links, missing identifiers, or incorrect pricing data. The epistemological structure reflects a Bayesian update process where prior beliefs about affiliate efficacy are refined through empirical outcomes.\n\nDeep epistemic analysis for p0020 (6cbcffb05757a8d4, domain=other, pages_read=3/3): Operator 'Referral Linkage Operator' (page 1, domain other) captures: The hyperlink thus serves as a referral mechanism for referring the customer to the merchant Web site 106. Assumptions: Each hyperlink uniquely identifies a product or group; customer action triggers redirect to merchant site. Breakdown regime: When L is malformed or C does not engage M, referral fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Linkage function maps customer intent to merchant transaction via persistent identifier. Operator 'Affiliate Attribution Kernel' (page 1, domain other) captures: A computer program 144 of the merchant Web site 106 uses this information to identify the associate that was the source of the referral, and to credit the sale (referral) to the associate if the customer subsequently purchases the product (or group of products). Assumptions: Sale event S is causally linked to prior referral A-P pair. Breakdown regime: When P is not found in database or A is invalid, attribution fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Attribution kernel computes conditional probability of referral success given prior link interaction. Operator 'Commission Calculation Module' (page 1, domain other) captures: The computer program 144 of the merchant site 106 uses this pricing information to calculate the proper commission or referral payment. Assumptions: Commission is proportional to product value; R is fixed or dynamic. Breakdown regime: When P_p is missing or R undefined, calculation fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Commission module applies pricing kernel to compute payout based on transaction value. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0020 (6cbcffb05757a8d4, domain=other, pages_read=3/3): Operator 'Referral Linkage Operator' (page 1, domain other) captures: The hyperlink thus serves as a referral mechanism for referring the customer to the merchant Web site 106. Assumptions: Each hyperlink uniquely identifies a product or group; customer action triggers redirect to merchant site. Breakdown regime: When L is malformed or C does not engage M, referral fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Linkage function maps customer intent to merchant transaction via persistent identifier. Operator 'Affiliate Attribution Kernel' (page 1, domain other) captures: A computer program 144 of the merchant Web site 106 uses this information to identify the associate that was the source of the referral, and to credit the sale (referral) to the associate if the customer subsequently purchases the product (or group of products). Assumptions: Sale event S is causally linked to prior referral A-P pair. Breakdown regime: When P is not found in database or A is invalid, attribution fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Attribution kernel computes conditional probability of referral success given prior link interaction. Operator 'Commission Calculation Module' (page 1, domain other) captures: The computer program 144 of the merchant site 106 uses this pricing information to calculate the proper commission or referral payment. Assumptions: Commission is proportional to product value; R is fixed or dynamic. Breakdown regime: When P_p is missing or R undefined, calculation fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Commission module applies pricing kernel to compute payout based on transaction value. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early web tracking systems and affiliate marketing frameworks from the 1990s, evolving into modern behavioral economics and digital commerce analytics. Retrocausal Genealogy: Rooted in p0020 (6cbcffb05757a8d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0020 (6cbcffb05757a8d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the customer (decision-making), affiliate (content creation), and merchant (transaction processing). Each agent operates under bounded rationality, with incentives aligned through reward structures. Theory of Mind & Decision Maker Model: Rooted in p0020 (6cbcffb05757a8d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0020 (6cbcffb05757a8d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple affiliates reference same product without differentiation; leakage occurs if attribution lacks temporal specificity or product granularity. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0020 (6cbcffb05757a8d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0020 (6cbcffb05757a8d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "00fba93f01c3278c",
+  "source_status": "COMPLETE",
+  "title": "fnf-react",
+  "file_name": "fnf-react.md",
+  "sha256": "00fba93f01c3278c63eece44ac86a05e6680d6d367db67c3c7d3f29e5b43503c",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fnf_provider",
+      "name": "FNF Provider Composition",
+      "verbatim_quote": "## Provider Shape Use `QueryClientProvider` above the website, then `FnfProvider` where SDK clients are needed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Stable React component tree with defined authentication boundaries.",
+      "breakdown_regime": "State initialization and prop drilling for SDK client injection.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's multi-stage generation pipeline: Provider = Data Layer -> GSI = Control Layer. Maps to GSE's stateful generation actor: Provider = Actor Initialization -> GSE = State Machine.",
+        "source_operator": "fnf_provider",
+        "telemetry": "Cache hit ratios, provider re-render counts, query staleness metrics."
+      }
+    },
+    {
+      "primitive_id": "use_fnf",
+      "name": "FNF Client Hook",
+      "verbatim_quote": "For real SDK-backed generation/media/profile/credits, render `FnfProvider` only inside an authenticated website boundary or pass clients that call authenticated server functions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Authenticated server-side function or boundary ensures secure client instantiation.",
+      "breakdown_regime": "Lazy initialization of SDK clients with memoization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's API endpoint orchestration: Hook = API Client -> GSI = Endpoint Orchestrator. Maps to GSE's internal state access: Hook = State Getter -> GSE = Agent Memory.",
+        "source_operator": "use_fnf",
+        "telemetry": "Client initialization latency, network request volume, authentication success rates."
+      }
+    },
+    {
+      "primitive_id": "fnf_keys",
+      "name": "FNF Cache Key Factory",
+      "verbatim_quote": "This boundary means Higgsfield auth, not the generated website's own local sign-in.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Immutable inputs guarantee deterministic cache keys.",
+      "breakdown_regime": "Cache key collision prevention through structured hashing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's caching layer: Key Factory = Cache Indexer -> GSI = Cache Optimizer. Maps to GSE's belief tracking: Key Factory = State Hasher -> GSE = Belief State Manager.",
+        "source_operator": "fnf_keys",
+        "telemetry": "Cache miss rate, key length distribution, stale data percentage."
+      }
+    },
+    {
+      "primitive_id": "use_generation_run",
+      "name": "Generation Lifecycle Controller",
+      "verbatim_quote": "- Any real generation screen must include both the submit lifecycle and a feed/history surface.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Asynchronous operation with explicit confirmation step prevents orphaned requests.",
+      "breakdown_regime": "Polling loop termination upon completion or error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's execution pipeline: Controller = Execution Orchestrator -> GSI = Job Scheduler. Maps to GSE's action sequence: Controller = Sequence Executor -> GSE = Action Planer.",
+        "source_operator": "use_generation_run",
+        "telemetry": "Poll interval variance, lifecycle transition frequency, error recovery time."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "00fba93f01c3278c_t0",
+      "think": "The FNF React primitives establish a compositional algebra for AI-driven generation pipelines. Providers encapsulate stateful SDK clients, ensuring separation of concerns between data lifecycles (fnfProvider) and UI logic (Quanta). The useFnf hook implements a monadic bind pattern, chaining authentication, client initialization, and query construction while preventing unauthorized access. fnfKeys enforce referential transparency by mapping immutable inputs to deterministic cache addresses, mitigating race conditions and stale data. Finally, useGenerationRun embodies a state machine with explicit confirmation gates, enforcing the duality between user intent (submit) and system progress (poll), thereby preventing orphaned processes and ensuring idempotent execution. These operators collectively form a category-theoretic interface, isolating side effects and enabling compositional reasoning across GSI's multi-model inference and GSE's autonomous agent architectures.\n\nDeep epistemic analysis for fnf-react (00fba93f01c3278c, domain=other, pages_read=5/5): Operator 'FNF Provider Composition' (page 1, domain other) captures: ## Provider Shape Use `QueryClientProvider` above the website, then `FnfProvider` where SDK clients are needed. Assumptions: Stable React component tree with defined authentication boundaries. Breakdown regime: State initialization and prop drilling for SDK client injection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-stage generation pipeline: Provider = Data Layer -> GSI = Control Layer. Maps to GSE's stateful generation actor: Provider = Actor Initialization -> GSE = State Machine. Operator 'FNF Client Hook' (page 1, domain other) captures: For real SDK-backed generation/media/profile/credits, render `FnfProvider` only inside an authenticated website boundary or pass clients that call authenticated server functions. Assumptions: Authenticated server-side function or boundary ensures secure client instantiation. Breakdown regime: Lazy initialization of SDK clients with memoization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's API endpoint orchestration: Hook = API Client -> GSI = Endpoint Orchestrator. Maps to GSE's internal state access: Hook = State Getter -> GSE = Agent Memory. Operator 'FNF Cache Key Factory' (page 1, domain other) captures: This boundary means Higgsfield auth, not the generated website's own local sign-in. Assumptions: Immutable inputs guarantee deterministic cache keys. Breakdown regime: Cache key collision prevention through structured hashing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's caching layer: Key Factory = Cache Indexer -> GSI = Cache Optimizer. Maps to GSE's belief tracking: Key Factory = State Hasher -> GSE = Belief State Manager. Operator 'Generation Lifecycle Controller' (page 1, domain other) captures: - Any real generation screen must include both the submit lifecycle and a feed/history surface. Assumptions: Asynchronous operation with explicit confirmation step prevents orphaned requests. Breakdown regime: Polling loop termination upon completion or error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's execution pipeline: Controller = Execution Orchestrator -> GSI = Job Scheduler. Maps to GSE's action sequence: Controller = Sequence Executor -> GSE = Action Planer. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for fnf-react (00fba93f01c3278c, domain=other, pages_read=5/5): Operator 'FNF Provider Composition' (page 1, domain other) captures: ## Provider Shape Use `QueryClientProvider` above the website, then `FnfProvider` where SDK clients are needed. Assumptions: Stable React component tree with defined authentication boundaries. Breakdown regime: State initialization and prop drilling for SDK client injection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-stage generation pipeline: Provider = Data Layer -> GSI = Control Layer. Maps to GSE's stateful generation actor: Provider = Actor Initialization -> GSE = State Machine. Operator 'FNF Client Hook' (page 1, domain other) captures: For real SDK-backed generation/media/profile/credits, render `FnfProvider` only inside an authenticated website boundary or pass clients that call authenticated server functions. Assumptions: Authenticated server-side function or boundary ensures secure client instantiation. Breakdown regime: Lazy initialization of SDK clients with memoization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's API endpoint orchestration: Hook = API Client -> GSI = Endpoint Orchestrator. Maps to GSE's internal state access: Hook = State Getter -> GSE = Agent Memory. Operator 'FNF Cache Key Factory' (page 1, domain other) captures: This boundary means Higgsfield auth, not the generated website's own local sign-in. Assumptions: Immutable inputs guarantee deterministic cache keys. Breakdown regime: Cache key collision prevention through structured hashing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's caching layer: Key Factory = Cache Indexer -> GSI = Cache Optimizer. Maps to GSE's belief tracking: Key Factory = State Hasher -> GSE = Belief State Manager. Operator 'Generation Lifecycle Controller' (page 1, domain other) captures: - Any real generation screen must include both the submit lifecycle and a feed/history surface. Assumptions: Asynchronous operation with explicit confirmation step prevents orphaned requests. Breakdown regime: Polling loop termination upon completion or error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's execution pipeline: Controller = Execution Orchestrator -> GSI = Job Scheduler. Maps to GSE's action sequence: Controller = Sequence Executor -> GSE = Action Planer. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Derived from functional reactive programming (FRP) and monad transformers, tracing back to Haskell's IO monad and RxJS observables, adapted for secure web-scale AI inference. Retrocausal Genealogy: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include frontend developers seeking rapid iteration versus security teams demanding strict authentication boundaries. The primitives model their decision trade-offs as utility maximization under constraints. Theory of Mind & Decision Maker Model: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents anti-patterns such as inline API calls bypassing the provider layer, which would leak implementation details and compromise maintainability. Cross-Layer Veto & Anti-Leakage Check: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in fnf-react (00fba93f01c3278c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

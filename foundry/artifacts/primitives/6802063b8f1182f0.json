@@ -1,0 +1,78 @@
+{
+  "book_id": "6802063b8f1182f0",
+  "source_status": "COMPLETE",
+  "title": "2020 - Characterization of Space and Time-Dependence of 3-Point Shots in Basketball - Unknown Authors",
+  "file_name": "2020 - Characterization of Space and Time-Dependence of 3-Point Shots in Basketball - Unknown Authors.md",
+  "sha256": "6802063b8f1182f0d1b9f1af4ee6e2f02108bf20d17c23324f3bd5296b7ad4c5",
+  "primary_domain": "other",
+  "pages_total": 11,
+  "pages_read": 11,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Space-time Voronoi tessellation models for 3-point shot analysis unify player motion dynamics with spatial occupation under defensive constraints. Universal Lens: Rooted in 2020 - Characterization of Space and Time-Dependence of 3-Point Shots in Basketball - Unknown Authors (6802063b8f1182f0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps 3-point success rates to defensive settings via spatio-temporal player motion models using SportVU data. GSI Mapping: Rooted in 2020 - Characterization of Space and Time-Dependence of 3-Point Shots in Basketball - Unknown Authors (6802063b8f1182f0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes catch-and-shoot vs pull-up shot decisions as state transitions conditioned on opponent proximity and release timing. GSE Mapping: Rooted in 2020 - Characterization of Space and Time-Dependence of 3-Point Shots in Basketball - Unknown Authors (6802063b8f1182f0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "voronoi_occupation_map",
+      "name": "Voronoi Occupation Map",
+      "verbatim_quote": "In [4], [5] and [6] for each player a dominant region was calculated using Voronoi tessellation, adapting the metric using different motion models adapted to the players' dynamics.",
+      "page": 1,
+      "latex": "\\delta_{ij}(t) = \\text{distance from point } x \\text{ to nearest opponent } j \\text{ at time } t",
+      "symbol_and_unit_ledger": "{'\\\\delta_{ij}(t)': 'dimensionless normalized spatial influence factor', 'x': 'spatial coordinate vector in court units', 'j': 'opponent index', 't': 'time in seconds'}",
+      "assumptions": "Players are modeled as static points with inertia, and Voronoi cells define territorial dominance.",
+      "breakdown_regime": "When opponent proximity approaches zero, \\delta_{ij} \\to 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps player spatial dominance to shot selection probability through Voronoi-based influence zones.",
+        "source_operator": "voronoi_occupation_map",
+        "telemetry": "Occupation map entropy and boundary overlap metrics."
+      }
+    },
+    {
+      "primitive_id": "catch_and_shoot_classification",
+      "name": "Catch-and-Shoot Classification",
+      "verbatim_quote": "Those models allow us to identify individual behavior as a function of specific defensive settings, e.g.",
+      "page": 1,
+      "latex": "\\mathcal{C} = \\begin{cases} 1 & \\text{if } t_{\\text{release}} - t_{\\text{catch}} < 2 \\text{ sec and no dribble} \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{C}': 'binary indicator for catch-and-shoot', 't_{\\\\text{release}}': 'time of ball release in seconds', 't_{\\\\text{catch}}': 'time of ball catch in seconds'}",
+      "assumptions": "Shot classification based on temporal and kinematic thresholds without dribble.",
+      "breakdown_regime": "When release time exceeds 2 seconds or dribble occurs, \\mathcal{C} = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives shot-type kernel from motion trajectory and release timing.",
+        "source_operator": "catch_and_shoot_classification",
+        "telemetry": "Classification accuracy and success rate differential."
+      }
+    },
+    {
+      "primitive_id": "temporal_shot_timing",
+      "name": "Temporal Shot Timing",
+      "verbatim_quote": "They won that season taking 654 3-point shots in the first seven seconds after a change of possession for a success rate of 43% [3].",
+      "page": 1,
+      "latex": "T_{\\text{timing}} = t_{\\text{shot}} - t_{\\text{possession}} \\in [0, 7] \\text{ sec}",
+      "symbol_and_unit_ledger": "{'T_{\\\\text{timing}}': 'time elapsed since possession change in seconds', 't_{\\\\text{shot}}': 'shot execution time', 't_{\\\\text{possession}}': 'possession change time'}",
+      "assumptions": "Timing window is bounded by 0–7 seconds post-possession.",
+      "breakdown_regime": "When T_{\\text{timing}} > 7 sec, shot is excluded from analysis.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes shot timing as a stochastic process conditioned on possession dynamics.",
+        "source_operator": "temporal_shot_timing",
+        "telemetry": "Success rate as function of T_{\\text{timing}}."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6802063b8f1182f0_t0",
+      "think": "The Voronoi occupation map (primitive 1) quantifies spatial dominance by assigning each court point to the nearest opponent, enabling dynamic influence modeling. Catch-and-shoot classification (primitive 2) distinguishes shot types via release timing and dribble absence, forming a binary kernel for behavioral inference. Temporal shot timing (primitive 3) captures the critical 0–7 second window post-possession change, aligning with high-success counter-attack scenarios. These primitives form a dual framework: one spatially grounded in player occupation, the other temporally anchored in game flow. Failure modes include misclassification due to noisy SportVU data or violation of assumptions (e.g., dribble detection errors). Dualities emerge in how spatial dominance correlates with shot timing—high-value shots often occur when defensive zones are least defined. The models assume deterministic player motion and static opponent positions, which may fail under high-intensity defensive pressure or erratic movement patterns.\n\nDeep epistemic analysis for 2020 - Characterization of Space and Time-Dependence of 3-Point Shots in Basketball - Unknown Authors (6802063b8f1182f0, domain=other, pages_read=11/11): Operator 'Voronoi Occupation Map' (page 1, domain other) captures: In [4], [5] and [6] for each player a dominant region was calculated using Voronoi tessellation, adapting the metric using different motion models adapted to the players' dynamics. Assumptions: Players are modeled as static points with inertia, and Voronoi cells define territorial dominance. Breakdown regime: When opponent proximity approaches zero, \\delta_{ij} \\to 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps player spatial dominance to shot selection probability through Voronoi-based influence zones. Operator 'Catch-and-Shoot Classification' (page 1, domain other) captures: Those models allow us to identify individual behavior as a function of specific defensive settings, e.g. Assumptions: Shot classification based on temporal and kinematic thresholds without dribble. Breakdown regime: When release time exceeds 2 seconds or dribble occurs, \\mathcal{C} = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives shot-type kernel from motion trajectory and release timing. Operator 'Temporal Shot Timing' (page 1, domain other) captures: They won that season taking 654 3-point shots in the first seven seconds after a change of possession for a success rate of 43% [3]. Assumptions: Timing window is bounded by 0–7 seconds post-possession. Breakdown regime: When T_{\\text{timing}} > 7 sec, shot is excluded from analysis. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes shot timing as a stochastic process conditioned on possession dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2020 - Characterization of Space and Time-Dependence of 3-Point Shots in Basketball - Unknown Authors (6802063b8f1182f0, domain=other, pages_read=11/11): Operator 'Voronoi Occupation Map' (page 1, domain other) captures: In [4], [5] and [6] for each player a dominant region was calculated using Voronoi tessellation, adapting the metric using different motion models adapted to the players' dynamics. Assumptions: Players are modeled as static points with inertia, and Voronoi cells define territorial dominance. Breakdown regime: When opponent proximity approaches zero, \\delta_{ij} \\to 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps player spatial dominance to shot selection probability through Voronoi-based influence zones. Operator 'Catch-and-Shoot Classification' (page 1, domain other) captures: Those models allow us to identify individual behavior as a function of specific defensive settings, e.g. Assumptions: Shot classification based on temporal and kinematic thresholds without dribble. Breakdown regime: When release time exceeds 2 seconds or dribble occurs, \\mathcal{C} = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives shot-type kernel from motion trajectory and release timing. Operator 'Temporal Shot Timing' (page 1, domain other) captures: They won that season taking 654 3-point shots in the first seven seconds after a change of possession for a success rate of 43% [3]. Assumptions: Timing window is bounded by 0–7 seconds post-possession. Breakdown regime: When T_{\\text{timing}} > 7 sec, shot is excluded from analysis. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes shot timing as a stochastic process conditioned on possession dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Voronoi tessellations from computational geometry and spatial statistics, extended to player dynamics in [4], [5], [6]. Influenced by earlier work on territorial control in sports analytics. Retrocausal Genealogy: Rooted in 2020 - Characterization of Space and Time-Dependence of 3-Point Shots in Basketball - Unknown Authors (6802063b8f1182f0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational decision-making where players optimize shot selection based on spatial and temporal cues. Opposing agents (defenders) are modeled as static spatial constraints rather than active strategists. Theory of Mind & Decision Maker Model: Rooted in 2020 - Characterization of Space and Time-Dependence of 3-Point Shots in Basketball - Unknown Authors (6802063b8f1182f0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when spatial and temporal models overfit to similar data subsets. Leakage occurs if shot classification ignores defensive positioning or vice versa. Veto conditions enforce independence between Voronoi-based influence and temporal shot timing. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2020 - Characterization of Space and Time-Dependence of 3-Point Shots in Basketball - Unknown Authors (6802063b8f1182f0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "201e31fcd75ce6d3",
+  "source_status": "COMPLETE",
+  "title": "sports-science-licensing-policy",
+  "file_name": "sports-science-licensing-policy.md",
+  "sha256": "201e31fcd75ce6d3bc20050baeca496808119a8c46694e169621873b62b927c3",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The licensing policy defines a multi-layered constraint manifold over the space of admissible sports science data. A datum is valid only if it satisfies simultaneous projections into open-source, commercial, and collective-bargaining subspaces, forming a strict intersectional filter that governs all downstream inference.",
+  "gsi_mapping": "GSI treats each license category as a hierarchical prior in a Bayesian network. The default prohibited state acts as a zero-measure prior; empirical evidence from signed agreements updates the posterior probability of legal ingestion, strictly bounding conformal prediction sets for biomechanical features.",
+  "gse_mapping": "In GSE, licensing dictates valid state transitions within the situational reasoning graph. An agent can only transition to an 'ingested' state if the current node satisfies Category D or F constraints, preventing illegal trajectory extrapolations in the tactical simulation engine.",
+  "primitives": [
+    {
+      "primitive_id": "default_prohibition_operator",
+      "name": "Default Prohibition Operator",
+      "verbatim_quote": "**Default position: ALL sports science data is PROHIBITED until licensed.** Unlike standard web data, the \"it's publicly available\" argument does not confer commercial use rights for sports science data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "D: Data domain (dimensionless set), L: Licensing predicate (Boolean)",
+      "assumptions": "Public accessibility does not imply commercial rights; initial state assumes maximum restriction.",
+      "breakdown_regime": "Fails if implicit public domain assumptions override explicit contractual prohibitions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the GSI zero-measure prior, ensuring no unlicensed data enters the conformal inference pipeline.",
+        "source_operator": "default_prohibition_operator",
+        "telemetry": "Count of rejected raw data packets at the ingestion boundary."
+      }
+    },
+    {
+      "primitive_id": "commercial_use_closure",
+      "name": "Commercial Use Closure",
+      "verbatim_quote": "Commercial use\" includes: ingestion into a prediction engine, inference from the data, or citing the data in commercial content — even if the output is a summary and not raw data.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "U: Usage operator (dimensionless), C: Commercial context (Boolean)",
+      "assumptions": "Any derivative work inherits the restrictive properties of the base dataset.",
+      "breakdown_regime": "Violated when anonymization or summarization is falsely assumed to bypass original licensing terms.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines the closure property for GSE feature extraction; any derived tactical metric inherits the parent data's licensing constraints.",
+        "source_operator": "commercial_use_closure",
+        "telemetry": "Audit logs tracking derivation chains from raw feeds to published metrics."
+      }
+    },
+    {
+      "primitive_id": "cba_consent_intersection",
+      "name": "CBA Consent Intersection",
+      "verbatim_quote": "If the data relates to individual athlete physiology, movement, or biometrics, applicable collective bargaining agreements may govern consent requirements independently of any commercial license.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "B: Biometric data (vector space), K: CBA constraints (Boolean mask)",
+      "assumptions": "Labor law operates orthogonally to intellectual property and commercial licensing regimes.",
+      "breakdown_regime": "Breaks down if a commercial league license is incorrectly treated as a blanket waiver for player privacy rights.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a hard constraint layer in GSE state machines; biometric nodes require dual authorization keys to unlock.",
+        "source_operator": "cba_consent_intersection",
+        "telemetry": "Verification flags on individual athlete tracking vectors."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "201e31fcd75ce6d3_t0",
+      "think": "The mathematical structure of the Sports Science Licensing Policy is fundamentally a multi-dimensional constraint satisfaction problem. We define the universe of potential data sources as a vector space V. The Default Prohibition Operator establishes the origin point where all vectors are initially projected to zero (prohibited). To achieve a non-zero state (admissible), a data vector must successfully pass through a series of orthogonal projection matrices representing distinct legal regimes: Open Source Code (Category A), Research Restrictions (Category B), Commercial Agreements (Category D), and Collective Bargaining Agreements (Category F). The Commercial Use Closure acts as a topological closure operator; it ensures that any transformation T applied to an admissible vector v results in a new vector Tv that remains within the admissible subspace. If T represents ingestion into a prediction engine, the resulting inference is bound by the exact same licensing constraints as the raw input. The CBA Consent Intersection introduces a non-linear dependency, where the validity of a biometric vector depends not just on the commercial license matrix, but on an independent boolean mask derived from labor contracts. Failure modes occur at the boundaries of these intersections. For instance, assuming public availability equates to commercial rights is equivalent to ignoring the prohibition operator, leading to immediate systemic contamination. Similarly, treating a league-wide commercial license as sufficient for individual biometric tracking ignores the CBA intersection, creating a high-risk singularity in the compliance manifold.\n\nDeep epistemic analysis for sports-science-licensing-policy (201e31fcd75ce6d3, domain=other, pages_read=5/5): Operator 'Default Prohibition Operator' (page 1, domain other) captures: **Default position: ALL sports science data is PROHIBITED until licensed.** Unlike standard web data, the \"it's publicly available\" argument does not confer commercial use rights for sports science data. Assumptions: Public accessibility does not imply commercial rights; initial state assumes maximum restriction. Breakdown regime: Fails if implicit public domain assumptions override explicit contractual prohibitions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSI zero-measure prior, ensuring no unlicensed data enters the conformal inference pipeline. Operator 'Commercial Use Closure' (page 2, domain other) captures: Commercial use\" includes: ingestion into a prediction engine, inference from the data, or citing the data in commercial content — even if the output is a summary and not raw data. Assumptions: Any derivative work inherits the restrictive properties of the base dataset. Breakdown regime: Violated when anonymization or summarization is falsely assumed to bypass original licensing terms. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the closure property for GSE feature extraction; any derived tactical metric inherits the parent data's licensing constraints. Operator 'CBA Consent Intersection' (page 3, domain other) captures: If the data relates to individual athlete physiology, movement, or biometrics, applicable collective bargaining agreements may govern consent requirements independently of any commercial license. Assumptions: Labor law operates orthogonally to intellectual property and commercial licensing regimes. Breakdown regime: Breaks down if a commercial league license is incorrectly treated as a blanket waiver for player privacy rights. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a hard constraint layer in GSE state machines; biometric nodes require dual authorization keys to unlock. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sports-science-licensing-policy (201e31fcd75ce6d3, domain=other, pages_read=5/5): Operator 'Default Prohibition Operator' (page 1, domain other) captures: **Default position: ALL sports science data is PROHIBITED until licensed.** Unlike standard web data, the \"it's publicly available\" argument does not confer commercial use rights for sports science data. Assumptions: Public accessibility does not imply commercial rights; initial state assumes maximum restriction. Breakdown regime: Fails if implicit public domain assumptions override explicit contractual prohibitions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSI zero-measure prior, ensuring no unlicensed data enters the conformal inference pipeline. Operator 'Commercial Use Closure' (page 2, domain other) captures: Commercial use\" includes: ingestion into a prediction engine, inference from the data, or citing the data in commercial content — even if the output is a summary and not raw data. Assumptions: Any derivative work inherits the restrictive properties of the base dataset. Breakdown regime: Violated when anonymization or summarization is falsely assumed to bypass original licensing terms. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the closure property for GSE feature extraction; any derived tactical metric inherits the parent data's licensing constraints. Operator 'CBA Consent Intersection' (page 3, domain other) captures: If the data relates to individual athlete physiology, movement, or biometrics, applicable collective bargaining agreements may govern consent requirements independently of any commercial license. Assumptions: Labor law operates orthogonally to intellectual property and commercial licensing regimes. Breakdown regime: Breaks down if a commercial league license is incorrectly treated as a blanket waiver for player privacy rights. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a hard constraint layer in GSE state machines; biometric nodes require dual authorization keys to unlock. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This framework traces its lineage to the rigorous separation of concerns found in information security models like Bell-LaPadula, adapted here for intellectual property. Historically, the commodification of sports data evolved from simple box scores to granular biomechanics, necessitating a shift from copyright-centric models to complex, overlapping regimes involving GDPR, CCPA, and CBAs. The doctrine formalizes this evolution into a strict algebraic hierarchy.",
+      "theory_of_mind": "We model the decision actors—leagues, data vendors, and athletes—as rational agents maximizing utility under conflicting constraints. Leagues seek to monetize data while protecting broadcast rights; athletes aim to preserve privacy and leverage biometric value. The policy acts as a Nash equilibrium mechanism, forcing all agents to explicitly negotiate their boundaries before any data exchange occurs, preventing unilateral exploitation of publicly visible but legally restricted information.",
+      "cross_layer_veto": "Anti-collinearity is enforced by strictly isolating the CBA consent layer from the commercial licensing layer. A veto condition triggers if a Category D commercial agreement is used to implicitly satisfy Category F biometric requirements. Furthermore, leakage is prevented by the Commercial Use Closure, which vetoes any attempt to bypass restrictions via data summarization or aggregation, ensuring the integrity of the sovereign primitive across all computational layers."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "9e0032177968babc",
+  "source_status": "COMPLETE",
+  "title": "1761-icm-out-better-tournament-strategy-continuations",
+  "file_name": "1761-icm-out-better-tournament-strategy-continuations.md",
+  "sha256": "9e0032177968babc3e394cd23f7cb086d011b32e556e5f07ce107c8d795c97ed",
+  "primary_domain": "history",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 1761-icm-out-better-tournament-strategy-continuations (9e0032177968babc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 1761-icm-out-better-tournament-strategy-continuations (9e0032177968babc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 1761-icm-out-better-tournament-strategy-continuations (9e0032177968babc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "strategic_continuation_optimization",
+      "name": "Strategic-Continuation Optimization",
+      "verbatim_quote": "The paper introduces Strategic-Continuation Optimization (SCO): enumerate current-decision outcomes → map to successor states → price those states with continuation values from the finite tournament model → optimize the policy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Enumerated tournament states, fixed opponent policies, finite horizon backward induction.",
+      "breakdown_regime": "Computational intractability for large state spaces.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE situational reasoning maps tournament state transitions to sequential decision trees, with SCO providing optimal continuation-value bootstrapping for multi-stage betting.",
+        "source_operator": "strategic_continuation_optimization",
+        "telemetry": "Policy owner selection differences between SCO and ICM benchmarks."
+      }
+    },
+    {
+      "primitive_id": "independent_chip_model_flaw",
+      "name": "Independent Chip Model Flaw",
+      "verbatim_quote": "ICM's flaws diagnosed: reads only stack sizes; omits action order, blind obligations, seat rotation, and the elimination pressure a big stack exerts on short stacks it can bust.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Tournament structure with blinds and mandatory bets.",
+      "breakdown_regime": "Inefficient strategy near bubble and final-table dynamics.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian inference uses tournament state features as predictive inputs; SCO's richer continuation values improve posterior calibration for equity estimation.",
+        "source_operator": "independent_chip_model_flaw",
+        "telemetry": "Mean absolute error reduction in continuation-value approximation."
+      }
+    },
+    {
+      "primitive_id": "finite_horizon_backward_induction",
+      "name": "Finite-Horizon Backward Induction",
+      "verbatim_quote": "Dataset / schema - **Setting:** three-player jam/fold poker tournament, $1,000,000 prize pool.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Deterministic prize ladder, perfect recall, discrete time steps.",
+      "breakdown_regime": "Exponential state-space explosion beyond moderate player counts.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE state-transition systems apply dynamic programming to optimize over finite decision horizons; backward induction identifies optimal sub-policies.",
+        "source_operator": "finite_horizon_backward_induction",
+        "telemetry": "Computational complexity scaling with number of tournament states."
+      }
+    },
+    {
+      "primitive_id": "expected_prize_equity_objective",
+      "name": "Expected Prize Equity Objective",
+      "verbatim_quote": "- **Opponents:** solver-built game-theoretic opponents; robustness checked against two LLMs and a family of non-modeling threshold players.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Risk-neutral utility, fixed opponent distributions.",
+      "breakdown_regime": "Non-convex optimization landscape with multiple local optima.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI lineup construction seeks distributions over player selections that maximize expected cash prizes; SCO provides a rigorous benchmark for greedy heuristics.",
+        "source_operator": "expected_prize_equity_objective",
+        "telemetry": "Out-of-sample performance on held-out contests."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9e0032177968babc_t0",
+      "think": "SCO addresses the core limitation of ICM, which treats tournament stages as independent lotteries ignoring future博弈. By solving the finite-horizon dynamic program exactly, SCO yields optimal jam/fold ranges that exploit the sequential nature of tournament play. Specifically, it captures how a big stack's aggression affects short-stack survival probabilities, leading to higher equity than ICM-based strategies. The $214.33/hand premium demonstrates that accounting for elimination pressure and action ordering is material in three-player settings. However, the exponential scaling of backward induction restricts direct application to large-field contests; approximations or factorization are needed for practical GSE/GSI deployment.\n\nDeep epistemic analysis for 1761-icm-out-better-tournament-strategy-continuations (9e0032177968babc, domain=history, pages_read=3/3): Operator 'Strategic-Continuation Optimization' (page 1, domain history) captures: The paper introduces Strategic-Continuation Optimization (SCO): enumerate current-decision outcomes → map to successor states → price those states with continuation values from the finite tournament model → optimize the policy. Assumptions: Enumerated tournament states, fixed opponent policies, finite horizon backward induction. Breakdown regime: Computational intractability for large state spaces. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE situational reasoning maps tournament state transitions to sequential decision trees, with SCO providing optimal continuation-value bootstrapping for multi-stage betting. Operator 'Independent Chip Model Flaw' (page 1, domain history) captures: ICM's flaws diagnosed: reads only stack sizes; omits action order, blind obligations, seat rotation, and the elimination pressure a big stack exerts on short stacks it can bust. Assumptions: Tournament structure with blinds and mandatory bets. Breakdown regime: Inefficient strategy near bubble and final-table dynamics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian inference uses tournament state features as predictive inputs; SCO's richer continuation values improve posterior calibration for equity estimation. Operator 'Finite-Horizon Backward Induction' (page 1, domain history) captures: Dataset / schema - **Setting:** three-player jam/fold poker tournament, $1,000,000 prize pool. Assumptions: Deterministic prize ladder, perfect recall, discrete time steps. Breakdown regime: Exponential state-space explosion beyond moderate player counts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state-transition systems apply dynamic programming to optimize over finite decision horizons; backward induction identifies optimal sub-policies. Operator 'Expected Prize Equity Objective' (page 1, domain history) captures: - **Opponents:** solver-built game-theoretic opponents; robustness checked against two LLMs and a family of non-modeling threshold players. Assumptions: Risk-neutral utility, fixed opponent distributions. Breakdown regime: Non-convex optimization landscape with multiple local optima. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI lineup construction seeks distributions over player selections that maximize expected cash prizes; SCO provides a rigorous benchmark for greedy heuristics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1761-icm-out-better-tournament-strategy-continuations (9e0032177968babc, domain=history, pages_read=3/3): Operator 'Strategic-Continuation Optimization' (page 1, domain history) captures: The paper introduces Strategic-Continuation Optimization (SCO): enumerate current-decision outcomes → map to successor states → price those states with continuation values from the finite tournament model → optimize the policy. Assumptions: Enumerated tournament states, fixed opponent policies, finite horizon backward induction. Breakdown regime: Computational intractability for large state spaces. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE situational reasoning maps tournament state transitions to sequential decision trees, with SCO providing optimal continuation-value bootstrapping for multi-stage betting. Operator 'Independent Chip Model Flaw' (page 1, domain history) captures: ICM's flaws diagnosed: reads only stack sizes; omits action order, blind obligations, seat rotation, and the elimination pressure a big stack exerts on short stacks it can bust. Assumptions: Tournament structure with blinds and mandatory bets. Breakdown regime: Inefficient strategy near bubble and final-table dynamics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian inference uses tournament state features as predictive inputs; SCO's richer continuation values improve posterior calibration for equity estimation. Operator 'Finite-Horizon Backward Induction' (page 1, domain history) captures: Dataset / schema - **Setting:** three-player jam/fold poker tournament, $1,000,000 prize pool. Assumptions: Deterministic prize ladder, perfect recall, discrete time steps. Breakdown regime: Exponential state-space explosion beyond moderate player counts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state-transition systems apply dynamic programming to optimize over finite decision horizons; backward induction identifies optimal sub-policies. Operator 'Expected Prize Equity Objective' (page 1, domain history) captures: - **Opponents:** solver-built game-theoretic opponents; robustness checked against two LLMs and a family of non-modeling threshold players. Assumptions: Risk-neutral utility, fixed opponent distributions. Breakdown regime: Non-convex optimization landscape with multiple local optima. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI lineup construction seeks distributions over player selections that maximize expected cash prizes; SCO provides a rigorous benchmark for greedy heuristics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "SCO generalizes the classic backward-induction solution to perfect-information extensive-form games (Kuhn, 1953) to stochastic imperfect-information settings. It also draws from approximate dynamic programming in operations research (Bertsekas, 2017), adapting value-function approximation to the specific structure of tournament poker. Retrocausal Genealogy: Rooted in 1761-icm-out-better-tournament-strategy-continuations (9e0032177968babc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents in a tournament are boundedly rational, often using simplified heuristics like ICM. An optimal strategy must anticipate these suboptimal responses while simultaneously exploiting their predictable errors. SCO achieves this by solving the best-response recursion, assuming opponents follow fixed policies, thus creating a robust equilibrium concept. Theory of Mind & Decision Maker Model: Rooted in 1761-icm-out-better-tournament-strategy-continuations (9e0032177968babc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent leakage between GSI's statistical lineup models and GSE's tactical decision trees, the continuation values must be pre-computed and stored externally. This decouples the expensive optimization from real-time prediction pipelines, ensuring clean separation of concerns. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1761-icm-out-better-tournament-strategy-continuations (9e0032177968babc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

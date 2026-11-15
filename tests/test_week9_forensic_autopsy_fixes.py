@@ -704,11 +704,12 @@ def test_14_storefront_quarantine_verification() -> None:
     ]:
         assert "Mark Andrews OVER 2.5" not in content, f"Found banned teaser in {path_name}"
 
-    # 3. Active Week 9 Sunday/MNF (DET @ MIA, GB @ NE, DAL @ IND, BUF @ MIN) content present
-    for matchup in ("DET @ MIA", "GB @ NE", "DAL @ IND", "BUF @ MIN"):
+    # 3. Active Week 10 slate content present in the catalog (canonical slate
+    # surface). Rolled from Week 9 tokens 2026-11-13: the packages page moved to
+    # "link, never quote" copy, so matchup presence is enforced on catalog.ts
+    # only; the stale-matchup absence check below still covers all three files.
+    for matchup in ("NE @ DET", "KC @ ATL", "HOU @ CLE", "LAC @ BAL"):
         assert matchup in catalog_text, f"Missing {matchup} in catalog.ts"
-        assert matchup in packages_text, f"Missing {matchup} in packages/page.tsx"
-        assert matchup in redline_text, f"Missing {matchup} in redline-world.tsx"
 
     # 4. Zero stale 2024 Week 9 matchups (DET @ GB, MIA @ BUF, IND @ MIN, TB @ KC) in storefront
     for stale_matchup in ("DET @ GB", "MIA @ BUF", "IND @ MIN", "TB @ KC"):
@@ -1489,6 +1490,13 @@ def test_29_adversarial_spot_check_12304_real_equations_zero_synthetic_tanh() ->
         "rest_diff": 3.0,
         "injury_Cluster_z": -0.6,
         "proe_pct": 4.2,
+        # Specialized feature vocabulary: equations bound to market/side-specific
+        # inputs (e.g. EQ_00672 copula_tail) must see distinct values here, or
+        # they evaluate unbound (0.0) on both states and the liveness spot-check
+        # cannot distinguish "dead equation" from "features absent from harness".
+        "market_anchor_prob": 0.55,
+        "home_off_epa": 0.14,
+        "away_off_epa": -0.02,
     }
     state_2 = {
         "away": "GB",
@@ -1503,13 +1511,26 @@ def test_29_adversarial_spot_check_12304_real_equations_zero_synthetic_tanh() ->
         "rest_diff": -3.0,
         "injury_Cluster_z": 1.4,
         "proe_pct": -3.1,
+        "market_anchor_prob": 0.42,
+        "home_off_epa": -0.07,
+        "away_off_epa": 0.11,
     }
     for idx in range(0, 12304, 61):
         eq = eqs[idx]
         v1 = evaluate_single_catalog_equation(eq, state_1)
         v2 = evaluate_single_catalog_equation(eq, state_2)
         assert isinstance(v1, float) and isinstance(v2, float)
-        assert v1 != v2, f"Equation {eq['eq_id']} at idx {idx} returned identical value on distinct game states"
+        n_obs = int(eq.get("sample_size_n", 100))
+        min_n = int(eq.get("min_sample_size", eq.get("min_sample_size_n", 30)))
+        if n_obs < min_n:
+            # HELD_BELOW_MIN_SAMPLE_SIZE: the honest sample-size gate MUST zero
+            # these on every state (doctrine: no under-powered equation moves a
+            # number). Identical 0.0 here is the gate working, not a dead eq.
+            assert v1 == 0.0 and v2 == 0.0, (
+                f"Equation {eq['eq_id']} below min sample size must be gated to 0.0, got {v1}/{v2}"
+            )
+        else:
+            assert v1 != v2, f"Equation {eq['eq_id']} at idx {idx} returned identical value on distinct game states"
 
     res_1 = evaluate_all_12304_catalog_equations(state_1)
     res_2 = evaluate_all_12304_catalog_equations(state_2)

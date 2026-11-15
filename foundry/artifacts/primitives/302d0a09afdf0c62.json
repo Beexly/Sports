@@ -1,0 +1,78 @@
+{
+  "book_id": "302d0a09afdf0c62",
+  "source_status": "COMPLETE",
+  "title": "2204.06240v3",
+  "file_name": "2204.06240v3.pdf",
+  "sha256": "302d0a09afdf0c62b4bc0907685a67b5d915626632f0bb373c759208a22d8976",
+  "primary_domain": "other",
+  "pages_total": 18,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Large-batch training in CTR prediction faces accuracy degradation due to heterogeneous id frequencies; adaptive clipping stabilizes learning. Universal Lens: Rooted in 2204.06240v3 (302d0a09afdf0c62), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models CTR predictions using embedding distributions, where adaptive clipping preserves posterior accuracy under large batches. GSI Mapping: Rooted in 2204.06240v3 (302d0a09afdf0c62), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning updates model states via embedding-based gradient clipping, transitioning from small to large batch regimes without loss of AUC. GSE Mapping: Rooted in 2204.06240v3 (302d0a09afdf0c62), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "adaptive_column_wise_clipping",
+      "name": "Adaptive Column-wise Clipping",
+      "verbatim_quote": "To stabilize the training process in a large batch size setting, we develop the adaptive Column-wise Clipping (CowClip).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Embedding gradients vary in frequency; learning rate must remain constant for stability.",
+      "breakdown_regime": "When batch size exceeds optimal threshold without adaptive clipping, accuracy degrades due to gradient explosion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CowClip maps to a constrained optimization framework where column-wise norms regulate gradient flow in embedding spaces, aligning with GSI's probabilistic embedding inference.",
+        "source_operator": "adaptive_column_wise_clipping",
+        "telemetry": "AUC improvement and reduced training time confirm successful scaling."
+      }
+    },
+    {
+      "primitive_id": "frequency_dependent_scaling_rule",
+      "name": "Frequency Dependent Scaling Rule",
+      "verbatim_quote": "To tackle this problem, we first theoretically show that different frequencies of ids make it challenging to scale hyperparameters when scaling the batch size.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "High-frequency IDs dominate gradient statistics, causing instability in standard scaling rules.",
+      "breakdown_regime": "Standard linear or sqrt scaling fails when id frequencies differ significantly across fields.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The derived kernel captures the variance in gradient magnitudes across ID frequencies, enabling dynamic adjustment of regularization parameters in GSE.",
+        "source_operator": "frequency_dependent_scaling_rule",
+        "telemetry": "Table 2 demonstrates AUC degradation under traditional scaling rules on Criteo."
+      }
+    },
+    {
+      "primitive_id": "embedding_gradient_stabilization",
+      "name": "Embedding Gradient Stabilization",
+      "verbatim_quote": "It enables an easy and effective scaling rule for the embeddings, which keeps the learning rate unchanged and scales the L2 loss.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "L2 regularization can be adjusted independently of learning rate to maintain convergence.",
+      "breakdown_regime": "Without stabilization, embedding updates become unstable with increasing batch size.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This primitive mirrors GSI’s use of conformal prediction to adjust embedding uncertainty bounds during training, preserving model calibration.",
+        "source_operator": "embedding_gradient_stabilization",
+        "telemetry": "Successful scaling from 1K to 128K batch size on DeepFM shows no accuracy drop."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "302d0a09afdf0c62_t0",
+      "think": "The core issue in large-batch CTR training arises from the heterogeneity of feature ID frequencies—popular items generate frequent embeddings, whereas rare ones rarely do. This leads to inconsistent gradient dynamics across embedding dimensions. Standard scaling laws like linear or sqrt fail because they assume uniform behavior. The proposed CowClip addresses this by applying column-wise gradient clipping, effectively normalizing per-feature update magnitudes. This allows stable training even with massive batches. Theoretically, this is akin to a frequency-weighted projection in embedding space, where each column (feature) adapts its norm based on empirical usage. Empirically, this manifests as improved convergence and preserved AUC despite 128x batch size increase. The failure mode occurs when ignoring these disparities—leading to vanishing or exploding gradients. Thus, the key insight is that embedding stability requires per-column adaptation rather than global scaling.\n\nDeep epistemic analysis for 2204.06240v3 (302d0a09afdf0c62, domain=other, pages_read=18/18): Operator 'Adaptive Column-wise Clipping' (page 1, domain other) captures: To stabilize the training process in a large batch size setting, we develop the adaptive Column-wise Clipping (CowClip). Assumptions: Embedding gradients vary in frequency; learning rate must remain constant for stability. Breakdown regime: When batch size exceeds optimal threshold without adaptive clipping, accuracy degrades due to gradient explosion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CowClip maps to a constrained optimization framework where column-wise norms regulate gradient flow in embedding spaces, aligning with GSI's probabilistic embedding inference. Operator 'Frequency Dependent Scaling Rule' (page 1, domain other) captures: To tackle this problem, we first theoretically show that different frequencies of ids make it challenging to scale hyperparameters when scaling the batch size. Assumptions: High-frequency IDs dominate gradient statistics, causing instability in standard scaling rules. Breakdown regime: Standard linear or sqrt scaling fails when id frequencies differ significantly across fields. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The derived kernel captures the variance in gradient magnitudes across ID frequencies, enabling dynamic adjustment of regularization parameters in GSE. Operator 'Embedding Gradient Stabilization' (page 1, domain other) captures: It enables an easy and effective scaling rule for the embeddings, which keeps the learning rate unchanged and scales the L2 loss. Assumptions: L2 regularization can be adjusted independently of learning rate to maintain convergence. Breakdown regime: Without stabilization, embedding updates become unstable with increasing batch size. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): This primitive mirrors GSI’s use of conformal prediction to adjust embedding uncertainty bounds during training, preserving model calibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2204.06240v3 (302d0a09afdf0c62, domain=other, pages_read=18/18): Operator 'Adaptive Column-wise Clipping' (page 1, domain other) captures: To stabilize the training process in a large batch size setting, we develop the adaptive Column-wise Clipping (CowClip). Assumptions: Embedding gradients vary in frequency; learning rate must remain constant for stability. Breakdown regime: When batch size exceeds optimal threshold without adaptive clipping, accuracy degrades due to gradient explosion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CowClip maps to a constrained optimization framework where column-wise norms regulate gradient flow in embedding spaces, aligning with GSI's probabilistic embedding inference. Operator 'Frequency Dependent Scaling Rule' (page 1, domain other) captures: To tackle this problem, we first theoretically show that different frequencies of ids make it challenging to scale hyperparameters when scaling the batch size. Assumptions: High-frequency IDs dominate gradient statistics, causing instability in standard scaling rules. Breakdown regime: Standard linear or sqrt scaling fails when id frequencies differ significantly across fields. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The derived kernel captures the variance in gradient magnitudes across ID frequencies, enabling dynamic adjustment of regularization parameters in GSE. Operator 'Embedding Gradient Stabilization' (page 1, domain other) captures: It enables an easy and effective scaling rule for the embeddings, which keeps the learning rate unchanged and scales the L2 loss. Assumptions: L2 regularization can be adjusted independently of learning rate to maintain convergence. Breakdown regime: Without stabilization, embedding updates become unstable with increasing batch size. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): This primitive mirrors GSI’s use of conformal prediction to adjust embedding uncertainty bounds during training, preserving model calibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots lie in early work on large batch training (Goyal et al., 2017) and gradient clipping (Zhang et al., 2020), but the specific challenge of embedding heterogeneity was not addressed until recent studies in recommender systems. Retrocausal Genealogy: Rooted in 2204.06240v3 (302d0a09afdf0c62), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the optimizer trying to minimize loss and the data distribution generating varying embedding frequencies. The model must balance between fast convergence and robustness to outliers in feature usage. Theory of Mind & Decision Maker Model: Rooted in 2204.06240v3 (302d0a09afdf0c62), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured through per-column clipping, preventing co-adaptation of embeddings. Leakage is mitigated by maintaining distinct update paths for high- vs low-frequency features. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2204.06240v3 (302d0a09afdf0c62), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2204.06240v3 (302d0a09afdf0c62), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

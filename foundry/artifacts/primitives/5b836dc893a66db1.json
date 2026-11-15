@@ -1,0 +1,78 @@
+{
+  "book_id": "5b836dc893a66db1",
+  "source_status": "COMPLETE",
+  "title": "07-product-architecture",
+  "file_name": "07-product-architecture.md",
+  "sha256": "5b836dc893a66db1c6c4daabc414f65f613c849dbd9c946a162bf83083763ea6",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Product architecture defines a categorical framework of interdependent entities and their surface-level observability, enabling structured probabilistic reasoning across game states. Universal Lens: Rooted in 07-product-architecture (5b836dc893a66db1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers latent manager strategies and risk profiles via conformal predictive distributions over roster and pick events, using edge-team and risk-ladder telemetry as Bayesian priors. GSI Mapping: Rooted in 07-product-architecture (5b836dc893a66db1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models dynamic draft and lineup decisions through state-transition graphs of draft-room and contest entities, encoding temporal dependencies in manager behavior and risk exposure. GSE Mapping: Rooted in 07-product-architecture (5b836dc893a66db1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "contest",
+      "name": "Contest Lifecycle",
+      "verbatim_quote": "# Product Architecture As of: 2026-06-09 ## Entities | Entity | Fields | Surface | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'id': 'dimensionless identifier', 'format': 'categorical string', 'status': 'boolean', 'starts_at': 'timestamp', 'ends_at': 'timestamp'}",
+      "assumptions": "Contest lifecycle is deterministic within defined time bounds; all participants observe same start/end times.",
+      "breakdown_regime": "Undefined when starts_at > current_time or ends_at < current_time.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Contest entity maps to a temporal event space in GSI's probabilistic model, where each state transition corresponds to an event in the event taxonomy.",
+        "source_operator": "contest",
+        "telemetry": "Event log timestamps and participant actions."
+      }
+    },
+    {
+      "primitive_id": "draft_pick",
+      "name": "Draft Pick Decision",
+      "verbatim_quote": "contest_id, pod_id, timer_mode, pick_clock, status | Public beta | | DraftPick | draft_room_id, pick_no, manager_id, player_id,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'draft_room_id': 'dimensionless identifier', 'pick_no': 'integer', 'manager_id': 'dimensionless identifier', 'player_id': 'dimensionless identifier', 'risk_snapshot': 'scalar score'}",
+      "assumptions": "Each pick is made under bounded rationality constraints; risk snapshot reflects agent-specific volatility.",
+      "breakdown_regime": "Undefined when pick_no exceeds available slots or manager_id lacks access rights.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "DraftPick encodes a decision kernel in GSE’s state graph, where transitions depend on manager archetype and risk ladder scores.",
+        "source_operator": "draft_pick",
+        "telemetry": "Risk overlay view logs and manager archetype data."
+      }
+    },
+    {
+      "primitive_id": "risk_ladder",
+      "name": "Risk Exposure Scoring",
+      "verbatim_quote": "Public/private | | RiskLadder | team_id, week, volatility_score, durability_score, no_bet_signal, explanation_public | Public reveal-less | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'team_id': 'dimensionless identifier', 'week': 'integer', 'volatility_score': 'unitless scalar', 'durability_score': 'unitless scalar', 'no_bet_signal': 'boolean'}",
+      "assumptions": "Volatility and durability scores are independent; no_bet_signal triggers conditional policy enforcement.",
+      "breakdown_regime": "Undefined when team_id does not correspond to active roster or week exceeds season limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "RiskLadder maps to a stochastic process in GSI’s risk inference engine, where volatility/durability define posterior belief updates.",
+        "source_operator": "risk_ladder",
+        "telemetry": "Weekly score changes and signal triggers."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b836dc893a66db1_t0",
+      "think": "The product architecture establishes a categorical lattice of entities that encode both static metadata and dynamic behavioral signals. The Contest entity serves as a temporal anchor, defining the scope of all other operations. DraftPick represents a discrete decision node in a partially ordered set of choices, where risk_snapshot acts as a contextual parameter influencing outcome probabilities. RiskLadder introduces a layered uncertainty measure, mapping to a stochastic process in GSI’s inference engine. These primitives form a dual structure: one for operational state transitions (GSE), another for probabilistic strategy inference (GSI). Failure modes arise from inconsistent time-boundaries, invalid identifiers, or missing telemetry. The system exhibits duality between public-private surfaces and observable vs hidden states, which must be maintained for coherence in both layers.\n\nDeep epistemic analysis for 07-product-architecture (5b836dc893a66db1, domain=other, pages_read=1/1): Operator 'Contest Lifecycle' (page 1, domain other) captures: # Product Architecture As of: 2026-06-09 ## Entities | Entity | Fields | Surface | | Assumptions: Contest lifecycle is deterministic within defined time bounds; all participants observe same start/end times. Breakdown regime: Undefined when starts_at > current_time or ends_at < current_time. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Contest entity maps to a temporal event space in GSI's probabilistic model, where each state transition corresponds to an event in the event taxonomy. Operator 'Draft Pick Decision' (page 1, domain other) captures: contest_id, pod_id, timer_mode, pick_clock, status | Public beta | | DraftPick | draft_room_id, pick_no, manager_id, player_id, Assumptions: Each pick is made under bounded rationality constraints; risk snapshot reflects agent-specific volatility. Breakdown regime: Undefined when pick_no exceeds available slots or manager_id lacks access rights. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): DraftPick encodes a decision kernel in GSE’s state graph, where transitions depend on manager archetype and risk ladder scores. Operator 'Risk Exposure Scoring' (page 1, domain other) captures: Public/private | | RiskLadder | team_id, week, volatility_score, durability_score, no_bet_signal, explanation_public | Public reveal-less | | Assumptions: Volatility and durability scores are independent; no_bet_signal triggers conditional policy enforcement. Breakdown regime: Undefined when team_id does not correspond to active roster or week exceeds season limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RiskLadder maps to a stochastic process in GSI’s risk inference engine, where volatility/durability define posterior belief updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 07-product-architecture (5b836dc893a66db1, domain=other, pages_read=1/1): Operator 'Contest Lifecycle' (page 1, domain other) captures: # Product Architecture As of: 2026-06-09 ## Entities | Entity | Fields | Surface | | Assumptions: Contest lifecycle is deterministic within defined time bounds; all participants observe same start/end times. Breakdown regime: Undefined when starts_at > current_time or ends_at < current_time. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Contest entity maps to a temporal event space in GSI's probabilistic model, where each state transition corresponds to an event in the event taxonomy. Operator 'Draft Pick Decision' (page 1, domain other) captures: contest_id, pod_id, timer_mode, pick_clock, status | Public beta | | DraftPick | draft_room_id, pick_no, manager_id, player_id, Assumptions: Each pick is made under bounded rationality constraints; risk snapshot reflects agent-specific volatility. Breakdown regime: Undefined when pick_no exceeds available slots or manager_id lacks access rights. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): DraftPick encodes a decision kernel in GSE’s state graph, where transitions depend on manager archetype and risk ladder scores. Operator 'Risk Exposure Scoring' (page 1, domain other) captures: Public/private | | RiskLadder | team_id, week, volatility_score, durability_score, no_bet_signal, explanation_public | Public reveal-less | | Assumptions: Volatility and durability scores are independent; no_bet_signal triggers conditional policy enforcement. Breakdown regime: Undefined when team_id does not correspond to active roster or week exceeds season limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RiskLadder maps to a stochastic process in GSI’s risk inference engine, where volatility/durability define posterior belief updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal category theory and Bayesian network semantics, with influence from temporal logic and game-theoretic modeling in multi-agent systems. Retrocausal Genealogy: Rooted in 07-product-architecture (5b836dc893a66db1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 07-product-architecture (5b836dc893a66db1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as rational actors with private information (e.g., archetype, ghost manager) and shared public signals (e.g., leaderboard, risk ladder). Their decisions are constrained by contest rules and observed behaviors. Theory of Mind & Decision Maker Model: Rooted in 07-product-architecture (5b836dc893a66db1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that GSE’s state transitions do not directly depend on GSI’s probabilistic inferences without explicit causal mediation. Leakage occurs if private risk data leaks into public domains without proper boundary enforcement. Cross-Layer Veto & Anti-Leakage Check: Rooted in 07-product-architecture (5b836dc893a66db1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

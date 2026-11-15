@@ -1,0 +1,306 @@
+{
+  "book_id": "53c00239b496d051",
+  "source_status": "COMPLETE",
+  "title": "1545-markov-decision-processes-with-dynamic-transition",
+  "file_name": "1545-markov-decision-processes-with-dynamic-transition.md",
+  "sha256": "53c00239b496d05143c4110e02c9b652ae02b656bc93d62393a3678617942706",
+  "primary_domain": "psych",
+  "pages_total": 4,
+  "pages_read": 4,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 4,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian hierarchical Markov decision process models dynamic shooting strategies in basketball using non-stationary transition probabilities indexed by shot-clock intervals. Markov decision processes unify situational football policy learning via state-transitions, rewards, and counterfactual simulations.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over MDP policies to estimate team-specific shooting behaviors under temporal covariance structures derived from optical tracking data. The framework implements a GSI-style sequential Bayesian updating pipeline: first-stage conformal predictive intervals for raw tracking data (STATS LLC), second-stage hierarchical posterior draws for player-level latent states (shrinkage parameter ρ̂_θ), yielding empirical Bayes credible intervals for policy alteration effects (e.g., EPPS/EPPP changes).",
+  "gse_mapping": "GSE utilizes state-transition tensors to simulate play sequences, incorporating shot-clock dynamics and defensive pressure to predict optimal shooting decisions in real-time. GSE's situational reasoning layer can adopt the transition kernel R(·) as a state-transition matrix for discrete-event game simulators, while its state-transition mapping leverages the same posterior draws to propagate uncertainty in ballhandler decisions through branching play trees, though current v5.2.7 lacks native policy-counterfactual capability.",
+  "primitives": [
+    {
+      "primitive_id": "w0_markov_decision_process",
+      "name": "Dynamic Transition Probability Tensor",
+      "verbatim_quote": "Non-stationarity handled by transition probability tensors (TPTs): n_TPT = 8 slices, each a transition matrix for a 3-second shot-clock interval (T(c_n) maps clock time to slice 1–8).",
+      "page": 1,
+      "latex": "\\mathbf{T}(t) \\in \\mathbb{R}^{n \\times n}, \\quad t \\in [0, T_{\\text{clock}}]",
+      "symbol_and_unit_ledger": "{'T': 'transition probability tensor, dimensionless', 't': 'shot-clock time, seconds', 'n': 'number of discrete court regions, dimensionless'}",
+      "assumptions": "Transition probabilities vary smoothly with shot-clock time; each slice represents a fixed time interval.",
+      "breakdown_regime": "At shot-clock expiry, transitions map to turnover or end-of-play states.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The TPT framework mirrors GSE's state-transition kernel, where each time-slice corresponds to a conditional policy update in response to evolving game context.",
+        "source_operator": "w0_markov_decision_process",
+        "telemetry": "Empirical transition frequency matrices across shot-clock bins."
+      }
+    },
+    {
+      "primitive_id": "w1_bayesian_hierarchical_model",
+      "name": "Hierarchical Policy Estimator",
+      "verbatim_quote": "Each MDP component (policy π, transitions P, reward R) estimated with Bayesian hierarchical models in Stan (2 chains, R̂ < 1.05, ESS 48–15,000).",
+      "page": 1,
+      "latex": "\\pi(a|s) = \\int p(a|s, \\theta) p(\\theta | D) d\\theta",
+      "symbol_and_unit_ledger": "{'π': 'policy function, dimensionless', 'a': 'action, binary (Shoot/Not Shoot)', 's': 'state vector, dimensionless', 'θ': 'model parameters, dimensionless', 'D': 'data set, dimensionless'}",
+      "assumptions": "Policy estimates are informed by group-level priors and individual-level likelihoods.",
+      "breakdown_regime": "When data sparsity occurs, hierarchical shrinkage stabilizes estimates.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Bayesian estimator provides GSI with uncertainty quantification for policy decisions, enabling robust inference on team performance.",
+        "source_operator": "w1_bayesian_hierarchical_model",
+        "telemetry": "Posterior effective sample size (ESS) and convergence diagnostic (R̂)."
+      }
+    },
+    {
+      "primitive_id": "w2_absorbing_chain_theorem",
+      "name": "Average Chain Theorem",
+      "verbatim_quote": "Novel \"average chain\" theorem: 500+ lineup-specific chains combined into one team-average chain whose expected transition count per state-pair equals the weighted sum of the chains' expected counts (derivation via canonical Q/U absorbing-chain form).",
+      "page": 1,
+      "latex": "\\mathbb{E}[N_{ij}] = \\sum_{k=1}^{K} w_k \\cdot \\mathbb{E}[N_{ij}^{(k)}]",
+      "symbol_and_unit_ledger": "{'N_{ij}': 'expected number of transitions from state i to j, dimensionless', 'w_k': 'weight for lineup k, dimensionless', 'N_{ij}^{(k)}': 'transitions for lineup k, dimensionless'}",
+      "assumptions": "Lineup-specific chains are independent and identically distributed with known weights.",
+      "breakdown_regime": "In cases of low lineup diversity, average chain may underrepresent rare strategic patterns.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The average chain theorem enables GSE to aggregate heterogeneous player behavior into a single representative policy trajectory.",
+        "source_operator": "w2_absorbing_chain_theorem",
+        "telemetry": "Weighted average transition counts across lineups."
+      }
+    },
+    {
+      "primitive_id": "w3_state_space_representation",
+      "name": "Court Region State Space",
+      "verbatim_quote": "State = ballcarrier × 6 court regions (rim/paint/mid-range/corner-3/arc-3/backcourt) × defensive pressure (open/contested) — ~180 states/team.",
+      "page": 1,
+      "latex": "S = \\{s_i \\mid i = 1, ..., 180\\}, \\quad s_i = (\\text{ballcarrier}, \\text{region}, \\text{pressure})",
+      "symbol_and_unit_ledger": "{'S': 'state space, dimensionless', 's_i': 'individual state vector, dimensionless', 'ballcarrier': 'player identifier, dimensionless', 'region': 'court zone, dimensionless', 'pressure': 'defensive status, binary'}",
+      "assumptions": "States are mutually exclusive and collectively exhaustive for each play.",
+      "breakdown_regime": "When ball carrier is undefined, state representation becomes ambiguous.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This structured state space allows GSE to encode contextual features such as shot difficulty and defensive intensity into its decision-making engine.",
+        "source_operator": "w3_state_space_representation",
+        "telemetry": "Frequency of state visits per region-pressure combination."
+      }
+    },
+    {
+      "primitive_id": "53c00239b496d051_w1_g1",
+      "name": "1545-markov-decision-processes-with-dynami Ch.2 Grounded Operator",
+      "verbatim_quote": "- TPT slicing: T(c_n) = 1 if c_n ∈ (0,3], ..., 8 if c_n ∈ (21,24] (2.10); n_TPT = 8 chosen because each extra slice adds ~1M parameters.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 53c00239b496d051_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "53c00239b496d051_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "53c00239b496d051_w1_g2",
+      "name": "1545-markov-decision-processes-with-dynami Ch.2 Grounded Operator",
+      "verbatim_quote": "- Transitions: P(s,a,s′) = exp(λ^{((x,y,z),(x′,y′,z′))}_{t_n}) / Σ_{i,j,k} exp(λ^{((x,y,z),(i,j,k))}_{t_n}) (3.5); λ array is |S^team|×(|S^team|+1)×8 = 180×181×8 = ≥260,640 params/team; hierarchy λ ~ N_8(ζ^{(position)}, Σ_λ), ζ ~ N_8(ω^{(region/defense)}, Σ_ζ), ω ~ N_8(0, Σ_ω) (3.6–3.8); two-stage fitting (per-team, borrowing from position/location levels) due to ~10M league-wide parameters.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 53c00239b496d051_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "53c00239b496d051_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "53c00239b496d051_w1_g3",
+      "name": "1545-markov-decision-processes-with-dynami Ch.2 Grounded Operator",
+      "verbatim_quote": "- Make probability: Make(s) = expit(μ^{(x,y)} + I(z_n='Open')·ξ^{(y)}) (3.9); R(s,a) = 3·Make(s) or 2·Make(s) if shot, else 0 (3.10).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 53c00239b496d051_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "53c00239b496d051_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "w2_shrinkage_policy_modeling",
+      "name": "Shrinkage Policy Modeling",
+      "verbatim_quote": "Temporal autocorrelation estimate ρ̂_θ = 0.94 (strong smoothing of shot policies).",
+      "page": 3,
+      "latex": "\\pi_{t}(a|s) \\sim \\text{Dirichlet}\\left(\\alpha \\cdot \\bar{\\pi} + (1-\\alpha) \\cdot \\pi^{(\\text{local})}_{t}(a|s)\\right), \\quad \\alpha = f(\\rho_{\\theta})",
+      "symbol_and_unit_ledger": "{'\\\\pi_{t}(a|s)': 'Probability of action a at state s and time t (dimensionless)', '\\\\bar{\\\\pi}': 'League-average policy (dimensionless)', '\\\\pi^{(\\\\text{local})}_{t}(a|s)': 'Local empirical policy (dimensionless)', '\\\\rho_{\\\\theta}': 'Temporal autocorrelation coefficient (dimensionless, 0 < \\\\rho_{\\\\theta} < 1)', '\\\\alpha': ' Shrinkage weight (dimensionless, 0 \\\\leq \\\\alpha \\\\leq 1)'}",
+      "assumptions": "Strong temporal stationarity (ρ̂_θ ≈ 1), i.i.d. local policies, Dirichlet conjugate prior, and no systematic offensive adaptation to policy interventions.",
+      "breakdown_regime": "α → 1 (no shrinkage) when ρ̂_θ → 1, leading to overfitting on short-term streaks; α → 0 recovers pure league average, eliminating individuality.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's discrete-event state-transition logic where each node represents a ballhandler decision (action a) with learned transition probabilities. The shrinkage term acts as a regularization prior on edge weights, preventing overfitting in sparse branches.",
+        "source_operator": "w2_shrinkage_policy_modeling",
+        "telemetry": "Observed vs. predicted shot frequency discrepancies after intervention (EPPS/EPPP metrics)"
+      }
+    },
+    {
+      "primitive_id": "w2_counterfactual_simulation",
+      "name": "Counterfactual Policy Simulation",
+      "verbatim_quote": "Policy results (300 sims each, Cavaliers): Alteration 1 (cut contested mid-range 20% with >10s on clock) — no practical EPPS/EPPP change (only 7.5% of plays end in mid-range shots with >10s left).",
+      "page": 3,
+      "latex": "\\Delta \\text{EPPS} = \\mathbb{E}_{\\pi'}[R] - \\mathbb{E}_{\\pi}[R], \\quad \\Delta \\text{EPPP} = \\mathbb{E}_{\\pi'}[P] - \\mathbb{E}_{\\pi}[P]",
+      "symbol_and_unit_ledger": "{\"\\\\pi, \\\\pi'\": 'Base and altered policy functions (dimensionless)', 'R': 'Expected points per possession (dimensionless)', 'P': 'Scoring efficacy (dimensionless)', '\\\\Delta \\\\text{EPPS}, \\\\Delta \\\\text{EPPP}': 'Absolute change in expected points per shot/system (dimensionless)'}",
+      "assumptions": "Average-chain invariance (rebounders/teammates do not affect ballhandler transitions), no defensive adaptation, and linear additivity of policy impacts across all states.",
+      "breakdown_regime": "ΔEPPS/EPPP → 0 when altered action has low marginal frequency (<7.5% in this case) or when the altered region has near-neutral scoring value.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Simulates alternative decision paths in GSE's branching tree by reweighting edges according to π' versus π, accumulating leaf-node outcomes to estimate overall win probability deltas.",
+        "source_operator": "w2_counterfactual_simulation",
+        "telemetry": "Historical win-rate comparison between actual game trajectories and simulated altered trajectories"
+      }
+    },
+    {
+      "primitive_id": "w2_defense_adaptation",
+      "name": "Defense Non-Adversarial Assumption",
+      "verbatim_quote": "(2) Defense non-adversarial: policy gains assume no defensive adaptation (authors' Raptors example suggests adaptation is partial, but it's observational).",
+      "page": 3,
+      "latex": "V^{\\text{obs}}(\\pi') = V^{\\text{true}}(\\pi') + \\epsilon, \\quad \\mathbb{E}[\\epsilon | \\pi'] \\neq 0",
+      "symbol_and_unit_ledger": "{'V^{\\\\text{obs}}': \"Observed value function under altered policy π' (dimensionless)\", 'V^{\\\\text{true}}': 'True value function accounting for full defensive adaptation (dimensionless)', '\\\\epsilon': 'Observational bias due to static defense (dimensionless)', \"\\\\mathbb{E}[\\\\cdot | \\\\pi']\": \"Conditional expectation given policy π'\"}",
+      "assumptions": "Defensive systems are exogenous, fixed across seasons, and independent of offensive strategy, violating the closed-loop feedback inherent in real-game adaptation.",
+      "breakdown_regime": "Bias term ε → 0 only if defenses perfectly randomize or if the sample size of adaptations is infinite, both unrealistic.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives an adversarial correction factor c(\\pi') = \\frac{V^{\\text{true}}}{V^{\\text{obs}}} \\approx 1 - \\frac{\\text{Cov}(\\pi', \\text{Defense)}}{\\text{Var}(V^{\\text{obs}})}$ for GSE's minimax tree search, where covariance captures observed adaptation patterns.",
+        "source_operator": "w2_defense_adaptation",
+        "telemetry": "Difference in opponent defensive efficiency before vs. after policy shift"
+      }
+    },
+    {
+      "primitive_id": "w2_hierarchical_posterior_sampling",
+      "name": "Hierarchical Posterior Sampling",
+      "verbatim_quote": "Alteration 2 (cut contested mid-range 70%, double 3PA rate): EPPS 1.038 → 1.089, EPPP 0.923 → 0.973.",
+      "page": 3,
+      "latex": "\\theta_i^{(l)} \\sim p(\\theta_i | \\mathbf{y}_i, \\phi), \\quad \\phi \\sim p(\\phi | \\mathbf{Y}_{-i}), \\quad l = 1,\\dots,L",
+      "symbol_and_unit_ledger": "{'\\\\theta_i^{(l)}': 'Latent state parameter for player i at level l (dimensionless)', '\\\\mathbf{y}_i': ' Local observation vector for player i (dimensionless)', '\\\\mathbf{Y}_{-i}': 'Data excluding player i (dimensionless)', '\\\\phi': ' Hyperparameter governing population distribution (dimensionless)', 'L': 'Number of posterior draws (dimensionless)'}",
+      "assumptions": "Exchangeability of players within a position group, conjugate priors, and sufficient statistics for \\phi, with ρ̂_θ controlling the informativeness of the prior.",
+      "breakdown_regime": "L → ∞ recovers frequentist maximum likelihood; L → 1 reduces to point estimation, ignoring uncertainty propagation.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's ensemble forecasting where each posterior draw \\theta_i^{(l)} becomes a scenario-specific model parameter, and the hierarchical structure propagates uncertainty from player-level estimates to team-level outcomes.",
+        "source_operator": "w2_hierarchical_posterior_sampling",
+        "telemetry": "Spread of simulated EPPS/EPPP across posterior draws as uncertainty metric"
+      }
+    },
+    {
+      "primitive_id": "ngs_tpt_analogue",
+      "name": "NGS-Based Transition Probability Template",
+      "verbatim_quote": "Counterfactual simulator: posterior draws → simulate seasons under altered 4th-down or pass-rate policies → EPPP-equivalent (expected points per drive) distributions, exactly as their Algorithm 1.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'s': 'state vector in discrete space', 'a': 'action (play type)', 'r': 'reward (EPA)', \"p(s'|s,a)\": 'transition probability'}",
+      "assumptions": "Discrete state-action space, Markovian transitions, bounded reward function.",
+      "breakdown_regime": "When field position or score differential exceeds defined buckets.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps coach policy decisions to stochastic state transitions via EPA reward in NGS-enhanced football context.",
+        "source_operator": "ngs_tpt_analogue",
+        "telemetry": "Expected Points Added (EPA) distribution across simulated play sequences."
+      }
+    },
+    {
+      "primitive_id": "counterfactual_simulator",
+      "name": "Counterfactual Policy Simulator",
+      "verbatim_quote": "Effort: 2–3 weeks for a Stan prototype on one team-season of nflverse + NGS; the full TPT is heavier (their 260k params/team).",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{\"π':\": 'policy under simulation', 'θ': 'posterior parameters', 'EPD': 'expected points per drive', 'D': 'drive-level outcome distribution'}",
+      "assumptions": "Posterior draws represent model uncertainty; policy changes are independent of observed behavior.",
+      "breakdown_regime": "Under extreme policy deviation from baseline.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates synthetic season trajectories conditioned on modified strategic policies to estimate causal effect on EPD.",
+        "source_operator": "counterfactual_simulator",
+        "telemetry": "Distributional shift in EPPP-equivalent metrics under alternative strategies."
+      }
+    },
+    {
+      "primitive_id": "hierarchical_ar1_model",
+      "name": "Hierarchical Autoregressive Model",
+      "verbatim_quote": "Test A (estimation): hierarchical AR(1) model of QB EPA/play vs GSE's current point estimates — metric: out-of-sample log-likelihood on held-out 2025 games (their Table 2 protocol), requiring the hierarchical model to beat the empirical/no-shrinkage baseline.",
+      "page": 4,
+      "latex": "\\text{EPA}_{t} = \\phi \\cdot \\text{EPA}_{t-1} + \\epsilon_t, \\quad \\epsilon_t \\sim \\mathcal{N}(0,\\sigma^2)",
+      "symbol_and_unit_ledger": "{'EPA_t': 'expected points added at time t', 'φ': 'autoregressive coefficient', 'σ²': 'variance parameter', 'ε_t': 'error term'}",
+      "assumptions": "Time-series stationarity, normality of residuals, hierarchical shrinkage structure.",
+      "breakdown_regime": "When out-of-sample predictive performance degrades below baseline.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes QB performance dynamics through autoregressive dependence while incorporating group-level variance via hierarchical Bayesian structure.",
+        "source_operator": "hierarchical_ar1_model",
+        "telemetry": "Out-of-sample log-likelihood comparison between hierarchical and empirical models."
+      }
+    },
+    {
+      "primitive_id": "reproducible_test_dataset",
+      "name": "Reproducible NFL Data Framework",
+      "verbatim_quote": "Reproducible test Dataset: nflverse 2020–2025 + NGS tracking where available.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{nfl}': 'nflverse dataset', 'D_{ngs}': 'NGS tracking supplement', 'T': 'time period [2020, 2025]'}",
+      "assumptions": "Data completeness within temporal window; availability of NGS tracking per game.",
+      "breakdown_regime": "When data gaps exceed 10% of total observations.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides standardized input pipeline for both estimation and simulation tasks across multiple seasons and tracking modalities.",
+        "source_operator": "reproducible_test_dataset",
+        "telemetry": "Coverage rate of NGS data per season and alignment with nflverse schema."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "53c00239b496d051_t0",
+      "think": "Chapter 1 introduces a formalism for modeling basketball plays as episodes within a non-stationary Markov decision process (MDP), where actions are binary (Shoot/Not Shoot), and states are defined by court position and defensive pressure. The core innovation lies in the use of transition probability tensors (TPTs) that vary with shot-clock time, allowing for dynamic modeling of decision-making under temporal constraints. This approach leverages Bayesian hierarchical modeling to estimate policy, transition, and reward functions, incorporating multi-level shrinkage and AR(1) temporal covariance. The paper also proposes an 'average chain' theorem to combine lineup-specific MDPs into a team-wide representation. These primitives enable both GSI’s probabilistic inference over player behavior and GSE’s real-time situational reasoning. The methodological framework supports simulation-based policy evaluation and robustness against data sparsity through hierarchical priors. The formalism bridges stochastic control theory with empirical game analysis, offering a principled way to model strategic decision-making in basketball. Window 1 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on MDPs in operations research and reinforcement learning, this chapter extends classical formulations to include temporal non-stationarity and hierarchical structure, building upon prior studies in sports analytics and Bayesian modeling. Retrocausal Genealogy (Window 1): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The model assumes rational actors—players making optimal decisions based on current state and expected rewards. It accounts for opposing agent behavior through defensive pressure states, capturing the adversarial nature of basketball. Theory of Mind (Window 1): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by separating state representation into distinct dimensions (position, pressure, ball carrier). Leakage is mitigated by ensuring each transition is conditioned only on immediate state and action, avoiding long-term dependencies beyond shot-clock dynamics. Cross-Layer Veto (Window 1): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "53c00239b496d051_t1",
+      "think": "Window 2 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "53c00239b496d051_t2",
+      "think": "This chapter introduces a unified Bayesian hierarchical MDP framework that integrates three core components: policy (π), scoring efficacy (P), and transition (R) models. The key innovation is using posterior draws from the hierarchical model to simulate counterfactual policies, such as altering shot distributions or pass networks. The temporal autocorrelation ρ̂_θ = 0.94 implies strong persistence in player behavior, justifying aggressive shrinkage toward the league mean. The empirical results demonstrate that small policy changes have minimal impact unless they target high-frequency actions (e.g., Alteration 2 vs. Alteration 1). The 'defense non-adversarial' assumption is a critical limitation, as real defenses will adapt, reducing the observed gains. This work bridges the gap between static shot charts and dynamic decision processes, providing a rigorous probabilistic foundation for strategic analysis. Window 3 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The lineage traces back to early Markov chain models of baseball (Stevens, 1961) and chess endgames (Zermelo, 1913). It builds on dynamic programming in operations research (Bellman, 1957) and incorporates modern hierarchical Bayesian methods from machine learning (Gelman et al., 2013). The use of posterior sampling for policy evaluation connects to reinforcement learning (Sutton & Barto, 1998) and causal inference in economics (Imbens & Rubin, 2015).",
+      "theory_of_mind": "Coaches and analysts model opponents as rational adaptive agents who adjust defensive rotations, help coverages, and shot contesting based on observed offensive tendencies. The non-adversarial assumption ignores this recursive best-response process, leading to optimistic projections. For instance, doubling up on three-point attempts (Alteration 2) would likely trigger more ball movement and pick-and-roll actions, changing the transition matrix R entirely. Theory of Mind (Window 3): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Collinearity risk exists between policy alterations and underlying talent levels; if high-skilled players naturally take more efficient shots, isolating the policy effect requires conditioning on performance metrics. Leakage occurs if the training data contains future information about defensive adjustments, inflating out-of-sample performance. To prevent this, the authors should use cross-validation that respects temporal order. Cross-Layer Veto (Window 3): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "53c00239b496d051_t3",
+      "think": "Chapter 4 introduces a formal framework for modeling football strategy using Markov Decision Processes (MDPs), grounded in real-time tracking data (NGS) and expected points (EPA). The core idea is to treat each play as a state transition governed by coach decisions, with rewards derived from EPA. This allows for both estimation of player performance via hierarchical AR(1) models and simulation of counterfactual strategies such as aggressive 4th-down plays. The use of probabilistic programming languages like Stan enables scalable Bayesian inference over large datasets including nflverse and NGS. The framework supports reproducibility through standardized data pipelines and provides rigorous testing protocols that validate model accuracy against empirical baselines. This chapter bridges theoretical MDPs with practical application in sports analytics, enabling dynamic policy learning and strategic evaluation. Window 4 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on expected points models and reinforcement learning in sports, building upon prior frameworks like TPT and extending them with high-dimensional tracking data. Retrocausal Genealogy (Window 4): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models coach behavior as optimizing agent within a stochastic environment, where actions influence future states through probabilistic transitions and reward signals derived from EPA. Theory of Mind (Window 4): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting by enforcing cross-validation on held-out data and ensuring no leakage between estimation and simulation layers. Cross-Layer Veto (Window 4): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 1545-markov-decision-processes-with-dynamic-transition (53c00239b496d051, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

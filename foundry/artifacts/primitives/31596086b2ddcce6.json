@@ -1,0 +1,78 @@
+{
+  "book_id": "31596086b2ddcce6",
+  "source_status": "COMPLETE",
+  "title": "unkey",
+  "file_name": "unkey.md",
+  "sha256": "31596086b2ddcce6119ddfcdb2c79c0669f453e495bb960c99e64fac42d0529d",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'name': 'API Key Management', 'description': 'A sovereign primitive for managing API access through token-based authentication, rate limiting, and usage analytics.', 'symbols': {'k': 'API key', 'r(k)': 'Rate limit threshold for key k', 'u(k,t)': 'Usage count of key k at time t', 'T': 'Time window for rate limiting', 'C': 'Capacity constraint on total requests'}, 'equation': 'If u(k,t) > r(k) over T, then throttle key k. If total requests exceed C, then reject all.', 'assumptions': 'Keys are uniformly distributed, usage follows Poisson process, capacity is finite.', 'breakdown': 'Failure occurs when bursty traffic exceeds T, causing denial of service.'}",
+  "gsi_mapping": "{'name': 'GSI API Governance', 'description': \"Maps to GSI's risk assessment framework for third-party API integrations, quantifying reliability and compliance.\", 'bayesian_model': 'P(reliable|usage_data) = f(average_latency, error_rate, throughput)', 'conformal_mapping': \"Unkey's rate limits serve as conformal prediction intervals for expected load.\"}",
+  "gse_mapping": "{'name': 'GSE Traffic Shaping', 'description': \"Applies to GSE's edge routing and congestion control, translating API key quotas into network flow management.\", 'situational_reasoning': \"When network latency spikes, GSE uses Unkey's `u(k,t)` to prioritize high-value API calls.\", 'state_transition': 'State(k) = {authorized, throttled, revoked} transitions based on `u(k,t) vs r(k)` thresholds.'}",
+  "primitives": [
+    {
+      "primitive_id": "api_key_authentication",
+      "name": "Token-Based Access Control",
+      "verbatim_quote": "# Unkey ## Project Summary Unkey is the candidate api keys, rate limiting, authorization, api analytics, gateway layer for GSE / GSN.",
+      "page": 1,
+      "latex": "A_{auth}(k) = \\begin{cases} 1, & \\text{if } k \\in K_{valid} \\\\ 0, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'A_{auth}: {0,1}': 'Authorization outcome indicator', 'K_{valid}': 'Set of valid API keys', 'k': 'Candidate API key'}",
+      "assumptions": "Valid keys are drawn from a known distribution, offline attacks are prevented by short TTL.",
+      "breakdown_regime": "Unauthorized access occurs when k collides with a leaked key in K_{leaked}.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI verifies API signatures using similar binary classification. GSE uses HMACs instead of JWTs.",
+        "source_operator": "api_key_authentication",
+        "telemetry": "Authentication success rate per minute, ratio of 401 Unauthorized responses."
+      }
+    },
+    {
+      "primitive_id": "rate_limiting",
+      "name": "Token Bucket Throttling",
+      "verbatim_quote": "## What Not To Do - Do not copy Unkey source into GSE.",
+      "page": 1,
+      "latex": "B(t) = min(C, max(0, B(t-\\Delta t) + \\lambda - 1_{request}))",
+      "symbol_and_unit_ledger": "{'B(t): [0,C]': 'Tokens remaining at time t', 'C: N': 'Bucket capacity (requests)', '\\\\lambda: [0,1]': 'Token fill rate (per second)', '1_{request}: 1': 'Indicator for request arrival'}",
+      "assumptions": "Requests arrive independently, bucket resets on overflow, λ is constant.",
+      "breakdown_regime": "Throttling triggers when B(t) < 0, causing queue buildup or rejection.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE implements leaky bucket variants for RPC rate control. GSI uses this for provider SLA enforcement.",
+        "source_operator": "rate_limiting",
+        "telemetry": "Average queue depth, percentage of requests dropped due to limits."
+      }
+    },
+    {
+      "primitive_id": "usage_analytics",
+      "name": "Request Volume Monitoring",
+      "verbatim_quote": "- Add event taxonomy, data-boundary, and rollback docs before package install.",
+      "page": 1,
+      "latex": "\\hat{\\mu}(t) = \\frac{1}{T} \\sum_{\\tau=t-T}^{t-1} x(\\tau)",
+      "symbol_and_unit_ledger": "{'\\\\hat{\\\\mu}(t): R': 'Estimated mean request rate at time t', 'x(\\\\tau): N': 'Count of requests at timestamp τ', 'T: s': 'Aggregation window duration'}",
+      "assumptions": "Data is stationary within T, sampling noise is Gaussian, no autocorrelation.",
+      "breakdown_regime": "Anomalies detected when |\\hat{\\mu}(t) - \\mu_{baseline}| > 3σ, indicating potential DDoS.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI tracks hourly API call volumes to forecast provider costs. GSE uses moving averages for congestion alerts.",
+        "source_operator": "usage_analytics",
+        "telemetry": "Standard deviation of request counts, sudden spikes above baseline thresholds."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "31596086b2ddcce6_t0",
+      "think": "The core challenge is balancing system resilience against user demand. Unkey's primitives formalize this via stochastic queuing: a key acts as a server, requests as customers, and the bucket as a finite waiting room. The transition from \"authorized\" to \"throttled\" is a phase change akin to a liquid-gas shift in statistical mechanics. When load exceeds capacity, the system exhibits critical opalescence—fluctuations diverge. In GSE, this maps directly to packet loss; in GSI, it manifests as SLA violations. The veto condition is that these models fail when traffic exhibits long-range dependence (e.g., periodic bursts), requiring fractional Brownian motion extensions rather than Poisson.\n\nDeep epistemic analysis for unkey (31596086b2ddcce6, domain=other, pages_read=2/2): Operator 'Token-Based Access Control' (page 1, domain other) captures: # Unkey ## Project Summary Unkey is the candidate api keys, rate limiting, authorization, api analytics, gateway layer for GSE / GSN. Assumptions: Valid keys are drawn from a known distribution, offline attacks are prevented by short TTL. Breakdown regime: Unauthorized access occurs when k collides with a leaked key in K_{leaked}. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI verifies API signatures using similar binary classification. GSE uses HMACs instead of JWTs. Operator 'Token Bucket Throttling' (page 1, domain other) captures: ## What Not To Do - Do not copy Unkey source into GSE. Assumptions: Requests arrive independently, bucket resets on overflow, λ is constant. Breakdown regime: Throttling triggers when B(t) < 0, causing queue buildup or rejection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE implements leaky bucket variants for RPC rate control. GSI uses this for provider SLA enforcement. Operator 'Request Volume Monitoring' (page 1, domain other) captures: - Add event taxonomy, data-boundary, and rollback docs before package install. Assumptions: Data is stationary within T, sampling noise is Gaussian, no autocorrelation. Breakdown regime: Anomalies detected when |\\hat{\\mu}(t) - \\mu_{baseline}| > 3σ, indicating potential DDoS. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI tracks hourly API call volumes to forecast provider costs. GSE uses moving averages for congestion alerts. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for unkey (31596086b2ddcce6, domain=other, pages_read=2/2): Operator 'Token-Based Access Control' (page 1, domain other) captures: # Unkey ## Project Summary Unkey is the candidate api keys, rate limiting, authorization, api analytics, gateway layer for GSE / GSN. Assumptions: Valid keys are drawn from a known distribution, offline attacks are prevented by short TTL. Breakdown regime: Unauthorized access occurs when k collides with a leaked key in K_{leaked}. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI verifies API signatures using similar binary classification. GSE uses HMACs instead of JWTs. Operator 'Token Bucket Throttling' (page 1, domain other) captures: ## What Not To Do - Do not copy Unkey source into GSE. Assumptions: Requests arrive independently, bucket resets on overflow, λ is constant. Breakdown regime: Throttling triggers when B(t) < 0, causing queue buildup or rejection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE implements leaky bucket variants for RPC rate control. GSI uses this for provider SLA enforcement. Operator 'Request Volume Monitoring' (page 1, domain other) captures: - Add event taxonomy, data-boundary, and rollback docs before package install. Assumptions: Data is stationary within T, sampling noise is Gaussian, no autocorrelation. Breakdown regime: Anomalies detected when |\\hat{\\mu}(t) - \\mu_{baseline}| > 3σ, indicating potential DDoS. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI tracks hourly API call volumes to forecast provider costs. GSE uses moving averages for congestion alerts. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Erlang's teletraffic theory (1917) for circuit switching, adapted to Internet-scale APIs via Leaky Bucket (1990s) and Token Bucket (1992). Modernized by Google's Borg (2015) and CNCF service meshes. Retrocausal Genealogy: Rooted in unkey (31596086b2ddcce6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in unkey (31596086b2ddcce6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious bots targeting rate limits to cause denial-of-service, while legitimate users expect consistent performance. Compliance officers enforce privacy by ensuring analytics cannot re-identify individuals. Theory of Mind & Decision Maker Model: Rooted in unkey (31596086b2ddcce6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity fails if multiple keys share the same underlying database connection pool, creating a single point of failure. Leakage occurs if telemetry endpoints transmit raw request payloads instead of aggregates. Cross-Layer Veto & Anti-Leakage Check: Rooted in unkey (31596086b2ddcce6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

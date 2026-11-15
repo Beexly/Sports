@@ -1,0 +1,321 @@
+{
+  "book_id": "5fee5df924431396",
+  "source_status": "COMPLETE",
+  "pages_total": 44,
+  "pages_read": 44,
+  "source_title_actual": "The Forward Pass in Football — Elmer Berry (A. S. Barnes & Co., 1921)",
+  "catalog_note": "Catalog title matches actual content (verified PDF p.13 title page, p.38 author advertisement). 1921 Internet Archive scan (forwardpassinfooOOberriala, UCLA copy) with readable OCR text layer carrying period artifacts; quotes preserve artifacts verbatim. Figures 1-5 are image-only plates described in prose; plate images not extracted. Page citations are PDF page numbers (PDF pp.13-37 = printed pp.1-25). Primary historical source; no retraction applicable.",
+  "extractor_model": "qwen4-max-preview (worker ext-32)",
+  "primitives": [
+    {
+      "domain": "football",
+      "statement": "Sovereign institutional invariant of football rule evolution (Berry 1921, Ch. I): the history of the game is a history of restricting the offense, while the defense has never been restricted in alignment or timing (barring offside). The forward pass was not an exogenous innovation but endogenous legislation: the ten-yards-to-gain requirement 'could never be made by mass attack', so the pass was granted to the offense as 'practically the one great occasion of legislation favoring the offense'. The 1906 New York conference (~70 colleges, convened to abolish football after mass-play deaths) instead formed the NCAA and revised the game; the 1912 fourth down, intended by many as a blow to the pass, actually helped it by giving quarterbacks an extra down to experiment with.",
+      "verbatim_quote": "The history of football has been a story of limiting the power of the offense.",
+      "supporting_quotes": [
+        {
+          "quote": "The defense has never been restricted, never curtailed, never hampered, always free to line up as it chose, to go when it pleased (barring offside), where it pleased and do prac- tically as it pleased.",
+          "page": 13
+        },
+        {
+          "quote": "This could never be made by mass attack. Consequently the for- ward pass was given to the offense—practically the one great oc- casion of legislation favoring the offense.",
+          "page": 15
+        },
+        {
+          "quote": "In 1912 a fourth down was added. With ten yards in four downs and the forward pass as the fundamentals the modem game of football",
+          "page": 15
+        }
+      ],
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": [],
+      "assumptions": [
+        "Historical-institutional claim as stated by a 1921 participant-observer (YMCA college coach); dates and rule changes are cross-referenced by Berry to the Football Guides of 1903/1906/1907/1908.",
+        "The asymmetry claim ('defense never restricted') is Berry's generalization 'taking it by and large'; he concedes minor rule changes had other motives.",
+        "Era-bound: describes the 1906-1921 rule trajectory, not a timeless law of sport."
+      ],
+      "provenance": "Berry, Elmer. The Forward Pass in Football. New York: A. S. Barnes & Co., 1921. Author: football and baseball coach, International Y.M.C.A. College, Springfield, Mass. Source file: Berry-1921-The-Forward-Pass-in-Football.pdf, 44 PDF pages; prose body PDF pp.13-37 (printed pp.1-25), front matter PDF pp.3-12, publisher ad p.38, UCLA library bookplates pp.3,40,42. Internet Archive scan forwardpassinfooOOberriala, digitized 2007 with Microsoft Corporation funding; University of California Southern Regional Library Facility copy. Primary historical source, not a derivative or AI summary; no retraction applicable (1921 monograph). OCR text layer present on all prose pages with period scan artifacts (e.g. 'oflFensive', 'dozimzvard', 'prac- tically', 'modem' for 'modern'); all quotes preserve these artifacts verbatim against the normalized text layer and are NOT silently corrected. Figures 1-5 are image-only plates; their content is quoted from the surrounding prose, the plate images themselves are not extracted. Page numbers in this artifact are PDF page numbers. Catalog title matches actual content (verified p.13 title page and p.38 author ad).",
+      "primitive_id": "P1",
+      "name": "Rule-evolution asymmetry: offense restricted, defense free; the forward pass as endogenous counter-legislation (1906-1912)",
+      "breakdown_regime": "Berry's own hedge: minor changes had other motives; the asymmetry is a dominant tendency, not an absolute. Post-1921 legislation (not covered by this source) may restrict defense too; the invariant must be era-tagged in any simulator. The fourth-down counterexample shows intent and effect can diverge: legislation aimed against the pass helped it.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "[DERIVED KERNEL] Rule-engine asymmetry kernel for GSE historical modes: offense-restriction operator R_off(year) applied to down-distance, pass legality, eligibility and grounding rules, while defense alignment stays free (offside only). Telemetry: {rule_year, down_distance_yd, pass_legal, restriction_target, fourth_down_available}. The 1906->1910->1912->1913-15 rule states become dated configurations; the endogenous loop (offense dominance -> restriction -> new offensive weapon -> restriction) is the feedback the kernel must reproduce. [ISOMORPHISM] Generic governance feedback: a regulator constrains the side that has accumulated advantage while leaving the counter-side free, and each constraint induces a new offensive capability that re-triggers constraint. The same structure appears in arms-control dynamics and platform-rule evolution; the mathematics of feedback is not claimed to originate in football — Berry's 1921 account is a documented instance.",
+        "source_operator": "P1",
+        "telemetry": [
+          "rule_year",
+          "down_distance_yd",
+          "pass_legal",
+          "restriction_target",
+          "fourth_down_available"
+        ]
+      },
+      "timescales": [
+        "years: rule trajectory 1903 -> 1906 -> 1910 -> 1912 -> 1913-1915",
+        "per-play: alignment freedom under offside-only constraint"
+      ]
+    },
+    {
+      "domain": "football",
+      "statement": "Sovereign coverage-overload invariant (Berry 1921, Ch. V, printed pp.15-17): a regular forward pass play must get as many eligible men open as possible, spread so the defense cannot cover them all; the passer then selects an open man or the best open man ('choice' method, opposed to the 'mechanical' method of one designed receiver). The named greatest single fault is insufficient spread: two or three eligibles in the same zone let ONE defender cover all of them. Decoys force defensive halves to commit; if they refuse to cover the decoy, the decoy immediately becomes the target. Calling the receiver before the throw converts the pass 'from a happy-go-lucky chance into a mathematical probability'. Formalized as a derived pigeonhole kernel: if the number of distinct zones occupied by eligible routes exceeds the number of defenders available to cover, at least one eligible is open.",
+      "verbatim_quote": "as a general principle a regular forward pass play should aim to get as many eligible men as possible open to receive the pass. These men should be so spread that they cannot all be covered by the defense. The passer then selects an open man or the best open man to whom to pass.",
+      "supporting_quotes": [
+        {
+          "quote": "The greatest single fault and the one thing that stops most teams, outside of mechanical failure, is the failure of eligible men to spread widely enough.",
+          "page": 29
+        },
+        {
+          "quote": "Too often two or three eligible men go to the same zone or area and a pass to any one of the three can be covered by a single defensive player.",
+          "page": 29
+        },
+        {
+          "quote": "In case the defensive halves, however, refuse to cover these de- coys, they should immediately be given the pass.",
+          "page": 29
+        },
+        {
+          "quote": "this is exactly the thing that will change the forward pass game from a happy-go-lucky chance into a mathematical probability.",
+          "page": 28
+        }
+      ],
+      "page": 27,
+      "latex": "N_{\\mathrm{zones}} = \\left|\\{\\, z(r) : r \\in E \\,\\}\\right|, \\qquad N_{\\mathrm{zones}} > N_{\\mathrm{def}} \\;\\Longrightarrow\\; \\exists\\, r^{*} \\in E \\text{ not covered by any defender}",
+      "symbol_and_unit_ledger": [
+        {
+          "symbol": "E",
+          "meaning": "set of eligible receivers on the play",
+          "unit": "count (men)",
+          "source": "derived from 'as many eligible men as possible open' (PDF p.27)"
+        },
+        {
+          "symbol": "z(r)",
+          "meaning": "zone occupied by receiver r's route at the moment of the throw",
+          "unit": "zone index (dimensionless)",
+          "source": "derived from 'two or three eligible men go to the same zone or area' (PDF p.29)"
+        },
+        {
+          "symbol": "N_zones",
+          "meaning": "number of distinct occupied zones",
+          "unit": "count",
+          "source": "derived"
+        },
+        {
+          "symbol": "N_def",
+          "meaning": "defenders available to cover occupied zones",
+          "unit": "count (men)",
+          "source": "derived from 'they cannot all be covered by the defense' (PDF p.27)"
+        },
+        {
+          "symbol": "r*",
+          "meaning": "open receiver selected by the passer (best open man, subject to play choice order)",
+          "unit": "index",
+          "source": "derived from 'selects an open man or the best open man' (PDF p.27)"
+        }
+      ],
+      "assumptions": [
+        "DERIVED formalization: the source states the principle in prose and prints no equation; the pigeonhole inequality is the extractor's kernel, not Berry's notation.",
+        "One defender covers at most one occupied zone at the moment of the throw (the source's coverage model: a single defensive player covers a pass to any of three men in one zone).",
+        "Choice order constraint: first choice is always the signal called; second/third/fourth choices unlock as the passer develops (PDF p.27)."
+      ],
+      "provenance": "Berry, Elmer. The Forward Pass in Football. New York: A. S. Barnes & Co., 1921. Author: football and baseball coach, International Y.M.C.A. College, Springfield, Mass. Source file: Berry-1921-The-Forward-Pass-in-Football.pdf, 44 PDF pages; prose body PDF pp.13-37 (printed pp.1-25), front matter PDF pp.3-12, publisher ad p.38, UCLA library bookplates pp.3,40,42. Internet Archive scan forwardpassinfooOOberriala, digitized 2007 with Microsoft Corporation funding; University of California Southern Regional Library Facility copy. Primary historical source, not a derivative or AI summary; no retraction applicable (1921 monograph). OCR text layer present on all prose pages with period scan artifacts (e.g. 'oflFensive', 'dozimzvard', 'prac- tically', 'modem' for 'modern'); all quotes preserve these artifacts verbatim against the normalized text layer and are NOT silently corrected. Figures 1-5 are image-only plates; their content is quoted from the surrounding prose, the plate images themselves are not extracted. Page numbers in this artifact are PDF page numbers. Catalog title matches actual content (verified p.13 title page and p.38 author ad).",
+      "primitive_id": "P2",
+      "name": "Coverage-overload / choice principle: spread eligibles across more zones than defenders can cover; pigeonhole kernel (derived)",
+      "breakdown_regime": "Zone congestion: routes converging on one zone collapse N_zones to 1 regardless of |E| — the source's greatest single fault. The guarantee is about coverage capacity, not completion: mechanical failure, interception and a hurried passer still defeat the play. Mechanical-method fallback: a passer who cannot make the choice requires designed single-receiver plays (PDF p.28).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "[DERIVED KERNEL] Coach-Mind spacing/coverage kernel: route tree assigns z(r) per eligible; kernel computes N_zones vs N_def and selects r* by play choice order among open men; decoy logic flips the target to the decoy when the defender refuses it. Telemetry: {n_eligible, n_zones_occupied, n_def_cover, choice_order, t_pocket, decoy_committed}. Congestion penalty when multiple routes share a zone; the 'mathematical probability' clause binds receiver-call-before-throw as a coordination event that raises completion probability. [ISOMORPHISM] The pigeonhole principle in adversarial spatial assignment: any finite responder set covering spatially distributed threats faces the same counting bound (defensive sector assignment, load balancing across servers, channel reuse). The mathematics is ancient and not claimed to originate in football; Berry 1921 is a documented early instantiation in sport, crediting Springfield College (McCurdy) and the Carlisle Indians.",
+        "source_operator": "P2",
+        "telemetry": [
+          "n_eligible",
+          "n_zones_occupied",
+          "n_def_cover",
+          "choice_order",
+          "t_pocket",
+          "decoy_committed"
+        ]
+      },
+      "timescales": [
+        "per-play (seconds): route development, zone occupation at moment of throw, passer choice sweep"
+      ]
+    },
+    {
+      "domain": "football",
+      "statement": "Sovereign time-budget invariant (Berry 1921, Ch. V, printed pp.13-14): by ACTUAL EXPERIMENT a passer depth of thirteen to fifteen yards was found necessary; teams failing at seven to ten yards back are named as a failure regime. The greater depth buys 'a short but vital length of time' for receivers to get free and for the passer to pick the open man, and lets the offense dispense with passer protection. Prerequisite: a fast, accurate spiral snap from center of at least fifteen yards that leads the passer — without it, no advantage is gained by the depth (centers failing this cause passers to creep up and be hurried). Deep-threat geometry: secondary ten yards back plus twenty yards of coverage plus passer fifteen yards behind the line means an angled pass must often travel fifty-five yards to clear the secondary; the mere threat of 50-60 yard passes keeps the secondary deep so short passes succeed.",
+      "verbatim_quote": "By actual experiment it was found that a distance of thirteen to fifteen yards was necessary.",
+      "supporting_quotes": [
+        {
+          "quote": "The greater distance gives a short but vital length of time for receivers to get free and for the passer to pick out the open man.",
+          "page": 25
+        },
+        {
+          "quote": "Many teams are failing with their passes simply because their passer is not more than seven to ten yards back.",
+          "page": 25
+        },
+        {
+          "quote": "Unless the snapper-back can make a consistent, accurate, speedy pass to a distance of fifteen or more yards and can accurately lead his passer, no advantage is gained by this distance back.",
+          "page": 25
+        },
+        {
+          "quote": "With the secondary defense playing ten yards back and possibly cover- ing twenty yards more, with the passer fifteen yards behind his own oflFensive line, the pass going outward at an angle must often travel fifty-five yards to clear the secondary defense.",
+          "page": 26
+        }
+      ],
+      "page": 25,
+      "latex": "t_{\\mathrm{choice}} \\approx \\frac{d_{\\mathrm{depth}}}{v_{\\mathrm{rush}}}, \\qquad d_{\\mathrm{depth}} \\in [13,15]\\ \\mathrm{yd}\\ \\text{(experimental window)}",
+      "symbol_and_unit_ledger": [
+        {
+          "symbol": "d_depth",
+          "meaning": "passer depth behind the line of scrimmage",
+          "unit": "yards",
+          "source": "13-15 yd experimental window and 7-10 yd failure regime stated PDF p.25"
+        },
+        {
+          "symbol": "v_rush",
+          "meaning": "effective speed of the unblocked rushing line (source: line comes charging through 'absolutely without resistance')",
+          "unit": "yards/second (NOT measured in source; symbolic placeholder)",
+          "source": "derived from PDF p.25"
+        },
+        {
+          "symbol": "t_choice",
+          "meaning": "time available for receivers to get free and passer to choose",
+          "unit": "seconds",
+          "source": "derived formalization of 'a short but vital length of time' (PDF p.25)"
+        },
+        {
+          "symbol": "L_clear",
+          "meaning": "pass length needed to clear the secondary defense on an angle",
+          "unit": "yards",
+          "source": "55 yd stated PDF p.26 (15 yd passer depth + 10 yd secondary depth + 20 yd coverage + angle margin)"
+        },
+        {
+          "symbol": "d_snap",
+          "meaning": "required spiral snap distance from center",
+          "unit": "yards",
+          "source": ">=15 yd stated PDF pp.18,25"
+        }
+      ],
+      "assumptions": [
+        "DERIVED formalization: t = d/v is the extractor's kernel; Berry states the time claim qualitatively and the depth window experimentally, printing no equation.",
+        "Constant effective rush speed and straight-line depth; the 1921 tactic deliberately let the line through unblocked.",
+        "Era-bound: 1921 rush dynamics and the 5-yards-behind-the-line snap/pass rule; not a modern pocket model."
+      ],
+      "provenance": "Berry, Elmer. The Forward Pass in Football. New York: A. S. Barnes & Co., 1921. Author: football and baseball coach, International Y.M.C.A. College, Springfield, Mass. Source file: Berry-1921-The-Forward-Pass-in-Football.pdf, 44 PDF pages; prose body PDF pp.13-37 (printed pp.1-25), front matter PDF pp.3-12, publisher ad p.38, UCLA library bookplates pp.3,40,42. Internet Archive scan forwardpassinfooOOberriala, digitized 2007 with Microsoft Corporation funding; University of California Southern Regional Library Facility copy. Primary historical source, not a derivative or AI summary; no retraction applicable (1921 monograph). OCR text layer present on all prose pages with period scan artifacts (e.g. 'oflFensive', 'dozimzvard', 'prac- tically', 'modem' for 'modern'); all quotes preserve these artifacts verbatim against the normalized text layer and are NOT silently corrected. Figures 1-5 are image-only plates; their content is quoted from the surrounding prose, the plate images themselves are not extracted. Page numbers in this artifact are PDF page numbers. Catalog title matches actual content (verified p.13 title page and p.38 author ad).",
+      "primitive_id": "P3",
+      "name": "Passer-depth time budget: experimental 13-15 yd window, 7-10 yd failure regime, 15 yd spiral-snap prerequisite, 55 yd clearance geometry",
+      "breakdown_regime": "Snap failure: if the center cannot deliver a consistent accurate 15+ yd spiral that leads the passer, depth buys nothing and the passer creeps up (named causal chain, PDF p.25). 7-10 yd depth: named failure regime — insufficient t_choice, hurried passes. The 55-yd clearance is a threat requirement, not a usage requirement: long passes 'need not often be used', but the capability must exist to hold the secondary deep.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "[DERIVED KERNEL] Pocket-time kernel: t_choice = d_depth / v_rush with d_depth era-tagged to the 13-15 yd experimental window; snap-quality gate (d_snap >= 15 yd, accuracy, lead) must pass before depth credit accrues; deep-threat capability flag holds secondary depth at 10+20 yd, enabling short-pass efficiency. Telemetry: {d_depth, v_rush, t_choice, snap_quality, secondary_depth, deep_threat_capable}. Coupled to P2: choice quality is a function of t_choice. [ISOMORPHISM] The decision-execution time race: any adversarial sequential system where a decision-maker buys time by standoff distance against an advancing disruptor (standoff sensing, reaction-time budgets in control loops). The d/v structure is elementary kinematics, not a football invention; Berry's experimentally determined 13-15 yd window is the sport-specific calibration.",
+        "source_operator": "P3",
+        "telemetry": [
+          "d_depth",
+          "v_rush",
+          "t_choice",
+          "snap_quality",
+          "secondary_depth",
+          "deep_threat_capable"
+        ]
+      },
+      "timescales": [
+        "per-play (seconds): t_choice = d_depth / v_rush",
+        "per-play: snap flight ~15 yd",
+        "season: experimental calibration of depth window"
+      ]
+    },
+    {
+      "domain": "football",
+      "statement": "Sovereign defensive doctrine (Berry 1921, Ch. VII, printed pp.23-25): 'There is no defense for the forward pass' — the pass cannot be prevented, particularly mid-field; defense operates by degrading execution, not by prevention. Four levers: (1) 'hurry the pass' — send some men (usually ends, not the entire line) to force the throw before eligibles are ready or located, raising mechanical failure; sending tackles too helps the pass but makes end running easy (named trade-off); (2) block eligible men at the line before the pass (center trio's best work); (3) zone defense — each back covers an area and plays the ball entering it rather than following men; (4) the open defense with explicit geometry: ends no more than ~2 yd outside their own tackle, center and full ~3 yd behind tackle, backs 7-10 yd back nearly straight behind end, safety as close as he dares considering quick punts. Berry explicitly scopes this as suggestions 'simply as a beginning', not a solved problem.",
+      "verbatim_quote": "There is no defense for the forward pass. In reality the pass cannot be prevented, particularly in the center of the field.",
+      "supporting_quotes": [
+        {
+          "quote": "Some man or men, not the entire line, should go through and force the pass at the earliest possible moment, downing the passer, blocking the pass or forcing it to be made before the eligible men are ready or the passer has been able to locate them.",
+          "page": 35
+        },
+        {
+          "quote": "Third, play a zone defense having each defensive back cover an area and play the ball coming into that area rather than at- tempt to follow individually eligible men.",
+          "page": 36
+        },
+        {
+          "quote": "Ends play as close as possible, often not over two yards outside their own tackle and tear into every play smashing the interference and hurrying passes.",
+          "page": 36
+        },
+        {
+          "quote": "Backs play from seven to ten yards back and nearly straight behind end.",
+          "page": 37
+        }
+      ],
+      "page": 35,
+      "latex": null,
+      "symbol_and_unit_ledger": [
+        {
+          "symbol": "ends_outside",
+          "meaning": "open-defense end alignment outside own tackle",
+          "unit": "yards",
+          "source": "<=2 yd stated PDF p.36"
+        },
+        {
+          "symbol": "center_full_depth",
+          "meaning": "open-defense center/full depth behind tackle",
+          "unit": "yards",
+          "source": "~3 yd stated PDF p.36"
+        },
+        {
+          "symbol": "backs_depth",
+          "meaning": "open-defense backfield depth",
+          "unit": "yards",
+          "source": "7-10 yd stated PDF p.37"
+        }
+      ],
+      "assumptions": [
+        "Doctrine as stated by an offense-side author who explicitly disclaims having solved pass defense ('His interest has been rather on the other side').",
+        "The no-prevention claim is scoped to mid-field and to a mechanically competent passing offense; Berry attributes 1921 defensive success to offensive inefficiency plus restrictive rules, not to defensive skill.",
+        "Era-bound geometry: 1921 open defense, not modern pattern-match zone coverage."
+      ],
+      "provenance": "Berry, Elmer. The Forward Pass in Football. New York: A. S. Barnes & Co., 1921. Author: football and baseball coach, International Y.M.C.A. College, Springfield, Mass. Source file: Berry-1921-The-Forward-Pass-in-Football.pdf, 44 PDF pages; prose body PDF pp.13-37 (printed pp.1-25), front matter PDF pp.3-12, publisher ad p.38, UCLA library bookplates pp.3,40,42. Internet Archive scan forwardpassinfooOOberriala, digitized 2007 with Microsoft Corporation funding; University of California Southern Regional Library Facility copy. Primary historical source, not a derivative or AI summary; no retraction applicable (1921 monograph). OCR text layer present on all prose pages with period scan artifacts (e.g. 'oflFensive', 'dozimzvard', 'prac- tically', 'modem' for 'modern'); all quotes preserve these artifacts verbatim against the normalized text layer and are NOT silently corrected. Figures 1-5 are image-only plates; their content is quoted from the surrounding prose, the plate images themselves are not extracted. Page numbers in this artifact are PDF page numbers. Catalog title matches actual content (verified p.13 title page and p.38 author ad).",
+      "primitive_id": "P4",
+      "name": "Defensive time-compression doctrine: pass cannot be prevented; hurry/jam/zone/open-defense levers with 1921 geometry",
+      "breakdown_regime": "Hurry-vs-run trade-off: sending tackles in addition to ends helps against the pass but makes end running very easy (named, PDF p.35). If the offense lacks mechanical competence, 'trust to luck' defense suffices — the doctrine's premises fail and its levers are over-specified. Spread-formation and special-play defense is explicitly left unsolved ('too much a matter of individual opinion', PDF p.37).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "[DERIVED KERNEL] Defensive time-compression kernel: objective minimize t_forced (time to forced throw) via rush allocation (ends-only vs ends+tackles with the named run trade-off), pre-pass jamming of eligibles, and zone-area assignment (each back owns an area, plays the ball entering it). Open-defense geometry preset era-tagged 1921. Telemetry: {rush_allocation, t_forced, zone_areas, jam_success, open_defense_geometry}. Dual of P3: the same time variable appears on both sides — offense buys t_choice with depth, defense sells it with rush. [ISOMORPHISM] Attacking the adversary's decision cycle rather than its capability: when a capability cannot be prevented, degrade the time and information available to exercise it (decision-cycle disruption in adversarial planning, deadline pressure in negotiation). Berry's 'hurry the pass' is a documented 1921 instance; the general principle is not claimed to originate in football.",
+        "source_operator": "P4",
+        "telemetry": [
+          "rush_allocation",
+          "t_forced",
+          "zone_areas",
+          "jam_success",
+          "open_defense_geometry"
+        ]
+      },
+      "timescales": [
+        "per-play (seconds): time-to-forced-throw vs route development",
+        "pre-pass: jamming window at line of scrimmage"
+      ]
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "primitives": [
+        "P2",
+        "P3"
+      ],
+      "think": "retrocausal_genealogy: Start from the modern invariant every spread offense runs on — space the defense until it cannot cover everyone, then let the quarterback choose — and walk backward to its documented 1921 codification. Berry's Chapter V states the counting principle explicitly: get as many eligible men open as possible, spread so they cannot all be covered, select the best open man. This is not a retrospective projection of modern analytics onto an old text; the text itself names the mechanism, the failure mode (zone congestion: three men in one area covered by one defender), and the decoy counter (if the defensive half refuses the decoy, throw to the decoy). One layer deeper, the principle's precondition is the passer-depth time budget: by actual experiment thirteen to fifteen yards back was necessary, because the unblocked rushing line otherwise eliminates the choice window. One layer deeper still, the whole structure is downstream of legislation: the 1906 conference that met to abolish football instead created the ten-yard requirement, which mass play could never satisfy, and granted the forward pass as the counterweight. Berry credits the development to Springfield College (McCurdy) and the Carlisle Indians, and cites the 1912 Springfield-Carlisle game (Indians won 30-24) as the era's greatest open-football exhibition. The genealogy is therefore fully sourced: crisis (mass-play deaths) -> legislation (ten yards + pass) -> tactical experiment (Springfield/Carlisle) -> codified counting principle (Berry 1921) -> structural continuity with modern spacing concepts. The pigeonhole mathematics underneath is ancient and is NOT claimed to originate in football; what originates here is its documented instantiation as offensive doctrine. theory_of_mind: Berry writes as a YMCA-college coach addressing smaller-college coaches against entrenched big-college resistance, and he models his opponents' incentives with unusual explicitness for 1921: the pass 'has taken away from them the advantage of numbers, weight and power, made the game one of brains, speed and strategy', so 'Why should they have hastened its development?' That is incentive analysis, not folklore — the extractor must preserve it as strategic cognition. He also models the passer's mind: the choice method 'requires a passer of special mental type' with basketball ability, a trained sweep order (first choice is always the called signal), and the capacity to throw accurately even when apparently covered. And he models the defensive half's dilemma — cover the decoy and open someone else, refuse it and be thrown to — calling the position harder than baseball's 'dizzy corner'. Flattening these agents into physics would destroy the primitive: the coverage count only matters because a choosing mind exploits it under time pressure, and the defense only fails because minds commit to decoys. cross_layer_veto: Four vetoes govern any kernel built from these primitives. First, the time-budget duality: P2's choice is parasitic on P3's pocket time. Berry names the exact failure — coaches who adopted the choice method failed because their plays gave the passer no time, letting the defense hurry him. Any simulation that grants receiver choice without a depth-derived time state violates the source and must be rejected. Second, the zone-congestion veto: counting receivers instead of occupied zones violates the greatest-fault clause; three eligibles in one zone are one coverage problem, not three. A spacing metric that rewards headcount over zone count is falsified by the text. Third, the era veto: the 13-15 yard window was calibrated against 1921 rush dynamics under rules where the pass had to originate five yards behind the line and the line was deliberately let through unblocked; back-projecting a modern protected pocket onto these numbers corrupts the calibration. Fourth, the OCR veto: this scan's text layer carries artifacts ('oflFensive', 'dozimzvard', 'prac- tically'); quotes preserve them verbatim and any silent correction breaks the verbatim contract with the source. universal_lens: The coverage-overload invariant is the pigeonhole principle applied to adversarial spatial assignment: a finite responder set cannot cover more distinct zones than it has members, so the attacker's design variable is occupied-zone count, not headcount. The same bound governs defensive sector assignment, server load balancing, and channel reuse. The time budget is the universal decision-versus-execution race: standoff distance buys decision time against an advancing disruptor, and the experimental window is the system-specific calibration of a generic kinematic trade. gsi_mapping: GSI's Coach-Mind receives a spacing/coverage kernel: route tree maps each eligible to a terminal zone; the kernel computes occupied-zone count against available coverage, selects the target by play choice order among open men, and implements the decoy flip (refuse coverage -> decoy becomes target). The pocket-time kernel gates choice quality on depth-derived time with a snap-quality prerequisite (15+ yard accurate leading spiral). Telemetry: n_eligible, n_zones_occupied, n_def_cover, choice_order, t_pocket, snap_quality, decoy_committed. The receiver-call-before-throw event is logged as the coordination step that converts chance into probability. gse_mapping: The GSE game engine's passing subsystem takes era-tagged parameters: depth window 13-15 yd (1921 experimental), failure regime 7-10 yd, rush-speed-to-time coupling, zone-congestion penalty, and the deep-threat capability flag (55-yard clearance geometry: 15 yd passer + 10 yd secondary + 20 yd coverage + angle) that holds the secondary deep and enables short-pass efficiency. The defensive mirror (hurry-the-pass time compression) is wired in trace 2 so both sides share one time variable. All kernels are marked DERIVED where the source prints prose rather than equations; no 1921 notation is fabricated.",
+      "retrocausal_genealogy": "Modern spacing invariant -> Berry's explicit 1921 counting principle (spread so the defense cannot cover all; select the best open man; zone congestion is the greatest fault; decoy flip) -> its precondition, the experimentally determined 13-15 yard passer-depth time budget -> its legislative origin: the 1906 abolition crisis produced the ten-yard requirement that mass play could never satisfy, and the pass was granted as the counterweight. Development credited to Springfield (McCurdy) and Carlisle; the 1912 game (30-24) is the cited exhibition. The pigeonhole math is ancient; football's documented instantiation is what this source provides.",
+      "theory_of_mind": "Berry models three minds explicitly: the big-college establishment's incentives (the pass erodes their numbers, weight and power advantage, so they resisted — 'Why should they have hastened its development?'); the passer's cognitive profile (special mental type, basketball ability, trained choice sweep with the called signal first); and the defensive half's decoy dilemma (cover and open another, refuse and be thrown to). The extractor preserves these as strategic cognition: the coverage count matters only because a choosing mind exploits it under time pressure.",
+      "cross_layer_veto": "Four vetoes: (1) time-budget duality — choice without depth-derived pocket time violates the source's named failure of the choice method (hurried passer); (2) zone-congestion — counting receivers instead of occupied zones contradicts the greatest-fault clause (three men, one zone, one defender); (3) era — the 13-15 yd window is calibrated to 1921 unblocked-rush dynamics and the five-yards-behind-the-line rule, not a modern pocket; (4) OCR — quotes preserve scan artifacts verbatim; silent correction breaks the verbatim contract.",
+      "trace_id": "T1"
+    },
+    {
+      "primitives": [
+        "P1",
+        "P4"
+      ],
+      "think": "retrocausal_genealogy: Begin at the modern rulebook's persistent asymmetry — offensive restrictions accumulate while defensive alignment stays comparatively free — and trace it to Berry's 1921 opening sentence: the history of football is a story of limiting the power of the offense, the defense never restricted, never curtailed, never hampered, free to line up as it chose (barring offside). The genealogy he supplies is concrete and dated. The old game: five yards in three downs made mass play rational — a six-foot man falling forward his full length three times made six yards and a first down — producing the flying wedge, guards-back, and straps for hauling teammates, with deaths and hidden foul play that spectators and officials could not see. The 1906 New York conference, convened by roughly seventy colleges to abolish the game, instead formed the NCAA and a rules committee; the first fundamental suggestion was ten yards to gain, which mass attack could never make, and consequently the forward pass was given to the offense — practically the one great occasion of legislation favoring it. Then the oscillation: 1910 imposed a twenty-yard passing zone and required passes five yards behind the line; 1912 dropped the zone, added the end zone and the fourth down; the fourth down was regarded by many as a direct blow to the pass but worked advantageously for it, giving quarterbacks an extra down to experiment. 1913-1915 added passer protection from roughing (1914), an intentional-grounding penalty, and the out-of-bounds incomplete rule (1915). Every step is sourced to the Football Guides Berry cites; nothing is invented. The defensive doctrine of Chapter VII is the same story from the other side: because the pass cannot be prevented, defense must attack its execution — hurry the throw, jam eligibles before the pass, cover areas instead of men, and align the open defense with explicit yardage geometry. theory_of_mind: The source is unusually rich in modeled intentions. The rules committee's fourth-down intent diverges from its effect — Berry explicitly notes the gap between what originators intended (a blow to the pass, reviving line bucking) and what happened (an extra experimental down for the new game). That is a 1921 account of unintended consequences, and the extractor must keep intent and effect separate rather than collapsing them into a single 'the rules evolved' narrative. The defense's mindset is modeled too: most teams 'trusted to luck', protected by offensive inefficiency and restrictive rules rather than by defensive skill — and the teams loudest that the pass was worthless were precisely those with no adequate pass defense. Berry also models his own limits: 'The writer does not pretend to have solved this problem. His interest has been rather on the other side.' Chapter VII is offered 'simply as a beginning'. Any kernel that treats these suggestions as a solved, complete defensive theory overclaims the source; the honest encoding is a doctrine with named open problems (spread-formation defense is explicitly left to individual opinion). cross_layer_veto: Four vetoes. First, the prevention veto: a defensive model that can drive mid-field pass probability to zero violates the source's core invariant — the pass cannot be prevented, particularly in the center of the field; defense operates on execution variance (mechanical failure, hurried decisions), never on possibility. Second, the time dual: hurry-the-pass is the exact mirror of the passer-depth time budget; both sides must share one time variable in the engine, and a defense that 'covers better' without compressing time misrepresents the doctrine. Third, the zone-era veto: the 1921 zone prescription (each back owns an area and plays the ball entering it) and the open-defense geometry (ends <=2 yd outside tackle, center/full ~3 yd behind tackle, backs 7-10 yd deep) are era-specific configurations; conflating them with modern pattern-match zone or back-projecting modern alignments corrupts the historical calibration. Fourth, the endogeneity veto: rules are not static background. Berry's asymmetry is a feedback loop — offensive dominance triggers restriction, restriction induces new offensive capability, which triggers further restriction — and a simulator with fixed rules misses the mechanism the source actually describes. universal_lens: The restriction asymmetry is a generic governance pattern: regulators constrain the side holding accumulated advantage and leave the counter-side free, and each constraint selects for a new capability that re-triggers constraint — the same structure as arms-control dynamics and platform-rule evolution. The defensive doctrine is the generic adversarial move against an unpreventable capability: attack the decision cycle (time, information, coordination) rather than the capability itself. Neither pattern is claimed to originate in football; Berry's text is a documented early instance with dates. gsi_mapping: GSI's defensive AI receives the time-compression kernel: rush allocation with the named ends-only versus ends-plus-tackles trade-off against end runs, pre-pass jamming of eligibles (center trio work), zone-area assignment where each back plays the ball entering his area, and an era-tagged 1921 open-defense geometry preset. Telemetry: rush_allocation, t_forced, zone_areas, jam_success, open_defense_geometry. The rule-engine asymmetry kernel supplies dated rule configurations (1906/1910/1912/1913-15) with the endogenous legislation loop, so defensive and offensive kernels always run against the same rule state. gse_mapping: The GSE rule engine's historical mode encodes the dated configurations and the feedback loop (offense dominance -> restriction -> new weapon -> restriction); the pass-defense subsystem is parameterized by execution degradation, never prevention, with the hurry objective minimizing time-to-forced-throw against the offense's depth-derived choice time from trace 1. The intent-versus-effect distinction (fourth down) is kept as separate fields so scenario analysis can model legislative surprises. Open problems named by Berry (spread defense) are flagged as unsolved rather than silently filled with modern doctrine.",
+      "retrocausal_genealogy": "Modern rulebook asymmetry -> Berry's 1921 statement (offense restricted, defense free barring offside) -> the old game's five-yards-in-three-downs mass-play rationality (six-foot man falling forward three times = six yards) and its deaths -> the 1906 ~70-college abolition conference that formed the NCAA -> ten yards to gain, which mass attack could never make -> the pass granted as the one great pro-offense legislation -> 1910 zone and 5-yard origin rule -> 1912 zone dropped, end zone and fourth down added (intended as a blow to the pass, it helped it) -> 1913-15 protections and grounding/out-of-bounds rules. All steps cite the Football Guides.",
+      "theory_of_mind": "Three modeled intentions: the rules committee's fourth-down intent versus effect (a blow to the pass that instead gave quarterbacks an experimental down — a 1921 unintended-consequences account); the defense's luck-trusting mindset, shielded by offensive inefficiency rather than skill, with the loudest pass-skeptics being exactly the teams with no pass defense; and Berry's own scope disclaimer ('does not pretend to have solved this problem', suggestions 'simply as a beginning'). Kernels must keep intent separate from effect and flag spread defense as an open problem, not a solved theory.",
+      "cross_layer_veto": "Four vetoes: (1) prevention — no defensive model may zero mid-field pass probability; defense degrades execution, never possibility; (2) time dual — hurry-the-pass and passer-depth must share one time variable; (3) zone-era — 1921 area-coverage and open-defense yardage (ends <=2 yd, center/full ~3 yd, backs 7-10 yd) are era-tagged, not modern pattern-match zone; (4) endogeneity — rules are a feedback loop (dominance -> restriction -> new capability), not static background.",
+      "trace_id": "T2"
+    }
+  ],
+  "universal_lens": "Two generic invariants with documented 1921 football instantiations. (1) Pigeonhole in adversarial spatial assignment: a finite responder set cannot cover more distinct zones than it has members, so the attacker optimizes occupied-zone count, not headcount — the same bound governs defensive sector assignment, server load balancing and channel reuse. (2) The decision-versus-execution time race: standoff distance buys decision time against an advancing disruptor, and an unpreventable capability is attacked through its decision cycle (time, information, coordination) rather than the capability itself. A third, institutional pattern: regulators constrain the side holding accumulated advantage while leaving the counter-side free, and each constraint selects for a new capability that re-triggers constraint. The mathematics and governance theory are not claimed to originate in football; Berry's text is a dated, sourced instance.",
+  "gsi_mapping": "GSI Coach-Mind receives three coupled kernels. Spacing/coverage kernel: route-to-zone map, occupied-zone count vs available coverage, choice-order target selection with the called signal first, and the decoy flip (refuse coverage and the decoy becomes the target). Pocket-time kernel: choice quality gated on depth-derived time with the 15+ yard accurate leading-spiral snap prerequisite. Defensive time-compression kernel: rush allocation with the named ends-only versus ends-plus-tackles run trade-off, pre-pass jamming, zone-area ball-playing assignment, era-tagged 1921 open-defense preset. Telemetry: n_eligible, n_zones_occupied, n_def_cover, choice_order, t_pocket, snap_quality, decoy_committed, rush_allocation, t_forced, zone_areas, jam_success. Receiver-call-before-throw is logged as the coordination event converting chance into probability.",
+  "gse_mapping": "GSE game engine: passing subsystem with era-tagged depth window 13-15 yd (1921 experiment), failure regime 7-10 yd, rush-speed-to-time coupling, zone-congestion penalty, and the deep-threat capability flag from the 55-yard clearance geometry (15 yd passer + 10 yd secondary + 20 yd coverage + angle) that holds the secondary deep for short-pass efficiency. Historical rule engine: dated 1906/1910/1912/1913-15 configurations with the endogenous dominance-restriction-capability feedback loop; intent-versus-effect kept separate (the fourth down was intended against the pass and helped it). Pass defense parameterized by execution degradation, never prevention; both sides share one time variable. Berry's named open problems (spread-formation defense) are flagged unsolved rather than back-filled with modern doctrine. All equation-bearing kernels are marked DERIVED; no 1921 notation is fabricated."
+}

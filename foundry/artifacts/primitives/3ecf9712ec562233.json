@@ -1,0 +1,78 @@
+{
+  "book_id": "3ecf9712ec562233",
+  "source_status": "COMPLETE",
+  "title": "2023 - Fair and Efficient Ranking in Incomplete Tournaments - Bertran",
+  "file_name": "2023 - Fair and Efficient Ranking in Incomplete Tournaments - Bertran.pdf",
+  "sha256": "3ecf9712ec56223329e499529710db7716ee5255a61589a3c190e160ab68ae93",
+  "primary_domain": "other",
+  "pages_total": 17,
+  "pages_read": 17,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The structural unification of incomplete tournaments relies on mapping the sparse win matrix to a scoring operator that satisfies anonymity and efficiency. This bridges combinatorial graph theory with statistical estimation, defining fairness as an invariant under permutation while efficiency measures proximity to complete-tournament win percentages.",
+  "gsi_mapping": "GSI maps the parsimonious family of scoring methods to a Bayesian hierarchical model. The unknown true strength parameters are inferred from the sparse adjacency matrix, using betting odds as priors. Conformal inference bounds quantify the uncertainty of rankings when the fixture graph is highly disconnected.",
+  "gse_mapping": "GSE treats the tournament as a dynamic state-transition system. Each match outcome updates the latent state vector via the derived scoring kernel. Situational reasoning evaluates the 'quality of opposition' by propagating scores through the fixture graph, dynamically adjusting for incomplete scheduling constraints.",
+  "primitives": [
+    {
+      "primitive_id": "tournament_fixture_matrix",
+      "name": "Tournament Fixture Operator",
+      "verbatim_quote": "The first is a case of a twice-complete tournament and the second a case of an incomplete tournament.",
+      "page": 2,
+      "latex": "G \\equiv W + W^T",
+      "symbol_and_unit_ledger": "W: Win matrix (dimensionless integer counts), G: Tournament fixture matrix (dimensionless integer counts)",
+      "assumptions": "Matches are binary or ternary outcomes; the graph structure is fixed prior to evaluation.",
+      "breakdown_regime": "Singularities arise when G contains zero rows/columns (isolated teams) or disconnected components preventing global ranking.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the adjacency matrix of a directed multigraph in GSE network topology modules.",
+        "source_operator": "tournament_fixture_matrix",
+        "telemetry": "Graph density and component connectivity metrics."
+      }
+    },
+    {
+      "primitive_id": "scoring_problem_kernel",
+      "name": "Scoring Problem Kernel",
+      "verbatim_quote": "I present a parsimonious family of scoring methods that uniquely satisfies these standards.",
+      "page": 1,
+      "latex": "p_i(W) = \\sum_{j=1}^{n} [w_{ij} F_{ij}(W) + w_{ji} G_{ij}(W)]",
+      "symbol_and_unit_ledger": "p_i: Assigned points for team i (dimensionless), w_{ij}: Wins of i over j (integer), F_{ij}, G_{ij}: Weighting functions (dimensionless)",
+      "assumptions": "Scores depend exclusively on the realized win matrix; linearity in local match outcomes.",
+      "breakdown_regime": "Breaks down if weighting functions introduce cyclic dependencies that violate Condorcet consistency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSI's pairwise comparison likelihood kernels used in Elo/Bradley-Terry estimations.",
+        "source_operator": "scoring_problem_kernel",
+        "telemetry": "Variance of team scores across different valid weighting function instantiations."
+      }
+    },
+    {
+      "primitive_id": "efficiency_metric",
+      "name": "Efficiency Metric",
+      "verbatim_quote": "I analyze this family of scoring methods in terms of efficiency, defined as how close a scoring method comes to capturing what the teams' win percentages would have been, in a complete tournament.",
+      "page": 1,
+      "latex": "\\mathcal{E} = \\min_{M} \\| v(M) - \\hat{v}_{complete} \\|^2",
+      "symbol_and_unit_ledger": "\\mathcal{E}: Efficiency loss (dimensionless squared error), v: Actual score vector, \\hat{v}_{complete}: Hypothetical complete tournament win percentages",
+      "assumptions": "A ground-truth latent skill exists that would manifest perfectly in a fully connected tournament graph.",
+      "breakdown_regime": "Metric becomes ill-defined if the underlying latent skill distribution is non-stationary across the season.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Functions as the GSI loss function for calibrating incomplete observation models against synthetic complete-graph simulations.",
+        "source_operator": "efficiency_metric",
+        "telemetry": "Mean absolute deviation between observed rankings and simulated complete-tournament rankings."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3ecf9712ec562233_t0",
+      "think": "The derivation begins by formalizing the tournament as a directed multigraph where the win matrix $W$ dictates edge weights. In a complete tournament, the symmetry of the fixture matrix $G$ ensures that standard win-percentage scoring is both fair and efficient. However, in incomplete tournaments, the sparsity of $G$ introduces structural biases. The author defines a parsimonious family of scoring methods parameterized by functions $F_{ij}$ and $G_{ij}$, which assign dynamic point values to wins and losses based on the global state of $W$. The core mathematical tension arises between fairness axioms—specifically anonymity, which demands invariance under team relabeling—and efficiency, which requires the scoring vector to approximate the hypothetical win percentages of a completed graph. By treating the scoring problem as a projection of the sparse $W$ onto a dense latent space, we identify that maximizing efficiency often necessitates violating strict anonymity, leading to the quantified biases observed in NCAA rankings. The failure mode occurs when the graph's disconnected components prevent a unique solution for the weighting functions, forcing arbitrary tie-breaking that inherently favors specific subgraphs.\n\nDeep epistemic analysis for 2023 - Fair and Efficient Ranking in Incomplete Tournaments - Bertran (3ecf9712ec562233, domain=other, pages_read=17/17): Operator 'Tournament Fixture Operator' (page 2, domain other) captures: The first is a case of a twice-complete tournament and the second a case of an incomplete tournament. Assumptions: Matches are binary or ternary outcomes; the graph structure is fixed prior to evaluation. Breakdown regime: Singularities arise when G contains zero rows/columns (isolated teams) or disconnected components preventing global ranking. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the adjacency matrix of a directed multigraph in GSE network topology modules. Operator 'Scoring Problem Kernel' (page 1, domain other) captures: I present a parsimonious family of scoring methods that uniquely satisfies these standards. Assumptions: Scores depend exclusively on the realized win matrix; linearity in local match outcomes. Breakdown regime: Breaks down if weighting functions introduce cyclic dependencies that violate Condorcet consistency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSI's pairwise comparison likelihood kernels used in Elo/Bradley-Terry estimations. Operator 'Efficiency Metric' (page 1, domain other) captures: I analyze this family of scoring methods in terms of efficiency, defined as how close a scoring method comes to capturing what the teams' win percentages would have been, in a complete tournament. Assumptions: A ground-truth latent skill exists that would manifest perfectly in a fully connected tournament graph. Breakdown regime: Metric becomes ill-defined if the underlying latent skill distribution is non-stationary across the season. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as the GSI loss function for calibrating incomplete observation models against synthetic complete-graph simulations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2023 - Fair and Efficient Ranking in Incomplete Tournaments - Bertran (3ecf9712ec562233, domain=other, pages_read=17/17): Operator 'Tournament Fixture Operator' (page 2, domain other) captures: The first is a case of a twice-complete tournament and the second a case of an incomplete tournament. Assumptions: Matches are binary or ternary outcomes; the graph structure is fixed prior to evaluation. Breakdown regime: Singularities arise when G contains zero rows/columns (isolated teams) or disconnected components preventing global ranking. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the adjacency matrix of a directed multigraph in GSE network topology modules. Operator 'Scoring Problem Kernel' (page 1, domain other) captures: I present a parsimonious family of scoring methods that uniquely satisfies these standards. Assumptions: Scores depend exclusively on the realized win matrix; linearity in local match outcomes. Breakdown regime: Breaks down if weighting functions introduce cyclic dependencies that violate Condorcet consistency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSI's pairwise comparison likelihood kernels used in Elo/Bradley-Terry estimations. Operator 'Efficiency Metric' (page 1, domain other) captures: I analyze this family of scoring methods in terms of efficiency, defined as how close a scoring method comes to capturing what the teams' win percentages would have been, in a complete tournament. Assumptions: A ground-truth latent skill exists that would manifest perfectly in a fully connected tournament graph. Breakdown regime: Metric becomes ill-defined if the underlying latent skill distribution is non-stationary across the season. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as the GSI loss function for calibrating incomplete observation models against synthetic complete-graph simulations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This framework extends classical social choice theory and the Kendall-Wei eigenvector method. Historically, ranking systems evolved from simple point accumulation in round-robin leagues to complex iterative algorithms like PageRank to handle incomplete, asymmetric data. Bertran's work retroactively applies modern axiomatic fairness constraints to these legacy systems, exposing why traditional college football polls fail mathematically when applied to sparse, non-transitive graphs.",
+      "theory_of_mind": "The decision actors here are the ranking committees or algorithmic selectors who must impose order on chaotic, incomplete data. They operate under the cognitive bias of 'strength of schedule,' attempting to infer latent team quality from limited interactions. The model assumes these actors seek a Pareto-optimal balance between respecting raw win counts and adjusting for opponent quality, often failing to recognize that their adjustment heuristics introduce systematic, quantifiable unfairness.",
+      "cross_layer_veto": "We veto any scoring primitive that exhibits collinearity between team wage bills and assigned points without explicit graph-theoretic justification. Leakage occurs if the efficiency metric inadvertently bakes in historical betting odds rather than pure performance data. The anti-collinearity condition strictly requires that the scoring kernel remains invariant to external financial priors, relying solely on the topological properties of the win matrix."
+    }
+  ]
+}

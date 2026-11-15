@@ -675,3 +675,87 @@ export function computeBarberWeightedConformalInterval(
   };
   return { low: qLow + wq(alpha / 2), high: qHigh + wq(1 - alpha / 2), alpha, rho };
 }
+
+export interface CorpusRegularizedBookCalibrationInput {
+  readonly rawProb: number;
+  readonly generationPath: "book" | "signal";
+  readonly sampleCount?: number;
+  readonly shrinkStrength?: number;
+  readonly liveCalibrationFlagEnabled?: boolean;
+}
+
+export interface CorpusRegularizedBookCalibrationReceipt {
+  readonly rawProb: number;
+  readonly calibratedProb: number;
+  readonly livePublishedProb: number;
+  readonly calibrationApplied: boolean;
+  readonly liveCalibrationFlagEnabled: boolean;
+  readonly oofBrierBaseline: number;
+  readonly oofEceBaseline: number;
+  readonly shrinkageFactor: number;
+}
+
+const CORPUS_OOF_SAMPLE_DEFAULT = 4823;
+const CORPUS_OOF_BRIER_BASELINE = 0.247983;
+const CORPUS_OOF_ECE_BASELINE = 0.022581;
+
+/**
+ * Empirical-Bayes OOF calibration bridge for `book`-path heuristic probabilities.
+ * Leaves the calibrated `signal` generation path strictly untouched per AGENTS.md,
+ * and keeps live output behind `liveCalibrationFlagEnabled` (fail-closed false).
+ */
+export function applyCorpusRegularizedBookPathCalibration(
+  input: CorpusRegularizedBookCalibrationInput,
+): CorpusRegularizedBookCalibrationReceipt {
+  const liveCalibrationFlagEnabled = Boolean(input.liveCalibrationFlagEnabled ?? false);
+
+  if (input.generationPath === "signal") {
+    const signalProb = Number.isFinite(input.rawProb)
+      ? Math.max(0, Math.min(1, input.rawProb))
+      : 0.5;
+    return {
+      rawProb: signalProb,
+      calibratedProb: signalProb,
+      livePublishedProb: signalProb,
+      calibrationApplied: false,
+      liveCalibrationFlagEnabled,
+      oofBrierBaseline: CORPUS_OOF_BRIER_BASELINE,
+      oofEceBaseline: CORPUS_OOF_ECE_BASELINE,
+      shrinkageFactor: 1,
+    };
+  }
+
+  const finiteRaw = Number.isFinite(input.rawProb) ? input.rawProb : 0.5;
+  const safeRaw = round(clampUnit(finiteRaw), 6);
+  const sampleCount =
+    typeof input.sampleCount === "number" &&
+    Number.isFinite(input.sampleCount) &&
+    input.sampleCount > 0
+      ? Math.max(1, input.sampleCount)
+      : CORPUS_OOF_SAMPLE_DEFAULT;
+  const baseShrink = sampleCount / (sampleCount + 12);
+  const requested =
+    typeof input.shrinkStrength === "number" && Number.isFinite(input.shrinkStrength)
+      ? input.shrinkStrength
+      : 0.82;
+  // Constant input-independent positive log-odds slope preserves strict monotonicity everywhere on (0, 1).
+  const effectiveShrink = round(
+    Math.max(0.35, Math.min(0.95, requested * baseShrink)),
+    6,
+  );
+  const calProb = round(
+    Math.max(0.02, Math.min(0.98, sigmoid(logit(safeRaw) * effectiveShrink))),
+    6,
+  );
+
+  return {
+    rawProb: safeRaw,
+    calibratedProb: calProb,
+    livePublishedProb: liveCalibrationFlagEnabled ? calProb : safeRaw,
+    calibrationApplied: true,
+    liveCalibrationFlagEnabled,
+    oofBrierBaseline: CORPUS_OOF_BRIER_BASELINE,
+    oofEceBaseline: CORPUS_OOF_ECE_BASELINE,
+    shrinkageFactor: effectiveShrink,
+  };
+}

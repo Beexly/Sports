@@ -7,9 +7,9 @@ import { computeLiveSinkhornKnoppTransport } from "@/lib/jarvis/stealth-skeleton
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: { absolute: "Provider & Platform Status | Galaxy Sports Edge & GSI" },
+  title: { absolute: "Provider & Platform Status | Galaxy Sports Edge" },
   description:
-    "Live operational status for Galaxy Sports Edge & Galaxy Science Institute (GSI) Stealth-Skeleton v2.4.0 OpenRouter inference endpoints.",
+    "Live operational status for Galaxy Sports Edge Stealth-Skeleton v2.4.0 OpenRouter inference endpoints.",
   alternates: { canonical: "/status" },
 };
 
@@ -20,7 +20,7 @@ export default function StatusPage(): JSX.Element {
       <Nav />
       <main id="main-content" className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
         <header className="rounded-3xl border border-[#252833] bg-[#0E1015] p-8">
-          <span className="rounded-full border border-verify/40/40 bg-verify/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-verify">
+          <span className="rounded-full border border-verify/40 bg-verify/10 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-verify">
             All Systems Operational · Zero Data Retention Active
           </span>
           <h1 className="mt-4 font-display text-3xl uppercase tracking-tight text-white sm:text-4xl">
@@ -49,7 +49,7 @@ export default function StatusPage(): JSX.Element {
           </div>
           <div className="rounded-2xl border border-[#252833] bg-[#0E1015] p-5">
             <p className="font-mono text-[10px] uppercase tracking-widest text-[#8F8A82]">
-              Sinkhorn Transport Probe
+              Routing Convergence Probe
             </p>
             <p className="mt-1 font-mono text-xl font-bold text-white">
               {sinkhorn.l1MarginalResidual.toExponential(2)} L1

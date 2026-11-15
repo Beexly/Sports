@@ -1,0 +1,76 @@
+{
+  "schema": "gse.gcp_vision_ocr_rescue.v1",
+  "generated_at_utc": "2026-11-14T02:58:14.341116+00:00",
+  "project_id": "galaxysportsedge",
+  "vision_feature": "DOCUMENT_TEXT_DETECTION",
+  "always_free_monthly_units": 1000,
+  "circuit_breaker_max_pages": 120,
+  "dry_run": false,
+  "planned_total_pages": 99,
+  "actual_pages_ocr": 99,
+  "always_free_pct_used": 9.9,
+  "estimated_cost_usd": 0.0,
+  "vision_api_http_batches": 22,
+  "books_rescued": [
+    {
+      "book_id": "3d7cafefb6ffa2ae",
+      "file_name": "Dixon & Coles 1997 — Modelling Association Football Scores and Inefficiencies in the Football Betting Market.pdf",
+      "primary_domain": "football",
+      "pdf_total_pages": 17,
+      "pages_rescued": 17,
+      "coverage_mode": "FULL_DOCUMENT",
+      "output_txt_rel": "3d7cafefb6ffa2ae_vision_ocr_core.txt",
+      "word_count": 6710,
+      "char_count": 41188,
+      "sample_opening_words": "Modelling Association Football Scores and Inefficiencies in the Football Betting Market Mark J. Dixon, Stuart G. Coles Applied"
+    },
+    {
+      "book_id": "3a88f7ddf53d358c",
+      "file_name": "Tolman-1932-PurposiveBehaviorInAnimalsAndMen.pdf",
+      "primary_domain": "psych",
+      "pdf_total_pages": 495,
+      "pages_rescued": 25,
+      "coverage_mode": "TOC_AND_FOUNDATION_SLICE",
+      "output_txt_rel": "3a88f7ddf53d358c_vision_ocr_core.txt",
+      "word_count": 6139,
+      "char_count": 38024,
+      "sample_opening_words": "PURPOSIVE BEHAVIOR IN ANIMALS AND MEN"
+    },
+    {
+      "book_id": "71382581388cd74f",
+      "file_name": "Daly-1921-American-Football.pdf",
+      "primary_domain": "football",
+      "pdf_total_pages": 210,
+      "pages_rescued": 25,
+      "coverage_mode": "TOC_AND_FOUNDATION_SLICE",
+      "output_txt_rel": "71382581388cd74f_vision_ocr_core.txt",
+      "word_count": 2247,
+      "char_count": 13340,
+      "sample_opening_words": "Google This is a digital copy of a book that was preserved for generations on library shelves before"
+    },
+    {
+      "book_id": "1eb756d93ff49446",
+      "file_name": "Hull-1943-PrinciplesOfBehavior.pdf",
+      "primary_domain": "psych",
+      "pdf_total_pages": 428,
+      "pages_rescued": 16,
+      "coverage_mode": "TOC_AND_FOUNDATION_SLICE",
+      "output_txt_rel": "1eb756d93ff49446_vision_ocr_core.txt",
+      "word_count": 2256,
+      "char_count": 14403,
+      "sample_opening_words": ""
+    },
+    {
+      "book_id": "17150554536af787",
+      "file_name": "James-1890-PrinciplesOfPsychology-Vol2.pdf",
+      "primary_domain": "psych",
+      "pdf_total_pages": 726,
+      "pages_rescued": 16,
+      "coverage_mode": "TOC_AND_FOUNDATION_SLICE",
+      "output_txt_rel": "17150554536af787_vision_ocr_core.txt",
+      "word_count": 4163,
+      "char_count": 25396,
+      "sample_opening_words": "Google This is a digital copy of a book that was preserved for generations on library shelves before"
+    }
+  ]
+}

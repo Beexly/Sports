@@ -1,0 +1,323 @@
+{
+  "book_id": "4ac7c31a25d6cba2",
+  "source_status": "COMPLETE",
+  "title": "2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al",
+  "file_name": "2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al.pdf",
+  "sha256": "4ac7c31a25d6cba25151fae03fc387db08d5ec80b2f24d484d3683355322114b",
+  "primary_domain": "other",
+  "pages_total": 14,
+  "pages_read": 14,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 14,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The Swiss-system tournament is modeled as a stochastic selection mechanism optimizing the efficacy-competitiveness frontier. Efficacy measures the fidelity of observed rankings to latent skill distributions, while competitiveness quantifies the temporal persistence of outcome uncertainty. The structural unification lies in minimizing early resolution entropy without sacrificing asymptotic convergence to the true Pareto-optimal ranking. A unified framework for tournament efficacy and competitiveness through stochastic pairing and Elo-based win probability models.",
+  "gsi_mapping": "GSI maps tournament efficacy to Bayesian posterior concentration over latent team strengths. Match outcomes serve as noisy observations updating prior skill distributions. Competitiveness is formalized via conformal prediction intervals; a highly competitive state occurs when the predictive distribution for the final rank remains broad until the terminal round, maximizing information gain per match. Bayesian inference on tournament outcomes using Monte Carlo simulations with Elo-derived match probabilities and stakeless round metrics.",
+  "gse_mapping": "GSE models the tournament as a discrete Markov decision process where state transitions are driven by pairwise match results. Situational reasoning evaluates the 'stakeless' probability: if the current score differential exceeds the maximum achievable points in remaining rounds, the state collapses into a resolved terminal node, prematurely terminating strategic engagement and reducing spectator utility. Situation-aware state transitions in Swiss-system tournaments governed by pairing algorithms and dynamic score-based team rankings.",
+  "primitives": [
+    {
+      "primitive_id": "efficacy_operator",
+      "name": "Efficacy Operator",
+      "verbatim_quote": "Efficacy is the ability of the tournament to approxiamte the latent strength ranking of the players by the ranking based on the results of matches.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Latent strength \\theta_i (dimensionless skill rating), Observed rank R_i (ordinal integer).",
+      "assumptions": "Matches are independent Bernoulli trials governed by an underlying continuous skill distribution; noise is symmetric.",
+      "breakdown_regime": "Breaks down under extreme heteroscedasticity or when teams collude to manipulate pairings, decoupling observed ranks from latent skills.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the GSI Kalman filter update step, where match outcomes minimize the mean-squared error between predicted and actual performance vectors.",
+        "source_operator": "efficacy_operator",
+        "telemetry": "Spearman's rank correlation coefficient between pre-tournament Elo ratings and final Swiss-system standings."
+      }
+    },
+    {
+      "primitive_id": "competitiveness_constraint",
+      "name": "Competitiveness Constraint",
+      "verbatim_quote": "Here we adopt a straightforward definition called competitiveness: the winner should not be decided before the last round of the tournament.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Current score S_i (dimensionless points), Rounds remaining k (integer), Max possible points P_max (dimensionless).",
+      "assumptions": "Tournament suspense is strictly monotonic with the number of mathematically viable candidates for first place.",
+      "breakdown_regime": "Fails in systems with massive point inflation or when tie-break rules deterministically resolve rankings regardless of final-round outcomes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE state-transition pruning; the constraint acts as a boundary condition preventing premature absorption into a resolved state.",
+        "source_operator": "competitiveness_constraint",
+        "telemetry": "Probability that the top seed's lead is insurmountable prior to the final round (stakeless probability)."
+      }
+    },
+    {
+      "primitive_id": "selection_mechanism",
+      "name": "Selection Mechanism",
+      "verbatim_quote": "Indeed, a tournament is often considered a selection mechanism used to identify the best team in a noisy environment (Ryvkin, 2010).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Noise variance \\sigma^2 (dimensionless outcome volatility), True best team T^* (categorical entity).",
+      "assumptions": "The environment is stationary during the tournament duration; noise does not systematically favor higher or lower ranked opponents.",
+      "breakdown_regime": "Breaks down if the noise term becomes signal-dominated (e.g., random walk behavior) or if the tournament length approaches zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly isomorphic to GSI multi-armed bandit exploration-exploitation trade-offs, balancing sample efficiency against identification accuracy.",
+        "source_operator": "selection_mechanism",
+        "telemetry": "Frequency of the true strongest team winning the tournament across Monte Carlo simulations."
+      }
+    },
+    {
+      "primitive_id": "attractiveness_metric",
+      "name": "Attractiveness Metric",
+      "verbatim_quote": "While attractiveness has several different interpretations, they are all connected to the entertainment generated by the tournament.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Entertainment value U (utility dimensionless), Spectator attention A(t) (continuous time-series).",
+      "assumptions": "Entertainment is a strictly increasing function of outcome uncertainty and match closeness.",
+      "breakdown_regime": "Invalidates when audience preferences shift towards spectacle over competitive integrity, or during blowout scenarios.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the GSE reward function for scheduling algorithms, maximizing cumulative expected uncertainty across all concurrent matches.",
+        "source_operator": "attractiveness_metric",
+        "telemetry": "Aggregate viewership metrics normalized by the margin of victory in featured matches."
+      }
+    },
+    {
+      "primitive_id": "tournament_efficiency",
+      "name": "Tournament Efficiency",
+      "verbatim_quote": "3.1 Input data We examine two settings regarding the strengths of players based on Elo points (Elo, 1978).",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Elo': 'dimensionless rating scale', 'n_teams': 'dimensionless count', 'rounds': 'dimensionless count'}",
+      "assumptions": "Players' strength modeled via static Elo ratings; tournament structure allows variable rounds.",
+      "breakdown_regime": "When Elo gaps exceed threshold, leading teams dominate early rounds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Efficiency quantified via expected match outcomes and ranking stability across simulated rounds.",
+        "source_operator": "tournament_efficiency",
+        "telemetry": "Expected ranking entropy and variance of final standings."
+      }
+    },
+    {
+      "primitive_id": "pairing_optimization",
+      "name": "Pairing Optimization",
+      "verbatim_quote": "Section 3.2 describes the pairing mechanism and the probabilistic model of Milvang (2015) used to generate match results.",
+      "page": 4,
+      "latex": "\\max \\sum_{(u,v) \\in F} (s_u - s_v)^2 x_{uv}",
+      "symbol_and_unit_ledger": "{'x_{uv}': 'binary variable indicating pairing of teams u and v', 's_u': 'score of team u', 'F': 'set of feasible pairings'}",
+      "assumptions": "Pairing minimizes score disparity between opponents in each round.",
+      "breakdown_regime": "When score distribution becomes uniform, pairing optimization fails to reduce variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pairing optimization mirrors linear programming formulations in resource allocation.",
+        "source_operator": "pairing_optimization",
+        "telemetry": "Pairing imbalance index and score variance across rounds."
+      }
+    },
+    {
+      "primitive_id": "competitiveness_metric",
+      "name": "Competitiveness Metric",
+      "verbatim_quote": "Our measure of competitiveness, the probability of a stakeless last round, has received serious attention in (incomplete) round-robin tournaments.",
+      "page": 4,
+      "latex": "P(stakeless\\_last\\_round) = \\frac{\\text{favorable outcomes}}{\\text{total outcomes}}",
+      "symbol_and_unit_ledger": "{'P(stakeless\\\\_last\\\\_round)': 'probability dimensionless', 'favorable outcomes': 'count of qualifying last-round scenarios', 'total outcomes': 'total simulation runs'}",
+      "assumptions": "Last round is stakeless if top team's lead is less than max possible points in one round.",
+      "breakdown_regime": "When top team leads by more than max points per round, competitiveness approaches zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Probability of stakeless last round maps to uncertainty in final outcome distribution.",
+        "source_operator": "competitiveness_metric",
+        "telemetry": "Entropy of final rank distribution and last-round point gap."
+      }
+    },
+    {
+      "primitive_id": "elo_based_win_probability",
+      "name": "Elo-Based Win Probability",
+      "verbatim_quote": "3 Methodology Following the standard approach in tournament design (Devriesere et al., 2025), we use Monte Carlo simulations to quantify efficacy and competitiveness.",
+      "page": 4,
+      "latex": "P(win) = \\frac{1}{1 + 10^{(Elo_{opponent} - Elo_{player})/400}}",
+      "symbol_and_unit_ledger": "{'P(win)': 'probability dimensionless', 'Elo_{player}': 'Elo rating', 'Elo_{opponent}': 'Elo rating'}",
+      "assumptions": "Win probability follows logistic function of Elo difference; independent match outcomes.",
+      "breakdown_regime": "When Elo difference exceeds 400 points, win probability approaches 1 or 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Elo win probability aligns with Bayesian belief updating in sequential games.",
+        "source_operator": "elo_based_win_probability",
+        "telemetry": "Log-loss of predicted match outcomes against actual results."
+      }
+    },
+    {
+      "primitive_id": "efficacy_competitiveness_tradeoff",
+      "name": "Efficacy-Competitiveness Trade-off",
+      "verbatim_quote": "increasingly challenging if one wants to achieve a higher accuracy: for a mere improvement of 4 percentage points from 67% to 71%, the chance of an uninteresting last round grows from 3.3% to more than 5.6%.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_stakeless': 'probability of stakeless last round (dimensionless)', 'accuracy': 'tournament outcome prediction accuracy (dimensionless)'}",
+      "assumptions": "Tournament structure follows Swiss-system rules with fixed rounds; ranking based on match points or board points; teams have independent performance distributions.",
+      "breakdown_regime": "When p_stakeless > 5.6%, tournament loses appeal due to reduced excitement in final rounds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes posterior probabilities of stakeless outcomes; GSE simulates state transitions of team rankings to predict competitiveness.",
+        "source_operator": "efficacy_competitiveness_tradeoff",
+        "telemetry": "Observed stakeless round frequency vs predicted threshold"
+      }
+    },
+    {
+      "primitive_id": "board_point_optimization",
+      "name": "Board Point Optimization",
+      "verbatim_quote": "The efficacy-competitiveness frontier is fully determined by the rule based on board points, when the chance of a stakeless last round remains below 3% with 32 teams and 12 rounds.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_stakeless': 'probability of stakeless last round (dimensionless)', 'n_teams': 'number of participating teams (dimensionless)', 'n_rounds': 'number of tournament rounds (dimensionless)'}",
+      "assumptions": "Tournament uses standard Swiss-system; board points provide superior ranking compared to match points; team strength varies independently across matches.",
+      "breakdown_regime": "For n_teams=32, n_rounds=12, p_stakeless must remain < 3% for optimal competitiveness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI infers optimal point assignment via likelihood maximization; GSE evaluates strategic implications of board-point-based pairings.",
+        "source_operator": "board_point_optimization",
+        "telemetry": "Comparison of stakeless round rates between board and match point systems"
+      }
+    },
+    {
+      "primitive_id": "match_point_suboptimality",
+      "name": "Match Point Suboptimality",
+      "verbatim_quote": "Ranking based on board points determines the Pareto frontier, and awarding three points for winning a match remains suboptimal.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_win': 'probability of winning a match (dimensionless)', 'p_stakeless': 'probability of stakeless last round (dimensionless)'}",
+      "assumptions": "Match point system awards 3-1-0 points; tournament has sufficient rounds to allow meaningful competition; teams are heterogeneous in skill.",
+      "breakdown_regime": "Awarding 3 points per win leads to higher p_stakeless than alternative scoring schemes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI quantifies inefficiency of 3-1-0 scoring using entropy measures; GSE models impact on final standings stability.",
+        "source_operator": "match_point_suboptimality",
+        "telemetry": "Entropy of final team rankings under different point systems"
+      }
+    },
+    {
+      "primitive_id": "round_count_threshold",
+      "name": "Round Count Threshold for Stakelessness",
+      "verbatim_quote": "stakeless if the number of rounds is three or four.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'n_rounds': 'number of tournament rounds (dimensionless)', 'p_stakeless': 'probability of stakeless last round (dimensionless)'}",
+      "assumptions": "Tournament uses standard Swiss pairing logic; teams are evenly matched; match outcomes are stochastic but bounded.",
+      "breakdown_regime": "With n_rounds ≤ 4, p_stakeless exceeds acceptable levels for competitive integrity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI estimates p_stakeless via Monte Carlo simulations; GSE predicts tournament flow paths for round count validation.",
+        "source_operator": "round_count_threshold",
+        "telemetry": "Frequency of stakeless last rounds across varying round counts"
+      }
+    },
+    {
+      "primitive_id": "efficacy_competitiveness_tradeoff_w3_1",
+      "name": "Efficacy-Competitiveness Tradeoff",
+      "verbatim_quote": "Our results uncover the need to balance the quality of the ranking and suspense in the last round: the former can be improved only by playing a higher number of rounds, which increases the likelihood that the winner will be determined early.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'number of rounds', 'A': 'ranking accuracy (dimensionless)', 'S': 'suspense in final round (dimensionless)'}",
+      "assumptions": "Ranking accuracy improves monotonically with rounds; suspense decreases with early winner determination.",
+      "breakdown_regime": "When R approaches infinity, A → 1 but S → 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses SRD to quantify A; GSE simulates S via pairing dynamics.",
+        "source_operator": "efficacy_competitiveness_tradeoff_w3_1",
+        "telemetry": "Average rank of winner vs. SRD"
+      }
+    },
+    {
+      "primitive_id": "scoring_rule_optimization",
+      "name": "Scoring Rule Optimization",
+      "verbatim_quote": "This trade-off also depends on the scoring rule; according to the simulations, ranking is Swiss-system chess team tournaments should be based on the number of board points rather than the number of match points, while combining board and match points is preferred to using match points.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'board points per game', 'M': 'match points per game', 'P': 'combined point system (B + M)'}",
+      "assumptions": "Board points reflect individual performance better than match points.",
+      "breakdown_regime": "When B = M, P becomes redundant; when B ≠ M, P optimizes both components.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI evaluates P via simulation; GSE applies P to real-time pairing logic.",
+        "source_operator": "scoring_rule_optimization",
+        "telemetry": "Ranking consistency across simulated tournaments"
+      }
+    },
+    {
+      "primitive_id": "pairing_mechanism_impact",
+      "name": "Pairing Mechanism Impact",
+      "verbatim_quote": "The pairing mechanism is a key feature of the Swiss system, and alternative pairing algorithms could enhance its performance.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{alg}': 'pairing algorithm', 'D': 'disparity in skill levels', 'C': 'competitiveness metric'}",
+      "assumptions": "Pairing algorithms reduce D and increase C.",
+      "breakdown_regime": "If P_{alg} minimizes D, then C → max.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes D using strength distributions; GSE simulates C via state transitions.",
+        "source_operator": "pairing_mechanism_impact",
+        "telemetry": "Skill disparity reduction over rounds"
+      }
+    },
+    {
+      "primitive_id": "pareto_frontier_gap",
+      "name": "Pareto Frontier Gap",
+      "verbatim_quote": "Combining the two improves performance compared to using only match points (where a win is worth either two or three points); however, there remains a substantial gap from the Pareto frontier.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Pareto frontier', 'A_{actual}': 'actual performance', 'G': 'gap from frontier'}",
+      "assumptions": "Performance lies below F due to suboptimal design parameters.",
+      "breakdown_regime": "As G → 0, A_{actual} → F.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI quantifies G via SRD; GSE identifies design parameters causing G.",
+        "source_operator": "pareto_frontier_gap",
+        "telemetry": "Distance from optimal performance in simulations"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4ac7c31a25d6cba2_t0",
+      "think": "The foundational doctrine of this chapter window establishes a rigorous duality between statistical fidelity (efficacy) and narrative tension (competitiveness). Mathematically, we model the tournament as a finite-state stochastic process where each round refines our estimate of the latent skill vector \\mathbf{\\theta}. Efficacy is maximized when the covariance matrix of the posterior distribution over \\mathbf{\\theta} shrinks monotonically, ensuring the final ranking aligns with the true Pareto frontier of player strength. However, maximizing efficacy typically requires an abundance of rounds, which introduces a critical singularity: the stakeless last round. If the accumulated point differentials exceed the maximum possible points available in the remaining schedule, the state space collapses prematurely. This violates the competitiveness constraint, defined here as the requirement that the set of mathematically viable winners must have cardinality greater than one entering the final round. The authors leverage simulation to map the efficacy-competitiveness frontier, demonstrating that simply adding rounds yields diminishing returns on efficacy while exponentially increasing the probability of a resolved state. Furthermore, the introduction of alternative scoring mechanisms—such as awarding three points for a match win instead of two—is analyzed not merely as a rule change, but as a modification of the transition probabilities within the Markov chain. By altering the payoff matrix, the system attempts to incentivize risk-taking, thereby injecting variance back into the outcome distribution to prevent early stagnation. This creates a complex optimization landscape where tournament organizers must balance the informational purity of the selection mechanism against the entertainment utility derived from sustained uncertainty.",
+      "retrocausal_genealogy": "This framework inherits directly from the classical tournament design literature, notably Ryvkin’s work on selection mechanisms in noisy environments. It extends Devriesere et al.’s recent survey by operationalizing 'attractiveness' into a hard mathematical constraint regarding late-round viability. Historically, Swiss-system reforms, such as the 2008 Chess Olympiad changes, were driven by heuristic desires to enhance team cohesion rather than rigorous probabilistic modeling. This paper retroactively validates those heuristics by exposing the underlying trade-offs in the efficacy-competitiveness plane, bridging the gap between combinatorial game theory and modern sports analytics.",
+      "theory_of_mind": "Modeling the agents—teams and individual players—requires accounting for divergent incentive structures. A team acting as a single decision-making entity might prioritize securing a match win (and thus maximum points) over individual board victories, potentially leading to conservative play if the point gap is large. Conversely, individual players might seek personal rating gains, creating internal friction. The 'three-point rule' is hypothesized to alter this theory-of-mind dynamic by drastically increasing the penalty for drawing a match, thereby forcing agents to adopt high-variance strategies. Understanding these psychological and strategic layers is crucial for predicting how rule changes propagate through the tournament's state space and affect the overall competitiveness metric.",
+      "cross_layer_veto": "We must veto any interpretation that treats efficacy and competitiveness as independently optimizable variables; they are fundamentally coupled through the number of rounds and the scoring matrix. Leakage occurs if we assume match outcomes are purely exogenous, ignoring the endogenous strategic adjustments players make in response to the current standings. Anti-collinearity checks are required to ensure that the observed increase in 'stakeless' rounds is not merely an artifact of stronger teams dominating early due to flawed initial seeding, rather than an inherent property of the Swiss pairing algorithm itself. The model must explicitly account for the feedback loop between current rank and future pairing strength."
+    },
+    {
+      "trace_id": "4ac7c31a25d6cba2_t1",
+      "think": "Chapter 2 explores the interplay between tournament design and competitive balance in Swiss-system formats. It introduces a probabilistic model grounded in Elo ratings to simulate match outcomes and evaluates tournament efficacy through Monte Carlo methods. The core premise is that tournament structure—particularly the number of rounds and pairing mechanisms—directly influences both the likelihood of competitive last rounds and the accuracy of team rankings. The authors posit that stakeless last rounds are indicative of high competitiveness, where no single team holds an insurmountable lead. This is formalized through a probability metric derived from simulated tournament outcomes. Pairing strategies are optimized using a linear program that minimizes score disparities, ensuring balanced competition throughout the event. The paper also highlights how real-world data, such as betting market behavior, supports the hypothesis that incentives affect performance, reinforcing the relevance of modeling effort levels. The methodology integrates historical references to prior studies, including those by Csató and Gyimesi, who analyze the impact of tie-breaking rules and stakeless conditions in major tournaments. These insights form the foundation for evaluating tournament fairness and robustness under varying structural parameters. Window 2 Synthesis: Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon earlier work in tournament theory and Elo-based modeling, this chapter extends previous research by incorporating stochastic simulation techniques and explicit treatment of pairing optimization within Swiss systems. Retrocausal Genealogy (Window 2): Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents in this model are teams whose strategic decisions are influenced by incentive structures, particularly around final rounds. Coaches and players adjust effort levels based on potential rewards, reflecting a rational response to tournament dynamics. Theory of Mind (Window 2): Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by distinguishing between pairing optimization (score-based) and ranking metrics (board/match points). Leakage is mitigated by assuming independence of match outcomes and excluding seeding effects from the baseline model. Cross-Layer Veto (Window 2): Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4ac7c31a25d6cba2_t2",
+      "think": "Chapter 3 explores the trade-offs inherent in Swiss-system tournament design, particularly concerning the efficacy-competitiveness frontier. It establishes that board points outperform match points in maintaining competitive balance, especially when stakeless last rounds are considered. The analysis hinges on probabilistic models of tournament outcomes, where increasing rounds improve accuracy but also raise the risk of uninteresting finals. This creates a constraint: achieving high predictive accuracy necessitates careful tuning of scoring systems to avoid diminishing returns in spectator engagement. The paper's core insight is that the optimal configuration balances statistical reliability with dynamic excitement, which is quantified through metrics like average rank and Sum of Ranking Differences (SRD). These metrics reflect both the precision of outcome prediction and the robustness of competitive dynamics. The findings suggest that while match points may seem intuitive, they introduce systemic biases that reduce the likelihood of thrilling conclusions. Conversely, board points align better with maximizing the probability of stakeless finishes, thereby preserving tournament intrigue. The mathematical framework supports this conclusion by showing that the Pareto frontier—the set of non-dominated solutions—is defined by board-point-based rankings. Thus, the chapter contributes to understanding how tournament design can be optimized for both analytical rigor and entertainment value.",
+      "retrocausal_genealogy": "This work builds upon earlier studies in tournament theory and game design, particularly those addressing fairness and competitiveness in Swiss-system formats. It extends prior research by introducing formalized metrics for measuring efficacy and competitiveness, enabling quantitative comparisons across different rule sets. Retrocausal Genealogy (Window 3): Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents—tournament organizers and participants—may prioritize either statistical accuracy or entertainment value. Organizers might favor match points for simplicity, while spectators prefer board points for increased drama. Coaches and players adapt strategies accordingly, influencing overall tournament dynamics. Theory of Mind (Window 3): Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that each primitive addresses distinct aspects of tournament design: one focuses on trade-offs, another on optimization, a third on suboptimality, and the fourth on constraints. Leakage is mitigated by grounding all primitives in empirical observables such as stakeless round frequencies and ranking entropies. Cross-Layer Veto (Window 3): Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4ac7c31a25d6cba2_t3",
+      "think": "Chapter 4 explores the fundamental tension in tournament design between accurately ranking participants and maintaining competitive suspense in later rounds. Using the Swiss system as a model, it demonstrates that increasing rounds enhances ranking accuracy but reduces suspense. This trade-off is influenced by scoring rules—specifically, whether to use match points or board points. Board points better capture individual contributions, whereas match points emphasize team outcomes. The study finds that combining both provides superior performance relative to either alone, yet still falls short of the theoretical Pareto frontier. Pairing mechanisms play a critical role in mitigating this gap by ensuring balanced matchups that preserve suspense while maximizing information gain. These insights are validated across multiple efficacy measures and strength distributions, suggesting robustness in the conclusions. The implications extend beyond chess to any competitive structure where accurate ranking must coexist with engaging competition. Window 4 Synthesis: Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon earlier work by Csató (2013, 2017) and Sziklai et al. (2022), this chapter refines the understanding of Swiss-system tournament design by introducing empirical validation of the efficacy-competitiveness trade-off through SRD and simulation-based analysis. Retrocausal Genealogy (Window 4): Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Players and organizers face conflicting incentives: players want fair rankings, while organizers seek thrilling finishes. Coaches may prefer match points for team cohesion, but strategic pairing and scoring rule selection can align these interests toward optimal outcomes. Theory of Mind (Window 4): Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity prevents reliance on single metrics like average rank alone. Leakage is avoided by integrating SRD and pairing efficiency into a unified framework that avoids overfitting to one aspect of tournament design. Cross-Layer Veto (Window 4): Rooted in 2026 - The efficacy-competitiveness frontier in the Swiss system - Csat et al (4ac7c31a25d6cba2, 14/14 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

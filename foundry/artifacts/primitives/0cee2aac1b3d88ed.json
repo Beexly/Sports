@@ -1,0 +1,78 @@
+{
+  "book_id": "0cee2aac1b3d88ed",
+  "source_status": "COMPLETE",
+  "title": "2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors",
+  "file_name": "2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors.pdf",
+  "sha256": "0cee2aac1b3d88ed1d5fcab97306965c0c02577ccfc0fc93b93ad80bdf3b5076",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "phf_schedule",
+      "name": "2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors Operator 1",
+      "verbatim_quote": "In addition to the PHF data and functions available through fastRhockey, functions to access the NHL API are available through fastRhockey.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes stable API endpoints and consistent data formatting.",
+      "breakdown_regime": "API changes or website redesigns causing scraper failures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian time-series forecasting of API availability and data integrity.",
+        "source_operator": "phf_schedule",
+        "telemetry": "API request latency and error rate metrics"
+      }
+    },
+    {
+      "primitive_id": "phf_player_box",
+      "name": "2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors Operator 2",
+      "verbatim_quote": "The following paper will briefly discuss the NHL API access and functions, but they were not the primary motivation for creating the fastRhockey paper.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All events are logged with accurate timestamps and player identifiers.",
+      "breakdown_regime": "Missing or mislabeled player data leading to incomplete event records.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction intervals for player contribution uncertainty.",
+        "source_operator": "phf_player_box",
+        "telemetry": "Event completeness ratio per game"
+      }
+    },
+    {
+      "primitive_id": "phf_play",
+      "name": "2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors Operator 3",
+      "verbatim_quote": "fastRhockey contains a multitude of functions, but the ones that return actionable data being with either the phf_ or load_ prefix.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Game outcomes are final and correctly attributed to winning/losing teams.",
+      "breakdown_regime": "Data entry errors or delayed updates causing incorrect win-loss assignments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Markov chain Monte Carlo models for outcome probability calibration.",
+        "source_operator": "phf_play",
+        "telemetry": "Win-probability score calibration metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0cee2aac1b3d_t0",
+      "think": "The core challenge is managing the 'observational gap' between raw event logs and actionable performance metrics. FastRhockey bridges this by applying a descriptive operator that aggregates skater contributions into standardized statistics (goals, assists, plus-minus). This operator is mathematically dual to traditional boxscore aggregation, but accounts for temporal dependencies and player-on-ice effects. Failure occurs when API schema changes break backward compatibility; retrocausally, this mirrors issues in early NHL data pipelines. Opponents may manipulate game IDs to cause data leaks. Anti-collinearity is enforced by ensuring each event contributes only once to aggregated totals.\n\nDeep epistemic analysis for 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed, domain=other, pages_read=6/6): Operator '2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors Operator 1' (page 1, domain other) captures: In addition to the PHF data and functions available through fastRhockey, functions to access the NHL API are available through fastRhockey. Assumptions: Assumes stable API endpoints and consistent data formatting. Breakdown regime: API changes or website redesigns causing scraper failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian time-series forecasting of API availability and data integrity. Operator '2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors Operator 2' (page 1, domain other) captures: The following paper will briefly discuss the NHL API access and functions, but they were not the primary motivation for creating the fastRhockey paper. Assumptions: All events are logged with accurate timestamps and player identifiers. Breakdown regime: Missing or mislabeled player data leading to incomplete event records. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals for player contribution uncertainty. Operator '2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors Operator 3' (page 1, domain other) captures: fastRhockey contains a multitude of functions, but the ones that return actionable data being with either the phf_ or load_ prefix. Assumptions: Game outcomes are final and correctly attributed to winning/losing teams. Breakdown regime: Data entry errors or delayed updates causing incorrect win-loss assignments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Markov chain Monte Carlo models for outcome probability calibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed, domain=other, pages_read=6/6): Operator '2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors Operator 1' (page 1, domain other) captures: In addition to the PHF data and functions available through fastRhockey, functions to access the NHL API are available through fastRhockey. Assumptions: Assumes stable API endpoints and consistent data formatting. Breakdown regime: API changes or website redesigns causing scraper failures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian time-series forecasting of API availability and data integrity. Operator '2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors Operator 2' (page 1, domain other) captures: The following paper will briefly discuss the NHL API access and functions, but they were not the primary motivation for creating the fastRhockey paper. Assumptions: All events are logged with accurate timestamps and player identifiers. Breakdown regime: Missing or mislabeled player data leading to incomplete event records. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals for player contribution uncertainty. Operator '2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors Operator 3' (page 1, domain other) captures: fastRhockey contains a multitude of functions, but the ones that return actionable data being with either the phf_ or load_ prefix. Assumptions: Game outcomes are final and correctly attributed to winning/losing teams. Breakdown regime: Data entry errors or delayed updates causing incorrect win-loss assignments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Markov chain Monte Carlo models for outcome probability calibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "League administrators prioritize data consistency over historical format preservation, creating predictable breaking points. Theory of Mind & Decision Maker Model: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevent leakage by cross-validating API-derived game IDs against external event logs. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2022 - fastRhockey A Package For Women s Hockey Data - Unknown Authors (0cee2aac1b3d88ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

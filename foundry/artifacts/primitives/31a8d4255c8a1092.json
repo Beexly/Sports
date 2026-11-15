@@ -1,0 +1,78 @@
+{
+  "book_id": "31a8d4255c8a1092",
+  "source_status": "COMPLETE",
+  "title": "wave4-floor-gap-register",
+  "file_name": "wave4-floor-gap-register.md",
+  "sha256": "31a8d4255c8a10929b5fd0b86e7b9db2e0999fb806e1f135d4721590c444ac51",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Wave 4 floor-gap register defines GSE's operational boundaries through verified code paths, data integrity constraints, and probabilistic inference regimes. It maps competitive gaps to actionable primitives via Bayesian calibration and conformal prediction.",
+  "gsi_mapping": "GSI leverages the floor-gap register to construct Bayesian belief states over contest outcomes using calibrated projections and expert grading. Conformal inference ensures coverage guarantees while maintaining minimal false discovery rates.",
+  "gse_mapping": "GSE employs the floor-gap register as a state-transition engine for situational awareness. It dynamically evaluates feasibility checks, handles data gaps, and enforces logical consistency in prediction markets and exposure analytics.",
+  "primitives": [
+    {
+      "primitive_id": "explicit_inconclusive_disclosure",
+      "name": "Explicit Inconclusive Disclosure",
+      "verbatim_quote": "| — | — | | 19 | Explicit-inconclusive disclosure (withhold a verdict when the interval straddles zero) | wbp318/cfb_2026 — README leads with n=51, ROI -2.1%, CI [-40%,+41%], every verdict labeled inconclusive | **partial** — Wilson 95% interval IS computed (lib/airwave/grade.ts:16,124-130 via @sports/prediction-engine) but the string \"inconclusive",
+      "page": 3,
+      "latex": "\\text{If } \\mathcal{I}(\\theta) \\ni 0 \\Rightarrow \\text{label } \\theta \\text{ as inconclusive}",
+      "symbol_and_unit_ledger": "{'θ': 'unknown parameter (e.g., ROI)', 'I(θ)': 'confidence interval for θ'}",
+      "assumptions": "Confidence intervals are symmetric and centered around point estimates; zero lies within the interval implies insufficient evidence for directional inference.",
+      "breakdown_regime": "When confidence interval spans zero, indicating no statistically significant effect.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction framework where uncertainty bounds determine verdict validity.",
+        "source_operator": "explicit_inconclusive_disclosure",
+        "telemetry": "Interval width and zero-crossing behavior in simulated outcomes."
+      }
+    },
+    {
+      "primitive_id": "projection_calibration_loop",
+      "name": "Projection Calibration Loop",
+      "verbatim_quote": "Projection calibration loop (learned bias + spread correction on our own projections)",
+      "page": 3,
+      "latex": "\\hat{y}_t = \\mu + \\sigma \\cdot \\Phi^{-1}(p_{\\text{proj}}), \\quad \\text{where } \\Phi^{-1} \\text{ is inverse normal CDF}",
+      "symbol_and_unit_ledger": "{'y_t': 'calibrated projection at time t', 'μ': 'mean bias correction', 'σ': 'standard deviation multiplier', 'Φ⁻¹(p_proj)': 'inverse normal CDF of projected probability'}",
+      "assumptions": "Projections follow Gaussian distribution; learned corrections improve out-of-sample accuracy.",
+      "breakdown_regime": "Out-of-sample performance degrades due to distribution shift or insufficient training data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's internal projection engine; used in DFS lineup generation and risk modeling.",
+        "source_operator": "projection_calibration_loop",
+        "telemetry": "Mean absolute error before/after calibration, holdout test scores."
+      }
+    },
+    {
+      "primitive_id": "free_data_spine",
+      "name": "Free Data Spine",
+      "verbatim_quote": "Free-data spine (no paid key required to compute an edge)",
+      "page": 4,
+      "latex": "\\mathcal{D}_{\\text{free}} = \\{ d_i \\mid \\forall i, \\text{keyless access} \\}",
+      "symbol_and_unit_ledger": "{'D_free': 'set of free-accessible data streams', 'd_i': 'individual data stream'}",
+      "assumptions": "All data sources are publicly accessible without licensing fees; sufficient for basic predictive modeling.",
+      "breakdown_regime": "When proprietary data becomes necessary for higher fidelity predictions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI’s data-driven edge computation pipeline, enabling low-cost experimentation.",
+        "source_operator": "free_data_spine",
+        "telemetry": "Number of keyless adapters integrated into core prediction models."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "31a8d4255c8a1092_t0",
+      "think": "The floor-gap register encodes GSE's strategic posture by identifying gaps between claimed capabilities and actual implementation. Each primitive reflects a distinct mode of reasoning: explicit inconclusiveness prevents overconfident decisions, projection calibration improves reliability, and free data spine enables scalable innovation. These primitives form a dual logic system—Bayesian inference for uncertainty quantification and state transitions for operational consistency. Failure modes include silent drops in feasibility checks, misalignment between simulated and real-world outcomes, and reliance on incomplete data structures. The register functions as a constraint-based architecture that balances exploration and exploitation in competitive environments.\n\nDeep epistemic analysis for wave4-floor-gap-register (31a8d4255c8a1092, domain=other, pages_read=4/4): Operator 'Explicit Inconclusive Disclosure' (page 3, domain other) captures: | — | — | | 19 | Explicit-inconclusive disclosure (withhold a verdict when the interval straddles zero) | wbp318/cfb_2026 — README leads with n=51, ROI -2.1%, CI [-40%,+41%], every verdict labeled inconclusive | **partial** — Wilson 95% interval IS computed (lib/airwave/grade.ts:16,124-130 via @sports/prediction-engine) but the string \"inconclusive Assumptions: Confidence intervals are symmetric and centered around point estimates; zero lies within the interval implies insufficient evidence for directional inference. Breakdown regime: When confidence interval spans zero, indicating no statistically significant effect. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction framework where uncertainty bounds determine verdict validity. Operator 'Projection Calibration Loop' (page 3, domain other) captures: Projection calibration loop (learned bias + spread correction on our own projections) Assumptions: Projections follow Gaussian distribution; learned corrections improve out-of-sample accuracy. Breakdown regime: Out-of-sample performance degrades due to distribution shift or insufficient training data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's internal projection engine; used in DFS lineup generation and risk modeling. Operator 'Free Data Spine' (page 4, domain other) captures: Free-data spine (no paid key required to compute an edge) Assumptions: All data sources are publicly accessible without licensing fees; sufficient for basic predictive modeling. Breakdown regime: When proprietary data becomes necessary for higher fidelity predictions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s data-driven edge computation pipeline, enabling low-cost experimentation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for wave4-floor-gap-register (31a8d4255c8a1092, domain=other, pages_read=4/4): Operator 'Explicit Inconclusive Disclosure' (page 3, domain other) captures: | — | — | | 19 | Explicit-inconclusive disclosure (withhold a verdict when the interval straddles zero) | wbp318/cfb_2026 — README leads with n=51, ROI -2.1%, CI [-40%,+41%], every verdict labeled inconclusive | **partial** — Wilson 95% interval IS computed (lib/airwave/grade.ts:16,124-130 via @sports/prediction-engine) but the string \"inconclusive Assumptions: Confidence intervals are symmetric and centered around point estimates; zero lies within the interval implies insufficient evidence for directional inference. Breakdown regime: When confidence interval spans zero, indicating no statistically significant effect. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction framework where uncertainty bounds determine verdict validity. Operator 'Projection Calibration Loop' (page 3, domain other) captures: Projection calibration loop (learned bias + spread correction on our own projections) Assumptions: Projections follow Gaussian distribution; learned corrections improve out-of-sample accuracy. Breakdown regime: Out-of-sample performance degrades due to distribution shift or insufficient training data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's internal projection engine; used in DFS lineup generation and risk modeling. Operator 'Free Data Spine' (page 4, domain other) captures: Free-data spine (no paid key required to compute an edge) Assumptions: All data sources are publicly accessible without licensing fees; sufficient for basic predictive modeling. Breakdown regime: When proprietary data becomes necessary for higher fidelity predictions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s data-driven edge computation pipeline, enabling low-cost experimentation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical hypothesis testing and modern machine learning calibration techniques, this structure builds upon prior work in conformal prediction and robust optimization frameworks developed in the early 2020s. Retrocausal Genealogy: Rooted in wave4-floor-gap-register (31a8d4255c8a1092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in wave4-floor-gap-register (31a8d4255c8a1092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit gaps in data availability or inference rigor. GSE counters these threats by embedding redundancy checks and enforcing strict validation protocols across all primitives. Theory of Mind & Decision Maker Model: Rooted in wave4-floor-gap-register (31a8d4255c8a1092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through orthogonal decomposition of primitives; leakage vetoes prevent cross-contamination between calibration loops and expert grading systems. Cross-Layer Veto & Anti-Leakage Check: Rooted in wave4-floor-gap-register (31a8d4255c8a1092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in wave4-floor-gap-register (31a8d4255c8a1092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

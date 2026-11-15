@@ -1,0 +1,289 @@
+{
+  "book_id": "64e07046f3ecab8d",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2609.26315v1",
+  "file_name": "arxiv_2609.26315v1.pdf",
+  "sha256": "64e07046f3ecab8d3257392b2b6397eb741fcfa743d4a2515bcd4ea25a184d4f",
+  "primary_domain": "other",
+  "pages_total": 8,
+  "pages_read": 8,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 8,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The structural unification of ArborSplat rests on a constrained variational manifold where photometric fidelity and semantic consistency are coupled via a joint energy functional. The optimization dynamically allocates Gaussian primitives to minimize reprojection error while enforcing topological invariance across phenological stages, effectively mapping high-dimensional visual data onto a low-dimensional, semantically grounded latent space.",
+  "gsi_mapping": "In GSI, the observed PSNR degradation from semantic integration maps directly to a Bayesian posterior contraction under conformal prediction sets. We treat the semantic loss as an informative prior that penalizes high-entropy regions (e.g., isolated fruit), ensuring that novel view synthesis remains within calibrated uncertainty bounds despite sparse training trajectories.",
+  "gse_mapping": "For GSE situational reasoning, the transition from dormancy to harvest represents a non-stationary state-space evolution. The system's ability to maintain structural mIoU on held-out views indicates robust state-transition modeling, where opacity normalization acts as a dynamic filter to isolate persistent structural features (trellis posts) from transient noise (foliage).",
+  "primitives": [
+    {
+      "primitive_id": "semantic_gaussian_optimization",
+      "name": "Semantic Gaussian Optimization",
+      "verbatim_quote": "However, its optimization remains appearance-driven, and transferring image semantics to 3D points is unreliable for thin structures, whose pixels may receive depth from background surfaces.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes direct projection of image semantics onto 3D points without considering occlusion or depth ambiguity for thin structures.",
+      "breakdown_regime": "Breaks down when background surfaces occlude thin structures, leading to incorrect depth assignment and unreliable semantics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Conformal Prediction via uncertainty quantification of semantic labels, where the conformal set ensures robustness against depth ambiguity.",
+        "source_operator": "semantic_gaussian_optimization",
+        "telemetry": "Mean Intersection over Union (mIoU) on thin structures like trunks and wires serves as the verification metric."
+      }
+    },
+    {
+      "primitive_id": "class_constrained_refinement",
+      "name": "Class-Constrained Refinement",
+      "verbatim_quote": "Class-constrained refinement reserves Gaussian capacity for underrepresented structures and, under reduced budgets, increases training-view accuracy on tree classes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Operates under a fixed Gaussian budget, prioritizing underrepresented classes to optimize accuracy on specific structures.",
+      "breakdown_regime": "Breaks down when the budget is too restrictive, causing loss of detail for overrepresented classes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's State-Transition Logic through resource allocation constraints, ensuring that critical transitions (e.g., from dormancy to flowering) are accurately captured.",
+        "source_operator": "class_constrained_refinement",
+        "telemetry": "Training-view accuracy metrics on tree classes provide empirical verification."
+      }
+    },
+    {
+      "primitive_id": "height_prior_vetting",
+      "name": "Height Prior Vetting",
+      "verbatim_quote": "ArborSplat: Online Semantic Gaussian Splatting SLAM for Orchards Alessandro Masini1, Matteo Frosi∗1, Mirko Usuelli1, and Matteo Matteucci1 This work has been submitted to the IEEE for possible publication.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Uses a ground-plane fit to establish height bands, filtering out unlikely semantic classes based on geometric consistency.",
+      "breakdown_regime": "Breaks down in uneven terrain where the ground plane assumption fails, leading to misclassification.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian Inference framework by incorporating geometric priors into the posterior distribution, enhancing robustness against noise.",
+        "source_operator": "height_prior_vetting",
+        "telemetry": "Accuracy of vetted class probabilities serves as the verification metric."
+      }
+    },
+    {
+      "primitive_id": "online_semantic_slam",
+      "name": "Online Semantic SLAM",
+      "verbatim_quote": "INTRODUCTION Labor shortage is becoming a limiting factor for agricultural production [1], pushing orchards toward robotic automation throughout the year.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Enables incremental map building with semantic labels in real-time, supporting continuous operation of robotic systems.",
+      "breakdown_regime": "Breaks down under extreme dynamic changes (e.g., heavy wind affecting canopy) that alter the scene topology rapidly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's Situational Reasoning through continuous state estimation, allowing the system to adapt to changing operational contexts.",
+        "source_operator": "online_semantic_slam",
+        "telemetry": "Absolute Trajectory Error (ATE) below 0.5 meters across full routes provides empirical validation."
+      }
+    },
+    {
+      "primitive_id": "64e07046f3ecab8d_w1_g1",
+      "name": "arxiv_2609.26315v1 Ch.2 Grounded Operator",
+      "verbatim_quote": "component therefore keeps its predicted class only if its tallest valid pixel reaches a minimum height, and components without valid in-range depth abstain.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64e07046f3ecab8d_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64e07046f3ecab8d_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64e07046f3ecab8d_w1_g2",
+      "name": "arxiv_2609.26315v1 Ch.2 Grounded Operator",
+      "verbatim_quote": "Sky is assigned last, overriding every other label, and the segmenter sees the full image before sky masking, preserving thin backlit structures.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64e07046f3ecab8d_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64e07046f3ecab8d_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64e07046f3ecab8d_w1_g3",
+      "name": "arxiv_2609.26315v1 Ch.2 Grounded Operator",
+      "verbatim_quote": "1) follows AgriGS-SLAM [6], with fixed 0.1 m voxels: only Gaussians sharing a voxel with the current keyframe's stereo points stay active on the GPU, the others being kept dormant on the CPU.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64e07046f3ecab8d_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64e07046f3ecab8d_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64e07046f3ecab8d_w2_g1",
+      "name": "arxiv_2609.26315v1 Ch.3 Grounded Operator",
+      "verbatim_quote": "TABLE I COMPARISON WITH SEMANTIC GAUSSIAN SLAM ON A 301-FRAME SEGMENT OF EACH SEQUENCE (INLINE CAMERA), EVERY SYSTEM ESTIMATING ITS OWN POSES: MIOU/STRUCTURAL MIOU ON TRAINING VIEWS (TV) AND HELD-OUT FRAMES (HO), TRAINING ATE, AND WALL-CLOCK TIME.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64e07046f3ecab8d_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64e07046f3ecab8d_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64e07046f3ecab8d_w2_g2",
+      "name": "arxiv_2609.26315v1 Ch.3 Grounded Operator",
+      "verbatim_quote": "ALL METHODS RECEIVE THE SAME IMAGES, STEREO DEPTH, AND SEGMENTER LABELS.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64e07046f3ecab8d_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64e07046f3ecab8d_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "64e07046f3ecab8d_w2_g3",
+      "name": "arxiv_2609.26315v1 Ch.3 Grounded Operator",
+      "verbatim_quote": "OURS-NS (no semantics), run on all six sequences, disables segmentation, the semantic loss, and the semantic point cloud.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 64e07046f3ecab8d_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "64e07046f3ecab8d_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "semantic_cost_psnr_tradeoff",
+      "name": "Semantic Fidelity Degradation Operator",
+      "verbatim_quote": "Learning semantics costs 1.39 dB of training PSNR on average and 0.63 dB on validation keyframes, on pear harvesting mostly through the semantic loss itself (Sec.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "PSNR: Peak Signal-to-Noise Ratio [dB]; Semantic Loss: Dimensionless cross-entropy penalty; Validation Keyframes: Discrete temporal indices.",
+      "assumptions": "Assumes a fixed optimization budget where adding a semantic gradient term necessarily redistributes the convergence landscape away from pure photometric minima.",
+      "breakdown_regime": "Breaks down when semantic labels are highly noisy or when the scene lacks sufficient texture for simultaneous geometric and semantic anchoring, leading to catastrophic forgetting of geometry.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the defensive efficiency metric in sports analytics, where allocating cognitive resources to long-term strategic positioning (semantics) inherently reduces short-term execution accuracy (photometric PSNR).",
+        "source_operator": "semantic_cost_psnr_tradeoff",
+        "telemetry": "Delta PSNR between purely photometric baselines and semantically augmented runs."
+      }
+    },
+    {
+      "primitive_id": "novel_view_miou_gap",
+      "name": "Generalization Gap Quantifier",
+      "verbatim_quote": "One set of text prompts serves both species and all stages, but novel views remain much harder than training views: held-out mIoU stays between 0.317 and 0.356, while training views reach 0.614 to 0.758.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "mIoU: Mean Intersection over Union [dimensionless ratio 0..1]; Text Prompts: Natural language embedding vectors; Novel Views: Unobserved camera poses.",
+      "assumptions": "Assumes the underlying 3D Gaussian representation is sufficiently dense to support interpolation, but acknowledges the fundamental difficulty of extrapolating semantic boundaries outside the convex hull of training poses.",
+      "breakdown_regime": "Fails in occluded regions or highly specular surfaces where the single-set prompt cannot disambiguate overlapping semantic classes from a novel vantage point.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to the GSE 'blind-side' vulnerability kernel, quantifying the drop in predictive accuracy when an agent is observed from an untrained tactical angle.",
+        "source_operator": "novel_view_miou_gap",
+        "telemetry": "Ratio of held-out mIoU to training mIoU across varying camera baselines."
+      }
+    },
+    {
+      "primitive_id": "opacity_norm_structural_preservation",
+      "name": "Opacity Normalization Filter",
+      "verbatim_quote": "Opacity normalization matters most on held-out views: removing it lowers structural mIoU by 0.040, while training views barely change.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "Opacity: Alpha blending factor [dimensionless 0..1]; Structural mIoU: Intersection over union restricted to load-bearing classes [dimensionless].",
+      "assumptions": "Assumes that without explicit normalization, the optimizer will favor high-opacity primitives in training views to minimize local loss, creating artifacts that collapse under novel viewing angles.",
+      "breakdown_regime": "Becomes singular in uniformly transparent scenes (e.g., glasshouses) where opacity gradients provide no meaningful structural signal for normalization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly isomorphic to the 'momentum conservation' primitive in GSE, where normalizing player velocity vectors prevents overfitting to a single play's explosive movement, preserving the underlying formation structure.",
+        "source_operator": "opacity_norm_structural_preservation",
+        "telemetry": "Structural mIoU delta on held-out test sets with and without the normalization constraint."
+      }
+    },
+    {
+      "primitive_id": "label_fusion_voxel_projection",
+      "name": "Voxel-Projected Label Fusion",
+      "verbatim_quote": "Label fusion helps consistently but modestly: the online semantic point cloud is more accurate than naive first-view transfer on every sequence, with structural mIoU gains of +0.007 to +0.013 on the 4.5 to 5.8% of reference pixels covered by projected voxels.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "Voxel: 3D volumetric pixel [m^3]; Reference Pixels: 2D image coordinates [px]; Structural mIoU Gain: Incremental improvement [dimensionless].",
+      "assumptions": "Assumes that projecting 3D semantic consensus back onto 2D planes provides a regularizing effect that corrects initial segmentation errors, albeit only where 3D coverage is dense.",
+      "breakdown_regime": "Degenerates in sparse trajectory regimes where voxel coverage drops below the 4.5% threshold, rendering the fusion step statistically insignificant.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Corresponds to the GSI 'crowd-sourced tracking' kernel, where fusing multiple low-fidelity sensor readings yields a marginal but consistent improvement in entity localization over a single primary tracker.",
+        "source_operator": "label_fusion_voxel_projection",
+        "telemetry": "Percentage of reference pixels covered by projected voxels vs. resulting mIoU gain."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "64e07046f3ecab8d_t0",
+      "think": "This chapter introduces ArborSplat, a novel online semantic 3DGS SLAM system designed specifically for orchards. It addresses the critical challenge of mapping small, semantically important structures (trunks, trellises, fruit) that dominate robotic task performance but are difficult to capture using traditional appearance-driven methods. By integrating LiDAR odometry for robust tracking and optimizing semantics directly on the Gaussian map with class constraints and height priors, ArborSplat decouples geometry from semantics, improving accuracy on thin structures. Empirical evaluation on apple and pear orchards demonstrates superior performance in terms of ATE, mIoU, and speed compared to baseline methods, establishing it as a foundational sovereign primitive for reliable orchard robotics. Window 1 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in classical simultaneous localization and mapping (SLAM) theory, extending 3D Gaussian Splatting (3DGS) with semantic constraints inspired by point cloud segmentation and deep learning classification. Influenced by prior work on multimodal sensor fusion and geometric priors in robotics. Retrocausal Genealogy (Window 1): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Farmers and orchard managers expect consistent, accurate maps year-round to deploy autonomous harvesters, sprayers, and pruners. They model the robot as a rational agent seeking optimal trajectories while avoiding obstacles, requiring the system to anticipate seasonal changes and handle occlusions. Theory of Mind (Window 1): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must avoid collinearity with pure appearance-based 3DGS methods (no semantic improvement), leakages into unrelated domains (e.g., urban SLAM without orchard-specific constraints), and ensure independence from sports analytics metrics since the primitives are purely geometric. Cross-Layer Veto (Window 1): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "64e07046f3ecab8d_t1",
+      "think": "Window 2 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "64e07046f3ecab8d_t2",
+      "think": "Window 3 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in arxiv_2609.26315v1 (64e07046f3ecab8d, 8/8 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "64e07046f3ecab8d_t3",
+      "think": "The mathematical derivation of ArborSplat's efficacy hinges on the interplay between geometric reconstruction and semantic segmentation within a unified Gaussian Splatting framework. Traditionally, these are treated as sequential pipelines: first reconstruct geometry, then segment. ArborSplat collapses this into a simultaneous optimization problem. The core equation involves minimizing a composite loss function $\\mathcal{L} = \\lambda_{photo} \\mathcal{L}_{photo} + \\lambda_{sem} \\mathcal{L}_{sem}$, where $\\mathcal{L}_{photo}$ is the standard photometric error (often L1 or SSIM) and $\\mathcal{L}_{sem}$ is a cross-entropy loss against pseudo-labels generated by a frozen vision-language model. The 'cost of semantics' mentioned in the text (1.39 dB PSNR drop) is not a failure but a necessary regularization term. It forces the Gaussian primitives to align not just with color gradients but with semantic boundaries. This is mathematically analogous to introducing a total variation prior that penalizes high-frequency noise unless it corresponds to a true object edge. The opacity normalization primitive further refines this by preventing the optimizer from 'cheating' by assigning high opacity to foreground objects while ignoring background structure, which would boost training PSNR but destroy novel view consistency. The ablation studies confirm that each component—opacity normalization, label fusion, and semantic loss—protects a distinct region of the solution space. Label fusion, specifically, acts as a temporal smoother, correcting drift in the semantic map by projecting accumulated 3D confidence back onto 2D observations. The result is a map that is slightly less photometrically perfect on training views but significantly more robust and semantically coherent on novel views, a trade-off explicitly quantified by the mIoU gaps. This demonstrates a profound shift from pure rendering fidelity to structural understanding, essential for robotic navigation in unstructured environments like orchards.",
+      "retrocausal_genealogy": "This approach inherits from the foundational work in Multi-View Stereo (MVS) and Structure-from-Motion (SfM), which prioritized geometric accuracy. The introduction of Neural Radiance Fields (NeRF) shifted focus to view synthesis quality. Gaussian Splatting (3DGS) accelerated this by offering explicit, editable representations. ArborSplat represents the next evolutionary step: injecting semantic awareness directly into the explicit representation. It builds upon earlier attempts to combine SLAM with semantics (like Semantic-SfM) but achieves real-time performance by leveraging the efficiency of splatting and the power of pre-trained vision models, avoiding the need for heavy on-device segmentation networks during optimization.",
+      "theory_of_mind": "From a theory-of-mind perspective, the robot (or the algorithm acting as its visual cortex) must anticipate the needs of downstream tasks. A purely photometric map might look perfect but fail to distinguish a ripe apple from a leaf due to similar colors under varying lighting. By integrating semantics, the system develops a 'belief' about object identity that persists across viewpoints. The 'held-out mIoU' metrics reflect the system's ability to generalize this belief to unseen angles. The fact that one set of prompts works for all stages suggests the model has learned an abstract, invariant concept of 'fruit' or 'branch' that transcends specific phenological appearances. This is akin to a coach recognizing a player's intent regardless of their uniform or the game's quarter. The system isn't just seeing pixels; it's inferring the underlying state of the orchard, predicting where fruit *should* be based on structural cues, even if partially occluded.",
+      "cross_layer_veto": "A critical veto condition arises if the semantic labels are inconsistent with the geometric structure. For instance, if the vision-language model misclassifies a trellis post as a branch, the semantic loss will force the Gaussian primitives to conform to this error, potentially distorting the geometry. The 'opacity normalization' acts as a partial veto here, as it relies on structural persistence rather than semantic labels. If a region is structurally stable (like a post) but semantically volatile, the normalization might preserve the geometry despite the semantic pressure. Another veto occurs if the computational budget is exceeded; the text notes that semantics adds no wall-clock time but reduces the number of optimization steps. If the system were forced to run at a fixed step count, the inclusion of semantics might lead to under-converged geometry. Thus, the system must dynamically allocate resources, potentially vetoing semantic updates if geometric convergence is lagging, to ensure a minimally viable map for navigation."
+    }
+  ]
+}

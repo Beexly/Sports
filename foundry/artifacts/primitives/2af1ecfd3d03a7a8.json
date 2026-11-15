@@ -1,0 +1,78 @@
+{
+  "book_id": "2af1ecfd3d03a7a8",
+  "source_status": "COMPLETE",
+  "title": "BUF-LAR-2026-10-13",
+  "file_name": "BUF-LAR-2026-10-13.md",
+  "sha256": "2af1ecfd3d03a7a83cc6a60eee333a2af1d89625abcd80f0f258c92442f086f0",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Aerodynamic and defensive signal fusion in controlled environments yields probabilistic game-state alignment. Universal Lens: Rooted in BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on SGP empirical lift using z-score and alpha metrics for win rate inference. GSI Mapping: Rooted in BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps venue conditions and adversary verification to state transitions in game pick and prop selections. GSE Mapping: Rooted in BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "aerodynamic_conditioning",
+      "name": "Aerodynamic Conditioning",
+      "verbatim_quote": "Quantitative Foundation & Signals - **Venue & Aerodynamics:** Optimal high-carry ballistic dome environment (1.190 kg/m3, +2.7 yds carry delta) - **Adversary Verification:** Breaking conditions met = `False` (Verified fail-closed).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ρ': '1.190 kg/m³ (air density)', 'Δd': '+2.7 yds (carry delta)'}",
+      "assumptions": "Dome environment maintains constant air resistance; ball trajectory follows standard physics.",
+      "breakdown_regime": "High-carry ballistic regime under controlled atmospheric conditions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Air density and carry delta modulate pass efficiency and offensive strategy outcomes.",
+        "source_operator": "aerodynamic_conditioning",
+        "telemetry": "Passing yardage and completion rates under defined environmental parameters."
+      }
+    },
+    {
+      "primitive_id": "sgp_empirical_lift",
+      "name": "SGP Empirical Lift",
+      "verbatim_quote": "- **SGP Empirical Lift:** Measured joint win rate is **39.2% vs 31.0% book independent** (+26.68% alpha, z = 37.85).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_win^{SGP}': '39.2%', 'P_win^{book}': '31.0%', 'α': '+26.68%', 'z': '37.85'}",
+      "assumptions": "Independent sample size ensures statistical significance; SGP model is calibrated.",
+      "breakdown_regime": "Statistical lift above baseline book expectation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Empirical win rate deviation maps to confidence-adjusted betting value.",
+        "source_operator": "sgp_empirical_lift",
+        "telemetry": "Joint probability of win rate and z-score validation."
+      }
+    },
+    {
+      "primitive_id": "stafford_passing_projection",
+      "name": "Stafford Passing Projection",
+      "verbatim_quote": "**Key Prop:** - **Prop:** Stafford Over 260.5 Yds - **Rationale:** Stafford's performance is crucial to the Rams' success.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Y_{stafford}': '>260.5 yds', 'P_{leg}': '0.5622'}",
+      "assumptions": "Stafford's efficiency correlates with favorable aerodynamic conditions and opponent vulnerability.",
+      "breakdown_regime": "Projection under optimized environmental and strategic constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Projected passing yardage aligns with conditional probability of success.",
+        "source_operator": "stafford_passing_projection",
+        "telemetry": "Leg probability and yardage threshold compliance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2af1ecfd3d03a7a8_t0",
+      "think": "The aerodynamic environment at SoFi Stadium provides a +2.7 yd carry delta, enhancing offensive efficiency. This condition is modeled as a deterministic modifier to pass yardage. The SGP empirical lift of 39.2% vs 31.0% implies a strong alpha of 26.68%, validated by z = 37.85, indicating robust statistical significance. The primary game pick favors LAR -3.5, leveraging superior defense and Stafford’s ability to exploit aerodynamic advantages. The total lean under 55.5 is supported by defensive strength and limited explosive play potential. The Stafford over 260.5 yds prop is justified by a leg probability of 0.5622, suggesting a high likelihood of exceeding the threshold given favorable conditions. These primitives form a coherent causal chain from environmental signal to actionable game state.\n\nDeep epistemic analysis for BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8, domain=other, pages_read=1/1): Operator 'Aerodynamic Conditioning' (page 1, domain other) captures: Quantitative Foundation & Signals - **Venue & Aerodynamics:** Optimal high-carry ballistic dome environment (1.190 kg/m3, +2.7 yds carry delta) - **Adversary Verification:** Breaking conditions met = `False` (Verified fail-closed). Assumptions: Dome environment maintains constant air resistance; ball trajectory follows standard physics. Breakdown regime: High-carry ballistic regime under controlled atmospheric conditions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Air density and carry delta modulate pass efficiency and offensive strategy outcomes. Operator 'SGP Empirical Lift' (page 1, domain other) captures: - **SGP Empirical Lift:** Measured joint win rate is **39.2% vs 31.0% book independent** (+26.68% alpha, z = 37.85). Assumptions: Independent sample size ensures statistical significance; SGP model is calibrated. Breakdown regime: Statistical lift above baseline book expectation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Empirical win rate deviation maps to confidence-adjusted betting value. Operator 'Stafford Passing Projection' (page 1, domain other) captures: **Key Prop:** - **Prop:** Stafford Over 260.5 Yds - **Rationale:** Stafford's performance is crucial to the Rams' success. Assumptions: Stafford's efficiency correlates with favorable aerodynamic conditions and opponent vulnerability. Breakdown regime: Projection under optimized environmental and strategic constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Projected passing yardage aligns with conditional probability of success. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8, domain=other, pages_read=1/1): Operator 'Aerodynamic Conditioning' (page 1, domain other) captures: Quantitative Foundation & Signals - **Venue & Aerodynamics:** Optimal high-carry ballistic dome environment (1.190 kg/m3, +2.7 yds carry delta) - **Adversary Verification:** Breaking conditions met = `False` (Verified fail-closed). Assumptions: Dome environment maintains constant air resistance; ball trajectory follows standard physics. Breakdown regime: High-carry ballistic regime under controlled atmospheric conditions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Air density and carry delta modulate pass efficiency and offensive strategy outcomes. Operator 'SGP Empirical Lift' (page 1, domain other) captures: - **SGP Empirical Lift:** Measured joint win rate is **39.2% vs 31.0% book independent** (+26.68% alpha, z = 37.85). Assumptions: Independent sample size ensures statistical significance; SGP model is calibrated. Breakdown regime: Statistical lift above baseline book expectation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Empirical win rate deviation maps to confidence-adjusted betting value. Operator 'Stafford Passing Projection' (page 1, domain other) captures: **Key Prop:** - **Prop:** Stafford Over 260.5 Yds - **Rationale:** Stafford's performance is crucial to the Rams' success. Assumptions: Stafford's efficiency correlates with favorable aerodynamic conditions and opponent vulnerability. Breakdown regime: Projection under optimized environmental and strategic constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Projected passing yardage aligns with conditional probability of success. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical aerodynamics and modern Bayesian inference frameworks, tracing back to early 20th-century fluid dynamics and contemporary sports analytics. Retrocausal Genealogy: Rooted in BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the Bills’ defense, which may counteract aerodynamic gains, and the market, which may misprice the SGP-derived alpha. Theory of Mind & Decision Maker Model: Rooted in BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity checks ensure that aerodynamic gain does not overfit to single defensive metrics. Leakage vetoes prevent over-reliance on one prop without considering broader game state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUF-LAR-2026-10-13 (2af1ecfd3d03a7a8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

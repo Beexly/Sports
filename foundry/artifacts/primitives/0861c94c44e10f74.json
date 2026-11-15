@@ -1,0 +1,78 @@
+{
+  "book_id": "0861c94c44e10f74",
+  "source_status": "COMPLETE",
+  "title": "NIGHT-SUMMARY-2026-10-23-0850-v3",
+  "file_name": "NIGHT-SUMMARY-2026-10-23-0850-v3.md",
+  "sha256": "0861c94c44e10f741205ed03d531a3d94042a4412a20a9f41633af882d1483c3",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The transition from confidence-based to market-fair-probability sorting represents a fundamental isomorphism between empirical calibration and information-theoretic ordering. By abandoning unstable team-aggregate priors, the primitive enforces a strict measure-concentration regime where ranking operators are strictly bounded by observed outcome frequencies rather than latent feature hallucinations.",
+  "gsi_mapping": "Within GSI, this maps directly to conformal prediction sets anchored on `marketFairProb`. The documented ECE reduction (0.1079 to 0.0202) signifies a collapse of epistemic variance. Bayesian updates must treat the market probability as the dominant prior, applying the QB-WR/TE copula ($\\theta \\approx 0.8$) only as a localized conditional perturbation.",
+  "gse_mapping": "For GSE state-transitions, the kneeldown mass operator dictates discrete score-delta distributions via $P(\\text{enter})$, rejecting flat integer shifts. Situational reasoning explicitly vetoes binary attrition triggers (e.g., 2-ILB), replacing them with continuous point-weighting (+2 to +3). This ensures the game engine respects non-linear availability dynamics over rigid boolean flags.",
+  "primitives": [
+    {
+      "primitive_id": "market_fair_prob_sort",
+      "name": "Market Fair Probability Sort Operator",
+      "verbatim_quote": "**Sort by marketFairProb, keep confidence as a visible fallback** (c15).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "marketFairProb: dimensionless probability scalar [0,1]; confidence: model-generated dimensionless scalar [0,1]",
+      "assumptions": "Market probabilities aggregate available information more efficiently than internal model confidence scores; outcome correlation is strictly monotonic with marketFairProb.",
+      "breakdown_regime": "Fails if market liquidity dries up or if the underlying market mechanism suffers from systemic arbitrage failure, causing ECE to exceed 0.03.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps internal belief states to external consensus measures, enforcing calibration bounds.",
+        "source_operator": "market_fair_prob_sort",
+        "telemetry": "Empirical Calibration Error (ECE) < 0.03; Brier score improvement > 0.038"
+      }
+    },
+    {
+      "primitive_id": "kneeldown_mass_distribution",
+      "name": "Kneeldown Mass Distribution Operator",
+      "verbatim_quote": "Kneeldown mass -1.06, mixture {0,-1,-2...}, applied via P(enter) not a flat -2.5 (c1).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "mass: expected value of score delta (-1.06 points); P(enter): dimensionless probability of entering kneeldown state; mixture: discrete set of integer score deltas",
+      "assumptions": "Game-ending clock management follows a probabilistic mixture distribution rather than a deterministic fixed-point deduction.",
+      "breakdown_regime": "Breaks down in non-standard rule sets or overtime scenarios where standard kneeldown heuristics do not apply.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Translates situational game-clock states into probabilistic score adjustments for the simulation engine.",
+        "source_operator": "kneeldown_mass_distribution",
+        "telemetry": "Observed average kneeldown score delta vs simulated expectation"
+      }
+    },
+    {
+      "primitive_id": "qb_wrte_copula_joint",
+      "name": "QB-WR/TE Copula Joint Operator",
+      "verbatim_quote": "One positive copula at θ≈.8 for QB↔WR/TE SGP joints; no family branching (c9–c11).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "θ: dimensionless copula dependence parameter (~0.8); SGP: dimensionless skill/performance probability scalar",
+      "assumptions": "Quarterback and receiver/tight end performance metrics exhibit strong positive dependence, independent of specific roster family structures.",
+      "breakdown_regime": "Singularities arise if offensive scheme entirely decouples QB and WR/TE usage (e.g., run-heavy draw plays).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models multi-agent dependency structures within the offensive unit without over-parameterizing family trees.",
+        "source_operator": "qb_wrte_copula_joint",
+        "telemetry": "Joint tail-dependence of QB and WR/TE fantasy/output scoring"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0861c94c44e10f74_t0",
+      "think": "The overnight run across fifteen cycles exposes a profound structural fragility in traditional sports modeling: the reliance on internal confidence metrics and complex team-aggregate priors. The empirical data demonstrates that these constructs have 'died or gone unstable,' leading to severe miscalibration (ECE 0.1079). The pivot to `marketFairProb` as the primary sort key is not merely a heuristic adjustment but a rigorous enforcement of information efficiency. By aligning the ranking operator with the market's aggregated probability distribution, the system achieves a dramatic reduction in Brier score (0.038 improvement) and establishes honest reliability above the median. \n\nSimultaneously, the survival of the kneeldown mass operator highlights the necessity of discrete mixture models over flat integer approximations in game-state transitions. Applying a -1.06 mass via $P(\\text{enter})$ captures the nuanced reality of clock-management strategies better than a blunt -2.5 deduction. Furthermore, the persistence of the QB-WR/TE copula ($\\theta \\approx 0.8$) validates the existence of deep, structural dependencies between offensive skill positions, independent of superficial roster classifications. The rejection of the 2-ILB attrition trigger in favor of a soft point-weighting (+2 to +3) further underscores a shift away from brittle, binary logical gates toward continuous, probabilistic impact assessments. Ultimately, the largest measurable win stems from recognizing that the intelligence layer was operating at the wrong altitude—attempting to predict outcomes from noisy features rather than leveraging the calibrated consensus already embedded in market probabilities.\n\nDeep epistemic analysis for NIGHT-SUMMARY-2026-10-23-0850-v3 (0861c94c44e10f74, domain=other, pages_read=1/1): Operator 'Market Fair Probability Sort Operator' (page 1, domain other) captures: **Sort by marketFairProb, keep confidence as a visible fallback** (c15). Assumptions: Market probabilities aggregate available information more efficiently than internal model confidence scores; outcome correlation is strictly monotonic with marketFairProb. Breakdown regime: Fails if market liquidity dries up or if the underlying market mechanism suffers from systemic arbitrage failure, causing ECE to exceed 0.03. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps internal belief states to external consensus measures, enforcing calibration bounds. Operator 'Kneeldown Mass Distribution Operator' (page 1, domain other) captures: Kneeldown mass -1.06, mixture {0,-1,-2...}, applied via P(enter) not a flat -2.5 (c1). Assumptions: Game-ending clock management follows a probabilistic mixture distribution rather than a deterministic fixed-point deduction. Breakdown regime: Breaks down in non-standard rule sets or overtime scenarios where standard kneeldown heuristics do not apply. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Translates situational game-clock states into probabilistic score adjustments for the simulation engine. Operator 'QB-WR/TE Copula Joint Operator' (page 1, domain other) captures: One positive copula at θ≈.8 for QB↔WR/TE SGP joints; no family branching (c9–c11). Assumptions: Quarterback and receiver/tight end performance metrics exhibit strong positive dependence, independent of specific roster family structures. Breakdown regime: Singularities arise if offensive scheme entirely decouples QB and WR/TE usage (e.g., run-heavy draw plays). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models multi-agent dependency structures within the offensive unit without over-parameterizing family trees. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NIGHT-SUMMARY-2026-10-23-0850-v3 (0861c94c44e10f74, domain=other, pages_read=1/1): Operator 'Market Fair Probability Sort Operator' (page 1, domain other) captures: **Sort by marketFairProb, keep confidence as a visible fallback** (c15). Assumptions: Market probabilities aggregate available information more efficiently than internal model confidence scores; outcome correlation is strictly monotonic with marketFairProb. Breakdown regime: Fails if market liquidity dries up or if the underlying market mechanism suffers from systemic arbitrage failure, causing ECE to exceed 0.03. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps internal belief states to external consensus measures, enforcing calibration bounds. Operator 'Kneeldown Mass Distribution Operator' (page 1, domain other) captures: Kneeldown mass -1.06, mixture {0,-1,-2...}, applied via P(enter) not a flat -2.5 (c1). Assumptions: Game-ending clock management follows a probabilistic mixture distribution rather than a deterministic fixed-point deduction. Breakdown regime: Breaks down in non-standard rule sets or overtime scenarios where standard kneeldown heuristics do not apply. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Translates situational game-clock states into probabilistic score adjustments for the simulation engine. Operator 'QB-WR/TE Copula Joint Operator' (page 1, domain other) captures: One positive copula at θ≈.8 for QB↔WR/TE SGP joints; no family branching (c9–c11). Assumptions: Quarterback and receiver/tight end performance metrics exhibit strong positive dependence, independent of specific roster family structures. Breakdown regime: Singularities arise if offensive scheme entirely decouples QB and WR/TE usage (e.g., run-heavy draw plays). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models multi-agent dependency structures within the offensive unit without over-parameterizing family trees. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This evolution mirrors the historical shift in quantitative finance from complex, over-parameterized stochastic volatility models to robust, market-implied volatility surfaces. Just as options traders abandoned internal variance forecasts for implied volatilities derived from option prices, this framework abandons internal confidence scores for `marketFairProb`. It also echoes the adoption of copulas in risk management, where modeling joint tail dependencies (like QB-WR performance) became paramount over assuming multivariate normality across independent asset classes.",
+      "theory_of_mind": "The model implicitly treats the betting market as a highly sophisticated, distributed cognitive agent that has already processed all relevant public and semi-public information. By sorting on `marketFairProb`, the system acknowledges that the market's 'belief state' is superior to its own isolated inference engine. Conversely, opposing agents (coaches, players) are modeled through their strategic responses to state constraints (e.g., kneeldown probabilities) rather than as static entities governed by rigid positional attrition rules.",
+      "cross_layer_veto": "A strict veto is placed on any feature engineering that attempts to re-introduce binary attrition flags (like the 2-ILB trigger) or rely on unfalsifiable team-aggregate claims. If the ECE drifts above 0.03 following the sort-key change, an immediate revert protocol is triggered. Furthermore, any attempt to branch the QB-WR/TE copula by family structure is explicitly forbidden, preserving the isomorphism's parsimony and preventing overfitting to sparse roster configurations."
+    }
+  ]
+}

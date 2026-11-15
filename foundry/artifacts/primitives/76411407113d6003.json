@@ -1,0 +1,78 @@
+{
+  "book_id": "76411407113d6003",
+  "source_status": "COMPLETE",
+  "title": "LAUNCH_CALIBRATION_COHORT_2026-09-12",
+  "file_name": "LAUNCH_CALIBRATION_COHORT_2026-09-12.md",
+  "sha256": "76411407113d600322a1fad1edb0eb05956415d843a1a4fb3547ab34aa5081a6",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Market anchoring via odds-table resolution, single-book fallback, and receipt-based calibration define probabilistic coherence in live calibration. Universal Lens: Rooted in LAUNCH_CALIBRATION_COHORT_2026-09-12 (76411407113d6003), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian posterior inference over market anchors using conformal prediction bounds on calibrated probabilities from multi-book odds. GSI Mapping: Rooted in LAUNCH_CALIBRATION_COHORT_2026-09-12 (76411407113d6003), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions driven by bookmaker snapshot consistency and receipt demotion logic under temporal alignment constraints. GSE Mapping: Rooted in LAUNCH_CALIBRATION_COHORT_2026-09-12 (76411407113d6003), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "market_anchoring_resolution",
+      "name": "Market Anchoring Resolution",
+      "verbatim_quote": "Resolution order (live-calibration-p.ts): odds-table resolver first (two or more books; exactly one book resolves as `resolver_single_book`), then proof receipt marketFairProb, then factor-breakdown market fair.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_market': 'dimensionless probability anchored to market consensus', 'p_receipt': 'dimensionless probability derived from receipt', 'p_odds_table': 'dimensionless probability from odds table'}",
+      "assumptions": "Odds table contains at least two books; single-book case resolves uniquely.",
+      "breakdown_regime": "When odds table lacks sufficient coverage or receipt is absent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Market anchoring maps to Bayesian evidence aggregation across bookmakers.",
+        "source_operator": "market_anchoring_resolution",
+        "telemetry": "Brier score and ECE of resolved probabilities."
+      }
+    },
+    {
+      "primitive_id": "single_book_policy",
+      "name": "Single Book Policy",
+      "verbatim_quote": "Single-book policy (C-110, 2026-09-06): a receipt-less pick whose game has exactly one real book at/before generatedAt is scored on that book's proportionally de-vigged price, tagged `market_p_single_book`, reported separately from `market_p_from_odds_table`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_single_book': 'dimensionless probability from single book', 'p_devigged': 'de-vigged odds converted to implied probability'}",
+      "assumptions": "Exactly one book exists for the game at or before pick generation time.",
+      "breakdown_regime": "When no receipt is available but a single book exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from market anchoring when resolution fails due to insufficient data.",
+        "source_operator": "single_book_policy",
+        "telemetry": "Proportion of picks scored via single-book fallback."
+      }
+    },
+    {
+      "primitive_id": "snapshot_consistency_rule",
+      "name": "Snapshot Consistency Rule",
+      "verbatim_quote": "Snapshot rule per real book: latest H2H row with fetchedAt at or before the pick's generatedAt; rows after generatedAt are never read.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_generated': 'timestamp of pick generation', 't_fetched': 'timestamp of book fetch', 'row_t': 'timestamp of row used for snapshot'}",
+      "assumptions": "Book data is timestamped and rows are ordered chronologically.",
+      "breakdown_regime": "When multiple snapshots exist for a given book.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Temporal alignment ensures causal consistency between picks and book data.",
+        "source_operator": "snapshot_consistency_rule",
+        "telemetry": "Temporal lag between generatedAt and fetchedAt."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "76411407113d6003_t0",
+      "think": "Market anchoring resolution defines a hierarchical probabilistic inference pipeline where odds tables provide primary estimates, receipts refine them, and factor breakdowns offer secondary validation. The system assumes at least two books for resolution; otherwise, single-book fallback applies. Temporal consistency is enforced through snapshot rules ensuring data integrity. These primitives form a dual structure: one for probabilistic estimation (anchoring), another for robustness (single-book fallback). Failure modes include receipt absence, insufficient bookmakers, and temporal misalignment. The system avoids cross-layer contamination by enforcing strict separation between different data sources and methods. The dual nature of these operators reflects a duality in information theory—estimation vs. validation—ensuring that each step in the pipeline is both mathematically sound and operationally verifiable.\n\nDeep epistemic analysis for LAUNCH_CALIBRATION_COHORT_2026-09-12 (76411407113d6003, domain=other, pages_read=3/3): Operator 'Market Anchoring Resolution' (page 1, domain other) captures: Resolution order (live-calibration-p.ts): odds-table resolver first (two or more books; exactly one book resolves as `resolver_single_book`), then proof receipt marketFairProb, then factor-breakdown market fair. Assumptions: Odds table contains at least two books; single-book case resolves uniquely. Breakdown regime: When odds table lacks sufficient coverage or receipt is absent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Market anchoring maps to Bayesian evidence aggregation across bookmakers. Operator 'Single Book Policy' (page 1, domain other) captures: Single-book policy (C-110, 2026-09-06): a receipt-less pick whose game has exactly one real book at/before generatedAt is scored on that book's proportionally de-vigged price, tagged `market_p_single_book`, reported separately from `market_p_from_odds_table`. Assumptions: Exactly one book exists for the game at or before pick generation time. Breakdown regime: When no receipt is available but a single book exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from market anchoring when resolution fails due to insufficient data. Operator 'Snapshot Consistency Rule' (page 2, domain other) captures: Snapshot rule per real book: latest H2H row with fetchedAt at or before the pick's generatedAt; rows after generatedAt are never read. Assumptions: Book data is timestamped and rows are ordered chronologically. Breakdown regime: When multiple snapshots exist for a given book. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal alignment ensures causal consistency between picks and book data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LAUNCH_CALIBRATION_COHORT_2026-09-12 (76411407113d6003, domain=other, pages_read=3/3): Operator 'Market Anchoring Resolution' (page 1, domain other) captures: Resolution order (live-calibration-p.ts): odds-table resolver first (two or more books; exactly one book resolves as `resolver_single_book`), then proof receipt marketFairProb, then factor-breakdown market fair. Assumptions: Odds table contains at least two books; single-book case resolves uniquely. Breakdown regime: When odds table lacks sufficient coverage or receipt is absent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Market anchoring maps to Bayesian evidence aggregation across bookmakers. Operator 'Single Book Policy' (page 1, domain other) captures: Single-book policy (C-110, 2026-09-06): a receipt-less pick whose game has exactly one real book at/before generatedAt is scored on that book's proportionally de-vigged price, tagged `market_p_single_book`, reported separately from `market_p_from_odds_table`. Assumptions: Exactly one book exists for the game at or before pick generation time. Breakdown regime: When no receipt is available but a single book exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from market anchoring when resolution fails due to insufficient data. Operator 'Snapshot Consistency Rule' (page 2, domain other) captures: Snapshot rule per real book: latest H2H row with fetchedAt at or before the pick's generatedAt; rows after generatedAt are never read. Assumptions: Book data is timestamped and rows are ordered chronologically. Breakdown regime: When multiple snapshots exist for a given book. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Temporal alignment ensures causal consistency between picks and book data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference and modern conformal prediction frameworks, this structure builds upon prior work in probabilistic forecasting and market consensus modeling from 2020–2025. Retrocausal Genealogy: Rooted in LAUNCH_CALIBRATION_COHORT_2026-09-12 (76411407113d6003), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in LAUNCH_CALIBRATION_COHORT_2026-09-12 (76411407113d6003), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents in this framework are modeled as bookmakers with imperfect information and varying update frequencies. The system accounts for adversarial behavior by enforcing temporal consistency and minimizing reliance on single sources. Theory of Mind & Decision Maker Model: Rooted in LAUNCH_CALIBRATION_COHORT_2026-09-12 (76411407113d6003), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that no two methods operate on overlapping data points. Leakage is prevented by strict separation of receipt-based and odds-table-based scoring mechanisms. Cross-Layer Veto & Anti-Leakage Check: Rooted in LAUNCH_CALIBRATION_COHORT_2026-09-12 (76411407113d6003), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in LAUNCH_CALIBRATION_COHORT_2026-09-12 (76411407113d6003), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

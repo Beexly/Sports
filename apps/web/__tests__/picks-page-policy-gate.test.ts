@@ -23,9 +23,12 @@ import { resolve } from "node:path";
 const repoRoot = resolve(__dirname, "..");
 const src = readFileSync(resolve(repoRoot, "app/picks/page.tsx"), "utf8");
 
-describe("/picks sealed-board policy contract", () => {
-  it("uses the sealed card as its only data source (no runtime picks fetch, no fabricated list)", () => {
-    expect(src).toMatch(/sealed-board\.json/);
+describe("/picks DoctrineBoard policy contract", () => {
+  it("loads the two-doctrines board via loadDoctrineBoard and verifiedLedger (no runtime picks fetch, no fabricated list)", () => {
+    expect(src).toMatch(/loadDoctrineBoard/);
+    expect(src).toMatch(/DoctrineBoardView/);
+    expect(src).toMatch(/verifiedLedger/);
+    expect(src).toMatch(/data-testid="verified-record-strip"/);
     // There must not be a JSX array literal mounting hardcoded picks.
     expect(src).not.toMatch(/picks\s*=\s*\[\s*\{/);
     // The page does not call a runtime picks endpoint or fetch at all.
@@ -33,12 +36,15 @@ describe("/picks sealed-board policy contract", () => {
     expect(src).not.toMatch(/\bfetch\(/);
   });
 
-  it("only publish-allowed PUBLISH rows can render (PASS/abstain rows are structurally excluded)", () => {
-    expect(src).toMatch(/publishAllowed && row\.decision === "PUBLISH"/);
+  it("reads entitlements server-side so viewer-gated selections are never leaked", () => {
+    expect(src).toMatch(/getUserEntitlements/);
+    expect(src).toMatch(/loadDoctrineBoard\(viewerEntitlements\)/);
   });
 
-  it("shows the seal digest so the locked card is verifiable", () => {
-    expect(src).toMatch(/card\.seal_digest/);
+  it("shows calibration progress behind the 200-bet law with /record verification links", () => {
+    expect(src).toMatch(/gate\.clvBackedSettled/);
+    expect(src).toMatch(/gate\.target/);
+    expect(src).toMatch(/href="\/record"/);
   });
 
   it("routes customers to the paid product (/packages) and the props watchlist (/props)", () => {
@@ -48,7 +54,7 @@ describe("/picks sealed-board policy contract", () => {
 
   it("carries no unearned performance copy", () => {
     expect(src).not.toMatch(/guaranteed|risk-free|sure thing|easy money/i);
-    expect(src).not.toMatch(/win\s*rate/i);
+    expect(src).not.toMatch(/win\s+rate/i);
     expect(src).not.toMatch(/no daily limit/i);
     expect(src).not.toMatch(/free sample/i);
   });

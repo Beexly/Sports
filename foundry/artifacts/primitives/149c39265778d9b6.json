@@ -1,0 +1,451 @@
+{
+ "book_id": "149c39265778d9b6",
+ "title": "An Improved Adjusted Plus-Minus Statistic for NHL Players",
+ "author": "Brian Macdonald (United States Military Academy, West Point)",
+ "year": 2011,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2011 An_Improved_Adjusted_Plus_Minus_Statististic - McDonald.pdf",
+ "source_note": "MIT Sloan Sports Analytics Conference 2011, March 4-5 Boston, 8 pages, full read via pymupdf. Identity confirmed: author Brian Macdonald, West Point (bmac@jhu.edu); the FILENAME spells 'McDonald' but the paper names Macdonald. PROVENANCE: all display equations (the WLS APM regression y=beta0+sum beta_j X_j+sum delta_j D_j+sum gamma_k G_k+eps, the zone-adjusted form, the special-teams four-variable model, and the OPM/DPM/APM aggregation) use a shifted/custom font and are reconstructed in labeled LaTeX from the unambiguous prose; clean prose quoted verbatim. Data: NHL.com detailed shift reports, 2007-08/2008-09/2009-10 seasons. Key numbers: Sedin co-activation 92% EV / 98% PP; EVAPM/60 SE 0.50-0.78 vs PPAPM/60 SE 1.13-2.23; 700-minute EV cutoff. No sportsbook lines used as model inputs.",
+ "domain": "math",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "pm_confound",
+   "name": "Raw plus/minus is team- and opponent-dependent",
+   "verbatim_quote": "a player's plus-minus is highly dependent on the team he plays for, the opponents he faces, and other variables out of his control, so it is not always a good measure of that player's individual contribution to his team.",
+   "page": 1,
+   "latex": "+/-_p=\\text{goals for}-\\text{goals against}\\big|_{p\\ \\text{on ice}}=\\text{ability}_p+\\text{context}_p",
+   "symbol_and_unit_ledger": {
+    "+/-_p": "raw plus/minus [goal differential]",
+    "context_p": "teammate/opponent/zone effects [goals]"
+   },
+   "assumptions": [
+    "Raw plus/minus aggregates everything that happens while the player is on ice",
+    "Team strength, opponent strength, and zone starts are out of the player's control"
+   ],
+   "breakdown_regime": "Without adjustment, a good player on a bad team looks bad and a mediocre player on a good team looks good; the confound is the reason APM exists.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE context confound IS this plus/minus problem: the engine's raw on-field outcome for a factor is contaminated by co-active teammates, opponents, and situation, so individual contribution must be isolated by adjustment. GSI: component output confounded by system and environment.",
+    "source_operator": "pm_confound",
+    "telemetry": "raw vs adjusted contribution; context residual"
+   }
+  },
+  {
+   "primitive_id": "apm_independence",
+   "name": "APM isolates contribution independent of teammates/opponents",
+   "verbatim_quote": "each player's APM is independent of the strength of that player's teammates and opponents.",
+   "page": 1,
+   "latex": "\\text{APM}_p=\\hat\\beta_p\\ \\text{from regression controlling for all co-active players}",
+   "symbol_and_unit_ledger": {
+    "APM_p": "adjusted plus/minus [goals per 60 or per season]",
+    "beta_p": "regression coefficient [goals/60min]"
+   },
+   "assumptions": [
+    "A regression with presence indicators for all teammates and opponents isolates each player",
+    "The coefficient is the marginal contribution holding context fixed"
+   ],
+   "breakdown_regime": "Independence holds only to the extent the design matrix is identifiable; perfectly collinear players (always together) cannot be separated.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE confound-adjusted attribution IS APM: the engine regresses outcomes on factor-presence indicators controlling for all co-active factors, so each factor's coefficient is its marginal contribution independent of context. GSI: marginal attribution via regression on collinear presence indicators.",
+    "source_operator": "apm_independence",
+    "telemetry": "APM coefficient; teammate/opponent-controlled estimate"
+   }
+  },
+  {
+   "primitive_id": "teammate_opponent_effect",
+   "name": "Good teammates raise, good opponents lower raw +/-",
+   "verbatim_quote": "Playing with very good players will tend to raise a player's plus-minus, while playing against very good players will tend to lower a player's plus-minus.",
+   "page": 1,
+   "latex": "\\frac{\\partial(+/-_p)}{\\partial(\\text{teammate quality})}>0;\\quad \\frac{\\partial(+/-_p)}{\\partial(\\text{opponent quality})}<0",
+   "symbol_and_unit_ledger": {
+    "teammate quality": "co-active teammate strength [goals]",
+    "opponent quality": "opposing strength [goals]"
+   },
+   "assumptions": [
+    "The direction of the bias is predictable: positive from teammates, negative from opponents",
+    "This is why raw +/- misranks players across different team contexts"
+   ],
+   "breakdown_regime": "The bias direction is systematic, so cross-team raw +/- comparisons are invalid without adjustment for both teammate and opponent quality.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE signed context bias IS this directional effect: the engine knows the sign of each confound (co-active quality inflates, opposition quality deflates) and corrects accordingly rather than treating context as symmetric noise. GSI: signed bias correction for known confound directions.",
+    "source_operator": "teammate_opponent_effect",
+    "telemetry": "teammate-quality slope; opponent-quality slope; bias direction"
+   }
+  },
+  {
+   "primitive_id": "special_teams_bias",
+   "name": "Mixing game states unfairly rates special-teams players",
+   "verbatim_quote": "players who spend a lot of time on the power play would have unfairly high ratings, while players who play during shorthanded situations would have unfairly low ratings.",
+   "page": 2,
+   "latex": "\\text{single-state model}\\Rightarrow \\text{PP players inflated},\\ \\text{SH players deflated}",
+   "symbol_and_unit_ledger": {
+    "PP": "power play (man advantage) [state]",
+    "SH": "shorthanded (man disadvantage) [state]"
+   },
+   "assumptions": [
+    "Power play and shorthanded are structurally different scoring environments",
+    "A single even-strength model misattributes state advantage to player skill"
+   ],
+   "breakdown_regime": "Pooling states confounds situational advantage with ability; separate state-specific models are required, the hockey analogue of situation-specific normalization.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE state-specific normalization IS this special-teams separation: the engine models each game state (power play, shorthanded, even strength; or red-zone, two-minute, garbage-time) separately so situational advantage is not mistaken for factor skill. GSI: stratify by operating regime before attribution.",
+    "source_operator": "special_teams_bias",
+    "telemetry": "per-state ratings; state-advantage vs skill separation"
+   }
+  },
+  {
+   "primitive_id": "shift_definition",
+   "name": "Shift = no-substitution interval (the observation unit)",
+   "verbatim_quote": "A shift is considered to be a period of time on the ice when no substitutions are made.",
+   "page": 3,
+   "latex": "\\text{shift}=[t_{\\text{start}},t_{\\text{end}}]\\ \\text{with constant on-ice personnel}",
+   "symbol_and_unit_ledger": {
+    "shift": "interval of fixed personnel [time]"
+   },
+   "assumptions": [
+    "A shift ends at any substitution",
+    "The on-ice player set is constant within a shift, defining the regression observation"
+   ],
+   "breakdown_regime": "Shifts are the atomic unit where the presence-indicator design is well-defined; crossing a substitution boundary mixes two different player sets.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE constant-personnel interval IS the shift: the engine defines its attribution observation as an interval with a fixed set of active factors (a drive with constant personnel), so the presence design is well-defined and not blurred across substitutions. GSI: fixed-configuration observation window.",
+    "source_operator": "shift_definition",
+    "telemetry": "shift boundaries; constant on-ice set; substitution events"
+   }
+  },
+  {
+   "primitive_id": "shift_weighting",
+   "name": "Observations weighted by shift duration",
+   "verbatim_quote": "Each observation is weighted by the duration of the shift.",
+   "page": 3,
+   "latex": "\\min_{\\beta}\\sum_{s} w_s\\,(y_s-\\hat y_s)^2,\\quad w_s=\\text{duration}(s)",
+   "symbol_and_unit_ledger": {
+    "w_s": "shift duration weight [time]",
+    "y_s": "goals in shift s [goals]"
+   },
+   "assumptions": [
+    "Longer shifts carry more information and get more weight",
+    "Weighted least squares rather than ordinary least squares"
+   ],
+   "breakdown_regime": "Duration weighting assumes goal rate is constant within a shift; very short shifts contribute little and very long shifts dominate, so the weighting encodes exposure.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE exposure weighting IS shift-duration WLS: the engine weights each observation by its exposure time so longer, more-informative intervals count more, the weighted-least-squares discipline for rate estimation. GSI: exposure-weighted regression.",
+    "source_operator": "shift_weighting",
+    "telemetry": "shift-duration weights; WLS objective; exposure proportionality"
+   }
+  },
+  {
+   "primitive_id": "two_obs_per_shift",
+   "name": "Two observations per shift (home and away offense)",
+   "verbatim_quote": "For each shift, we get two observations in this model, one corresponding to the offensive output of the home team, and one corresponding offensive output of the away team.",
+   "page": 3,
+   "latex": "\\text{shift}\\Rightarrow (y_{\\text{home offense}},\\ y_{\\text{away offense}})",
+   "symbol_and_unit_ledger": {
+    "y_home/away": "goals scored by each team during the shift [goals]"
+   },
+   "assumptions": [
+    "Each shift produces a home-offense and an away-offense observation",
+    "The same on-ice personnel serve as offense for one team and defense for the other"
+   ],
+   "breakdown_regime": "The dual observation doubles the data and ties offense and defense coefficients through the same shift; it assumes the two outputs are modeled consistently.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE dual-sided observation IS this structure: each interval yields two observations (one per side), so the engine learns offense and defense coefficients jointly from the same context, doubling information and coupling the two sides. GSI: paired observations from a single interaction event.",
+    "source_operator": "two_obs_per_shift",
+    "telemetry": "home/away offense observations per shift; coupled off/def estimation"
+   }
+  },
+  {
+   "primitive_id": "goalie_offense_negligible",
+   "name": "Goalie offense impact assumed negligible",
+   "verbatim_quote": "we assume that a goalie's impact on offense is negligible.",
+   "page": 3,
+   "latex": "\\beta_{\\text{goalie,offense}}=0;\\quad \\text{goalie has only defensive variables}",
+   "symbol_and_unit_ledger": {
+    "beta_goalie,offense": "goalie offensive coefficient [goals/60min] (set to 0)"
+   },
+   "assumptions": [
+    "Goalies contribute only on defense in the model",
+    "Skaters have offense and defense variables; goalies have defense only"
+   ],
+   "breakdown_regime": "The negligible-offense assumption is a structural simplification; a goalie's puck-handling could have a small offensive effect the model ignores.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE structural zero constraint IS this goalie assumption: the engine zeroes out factor contributions that are structurally negligible (a factor that cannot affect one side), reducing parameters and encoding domain knowledge as a hard constraint. GSI: domain-informed parameter fixing.",
+    "source_operator": "goalie_offense_negligible",
+    "telemetry": "goalie offense coefficient fixed at 0; structural sparsity"
+   }
+  },
+  {
+   "primitive_id": "four_vars_special",
+   "name": "Special teams: four variables per skater",
+   "verbatim_quote": "Instead of having two variables in the model for each skater, like we did in the even strength model, each skater will have four variables.",
+   "page": 3,
+   "latex": "\\text{skater vars}=\\{X^{pp},D^{pp},X^{sh},D^{sh}\\};\\quad \\text{goalie vars}=\\{G^{pp},G^{sh}\\}",
+   "symbol_and_unit_ledger": {
+    "X^pp,D^pp": "power-play offense/defense indicators [dimensionless]",
+    "X^sh,D^sh": "shorthanded offense/defense indicators [dimensionless]"
+   },
+   "assumptions": [
+    "Each skater gets offense and defense variables for both power play and shorthanded",
+    "Each goalie gets a defense variable for each special-teams state"
+   ],
+   "breakdown_regime": "More variables per player means more parameters to estimate from less special-teams data, which is why special-teams estimates are noisier.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE state-expanded design IS this four-variable structure: the engine expands each factor's presence indicators across game states so state-specific contributions are estimated separately, accepting the parameter-count cost against thinner per-state data. GSI: state-stratified design matrix expansion.",
+    "source_operator": "four_vars_special",
+    "telemetry": "per-state indicator count; parameter inflation vs data sparsity"
+   }
+  },
+  {
+   "primitive_id": "aggregation",
+   "name": "Per-60 components aggregate to per-season OPM/DPM/APM",
+   "verbatim_quote": "These converted results for even strength, power play, and shorthanded situations can be added to give the offensive (OPM), defensive (DPM), and total (APM) contributions of a player in all situations in terms of goals per season.",
+   "page": 2,
+   "latex": "\\mathrm{OPM}=\\mathrm{EVOPM}+\\mathrm{PPOPM}+\\mathrm{SHOPM};\\quad \\mathrm{APM}=\\mathrm{OPM}+\\mathrm{DPM}",
+   "symbol_and_unit_ledger": {
+    "OPM/DPM/APM": "offensive/defensive/total plus-minus [goals per season]",
+    "EV/PP/SH": "even-strength/power-play/shorthanded components [goals]"
+   },
+   "assumptions": [
+    "Per-60 rates are converted to per-season by multiplying by minutes played in each state",
+    "Components are additive across states and across offense/defense"
+   ],
+   "breakdown_regime": "Additivity assumes the state components are independent contributions; the per-60 to per-season conversion requires accurate state-specific minutes.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE additive component aggregation IS this OPM/DPM/APM structure: the engine sums state-specific and side-specific marginal contributions into a total per-season value, converting rates to totals via exposure, so the final valuation is a transparent sum of interpretable parts. GSI: additive decomposition of total contribution.",
+    "source_operator": "aggregation",
+    "telemetry": "OPM/DPM/APM components; per-60 to per-season conversion; additivity"
+   }
+  },
+  {
+   "primitive_id": "sedin_collinearity",
+   "name": "Always-together players cannot be separated (collinearity)",
+   "verbatim_quote": "The high errors are due to the fact that the twin brothers spend almost all of their time on the ice playing together, and the model has difficulty separating the contribution of the two players.",
+   "page": 5,
+   "latex": "\\mathrm{corr}(\\text{presence}_{\\text{Henrik}},\\text{presence}_{\\text{Daniel}})\\approx1\\Rightarrow \\mathrm{Var}(\\hat\\beta)\\to\\infty",
+   "symbol_and_unit_ledger": {
+    "presence": "on-ice indicator [dimensionless]",
+    "Var(beta_hat)": "coefficient variance [goals^2]"
+   },
+   "assumptions": [
+    "The Sedin twins play almost all their minutes together",
+    "Near-perfect collinearity inflates standard errors and prevents individual separation"
+   ],
+   "breakdown_regime": "This is the fundamental identifiability limit of APM: factors that always co-activate cannot be individually attributed, no matter the sample size.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE collinearity identifiability limit IS the Sedin case: the engine recognizes that factors which always activate together cannot be separately attributed, and reports high uncertainty rather than a false precise split. GSI: identifiability failure under near-perfect collinearity.",
+    "source_operator": "sedin_collinearity",
+    "telemetry": "presence correlation; coefficient standard error; separability flag"
+   }
+  },
+  {
+   "primitive_id": "sedin_pct",
+   "name": "Quantified co-activation: 92% EV, 98% PP",
+   "verbatim_quote": "Daniel spent 92% of his time at even strength and 98% of his time on the power play playing with Henrik.",
+   "page": 5,
+   "latex": "\\Pr(\\text{Henrik on}\\mid\\text{Daniel on})=0.92\\ (\\text{EV}),\\ 0.98\\ (\\text{PP})",
+   "symbol_and_unit_ledger": {
+    "conditional presence": "probability teammate on ice given player on ice [probability]"
+   },
+   "assumptions": [
+    "Co-activation is measured as the fraction of minutes played together",
+    "92% even strength and 98% power play for the Sedin twins"
+   ],
+   "breakdown_regime": "These conditional-presence fractions quantify the collinearity; the closer to 1, the less separable the pair, giving a concrete diagnostic threshold.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE co-activation diagnostic IS this conditional-presence measure: the engine quantifies how often two factors co-activate as a separability diagnostic, flagging pairs above a threshold as non-attributable individually. GSI: conditional co-occurrence as an identifiability metric.",
+    "source_operator": "sedin_pct",
+    "telemetry": "conditional-presence fraction; co-activation threshold; separability diagnostic"
+   }
+  },
+  {
+   "primitive_id": "special_teams_noisier",
+   "name": "Special-teams estimates have much higher standard errors",
+   "verbatim_quote": "the standard errors in EVAPM/60 for a typical player are between 0.50 and 0.78, while for PPAPM/60 the errors are between 1.13 and 2.23.",
+   "page": 6,
+   "latex": "\\mathrm{SE}(\\text{EVAPM/60})\\in[0.50,0.78];\\quad \\mathrm{SE}(\\text{PPAPM/60})\\in[1.13,2.23]",
+   "symbol_and_unit_ledger": {
+    "SE": "standard error of the rate estimate [goals/60min]"
+   },
+   "assumptions": [
+    "Even strength dominates NHL ice time, so special-teams samples are much smaller",
+    "Less data plus more parameters per player yields higher special-teams uncertainty"
+   ],
+   "breakdown_regime": "Special-teams ratings are less useful precisely because their uncertainty is 2-3x the even-strength uncertainty; the engine must down-weight or shrink them.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE sample-driven uncertainty IS this SE contrast: the engine tracks that thinner-sample state-specific estimates carry 2-3x the uncertainty of the dominant-state estimates and down-weights or shrinks them accordingly. GSI: uncertainty scaling with sample sparsity.",
+    "source_operator": "special_teams_noisier",
+    "telemetry": "EV vs PP standard-error ranges; uncertainty ratio; shrinkage need"
+   }
+  },
+  {
+   "primitive_id": "se_uncertainty",
+   "name": "Standard errors quantify estimate uncertainty",
+   "verbatim_quote": "The standard errors are a measure of the uncertainty in the APM estimates",
+   "page": 5,
+   "latex": "\\mathrm{AErr}_p=\\mathrm{SE}(\\hat{\\mathrm{APM}}_p)",
+   "symbol_and_unit_ledger": {
+    "AErr": "standard error of APM [goals per season]"
+   },
+   "assumptions": [
+    "Every APM estimate is reported with a standard error",
+    "High-error players (e.g. the Sedins) have the least reliable ratings"
+   ],
+   "breakdown_regime": "Reporting a point estimate without its standard error hides reliability; the engine must carry uncertainty alongside every attribution.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE uncertainty-alongside-estimate IS this AErr discipline: the engine reports a confidence/uncertainty measure with every factor valuation so downstream gates can down-weight unreliable estimates rather than trusting point values. GSI: paired estimate-and-uncertainty reporting.",
+    "source_operator": "se_uncertainty",
+    "telemetry": "AErr per player; uncertainty-aware ranking"
+   }
+  },
+  {
+   "primitive_id": "min_minutes",
+   "name": "Minimum-minutes threshold for reliable ratings",
+   "verbatim_quote": "he still ranks in the top 30 in EVDPM/60 among players with at least 700 minutes played at even strength.",
+   "page": 6,
+   "latex": "\\text{include player iff }\\mathrm{MIN}_{\\text{EV}}\\ge700",
+   "symbol_and_unit_ledger": {
+    "MIN_EV": "even-strength minutes played [time]",
+    "700": "minimum-minutes cutoff [minutes]"
+   },
+   "assumptions": [
+    "A minimum exposure threshold filters out small-sample noise",
+    "700 even-strength minutes is used as the cutoff for the defensive ranking"
+   ],
+   "breakdown_regime": "Below the threshold the rate is dominated by sampling noise; the cutoff is the hockey analogue of the per-minute reliability gate.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE minimum-exposure gate IS this minutes threshold: the engine excludes factors below a minimum exposure from rate-based rankings so thin samples do not produce spurious extremes. GSI: minimum-sample validity gate.",
+    "source_operator": "min_minutes",
+    "telemetry": "minutes cutoff; included vs excluded player set"
+   }
+  },
+  {
+   "primitive_id": "external_validation",
+   "name": "APM validated against two-way reputation",
+   "verbatim_quote": "Pavel Datsyuk is considered by many to be the best two-way forward in the league, and his APM rating certainly supports that belief.",
+   "page": 4,
+   "latex": "\\text{APM rank}_{\\text{Datsyuk}}=1\\ \\text{corroborates best two-way reputation}",
+   "symbol_and_unit_ledger": {
+    "APM rank": "ordinal total contribution [rank]"
+   },
+   "assumptions": [
+    "The top total-APM player matches the consensus best two-way forward",
+    "External reputation serves as a sanity check on the metric"
+   ],
+   "breakdown_regime": "Reputation validation is suggestive not definitive; APM measures goal contribution which is related to but not identical to two-way reputation.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE external-ground-truth validation IS this check: the engine validates its attribution ranking against an independent external judgment (reputation, awards) so the metric is anchored to reality. GSI: validate a learned ranking against external gold standard.",
+    "source_operator": "external_validation",
+    "telemetry": "APM rank vs external reputation; corroboration"
+   }
+  },
+  {
+   "primitive_id": "offense_only_stars",
+   "name": "Total APM omits offense-only superstars",
+   "verbatim_quote": "There are some notable omissions to this list of top skaters, including Sidney Crosby, Alex Ovechkin, and Evgeni Malkin, three of the league's most recognizable superstars.",
+   "page": 4,
+   "latex": "\\text{top APM}\\ne\\text{top OPM};\\quad \\text{Crosby/Ovechkin/Malkin top OPM, not APM}",
+   "symbol_and_unit_ledger": {
+    "OPM": "offensive plus-minus [goals/season]",
+    "APM": "total plus-minus [goals/season]"
+   },
+   "assumptions": [
+    "Offense-only stars rank high in OPM but not total APM because their defense is weak",
+    "Total value requires both sides, not just scoring"
+   ],
+   "breakdown_regime": "Ranking by total APM versus OPM gives different lists; the engine must choose the objective (total vs offense-only) deliberately, not conflate them.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE objective-dependent ranking IS this APM-vs-OPM distinction: the engine's factor ranking depends on whether the objective is total contribution or one-sided contribution, and offense-only standouts can be mediocre overall, so the objective must be explicit. GSI: objective-conditioned ranking.",
+    "source_operator": "offense_only_stars",
+    "telemetry": "APM vs OPM ranking divergence; objective selection"
+   }
+  },
+  {
+   "primitive_id": "zone_adjustment",
+   "name": "Initial faceoff zone is a controlled confound",
+   "verbatim_quote": "for those shifts that begin with a faceoff, we have accounted for the zone on the ice in which a shift begins.",
+   "page": 1,
+   "latex": "y=\\dots+\\kappa_{\\text{off}}Z_{\\text{off}}+\\kappa_{\\text{def}}Z_{\\text{def}}+\\varepsilon",
+   "symbol_and_unit_ledger": {
+    "Z_off,Z_def": "offensive/defensive-zone faceoff indicators [dimensionless]",
+    "kappa": "zone-start effect [goals/60min]"
+   },
+   "assumptions": [
+    "A shift starting in the offensive zone is easier to score from than one in the defensive zone",
+    "Zone-start indicators control for this deployment advantage"
+   ],
+   "breakdown_regime": "Zone starts are a deployment choice out of the player's control; failing to control them credits players for favorable deployment, the hockey analogue of field-position adjustment.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE deployment/field-position adjustment IS this zone control: the engine controls for starting field position (or deployment) so a factor is not credited for favorable starting conditions it did not create. GSI: initial-condition confound control.",
+    "source_operator": "zone_adjustment",
+    "telemetry": "zone-start indicators; kappa zone effect; deployment adjustment"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "macdonald2011_nhl_apm",
+   "think": "This inline cycle extracts Brian Macdonald's 2011 MIT Sloan Sports Analytics Conference paper, An Improved Adjusted Plus-Minus Statistic for NHL Players, an eight-page weighted-least-squares treatment of the teammate-and-opponent confound that completes the attribution cluster begun by Kubatko's accounting layer and Piette's network layer. A provenance note: the filename spells the author McDonald but the paper itself names Brian Macdonald of the United States Military Academy at West Point, and the display equations use a shifted custom font, so they are reconstructed in labeled LaTeX from the unambiguous prose while every verbatim quote is a clean readable passage verified as an exact substring. Eighteen primitives are extracted, each with a verified quote, page anchor, reconstructed equation, symbol-and-unit ledger, assumptions, breakdown regime, and a Layer-2 mapping with telemetry. No sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from hockey's raw plus-minus through the basketball adjusted-plus-minus literature into this NHL extension. The load-bearing problem is identical to basketball: raw plus-minus is contaminated by team strength, opponent strength, and other variables out of the player's control, so it misranks individual contribution. Macdonald's contribution is to extend the even-strength regression to the states that make hockey different from basketball, namely power play and shorthanded, because hockey is not always played at even strength. The genealogy is precise about why a single pooled model fails: players who spend heavy power-play time would be unfairly inflated and shorthanded players unfairly deflated, so situational advantage would be mistaken for skill. This is the same state-stratification discipline the Foundry's football engine applies to red-zone, two-minute, and garbage-time situations, and it grounds the principle that attribution must be conditioned on the operating regime.\n\nThe recursive theory of mind models the analyst reasoning about a player whose value is a regression coefficient estimated against all co-active players. Each shift, defined as an interval with no substitutions, yields two observations, home offense and away offense, weighted by shift duration, and the design matrix carries offense, defense, and goalie presence indicators plus initial-zone faceoff indicators. The analyst must then reason about the identifiability limit: the Sedin twins spend 92 percent of even-strength and 98 percent of power-play time together, so their presence indicators are nearly collinear and the model cannot separate their contributions, producing the highest standard errors among forwards. This is a theory of mind about what can and cannot be known from co-activation data, and the analyst reports uncertainty alongside every estimate rather than a false precise split. The special-teams model expands each skater to four variables, offense and defense for power play and shorthanded, which buys state-specificity at the cost of more parameters estimated from thinner data, so special-teams standard errors run 1.13 to 2.23 against even-strength 0.50 to 0.78.\n\nThe cross-layer veto adjudication is where this book earns its place beside the accounting and network layers. The first veto is the context confound: raw on-field outcome is ability plus context, so the engine isolates marginal contribution by regressing on all co-active presence indicators, the APM discipline. The second veto is state stratification: pooling game states confounds situational advantage with skill, so the engine models each regime separately, the special-teams principle applied to football situations. The third veto is the collinearity identifiability limit: factors that always co-activate cannot be individually attributed, so the engine reports high uncertainty rather than a false split, the Sedin case. The fourth veto is exposure weighting and the minimum-minutes gate: observations are weighted by duration and thin samples below a threshold are excluded, the weighted-least-squares and reliability disciplines. The fifth veto is uncertainty-alongside-estimate and objective-dependent ranking: every valuation carries a standard error, and total versus offense-only objectives give different rankings, so the engine down-weights noisy estimates and states its objective explicitly. The zone-start control links to field-position adjustment, the external Datsyuk validation links to the anchor-to-outcome requirement, and the additive OPM/DPM/APM aggregation links to the transparent component decomposition of the Kubatko layer.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The goalie's offensive impact is fixed at zero as a structural constraint, encoding domain knowledge as parameter sparsity rather than estimating a negligible effect from noise. The per-60 rates convert to per-season totals by multiplying by state-specific minutes, and the components add across states and across offense and defense, so the final valuation is a transparent sum of interpretable parts whose additivity assumes independent state contributions. The dual observation per shift couples offense and defense estimation through the same personnel, doubling information but tying the two sides together. The initial-zone indicators control deployment advantage so a player is not credited for favorable faceoff placement he did not create. These invariants ground the engine's structural-zero constraints, exposure-based rate-to-total conversion, additive component aggregation, coupled two-sided estimation, and deployment adjustment, completing a sovereign regression-attribution layer that sits between the accounting foundation and the network significance layer above it. Read together with Kubatko's conserved possession unit and Piette's structure-preserving significance, this regression layer forms the middle rung of a coherent attribution stack: accounting defines the opportunity, regression isolates the marginal contribution within each regime, and the network tests whether that contribution exceeds chance, so the engine's valuation is grounded at every level rather than asserted.",
+   "retrocausal_genealogy": "The genealogy runs from hockey raw plus-minus through the basketball adjusted-plus-minus literature into this NHL extension. The load-bearing problem is the team/opponent confound that misranks individual contribution. Macdonald extends the even-strength regression to power play and shorthanded because hockey is not always at even strength, and a single pooled model would unfairly inflate power-play players and deflate shorthanded players, mistaking situational advantage for skill. This is the state-stratification discipline the football engine applies to red-zone, two-minute, and garbage-time. The method is weighted least squares on shift-duration-weighted observations with offense/defense/goalie presence indicators and initial-zone controls, the regression-attribution descendant of adjusted plus-minus.",
+   "theory_of_mind": "The analyst reasons about a player whose value is a regression coefficient against all co-active players. Each no-substitution shift yields home-offense and away-offense observations weighted by duration, with presence and zone indicators in the design. The analyst reasons about the identifiability limit: the Sedin twins share 92 percent even-strength and 98 percent power-play ice time, so near-collinear presence indicators prevent separation and produce the highest forward standard errors. This is a theory of mind about what co-activation data can and cannot reveal, reporting uncertainty alongside every estimate. The special-teams model expands each skater to four variables, buying state-specificity at the cost of more parameters from thinner data, so special-teams errors run 1.13-2.23 versus even-strength 0.50-0.78.",
+   "cross_layer_veto": "Five vetoes adjudicate against the accounting and network layers. Context confound: isolate marginal contribution by regressing on all co-active presence indicators. State stratification: model each game regime separately so situational advantage is not skill. Collinearity identifiability limit: always-co-activating factors cannot be individually attributed, report high uncertainty not a false split (the Sedin case). Exposure weighting and minimum-minutes gate: weight by duration and exclude thin samples. Uncertainty-alongside-estimate and objective-dependent ranking: carry a standard error with every valuation and state whether the objective is total or one-sided. Zone-start control links to field-position adjustment, Datsyuk external validation to anchor-to-outcome, and additive OPM/DPM/APM aggregation to transparent component decomposition."
+  }
+ ],
+ "universal_lens": "Macdonald 2011 contributes the regression-attribution and state-stratification layer to the Foundry stack: adjusted plus-minus as weighted-least-squares coefficients on shift-duration-weighted observations with offense/defense/goalie presence indicators and initial-zone controls, separate special-teams models so situational advantage is not mistaken for skill, additive per-60-to-per-season OPM/DPM/APM aggregation, and explicit uncertainty via standard errors. Its load-bearing invariants are the context confound, state stratification, the collinearity identifiability limit (the Sedin case), exposure weighting, the minimum-exposure gate, structural-zero constraints, and objective-dependent ranking.",
+ "gsi_mapping": "For GSI these primitives are the general regression-attribution layer: isolate a component's marginal contribution by regressing outcomes on all co-active presence indicators, stratify by operating regime before attribution so regime advantage is not skill, weight observations by exposure, fix structurally negligible contributions to zero, quantify identifiability via conditional co-activation, report uncertainty alongside every estimate, gate on minimum sample, and aggregate state-specific components additively into a transparent total. The collinearity limit and the sample-driven uncertainty scaling are first-class diagnostics.",
+ "gse_mapping": "For GSE this is the confound-adjusted factor-attribution layer between accounting and network significance: the context confound IS the co-active-factor problem, APM regression IS marginal attribution controlling for teammates/opponents, special-teams stratification IS football situation-specific modeling (red-zone/two-minute/garbage-time), the Sedin collinearity case IS the always-co-activating-factor identifiability limit, shift-duration weighting IS exposure weighting, the 700-minute cutoff IS the minimum-exposure gate, zone-start control IS field-position adjustment, AErr IS uncertainty-alongside-estimate, and OPM-vs-APM IS objective-dependent ranking. Additive aggregation links to Kubatko component decomposition and external Datsyuk validation to anchor-to-outcome. Equation reconstructions are labeled and no sportsbook line is a model input."
+}

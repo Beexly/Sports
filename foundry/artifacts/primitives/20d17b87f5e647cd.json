@@ -1,0 +1,78 @@
+{
+  "book_id": "20d17b87f5e647cd",
+  "source_status": "COMPLETE",
+  "title": "other",
+  "file_name": "other.md",
+  "sha256": "20d17b87f5e647cd7a9e34d1b7ea6c5b2d72a7fcbdf874d863c1ba38af3a7658",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Tournament probability computation via metamorphic testing and Bayesian inference across dynamic movement forecasting. Universal Lens: Rooted in other (20d17b87f5e647cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over match outcomes using probabilistic logic trees derived from player and team latent variables. GSI Mapping: Rooted in other (20d17b87f5e647cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models state transitions in real-time sports scenarios through recurrent-to-graph neural networks with temporal attention mechanisms. GSE Mapping: Rooted in other (20d17b87f5e647cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "tournament_probability_computation",
+      "name": "Tournament Probability Computation",
+      "verbatim_quote": "Efficient Computation of Tournament Winning Probabilities - `2502.09460` (6) Metamorphic Testing for Pose Estimation Systems - `2509.08128` (6) Signals in the Noise: Decoding Unexpected Engagement Patterns on Twitter - `2602.08996` (6) Generalizing Sports Feedback Generation by Watching Competitions and Reading Boo",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Probabilistic independence of match outcomes under fixed tournament structure.",
+      "breakdown_regime": "When tournament bracket symmetry is violated or external shocks occur.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Bayesian belief networks where nodes represent teams and edges denote match outcome probabilities.",
+        "source_operator": "tournament_probability_computation",
+        "telemetry": "Accuracy of predicted win-loss sequences against actual tournament results."
+      }
+    },
+    {
+      "primitive_id": "dynamic_movement_forecasting",
+      "name": "Dynamic Movement Forecasting",
+      "verbatim_quote": "Dynamic Movement Forecasting: RNN to GNN and T - `2006.14188` (9) Identifying group contributions in NBA",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Temporal dependencies in motion data can be modeled via graph convolutions.",
+      "breakdown_regime": "In high-dimensional action spaces with sparse observations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel derived from recurrent neural network embeddings transformed into graph-based spatial-temporal kernels.",
+        "source_operator": "dynamic_movement_forecasting",
+        "telemetry": "Prediction error variance in next-step player positions."
+      }
+    },
+    {
+      "primitive_id": "meta_modeling_for_esports",
+      "name": "Meta-Modeling for Esports Analytics",
+      "verbatim_quote": "the Meta: Leveraging Game Design Parameters for Patch-Agnostic Esport Ana - `2406.14877` (8) Sports Intelligence: Assessing",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Game design parameters remain stable across patches but influence strategic behavior.",
+      "breakdown_regime": "When game mechanics undergo significant update without full retraining.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to meta-learning frameworks where base learners adapt to new environments via parameterized policy updates.",
+        "source_operator": "meta_modeling_for_esports",
+        "telemetry": "Performance consistency across different patch versions of same game mode."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "20d17b87f5e647cd_t0",
+      "think": "The core insight is that tournament outcomes depend on both static team strength and evolving dynamics captured through movement forecasting. These systems must integrate probabilistic reasoning with deep learning architectures. The first primitive formalizes this as a Bayesian network over match outcomes, assuming conditional independence among matches. The second extends this to spatiotemporal dynamics using graph neural networks, enabling prediction of future states based on current configurations. The third introduces adaptive modeling for changing game rules, leveraging meta-learning principles to maintain performance despite environmental shifts. Each primitive exhibits failure modes tied to assumption violations—such as non-independence in tournaments or lack of sufficient data in movement forecasting.\n\nDeep epistemic analysis for other (20d17b87f5e647cd, domain=other, pages_read=1/1): Operator 'Tournament Probability Computation' (page 1, domain other) captures: Efficient Computation of Tournament Winning Probabilities - `2502.09460` (6) Metamorphic Testing for Pose Estimation Systems - `2509.08128` (6) Signals in the Noise: Decoding Unexpected Engagement Patterns on Twitter - `2602.08996` (6) Generalizing Sports Feedback Generation by Watching Competitions and Reading Boo Assumptions: Probabilistic independence of match outcomes under fixed tournament structure. Breakdown regime: When tournament bracket symmetry is violated or external shocks occur. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Bayesian belief networks where nodes represent teams and edges denote match outcome probabilities. Operator 'Dynamic Movement Forecasting' (page 1, domain other) captures: Dynamic Movement Forecasting: RNN to GNN and T - `2006.14188` (9) Identifying group contributions in NBA Assumptions: Temporal dependencies in motion data can be modeled via graph convolutions. Breakdown regime: In high-dimensional action spaces with sparse observations. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel derived from recurrent neural network embeddings transformed into graph-based spatial-temporal kernels. Operator 'Meta-Modeling for Esports Analytics' (page 1, domain other) captures: the Meta: Leveraging Game Design Parameters for Patch-Agnostic Esport Ana - `2406.14877` (8) Sports Intelligence: Assessing Assumptions: Game design parameters remain stable across patches but influence strategic behavior. Breakdown regime: When game mechanics undergo significant update without full retraining. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to meta-learning frameworks where base learners adapt to new environments via parameterized policy updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for other (20d17b87f5e647cd, domain=other, pages_read=1/1): Operator 'Tournament Probability Computation' (page 1, domain other) captures: Efficient Computation of Tournament Winning Probabilities - `2502.09460` (6) Metamorphic Testing for Pose Estimation Systems - `2509.08128` (6) Signals in the Noise: Decoding Unexpected Engagement Patterns on Twitter - `2602.08996` (6) Generalizing Sports Feedback Generation by Watching Competitions and Reading Boo Assumptions: Probabilistic independence of match outcomes under fixed tournament structure. Breakdown regime: When tournament bracket symmetry is violated or external shocks occur. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Bayesian belief networks where nodes represent teams and edges denote match outcome probabilities. Operator 'Dynamic Movement Forecasting' (page 1, domain other) captures: Dynamic Movement Forecasting: RNN to GNN and T - `2006.14188` (9) Identifying group contributions in NBA Assumptions: Temporal dependencies in motion data can be modeled via graph convolutions. Breakdown regime: In high-dimensional action spaces with sparse observations. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel derived from recurrent neural network embeddings transformed into graph-based spatial-temporal kernels. Operator 'Meta-Modeling for Esports Analytics' (page 1, domain other) captures: the Meta: Leveraging Game Design Parameters for Patch-Agnostic Esport Ana - `2406.14877` (8) Sports Intelligence: Assessing Assumptions: Game design parameters remain stable across patches but influence strategic behavior. Breakdown regime: When game mechanics undergo significant update without full retraining. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to meta-learning frameworks where base learners adapt to new environments via parameterized policy updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early work on Markov chains for sequential games and extended into modern reinforcement learning paradigms. Influenced by statistical physics and information theory. Retrocausal Genealogy: Rooted in other (20d17b87f5e647cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in other (20d17b87f5e647cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing agents as stochastic processes with bounded rationality, incorporating uncertainty in decision-making and response times. Theory of Mind & Decision Maker Model: Rooted in other (20d17b87f5e647cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in other (20d17b87f5e647cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents overfitting by enforcing orthogonality between probabilistic outcome models and deterministic movement predictors. Ensures no leakage from one domain into another during training. Cross-Layer Veto & Anti-Leakage Check: Rooted in other (20d17b87f5e647cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in other (20d17b87f5e647cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

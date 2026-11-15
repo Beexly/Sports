@@ -154,7 +154,7 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
       "12,304 equations wired · 25 graduate textbooks (BK-01..BK-25) · James-Stein cap 0.35",
     gridPos: { col: 2, row: 0, x: 820, y: 120 },
     accentHex: "#34d399",
-    accentClass: "border-verify/40/60 bg-verify/10/30 text-verify",
+    accentClass: "border-verify/60 bg-verify/20 text-verify",
     toolCalls: [
       {
         id: "tc-301",
@@ -873,7 +873,7 @@ export function CockpitOffice3dBotHq({
           className={[
             "rounded-xl border px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider transition-colors",
             activeTab === "hermes-bot-hq"
-              ? "border-verify/40/70 bg-verify/10/40 text-verify"
+              ? "border-verify/70 bg-verify/20 text-verify"
               : "border-titanium/40 bg-obsidian/60 text-ion-2 hover:text-ion-white",
           ].join(" ")}
         >
@@ -924,7 +924,7 @@ export function CockpitOffice3dBotHq({
                   value={pitchDeg}
                   aria-label="Camera pitch angle"
                   onChange={(e) => setPitchDeg(Number(e.target.value))}
-                  className="h-1.5 w-20 accent-sky-400"
+                  className="h-1.5 w-20 accent-plasma"
                 />
               </label>
               <label className="flex items-center gap-1.5">
@@ -936,7 +936,7 @@ export function CockpitOffice3dBotHq({
                   value={yawDeg}
                   aria-label="Camera yaw angle"
                   onChange={(e) => setYawDeg(Number(e.target.value))}
-                  className="h-1.5 w-20 accent-sky-400"
+                  className="h-1.5 w-20 accent-plasma"
                 />
               </label>
               <label className="flex items-center gap-1.5">
@@ -948,7 +948,7 @@ export function CockpitOffice3dBotHq({
                   value={zoomScale}
                   aria-label="Camera zoom scale"
                   onChange={(e) => setZoomScale(Number(e.target.value))}
-                  className="h-1.5 w-20 accent-sky-400"
+                  className="h-1.5 w-20 accent-plasma"
                 />
               </label>
             </div>
@@ -1215,7 +1215,7 @@ export function CockpitOffice3dBotHq({
                 {dispatchStatus.message && (
                   <div
                     data-testid="workstation-dispatch-receipt"
-                    className="mt-2 rounded-xl border border-verify/40/40 bg-verify/10/20 px-3 py-2 font-mono text-[10px] text-verify"
+                    className="mt-2 rounded-xl border border-verify/40 bg-verify/15 px-3 py-2 font-mono text-[10px] text-verify"
                   >
                     [{dispatchStatus.timestamp}] {dispatchStatus.message}
                   </div>
@@ -1254,7 +1254,7 @@ export function CockpitOffice3dBotHq({
               <span className="rounded border border-plasma/40 bg-plasma/15 px-2.5 py-1 text-plasma">
                 Models: 5 Native (86.12/100)
               </span>
-              <span className="rounded border border-verify/40/40 bg-verify/10/30 px-2.5 py-1 text-verify">
+              <span className="rounded border border-verify/40 bg-verify/20 px-2.5 py-1 text-verify">
                 Plugins: 6 RAG/Math Nodes
               </span>
               <span className="rounded border border-caution/40 bg-caution/15 px-2.5 py-1 text-caution">
@@ -1441,7 +1441,7 @@ export function CockpitOffice3dBotHq({
           }
         >
           {/* 1-Click Broadcast Command Bar */}
-          <div className="rounded-2xl border border-verify/40/40 bg-obsidian/70 p-4">
+          <div className="rounded-2xl border border-verify/40 bg-obsidian/70 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h3 className="font-mono text-xs font-bold uppercase tracking-widest text-verify">
@@ -1470,7 +1470,7 @@ export function CockpitOffice3dBotHq({
                 type="button"
                 data-testid="hermes-broadcast-btn"
                 onClick={handleBroadcastCommand}
-                className="rounded-xl border border-verify/40/60 bg-verify/10/60 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-verify hover:bg-verify/10/60"
+                className="rounded-xl border border-verify/60 bg-verify/25 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-verify hover:bg-verify/35"
               >
                 Broadcast to All 6 Agents
               </button>
@@ -1511,7 +1511,7 @@ export function CockpitOffice3dBotHq({
                       <span className="rounded bg-obsidian/80 px-1.5 py-0.5 text-plasma">
                         {msg.channel}
                       </span>
-                      <span className="rounded bg-verify/10/40 px-1.5 py-0.5 text-verify">
+                      <span className="rounded bg-verify/20 px-1.5 py-0.5 text-verify">
                         {msg.topic}
                       </span>
                     </div>

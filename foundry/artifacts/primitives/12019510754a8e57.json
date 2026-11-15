@@ -1,0 +1,463 @@
+{
+ "book_id": "12019510754a8e57",
+ "title": "Murphy 2023 — Probabilistic Machine Learning: Advanced Topics",
+ "source_status": "READABLE",
+ "source_note": "Kevin P. Murphy, Probabilistic Machine Learning: Advanced Topics, MIT Press (Adaptive Computation and Machine Learning), online version Dec 10 2025, CC-BY-NC-ND. 1370 PDF pages, 3.49M chars extracted; figure XObject warnings are cosmetic. Core read: Bayes rule ch2.1.6, KL divergence ch5.1, variational inference/ELBO ch10.1, Monte Carlo ch11.2, Metropolis-Hastings ch12.2, Bayes model averaging ch3.8. Printed-page provenance (PDF index != printed page). Not retracted; title matches content. Zero sportsbook odds.",
+ "pages_total": 1370,
+ "pages_read": 6,
+ "primitives": [
+  {
+   "primitive_id": "bayes_rule",
+   "name": "Bayes' rule: posterior = likelihood x prior / evidence",
+   "verbatim_quote": "we can write Bayes' rule as follows, using the law of total probability",
+   "page": 8,
+   "latex": "p(X=k\\mid E)=\\frac{p(E\\mid X=k)\\,p(X=k)}{\\sum_{k'}p(E\\mid X=k')\\,p(X=k')}",
+   "symbol_and_unit_ledger": {
+    "p(X=k)": "prior probability [dimensionless, 0..1]",
+    "p(E|X=k)": "likelihood [dimensionless]",
+    "p(X=k|E)": "posterior probability [dimensionless]",
+    "p(E)": "marginal likelihood / evidence [dimensionless normalizer]"
+   },
+   "assumptions": [
+    "Events have positive probability",
+    "Prior encodes pre-evidence belief",
+    "Likelihood is the data model"
+   ],
+   "breakdown_regime": "Improper prior or zero evidence makes the posterior undefined; prior must put mass where the likelihood lives.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine is a Bayes machine: the football ontology is the prior, each snap is evidence E, and the calibrated game probability is the posterior. The posterior is not a point guess but a belief updated by the likelihood of what actually happened on the field.",
+    "source_operator": "bayes_rule",
+    "telemetry": "posterior_update_per_snap"
+   }
+  },
+  {
+   "primitive_id": "mc_integration",
+   "name": "Monte Carlo integration: expectation as a sample average",
+   "verbatim_quote": "It has the advantage over numerical integration that the function is only evaluated in places where there is non-negligible probability",
+   "page": 483,
+   "latex": "\\mathbb{E}[f(x)]=\\int f(x)p(x)\\,dx\\approx\\frac{1}{N_s}\\sum_{n=1}^{N_s}f(x_n),\\quad x_n\\sim p(x)",
+   "symbol_and_unit_ledger": {
+    "E[f(x)]": "expected value [units of f]",
+    "N_s": "number of samples [count]",
+    "x_n": "draw from target p [state]",
+    "f": "integrand / world-outcome functional [units of f]"
+   },
+   "assumptions": [
+    "Samples are drawn from the target (or posterior)",
+    "f is integrable",
+    "Low-dimensional quadrature fails to scale"
+   ],
+   "breakdown_regime": "If you cannot sample from p, the estimator is unavailable; high variance in f inflates the error regardless of N_s.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The 10,000-world crucible IS Monte Carlo integration: each simulated world is a draw x_n from the game's outcome distribution, and the win probability is the sample average of the world-outcome functional. Accuracy is dimension-independent, so the enormous state space of a football game does not degrade the estimator the way a grid would.",
+    "source_operator": "mc_integration",
+    "telemetry": "ensemble_worlds_as_mc_samples"
+   }
+  },
+  {
+   "primitive_id": "mc_clt",
+   "name": "Monte Carlo error is asymptotically normal (CLT)",
+   "verbatim_quote": "This is a consequence of the central limit theorem.",
+   "page": 485,
+   "latex": "(\\hat\\mu-\\mu)\\ \\to\\ \\mathcal{N}\\!\\left(0,\\frac{\\sigma^2}{N_s}\\right),\\quad \\sigma^2=\\mathbb{V}[f(X)]",
+   "symbol_and_unit_ledger": {
+    "mu_hat": "MC estimate [units of f]",
+    "mu": "true expectation [units of f]",
+    "sigma^2": "variance of f(X) [units f^2]",
+    "N_s": "sample count [count]"
+   },
+   "assumptions": [
+    "Independent samples",
+    "Finite variance of f",
+    "N_s large enough for the CLT"
+   ],
+   "breakdown_regime": "Heavy-tailed f (infinite variance) breaks the CLT normal approximation; correlated samples inflate the effective error.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The spread of the 10,000-world ensemble around its mean is governed by the CLT: the uncertainty on the win probability shrinks as sigma/sqrt(N_s). This is why more worlds tighten the estimate, and why a fat-tailed outcome (a rare blowout or overtime chaos) widens the error bar even with many worlds.",
+    "source_operator": "mc_clt",
+    "telemetry": "ensemble_error_bar_clt"
+   }
+  },
+  {
+   "primitive_id": "mc_standard_error",
+   "name": "Standard error and the sample-size law",
+   "verbatim_quote": "is theoretically independent of the dimensionality of the integral.",
+   "page": 485,
+   "latex": "\\mathrm{SE}=\\sqrt{\\hat\\sigma^2/N_s},\\qquad N_s\\ge\\frac{4\\hat\\sigma^2}{\\epsilon^2}\\ \\ (\\pm\\epsilon,\\ 95\\%)",
+   "symbol_and_unit_ledger": {
+    "SE": "standard error [units of f]",
+    "epsilon": "target accuracy [units of f]",
+    "N_s": "required samples [count]",
+    "sigma_hat^2": "MC variance estimate [units f^2]"
+   },
+   "assumptions": [
+    "95% coverage uses the 1.96~2 factor",
+    "Variance estimated from the same samples"
+   ],
+   "breakdown_regime": "The catch: sampling from high-dimensional distributions can be hard even though the error formula is dimension-free.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the ensemble-sizing law for the crucible: to pin the win probability to within epsilon at 95% confidence you need N_s >= 4*sigma^2/epsilon^2 worlds. The 10,000-world budget is a deliberate choice of epsilon, not a magic number; a tighter gate demands quadratically more worlds.",
+    "source_operator": "mc_standard_error",
+    "telemetry": "crucible_world_budget_sizing"
+   }
+  },
+  {
+   "primitive_id": "mh_basic",
+   "name": "Metropolis-Hastings: propose then accept/reject",
+   "verbatim_quote": "The basic idea in MH is that at each step, we propose to move from the current state",
+   "page": 500,
+   "latex": "A=\\min\\!\\left(1,\\frac{p^*(x')}{p^*(x)}\\right)\\ \\text{(symmetric proposal)}",
+   "symbol_and_unit_ledger": {
+    "x": "current state [state]",
+    "x'": "proposed state [state]",
+    "q(x'|x)": "proposal kernel [probability]",
+    "A": "acceptance probability [dimensionless, 0..1]",
+    "p*": "target (unnormalized ok) [density]"
+   },
+   "assumptions": [
+    "Proposal covers the target support",
+    "Chain is ergodic and irreducible"
+   ],
+   "breakdown_regime": "A proposal that cannot reach part of the support leaves that region unsampled; the chain then misrepresents the target.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the game's posterior over latent states (coverage intent, QB health, script elasticity) cannot be sampled directly, the engine explores it by Metropolis-Hastings: propose a perturbed game state, accept it in proportion to its posterior probability. This is how the crucible samples plausible alternative worlds rather than enumerating them.",
+    "source_operator": "mh_basic",
+    "telemetry": "mcmc_latent_game_state_sampling"
+   }
+  },
+  {
+   "primitive_id": "mh_downhill",
+   "name": "MH accepts downhill moves: exploration over greed",
+   "verbatim_quote": "So instead of greedily moving to only more probable states, we occasionally allow",
+   "page": 500,
+   "latex": "A=\\min(1,\\alpha),\\quad \\alpha=\\frac{p^*(x')\\,q(x\\mid x')}{p^*(x)\\,q(x'\\mid x)}",
+   "symbol_and_unit_ledger": {
+    "alpha": "Hastings ratio [dimensionless]",
+    "q(x|x')": "reverse proposal [probability]"
+   },
+   "assumptions": [
+    "Asymmetric proposal needs the Hastings correction",
+    "Downhill moves are accepted with probability alpha<1"
+   ],
+   "breakdown_regime": "Pure greedy ascent gets trapped in a single mode; the occasional downhill move is what lets the chain escape.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine must not greedily collapse to the single most likely game script. MH's downhill moves are the formal license to keep exploring less-probable but plausible worlds (the comeback, the upset), which is exactly what a calibrated ensemble needs and what a 'lock' mentality destroys.",
+    "source_operator": "mh_downhill",
+    "telemetry": "exploration_vs_greedy_script"
+   }
+  },
+  {
+   "primitive_id": "mh_unnormalized",
+   "name": "MH needs only the unnormalized target (Z cancels)",
+   "verbatim_quote": "An important reason why MH is a useful algorithm is that",
+   "page": 500,
+   "latex": "\\alpha=\\frac{(\\tilde p(x')/Z)\\,q(x\\mid x')}{(\\tilde p(x)/Z)\\,q(x'\\mid x)}\\ \\Rightarrow\\ Z\\ \\text{cancels}",
+   "symbol_and_unit_ledger": {
+    "p_tilde": "unnormalized density [density]",
+    "Z": "normalization constant / evidence [cancels]"
+   },
+   "assumptions": [
+    "Target known up to a constant",
+    "Ratio of densities is computable"
+   ],
+   "breakdown_regime": "If even the unnormalized density is intractable, MH cannot evaluate the acceptance ratio.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE posterior over game worlds is known only up to a normalizer (the evidence is intractable). MH lets the crucible sample from it anyway because the evidence cancels in the acceptance ratio. This is why the engine can reason about relative world plausibility without ever computing the absolute probability of the observed game.",
+    "source_operator": "mh_unnormalized",
+    "telemetry": "evidence_free_world_sampling"
+   }
+  },
+  {
+   "primitive_id": "detailed_balance",
+   "name": "Detailed balance guarantees the target is stationary",
+   "verbatim_quote": "We also showed that if a chain satisfies detailed balance",
+   "page": 501,
+   "latex": "p(x'\\mid x)\\,p^*(x)=p(x\\mid x')\\,p^*(x')",
+   "symbol_and_unit_ledger": {
+    "p(x'|x)": "transition kernel [probability]",
+    "p*": "stationary / target distribution [density]"
+   },
+   "assumptions": [
+    "In-flow equals out-flow for every state pair",
+    "Ergodicity + irreducibility for uniqueness"
+   ],
+   "breakdown_regime": "If detailed balance fails, the chain's stationary distribution is not the intended target and samples are biased.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Detailed balance is the correctness certificate for the world sampler: it guarantees the long-run fraction of time the crucible spends in each game state equals that state's true posterior probability. Without it, the ensemble would systematically over- or under-represent certain scripts and the win probability would be biased.",
+    "source_operator": "detailed_balance",
+    "telemetry": "sampler_correctness_certificate"
+   }
+  },
+  {
+   "primitive_id": "rwm_optimal_acceptance",
+   "name": "Random-walk Metropolis: the 0.234 acceptance sweet spot",
+   "verbatim_quote": "this results in an acceptance rate of 0.234, which (in this case) is the optimal tradeoff",
+   "page": 503,
+   "latex": "q(x'\\mid x)=\\mathcal{N}(x'\\mid x,\\tau^2 I),\\quad \\tau^2=\\frac{2.38^2}{D},\\quad \\text{acceptance}\\approx0.234",
+   "symbol_and_unit_ledger": {
+    "tau^2": "proposal variance [state^2]",
+    "D": "dimensionality [count]",
+    "0.234": "optimal acceptance rate [dimensionless]"
+   },
+   "assumptions": [
+    "Gaussian posterior (asymptotic result)",
+    "Too-small variance traps one mode; too-large is sticky"
+   ],
+   "breakdown_regime": "The 0.234 rule is asymptotic and Gaussian-specific; multimodal or heavy-tailed targets need tuned or adaptive proposals.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The crucible's proposal scale is a calibration knob: too tight and it explores only one game script (trapped mode), too wide and almost every proposed world is rejected (sticky chain). The 0.234 acceptance target is the formal statement that exploration and acceptance must be balanced, mirroring the explore/exploit tradeoff in the RL layer.",
+    "source_operator": "rwm_optimal_acceptance",
+    "telemetry": "proposal_scale_tuning"
+   }
+  },
+  {
+   "primitive_id": "kl_definition",
+   "name": "KL divergence: the unique measure of belief update",
+   "verbatim_quote": "What we seek is a mathematical way to quantify the magnitude of this update",
+   "page": 221,
+   "latex": "D_{\\mathrm{KL}}(p\\parallel q)=\\sum_k p_k\\log\\frac{p_k}{q_k}=\\int p(x)\\log\\frac{p(x)}{q(x)}\\,dx",
+   "symbol_and_unit_ledger": {
+    "p": "updated / true distribution [probability]",
+    "q": "original / approximating distribution [probability]",
+    "D_KL": "information gain / relative entropy [nats or bits]"
+   },
+   "assumptions": [
+    "Continuous, non-negative, permutation-invariant, satisfies the chain rule",
+    "Unique up to a multiplicative constant"
+   ],
+   "breakdown_regime": "Asymmetric: D_KL(p||q) != D_KL(q||p); the direction matters (mode-seeking vs mass-covering).",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "KL divergence is the GSE calibration-surprise metric: it measures how far the engine's predicted distribution q is from the realized outcome distribution p. It is the same quantity that appears as the cross-entropy gradient in the DL layer and the regularizer in the ELBO, unifying the whole stack under one information-theoretic ruler.",
+    "source_operator": "kl_definition",
+    "telemetry": "calibration_surprise_metric"
+   }
+  },
+  {
+   "primitive_id": "kl_nonnegativity",
+   "name": "Information inequality: KL >= 0, zero iff p = q",
+   "verbatim_quote": "The non-negativity of KL divergence often feels as though it",
+   "page": 222,
+   "latex": "D_{\\mathrm{KL}}(p\\parallel q)\\ge 0,\\quad =0\\iff p=q",
+   "symbol_and_unit_ledger": {
+    "D_KL": "divergence [nats, >=0]"
+   },
+   "assumptions": [
+    "Proved via Jensen's inequality on the concave log",
+    "Equality only when distributions coincide"
+   ],
+   "breakdown_regime": "Numerically, estimating KL from finite samples can appear negative; the true quantity is never negative.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The information inequality is the engine's honesty floor: a calibrated prediction can never be 'better than perfect' (negative surprise). Any pipeline reporting negative calibration error is measuring noise, not skill. This is the probabilistic root of the zero-fabrication doctrine.",
+    "source_operator": "kl_nonnegativity",
+    "telemetry": "calibration_honesty_floor"
+   }
+  },
+  {
+   "primitive_id": "kl_bound_generation",
+   "name": "Dropping non-negative KL terms generates bounds",
+   "verbatim_quote": "Anytime you can rearrange an expression in terms of KL divergence terms, since those are guaranteed to be non-negative, dropping them immediately generates a bound.",
+   "page": 222,
+   "latex": "\\log p(x)=\\mathrm{ELBO}+D_{\\mathrm{KL}}(q\\parallel p)\\ \\ge\\ \\mathrm{ELBO}",
+   "symbol_and_unit_ledger": {
+    "log p(x)": "log evidence [nats]",
+    "ELBO": "evidence lower bound [nats]",
+    "D_KL": "non-negative gap [nats]"
+   },
+   "assumptions": [
+    "The decomposition must isolate a genuine KL term",
+    "Dropping it yields a lower (not upper) bound"
+   ],
+   "breakdown_regime": "Mis-identifying a signed term as a KL divergence produces an invalid bound.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's proof technique for every gate: rearrange the quantity of interest until a non-negative KL term appears, then drop it to get a bound you can certify. The ELBO, the calibration floor, and the conjunction gate all ride this single trick, which is why the Foundry's vetoes are provable rather than heuristic.",
+    "source_operator": "kl_bound_generation",
+    "telemetry": "veto_bound_proof_technique"
+   }
+  },
+  {
+   "primitive_id": "kl_infinite_support",
+   "name": "Zero prior mass on a realized outcome costs infinite information",
+   "verbatim_quote": "Intuitively it would require an infinite amount of information for us to update our beliefs in some outcome to change from being exactly 0 to some positive value.",
+   "page": 222,
+   "latex": "q(x)=0,\\ p(x)>0\\ \\Rightarrow\\ D_{\\mathrm{KL}}(p\\parallel q)=\\infty",
+   "symbol_and_unit_ledger": {
+    "q(x)": "predicted probability of outcome [0]",
+    "p(x)": "realized probability [>0]"
+   },
+   "assumptions": [
+    "The original belief assigns exactly zero to an outcome that occurs"
+   ],
+   "breakdown_regime": "This is the formal death of the confident lock: assigning zero probability to what actually happens is an infinite error.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the probabilistic statement of the no-lock doctrine. A pick that assigns zero probability to the outcome that occurs incurs infinite KL surprise, exactly as the cross-entropy loss goes to infinity for a confident wrong prediction in the DL layer. The engine must keep non-zero mass on every plausible outcome; a 'guaranteed' pick is an infinite-risk bet.",
+    "source_operator": "kl_infinite_support",
+    "telemetry": "no_lock_infinite_surprise"
+   }
+  },
+  {
+   "primitive_id": "elbo_definition",
+   "name": "ELBO: expected log joint + entropy, a lower bound on evidence",
+   "verbatim_quote": "The second term encourages the posterior to be maximum entropy, while the first term encourages it to be a joint MAP configuration.",
+   "page": 441,
+   "latex": "\\mathcal{L}(\\theta,\\psi\\mid x)=\\mathbb{E}_{q_\\psi(z)}[\\log p_\\theta(x,z)-\\log q_\\psi(z)]\\le\\log p_\\theta(x)",
+   "symbol_and_unit_ledger": {
+    "L": "ELBO [nats]",
+    "q_psi(z)": "variational posterior [probability]",
+    "p_theta(x,z)": "joint [probability]",
+    "H(q)": "entropy of the posterior [nats]",
+    "log p(x)": "evidence [nats]"
+   },
+   "assumptions": [
+    "Maximizing ELBO wrt psi minimizes KL(q||posterior)",
+    "Evidence is constant wrt variational parameters"
+   ],
+   "breakdown_regime": "The bound is loose when q is far from the true posterior; a poor variational family caps achievable accuracy.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the exact game posterior is intractable, the engine fits a tractable approximation by maximizing the ELBO: fit the observed snaps (expected log joint) while staying maximally uncertain (entropy). This is the variational counterpart of the crucible, trading exactness for a certified lower bound on how well the model explains the game.",
+    "source_operator": "elbo_definition",
+    "telemetry": "variational_game_posterior"
+   }
+  },
+  {
+   "primitive_id": "elbo_regularization",
+   "name": "ELBO = expected log likelihood - KL to prior (regularizer)",
+   "verbatim_quote": "The KL term acts like a regularizer, preventing the posterior from diverging too much from the prior.",
+   "page": 441,
+   "latex": "\\mathcal{L}=\\mathbb{E}_{q_\\psi(z)}[\\log p_\\theta(x\\mid z)]-D_{\\mathrm{KL}}(q_\\psi(z)\\parallel p_\\theta(z))",
+   "symbol_and_unit_ledger": {
+    "E_q[log p(x|z)]": "expected log likelihood / fit [nats]",
+    "D_KL(q||prior)": "complexity penalty [nats]"
+   },
+   "assumptions": [
+    "Prior encodes domain knowledge",
+    "KL penalty prevents overfitting the snaps"
+   ],
+   "breakdown_regime": "Too strong a prior penalty underfits; too weak lets the posterior chase noise in the observed game.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the formal bias-complexity tradeoff of the PAC layer, re-expressed probabilistically: the engine must fit the observed snaps (likelihood) but is penalized for abandoning the football ontology (KL to prior). A model that explains one game perfectly by discarding football knowledge is overfitting; the KL regularizer is the ontology's veto.",
+    "source_operator": "elbo_regularization",
+    "telemetry": "ontology_prior_regularizer"
+   }
+  },
+  {
+   "primitive_id": "vi_overconfidence",
+   "name": "Mean-field VI is overconfident (mode-seeking flaw)",
+   "verbatim_quote": "the approximation is over confident, which is a well-known flaw of variational inference",
+   "page": 442,
+   "latex": "\\min_q D_{\\mathrm{KL}}(q\\parallel p)\\ \\Rightarrow\\ q\\ \\text{mode-seeking, underestimates variance}",
+   "symbol_and_unit_ledger": {
+    "q": "variational posterior [probability]",
+    "p": "true posterior [probability]",
+    "D_KL(q||p)": "reverse KL [nats]"
+   },
+   "assumptions": [
+    "Mean-field factorization drops correlations",
+    "Reverse KL is mode-seeking, not mass-covering"
+   ],
+   "breakdown_regime": "The approximation collapses onto one mode and reports too little uncertainty; full-covariance or rank-1 fixes help.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the calibration trap the GSE engine must veto: a mean-field-style approximation that ignores correlations between game factors (coverage and pressure, script and score) reports false confidence. The overconfidence flaw is why the engine cross-checks variational posteriors against the sampling ensemble and refuses to publish a tight probability the ensemble does not support.",
+    "source_operator": "vi_overconfidence",
+    "telemetry": "overconfidence_calibration_veto"
+   }
+  },
+  {
+   "primitive_id": "bayes_model_averaging",
+   "name": "Bayes model averaging: predict by averaging over models",
+   "verbatim_quote": "If our goal is to perform predictions, we are better off averaging over all models, rather than predicting using just one single model.",
+   "page": 121,
+   "latex": "p(y\\mid D)=\\sum_{m\\in\\mathcal{M}}p(y\\mid m)\\,p(m\\mid D)",
+   "symbol_and_unit_ledger": {
+    "p(y|D)": "posterior predictive [probability]",
+    "p(y|m)": "model m prediction [probability]",
+    "p(m|D)": "posterior model weight [probability, sums to 1]"
+   },
+   "assumptions": [
+    "Models weighted by their posterior evidence",
+    "Better than committing to a single model for prediction"
+   ],
+   "breakdown_regime": "If one model dominates the evidence, BMA collapses to it in the large-sample limit (unlike a generic ensemble).",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Foundry swarm IS Bayes model averaging: each sovereign primitive / model is a hypothesis m, weighted by how well it explains the corpus and the game, and the published probability is the evidence-weighted average. This is why the engine averages over the swarm rather than trusting one 'whale' model, and why a single dominant explanation eventually concentrates the weight.",
+    "source_operator": "bayes_model_averaging",
+    "telemetry": "swarm_as_bayes_model_averaging"
+   }
+  },
+  {
+   "primitive_id": "bma_vs_ensemble",
+   "name": "BMA weights sum to one and collapse; ensembles need not",
+   "verbatim_quote": "since the weights in an ensemble do not need to sum to 1.",
+   "page": 121,
+   "latex": "p(m\\mid D)\\to\\delta_{m^*}\\ \\text{as }N\\to\\infty\\ \\text{(single best model }m^*\\text{)}",
+   "symbol_and_unit_ledger": {
+    "p(m|D)": "posterior model weight [sums to 1]",
+    "m*": "best model [index]",
+    "delta": "degenerate distribution"
+   },
+   "assumptions": [
+    "BMA is a proper probability mixture",
+    "Generic ensembling is a weighted combination, not necessarily normalized"
+   ],
+   "breakdown_regime": "Conflating BMA with ensembling misstates the large-sample behavior: BMA concentrates, ensembles can keep diversity.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This distinction guards the swarm's aggregation: the GSE weights are a proper Bayesian mixture (they sum to one and concentrate on the best-supported explanation as evidence grows), not an arbitrary ensemble. It is the formal reason the engine's confidence rises as the corpus settles on one explanation, and why fabricated diversity cannot substitute for evidence.",
+    "source_operator": "bma_vs_ensemble",
+    "telemetry": "evidence_weighted_aggregation"
+   }
+  },
+  {
+   "primitive_id": "harmonic_mean_warning",
+   "name": "The harmonic-mean evidence estimator is unreliable",
+   "verbatim_quote": "The harmonic mean method is clearly hopelessly inaccurate.",
+   "page": 122,
+   "latex": "p(D)\\approx\\left(\\frac{1}{S}\\sum_{s=1}^{S}\\frac{1}{p(D\\mid\\theta_s)}\\right)^{-1},\\quad \\theta_s\\sim p(\\theta\\mid D)",
+   "symbol_and_unit_ledger": {
+    "p(D)": "marginal likelihood / evidence [probability]",
+    "theta_s": "posterior samples [parameter]",
+    "S": "sample count"
+   },
+   "assumptions": [
+    "Posterior much narrower than prior",
+    "Estimator dominated by rare low-likelihood samples"
+   ],
+   "breakdown_regime": "Neal called it 'The Worst Monte Carlo Method Ever'; use annealed importance sampling or nested sampling instead.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is a provenance-and-method veto for the Foundry: a naive evidence estimator that looks principled can be wildly wrong, so the engine must not certify a model's evidence with a known-bad estimator. It mirrors the gatekeeper's refusal of derivative AI summaries and the retracted-source rule: a method that cannot be trusted is refused, not papered over.",
+    "source_operator": "harmonic_mean_warning",
+    "telemetry": "unreliable_estimator_veto"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "12019510754a8e57-t1",
+   "think": "Retrocausal Genealogy. Murphy's advanced probabilistic machinery is the layer that turns the rest of the Foundry stack into a coherent inference engine, and its lineage runs backward from the GSE crucible to the foundations of belief updating. The root is Bayes' rule (Eq. 2.15-2.17): the posterior is the likelihood times the prior, normalized by the evidence. Everything downstream is an answer to the question 'what do we do when the posterior is intractable?' Monte Carlo integration (Eq. 11.1-11.2) answers it by sampling: the expectation becomes a sample average, and the central limit theorem (Eq. 11.7) makes the error shrink as sigma/sqrt(N_s), independent of the dimensionality of the integral. When direct sampling is impossible, Metropolis-Hastings (Eq. 12.1-12.4) constructs a Markov chain whose stationary distribution is the target, certified by detailed balance (Eq. 12.7) and the ergodicity theorem (12.2.1), needing only the unnormalized density because the evidence cancels. When even MCMC is too slow, variational inference (Eq. 10.9-10.15) optimizes a tractable lower bound on the evidence, the ELBO, which decomposes into fit minus a KL-to-prior regularizer. The information-theoretic ruler underneath all of it is the KL divergence (Eq. 5.9-5.10), the unique measure of belief update, non-negative by the information inequality (5.1.1), and infinite when a zero-probability outcome occurs. At the top, Bayes model averaging (Eq. 3.283) says to predict by averaging over models weighted by their evidence rather than committing to one. This genealogy is retrocausal because the GSE engine's design choices pull these results into existence: the 10,000-world ensemble is Monte Carlo integration, the swarm is Bayes model averaging, the calibration metric is KL, and the no-lock doctrine is the infinite-support clause of KL.\n\nRecursive Theory of Mind. The engine reasons about its own uncertainty, and about the defense's uncertainty about it, in a recursive stack that Murphy's formalism makes precise. At the base, the engine holds a prior over game states (the football ontology) and updates it to a posterior as snaps arrive. But the engine also holds a distribution over its own models (BMA), so it reasons about which explanation to trust, weighting each by its evidence. One level up, the engine models the defense as itself a Bayesian reasoner: the coverage call is the defense's posterior over the offense's intent, conditioned on formation and down-distance. The engine must therefore compute its posterior over the defense's posterior, a theory-of-mind recursion that is exactly the hierarchical Bayesian structure Murphy develops. The variational layer adds a further recursion: the engine knows its own variational approximation is mode-seeking and overconfident (the mean-field flaw), so it reasons about the gap between its tractable posterior and the true posterior, and refuses to publish a confidence the sampling ensemble does not corroborate. This is recursive self-skepticism: the engine's belief about its own belief is itself calibrated, and the KL-to-prior regularizer is the formal leash that keeps the recursion from collapsing into overfitting one observed game.\n\nCross-Layer Veto Adjudication. The probabilistic layer supplies the vetoes that bind the whole stack. First, the infinite-support veto: any pick assigning zero probability to a plausible outcome incurs infinite KL surprise (Eq. 5.1.2.1), the exact probabilistic counterpart of the cross-entropy infinite penalty in the DL layer and the no-lock doctrine; the engine must keep non-zero mass on every plausible world. Second, the overconfidence veto: a mean-field-style posterior that ignores correlations between game factors reports false confidence (the VI flaw), so the engine cross-checks any tight variational probability against the sampling ensemble and PASSes when they disagree. Third, the ensemble-size veto: the standard-error law N_s >= 4*sigma^2/epsilon^2 (Eq. 11.10) means a confidence interval is only as tight as the world budget supports; the engine cannot claim a precision the 10,000-world ensemble does not deliver. Fourth, the unreliable-estimator veto: the harmonic-mean evidence estimator is 'hopelessly inaccurate' (Neal), so the engine refuses to certify model evidence with a known-bad method, just as the gatekeeper refuses derivative summaries and retracted sources. Fifth, the ontology-prior veto: the ELBO's KL-to-prior term (Eq. 10.15) penalizes abandoning football knowledge to fit one game, the probabilistic form of the PAC bias-complexity tradeoff. These vetoes are provable, not heuristic, because they ride the single trick of isolating a non-negative KL term and dropping it to generate a bound (Eq. 5.1.2.2). The adjudication order is fixed: support first (no zero-mass locks), then calibration (no overconfidence), then precision (ensemble budget), then method (no bad estimators), then prior (no ontology abandonment). A candidate that fails any veto is PASSed, and a PASS on a bad board is the engine honoring the same information inequality that forbids negative surprise: you cannot manufacture skill that the evidence does not contain.\n\nThe load-bearing isomorphism is that the GSE engine IS a Bayesian inference machine. The football ontology is the prior, each snap is evidence, the calibrated game probability is the posterior, the 10,000-world crucible is Monte Carlo integration with a dimension-independent 1/sqrt(N_s) error, the Foundry swarm is Bayes model averaging with evidence-weighted collapse, KL divergence is the calibration-surprise metric shared with the cross-entropy gradient of the DL layer and the subgradient of the online layer, and the infinite-support clause is the no-lock doctrine. Murphy's warning that variational inference is overconfident is the engine's standing calibration trap, and the harmonic-mean fiasco is its standing method-hygiene trap. The probabilistic layer does not sit beside the online, PAC, RL, and DL layers; it is the measure-theoretic glue that makes their shared quantities (surprise, regularization, exploration, averaging) one and the same, and it is what lets the Foundry certify its vetoes as theorems rather than opinions.",
+   "retrocausal_genealogy": "Murphy's advanced probabilistic machinery is the layer that turns the rest of the Foundry stack into a coherent inference engine, and its lineage runs backward from the GSE crucible to the foundations of belief updating. The root is Bayes' rule (Eq. 2.15-2.17): the posterior is the likelihood times the prior, normalized by the evidence. Everything downstream is an answer to the question 'what do we do when the posterior is intractable?' Monte Carlo integration (Eq. 11.1-11.2) answers it by sampling: the expectation becomes a sample average, and the central limit theorem (Eq. 11.7) makes the error shrink as sigma/sqrt(N_s), independent of the dimensionality of the integral. When direct sampling is impossible, Metropolis-Hastings (Eq. 12.1-12.4) constructs a Markov chain whose stationary distribution is the target, certified by detailed balance (Eq. 12.7) and the ergodicity theorem (12.2.1), needing only the unnormalized density because the evidence cancels. When even MCMC is too slow, variational inference (Eq. 10.9-10.15) optimizes a tractable lower bound on the evidence, the ELBO, which decomposes into fit minus a KL-to-prior regularizer. The information-theoretic ruler underneath all of it is the KL divergence (Eq. 5.9-5.10), the unique measure of belief update, non-negative by the information inequality (5.1.1), and infinite when a zero-probability outcome occurs. At the top, Bayes model averaging (Eq. 3.283) says to predict by averaging over models weighted by their evidence rather than committing to one. This genealogy is retrocausal because the GSE engine's design choices pull these results into existence: the 10,000-world ensemble is Monte Carlo integration, the swarm is Bayes model averaging, the calibration metric is KL, and the no-lock doctrine is the infinite-support clause of KL.",
+   "theory_of_mind": "The engine reasons about its own uncertainty, and about the defense's uncertainty about it, in a recursive stack that Murphy's formalism makes precise. At the base, the engine holds a prior over game states (the football ontology) and updates it to a posterior as snaps arrive. But the engine also holds a distribution over its own models (BMA), so it reasons about which explanation to trust, weighting each by its evidence. One level up, the engine models the defense as itself a Bayesian reasoner: the coverage call is the defense's posterior over the offense's intent, conditioned on formation and down-distance. The engine must therefore compute its posterior over the defense's posterior, a theory-of-mind recursion that is exactly the hierarchical Bayesian structure Murphy develops. The variational layer adds a further recursion: the engine knows its own variational approximation is mode-seeking and overconfident (the mean-field flaw), so it reasons about the gap between its tractable posterior and the true posterior, and refuses to publish a confidence the sampling ensemble does not corroborate. This is recursive self-skepticism: the engine's belief about its own belief is itself calibrated, and the KL-to-prior regularizer is the formal leash that keeps the recursion from collapsing into overfitting one observed game.",
+   "cross_layer_veto": "The probabilistic layer supplies the vetoes that bind the whole stack. First, the infinite-support veto: any pick assigning zero probability to a plausible outcome incurs infinite KL surprise (Eq. 5.1.2.1), the exact probabilistic counterpart of the cross-entropy infinite penalty in the DL layer and the no-lock doctrine; the engine must keep non-zero mass on every plausible world. Second, the overconfidence veto: a mean-field-style posterior that ignores correlations between game factors reports false confidence (the VI flaw), so the engine cross-checks any tight variational probability against the sampling ensemble and PASSes when they disagree. Third, the ensemble-size veto: the standard-error law N_s >= 4*sigma^2/epsilon^2 (Eq. 11.10) means a confidence interval is only as tight as the world budget supports; the engine cannot claim a precision the 10,000-world ensemble does not deliver. Fourth, the unreliable-estimator veto: the harmonic-mean evidence estimator is 'hopelessly inaccurate' (Neal), so the engine refuses to certify model evidence with a known-bad method, just as the gatekeeper refuses derivative summaries and retracted sources. Fifth, the ontology-prior veto: the ELBO's KL-to-prior term (Eq. 10.15) penalizes abandoning football knowledge to fit one game, the probabilistic form of the PAC bias-complexity tradeoff. These vetoes are provable, not heuristic, because they ride the single trick of isolating a non-negative KL term and dropping it to generate a bound (Eq. 5.1.2.2). The adjudication order is fixed: support first (no zero-mass locks), then calibration (no overconfidence), then precision (ensemble budget), then method (no bad estimators), then prior (no ontology abandonment). A candidate that fails any veto is PASSed, and a PASS on a bad board is the engine honoring the same information inequality that forbids negative surprise: you cannot manufacture skill that the evidence does not contain."
+  }
+ ],
+ "universal_lens": "Any predictive system under uncertainty is governed by Bayesian inference: beliefs update by Bayes' rule (posterior = likelihood x prior / evidence); intractable posteriors are handled by Monte Carlo sampling (dimension-independent 1/sqrt(N) error), Metropolis-Hastings (detailed balance, unnormalized target), or variational inference (ELBO = fit minus KL-to-prior); KL divergence is the unique non-negative measure of belief update, infinite when a zero-probability outcome occurs; and prediction is best done by averaging over models weighted by their evidence (Bayes model averaging), not by committing to a single model.",
+ "gsi_mapping": "For GSI, this is the epistemology of calibrated prediction under uncertainty: why a belief must keep non-zero mass on every plausible outcome (infinite KL surprise is the no-lock doctrine), why a mode-seeking variational approximation is overconfident and must be cross-checked against a sampling ensemble, why an evidence estimator can look principled yet be hopelessly inaccurate (the harmonic mean) and must be refused, and why the KL-to-prior regularizer is the formal leash against overfitting one observation. It is the measure-theoretic foundation that makes calibration, regularization, exploration, and model averaging one coherent discipline rather than a bag of tricks.",
+ "gse_mapping": "For GSE, this is the probabilistic inference layer: the football ontology is the prior, each snap is evidence, and the calibrated game probability is the posterior; the 10,000-world crucible is Monte Carlo integration with a dimension-independent 1/sqrt(N_s) error and a world-budget sizing law N_s >= 4*sigma^2/epsilon^2; the Foundry swarm is Bayes model averaging with evidence-weighted collapse; KL divergence is the calibration-surprise metric shared with the cross-entropy gradient of the DL layer and the subgradient of the online layer; the infinite-support clause is the no-lock doctrine; and the variational-overconfidence flaw is the standing calibration veto.",
+ "layer2_summary": "[ISOMORPHISM] GSE engine IS a Bayesian inference machine: ontology=prior, snap=evidence, calibrated probability=posterior; 10,000-world crucible=Monte Carlo integration; Foundry swarm=Bayes model averaging; KL=calibration surprise; infinite-support=no-lock; VI overconfidence=calibration trap."
+}

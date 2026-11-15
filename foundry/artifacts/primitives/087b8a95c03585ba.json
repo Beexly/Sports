@@ -1,0 +1,78 @@
+{
+  "book_id": "087b8a95c03585ba",
+  "source_status": "COMPLETE",
+  "title": "openalex_W1505403248",
+  "file_name": "openalex_W1505403248.pdf",
+  "sha256": "087b8a95c03585ba0d4b88f33e8e8ef27f76f8ae32076a145a904062d98b5d68",
+  "primary_domain": "other",
+  "pages_total": 123,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Synchronization-robust cyclic codes via coset and subset constructions for additive error correction. Universal Lens: Rooted in openalex_W1505403248 (087b8a95c03585ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on coded message likelihood under synchronization loss using conformal predictive distributions. GSI Mapping: Rooted in openalex_W1505403248 (087b8a95c03585ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in decoding automata governed by error-correction kernels and synchronization thresholds. GSE Mapping: Rooted in openalex_W1505403248 (087b8a95c03585ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "coset_code_protection",
+      "name": "Coset Code Protection",
+      "verbatim_quote": "CODES FOR PROTECTION FROM SYNCHRONIZATION LOSS AND ADDITIVE ERRORS G.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Cyclic codes modified to tolerate misframing through coset construction.",
+      "breakdown_regime": "Loss of synchronization at decoder exceeds code's correction capability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Coset structure maps to equivalence classes of codewords under framing errors; GSE models this as state-space partitioning.",
+        "source_operator": "coset_code_protection",
+        "telemetry": "Decoder synchronization success rate vs. frame error probability."
+      }
+    },
+    {
+      "primitive_id": "subset_code_decoding_strategy",
+      "name": "Subset Code Decoding Strategy",
+      "verbatim_quote": "The proofs of all results indicate the general strategy for decoding the modified code.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Subset codes derived from expurgated cyclic codes enable structured decoding.",
+      "breakdown_regime": "Decoding fails when subset constraints exceed allowable error patterns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Subset decoding kernel defines valid paths in syndrome space; GSI uses this for belief propagation.",
+        "source_operator": "subset_code_decoding_strategy",
+        "telemetry": "Syndrome path consistency during decoding iterations."
+      }
+    },
+    {
+      "primitive_id": "synchronization_loss_correction",
+      "name": "Synchronization Loss Correction",
+      "verbatim_quote": "However their effectiveness, like that of block codes, requires correct word synchronization at the decoder, Cyclic codes with symbols from a general finite field are, modified so that they are also capable of protecting against misframing at the decoder.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Modified cyclic codes incorporate framing resilience via algebraic extensions.",
+      "breakdown_regime": "Misalignment beyond correction threshold leads to catastrophic failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Framing error model maps to coset shifts in extended code space; GSE encodes this into transition matrices.",
+        "source_operator": "synchronization_loss_correction",
+        "telemetry": "Frame alignment recovery time and bit-error rate post-recovery."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "087b8a95c03585ba_t0",
+      "think": "The foundational work introduces two primary modifications to standard cyclic codes: coset coding for synchronization robustness and subset coding for structured decoding. Coset codes extend traditional cyclic structures by embedding redundancy that compensates for misframing events, effectively creating equivalence classes that maintain integrity even when synchronization is lost. Subset codes refine this approach by selecting specific codewords that form a coherent substructure, enabling more efficient decoding strategies. These primitives are mathematically unified through finite field theory and group actions on code spaces. The failure mode occurs when either the number of frame errors exceeds the designed tolerance or when decoding algorithms cannot resolve ambiguities introduced by overlapping cosets. Dualities emerge between the structure of these codes and their corresponding syndrome spaces, where each coset corresponds to a distinct error pattern. In GSI, these are modeled as probabilistic belief updates conditioned on observed syndromes. In GSE, they define deterministic state transitions within a decoding automaton.\n\nDeep epistemic analysis for openalex_W1505403248 (087b8a95c03585ba, domain=other, pages_read=32/123): Operator 'Coset Code Protection' (page 2, domain other) captures: CODES FOR PROTECTION FROM SYNCHRONIZATION LOSS AND ADDITIVE ERRORS G. Assumptions: Cyclic codes modified to tolerate misframing through coset construction. Breakdown regime: Loss of synchronization at decoder exceeds code's correction capability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Coset structure maps to equivalence classes of codewords under framing errors; GSE models this as state-space partitioning. Operator 'Subset Code Decoding Strategy' (page 6, domain other) captures: The proofs of all results indicate the general strategy for decoding the modified code. Assumptions: Subset codes derived from expurgated cyclic codes enable structured decoding. Breakdown regime: Decoding fails when subset constraints exceed allowable error patterns. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Subset decoding kernel defines valid paths in syndrome space; GSI uses this for belief propagation. Operator 'Synchronization Loss Correction' (page 6, domain other) captures: However their effectiveness, like that of block codes, requires correct word synchronization at the decoder, Cyclic codes with symbols from a general finite field are, modified so that they are also capable of protecting against misframing at the decoder. Assumptions: Modified cyclic codes incorporate framing resilience via algebraic extensions. Breakdown regime: Misalignment beyond correction threshold leads to catastrophic failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Framing error model maps to coset shifts in extended code space; GSE encodes this into transition matrices. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W1505403248 (087b8a95c03585ba, domain=other, pages_read=32/123): Operator 'Coset Code Protection' (page 2, domain other) captures: CODES FOR PROTECTION FROM SYNCHRONIZATION LOSS AND ADDITIVE ERRORS G. Assumptions: Cyclic codes modified to tolerate misframing through coset construction. Breakdown regime: Loss of synchronization at decoder exceeds code's correction capability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Coset structure maps to equivalence classes of codewords under framing errors; GSE models this as state-space partitioning. Operator 'Subset Code Decoding Strategy' (page 6, domain other) captures: The proofs of all results indicate the general strategy for decoding the modified code. Assumptions: Subset codes derived from expurgated cyclic codes enable structured decoding. Breakdown regime: Decoding fails when subset constraints exceed allowable error patterns. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Subset decoding kernel defines valid paths in syndrome space; GSI uses this for belief propagation. Operator 'Synchronization Loss Correction' (page 6, domain other) captures: However their effectiveness, like that of block codes, requires correct word synchronization at the decoder, Cyclic codes with symbols from a general finite field are, modified so that they are also capable of protecting against misframing at the decoder. Assumptions: Modified cyclic codes incorporate framing resilience via algebraic extensions. Breakdown regime: Misalignment beyond correction threshold leads to catastrophic failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Framing error model maps to coset shifts in extended code space; GSE encodes this into transition matrices. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Shannon's information theory and Hamming’s error-correcting codes, this line extends from Reed-Solomon and BCH codes to modern concatenated and turbo-like structures. The formalism builds upon earlier work in synchronization-aware coding by Forney and others. Retrocausal Genealogy: Rooted in openalex_W1505403248 (087b8a95c03585ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include an adversarial channel introducing both additive noise and synchronization loss, and a decoder attempting to reconstruct messages under uncertainty. The system must balance computational complexity with error resilience, modeling trade-offs between throughput and reliability. Theory of Mind & Decision Maker Model: Rooted in openalex_W1505403248 (087b8a95c03585ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when coset and subset structures interfere with each other’s decoding paths. Leakage occurs if synchronization loss is not properly isolated from additive errors, leading to incorrect syndrome interpretation. Veto conditions ensure that only well-defined coset representatives are considered in decoding. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W1505403248 (087b8a95c03585ba), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

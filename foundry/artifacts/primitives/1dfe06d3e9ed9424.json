@@ -1,0 +1,78 @@
+{
+  "book_id": "1dfe06d3e9ed9424",
+  "source_status": "COMPLETE",
+  "title": "QUICKSTART",
+  "file_name": "QUICKSTART.md",
+  "sha256": "1dfe06d3e9ed942434cdfce588ec686969f295d89e0724271753e004e03f4ae4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "State-space partitioning of GSI/GSE operational domains via stub-mode simulation and canonical pick accumulation. Universal Lens: Rooted in QUICKSTART (1dfe06d3e9ed9424), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on pick validity conditioned on stub vs real DB states using synthetic admin sessions. GSI Mapping: Rooted in QUICKSTART (1dfe06d3e9ed9424), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions between demo, stub, and live data regimes via environment variable toggles. GSE Mapping: Rooted in QUICKSTART (1dfe06d3e9ed9424), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "open_this_tonight_html",
+      "name": "Dashboard Snapshot Launcher",
+      "verbatim_quote": "# Quickstart — Sports Intelligence OS ## Path A — \"I just want to see the dashboard\" (no commands) Open `OPEN_THIS_TONIGHT.html` at the root of this folder.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "HTML snapshot rendering is deterministic and representative of live routes.",
+      "breakdown_regime": "No active data flow; static route rendering only.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's initial state transition from idle to demo mode, where all telemetry is mocked.",
+        "source_operator": "open_this_tonight_html",
+        "telemetry": "Rendered HTML snapshot availability"
+      }
+    },
+    {
+      "primitive_id": "dev_fake_admin",
+      "name": "Synthetic Admin Session Enabler",
+      "verbatim_quote": "It returns a synthetic ADMIN session so you can open `/dashboard` and `/cockpit` without configuring Google OAuth or running a real Postgres session table.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Synthetic session mimics real auth behavior for UI access control.",
+      "breakdown_regime": "Authentication bypass in development only.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from stub-mode DB abstraction; enables GSI inference without backend persistence.",
+        "source_operator": "dev_fake_admin",
+        "telemetry": "Session token validity and cockpit access logs"
+      }
+    },
+    {
+      "primitive_id": "force_real_prisma",
+      "name": "Real DB Connection Override",
+      "verbatim_quote": "**Never set this in production.** - `FORCE_REAL_PRISMA=true` overrides the stub-mode check — useful when you need to see real connection errors instead of empty defaults.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Stub-mode is default; override implies intentional error exposure.",
+      "breakdown_regime": "Failure mode detection in non-prod environments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE's error-state transition by forcing real DB interaction during testing.",
+        "source_operator": "force_real_prisma",
+        "telemetry": "Connection error logs and latency metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1dfe06d3e9ed9424_t0",
+      "think": "The system operates under a dual-state paradigm: stubbed and real. The 'open_this_tonight.html' primitive initializes a static view of the dashboard, enabling early-stage validation without live data. This is a form of state-space projection where each route is pre-rendered into HTML. The 'dev_fake_admin' primitive introduces a synthetic authentication layer that allows full UI navigation without backend dependencies, effectively creating a sandboxed inference space. The 'force_real_prisma' primitive acts as a toggle switch that shifts the system into a failure-aware regime, exposing real DB connection behaviors. These primitives collectively define a layered operational matrix: (1) Static UI rendering, (2) Auth-sandboxed simulation, and (3) Real-time error injection. Each layer corresponds to a distinct epistemic regime—demo, test, and validation—wherein the system's observability and inferential capacity vary accordingly.\n\nDeep epistemic analysis for QUICKSTART (1dfe06d3e9ed9424, domain=other, pages_read=1/1): Operator 'Dashboard Snapshot Launcher' (page 1, domain other) captures: # Quickstart — Sports Intelligence OS ## Path A — \"I just want to see the dashboard\" (no commands) Open `OPEN_THIS_TONIGHT.html` at the root of this folder. Assumptions: HTML snapshot rendering is deterministic and representative of live routes. Breakdown regime: No active data flow; static route rendering only. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's initial state transition from idle to demo mode, where all telemetry is mocked. Operator 'Synthetic Admin Session Enabler' (page 1, domain other) captures: It returns a synthetic ADMIN session so you can open `/dashboard` and `/cockpit` without configuring Google OAuth or running a real Postgres session table. Assumptions: Synthetic session mimics real auth behavior for UI access control. Breakdown regime: Authentication bypass in development only. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from stub-mode DB abstraction; enables GSI inference without backend persistence. Operator 'Real DB Connection Override' (page 1, domain other) captures: **Never set this in production.** - `FORCE_REAL_PRISMA=true` overrides the stub-mode check — useful when you need to see real connection errors instead of empty defaults. Assumptions: Stub-mode is default; override implies intentional error exposure. Breakdown regime: Failure mode detection in non-prod environments. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE's error-state transition by forcing real DB interaction during testing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for QUICKSTART (1dfe06d3e9ed9424, domain=other, pages_read=1/1): Operator 'Dashboard Snapshot Launcher' (page 1, domain other) captures: # Quickstart — Sports Intelligence OS ## Path A — \"I just want to see the dashboard\" (no commands) Open `OPEN_THIS_TONIGHT.html` at the root of this folder. Assumptions: HTML snapshot rendering is deterministic and representative of live routes. Breakdown regime: No active data flow; static route rendering only. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's initial state transition from idle to demo mode, where all telemetry is mocked. Operator 'Synthetic Admin Session Enabler' (page 1, domain other) captures: It returns a synthetic ADMIN session so you can open `/dashboard` and `/cockpit` without configuring Google OAuth or running a real Postgres session table. Assumptions: Synthetic session mimics real auth behavior for UI access control. Breakdown regime: Authentication bypass in development only. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from stub-mode DB abstraction; enables GSI inference without backend persistence. Operator 'Real DB Connection Override' (page 1, domain other) captures: **Never set this in production.** - `FORCE_REAL_PRISMA=true` overrides the stub-mode check — useful when you need to see real connection errors instead of empty defaults. Assumptions: Stub-mode is default; override implies intentional error exposure. Breakdown regime: Failure mode detection in non-prod environments. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE's error-state transition by forcing real DB interaction during testing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in software engineering practices of isolated development environments and staged rollouts, tracing back to early CI/CD pipelines and virtualized testing frameworks. Retrocausal Genealogy: Rooted in QUICKSTART (1dfe06d3e9ed9424), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in QUICKSTART (1dfe06d3e9ed9424), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the developer (seeking rapid iteration), the system (maintaining integrity), and the end-user (expecting seamless experience). Their interplay defines the operational boundaries of each primitive. Theory of Mind & Decision Maker Model: Rooted in QUICKSTART (1dfe06d3e9ed9424), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between stub and real modes; setting both flags simultaneously would create contradictory telemetry paths. Leakage occurs if 'dev_fake_admin' persists beyond staging, violating security assumptions. Cross-Layer Veto & Anti-Leakage Check: Rooted in QUICKSTART (1dfe06d3e9ed9424), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in QUICKSTART (1dfe06d3e9ed9424), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

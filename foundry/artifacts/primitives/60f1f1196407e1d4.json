@@ -1,0 +1,78 @@
+{
+  "book_id": "60f1f1196407e1d4",
+  "source_status": "COMPLETE",
+  "title": "p0185",
+  "file_name": "p0185.txt",
+  "sha256": "60f1f1196407e1d46ad0957674a354399da9534b037a5d102d14ae7be2e00d90",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Means-end field optimization under constrained path selection; rat behavioral dynamics map to directed graph traversal with probabilistic exit points. Universal Lens: Rooted in p0185 (60f1f1196407e1d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models path preference via sequential door-locking events; conditional probability distributions over Rr, Ra, Rs reflect learned policy convergence. GSI Mapping: Rooted in p0185 (60f1f1196407e1d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes state transitions through D1-D3 door closures; action selection follows deterministic precedence until common segment Fe locks, triggering adaptive rerouting. GSE Mapping: Rooted in p0185 (60f1f1196407e1d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "path_preference_field",
+      "name": "Path Preference Field",
+      "verbatim_quote": "And during this training the animals eventually acquired a very strong propensity to try Ri, the shortest path, first and then, if they found D.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Ri': 'shortest path (dimensionless)', 'R': 'next shortest path (dimensionless)', 'Rs': 'final alternative path (dimensionless)', 'D1, D2, D3': 'door states (binary: locked/unlocked)'}",
+      "assumptions": "Animals exhibit greedy path selection based on prior training; door states determine sequential access.",
+      "breakdown_regime": "When common door Fe is locked, path preference reverts to alternate sequence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Behavioral path selection mirrors graph search algorithms with heuristic pruning.",
+        "source_operator": "path_preference_field",
+        "telemetry": "Frequency of path traversal per trial"
+      }
+    },
+    {
+      "primitive_id": "means_end_field",
+      "name": "Means-End Field",
+      "verbatim_quote": "Further, it is to be observed that Paths Rr and Ra lead into a final common segment, that between D.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Rr': 'path leading to common segment (dimensionless)', 'Ra': 'alternative path to same segment (dimensionless)', 'R': 'direct path (dimensionless)', 'D1, D2': 'segment boundary doors (binary)'}",
+      "assumptions": "Common segment represents shared goal space; distinct paths imply divergent means.",
+      "breakdown_regime": "Upon lock of common door Fe, divergence occurs between Rr/Ra and R.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Optimization landscape defined by path length and constraint satisfaction.",
+        "source_operator": "means_end_field",
+        "telemetry": "Time to reach common segment across paths"
+      }
+    },
+    {
+      "primitive_id": "sequential_door_locking",
+      "name": "Sequential Door Locking",
+      "verbatim_quote": "During the training period, the rats were forced in successive trials through each of the three paths, by closing pairs of doors such as D1 and D2, D2 and D3, or D, and D3.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D1, D2, D3': 'doors in sequence (binary)', 'T': 'trial index (integer)', 'P': 'path taken (set {Ri,R,Rs})'}",
+      "assumptions": "Door closure enforces path constraints; repeated exposure builds preference.",
+      "breakdown_regime": "Failure mode when door pair is inconsistent with path structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Constraint satisfaction problem modeled as temporal state machine.",
+        "source_operator": "sequential_door_locking",
+        "telemetry": "Success rate of path completion per door configuration"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "60f1f1196407e1d4_t0",
+      "think": "The system operates under a hierarchical path optimization framework where Rr and Ra converge into a shared terminal segment between D1 and D2, unlike direct path R. This implies a dual-pathway means-end field where Rr/Ra represent exploratory branches while R denotes a direct route. During training, rats learn a conditional preference order: Ri → R → Rs, conditioned on door states. When Fe is locked in testing, the system fails its original convergence strategy, forcing a retrograde shift to previously learned alternatives. The derived kernel maps this to a dynamic programming-like process where each trial updates belief over optimal path. The failure mode arises when the common door becomes inaccessible, breaking the convergence assumption. The behavioral graph shows empirical validation of this model, with rats exhibiting consistent preference reversal patterns. The isomorphism to graph theory manifests in the directed acyclic structure of paths, with probabilistic transitions governed by door states.\n\nDeep epistemic analysis for p0185 (60f1f1196407e1d4, domain=other, pages_read=1/1): Operator 'Path Preference Field' (page 1, domain other) captures: And during this training the animals eventually acquired a very strong propensity to try Ri, the shortest path, first and then, if they found D. Assumptions: Animals exhibit greedy path selection based on prior training; door states determine sequential access. Breakdown regime: When common door Fe is locked, path preference reverts to alternate sequence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Behavioral path selection mirrors graph search algorithms with heuristic pruning. Operator 'Means-End Field' (page 1, domain other) captures: Further, it is to be observed that Paths Rr and Ra lead into a final common segment, that between D. Assumptions: Common segment represents shared goal space; distinct paths imply divergent means. Breakdown regime: Upon lock of common door Fe, divergence occurs between Rr/Ra and R. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Optimization landscape defined by path length and constraint satisfaction. Operator 'Sequential Door Locking' (page 1, domain other) captures: During the training period, the rats were forced in successive trials through each of the three paths, by closing pairs of doors such as D1 and D2, D2 and D3, or D, and D3. Assumptions: Door closure enforces path constraints; repeated exposure builds preference. Breakdown regime: Failure mode when door pair is inconsistent with path structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Constraint satisfaction problem modeled as temporal state machine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0185 (60f1f1196407e1d4, domain=other, pages_read=1/1): Operator 'Path Preference Field' (page 1, domain other) captures: And during this training the animals eventually acquired a very strong propensity to try Ri, the shortest path, first and then, if they found D. Assumptions: Animals exhibit greedy path selection based on prior training; door states determine sequential access. Breakdown regime: When common door Fe is locked, path preference reverts to alternate sequence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Behavioral path selection mirrors graph search algorithms with heuristic pruning. Operator 'Means-End Field' (page 1, domain other) captures: Further, it is to be observed that Paths Rr and Ra lead into a final common segment, that between D. Assumptions: Common segment represents shared goal space; distinct paths imply divergent means. Breakdown regime: Upon lock of common door Fe, divergence occurs between Rr/Ra and R. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Optimization landscape defined by path length and constraint satisfaction. Operator 'Sequential Door Locking' (page 1, domain other) captures: During the training period, the rats were forced in successive trials through each of the three paths, by closing pairs of doors such as D1 and D2, D2 and D3, or D, and D3. Assumptions: Door closure enforces path constraints; repeated exposure builds preference. Breakdown regime: Failure mode when door pair is inconsistent with path structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Constraint satisfaction problem modeled as temporal state machine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century animal cognition studies, particularly those of Tolman and Köhler, who posited cognitive maps and insight learning. Later formalized in reinforcement learning frameworks and graph-based decision processes. Retrocausal Genealogy: Rooted in p0185 (60f1f1196407e1d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0185 (60f1f1196407e1d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Rats act as bounded rational agents with memory of past outcomes. Their decision-making reflects internalized cost functions over path lengths and door states. Opposing agents could include environmental constraints or competing stimuli, though none are explicitly modeled here. Theory of Mind & Decision Maker Model: Rooted in p0185 (60f1f1196407e1d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that path preference does not collapse into trivial uniformity. Leakage veto prevents overfitting to specific door configurations by enforcing generalizable transition rules across trials. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0185 (60f1f1196407e1d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0185 (60f1f1196407e1d4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "2d2923a7c1f962d3",
+  "source_status": "COMPLETE",
+  "title": "05-identity-resolution-dedupe",
+  "file_name": "05-identity-resolution-dedupe.md",
+  "sha256": "2d2923a7c1f962d3888bba516a4d4e0057667a755941b42633122d582b5b6ef0",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Identity resolution as a categorical fiber bundle over player state space, with canonical IDs as structure group actions and fuzzy matches as local trivializations. Universal Lens: Rooted in 05-identity-resolution-dedupe (2d2923a7c1f962d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief propagation over identity hypotheses using stable ID priors, with fuzzy match likelihoods as evidence updates in a conformal predictive framework. GSI Mapping: Rooted in 05-identity-resolution-dedupe (2d2923a7c1f962d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions between provisional, canonical, and review states via deterministic automata driven by ID convergence and conflict resolution heuristics. GSE Mapping: Rooted in 05-identity-resolution-dedupe (2d2923a7c1f962d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "canonical_id_preference",
+      "name": "Canonical ID Preference Operator",
+      "verbatim_quote": "## Canonical Rules - Prefer stable official/open-data IDs over names.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_{\\\\text{canon}}': 'canonical identity indicator, dimensionless', 'I_{\\\\text{name}}': 'name-based identity indicator, dimensionless'}",
+      "assumptions": "Stable identifiers form a partially ordered set under precedence; name-based identifiers are less reliable.",
+      "breakdown_regime": "When no stable ID exists, fallback to name-based clustering.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian prior assignment where canonical IDs are assigned higher log-probability weights.",
+        "source_operator": "canonical_id_preference",
+        "telemetry": "Confidence score difference between name-only and ID-assisted matches."
+      }
+    },
+    {
+      "primitive_id": "provisional_identity_state",
+      "name": "Provisional Identity State Transition",
+      "verbatim_quote": "- Rookies and UDFAs can enter a provisional identity state until IDs converge.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{prov}}': 'provisional state flag, binary', 't_{\\\\text{converge}}': 'time to ID convergence, seconds'}",
+      "assumptions": "Provisional state is temporary and resolves upon ID confirmation.",
+      "breakdown_regime": "If no convergence within T_max, triggers manual review.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state machine transitions into a probabilistic holding state until sufficient evidence accumulates.",
+        "source_operator": "provisional_identity_state",
+        "telemetry": "Time elapsed since initial identity entry and number of conflicting sources."
+      }
+    },
+    {
+      "primitive_id": "hard_no_merge_rules",
+      "name": "Hard No-Merge Conflict Detection",
+      "verbatim_quote": "## Hard No-Merge Rules - Same name with different DOB/college and no shared external ID.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{conflict}}': 'conflict detection flag, binary', 'D_{\\\\text{DOB}}': 'date-of-birth mismatch, days', 'C_{\\\\text{college}}': 'college mismatch indicator, binary'}",
+      "assumptions": "Same name implies potential identity collision unless resolved by metadata.",
+      "breakdown_regime": "If D_{\\text{DOB}} > threshold or C_{\\text{college}} = 1 and no shared ID, prevent merge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's hard constraint enforcement in probabilistic graph matching.",
+        "source_operator": "hard_no_merge_rules",
+        "telemetry": "Number of conflicting identity pairs flagged by hard rule violation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2d2923a7c1f962d3_t0",
+      "think": "The identity resolution process is modeled as a structured data fusion problem over a relational lattice of player attributes. Each primitive defines a morphism in this lattice: canonical ID preference acts as a projection onto a stable submanifold, provisional identity enables temporal extension of state space, and hard no-merge rules define topological obstructions that prevent pathologies in identity graphs. The system operates under a dual logic: deterministic state transitions guided by stable identifiers and stochastic resolution of ambiguity through fuzzy matching. Failure modes arise from insufficient metadata, conflicting sources, or missing identifiers—each triggering a regression test suite to validate consistency across all known representations. The epistemic closure is maintained by ensuring that each identity hypothesis is either confirmed or rejected based on empirical thresholds.\n\nDeep epistemic analysis for 05-identity-resolution-dedupe (2d2923a7c1f962d3, domain=other, pages_read=1/1): Operator 'Canonical ID Preference Operator' (page 1, domain other) captures: ## Canonical Rules - Prefer stable official/open-data IDs over names. Assumptions: Stable identifiers form a partially ordered set under precedence; name-based identifiers are less reliable. Breakdown regime: When no stable ID exists, fallback to name-based clustering. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian prior assignment where canonical IDs are assigned higher log-probability weights. Operator 'Provisional Identity State Transition' (page 1, domain other) captures: - Rookies and UDFAs can enter a provisional identity state until IDs converge. Assumptions: Provisional state is temporary and resolves upon ID confirmation. Breakdown regime: If no convergence within T_max, triggers manual review. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state machine transitions into a probabilistic holding state until sufficient evidence accumulates. Operator 'Hard No-Merge Conflict Detection' (page 1, domain other) captures: ## Hard No-Merge Rules - Same name with different DOB/college and no shared external ID. Assumptions: Same name implies potential identity collision unless resolved by metadata. Breakdown regime: If D_{\\text{DOB}} > threshold or C_{\\text{college}} = 1 and no shared ID, prevent merge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's hard constraint enforcement in probabilistic graph matching. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 05-identity-resolution-dedupe (2d2923a7c1f962d3, domain=other, pages_read=1/1): Operator 'Canonical ID Preference Operator' (page 1, domain other) captures: ## Canonical Rules - Prefer stable official/open-data IDs over names. Assumptions: Stable identifiers form a partially ordered set under precedence; name-based identifiers are less reliable. Breakdown regime: When no stable ID exists, fallback to name-based clustering. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian prior assignment where canonical IDs are assigned higher log-probability weights. Operator 'Provisional Identity State Transition' (page 1, domain other) captures: - Rookies and UDFAs can enter a provisional identity state until IDs converge. Assumptions: Provisional state is temporary and resolves upon ID confirmation. Breakdown regime: If no convergence within T_max, triggers manual review. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state machine transitions into a probabilistic holding state until sufficient evidence accumulates. Operator 'Hard No-Merge Conflict Detection' (page 1, domain other) captures: ## Hard No-Merge Rules - Same name with different DOB/college and no shared external ID. Assumptions: Same name implies potential identity collision unless resolved by metadata. Breakdown regime: If D_{\\text{DOB}} > threshold or C_{\\text{college}} = 1 and no shared ID, prevent merge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's hard constraint enforcement in probabilistic graph matching. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in database normalization principles and graph theory, evolving from early entity resolution models in information retrieval to modern probabilistic identity fusion frameworks used in large-scale sports analytics. Retrocausal Genealogy: Rooted in 05-identity-resolution-dedupe (2d2923a7c1f962d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 05-identity-resolution-dedupe (2d2923a7c1f962d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include data sources (e.g., NFL, ESPN), internal systems (GSI, GSE), and human reviewers. Each agent contributes partial knowledge with varying reliability, requiring a multi-agent consensus mechanism to resolve contradictions and maintain logical coherence. Theory of Mind & Decision Maker Model: Rooted in 05-identity-resolution-dedupe (2d2923a7c1f962d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that no single attribute (e.g., name) dominates identity resolution. Leakage vetoes occur when external IDs are inconsistent with internal metadata, preventing erroneous merges that could propagate downstream errors in prediction or tracking systems. Cross-Layer Veto & Anti-Leakage Check: Rooted in 05-identity-resolution-dedupe (2d2923a7c1f962d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

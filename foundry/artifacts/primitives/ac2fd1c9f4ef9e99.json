@@ -1,0 +1,78 @@
+{
+  "book_id": "ac2fd1c9f4ef9e99",
+  "source_status": "COMPLETE",
+  "title": "bdb_tracking_subject_only",
+  "file_name": "bdb_tracking_subject_only.md",
+  "sha256": "ac2fd1c9f4ef9e990ebf21e897890982749573defd9b283a6d1876771d943173",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Subject-only tracking implies player-centric kinematics with limited inter-agent separation data; full 22-man frame coverage is absent. Universal Lens: Rooted in bdb_tracking_subject_only (ac2fd1c9f4ef9e99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on player kinematics uses conditional probability distributions over tracked subjects; separation metrics are conformal only via NGS aggregates. GSI Mapping: Rooted in bdb_tracking_subject_only (ac2fd1c9f4ef9e99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models coverage dynamics through discrete player states; state transitions depend on tracked subset size and frame continuity. GSE Mapping: Rooted in bdb_tracking_subject_only (ac2fd1c9f4ef9e99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "subject_player_count_distribution",
+      "name": "Subject Player Count Distribution",
+      "verbatim_quote": "Rows per play mean 115.7, but **distinct players per play median 1**, mean 1.61, max 6.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{players}}': 'number of distinct tracked players per play, dimensionless', '\\\\mu': 'mean number of players per play, dimensionless', 'M': 'maximum number of players tracked in a single play, dimensionless'}",
+      "assumptions": "Each play is represented by a fixed number of frames; tracking is limited to subject players only.",
+      "breakdown_regime": "When $ N_{\\text{players}} > 1 $, inter-agent separation cannot be computed reliably.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic player kinematic model where $ \\mathbb{E}[N_{\\text{players}}] = 1.61 $ defines sampling bias.",
+        "source_operator": "subject_player_count_distribution",
+        "telemetry": "Play-level distribution of tracked players across 864 sampled plays."
+      }
+    },
+    {
+      "primitive_id": "nearest_non_subject_separation",
+      "name": "Nearest Non-Subject Separation",
+      "verbatim_quote": "## What that broke Computed \"separation at pass forward\" as nearest tracked non-subject player distance on 864 plays and got a mean of **15.5 yd** — versus NGS's 3.0–3.2 for true separation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'d_{\\\\text{sep}}': 'separation distance between subject and nearest non-subject player, yards', '\\\\bar{d}_{\\\\text{sep}}': 'mean separation over 864 plays, yards'}",
+      "assumptions": "Only tracked players are considered; nearest neighbor is computed among tracked entities.",
+      "breakdown_regime": "When fewer than two players are tracked, separation becomes undefined or misestimated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's coverage estimation kernel, where $ d_{\\text{sep}} $ approximates defender proximity under partial tracking.",
+        "source_operator": "nearest_non_subject_separation",
+        "telemetry": "Mean separation value of 15.5 yd from 864 plays indicates systematic overestimation."
+      }
+    },
+    {
+      "primitive_id": "frame_continuity_constraint",
+      "name": "Frame Continuity Constraint",
+      "verbatim_quote": "Every play is a handful of tracked individuals over ~70 frames at 10 Hz.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'duration of play tracking in seconds, dimensionless', 'F': 'number of frames per play, dimensionless', 'f_{\\\\text{rate}}': 'frame rate, Hz'}",
+      "assumptions": "Tracking occurs at fixed temporal resolution; frame count is bounded per play.",
+      "breakdown_regime": "Interpolation between frames leads to loss of spatial detail and motion coherence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's temporal state transition logic depends on $ F = 70 $ and $ f_{\\text{rate}} = 10 $ Hz for motion continuity.",
+        "source_operator": "frame_continuity_constraint",
+        "telemetry": "Temporal consistency of tracked motion across 70 frames at 10 Hz."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ac2fd1c9f4ef9e99_t0",
+      "think": "The BDB 2027 tracking files are structured around subject-only player identification, meaning each play is associated with a variable number of tracked individuals—median 1, mean 1.61, up to 6. This implies that full 22-man frame coverage is not available, which directly impacts the computation of true inter-agent separations. When computing separation metrics such as 'nearest non-subject player distance', the result is inflated due to the absence of full tracking. For example, the computed mean separation of 15.5 yards is significantly higher than NGS's 3.0–3.2 yards because the covering defender is often not included in the frame. This creates a dual failure mode: first, the lack of full-frame coverage prevents accurate spatial modeling; second, the reliance on tracked subsets introduces systematic bias. The implications extend to both GSI’s Bayesian inference framework, which must account for missing data in kinematic models, and GSE’s situational reasoning engine, which requires complete state transitions to simulate coverage behavior. The constraint of 70 frames at 10 Hz further limits temporal fidelity, making interpolation unreliable for motion reconstruction.\n\nDeep epistemic analysis for bdb_tracking_subject_only (ac2fd1c9f4ef9e99, domain=other, pages_read=1/1): Operator 'Subject Player Count Distribution' (page 1, domain other) captures: Rows per play mean 115.7, but **distinct players per play median 1**, mean 1.61, max 6. Assumptions: Each play is represented by a fixed number of frames; tracking is limited to subject players only. Breakdown regime: When $ N_{\\text{players}} > 1 $, inter-agent separation cannot be computed reliably. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic player kinematic model where $ \\mathbb{E}[N_{\\text{players}}] = 1.61 $ defines sampling bias. Operator 'Nearest Non-Subject Separation' (page 1, domain other) captures: ## What that broke Computed \"separation at pass forward\" as nearest tracked non-subject player distance on 864 plays and got a mean of **15.5 yd** — versus NGS's 3.0–3.2 for true separation. Assumptions: Only tracked players are considered; nearest neighbor is computed among tracked entities. Breakdown regime: When fewer than two players are tracked, separation becomes undefined or misestimated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's coverage estimation kernel, where $ d_{\\text{sep}} $ approximates defender proximity under partial tracking. Operator 'Frame Continuity Constraint' (page 1, domain other) captures: Every play is a handful of tracked individuals over ~70 frames at 10 Hz. Assumptions: Tracking occurs at fixed temporal resolution; frame count is bounded per play. Breakdown regime: Interpolation between frames leads to loss of spatial detail and motion coherence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's temporal state transition logic depends on $ F = 70 $ and $ f_{\\text{rate}} = 10 $ Hz for motion continuity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for bdb_tracking_subject_only (ac2fd1c9f4ef9e99, domain=other, pages_read=1/1): Operator 'Subject Player Count Distribution' (page 1, domain other) captures: Rows per play mean 115.7, but **distinct players per play median 1**, mean 1.61, max 6. Assumptions: Each play is represented by a fixed number of frames; tracking is limited to subject players only. Breakdown regime: When $ N_{\\text{players}} > 1 $, inter-agent separation cannot be computed reliably. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic player kinematic model where $ \\mathbb{E}[N_{\\text{players}}] = 1.61 $ defines sampling bias. Operator 'Nearest Non-Subject Separation' (page 1, domain other) captures: ## What that broke Computed \"separation at pass forward\" as nearest tracked non-subject player distance on 864 plays and got a mean of **15.5 yd** — versus NGS's 3.0–3.2 for true separation. Assumptions: Only tracked players are considered; nearest neighbor is computed among tracked entities. Breakdown regime: When fewer than two players are tracked, separation becomes undefined or misestimated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's coverage estimation kernel, where $ d_{\\text{sep}} $ approximates defender proximity under partial tracking. Operator 'Frame Continuity Constraint' (page 1, domain other) captures: Every play is a handful of tracked individuals over ~70 frames at 10 Hz. Assumptions: Tracking occurs at fixed temporal resolution; frame count is bounded per play. Breakdown regime: Interpolation between frames leads to loss of spatial detail and motion coherence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's temporal state transition logic depends on $ F = 70 $ and $ f_{\\text{rate}} = 10 $ Hz for motion continuity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This structure mirrors early tracking systems in sports analytics where player-centric data was prioritized over holistic field coverage. The mathematical lineage traces back to discrete sampling theory and sensor fusion limitations in computer vision applied to sports domains. Retrocausal Genealogy: Rooted in bdb_tracking_subject_only (ac2fd1c9f4ef9e99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents—defenders and receivers—operate under incomplete information about each other’s positions. The tracking system acts as a noisy oracle, providing partial observations that influence decision-making in both offensive and defensive strategies. Theory of Mind & Decision Maker Model: Rooted in bdb_tracking_subject_only (ac2fd1c9f4ef9e99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is violated when GSE assumes full 22-player tracking from subject-only data, leading to leakage into GSI’s kinematic models. The system must vet any derived separation metrics against NGS ground truth to avoid spurious correlations. Cross-Layer Veto & Anti-Leakage Check: Rooted in bdb_tracking_subject_only (ac2fd1c9f4ef9e99), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

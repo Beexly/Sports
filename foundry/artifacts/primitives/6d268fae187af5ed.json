@@ -1,0 +1,78 @@
+{
+  "book_id": "6d268fae187af5ed",
+  "source_status": "COMPLETE",
+  "title": "tipico.com",
+  "file_name": "tipico.com.md",
+  "sha256": "6d268fae187af5ed4f9dc864b6d6ec7a9a07017f91a28c558ff61d54fbe835fe",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Path-space topological invariants under service availability constraints; modular URL segment classification with failure mode detection. Universal Lens: Rooted in tipico.com (6d268fae187af5ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on service status using URL path priors; conformal predictive regions for operational states across crawlable segments. GSI Mapping: Rooted in tipico.com (6d268fae187af5ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps URL paths to state transitions; state-machine evolution conditioned on service availability and crawlability signals. GSE Mapping: Rooted in tipico.com (6d268fae187af5ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "path_segment_classifier",
+      "name": "URL Path Segment Classifier",
+      "verbatim_quote": "| 1 | | `/years` | 1 | | `/teams` | 1 | | `/players` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'path segment identifier (dimensionless)', 'S(P)': 'service status of path P (binary: 0/1)'}",
+      "assumptions": "Each path segment maps to a discrete service state; paths are mutually exclusive and collectively exhaustive.",
+      "breakdown_regime": "When S(P) = 0, path is inaccessible or non-operational.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "URL path space is isomorphic to a finite-state automaton where each segment represents a node and S(P) defines edge validity.",
+        "source_operator": "path_segment_classifier",
+        "telemetry": "Crawl success rate per path segment"
+      }
+    },
+    {
+      "primitive_id": "service_availability_detector",
+      "name": "Service Availability Detector",
+      "verbatim_quote": "| |---|---| | `https://tipico.com/` | Tipico No Service | | `https://tipico.com/years/` | Tipico No Service |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'availability indicator (binary: 0/1)', 'T': 'time index (seconds)'}",
+      "assumptions": "Availability is deterministic over time intervals; service status is static during observation window.",
+      "breakdown_regime": "A = 0 when service returns error or timeout.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from path classifier via temporal sampling of HTTP response codes; kernel maps path → availability vector.",
+        "source_operator": "service_availability_detector",
+        "telemetry": "HTTP status code frequency per path"
+      }
+    },
+    {
+      "primitive_id": "crawlability_indexer",
+      "name": "Crawlability Indexer",
+      "verbatim_quote": "# tipico.com — crawl URLs reached: **10** ## Path segments | Segment | URLs | |---|---|",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'crawlability score (dimensionless)', 'U': 'unique URL count (integer)'}",
+      "assumptions": "All crawled URLs are equally valid for indexing; crawlability is independent of content depth.",
+      "breakdown_regime": "C < 1 when URL set is incomplete or blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Crawlability is isomorphic to a graph connectivity measure; U defines node cardinality in crawl graph.",
+        "source_operator": "crawlability_indexer",
+        "telemetry": "Number of successfully indexed URLs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6d268fae187af5ed_t0",
+      "think": "The path-segment classifier encodes a topological structure over URL space, where each segment is a node in a directed graph. Service availability detector acts as a binary filter on this graph, marking nodes as accessible or not. The crawlability indexer aggregates these into a scalar metric. Together, they form a dual system: one that partitions the domain by semantic intent (paths), and another that evaluates operational feasibility (availability). Failure modes emerge when paths are unreachable due to blocking or misconfiguration, leading to zero availability. These primitives support a layered inference model where path semantics inform service logic, and service data informs crawl strategy. The system exhibits a duality between structural classification and operational validation.\n\nDeep epistemic analysis for tipico.com (6d268fae187af5ed, domain=other, pages_read=1/1): Operator 'URL Path Segment Classifier' (page 1, domain other) captures: | 1 | | `/years` | 1 | | `/teams` | 1 | | `/players` | Assumptions: Each path segment maps to a discrete service state; paths are mutually exclusive and collectively exhaustive. Breakdown regime: When S(P) = 0, path is inaccessible or non-operational. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL path space is isomorphic to a finite-state automaton where each segment represents a node and S(P) defines edge validity. Operator 'Service Availability Detector' (page 1, domain other) captures: | |---|---| | `https://tipico.com/` | Tipico No Service | | `https://tipico.com/years/` | Tipico No Service | Assumptions: Availability is deterministic over time intervals; service status is static during observation window. Breakdown regime: A = 0 when service returns error or timeout. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from path classifier via temporal sampling of HTTP response codes; kernel maps path → availability vector. Operator 'Crawlability Indexer' (page 1, domain other) captures: # tipico.com — crawl URLs reached: **10** ## Path segments | Segment | URLs | |---|---| Assumptions: All crawled URLs are equally valid for indexing; crawlability is independent of content depth. Breakdown regime: C < 1 when URL set is incomplete or blocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Crawlability is isomorphic to a graph connectivity measure; U defines node cardinality in crawl graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for tipico.com (6d268fae187af5ed, domain=other, pages_read=1/1): Operator 'URL Path Segment Classifier' (page 1, domain other) captures: | 1 | | `/years` | 1 | | `/teams` | 1 | | `/players` | Assumptions: Each path segment maps to a discrete service state; paths are mutually exclusive and collectively exhaustive. Breakdown regime: When S(P) = 0, path is inaccessible or non-operational. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL path space is isomorphic to a finite-state automaton where each segment represents a node and S(P) defines edge validity. Operator 'Service Availability Detector' (page 1, domain other) captures: | |---|---| | `https://tipico.com/` | Tipico No Service | | `https://tipico.com/years/` | Tipico No Service | Assumptions: Availability is deterministic over time intervals; service status is static during observation window. Breakdown regime: A = 0 when service returns error or timeout. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from path classifier via temporal sampling of HTTP response codes; kernel maps path → availability vector. Operator 'Crawlability Indexer' (page 1, domain other) captures: # tipico.com — crawl URLs reached: **10** ## Path segments | Segment | URLs | |---|---| Assumptions: All crawled URLs are equally valid for indexing; crawlability is independent of content depth. Breakdown regime: C < 1 when URL set is incomplete or blocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Crawlability is isomorphic to a graph connectivity measure; U defines node cardinality in crawl graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and information theory; extends concepts of automata and state machines from computational theory to web crawling domains. Retrocausal Genealogy: Rooted in tipico.com (6d268fae187af5ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in tipico.com (6d268fae187af5ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents may be modeled as crawlers seeking maximal coverage, while adversaries could be servers enforcing access control or returning errors. The system's behavior reflects a balance between exploration and exploitation of path space. Theory of Mind & Decision Maker Model: Rooted in tipico.com (6d268fae187af5ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when path classification overlaps with availability detection; leakage occurs if crawlability is not orthogonal to service status. Veto conditions enforce independence between layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in tipico.com (6d268fae187af5ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in tipico.com (6d268fae187af5ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

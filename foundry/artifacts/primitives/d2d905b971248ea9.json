@@ -1,0 +1,78 @@
+{
+  "book_id": "d2d905b971248ea9",
+  "source_status": "COMPLETE",
+  "title": "0367-efficient-2d-to-full-3d-human",
+  "file_name": "0367-efficient-2d-to-full-3d-human.md",
+  "sha256": "d2d905b971248ea98b2a65b4c25f0a2754b108e0e7487c748fc10063f2deb900",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A 2D-to-3D human pose uplifting framework integrating joint rotations via differentiable SMPL-X layers, enabling real-time biomechanical analysis without inverse kinematics. Universal Lens: Rooted in 0367-efficient-2d-to-full-3d-human (d2d905b971248ea9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on 3D pose and rotation estimates using weak supervision and VPoser priors for probabilistic motion forecasting in sports analytics. GSI Mapping: Rooted in 0367-efficient-2d-to-full-3d-human (d2d905b971248ea9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situation-aware state transitions in athlete biomechanics using rotation-matrix encoded joint dynamics, enabling torque estimation and injury risk modeling from broadcast video. GSE Mapping: Rooted in 0367-efficient-2d-to-full-3d-human (d2d905b971248ea9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "uu_uplift_and_upsample",
+      "name": "Uplift and Upsample",
+      "verbatim_quote": "Method / model Backbone: **UU (Uplift and Upsample, Einfalt et al.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x_2d': '2D joint coordinates (pixels)', 'x_3d': '3D joint coordinates (mm)', 'R': 'rotation matrix (3×3)'}",
+      "assumptions": "Input 2D poses are detected with high confidence; body shape is known or inferred.",
+      "breakdown_regime": "Failure at occlusion or low-resolution input.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps 2D image features to 3D joint locations and rotations through learned spatial upsampling and geometric constraints.",
+        "source_operator": "uu_uplift_and_upsample",
+        "telemetry": "MPJPE (mean per-joint position error) and MPJAE (mean per-joint angular error)"
+      }
+    },
+    {
+      "primitive_id": "smplx_layer_rotation_estimation",
+      "name": "SMPL-X Layer Rotation Estimation",
+      "verbatim_quote": "Method / model Backbone: **UU (Uplift and Upsample, Einfalt et al.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'θ': 'joint rotation vector (axis-angle or quaternion)', 'T': 'transformation matrix (4×4)', 'v': 'vertex positions (mm)'}",
+      "assumptions": "SMPL-X body model accurately represents human anatomy; rotation representations are consistent with SMPL-X parameterization.",
+      "breakdown_regime": "Inaccurate body shape or extreme pose leads to geometric misalignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Rotation estimation via differentiable SMPL-X forward kinematics links predicted rotations to 3D joint positions.",
+        "source_operator": "smplx_layer_rotation_estimation",
+        "telemetry": "Geodesic distance between predicted and ground-truth rotation matrices"
+      }
+    },
+    {
+      "primitive_id": "pseudo_label_rotation_training",
+      "name": "Pseudo-Label Rotation Training",
+      "verbatim_quote": "2024 for comparability, and MPJAE-26 in brackets with finger rotations zeroed where models don't estimate them.) - **Access:** fit3D is public (Aifit/CVPR 2021).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'θ_gt': 'ground-truth rotation (degrees)', 'θ_pl': 'pseudo-labeled rotation (degrees)', 'L_geodesic': 'geodesic loss function'}",
+      "assumptions": "Ground-truth 3D locations are accurate; IK provides valid pseudo-labels for rotation training.",
+      "breakdown_regime": "Poor 3D localization degrades pseudo-label quality, increasing rotation error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Uses inverse kinematics to generate pseudo-labels for rotation training under weak supervision.",
+        "source_operator": "pseudo_label_rotation_training",
+        "telemetry": "Rotation error (MPJAE) under weak supervision vs. full supervision"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d2d905b971248ea9_t0",
+      "think": "The core innovation lies in extending the UU (Uplift and Upsample) architecture to jointly predict 3D joint locations and rotations in a single forward pass. The method compares rotation representations—axis-angle (AA), quaternions (Q), and rotation matrices (RM)—and loss functions—MSE and geodesic—to optimize performance. Rotation matrices with geodesic loss yield the best results, while quaternions fail under geodesic loss due to non-Euclidean geometry. The SMPL-X layer approach integrates rotation predictions into a differentiable body model, linking rotations to joint positions. Weak supervision via pseudo-labels or VPoser priors enables training without ground-truth rotations. The failure modes include catastrophic quaternion collapse under geodesic loss, degradation under weak supervision, and runtime inefficiencies in real-time deployment. The method achieves 150× speedup over traditional IK methods, making it suitable for real-time biomechanical analysis in sports broadcasting.\n\nDeep epistemic analysis for 0367-efficient-2d-to-full-3d-human (d2d905b971248ea9, domain=other, pages_read=5/5): Operator 'Uplift and Upsample' (page 1, domain other) captures: Method / model Backbone: **UU (Uplift and Upsample, Einfalt et al. Assumptions: Input 2D poses are detected with high confidence; body shape is known or inferred. Breakdown regime: Failure at occlusion or low-resolution input. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps 2D image features to 3D joint locations and rotations through learned spatial upsampling and geometric constraints. Operator 'SMPL-X Layer Rotation Estimation' (page 1, domain other) captures: Method / model Backbone: **UU (Uplift and Upsample, Einfalt et al. Assumptions: SMPL-X body model accurately represents human anatomy; rotation representations are consistent with SMPL-X parameterization. Breakdown regime: Inaccurate body shape or extreme pose leads to geometric misalignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Rotation estimation via differentiable SMPL-X forward kinematics links predicted rotations to 3D joint positions. Operator 'Pseudo-Label Rotation Training' (page 1, domain other) captures: 2024 for comparability, and MPJAE-26 in brackets with finger rotations zeroed where models don't estimate them.) - **Access:** fit3D is public (Aifit/CVPR 2021). Assumptions: Ground-truth 3D locations are accurate; IK provides valid pseudo-labels for rotation training. Breakdown regime: Poor 3D localization degrades pseudo-label quality, increasing rotation error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Uses inverse kinematics to generate pseudo-labels for rotation training under weak supervision. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0367-efficient-2d-to-full-3d-human (d2d905b971248ea9, domain=other, pages_read=5/5): Operator 'Uplift and Upsample' (page 1, domain other) captures: Method / model Backbone: **UU (Uplift and Upsample, Einfalt et al. Assumptions: Input 2D poses are detected with high confidence; body shape is known or inferred. Breakdown regime: Failure at occlusion or low-resolution input. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps 2D image features to 3D joint locations and rotations through learned spatial upsampling and geometric constraints. Operator 'SMPL-X Layer Rotation Estimation' (page 1, domain other) captures: Method / model Backbone: **UU (Uplift and Upsample, Einfalt et al. Assumptions: SMPL-X body model accurately represents human anatomy; rotation representations are consistent with SMPL-X parameterization. Breakdown regime: Inaccurate body shape or extreme pose leads to geometric misalignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Rotation estimation via differentiable SMPL-X forward kinematics links predicted rotations to 3D joint positions. Operator 'Pseudo-Label Rotation Training' (page 1, domain other) captures: 2024 for comparability, and MPJAE-26 in brackets with finger rotations zeroed where models don't estimate them.) - **Access:** fit3D is public (Aifit/CVPR 2021). Assumptions: Ground-truth 3D locations are accurate; IK provides valid pseudo-labels for rotation training. Breakdown regime: Poor 3D localization degrades pseudo-label quality, increasing rotation error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Uses inverse kinematics to generate pseudo-labels for rotation training under weak supervision. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in prior work on 2D-to-3D pose lifting (Ludwig et al., 2024) and inverse kinematics (Pavlakos et al., 2019), this framework builds upon differentiable SMPL-X models and deep learning architectures for motion capture. Retrocausal Genealogy: Rooted in 0367-efficient-2d-to-full-3d-human (d2d905b971248ea9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the data-driven model trying to generalize from limited training samples and the physical constraints of human biomechanics. The model must balance accuracy against computational efficiency and robustness to noise. Theory of Mind & Decision Maker Model: Rooted in 0367-efficient-2d-to-full-3d-human (d2d905b971248ea9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring rotation representations do not degenerate into trivial solutions. Leakage is mitigated by constraining the model with SMPL-X geometric consistency and VPoser priors. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0367-efficient-2d-to-full-3d-human (d2d905b971248ea9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0367-efficient-2d-to-full-3d-human (d2d905b971248ea9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -64,7 +64,7 @@ export default function GamePage({ params }: GameDetailPageProps): JSX.Element {
         {/* Hero Matchup Header */}
         <div className="rounded-2xl border-2 border-mineral bg-obsidian p-6 sm:p-8 shadow-xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="rounded-md bg-caution/20 border border-caution/30/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
+            <span className="rounded-md bg-caution/20 border border-caution/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
               {slotLabel}
             </span>
             <span className="font-mono text-xs sm:text-sm font-semibold text-ion-1">
@@ -149,10 +149,10 @@ export default function GamePage({ params }: GameDetailPageProps): JSX.Element {
         </section>
 
         {/* Locked Official Picks Card — ZERO leaked picks, sides, totals, or confidence numbers */}
-        <section className="mt-8 rounded-2xl border-2 border-caution/30/40 bg-obsidian p-6 sm:p-8 shadow-xl">
+        <section className="mt-8 rounded-2xl border-2 border-caution/40 bg-obsidian p-6 sm:p-8 shadow-xl">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-mineral pb-4">
             <div>
-              <span className="inline-flex items-center gap-1.5 rounded-md bg-caution/20 border border-caution/30/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-caution/20 border border-caution/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
                 🔒 Official Picks Locked
               </span>
               <h2 className="mt-3 text-xl sm:text-2xl font-bold text-white">

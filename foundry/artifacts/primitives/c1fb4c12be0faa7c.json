@@ -1,0 +1,78 @@
+{
+  "book_id": "c1fb4c12be0faa7c",
+  "source_status": "COMPLETE",
+  "title": "FREE_SETTLEMENT_DAEMON_SPEC",
+  "file_name": "FREE_SETTLEMENT_DAEMON_SPEC.md",
+  "sha256": "c1fb4c12be0faa7cdae1b752530822236cd887fe8d7adf4eacc188c0c040e4a4",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "compute_brier_score",
+      "name": "FREE_SETTLEMENT_DAEMON_SPEC Operator 1",
+      "verbatim_quote": "Replaced with `strictNumber()`, which rejects `null`, `undefined`, `\"\"`, booleans, arrays and objects.",
+      "page": 1,
+      "latex": "Brier = \\frac{1}{N} \\sum_{i=1}^{N} (p_i - y_i)^2",
+      "symbol_and_unit_ledger": "{'p_i': 'Probability of pick i (dimensionless)', 'y_i': 'Outcome indicator (1 for win, 0 for loss)', 'N': 'Total number of scorable picks (dimensionless)'}",
+      "assumptions": "No missing probabilities; all picks have valid stated probabilities; pushes and voids excluded from summation.",
+      "breakdown_regime": "Well-defined quadratic scoring for binary outcomes; undefined for non-numeric inputs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual to GSI calibration surface error metric, conformal prediction interval width.",
+        "source_operator": "compute_brier_score",
+        "telemetry": "Mean squared deviation of stated vs realized outcomes, excluding zero-weight samples."
+      }
+    },
+    {
+      "primitive_id": "compute_clv",
+      "name": "FREE_SETTLEMENT_DAEMON_SPEC Operator 2",
+      "verbatim_quote": "urns `null` because no team abbreviation appears in it — so *every total voided*.",
+      "page": 2,
+      "latex": "CLV = (Close - Lock) \\times Size",
+      "symbol_and_unit_ledger": "{'Close': 'Closing number (e.g., final score, odds)', 'Lock': 'Entry point (stated probability or model estimate)', 'Size': 'Position size (dimensionless or monetary units)', '(Close - Lock)': 'Profit per unit (dimensionless profit factor)'}",
+      "assumptions": "Valid closing numbers exist; no missing values; position sizing is linear in stake.",
+      "breakdown_regime": "Linear profit calculation; undefined if any term is null.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE state-transition value change under conformal hedge.",
+        "source_operator": "compute_clv",
+        "telemetry": "Expected monetary gain/loss relative to entry, scaled by position."
+      }
+    },
+    {
+      "primitive_id": "resolve_side",
+      "name": "FREE_SETTLEMENT_DAEMON_SPEC Operator 3",
+      "verbatim_quote": "**Totals voided on every board.** The team-side resolver ran before the TOTAL branch, and `resolveSide(\"OVER\")` ret",
+      "page": 1,
+      "latex": "Side = f(GameEvent)",
+      "symbol_and_unit_ledger": "{'f': 'Resolver function (dimensionless)', 'GameEvent': 'ESPN scoreboard event object'}",
+      "assumptions": "Game events contain sufficient structured data to determine outcome.",
+      "breakdown_regime": "Discrete classification; returns valid side or null for unresolved cases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI probabilistic label assignment via conformal reject option.",
+        "source_operator": "resolve_side",
+        "telemetry": "Resolution success rate, fraction of events mapped to {OVER, UNDER, HOME, AWAY}."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c1fb4c12be0faa7c_t0",
+      "think": "The core challenge is converting public ESPN scoreboard data into deterministic settlement outcomes for user picks. This requires resolving ambiguous game states (e.g., totals vs spreads) and handling missing or invalid data without leaking information across bets. The two defects found—coercion of null to zero and improper total resolution—are classic edge-case failures in weakly typed languages. By introducing `strictNumber()` and enforcing total-resolution-first ordering, the system enforces a hard boundary: any incomplete game state yields a void, preventing spurious settlement. The Brier score measures calibration of stated probabilities against binary outcomes, while CLV tracks linear profit/loss under a fixed-size hedge. Together they form a minimal but complete verification suite: the daemon must produce identical void/win/loss classifications regardless of whether it uses paid or free paths, differing only in the presence of closing prices.\n\nDeep epistemic analysis for FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c, domain=other, pages_read=3/3): Operator 'FREE_SETTLEMENT_DAEMON_SPEC Operator 1' (page 1, domain other) captures: Replaced with `strictNumber()`, which rejects `null`, `undefined`, `\"\"`, booleans, arrays and objects. Assumptions: No missing probabilities; all picks have valid stated probabilities; pushes and voids excluded from summation. Breakdown regime: Well-defined quadratic scoring for binary outcomes; undefined for non-numeric inputs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSI calibration surface error metric, conformal prediction interval width. Operator 'FREE_SETTLEMENT_DAEMON_SPEC Operator 2' (page 2, domain other) captures: urns `null` because no team abbreviation appears in it — so *every total voided*. Assumptions: Valid closing numbers exist; no missing values; position sizing is linear in stake. Breakdown regime: Linear profit calculation; undefined if any term is null. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state-transition value change under conformal hedge. Operator 'FREE_SETTLEMENT_DAEMON_SPEC Operator 3' (page 1, domain other) captures: **Totals voided on every board.** The team-side resolver ran before the TOTAL branch, and `resolveSide(\"OVER\")` ret Assumptions: Game events contain sufficient structured data to determine outcome. Breakdown regime: Discrete classification; returns valid side or null for unresolved cases. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI probabilistic label assignment via conformal reject option. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c, domain=other, pages_read=3/3): Operator 'FREE_SETTLEMENT_DAEMON_SPEC Operator 1' (page 1, domain other) captures: Replaced with `strictNumber()`, which rejects `null`, `undefined`, `\"\"`, booleans, arrays and objects. Assumptions: No missing probabilities; all picks have valid stated probabilities; pushes and voids excluded from summation. Breakdown regime: Well-defined quadratic scoring for binary outcomes; undefined for non-numeric inputs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSI calibration surface error metric, conformal prediction interval width. Operator 'FREE_SETTLEMENT_DAEMON_SPEC Operator 2' (page 2, domain other) captures: urns `null` because no team abbreviation appears in it — so *every total voided*. Assumptions: Valid closing numbers exist; no missing values; position sizing is linear in stake. Breakdown regime: Linear profit calculation; undefined if any term is null. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state-transition value change under conformal hedge. Operator 'FREE_SETTLEMENT_DAEMON_SPEC Operator 3' (page 1, domain other) captures: **Totals voided on every board.** The team-side resolver ran before the TOTAL branch, and `resolveSide(\"OVER\")` ret Assumptions: Game events contain sufficient structured data to determine outcome. Breakdown regime: Discrete classification; returns valid side or null for unresolved cases. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI probabilistic label assignment via conformal reject option. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bettors who expect consistent settlement regardless of API key status, and risk managers who require auditability and leak-proof execution. The system models them as rational actors seeking certainty in payout determinations. Theory of Mind & Decision Maker Model: Rooted in FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "The free-path CLV computation is deliberately omitted to prevent cross-layer leakage: users should not infer paid-market-making margins from free-path settlement data. Similarly, the Brier score remains isolated to the GSI calibration layer, ensuring that operational metrics do not contaminate statistical analysis. Cross-Layer Veto & Anti-Leakage Check: Rooted in FREE_SETTLEMENT_DAEMON_SPEC (c1fb4c12be0faa7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,869 @@
+{
+  "book_id": "09fe4b789dbfcaff",
+  "source_status": "COMPLETE",
+  "source_note": "True source: Dimitri P. Bertsekas, Rollout, Policy Iteration, and Distributed Reinforcement Learning, Athena Scientific, Belmont, Massachusetts, 2020 (ISBN-10 1-886529-07-8, ISBN-13 978-1-886529-07-6; this copy states 2nd Printing, includes revisions and updates). Local file: the publisher edition PDF held in Garrett's library at library/books-d-models/Bertsekas-2020-RolloutPolicyIterationAndDistributedRL.pdf, 13,405,794 bytes, sha256 09fe4b789dbfcaff358503b5f87302d2332fcdf714f3a9af4759f9ea0d399d21, book_id 09fe4b789dbfcaff computed over the PDF bytes only by the scan digest sha256(str(size) + bytes). Extracted text at text/books-d-models/Bertsekas-2020-RolloutPolicyIterationAndDistributedRL.pdf.txt, 1,580,715 bytes, 26,379 lines; text quality is high for prose, with the usual extraction artifacts in displayed equations, footnote markers, and some accented symbols. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "offline_training_online_play_split",
+      "name": "Learning separates into off-line policy iteration that trains value and policy networks, and on-line play that improves decisions by lookahead",
+      "verbatim_quote": "To understand the overall structure of AlphaZero and related programs, and their connections to our DP/RL methodology, it is useful to divide their design into two parts:",
+      "page": "Sec. 1.1; text lines 594-610",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Off-line training can generate or access enough trajectories to evaluate the current policy before real-time decisions are required.",
+        "The trained value and policy representations remain relevant to the states met during on-line play."
+      ],
+      "breakdown_regime": "If the on-line state distribution shifts away from the training distribution, the learned evaluator and base policy can both be wrong in the same direction, and lookahead then amplifies a shared bias instead of correcting it.",
+      "domain": "reinforcement_learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine keeps two clocks. A slow training loop updates state value estimates and a default decision policy from completed episodes, while a fast decision loop runs bounded lookahead from the current state before committing to an action. Each loop logs its own inputs so a decision can be traced to the model version that produced it.",
+        "source_operator": "offline_training_online_play_split",
+        "telemetry": "Versioned training episodes, current game or task state, candidate actions, decision latency, and post-decision outcomes by model version."
+      }
+    },
+    {
+      "primitive_id": "principle_of_optimality",
+      "name": "The tail of an optimal control sequence is itself optimal for the subproblem that starts where the tail begins",
+      "verbatim_quote": "Stated succinctly, the principle of optimality says that the tail of an optimal sequence is optimal for the tail subproblem.",
+      "page": "Sec. 1.2; text lines 1071-1074",
+      "latex": "J_N^{*}(x_N)=g_N(x_N), \\qquad J_k^{*}(x_k)=\\min_{u_k\\in U_k(x_k)}\\left[g_k(x_k,u_k)+J_{k+1}^{*}\\left(f_k(x_k,u_k)\\right)\\right]",
+      "symbol_and_unit_ledger": {
+        "J_k^{*}(x_k)": "optimal cost-to-go from state x_k at stage k [cost units]",
+        "g_k(x_k,u_k)": "stage cost of control u_k at state x_k [cost units]",
+        "f_k(x_k,u_k)": "next state under the deterministic system [state]",
+        "U_k(x_k)": "feasible control set at state x_k [controls]"
+      },
+      "assumptions": [
+        "Costs are additive over stages and the future cost depends on the past only through the current state.",
+        "The state is a sufficient summary of the history for the remaining problem."
+      ],
+      "breakdown_regime": "The recursion fails as stated when the recorded state omits information that changes future costs or feasibility, because two histories with the same label then need different tails.",
+      "domain": "dynamic_programming",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every projection is stored as a continuation value attached to a fully specified state, never as an isolated final number. If a late game or late process state changes, only the tail value from that state is recomputed, and the earlier decisions that lead into it are re-scored through the recursion.",
+        "source_operator": "principle_of_optimality",
+        "telemetry": "State snapshots with complete context fields, stage outcomes, terminal outcomes, and recomputation logs keyed by state."
+      }
+    },
+    {
+      "primitive_id": "approximation_in_value_space",
+      "name": "A usable policy is obtained by replacing the exact cost-to-go with an approximation and minimizing stage cost plus approximate continuation value",
+      "verbatim_quote": "However, a similar forward algorithmic process can be used if the optimal cost-to-go functions Jk* are replaced by some approximations J˜k",
+      "page": "Sec. 1.2.3; text lines 1847-1857",
+      "latex": "\\tilde{u}_k\\in\\arg\\min_{u_k\\in U_k(\\tilde{x}_k)}\\left[g_k(\\tilde{x}_k,u_k)+\\tilde{J}_{k+1}\\left(f_k(\\tilde{x}_k,u_k)\\right)\\right]",
+      "symbol_and_unit_ledger": {
+        "\\tilde{u}_k": "approximately optimal control at stage k [control]",
+        "\\tilde{J}_{k+1}": "approximate cost-to-go at stage k+1 [cost units]",
+        "g_k": "stage cost [cost units]",
+        "f_k": "system transition function [state]"
+      },
+      "assumptions": [
+        "An approximate cost-to-go function is available for every reachable next state.",
+        "One-step minimization is computationally feasible at decision time."
+      ],
+      "breakdown_regime": "Ranking errors in the approximation dominate when candidate actions differ by less than the approximation error, so the selected control can be worse than the baseline it was meant to improve.",
+      "domain": "approximate_dynamic_programming",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Baseline projections serve as the approximate continuation value inside a one-step rescoring of each candidate decision. The engine records both the raw baseline value and the rescored value, so the size and direction of every adjustment the lookahead makes is measurable.",
+        "source_operator": "approximation_in_value_space",
+        "telemetry": "Baseline continuation values, candidate level rescoring deltas, realized outcomes, and error by state region."
+      }
+    },
+    {
+      "primitive_id": "optimal_q_factors",
+      "name": "Optimal action values package stage cost plus optimal continuation, and the optimal value is their minimum over feasible controls",
+      "verbatim_quote": "Thus the optimal Q-factors are simply the expressions that are minimized in the right-hand side of the DP equation (1.4).",
+      "page": "Sec. 1.2.2; text lines 2090-2105",
+      "latex": "Q_k^{*}(x_k,u_k)=g_k(x_k,u_k)+J_{k+1}^{*}\\left(f_k(x_k,u_k)\\right), \\qquad J_k^{*}(x_k)=\\min_{u_k\\in U_k(x_k)}Q_k^{*}(x_k,u_k)",
+      "symbol_and_unit_ledger": {
+        "Q_k^{*}(x_k,u_k)": "optimal action value of control u_k at state x_k [cost units]",
+        "J_{k+1}^{*}": "optimal cost-to-go at the next state [cost units]",
+        "g_k": "stage cost [cost units]"
+      },
+      "assumptions": [
+        "The continuation after the first control follows an optimal policy.",
+        "All feasible controls at the state can in principle be evaluated."
+      ],
+      "breakdown_regime": "With function approximation the stored action value can absorb large state level components that do not affect the ranking, wasting model capacity and corrupting comparisons between controls.",
+      "domain": "dynamic_programming",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Projections are kept at the level of state and candidate action pairs rather than collapsed to a single state score. Rankings, explanations, and uncertainty are all computed from the pair level table, which preserves which specific choice drives a recommendation.",
+        "source_operator": "optimal_q_factors",
+        "telemetry": "State and action pair projections, pair level realized outcomes, and ranking changes under updated information."
+      }
+    },
+    {
+      "primitive_id": "stochastic_feedback_policy_dp",
+      "name": "Under uncertainty the object optimized is a feedback policy, and the recursion minimizes expected stage cost plus expected continuation value",
+      "verbatim_quote": "Policies are more general objects than control sequences, and in the presence of stochastic uncertainty, they can result in improved cost, since they allow choices of controls uk that incorporate knowledge of the state xk",
+      "page": "Sec. 1.3; text lines 2213-2225",
+      "latex": "J_k^{*}(x_k)=\\min_{u_k\\in U_k(x_k)}E_{w_k}\\left[g_k(x_k,u_k,w_k)+J_{k+1}^{*}\\left(f_k(x_k,u_k,w_k)\\right)\\right]",
+      "symbol_and_unit_ledger": {
+        "E_{w_k}": "expectation over the stage disturbance w_k [probability weighted average]",
+        "w_k": "random disturbance at stage k [problem specific units]",
+        "J_k^{*}(x_k)": "optimal expected cost-to-go [cost units]",
+        "f_k(x_k,u_k,w_k)": "random next state [state]"
+      },
+      "assumptions": [
+        "The disturbance distribution may depend on the current state and control but not on earlier disturbances beyond what the state records.",
+        "The controller observes the current state before choosing each control."
+      ],
+      "breakdown_regime": "Open loop plans degrade when disturbances move the system into states the plan never anticipated, and expectation based recursion can hide tail risk when the cost of rare states is extreme.",
+      "domain": "stochastic_control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scenario generation in the engine is closed loop: after each simulated event the state is updated and the next decision is re-derived from the new state, instead of freezing a full sequence of decisions in advance. Distributional outcomes are reported alongside expected values.",
+        "source_operator": "stochastic_feedback_policy_dp",
+        "telemetry": "Scenario trees with state updates after each event, disturbance samples, and outcome distributions per decision point."
+      }
+    },
+    {
+      "primitive_id": "linear_quadratic_certainty_equivalence",
+      "name": "For linear dynamics with quadratic cost the optimal policy is linear, the value is quadratic, and the policy does not depend on disturbance variance",
+      "verbatim_quote": "Another remarkable feature of this example, which can also be extended to multi-dimensional systems, is that the optimal policy does not depend on the variance of wk , and remains unaffected when wk is replaced by its mean",
+      "page": "Sec. 1.3.1; text lines 2420-2427",
+      "latex": "K^{*}=\\frac{\\alpha r K^{*}}{r+\\alpha b^{2}K^{*}}+1, \\qquad \\mu^{*}(x)=Lx, \\qquad L=-\\frac{\\alpha b K^{*}}{r+\\alpha b^{2}K^{*}}",
+      "symbol_and_unit_ledger": {
+        "K^{*}": "positive Riccati solution scaling the quadratic value [cost per squared state unit]",
+        "L": "linear feedback gain [control per state unit]",
+        "b": "control effectiveness in the scalar dynamics [state per control unit]",
+        "r": "control cost weight [cost per squared control unit]",
+        "\\alpha": "discount factor [dimensionless, 0<alpha<1]"
+      },
+      "assumptions": [
+        "The system is linear, the cost is quadratic, and the disturbance enters additively with a mean that is known.",
+        "The Riccati equation has a positive solution and the resulting feedback is stabilizing."
+      ],
+      "breakdown_regime": "Certainty equivalence collapses outside the linear quadratic setting: with nonlinear dynamics, constraints, or nonquadratic costs, variance and higher moments change the optimal control.",
+      "domain": "optimal_control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Where a local linear quadratic approximation is defensible, the engine uses the closed form as a fast reference policy and as a sanity check on simulation based values. Deviations between the closed form and the general solver are logged as a measure of nonlinearity and constraint activity.",
+        "source_operator": "linear_quadratic_certainty_equivalence",
+        "telemetry": "Local linearization residuals, constraint activation flags, Riccati based reference values, and solver deviation by state region."
+      }
+    },
+    {
+      "primitive_id": "rollout_cost_improvement",
+      "name": "Rollout optimizes the first control against the cost of following a base heuristic afterward, and thereby performs no worse than that heuristic under its conditions",
+      "verbatim_quote": "The major theoretical property of rollout is cost improvement : the cost obtained by rollout using some base heuristic is less or equal to the corresponding cost of the base heuristic.",
+      "page": "Sec. 1.2.2; text lines 1927-1932",
+      "latex": "\\tilde{\\mu}_k(x_k)\\in\\arg\\min_{u_k\\in U_k(x_k)}\\tilde{Q}_k(x_k,u_k), \\qquad \\tilde{Q}_k(x_k,u_k)=g_k(x_k,u_k)+H_{k+1}\\left(f_k(x_k,u_k)\\right)",
+      "symbol_and_unit_ledger": {
+        "\\tilde{\\mu}_k": "rollout policy at stage k [control function]",
+        "\\tilde{Q}_k": "rollout action value built from the base heuristic [cost units]",
+        "H_{k+1}": "cost of the base heuristic from the next state [cost units]",
+        "g_k": "stage cost [cost units]"
+      },
+      "assumptions": [
+        "The base heuristic can be run from any next state reached by a candidate first control.",
+        "The heuristic satisfies sequential consistency or the weaker sequential improvement condition."
+      ],
+      "breakdown_regime": "An arbitrary heuristic can violate the improvement conditions, and plain rollout can then return a worse trajectory than the heuristic produced on its own, as the book demonstrates with a two stage counterexample.",
+      "domain": "rollout",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every heuristic or model in the engine is treated as a base policy that rollout can improve, never as a final answer. Improvement is claimed only after the improved trajectory is actually simulated and compared against the base trajectory from the same starting state.",
+        "source_operator": "rollout_cost_improvement",
+        "telemetry": "Paired base and rollout trajectory costs from identical starting states, improvement deltas, and condition violation flags."
+      }
+    },
+    {
+      "primitive_id": "policy_iteration_as_newton_step",
+      "name": "Policy iteration is a Newton iteration on the Bellman equation, and one rollout step is one Newton step from the base policy value",
+      "verbatim_quote": "Generally, rollout with base policy µ can be viewed as a single iteration of Newton's method applied to the solution of the Bellman equation starting from Jµ",
+      "page": "Sec. 1.3.4; text lines 3843-3850",
+      "latex": "T_{\\tilde{\\mu}}J_{\\mu}=TJ_{\\mu}, \\qquad \\frac{\\tilde{J}-J^{*}}{J-J^{*}}",
+      "symbol_and_unit_ledger": {
+        "T": "Bellman optimality operator [maps cost functions to cost functions]",
+        "T_{\\tilde{\\mu}}": "linear Bellman operator of the rollout policy [maps cost functions to cost functions]",
+        "J_{\\mu}": "exact cost function of the base policy [cost units]",
+        "J^{*}": "optimal cost function [cost units]",
+        "\\tilde{J}": "cost function of the rollout policy [cost units]"
+      },
+      "assumptions": [
+        "Policy evaluation of the base policy is exact or accurate enough that the linearization point is meaningful.",
+        "The Bellman operator is well approximated locally by the operator of a single policy."
+      ],
+      "breakdown_regime": "The minimum over policies makes the operator nonsmooth, so quadratic convergence is a local and structural statement, not a promise for approximate evaluation, sampling noise, or distant starting policies.",
+      "domain": "policy_iteration",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Improvement is judged by the error ratio against the remaining gap, not by the raw size of the gain. A small gain from a strong baseline can be excellent performance, so the engine tracks estimated distance to the best attainable value alongside every improvement claim.",
+        "source_operator": "policy_iteration_as_newton_step",
+        "telemetry": "Baseline value, improved value, estimated optimal value bounds, and improvement ratios across successive improvement rounds."
+      }
+    },
+    {
+      "primitive_id": "multistep_lookahead",
+      "name": "Extending exact optimization over more stages reduces dependence on the terminal value approximation, at rising computational cost",
+      "verbatim_quote": "Indeed, in practice, longer lookahead typically results in better performance, although one can construct artificial examples where this is not so (see [Ber19a], Section 2.2.1).",
+      "page": "Sec. 2.1.1; text lines 6455-6465",
+      "latex": "\\tilde{u}_k\\in\\arg\\min_{u_k,\\mu_{k+1},\\ldots,\\mu_{k+\\ell-1}}E\\left[\\sum_{i=k}^{k+\\ell-1}g_i(x_i,u_i,w_i)+\\tilde{J}_{k+\\ell}(x_{k+\\ell})\\right]",
+      "symbol_and_unit_ledger": {
+        "\\ell": "lookahead depth [stages]",
+        "\\tilde{J}_{k+\\ell}": "terminal cost approximation after the lookahead window [cost units]",
+        "g_i": "stage cost at stage i [cost units]",
+        "w_i": "stage disturbance [problem specific units]"
+      },
+      "assumptions": [
+        "The lookahead problem over the chosen depth can be solved exactly or nearly exactly within the decision time budget.",
+        "Terminal approximation error shrinks in influence as more stages are optimized exactly."
+      ],
+      "breakdown_regime": "In stochastic problems the lookahead tree grows rapidly and simulation noise accumulates, so a longer window can be slower and less accurate per unit of computation than a shorter one.",
+      "domain": "approximate_dynamic_programming",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Lookahead depth is an explicit engine parameter that is tuned per decision type against measured accuracy and latency. Short windows are used where events resolve quickly, and deeper windows where a single early choice constrains many later states.",
+        "source_operator": "multistep_lookahead",
+        "telemetry": "Accuracy and latency measurements by lookahead depth, terminal approximation error, and decision type."
+      }
+    },
+    {
+      "primitive_id": "sequential_consistency",
+      "name": "A base heuristic is sequentially consistent when, started one step later along its own trajectory, it continues with the same remaining trajectory",
+      "verbatim_quote": "In other words, the base heuristic is sequentially consistent if it “stays the course”: when the starting state xk is moved forward to the next state xk+1 of its state trajectory, the heuristic will not deviate from the remainder of the trajectory.",
+      "page": "Sec. 2.3.1; text lines 7976-7982",
+      "latex": "J_{k,\\tilde{\\pi}}(x_k)\\leq H_k(x_k), \\qquad \\forall x_k,\\ k",
+      "symbol_and_unit_ledger": {
+        "J_{k,\\tilde{\\pi}}(x_k)": "cost of the rollout policy from state x_k [cost units]",
+        "H_k(x_k)": "cost of the base heuristic from state x_k [cost units]"
+      },
+      "assumptions": [
+        "The heuristic produces a complete trajectory from any state it is started from.",
+        "Restarting the heuristic at the successor state reproduces the tail of the original trajectory."
+      ],
+      "breakdown_regime": "State dependent heuristics that recompute from scratch, use global randomness, or depend on the path taken can violate consistency, and the cost improvement proof then fails at exactly the induction step that equates the heuristic with a policy.",
+      "domain": "rollout",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Before any heuristic is admitted as a rollout base, the engine runs a consistency probe: it restarts the heuristic at successor states along its own trajectories and compares the resulting tails. Heuristics that fail are routed to fortified rollout instead of plain rollout.",
+        "source_operator": "sequential_consistency",
+        "telemetry": "Restart probe results per heuristic, tail divergence counts, and routing decisions between plain and fortified rollout."
+      }
+    },
+    {
+      "primitive_id": "sequential_improvement",
+      "name": "Sequential improvement, the condition that the best one-step deviation is no worse than the heuristic cost, is sufficient for rollout cost improvement and monotone trajectory improvement",
+      "verbatim_quote": "Thus the rollout algorithm obtained with a sequentially improving base heuristic, will improve or at least will perform no worse than the base heuristic, from every starting state xk",
+      "page": "Sec. 2.3.1; text lines 8095-8100",
+      "latex": "\\min_{u_k\\in U_k(x_k)}\\tilde{Q}_k(x_k,u_k)\\leq H_k(x_k), \\qquad \\mathrm{Cost}(T_0)\\geq \\mathrm{Cost}(T_1)\\geq\\cdots\\geq \\mathrm{Cost}(T_N)",
+      "symbol_and_unit_ledger": {
+        "\\tilde{Q}_k(x_k,u_k)": "heuristic action value of control u_k [cost units]",
+        "H_k(x_k)": "base heuristic cost from state x_k [cost units]",
+        "T_k": "intermediate trajectory after k rollout steps [trajectory]"
+      },
+      "assumptions": [
+        "The minimum is taken over the full feasible control set, or over a restricted set that still contains a control meeting the condition.",
+        "Costs of complete trajectories can be evaluated exactly or by controlled simulation."
+      ],
+      "breakdown_regime": "If no feasible control satisfies the inequality at some state, monotone improvement stops there and unfortified rollout can end worse than the base heuristic from the original start.",
+      "domain": "rollout",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine evaluates the sequential improvement inequality at every visited state during rollout and logs violations as first class diagnostics. A violation is treated as evidence about the base heuristic, not as noise, and it changes which rollout variant is trusted for that state region.",
+        "source_operator": "sequential_improvement",
+        "telemetry": "Per state improvement inequality margins, violation locations, and trajectory cost sequences for each rollout run."
+      }
+    },
+    {
+      "primitive_id": "parallel_rollout_superheuristic",
+      "name": "Multiple heuristics combine into a superheuristic that keeps the best trajectory, and rollout over it improves on every member heuristic",
+      "verbatim_quote": "The idea is to construct a superheuristic, which selects the best out of the trajectories produced by the entire collection of heuristics.",
+      "page": "Sec. 2.3.2; text lines 8240-8250",
+      "latex": "\\tilde{u}_k\\in\\arg\\min_{u_k\\in U_k(x_k)}\\min_{\\ell=1,\\ldots,m}\\tilde{Q}_k^{\\ell}(x_k,u_k)",
+      "symbol_and_unit_ledger": {
+        "\\tilde{Q}_k^{\\ell}": "action value built from the ell-th base heuristic [cost units]",
+        "m": "number of base heuristics [count]"
+      },
+      "assumptions": [
+        "Each member heuristic can be evaluated from the same states, and their trajectory costs are comparable on one scale.",
+        "If every member is sequentially improving, the superheuristic is also sequentially improving."
+      ],
+      "breakdown_regime": "Taking the minimum over many noisy heuristic evaluations biases the selected cost downward, so the superheuristic can look better than it performs when evaluations are stochastic and unvalidated.",
+      "domain": "rollout",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine maintains a portfolio of unlike baselines, for example statistical, matchup driven, and conservative baselines, and lets rollout select among them state by state. Portfolio membership is reviewed from realized costs, not from reputation.",
+        "source_operator": "parallel_rollout_superheuristic",
+        "telemetry": "Per heuristic trajectory costs by state, selection frequencies, and realized cost of the superheuristic against each member."
+      }
+    },
+    {
+      "primitive_id": "simplified_rollout",
+      "name": "Restricting the lookahead minimization to a smaller promising control subset preserves cost improvement when the restricted set still satisfies the improvement condition",
+      "verbatim_quote": "The idea of replacing the minimization (2.17) by the simpler minimization (2.18) can be extended.",
+      "page": "Sec. 2.3.3; text lines 8368-8380",
+      "latex": "\\tilde{\\mu}_k(x_k)\\in\\arg\\min_{u_k\\in \\bar{U}_k(x_k)}\\tilde{Q}_k(x_k,u_k), \\qquad \\min_{u_k\\in \\bar{U}_k(x_k)}\\tilde{Q}_k(x_k,u_k)\\leq H_k(x_k)",
+      "symbol_and_unit_ledger": {
+        "\\bar{U}_k(x_k)": "restricted candidate control subset [controls]",
+        "U_k(x_k)": "full feasible control set [controls]",
+        "\\tilde{Q}_k": "heuristic action value [cost units]",
+        "H_k(x_k)": "base heuristic cost [cost units]"
+      },
+      "assumptions": [
+        "The restricted subset contains the base heuristic control or another control that meets the modified improvement condition.",
+        "Candidate generation for the subset is cheap relative to full minimization."
+      ],
+      "breakdown_regime": "If candidate generation systematically excludes the controls that matter in unusual states, the restricted algorithm silently loses exactly the improvements that full rollout would have found there.",
+      "domain": "rollout",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Candidate generation is a separate, auditable stage of the engine: a cheap model proposes a shortlist of actions or scenarios, and rollout optimizes only over the shortlist. Shortlist recall is measured by checking how often the full search winner falls outside the shortlist on sampled states.",
+        "source_operator": "simplified_rollout",
+        "telemetry": "Candidate shortlists, full search winners on audit samples, shortlist recall, and computation saved per decision."
+      }
+    },
+    {
+      "primitive_id": "fortified_rollout",
+      "name": "Fortified rollout keeps the best complete trajectory found so far and follows it unless rollout discovers a strictly better end-to-end trajectory",
+      "verbatim_quote": "In other words the fortified rollout at xk follows the current tentative best trajectory T k unless a lower cost trajectory T̃k is discovered by running the base heuristic from all possible next states xk+1",
+      "page": "Sec. 2.3.4; text lines 8483-8490",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The base heuristic produces at least one feasible complete trajectory from the initial state to anchor the tentative best.",
+        "Complete trajectory costs are comparable across iterations."
+      ],
+      "breakdown_regime": "Fortification protects the final cost but cannot create improvement where the heuristic and rollout both search poorly; it also spends computation re-evaluating alternatives at every state.",
+      "domain": "rollout",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine never lets an improvement procedure return something worse than the incumbent solution. Every candidate plan, lineup, or projection set is compared end to end against the stored incumbent, and the incumbent is replaced only on a verified improvement.",
+        "source_operator": "fortified_rollout",
+        "telemetry": "Incumbent solution costs, candidate end to end costs, replacement events, and rejected candidate logs."
+      }
+    },
+    {
+      "primitive_id": "mcts_adaptive_sampling_ucb",
+      "name": "Monte Carlo tree search allocates simulation by minimizing the sum of an exploitation index and an exploration index such as the UCB bonus",
+      "verbatim_quote": "Thus it makes sense to sample next the control i that minimizes the sum Ti,n + Ri,n of two indexes: an exploitation index Ti,n and an exploration index Ri,n",
+      "page": "Sec. 2.4.2; text lines 10124-10140",
+      "latex": "R_{i,n}=-c\\sqrt{\\frac{\\log n}{s_i}}, \\qquad i_{next}\\in\\arg\\min_i\\left(Q_{i,n}+R_{i,n}\\right)",
+      "symbol_and_unit_ledger": {
+        "R_{i,n}": "exploration index for control i after n samples [cost units]",
+        "Q_{i,n}": "empirical mean action value of control i [cost units]",
+        "s_i": "number of times control i has been sampled [count]",
+        "c": "positive exploration constant [cost units]",
+        "n": "total samples collected [count]"
+      },
+      "assumptions": [
+        "Sampled action values are comparable across controls and their empirical means are meaningful estimates.",
+        "The exploration constant is scaled to the range of the action values."
+      ],
+      "breakdown_regime": "With too little exploration the search locks onto an early lucky control; with too much it wastes the budget on hopeless controls, and deep trees make the index statistics stale as the underlying policy changes.",
+      "domain": "monte_carlo_tree_search",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Simulation budget in the engine is allocated adaptively: scenarios that currently look best and scenarios that are under-sampled compete through an explicit index, instead of receiving equal samples. The index components are logged so allocation decisions can be audited afterward.",
+        "source_operator": "mcts_adaptive_sampling_ucb",
+        "telemetry": "Sample counts per scenario, empirical means, exploration bonuses, and allocation histories per decision."
+      }
+    },
+    {
+      "primitive_id": "common_disturbance_variance_reduction",
+      "name": "Comparing controls under the same disturbance sequence reduces the variance of estimated action value differences when the paired errors are nonnegatively correlated",
+      "verbatim_quote": "Thus, under the assumption (2.49), the condition (2.48) holds and guarantees that by averaging cost difference samples rather than differencing (independently obtained) averages of cost samples, the simulation error variance does not increase.",
+      "page": "Sec. 2.4.4; text lines 10339-10345",
+      "latex": "E\\left[D_k(x_k,u_k,w_k)D_k(x_k,\\hat{u}_k,w_k)\\right]\\geq 0",
+      "symbol_and_unit_ledger": {
+        "D_k(x_k,u_k,w_k)": "zero mean sampling error of the action value estimate for control u_k [cost units]",
+        "w_k": "shared disturbance sequence [problem specific units]",
+        "\\hat{u}_k": "comparison control [control]"
+      },
+      "assumptions": [
+        "The disturbance distribution does not depend on the state or control being compared, so one shared sequence is a valid draw for both.",
+        "The effect of changing the first control on the sampling error is small relative to the effect of the shared randomness."
+      ],
+      "breakdown_regime": "If paired errors are negatively correlated, common random numbers increase rather than decrease the variance of the difference, and independent sampling is better.",
+      "domain": "simulation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "All head to head comparisons in the engine use paired simulation: the same random scenario, weather draw, or opponent sequence is applied to every candidate, and only the resulting differences are averaged. Unpaired averages are never used to rank close candidates.",
+        "source_operator": "common_disturbance_variance_reduction",
+        "telemetry": "Paired scenario identifiers across candidates, per pair outcome differences, and correlation of paired errors."
+      }
+    },
+    {
+      "primitive_id": "advantage_updating",
+      "name": "Training should target action value differences from the best action, because large state dependent components of the value do not affect control choice and swamp naive fitting",
+      "verbatim_quote": "However, with advantage updating, we may instead focus the training process on finer scale variations of Q*k , which may be all that matters.",
+      "page": "Sec. 4.3.3; text lines 17830-17840",
+      "latex": "A_k(x_k,u_k)=Q_k^{*}(x_k,u_k)-\\min_{u\\in U_k(x_k)}Q_k^{*}(x_k,u)",
+      "symbol_and_unit_ledger": {
+        "A_k(x_k,u_k)": "advantage of control u_k at state x_k [cost units]",
+        "Q_k^{*}(x_k,u_k)": "optimal action value [cost units]"
+      },
+      "assumptions": [
+        "Control choice depends only on differences between action values at the same state.",
+        "A state dependent baseline can be estimated or subtracted without changing the ranking."
+      ],
+      "breakdown_regime": "Advantage targets discard the absolute level of the value, so a model trained only on advantages cannot price the state itself and must be paired with a separate level estimate where levels matter.",
+      "domain": "function_approximation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine models that rank options are trained on margins between options at the same state, not on raw outcome levels. Level models and margin models are kept separate, and selection decisions read only the margin model.",
+        "source_operator": "advantage_updating",
+        "telemetry": "Per state option margins, margin model errors, level model errors, and selection accuracy by margin size."
+      }
+    },
+    {
+      "primitive_id": "mpc_as_rollout",
+      "name": "Model predictive control is rollout whose base heuristic drives the state to the target in one fewer stage, which makes it sequentially improving and gives finite total cost stability",
+      "verbatim_quote": "It turns out that the base heuristic just described is sequentially improving, so MPC has a cost improvement property, of the type discussed in Section 2.3.1.",
+      "page": "Sec. 3.1; text lines 11511-11520",
+      "latex": "\\min_{u_k\\in U_k(x_k)}\\left[g_k(x_k,u_k)+H_{k+1}\\left(f_k(x_k,u_k)\\right)\\right]\\leq H_k(x_k), \\qquad \\sum_{k=0}^{\\infty}g_k(x_k,u_k)<\\infty",
+      "symbol_and_unit_ledger": {
+        "H_k(x_k)": "optimal cost of the shortened horizon problem that drives the state to the target [cost units]",
+        "g_k": "stage cost [cost units]",
+        "f_k": "system transition function [state]"
+      },
+      "assumptions": [
+        "Constrained controllability holds: from every admitted state the target can be reached within the horizon without violating state or control constraints.",
+        "Only the first control of each optimized sequence is applied before re-optimizing."
+      ],
+      "breakdown_regime": "If the horizon is too short or the target unreachable under the constraints, the optimization is infeasible or myopic, and the stability argument collapses.",
+      "domain": "model_predictive_control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Receding horizon planning in the engine re-solves the whole remaining problem after every new observation, applying only the immediate decision from each solve. Feasibility of the full remaining plan is checked at each re-solve, not assumed from the previous one.",
+        "source_operator": "mpc_as_rollout",
+        "telemetry": "Replanning timestamps, applied first decisions, feasibility checks per re-solve, and divergence between planned and realized trajectories."
+      }
+    },
+    {
+      "primitive_id": "target_tubes_reachability",
+      "name": "Constraint sets must be replaced by a reachable target tube computed backward, so that every admitted state has a feasible continuation",
+      "verbatim_quote": "The critical construction in the preceding example is to identify sets of states X k ⊂ Xk such that starting from within X k we are guaranteed to stay within the “tube” {X k+1 , X k+2 , . . . , X N } for all subsequent times with appropriate choices of control.",
+      "page": "Sec. 3.1.1; text lines 11734-11745",
+      "latex": "\\bar{X}_N=X_N, \\qquad \\bar{X}_k=\\left\\{x_k\\in X_k \\mid \\exists u_k\\in U_k(x_k):\\ f_k(x_k,u_k)\\in \\bar{X}_{k+1}\\right\\}",
+      "symbol_and_unit_ledger": {
+        "\\bar{X}_k": "reachable subset of the stage k constraint set [states]",
+        "X_k": "original stage k constraint set [states]",
+        "f_k(x_k,u_k)": "next state [state]",
+        "U_k(x_k)": "feasible controls at x_k [controls]"
+      },
+      "assumptions": [
+        "The dynamics and constraint sets are known well enough to compute or approximate predecessor sets.",
+        "Inner approximations of the tube are acceptable when exact computation is intractable."
+      ],
+      "breakdown_regime": "Exact tube computation becomes intractable in high dimensions, and coarse inner approximations can exclude most of the usable state space, making the controller conservative to the point of uselessness.",
+      "domain": "constrained_control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Eligibility and feasibility in the engine are computed backward from the deadline or terminal requirement, not forward from the current state. A plan is admitted only if every intermediate state sits inside the precomputed feasible tube for its stage.",
+        "source_operator": "target_tubes_reachability",
+        "telemetry": "Backward feasibility sets per stage, plan admission checks, and rejection reasons tied to specific stages."
+      }
+    },
+    {
+      "primitive_id": "multiagent_rollout",
+      "name": "Agent-by-agent rollout optimizes one control component at a time against the base policy and retains the cost improvement property at polynomial rather than exponential cost",
+      "verbatim_quote": "In the multiagent rollout algorithm, at a given stage and state, we take up each vehicle in the order 1, . . . , n, and we compare the Q-factors of the available moves to that vehicle while assuming that all the remaining moves will be made according to the base heuristic, and taking into account the moves that have been already made and the tasks that have already been performed; see the illustration of Fig. 3.2.3.",
+      "page": "Sec. 3.2; text lines 12623-12632",
+      "latex": "J_{k,\\tilde{\\pi}}(x_k)\\leq J_{k,\\pi}(x_k), \\qquad \\forall x_k,\\ k",
+      "symbol_and_unit_ledger": {
+        "J_{k,\\tilde{\\pi}}(x_k)": "cost of the multiagent rollout policy [cost units]",
+        "J_{k,\\pi}(x_k)": "cost of the base policy [cost units]"
+      },
+      "assumptions": [
+        "Agents share information, so each agent knows the components already chosen by its predecessors in the order.",
+        "The joint control factors into separately constrained components."
+      ],
+      "breakdown_regime": "Componentwise optimization can stall at a point where no single agent can improve but a coordinated joint change would, so agent-by-agent results are not jointly optimal in general.",
+      "domain": "multiagent_systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Joint decisions in the engine, such as a full lineup or a full game plan, are improved component by component: one slot or unit at a time is re-optimized with the others held at their current or base values. The order of components is recorded because it can affect the result.",
+        "source_operator": "multiagent_rollout",
+        "telemetry": "Component level improvement traces, agent order used, per component action values, and joint cost before and after each pass."
+      }
+    },
+    {
+      "primitive_id": "constrained_rollout_cost_improvement",
+      "name": "Constrained rollout under sequential improvement produces a feasible complete trajectory whose cost is no larger than the base heuristic trajectory",
+      "verbatim_quote": "Proposition 3.3.1 establishes the fundamental cost improvement property for constrained rollout under the sequential improvement condition.",
+      "page": "Sec. 3.3.1; text lines 14279-14284",
+      "latex": "G\\left(\\tilde{y}_N\\right)\\leq G\\left(R(\\tilde{y}_0)\\right), \\qquad \\tilde{y}_N\\in C",
+      "symbol_and_unit_ledger": {
+        "G": "cost of a complete trajectory [cost units]",
+        "R(\\tilde{y}_0)": "complete trajectory generated by the base heuristic from the initial state [trajectory]",
+        "\\tilde{y}_N": "complete trajectory generated by constrained rollout [trajectory]",
+        "C": "set of feasible complete trajectories [trajectories]"
+      },
+      "assumptions": [
+        "The base heuristic generates a feasible complete trajectory from the initial state.",
+        "At each stage the set of controls that admit a feasible completion is nonempty under the improvement condition."
+      ],
+      "breakdown_regime": "When sequential improvement fails, the feasible continuation set can become empty mid-trajectory and plain constrained rollout cannot extend the partial trajectory at all; fortification is then required.",
+      "domain": "constrained_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Hard constraints are handled inside the search, not by penalizing violations afterward. Candidate partial solutions are extended only by choices that still admit a feasible completion, and feasibility of the final artifact is proved rather than sampled.",
+        "source_operator": "constrained_rollout_cost_improvement",
+        "telemetry": "Feasible continuation checks per stage, constraint violation counts (target zero), and cost comparison against the base feasible solution."
+      }
+    },
+    {
+      "primitive_id": "surrogate_and_bayesian_optimization",
+      "name": "Surrogate optimization replaces quantities that are expensive to evaluate with cheaper stand-ins, and Bayesian optimization chooses new evaluation points by trading exploration against exploitation",
+      "verbatim_quote": "The idea is to replace the hard-to-compute quantities with “surrogates” that are easier to obtain.",
+      "page": "Sec. 3.5; text lines 15178-15182",
+      "latex": "\\hat{J}_k(x_k)=\\min_{u_k\\in U_k(x_k)}E\\left[\\hat{g}_k(x_k,u_k,w_k)+\\hat{J}_{k+1}\\left(\\hat{f}_k(x_k,u_k,w_k)\\right)\\right], \\qquad \\mu_k(I_k)\\in\\arg\\max_{u\\in U}A_k(u;I_k)",
+      "symbol_and_unit_ledger": {
+        "\\hat{g}_k, \\hat{f}_k": "surrogate stage cost and system functions [cost units, state]",
+        "\\hat{J}_k": "surrogate cost-to-go [cost units]",
+        "A_k(u;I_k)": "acquisition function value of evaluating point u given information I_k [benefit units]",
+        "I_k": "information vector of past evaluation points and measured values [data]"
+      },
+      "assumptions": [
+        "The surrogate is cheaper to evaluate than the true quantity by a wide enough margin to repay its approximation error.",
+        "Measurements are noisy but informative, and the information state summarizes all past evaluations."
+      ],
+      "breakdown_regime": "A surrogate fitted on few or unrepresentative points can be confidently wrong in unexplored regions, and greedy acquisition then exploits the surrogate error instead of the true optimum.",
+      "domain": "surrogate_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Expensive evaluations in the engine, such as full simulations, are fronted by a cheap surrogate that screens candidates, and a sequential sampling rule decides which candidates earn a full evaluation. Surrogate error is tracked against realized full evaluations and the screening threshold adapts to it.",
+        "source_operator": "surrogate_and_bayesian_optimization",
+        "telemetry": "Surrogate predictions versus full evaluation results, acquisition choices, evaluation budget spent, and screening false negative estimates."
+      }
+    },
+    {
+      "primitive_id": "minimax_rollout",
+      "name": "Minimax rollout chooses the control that minimizes the worst case continuation cost over the disturbance set, replacing simulation with a maximization dynamic program",
+      "verbatim_quote": "Note that like all rollout algorithms, the minimax rollout algorithm is well-suited for on-line replanning in problems where data may be changing or may be revealed during the process of control selection.",
+      "page": "Sec. 3.6; text lines 15595-15602",
+      "latex": "\\tilde{u}_k\\in\\arg\\min_{u_k\\in U(x_k)}\\max_{w_k\\in W_k(x_k,u_k)}\\left[g_k(x_k,u_k,w_k)+\\tilde{J}_{k+1}\\left(f_k(x_k,u_k,w_k)\\right)\\right]",
+      "symbol_and_unit_ledger": {
+        "W_k(x_k,u_k)": "set of possible disturbances at stage k [disturbance values]",
+        "\\tilde{J}_{k+1}": "tail cost of the base policy under worst case future disturbances [cost units]",
+        "g_k": "stage cost [cost units]"
+      },
+      "assumptions": [
+        "Disturbances are known to lie in specified sets, with no probability distribution required.",
+        "The base policy tail cost under adversarial disturbances can be computed by a maximization dynamic program."
+      ],
+      "breakdown_regime": "Worst case optimization is conservative when the disturbance set is wide, and it can be computationally hard because every candidate requires an inner maximization.",
+      "domain": "minimax_control",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "For decisions exposed to adversarial or poorly characterized uncertainty, the engine reports a worst case value beside the expected value. A candidate that wins on expectation but collapses under the worst credible case is flagged rather than silently preferred.",
+        "source_operator": "minimax_rollout",
+        "telemetry": "Worst case and expected values per candidate, disturbance set definitions, and sensitivity of rankings to set width."
+      }
+    },
+    {
+      "primitive_id": "fitted_value_iteration",
+      "name": "Fitted value iteration trains each stage value approximation by least squares against one-step dynamic programming targets computed from the next stage approximation",
+      "verbatim_quote": "In particular, each rk is determined by generating a large number of sample states and solving a least squares problem that aims to minimize the error in satisfying the DP equation for these states at time k.",
+      "page": "Sec. 4.3.1; text lines 17581-17588",
+      "latex": "r_k\\in\\arg\\min_r\\sum_{s=1}^{q}\\left[\\tilde{J}_k(x_k^{s},r)-\\beta_k^{s}\\right]^{2}",
+      "symbol_and_unit_ledger": {
+        "r_k": "parameter vector of the stage k value architecture [parameter units]",
+        "\\tilde{J}_k(x_k^{s},r)": "approximate cost-to-go at sample state s [cost units]",
+        "\\beta_k^{s}": "one-step DP target for sample state s [cost units]",
+        "q": "number of sample states [count]"
+      },
+      "assumptions": [
+        "Sample states are representative, roughly in proportion to their visitation under a near optimal policy.",
+        "The next stage parameters are already fitted when the current stage targets are computed."
+      ],
+      "breakdown_regime": "Errors compound backward over long horizons and the method can become unstable, because each stage fits targets generated by an already approximate successor.",
+      "domain": "function_approximation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Value models are trained against bootstrapped one-step targets built from the engine's own successor model, stage by stage, rather than only against final outcomes. Target generation and fitting are versioned together so a model can be rolled back to the targets that produced it.",
+        "source_operator": "fitted_value_iteration",
+        "telemetry": "Sample state distributions, target values, fit residuals per stage, and stability checks across refits."
+      }
+    },
+    {
+      "primitive_id": "q_factor_parametric_approximation",
+      "name": "Parametric action value approximation removes the on-line expected value computation, because the learned action value already integrates the disturbance",
+      "verbatim_quote": "This latter property is a primary incentive for using Q-factors in approximate DP, particularly when there are tight constraints on the amount of on-line computation that is possible in the given practical setting.",
+      "page": "Sec. 4.3.2; text lines 17770-17778",
+      "latex": "\\tilde{\\mu}_k(x_k)\\in\\arg\\min_{u\\in U_k(x_k)}\\tilde{Q}_k(x_k,u,r_k)",
+      "symbol_and_unit_ledger": {
+        "\\tilde{Q}_k(x_k,u,r_k)": "parametric action value approximation [cost units]",
+        "r_k": "parameter vector of the action value architecture [parameter units]",
+        "\\tilde{\\mu}_k": "one-step lookahead policy induced by the approximation [control function]"
+      },
+      "assumptions": [
+        "A simulator or model can generate sample transitions and stage costs for arbitrary state and control pairs.",
+        "The feature representation depends on the state alone or on the state and control pair, with enough capacity to separate the controls that matter."
+      ],
+      "breakdown_regime": "One weight vector per control scales badly when the control set is large, and single sample targets are noisy, so the fit can chase sampling error.",
+      "domain": "function_approximation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Where decision latency matters, the engine precomputes action values for the states it expects to face, so the live decision is a table minimization rather than a fresh simulation. Precomputation coverage is monitored, and uncovered states fall back to simulation.",
+        "source_operator": "q_factor_parametric_approximation",
+        "telemetry": "Precomputed action value coverage, decision latency, fallback frequency, and target sample counts per pair."
+      }
+    },
+    {
+      "primitive_id": "differential_training",
+      "name": "Differential training learns cost differences between paired trajectories of the base policy, so rollout comparisons are trained directly instead of derived by subtracting two large fitted values",
+      "verbatim_quote": "Thus, it can be seen that any of the standard methods that can be used to train architectures that approximate Jk,π , can also be used for training architectures that approximate Gk",
+      "page": "Sec. 4.3.4; text lines 18029-18034",
+      "latex": "\\tilde{\\mu}_k(x_k)\\in\\arg\\min_{u\\in U_k(x_k)}E\\left[g_k(x_k,u,w_k)-g_k(x_k,\\mu_k(x_k),w_k)+\\tilde{G}_{k+1}\\left(f_k(x_k,u,w_k),f_k(x_k,\\mu_k(x_k),w_k)\\right)\\right]",
+      "symbol_and_unit_ledger": {
+        "\\tilde{G}_{k+1}": "approximate cost difference function between two successor states [cost units]",
+        "\\mu_k(x_k)": "base policy control at state x_k [control]",
+        "g_k": "stage cost [cost units]",
+        "f_k": "system transition function [state]"
+      },
+      "assumptions": [
+        "Paired trajectories share the same disturbance sequence, forming a differential system whose cost is the difference of stage costs.",
+        "The difference function satisfies its own dynamic programming equation under the base policy."
+      ],
+      "breakdown_regime": "Training pairs must cover the state pairs that real comparisons will visit; pairs drawn from unrelated regions teach differences the rollout never queries.",
+      "domain": "function_approximation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Comparison models in the engine are trained on paired outcomes from the same context, with the pair difference as the target. This is the learning level counterpart of paired simulation, and it keeps small but decisive margins from being buried under large shared level effects.",
+        "source_operator": "differential_training",
+        "telemetry": "Paired trajectory datasets, difference targets, pair coverage maps, and margin prediction errors."
+      }
+    },
+    {
+      "primitive_id": "perpetual_rollout",
+      "name": "Perpetual rollout alternates between distilling a rollout policy into a policy network and fitting a value network to it, so each generation becomes the base for the next",
+      "verbatim_quote": "The cost function of the policy network can in turn be approximated with a value network using the methodology of Section 4.3. Then the value network can be used as a terminal cost function approximation in a truncated rollout scheme where the previously obtained policy network can be used as a base policy. In this way a perpetual rollout scheme is obtained, which involves a sequence of value and policy networks.",
+      "page": "Sec. 4.4.2; text lines 18335-18344",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Rollout can generate enough state and control samples to train a faithful policy approximation.",
+        "The value network can evaluate the distilled policy accurately enough to serve as the next terminal approximation."
+      ],
+      "breakdown_regime": "Each distillation step adds approximation error, so the sequence can drift or cycle instead of improving if the policy and value approximations are not validated against true rollout costs at every generation.",
+      "domain": "reinforcement_learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine improvement loop is explicitly generational: a search procedure produces improved decisions, a fast model is distilled from them, the fast model is evaluated, and then it becomes the baseline for the next search round. Generation artifacts are kept separate so regression to an earlier generation is always possible.",
+        "source_operator": "perpetual_rollout",
+        "telemetry": "Per generation policy and value model versions, distillation fidelity, true evaluated cost per generation, and rollback events."
+      }
+    },
+    {
+      "primitive_id": "cost_shaping_temporal_difference",
+      "name": "Cost shaping replaces stage costs with temporal differences against a reference value, leaving optimal policies unchanged while shrinking the range an approximator must fit",
+      "verbatim_quote": "A key fact is that with a choice of V close to J * , the range of values of Jˆ is reduced, and this tends to enhance the ability of approximation methods to capture small scale variations in J * .",
+      "page": "Sec. 5.1.1; text lines 18957-18962",
+      "latex": "\\hat{g}(x,u,y)=g(x,u,y)+\\alpha V(y)-V(x)",
+      "symbol_and_unit_ledger": {
+        "\\hat{g}(x,u,y)": "shaped stage cost, the temporal difference corresponding to V [cost units]",
+        "g(x,u,y)": "original stage cost [cost units]",
+        "V": "reference value function [cost units]",
+        "\\alpha": "discount factor [dimensionless]"
+      },
+      "assumptions": [
+        "The reference value V is a rough estimate of the optimal value, obtainable from a problem approximation or a prior model.",
+        "Exact methods are invariant to the choice of V; only approximate methods are affected."
+      ],
+      "breakdown_regime": "A poor reference value can distort the approximate problem as easily as a good one can help it, and the shaped values no longer carry the original cost scale for reporting.",
+      "domain": "reinforcement_learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine features and targets are centered against a strong reference projection before fitting residual models. The residual model only has to explain departures from the reference, which keeps small matchup and situational effects from being swamped by large baseline differences between teams or players.",
+        "source_operator": "cost_shaping_temporal_difference",
+        "telemetry": "Reference projection values, residual targets and errors, and the share of variance carried by reference versus residual by segment."
+      }
+    },
+    {
+      "primitive_id": "bellman_operator_contraction",
+      "name": "The discounted Bellman operators are contractions of modulus alpha in the maximum norm, which fixes the optimal value as their unique fixed point and gives geometric value iteration convergence",
+      "verbatim_quote": "The Bellman operators T and Tµ of Eqs. (5.11) and (5.12) are contraction mappings of modulus α with respect to the maximum norm",
+      "page": "Sec. 5.1.4; text lines 19497-19505",
+      "latex": "\\|TJ-TJ'\\|\\leq\\alpha\\|J-J'\\|, \\qquad \\|T_{\\mu}J-T_{\\mu}J'\\|\\leq\\alpha\\|J-J'\\|",
+      "symbol_and_unit_ledger": {
+        "T": "Bellman optimality operator [cost function mapping]",
+        "T_{\\mu}": "Bellman operator of policy mu [cost function mapping]",
+        "\\alpha": "discount factor and contraction modulus [dimensionless, 0<alpha<1]",
+        "\\|\\cdot\\|": "maximum norm over states [cost units]"
+      },
+      "assumptions": [
+        "The problem is discounted with alpha below one, or is a stochastic shortest path problem in which all policies are proper.",
+        "Values are compared in the maximum norm over the state space."
+      ],
+      "breakdown_regime": "Improper policies in undiscounted shortest path problems break contraction: the Bellman equation can then have no solution or infinitely many, and value iteration can stall away from the optimum.",
+      "domain": "dynamic_programming",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Iterative solvers in the engine are only trusted when a contraction or an equivalent convergence structure is identified and the observed error reduction per iteration is consistent with it. Solvers whose iterates stop contracting are flagged instead of being run longer.",
+        "source_operator": "bellman_operator_contraction",
+        "telemetry": "Per iteration value change, implied contraction factor, fixed point residuals, and solver termination reasons."
+      }
+    },
+    {
+      "primitive_id": "q_learning_stochastic_value_iteration",
+      "name": "Q-learning is stochastic value iteration on action values: the visited pair is moved toward a single sample Bellman target with a stepsize that satisfies the stochastic approximation conditions",
+      "verbatim_quote": "The original and most widely known Q-learning algorithm ([Wat89]) is a stochastic version of VI, whereby the expected value in Eq. (5.6) is suitably approximated by sampling and simulation.",
+      "page": "Sec. 5.1.3; text lines 19287-19295",
+      "latex": "Q_{k+1}(x,u)=(1-\\gamma_k)Q_k(x,u)+\\gamma_k\\left(F_kQ_k\\right)(x,u)",
+      "symbol_and_unit_ledger": {
+        "Q_k(x,u)": "current action value estimate [cost units]",
+        "F_k": "single sample Bellman operator built from the observed transition [cost function mapping]",
+        "\\gamma_k": "stepsize at iteration k [dimensionless, 0<gamma_k<=1]"
+      },
+      "assumptions": [
+        "Every state and control pair is generated infinitely often and successor states are sampled independently at each visit.",
+        "Stepsizes are positive, sum to infinity, and have finite squared sum."
+      ],
+      "breakdown_regime": "Finite data violates the visitation conditions in large spaces, so rarely visited pairs keep stale values, and the tabular form collapses entirely when the pair count is excessive.",
+      "domain": "reinforcement_learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Online updates in the engine move estimates only for the state and action pairs actually observed, with a decaying stepsize, and coverage counters expose which pairs have never been updated. Decisions are not allowed to rest on pairs whose update count is zero without a fallback estimate.",
+        "source_operator": "q_learning_stochastic_value_iteration",
+        "telemetry": "Update counts per state and action pair, stepsize schedules, target samples, and stale pair reports."
+      }
+    },
+    {
+      "primitive_id": "optimistic_policy_iteration_truncated_rollout",
+      "name": "Optimistic policy iteration evaluates the current policy for only a few value iterations, and its simulation form is exactly truncated rollout with a terminal cost approximation",
+      "verbatim_quote": "This is in effect truncated rollout, which at state xk performs a one-step lookahead minimization with cost function approximation obtained by mk -stages rollout using µk as the base policy, followed by terminal cost function approximation Jk",
+      "page": "Sec. 5.3.1; text lines 19984-19990",
+      "latex": "\\hat{J}_{k,m+1}(x)=\\sum_{y=1}^{n}p_{xy}^{\\mu_k(x)}\\left[g\\left(x,\\mu_k(x),y\\right)+\\alpha\\hat{J}_{k,m}(y)\\right]",
+      "symbol_and_unit_ledger": {
+        "\\hat{J}_{k,m}": "value estimate after m evaluation iterations in round k [cost units]",
+        "p_{xy}^{\\mu_k(x)}": "transition probability from x to y under the current policy [probability]",
+        "\\alpha": "discount factor [dimensionless]",
+        "g": "stage cost [cost units]"
+      },
+      "assumptions": [
+        "The number of evaluation iterations or rollout stages is finite and chosen by experimentation for the problem at hand.",
+        "A terminal cost approximation closes the truncated trajectory."
+      ],
+      "breakdown_regime": "Too few stages leave the evaluation crude, while too many waste computation and, under simulation, accumulate noise; far future errors matter less under discounting, which argues for shorter truncation.",
+      "domain": "policy_iteration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Evaluation depth in the engine is a tuned budget, not a default: partial evaluation plus a terminal estimate is used when full evaluation is too slow, and the depth is selected from measured accuracy curves for each decision family.",
+        "source_operator": "optimistic_policy_iteration_truncated_rollout",
+        "telemetry": "Evaluation depth settings, partial evaluation errors against full evaluation benchmarks, and compute time per depth."
+      }
+    },
+    {
+      "primitive_id": "approximate_policy_iteration_error_zone",
+      "name": "Approximate policy iteration improves rapidly and then oscillates inside an error zone whose width is set by evaluation error, improvement error, and the discount factor",
+      "verbatim_quote": "Typically, in the beginning, the method tends to make rapid and fairly monotonic progress, but eventually it gets into an oscillatory pattern.",
+      "page": "Sec. 5.4; text lines 21868-21875",
+      "latex": "\\limsup_{k\\to\\infty}\\max_x\\left|J_{\\mu_k}(x)-J^{*}(x)\\right|\\leq\\frac{\\epsilon+2\\alpha\\delta}{(1-\\alpha)^{2}}",
+      "symbol_and_unit_ledger": {
+        "\\delta": "policy evaluation error bound [cost units]",
+        "\\epsilon": "policy improvement error bound [cost units]",
+        "\\alpha": "discount factor [dimensionless]",
+        "J_{\\mu_k}": "cost function of the policy at iteration k [cost units]",
+        "J^{*}": "optimal cost function [cost units]"
+      },
+      "assumptions": [
+        "Evaluation error is uniformly bounded by delta and improvement error by epsilon across iterations.",
+        "The problem is discounted, so the zone width grows sharply as alpha approaches one."
+      ],
+      "breakdown_regime": "The bound is worst case and usually pessimistic, but the oscillation it predicts is real: once inside the zone, further iterations do not converge to a single policy and can cycle indefinitely.",
+      "domain": "policy_iteration",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine improvement loops carry an explicit error budget. When successive model generations differ by less than the zone implied by their evaluation noise, iteration stops and the remaining differences are reported as unresolved rather than as ranking signal.",
+        "source_operator": "approximate_policy_iteration_error_zone",
+        "telemetry": "Evaluation noise estimates, generation to generation value changes, stopping decisions, and unresolved difference reports."
+      }
+    },
+    {
+      "primitive_id": "abstract_dynamic_programming",
+      "name": "Dynamic programming results rest on monotonicity and contraction of an abstract Bellman operator, so one theory covers discounted, shortest path, minimax, and game problems",
+      "verbatim_quote": "The most critical properties in this regard are contraction, which is present for some of the models discussed in the preceding sections, as well as the monotonicity, which is present in almost all DP models of practical interest.",
+      "page": "Sec. 5.5; text lines 21994-21998",
+      "latex": "J^{*}(x)=\\min_{u\\in U(x)}H\\left(x,u,J^{*}\\right), \\qquad (T_{\\mu}J)(x)=H\\left(x,\\mu(x),J\\right)",
+      "symbol_and_unit_ledger": {
+        "H(x,u,J)": "abstract one-stage mapping combining stage cost and continuation value [cost units]",
+        "J^{*}": "abstract optimal cost function [cost units]",
+        "T_{\\mu}": "abstract Bellman operator of policy mu [cost function mapping]",
+        "U(x)": "feasible control set at state x [controls]"
+      },
+      "assumptions": [
+        "The mapping H is monotone in its value argument, and a contraction structure exists for the models under study.",
+        "Policies are functions that select a feasible control at every state."
+      ],
+      "breakdown_regime": "Semicontractive problems, where only some policies induce contractions, fall outside the clean theory and need separate analysis; monotonicity alone does not give convergence rates.",
+      "domain": "dynamic_programming",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "New problem types are admitted to the engine by writing down their one-stage mapping and checking monotonicity and contraction, rather than by inventing a new solver. The same evaluation, improvement, and error machinery then applies across sports and problem families.",
+        "source_operator": "abstract_dynamic_programming",
+        "telemetry": "Operator definitions per problem family, monotonicity and contraction test results, and shared solver conformance tests."
+      }
+    },
+    {
+      "primitive_id": "asynchronous_distributed_value_iteration",
+      "name": "Totally asynchronous value iteration converges when every component is updated infinitely often and stale information is eventually purged, with no bound on delays required",
+      "verbatim_quote": "Assumption 5.7.1 is natural and essential for proving any kind of convergence result about the algorithm.",
+      "page": "Sec. 5.7.2; text lines 23226-23230",
+      "latex": "\\lim_{t\\to\\infty}\\left\\|J^{t}-J^{*}\\right\\|=0",
+      "symbol_and_unit_ledger": {
+        "J^{t}": "distributed value iterate at global time t [cost units]",
+        "J^{*}": "optimal cost function, the fixed point of the Bellman operator [cost units]",
+        "t": "global iteration counter across processors [count]"
+      },
+      "assumptions": [
+        "Each processor updates its components at an infinite set of times.",
+        "The timestamps of information received from every other processor tend to infinity, so outdated values are eventually purged."
+      ],
+      "breakdown_regime": "Approximate value functions, especially neural networks, break the theorem: with complicated approximations the contraction and box conditions generally fail and rigorous convergence is not expected.",
+      "domain": "distributed_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Distributed engine workers update disjoint slices of the state space on their own schedules and exchange values without a global lock. Liveness and information freshness are monitored per worker, because those are exactly the conditions the convergence result stands on.",
+        "source_operator": "asynchronous_distributed_value_iteration",
+        "telemetry": "Per worker update counts, information timestamps and delay distributions, slice assignments, and convergence residuals."
+      }
+    },
+    {
+      "primitive_id": "agent_by_agent_optimality",
+      "name": "Agent-by-agent optimality means no single component can improve with the others fixed; it is a coordinatewise equilibrium that need not be globally optimal",
+      "verbatim_quote": "While an agent-by-agent optimal policy may be either optimal or adequate for practical purposes, it may offer no guarantees of quality.",
+      "page": "Sec. 5.6.1; text lines 22725-22728",
+      "latex": "H\\left(x,\\mu(x),J_{\\mu}\\right)=\\min_{u^{\\ell}\\in U^{\\ell,\\mu}(x)}H\\left(x,\\mu^{1}(x),\\ldots,u^{\\ell},\\ldots,\\mu^{m}(x),J_{\\mu}\\right)",
+      "symbol_and_unit_ledger": {
+        "H": "abstract one-stage mapping [cost units]",
+        "\\mu^{\\ell}(x)": "policy component of agent ell at state x [control]",
+        "U^{\\ell,\\mu}(x)": "feasible values for component ell given the other components of mu [controls]",
+        "J_{\\mu}": "cost function of policy mu [cost units]",
+        "m": "number of agents or components [count]"
+      },
+      "assumptions": [
+        "The control factors into components, and each component can be varied while the others are held fixed.",
+        "Cost functions of distinct policies are distinct, the uniqueness property used by the convergence analysis."
+      ],
+      "breakdown_regime": "Strong coupling between components, such as a shared budget constraint, can make almost every feasible policy agent-by-agent optimal, creating spurious equilibria with no quality guarantee.",
+      "domain": "multiagent_systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Componentwise optima in the engine are labeled as such and never reported as joint optima. Reports state which components were optimized, which were held fixed, and whether any joint move was tested, so a coordinatewise stall cannot be mistaken for a global answer.",
+        "source_operator": "agent_by_agent_optimality",
+        "telemetry": "Component optimization logs, held fixed component lists, joint move test results, and equilibrium quality checks."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "09fe4b789dbfcaff-t1",
+      "think": "This monograph is best read as a single argument repeated at several levels of generality: a sequential decision problem becomes tractable when its future is compressed into a cost-to-go function, and every practical method in the book is a way of obtaining, approximating, improving, or distributing that compression. The foundation is the principle of optimality. Because the tail of an optimal sequence is optimal for the tail subproblem, a multistage optimization decomposes into one-stage minimizations linked by a recursion. The deterministic recursion, the stochastic recursion with expectations over disturbances, and the infinite horizon Bellman equation are the same object under different assumptions about noise and horizon. Q-factors repackage the recursion at the level of state and control pairs, which is why they support both exact algorithms and sampling algorithms such as Q-learning.\n\nRollout is the hinge of the book. An arbitrary heuristic or policy supplies an approximate cost-to-go by being simulated from the successor state, and a single optimization over the first control converts it into a new policy. Bertsekas does not present this as a trick that usually works. He identifies the exact conditions, sequential consistency and the weaker sequential improvement, under which the conversion provably cannot hurt, and he exhibits the counterexample that shows what fails when the conditions fail. Fortified rollout then repairs the failure mode by keeping the best complete trajectory as an incumbent. This pattern, claim paired with its condition and its repair, is the methodological core of the work.\n\nThe second half of the argument is about scale. Exact recursion dies by dimensionality, so the book replaces exact values with architectures and trains them with fitted value iteration, action value fitting, advantage updating, and differential training. The subtle point is that comparisons, not levels, drive decisions: large state dependent components of a value are irrelevant to control choice and yet dominate naive least squares fits, so the training target should be differences. The same idea appears in simulation as variance reduction by common disturbance sequences, and in infinite horizon problems as cost shaping, where a reference value is subtracted so that the approximator only has to resolve small variations around it.\n\nPolicy iteration organizes these pieces into an improvement loop, and the Newton interpretation explains its speed: evaluating a policy and improving it once is a linearization step on the Bellman equation, so progress should be measured by the ratio of remaining error, not by absolute gains. Approximation breaks the clean loop in a quantifiable way. Evaluation error and improvement error do not prevent improvement, but they confine it to an error zone whose width grows as the discount factor approaches one, and inside that zone the iterates oscillate. Optimistic policy iteration shows that truncated rollout is not an ad hoc shortcut but one point on a spectrum between value iteration and full policy iteration, with evaluation depth as a budget to be tuned rather than a constant to be assumed.\n\nThe final chapters lift the whole apparatus. Model predictive control is rollout with a particular base heuristic and a stability proof. Multiagent rollout replaces one exponential joint minimization with a sequence of component minimizations and accepts agent-by-agent optimality, a coordinatewise equilibrium, in place of joint optimality. Minimax problems replace expectation with worst case maximization. Abstract dynamic programming isolates monotonicity and contraction as the two properties from which the convergence theory actually follows, and the asynchronous convergence theorem shows that distributed iteration still works when processors update on their own schedules, provided every component is updated forever and stale information is eventually purged. For a reasoning engine, the combined lesson is architectural: represent states completely, keep a baseline policy for every decision family, improve it by lookahead under stated conditions, train on differences, budget evaluation depth, track the error zone, and never let a distributed or approximate component claim more than its convergence structure supports.\n\nThe book is equally careful about where approximation enters. Approximation in value space involves three distinct error sources: the cost-to-go approximation itself, the approximation of expected values when disturbances cannot be integrated exactly, and the approximation of the lookahead minimization when the control set is too large to search. Each source has a different remedy. Better architectures and training address the first, sampling design and variance reduction address the second, and simplified or multiagent minimization addresses the third. Confusing them leads to wasted effort, because more simulation cannot repair a value architecture that cannot represent the relevant differences, and a better architecture cannot repair a minimization that never visits the controls that matter. A related asymmetry runs through the approximate policy iteration discussion: simulation based policy evaluation explores only the states the current policy visits, so evaluation can be badly wrong exactly where an improved policy would go, whereas standard rollout does not suffer this exploration problem because it evaluates the base policy from the states the decision actually faces.\n\nThe treatment of large state spaces is similarly layered. A feature based architecture is implicitly a state aggregation: states sharing a feature vector share a value, and the quality of the architecture is the quality of that partition. Chapter 4 extends the idea to partitioned architectures in which different regions of the state space carry their own local value and policy networks, with truncated rollout trajectories crossing region boundaries and the neighboring region's value network supplying the terminal cost. Chapter 5 then supplies the distributed theory for exactly this picture: processors own state subsets, update with delayed information from the others, and still converge under the asynchronous conditions, while the optimistic policy iteration analysis warns that naive mixtures of evaluation and improvement steps can oscillate when the operators involved aim at different fixed points, a difficulty the uniform fixed point construction of Section 5.8.2 is built to remove. Read together, the monograph's message for system builders is that scale is never one problem. Representation, sampling, minimization, evaluation depth, and distribution each impose their own condition, each condition can be checked separately, and the honest performance claim for the whole system is the conjunction of the checks, not the strongest single result.",
+      "retrocausal_genealogy": "The lineage runs from Bellman's dynamic programming and Howard's policy iteration in the late 1950s and 1960s, through Kleinman's recognition that policy iteration for linear quadratic problems is Newton's method, to the neuro-dynamic programming synthesis of Bertsekas and Tsitsiklis in the 1990s. Tesauro's backgammon programs supplied the empirical proof that one-step lookahead over a learned value function could reach world class play, and AlphaGo and AlphaZero later industrialized the same structure with deep networks and tree search. The asynchronous material descends from Bertsekas's own work on distributed computation in the early 1980s.",
+      "theory_of_mind": "The author models the reader as an engineer who distrusts methods that merely perform well in demonstrations. Every algorithm is therefore introduced together with the property that certifies it, the assumption the property needs, and a counterexample or failure discussion where the assumption is fragile. He also assumes the reader believes heuristics are first class objects: a base policy is not an embarrassment to be hidden but the raw material that rollout and policy iteration exist to improve. Computation is treated throughout as a budget to be allocated deliberately, never as an afterthought.",
+      "cross_layer_veto": "Several results in this work veto claims that other layers of a reasoning system might want to make. No cost improvement may be claimed for a rollout whose base heuristic fails sequential improvement, unless fortification was used. No convergence claim survives the loss of contraction or of the asynchronous updating conditions. No ranking may be trusted below the resolution set by advantage scale and simulation variance, and no approximate policy iteration result may be reported as converged once its movement is inside the error zone. Finally, agent-by-agent optimality vetoes any report of joint optimality for a componentwise result."
+    }
+  ],
+  "universal_lens": "Read as a general template, this work says that any sequential decision system can be organized around five questions. What is the state, and is it complete enough that the future depends on the past only through it. What baseline procedure already produces acceptable complete solutions. How can one decision at a time be re-optimized against simulated continuations of that baseline. What differences, rather than levels, actually determine the choices. And what conditions certify that the improvement procedure cannot make things worse. Systems that answer all five questions explicitly can be improved indefinitely; systems that skip the last one can only be hoped in.",
+  "gsi_mapping": "For the Galaxy Sports Institute, the takeaways are a research program and a standard of evidence. Publish improvement claims only with the condition that certifies them and the counterexample that bounds them. Maintain a library of baseline policies and heuristics as scientific objects with measured behavior, including restart consistency probes and sequential improvement margins. Treat common random numbers, advantage targets, and cost shaping as core experimental method, since they decide whether small effects are measurable at all. And teach the abstract operator view, because it lets one convergence theory serve many problem families instead of multiplying ad hoc solvers.",
+  "gse_mapping": "For the Galaxy Sports Edge engine, the design consequences are concrete. Every projection family becomes a named base policy whose trajectories can be simulated and costed from any state. Rollout layers improve those baselines by situation, with fortification guaranteeing that a published projection set is never worse than the incumbent baseline it replaced. Margin and difference models are trained separately from level models, simulation comparisons are paired on identical scenarios, and evaluation depth is tuned per market or decision type. Confidence language is tied to measured error zones, and distributed workers update state slices asynchronously with freshness monitoring, so scale does not silently void the convergence story."
+}

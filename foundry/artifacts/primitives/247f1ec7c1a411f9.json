@@ -1,0 +1,78 @@
+{
+  "book_id": "247f1ec7c1a411f9",
+  "source_status": "COMPLETE",
+  "title": "FIRECRAWLTOTALDOMINANCE",
+  "file_name": "FIRECRAWLTOTALDOMINANCE.md",
+  "sha256": "247f1ec7c1a411f977f15fa8b8afaa6e66dff18ecdb0466c8a529d7b8f012e4b",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Market teardowns reveal structural weaknesses through client-side scoring reconstruction, API access limitations, and public data corroboration. Universal Lens: Rooted in FIRECRAWLTOTALDOMINANCE (247f1ec7c1a411f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers competitor mechanisms using conformal predictive distributions over observed JS bundles and public APIs to estimate PF Rating thresholds and ML gating. GSI Mapping: Rooted in FIRECRAWLTOTALDOMINANCE (247f1ec7c1a411f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies Bayesian belief updates on telemetry from Discord, sitemaps, and app stores to refine state transitions in product architecture and pricing strategies. GSE Mapping: Rooted in FIRECRAWLTOTALDOMINANCE (247f1ec7c1a411f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "client_side_scoring_reconstruction",
+      "name": "Client-Side Scoring Reconstruction",
+      "verbatim_quote": "That one pulled ~2MB of the JavaScript PropFinder ships to every anonymous visitor and **reconstructed their entire proprietary \"PF Rating\" scoring formula from it** — all 100 points, component by component, proving 30 of those points are binary yes/no threshold tests that discard magnitude.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PF_Rating': 'dimensionless score', 'threshold_tests': 'binary {0,1}', 'magnitude_discard': 'boolean'}",
+      "assumptions": "Anonymous JS bundle contains full scoring logic; 30 components are deterministic thresholds.",
+      "breakdown_regime": "When client-side logic is exposed via public JS chunks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses this kernel to derive competitor scoring functions from public JS, enabling GSE to replicate or outperform their rating systems.",
+        "source_operator": "client_side_scoring_reconstruction",
+        "telemetry": "JS bundle size, number of threshold tests identified"
+      }
+    },
+    {
+      "primitive_id": "api_endpoint_access_control",
+      "name": "API Endpoint Access Control",
+      "verbatim_quote": "It found their ML endpoint is admin-gated and MLB-only, so no customer has ever seen it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ML_endpoint': 'URI string', 'access_level': 'enum {public, admin, customer}', 'data_source': 'enum {MLB, NFL, etc}'}",
+      "assumptions": "Admin-gated endpoints imply restricted functionality; no customer-facing ML exposure.",
+      "breakdown_regime": "When API access is not publicly documented or exposed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE maps competitor API access patterns to identify hidden capabilities and structural constraints.",
+        "source_operator": "api_endpoint_access_control",
+        "telemetry": "Endpoint path visibility, access control headers, data source restrictions"
+      }
+    },
+    {
+      "primitive_id": "community_size_verification",
+      "name": "Community Size Verification",
+      "verbatim_quote": "It cross-checked their \"18,000+ community members\" claim against Discord's own public API and found 16,735.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'claimed_members': 'integer', 'verified_members': 'integer', 'delta': 'integer'}",
+      "assumptions": "Discord's public API provides accurate membership count; discrepancy indicates overstatement.",
+      "breakdown_regime": "When marketing claims are compared against public data sources.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI verifies marketing assertions by cross-referencing with public APIs, informing GSE's trust-based positioning strategy.",
+        "source_operator": "community_size_verification",
+        "telemetry": "Discrepancy between claimed and verified community size"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "247f1ec7c1a411f9_t0",
+      "think": "The primitives form a coherent framework for competitive intelligence by extracting functional logic from client-side code, validating API access controls, and verifying community metrics. These operations enable GSE to build a probabilistic model of competitor behavior through empirical observation. The scoring reconstruction reveals that PropFinder’s algorithm reduces complexity by discarding magnitude in favor of binary thresholds—this suggests a simplified but potentially brittle approach to player evaluation. Meanwhile, the ML endpoint being admin-gated implies a strategic limitation in exposing advanced features, possibly due to computational or data governance constraints. Community size verification exposes potential misalignment between marketing and reality, which can be leveraged for reputational advantage. Together, these primitives allow GSE to infer not just what competitors do, but also where they fail structurally—enabling targeted attacks on weak points in their architecture.\n\nDeep epistemic analysis for FIRECRAWLTOTALDOMINANCE (247f1ec7c1a411f9, domain=other, pages_read=4/4): Operator 'Client-Side Scoring Reconstruction' (page 1, domain other) captures: That one pulled ~2MB of the JavaScript PropFinder ships to every anonymous visitor and **reconstructed their entire proprietary \"PF Rating\" scoring formula from it** — all 100 points, component by component, proving 30 of those points are binary yes/no threshold tests that discard magnitude. Assumptions: Anonymous JS bundle contains full scoring logic; 30 components are deterministic thresholds. Breakdown regime: When client-side logic is exposed via public JS chunks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI uses this kernel to derive competitor scoring functions from public JS, enabling GSE to replicate or outperform their rating systems. Operator 'API Endpoint Access Control' (page 1, domain other) captures: It found their ML endpoint is admin-gated and MLB-only, so no customer has ever seen it. Assumptions: Admin-gated endpoints imply restricted functionality; no customer-facing ML exposure. Breakdown regime: When API access is not publicly documented or exposed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps competitor API access patterns to identify hidden capabilities and structural constraints. Operator 'Community Size Verification' (page 1, domain other) captures: It cross-checked their \"18,000+ community members\" claim against Discord's own public API and found 16,735. Assumptions: Discord's public API provides accurate membership count; discrepancy indicates overstatement. Breakdown regime: When marketing claims are compared against public data sources. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI verifies marketing assertions by cross-referencing with public APIs, informing GSE's trust-based positioning strategy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FIRECRAWLTOTALDOMINANCE (247f1ec7c1a411f9, domain=other, pages_read=4/4): Operator 'Client-Side Scoring Reconstruction' (page 1, domain other) captures: That one pulled ~2MB of the JavaScript PropFinder ships to every anonymous visitor and **reconstructed their entire proprietary \"PF Rating\" scoring formula from it** — all 100 points, component by component, proving 30 of those points are binary yes/no threshold tests that discard magnitude. Assumptions: Anonymous JS bundle contains full scoring logic; 30 components are deterministic thresholds. Breakdown regime: When client-side logic is exposed via public JS chunks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI uses this kernel to derive competitor scoring functions from public JS, enabling GSE to replicate or outperform their rating systems. Operator 'API Endpoint Access Control' (page 1, domain other) captures: It found their ML endpoint is admin-gated and MLB-only, so no customer has ever seen it. Assumptions: Admin-gated endpoints imply restricted functionality; no customer-facing ML exposure. Breakdown regime: When API access is not publicly documented or exposed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps competitor API access patterns to identify hidden capabilities and structural constraints. Operator 'Community Size Verification' (page 1, domain other) captures: It cross-checked their \"18,000+ community members\" claim against Discord's own public API and found 16,735. Assumptions: Discord's public API provides accurate membership count; discrepancy indicates overstatement. Breakdown regime: When marketing claims are compared against public data sources. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI verifies marketing assertions by cross-referencing with public APIs, informing GSE's trust-based positioning strategy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and adversarial intelligence, these primitives echo early work in reverse engineering and open-source competition analysis, particularly in digital platforms and AI-driven prediction systems. Retrocausal Genealogy: Rooted in FIRECRAWLTOTALDOMINANCE (247f1ec7c1a411f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in FIRECRAWLTOTALDOMINANCE (247f1ec7c1a411f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents likely use opaque scoring logic to obscure competitive advantages while maintaining minimal viable product footprints. They may overstate community size to attract users and gate advanced features behind paywalls or access controls. Theory of Mind & Decision Maker Model: Rooted in FIRECRAWLTOTALDOMINANCE (247f1ec7c1a411f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires avoiding reliance on single-source telemetry. Leakage vetoes prevent overfitting to any one data point such as Discord counts or JS bundle sizes without corroborating evidence from multiple layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in FIRECRAWLTOTALDOMINANCE (247f1ec7c1a411f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

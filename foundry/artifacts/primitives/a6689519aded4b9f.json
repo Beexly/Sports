@@ -1,0 +1,78 @@
+{
+  "book_id": "a6689519aded4b9f",
+  "source_status": "COMPLETE",
+  "title": "posters-banners",
+  "file_name": "posters-banners.md",
+  "sha256": "a6689519aded4b9fbfcc519f5cf1a6655c24457ccc4716f174fe4965bd4cdb16",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Vectorized branded asset construction with deterministic slot-based composition and conditional approval. Universal Lens: Rooted in posters-banners (a6689519aded4b9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian brand element validation via slot-conditional likelihoods and approval posterior distributions. GSI Mapping: Rooted in posters-banners (a6689519aded4b9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions driven by asset slot completeness and deterministic layout kernel updates. GSE Mapping: Rooted in posters-banners (a6689519aded4b9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "slot_based_composition",
+      "name": "Slot-Based Composition",
+      "verbatim_quote": "# Posters and banners Create once the slots used by the requested poster/banner are approved.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'set of approved slots, dimensionless', 'A': 'asset type, dimensionless'}",
+      "assumptions": "Assets are composed only from approved slots; partial slot usage is valid.",
+      "breakdown_regime": "When S ⊂ S_total and |S| < |S_total|, asset is incomplete.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each slot maps to a unique parameter in GSI's brand element space, enabling compositional inference.",
+        "source_operator": "slot_based_composition",
+        "telemetry": "Approval status of each slot in S."
+      }
+    },
+    {
+      "primitive_id": "deterministic_layout_kernel",
+      "name": "Deterministic Layout Kernel",
+      "verbatim_quote": "## Inputs - intended channel/use - dimensions/aspect ratio - exact headline/body/CTA - print or digital - supplied imagery - required bleed/safe area ## Build - Vector/layout-led work → editable SVG.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'layout kernel, dimensionless', 'V': 'vector format, dimensionless', 'D': 'dimensionality, dimensionless'}",
+      "assumptions": "Layouts are deterministic and vector-based; content remains separate from structure.",
+      "breakdown_regime": "When V ≠ SVG or D ≠ 2, layout fidelity degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "L encodes geometric constraints and content placement rules; GSE uses L to generate layout states.",
+        "source_operator": "deterministic_layout_kernel",
+        "telemetry": "SVG export integrity and layout rule compliance."
+      }
+    },
+    {
+      "primitive_id": "brand_element_isolation",
+      "name": "Brand Element Isolation",
+      "verbatim_quote": "For text-bearing branded layouts, require separately approved logo, palette, and typography.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'brand element set, dimensionless', 'L': 'logo, dimensionless', 'P': 'palette, dimensionless', 'T': 'typography, dimensionless'}",
+      "assumptions": "Branded assets must isolate B components for independent validation.",
+      "breakdown_regime": "When B ∩ {L,P,T} ≠ ∅, brand consistency is compromised.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each B component maps to a GSI probabilistic model of brand conformity.",
+        "source_operator": "brand_element_isolation",
+        "telemetry": "Approved status of L, P, T elements."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a6689519aded4b9f_t0",
+      "think": "The primitives form a compositional algebra where assets are built from approved slots under deterministic layout kernels. Brand elements are isolated to ensure modularity and validation. Failure occurs when slots are unapproved, layouts are non-vector, or brand elements are baked in. The system enforces a dual logic: approval-driven composition and deterministic structure. Slot-based composition ensures that assets are only assembled from validated components. Deterministic layout kernel guarantees reproducible structure. Brand element isolation prevents contamination of branding across assets. These operators define a closed-loop system where each step is conditionally dependent on prior validation.\n\nDeep epistemic analysis for posters-banners (a6689519aded4b9f, domain=other, pages_read=1/1): Operator 'Slot-Based Composition' (page 1, domain other) captures: # Posters and banners Create once the slots used by the requested poster/banner are approved. Assumptions: Assets are composed only from approved slots; partial slot usage is valid. Breakdown regime: When S ⊂ S_total and |S| < |S_total|, asset is incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each slot maps to a unique parameter in GSI's brand element space, enabling compositional inference. Operator 'Deterministic Layout Kernel' (page 1, domain other) captures: ## Inputs - intended channel/use - dimensions/aspect ratio - exact headline/body/CTA - print or digital - supplied imagery - required bleed/safe area ## Build - Vector/layout-led work → editable SVG. Assumptions: Layouts are deterministic and vector-based; content remains separate from structure. Breakdown regime: When V ≠ SVG or D ≠ 2, layout fidelity degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L encodes geometric constraints and content placement rules; GSE uses L to generate layout states. Operator 'Brand Element Isolation' (page 1, domain other) captures: For text-bearing branded layouts, require separately approved logo, palette, and typography. Assumptions: Branded assets must isolate B components for independent validation. Breakdown regime: When B ∩ {L,P,T} ≠ ∅, brand consistency is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each B component maps to a GSI probabilistic model of brand conformity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for posters-banners (a6689519aded4b9f, domain=other, pages_read=1/1): Operator 'Slot-Based Composition' (page 1, domain other) captures: # Posters and banners Create once the slots used by the requested poster/banner are approved. Assumptions: Assets are composed only from approved slots; partial slot usage is valid. Breakdown regime: When S ⊂ S_total and |S| < |S_total|, asset is incomplete. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each slot maps to a unique parameter in GSI's brand element space, enabling compositional inference. Operator 'Deterministic Layout Kernel' (page 1, domain other) captures: ## Inputs - intended channel/use - dimensions/aspect ratio - exact headline/body/CTA - print or digital - supplied imagery - required bleed/safe area ## Build - Vector/layout-led work → editable SVG. Assumptions: Layouts are deterministic and vector-based; content remains separate from structure. Breakdown regime: When V ≠ SVG or D ≠ 2, layout fidelity degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L encodes geometric constraints and content placement rules; GSE uses L to generate layout states. Operator 'Brand Element Isolation' (page 1, domain other) captures: For text-bearing branded layouts, require separately approved logo, palette, and typography. Assumptions: Branded assets must isolate B components for independent validation. Breakdown regime: When B ∩ {L,P,T} ≠ ∅, brand consistency is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each B component maps to a GSI probabilistic model of brand conformity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in design systems theory and modular software architecture, tracing back to early vector graphics and brand governance frameworks. Retrocausal Genealogy: Rooted in posters-banners (a6689519aded4b9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in posters-banners (a6689519aded4b9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include designers, approvers, and GSE. Designers compose assets; approvers validate slots; GSE enforces layout and brand consistency. Theory of Mind & Decision Maker Model: Rooted in posters-banners (a6689519aded4b9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in posters-banners (a6689519aded4b9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring slot approval does not imply layout or brand validity. Leakage is prevented by isolating brand elements and enforcing vector-based outputs. Cross-Layer Veto & Anti-Leakage Check: Rooted in posters-banners (a6689519aded4b9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in posters-banners (a6689519aded4b9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

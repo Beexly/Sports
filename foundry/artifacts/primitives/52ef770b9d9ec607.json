@@ -1,0 +1,78 @@
+{
+  "book_id": "52ef770b9d9ec607",
+  "source_status": "COMPLETE",
+  "title": "RATE_LIMIT_COVERAGE",
+  "file_name": "RATE_LIMIT_COVERAGE.md",
+  "sha256": "52ef770b9d9ec6072e5c5681e14ba6370e95ccd741a08b9a0c2e0c7937f363f4",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Rate-limit coverage as a binary classification problem over API route space, with 40.3% protection ratio and no middleware-level enforcement. Universal Lens: Rooted in RATE_LIMIT_COVERAGE (52ef770b9d9ec607), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian rate-limit coverage model maps route-level calls to premium entitlements and IP/user keys, enabling conformal prediction of access likelihood. GSI Mapping: Rooted in RATE_LIMIT_COVERAGE (52ef770b9d9ec607), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates route state transitions through auth-gated and IP-keyed rate limits, supporting dynamic risk-aware state updates. GSE Mapping: Rooted in RATE_LIMIT_COVERAGE (52ef770b9d9ec607), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "rate_limit_coverage_ratio",
+      "name": "Rate Limit Coverage Ratio",
+      "verbatim_quote": "# Rate-Limit Coverage Re-measurement **Date:** 2026-08-16T20:00:00Z **Commit baseline:** working-tree state as of this measurement **Scope:** all `route.ts` files under `apps/web/app/api/` **Method:** grep-derived counts, not copied from any prior document.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'rate-limit coverage ratio, dimensionless', 'P': 'protected routes, count', 'T': 'total routes, count'}",
+      "assumptions": "All routes are equally likely to be protected; coverage is independent across routes.",
+      "breakdown_regime": "R = P / T, where P=71, T=176",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binary classifier over route space with 40.3% coverage; GSI models access probability via premium entitlements, GSE evaluates state transitions.",
+        "source_operator": "rate_limit_coverage_ratio",
+        "telemetry": "Protected vs unprotected route count ratio"
+      }
+    },
+    {
+      "primitive_id": "ip_user_keyed_rate_limit",
+      "name": "IP/User-Keyed Rate Limit",
+      "verbatim_quote": "`consumeRateLimit` from `@/lib/api/rate-limit` — IP-keyed or user-id-keyed, synchronous in-memory bucket 2.",
+      "page": 1,
+      "latex": "\\mathcal{L}_{\\text{IP}}(t) = \\begin{cases} 1 & \\text{if } t < \\tau_{\\text{IP}} \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'t': 'time since last request, seconds', 'τ_IP': 'IP bucket capacity, seconds', 'L_IP': 'limit status, binary'}",
+      "assumptions": "In-memory bucket with fixed capacity, synchronous operation.",
+      "breakdown_regime": "Rate limit enforced per IP or user key",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "State transition kernel for IP/user-keyed access control in GSE; probabilistic model in GSI for access likelihood.",
+        "source_operator": "ip_user_keyed_rate_limit",
+        "telemetry": "Request frequency per IP/user key"
+      }
+    },
+    {
+      "primitive_id": "premium_entitlement_limiter",
+      "name": "Premium Entitlement Limiter",
+      "verbatim_quote": "`requirePremiumApiRateLimited` from `@/lib/api-entitlement` — auth-gated limiter that also checks premium entitlement 4.",
+      "page": 1,
+      "latex": "\\mathcal{L}_{\\text{PREM}}(u) = \\begin{cases} 1 & \\text{if } u \\in \\mathcal{U}_{\\text{PREM}} \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'u': 'user identifier, dimensionless', 'U_PREM': 'set of premium users, set', 'L_PREM': 'premium access status, binary'}",
+      "assumptions": "User authentication required, entitlements checked at runtime.",
+      "breakdown_regime": "Access granted only to premium users",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Conditional access kernel in GSE; Bayesian belief update in GSI for premium user likelihood.",
+        "source_operator": "premium_entitlement_limiter",
+        "telemetry": "User role and entitlement validation"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "52ef770b9d9ec607_t0",
+      "think": "The rate-limit coverage problem is modeled as a binary classification task over API routes. With 71 protected routes out of 176 total, the coverage ratio R = 71/176 ≈ 0.403. This implies 40.3% of routes are rate-limited, while 59.7% are not. The protection mechanism is per-route, using three distinct limiter functions: consumeRateLimit (IP/user-keyed), consumePublicFormRateLimit (public form), and requirePremiumApiRateLimited (auth-gated). These functions define a layered access control system. The absence of middleware-level rate limiting indicates a distributed enforcement strategy. Cron routes (24 files) are excluded from rate limiting due to bearer token auth, and admin routes (9 files) lack rate limits despite requiring auth. The failure mode occurs when unprotected routes are subject to abuse or DoS attacks. The mathematical structure supports a probabilistic model in GSI and a state-transition kernel in GSE.\n\nDeep epistemic analysis for RATE_LIMIT_COVERAGE (52ef770b9d9ec607, domain=other, pages_read=7/7): Operator 'Rate Limit Coverage Ratio' (page 1, domain other) captures: # Rate-Limit Coverage Re-measurement **Date:** 2026-08-16T20:00:00Z **Commit baseline:** working-tree state as of this measurement **Scope:** all `route.ts` files under `apps/web/app/api/` **Method:** grep-derived counts, not copied from any prior document. Assumptions: All routes are equally likely to be protected; coverage is independent across routes. Breakdown regime: R = P / T, where P=71, T=176 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary classifier over route space with 40.3% coverage; GSI models access probability via premium entitlements, GSE evaluates state transitions. Operator 'IP/User-Keyed Rate Limit' (page 1, domain other) captures: `consumeRateLimit` from `@/lib/api/rate-limit` — IP-keyed or user-id-keyed, synchronous in-memory bucket 2. Assumptions: In-memory bucket with fixed capacity, synchronous operation. Breakdown regime: Rate limit enforced per IP or user key Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): State transition kernel for IP/user-keyed access control in GSE; probabilistic model in GSI for access likelihood. Operator 'Premium Entitlement Limiter' (page 1, domain other) captures: `requirePremiumApiRateLimited` from `@/lib/api-entitlement` — auth-gated limiter that also checks premium entitlement 4. Assumptions: User authentication required, entitlements checked at runtime. Breakdown regime: Access granted only to premium users Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Conditional access kernel in GSE; Bayesian belief update in GSI for premium user likelihood. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RATE_LIMIT_COVERAGE (52ef770b9d9ec607, domain=other, pages_read=7/7): Operator 'Rate Limit Coverage Ratio' (page 1, domain other) captures: # Rate-Limit Coverage Re-measurement **Date:** 2026-08-16T20:00:00Z **Commit baseline:** working-tree state as of this measurement **Scope:** all `route.ts` files under `apps/web/app/api/` **Method:** grep-derived counts, not copied from any prior document. Assumptions: All routes are equally likely to be protected; coverage is independent across routes. Breakdown regime: R = P / T, where P=71, T=176 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary classifier over route space with 40.3% coverage; GSI models access probability via premium entitlements, GSE evaluates state transitions. Operator 'IP/User-Keyed Rate Limit' (page 1, domain other) captures: `consumeRateLimit` from `@/lib/api/rate-limit` — IP-keyed or user-id-keyed, synchronous in-memory bucket 2. Assumptions: In-memory bucket with fixed capacity, synchronous operation. Breakdown regime: Rate limit enforced per IP or user key Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): State transition kernel for IP/user-keyed access control in GSE; probabilistic model in GSI for access likelihood. Operator 'Premium Entitlement Limiter' (page 1, domain other) captures: `requirePremiumApiRateLimited` from `@/lib/api-entitlement` — auth-gated limiter that also checks premium entitlement 4. Assumptions: User authentication required, entitlements checked at runtime. Breakdown regime: Access granted only to premium users Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Conditional access kernel in GSE; Bayesian belief update in GSI for premium user likelihood. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s microservice security patterns, evolving into per-route enforcement models with IP/user buckets and auth-gated access. Influenced by Next.js API route design and middleware-free architecture trends. Retrocausal Genealogy: Rooted in RATE_LIMIT_COVERAGE (52ef770b9d9ec607), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in RATE_LIMIT_COVERAGE (52ef770b9d9ec607), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious bots seeking to exploit unprotected routes, and legitimate users accessing premium features. Decision actors are GSI's Bayesian inference engine and GSE's state transition logic, both reacting to access patterns and entitlements. Theory of Mind & Decision Maker Model: Rooted in RATE_LIMIT_COVERAGE (52ef770b9d9ec607), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity between GSI’s probabilistic access model and GSE’s deterministic state transitions prevents redundant enforcement. Leakage vetoes occur if premium access bypasses rate limits or if IP-based limits fail to account for shared IPs. Cross-Layer Veto & Anti-Leakage Check: Rooted in RATE_LIMIT_COVERAGE (52ef770b9d9ec607), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

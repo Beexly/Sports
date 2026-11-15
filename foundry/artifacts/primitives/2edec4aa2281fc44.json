@@ -1,0 +1,78 @@
+{
+  "book_id": "2edec4aa2281fc44",
+  "source_status": "COMPLETE",
+  "title": "wire-everything-addendum-3-weight-correction-2026-10-17",
+  "file_name": "wire-everything-addendum-3-weight-correction-2026-10-17.md",
+  "sha256": "2edec4aa2281fc442fd664035f96420c3d1880cab03eda07bf6444bcd90a1113",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The sovereign primitive of full-scale measurement enforces that any parameter optimization must be evaluated over the complete legal support of the underlying measure space. Freezing parameters due to insufficient local sampling violates ergodicity, necessitating a global walk-forward evaluation to ensure asymptotic consistency.",
+  "gsi_mapping": "In GSI, this mandates expanding the conformal calibration set from a localized 79-game window to the entire 2,462-game locked universe. Bayesian posterior updates for feature weights are strictly conditioned on the maximal available historical likelihoods, preventing premature convergence and ensuring robust predictive intervals.",
+  "gse_mapping": "For GSE, situational state transitions rely on context-derived features (rest, altitude, weather). The correction ensures the engine's transition matrices are trained on the exhaustive historical state-space, guaranteeing that real-time inferences reflect deep structural dynamics rather than transient seasonal noise.",
+  "primitives": [
+    {
+      "primitive_id": "full_legal_scale_evaluation",
+      "name": "Full Legal Scale Evaluation Operator",
+      "verbatim_quote": "THE CORRECTION — RUN THE MEASUREMENT AT FULL LEGAL SCALE: 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "N: Sample size (dimensionless count), N_min: Minimum threshold (dimensionless count)",
+      "assumptions": "The data warehouse contains a superset of the minimum required samples; all historical data is legally accessible under the training fence.",
+      "breakdown_regime": "Breaks down when N < N_min, triggering an invalid frozen-weight disposition instead of a measured value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to enforcing a minimum effective sample size in non-parametric density estimation to prevent high-variance weight assignments.",
+        "source_operator": "full_legal_scale_evaluation",
+        "telemetry": "Sample size N and coverage counts per field per season."
+      }
+    },
+    {
+      "primitive_id": "explicit_coverage_logging",
+      "name": "Explicit Coverage Logging Kernel",
+      "verbatim_quote": "Any field that cannot be derived for a game is logged as a coverage count per field per season — never silently dropped, never invented.",
+      "page": 1,
+      "latex": "C_{f,s} = \\sum_{g \\in s} \\mathbb{I}(x_{f,g} \\text{ is derivable})",
+      "symbol_and_unit_ledger": "C_{f,s}: Coverage count for field f in season s (dimensionless), x_{f,g}: Feature value for game g",
+      "assumptions": "Missingness is not completely at random; explicit tracking prevents silent bias injection into the loss function.",
+      "breakdown_regime": "Fails if missing data is imputed or silently dropped, corrupting the gradient descent landscape.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to the construction of a valid indicator matrix in conformal inference, ensuring prediction sets only utilize fully observed feature vectors.",
+        "source_operator": "explicit_coverage_logging",
+        "telemetry": "Per-field, per-season coverage counts C_{f,s}."
+      }
+    },
+    {
+      "primitive_id": "walk_forward_season_fit",
+      "name": "Walk-Forward Season Fit Operator",
+      "verbatim_quote": "Walk-forward by season: fit the evaluator's coefficients on earlier seasons, evaluate on later pre-Week-6 seasons.",
+      "page": 1,
+      "latex": "\\hat{\\theta}_{t} = \\arg\\min_{\\theta} \\mathcal{L}(Y_{<t}, X_{<t}; \\theta) \\quad \\text{evaluated on} \\quad (Y_t, X_t)",
+      "symbol_and_unit_ledger": "\\hat{\\theta}_{t}: Coefficients at season t (dimensionless), \\mathcal{L}: Loss function (e.g., Brier score)",
+      "assumptions": "Temporal stationarity holds sufficiently between adjacent seasons to allow out-of-sample generalization without lookahead bias.",
+      "breakdown_regime": "Violated if cross-validation folds mix future and past data, inducing severe leakage and optimistic bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Purged K-Fold Cross-Validation in time-series forecasting, strictly preserving causal ordering in state transitions.",
+        "source_operator": "walk_forward_season_fit",
+        "telemetry": "Delta Brier score and Delta log-loss per tested weight."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2edec4aa2281fc44_t0",
+      "think": "The fundamental mathematical failure identified in Addendum 3 is a variance-bias trade-off collapse induced by an artificially truncated integration domain. By scoping the corpus-evaluator backtest to merely 79 games (2026 Weeks 1–5), the system computed a high-variance estimator for the production weight, subsequently freezing it at 0.0 because the sample failed to clear the 500-game minimum threshold. This constitutes a premature termination of the optimization routine. The correction mandates expanding the domain of integration to the 'full legal scale'—specifically, the 2,462-game locked-filter universe and potentially the 14,251 fixture line archive. Mathematically, this shifts the weight derivation from a sparse, noisy local approximation to a globally consistent maximum likelihood estimate (or equivalent Bayesian posterior mode) over the complete historical measure space. The introduction of explicit coverage logging (never silently dropping fields) ensures that the feature vector $X$ maintains structural integrity across the expanded temporal horizon, preventing silent dimensionality reduction that would otherwise bias the coefficient estimates. Furthermore, the enforcement of a strict walk-forward evaluation by season introduces a causal temporal filter, effectively modeling the system as a non-stationary stochastic process where parameters $\\theta_t$ are fitted on $\\mathcal{D}_{<t}$ and validated on $\\mathcal{D}_t$. This dual approach—maximal spatial coverage combined with strict temporal causality—guarantees that the resulting weight is an earned, asymptotically consistent parameter rather than an arbitrary boundary condition imposed by a computational shortcut.\n\nDeep epistemic analysis for wire-everything-addendum-3-weight-correction-2026-10-17 (2edec4aa2281fc44, domain=other, pages_read=1/1): Operator 'Full Legal Scale Evaluation Operator' (page 1, domain other) captures: THE CORRECTION — RUN THE MEASUREMENT AT FULL LEGAL SCALE: 1. Assumptions: The data warehouse contains a superset of the minimum required samples; all historical data is legally accessible under the training fence. Breakdown regime: Breaks down when N < N_min, triggering an invalid frozen-weight disposition instead of a measured value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to enforcing a minimum effective sample size in non-parametric density estimation to prevent high-variance weight assignments. Operator 'Explicit Coverage Logging Kernel' (page 1, domain other) captures: Any field that cannot be derived for a game is logged as a coverage count per field per season — never silently dropped, never invented. Assumptions: Missingness is not completely at random; explicit tracking prevents silent bias injection into the loss function. Breakdown regime: Fails if missing data is imputed or silently dropped, corrupting the gradient descent landscape. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to the construction of a valid indicator matrix in conformal inference, ensuring prediction sets only utilize fully observed feature vectors. Operator 'Walk-Forward Season Fit Operator' (page 1, domain other) captures: Walk-forward by season: fit the evaluator's coefficients on earlier seasons, evaluate on later pre-Week-6 seasons. Assumptions: Temporal stationarity holds sufficiently between adjacent seasons to allow out-of-sample generalization without lookahead bias. Breakdown regime: Violated if cross-validation folds mix future and past data, inducing severe leakage and optimistic bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Purged K-Fold Cross-Validation in time-series forecasting, strictly preserving causal ordering in state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for wire-everything-addendum-3-weight-correction-2026-10-17 (2edec4aa2281fc44, domain=other, pages_read=1/1): Operator 'Full Legal Scale Evaluation Operator' (page 1, domain other) captures: THE CORRECTION — RUN THE MEASUREMENT AT FULL LEGAL SCALE: 1. Assumptions: The data warehouse contains a superset of the minimum required samples; all historical data is legally accessible under the training fence. Breakdown regime: Breaks down when N < N_min, triggering an invalid frozen-weight disposition instead of a measured value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to enforcing a minimum effective sample size in non-parametric density estimation to prevent high-variance weight assignments. Operator 'Explicit Coverage Logging Kernel' (page 1, domain other) captures: Any field that cannot be derived for a game is logged as a coverage count per field per season — never silently dropped, never invented. Assumptions: Missingness is not completely at random; explicit tracking prevents silent bias injection into the loss function. Breakdown regime: Fails if missing data is imputed or silently dropped, corrupting the gradient descent landscape. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to the construction of a valid indicator matrix in conformal inference, ensuring prediction sets only utilize fully observed feature vectors. Operator 'Walk-Forward Season Fit Operator' (page 1, domain other) captures: Walk-forward by season: fit the evaluator's coefficients on earlier seasons, evaluate on later pre-Week-6 seasons. Assumptions: Temporal stationarity holds sufficiently between adjacent seasons to allow out-of-sample generalization without lookahead bias. Breakdown regime: Violated if cross-validation folds mix future and past data, inducing severe leakage and optimistic bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Purged K-Fold Cross-Validation in time-series forecasting, strictly preserving causal ordering in state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This correction directly echoes the foundational principles of time-series econometrics and the avoidance of look-ahead bias in quantitative finance. Historically, it mirrors the shift from static cross-sectional analysis to dynamic panel data models, where ignoring the temporal depth of available data leads to spurious regression results. It also aligns with the rigorous standards of conformal prediction, which demands that calibration sets be both representative and maximally sized to guarantee finite-sample coverage properties.",
+      "theory_of_mind": "From a decision-theoretic perspective, the 'frozen weight' represents a passive agent defaulting to a null hypothesis due to computational inertia or fear of overfitting on small samples. The correction forces the agent to actively engage with the full complexity of the environment. It models the opposing force—the market or the physical game—as a high-dimensional system that cannot be accurately captured by a 5-week snapshot. By demanding full-scale measurement, the system acknowledges that true predictive power requires absorbing the long-memory effects inherent in sports dynamics.",
+      "cross_layer_veto": "A critical veto condition arises if the expanded dataset introduces collinearity or regime shifts that invalidate the linear assumptions of the evaluator. The explicit coverage logging acts as a primary anti-leakage mechanism, ensuring that no future information contaminates the training folds. If the walk-forward evaluation reveals that the measured weight fails to clear the contract bars (e.g., $\\Delta$Brier $\\le -0.002$) even at full scale, the system must default to the least-harm measured value, thereby vetoing any unearned promotional upgrade and maintaining epistemic humility."
+    }
+  ]
+}

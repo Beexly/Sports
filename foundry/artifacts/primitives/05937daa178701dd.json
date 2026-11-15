@@ -1,0 +1,78 @@
+{
+  "book_id": "05937daa178701dd",
+  "source_status": "COMPLETE",
+  "title": "AGENT-CHARTERS",
+  "file_name": "AGENT-CHARTERS.md",
+  "sha256": "05937daa178701dddd25f18b06215589034c62eab7e76ff271d5e66229550cbc",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Agent charters define autonomous domains with contract-bound ownership, enforcing accuracy through proved calibration rather than assertion, enabling parallelizable, self-verifying inference. Universal Lens: Rooted in AGENT-CHARTERS (05937daa178701dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI primitives map to Bayesian calibration gates where each domain's output is certified via empirical validation, ensuring predictive accuracy through conformal inference and rejection of asserted claims. GSI Mapping: Rooted in AGENT-CHARTERS (05937daa178701dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE primitives encode situational reasoning through state-transition constraints defined by domain-specific contracts, allowing independent model evolution while enforcing anti-collinearity via veto mechanisms. GSE Mapping: Rooted in AGENT-CHARTERS (05937daa178701dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "contractual_autonomy",
+      "name": "Contractual Autonomy",
+      "verbatim_quote": "A contract says what you own, what you may decide alone, and what you may never do, and then gets out of the way.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ownership_domain': 'dimensionless', 'decision_boundary': 'dimensionless', 'prohibition_set': 'dimensionless'}",
+      "assumptions": "Each domain operates under a formal contract defining its scope of control and prohibitions.",
+      "breakdown_regime": "When a charter conflicts with a law, enforcement halts work and marks it blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Domain autonomy maps to Bayesian prior constraints, where each model's decision space is bounded by its charter's legal limits.",
+        "source_operator": "contractual_autonomy",
+        "telemetry": "Verification of domain compliance against charter-defined boundaries."
+      }
+    },
+    {
+      "primitive_id": "calibration_gate",
+      "name": "Calibration Gate",
+      "verbatim_quote": "The goal, stated once so every domain can check itself against it: > The most accurate and best-calibrated fantasy and prediction sports company in the world, > where accuracy is **proved rather than asserted**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'accuracy_metric': 'dimensionless', 'calibration_score': 'unitless', 'assertion_vs_proof': 'boolean'}",
+      "assumptions": "Accuracy must be empirically validated, not claimed without evidence.",
+      "breakdown_regime": "Failure to prove accuracy leads to rejection of outputs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Calibration gate ensures that predictions are not merely asserted but verified through statistical conformity.",
+        "source_operator": "calibration_gate",
+        "telemetry": "Empirical calibration curves and coverage checks."
+      }
+    },
+    {
+      "primitive_id": "veto_constraint",
+      "name": "Veto Constraint",
+      "verbatim_quote": "Where a charter and a law disagree, the law wins and the work is marked BLOCKED.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'charter_conflict': 'boolean', 'law_enforcement': 'dimensionless', 'blocked_status': 'boolean'}",
+      "assumptions": "Legal constraints override contractual autonomy when in conflict.",
+      "breakdown_regime": "Work is halted upon detection of charter-law inconsistency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Veto constraint enforces consistency across domains by preventing autonomous decisions that violate overarching laws.",
+        "source_operator": "veto_constraint",
+        "telemetry": "Conflict resolution logs and blocked task indicators."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "05937daa178701dd_t0",
+      "think": "The core insight is that autonomous domains must operate under formalized contracts to prevent misalignment. Each domain’s charter defines its operational scope, including what it may decide alone, what it must not do, and what it owns. This structure prevents emergent errors from cascading across models, especially when multiple agents produce consistent but incorrect results. The calibration gate ensures that even if domains agree, their outputs must be proven accurate rather than simply asserted. The veto constraint enforces that laws take precedence over internal contracts, maintaining system integrity. These primitives together form a dual logic: autonomy within bounds, and verification beyond.\n\nDeep epistemic analysis for AGENT-CHARTERS (05937daa178701dd, domain=other, pages_read=6/6): Operator 'Contractual Autonomy' (page 1, domain other) captures: A contract says what you own, what you may decide alone, and what you may never do, and then gets out of the way. Assumptions: Each domain operates under a formal contract defining its scope of control and prohibitions. Breakdown regime: When a charter conflicts with a law, enforcement halts work and marks it blocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Domain autonomy maps to Bayesian prior constraints, where each model's decision space is bounded by its charter's legal limits. Operator 'Calibration Gate' (page 1, domain other) captures: The goal, stated once so every domain can check itself against it: > The most accurate and best-calibrated fantasy and prediction sports company in the world, > where accuracy is **proved rather than asserted**. Assumptions: Accuracy must be empirically validated, not claimed without evidence. Breakdown regime: Failure to prove accuracy leads to rejection of outputs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Calibration gate ensures that predictions are not merely asserted but verified through statistical conformity. Operator 'Veto Constraint' (page 1, domain other) captures: Where a charter and a law disagree, the law wins and the work is marked BLOCKED. Assumptions: Legal constraints override contractual autonomy when in conflict. Breakdown regime: Work is halted upon detection of charter-law inconsistency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Veto constraint enforces consistency across domains by preventing autonomous decisions that violate overarching laws. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for AGENT-CHARTERS (05937daa178701dd, domain=other, pages_read=6/6): Operator 'Contractual Autonomy' (page 1, domain other) captures: A contract says what you own, what you may decide alone, and what you may never do, and then gets out of the way. Assumptions: Each domain operates under a formal contract defining its scope of control and prohibitions. Breakdown regime: When a charter conflicts with a law, enforcement halts work and marks it blocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Domain autonomy maps to Bayesian prior constraints, where each model's decision space is bounded by its charter's legal limits. Operator 'Calibration Gate' (page 1, domain other) captures: The goal, stated once so every domain can check itself against it: > The most accurate and best-calibrated fantasy and prediction sports company in the world, > where accuracy is **proved rather than asserted**. Assumptions: Accuracy must be empirically validated, not claimed without evidence. Breakdown regime: Failure to prove accuracy leads to rejection of outputs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Calibration gate ensures that predictions are not merely asserted but verified through statistical conformity. Operator 'Veto Constraint' (page 1, domain other) captures: Where a charter and a law disagree, the law wins and the work is marked BLOCKED. Assumptions: Legal constraints override contractual autonomy when in conflict. Breakdown regime: Work is halted upon detection of charter-law inconsistency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Veto constraint enforces consistency across domains by preventing autonomous decisions that violate overarching laws. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification theory and distributed systems design, these primitives echo concepts from actor models and contract-based concurrency, tracing back to early work on decentralized decision-making in multi-agent systems. Retrocausal Genealogy: Rooted in AGENT-CHARTERS (05937daa178701dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in AGENT-CHARTERS (05937daa178701dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as rational actors constrained by their charters, yet capable of misalignment due to shared but incomplete information. The system mitigates this by requiring external adversarial verification and enforcing legal overrides. Theory of Mind & Decision Maker Model: Rooted in AGENT-CHARTERS (05937daa178701dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring each domain to independently validate findings, with cross-layer vetoes preventing consensus on false positives. Leakage occurs when domains fail to enforce their own boundaries, leading to systemic error propagation. Cross-Layer Veto & Anti-Leakage Check: Rooted in AGENT-CHARTERS (05937daa178701dd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

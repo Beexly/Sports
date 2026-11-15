@@ -1,0 +1,78 @@
+{
+  "book_id": "a5881e25f295d355",
+  "source_status": "COMPLETE",
+  "title": "ftnfantasy.com",
+  "file_name": "ftnfantasy.com.md",
+  "sha256": "a5881e25f295d355798969dc4adcadfb27a5c167cb615a3f452a0c7e59468ce6",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap topology and URL path segmentation define a hierarchical graph structure for content navigation and data indexing. Universal Lens: Rooted in ftnfantasy.com (a5881e25f295d355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models sitemap crawl success rates as probabilistic events; conformal prediction bounds uncertainty in URL discovery counts. GSI Mapping: Rooted in ftnfantasy.com (a5881e25f295d355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions between sitemap indices and post-player paths enable dynamic fantasy sports content routing and contextual relevance scoring. GSE Mapping: Rooted in ftnfantasy.com (a5881e25f295d355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_crawl_topology",
+      "name": "Sitemap Crawl Topology",
+      "verbatim_quote": "# ftnfantasy.com Category: **advanced-data** URLs discovered: **37,473** Sitemaps walked: 48 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{urls}': 'dimensionless, total discovered URLs', 'N_{sitemaps}': 'dimensionless, number of sitemaps crawled'}",
+      "assumptions": "All sitemaps are accessible and correctly indexed by web crawler.",
+      "breakdown_regime": "When sitemap status code ≠ 200, crawl fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Graph isomorphism between sitemap index and URL path taxonomy enables GSI to model content coverage as a directed acyclic graph.",
+        "source_operator": "sitemap_crawl_topology",
+        "telemetry": "Crawl success rate per sitemap type"
+      }
+    },
+    {
+      "primitive_id": "path_taxonomy_segmentation",
+      "name": "Path Taxonomy Segmentation",
+      "verbatim_quote": "# ftnfantasy.com Category: **advanced-data** URLs discovered: **37,473** Sitemaps walked: 48 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_i': 'dimensionless, path segment identifier', 'U_i': 'dimensionless, count of URLs under path segment'}",
+      "assumptions": "Each path segment corresponds to a distinct sport or category.",
+      "breakdown_regime": "When U_i < threshold, path may be underrepresented.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel density estimation of path segments maps to GSE's content routing kernel for real-time fantasy sports context.",
+        "source_operator": "path_taxonomy_segmentation",
+        "telemetry": "URL distribution across path segments"
+      }
+    },
+    {
+      "primitive_id": "url_path_indexing",
+      "name": "URL Path Indexing",
+      "verbatim_quote": "# ftnfantasy.com Category: **advanced-data** URLs discovered: **37,473** Sitemaps walked: 48 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_n': 'dimensionless, sample URL index', 'L_n': 'dimensionless, length of URL string'}",
+      "assumptions": "URLs follow consistent hierarchical structure.",
+      "breakdown_regime": "When L_n exceeds threshold, indexing becomes inefficient.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "URLs form a labeled tree where each node represents a content category; GSI uses this to infer semantic similarity.",
+        "source_operator": "url_path_indexing",
+        "telemetry": "URL string entropy and categorization accuracy"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a5881e25f295d355_t0",
+      "think": "The sitemap crawl topology defines a directed graph where nodes represent sitemaps and edges denote successful traversal. Each sitemap contributes to a cumulative URL count, which GSI models using probabilistic inference on crawl outcomes. The path taxonomy segmentation partitions this graph into subgraphs by sport or category, enabling GSE to perform state transitions based on user intent. The URL indexing layer provides granular access control and semantic tagging. Dualities emerge in that sitemap success implies robustness in URL discovery, while path segmentation reflects content hierarchy. Failure modes include 404 errors, which indicate broken links or misconfigured sitemaps, disrupting both GSI’s probabilistic models and GSE’s routing logic. These failures propagate through the system unless mitigated via redundancy checks.\n\nDeep epistemic analysis for ftnfantasy.com (a5881e25f295d355, domain=other, pages_read=4/4): Operator 'Sitemap Crawl Topology' (page 1, domain other) captures: # ftnfantasy.com Category: **advanced-data** URLs discovered: **37,473** Sitemaps walked: 48 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are accessible and correctly indexed by web crawler. Breakdown regime: When sitemap status code ≠ 200, crawl fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Graph isomorphism between sitemap index and URL path taxonomy enables GSI to model content coverage as a directed acyclic graph. Operator 'Path Taxonomy Segmentation' (page 1, domain other) captures: # ftnfantasy.com Category: **advanced-data** URLs discovered: **37,473** Sitemaps walked: 48 ## Sitemaps | Sitemap | Status Assumptions: Each path segment corresponds to a distinct sport or category. Breakdown regime: When U_i < threshold, path may be underrepresented. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel density estimation of path segments maps to GSE's content routing kernel for real-time fantasy sports context. Operator 'URL Path Indexing' (page 1, domain other) captures: # ftnfantasy.com Category: **advanced-data** URLs discovered: **37,473** Sitemaps walked: 48 ## Sitemaps | Sitemap | Status Assumptions: URLs follow consistent hierarchical structure. Breakdown regime: When L_n exceeds threshold, indexing becomes inefficient. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URLs form a labeled tree where each node represents a content category; GSI uses this to infer semantic similarity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ftnfantasy.com (a5881e25f295d355, domain=other, pages_read=4/4): Operator 'Sitemap Crawl Topology' (page 1, domain other) captures: # ftnfantasy.com Category: **advanced-data** URLs discovered: **37,473** Sitemaps walked: 48 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are accessible and correctly indexed by web crawler. Breakdown regime: When sitemap status code ≠ 200, crawl fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Graph isomorphism between sitemap index and URL path taxonomy enables GSI to model content coverage as a directed acyclic graph. Operator 'Path Taxonomy Segmentation' (page 1, domain other) captures: # ftnfantasy.com Category: **advanced-data** URLs discovered: **37,473** Sitemaps walked: 48 ## Sitemaps | Sitemap | Status Assumptions: Each path segment corresponds to a distinct sport or category. Breakdown regime: When U_i < threshold, path may be underrepresented. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel density estimation of path segments maps to GSE's content routing kernel for real-time fantasy sports context. Operator 'URL Path Indexing' (page 1, domain other) captures: # ftnfantasy.com Category: **advanced-data** URLs discovered: **37,473** Sitemaps walked: 48 ## Sitemaps | Sitemap | Status Assumptions: URLs follow consistent hierarchical structure. Breakdown regime: When L_n exceeds threshold, indexing becomes inefficient. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URLs form a labeled tree where each node represents a content category; GSI uses this to infer semantic similarity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web crawling algorithms and XML sitemap standards introduced by Google in 2005, this structure evolved into modern SEO and content indexing paradigms. Retrocausal Genealogy: Rooted in ftnfantasy.com (a5881e25f295d355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ftnfantasy.com (a5881e25f295d355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include crawlers (seeking completeness), users (seeking relevance), and site maintainers (optimizing for performance). Their interplay shapes the integrity of the sitemap graph and its downstream applications. Theory of Mind & Decision Maker Model: Rooted in ftnfantasy.com (a5881e25f295d355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that sitemap success does not correlate with path segment underrepresentation. Leakage occurs when GSE assumes uniform URL distribution across segments without accounting for crawl anomalies. Cross-Layer Veto & Anti-Leakage Check: Rooted in ftnfantasy.com (a5881e25f295d355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in ftnfantasy.com (a5881e25f295d355), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "b43369b85924fb6a",
+  "source_status": "COMPLETE",
+  "title": "PERSISTED_TASK_RUNTIME",
+  "file_name": "PERSISTED_TASK_RUNTIME.md",
+  "sha256": "b43369b85924fb6aed64685f6514378b1bcde1e7335d682d007d8864e603b09e",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Agent OS task persistence via CockpitTask delegate; in-memory fallback; deduplication by task ID; blocked task retention; complete payload storage. Universal Lens: Rooted in PERSISTED_TASK_RUNTIME (b43369b85924fb6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian task state tracking with conformal predictive validity; probabilistic task completion inference; deterministic deduplication logic. GSI Mapping: Rooted in PERSISTED_TASK_RUNTIME (b43369b85924fb6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational task runtime state transitions; blocked task constraint enforcement; agent-driven task payload integrity; memory fallback resilience. GSE Mapping: Rooted in PERSISTED_TASK_RUNTIME (b43369b85924fb6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "persisted_task_runtime",
+      "name": "Persisted Task Runtime",
+      "verbatim_quote": "# Persisted Task Runtime Implemented `apps/web/lib/tasks/agent-task-store.ts`, `agent-task-runtime.ts`, and `agent-task-seed-runtime.ts`. ## Behavior - Agent OS seed tasks",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Task identifier (dimensionless)', 'D': 'Database state (boolean)', 'M': 'Memory store state (boolean)'}",
+      "assumptions": "Task persistence depends on database availability; fallback to memory store occurs on absence.",
+      "breakdown_regime": "When D=false, M=true; task data stored in volatile memory.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Task persistence model mirrors Bayesian belief updating under uncertain evidence; memory fallback corresponds to prior belief degradation.",
+        "source_operator": "persisted_task_runtime",
+        "telemetry": "Task persistence success rate, memory fallback frequency"
+      }
+    },
+    {
+      "primitive_id": "deduplication_by_task_id",
+      "name": "Deduplication by Task ID",
+      "verbatim_quote": "- Persistence stores the complete Agent OS task payload without adding a duplicate Prisma table.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_i': 'Task identifier (dimensionless)', 'U': 'Uniqueness check (boolean)'}",
+      "assumptions": "Each task has a unique identifier; duplicate detection is deterministic.",
+      "breakdown_regime": "When U=false, task is rejected as duplicate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel function maps task IDs to unique indices; collision resolution ensures data integrity.",
+        "source_operator": "deduplication_by_task_id",
+        "telemetry": "Duplicate task rejection count, uniqueness validation rate"
+      }
+    },
+    {
+      "primitive_id": "blocked_task_retention",
+      "name": "Blocked Task Retention",
+      "verbatim_quote": "in-memory store instead of crashing. - Tasks are deduped by Agent OS task id. - Blocked",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'Blocked state (boolean)', 'R': 'Retention policy (boolean)'}",
+      "assumptions": "Blocked tasks must maintain their state across persistence cycles.",
+      "breakdown_regime": "When B=true, R=true; task remains in blocked state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State retention mirrors topological invariance under persistence; blocked state is preserved as fixed point.",
+        "source_operator": "blocked_task_retention",
+        "telemetry": "Blocked task preservation rate, state transition fidelity"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b43369b85924fb6a_t0",
+      "think": "The system implements a dual-state persistence mechanism: real DB for production, in-memory store for stub mode. This dualism enables robustness against infrastructure failure. The task runtime is modeled as a state machine where each task T_i has a deterministic path through states {persisted, deduplicated, blocked}. Deduplication uses a hash-based index to ensure uniqueness. Blocked tasks are retained to preserve execution context. The kernel operator T_i → T_i' maps task identifiers to persistent payloads. The failure mode occurs when DB is unavailable, triggering fallback to M. The system's behavior is governed by a conditional logic: if D=true then persist(T); else M.store(T).\n\nDeep epistemic analysis for PERSISTED_TASK_RUNTIME (b43369b85924fb6a, domain=other, pages_read=1/1): Operator 'Persisted Task Runtime' (page 1, domain other) captures: # Persisted Task Runtime Implemented `apps/web/lib/tasks/agent-task-store.ts`, `agent-task-runtime.ts`, and `agent-task-seed-runtime.ts`. ## Behavior - Agent OS seed tasks Assumptions: Task persistence depends on database availability; fallback to memory store occurs on absence. Breakdown regime: When D=false, M=true; task data stored in volatile memory. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Task persistence model mirrors Bayesian belief updating under uncertain evidence; memory fallback corresponds to prior belief degradation. Operator 'Deduplication by Task ID' (page 1, domain other) captures: - Persistence stores the complete Agent OS task payload without adding a duplicate Prisma table. Assumptions: Each task has a unique identifier; duplicate detection is deterministic. Breakdown regime: When U=false, task is rejected as duplicate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel function maps task IDs to unique indices; collision resolution ensures data integrity. Operator 'Blocked Task Retention' (page 1, domain other) captures: in-memory store instead of crashing. - Tasks are deduped by Agent OS task id. - Blocked Assumptions: Blocked tasks must maintain their state across persistence cycles. Breakdown regime: When B=true, R=true; task remains in blocked state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State retention mirrors topological invariance under persistence; blocked state is preserved as fixed point. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PERSISTED_TASK_RUNTIME (b43369b85924fb6a, domain=other, pages_read=1/1): Operator 'Persisted Task Runtime' (page 1, domain other) captures: # Persisted Task Runtime Implemented `apps/web/lib/tasks/agent-task-store.ts`, `agent-task-runtime.ts`, and `agent-task-seed-runtime.ts`. ## Behavior - Agent OS seed tasks Assumptions: Task persistence depends on database availability; fallback to memory store occurs on absence. Breakdown regime: When D=false, M=true; task data stored in volatile memory. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Task persistence model mirrors Bayesian belief updating under uncertain evidence; memory fallback corresponds to prior belief degradation. Operator 'Deduplication by Task ID' (page 1, domain other) captures: - Persistence stores the complete Agent OS task payload without adding a duplicate Prisma table. Assumptions: Each task has a unique identifier; duplicate detection is deterministic. Breakdown regime: When U=false, task is rejected as duplicate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel function maps task IDs to unique indices; collision resolution ensures data integrity. Operator 'Blocked Task Retention' (page 1, domain other) captures: in-memory store instead of crashing. - Tasks are deduped by Agent OS task id. - Blocked Assumptions: Blocked tasks must maintain their state across persistence cycles. Breakdown regime: When B=true, R=true; task remains in blocked state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State retention mirrors topological invariance under persistence; blocked state is preserved as fixed point. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in distributed systems design principles; inspired by CRDTs and eventual consistency models. Influenced by actor model concurrency patterns. Retrocausal Genealogy: Rooted in PERSISTED_TASK_RUNTIME (b43369b85924fb6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PERSISTED_TASK_RUNTIME (b43369b85924fb6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include infrastructure reliability (DB vs memory), task integrity (deduplication), and execution control (blocking). Decision actors are the runtime engine and persistence layer. Theory of Mind & Decision Maker Model: Rooted in PERSISTED_TASK_RUNTIME (b43369b85924fb6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in PERSISTED_TASK_RUNTIME (b43369b85924fb6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity: memory fallback should not interfere with DB persistence logic. Leakage veto: blocked tasks must not propagate into active queues. State transitions must be atomic to prevent partial updates. Cross-Layer Veto & Anti-Leakage Check: Rooted in PERSISTED_TASK_RUNTIME (b43369b85924fb6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

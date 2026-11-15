@@ -1,0 +1,78 @@
+{
+  "book_id": "cfc5a80e8c802f1e",
+  "source_status": "COMPLETE",
+  "title": "INGESTION-COVERAGE-2026-10-13",
+  "file_name": "INGESTION-COVERAGE-2026-10-13.md",
+  "sha256": "cfc5a80e8c802f1e057b13077d7932ec564456ff0ce64f8258642b0f560da455",
+  "primary_domain": "other",
+  "pages_total": 16,
+  "pages_read": 16,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Ingestion paths form a directed acyclic graph where nodes are data sources and edges are scheduled triggers; coverage completeness is a Boolean function over trigger sets. Universal Lens: Rooted in INGESTION-COVERAGE-2026-10-13 (cfc5a80e8c802f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models ingestion as a Bayesian belief network over scheduled and contingent paths, with observables mapped to signal tables via probabilistic update rules. GSI Mapping: Rooted in INGESTION-COVERAGE-2026-10-13 (cfc5a80e8c802f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes ingestion state transitions using a Markov decision process, where actions are trigger activations and states are data availability layers. GSE Mapping: Rooted in INGESTION-COVERAGE-2026-10-13 (cfc5a80e8c802f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "trigger_a_vercel_cron",
+      "name": "Vercel Cron Scheduler",
+      "verbatim_quote": "Inventory — every ingestion path currently in the repo, grouped by trigger ### Trigger A — Vercel cron (`vercel.json` + `apps/web/vercel.json`) 31 scheduled entries, mirrored in both files.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'time interval (minutes)', 'S': 'scheduled entry count (dimensionless)', 'F': 'feed type (dimensionless)'}",
+      "assumptions": "All schedules are deterministic and synchronized across files.",
+      "breakdown_regime": "When vercel.json diverges from apps/web/vercel.json.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each cron job maps to a unique feed ingestion function in GSI's belief network.",
+        "source_operator": "trigger_a_vercel_cron",
+        "telemetry": "Scheduled execution logs and feed freshness metrics."
+      }
+    },
+    {
+      "primitive_id": "trigger_b_github_actions",
+      "name": "GitHub Actions Scheduler",
+      "verbatim_quote": "**[V]** ### Trigger B — GitHub Actions scheduler (`.github/workflows/external-cron.yml`) 9 jobs hitting production over HTTP with the same bearer token.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'J': 'job count (dimensionless)', 'B': 'bearer token (dimensionless)', 'P': 'production endpoint (dimensionless)'}",
+      "assumptions": "Bearer token is consistent and endpoints are reachable.",
+      "breakdown_regime": "When GitHub Actions minutes are exhausted or runners idle.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Contingent ingestion kernel derived from Vercel path with conditional probability based on resource availability.",
+        "source_operator": "trigger_b_github_actions",
+        "telemetry": "Runner status and job completion timestamps."
+      }
+    },
+    {
+      "primitive_id": "trigger_c_local_daemon",
+      "name": "Local Daemon Ingestion",
+      "verbatim_quote": "### Trigger C — Local daemon: Mind Guardian (`scripts/ops/mind_guardian_daemon.py`, 497 lines) **[V]** The only path that ingests *arbitrary files* rather than structured feeds.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'daemon runtime (seconds)', 'F': 'file type (dimensionless)', 'R': 'root watch directory (dimensionless)'}",
+      "assumptions": "Daemon operates independently and monitors specified directories.",
+      "breakdown_regime": "When file system access fails or daemon crashes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "File-based ingestion maps to raw data streams in GSI's event processing pipeline.",
+        "source_operator": "trigger_c_local_daemon",
+        "telemetry": "File modification events and ingestion success rates."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cfc5a80e8c802f1e_t0",
+      "think": "The ingestion coverage model is a hybrid system combining deterministic cron scheduling (Vercel), conditional execution (GitHub Actions), and reactive file monitoring (local daemon). Each trigger represents a distinct pathway for data flow into the system. The Vercel cron provides stable, high-frequency ingestion with 31 entries. GitHub Actions introduces a contingent path dependent on external resources, modeled as a probabilistic condition. The local daemon enables arbitrary file ingestion, forming a non-standard but critical data ingress point. These paths intersect in a directed graph where each node represents a data source and edge a trigger. Coverage completeness is determined by verifying all scheduled paths and identifying orphaned routes. Failure modes include schedule divergence, runner idleness, and daemon crash. The system's robustness depends on redundancy and fallback mechanisms.\n\nDeep epistemic analysis for INGESTION-COVERAGE-2026-10-13 (cfc5a80e8c802f1e, domain=other, pages_read=16/16): Operator 'Vercel Cron Scheduler' (page 1, domain other) captures: Inventory — every ingestion path currently in the repo, grouped by trigger ### Trigger A — Vercel cron (`vercel.json` + `apps/web/vercel.json`) 31 scheduled entries, mirrored in both files. Assumptions: All schedules are deterministic and synchronized across files. Breakdown regime: When vercel.json diverges from apps/web/vercel.json. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each cron job maps to a unique feed ingestion function in GSI's belief network. Operator 'GitHub Actions Scheduler' (page 2, domain other) captures: **[V]** ### Trigger B — GitHub Actions scheduler (`.github/workflows/external-cron.yml`) 9 jobs hitting production over HTTP with the same bearer token. Assumptions: Bearer token is consistent and endpoints are reachable. Breakdown regime: When GitHub Actions minutes are exhausted or runners idle. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Contingent ingestion kernel derived from Vercel path with conditional probability based on resource availability. Operator 'Local Daemon Ingestion' (page 3, domain other) captures: ### Trigger C — Local daemon: Mind Guardian (`scripts/ops/mind_guardian_daemon.py`, 497 lines) **[V]** The only path that ingests *arbitrary files* rather than structured feeds. Assumptions: Daemon operates independently and monitors specified directories. Breakdown regime: When file system access fails or daemon crashes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): File-based ingestion maps to raw data streams in GSI's event processing pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for INGESTION-COVERAGE-2026-10-13 (cfc5a80e8c802f1e, domain=other, pages_read=16/16): Operator 'Vercel Cron Scheduler' (page 1, domain other) captures: Inventory — every ingestion path currently in the repo, grouped by trigger ### Trigger A — Vercel cron (`vercel.json` + `apps/web/vercel.json`) 31 scheduled entries, mirrored in both files. Assumptions: All schedules are deterministic and synchronized across files. Breakdown regime: When vercel.json diverges from apps/web/vercel.json. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each cron job maps to a unique feed ingestion function in GSI's belief network. Operator 'GitHub Actions Scheduler' (page 2, domain other) captures: **[V]** ### Trigger B — GitHub Actions scheduler (`.github/workflows/external-cron.yml`) 9 jobs hitting production over HTTP with the same bearer token. Assumptions: Bearer token is consistent and endpoints are reachable. Breakdown regime: When GitHub Actions minutes are exhausted or runners idle. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Contingent ingestion kernel derived from Vercel path with conditional probability based on resource availability. Operator 'Local Daemon Ingestion' (page 3, domain other) captures: ### Trigger C — Local daemon: Mind Guardian (`scripts/ops/mind_guardian_daemon.py`, 497 lines) **[V]** The only path that ingests *arbitrary files* rather than structured feeds. Assumptions: Daemon operates independently and monitors specified directories. Breakdown regime: When file system access fails or daemon crashes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): File-based ingestion maps to raw data streams in GSI's event processing pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in temporal logic and distributed systems theory, tracing back to early 2020s work on cron-based automation and modern microservices architectures. Retrocausal Genealogy: Rooted in INGESTION-COVERAGE-2026-10-13 (cfc5a80e8c802f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in INGESTION-COVERAGE-2026-10-13 (cfc5a80e8c802f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the scheduler (which may fail due to resource constraints) and the daemon (which may miss files). Decision actors are the system's operational logic and the human maintainer. Theory of Mind & Decision Maker Model: Rooted in INGESTION-COVERAGE-2026-10-13 (cfc5a80e8c802f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no two paths map to identical data sinks. Leakage veto prevents redundant ingestion from overlapping triggers. Cross-Layer Veto & Anti-Leakage Check: Rooted in INGESTION-COVERAGE-2026-10-13 (cfc5a80e8c802f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in INGESTION-COVERAGE-2026-10-13 (cfc5a80e8c802f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

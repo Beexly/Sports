@@ -1,0 +1,710 @@
+{
+  "book_id": "b4a2a7351d2588a1",
+  "source_status": "COMPLETE",
+  "source_note": "National Academies of Sciences, Engineering, and Medicine, Committee on Accelerating Progress in Traumatic Brain Injury Research and Care, 'Traumatic Brain Injury: A Roadmap for Accelerating Progress', consensus study report, National Academies Press, Washington, DC, 2022 (sponsor: Combat Casualty Care Research Program, Department of Defense). Local file is the publisher PDF (9,915,941 bytes); extracted text is clean born-digital text with occasional figure OCR garbling in reproduced graphics, which was avoided for quotations. Identity computed per gatekeeper scan over the PDF: size 9915941, sha256 b4a2a7351d2588a1c2c82244075c0f350c59b1526e2da1f989335ccdd963a4ec, book_id b4a2a7351d2588a1. Catalog title and author are accurate as given. All verbatim quotes verified as exact normalized substrings of the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "cde_definition_of_tbi",
+      "name": "TBI defined by the Common Data Elements initiative as alteration in brain function or other evidence of brain pathology caused by an external force",
+      "verbatim_quote": "an alteration in brain function, or other evidence of brain pathology, caused by an external force",
+      "page": "Ch1 Box 1-2, report p17",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The definition is intentionally inclusive across all severities and populations, civilian and military.",
+        "Operational definitions for disability adjudication, payment, or study inclusion differ by sector and remain in use alongside this encompassing definition."
+      ],
+      "breakdown_regime": "Too inclusive to stratify care by itself: it admits concussion and coma under one label, so it must be paired with a classification layer before it can guide decisions.",
+      "domain": "neurotrauma",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The definition is a membership test with two disjunctive evidence channels, observed function change or pathology evidence, gated by an external cause. The engine uses the same shape for event admission: a state counts as an instance of a class when either a behavioral signal or a structural signal fires, provided an exogenous trigger is identified, which keeps silent cases with pathology evidence from being discarded just because no functional change was observed.",
+        "source_operator": "cde_definition_of_tbi",
+        "telemetry": "external force mechanism (impact, rotational acceleration, pressure wave, penetrating), observed functional alteration, imaging or pathology evidence"
+      }
+    },
+    {
+      "primitive_id": "tbi_heterogeneity_no_single_trajectory",
+      "name": "TBI is not a single injury type with a single trajectory; heterogeneity is the central assessment problem",
+      "verbatim_quote": "TBI is not a single type of injury with a single trajectory",
+      "page": "Ch1, report p18",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "More than 80 percent of DoD TBIs are classified mild, roughly 10 to 11 percent moderate, and about 2 percent severe or penetrating, so base rates differ sharply by subtype."
+      ],
+      "breakdown_regime": "Any aggregate statistic over all TBI (mean recovery time, average cost) mixes unlike subpopulations and can mislead in both directions.",
+      "domain": "neurotrauma",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Heterogeneity here is structural, not noise: one label covers many pathoanatomical subtypes with divergent courses. The engine mirrors this by refusing a single trajectory model per condition class and instead maintaining a fan of trajectory hypotheses whose spread is itself a reported quantity, so a wide fan reads as genuine uncertainty rather than model failure.",
+        "source_operator": "tbi_heterogeneity_no_single_trajectory",
+        "telemetry": "mechanism of injury, pathoanatomical subtype, severity markers, observed course over time"
+      }
+    },
+    {
+      "primitive_id": "primary_secondary_damage_cascade",
+      "name": "Initial mechanical forces trigger a cellular and molecular cascade that produces further damage beyond the primary injury",
+      "verbatim_quote": "These forces can lead to bleeding and swelling, as well as to a host of cellular and molecular events that lead to further damage",
+      "page": "Ch1, report p18",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Impact, acceleration and deceleration, and internal brain shift can bruise tissue, damage the blood brain barrier and vessels, and stretch or shear neurons.",
+        "Appendix B describes the related secondary injury process: the immune debriding response after injury is essential for tissue recovery, but if it is too extreme or prolonged it itself produces substantial further injury."
+      ],
+      "breakdown_regime": "The cascade description is qualitative in this report; it names mechanisms without rates, so it supports structure, not quantitative simulation, on its own.",
+      "domain": "neurotrauma",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Damage is a two stage process: an instantaneous primary insult, then a self propagating secondary cascade with its own time course. The engine inherits a kernel that separates the initiating shock from the endogenous amplification that follows, because interventions and predictions differ: the primary term is fixed at the event, while the secondary term is the only part still modifiable after the event.",
+        "source_operator": "primary_secondary_damage_cascade",
+        "telemetry": "bleeding and swelling indicators, neurotransmitter and ion flow disruption, metabolic alteration, inflammatory response markers"
+      }
+    },
+    {
+      "primitive_id": "global_burden_magnitude",
+      "name": "Each year an estimated 55.9 million people globally experience a mild TBI and 5.48 million a severe TBI; over 55 million live with the effects of a medically treated TBI",
+      "verbatim_quote": "Annually, as many as 55.9 million people globally are estimated to experience a “mild” TBI, and 5.48 million to experience a “severe” TBI",
+      "page": "Summary Box S-1, report p2",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Figures are estimates drawn from health system data and disease classification codes.",
+        "In the United States, TBI is diagnosed in approximately 2 percent of total emergency department visits, hospitalizations, and deaths.",
+        "Estimates are likely to undercount true rates of TBI, because ascertainment depends on health system contact and disease classification coding (Box S-1 footnote, p2)."
+      ],
+      "breakdown_regime": "Estimates inherit the classification problems the report criticizes: severity bands come from the same mild moderate severe shorthand the committee wants replaced.",
+      "domain": "epidemiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The burden estimate pairs an incidence flow with a prevalent stock of people living with effects, roughly 0.7 percent of world population. The engine keeps the same accounting discipline for any chronic signal class: track new events per period and the standing population carrying consequences separately, because the two numbers answer different planning questions and conflating them understates long tail load.",
+        "source_operator": "global_burden_magnitude",
+        "telemetry": "annual incidence by severity band, prevalent population living with effects, emergency department evaluations (4.8 million per year in the United States)"
+      }
+    },
+    {
+      "primitive_id": "mild_tbi_persistent_impairment",
+      "name": "A year after injury, 53 percent of people who experienced a mild TBI report persistent symptoms and functional impairment",
+      "verbatim_quote": "One study found that even among those who had experienced an injury considered a mild TBI, 53 percent reported continued impairment a year later (Nelson et al., 2019).",
+      "page": "Ch2, report p18",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The figure comes from a cited cohort study (Nelson et al., 2019) of people whose injury was considered mild."
+      ],
+      "breakdown_regime": "Self reported symptoms at one year are not specific to TBI and overlap with other conditions, so the rate bounds the problem rather than attributing every symptom to the injury.",
+      "domain": "neurotrauma",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The label mild describes the acute presentation, not the outcome distribution: a majority of this cohort still reports impairment at one year. The engine derives a standing rule from this: never let an intake severity label cap the outcome forecast; carry the label and the long horizon outcome rate as separate variables, because in this domain they routinely contradict each other.",
+        "source_operator": "mild_tbi_persistent_impairment",
+        "telemetry": "one year symptom persistence self reports, functional impairment status, initial severity classification"
+      }
+    },
+    {
+      "primitive_id": "rehabilitation_access_gap",
+      "name": "Only 13 to 25 percent of people with moderate, severe, or penetrating TBI receive interdisciplinary inpatient rehabilitation",
+      "verbatim_quote": "Although many patients with moderate to severe TBI would benefit from comprehensive interdisciplinary inpatient rehabilitation, most are discharged to home or to skilled nursing facilities that may not provide intensive, comprehensive, or specialized therapy and that offer limited opportunities for reevaluation.",
+      "page": "Ch6, report p107",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The statistic covers moderate, severe, or penetrating injury, the groups with the strongest claim on inpatient rehabilitation."
+      ],
+      "breakdown_regime": "The range reflects variation across data sources and settings; it does not identify which barrier (capacity, coverage, referral practice) dominates in a given region.",
+      "domain": "health_systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Need and receipt diverge by a factor of four or more in the very group with the clearest indication. The engine uses receipt versus indication as a first class gap metric: for any recommended intervention, track the indicated population and the served population separately, because a system can look busy while serving a small minority of those who qualify.",
+        "source_operator": "rehabilitation_access_gap",
+        "telemetry": "rehabilitation referral and admission rates by severity, insurance status, geographic access measures"
+      }
+    },
+    {
+      "primitive_id": "prevention_primacy",
+      "name": "Preventing injuries from occurring is the most effective way to reduce the burden of TBI",
+      "verbatim_quote": "The most effective way to improve outcomes of TBI is to prevent people from experiencing such an injury in the first place.",
+      "page": "Ch1, report p19",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prevention is emphasized even though it is not the main focus of this report."
+      ],
+      "breakdown_regime": "Prevention effects arrive slowly and are hard to attribute, which is why systems underinvest in them relative to visible acute care.",
+      "domain": "prevention",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Upstream incidence reduction dominates every downstream improvement because no therapy in the report reverses established injury. The engine adopts the same priority ordering for any harmful event class: expected value calculations must price prevention of the event above mitigation after the event, and a roadmap that only optimizes response is structurally incomplete.",
+        "source_operator": "prevention_primacy",
+        "telemetry": "injury incidence rates, mechanism specific prevention coverage (helmets, vehicle safety, fall prevention), severity distribution shift"
+      }
+    },
+    {
+      "primitive_id": "bpse_model",
+      "name": "The bio-psycho-socio-ecological model: recovery is shaped by interacting biological, psychological, social, and ecological (including economic) domains",
+      "verbatim_quote": "an expanded bio-psycho-socio-ecological (BPSE) model includes the wide and complex array of qualitative and quantitative elements of the living and inanimate network within which each human lives and flourishes",
+      "page": "Ch3, report p50",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The construct descends from Engel's biopsychosocial model (1977), expanded with an explicit ecological and economic layer.",
+        "The ecological dimension includes scarcity of rehabilitation venues and limited insurance coverage as trajectory shaping forces.",
+        "The role of patient attributes in determining the trajectory of immediate recovery, rehabilitation, and long term outcomes is as important as the nature of the injury itself (Ch3, p50)."
+      ],
+      "breakdown_regime": "The model is a lens, not a fitted equation: the report states the interactions among factors remain largely unknown, so domain weights cannot be read off the text.",
+      "domain": "frameworks",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The model is an explicit four domain state description: biological state, psychological state, social relationships, and ecological context including economics, all interacting rather than additive. The engine mirrors this as a standing feature contract: no trajectory is computed from the primary signal alone; context domains are mandatory inputs with their own update cadence, and a missing domain is flagged as missing rather than silently treated as neutral.",
+        "source_operator": "bpse_model",
+        "telemetry": "medical and physiological variables, behavioral and psychological measures, family and community relationship data, insurance, geography, and economic context"
+      }
+    },
+    {
+      "primitive_id": "bpse_prism_refraction",
+      "name": "The unique array of BPSE factors acts as a prism that refracts each person's trajectory, bending the same initial classification into outcomes from very poor to very favorable",
+      "verbatim_quote": "An initial classification of a TBI in a range from less to more severe can be refracted into an array of outcomes, from very poor to very favorable.",
+      "page": "Ch3, report p51",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The prism is always present; only its factor balance changes over time."
+      ],
+      "breakdown_regime": "The metaphor gives no functional form: it justifies case level adjustment and outcome fan widening, not a computed refraction index.",
+      "domain": "frameworks",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Refraction is the right operator: the input (initial severity) is preserved but its direction changes by a person specific medium, in both directions. The engine maps this to a per case modifier field applied after base classification, signed in either direction, and time varying, since the report notes the balance of factors and their interactions can change over time for one patient.",
+        "source_operator": "bpse_prism_refraction",
+        "telemetry": "initial classification, per person BPSE factor profile, deviation between expected and observed trajectory"
+      }
+    },
+    {
+      "primitive_id": "health_system_as_corrective_lens",
+      "name": "An effective health care system acts as a lens that detects deviation from the ideal recovery pathway and refocuses the person back toward it",
+      "verbatim_quote": "an effective health care system provides the lens that refocuses a person’s pathway back toward the best possible recovery trajectory",
+      "page": "Ch3, report p52",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The lens encompasses diagnosis, treatment, rehabilitation, and reintegration.",
+        "A person may need to engage the system multiple times as recovery evolves."
+      ],
+      "breakdown_regime": "Most real systems lack the sensing step: without scheduled reassessment there is no deviation signal, so the lens exists on paper only.",
+      "domain": "health_systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is a closed loop controller description: an ideal pathway exists per person, the system senses deviation, identifies what is required, and adjusts course, repeatedly across the lifespan. The engine mirrors it directly in its monitoring design: define the reference trajectory, measure deviation at each contact, and treat correction as a system output, with loss to follow up defined as controller failure rather than patient noncompliance.",
+        "source_operator": "health_system_as_corrective_lens",
+        "telemetry": "repeated assessments across the lifespan, deviation from expected recovery milestones, adjustments to treatment, assessment, and community resources"
+      }
+    },
+    {
+      "primitive_id": "care_journey_stages",
+      "name": "The care journey runs recognition, acute care, classification, rehabilitation, follow up, and recovery and reintegration",
+      "verbatim_quote": "stages of care may include recognition of the injury, acute care, classification, rehabilitation care, further follow-up, and recovery to the greatest extent possible",
+      "page": "Ch3 Figure 3-1 caption, report p48",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Stage content differs by setting: recognition may be by an athletic trainer, bystanders, EMS, or a battlefield medic.",
+        "The journey is not always continuous or smooth: chronic symptoms may necessitate ongoing care, and a person may be reinjured and experience another TBI, restarting the journey with a changed prior state (Figure 3-1 caption)."
+      ],
+      "breakdown_regime": "The figure is explicitly an illustrative generalized view; individual journeys skip, repeat, or reorder stages.",
+      "domain": "health_systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The journey is an ordered state machine with classification placed after acute care as its own stage, not a byproduct of intake. The engine mirrors staged pipelines where each stage has entry criteria and its own failure modes (missed recognition, delayed classification, absent follow up), and stage occupancy is tracked so a case stalled between stages is visible instead of counted as in care.",
+        "source_operator": "care_journey_stages",
+        "telemetry": "stage timestamps (recognition, acute care start, classification, rehabilitation start, follow up contacts), handoff completion between stages"
+      }
+    },
+    {
+      "primitive_id": "gcs_component_structure",
+      "name": "The Glasgow Coma Scale scores eye opening (1 to 4), verbal response (1 to 5), and motor response (1 to 6) as separate components",
+      "verbatim_quote": "Patients are assessed and assigned a numerical score for each of the three components of the scale—based on eye opening (E), verbal response (V), and motor response (M)",
+      "page": "Ch5, report p83",
+      "latex": "\\mathrm{GCS} = E + V + M,\\quad E \\in [1,4],\\; V \\in [1,5],\\; M \\in [1,6],\\; \\mathrm{GCS} \\in [3,15]",
+      "symbol_and_unit_ledger": {
+        "E": "eye opening component score, ordinal 1 (none) to 4 (spontaneous)",
+        "V": "verbal response component score, ordinal 1 (none) to 5 (orientated)",
+        "M": "best motor response component score, ordinal 1 (none) to 6 (obeying commands)",
+        "GCS": "summed total score, minimum 3, maximum 15 indicating awake and responsive"
+      },
+      "assumptions": [
+        "Each component is assessed by a standardized approach permitting objective evaluation of level of consciousness.",
+        "Scores are communicated as three numbers, for example E4V4M6 (Teasdale and Jennett, 1974)."
+      ],
+      "breakdown_regime": "Confounders including intoxication, sedation, intubation, dementia, and language issues can invalidate a component or the sum, limiting the GCS as a stand alone classification measure.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The scale is a three channel ordinal instrument whose components carry different information and different failure modes (the verbal channel is untestable in an intubated patient). The engine mirrors component preserving scoring: subscores are stored and transmitted individually, and any aggregation is a derived view, so a missing channel degrades the record visibly instead of corrupting a single number.",
+        "source_operator": "gcs_component_structure",
+        "telemetry": "eye opening score E in 1..4, verbal score V in 1..5, motor score M in 1..6, component level time series from repeated observation charts"
+      }
+    },
+    {
+      "primitive_id": "three_category_taxonomy_inadequate",
+      "name": "The mild moderate severe categories derived from GCS clusters are inadequate for management and prognostication",
+      "verbatim_quote": "the taxonomic categories of “mild, moderate, and severe,” derived from clusters of scores on the Glasgow Coma Scale, are inadequate to capture or guide either proper management of TBI or accurate prognostication of its outcome",
+      "page": "Summary, report p4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The categories are clusters of the GCS sum score: mild 13 to 15, moderate 9 to 12, severe 3 to 8."
+      ],
+      "breakdown_regime": "The shorthand persists because it is convenient for communication and triage; the failure shows in prognosis, follow up decisions, and trial stratification, not in rapid field communication.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binning a 13 point scale into three labeled buckets destroys exactly the resolution needed for decisions, and the labels then smuggle in outcome assumptions the data do not support. The engine derives a hard rule: coarse bins may be used for display, never for storage or decision logic, and any inherited dataset that arrives pre binned is flagged as resolution damaged at intake.",
+        "source_operator": "three_category_taxonomy_inadequate",
+        "telemetry": "distribution of cases across GCS 3 to 15, outcome variance within each of the three legacy categories"
+      }
+    },
+    {
+      "primitive_id": "cancer_classification_analogy",
+      "name": "Classification should evolve from coarse clinical shorthand to marker based taxonomy, as cancer classification did",
+      "verbatim_quote": "Today, one could not imagine classifying cancer as “mild, moderate, and severe” for diagnosis, treatment, and prognosis",
+      "page": "Ch5, report p84",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cancer classification began with primary site, tumor size, node involvement, and metastases before molecular features were added."
+      ],
+      "breakdown_regime": "An analogy is not evidence that TBI markers will stratify as cleanly; TBI lacks a single tissue of origin and its pathoanatomical subtypes are less discrete.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The analogy specifies the direction of travel: cancer moved from site and size to protein expression and then genetic and epigenetic features as cohorts grew. The engine maps this as a taxonomy roadmap for any immature classification: start with the observable score, add structural markers, then molecular or mechanistic markers, with each layer retained because later layers refine rather than replace earlier ones.",
+        "source_operator": "cancer_classification_analogy",
+        "telemetry": "marker availability by era (clinical score, imaging features, blood biomarkers, genetic features), cohort sizes enabling finer strata"
+      }
+    },
+    {
+      "primitive_id": "label_induced_care_bias",
+      "name": "The mild label itself suppresses follow up care on the assumption of spontaneous full recovery",
+      "verbatim_quote": "Patients with “mild TBI” often receive no follow-up care based on the assumption that spontaneous full recovery will occur",
+      "page": "Ch5, report p85",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A subset of mild TBI patients experience persistent symptoms and impairments, per Nelson et al., 2019, as cited."
+      ],
+      "breakdown_regime": "Some mild cases do recover fully and quickly; the bias is in applying the assumption universally without a follow up safety net.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Labels are interventions: a reassuring label changes downstream behavior (no follow up scheduled) and thereby worsens the outcomes it predicted would be fine. The engine derives a label audit: whenever a category name carries a valence (mild, minor, low risk), check whether assignment to that category measurably reduces subsequent observation, and if it does, the label is treated as a risk factor in its own right.",
+        "source_operator": "label_induced_care_bias",
+        "telemetry": "follow up scheduling rates by assigned label, symptom persistence among label reassured groups"
+      }
+    },
+    {
+      "primitive_id": "severe_label_nihilism",
+      "name": "The severe label invites therapeutic nihilism including early withdrawal of life sustaining therapy, despite evidence some such patients achieve significant functional improvement",
+      "verbatim_quote": "withdrawal of life-sustaining therapy accounts for up to 70% of TBI deaths in the intensive care unit (ICU), with decisions often made within 3 days of admission.",
+      "page": "Ch5, report p97",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Evidence cited (McCrea et al., 2021) shows some severely injured patients achieve significant improvement in global functional outcome."
+      ],
+      "breakdown_regime": "The report does not claim most severe injuries end well; it claims the observed outcome distribution is biased by early decisions and cannot be read at face value.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Prognosis at the severe end is contaminated by a self fulfilling loop: predicted poor outcome motivates withdrawal, withdrawal guarantees the outcome, and the resulting data confirm the prediction. The engine derives a censoring rule from this: outcomes recorded after an early irreversible decision are marked as decision censored and excluded from naive prognostic calibration, because they measure the decision, not the biology.",
+        "source_operator": "severe_label_nihilism",
+        "telemetry": "timing of withdrawal of life sustaining treatment, functional outcomes among severe cases receiving full support, disorders of consciousness course"
+      }
+    },
+    {
+      "primitive_id": "composite_classification_three_axes",
+      "name": "GCS, neuroimaging, and blood biomarkers are correlated but complementary: biomarkers quantify cell injury extent, imaging adds location and anatomy, GCS captures functional consequence",
+      "verbatim_quote": "Blood-based biomarkers of glial and neuronal injury quantify the extent of brain cell injury irrespective of the injury’s location or functional consequences.",
+      "page": "Ch5, report p85",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Blood biomarkers quantify extent of brain cell injury irrespective of location or functional consequence; imaging adds location and anatomic consequence; GCS reports functional consequence.",
+        "Blood biomarkers provide prognostic information above and beyond information from a clinical exam (Frankel et al., 2019), and Recommendation 1 asks clinicians to classify using the actual GCS sum score, adding neuroimaging and blood biomarker results when available and clinically indicated."
+      ],
+      "breakdown_regime": "Composite classification requires all three channels to be available and clinically indicated; in low resource or prehospital settings the composite degrades to whichever channels exist.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Three correlated channels still earn their place because each measures a different aspect of the same event: how much tissue is injured, where, and what it does to function. The engine mirrors the composite rule: keep correlated signal families in the model when their measurement targets differ, and judge each family by incremental value on its own target, not by its correlation with the others.",
+        "source_operator": "composite_classification_three_axes",
+        "telemetry": "GCS components, CT and MRI pathoanatomical findings (contusion, diffuse axonal injury, midline shift), blood biomarker concentrations"
+      }
+    },
+    {
+      "primitive_id": "dynamic_reassessment_requirement",
+      "name": "Initial assessment does not reliably predict ultimate outcome, so classification must be updated by regular reassessment as condition evolves",
+      "verbatim_quote": "Because initial assessment does not reliably predict ultimate outcome, regular reassessment is also essential as a person’s condition and needs change",
+      "page": "Summary, report p4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Clinicians should update the TBI classification for each patient as the person's condition evolves."
+      ],
+      "breakdown_regime": "Reassessment cadence is unspecified in the report; too sparse misses deterioration, too dense burdens care, and the optimum is an open research question.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A state estimate with known weak predictive validity must be versioned and revised on a schedule, not frozen at intake. The engine mirrors this by stamping every classification with its assessment time and evidence set, scheduling re estimation when new evidence arrives, and keeping the revision history, since the trajectory of revisions is itself informative about the case.",
+        "source_operator": "dynamic_reassessment_requirement",
+        "telemetry": "serial GCS and symptom assessments, repeat imaging, biomarker trends, evolving care needs"
+      }
+    },
+    {
+      "primitive_id": "ed_underdiagnosis_negative_ct",
+      "name": "TBI is underdiagnosed in the emergency department: in more than 50 percent of cases with a negative head CT, no TBI diagnosis appears on the chart",
+      "verbatim_quote": "in more than 50 percent of cases, a diagnosis of TBI is not indicated on the patient’s chart",
+      "page": "Ch5, report p86",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Patients with a negative head CT are often told they are fine.",
+        "Standardized tools validated for athletes and military settings (SAC, SCAT5, MACE 2) have not been validated for the more heterogeneous ED population."
+      ],
+      "breakdown_regime": "Many negative CT patients do recover without sequelae; the failure is the absence of risk stratification for the subset that will not.",
+      "domain": "diagnosis",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A negative structural test is being used as a negative diagnosis, and the resulting missing labels poison every downstream dataset built from charts. The engine derives a missingness rule: absence of a label after a single negative test is coded as unassessed, not as negative, and any training data drawn from such charts inherits a known label noise process that must be modeled rather than ignored.",
+        "source_operator": "ed_underdiagnosis_negative_ct",
+        "telemetry": "chart diagnosis rates after negative CT (Powell et al., 2008, as cited), symptom assessment use in ED, availability of validated civilian ED assessment tools"
+      }
+    },
+    {
+      "primitive_id": "gfap_biomarker_identity_kinetics",
+      "name": "GFAP is an astroglial structural protein released on injury and cell death; serum levels peak about 20 hours after acute TBI",
+      "verbatim_quote": "GFAP is an astroglial intermediate filament structural cytoskeleton protein that is released on injury and cell death; after acute TBI, serum GFAP levels peak 20 hours after injury",
+      "page": "Appendix B, report p196",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "GFAP and UCH-L1 are the first combination biomarkers to receive FDA approval in acute TBI.",
+        "Lower GCS values are associated with higher GFAP and UCH-L1 levels, including among GCS 15 patients."
+      ],
+      "breakdown_regime": "Kinetics vary by injury type and patient; a single peak time is a population summary, and levels also rise with non TBI astroglial injury.",
+      "domain": "biomarkers",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The marker has a known source cell type (astroglia) and a known kinetic profile (peak near 20 hours), so a measurement is interpretable only relative to time since injury. The engine mirrors time stamped marker handling: every biomarker value is stored with its sampling offset from the event, and interpretation functions are defined over the kinetic curve, so an early low value is not mistaken for absence of injury.",
+        "source_operator": "gfap_biomarker_identity_kinetics",
+        "telemetry": "serum GFAP concentration, hours since injury, assay type"
+      }
+    },
+    {
+      "primitive_id": "uchl1_biomarker_kinetics",
+      "name": "UCH-L1 is a neuron enriched enzyme detectable as early as 1 hour after TBI, peaking at 8 hours and declining slowly by 48 hours",
+      "verbatim_quote": "UCH-L1, a neuron-enriched enzyme involved in ubiquitin turnover, is detectable as early as 1 hour after TBI, peaks at 8 hours, and declines slowly 48 hours after injury",
+      "page": "Appendix B, report p196",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The GFAP plus UCH-L1 brain trauma indicator test showed high sensitivity and negative predictive value for traumatic intracranial injury on head CT."
+      ],
+      "breakdown_regime": "Decline by 48 hours limits late diagnostic use; the pair is an acute window instrument, and subacute or chronic monitoring needs other markers.",
+      "domain": "biomarkers",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "UCH-L1 and GFAP are complementary clocks: the neuronal marker rises and peaks early (8 hours) while the glial marker peaks late (20 hours), so the pair brackets the sampling window and identifies different cell populations. The engine mirrors paired marker design: prefer signal pairs whose informative windows are offset, because the pair covers intervals where either marker alone is uninformative.",
+        "source_operator": "uchl1_biomarker_kinetics",
+        "telemetry": "serum UCH-L1 concentration, hours since injury, paired GFAP values"
+      }
+    },
+    {
+      "primitive_id": "gfap_discrimination_evidence",
+      "name": "In CENTER-TBI, GFAP achieved the highest discrimination for CT abnormalities (AUC 0.89), better than any other single protein or combination in the six marker panel",
+      "verbatim_quote": "found that GFAP achieved the highest discrimination for predicting CT abnormalities (AUC 0.89), better than any other single candidate protein or combination of biomarkers in the panel",
+      "page": "Appendix B, report p196",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The TRACK-TBI point of care analysis covered 1,409 patients across the full GCS 3 to 15 spectrum at 24 hours after injury."
+      ],
+      "breakdown_regime": "Discrimination for CT abnormality is a proxy target; it does not by itself establish value for prognosis, monitoring, or treatment selection.",
+      "domain": "biomarkers",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A single well chosen marker beat both rival singles and the full combination, a reminder that panel size is not performance. The engine mirrors the evaluation discipline: candidate signals and combinations are compared on discrimination against a defined target (here CT positivity) with the combination required to beat its best member before it earns its complexity.",
+        "source_operator": "gfap_discrimination_evidence",
+        "telemetry": "AUC for CT abnormality prediction by marker (GFAP 0.89 in CENTER-TBI; TRACK-TBI GFAP 0.85, S100B 0.67), panel composition (S100B, NSE, GFAP, UCH-L1, NfL, total tau)"
+      }
+    },
+    {
+      "primitive_id": "no_single_biomarker",
+      "name": "No single biomarker reflects all pathophysiological mechanisms of TBI, especially given their dynamic trajectories over time",
+      "verbatim_quote": "No single biomarker reflects all known pathophysiological mechanisms of TBI, particularly given their dynamic trajectories over time",
+      "page": "Appendix B, report p197",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Most biomarker research has concentrated on acute diagnosis within 24 hours; few candidates exist for subacute or chronic phases."
+      ],
+      "breakdown_regime": "Panel expansion has cost and false positive consequences; the report calls for determining added value over clinical and imaging evaluation, not maximal panels.",
+      "domain": "biomarkers",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Coverage failure is structural: mechanisms are plural (inflammation, blood brain barrier integrity, axonal, neuronal, astroglial, vascular injury) and time varying, so any single channel is blind to most of the state. The engine derives a coverage audit for its signal stack: enumerate the mechanism classes of the target process and mark which channels observe each class in each time window, with blind cells reported rather than smoothed over.",
+        "source_operator": "no_single_biomarker",
+        "telemetry": "marker by mechanism coverage matrix, marker trajectories across acute (under 24 hours), subacute (to 1 week), and chronic (3 months to years) windows"
+      }
+    },
+    {
+      "primitive_id": "lost_to_followup_black_hole",
+      "name": "After acute treatment many people with TBI fall into a black hole, lost to follow up with no clear pathway to providers and no data collection on the shortfall",
+      "verbatim_quote": "After acute treatment, many people living with TBI drop into a black hole, lost to follow-up and without clear pathways to providers",
+      "page": "Ch8, report p163",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The nation has no mechanism in place for long term follow up and care of adults or children with TBI, for the most part."
+      ],
+      "breakdown_regime": "The report cannot size the black hole precisely because the missing data are the problem; magnitude claims beyond the qualitative finding would be invented.",
+      "domain": "care_continuum",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Attrition is doubly destructive: patients lose care and the system loses the data that would document the loss, so the failure hides itself. The engine derives a censoring alarm: when follow up stops, the case is flagged as informatively censored and the censoring event itself becomes a measured outcome, because silent dropout is the exact signature of system failure in longitudinal data.",
+        "source_operator": "lost_to_followup_black_hole",
+        "telemetry": "follow up attendance after discharge, time to last contact, registry completeness for downstream outcomes"
+      }
+    },
+    {
+      "primitive_id": "chronic_brain_injury_cbi",
+      "name": "Brain injury can evolve into chronic brain injury (CBI), a lifelong condition that impairs the brain and other organ systems and may persist or progress across the lifespan",
+      "verbatim_quote": "injury to the brain can evolve into a lifelong health condition termed chronic brain injury (CBI)",
+      "page": "Ch6, report p123",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The definition is quoted from Corrigan and Hammond (2013), reporting the 2012 Galveston Brain Injury Conference consensus.",
+        "Consensus recommendations included a disease management approach, identification of those at greatest risk for decline, self management training, and periodic resumption of rehabilitation.",
+        "The report's conclusion form: high quality care for TBI requires that it be managed as a condition with both acute and long term phases."
+      ],
+      "breakdown_regime": "Not every TBI becomes CBI; the conversion criteria and rates are incompletely characterized, which the report lists as a knowledge gap.",
+      "domain": "care_continuum",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CBI names the conversion of an event into a standing, possibly progressive condition, which changes the management contract to proactive lifelong management. The engine mirrors event to condition conversion: when sequelae persist past a defined horizon or progress, the case type changes from episode to managed condition, triggering surveillance and self management support rather than repeated episodic intake.",
+        "source_operator": "chronic_brain_injury_cbi",
+        "telemetry": "persistent or progressive impairment across organ systems, neurodegenerative and stroke risk elevation after even a single TBI, periodic rehabilitation resumption needs"
+      }
+    },
+    {
+      "primitive_id": "chronic_care_model",
+      "name": "The Chronic Care Model frames chronic condition management as a dynamic interactive process in which system and community resources support patient self management through productive patient provider relationships",
+      "verbatim_quote": "When applied to TBI care, a model that incorporates long-term care for TBI as a chronic condition can inform the organization of health care system components, such as delivery system design, decision support, and clinical information systems.",
+      "page": "Ch6, report p123",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model was originally described by Wagner and colleagues (1999) and widely applied to diabetes and heart failure.",
+        "Applying it to TBI requires a TBI specific variant, per comparison with cancer survivorship and diabetes management cited in the report."
+      ],
+      "breakdown_regime": "Implementation requires infrastructure and knowledge the field lacks: long term impairment patterns, risk and protective factors, and early detection protocols are named gaps.",
+      "domain": "care_continuum",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The CCM relocates quality from encounters to the standing relationship between an informed, activated patient and a prepared, proactive team, supported by delivery design, decision support, and information systems. The engine mirrors the shift from event scoring to relationship state: for long horizon problems it tracks activation, preparedness, and information flow as state variables, since outcomes are produced between encounters, not only at them.",
+        "source_operator": "chronic_care_model",
+        "telemetry": "self management capability, care team preparedness, clinical information system completeness, community resource linkage"
+      }
+    },
+    {
+      "primitive_id": "care_ecosystem_navigator",
+      "name": "The Care Ecosystem model pairs a multidisciplinary team with a care team navigator as lead contact for the patient caregiver dyad",
+      "verbatim_quote": "A multidisciplinary team of care providers is available to the patient–caregiver dyad, while a care team navigator plays the lead role in communicating with and supporting the patient and caregiver",
+      "page": "Ch6 Box 6-5, report p125",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model was developed in dementia care; demonstrated benefits include improved caregiver well being, better patient quality of life, and reduced emergency visits (Possin et al., 2019).",
+        "Resource facilitation for TBI shows improved return to work in an early randomized trial (Trexler et al., 2010)."
+      ],
+      "breakdown_regime": "Transfer from dementia to TBI is a hypothesis the report endorses for testing, not a proven equivalence; a TBI effectiveness study was still under way.",
+      "domain": "care_continuum",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The navigator is a routing and memory layer between a complex system and a dyad that cannot be expected to coordinate it alone. The engine mirrors this as an explicit coordination function in any multi provider process: one accountable contact maintains the shared picture, sequences referrals, and absorbs navigation cost, with the largest measured gains appearing in isolated and lower socioeconomic status groups, where navigation cost was highest.",
+        "source_operator": "care_ecosystem_navigator",
+        "telemetry": "navigator contact frequency, medication review and behavior management support, emergency visit rates, caregiver well being measures"
+      }
+    },
+    {
+      "primitive_id": "integrated_person_family_centered_management",
+      "name": "Recommendation 2: all people with TBI should have reliable, timely access to integrated, multidisciplinary, specialized care for sequelae and comorbidities",
+      "verbatim_quote": "These facilities must demonstrate the use of rehabilitation methods based on current evidence and provide patient- and family-centered care within an integrated system designed to maximize recovery and community reintegration.",
+      "page": "Ch6, report p110",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Discharge from acute settings should come with an opportunity for follow up with a clinician experienced in managing TBI.",
+        "Families and caregivers are inside the unit of care: their education and support needs are key components of long term care plans."
+      ],
+      "breakdown_regime": "Workforce and coverage constraints bind hardest outside major centers; the recommendation states the standard, not the capacity to meet it.",
+      "domain": "care_continuum",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The recommendation defines access as a system property with three testable attributes (reliable, timely, integrated) rather than a service existing somewhere. The engine mirrors access auditing: a resource counts as available only if a referred case actually reaches it within a time bound, so nominal capacity and realized access are separate metrics and the gap between them is the finding.",
+        "source_operator": "integrated_person_family_centered_management",
+        "telemetry": "time from discharge to TBI experienced follow up, care navigation referral completion, lifetime TBI exposure screening at intake"
+      }
+    },
+    {
+      "primitive_id": "guideline_deimplementation",
+      "name": "Recommendation 3: identify practices contraindicated by current evidence and issue guidance on their deimplementation",
+      "verbatim_quote": "Identify guidelines and practices that are contraindicated by current evidence, and issue guidance on their deimplementation",
+      "page": "Summary Recommendation 3c, report p6",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The same recommendation calls for surveying all existing guidelines, synthesizing consensus where evidence is limited, and aligning CMS coverage with guidelines."
+      ],
+      "breakdown_regime": "Deimplementation is behaviorally hard: clinicians may continue familiar practices, and coverage policy can keep paying for them after guidance changes.",
+      "domain": "health_systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Knowledge maintenance includes subtraction: a guidance system must retire practices as actively as it adopts them, with the same consensus machinery. The engine mirrors deimplementation as a first class operation in its own rule base: every active heuristic carries an evidence status, and a contraindicated status triggers removal guidance with the same visibility as an addition, so obsolete rules cannot persist by inertia.",
+        "source_operator": "guideline_deimplementation",
+        "telemetry": "guideline inventories across all care phases and specialties, inconsistency resolutions between guidelines, contraindicated practice lists"
+      }
+    },
+    {
+      "primitive_id": "achievable_benefit_not_achieved",
+      "name": "The gap between current outcomes and achievable outcomes is the achievable benefit not achieved, attributable in part to underestimation of burden",
+      "verbatim_quote": "what quality-of-care researcher John Williamson termed “achievable benefit not achieved.”",
+      "page": "Summary, report p7",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Underinvestment in research may reflect public and policy maker underestimation of the burden TBI imposes."
+      ],
+      "breakdown_regime": "The achievable frontier must be estimated from real best practice, not theory, or the gap becomes unfalsifiable.",
+      "domain": "health_systems",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The concept prices inaction: the distance between observed outcomes and outcomes achievable with known best practice is a measurable loss, not background noise. The engine derives a gap accounting habit: for any managed process, estimate the achievable frontier from best observed performance, report the shortfall as a quantity with owners, and treat a persistent shortfall as a defect rather than as the natural rate.",
+        "source_operator": "achievable_benefit_not_achieved",
+        "telemetry": "outcome distributions under best practice sites versus average sites, follow up and rehabilitation receipt rates, investment relative to burden"
+      }
+    },
+    {
+      "primitive_id": "learning_health_system_data_architecture",
+      "name": "Recommendation 6: build a learning system on thorough surveillance, standardized longitudinal patient data, and registries crosslinked across sites and through time",
+      "verbatim_quote": "Reducing the burden of TBI will require a learning system capable of continual improvement. Important elements are thorough surveillance, standardized and longitudinal patient information, and accessibility of data",
+      "page": "Summary Recommendation 6, report p9",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Data systems should collect clinical information in alignment with the refined classification system of Recommendation 1.",
+        "A true learning system uses the data to drive real time and iterative improvements in care, not only retrospective study.",
+        "Chapter 8 adds the sufficiency condition: establishing a system is necessary but not sufficient; an optimized system for TBI is a learning system (report p165)."
+      ],
+      "breakdown_regime": "Crosslinking collides with privacy, consent, and vendor heterogeneity in electronic records; the report names the goal and the actors, not a solved technical design.",
+      "domain": "health_systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The architecture is specified as three layers: population surveillance to see the whole problem, standardized capture at the patient level so records are comparable, and longitudinal crosslinking so trajectories exist at all. The engine mirrors this stack in its own data design: event intake, normalized case records keyed to a stable classification, and identity resolution across sources and time, with each layer independently auditable.",
+        "source_operator": "learning_health_system_data_architecture",
+        "telemetry": "surveillance completeness, common data element conformance in records, registry crosslink match rates (NEMSIS, National Trauma Databank, TBI Model Systems, DoD and VA registries)"
+      }
+    },
+    {
+      "primitive_id": "research_design_eclecticism",
+      "name": "Recommendation 7: study methods should be eclectic and adaptive, spanning efficacy RCTs, pragmatic and adaptive trials, comparative effectiveness, causal inference observational studies, and mixed methods",
+      "verbatim_quote": "Study methods should be eclectic and adaptive, and should include not only randomized controlled trials for efficacy but also pragmatic trials, adaptive designs, comparative effectiveness trials, observational studies (including those using statistical control for causal inference), and mixed methods, as appropriate to the research questions",
+      "page": "Summary Recommendation 7c4, report p11",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Patients and family voices should be engaged early through community based participatory research.",
+        "The classification system of Recommendation 1 should be used to stratify trial participants."
+      ],
+      "breakdown_regime": "Eclecticism can decay into laxity if rigor standards per design are not enforced; the report pairs this call with common criteria for study inclusion in guidelines.",
+      "domain": "research_agenda",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Method follows question: heterogeneity and long horizons make any single design insufficient, so the portfolio is the method. The engine mirrors design pluralism in evaluation: candidate improvements are tested with the design matched to the claim (controlled comparison for efficacy, pragmatic rollout for real world effect, observational causal methods where randomization is impossible), and evidence grades record which design produced them.",
+        "source_operator": "research_design_eclecticism",
+        "telemetry": "study design distribution in funded portfolio, representativeness of recruited participants, stakeholder engagement in question formation"
+      }
+    },
+    {
+      "primitive_id": "eight_area_research_agenda",
+      "name": "The research agenda names eight priority areas from epidemiology and economics to disparities, measurement tools, therapies, care design, and implementation science",
+      "verbatim_quote": "The following eight areas are among the most urgent priorities for continued and expanded research on TBI",
+      "page": "Summary Box S-3, report p11",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Areas E and H (validated measurement tools; health care quality, health economics, implementation science) are called out as having a weak history of TBI focus."
+      ],
+      "breakdown_regime": "A priority list is not a ranking: the report presents the eight as among the most urgent, without relative weights.",
+      "domain": "research_agenda",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The agenda is a coverage map over the whole problem space: burden, cost, interaction effects, disparities, measurement, treatment, delivery design, and neglected disciplines. The engine mirrors portfolio coverage checking: research or feature backlogs are audited against a fixed area list so that fashionable areas cannot crowd out measurement and implementation work, which the report flags as historically weak in this field.",
+        "source_operator": "eight_area_research_agenda",
+        "telemetry": "funding and publication counts by agenda area (A epidemiology, B economics, C interaction factors, D disparities, E measurement tools, F therapies, G care design, H quality economics implementation)"
+      }
+    },
+    {
+      "primitive_id": "leadership_ownership_framework",
+      "name": "Without a lead entity that owns the problem, major progress is unlikely; Recommendation 8 creates a national framework, implementation plan, and a 10 year TBI Task Force",
+      "verbatim_quote": "Absent a leadership entity, no one owns the problem, and major progress is unlikely",
+      "page": "Summary, report p12",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Task Force is proposed for 10 years as successor to the National Research Action Plan, with a framework and a specific implementation plan due within 2 years."
+      ],
+      "breakdown_regime": "A task force can become a coordination theater; the report guards this by requiring a curated, updated implementation plan and a multistakeholder public private coalition.",
+      "domain": "health_systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Coordination failure is diagnosed as a missing owner with a systemic view, goal articulation, and convening power, not as missing knowledge. The engine mirrors ownership accounting in any multi actor program: every objective carries a named accountable owner with a timeline and progress metrics, and unowned objectives are reported as defects, since distributed goodwill does not substitute for an accountable seat.",
+        "source_operator": "leadership_ownership_framework",
+        "telemetry": "existence of a strategic framework and implementation plan, task force composition across agencies, progress metric publication cadence"
+      }
+    },
+    {
+      "primitive_id": "equity_geography_principle",
+      "name": "Where you live, who you are, and where you receive care should not determine survival or quality of life after TBI",
+      "verbatim_quote": "Where you live, who you are, and where you receive care should not determine if and how well you live",
+      "page": "Summary, report p8",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Rural populations have higher TBI incidence, poorer outcomes, and longer times to reach care; a workshop comment quoted in the report puts it as: where you live actually can determine if you live."
+      ],
+      "breakdown_regime": "Stratified gaps identify where the system fails, not why; causal attribution needs the disparities research of agenda area D.",
+      "domain": "health_systems",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The principle converts equity into a measurable null hypothesis: outcomes should be independent of geography, identity, and site of care once injury factors are accounted for. The engine derives stratified auditing from it: every outcome metric is reported split by the protected and geographic strata, and a significant stratum effect is treated as a system defect with the same severity as an accuracy defect.",
+        "source_operator": "equity_geography_principle",
+        "telemetry": "incidence, time to care, rehabilitation access, and outcomes stratified by race, ethnicity, rurality, and socioeconomic status"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b4a2a7351d2588a1-t1",
+      "think": "This report is a consensus study roadmap, not a trial or a textbook, and its machinery is the machinery of systems diagnosis: define the condition properly, show that the inherited classification is too coarse to think with, follow the patient through a journey the current system fragments, and then specify the optimized system and the research agenda that would close the gap. Its first move is definitional discipline. The Common Data Elements definition admits a case on either functional alteration or pathology evidence given an external force, which is a deliberately low, inclusive gate; everything after it is about recovering the resolution that such a wide gate gives away. The report's central technical claim is that the Glasgow Coma Scale sum, compressed into mild, moderate, and severe, cannot carry management or prognosis for a condition this heterogeneous. The scale itself is sound as a three component instrument, and the report is careful to keep it, but the bucket labels actively distort care: mild suppresses follow up while most of that cohort reports impairment at a year, and severe invites early withdrawal decisions that then manufacture the poor outcomes used to justify them. Against the buckets it sets a composite classification in the making, where GCS reports function, imaging reports location and anatomy, and blood biomarkers report the extent of cellular injury irrespective of location, each correlated with the others yet each adding information the others do not contain. The biomarker appendix gives this composite empirical teeth: GFAP discriminating CT abnormality at AUC 0.89 in CENTER-TBI, better than any rival or combination in the panel, and a kinetic structure in which UCH-L1 peaks at eight hours and GFAP at twenty, so the pair forms a timed instrument rather than a single snapshot. At the same time the report is honest that no single biomarker spans the mechanisms, that most evidence is acute window only, and that the subacute and chronic phases lack validated markers almost entirely. The second half of the argument changes scale, from classifying an injury to governing a trajectory. The bio-psycho-socio-ecological model insists that context is not decoration on the medical facts: patient attributes rival the injury itself in shaping outcomes, direct clinical care accounts for only about a fifth of population well being, and the person's unique factor array refracts an initial classification into outcomes far better or worse than expected. The health system is then cast as the corrective lens in that optics, a feedback device that must sense deviation from the best achievable pathway and refocus the course repeatedly across a lifespan. What exists instead is a broken loop: patients fall into a post acute black hole, charts omit the diagnosis in most negative CT cases, only a minority of those indicated receive interdisciplinary rehabilitation, and the missing follow up data hide the failure from the system itself. The remedies are correspondingly structural: manage TBI as an acute and chronic condition under a chronic care model with navigators and disease management for chronic brain injury; rebuild guidance with deimplementation of contraindicated practices alongside adoption; weld care and research into a learning system whose data architecture is surveillance, standardized capture, and longitudinal crosslinking; diversify study designs because heterogeneity defeats any single method; and assign an owner, a national framework and task force, because unowned problems do not move. For a reasoning engine the transfer value is unusually direct, because the report is itself a worked example of reasoning under heterogeneity with censored data. Its reusable operators include component preserving scores over bucket labels, label audits that treat reassuring categories as interventions with side effects, decision censoring flags where an early irreversible choice contaminates outcome data, incremental value gates for admitting new signal families, mechanism coverage matrices for sensor stacks, and gap accounting in the form of achievable benefit not achieved. Its limits are equally instructive. Almost everything quantitative is imported from cited cohorts rather than derived in the report, several load bearing claims are consensus judgments, the BPSE model supplies structure without weights, and the recommendations name actors and standards more often than mechanisms and budgets. The engine should therefore ingest this work as architecture and audit discipline, not as a parameter source: it tells a system how to organize classification, monitoring, and correction for a heterogeneous, long horizon, context dominated process, and it is candid about which numbers it cannot yet supply. The roadmap sections deserve attention as engineering specifications in their own right. Recommendation 3 treats the guideline corpus as a maintained artifact: survey everything, reconcile inconsistencies between guidelines, synthesize consensus where trials are absent, align payer coverage with the result, and actively deimplement what evidence now contraindicates. Recommendation 6 specifies a data architecture in three layers, population surveillance, standardized patient level capture aligned to the new classification, and crosslinking of registries across sites and through time, with named systems from NEMSIS and the National Trauma Databank to the TBI Model Systems and the DoD and VA registries. Recommendation 7 widens the admissible evidence base on purpose, because a condition this heterogeneous cannot be learned from efficacy trials alone: pragmatic trials, adaptive designs, comparative effectiveness work, and observational studies with statistical control for causal inference all earn a place, provided rigor criteria are shared. Recommendation 8 closes the loop organizationally, with a national framework, a ten year task force, an implementation plan within two years, and a public private coalition, on the explicit diagnosis that absent a leadership entity no one owns the problem. Read together, the eight recommendations form a dependency chain: classification reform feeds trial stratification and data standards, data standards feed the learning system, the learning system feeds guideline maintenance, and leadership exists to keep the chain from dissolving into uncoordinated projects. The report also keeps a prevention and equity spine throughout: prevention is the most effective burden reducer even though it sits largely outside the care system, and outcome independence from geography, identity, and site of care is stated as the standard against which the redesigned system will be judged, with stratified measurement as the enforcement mechanism.",
+      "retrocausal_genealogy": "The lineage starts with Teasdale and Jennett's 1974 Glasgow Coma Scale, built when CT was new and standardized observation was the pressing need, and with Engel's 1977 biopsychosocial model, which this report extends into a bio-psycho-socio-ecological frame. Wagner's Chronic Care Model from 1999 supplies the long term management template, the Institute of Medicine learning health care system reports of 2007 onward supply the learning system blueprint, and Williamson's achievable benefit concept supplies the gap accounting. The immediate ancestors are the large cohort programs, TRACK-TBI and CENTER-TBI, whose data made marker based classification arguable, and the 2012 National Research Action Plan, whose research coordination the proposed task force would succeed and widen into implementation.",
+      "theory_of_mind": "The committee models its reader as a system steward rather than a clinician at a single bedside: agency heads, payers, professional societies, and researchers who each hold one lever. Its model of the domain is that TBI is a population scale, lifespan, context dominated condition masquerading as an acute event, and that the binding constraint is not knowledge of any single treatment but fragmentation, misclassification, and missing longitudinal data. It assumes testimony from patients and families is evidence, that consensus process can legitimately fill gaps where trials are absent, and that naming accountable actors inside each recommendation is what separates a roadmap from a review article.",
+      "cross_layer_veto": "Several findings veto common shortcuts in adjacent layers. The classification critique vetoes any downstream model that consumes mild, moderate, or severe as ground truth features. The withdrawal bias finding vetoes naive prognostic calibration on severe case outcomes, because early decisions censor the biology. The negative CT underdiagnosis finding vetoes chart derived labels as clean training data. The no single biomarker finding vetoes single channel monitoring designs, and the BPSE findings veto any trajectory model built from injury variables alone, since context carries comparable weight and the care system itself is part of the causal pathway."
+    }
+  ],
+  "universal_lens": "Any field managing a heterogeneous, long horizon condition with a coarse inherited taxonomy can reuse this template: keep the raw component scores, add independent measurement channels until classification resolves into homogeneous subsets, treat reassuring labels as interventions with side effects, close the loop with scheduled reassessment against an ideal pathway, count the gap between achieved and achievable outcomes as a loss with an owner, and build the data system so that dropout is itself measured. The sequence matters more than the domain: definition first, classification second, trajectory governance third, learning infrastructure last, because each stage inherits the resolution limits of the one before it.",
+  "gsi_mapping": "The Galaxy Sports Institute takes the report as its clinical governance reference for brain injury work: the CDE definition for case admission, the composite of function, imaging, and biomarker evidence for classification, the acute and chronic two regime model for athlete care pathways, and the BPSE frame for return to learn and return to play decisions that involve school, family, and economic context. It also takes the cautions: mild labels must never end follow up, prognosis language must respect decision censoring at the severe end, and biomarker claims must carry their sampling window and validation limits whenever the Institute teaches or publishes on concussion and TBI.",
+  "gse_mapping": "The Galaxy Sports Edge engine takes audit and architecture operators rather than medical content: component preserving scores instead of bucket labels, label side effect audits, decision censored outcome flags in calibration data, incremental value admission tests for new signal families, mechanism by time window coverage matrices for its sensor stack, and achievable benefit gap accounting for its own processes. It also takes the structural pattern of the learning system, surveillance plus standardized capture plus longitudinal crosslinking, as the template for keeping its data honest over long horizons, and the report's heterogeneity doctrine as a standing warning against single trajectory models for any complex, context dominated forecasting target."
+}

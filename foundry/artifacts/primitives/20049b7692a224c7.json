@@ -1,0 +1,78 @@
+{
+  "book_id": "20049b7692a224c7",
+  "source_status": "COMPLETE",
+  "title": "05_big_plays_vs_success",
+  "file_name": "05_big_plays_vs_success.md",
+  "sha256": "20049b7692a224c7d6e827b4cf0ee2951ad94df17fee3823e4a4ad0b9b61dbe9",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A bivariate quadrant decomposition of NFL offensive performance using success rate (EPA > 0) and big-play rate (Sharp thresholds), partitioned by league medians (0.424, 0.105). Universal Lens: Rooted in 05_big_plays_vs_success (20049b7692a224c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on team offensive efficiency using EPA and explosive play metrics as sufficient statistics; conformal prediction intervals for quadrant membership uncertainty. GSI Mapping: Rooted in 05_big_plays_vs_success (20049b7692a224c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions in game flow driven by quadrant classification; e.g., Q1 teams exhibit stable high-leverage playmaking, while Q2 teams show volatile boom-or-bust dynamics. GSE Mapping: Rooted in 05_big_plays_vs_success (20049b7692a224c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "big_play_success_quadrant",
+      "name": "Big Play vs Success Rate Quadrant",
+      "verbatim_quote": "# Signal 5 — Big plays vs success rate quadrant (team offenses) Method: @ghatz_28 quadrant chart, Weeks 1-7 (post from Garrett's Oct 30 phone-feed video; the account's charts are nflfastR-based).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'s': 'success rate, dimensionless', 'b': 'big-play rate, dimensionless', 'm_s': 'league median success rate = 0.424', 'm_b': 'league median big-play rate = 0.105'}",
+      "assumptions": "Offensive performance is adequately described by two scalar metrics: success rate (EPA > 0) and big-play rate (Sharp thresholds). League medians define quadrants.",
+      "breakdown_regime": "When s < m_s and b < m_b, teams are classified as inefficient and non-explosive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Quadrant assignment maps to a 2D vector space where each axis represents normalized performance along success and explosive play dimensions; GSE uses this for dynamic state transition modeling.",
+        "source_operator": "big_play_success_quadrant",
+        "telemetry": "Team-specific (s, b) coordinates from weekly data."
+      }
+    },
+    {
+      "primitive_id": "explosive_play_definition",
+      "name": "Explosive Play Definition",
+      "verbatim_quote": "Football thresholds (pass gain >= 16 yards, rush gain >= 12 yards). Quadrants split at the",
+      "page": 1,
+      "latex": "\\text{Explosive Play} = \\begin{cases} \\text{Pass} & \\text{if } \\text{gain} \\geq 16 \\,\\text{yards} \\\\ \\text{Rush} & \\text{if } \\text{gain} \\geq 12 \\,\\text{yards} \\end{cases}",
+      "symbol_and_unit_ledger": "{'g_p': 'pass play gain, yards', 'g_r': 'rush play gain, yards', 't_p': 'threshold pass gain = 16 yards', 't_r': 'threshold rush gain = 12 yards'}",
+      "assumptions": "Play outcomes can be categorized into explosive/non-explosive based on fixed yardage thresholds.",
+      "breakdown_regime": "When g_p < t_p and g_r < t_r, play is non-explosive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Threshold-based binary classification of scrimmage plays used to compute big-play rate; GSI applies this as a kernel for feature engineering in predictive models.",
+        "source_operator": "explosive_play_definition",
+        "telemetry": "Count of explosive plays per team per week."
+      }
+    },
+    {
+      "primitive_id": "success_rate_definition",
+      "name": "Success Rate Definition",
+      "verbatim_quote": "excluded) with EPA > 0; big-play rate = share of scrimmage plays that are explosive under",
+      "page": 1,
+      "latex": "\\text{Success Rate} = \\frac{\\sum_{i=1}^{n} \\mathbb{1}_{\\text{EPA}_i > 0}}{n}",
+      "symbol_and_unit_ledger": "{'EPA_i': 'expected points added for play i, dimensionless', 'n': 'total number of scrimmage plays, dimensionless', '1_{\\\\text{EPA}_i > 0}': 'indicator function for positive EPA'}",
+      "assumptions": "Success is defined by positive expected points added; excludes 2-point conversions.",
+      "breakdown_regime": "When EPA_i ≤ 0, play is not considered successful.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "EPA-based scalar aggregation used to quantify offensive consistency; GSE uses this as a baseline performance indicator.",
+        "source_operator": "success_rate_definition",
+        "telemetry": "Weekly average success rate per team."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "20049b7692a224c7_t0",
+      "think": "The bivariate quadrant approach partitions offensive performance into four categories based on league-median thresholds for success rate (s) and big-play rate (b). This creates a dual-axis model where teams are classified as efficient+explosive (Q1), efficient+non-explosive (Q2), inefficient+explosive (Q3), or inefficient+non-explosive (Q4). The mathematical structure is a Cartesian product of two binary classifiers derived from continuous variables. The primary duality lies between consistency (success rate) and volatility (big-play rate). Failure modes include misclassification due to threshold sensitivity, especially near medians, and over-reliance on static thresholds without considering temporal or contextual variation. The model assumes additive independence between success and explosiveness, which may not hold in complex game states. The quadrant boundaries are robust to small shifts in thresholds but sensitive to outliers or extreme performances.\n\nDeep epistemic analysis for 05_big_plays_vs_success (20049b7692a224c7, domain=other, pages_read=1/1): Operator 'Big Play vs Success Rate Quadrant' (page 1, domain other) captures: # Signal 5 — Big plays vs success rate quadrant (team offenses) Method: @ghatz_28 quadrant chart, Weeks 1-7 (post from Garrett's Oct 30 phone-feed video; the account's charts are nflfastR-based). Assumptions: Offensive performance is adequately described by two scalar metrics: success rate (EPA > 0) and big-play rate (Sharp thresholds). League medians define quadrants. Breakdown regime: When s < m_s and b < m_b, teams are classified as inefficient and non-explosive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Quadrant assignment maps to a 2D vector space where each axis represents normalized performance along success and explosive play dimensions; GSE uses this for dynamic state transition modeling. Operator 'Explosive Play Definition' (page 1, domain other) captures: Football thresholds (pass gain >= 16 yards, rush gain >= 12 yards). Quadrants split at the Assumptions: Play outcomes can be categorized into explosive/non-explosive based on fixed yardage thresholds. Breakdown regime: When g_p < t_p and g_r < t_r, play is non-explosive. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Threshold-based binary classification of scrimmage plays used to compute big-play rate; GSI applies this as a kernel for feature engineering in predictive models. Operator 'Success Rate Definition' (page 1, domain other) captures: excluded) with EPA > 0; big-play rate = share of scrimmage plays that are explosive under Assumptions: Success is defined by positive expected points added; excludes 2-point conversions. Breakdown regime: When EPA_i ≤ 0, play is not considered successful. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): EPA-based scalar aggregation used to quantify offensive consistency; GSE uses this as a baseline performance indicator. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 05_big_plays_vs_success (20049b7692a224c7, domain=other, pages_read=1/1): Operator 'Big Play vs Success Rate Quadrant' (page 1, domain other) captures: # Signal 5 — Big plays vs success rate quadrant (team offenses) Method: @ghatz_28 quadrant chart, Weeks 1-7 (post from Garrett's Oct 30 phone-feed video; the account's charts are nflfastR-based). Assumptions: Offensive performance is adequately described by two scalar metrics: success rate (EPA > 0) and big-play rate (Sharp thresholds). League medians define quadrants. Breakdown regime: When s < m_s and b < m_b, teams are classified as inefficient and non-explosive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Quadrant assignment maps to a 2D vector space where each axis represents normalized performance along success and explosive play dimensions; GSE uses this for dynamic state transition modeling. Operator 'Explosive Play Definition' (page 1, domain other) captures: Football thresholds (pass gain >= 16 yards, rush gain >= 12 yards). Quadrants split at the Assumptions: Play outcomes can be categorized into explosive/non-explosive based on fixed yardage thresholds. Breakdown regime: When g_p < t_p and g_r < t_r, play is non-explosive. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Threshold-based binary classification of scrimmage plays used to compute big-play rate; GSI applies this as a kernel for feature engineering in predictive models. Operator 'Success Rate Definition' (page 1, domain other) captures: excluded) with EPA > 0; big-play rate = share of scrimmage plays that are explosive under Assumptions: Success is defined by positive expected points added; excludes 2-point conversions. Breakdown regime: When EPA_i ≤ 0, play is not considered successful. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): EPA-based scalar aggregation used to quantify offensive consistency; GSE uses this as a baseline performance indicator. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s football analytics literature on play categorization and the emergence of EPA as a core metric. Influenced by Sharp Football’s threshold-based explosive play definition and the broader nflfastR ecosystem. Retrocausal Genealogy: Rooted in 05_big_plays_vs_success (20049b7692a224c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (defenses) may adapt to Q1 teams' predictable efficiency, while Q2 teams' volatility introduces uncertainty. Coaches might optimize for either stability (Q2) or high-leverage moments (Q1/Q3). Theory of Mind & Decision Maker Model: Rooted in 05_big_plays_vs_success (20049b7692a224c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring success and big-play rates are distinct metrics. Leakage occurs when EPA or explosive play definitions are conflated with other metrics like turnover margin or red zone efficiency. Cross-Layer Veto & Anti-Leakage Check: Rooted in 05_big_plays_vs_success (20049b7692a224c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

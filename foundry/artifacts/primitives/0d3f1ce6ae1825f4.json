@@ -1,0 +1,78 @@
+{
+  "book_id": "0d3f1ce6ae1825f4",
+  "source_status": "COMPLETE",
+  "title": "CAR@PHI-card-REFUSED",
+  "file_name": "CAR@PHI-card-REFUSED.md",
+  "sha256": "0d3f1ce6ae1825f421b00c4a309a07c59c5b90c51e35260c608c8e263342c76a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Fixture confirmation logic maps to a binary predicate over game slate validity, enabling causal filtering of analyst cards. Universal Lens: Rooted in CAR@PHI-card-REFUSED (0d3f1ce6ae1825f4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on game existence conditioned on slate membership; conformal prediction rejects non-slate fixtures via posterior exclusion. GSI Mapping: Rooted in CAR@PHI-card-REFUSED (0d3f1ce6ae1825f4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transition from query to resolved game; engine enforces causal consistency through period-based constraint validation. GSE Mapping: Rooted in CAR@PHI-card-REFUSED (0d3f1ce6ae1825f4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fixture_slate_validity",
+      "name": "Fixture Slate Validity Predicate",
+      "verbatim_quote": "# CAR@PHI - FIXTURE NOT CONFIRMED (card REFUSED) **This matchup is not a game on the real 6 slate.** The engine does not emit an analyst card for a fixture it cannot confirm.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'fixture identifier (dimensionless)', 'S': 'slate period (dimensionless)', 'V(F,S)': 'validity predicate {0,1}'}",
+      "assumptions": "Game fixtures must belong to a confirmed slate period to be analyzed.",
+      "breakdown_regime": "V(F,S) = 0 when F ∉ S",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The validity predicate V(F,S) mirrors GSI's Bayesian rejection of out-of-slate hypotheses, and GSE's state-machine constraint enforcement.",
+        "source_operator": "fixture_slate_validity",
+        "telemetry": "Boolean outcome of fixture inclusion check"
+      }
+    },
+    {
+      "primitive_id": "fictional_card_rejection",
+      "name": "Fictional Card Rejection Mechanism",
+      "verbatim_quote": "A card here would be fiction that reads as analysis.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'analyst card (dimensionless)', 'F': 'fixture (dimensionless)', 'R(C|F)': 'rejection probability (0 ≤ R ≤ 1)'}",
+      "assumptions": "Analyst cards are rejected when they represent fictional or unconfirmed fixtures.",
+      "breakdown_regime": "R(C|F) = 1 when F is not confirmed",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from the slate validity kernel; models rejection of speculative outputs in GSE's reasoning loop.",
+        "source_operator": "fictional_card_rejection",
+        "telemetry": "Card emission status (rejected vs emitted)"
+      }
+    },
+    {
+      "primitive_id": "real_game_constraint",
+      "name": "Real Game Constraint Mapping",
+      "verbatim_quote": "Real games that week: PHI plays unknown; CAR plays unknown.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G_w': 'game in week w (dimensionless)', 'O_G': 'opponent set (set of teams)', 'W': 'week identifier (dimensionless)'}",
+      "assumptions": "Each team's real opponent is determinable within a known week.",
+      "breakdown_regime": "O_G(w) ≠ ∅ for valid weeks",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's constraint satisfaction over opponent sets and GSE's temporal game resolution.",
+        "source_operator": "real_game_constraint",
+        "telemetry": "Opponent assignment completeness per week"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0d3f1ce6ae1825f4_t0",
+      "think": "The core operator 'fixture_slate_validity' defines a Boolean function V(F,S) ∈ {0,1} where F is a fixture and S is a slate period. When V(F,S) = 0, the fixture is not part of the real schedule, triggering rejection by both GSI's Bayesian inference and GSE's state machine. The 'fictional_card_rejection' mechanism is a derived kernel that applies conditional probability R(C|F) = 1 when F is invalid, preventing spurious analyst outputs. The 'real_game_constraint' ensures that each team's opponent is determinable within a valid week, enforcing a consistent mapping between fixtures and real-world game data. These primitives form a closed-loop system where slate validation acts as a filter, rejecting invalid fixtures before they propagate into downstream reasoning layers.\n\nDeep epistemic analysis for CAR@PHI-card-REFUSED (0d3f1ce6ae1825f4, domain=other, pages_read=1/1): Operator 'Fixture Slate Validity Predicate' (page 1, domain other) captures: # CAR@PHI - FIXTURE NOT CONFIRMED (card REFUSED) **This matchup is not a game on the real 6 slate.** The engine does not emit an analyst card for a fixture it cannot confirm. Assumptions: Game fixtures must belong to a confirmed slate period to be analyzed. Breakdown regime: V(F,S) = 0 when F ∉ S Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The validity predicate V(F,S) mirrors GSI's Bayesian rejection of out-of-slate hypotheses, and GSE's state-machine constraint enforcement. Operator 'Fictional Card Rejection Mechanism' (page 1, domain other) captures: A card here would be fiction that reads as analysis. Assumptions: Analyst cards are rejected when they represent fictional or unconfirmed fixtures. Breakdown regime: R(C|F) = 1 when F is not confirmed Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from the slate validity kernel; models rejection of speculative outputs in GSE's reasoning loop. Operator 'Real Game Constraint Mapping' (page 1, domain other) captures: Real games that week: PHI plays unknown; CAR plays unknown. Assumptions: Each team's real opponent is determinable within a known week. Breakdown regime: O_G(w) ≠ ∅ for valid weeks Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's constraint satisfaction over opponent sets and GSE's temporal game resolution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CAR@PHI-card-REFUSED (0d3f1ce6ae1825f4, domain=other, pages_read=1/1): Operator 'Fixture Slate Validity Predicate' (page 1, domain other) captures: # CAR@PHI - FIXTURE NOT CONFIRMED (card REFUSED) **This matchup is not a game on the real 6 slate.** The engine does not emit an analyst card for a fixture it cannot confirm. Assumptions: Game fixtures must belong to a confirmed slate period to be analyzed. Breakdown regime: V(F,S) = 0 when F ∉ S Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The validity predicate V(F,S) mirrors GSI's Bayesian rejection of out-of-slate hypotheses, and GSE's state-machine constraint enforcement. Operator 'Fictional Card Rejection Mechanism' (page 1, domain other) captures: A card here would be fiction that reads as analysis. Assumptions: Analyst cards are rejected when they represent fictional or unconfirmed fixtures. Breakdown regime: R(C|F) = 1 when F is not confirmed Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from the slate validity kernel; models rejection of speculative outputs in GSE's reasoning loop. Operator 'Real Game Constraint Mapping' (page 1, domain other) captures: Real games that week: PHI plays unknown; CAR plays unknown. Assumptions: Each team's real opponent is determinable within a known week. Breakdown regime: O_G(w) ≠ ∅ for valid weeks Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's constraint satisfaction over opponent sets and GSE's temporal game resolution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal logic of constraint satisfaction and Bayesian falsifiability, tracing back to Kolmogorov's axioms of probability and Turing's computability theory. Retrocausal Genealogy: Rooted in CAR@PHI-card-REFUSED (0d3f1ce6ae1825f4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CAR@PHI-card-REFUSED (0d3f1ce6ae1825f4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models adversarial reasoning where the engine assumes a rational agent would reject speculative inputs. The system simulates a decision actor that prioritizes truth over utility in card generation. Theory of Mind & Decision Maker Model: Rooted in CAR@PHI-card-REFUSED (0d3f1ce6ae1825f4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by ensuring slate validity is checked before any card generation. Leakage vetoes occur when a fixture is passed without prior validation, causing GSE to halt and prompt re-query with correct week/period. Cross-Layer Veto & Anti-Leakage Check: Rooted in CAR@PHI-card-REFUSED (0d3f1ce6ae1825f4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

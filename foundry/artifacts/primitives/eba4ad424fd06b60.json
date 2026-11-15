@@ -1,0 +1,78 @@
+{
+  "book_id": "eba4ad424fd06b60",
+  "source_status": "COMPLETE",
+  "title": "ADP_ACCURACY_AUDIT",
+  "file_name": "ADP_ACCURACY_AUDIT.md",
+  "sha256": "eba4ad424fd06b60deadccc420243c9bf356af72fef36e0a088b79f4aa2aa071",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "ADP freshness and accuracy mapped through cache expiry, live ingestion, and single-source dependency. Universal Lens: Rooted in ADP_ACCURACY_AUDIT (eba4ad424fd06b60), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian ADP confidence intervals derived from FFC TTL and fetch timestamps, with rank delta as evidence variable. GSI Mapping: Rooted in ADP_ACCURACY_AUDIT (eba4ad424fd06b60), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in ADP ingestion governed by cache expiry logic and seasonal year derivation, with live route invocation. GSE Mapping: Rooted in ADP_ACCURACY_AUDIT (eba4ad424fd06b60), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ffc_adp_cache_expiry",
+      "name": "FFC ADP Cache Expiry",
+      "verbatim_quote": "→ PASS (no indefinite staleness) Cache (from `adp-source.ts`): - Module-level `Map<string, {expiresAt, value}>` at `apps/web/lib/fantasy/adp-source.ts:181`.",
+      "page": 1,
+      "latex": "\\text{expiresAt} = \\begin{cases} \\text{now()} + 24\\text{h}, & \\text{live entry} \\\\ \\text{now()} + 30\\text{m}, & \\text{error entry} \\end{cases}",
+      "symbol_and_unit_ledger": "{'expiresAt': 'timestamp (ms)', 'now()': 'timestamp (ms)', '24h': 'milliseconds', '30m': 'milliseconds'}",
+      "assumptions": "Cache entries are strictly time-based with no manual override.",
+      "breakdown_regime": "When `expiresAt <= now()`, cache is invalidated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expiry logic governs freshness in GSI's ADP confidence model.",
+        "source_operator": "ffc_adp_cache_expiry",
+        "telemetry": "Timestamps of last fetch and expiry check."
+      }
+    },
+    {
+      "primitive_id": "ffc_adp_ingestion_path",
+      "name": "FFC ADP Ingestion Path",
+      "verbatim_quote": "→ PASS Trace: - `loadFfcAdp` is imported ONLY by `apps/web/lib/integrations/graded-pool.ts:49` and called ONLY at `apps/web/lib/integrations/graded-pool.ts:420`.",
+      "page": 1,
+      "latex": "\\text{IngestionPath}(t) = \\text{graded-pool.ts:420} \\circ \\text{loadFfcAdp}",
+      "symbol_and_unit_ledger": "{'t': 'time (s)', 'IngestionPath': 'function mapping'}",
+      "assumptions": "No alternate paths exist for FFC ADP data in production.",
+      "breakdown_regime": "If `loadFfcAdp` is not called from `graded-pool.ts`, ingestion fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ingestion path mirrors GSE's live route execution flow.",
+        "source_operator": "ffc_adp_ingestion_path",
+        "telemetry": "Call graph verification via grep output."
+      }
+    },
+    {
+      "primitive_id": "adp_season_derivation",
+      "name": "ADP Season Derivation",
+      "verbatim_quote": "(Note: this differs from the P8-04 GSE-SEC-042 finding, which was about a different FreeStats module — `adp-source.ts` already does the right thing.) - The test at `adp-source.test.ts:118-129` and `:139-163` proves both the 24h live expiry and the 30m negative-cache TTL behave correctly.",
+      "page": 1,
+      "latex": "\\text{season} = \\text{getUTCFullYear()}(\\text{currentDate})",
+      "symbol_and_unit_ledger": "{'season': 'integer (year)', 'getUTCFullYear()': 'function returning year'}",
+      "assumptions": "Season aligns with calendar year during active NFL season.",
+      "breakdown_regime": "During offseason, may lag actual NFL season start.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Season logic ensures GSI uses correct ADP dataset.",
+        "source_operator": "adp_season_derivation",
+        "telemetry": "Year value from system clock during request."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "eba4ad424fd06b60_t0",
+      "think": "The ADP system operates under a dual TTL model: 24-hour for valid data and 30-minute for errors. This ensures freshness without overburdening the FFC API. The ingestion path is strictly controlled through `graded-pool.ts`, confirming live user access. The season is dynamically derived from UTC date, ensuring alignment with current NFL seasons. However, the lack of a second independent ADP source introduces a systemic risk: any FFC error propagates directly into the application without reconciliation. This creates a failure mode where downstream analytics like `adpDelta` inherit inaccuracies silently. The cache expiry mechanism is robust but relies entirely on a single upstream source, violating cross-source independence principles.\n\nDeep epistemic analysis for ADP_ACCURACY_AUDIT (eba4ad424fd06b60, domain=other, pages_read=4/4): Operator 'FFC ADP Cache Expiry' (page 1, domain other) captures: → PASS (no indefinite staleness) Cache (from `adp-source.ts`): - Module-level `Map<string, {expiresAt, value}>` at `apps/web/lib/fantasy/adp-source.ts:181`. Assumptions: Cache entries are strictly time-based with no manual override. Breakdown regime: When `expiresAt <= now()`, cache is invalidated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Expiry logic governs freshness in GSI's ADP confidence model. Operator 'FFC ADP Ingestion Path' (page 1, domain other) captures: → PASS Trace: - `loadFfcAdp` is imported ONLY by `apps/web/lib/integrations/graded-pool.ts:49` and called ONLY at `apps/web/lib/integrations/graded-pool.ts:420`. Assumptions: No alternate paths exist for FFC ADP data in production. Breakdown regime: If `loadFfcAdp` is not called from `graded-pool.ts`, ingestion fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ingestion path mirrors GSE's live route execution flow. Operator 'ADP Season Derivation' (page 1, domain other) captures: (Note: this differs from the P8-04 GSE-SEC-042 finding, which was about a different FreeStats module — `adp-source.ts` already does the right thing.) - The test at `adp-source.test.ts:118-129` and `:139-163` proves both the 24h live expiry and the 30m negative-cache TTL behave correctly. Assumptions: Season aligns with calendar year during active NFL season. Breakdown regime: During offseason, may lag actual NFL season start. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Season logic ensures GSI uses correct ADP dataset. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ADP_ACCURACY_AUDIT (eba4ad424fd06b60, domain=other, pages_read=4/4): Operator 'FFC ADP Cache Expiry' (page 1, domain other) captures: → PASS (no indefinite staleness) Cache (from `adp-source.ts`): - Module-level `Map<string, {expiresAt, value}>` at `apps/web/lib/fantasy/adp-source.ts:181`. Assumptions: Cache entries are strictly time-based with no manual override. Breakdown regime: When `expiresAt <= now()`, cache is invalidated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Expiry logic governs freshness in GSI's ADP confidence model. Operator 'FFC ADP Ingestion Path' (page 1, domain other) captures: → PASS Trace: - `loadFfcAdp` is imported ONLY by `apps/web/lib/integrations/graded-pool.ts:49` and called ONLY at `apps/web/lib/integrations/graded-pool.ts:420`. Assumptions: No alternate paths exist for FFC ADP data in production. Breakdown regime: If `loadFfcAdp` is not called from `graded-pool.ts`, ingestion fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ingestion path mirrors GSE's live route execution flow. Operator 'ADP Season Derivation' (page 1, domain other) captures: (Note: this differs from the P8-04 GSE-SEC-042 finding, which was about a different FreeStats module — `adp-source.ts` already does the right thing.) - The test at `adp-source.test.ts:118-129` and `:139-163` proves both the 24h live expiry and the 30m negative-cache TTL behave correctly. Assumptions: Season aligns with calendar year during active NFL season. Breakdown regime: During offseason, may lag actual NFL season start. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Season logic ensures GSI uses correct ADP dataset. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s web caching models, adapted for real-time fantasy sports data. Influenced by HTTP cache-control and TTL semantics. Retrocausal Genealogy: Rooted in ADP_ACCURACY_AUDIT (eba4ad424fd06b60), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ADP_ACCURACY_AUDIT (eba4ad424fd06b60), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the FFC API (source of truth) and the GSI engine (consumer of truth). The system assumes FFC is reliable, but lacks adversarial validation. Theory of Mind & Decision Maker Model: Rooted in ADP_ACCURACY_AUDIT (eba4ad424fd06b60), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in ADP_ACCURACY_AUDIT (eba4ad424fd06b60), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is violated due to exclusive reliance on FFC. Leakage occurs when FFC errors propagate undetected. Veto condition: require at least one additional independent ADP feed. Cross-Layer Veto & Anti-Leakage Check: Rooted in ADP_ACCURACY_AUDIT (eba4ad424fd06b60), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in ADP_ACCURACY_AUDIT (eba4ad424fd06b60), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

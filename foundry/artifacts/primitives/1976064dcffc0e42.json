@@ -1,0 +1,142 @@
+{
+ "book_id": "1976064dcffc0e42",
+ "source_status": "COMPLETE",
+ "pages_total": 18,
+ "pages_read": 18,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Random Forests (bootstrap-aggregated regression ensemble; Breiman 2001)",
+   "verbatim_quote": "Random forests are a type of ensemble learning that generates multiple decision-tree models and then obtains a consensus.",
+   "page": 12,
+   "latex": "\\hat{f}_{\\mathrm{rf}}(x)=\\frac{1}{B}\\sum_{b=1}^{B}T_b(x)",
+   "symbol_and_unit_ledger": "f_hat_rf(x) = ensemble predicted home-minus-away game margin [points]; x = team-stat feature vector, normalized to 0-1 per source [dimensionless]; B = number of regression trees [count, dimensionless]; T_b(x) = b-th tree's margin prediction [points]; 1/B = uniform averaging weight [dimensionless]. Homogeneous: points = (dimensionless)*(points). Derived canonical kernel of the cited Breiman (2001) method; source prints prose only, no displayed equation.",
+   "assumptions": "Supervised regression on i.i.d. game rows; bagging (bootstrap aggregation) to reduce variance; many small independent trees averaged (regression) or majority-voted (classification); features normalized to a common 0-1 scale; source uses 80% of games for training in a single run.",
+   "breakdown_regime": "Variance reduction fails when trees are strongly correlated or the label distribution is nonstationary; small sample (one 256-game season) limits forest depth; source notes team makeup changes every year (draft, trades, retirements, new coaches, rules, relocations), so a forest trained on one season does not transfer; cannot extrapolate beyond the training feature support.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p1",
+    "mapping": "Binds to the 22-player football dynamical system as a variance-reduced estimator of the margin state M = home_points - away_points: each weak tree is a coarse subsystem model (offensive pace, defensive stop rate, turnover propensity, special-teams field position) and the 1/B average is the consensus transition-kernel output that suppresses any single subsystem's noise. The ensemble is the Coach-Mind's committee-of-experts read of a matchup, not a betting line.",
+    "telemetry": "Source RMSE on held-out games: XGBoost 13.29 points, gbm AdaBoost 13.39 points vs MLR 17.09 points (Table 3/4); calibrates the ensemble's margin-error scale against the ~13-14 point closing-line historical spread."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Gradient Boosting (stagewise additive residual correction; Friedman 2001)",
+   "verbatim_quote": "The other was the XGBoost (eXtreme Gradient Boosting) R package, which is an implementation of gradient boosting framework by Friedman (2001).",
+   "page": 13,
+   "latex": "F_m(x)=F_{m-1}(x)+\\nu\\,\\gamma_m\\,h_m(x)",
+   "symbol_and_unit_ledger": "F_m(x), F_{m-1}(x) = cumulative margin predictor after m / m-1 stages [points]; h_m(x) = m-th weak learner (shallow tree) fitted to the current residual / negative loss gradient [points]; gamma_m = stage step size [dimensionless]; nu = shrinkage / learning rate [dimensionless]. Homogeneous: points = points + (dimensionless)*(dimensionless)*(points). Derived canonical Friedman (2001) kernel invoked by citation; source prints prose only.",
+   "assumptions": "Additive stagewise expansion; each shallow weak tree improves on the previous by fitting residuals (Freund & Schapire 1999; Friedman 2001); differentiable loss; shrinkage nu regularizes; boosting builds shallower weaker trees unlike random forests' deeper independent trees; 80% training, single run.",
+   "breakdown_regime": "Overfits when stage count m or tree depth grows against noisy residuals; sensitive to nonstationary season-to-season distribution shift; with one small season and no k-fold cross-validation the residual signal can be fit to noise; source reports boosted forests beat MLR but still cannot beat the closing line under 10% vigorish.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p2",
+    "mapping": "Binds as a sequential belief-update transition kernel: F_{m-1} is the Coach-Mind's current game-state estimate and each h_m corrects its residual error, analogous to play-by-play assimilation where a new down-and-distance observation refines the margin belief. The shrinkage nu is the conservatism gain that prevents over-reacting to a single noisy play.",
+    "telemetry": "Source XGBoost held-out RMSE 13.29 points (best of all methods, Table 4); the residual-correction gain over MLR is 17.09 - 13.29 = 3.80 points of margin error removed."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "ANN loss-gradient weight adaptation (backpropagation-style learning)",
+   "verbatim_quote": "Specifically, ANN learning is accomplished by computing a loss function that is a measure of goodness of fit, and then the derivative of the loss is used to adjust the learning-machine path weights.",
+   "page": 13,
+   "latex": "L=\\sum_{i=1}^{n}(y_i-\\hat{y}_i)^2,\\qquad w\\leftarrow w-\\eta\\,\\frac{\\partial L}{\\partial w}",
+   "symbol_and_unit_ledger": "L = sum-of-squared-errors loss [points^2]; y_i = observed margin [points]; y_hat_i = predicted margin [points]; n = training-game count [dimensionless]; w = node-to-node path weight [dimensionless]; eta = learning rate [points^-2] (carries inverse loss units so eta*dL/dw is dimensionless and the weight update is homogeneous); dL/dw = loss gradient [points^2]. Homogeneous: dimensionless = dimensionless - (points^-2)*(points^2). Derived canonical kernel of the source's described gradient learning; source prints prose only.",
+   "assumptions": "Differentiable activation (source default logistic; hyperbolic tangent tried, worse); inputs normalized; gradient of a goodness-of-fit loss drives weight updates; deep/multi-node nets need thousands of data points; source starts with one hidden node then increases capacity.",
+   "breakdown_regime": "Source demonstrates overfitting directly: 4 hidden nodes lower training SSE (1.467 vs 2.37) but worsen test correlation (0.272 vs 0.5678) and RMSE (97.89 points); across 10 resampled 80% training sets the 4-node RMSE ranges 96.71-156.59 (mean 127.14). Capacity exceeding the small nonstationary sample is the failure regime; more complex ANN models perform worse than the simple model here.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p3",
+    "mapping": "Binds to Coach-Mind policy adaptation: w are the coach's adjustable tendency weights and L is the goodness-of-fit loss on observed drive outcomes; the gradient step is learning from film. The overfitting result is a hard capacity veto - a high-parameter deception model fitted to one season's film memorizes noise rather than learning the opponent's true transition kernel.",
+    "telemetry": "Source training SSE 2.37 (1 node) -> 1.467 (4 nodes); test correlation 0.5678 -> 0.272; RMSE 97.89 points; resample RMSE spread 96.71-156.59 points. These calibrate the overfitting veto threshold for the sim."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "K-Nearest Neighbors local-similarity regression (Cover & Hart 1967)",
+   "verbatim_quote": "for regression test, data get classified based on the averages of nearest neighbors; default metric for distance is typically Euclidean for continuous variables.",
+   "page": 8,
+   "latex": "\\hat{y}(x)=\\frac{1}{K}\\sum_{j\\in\\mathcal{N}_K(x)}y_j",
+   "symbol_and_unit_ledger": "y_hat(x) = predicted margin for query x [points]; y_j = observed margin of neighbor j [points]; K = number of nearest neighbors [count, dimensionless]; N_K(x) = index set of the K nearest training games under Euclidean distance on normalized features [dimensionless distance]; 1/K = uniform local averaging weight [dimensionless]. Homogeneous: points = (dimensionless)*(points). Derived canonical KNN-regression kernel; source prints prose only.",
+   "assumptions": "Similarity measured by Euclidean distance on variables normalized to a common 0-1 scale (else higher-magnitude features dominate); K initially set to sqrt(number of data points); larger K reduces variance on noisy data but introduces bias by smoothing small useful patterns; local averaging for regression, voting for classification.",
+   "breakdown_regime": "Curse of dimensionality: source reports that adding more features made KNN less accurate (69% with only points scored/allowed, worse with more); overlapping win/loss decision surfaces (Fig. 9) mean no clean local separation; bias-variance tradeoff in K; nonstationary feature-label relation across seasons breaks the local-similarity assumption.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "p4",
+    "mapping": "Isomorphic to nearest-situation retrieval in a play-memory bank: the Coach-Mind answers a novel down/distance/field-position state by averaging outcomes of the K most similar past situations. The dimensionality breakdown is the warning that adding too many contextual features dilutes the analogy and degrades the read.",
+    "telemetry": "Source 2-feature KNN win/loss classification 69% (14/22 losses, 22/30 wins correct); accuracy falls when more features are added; K ~ sqrt(n) heuristic."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Stepwise MLR with AIC / adjusted-R^2 model selection (Akaike information criterion)",
+   "verbatim_quote": "Stepwise MLR determines the most significant independent variables by adding and removing independent variables via measuring the adjusted r squared or AIC (Akaike information criterion) value.",
+   "page": 12,
+   "latex": "\\mathrm{AIC}=2k-2\\ln\\hat{L}",
+   "symbol_and_unit_ledger": "AIC = Akaike information criterion [nats] (information units; lower is better); k = number of estimated model parameters [count, dimensionless]; L_hat = maximized likelihood of the fitted model [dimensionless likelihood]; ln = natural logarithm yielding nats; 2k = parsimony penalty (treated in nats by convention), -2 ln L_hat = lack-of-fit term [nats]. Homogeneous in information units. Derived canonical AIC kernel; source prints prose only and selects by stepAIC in R.",
+   "assumptions": "Linear additive predictors; likelihood-based fit (Gaussian errors for the linear model); AIC trades goodness-of-fit against parameter count; adjusted R^2 penalizes added predictors; source selects points/game and points allowed/game as the best AIC subset from 12 candidates.",
+   "breakdown_regime": "Source full MLR adjusted R^2 is only 0.2963 (linear model explains <30% of margin variance) with RMSE 17.09 points; strong multicollinearity among predictors (yards/game vs points/game; fumbles vs fumbles lost) destabilizes stepwise selection; nonlinear decision surfaces and season nonstationarity violate the linear stationary-error assumption.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1",
+    "tau_2",
+    "tau_3"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p5",
+    "mapping": "Binds as the parsimony gate on the Coach-Mind's deception/opponent model: AIC penalizes extra tendency parameters so the sim prefers the smallest model that explains the observed drive outcomes, resisting over-parameterized reads of a small film sample. The adjusted-R^2 ceiling is the honest upper bound on what linear team-stats can explain about the margin state.",
+    "telemetry": "Source full-MLR adjusted R^2 = 0.2963, RMSE = 17.09 points; best AIC subset = {points/game, points allowed/game}; ~4 points weaker than the boosted forests."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The central sovereign invariant this paper hands the Foundry is the bias-variance tradeoff made concrete on a real, small, nonstationary football sample, and the discipline of refusing to launder a betting line into the model. Brandon takes the 2017 NFL regular season, twelve team-stat predictors, and the actual home-minus-away margin as the dependent variable, and deliberately excludes both the opening and closing Vegas line from the predictor set. That exclusion is not a cosmetic choice; it is the methodological scar that makes the result trustworthy. Most prior point-spread work feeds the closing line back in as a feature and then claims to beat it, which is circular: the line already aggregates public information, so a model that consumes it is partly predicting the market with the market. By training only on early-week team statistics, the paper isolates how much signal genuinely lives in the teams themselves before injury news and consensus betting arrive. The quantitative arc is the lesson. Full multiple linear regression explains almost nothing: adjusted R-squared 0.2963, RMSE 17.09 points. Stepwise AIC selection collapses the twelve features to two - points per game and points allowed per game - confirming that most of the linear signal is just scoring differential. Boosted forests then remove about 3.8 points of margin error: XGBoost RMSE 13.29, gbm AdaBoost 13.39, comparable to the historical closing-line spread of roughly 13 to 14 points. The neural network is the cautionary tale. A one-hidden-node net trains to SSE 2.37 but tests at correlation 0.5678 and RMSE 97.89; adding capacity to four nodes improves training SSE to 1.467 yet degrades test correlation to 0.272, and across ten resampled training sets the four-node RMSE swings from 96.71 to 156.59. This is overfitting rendered as numbers: capacity that exceeds the information content of a single 256-game season memorizes noise. For the 22-player dynamical system the binding is direct. The margin M is a low-dimensional observable emerging from many interacting subsystems - offensive pace, defensive stop rate, turnover propensity, special-teams field position - and the ensemble methods succeed precisely because they average many weak, partially-independent reads of those subsystems rather than fitting one high-capacity surface. The forest's 1/B average and the boosting stagewise residual correction F_m = F_{m-1} + nu*gamma_m*h_m are variance-reduction operators on the transition kernel that maps a pre-game state to a margin distribution. The Coach-Mind sim should inherit exactly this structure: a committee of coarse subsystem models, a conservative shrinkage gain on each update, and a hard capacity veto borrowed from the ANN failure. The KNN result reinforces the same invariant from the retrieval side - two features give 69% win/loss classification, but adding features makes it worse, the curse of dimensionality showing that more context can dilute rather than sharpen an analogical read. The honest ceiling, stated by the author, is that even the best method cannot beat the closing line under the standard 10% vigorish; the only competitive opening is against the early-week line. We record that as a calibration fact about the difficulty of the prediction problem, not as a betting strategy: the Foundry uses no sportsbook odds as model inputs, and the value here is the error scale and the overfitting veto, not a wager. The dimensional care matters too - every kernel we derive is homogeneous in points or in information units (nats for AIC), and the ANN learning rate must carry inverse loss units (points^-2) for the weight update to be dimensionless, a detail that separates a real kernel from a toy heuristic.",
+   "retrocausal_genealogy": "The hidden state of this paper was created by a specific historical lineage. Football digital analytics began in the 1960s with linear regression programmed in FORTRAN, crystallized in Harville's 1980 JASA linear-model methodology, and then collided with the efficient-market finding that the Vegas closing line is an unbiased aggregate predictor (Fama 1970; Spinosa 2014). That collision is the scar: decades of researchers feeding the closing line back into their models produced circular accuracy claims, so the field carried a hidden contamination. Brandon's setup - early-week team stats only, no opening or closing line as a predictor - is the corrective response to that lineage, and it is why the modest 13.29-point RMSE is more honest than the inflated 90% claims of earlier line-consuming studies.",
+   "theory_of_mind": "Under pressure the belief clash is recursive. The head coach's comfort call is to trust the high-capacity neural net because it trains to the lowest SSE (1.467) and feels like the most sophisticated read; the defensive coordinator's tendency trap is to over-fit a single season's film and see patterns that are noise; the quarterback's internal clock is the live, nonstationary reality that the roster and rules change every year. Each agent models the others: the coach assumes the DC's detailed model is rigorous, the DC assumes the coach wants complexity, and both misread the QB's environment as stationary. The paper's test-correlation collapse (0.5678 to 0.272) is the objective referee that breaks this recursive comfort loop and forces the simpler, averaged read.",
+   "cross_layer_veto": "The cross-layer veto is fired by the overfitting physics against a high-EV-looking call. A selector that ranks models by training fit would choose the four-node ANN (lowest SSE) and assign it high expected value; the variance layer vetoes this because held-out correlation falls to 0.272 and resample RMSE spans 96.71 to 156.59 points. Independently, the nonstationarity layer vetoes any claim that a single-season model transfers, since team makeup changes yearly. And the doctrine layer vetoes importing the closing line as a feature at all. The admissible decision is the boosted forest with shrinkage and a capacity cap, accepting the honest ~13-point error scale rather than a fabricated edge."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The second invariant is nonstationarity and the parsimony gate, and together they explain why the Foundry must treat every fitted football model as a perishable object. Brandon is explicit that the nature of the problem changes as the game changes: new players from the draft, retiring players, trades, new coaches, new rules, and team relocations all shift the data-generating process between seasons. This is a distribution-shift statement, and it is the reason the paper refuses to pool multiple seasons to feed the data-hungry neural network - more rows from a different regime are not more information about the current regime. The AIC kernel formalizes the defensive response: AIC = 2k - 2 ln L_hat penalizes parameter count k in information units, so the selector prefers the smallest model that explains the observed margins. On this sample the best AIC subset is just scoring differential, and the full linear model's adjusted R-squared of 0.2963 is the honest ceiling on linear team-stat signal. For the Coach-Mind sim this becomes a model-selection policy: when an opponent model gains parameters, it must pay the AIC penalty, and a deception model that cannot justify its extra tendency parameters against the film likelihood is rejected. The KNN curse of dimensionality is the retrieval-side twin of the same principle - adding contextual features past the point where local similarity is meaningful degrades the read, so the play-memory bank must keep its situation descriptor low-dimensional. The GSI compilation reads these as biological regulation: ensemble averaging is redundant population coding that suppresses single-neuron noise; stagewise boosting is sequential residual correction in motor learning, where each practice trial corrects the error of the current internal model; and overfitting is maladaptive specialization, a neural circuit that memorizes one context and fails to generalize when the body's state shifts. The GSE compilation reads them as portfolio and DFS tail-risk control: a high-capacity model fitted to a small slate is a concentrated, overfit position whose out-of-sample error has fat tails (the 96.71-to-156.59 RMSE spread is exactly such a tail), so the parsimony gate and the capacity cap are risk limits, not accuracy tweaks. The retrocausal point is that the efficient-market scar and the small-sample reality jointly created a hidden state in which complexity is punished, and the theory-of-mind point is that every decision-maker under pressure is tempted to mistake training fit for skill. The veto adjudication is therefore layered: the information layer (AIC) rejects unjustified parameters, the variance layer rejects capacity that exceeds the sample, the nonstationarity layer rejects cross-season transfer, and the doctrine layer rejects odds as inputs. Only a model that survives all four vetoes is admitted to the engine queue, and the engine queues but never publishes. This is the sovereign lesson: rigor is not the largest model, it is the smallest model that survives every veto, calibrated to an honest error scale and refused any laundering of the market into its features.",
+   "retrocausal_genealogy": "The nonstationarity scar comes from the structural churn of the NFL itself: roster turnover through the draft, free agency, trades and retirement, coaching changes, rule changes and relocations mean each season is a partially new data-generating process. Combined with the efficient-market lineage that punished line-consuming models, this created a hidden state in which pooling seasons to satisfy a data-hungry network is actively harmful. Brandon's refusal to pool, and his turn to AIC parsimony, is the inherited corrective: treat the model as perishable and penalize every parameter that the current regime's likelihood cannot justify.",
+   "theory_of_mind": "The recursive belief clash here is about complexity as status. The analyst models the coach as wanting the most advanced tool, the coach models the analyst's deep net as authority, and the DFS player models the field as exploitable by a sophisticated model. Under pressure each escalates capacity to signal rigor, while the quarterback's lived reality - a roster and scheme that change yearly - quietly invalidates the shared assumption of stationarity. The paper's resample RMSE spread (96.71 to 156.59) is the shared evidence that should collapse this status game: the complex model is not more skilled, it is more fragile, and recognizing that requires each agent to model the others' incentive to overfit.",
+   "cross_layer_veto": "Four vetoes stack against the tempting high-capacity, pooled-season, line-consuming model. The information layer (AIC = 2k - 2 ln L_hat) vetoes parameters the film likelihood cannot justify. The variance layer vetoes capacity exceeding the small sample, evidenced by test correlation falling to 0.272. The nonstationarity layer vetoes cross-season transfer because the data-generating process churns yearly. The doctrine layer vetoes sportsbook odds as inputs entirely. A high-EV call that violates any one of these is rejected; the admissible object is the parsimonious boosted forest with a capacity cap, queued internally and never published."
+  }
+ ],
+ "universal_lens": "A polymath audit lens for any predictive claim: separate in-sample fit from out-of-sample skill, penalize every parameter against an information criterion, average weak independent reads to suppress variance, and refuse to feed the market's own aggregate back in as a feature. Complexity is admitted only when it survives the variance, nonstationarity, and circularity vetoes.",
+ "gsi_mapping": "Ensemble averaging maps to redundant neural population coding that suppresses single-unit noise; stagewise boosting maps to sequential residual correction in motor learning; ANN overfitting maps to maladaptive specialization that fails when body state shifts; the small-sample capacity cap maps to bioenergetic limits on how much plasticity a circuit can support without destabilizing consolidated function.",
+ "gse_mapping": "For the Coach-Mind sim these are transition-kernel estimators of the margin state with a shrinkage gain and a hard capacity veto on deception models. For DFS and portfolio construction the resample RMSE spread (96.71-156.59) is a fat-tailed out-of-sample risk, so AIC parsimony and the capacity cap act as risk limits. No sportsbook odds are used as inputs; the engine queues but never publishes."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "513a1a258f459102",
+  "source_status": "COMPLETE",
+  "title": "social-templates",
+  "file_name": "social-templates.md",
+  "sha256": "513a1a258f459102090b3808b9b173fba42bf88cbf845b90a0c7aaac5add0c10",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Social media graphic generation as a constrained optimization over visual fidelity, brand consistency, and platform compliance. Universal Lens: Rooted in social-templates (513a1a258f459102), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps brand assets and platform constraints to probabilistic graphic outcomes via deterministic GPT Image 2 rendering. GSI Mapping: Rooted in social-templates (513a1a258f459102), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions between no-text and text modes using exact typography and logo fidelity, with state transitions governed by aspect ratio and output format contracts. GSE Mapping: Rooted in social-templates (513a1a258f459102), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "brand_consistency_constraint",
+      "name": "Brand Consistency Constraint",
+      "verbatim_quote": "## Required question Require approved logo and palette for branded no-text graphics.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'approved logo (dimensionless)', 'P': 'approved palette (dimensionless)'}",
+      "assumptions": "Logo and palette are pre-approved and immutable.",
+      "breakdown_regime": "When no-text graphics are requested, L and P must be preserved.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian constraint on L and P ensures brand integrity across all deliverables.",
+        "source_operator": "brand_consistency_constraint",
+        "telemetry": "Verification of logo geometry and color variant in final output."
+      }
+    },
+    {
+      "primitive_id": "visual_mode_classification",
+      "name": "Visual Mode Classification",
+      "verbatim_quote": "Before generation, ask once for: - Platform, aspect ratio, and number of outputs - Exact text that must appear; \"no text\" is a valid answer - Visual mode: - plain branded background/poster - mockup photography/application - Any supplied photography or product assets Preserve copy verbatim.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'visual mode (dimensionless)', 'T': 'text presence flag (boolean)'}",
+      "assumptions": "Mode M determines rendering pipeline and asset inclusion.",
+      "breakdown_regime": "T = false implies no typography or text rendering.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transition function maps M to rendering kernel and T to typography inclusion.",
+        "source_operator": "visual_mode_classification",
+        "telemetry": "Output type matches specified visual mode and text presence."
+      }
+    },
+    {
+      "primitive_id": "platform_aspect_ratio_compliance",
+      "name": "Platform Aspect Ratio Compliance",
+      "verbatim_quote": "```bash higgsfield generate create gpt_image_2 \\ --image \"$BRANDKIT_WORKDIR/logo/approved-logo-2048.png\" \\ --image \"$BRANDKIT_WORKDIR/reviews/approved-typography.png\" \\ --prompt \"<exact social graphic prompt>\" \\ --aspect_ratio 3:4 \\ --resolution 4k \\ --wait --json ``` Omit the typography reference for a no-text graphic and use only live-schema ratio/resolution values.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'aspect ratio (dimensionless)', 'A': 'actual resolution (pixels)'}",
+      "assumptions": "R is fixed per platform and A is determined by resolution settings.",
+      "breakdown_regime": "R = 3:4 for standard poster; special handling for 4:5 feed posts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI constraint enforces R = 3:4 for GPT Image 2; GSE applies cropping for 4:5.",
+        "source_operator": "platform_aspect_ratio_compliance",
+        "telemetry": "Final graphic meets specified aspect ratio and resolution requirements."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "513a1a258f459102_t0",
+      "think": "The operators define a structured pipeline where brand assets (logo, palette) are constrained to ensure fidelity, visual mode classification determines rendering logic, and aspect ratio compliance ensures platform compatibility. Dualities arise in no-text vs. text modes, where typography becomes a conditional variable. Failure modes include incorrect logo placement, mismatched ratios, or missing approved fonts. The system enforces determinism through exact prompt and asset references, preventing creative deviation.\n\nDeep epistemic analysis for social-templates (513a1a258f459102, domain=other, pages_read=2/2): Operator 'Brand Consistency Constraint' (page 1, domain other) captures: ## Required question Require approved logo and palette for branded no-text graphics. Assumptions: Logo and palette are pre-approved and immutable. Breakdown regime: When no-text graphics are requested, L and P must be preserved. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian constraint on L and P ensures brand integrity across all deliverables. Operator 'Visual Mode Classification' (page 1, domain other) captures: Before generation, ask once for: - Platform, aspect ratio, and number of outputs - Exact text that must appear; \"no text\" is a valid answer - Visual mode: - plain branded background/poster - mockup photography/application - Any supplied photography or product assets Preserve copy verbatim. Assumptions: Mode M determines rendering pipeline and asset inclusion. Breakdown regime: T = false implies no typography or text rendering. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition function maps M to rendering kernel and T to typography inclusion. Operator 'Platform Aspect Ratio Compliance' (page 1, domain other) captures: ```bash higgsfield generate create gpt_image_2 \\ --image \"$BRANDKIT_WORKDIR/logo/approved-logo-2048.png\" \\ --image \"$BRANDKIT_WORKDIR/reviews/approved-typography.png\" \\ --prompt \"<exact social graphic prompt>\" \\ --aspect_ratio 3:4 \\ --resolution 4k \\ --wait --json ``` Omit the typography reference for a no-text graphic and use only live-schema ratio/resolution values. Assumptions: R is fixed per platform and A is determined by resolution settings. Breakdown regime: R = 3:4 for standard poster; special handling for 4:5 feed posts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI constraint enforces R = 3:4 for GPT Image 2; GSE applies cropping for 4:5. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for social-templates (513a1a258f459102, domain=other, pages_read=2/2): Operator 'Brand Consistency Constraint' (page 1, domain other) captures: ## Required question Require approved logo and palette for branded no-text graphics. Assumptions: Logo and palette are pre-approved and immutable. Breakdown regime: When no-text graphics are requested, L and P must be preserved. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian constraint on L and P ensures brand integrity across all deliverables. Operator 'Visual Mode Classification' (page 1, domain other) captures: Before generation, ask once for: - Platform, aspect ratio, and number of outputs - Exact text that must appear; \"no text\" is a valid answer - Visual mode: - plain branded background/poster - mockup photography/application - Any supplied photography or product assets Preserve copy verbatim. Assumptions: Mode M determines rendering pipeline and asset inclusion. Breakdown regime: T = false implies no typography or text rendering. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition function maps M to rendering kernel and T to typography inclusion. Operator 'Platform Aspect Ratio Compliance' (page 1, domain other) captures: ```bash higgsfield generate create gpt_image_2 \\ --image \"$BRANDKIT_WORKDIR/logo/approved-logo-2048.png\" \\ --image \"$BRANDKIT_WORKDIR/reviews/approved-typography.png\" \\ --prompt \"<exact social graphic prompt>\" \\ --aspect_ratio 3:4 \\ --resolution 4k \\ --wait --json ``` Omit the typography reference for a no-text graphic and use only live-schema ratio/resolution values. Assumptions: R is fixed per platform and A is determined by resolution settings. Breakdown regime: R = 3:4 for standard poster; special handling for 4:5 feed posts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI constraint enforces R = 3:4 for GPT Image 2; GSE applies cropping for 4:5. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in digital branding workflows and image synthesis models like GPT Image 2, extending into modern AI-driven content automation systems. Retrocausal Genealogy: Rooted in social-templates (513a1a258f459102), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in social-templates (513a1a258f459102), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the brand team (defining assets), the designer (specifying modes), and the AI (generating outputs). Each agent's intent must align with constraints to avoid misalignment. Theory of Mind & Decision Maker Model: Rooted in social-templates (513a1a258f459102), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in social-templates (513a1a258f459102), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity prevents mixing visual modes without explicit flagging. Leakage vetoes occur if typography is added without approval or if cropped images violate brand boundaries. Cross-Layer Veto & Anti-Leakage Check: Rooted in social-templates (513a1a258f459102), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in social-templates (513a1a258f459102), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

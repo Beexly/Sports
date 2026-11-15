@@ -1,0 +1,78 @@
+{
+  "book_id": "70fa6ae2eaa13ce3",
+  "source_status": "COMPLETE",
+  "title": "PUBLIC_FINDINGS_FOR_GROK",
+  "file_name": "PUBLIC_FINDINGS_FOR_GROK.md",
+  "sha256": "70fa6ae2eaa13ce3dc3c6fe5044b5fb27f4061a36f51ae57597a4aecf516a493",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Public surface codebase exhibits systematic seasonal misalignment, dead anchors, and UX inconsistency—mapping to GSI's probabilistic state-space and GSE's dynamic constraint satisfaction. Universal Lens: Rooted in PUBLIC_FINDINGS_FOR_GROK (70fa6ae2eaa13ce3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers user intent via Bayesian belief updates on seasonal data integrity; misaligned seasons yield posterior collapse in fantasy league access. GSI Mapping: Rooted in PUBLIC_FINDINGS_FOR_GROK (70fa6ae2eaa13ce3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE resolves UI state transitions using conformal temporal logic; dead anchors and incorrect counts trigger state-machine divergence in responsive layouts. GSE Mapping: Rooted in PUBLIC_FINDINGS_FOR_GROK (70fa6ae2eaa13ce3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "seasonal_data_alignment",
+      "name": "Seasonal Data Alignment",
+      "verbatim_quote": "**components/fantasy/sleeper-connect.tsx:36** [MED] — Sleeper season hardcoded `\"2025\"` on a 2026 site → the flagship league-connect defaults to a prior season and returns no leagues for 2026-only users (dead-end).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{current}}': 'Current NFL season (year)', 'S_{\\\\text{hardcoded}}': 'Hardcoded season value (2025)'}",
+      "assumptions": "Season logic is deterministic and based on calendar year.",
+      "breakdown_regime": "When $ S_{\\text{current}} \\neq S_{\\text{hardcoded}} $, league access fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's belief update on seasonality maps to GSE's state transition on league availability.",
+        "source_operator": "seasonal_data_alignment",
+        "telemetry": "User access to fantasy leagues"
+      }
+    },
+    {
+      "primitive_id": "anchor_integrity",
+      "name": "Anchor Integrity",
+      "verbatim_quote": "**app/responsible-play/page.tsx:37** [MED] — footer links to `/responsible-play#variance` but no `id=\"variance\"` exists → dead anchor on a compliance surface.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{\\\\text{link}}': \"Anchor link target (e.g., '#variance')\", 'A_{\\\\text{exists}}': 'Boolean indicating presence of corresponding ID'}",
+      "assumptions": "Anchor integrity requires bidirectional mapping between link and element ID.",
+      "breakdown_regime": "When $ A_{\\text{exists}} = \\text{false} $, navigation fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's compliance tracking maps to GSE's anchor resolution logic.",
+        "source_operator": "anchor_integrity",
+        "telemetry": "Navigation success rate on compliance pages"
+      }
+    },
+    {
+      "primitive_id": "player_comparison_logic",
+      "name": "Player Comparison Logic",
+      "verbatim_quote": "**lib/statking/product.ts:80** [MED] — `comparePlayers` awards ties to Player A (`a[key] >= b[key]`), so `/stats/compare` never shows \"Tied\" (the `??",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_A, P_B': 'Player A and B statistics', 'T': 'Tie condition indicator'}",
+      "assumptions": "Comparison logic is asymmetric and biased toward Player A.",
+      "breakdown_regime": "When $ P_A[key] = P_B[key] $, $ T = \\text{false} $, leading to false negation of tie.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's statistical inference bias maps to GSE's comparison rendering logic.",
+        "source_operator": "player_comparison_logic",
+        "telemetry": "Accuracy of tie reporting in player comparisons"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "70fa6ae2eaa13ce3_t0",
+      "think": "The primitives reveal systemic failures in data alignment, anchor integrity, and logical symmetry. Seasonal misalignment causes dead ends in user flow; dead anchors create accessibility failures; asymmetric comparison logic introduces bias. These failures map to GSI’s probabilistic inference engine and GSE’s state-transition system. The root cause lies in static assumptions embedded in UI logic rather than adaptive, context-aware computation. Each failure mode represents a breakdown in the dualism of user intent and system response, where GSI’s belief space and GSE’s state space diverge due to inconsistent symbolic grounding.\n\nDeep epistemic analysis for PUBLIC_FINDINGS_FOR_GROK (70fa6ae2eaa13ce3, domain=other, pages_read=3/3): Operator 'Seasonal Data Alignment' (page 1, domain other) captures: **components/fantasy/sleeper-connect.tsx:36** [MED] — Sleeper season hardcoded `\"2025\"` on a 2026 site → the flagship league-connect defaults to a prior season and returns no leagues for 2026-only users (dead-end). Assumptions: Season logic is deterministic and based on calendar year. Breakdown regime: When $ S_{\\text{current}} \\neq S_{\\text{hardcoded}} $, league access fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's belief update on seasonality maps to GSE's state transition on league availability. Operator 'Anchor Integrity' (page 1, domain other) captures: **app/responsible-play/page.tsx:37** [MED] — footer links to `/responsible-play#variance` but no `id=\"variance\"` exists → dead anchor on a compliance surface. Assumptions: Anchor integrity requires bidirectional mapping between link and element ID. Breakdown regime: When $ A_{\\text{exists}} = \\text{false} $, navigation fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's compliance tracking maps to GSE's anchor resolution logic. Operator 'Player Comparison Logic' (page 1, domain other) captures: **lib/statking/product.ts:80** [MED] — `comparePlayers` awards ties to Player A (`a[key] >= b[key]`), so `/stats/compare` never shows \"Tied\" (the `?? Assumptions: Comparison logic is asymmetric and biased toward Player A. Breakdown regime: When $ P_A[key] = P_B[key] $, $ T = \\text{false} $, leading to false negation of tie. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's statistical inference bias maps to GSE's comparison rendering logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PUBLIC_FINDINGS_FOR_GROK (70fa6ae2eaa13ce3, domain=other, pages_read=3/3): Operator 'Seasonal Data Alignment' (page 1, domain other) captures: **components/fantasy/sleeper-connect.tsx:36** [MED] — Sleeper season hardcoded `\"2025\"` on a 2026 site → the flagship league-connect defaults to a prior season and returns no leagues for 2026-only users (dead-end). Assumptions: Season logic is deterministic and based on calendar year. Breakdown regime: When $ S_{\\text{current}} \\neq S_{\\text{hardcoded}} $, league access fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's belief update on seasonality maps to GSE's state transition on league availability. Operator 'Anchor Integrity' (page 1, domain other) captures: **app/responsible-play/page.tsx:37** [MED] — footer links to `/responsible-play#variance` but no `id=\"variance\"` exists → dead anchor on a compliance surface. Assumptions: Anchor integrity requires bidirectional mapping between link and element ID. Breakdown regime: When $ A_{\\text{exists}} = \\text{false} $, navigation fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's compliance tracking maps to GSE's anchor resolution logic. Operator 'Player Comparison Logic' (page 1, domain other) captures: **lib/statking/product.ts:80** [MED] — `comparePlayers` awards ties to Player A (`a[key] >= b[key]`), so `/stats/compare` never shows \"Tied\" (the `?? Assumptions: Comparison logic is asymmetric and biased toward Player A. Breakdown regime: When $ P_A[key] = P_B[key] $, $ T = \\text{false} $, leading to false negation of tie. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's statistical inference bias maps to GSE's comparison rendering logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early-stage UI/UX design decisions that prioritized rapid iteration over semantic consistency, echoing historical patterns in web application architecture where frontend logic was decoupled from backend data semantics. Retrocausal Genealogy: Rooted in PUBLIC_FINDINGS_FOR_GROK (70fa6ae2eaa13ce3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PUBLIC_FINDINGS_FOR_GROK (70fa6ae2eaa13ce3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the user seeking coherent navigation, the system attempting to render valid states, and the developer maintaining backward compatibility. Each agent operates under conflicting constraints: user expects continuity, system assumes static validity, developer balances legacy and new logic. Theory of Mind & Decision Maker Model: Rooted in PUBLIC_FINDINGS_FOR_GROK (70fa6ae2eaa13ce3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when GSI's probabilistic model conflicts with GSE's deterministic rendering. Leakage occurs when UI state changes do not propagate to backend logic, causing divergence between belief and action. Cross-Layer Veto & Anti-Leakage Check: Rooted in PUBLIC_FINDINGS_FOR_GROK (70fa6ae2eaa13ce3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

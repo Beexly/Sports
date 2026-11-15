@@ -1,0 +1,98 @@
+{
+  "book_id": "48a5cf533a515992",
+  "source_status": "COMPLETE",
+  "title": "DISALLOWED_QUERY_EXAMPLES",
+  "file_name": "DISALLOWED_QUERY_EXAMPLES.md",
+  "sha256": "48a5cf533a515992f77cbce1d3e7a2a00f4438c91d1d57444f3bc933184a9d5b",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 1,
+  "windows_extracted": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The disallowed query examples define a forbidden subspace within the high-dimensional data manifold. Mathematically, these represent boundary conditions where information leakage occurs, violating differential privacy constraints and breaking the isomorphism between aggregate statistical properties and individual entity states.",
+  "gsi_mapping": "In GSI, these primitives act as hard constraints on the Bayesian posterior updates. Any inference pipeline attempting to reconstruct individual athlete health or bettor behavior triggers a conformal prediction interval collapse, forcing the model to reject the hypothesis and maintain strict marginalization over protected identity variables.",
+  "gse_mapping": "For GSE, these rules dictate valid state transitions in the situational reasoning engine. The system must treat private team records as unobservable latent variables; attempting to infer them from public fixture rows violates the Markov property of the allowed game-state evolution graph.",
+  "primitives": [
+    {
+      "primitive_id": "w0_identity_join_prohibition",
+      "name": "Identity Join Prohibition Operator",
+      "verbatim_quote": "# Disallowed Query Examples - Joining on user identity. - Exporting row-level partner data. - Reconstructing",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "U: User identity set (dimensionless), D_p: Partner dataset (dimensionless), D_i: Internal dataset (dimensionless).",
+      "assumptions": "Assumes disjoint support for internal and external identity spaces unless explicitly contracted.",
+      "breakdown_regime": "Breaks down when unique identifiers leak through hash collisions or auxiliary metadata correlation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's isolation layers preventing cross-entity state merging without explicit authorization tokens.",
+        "source_operator": "w0_identity_join_prohibition",
+        "telemetry": "Zero successful joins on PII columns across partitioned databases."
+      }
+    },
+    {
+      "primitive_id": "w0_row_level_export_veto",
+      "name": "Row-Level Export Veto",
+      "verbatim_quote": "- Using partner data for model training without explicit contract.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "R: Row vector (dimensionless), E: Export function mapping R -> External Storage.",
+      "assumptions": "Data must be aggregated or anonymized before any export function E is applied.",
+      "breakdown_regime": "Fails if granular access controls are bypassed or if row-level security policies are misconfigured.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the kernel of allowable transformations in GSI, ensuring only aggregated tensors pass the export filter.",
+        "source_operator": "w0_row_level_export_veto",
+        "telemetry": "Audit logs showing zero raw row exports to external APIs."
+      }
+    },
+    {
+      "primitive_id": "w0_privacy_threshold_guard",
+      "name": "Privacy Threshold Guard",
+      "verbatim_quote": "or account behavior. - Querying below privacy threshold. - Using partner data for model training without",
+      "page": 1,
+      "latex": "I(\\mathcal{Q}; \\mathcal{E}_i) \\leq \\epsilon",
+      "symbol_and_unit_ledger": "I: Mutual information (nats), Q: Query output, E_i: Individual entity state, epsilon: Privacy budget (dimensionless).",
+      "assumptions": "Differential privacy framework applies; noise injection scales inversely with sensitivity.",
+      "breakdown_regime": "Singularity occurs when epsilon approaches zero without sufficient noise, exposing exact individual contributions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's minimum sample size requirements before releasing any tactical metric or performance statistic.",
+        "source_operator": "w0_privacy_threshold_guard",
+        "telemetry": "Query rejection rate for subsets falling below k-anonymity thresholds."
+      }
+    },
+    {
+      "primitive_id": "w0_health_inference_block",
+      "name": "Health Inference Block",
+      "verbatim_quote": "- Exporting fixture rows below privacy threshold. - Inferring individual player health from private team records.",
+      "page": 1,
+      "latex": "P(H|O_{public}) = P(H)",
+      "symbol_and_unit_ledger": "H: Player health status (categorical), O_public: Public observable features (dimensionless).",
+      "assumptions": "Public observables are statistically independent of private medical records absent explicit disclosure.",
+      "breakdown_regime": "Violated if proxy variables (e.g., sudden drop in tracking metrics) create high mutual information with H.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines the forbidden inference kernel in GSI, blocking any gradient flow from public fixtures to private health latents.",
+        "source_operator": "w0_health_inference_block",
+        "telemetry": "Correlation coefficients between public performance drops and subsequent injury reports must remain near zero pre-disclosure."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "48a5cf533a515992_t0",
+      "think": "The foundational chapter establishes the negative space of our data ontology. By explicitly enumerating disallowed queries, we define the boundary of the permissible mathematical manifold upon which Galaxy Sports Intelligence operates. These prohibitions are not merely legal compliance checkboxes; they are rigorous structural constraints on the information geometry of our models. When we forbid joining on user identity, we are enforcing a topological separation between the latent space of individual actors and the aggregate feature space utilized by our predictive engines. This prevents the catastrophic failure mode of re-identification, where high-dimensional vectors collapse back into specific, traceable entities.\n\nFurthermore, the prohibition against inferring individual player health from private team records highlights a critical epistemic boundary. In a Bayesian framework, this dictates that the prior distribution over an athlete's physiological state must remain strictly uninformed by unauthorized private covariates. If our models were permitted to ingest such data without explicit contract, the posterior distributions would become collinear with proprietary, non-replicable sources, creating fragile 'model-edge' claims that cannot withstand adversarial scrutiny. The privacy threshold guard acts as a regularization term, mathematically equivalent to adding calibrated noise to ensure differential privacy. This ensures that the marginal contribution of any single data point to the global loss function is bounded. Consequently, the sovereign primitives derived from these disallowed examples form the bedrock of our trust architecture, guaranteeing that all situational reasoning in GSE emerges purely from observable, consented, and structurally sound data aggregates.\n\nFull-book synthesis across 1/1 pages of DISALLOWED_QUERY_EXAMPLES (48a5cf533a515992): [w0_identity_join_prohibition p.1]: # Disallowed Query Examples - Joining on user identity. - Exporting row-level partner data. - Reconstructing (Maps directly to GSE's isolation layers preventing cross-entity state merging without explicit authorization tokens.) [w0_row_level_export_veto p.1]: - Using partner data for model training without explicit contract. (Derives the kernel of allowable transformations in GSI, ensuring only aggregated tensors pass the export filter.) [w0_privacy_threshold_guard p.1]: or account behavior. - Querying below privacy threshold. - Using partner data for model training without (Isomorphic to GSE's minimum sample size requirements before releasing any tactical metric or performance statistic.) [w0_health_inference_block p.1]: - Exporting fixture rows below privacy threshold. - Inferring individual player health from private team records. (Defines the forbidden inference kernel in GSI, blocking any gradient flow from public fixtures to private health latents.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of DISALLOWED_QUERY_EXAMPLES (48a5cf533a515992): [w0_identity_join_prohibition p.1]: # Disallowed Query Examples - Joining on user identity. - Exporting row-level partner data. - Reconstructing (Maps directly to GSE's isolation layers preventing cross-entity state merging without explicit authorization tokens.) [w0_row_level_export_veto p.1]: - Using partner data for model training without explicit contract. (Derives the kernel of allowable transformations in GSI, ensuring only aggregated tensors pass the export filter.) [w0_privacy_threshold_guard p.1]: or account behavior. - Querying below privacy threshold. - Using partner data for model training without (Isomorphic to GSE's minimum sample size requirements before releasing any tactical metric or performance statistic.) [w0_health_inference_block p.1]: - Exporting fixture rows below privacy threshold. - Inferring individual player health from private team records. (Defines the forbidden inference kernel in GSI, blocking any gradient flow from public fixtures to private health latents.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of DISALLOWED_QUERY_EXAMPLES (48a5cf533a515992): [w0_identity_join_prohibition p.1]: # Disallowed Query Examples - Joining on user identity. - Exporting row-level partner data. - Reconstructing (Maps directly to GSE's isolation layers preventing cross-entity state merging without explicit authorization tokens.) [w0_row_level_export_veto p.1]: - Using partner data for model training without explicit contract. (Derives the kernel of allowable transformations in GSI, ensuring only aggregated tensors pass the export filter.) [w0_privacy_threshold_guard p.1]: or account behavior. - Querying below privacy threshold. - Using partner data for model training without (Isomorphic to GSE's minimum sample size requirements before releasing any tactical metric or performance statistic.) [w0_health_inference_block p.1]: - Exporting fixture rows below privacy threshold. - Inferring individual player health from private team records. (Defines the forbidden inference kernel in GSI, blocking any gradient flow from public fixtures to private health latents.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of DISALLOWED_QUERY_EXAMPLES (48a5cf533a515992): [w0_identity_join_prohibition p.1]: # Disallowed Query Examples - Joining on user identity. - Exporting row-level partner data. - Reconstructing (Maps directly to GSE's isolation layers preventing cross-entity state merging without explicit authorization tokens.) [w0_row_level_export_veto p.1]: - Using partner data for model training without explicit contract. (Derives the kernel of allowable transformations in GSI, ensuring only aggregated tensors pass the export filter.) [w0_privacy_threshold_guard p.1]: or account behavior. - Querying below privacy threshold. - Using partner data for model training without (Isomorphic to GSE's minimum sample size requirements before releasing any tactical metric or performance statistic.) [w0_health_inference_block p.1]: - Exporting fixture rows below privacy threshold. - Inferring individual player health from private team records. (Defines the forbidden inference kernel in GSI, blocking any gradient flow from public fixtures to private health latents.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "These constraints echo the historical evolution of statistical disclosure limitation, tracing back to early census bureaus fearing demographic reconstruction. In modern sports analytics, they respond directly to the commodification of biometric tracking data, establishing a necessary firewall between commercial exploitation and athlete sovereignty, ensuring long-term ecosystem viability. Retrocausal Genealogy (Window 1): Rooted in DISALLOWED_QUERY_EXAMPLES (48a5cf533a515992, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "We must model the opposing agent—the adversarial data scientist or malicious insider—who seeks to reverse-engineer private states from public aggregates. By anticipating their attempts to exploit residual correlations or join vulnerabilities, we proactively harden our inference pipelines, treating every query as a potential attack vector against individual privacy. Theory of Mind (Window 1): Rooted in DISALLOWED_QUERY_EXAMPLES (48a5cf533a515992, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "A cross-layer veto is triggered if any GSE situational module attempts to utilize a feature vector that exhibits high mutual information with a prohibited private variable. This anti-collinearity check ensures that our public-facing odds and insights remain robust, untainted by hidden dependencies on uncontracted partner data or sensitive health records. Cross-Layer Veto (Window 1): Rooted in DISALLOWED_QUERY_EXAMPLES (48a5cf533a515992, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

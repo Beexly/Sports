@@ -1,0 +1,78 @@
+{
+  "book_id": "39fc35c26821050d",
+  "source_status": "COMPLETE",
+  "title": "CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT",
+  "file_name": "CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT.md",
+  "sha256": "39fc35c26821050ddfe920f37e20146ad0d672d367bfc9972e3222480be6dec7",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "End-to-end computer vision pipeline for NFL game analysis integrates ingestion, detection, tracking, homography, and derived metrics under strict temporal and operational fencing. Universal Lens: Rooted in CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT (39fc35c26821050d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework maps derived spatial metrics to probabilistic EPA outcomes using calibrated regression targets and coverage shell distributions. GSI Mapping: Rooted in CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT (39fc35c26821050d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions states based on STRAIN and pocket depth thresholds, with zero production weight ensuring deterministic reasoning paths. GSE Mapping: Rooted in CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT (39fc35c26821050d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "replay_ingestion",
+      "name": "Replay Ingestion Protocol",
+      "verbatim_quote": "- **Replay Ingestion**: Verified reachable via CDP browser automation (`PlaywrightScenarioSession.ts / CdpRuntimeRequests.ts`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'frames': 'dimensionless', 'fps': 'Hz'}",
+      "assumptions": "Synthetic simulation data used; real-world broadcast tracking not engaged.",
+      "breakdown_regime": "0.00% error rate confirmed for 1,450 frames at 5 fps.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CDP session abstraction mirrors real-time video stream parsing in GSE.",
+        "source_operator": "replay_ingestion",
+        "telemetry": "Frame count, error rate, and processing throughput."
+      }
+    },
+    {
+      "primitive_id": "detection_tracking",
+      "name": "YOLOv8x + BoT-SORT Tracker",
+      "verbatim_quote": "- **Detection & Tracking**: YOLOv8x dual-head detector and BoT-SORT / ByteTrack tracker with ORB stabilization maintained **23 continuous tracks** (22 players + 1 ball) with 31,610 bounding box detections.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'tracks': 'dimensionless', 'detections': 'dimensionless'}",
+      "assumptions": "ORB stabilization ensures robustness against motion blur and occlusion.",
+      "breakdown_regime": "Failure rates <0.83% dropped tracks and <0.41% ID switches.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "YOLOv8x provides high-confidence bounding boxes; BoT-SORT maintains temporal consistency.",
+        "source_operator": "detection_tracking",
+        "telemetry": "Track continuity, detection accuracy, and identity switch frequency."
+      }
+    },
+    {
+      "primitive_id": "homography_calibration",
+      "name": "Hartley-Normalized DLT Field Calibration",
+      "verbatim_quote": "- **Homography**: Hartley-normalized Direct Linear Transform (DLT) field calibration verified on 8 canonical field landmarks with **0.0974 m (0.1065 yd) mean reprojection RMSE**, with Adaptive Kalman Jacobian covariance propagation ($d_M^2 \\le 4.605$).",
+      "page": 1,
+      "latex": "$d_M^2 \\le 4.605$",
+      "symbol_and_unit_ledger": "{'RMSE': 'meters', 'd_M^2': 'dimensionless'}",
+      "assumptions": "Field landmarks are accurately identified and stable across frames.",
+      "breakdown_regime": "Mean reprojection error below 0.1065 yards indicates high fidelity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "DLT transforms 2D image coordinates into 3D field space; Kalman filter stabilizes drift.",
+        "source_operator": "homography_calibration",
+        "telemetry": "Reprojection RMSE and Jacobian covariance stability."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "39fc35c26821050d_t0",
+      "think": "The pipeline operates under a strict verification regime where synthetic data simulates real-world conditions. Ingestion is validated through automated browser sessions, ensuring full-frame capture at 5 fps. Detection and tracking rely on YOLOv8x and BoT-SORT respectively, maintaining 23 active tracks with minimal failure rates. Homography calibration uses DLT with adaptive Kalman filtering to ensure accurate spatial mapping. Derived metrics such as pocket depth and STRAIN are computed without nulls, enabling Bayesian inference. Reasoning integration currently has zero production weight, indicating deterministic behavior. The system's failure modes include data integrity issues during ingestion or tracking degradation beyond thresholds.\n\nDeep epistemic analysis for CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT (39fc35c26821050d, domain=other, pages_read=5/5): Operator 'Replay Ingestion Protocol' (page 1, domain other) captures: - **Replay Ingestion**: Verified reachable via CDP browser automation (`PlaywrightScenarioSession.ts / CdpRuntimeRequests.ts`). Assumptions: Synthetic simulation data used; real-world broadcast tracking not engaged. Breakdown regime: 0.00% error rate confirmed for 1,450 frames at 5 fps. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CDP session abstraction mirrors real-time video stream parsing in GSE. Operator 'YOLOv8x + BoT-SORT Tracker' (page 1, domain other) captures: - **Detection & Tracking**: YOLOv8x dual-head detector and BoT-SORT / ByteTrack tracker with ORB stabilization maintained **23 continuous tracks** (22 players + 1 ball) with 31,610 bounding box detections. Assumptions: ORB stabilization ensures robustness against motion blur and occlusion. Breakdown regime: Failure rates <0.83% dropped tracks and <0.41% ID switches. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): YOLOv8x provides high-confidence bounding boxes; BoT-SORT maintains temporal consistency. Operator 'Hartley-Normalized DLT Field Calibration' (page 1, domain other) captures: - **Homography**: Hartley-normalized Direct Linear Transform (DLT) field calibration verified on 8 canonical field landmarks with **0.0974 m (0.1065 yd) mean reprojection RMSE**, with Adaptive Kalman Jacobian covariance propagation ($d_M^2 \\le 4.605$). Assumptions: Field landmarks are accurately identified and stable across frames. Breakdown regime: Mean reprojection error below 0.1065 yards indicates high fidelity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): DLT transforms 2D image coordinates into 3D field space; Kalman filter stabilizes drift. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT (39fc35c26821050d, domain=other, pages_read=5/5): Operator 'Replay Ingestion Protocol' (page 1, domain other) captures: - **Replay Ingestion**: Verified reachable via CDP browser automation (`PlaywrightScenarioSession.ts / CdpRuntimeRequests.ts`). Assumptions: Synthetic simulation data used; real-world broadcast tracking not engaged. Breakdown regime: 0.00% error rate confirmed for 1,450 frames at 5 fps. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CDP session abstraction mirrors real-time video stream parsing in GSE. Operator 'YOLOv8x + BoT-SORT Tracker' (page 1, domain other) captures: - **Detection & Tracking**: YOLOv8x dual-head detector and BoT-SORT / ByteTrack tracker with ORB stabilization maintained **23 continuous tracks** (22 players + 1 ball) with 31,610 bounding box detections. Assumptions: ORB stabilization ensures robustness against motion blur and occlusion. Breakdown regime: Failure rates <0.83% dropped tracks and <0.41% ID switches. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): YOLOv8x provides high-confidence bounding boxes; BoT-SORT maintains temporal consistency. Operator 'Hartley-Normalized DLT Field Calibration' (page 1, domain other) captures: - **Homography**: Hartley-normalized Direct Linear Transform (DLT) field calibration verified on 8 canonical field landmarks with **0.0974 m (0.1065 yd) mean reprojection RMSE**, with Adaptive Kalman Jacobian covariance propagation ($d_M^2 \\le 4.605$). Assumptions: Field landmarks are accurately identified and stable across frames. Breakdown regime: Mean reprojection error below 0.1065 yards indicates high fidelity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): DLT transforms 2D image coordinates into 3D field space; Kalman filter stabilizes drift. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical computer vision (DLT, Kalman filters) and modern deep learning (YOLO, SORT), extending prior work in sports analytics and automated reasoning systems. Retrocausal Genealogy: Rooted in CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT (39fc35c26821050d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT (39fc35c26821050d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include potential sensor noise, occlusion artifacts, and model drift. Decision actors are the vision architecture agent and the reasoning engine, both constrained by temporal and data fencing. Theory of Mind & Decision Maker Model: Rooted in CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT (39fc35c26821050d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced via distinct metric domains (spatial vs. temporal). Leakage vetoes prevent cross-layer contamination between ingestion and reasoning layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT (39fc35c26821050d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CV_PIPELINE_VERIFICATION_AND_CALIBRATION_REPORT (39fc35c26821050d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

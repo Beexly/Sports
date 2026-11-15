@@ -1,0 +1,78 @@
+{
+  "book_id": "e33ecb1866907c21",
+  "source_status": "COMPLETE",
+  "title": "verified-claims",
+  "file_name": "verified-claims.md",
+  "sha256": "e33ecb1866907c213c3f9611f839ce2f29e52bf326a900bf548cd2529931dbcb",
+  "primary_domain": "other",
+  "pages_total": 50,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Verified claims map to Bayesian confirmation logic with numeric-token sweep as likelihood function; contradiction detection mirrors hypothesis falsification. Universal Lens: Rooted in verified-claims (e33ecb1866907c21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over verified claims, using ledger-level arithmetic to compute uncertainty bounds on probabilistic forecasts. GSI Mapping: Rooted in verified-claims (e33ecb1866907c21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models agent behavior through state transitions conditioned on verified claim confidence, with failure modes flagged via contradiction taxonomy. GSE Mapping: Rooted in verified-claims (e33ecb1866907c21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "numeric_token_sweep",
+      "name": "Numeric Token Sweep",
+      "verbatim_quote": "Method: numeric-token sweep of each brief's Findings section against the source file text, with manual review of every miss.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'token_count': 'dimensionless', 'hit_rate': 'dimensionless'}",
+      "assumptions": "All numeric tokens in briefs must exactly match those in source files.",
+      "breakdown_regime": "When token formatting differs (e.g., commas vs. periods), sweep fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Token sweep acts as a likelihood mapping from claim space to source space, enabling Bayesian verification.",
+        "source_operator": "numeric_token_sweep",
+        "telemetry": "Hit rate and miss count per brief."
+      }
+    },
+    {
+      "primitive_id": "verification_status_taxonomy",
+      "name": "Verification Status Taxonomy",
+      "verbatim_quote": "Status key (unified): VERIFIED = source re-opened, numbers/equations there as written.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'status': 'categorical {VERIFIED, VERIFIED*, PARTIAL, CONTRADICTED, NO-CLAIM}'}",
+      "assumptions": "Each status reflects a distinct logical outcome of source validation.",
+      "breakdown_regime": "Contradictions arise when source contradicts claim or itself.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Taxonomy defines a Boolean lattice over claim validity, enabling compositional reasoning.",
+        "source_operator": "verification_status_taxonomy",
+        "telemetry": "Frequency counts of each status across briefs."
+      }
+    },
+    {
+      "primitive_id": "ledger_arithmetic_confidence",
+      "name": "Ledger Arithmetic Confidence",
+      "verbatim_quote": "Standing caveat: arXiv-ledger claims are only as good as the ledger author's read; ledgers' own adversarial notes are quoted as first-class evidence.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'confidence_level': 'dimensionless (0 to 1)', 'adversarial_note_weight': 'dimensionless'}",
+      "assumptions": "ArXiv-ledger integrity depends on authorial accuracy and adversarial scrutiny.",
+      "breakdown_regime": "Confidence degrades when adversarial notes are present.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ledger confidence maps to Bayesian prior adjustment based on adversarial note presence.",
+        "source_operator": "ledger_arithmetic_confidence",
+        "telemetry": "Weighted average of confidence scores adjusted by adversarial note severity."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e33ecb1866907c21_t0",
+      "think": "The numeric token sweep operates as a discrete likelihood function over textual evidence, where each matched token contributes to a cumulative verification score. The taxonomy of statuses provides a categorical Bayesian framework for classifying claims based on their alignment with source data. Contradictions act as falsifiers, triggering a Bayesian revision of belief. Ledger arithmetic introduces a second-order uncertainty layer, where adversarial notes modify prior probabilities. This dual structure enables robust epistemic filtering and supports GSI’s probabilistic forecasting while ensuring GSE’s state transitions remain grounded in verifiable truth.\n\nDeep epistemic analysis for verified-claims (e33ecb1866907c21, domain=other, pages_read=18/50): Operator 'Numeric Token Sweep' (page 1, domain other) captures: Method: numeric-token sweep of each brief's Findings section against the source file text, with manual review of every miss. Assumptions: All numeric tokens in briefs must exactly match those in source files. Breakdown regime: When token formatting differs (e.g., commas vs. periods), sweep fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Token sweep acts as a likelihood mapping from claim space to source space, enabling Bayesian verification. Operator 'Verification Status Taxonomy' (page 1, domain other) captures: Status key (unified): VERIFIED = source re-opened, numbers/equations there as written. Assumptions: Each status reflects a distinct logical outcome of source validation. Breakdown regime: Contradictions arise when source contradicts claim or itself. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Taxonomy defines a Boolean lattice over claim validity, enabling compositional reasoning. Operator 'Ledger Arithmetic Confidence' (page 1, domain other) captures: Standing caveat: arXiv-ledger claims are only as good as the ledger author's read; ledgers' own adversarial notes are quoted as first-class evidence. Assumptions: ArXiv-ledger integrity depends on authorial accuracy and adversarial scrutiny. Breakdown regime: Confidence degrades when adversarial notes are present. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ledger confidence maps to Bayesian prior adjustment based on adversarial note presence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for verified-claims (e33ecb1866907c21, domain=other, pages_read=18/50): Operator 'Numeric Token Sweep' (page 1, domain other) captures: Method: numeric-token sweep of each brief's Findings section against the source file text, with manual review of every miss. Assumptions: All numeric tokens in briefs must exactly match those in source files. Breakdown regime: When token formatting differs (e.g., commas vs. periods), sweep fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Token sweep acts as a likelihood mapping from claim space to source space, enabling Bayesian verification. Operator 'Verification Status Taxonomy' (page 1, domain other) captures: Status key (unified): VERIFIED = source re-opened, numbers/equations there as written. Assumptions: Each status reflects a distinct logical outcome of source validation. Breakdown regime: Contradictions arise when source contradicts claim or itself. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Taxonomy defines a Boolean lattice over claim validity, enabling compositional reasoning. Operator 'Ledger Arithmetic Confidence' (page 1, domain other) captures: Standing caveat: arXiv-ledger claims are only as good as the ledger author's read; ledgers' own adversarial notes are quoted as first-class evidence. Assumptions: ArXiv-ledger integrity depends on authorial accuracy and adversarial scrutiny. Breakdown regime: Confidence degrades when adversarial notes are present. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ledger confidence maps to Bayesian prior adjustment based on adversarial note presence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian confirmation theory (Carnap, Keynes) and formalized through likelihood-based inference (Kullback-Leibler divergence). Retrocausal Genealogy: Rooted in verified-claims (e33ecb1866907c21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in verified-claims (e33ecb1866907c21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as probabilistic reasoners who update beliefs upon encountering new evidence, with adversarial notes representing competing hypotheses. Theory of Mind & Decision Maker Model: Rooted in verified-claims (e33ecb1866907c21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in verified-claims (e33ecb1866907c21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring independent verification of each claim across multiple layers; leakage is mitigated by strict separation of source rights and claim semantics. Cross-Layer Veto & Anti-Leakage Check: Rooted in verified-claims (e33ecb1866907c21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in verified-claims (e33ecb1866907c21), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

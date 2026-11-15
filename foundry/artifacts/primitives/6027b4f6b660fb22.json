@@ -1,0 +1,95 @@
+{
+  "book_id": "6027b4f6b660fb22",
+  "source_status": "COMPLETE",
+  "title": "CHANGELOG",
+  "file_name": "CHANGELOG.md",
+  "sha256": "6027b4f6b660fb225cfc1ba1ad689682c995f9072cefa68301968a5190ba8f0b",
+  "primary_domain": "other",
+  "pages_total": 15,
+  "pages_read": 15,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'name': 'Market Status Isomorphism', 'symbols': [{'symbol': '$\\\\mathcal{M}$', 'description': 'Equity market'}, {'symbol': '$S(\\\\mathcal{M})$', 'description': 'Status indicator function'}, {'symbol': '$\\\\{open, closed, unknown\\\\}$', 'description': 'Discrete status states'}, {'symbol': '$t$', 'description': 'Time index'}], 'equation': '$S: \\\\mathcal{M} \\\\times \\\\mathbb{T} \\\\rightarrow \\\\{open, closed, unknown\\\\}$', 'explanation': 'This operator maps equity markets to discrete status states over time, capturing provider instrument availability.'}",
+  "gsi_mapping": "{'name': 'Bayesian Market State Updating', 'symbols': [{'symbol': '$p(S|D)$', 'description': 'Posterior probability of status given data'}, {'symbol': '$p(D|S)$', 'description': 'Likelihood of data under status'}, {'symbol': '$p(S)$', 'description': 'Prior status belief'}, {'symbol': '$Z$', 'description': 'Normalizing constant'}, {'symbol': '$\\\\mathcal{D}_t$', 'description': 'Observations up to time $t$'}], 'equation': '$p(S(\\\\mathcal{M}, t)|\\\\mathcal{D}_t) = \\\\frac{p(\\\\mathcal{D}_t|S(\\\\mathcal{M}, t)) p(S(\\\\mathcal{M}, t))}{Z}$', 'explanation': 'Bayesian updating tracks equity market status transitions ($open$, $closed$, $unknown$) using observed data, enabling probabilistic inference.'}",
+  "gse_mapping": "{'name': 'Situational Reasoning for Market Status', 'symbols': [{'symbol': '$\\\\sigma(t)$', 'description': 'Market status transition'}, {'symbol': '$\\\\Delta t$', 'description': 'Time interval'}, {'symbol': '$\\\\phi$', 'description': 'Status preservation kernel'}, {'ymbol': '$\\\\delta_{carried}', 'description': 'Indicator for forward propagation'}], 'equation': '$S(\\\\mathcal{M}, t+\\\\Delta t) = \\\\phi(S(\\\\mathcal{M}, t)) + \\\\delta_{carried}(t) \\\\cdot S(\\\\mathcal{M}, t)$', 'explanation': 'Situational reasoning models status persistence and forward propagation, handling repeated timestamps and deduplication.'}",
+  "primitives": [
+    {
+      "primitive_id": "market_status_isomorphism",
+      "name": "Market Status Isomorphism",
+      "verbatim_quote": "# @polymarket/bindings ## 0.14.0 ### Minor Changes - c05ca40, f059b22: Add optional equity market status (`open`, `closed`, `unknown`) to spot/TWAP updates and snapshots; omission means not stated, never open.",
+      "page": 1,
+      "latex": "$S: \\mathcal{M} \\times \\mathbb{T} \\rightarrow \\{open, closed, unknown\\}$",
+      "symbol_and_unit_ledger": "[{'symbol': '$\\\\mathcal{M}$', 'unit': '-', 'definition': 'Equity market'}, {'symbol': '$S(\\\\mathcal{M})$', 'unit': '-', 'definition': 'Status indicator function'}, {'symbol': '$\\\\{open, closed, unknown\\\\}$', 'unit': '-', 'definition': 'Discrete status states'}, {'symbol': '$t$', 'unit': 'time', 'definition': 'Time index'}]",
+      "assumptions": "Provider instrument availability is deterministic and observable.",
+      "breakdown_regime": "Omission corresponds to undefined status; no singularity exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps equity market status to a discrete state space for probabilistic reasoning.",
+        "source_operator": "market_status_isomorphism",
+        "telemetry": "Observed market state transitions and consistency checks."
+      }
+    },
+    {
+      "primitive_id": "status_forward_propagation",
+      "name": "Status Forward Propagation",
+      "verbatim_quote": "Spot status-only updates may repeat the price timestamp with `isCarriedForward: true`; do not deduplicate by timestamp alone.",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "[{'symbol': '$t$', 'unit': 'time', 'definition': 'Timestamp'}, {'symbol': '$\\\\delta_{carried}(t)$', 'unit': 'binary indicator', 'definition': 'Forward propagation flag'}]",
+      "assumptions": "Status updates are idempotent; repeated identical updates preserve information.",
+      "breakdown_regime": "Deduplication by timestamp alone violates causality; forward flags prevent loss.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Captures temporal consistency in status streams using forward indicators.",
+        "source_operator": "status_forward_propagation",
+        "telemetry": "Rate of forward-propagated updates vs. unique status changes."
+      }
+    },
+    {
+      "primitive_id": "snapshot_status_reversion",
+      "name": "Snapshot Status Reversion",
+      "verbatim_quote": "Older unstated spot frames retain the last stated snapshot status.",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "[{'symbol': '$S_{last}$', 'unit': '-', 'definition': 'Last stated status'}, {'symbol': '$S_{current}$', 'unit': '-', 'definition': 'Current status'}, {'symbol': '$t$', 'unit': 'time', 'definition': 'Snapshot time'}]",
+      "assumptions": "Historical status is retroactively consistent; no information erasure occurs.",
+      "breakdown_regime": "Unstated frames revert to the most recent known value; no divergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Imputes missing status via backward filling, preserving temporal coherence.",
+        "source_operator": "snapshot_status_reversion",
+        "telemetry": "Frequency of reversion vs. direct observations."
+      }
+    },
+    {
+      "primitive_id": "twap_status_change",
+      "name": "TWAP Status Change",
+      "verbatim_quote": "Snapshots carry status at batch level and may retain an older closing price; TWAP status changes with a new price.",
+      "page": 1,
+      "latex": "None",
+      "symbol_and_unit_ledger": "[{'symbol': '$S_{batch}$', 'unit': '-', 'definition': 'Batch-level status'}, {'symbol': '$P_{TWAP}$', 'unit': 'price', 'definition': 'Time-weighted average price'}, {'symbol': '$\\\\Delta S$', 'unit': '-', 'definition': 'Status change indicator'}]",
+      "assumptions": "TWAP prices drive status transitions; batch-level status is conservative.",
+      "breakdown_regime": "New prices trigger immediate status shifts; older prices are stale.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Links TWAP dynamics to status updates, creating a feedback loop between price and availability.",
+        "source_operator": "twap_status_change",
+        "telemetry": "Correlation between TWAP price jumps and status transitions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6027b4f6b660fb22_t0",
+      "think": "The primitives formalize equity market status as a discrete-state Markov process over time. The isomorphism maps provider instrument availability to a deterministic function, enabling Bayesian updating. Forward propagation prevents information loss during deduplication, while snapshot reversion handles missing data via backward filling. TWAP-driven status changes introduce a price-feedback mechanism, linking liquidity metrics to market accessibility. These operators collectively model market state transitions, supporting probabilistic inference and situational awareness across financial systems.\n\nDeep epistemic analysis for CHANGELOG (6027b4f6b660fb22, domain=other, pages_read=15/15): Operator 'Market Status Isomorphism' (page 1, domain other) captures: # @polymarket/bindings ## 0.14.0 ### Minor Changes - c05ca40, f059b22: Add optional equity market status (`open`, `closed`, `unknown`) to spot/TWAP updates and snapshots; omission means not stated, never open. Assumptions: Provider instrument availability is deterministic and observable. Breakdown regime: Omission corresponds to undefined status; no singularity exists. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps equity market status to a discrete state space for probabilistic reasoning. Operator 'Status Forward Propagation' (page 1, domain other) captures: Spot status-only updates may repeat the price timestamp with `isCarriedForward: true`; do not deduplicate by timestamp alone. Assumptions: Status updates are idempotent; repeated identical updates preserve information. Breakdown regime: Deduplication by timestamp alone violates causality; forward flags prevent loss. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Captures temporal consistency in status streams using forward indicators. Operator 'Snapshot Status Reversion' (page 1, domain other) captures: Older unstated spot frames retain the last stated snapshot status. Assumptions: Historical status is retroactively consistent; no information erasure occurs. Breakdown regime: Unstated frames revert to the most recent known value; no divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Imputes missing status via backward filling, preserving temporal coherence. Operator 'TWAP Status Change' (page 1, domain other) captures: Snapshots carry status at batch level and may retain an older closing price; TWAP status changes with a new price. Assumptions: TWAP prices drive status transitions; batch-level status is conservative. Breakdown regime: New prices trigger immediate status shifts; older prices are stale. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Links TWAP dynamics to status updates, creating a feedback loop between price and availability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CHANGELOG (6027b4f6b660fb22, domain=other, pages_read=15/15): Operator 'Market Status Isomorphism' (page 1, domain other) captures: # @polymarket/bindings ## 0.14.0 ### Minor Changes - c05ca40, f059b22: Add optional equity market status (`open`, `closed`, `unknown`) to spot/TWAP updates and snapshots; omission means not stated, never open. Assumptions: Provider instrument availability is deterministic and observable. Breakdown regime: Omission corresponds to undefined status; no singularity exists. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps equity market status to a discrete state space for probabilistic reasoning. Operator 'Status Forward Propagation' (page 1, domain other) captures: Spot status-only updates may repeat the price timestamp with `isCarriedForward: true`; do not deduplicate by timestamp alone. Assumptions: Status updates are idempotent; repeated identical updates preserve information. Breakdown regime: Deduplication by timestamp alone violates causality; forward flags prevent loss. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Captures temporal consistency in status streams using forward indicators. Operator 'Snapshot Status Reversion' (page 1, domain other) captures: Older unstated spot frames retain the last stated snapshot status. Assumptions: Historical status is retroactively consistent; no information erasure occurs. Breakdown regime: Unstated frames revert to the most recent known value; no divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Imputes missing status via backward filling, preserving temporal coherence. Operator 'TWAP Status Change' (page 1, domain other) captures: Snapshots carry status at batch level and may retain an older closing price; TWAP status changes with a new price. Assumptions: TWAP prices drive status transitions; batch-level status is conservative. Breakdown regime: New prices trigger immediate status shifts; older prices are stale. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Links TWAP dynamics to status updates, creating a feedback loop between price and availability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Derived from information theory and stochastic processes; connects to earlier work on market microstructure and temporal data reconciliation. Retrocausal Genealogy: Rooted in CHANGELOG (6027b4f6b660fb22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CHANGELOG (6027b4f6b660fb22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling market participants' beliefs about instrument availability and their impact on trading decisions. Theory of Mind & Decision Maker Model: Rooted in CHANGELOG (6027b4f6b660fb22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in CHANGELOG (6027b4f6b660fb22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents cross-layer leakage by ensuring status updates are independent of price dynamics; maintains orthogonality between layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in CHANGELOG (6027b4f6b660fb22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CHANGELOG (6027b4f6b660fb22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

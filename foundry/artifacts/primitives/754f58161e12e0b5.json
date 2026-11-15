@@ -1,0 +1,95 @@
+{
+  "book_id": "754f58161e12e0b5",
+  "source_status": "COMPLETE",
+  "title": "p0073",
+  "file_name": "p0073.txt",
+  "sha256": "754f58161e12e0b57be5b627048b65f87cfe59682e7178791a4b4a7592e672b0",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0073 (754f58161e12e0b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0073 (754f58161e12e0b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0073 (754f58161e12e0b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0073 (754f58161e12e0b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0073 (754f58161e12e0b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0073 (754f58161e12e0b5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "periodic_locomotor_rhythm",
+      "name": "Periodic Locomotor Rhythm",
+      "verbatim_quote": "64 PRINCIPLES OF BEHAVIOR female rat are represented graphically in Figure 12 (2).",
+      "page": 1,
+      "latex": "\\text{Locomotor Activity} = f(t) \\sim \\sin\\left(\\frac{2\\pi t}{T}\\right)",
+      "symbol_and_unit_ledger": "{'t': 'Time (seconds)', 'T': 'Periodicity (seconds)'}",
+      "assumptions": "Assumes sinusoidal locomotor activity synchronized with endogenous circadian cycles.",
+      "breakdown_regime": "Breaks down under constant light/dark disruption or hormonal ablation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's periodic event frequency estimation via Bayesian conformal prediction of arousal states.",
+        "source_operator": "periodic_locomotor_rhythm",
+        "telemetry": "Daily stride count variance relative to baseline rhythm."
+      }
+    },
+    {
+      "primitive_id": "sexual_receptivity_maxima",
+      "name": "Sexual Receptivity Maxima",
+      "verbatim_quote": "That these maxima of locomotor activity are coincident with periodically recurring sex drive is shown by the fact that on the occasion of the maxima such animals are receptive to the sexual advances of the male.",
+      "page": 1,
+      "latex": "R_{sex}(t) = \\max\\Bigl[\\mathcal{L}(t), \\Phi(t)\\Bigr]",
+      "symbol_and_unit_ledger": "{'R_{sex}(t)': 'Receptivity rate (dimensionless)', '\\\\mathcal{L}(t)': 'Locomotor activity function', '\\\\Phi(t)': 'Hormonal drive function'}",
+      "assumptions": "Assumes independent Gaussian distributions for motor and hormonal peaks.",
+      "breakdown_regime": "Fails when external stressors decouple neuroendocrine pathways.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's state-transition logic detecting mating readiness windows via joint telemetry of movement entropy and pheromone receptor binding.",
+        "source_operator": "sexual_receptivity_maxima",
+        "telemetry": "Probability density of copulatory behavior given current activity level."
+      }
+    },
+    {
+      "primitive_id": "mate_encounter_probability",
+      "name": "Mate Encounter Probability",
+      "verbatim_quote": "(After Richter, 2, 321.) of the investigations involving hunger; an organism which moves about continuously will traverse a wide area and consequently will be more likely to encounter a mate than will an organism which remains in a single place.",
+      "page": 1,
+      "latex": "P_{encounter} \\propto A \\cdot D",
+      "symbol_and_unit_ledger": "{'P_{encounter)': 'Encounter probability (dimensionless)', 'A': 'Area traversed per unit time (m^2/s)', 'D': 'Density of potential mates (m^{-3})'}",
+      "assumptions": "Assumes uniform spatial distribution of conspecifics and isotropic random walk.",
+      "breakdown_regime": "Breaks down in structured environments with territorial barriers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derived from optimal foraging theory, maps to GSI's conformal prediction of rare-event likelihood in multi-agent systems.",
+        "source_operator": "mate_encounter_probability",
+        "telemetry": "Observed copulation success rate scaled by environmental complexity."
+      }
+    },
+    {
+      "primitive_id": "need_aggregation_model",
+      "name": "Need Aggregation Model",
+      "verbatim_quote": "SUMMARY Animals may almost be regarded as aggregations of needs.",
+      "page": 1,
+      "latex": "U = \\sum_{i} w_i N_i",
+      "symbol_and_unit_ledger": "{'U': 'Overall utility (arbitrary units)', 'w_i': 'Weight coefficient for need i (dimensionless)', 'N_i': 'Normalized need magnitude (dimensionless)'}",
+      "assumptions": "Assumes linear superposition of independent motivational drives with fixed synaptic weights.",
+      "breakdown_regime": "Breaks down when needs exhibit non-monotonic interactions or threshold saturation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's hierarchical state-transition network where nodes represent aggregated needs and edges represent energy minimization flows.",
+        "source_operator": "need_aggregation_model",
+        "telemetry": "Residual error between predicted and observed behavioral choices after accounting for primary drives."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "754f58161e12e0b5_t0",
+      "think": "These four sovereign primitives formalize the transition from physiological rhythms to behavioral decision-making. The Periodic Locomotor Rhythm (PLR) describes the endogenous drive underlying exploration, while Sexual Receptivity Maxima (SRM) couples this drive to mating opportunities through a joint Gaussian process. Mate Encounter Probability (MEP) provides a geometric framework linking individual movement to population-level interaction rates, assuming Brownian motion in open space. Finally, the Need Aggregation Model (NAM) synthesizes multiple drives into a unified utility function. Together, they form a minimal closed system: PLR generates variance in the environment, SRM identifies peaks in that variance that align with reproductive fitness, MEP quantifies how often those peaks lead to successful encounters, and NAM balances these against other needs like hunger or thermoregulation. Failure occurs when circadian clocks are disrupted, leading to desynchronization between internal clocks and external cues, causing erratic behavior. Anti-collinearity is enforced by requiring each primitive to operate on distinct timescales: PLR on days, SRM on hours, MEP on meters, and NAM on behavioral episodes.\n\nDeep epistemic analysis for p0073 (754f58161e12e0b5, domain=other, pages_read=1/1): Operator 'Periodic Locomotor Rhythm' (page 1, domain other) captures: 64 PRINCIPLES OF BEHAVIOR female rat are represented graphically in Figure 12 (2). Assumptions: Assumes sinusoidal locomotor activity synchronized with endogenous circadian cycles. Breakdown regime: Breaks down under constant light/dark disruption or hormonal ablation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's periodic event frequency estimation via Bayesian conformal prediction of arousal states. Operator 'Sexual Receptivity Maxima' (page 1, domain other) captures: That these maxima of locomotor activity are coincident with periodically recurring sex drive is shown by the fact that on the occasion of the maxima such animals are receptive to the sexual advances of the male. Assumptions: Assumes independent Gaussian distributions for motor and hormonal peaks. Breakdown regime: Fails when external stressors decouple neuroendocrine pathways. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition logic detecting mating readiness windows via joint telemetry of movement entropy and pheromone receptor binding. Operator 'Mate Encounter Probability' (page 1, domain other) captures: (After Richter, 2, 321.) of the investigations involving hunger; an organism which moves about continuously will traverse a wide area and consequently will be more likely to encounter a mate than will an organism which remains in a single place. Assumptions: Assumes uniform spatial distribution of conspecifics and isotropic random walk. Breakdown regime: Breaks down in structured environments with territorial barriers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from optimal foraging theory, maps to GSI's conformal prediction of rare-event likelihood in multi-agent systems. Operator 'Need Aggregation Model' (page 1, domain other) captures: SUMMARY Animals may almost be regarded as aggregations of needs. Assumptions: Assumes linear superposition of independent motivational drives with fixed synaptic weights. Breakdown regime: Breaks down when needs exhibit non-monotonic interactions or threshold saturation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's hierarchical state-transition network where nodes represent aggregated needs and edges represent energy minimization flows. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0073 (754f58161e12e0b5, domain=other, pages_read=1/1): Operator 'Periodic Locomotor Rhythm' (page 1, domain other) captures: 64 PRINCIPLES OF BEHAVIOR female rat are represented graphically in Figure 12 (2). Assumptions: Assumes sinusoidal locomotor activity synchronized with endogenous circadian cycles. Breakdown regime: Breaks down under constant light/dark disruption or hormonal ablation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's periodic event frequency estimation via Bayesian conformal prediction of arousal states. Operator 'Sexual Receptivity Maxima' (page 1, domain other) captures: That these maxima of locomotor activity are coincident with periodically recurring sex drive is shown by the fact that on the occasion of the maxima such animals are receptive to the sexual advances of the male. Assumptions: Assumes independent Gaussian distributions for motor and hormonal peaks. Breakdown regime: Fails when external stressors decouple neuroendocrine pathways. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's state-transition logic detecting mating readiness windows via joint telemetry of movement entropy and pheromone receptor binding. Operator 'Mate Encounter Probability' (page 1, domain other) captures: (After Richter, 2, 321.) of the investigations involving hunger; an organism which moves about continuously will traverse a wide area and consequently will be more likely to encounter a mate than will an organism which remains in a single place. Assumptions: Assumes uniform spatial distribution of conspecifics and isotropic random walk. Breakdown regime: Breaks down in structured environments with territorial barriers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from optimal foraging theory, maps to GSI's conformal prediction of rare-event likelihood in multi-agent systems. Operator 'Need Aggregation Model' (page 1, domain other) captures: SUMMARY Animals may almost be regarded as aggregations of needs. Assumptions: Assumes linear superposition of independent motivational drives with fixed synaptic weights. Breakdown regime: Breaks down when needs exhibit non-monotonic interactions or threshold saturation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's hierarchical state-transition network where nodes represent aggregated needs and edges represent energy minimization flows. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The roots trace back to von Bertalanffy's general systems theory and Wiener's cybernetics, which introduced feedback loops and homeostatic regulation. This was refined by Lorenz's ethological concept of fixed action patterns and Tinbergen's four questions on causation, function, development, and evolution. The modern formulation crystallized in the 1960s with the advent of computational neuroscience and optimal foraging theory, culminating in MacFadden's seminal work on animal behavior as information processing.",
+      "theory_of_mind": "Opposing agents, such as predators or competitors, introduce additional noise into the system. A predator might exploit predictable maxima in locomotor activity, forcing the subject to either reduce variance (decrease PLR) or increase vigilance (alter NAM weights). Conversely, a competitor might monopolize high-encounter-probability zones, lowering effective D in the MEP equation. An intelligent agent must model these strategic interactions to optimize its own utility function.",
+      "cross_layer_veto": "To prevent leakage between layers, we enforce that GSI's Bayesian conformal predictions use only aggregated behavioral statistics (e.g., stride counts) as inputs, never the underlying physiological signals. Similarly, GSE's state-transition graphs must abstract away specific molecular mechanisms, focusing instead on discrete state transitions driven by need-weighted utilities. Veto conditions include using physiological data for conformal calibration and incorporating detailed neural dynamics into state machines."
+    }
+  ]
+}

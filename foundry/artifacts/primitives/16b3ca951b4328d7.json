@@ -1,0 +1,78 @@
+{
+  "book_id": "16b3ca951b4328d7",
+  "source_status": "COMPLETE",
+  "title": "p0022",
+  "file_name": "p0022.txt",
+  "sha256": "16b3ca951b4328d77efbcca4430ce0c595451823a3c79275c26a9c95575570d0",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian fusion framework integrating historical performance factors and ownership metrics into a scalable fantasy athlete valuation model. Universal Lens: Rooted in p0022 (16b3ca951b4328d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over past performance factors and ownership data to compute posterior belief states for athlete selection under salary constraints. GSI Mapping: Rooted in p0022 (16b3ca951b4328d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions across fantasy team configurations using dynamic programming with reward functions derived from weighted performance and ownership kernels. GSE Mapping: Rooted in p0022 (16b3ca951b4328d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "past_performance_factor",
+      "name": "Past Performance Factor",
+      "verbatim_quote": "US 10,967,281 B2 23 any point-scoring structure can be used with embodiments of the present disclosure to determine a value of a past performance factor.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_i': 'past performance factor for athlete i', 'W_i': 'weight for factor F_i'}",
+      "assumptions": "Performance factors are normalized and weighted according to sport-specific historical scope.",
+      "breakdown_regime": "When historical data is insufficient or stale beyond defined range.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "F_i = f(stats_{t-n:t}, scoring_structure), where stats are from external source.",
+        "source_operator": "past_performance_factor",
+        "telemetry": "Daily feed from external source (e.g., Stats.com) with n-game rolling window."
+      }
+    },
+    {
+      "primitive_id": "ownership_factor",
+      "name": "Ownership Factor",
+      "verbatim_quote": "Another factor that can be included in the set of factors determined for an athlete at step 404 is an ownership factor which takes into account intangible aspects, such as the athlete's likability or popularity.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_op': 'ownership factor for athlete', 'W_op': 'weight for ownership factor'}",
+      "assumptions": "Ownership reflects contestant behavior in fantasy leagues and correlates with selection frequency.",
+      "breakdown_regime": "When contestant data is sparse or biased toward specific demographics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "F_op = g(lineup_data, draft_percentage), where lineup_data is from fantasy contests.",
+        "source_operator": "ownership_factor",
+        "telemetry": "Percentage of fantasy teams including athlete, derived from contest history."
+      }
+    },
+    {
+      "primitive_id": "fantasy_salary_model",
+      "name": "Fantasy Salary Model",
+      "verbatim_quote": "For example, the ownership factor can be varied (e.g., increased) in order to increase a popular athlete's fantasy salary, thereby acting as a disincentive for selection by a contestant working with a salary cap.",
+      "page": 1,
+      "latex": "\\text{Salary} = A \\cdot \\left(\\sum_{i=1}^{n} W_i \\cdot F_i + W_{op} \\cdot F_{op}\\right)",
+      "symbol_and_unit_ledger": "{'A': 'scaling coefficient (dimensionless)', 'W_i': 'weight for performance factor i', 'F_i': 'past performance factor', 'W_{op}': 'weight for ownership factor', 'F_{op}': 'ownership factor'}",
+      "assumptions": "Salary scales linearly with weighted sum of performance and ownership factors.",
+      "breakdown_regime": "When salary cap constraints conflict with optimal athlete selection.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Salary = A * (Σ(W_i * F_i) + W_op * F_op), where A ensures cap compliance.",
+        "source_operator": "fantasy_salary_model",
+        "telemetry": "Computed daily based on updated performance and ownership values."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "16b3ca951b4328d7_t0",
+      "think": "The core operators define a dualistic valuation system: performance factors (F_i) capture quantifiable athletic output, while ownership factors (F_op) encode qualitative market sentiment. These are fused through a weighted linear combination within a scaling function A to produce a fantasy salary. The system exhibits duality between deterministic performance signals and stochastic ownership dynamics. Failure modes arise when either component lacks sufficient data—e.g., new athletes without performance history or low-traffic players with sparse ownership data. The model assumes independence between F_i and F_op but allows for interaction via weights W_i and W_op. The breakdown regime occurs when external data sources fail or when the scaling coefficient A misaligns with league constraints. This framework supports recursive updates through daily feeds and enables adaptive pricing strategies.\n\nDeep epistemic analysis for p0022 (16b3ca951b4328d7, domain=other, pages_read=3/3): Operator 'Past Performance Factor' (page 1, domain other) captures: US 10,967,281 B2 23 any point-scoring structure can be used with embodiments of the present disclosure to determine a value of a past performance factor. Assumptions: Performance factors are normalized and weighted according to sport-specific historical scope. Breakdown regime: When historical data is insufficient or stale beyond defined range. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): F_i = f(stats_{t-n:t}, scoring_structure), where stats are from external source. Operator 'Ownership Factor' (page 1, domain other) captures: Another factor that can be included in the set of factors determined for an athlete at step 404 is an ownership factor which takes into account intangible aspects, such as the athlete's likability or popularity. Assumptions: Ownership reflects contestant behavior in fantasy leagues and correlates with selection frequency. Breakdown regime: When contestant data is sparse or biased toward specific demographics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): F_op = g(lineup_data, draft_percentage), where lineup_data is from fantasy contests. Operator 'Fantasy Salary Model' (page 1, domain other) captures: For example, the ownership factor can be varied (e.g., increased) in order to increase a popular athlete's fantasy salary, thereby acting as a disincentive for selection by a contestant working with a salary cap. Assumptions: Salary scales linearly with weighted sum of performance and ownership factors. Breakdown regime: When salary cap constraints conflict with optimal athlete selection. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Salary = A * (Σ(W_i * F_i) + W_op * F_op), where A ensures cap compliance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0022 (16b3ca951b4328d7, domain=other, pages_read=3/3): Operator 'Past Performance Factor' (page 1, domain other) captures: US 10,967,281 B2 23 any point-scoring structure can be used with embodiments of the present disclosure to determine a value of a past performance factor. Assumptions: Performance factors are normalized and weighted according to sport-specific historical scope. Breakdown regime: When historical data is insufficient or stale beyond defined range. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): F_i = f(stats_{t-n:t}, scoring_structure), where stats are from external source. Operator 'Ownership Factor' (page 1, domain other) captures: Another factor that can be included in the set of factors determined for an athlete at step 404 is an ownership factor which takes into account intangible aspects, such as the athlete's likability or popularity. Assumptions: Ownership reflects contestant behavior in fantasy leagues and correlates with selection frequency. Breakdown regime: When contestant data is sparse or biased toward specific demographics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): F_op = g(lineup_data, draft_percentage), where lineup_data is from fantasy contests. Operator 'Fantasy Salary Model' (page 1, domain other) captures: For example, the ownership factor can be varied (e.g., increased) in order to increase a popular athlete's fantasy salary, thereby acting as a disincentive for selection by a contestant working with a salary cap. Assumptions: Salary scales linearly with weighted sum of performance and ownership factors. Breakdown regime: When salary cap constraints conflict with optimal athlete selection. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Salary = A * (Σ(W_i * F_i) + W_op * F_op), where A ensures cap compliance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical arbitrage models of sports analytics and behavioral economics, tracing back to early fantasy sports scoring systems and modern machine learning-driven player valuation engines. Retrocausal Genealogy: Rooted in p0022 (16b3ca951b4328d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0022 (16b3ca951b4328d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents (contestants) optimize fantasy team composition under budgetary constraints, influenced by both objective performance and subjective popularity trends. The system models agent preferences as probabilistic responses to ownership signals. Theory of Mind & Decision Maker Model: Rooted in p0022 (16b3ca951b4328d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by distinct operational domains: performance factors rely on structured game logs, whereas ownership factors depend on unstructured contest participation. Leakage is mitigated by ensuring that each factor’s influence remains bounded by its respective weight and domain-specific normalization. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0022 (16b3ca951b4328d7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -52,7 +52,7 @@ export async function POST(request?: Request) {
       where: { OR: promotionFilters },
       data: {
         status: "ARCHIVED",
-        offerSummary: `Archived historical prior-week package — shifted cleanly to the upcoming active Week ${activeWeek} slate.`,
+        offerSummary: `Archived historical prior-week package - shifted cleanly to the upcoming active Week ${activeWeek} slate.`,
       },
     });
 

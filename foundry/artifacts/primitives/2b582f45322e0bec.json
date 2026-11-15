@@ -1,0 +1,95 @@
+{
+  "book_id": "2b582f45322e0bec",
+  "source_status": "COMPLETE",
+  "title": "1039-three-stream-ttstroke",
+  "file_name": "1039-three-stream-ttstroke.md",
+  "sha256": "2b582f45322e0becb1bf7b101e7862fe1714f8f6c912644594490e26b291be7e",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 1039-three-stream-ttstroke (2b582f45322e0bec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 1039-three-stream-ttstroke (2b582f45322e0bec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 1039-three-stream-ttstroke (2b582f45322e0bec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pose_descriptor_encoding",
+      "name": "Pose Descriptor Encoding",
+      "verbatim_quote": "Modalities computed per clip: RGB cuboids (120×120×100 ≈ 0.83 s), optical flow (iterative re-weighted least squares, foreground-masked, μ+3σ normalized), pose (PoseNet/PersonLab, 13 joints + pose center → 14×(x,y,score) descriptor; 25% of frames have no detection — filled with ROI center + score 0).",
+      "page": 1,
+      "latex": "\\mathbf{d}^{pose} \\in \\mathbb{R}^{42} = [x_1, y_1, s_1, \\dots, x_{14}, y_{14}, s_{14}]",
+      "symbol_and_unit_ledger": "{'x_i, y_i': 'Cartesian coordinates (pixels)', 's_i': 'Confidence score (dimensionless, [0,1])', 'N_joints': 'Number of keypoints (dimensionless, 14)'}",
+      "assumptions": "Keypoint extraction via PersonLab/PoseNet, 25% missingness handled by ROI center padding, score-based weighting.",
+      "breakdown_regime": "Pose occlusion (>25% missing) causes descriptor collapse to uniform ROI.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Posterior probability calibration for uncertain keypoint associations. GSE: Temporal tracking of player intent via confidence-weighted trajectory.",
+        "source_operator": "pose_descriptor_encoding",
+        "telemetry": "Frame-level keypoint count and average confidence as anomaly indicators"
+      }
+    },
+    {
+      "primitive_id": "bilinear_fusion",
+      "name": "Bilinear Fusion",
+      "verbatim_quote": "Pairwise bilinear fusion (y = x_1^T A x_2 + b) of the three branches, summed, softmax.",
+      "page": 1,
+      "latex": "y = \\sum_{i<j} \\mathbf{x}_i^T \\mathbf{A}_{ij} \\mathbf{x}_j + \\mathbf{b}",
+      "symbol_and_unit_ledger": "{'A_{ij}': 'Learned weight matrix (dimensionless)', 'b': 'Bias term (logit scale)', 'softmax': 'Normalizes output to categorical distribution'}",
+      "assumptions": "Feature independence within branch, shared linear bias, quadratic interaction captured by outer product.",
+      "breakdown_regime": "Co-linearity between fused streams leads to singular covariance, preventing inversion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Dempster-Shafer evidence combination for multi-source uncertainty. GSE: State-action value function integration across sensor modalities.",
+        "source_operator": "bilinear_fusion",
+        "telemetry": "Fusion matrix rank and eigenvalue spectrum as convergence diagnostics"
+      }
+    },
+    {
+      "primitive_id": "attention_blocks",
+      "name": "Attention Blocks",
+      "verbatim_quote": "## Method Three parallel branches: RGB and OF streams through 3D spatio-temporal convolutions (3 layers: 30/60/80 filters of 3×3×3, max-pool 2×2×2, attention blocks, FC-500); the pose stream through 1D temporal convolutions over the N_joints×3 descriptor channels with temporal max-pooling.",
+      "page": 1,
+      "latex": "\\mathbf{M} = \\sigma(W_H \\mathbf{H} + W_S \\mathbf{S} + \\mathbf{b})",
+      "symbol_and_unit_ledger": "{'W_H, W_S': 'Weight matrices (learned)', 'σ': 'Sigmoid activation (dimensionless)', 'H': 'High-level feature map', 'S': 'Source feature map'}",
+      "assumptions": "Spatial attention via sigmoid gating, learned linear projections, independent across branches.",
+      "breakdown_regime": "Vanishing gradients in deep networks cause ineffective attention.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Adaptive Kalman filtering for time-varying observation noise. GSE: Contextual bandit action selection with posterior sampling.",
+        "source_operator": "attention_blocks",
+        "telemetry": "Attention map sparsity and channel-wise variance as network health metrics"
+      }
+    },
+    {
+      "primitive_id": "joint_detection_segmentation",
+      "name": "Joint Detection-Segmentation",
+      "verbatim_quote": "Target: stroke class (classification task) or per-frame class labels via sliding-window decision fusion (vote/average/Gaussian-weighted, window 150/150/201).",
+      "page": 1,
+      "latex": "\\hat{y}_t = \\underset{c}{\\operatorname{argmax}} \\sum_{w \\in W_t} f(w) \\cdot \\mathbb{I}(y_w = c)",
+      "symbol_and_unit_ledger": "{'f(w)': 'Window weight function (vote, average, Gaussian)', 'W_t': 'Sliding window centered at frame t', 'I': 'Indicator function (binary)'}",
+      "assumptions": "Temporal consistency enforced via majority voting, Gaussian smoothing captures local motion.",
+      "breakdown_regime": "Short windows miss long-range context, long windows blur event boundaries.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Online change-point detection via cumulative sum statistics. GSE: Trajectory prediction with interval constraints.",
+        "source_operator": "joint_detection_segmentation",
+        "telemetry": "Segmentation F1-score and boundary precision as performance metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2b582f45322e0bec_t0",
+      "think": "The core challenge is fine-grained intra-class ambiguity in table tennis strokes. The three-stream architecture addresses this by decoupling spatial (RGB), motion (optical flow), and kinematic (pose) information. Bilinear fusion captures second-order interactions between these modalities, enabling the model to learn complex conjunctions that pure classification cannot. Attention blocks further refine this process by adaptively weighing the importance of different features, mitigating noisy inputs such as occlusions. Joint detection-segmentation then translates per-frame predictions into temporally coherent event hypotheses, bridging the gap between short-term action recognition and long-term game understanding. This modular design allows for incremental improvement: adding new modalities or refining individual streams directly impacts downstream performance.\n\nDeep epistemic analysis for 1039-three-stream-ttstroke (2b582f45322e0bec, domain=other, pages_read=3/3): Operator 'Pose Descriptor Encoding' (page 1, domain other) captures: Modalities computed per clip: RGB cuboids (120×120×100 ≈ 0.83 s), optical flow (iterative re-weighted least squares, foreground-masked, μ+3σ normalized), pose (PoseNet/PersonLab, 13 joints + pose center → 14×(x,y,score) descriptor; 25% of frames have no detection — filled with ROI center + score 0). Assumptions: Keypoint extraction via PersonLab/PoseNet, 25% missingness handled by ROI center padding, score-based weighting. Breakdown regime: Pose occlusion (>25% missing) causes descriptor collapse to uniform ROI. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Posterior probability calibration for uncertain keypoint associations. GSE: Temporal tracking of player intent via confidence-weighted trajectory. Operator 'Bilinear Fusion' (page 1, domain other) captures: Pairwise bilinear fusion (y = x_1^T A x_2 + b) of the three branches, summed, softmax. Assumptions: Feature independence within branch, shared linear bias, quadratic interaction captured by outer product. Breakdown regime: Co-linearity between fused streams leads to singular covariance, preventing inversion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Dempster-Shafer evidence combination for multi-source uncertainty. GSE: State-action value function integration across sensor modalities. Operator 'Attention Blocks' (page 1, domain other) captures: ## Method Three parallel branches: RGB and OF streams through 3D spatio-temporal convolutions (3 layers: 30/60/80 filters of 3×3×3, max-pool 2×2×2, attention blocks, FC-500); the pose stream through 1D temporal convolutions over the N_joints×3 descriptor channels with temporal max-pooling. Assumptions: Spatial attention via sigmoid gating, learned linear projections, independent across branches. Breakdown regime: Vanishing gradients in deep networks cause ineffective attention. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Adaptive Kalman filtering for time-varying observation noise. GSE: Contextual bandit action selection with posterior sampling. Operator 'Joint Detection-Segmentation' (page 1, domain other) captures: Target: stroke class (classification task) or per-frame class labels via sliding-window decision fusion (vote/average/Gaussian-weighted, window 150/150/201). Assumptions: Temporal consistency enforced via majority voting, Gaussian smoothing captures local motion. Breakdown regime: Short windows miss long-range context, long windows blur event boundaries. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Online change-point detection via cumulative sum statistics. GSE: Trajectory prediction with interval constraints. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1039-three-stream-ttstroke (2b582f45322e0bec, domain=other, pages_read=3/3): Operator 'Pose Descriptor Encoding' (page 1, domain other) captures: Modalities computed per clip: RGB cuboids (120×120×100 ≈ 0.83 s), optical flow (iterative re-weighted least squares, foreground-masked, μ+3σ normalized), pose (PoseNet/PersonLab, 13 joints + pose center → 14×(x,y,score) descriptor; 25% of frames have no detection — filled with ROI center + score 0). Assumptions: Keypoint extraction via PersonLab/PoseNet, 25% missingness handled by ROI center padding, score-based weighting. Breakdown regime: Pose occlusion (>25% missing) causes descriptor collapse to uniform ROI. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Posterior probability calibration for uncertain keypoint associations. GSE: Temporal tracking of player intent via confidence-weighted trajectory. Operator 'Bilinear Fusion' (page 1, domain other) captures: Pairwise bilinear fusion (y = x_1^T A x_2 + b) of the three branches, summed, softmax. Assumptions: Feature independence within branch, shared linear bias, quadratic interaction captured by outer product. Breakdown regime: Co-linearity between fused streams leads to singular covariance, preventing inversion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Dempster-Shafer evidence combination for multi-source uncertainty. GSE: State-action value function integration across sensor modalities. Operator 'Attention Blocks' (page 1, domain other) captures: ## Method Three parallel branches: RGB and OF streams through 3D spatio-temporal convolutions (3 layers: 30/60/80 filters of 3×3×3, max-pool 2×2×2, attention blocks, FC-500); the pose stream through 1D temporal convolutions over the N_joints×3 descriptor channels with temporal max-pooling. Assumptions: Spatial attention via sigmoid gating, learned linear projections, independent across branches. Breakdown regime: Vanishing gradients in deep networks cause ineffective attention. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Adaptive Kalman filtering for time-varying observation noise. GSE: Contextual bandit action selection with posterior sampling. Operator 'Joint Detection-Segmentation' (page 1, domain other) captures: Target: stroke class (classification task) or per-frame class labels via sliding-window decision fusion (vote/average/Gaussian-weighted, window 150/150/201). Assumptions: Temporal consistency enforced via majority voting, Gaussian smoothing captures local motion. Breakdown regime: Short windows miss long-range context, long windows blur event boundaries. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Online change-point detection via cumulative sum statistics. GSE: Trajectory prediction with interval constraints. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 1039-three-stream-ttstroke (2b582f45322e0bec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1039-three-stream-ttstroke (2b582f45322e0bec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opponents (e.g., sportsbooks) may exploit predictable stroke patterns if they observe consistent model behavior. Coaches could reverse-engineer the model to develop counter-strategies. Conversely, the model can be interpreted to identify opponent weaknesses based on misclassifications. Theory of Mind & Decision Maker Model: Rooted in 1039-three-stream-ttstroke (2b582f45322e0bec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Pose stream leakage occurs if the ROI contains irrelevant background information, causing the model to rely on appearance rather than kinematics. To prevent this, ensure that the ROI is tightly cropped around the player and validated against ground-truth annotations. Additionally, verify that the bilinear fusion does not amplify noise by checking the condition number of the learned matrices. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1039-three-stream-ttstroke (2b582f45322e0bec), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

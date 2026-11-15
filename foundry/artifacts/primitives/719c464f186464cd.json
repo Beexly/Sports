@@ -1,0 +1,204 @@
+{
+ "book_id": "719c464f186464cd",
+ "source_status": "COMPLETE",
+ "pages_total": 8,
+ "pages_read": 8,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Apprenticeship depth over breadth: championship coaches stay with a single mentor",
+   "verbatim_quote": "Instead of “paying dues” , the most talented assistant coaches tend to stay with a single mentor until they are promoted into a head coaching position.",
+   "page": 4,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed statistical companion (p. 4): 'Championship coaches work with signif- icantly fewer (p ≤0.001) mentors than non-championship coaches.' Championship coach defined as someone who coached in a Super Bowl or won a league championship before the Super Bowl era (1967). Data: NFL coaches affiliated with the 32 existing franchises, 1920 through the 2005 season; relocated franchises treated as one entity. The finding falsifies the folk 'paying dues' theory that broad mentor sampling produces head coaches.",
+   "breakdown_regime": "Observational correlation, not causal: talented assistants may be promoted faster and thus accumulate fewer mentors (selection), so the result cannot license forcing single-mentor apprenticeship. Confounded by era, franchise stability, and opportunity; the p-value is over a small population (61 championship coaches). The depth-over-breadth pattern may reverse in domains where cross-pollination, not deep transmission, is the skill mechanism.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one assistant-coach tenure under a mentor",
+    "tau_1: career accumulation of mentors before promotion",
+    "tau_2: head-coaching career length",
+    "tau_3: multi-generation coaching-tree lineage (1920-2005)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Expertise transmission in the athlete-performance system: depth-over-breadth apprenticeship is the isomorph of deliberate practice under a single expert coach versus sampling many short-term instructors. The skill mechanism is deep transmission of a coherent system, not breadth of exposure; this maps the coaching finding onto motor-skill acquisition and clinical/academic mentorship without claiming a football origin for the learning principle.",
+    "source_operator": "p1",
+    "telemetry": "Mentor count versus trainee outcome (promotion, championship, retention), tenure length under each mentor, transfer-test performance; calibrates whether depth or breadth predicts expertise in a given domain."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Mentor prolificacy predicts champion production; championship concentration (24/40)",
+   "verbatim_quote": "Using a linear regression model, we can estimate the dependency between the num- ber of future championship coaches a coach will produce and the number of head coaches produced. The slope of the regression line is signiﬁcant (p ≤0.001).",
+   "page": 4,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: a linear regression estimates the dependency between future championship coaches produced and head coaches produced; the slope is significant (p ≤0.001). Of 61 championship coaches, 30 produced five or more future head coaches and 31 produced fewer than five. Concentration fact (p. 2): 'These coaches are responsible for more than half of all Super Bowl victo- ries (24/40).' Table 1 lists coaches with five or more head-coaching proteges and three or more championships.",
+   "breakdown_regime": "The regression is associative and era-bound (through 2005); prolificacy may proxy opportunity, franchise wealth, and network centrality rather than mentorship quality. The 24/40 concentration reflects preferential attachment in coaching trees (Paul Brown at the root), so it is a structural artifact as much as a skill signal; extrapolating beyond the observed era or to a restructured league is unsupported.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one protege promotion event",
+    "tau_1: a mentor's career output of head coaches",
+    "tau_2: champion production across a coaching tree",
+    "tau_3: league-wide championship concentration over decades"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Knowledge-lineage kernel for the Foundry: the coaching tree is a preferential-attachment transmission graph where a mentor's output of successful descendants is autocorrelated and concentrated. This is the relational prior over coach quality that the call-value TD kernel (book 1) must condition on; prolific lineage is a structural feature, not an independent per-coach attribute.",
+    "source_operator": "p2",
+    "telemetry": "Per-mentor counts of head-coach and champion proteges, betweenness centrality in the work-under graph, championship share by lineage; calibrates the lineage prior against out-of-era hires."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Relational probability tree: tenure and avoidance of catastrophic seasons; plural winning recipes",
+   "verbatim_quote": "Since those fea- ture were not chosen by the model, it implies that differ- ent coaches have different recipes for winning, and winning coaches continue to have jobs in the NFL.",
+   "page": 5,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: the model characterizes coaches who produced five or more head coaches; accuracy 0.804 and AUC 0.811 (p. 5: 'This model performs with ac- curacy of 0.804 and area under the ROC curve (AUC) of 0.811.'). Top feature is degree of teams worked for with a threshold of ten seasons; next is count of teams winning four or fewer games (a 16-game season), where five or more such teams marks long-term failure. Wins and playoff attributes were NOT selected, implying different coaches have different recipes for winning. Learned with the RPT algorithm (Neville et al. 2003); probabilities Laplace corrected.",
+   "breakdown_regime": "The model is descriptive of mentor prolificacy, not a hiring oracle; the authors note it does not help identify good mentors because winning features were not selected. Tenure thresholds are era-specific (16-game season); the avoidance feature captures very few coaches. Accuracy/AUC are in-sample-ish relational estimates over a small, autocorrelated population, so they overstate iid generalization.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one season win total",
+    "tau_1: head-coaching tenure (threshold ten seasons)",
+    "tau_2: career count of catastrophic (<=4 win) seasons",
+    "tau_3: protege production over a career"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Plural-recipe invariant for any expert-evaluation system: when a relational learner selects tenure and failure-avoidance but not the obvious performance features, the domain admits multiple winning strategies rather than one optimizable metric. This vetoes single-metric coach/player grading in the GSE pipeline and maps to the Foundry's refusal to collapse expertise into one headline number.",
+    "source_operator": "p3",
+    "telemetry": "Feature-selection stability across relational folds, tenure and failure-count distributions, divergence of winning profiles; calibrates whether a single grading metric is licensed or pluralism is required."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Precision at playoff level: coaching-history model beats persistence and random",
+   "verbatim_quote": "The precision of the model is the number of teams correctly predicted to be in the playoffs divided by the number of playoff teams for each year.",
+   "page": 6,
+   "latex": "precision_at_playoff_level = (number of teams correctly predicted to be in the playoffs) / (number of playoff teams for each year)",
+   "symbol_and_unit_ledger": "Transcription of the source's verbal definition (no printed equation). Numerator: count of teams correctly predicted to make the playoffs [dimensionless team count]. Denominator: number of actual playoff teams that year [dimensionless team count, e.g. six per conference in recent seasons]. Ratio: dimensionless in [0,1], computed per year then averaged. Printed results: coaching-history model 0.63 mean precision; previous-year persistence baseline 0.57; random-without-replacement analytical baseline 0.37; learned model beats persistence at p ≤0.03 (t-test), 1970-2005. Ties for the final playoff spot filled by expected precision over random choice among tied teams.",
+   "assumptions": "Printed: teams ranked per conference by the model, picks taken from the top; precision is correct picks divided by playoff teams per year, like a sportswriter's pre-season picks. Baselines: previous-year results (0.57) and random without replacement (0.37). Model uses head-coach, assistant-coach, past-team, and mentor attributes via RPT. Evaluation window 1970-2005.",
+   "breakdown_regime": "The 0.63 vs 0.57 margin is modest and era-dependent; after the 1994 salary cap both models decay toward random (see p6), so the precision claim is not stationary. Precision at playoff level ignores which teams are missed and the ranking below the cut; small per-year playoff counts make the metric high-variance; the t-test assumes independent seasons despite autocorrelation.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one pre-season prediction",
+    "tau_1: one season's playoff outcome",
+    "tau_2: per-year precision then mean over 1970-2005",
+    "tau_3: era-level decay of predictability"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Evaluation kernel for the GSE prediction pipeline: precision-at-cut is the proper metric for a fixed-size selection problem (playoff field, roster, DFS lineup slots), not raw accuracy. It is the held-out, top-k scoring rule the Foundry uses to grade sealed baselines, with persistence and random as the mandatory lower bounds any model must beat.",
+    "source_operator": "p4",
+    "telemetry": "Per-year precision at the playoff cut, persistence and random baselines, tie-handling expected precision; calibrates whether a learned model clears the persistence floor out-of-sample."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Staff composition: first-year head-coach penalty and assistant playoff-experience threshold",
+   "verbatim_quote": "The feature with the highest score in our model is HeadCoach.year with team <= 1. Not surprisingly, teams coaches by ﬁrst-year coaches tend not to make the play- offs.",
+   "page": 5,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: the highest-scoring feature is HeadCoach.year_with_team <= 1; first-year head coaches tend not to make the playoffs. For coaches with more than one season, selected features aggregate past playoff performance and experience. Assistant experience matters (p. 5): 'If a team has assis- tant coaches who have made the playoffs at least 34% of the time, then the probability of that team making the play- offs is increased.' Mentor championship proportion also raises playoff probability for first-year coaches. RPT leaf probabilities are Laplace corrected (e.g. P(+)=0.02 for the first-year branch).",
+   "breakdown_regime": "The first-year penalty is a correlation confounded with rebuilding rosters (bad teams hire new coaches); the 34% assistant threshold is a learned split on a small, autocorrelated sample and is not a universal constant. The model attributes to coaching what may be player quality; the authors explicitly note performance also depends greatly on the players.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one season with a first-year head coach",
+    "tau_1: assistant career playoff proportion",
+    "tau_2: staff assembly before a season",
+    "tau_3: multi-year staff development"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Compositional-experience invariant for the 22-player system: team success depends on the joint experience distribution of the whole staff, not the head coach alone, and a novice leader is penalized until supported by experienced assistants. This is the isomorph of any team-production system where leadership tenure and subordinate expertise interact compositionally rather than additively.",
+    "source_operator": "p5",
+    "telemetry": "Head-coach tenure, assistant playoff-experience proportion, mentor championship share, staff offense/defense balance; calibrates the compositional effect against player-quality controls."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Regime break: salary cap and free agency decay predictability toward random ('Any Given Season')",
+   "verbatim_quote": "After the salary cap took effect in 1994, the predictive capability of both our model and the previous year model begins to decrease towards random.",
+   "page": 6,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: three eras appear in the precision curve. 1970-1982 strong playoff consistency (post NFL-AFL merger). 1982 players' strike shortened the season and expanded the playoff field; 1990 field expanded again; 1992 free agency; 1994 salary cap. Coaching histories help most in years of significant change (1982, 1990, 1992, 1994 the model outperforms persistence). After 1994 both models decay toward random because cap plus free agency moves veteran players and thins experienced rosters. The authors propose changing the credo from 'Any Given Sunday' to 'Any Given Season' (p. 6).",
+   "breakdown_regime": "This is the breakdown regime of every stationary predictor in the corpus: structural economic rules (cap, free agency) change the data-generating process, so historical autocorrelation is not transportable across the 1994 boundary. The era segmentation is identified from the precision curve, not pre-registered, so it risks post-hoc fitting; the mechanism (player movement, injury-replacement drop-off) is asserted, not isolated experimentally.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one game ('Any Given Sunday')",
+    "tau_1: one season's playoff field",
+    "tau_2: era boundaries (1982, 1990, 1992, 1994)",
+    "tau_3: league-wide predictability regime over decades"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Non-stationarity kernel for the Foundry: institutional rule changes are exogenous regime breaks that invalidate learned priors, so every GSE predictor must carry an era tag and a decay model. The cap/free-agency break is the football-native instance of the general law that complex adaptive networks lose predictability when their coupling rules change; it vetoes pooling pre- and post-1994 data.",
+    "source_operator": "p6",
+    "telemetry": "Precision-by-season curve, regime-break detection at rule changes, player-movement and roster-depth metrics, injury-replacement performance drop; calibrates the temporal extent of validity for each predictor."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Autocorrelation and collective classification: skill propagates through mentors and opponents",
+   "verbatim_quote": "a type of cyclic dependence, is the correlation of the same variable on related entities. In the NFL, coaching skill can be autocorrelated through mentor coach as coaches taught by the same mentor tend to have similar levels of success.",
+   "page": 7,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: autocorrelation is the correlation of the same variable on related entities; coaching skill is autocorrelated through mentor coach because coaches taught by the same mentor tend to have similar success. The relational dependency network (RDN) represents and learns cyclic dependencies (Neville & Jensen 2004; Buntine 1994 plate notation). Collective classification makes simultaneous inferences about the same variable on related entities; strength-of-schedule example (p. 7): 'A team which is able to beat many strong teams should be ranked higher than a team with the same number of wins against weak teams.'",
+   "breakdown_regime": "Autocorrelation violates the iid assumption of standard feature selection and inflates apparent significance (Jensen & Neville 2002, cited); collective inference can propagate errors cyclically and converge to overconfident consensus. The strength-of-schedule adjustment assumes opponent strength is itself estimable, which is circular without a joint model; the RDN in Figure 9 is hand-generated, not learned.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one head-to-head result",
+    "tau_1: a season's strength-of-schedule aggregation",
+    "tau_2: mentor-lineage skill autocorrelation",
+    "tau_3: collective-inference convergence over the network"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Relational-inference kernel for the GSE pipeline: team and player ratings must be jointly inferred over the schedule graph (collective classification), not computed as iid win counts, and coach priors must respect mentor autocorrelation. This is the football-native instance of the general rule that linked entities carry shared latent quality, and it is the structural reason strength-of-schedule matters.",
+    "source_operator": "p7",
+    "telemetry": "Schedule-graph opponent strengths, mentor-lineage skill correlation, collective-inference residuals versus iid ratings; calibrates the autocorrelation length and the joint model's lift over independent ratings."
+   }
+  },
+  {
+   "primitive_id": "p8",
+   "name": "Three dependency types any complex-network model must represent; offense/defense composition",
+   "verbatim_quote": "In addition to relational dependencies, we hypothesize the existence of (1) temporal dependencies and (2) complex structural dependencies in the NFL data.",
+   "page": 7,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: beyond relational dependencies the authors hypothesize (1) temporal dependencies (teams have a limited window to succeed; models must learn the relevant temporal interval and allow differing extent per variable) and (2) complex structural dependencies (staff offense/defense balance). The RPT could not represent these and achieved highest precision without them. Composition hypothesis (p. 8): teams with proper offense/defense balance succeed; the 'Defense wins championships' platitude is qualified by 'While this may be true, a team is unlikely to win if they are unable to score many points on offense.' Offense/defense specialization data is absent; EM proposed to learn it.",
+   "breakdown_regime": "These are hypothesized, not learned: the paper explicitly states current models cannot represent or learn them, so they are open requirements, not validated invariants. The offense/defense balance claim lacks the specialization data to test it; the temporal-window claim is asserted from NFL folklore. Treating them as established laws would overstate the source.",
+   "domain": "football",
+   "timescales": [
+    "tau_0: one staff composition decision",
+    "tau_1: a season's offense/defense balance",
+    "tau_2: a franchise's limited success window",
+    "tau_3: variable-specific temporal extent learned over eras"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Model-adequacy invariant for any complex adaptive system: a faithful model must represent relational, temporal, and compositional-structural dependencies together, and a balance constraint (offense/defense, exploration/exploitation, bias/variance) cannot be reduced to one side. This maps the paper's open requirements onto the Foundry's audit checklist for whether a simulator captures composition and time, not just pairwise links.",
+    "source_operator": "p8",
+    "telemetry": "Staff offense/defense specialization shares (to be learned via EM), success-window duration per franchise, variable-specific temporal autocorrelation lengths; calibrates whether composition and temporal extent improve fit."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "This source is a genuine football-domain research paper, The NFL Coaching Network by Andrew Fast and David Jensen of the University of Massachusetts Amherst, published by AAAI in 2006. It is eight pages of relational machine learning applied to the network of NFL coaches and teams from 1920 through the 2005 season, built on coaching staffs from the Professional Football Research Association and win-loss and playoff records from pro-football-reference. Unlike the tutorial collection I read first, this paper's Layer-1 content is itself football, so there is no need to fabricate a gridiron origin for anything; the mathematics is relational learning and the findings are empirical facts about the league. I read all eight pages. The sovereign content is a set of network invariants and one evaluation metric, and the deep structure is that the NFL is a complex adaptive network whose entities are not independent. The first invariant falsifies a folk theory. The common belief is that coaches pay their dues by working under many mentors before becoming head coaches; the data show the opposite. Championship coaches work with significantly fewer mentors, at p at most 0.001, and the most talented assistants stay with a single mentor until promoted. This is depth over breadth in apprenticeship, and it is observational, so the causal reading is contested: talented assistants may simply be promoted faster, accumulating fewer mentors by selection rather than by a superior training mechanism. The second invariant is concentration and lineage. A linear regression links the number of head coaches a mentor produces to the number of future champions he produces, slope significant at p at most 0.001, and the fifteen coaches in Table 1 who produced five or more head coaches and won three or more championships account for more than half of all Super Bowl victories, twenty-four of forty. That concentration is preferential attachment in a coaching tree rooted at Paul Brown, so it is a structural signal as much as a skill signal. The third invariant is the relational probability tree that characterizes prolific mentors: its top feature is tenure, the degree of teams worked for with a threshold of ten seasons, and its next feature is avoidance of catastrophic seasons, five or more teams winning four or fewer games in a sixteen-game season. Crucially, wins and playoff attributes were not selected, which the authors read as evidence that different coaches have different recipes for winning. The model reaches accuracy 0.804 and AUC 0.811, but those are relational estimates over a small autocorrelated population, not iid generalization guarantees. The fourth primitive is the evaluation metric and its result. Precision at playoff level is the number of teams correctly predicted to make the playoffs divided by the number of playoff teams that year, computed per conference and averaged; it is the proper top-k scoring rule for a fixed-size selection problem. The coaching-history model achieves 0.63 mean precision over 1970 to 2005, against a previous-year persistence baseline of 0.57 and a random-without-replacement baseline of 0.37, beating persistence at p at most 0.03. The margin is real but modest, and the fifth primitive shows why it cannot be extrapolated. The highest-scoring playoff feature is the first-year head-coach penalty, HeadCoach.year_with_team at most one, and assistant experience matters: a staff whose assistants made the playoffs at least thirty-four percent of the time raises the team's playoff probability. But this is composition, confounded with the rebuilding rosters that bad teams hand to new coaches. The sixth primitive is the regime break, and it is the most important veto in the paper. After the salary cap took effect in 1994, the predictive capability of both the coaching-history model and the persistence model begins to decrease toward random. The authors identify three eras, strong consistency from 1970 to 1982, playoff-field expansions in 1982 and 1990, free agency in 1992 and the cap in 1994, and they propose changing the league credo from Any Given Sunday to Any Given Season. The mechanism is economic: cap plus free agency moves veteran players, thins experienced rosters, and makes injury replacements drop off, so the data-generating process itself changes. This is the football-native instance of a universal law: when the coupling rules of a complex adaptive network change, learned priors lose validity, and no stationary predictor survives the boundary. The seventh primitive is autocorrelation and collective classification. Coaching skill is autocorrelated through mentors, because coaches taught by the same mentor tend to similar success, and strength of schedule must be inferred jointly: a team that beats many strong teams should rank higher than a team with the same wins against weak teams. This violates the iid assumption and is exactly why standard feature selection is biased under linkage, a result the paper cites from Jensen and Neville 2002. The eighth primitive is the model-adequacy requirement: any faithful model must represent relational, temporal, and complex structural dependencies together, and the offense/defense balance hypothesis, that defense wins championships is qualified by the necessity of scoring, is explicitly not yet learnable. Now the composition into the Foundry. Book one gave the call-value TD kernel; this book gives the relational prior that kernel must condition on. Coach quality is not an independent per-entity attribute but a lineage-autocorrelated, regime-dependent, compositionally-structured latent. The GSE pipeline must therefore do four things: carry mentor-lineage priors, use collective classification over the schedule graph rather than iid win counts, tag every predictor with an era and a decay model so the 1994 boundary is never crossed silently, and grade with precision-at-cut against persistence and random floors. The tensions are where the reasoning earns its keep. The fewer-mentors finding is a selection-versus-training confound and cannot license a hiring rule. The different-recipes result vetoes single-metric grading. The cap regime break vetoes stationarity. The small population, sixty-one championship coaches and thirty-two franchises, vetoes overfitting and demands held-out validation. The compiled stance is to adopt these as relational kernels and vetoes, to bind them to the 22-player system through explicit Layer-2 mappings with calibrating telemetry, and to keep the hypothesized dependencies marked as open requirements rather than laws. No win-rate headline is extracted, no sportsbook odds are used, and the football findings stay football while the general network principles map outward to skill transmission and complex-systems science.",
+   "retrocausal_genealogy": "The hidden state in these findings is historical and methodological scar tissue. The fewer-mentors result is the scar of a selection effect mistaken for a training law: talented assistants are promoted fast and so accumulate fewer mentors, falsifying the shared paying-dues folk theory. The twenty-four-of-forty concentration is the scar of preferential attachment in a coaching tree rooted at Paul Brown, not a pure skill signal. The salary-cap decay is the scar of a natural experiment, free agency in 1992 and the cap in 1994, that destroyed playoff autocorrelation and broke every stationary predictor. Methodologically the lineage is Neville and Jensen's relational learning at the UMass Knowledge Discovery Laboratory, born from the recognition that linkage and autocorrelation bias iid feature selection, cited here as Jensen and Neville 2002. These are the paper's own cited origins; none is fabricated, and the football facts carry no borrowed mathematics.",
+   "theory_of_mind": "The belief clash is institutional and recursive. General managers hire familiar coaches because the network, not talent discovery, drives selection, the Smith 2006 observation the paper cites; the Rooney rule forces a minority interview but not a hire, so the belief that we considered diverse candidates coexists with hiring inside the known tree. Pedigree becomes a coordination signal: a GM knows other GMs value the same mentor lineage, so hiring from it is common-knowledge safe even when it is not skill-optimal. The owner's limited-window-to-succeed belief drives firing and produces the first-year penalty, while the defensive coordinator's defense-wins-championships platitude clashes with the scoring necessity the authors insist on. The paying-dues theory is a shared belief the data falsifies, yet it persists because it is socially transmitted faster than it is statistically tested.",
+   "cross_layer_veto": "Four cross-layer vetoes bind any prediction or hiring rule. The economics veto: the salary cap and free agency change the data-generating process after 1994, so any stationary coaching-history predictor is vetoed across that boundary and must carry an era tag and decay model. The composition veto: defense wins championships is vetoed by the necessity of scoring, so a one-sided staff balance cannot be promoted regardless of its defensive rating. The causal veto: the fewer-mentors correlation is observational and confounded by talent and selection, so it cannot license forcing single-mentor apprenticeship as a hiring rule. The sample veto: sixty-one championship coaches and thirty-two franchises make the p-values and the 0.804 accuracy fragile, so every claim must be held out, not overfit. Economics, composition, and causal structure outrank the relational model whenever they conflict."
+  }
+ ],
+ "universal_lens": "Any knowledge-transmission network, scientific mentorship, craft apprenticeship, or organization, exhibits the same three dependencies the paper names, relational, temporal, and compositional-structural, and the same autocorrelation of skill through mentors. The universal audit asks whether a model respects linkage, regime breaks, and composition rather than treating entities as independent, and whether it grades with a top-k rule against persistence and random floors.",
+ "gsi_mapping": "Expertise and motor-skill transmission is apprenticeship autocorrelation: athletes trained by the same coach inherit similar technique quality, so skill is autocorrelated through the mentor. Depth-over-breadth apprenticeship maps to deliberate practice under a single expert versus sampling many instructors. Clinical and academic telemetry calibrates it: mentor pedigree versus trainee outcome, retention, and transfer-test performance, with the selection-versus-training confound held explicit.",
+ "gse_mapping": "Coach-Mind sim priors over coach quality are relational, mentor-autocorrelated, and regime-aware, with the cap era breaking stationarity. Hiring and DFS models must use collective classification over the schedule graph, strength of schedule, not iid win counts, and grade with precision-at-cut against persistence and random. The different-recipes finding warns against a single winning feature; sealed baselines, no sportsbook odds, internal artifacts only."
+}

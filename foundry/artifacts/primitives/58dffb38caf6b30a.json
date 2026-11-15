@@ -1,0 +1,78 @@
+{
+  "book_id": "58dffb38caf6b30a",
+  "source_status": "COMPLETE",
+  "title": "stitch-agent-workflow",
+  "file_name": "stitch-agent-workflow.md",
+  "sha256": "58dffb38caf6b30ac09a0fe73adb3141d55431811ccdb33ae4668e68ead1a5c8",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Stitch agent workflow formalizes content composition as a layered tensor product of design tokens, evidence, and brand constraints, enforcing causal coherence through gated validation. Universal Lens: Rooted in stitch-agent-workflow (58dffb38caf6b30a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian evidence integration within GSI models the likelihood of claim validity conditioned on Tier 1/2 sources, applying conformal prediction to reject thin-evidence drafts. GSI Mapping: Rooted in stitch-agent-workflow (58dffb38caf6b30a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE maps the agent's state transitions through validation gates (evidence sufficiency, claim governance, brand safety), with operator veto as terminal condition. GSE Mapping: Rooted in stitch-agent-workflow (58dffb38caf6b30a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "evidence_sufficiency_gate",
+      "name": "Evidence Sufficiency Gate",
+      "verbatim_quote": "A draft that cannot cite at least one Tier 1 or Tier 2 source for its core claims is not output.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{core}': 'Core evidence vector (Tier 1/2)', 'D_{draft}': 'Draft content object'}",
+      "assumptions": "Drafts must satisfy minimum evidence threshold; otherwise abort.",
+      "breakdown_regime": "If \\(\\forall e_i \\in E_{core}: e_i \\notin \\{Tier1, Tier2\\} \\Rightarrow D_{draft} \\text{ is rejected}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Draft generation kernel restricted to valid evidence vectors; invalid drafts are filtered out via compositional constraint.",
+        "source_operator": "evidence_sufficiency_gate",
+        "telemetry": "Logged ABORT event when evidence fails threshold check."
+      }
+    },
+    {
+      "primitive_id": "claim_governance_scanner",
+      "name": "Claim Governance Scanner",
+      "verbatim_quote": "RUN claim governance scanner (if forbidden language found → FLAG, do not proceed) ↓ 6.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{claim}': 'Content claim vector', 'L_{forbidden}': 'Forbidden language lexicon', 'F_{flag}': 'Violation flag signal'}",
+      "assumptions": "All claims must pass language compliance check before proceeding.",
+      "breakdown_regime": "If \\(C_{claim} \\cap L_{forbidden} \\neq \\emptyset \\Rightarrow F_{flag} \\text{ is raised}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scanning operation mirrors linguistic constraint enforcement in GSI's semantic filtering layer.",
+        "source_operator": "claim_governance_scanner",
+        "telemetry": "Operator receives flagged segment with violation details."
+      }
+    },
+    {
+      "primitive_id": "brand_safety_linter",
+      "name": "Brand Safety Linter",
+      "verbatim_quote": "RUN brand-safety linter (if violations found → FLAG) ↓ 7.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_{brand}': 'Brand safety policy vector', 'S_{content}': 'Content segment', 'V_{violation}': 'Safety violation indicator'}",
+      "assumptions": "Content must adhere to brand safety standards.",
+      "breakdown_regime": "If \\(S_{content} \\not\\subset B_{brand} \\Rightarrow V_{violation} \\text{ is triggered}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Linter enforces brand alignment via constraint projection onto policy space, analogous to GSE's integrity checks.",
+        "source_operator": "brand_safety_linter",
+        "telemetry": "Flagged content segments reported to operator cockpit."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "58dffb38caf6b30a_t0",
+      "think": "The Stitch Agent Workflow defines a compositional logic where content is assembled from modular inputs under strict governance. It operates in a dual regime: evidence-driven composition and rule-enforced validation. The system avoids thin-content generation by enforcing Tier 1/2 evidence thresholds, ensuring causal grounding. Claim governance and brand safety scanners act as constraint layers that filter out non-compliant outputs. Operator review acts as a final stochastic gate, introducing human oversight into the automated pipeline. Failure modes include evidence insufficiency (ABORT), forbidden language (FLAG), and brand violations (FLAG). These are modeled as discrete events in a state transition graph, where each validation step is a deterministic filter, and operator approval is a probabilistic terminal state. The workflow embodies a structured feedback loop between data, policy, and execution.\n\nDeep epistemic analysis for stitch-agent-workflow (58dffb38caf6b30a, domain=other, pages_read=4/4): Operator 'Evidence Sufficiency Gate' (page 2, domain other) captures: A draft that cannot cite at least one Tier 1 or Tier 2 source for its core claims is not output. Assumptions: Drafts must satisfy minimum evidence threshold; otherwise abort. Breakdown regime: If \\(\\forall e_i \\in E_{core}: e_i \\notin \\{Tier1, Tier2\\} \\Rightarrow D_{draft} \\text{ is rejected} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Draft generation kernel restricted to valid evidence vectors; invalid drafts are filtered out via compositional constraint. Operator 'Claim Governance Scanner' (page 2, domain other) captures: RUN claim governance scanner (if forbidden language found → FLAG, do not proceed) ↓ 6. Assumptions: All claims must pass language compliance check before proceeding. Breakdown regime: If \\(C_{claim} \\cap L_{forbidden} \\neq \\emptyset \\Rightarrow F_{flag} \\text{ is raised} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scanning operation mirrors linguistic constraint enforcement in GSI's semantic filtering layer. Operator 'Brand Safety Linter' (page 2, domain other) captures: RUN brand-safety linter (if violations found → FLAG) ↓ 7. Assumptions: Content must adhere to brand safety standards. Breakdown regime: If \\(S_{content} \\not\\subset B_{brand} \\Rightarrow V_{violation} \\text{ is triggered} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Linter enforces brand alignment via constraint projection onto policy space, analogous to GSE's integrity checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for stitch-agent-workflow (58dffb38caf6b30a, domain=other, pages_read=4/4): Operator 'Evidence Sufficiency Gate' (page 2, domain other) captures: A draft that cannot cite at least one Tier 1 or Tier 2 source for its core claims is not output. Assumptions: Drafts must satisfy minimum evidence threshold; otherwise abort. Breakdown regime: If \\(\\forall e_i \\in E_{core}: e_i \\notin \\{Tier1, Tier2\\} \\Rightarrow D_{draft} \\text{ is rejected} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Draft generation kernel restricted to valid evidence vectors; invalid drafts are filtered out via compositional constraint. Operator 'Claim Governance Scanner' (page 2, domain other) captures: RUN claim governance scanner (if forbidden language found → FLAG, do not proceed) ↓ 6. Assumptions: All claims must pass language compliance check before proceeding. Breakdown regime: If \\(C_{claim} \\cap L_{forbidden} \\neq \\emptyset \\Rightarrow F_{flag} \\text{ is raised} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scanning operation mirrors linguistic constraint enforcement in GSI's semantic filtering layer. Operator 'Brand Safety Linter' (page 2, domain other) captures: RUN brand-safety linter (if violations found → FLAG) ↓ 7. Assumptions: Content must adhere to brand safety standards. Breakdown regime: If \\(S_{content} \\not\\subset B_{brand} \\Rightarrow V_{violation} \\text{ is triggered} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Linter enforces brand alignment via constraint projection onto policy space, analogous to GSE's integrity checks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal information theory and constraint-based reasoning, this workflow inherits from prior work in automated content synthesis and policy-enforced AI systems, particularly those addressing ethical and regulatory compliance in generative contexts. Retrocausal Genealogy: Rooted in stitch-agent-workflow (58dffb38caf6b30a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the automated content generator (which seeks efficiency) and the governance engine (which prioritizes correctness). The operator functions as a meta-reasoner, capable of overriding or refining automated decisions based on contextual knowledge. Theory of Mind & Decision Maker Model: Rooted in stitch-agent-workflow (58dffb38caf6b30a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by enforcing distinct validation layers—evidence, governance, and safety—each with unique failure criteria. Leakage is prevented by requiring explicit operator intervention for publication, thereby decoupling automatic execution from public exposure. Cross-Layer Veto & Anti-Leakage Check: Rooted in stitch-agent-workflow (58dffb38caf6b30a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

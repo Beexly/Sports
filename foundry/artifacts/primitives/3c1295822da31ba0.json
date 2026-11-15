@@ -1,0 +1,205 @@
+{
+ "book_id": "3c1295822da31ba0",
+ "source_status": "COMPLETE",
+ "pages_total": 16,
+ "pages_read": 16,
+ "source_note": "PROVENANCE MISMATCH: file is named 2409.18934_LLM_and_ML_for_Fantasy_Football_and_Sports_Prediction.pdf and queued as football, but the actual content is the physics paper 'Two-dimensional Stoner transitions beyond mean-field' by Raines & Chubukov (arXiv:2409.18934v1 [cond-mat.str-el], 27 Sep 2024). Extracted honestly as physics-domain primitives; football bindings are explicitly derived Layer-2 isomorphisms, not claimed origins. Flag for corpus librarian to correct the title/domain metadata.",
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Unconventional 2D Stoner transition: strongly first order yet diverging susceptibility",
+   "verbatim_quote": "strongly first order but features a susceptibility which diverges at the transition point.",
+   "page": 1,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed central result: the 2D Stoner instability is strongly first order but features a susceptibility that diverges at the transition point. Persistence beyond mean field (p. 13): 'the VP transition is first-order into a half-metal state, with one valley completely depopulated, and the valley iso-spin susceptibility diverges as the transition point is approached from the unpolarized state.' The authors reserve 'Stoner' for instabilities where the iso-spin susceptibility diverges at the transition. Applies to low-density 2D fermions with repulsive interaction and spin/valley degrees of freedom (BBG, RTG, AlAs quantum wells).",
+   "breakdown_regime": "The coexistence of a first-order jump and a diverging susceptibility relies on the ground-state energy being exactly quadratic in the order parameter within the approximation; subleading non-logarithmic corrections or RPA-type ring diagrams saturate the susceptibility at a finite value, converting the Stoner transition into a first-order transition without divergence (scenario II). The result is established only inside the logarithmic approximation.",
+   "domain": "physics",
+   "timescales": [
+    "tau_0: approach to the critical interaction from the disordered side",
+    "tau_1: the first-order jump of the order parameter",
+    "tau_2: cascade of half-metal then quarter-metal transitions",
+    "tau_3: density-driven (rs) tuning across the phase diagram"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tipping-point isomorph for the 22-player system, explicitly derived not asserted as a football origin: a team or scheme can undergo a sudden first-order collapse (a regime shift, a locker-room or coordination breakdown) while a precursor response function (variance of outcomes, sensitivity to a small perturbation) grows sharply as the threshold is approached from the stable side. The physics supplies the universal shape of a discontinuous transition with a diverging precursor; the football binding is a Layer-2 mapping only.",
+    "source_operator": "p1",
+    "telemetry": "Outcome variance and perturbation sensitivity as a control parameter (roster turnover, scheme change) approaches a threshold; discontinuous jumps in team performance with growing precursor fluctuations, from internal tracking."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Mean-field Stoner criterion: susceptibility and vertex diverge at nu*U = 1",
+   "verbatim_quote": "The renormalized spin vertex and the spin susceptibility diverge at νU = 1, signaling the ferromagnetic instability of the normal state.",
+   "page": 3,
+   "latex": "\\chi_{\\mathrm{MF}} = \\frac{2\\nu}{1-\\nu U}, \\qquad \\Gamma = \\frac{1}{1-\\nu U}",
+   "symbol_and_unit_ledger": "Transcribed from source Eq. (8). nu: single-spin density of states at the Fermi level per unit area [1/(energy*area)] (natural units). U: repulsive contact (Hubbard) interaction [energy*area]. nu*U: dimensionless coupling. Gamma: renormalized spin vertex, dimensionless. chi_MF: paramagnetic spin susceptibility [1/(energy*area)], i.e. density-of-states units (magnetization/density response). Both expressions diverge at nu*U = 1, the ferromagnetic instability. Dimensional check: numerator 2*nu carries susceptibility units, denominator dimensionless, so chi_MF is homogeneous; Gamma is a dimensionless ratio.",
+   "assumptions": "Printed: the MF approximation uses the bare Green's function G0 and approximates the irreducible four-point function by the bare interaction U, making Gamma momentum-independent; at low temperature T*sum_k G0^2 = -nu (Eq. 7). The divergence at nu*U = 1 signals the ferromagnetic instability of the normal state. Single-valley, parabolic dispersion, repulsive U > 0.",
+   "breakdown_regime": "Mean field neglects particle-particle renormalizations that suppress U; beyond MF the effective coupling tilde{U} keeps tilde{U}*nu < 1 within the controlled regime, so the MF divergence is an overestimate of the ordering tendency. The criterion is a T=0, low-density, contact-interaction result; long-range or gate-screened interactions change the cutoff and the criterion.",
+   "domain": "physics",
+   "timescales": [
+    "tau_0: static (zero-frequency) susceptibility",
+    "tau_1: tuning U toward the critical value",
+    "tau_2: instability onset at nu*U = 1",
+    "tau_3: renormalization of the criterion beyond MF"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Threshold-kernel isomorph for the GSE pipeline: a dimensionless control parameter (coupling nu*U) crossing unity is the universal shape of a mean-field instability, the isomorph of a feedback gain crossing one in a team's coordination dynamics or a model's confidence crossing a calibration boundary. The kernel warns that the mean-field threshold overestimates ordering once fluctuations are included, so any GSE tipping-point threshold must be renormalized, not taken at face value.",
+    "source_operator": "p2",
+    "telemetry": "A dimensionless gain/control parameter estimated from internal tracking, its distance to a unity threshold, and the fluctuation-induced shift of that threshold; calibrates the mean-field versus renormalized tipping point."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Mean-field energy exactly quadratic in polarization forces a first-order jump at the susceptibility divergence",
+   "verbatim_quote": "this behavior is a consequence of the fact that the energy is exactly quadratic in the polarization, ζ.",
+   "page": 3,
+   "latex": "E_{\\mathrm{MF}} = E_N + \\frac{n^2}{2\\nu}\\,(1-\\nu U)\\,\\zeta^2",
+   "symbol_and_unit_ledger": "Transcribed from source Eq. (10). E_MF, E_N: ground-state and normal-state energy densities [energy/area]. n = n_up + n_down: fixed total fermion density [1/area]. nu: density of states [1/(energy*area)]. n^2/(2*nu): (1/area^2)*(energy*area) = energy/area, an energy density. zeta = (n_up - n_down)/n: dimensionless spin polarization, |zeta| <= 1. (1 - nu*U): dimensionless. There are no terms of higher order in zeta. Dimensional check: every term is an energy density; the quadratic coefficient changes sign at nu*U = 1, so the minimum jumps from zeta = 0 to |zeta| = 1 exactly where chi_MF diverges.",
+   "assumptions": "Printed: in 2D the MF ground-state energy is exactly quadratic in the dimensionless polarization zeta, with no higher-order terms; this exact quadratic form is why the transition is first order into a fully spin-polarized state |zeta| = 1 at nu*U = 1, the same point where the static susceptibility diverges. Derived from Hartree-Fock (Luttinger-Ward) evaluation with free-fermion propagators at fixed total density.",
+   "breakdown_regime": "The exact quadratic dependence is a 2D parabolic-dispersion MF artifact; for generic power-law dispersion epsilon_k proportional to k^{2*alpha} with 1 < alpha < 2 a first-order transition occurs before the susceptibility diverges (though within 2% for 1 <= alpha <= 2, per the source footnote). Beyond MF, non-logarithmic corrections add higher-order terms in zeta and can decouple the jump from the divergence.",
+   "domain": "physics",
+   "timescales": [
+    "tau_0: curvature of the energy in the order parameter",
+    "tau_1: sign change of the quadratic coefficient at nu*U = 1",
+    "tau_2: discontinuous jump to maximal polarization",
+    "tau_3: dispersion-dependent corrections to the quadratic form"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Landau-style isomorph for the Foundry: when the effective cost of an order parameter is exactly quadratic with a tunable curvature, the system jumps discontinuously to the maximal state at the curvature's sign change, and the response function diverges there simultaneously. This is the universal mechanism linking a sudden regime shift to a diverging precursor, mapped to team-state transitions only as a derived Layer-2 analogy, not a football origin.",
+    "source_operator": "p3",
+    "telemetry": "An order parameter (e.g. coordination or effort polarization) and the curvature of a fitted effective potential versus a control parameter; detects whether a transition is discontinuous and whether the precursor response diverges."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Beyond-mean-field logarithmic suppression: particle-particle ladders renormalize U downward",
+   "verbatim_quote": "The general suppression of the Stoner susceptibility due to particle-particle ladders was discussed in the ’60s by Kanamori [35].",
+   "page": 6,
+   "latex": "\\tilde{U} = \\frac{U}{1 + \\tfrac{1}{2}\\,\\nu U\\,\\ln(\\Lambda/k_F)}",
+   "symbol_and_unit_ledger": "Transcribed from source Eq. (19). U: bare repulsive contact interaction [energy*area]. nu: density of states [1/(energy*area)]; nu*U dimensionless. Lambda: UV momentum cutoff [momentum], of order the Brillouin-zone size for a Hubbard-like model. k_F: Fermi momentum [momentum]. ln(Lambda/k_F): dimensionless, parametrically large when k_F << Lambda. tilde{U}: effective interaction [energy*area], reduced relative to U by the ladder denominator. Within the controlled regime nu*U < 1 one has tilde{U}*nu < 1, so the susceptibility does not diverge. Dimensional check: the denominator is dimensionless, so tilde{U} carries the same units as U.",
+   "assumptions": "Printed: the leading beyond-MF effect is a downturn renormalization of the interaction by logarithmically large particle-particle contributions; summing the maximally crossed ladder diagrams to all orders (logarithmic accuracy) replaces the bare U by the two-particle scattering amplitude tilde{U}, which is logarithmically singular in 2D. The general suppression was discussed by Kanamori in the 1960s (ref 35). Low-density limit k_F << Lambda; single-valley and isotropic two-valley systems.",
+   "breakdown_regime": "The ladder series need not be absolutely convergent: at larger U subleading non-logarithmic particle-particle corrections can invalidate the resummation and allow a divergence (scenario I), and RPA-type particle-hole corrections can favor a polarized state even with finite susceptibility (scenario II). For gate-screened long-range interactions Lambda can be comparable to k_F, so ln(Lambda/k_F) is no longer large and the whole expansion fails.",
+   "domain": "physics",
+   "timescales": [
+    "tau_0: a single two-particle collision (independent at low density)",
+    "tau_1: ladder resummation of repeated collisions",
+    "tau_2: logarithmic running of the effective coupling",
+    "tau_3: breakdown of the logarithmic approximation at large U"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fluctuation-renormalization kernel for the GSE pipeline: repeated pairwise interactions (film-study corrections, player-to-player adjustments) renormalize a bare coupling downward, so a mean-field estimate of an ordering or feedback strength overestimates it. The control parameter ln(Lambda/k_F) decides whether the renormalization is large; this is the isomorph of the Foundry's rule that small-sample mean-field confidence must be shrunk by the effective number of independent interactions, derived not asserted as football physics.",
+    "source_operator": "p4",
+    "telemetry": "Bare versus renormalized coupling estimates, the effective independent-sample ratio Lambda/k_F, and the regime where the renormalization expansion breaks down; calibrates shrinkage of mean-field confidence."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "2D-specific particle-particle logarithm (not a Cooper logarithm)",
+   "verbatim_quote": "This is not a Cooper logarithm as Eq. (14) is only valid at q > kF , but rather a 2D-specific logarithm associated with the logarithmic behavior of the scattering amplitude.",
+   "page": 4,
+   "latex": "\\Pi_{pp} \\approx \\frac{\\nu}{2}\\,\\ln\\frac{\\Lambda}{k_F}",
+   "symbol_and_unit_ledger": "Transcribed from source Eq. (15). Pi_pp: particle-particle polarization bubble [1/(energy*area)], the same units as the density of states nu. nu: density of states [1/(energy*area)]. Lambda: UV momentum cutoff [momentum]; k_F: Fermi momentum [momentum]; ln(Lambda/k_F) dimensionless. The integral is logarithmically singular with a lower cutoff q_min ~ k_F (below which external momenta cannot be neglected) and upper cutoff Lambda. Dimensional check: nu times a dimensionless logarithm carries bubble units, homogeneous.",
+   "assumptions": "Printed: the crossed (particle-particle) diagram has an unconstrained momentum integration over q, unlike particle-hole diagrams whose internal momenta are pinned to the Fermi surface; the region k_F << q << Lambda gives a logarithm. This is explicitly NOT a Cooper logarithm (Eq. 14 is valid only at q > k_F) but a 2D-specific logarithm associated with the logarithmic behavior of the two-particle scattering amplitude. The particle-hole bubble Pi_ph = nu at low temperature.",
+   "breakdown_regime": "The logarithmic accuracy neglects subleading O(nu*U) regular terms and the q < k_F region; it requires k_F << Lambda so the logarithm is parametrically large. If the interaction cutoff is set by a screening gate rather than the Brillouin zone, Lambda ~ k_F and the logarithm is not large, so this enhancement disappears and particle-hole diagrams compete on equal footing.",
+   "domain": "physics",
+   "timescales": [
+    "tau_0: a single particle-particle bubble insertion",
+    "tau_1: accumulation of ln(Lambda/k_F) per loop order",
+    "tau_2: maximal crossing giving ln^{n-1} at n-loop",
+    "tau_3: separation of scales k_F << Lambda that controls the expansion"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Scale-separation isomorph for the Foundry: a logarithmically large enhancement arises only when two scales are widely separated (UV cutoff versus Fermi momentum), the isomorph of a multi-scale system where a slow collective mode accumulates a large logarithmic correction from a fast microscopic process. The lesson, derived not asserted as football origin, is that the existence of a large parameter (scale separation) decides which class of corrections dominates a model.",
+    "source_operator": "p5",
+    "telemetry": "Identification of separated scales in internal tracking (e.g. play-level versus season-level), the magnitude of their ratio, and which correction class dominates; calibrates whether a logarithmic enhancement is licensed."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Anisotropy selects valley polarization and restores the mean-field-like Stoner transition",
+   "verbatim_quote": "Stoner transitions into FM and SFM states do not occur within the logarithmic approximation, but a Stoner transition into the VP state does occur if the anisotropy is strong enough.",
+   "page": 11,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: with anisotropic quadratic dispersion (AlAs, two valleys at X and Y, anisotropy eta >= 1), the inter-valley susceptibility ratio chi2/chi1 is a decreasing function of eta > 1 (p. 7), so anisotropy favors zero-momentum orders (VP, FM, SFM). Beyond MF the intra-valley coupling tilde{U}1 is strongly reduced but the inter-valley tilde{U}2 is reduced less, with tilde{U}2 approximately U2 at strong anisotropy; for eta > 2 + sqrt(3) the two-loop VP renormalization actually increases the ordering tendency, and for eta >> 1 the VP Stoner instability occurs at smaller U than mean field. FM/SFM transitions do not occur within the logarithmic approximation, but VP does if anisotropy is strong enough.",
+   "breakdown_regime": "The selection of VP over FM/SFM and the restoration of a Stoner-like divergence hold only within the logarithmic approximation and for sufficiently strong anisotropy; at small anisotropy the system remains unpolarized. The eta > 2 + sqrt(3) threshold is a two-loop result; higher orders and RPA corrections modify it. The model neglects inter-valley scattering U3 (assumed U1 approximately U2 >> U3).",
+   "domain": "physics",
+   "timescales": [
+    "tau_0: anisotropy parameter eta tuning the Fermi-surface ellipticity",
+    "tau_1: differential renormalization of intra- versus inter-valley couplings",
+    "tau_2: VP ordering threshold decreasing with eta",
+    "tau_3: cascade VP then spin-valley-polarized states"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Symmetry-breaking-selection isomorph for the 22-player system: an anisotropy (an asymmetry in the effective 'mass' or constraints across two competing modes) lifts a degeneracy and selects one ordered channel over another, and can even restore an instability that isotropy suppresses. This maps to how an asymmetric constraint (personnel, field geometry, rule asymmetry) selects one team adaptation over a degenerate alternative; it is a derived Layer-2 analogy, not a claim that football obeys Stoner physics.",
+    "source_operator": "p6",
+    "telemetry": "An anisotropy/asymmetry parameter across competing team modes, the differential response of each mode, and which ordered adaptation is selected as asymmetry grows; calibrates the selection threshold from internal tracking."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Luttinger-Ward conserving approximation versus non-conserving RPA",
+   "verbatim_quote": "the RPA is in principle not a fully self-consistent conserving approximation as opposed to calculations within the Luttinger-Ward functional.",
+   "page": 12,
+   "latex": "E_{\\mathrm{LW}}[\\hat{G}] = -\\ln\\det[-\\hat{G}^{-1}] - \\mathrm{tr}[\\hat{\\Sigma}\\hat{G}] + \\Phi[\\hat{G}]",
+   "symbol_and_unit_ledger": "Transcribed from source Eq. (4). E_LW[G]: Luttinger-Ward free energy (ground-state energy at T=0) as a functional of the full Green's function [energy/area]. G: full matrix Green's function [1/energy] in natural units; Sigma = G0^{-1} - G^{-1}: self-energy [energy], defined by Sigma = delta Phi / delta G. Phi[G]: Luttinger-Ward functional from closed-loop diagrams with full Green's functions [energy/area]. tr[Sigma*G] and ln det[-G^{-1}] combine to energy density. Dimensional check: each term is an energy density; minimizing over G yields a self-consistent, conserving (Baym-Kadanoff) approximation.",
+   "assumptions": "Printed: working with the Luttinger-Ward functional automatically produces a self-consistent and conserving approximation; the RPA uses a free-fermion-like ansatz with an iso-spin-dependent chemical potential and does not evaluate the self-energy self-consistently (a G0W-type approximation), so it is not a fully conserving approximation. For the Hubbard model the distinction does not matter at MF or logarithmic order because the self-energy is constant; it matters for ring-diagram (self-consistent GW) sums where the self-energy depends on frequency and momentum. The authors caution that self-consistency does not guarantee the best approximation.",
+   "breakdown_regime": "Conserving structure guarantees consistency with conservation laws but not accuracy; the RPA and Luttinger-Ward ring sums differ because of the 1/l combinatoric cancellation present in the particle-particle ladder but absent in RPA. The choice of which diagram class to sum (particle-particle versus particle-hole) changes whether the susceptibility diverges, so the conclusion is approximation-scheme dependent.",
+   "domain": "physics",
+   "timescales": [
+    "tau_0: a single self-consistent Green's-function update",
+    "tau_1: convergence of the conserving loop expansion",
+    "tau_2: scheme dependence (particle-particle vs particle-hole) of the result",
+    "tau_3: validation against experiment and rigorous limits"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Self-consistency kernel for the GSE evaluation pipeline: a model whose components are solved jointly and conservingly (the isomorph of Luttinger-Ward) respects internal consistency constraints that a one-shot, non-self-consistent estimate (the isomorph of RPA/G0W) violates. The derived lesson for the Foundry is that sealed, self-consistent evaluation is structurally different from a plug-in estimate, and that self-consistency is necessary for coherence but not sufficient for accuracy.",
+    "source_operator": "p7",
+    "telemetry": "Self-consistency residuals of jointly-estimated ratings, comparison of conserving versus plug-in estimates, and scheme-dependence of conclusions; calibrates whether the evaluation loop is closed and conserving."
+   }
+  },
+  {
+   "primitive_id": "p8",
+   "name": "Regime of validity: three beyond-MF scenarios and the breakdown of the logarithmic approximation",
+   "verbatim_quote": "entirely possible that a Stoner transition actually occurs but is pushed to larger values of U where the logarith- mic approximation breaks down.",
+   "page": 6,
+   "latex": null,
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Printed: beyond mean field there are three possibilities, (I) a MF-like Stoner transition perhaps at larger U, (II) a first-order transition to a polarized state with no susceptibility divergence, (III) no transition. The logarithmic approximation cannot decide among them at large U because it neglects subleading non-logarithmic particle-particle corrections. The RPA companion result (p. 12): 'The screened Coulomb interaction never approaches the point nu*U_RPA(q) = 1, where the susceptibility would diverge,' because nu*U_RPA(q) = r_s*k_F/(q + 4*r_s*k_F) <= 1/4. Rigorous ferromagnetism exists on the half-filled Lieb lattice (Lieb 1989, ref 38), so absence within the approximation is not absence in general.",
+   "breakdown_regime": "This primitive IS the breakdown regime: the ladder series may not be absolutely convergent, subleading terms can invalidate the resummation at large U, and the control parameter ln(Lambda/k_F) ceases to be large for gate-screened interactions (Lambda ~ 1/d, the plate separation). The authors explicitly mark the large-U fate as an open question rather than a resolved law.",
+   "domain": "physics",
+   "timescales": [
+    "tau_0: validity boundary nu*U < 1 of the logarithmic expansion",
+    "tau_1: onset of subleading corrections at larger U",
+    "tau_2: cutoff crossover when Lambda ~ k_F (gate screening)",
+    "tau_3: open large-U fate (scenarios I/II/III)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Validity-boundary kernel for the Foundry: every approximation carries a control parameter and a regime beyond which its conclusions are not licensed, and a negative result inside the regime (no instability) is not a universal negative. This is the isomorph of the GSE rule that a model's era/scale validity tag vetoes extrapolation, and that an open question must be recorded as open rather than fabricated into a law; derived as a general modeling principle, not football physics.",
+    "source_operator": "p8",
+    "telemetry": "The control parameter and its distance to the validity boundary, detection of subleading-correction onset, and explicit open-question flags; calibrates where a predictor's conclusions must be suspended."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "This third source is a provenance anomaly that I must record honestly before extracting anything. The file is named 2409.18934_LLM_and_ML_for_Fantasy_Football_and_Sports_Prediction.pdf and the queue tags it football, but the actual content is a condensed-matter physics paper, Two-dimensional Stoner transitions beyond mean-field, by Zachary M. Raines and Andrey V. Chubukov of the University of Minnesota, arXiv 2409.18934v1 in cond-mat.str-el, dated 27 September 2024. The arXiv identifier matches the filename, so the filename's fantasy-football title is simply wrong; the paper is sixteen pages of many-body theory, fully readable, not corrupt, not image-only, not retracted. The contract's refusal categories do not apply, so the honest action is to extract the real physics as physics-domain primitives, document the mismatch, and bind it to the football system only through explicitly derived Layer-2 isomorphisms. I will not fabricate a football origin for any of this mathematics; the doctrine forbids it, and the paper itself is pure physics. I read all sixteen pages including the three appendices. The subject is the ferromagnetic Stoner instability of a low-density two-dimensional Fermi gas with spin and valley degrees of freedom, the effective theory of Bernal bilayer graphene, rhombohedral trilayer graphene, and AlAs quantum wells. The mean-field picture, established in the authors' prior work, is unconventional: the transition is strongly first order, into a fully polarized state, yet the corresponding susceptibility diverges as the critical point is approached from the disordered side. The mechanism is precise. The mean-field spin susceptibility is chi_MF = 2*nu/(1 - nu*U) and the renormalized vertex is Gamma = 1/(1 - nu*U), both diverging at the dimensionless coupling nu*U = 1, where nu is the density of states and U the repulsive contact interaction. The mean-field ground-state energy is exactly quadratic in the polarization zeta, E_MF = E_N + (n^2/2*nu)(1 - nu*U)*zeta^2, with no higher-order terms, so the minimum jumps discontinuously from zeta = 0 to |zeta| = 1 at exactly the point where the susceptibility diverges. That exact quadratic form is the entire reason a first-order jump and a diverging precursor coexist; it is a 2D parabolic-dispersion artifact, and the source notes that for intermediate power-law dispersions the jump precedes the divergence, though by less than two percent across the relevant range. The central contribution of this paper is what happens beyond mean field. In the low-density limit k_F much smaller than the ultraviolet cutoff Lambda, the crossed particle-particle diagram has an unconstrained momentum integration that produces a logarithm, Pi_pp approximately (nu/2)*ln(Lambda/k_F). The authors are careful to say this is not a Cooper logarithm, because the integral is valid only above k_F; it is a 2D-specific logarithm tied to the logarithmic singularity of the two-particle scattering amplitude. Summing the maximally crossed ladder diagrams to all orders replaces the bare interaction by an effective tilde{U} = U/(1 + (1/2)*nu*U*ln(Lambda/k_F)), which is reduced, so that within the controlled regime nu*U < 1 one has tilde{U}*nu < 1 and the susceptibility does not diverge. The leading beyond-MF effect is therefore suppression of the Stoner instability, a result Kanamori discussed in the 1960s. The story changes with anisotropy. For the AlAs two-valley model with elliptical Fermi surfaces and anisotropy eta, the inter-valley susceptibility ratio chi2/chi1 decreases with eta, so anisotropy favors zero-momentum orders. Beyond mean field the intra-valley coupling is strongly reduced but the inter-valley coupling is reduced less, approaching its bare value at strong anisotropy; above eta = 2 + sqrt(3) the valley-polarization renormalization actually increases the ordering tendency, and for eta much greater than one the valley-polarized Stoner transition occurs at smaller U than mean field. Thus ferromagnetic and staggered-ferromagnetic order are suppressed within the logarithmic approximation, but valley polarization survives and remains Stoner-like, first order into a half-metal with a diverging valley susceptibility. The unconventional mean-field behavior is therefore not an artifact of mean field; it persists, in some parameter regimes, once fluctuations are included. The paper is also a methodological object. It uses the Luttinger-Ward functional, E_LW[G] = -ln det[-G^{-1}] - tr[Sigma*G] + Phi[G], which automatically yields a self-consistent conserving approximation, and it contrasts this with the RPA calculation of a competing group, which sums particle-hole ring diagrams non-self-consistently and finds first-order transitions without a diverging susceptibility. The difference is structural: the particle-particle ladder has a combinatoric 1/l cancellation that the RPA lacks, so the two schemes disagree about whether the susceptibility diverges even when they agree about the sequence of ordered states. The authors are explicit that self-consistency does not guarantee the best approximation, and that the RPA screened interaction never reaches nu*U = 1 because it is bounded by one quarter. Now the composition into the Foundry, and the discipline it requires. The physics supplies universal shapes, not football facts: a dimensionless control parameter crossing a threshold, an exactly quadratic effective potential forcing a discontinuous jump with a diverging precursor, a fluctuation-induced downward renormalization of a bare coupling, a large logarithm licensed only by scale separation, an anisotropy that lifts a degeneracy and selects one ordered channel, a conserving versus non-conserving evaluation scheme, and an explicit validity boundary beyond which conclusions are not licensed. Each maps to the 22-player system only as a derived Layer-2 isomorphism: tipping points in team dynamics, shrinkage of small-sample mean-field confidence, scale-separated corrections, asymmetry-driven selection of an adaptation, self-consistent sealed evaluation, and era/scale validity tags. The reasoning earns its keep at the vetoes. The logarithmic approximation breaks down at large U, so a negative result inside it is not a universal negative; the RPA screened interaction never reaches the divergence, so the conclusion is scheme-dependent; self-consistency is necessary for coherence but not sufficient for accuracy; and the control parameter ln(Lambda/k_F) ceases to be large for gate-screened interactions, collapsing the whole expansion. The compiled stance is to adopt these as kernels and vetoes, to keep every football binding marked as derived, to record the large-U fate as the open question the authors leave it, and to flag the filename/content mismatch as a corpus provenance defect for the librarian. No win-rate headline, no sportsbook odds, no fabricated gridiron genealogy for Stoner, Kanamori, Luttinger-Ward, or Lieb.",
+   "retrocausal_genealogy": "The hidden state is the layered scar tissue of many-body theory. The mean-field criterion nu*U = 1 is Stoner's itinerant-ferromagnetism scar; the downward renormalization by particle-particle ladders is Kanamori's 1963 scar, cited here as ref 35, that fluctuations suppress mean-field order. The 2D logarithm is the scar of the logarithmically singular two-particle scattering amplitude in two dimensions, the Landau-Lifshitz and Galitskii 1958 lineage cited as refs 44-46. The conserving functional is the Luttinger-Ward 1960 and Baym-Kadanoff 1961 scar, refs 41-43, that a self-consistent approximation must respect conservation laws. The rigorous counterexample is Lieb's 1989 theorem on the half-filled Hubbard lattice, ref 38, and the immediate parent is the authors' own 2024 mean-field result, ref 34. A separate, non-physics scar is the corpus itself: the file carries a fantasy-football title that does not match its content, a provenance defect to be logged, not laundered into a football origin.",
+   "theory_of_mind": "The belief clash here is between theoretical camps and between theory and experiment, which is the physics isomorph of the Foundry's analyst disagreement. The RPA group, Calvera and collaborators, ref 32, believes the transitions are first order without a diverging susceptibility, scenario II, because they sum particle-hole rings; this group believes they remain Stoner-like with a divergence, scenario I, because they sum particle-particle ladders. Each camp's conclusion is rational given its diagram class, so the disagreement is about which control parameter is large, not about arithmetic. The experimentalists, the Shayegan group, measured a valley susceptibility that grows as density decreases but could not measure the immediate vicinity of the critical point, so the decisive datum is missing. The recursive lesson for the Foundry is that competing models can be internally consistent yet disagree because they privilege different corrections, and the tie-breaker is a measurement at the boundary, not a louder assertion.",
+   "cross_layer_veto": "Four cross-layer vetoes bind any conclusion drawn from this paper. The validity veto: the logarithmic approximation holds only for nu*U < 1 and k_F << Lambda, so a no-transition result inside it is not a universal negative, and the large-U fate must stay an open question. The scheme veto: the RPA screened interaction is bounded by one quarter and never reaches nu*U = 1, so whether the susceptibility diverges is approximation-scheme dependent and cannot be asserted absolutely. The sufficiency veto: self-consistency guarantees a conserving approximation but not the best one, so coherence does not license accuracy. The scale veto: for gate-screened interactions the cutoff Lambda is set by the plate separation and can be comparable to k_F, collapsing ln(Lambda/k_F) and invalidating the entire enhancement. These map to the Foundry's rules that a model's regime tag vetoes extrapolation and that an open question is recorded as open. Physics vetoes overreach; it does not fabricate football."
+  }
+ ],
+ "universal_lens": "Mean-field theory overestimates ordering; fluctuations renormalize the coupling downward, and a large logarithm is licensed only by scale separation. A first-order jump can coexist with a diverging precursor when the effective potential is exactly quadratic in the order parameter. The universal audit asks whether a model respects its control parameter, its conserving structure, and its validity boundary, and whether a negative result inside a regime is mistaken for a universal negative.",
+ "gsi_mapping": "Symmetry-breaking phase transitions model motor-state and gait transitions: an order parameter jumps discontinuously while a response function grows near the threshold, the isomorph of critical slowing down before a skill tipping point. Anisotropy selecting one ordered channel maps to asymmetric training favoring one adaptation. Clinical telemetry calibrates it: order-parameter jumps, response functions near transition, and retention across the boundary, with the physics kept as derived analogy.",
+ "gse_mapping": "Regime shifts and tipping points in team dynamics take the first-order-with-diverging-precursor shape; mean-field overconfidence is the isomorph of small-sample overfitting, renormalized downward by independent interactions. The control-parameter and validity-boundary vetoes become era/scale tags, and the conserving Luttinger-Ward structure becomes self-consistent sealed evaluation. All football bindings are derived Layer-2 isomorphisms; no sportsbook odds, internal artifacts only, no fabricated origins."
+}

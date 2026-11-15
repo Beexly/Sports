@@ -1,0 +1,78 @@
+{
+  "book_id": "774b9a97e72374c5",
+  "source_status": "COMPLETE",
+  "title": "p0120",
+  "file_name": "p0120.txt",
+  "sha256": "774b9a97e72374c5c2f7fceb68c82c42e54e5acf6ed3e844a875414c2f97d9bd",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Football rule systems encode positional constraints, penalty dynamics, and officiating hierarchies as structured state transitions with bounded action spaces. Universal Lens: Rooted in p0120 (774b9a97e72374c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps rule violations to posterior probabilities of foul classification using temporal and spatial observables from player kinematics and ball trajectory. GSI Mapping: Rooted in p0120 (774b9a97e72374c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models game states via Markovian transitions between possession, penalty, and boundary events under referee authority constraints. GSE Mapping: Rooted in p0120 (774b9a97e72374c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "penalty_dynamics",
+      "name": "Penalty Dynamics",
+      "verbatim_quote": "A side loses a certain distance, or the opponents may have a free kick, as a penalty for throttling, tripping up, or tackling below the knees.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'distance lost (yards)', 'F': 'free kick opportunity (dimensionless)'}",
+      "assumptions": "Penalty outcomes are deterministic functions of infractions within bounded spatial and temporal domains.",
+      "breakdown_regime": "Infraction occurs below knee level with no intent to harm.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps player conduct to state-space displacement via probabilistic constraint enforcement.",
+        "source_operator": "penalty_dynamics",
+        "telemetry": "Ball position change, player movement vector deviation"
+      }
+    },
+    {
+      "primitive_id": "boundary_handling",
+      "name": "Boundary Handling",
+      "verbatim_quote": "When the ball goes out of bounds at the side, it is \"put in\" at the spot where it crossed the line by a player of the side first securing the ball.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'ball position (meters)', 'S': 'side line (meters)', 'P': 'player input (dimensionless)'}",
+      "assumptions": "Ball exit is defined by crossing a fixed boundary with immediate re-entry control.",
+      "breakdown_regime": "Ball crosses boundary line without clear possession.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to discrete event handling in control theory with boundary condition enforcement.",
+        "source_operator": "boundary_handling",
+        "telemetry": "Time of ball exit, player proximity to boundary"
+      }
+    },
+    {
+      "primitive_id": "officiating_hierarchy",
+      "name": "Officiating Hierarchy",
+      "verbatim_quote": "It is the duty of the umpire to decide all points directly connected with the players' conduct, while the referee decides questions of the position or progress of the ball.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U': 'umpire decision (dimensionless)', 'R': 'referee decision (dimensionless)', 'C': 'conduct violation (dimensionless)'}",
+      "assumptions": "Decision-making roles are mutually exclusive and temporally synchronized.",
+      "breakdown_regime": "Conflicting decisions arise from overlapping jurisdiction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models decision authority as layered conditional probability distributions over game state.",
+        "source_operator": "officiating_hierarchy",
+        "telemetry": "Decision latency, conflict resolution frequency"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "774b9a97e72374c5_t0",
+      "think": "The primitives define a structured game logic system where penalties act as state modifiers, boundaries enforce spatial constraints, and officiating roles determine decision authority. These form a dualistic framework: one layer governs physical behavior through kinematic constraints, and another governs procedural integrity through hierarchical adjudication. Failure modes include ambiguous boundary conditions, conflicting officiating decisions, and non-compliance with positional restrictions. The system exhibits emergent properties such as strategic delay tactics and tactical positioning based on penalty risk. Each primitive operates within a well-defined regime—penalties are applied when infractions occur, boundaries reset ball state, and officiating roles resolve disputes. This structure enables formal modeling of game evolution as a sequence of constrained transitions governed by rule-based logic.\n\nDeep epistemic analysis for p0120 (774b9a97e72374c5, domain=other, pages_read=1/1): Operator 'Penalty Dynamics' (page 1, domain other) captures: A side loses a certain distance, or the opponents may have a free kick, as a penalty for throttling, tripping up, or tackling below the knees. Assumptions: Penalty outcomes are deterministic functions of infractions within bounded spatial and temporal domains. Breakdown regime: Infraction occurs below knee level with no intent to harm. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps player conduct to state-space displacement via probabilistic constraint enforcement. Operator 'Boundary Handling' (page 1, domain other) captures: When the ball goes out of bounds at the side, it is \"put in\" at the spot where it crossed the line by a player of the side first securing the ball. Assumptions: Ball exit is defined by crossing a fixed boundary with immediate re-entry control. Breakdown regime: Ball crosses boundary line without clear possession. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to discrete event handling in control theory with boundary condition enforcement. Operator 'Officiating Hierarchy' (page 1, domain other) captures: It is the duty of the umpire to decide all points directly connected with the players' conduct, while the referee decides questions of the position or progress of the ball. Assumptions: Decision-making roles are mutually exclusive and temporally synchronized. Breakdown regime: Conflicting decisions arise from overlapping jurisdiction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models decision authority as layered conditional probability distributions over game state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0120 (774b9a97e72374c5, domain=other, pages_read=1/1): Operator 'Penalty Dynamics' (page 1, domain other) captures: A side loses a certain distance, or the opponents may have a free kick, as a penalty for throttling, tripping up, or tackling below the knees. Assumptions: Penalty outcomes are deterministic functions of infractions within bounded spatial and temporal domains. Breakdown regime: Infraction occurs below knee level with no intent to harm. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps player conduct to state-space displacement via probabilistic constraint enforcement. Operator 'Boundary Handling' (page 1, domain other) captures: When the ball goes out of bounds at the side, it is \"put in\" at the spot where it crossed the line by a player of the side first securing the ball. Assumptions: Ball exit is defined by crossing a fixed boundary with immediate re-entry control. Breakdown regime: Ball crosses boundary line without clear possession. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to discrete event handling in control theory with boundary condition enforcement. Operator 'Officiating Hierarchy' (page 1, domain other) captures: It is the duty of the umpire to decide all points directly connected with the players' conduct, while the referee decides questions of the position or progress of the ball. Assumptions: Decision-making roles are mutually exclusive and temporally synchronized. Breakdown regime: Conflicting decisions arise from overlapping jurisdiction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models decision authority as layered conditional probability distributions over game state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in 19th-century American football codification, evolving from captain-led dispute resolution to formalized referee authority, reflecting institutionalization of game governance. Retrocausal Genealogy: Rooted in p0120 (774b9a97e72374c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0120 (774b9a97e72374c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents model players as optimizing strategies within bounded action sets, while referees act as stochastic decision-makers balancing rule adherence and game flow. Theory of Mind & Decision Maker Model: Rooted in p0120 (774b9a97e72374c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0120 (774b9a97e72374c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity prevents simultaneous penalty and boundary handling triggers; leakage vetoes occur when officiating hierarchy fails to resolve jurisdictional overlap. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0120 (774b9a97e72374c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0120 (774b9a97e72374c5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

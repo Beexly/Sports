@@ -1,0 +1,278 @@
+{
+  "book_id": "55e082c734ce5566",
+  "source_status": "COMPLETE",
+  "title": "ReddiEtAl-2026-MachineLearningSystems-Vol2-AtScale",
+  "source_note": "Vol2 'At Scale' (1690 pp). Local SHARD A (sha256 prefix 5). Read a targeted 96-page core: Notation (pp.45-49), ch1 scaling laws + C3 + Fleet Law (pp.82-105), ch2 memory wall + Roofline (pp.138-155), ch5 collectives (pp.346-360), ch6 distributed training (pp.414-428), ch7 fault tolerance (pp.502-514). Vol1 'Foundations' is DELEGATED_GCP (shard c) and was NOT touched. All verbatim quotes verified as exact substrings of the extracted core. Zero sportsbook odds; this is the fleet/systems layer that governs how the GSE ensemble and Foundry swarm execute.",
+  "pages_total": 1690,
+  "pages_read": 96,
+  "primitives": [
+    {
+      "primitive_id": "fleet_law",
+      "name": "Fleet Law (distributed step-time decomposition)",
+      "verbatim_quote": "The Fleet Law turns that diagnostic map into a first estimate of distributed step time. Its terms are a simplified accounting model, so a prediction must state how work is divided and which costs overlap.",
+      "page": "p.100 (eq 1.3); terms pp.100-102",
+      "latex": "T_{\\mathrm{step}}(N) = \\frac{T_{\\mathrm{compute}}}{N} + T_{\\mathrm{comm}}(N) + T_{\\mathrm{sync}}(N) - T_{\\mathrm{overlap}}",
+      "symbol_and_unit_ledger": "T_step,T_compute,T_comm,T_sync,T_overlap: seconds [s]; N: device count [dimensionless integer]. T_compute/N assumes ideally divisible local arithmetic; T_overlap subtracts only transfer/coordination hidden behind useful compute on the measured timeline.",
+      "assumptions": "Fixed global workload strong-scaled across N devices; local arithmetic divides cleanly by N; overlap subtracted only where the execution timeline supports it; measured-reference vs arithmetic-idealization convention must be stated.",
+      "breakdown_regime": "Breaks when partitioning shrinks per-device batch enough to lower kernel utilization or add recomputation (T_compute/N no longer invariant); weak scaling, load imbalance, memory-capacity change, or algorithm change require re-deriving terms. Double-counting a barrier interval that contains an unfinished transfer inflates both T_comm and T_sync.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The GSE 10,000-world Monte Carlo ensemble is a distributed step: T_compute/N = per-world snap simulation divided across workers; T_comm = ontology-state/gradient exchange between workers; T_sync = barrier waiting on the slowest world (straggler) + JEV adjudication synchronization; T_overlap = snap physics hidden behind I/O. GSE ensemble wall-clock is governed by this exact decomposition, not by world-count alone.",
+        "source_operator": "fleet_law",
+        "telemetry": "GSE telemetry: per-batch ensemble step time vs N workers; f_compute=(T_compute/N)/T_step. If f_compute<0.5 the ensemble is communication/coordination-bound and adding workers will not speed the crucible."
+      }
+    },
+    {
+      "primitive_id": "scaling_law",
+      "name": "Power-law scaling law with irreducible floor",
+      "verbatim_quote": "Scaling laws do not guarantee unbounded improvement. Each incremental performance gain must be weighed against its resource cost. As systems approach practical scaling limits, the emphasis shifts from scaling alone to efficient scaling: balancing performance, cost, energy consumption, and environmental impact.",
+      "page": "p.91 (sec 1.3.4); Theorem 1.1 p.87",
+      "latex": "\\mathcal{L}(X) = A_{\\mathcal{L}}\\, X^{-\\alpha_{\\mathrm{scale}}} + C_{\\mathcal{L}}",
+      "symbol_and_unit_ledger": "L(X): loss [nats/token or task loss]; X: resource quantity (parameters, tokens, or compute FLOPs); A_L: task-dependent amplitude [loss units]; alpha_scale: scaling exponent [dimensionless]; C_L: irreducible loss floor [loss units], a fit constant NOT a C3 label. Halving the reducible term requires X -> X*2^{1/alpha_scale}.",
+      "assumptions": "Balanced regime where the power-law fit was measured; loss well above the irreducible floor C_L; resource X is the binding dimension; fit constants task-dependent.",
+      "breakdown_regime": "Breaks when one dimension outpaces the others (model size grows faster than tokens -> undertrained; data exhausted -> capacity plateau). An observed plateau does NOT establish the irreducible floor: limited coverage, insufficient capacity, or incomplete optimization also flatten the curve. Downstream task utility can stall while fitted loss still falls.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE simulation-budget allocation: X = number of simulated worlds (or snap-samples); L(X) = estimation error of the win-probability / edge posterior. Error decays as a power law toward C_L = the aleatoric noise floor of football (the irreducible uncertainty no amount of simulation removes — links to Prince bias-variance-noise). The exponent alpha_scale is GSE's price list: halving Monte Carlo error costs 2^{1/alpha_scale} more worlds.",
+        "source_operator": "scaling_law",
+        "telemetry": "GSE telemetry: ensemble posterior variance vs world-count on log-log axes; fitted alpha_scale and floor C_L. Detect the saturation regime where more worlds buy negligible variance reduction (data/coverage-limited, not compute-limited)."
+      }
+    },
+    {
+      "primitive_id": "comm_intensity",
+      "name": "Communication intensity and fabric balance",
+      "verbatim_quote": "Low communication intensity describes compute-heavy workloads whose accelerators spend most of their time doing math, so scaling is comparatively easy.",
+      "page": "p.82 (eq 1.1)",
+      "latex": "\\mathrm{CI} = \\frac{M}{O}",
+      "symbol_and_unit_ledger": "CI: communication intensity [bytes/operation, e.g. bytes/FLOP]; M: bytes the worker moves across the network in the interval [bytes]; O: local operations performed in the same interval [FLOPs]. Fabric balance = per-worker network bandwidth / peak arithmetic throughput [bytes/FLOP]. Must state whether M counts sent, received, or both.",
+      "assumptions": "Same worker and same interval for numerator and denominator; comparison states sent/received/both; fabric balance is configuration-specific (depends on local throughput AND effective network bandwidth).",
+      "breakdown_regime": "Past the fabric balance point, transfers take longer than the local computation they accompany. Splitting a fixed batch across more accelerators shrinks O per worker while leaving M in place or adding collective overhead, raising CI and making the step SLOWER. 175B example: CI ~ 8e-5 bytes/FLOP sits near an A100 fabric balance, so without overlap the exchange roughly doubles the step.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE communication intensity = ontology-state bytes exchanged per snap simulated. A snap that requires fetching large defensive-shell / coverage tensors from the shared ontology (high M) but does little local physics (low O) is communication-bound. Adding GSE workers to a high-CI ontology workload slows the ensemble, exactly as Reddi's fabric-balance argument predicts.",
+        "source_operator": "comm_intensity",
+        "telemetry": "GSE telemetry: bytes of ontology state moved per snap / local snap FLOPs; compare to the swarm fabric balance (inter-worker bandwidth / per-worker snap rate). Flag high-CI snaps for ontology caching / locality."
+      }
+    },
+    {
+      "primitive_id": "chinchilla_6pd",
+      "name": "Compute-optimal allocation and the 6PD training-FLOP law",
+      "verbatim_quote": "This corrected earlier guidance that favored making models larger while training them on comparatively fewer tokens. The objective is loss at a fixed training-compute budget.",
+      "page": "p.85 (sec 1.3.2); O_train p.84; ~20 tokens/param p.84",
+      "latex": "O_{\\mathrm{train}} \\approx 6\\, P\\, D",
+      "symbol_and_unit_ledger": "O_train: total training work [FLOPs]; P: parameter count [dimensionless]; D: training tokens [dimensionless]. 6 = 2 FLOPs/param/token forward + 4 backward. Chinchilla compute-optimal ratio ~20 tokens/parameter; GPT-3 was undertrained at ~1.7 tokens/param. IsoFLOP curve is U-shaped; valley = best model size for the budget.",
+      "assumptions": "Dense transformer; fixed compute budget; within the studied scaling regime; training-compute objective only (a serving deployment must also account for inference cost, so its preferred allocation need not minimize training compute).",
+      "breakdown_regime": "Breaks when model size and tokens are not scaled together (undertrained large models). The compute-optimal point minimizes TRAINING loss at fixed budget, not deployment cost; inference-heavy serving shifts the optimum. FLOPs (work) must not be confused with FLOP/s (throughput): time = work/(eta_hw * R_peak).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE compute-optimal frontier: split a fixed simulation budget between ontology depth/complexity (P, the 'model') and number of worlds/snaps (D, the 'data'). Over-building the ontology with too few worlds is GSE's GPT-3 mistake (undertrained). Derived kernel: choose (ontology complexity, world-count) on the IsoFLOP valley, ~proportional scaling, rather than maximizing ontology sophistication alone.",
+        "source_operator": "chinchilla_6pd",
+        "telemetry": "GSE telemetry: IsoFLOP-style sweep of posterior calibration error vs (ontology depth, world-count) at fixed budget; locate the valley. Detect undertrained-ontology regime (high depth, low worlds)."
+      }
+    },
+    {
+      "primitive_id": "reliability_gap",
+      "name": "Reliability gap (all-component availability)",
+      "verbatim_quote": "Every added required component lowers the probability that the full set is available, so reliability engineering becomes a scaling problem rather than a cleanup task.",
+      "page": "p.93 (eq 1.2)",
+      "latex": "A_{\\mathrm{all}} = (A_{\\mathrm{component}})^{N}",
+      "symbol_and_unit_ledger": "A_all: probability every required component is up at the same instant [dimensionless probability]; A_component: single-component availability [probability]; N: number of independent components the job requires simultaneously [integer]. 99.9% per node, N=1000 -> 36.8%; N=10000 -> 0.0045%. 99.99% per node, N=10000 -> 36.8%.",
+      "assumptions": "Independent components; unreplicated synchronous job requiring ALL N at once; availability is a time-fraction (probability up at an instant), not a count of failures.",
+      "breakdown_regime": "The exponent N overwhelms any per-node availability below one: adding a nine only postpones the collapse. At fleet scale an unreplicated synchronous workload cannot rely on unbroken uptime; resilience (recovery speed, checkpoint quality, automated repair) replaces prevention as the governing objective.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Foundry extraction swarm and the GSE ensemble are unreplicated synchronous jobs: a crucible batch needs every assigned worker/world healthy at once. With N workers each at availability A, the probability the whole batch is simultaneously up is A^N. At swarm scale, worker failure is the common case, not the exception — the gatekeeper must treat failure as steady state.",
+        "source_operator": "reliability_gap",
+        "telemetry": "GSE telemetry: per-worker availability A; predicted batch availability A^N vs observed batch-stall frequency. Trigger checkpoint/elastic-recovery policy when A^N falls below the batch-completion target."
+      }
+    },
+    {
+      "primitive_id": "roofline",
+      "name": "Roofline model (attainable throughput ceiling)",
+      "verbatim_quote": "Most LLM inference operators fall well below this threshold, which is why the roofline remains the first diagnostic tool for identifying whether more compute or more bandwidth will improve performance.",
+      "page": "p.148 (eq 2.1)",
+      "latex": "\\text{Achievable FLOP/s} = \\min\\!\\big(R_{\\mathrm{peak}},\\ \\mathrm{BW}\\times I\\big)",
+      "symbol_and_unit_ledger": "Achievable FLOP/s: attainable throughput [FLOP/s]; R_peak: peak arithmetic throughput [FLOP/s]; BW: memory bandwidth [bytes/s]; I: arithmetic intensity [FLOP/byte]. Below the ridge the sloped bandwidth ceiling BW*I binds; above it the flat compute roof R_peak binds. A measured kernel can sit below either ceiling.",
+      "assumptions": "Single-accelerator model; I counts bytes at the memory level being modeled; weight-traffic-only idealization for the LLM examples; measured placement must also count activation, KV-cache, and optimizer traffic.",
+      "breakdown_regime": "A point below the ceiling needs further diagnosis: dependencies, insufficient parallel work, irregular access, synchronization, and power limits all prevent approaching the ceiling. The gap identifies a profiling question; it does NOT establish that software optimization can recover the whole difference. Roofline is a screening test, not a throughput forecast.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The GSE snap simulator is roofline-bound: I = snap-physics FLOPs per byte of ontology/coverage state fetched. Ontology-lookup-heavy snaps (low I) are memory-bound — faster physics compute does not help; more ontology bandwidth/caching does. Physics-heavy snaps (high I) are compute-bound. GSE hardware/kernel selection must start from the snap's arithmetic intensity, not from peak FLOP/s.",
+        "source_operator": "roofline",
+        "telemetry": "GSE telemetry: per-snap arithmetic intensity I vs the simulator ridge point; classify each snap kernel memory-bound vs compute-bound; verify that a proposed upgrade raises the BINDING ceiling."
+      }
+    },
+    {
+      "primitive_id": "ridge_point",
+      "name": "Ridge point (precision-dependent efficiency threshold)",
+      "verbatim_quote": "A rising ridge point over hardware generations indicates that compute is growing faster than bandwidth, making utilization harder.",
+      "page": "p.148 (Definition 2.3)",
+      "latex": "I_{\\mathrm{ridge}} = \\frac{R_{\\mathrm{peak}}}{\\mathrm{BW}}",
+      "symbol_and_unit_ledger": "I_ridge: ridge-point arithmetic intensity [FLOP/byte]; R_peak: peak arithmetic throughput [FLOP/s]; BW: memory bandwidth [bytes/s]. H100 FP16: 989 TFLOP/s / 3.35 TB/s ~ 295 FLOP/byte. Varies by precision: R_peak higher for INT8 than FP32 while BW constant, so INT8 ridge is much higher.",
+      "assumptions": "Per-precision R_peak with a common BW; the ridge is an architecture balance, not a single fixed number for the device.",
+      "breakdown_regime": "Misconception: an accelerator has a single ridge point. It varies by precision. Batch-1 decode I~1 FLOP/byte sits far below the H100 ridge (295), so it is deeply memory-bound; large-batch training I~2048 crosses the ridge to the compute roof. Decode and training intensities differ by ~2048x on the same hardware.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE precision/batching policy: the simulator's ridge point sets how much ontology reuse (batching worlds over the same coverage shell) is needed before physics compute saturates. Derived kernel: batch GSE worlds that share a defensive shell so each fetched ontology byte serves many snap simulations, raising I above the ridge — the GSE analogue of moving decode->training on the roofline.",
+        "source_operator": "ridge_point",
+        "telemetry": "GSE telemetry: effective I as a function of worlds-batched-per-shell; locate the batch size where the simulator crosses its ridge; confirm utilization gain tracks the roofline bound."
+      }
+    },
+    {
+      "primitive_id": "alpha_beta",
+      "name": "Alpha-beta transfer cost model and crossover size",
+      "verbatim_quote": "Pricing a collective therefore requires separating the fixed time to initiate each message from the rate at which bytes move once in transit.",
+      "page": "p.359 (sec 5.5); model p.41; crossover p.360",
+      "latex": "T(n) = \\alpha + \\frac{n}{\\beta}, \\qquad n^{*} = \\alpha\\,\\beta",
+      "symbol_and_unit_ledger": "T(n): transfer time for n bytes [s]; alpha: per-message startup latency [s] (includes software overhead, PCIe, switching; NOT one-time communicator init); beta: sustained per-direction bandwidth [bytes/s]; n: message size [bytes]; n*: critical crossover size [bytes] where startup=transfer. InfiniBand NDR alpha~1.5us, beta~50GB/s -> n*~75KB; NVLink beta 450GB/s -> n*~0.7MB.",
+      "assumptions": "Effective-path alpha and beta (not wire specs); compare n* against each schedule step's chunk M/N, not the whole tensor M; alpha from a matched collective benchmark.",
+      "breakdown_regime": "Below n* a step is latency-bound; above it bandwidth-bound. A large bucket split into N tiny chunks can fall below n* and pay startup per chunk. Fusion: 100 x 4KB messages cost ~100*alpha=150us; fused to 400KB cost alpha+n/beta~9.5us (~16x). Compressing a 4KB routing message offers little because alpha already dominates.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE swarm message pricing: every ontology-state/gradient exchange between Foundry workers pays alpha + n/beta. Small frequent snap-state messages are latency-bound (below n*); fusing them into larger buckets is the first GSE optimization. The crossover n*=alpha*beta tells GSE when to coalesce snap updates vs when to compress large ontology tensors.",
+        "source_operator": "alpha_beta",
+        "telemetry": "GSE telemetry: per-message size distribution vs measured n*; startup-dominated fraction; verify bucket fusion reduces modeled collective cost ~16x on latency-bound exchanges."
+      }
+    },
+    {
+      "primitive_id": "ring_allreduce",
+      "name": "Ring AllReduce bandwidth-optimal gradient synchronization",
+      "verbatim_quote": "In ring AllReduce, each worker communicates with neighbors according to a schedule, and the per-node communication volume is approximately constant as the cluster grows.",
+      "page": "p.349 (Definition 5.1); cost table p.357",
+      "latex": "V_{\\mathrm{ring}} = \\frac{2(N-1)}{N}\\, M \\;\\;\\xrightarrow{N\\to\\infty}\\;\\; 2M",
+      "symbol_and_unit_ledger": "V_ring: bytes sent per worker per step [bytes]; N: rank count [integer]; M: gradient payload bytes per replica [bytes] (= P params x storage width; BF16 = 2 bytes/param). Ring bandwidth-optimal cost 2(N-1)/N * M_coll/beta but O(N) latency; simple full-message tree O(log N) latency with more byte work. AllReduce = ReduceScatter + AllGather.",
+      "assumptions": "Synchronous data-parallel SGD; each worker sends to neighbors only (not all-to-all); equal local batch sizes for the plain average; floating-point reduction order can change low-order bits (not bitwise identical across algorithms).",
+      "breakdown_regime": "Misconception: ring AllReduce makes every worker exchange with every other worker — it does not; per-node volume ~constant as N grows. Scaling pressure comes from latency steps, topology, and gradient volume per step, not from N distinct streams. A centralized parameter server instead concentrates O(N) traffic at one node and saturates its NIC.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE ensemble aggregation: combining per-world edge posteriors / gradient contributions across the swarm is an AllReduce. Ring schedule keeps per-worker ontology traffic ~constant as the swarm grows (vs a central aggregator that saturates). GSE must use the ReduceScatter+AllGather decomposition when each worker only needs its own shard of the aggregated posterior.",
+        "source_operator": "ring_allreduce",
+        "telemetry": "GSE telemetry: per-worker aggregation bytes vs N (should plateau near 2M); compare flat-ring vs hierarchical (intra-node then inter-node) schedule cost; detect central-aggregator NIC saturation."
+      }
+    },
+    {
+      "primitive_id": "parallelism_3d",
+      "name": "3D parallelism configuration cube",
+      "verbatim_quote": "The axes represent distinct mathematical partitions, but they are not independent configuration knobs. Tensor and pipeline degrees must divide the model structure, the data-parallel degree and microbatch schedule must produce a viable global batch, every partition must fit memory, and each communication group must map onto an adequate topology and acceptable failure domain.",
+      "page": "p.420 (sec 6.2, fig 6.2)",
+      "latex": "N = N_{\\mathrm{DP}} \\times N_{\\mathrm{PP}} \\times N_{\\mathrm{TP}}",
+      "symbol_and_unit_ledger": "N: total accelerator allocation [integer]; N_DP: data-parallel degree (batch replication) [integer]; N_PP: pipeline-parallel degree (sequential stage partitioning) [integer]; N_TP: tensor-parallel degree (intra-layer sharding) [integer]. Each cell is one accelerator coordinate (N_DP,N_PP,N_TP).",
+      "assumptions": "Joint feasibility: tensor/pipeline degrees must divide model structure; data-parallel degree + microbatch schedule must yield a viable global batch; every partition must fit memory; each communication group must map onto adequate topology and failure domain.",
+      "breakdown_regime": "Tuning N_DP, N_PP, N_TP in isolation fails: a strategy placing frequent high-volume exchanges on a slow link fails before leaving the whiteboard. Tensor parallelism (per-layer AllReduce) favors the fast NVLink domain; pipeline/data parallelism tolerate slower links when traffic budgets fit. Bandwidth feasibility check: layer collective time must fit the layer compute time.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE partition cube: N_worlds (data-parallel replication of the ensemble) x N_snap-stages (pipeline partition of the Q1->Q4 snap sequence) x N_ontology-shards (tensor partition of the coverage/physics state). Derived kernel: select a jointly feasible GSE coordinate where each axis's traffic fits its interconnect tier — snap-stage activations on fast links, world-replica aggregation on slower links.",
+        "source_operator": "parallelism_3d",
+        "telemetry": "GSE telemetry: per-axis traffic volume vs tier bandwidth; feasibility screen flagging any axis whose collective time exceeds its compute budget; memory fit per partition."
+      }
+    },
+    {
+      "primitive_id": "exp_reliability",
+      "name": "Exponential system reliability and inverse-MTBF scaling",
+      "verbatim_quote": "This inverse scaling explains why per-device reliability that looks excellent in isolation erodes at cluster scale",
+      "page": "p.506 (eqs 7.3, 7.4); single-component p.505",
+      "latex": "R_{\\mathrm{system}}(t) = e^{-N\\lambda t}, \\qquad \\mathrm{MTBF}_{\\mathrm{system}} = \\frac{1}{N\\lambda} = \\frac{\\mathrm{MTTF}_{\\mathrm{component}}}{N}",
+      "symbol_and_unit_ledger": "R_system(t): probability of no system failure before t [probability]; lambda: per-component failure rate [failures/hour]; N: component count [integer]; t: elapsed time [hours, same unit as lambda]; MTBF_system [hours]; MTTF_component=1/lambda [hours]. FIT: 1 FIT = 1 failure per 1e9 device-hours; lambda_hour = FIT x 1e-9. GPU 50,000h MTTF = 20,000 FIT = lambda 2.0e-5/h. Exponent N*lambda*t dimensionless.",
+      "assumptions": "Independent, identical components with constant-rate exponential lifetimes (Poisson process); series system where any single failure fails the whole; MTTF for per-component constants, MTBF for composed system rates.",
+      "breakdown_regime": "The 1/N GPU trend is optimistic: a job is interrupted by far more than its GPUs (PCIe, power, network). Full-system cascade for 10,000 H100 gives MTBF 3.87h vs GPU-only 5h. Llama-3 measured 419 interruptions / 54 days / 16,384 H100 -> MTTF ~3.1h. Once expected failure interval < job length, fault tolerance is part of the execution budget.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Foundry swarm failure cadence: with N extraction/simulation workers each at failure rate lambda, the swarm's mean time between failures is MTTF/N. A long crucible run accumulates dozens of expected worker failures; the gatekeeper must checkpoint and recover as normal execution, not as an exceptional path. Series composition (any worker failure stalls the synchronous batch) is the training-job problem.",
+        "source_operator": "exp_reliability",
+        "telemetry": "GSE telemetry: per-worker FIT/MTTF; predicted swarm MTBF=MTTF/N vs observed interruption cadence; expected failures per crucible run = run_length / MTBF_swarm."
+      }
+    },
+    {
+      "primitive_id": "young_daly",
+      "name": "Young-Daly optimal checkpoint interval",
+      "verbatim_quote": "Checkpointing too frequently wastes wall time writing state to storage, whereas checkpointing too rarely loses long stretches of training work when a node fails.",
+      "page": "p.46 (Notation: Cluster Reliability, Fault Tolerance, and Checkpointing)",
+      "latex": "T^{*}_{\\mathrm{ckpt}} = \\sqrt{2\\, T_{\\mathrm{write}}\\, \\mathrm{MTBF}_{\\mathrm{system}}}",
+      "symbol_and_unit_ledger": "T*_ckpt: optimal useful-compute interval between checkpoints [s]; T_write: time to persist model state to storage [s]; MTBF_system: system-wide mean time between failures [same time unit as T_write]. MTBF reported in hours must be x3600 to combine with seconds-scale T_write. Result carries the input time unit.",
+      "assumptions": "Uses SYSTEM-wide MTBF (whole-job failure interval), NOT a component lifetime; T_write and MTBF_system in the same time unit; balances I/O overhead against recomputation rework.",
+      "breakdown_regime": "Substituting the per-component MTTF overestimates T*_ckpt by sqrt(N). Checkpointing too frequently wastes wall time on writes; too rarely loses long stretches of work on failure. The formula minimizes total wasted time (write overhead + expected replay).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Foundry checkpoint cadence: the swarm should checkpoint every T*_ckpt = sqrt(2 * T_write * MTBF_swarm) of useful extraction/simulation work, where T_write is the time to persist the corpus state (foundry.db + artifacts) and MTBF_swarm is the whole-swarm failure interval. Derived kernel: set the gatekeeper's checkpoint frequency from measured swarm MTBF, not from per-worker lifetime (which would overestimate by sqrt(N)).",
+        "source_operator": "young_daly",
+        "telemetry": "GSE telemetry: measured T_write (state persist time) and MTBF_swarm; computed T*_ckpt; observed wasted-time fraction (write overhead + replay) minimized at that cadence."
+      }
+    },
+    {
+      "primitive_id": "availability_mttr",
+      "name": "Steady-state availability and the recovery lever",
+      "verbatim_quote": "Engineering faster recovery is one response to that arithmetic; redundancy is the other.",
+      "page": "p.507 (Systems Perspective 7.1)",
+      "latex": "A = \\frac{\\mathrm{MTBF}}{\\mathrm{MTBF} + \\mathrm{MTTR}}",
+      "symbol_and_unit_ledger": "A: steady-state availability [probability]; MTBF: mean time between failures [hours]; MTTR: mean time to recovery [hours]. Cutting MTTR 30min->5min raises A from 90.91% to 98.36% (at MTBF 5h). Parallel redundancy: R_system = 1 - prod(1 - R_single_i).",
+      "assumptions": "Stationary two-state repairable model; unconstrained repair capacity; complete outage; independent failures. Series composition for training (every participant needed); parallel composition for serving (interchangeable replicas).",
+      "breakdown_regime": "Correlated incidents, repair contention, and degraded operation require direct measurement — the two-state model does not cover them. Availability A (probability up at an instant, counting repairs) is distinct from the survival function R_single(t) (probability not yet failed by t).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE recovery-first policy: since swarm MTBF collapses as 1/N, the lever is MTTR (fast worker replacement + checkpoint reload), not component reliability. Derived kernel: invest in elastic recovery (spare pool, prepositioned replacements, fast state reload) to cut MTTR; use parallel redundancy for the serving path (interchangeable dossier replicas) but series-aware checkpointing for the synchronous crucible.",
+        "source_operator": "availability_mttr",
+        "telemetry": "GSE telemetry: MTTR distribution (detect->restart->checkpoint-load->warmup); availability A before/after recovery-speed investment; spare-pool hit rate."
+      }
+    },
+    {
+      "primitive_id": "r_eff",
+      "name": "Effective fleet throughput factorization",
+      "verbatim_quote": "Fleet capacity metrics compound single-device arithmetic efficiency, scaling efficiency, and operational losses.",
+      "page": "p.49 (Notation: Fleet capacity factors and goodput)",
+      "latex": "R_{\\mathrm{eff}} = (N\\, R_{\\mathrm{peak}}) \\times \\mathrm{MFU} \\times \\eta_{\\mathrm{scaling}} \\times \\eta_{\\mathrm{runtime}}",
+      "symbol_and_unit_ledger": "R_eff: effective fleet throughput [FLOP/s]; N: device count [integer]; R_peak: per-device peak [FLOP/s]; MFU: single-device model-FLOPs utilization [dimensionless]; eta_scaling: in-step scaling loss [dimensionless]; eta_runtime: out-of-step operational loss (checkpoint pauses, recovery, preemption) [dimensionless]. MPG = eta_scheduling x eta_runtime x eta_program.",
+      "assumptions": "MFU is the single-device baseline here (fleet MFU = O_useful/(N*R_peak*T_step) already includes in-step scaling loss); eta_runtime captures only out-of-step loss excluded from T_N; a claim about fleet efficiency must name the measure and measurement interval.",
+      "breakdown_regime": "Peak vs sustained: a run budgeted 1000 GPU-hours from datasheet TFLOP/s consumes 2500 GPU-hours at 40% sustained utilization. Capacity planning must use measured/conservative sustained rate (1/eta_hw times the peak estimate). Different efficiency measures (percent-of-peak, MFU, HFU, goodput) answer different questions and are not interchangeable.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE effective ensemble throughput = (N_workers x per-worker snap rate) x MFU x eta_scaling x eta_runtime. The crucible's real delivery is peak world-capacity discounted by in-step scaling loss (communication/stragglers) AND out-of-step operational loss (checkpoint pauses, worker recovery). GSE must budget crucible wall-clock from R_eff, not from peak world-count.",
+        "source_operator": "r_eff",
+        "telemetry": "GSE telemetry: R_eff vs N x R_peak; decompose the loss into MFU, eta_scaling, eta_runtime; name the measure and interval for every efficiency claim in the crucible dossier."
+      }
+    },
+    {
+      "primitive_id": "dp_average",
+      "name": "Data-parallel gradient averaging preserves the SGD estimator",
+      "verbatim_quote": "Data parallelism therefore maintains the statistical properties of SGD training, because sampling the intended global batch across devices, computing local gradient sums independently, and normalizing by the aggregate denominator reproduces its estimator.",
+      "page": "p.424 (sec 6.3)",
+      "latex": "g_{\\mathrm{global}} = \\frac{1}{|B_{\\mathrm{total}}|} \\sum_{k} |\\mathcal{B}_k|\\, g_k",
+      "symbol_and_unit_ledger": "g_global: combined-batch gradient [loss/param units]; B_total: union of all local batches [examples]; B_k: worker k's local batch [examples]; g_k: worker k's local mean gradient [loss/param]. Equal local batches reduce to g_global=(1/N) sum g_k; unequal batches require the valid-example-weighted average.",
+      "assumptions": "Sampling and weighting reproduce the intended global-batch estimator; complete local gradient contributions; single synchronized update; equal-batch assumption for the plain mean; an unweighted mean of unequal local means overweights workers with smaller denominators.",
+      "breakdown_regime": "The SGD equivalence fails if data splitting breaks the intended sampling/weighting (e.g. padding repeats not accounted for in loss normalization). The sampler is an integral part of the distributed system, not an input-loader convenience. Bitwise reproducibility additionally depends on kernel determinism, collective reduction order, precision, and checkpointed RNG state.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE ensemble averaging: combining per-world edge estimates must weight each world by its valid snap/sample count, not take an unweighted mean of worlds with unequal sample counts (which overweights sparse worlds). The GSE aggregator reproduces the intended global posterior only if sampling and weighting across worlds are preserved — the exact data-parallel SGD invariant.",
+        "source_operator": "dp_average",
+        "telemetry": "GSE telemetry: per-world valid-sample counts; verify weighted vs unweighted aggregation divergence; detect worlds with small denominators being overweighted in the edge posterior."
+      }
+    },
+    {
+      "primitive_id": "memory_budget",
+      "name": "Peak-residency memory budget (weights+gradients+optimizer+activations)",
+      "verbatim_quote": "The capacity test must include activations rather than stopping at bytes per parameter.",
+      "page": "p.427 (sec 6.3.1.2)",
+      "latex": "M_{\\mathrm{total}} = M_{\\mathrm{weights}} + M_{\\mathrm{gradients}} + M_{\\mathrm{optimizer}} + M_{\\mathrm{activations}}",
+      "symbol_and_unit_ledger": "M_total: peak-residency memory [bytes]; M_weights, M_gradients, M_optimizer, M_activations: component state [bytes]. Mixed-precision Adam convention ~16 bytes/parameter (weights+gradients+FP32 master+moments). GPT-3 175B: ~350GB BF16 weights, ~2.8TB with Adam state (>=35 H100s before activations). Communication buffers/workspaces add headroom.",
+      "assumptions": "Peak residency, not just parameter bytes; sharding reduces the first three terms by stage; sequence length, local batch size, and pipeline scheduling govern M_activations; activation checkpointing trades memory for recomputation.",
+      "breakdown_regime": "Stopping the capacity test at bytes/parameter misses activations (175B example: ~1.1TB activations at batch 4 x seq 2048, reduced to ~19.3GB by checkpointing at ~1/3 extra compute). Full recomputation raises HFU but not MFU (credits only the model's own forward/backward work) — feasibility bought with recomputation is paid for in useful throughput.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE simulator memory budget: peak residency = ontology weights + per-world gradients/edge-state + optimizer/learning state + live snap activations (coverage tensors, JEV context). GSE must budget activations, not just ontology bytes; activation-checkpointing the snap sequence (recompute coverage shells on demand) trades memory for extra physics compute — the same HFU-vs-MFU distinction applies to GSE's useful-world throughput.",
+        "source_operator": "memory_budget",
+        "telemetry": "GSE telemetry: peak-residency breakdown (ontology/gradient/optimizer/activation); activation-checkpoint memory saving vs extra snap-recompute cost; useful-world throughput (MFU analogue) vs raw compute (HFU analogue)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t0",
+      "think": "The Reddi volume is not a football book, and that is exactly why it is sovereign for GSE. Every prior layer of the Foundry ontology tells the engine WHAT a snap is: the physics of the trench, the geometry of a coverage shell, the probability calculus of an edge. This volume tells the engine HOW TO RUN the thing that knows all of that. GSE's core deliverable is a 10,000-world snap-by-snap Monte Carlo ensemble adjudicated by JEV, produced by a swarm of extraction and simulation workers. That ensemble is, structurally, a distributed machine-learning fleet. Reddi gives the exact accounting laws of such a fleet, and the isomorphism is not decorative: it is the difference between a crucible that finishes and a crucible that stalls at a barrier while a thousand healthy workers wait on one straggler. Start with the Fleet Law, T_step(N) = T_compute/N + T_comm(N) + T_sync(N) - T_overlap. The naive GSE instinct is that doubling workers halves ensemble time. Reddi shows why that is false: the local compute term halves, but communication and barrier synchronization persist, and the shorter compute window leaves LESS room to hide transfers, so T_overlap shrinks too. The step on 2N devices takes well over half as long. This is the single most important operational fact for the Foundry: adding workers to a communication-bound ontology workload can make the crucible SLOWER. The diagnostic is f_compute = (T_compute/N)/T_step; below 0.5, more than half the step lies outside useful local arithmetic, and the C3 taxonomy tells you whether the binding axis is Compute (the snap physics), Communication (ontology-state transfer), or Coordination (straggler waiting, recovery, JEV adjudication barriers). The scaling law supplies the budget logic. L(X) = A_L X^{-alpha_scale} + C_L says estimation error decays as a power law toward an irreducible floor. For GSE, X is world-count and C_L is the aleatoric noise floor of football itself: the uncertainty no simulation removes, the same noise term Prince separates from bias and variance. The exponent is the price list: halving Monte Carlo error costs 2^{1/alpha_scale} more worlds. And Chinchilla's compute-optimal result is a direct warning against GSE's natural failure mode: over-building the ontology (parameters) while simulating too few worlds (tokens). GPT-3 was undertrained at 1.7 tokens/parameter against Chinchilla's ~20; a GSE ontology of enormous depth validated on a handful of worlds is the same mistake. The IsoFLOP valley, not maximal ontology sophistication, is the target. The 6PD law (O_train ~ 6PD) is the work-accounting bridge: it converts a budget into FLOPs, and FLOPs must never be confused with FLOP/s, because time = work/(eta_hw R_peak). Then the reliability arithmetic turns failure from an exception into a steady state. A_all = A_component^N and MTBF_system = MTTF_component/N mean that a swarm of N workers, each individually dependable, fails routinely as a whole. The Llama-3 measurement (419 interruptions in 54 days on 16,384 GPUs, MTTF ~3.1h) is the empirical anchor. For the Foundry this is not a hypothetical: a long extraction run accumulates dozens of expected worker failures, so the gatekeeper must checkpoint and recover as normal execution. Young-Daly gives the cadence: T*_ckpt = sqrt(2 T_write MTBF_system), using SYSTEM MTBF, not per-worker lifetime (which overestimates by sqrt(N)). And because MTBF collapses as 1/N, the lever is MTTR: A = MTBF/(MTBF+MTTR) shows cutting recovery 30min->5min raises availability 90.91%->98.36%. Engineer recovery, not component perfection. The memory and communication layers close the loop. The Roofline, min(R_peak, BW x I), and the precision-dependent ridge point I_ridge = R_peak/BW tell GSE whether a snap kernel is ontology-lookup-bound (low arithmetic intensity, memory-bound) or physics-bound (high intensity, compute-bound), and that batching worlds over a shared coverage shell is how you raise intensity above the ridge. The alpha-beta model T(n)=alpha+n/beta with crossover n*=alpha*beta prices every swarm message and tells you to fuse small snap-state updates (latency-bound) but compress large ontology tensors (bandwidth-bound). Ring AllReduce keeps per-worker aggregation volume ~constant as the swarm grows, where a central aggregator saturates. The 3D cube N=N_DP x N_PP x N_TP is the GSE partition: worlds x snap-stages x ontology-shards, each axis mapped to the interconnect tier that can carry its traffic. And the data-parallel invariant is a correctness gate: the ensemble must weight each world by its valid sample count, because an unweighted mean of unequal worlds overweights the sparse ones and silently corrupts the edge posterior. The three scaling phases map cleanly onto GSE's lifecycle and decide which part of the fleet carries the load. Pretraining scaling is the one long, failure-sensitive foundation run: building and calibrating the ontology corpus, where scaling-law gains must be realized in wall-clock time and checkpoint cadence is survival. Posttraining scaling replaces that single job with many smaller, coordination-heavy runs: GSE's per-week calibration and RLVR veto tuning, where the bottleneck shifts from raw throughput to orchestration. Test-time scaling spends compute on each request: GSE's per-game crucible, where additional worlds trade serving latency for a possible quality gain and compete with the pick-publication deadline. Reddi is explicit that the schematic curves establish no universal efficiency ranking, so GSE must compare measured task improvement against cost before choosing where to spend the next increment of compute. The energy account closes the budget: rho_energy = O_useful/(E_device+E_cooling+E_network) in FLOP/J, and communication energy is bytes sent times the energy per bit of every boundary crossed (a fabric-path midpoint ~35 pJ/bit gives ~5.6 kJ per 1GB reduction, paid again every synchronous step). An algorithm that moves fewer bytes, or a placement that keeps them inside the node, saves energy as directly as it saves time. For a zero-cost-bound Foundry this is not an afterthought: the swarm's electricity and egress are part of the honest cost of a crucible, and the same Amdahl accounting that bounds a partial speedup bounds every partial energy saving. The deepest point is the Byzantine/SDC taxonomy. A worker that returns wrong snap values while passing every liveness check is the fleet analogue of a corrupted world simulation poisoning the ensemble. Checksums of wrong bytes still pass; only independent recomputation, invariants, or model-level evidence expose it. That is precisely the gatekeeper's mandate: verify completion, do not assume it. Reddi thus supplies the operational constitution of the Foundry swarm, and every equation is a load-bearing wall, not a metaphor.",
+      "retrocausal_genealogy": "Retrocausal genealogy: the Fleet Law descends from Amdahl's serial-fraction bound (1967) and the single-machine iron law T = D_vol/BW + O/(R_peak eta_hw) + L_lat; the alpha-beta model from Hockney (1994); ring AllReduce from the HPC collective literature (Patarasuk and Yuan 2009) popularized for deep learning by Gibiansky (2017) and NCCL/Horovod; the scaling law from Kaplan (2020) corrected by Chinchilla/Hoffmann (2022); the reliability exponential from Birolini and the Poisson process; Young-Daly checkpointing from the HPC restart literature; the Roofline from Williams, Waterman and Patterson (2009); the Byzantine model from Lamport (1982). Each GSE operational rule is the final cause of a decades-long chain of fleet-engineering necessity, pulled backward from the crucible's need to finish.",
+      "theory_of_mind": "Recursive theory of mind: the fleet engineer models the straggler, who is itself a worker modeling its own local queue; the scheduler models the engineer's recovery policy; the adversary models the fleet's validation. GSE mirrors this recursion exactly: the offense models the defense's coverage shell, the defense models the offense's tendency, and the GSE engine models BOTH models while JEV adjudicates. Reddi's C3 lens is a theory of mind about the machine: an idle accelerator does not identify its own bottleneck, so the operator must infer whether it waits on operands, a transfer, or a failed peer. The GSE operator must likewise infer, for each stalled world, whether it waits on ontology data, a collective, or a corrupted peer, and must not trust a worker that passes liveness but returns wrong values.",
+      "cross_layer_veto": "Cross-layer veto adjudication: the physics/probability layer demands MORE worlds to shrink Monte Carlo error (scaling law), but the fleet layer VETOES naive worker-addition when f_compute<0.5 or CI exceeds fabric balance, because adding workers then slows the step (Fleet Law). The memory layer VETOES a partition that fits weights but not activations (M_total). The reliability layer VETOES an uncheckpointed long run (MTBF_swarm < run_length). The correctness layer VETOES unweighted world-averaging and any worker whose output fails independent recomputation (Byzantine/SDC). When layers conflict, the binding constraint wins and the gatekeeper PASSes rather than fabricating throughput: a crucible that cannot be run honestly within its budget is refused, not faked. This is the same fail-closed discipline as the pick-publication gate."
+    }
+  ],
+  "universal_lens": "Any system that partitions work across unreliable, bandwidth-limited workers is governed by the same accounting: a step-time decomposition (compute/communication/coordination minus overlap), a power-law return on resource investment with an irreducible floor, an inverse-N reliability collapse, and a roofline that decides whether more compute or more bandwidth helps. These laws are substrate-independent: they bind GPU fleets, Monte Carlo ensembles, and extraction swarms alike, and they convert 'add more workers' from an instinct into a diagnosable, falsifiable engineering decision.",
+  "gsi_mapping": "For GSI (the sovereign-intelligence institute), this volume is the operational epistemology of distributed knowing: how a fleet of fallible workers produces a trustworthy aggregate. The reliability gap and Byzantine/SDC taxonomy formalize why verification must be independent of liveness, why a passing checksum of wrong bytes is not evidence, and why the gatekeeper verifies completion rather than assuming it. The scaling law and compute-optimal allocation give GSI a principled budget doctrine: allocate between model depth and evidence volume on the IsoFLOP valley, and recognize the irreducible floor beyond which more compute buys no truth.",
+  "gse_mapping": "For GSE, the 10,000-world snap ensemble IS a distributed fleet: the Fleet Law models its wall-clock, the scaling law sets world-count vs the aleatoric noise floor, Chinchilla warns against an over-deep ontology validated on too few worlds, the Roofline/ridge classifies snap kernels as ontology-bound vs physics-bound, alpha-beta and ring AllReduce price swarm aggregation, the 3D cube partitions worlds x snap-stages x ontology-shards, Young-Daly sets Foundry checkpoint cadence, and the data-parallel invariant gates correct world-weighting. Every equation is a load-bearing operational rule for running the crucible honestly at scale."
+}

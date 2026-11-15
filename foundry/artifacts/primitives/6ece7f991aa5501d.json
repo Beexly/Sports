@@ -1,0 +1,231 @@
+{
+  "book_id": "6ece7f991aa5501d",
+  "source_status": "COMPLETE",
+  "title": "0597-decoding-machine-learning-benchmarks",
+  "file_name": "0597-decoding-machine-learning-benchmarks.md",
+  "sha256": "6ece7f991aa5501d4f8d272244f5429c0fd6e878c19879c4f7f916713b73c8aa",
+  "primary_domain": "cs",
+  "pages_total": 3,
+  "pages_read": 3,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 3,
+  "windows_extracted": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Classifier ability θ and True-Score distributions mapped via Glicko-2 ratings under inverse difficulty-discrimination constraints. A unified framework for evaluating predictive models using item response theory and Glicko-2 ranking to adjust for difficulty bias in backtesting.",
+  "gsi_mapping": "Bayesian True-Score estimation using Glicko-2 with dataset-weighted classifier ability θ, incorporating Nemenyi/Friedman validation for robustness. Bayesian inference over model performance using probabilistic item characteristics to estimate true skill, conditioned on historical pick correctness.",
+  "gse_mapping": "Situational reasoning models classifier state transitions through 60 datasets, where difficulty and discrimination regimes define dynamic action spaces and outcome probabilities. Situational reasoning through state transitions of model versions across game instances, weighted by discrimination and difficulty to optimize future predictions.",
+  "primitives": [
+    {
+      "primitive_id": "6ece7f991aa5501d_w0_g1",
+      "name": "0597-decoding-machine-learning-benchmarks Ch.1 Grounded Operator",
+      "verbatim_quote": "# [0597] Decoding machine learning benchmarks (arXiv:2007.14870v2) **Citation:** Cardoso, L.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6ece7f991aa5501d_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6ece7f991aa5501d_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6ece7f991aa5501d_w0_g2",
+      "name": "0597-decoding-machine-learning-benchmarks Ch.1 Grounded Operator",
+      "verbatim_quote": "**Verdict:** ADAPT — not for classifier benchmarking per se, but for the IRT-based model-evaluation framework: treat historical game-weeks as \"items\" and engine model versions as \"respondents,\" estimate item difficulty/discrimination, and rank models by difficulty-adjusted ability instead of raw accuracy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6ece7f991aa5501d_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6ece7f991aa5501d_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6ece7f991aa5501d_w0_g3",
+      "name": "0597-decoding-machine-learning-benchmarks Ch.1 Grounded Operator",
+      "verbatim_quote": "Research question Can Item Response Theory (IRT), borrowed from psychometrics, diagnose whether the OpenML-CC18 benchmark is actually a good test set for classifiers — and can it simultaneously estimate dataset difficulty and classifier ability, with Glicko-2 summarizing the results into a global ranking?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6ece7f991aa5501d_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6ece7f991aa5501d_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "classifier_ability_theta",
+      "name": "Classifier Ability Estimator",
+      "verbatim_quote": "Targets: classifier ability θ, True-Score per dataset, final Glicko-2 ratings.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'θ': 'dimensionless classifier ability parameter', 'TS': 'True-Score per dataset (unitless)'}",
+      "assumptions": "Classifier responses follow probabilistic item response theory; Glicko-2 assumes stable ability over time.",
+      "breakdown_regime": "When θ approaches ±∞, convergence to optimal/pessimal classification behavior.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "θ derived from empirical classifier performance matrices using Glicko-2 update rules; TS computed as mean accuracy across datasets.",
+        "source_operator": "classifier_ability_theta",
+        "telemetry": "Glicko-2 rating variance and confidence intervals"
+      }
+    },
+    {
+      "primitive_id": "dataset_difficulty_discrimination",
+      "name": "Dataset Difficulty-Discrimination Coupler",
+      "verbatim_quote": "Difficulty and discrimination are inversely related: the hardest datasets (tic-tac-toe, credit-approval, optdigits) are the least discriminating; the most discriminating (banknote-authentication, analcatdata_authorship, texture) are easy.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'dataset difficulty (normalized)', 'Δ': 'dataset discrimination (normalized)'}",
+      "assumptions": "Inverse correlation between D and Δ holds across all 60 datasets; no confounding variables.",
+      "breakdown_regime": "At D=0 or Δ=0, loss of discriminative power or stressability.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "D and Δ form a dual space where high D implies low Δ and vice versa; used to classify dataset utility for stress vs. ranking.",
+        "source_operator": "dataset_difficulty_discrimination",
+        "telemetry": "Correlation coefficient between D and Δ across datasets"
+      }
+    },
+    {
+      "primitive_id": "sanity_anchor_classifier",
+      "name": "Sanity Anchor Classifier",
+      "verbatim_quote": "Artificial classifiers act as sanity anchors (optimal must rank first, pessimal last).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_opt': 'optimal artificial classifier', 'C_pess': 'pessimal artificial classifier'}",
+      "assumptions": "Optimal classifier always ranks above real classifiers; pessimal classifier always below.",
+      "breakdown_regime": "If C_opt fails to rank first, system invalidates ranking validity.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "C_opt and C_pess provide normalization bounds for real classifier rankings; used to validate Glicko-2 consistency.",
+        "source_operator": "sanity_anchor_classifier",
+        "telemetry": "Ranking deviation from anchor bounds"
+      }
+    },
+    {
+      "primitive_id": "nemenyi_friedman_test",
+      "name": "Statistical Separability Validator",
+      "verbatim_quote": "60 datasets, pairwise Nemenyi/Friedman tests on rating distributions (Friedman p ≈ 9.36×10^{-80} for real classifiers).",
+      "page": 2,
+      "latex": "\\chi^2_{\\text{Friedman}} \\sim \\mathcal{X}^2_{k-1}",
+      "symbol_and_unit_ledger": "{'p': 'p-value from Friedman test (dimensionless)', '\\\\chi^2': 'Friedman chi-squared statistic (dimensionless)'}",
+      "assumptions": "Classifiers are independent; data follows monotonic ranking distribution.",
+      "breakdown_regime": "p > 0.05 indicates no statistical separation among top classifiers.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Friedman test maps classifier performance into statistical significance space; used to verify separability of top-ranked classifiers.",
+        "source_operator": "nemenyi_friedman_test",
+        "telemetry": "Friedman p-value and Nemenyi critical difference thresholds"
+      }
+    },
+    {
+      "primitive_id": "irt_evaluation_layer",
+      "name": "IRT Evaluation Layer",
+      "verbatim_quote": "GSE implementation spec Build an IRT evaluation layer over the engine's backtest history: items = historical game-weeks (or individual spread/total picks), respondents = model versions (v5.2.7 and predecessors/challengers), responses = pick correct/incorrect.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'items (historical game-weeks or picks)', 'R': 'respondents (model versions)', 'X_{ir}': 'binary response (correct/incorrect)'}",
+      "assumptions": "Responses follow a 2PL/3PL IRT model; items vary in difficulty and discrimination.",
+      "breakdown_regime": "When item difficulty is uniform or negative discrimination exceeds threshold.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "IRT model maps pick correctness to latent ability and item difficulty, enabling Glicko-2 ranking of models.",
+        "source_operator": "irt_evaluation_layer",
+        "telemetry": "Per-model True-Score derived from IRT parameters"
+      }
+    },
+    {
+      "primitive_id": "glicko2_ranking_system",
+      "name": "Glicko-2 Ranking System",
+      "verbatim_quote": "Fit 2PL/3PL per season; extract per-pick difficulty and discrimination; compute per-model True-Score and run the Glicko-2 round-robin across seasons to rank model versions by difficulty-adjusted ability.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_i': \"model version i's rating\", 'RD_i': 'rating deviation of model i', 'σ_i': \"standard deviation of model i's performance\"}",
+      "assumptions": "Model ratings evolve based on match outcomes and uncertainty; round-robin ensures pairwise comparison.",
+      "breakdown_regime": "When raw accuracy fails to distinguish model quality due to varying item difficulty.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Glicko-2 computes dynamic ratings adjusted for variance in item difficulty, enabling robust model comparison.",
+        "source_operator": "glicko2_ranking_system",
+        "telemetry": "Rankings of model versions by difficulty-adjusted True-Score"
+      }
+    },
+    {
+      "primitive_id": "difficulty_weighted_backtesting",
+      "name": "Difficulty-Weighted Backtesting",
+      "verbatim_quote": "Use instance-difficulty metadata to (a) weight future backtests toward high-discrimination games, (b) diagnose which game types (divisional, short-rest, weather) are systematically hard items.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'w_d': 'weight for difficulty d', 'D_i': 'discrimination parameter of item i', 'T_g': 'game type g (e.g., divisional, weather)'}",
+      "assumptions": "High-discrimination items provide more signal for model learning; game types influence item difficulty.",
+      "breakdown_regime": "When backtesting is skewed by low-discrimination items or unrepresentative game types.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Backtesting weights are derived from item discrimination to prioritize informative instances.",
+        "source_operator": "difficulty_weighted_backtesting",
+        "telemetry": "Performance metrics weighted by item discrimination"
+      }
+    },
+    {
+      "primitive_id": "model_selection_criterion",
+      "name": "Model Selection Criterion",
+      "verbatim_quote": "Then test whether the money-weighted ranking predicts next-season ROI better than the unweighted ranking — turning a descriptive benchmark tool into a model-selection criterion for deployment.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ROI_n': 'next-season return on investment', 'W_u': 'unweighted Glicko-2 ranking', 'W_m': 'money-weighted Glicko-2 ranking'}",
+      "assumptions": "Money-weighted rankings reflect real-world utility; ROI is a valid proxy for model selection.",
+      "breakdown_regime": "When descriptive rankings fail to predict actual financial outcomes.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The criterion evaluates whether weighted rankings improve out-of-sample prediction of ROI.",
+        "source_operator": "model_selection_criterion",
+        "telemetry": "Comparison of ROI prediction accuracy between weighted and unweighted rankings"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6ece7f991aa5501d_t0",
+      "think": "Window 1 Synthesis: Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 3/3 pages of 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d): [6ece7f991aa5501d_w0_g1 p.1]: # [0597] Decoding machine learning benchmarks (arXiv:2007.14870v2) **Citation:** Cardoso, L. (Binds verbatim proposition 6ece7f991aa5501d_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.) [6ece7f991aa5501d_w0_g2 p.1]: **Verdict:** ADAPT — not for classifier benchmarking per se, but for the IRT-based model-evaluation framework: treat historical game-weeks as \"items\" and engine model versions as \"respondents,\" estimate item difficulty/discrimination, and rank models by difficulty-adjusted ability instead of raw accuracy. (Binds verbatim proposition 6ece7f991aa5501d_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.) [6ece7f991aa5501d_w0_g3 p.1]: Research question Can Item Response Theory (IRT), borrowed from psychometrics, diagnose whether the OpenML-CC18 benchmark is actually a good test set for classifiers — and can it simultaneously estimate dataset difficulty and classifier ability, with Glicko-2 summarizing the results into a global ranking? (Binds verbatim proposition 6ece7f991aa5501d_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.) [classifier_ability_theta p.2]: Targets: classifier ability θ, True-Score per dataset, final Glicko-2 ratings. (θ derived from empirical classifier performance matrices using Glicko-2 update rules; TS computed as mean accuracy across datasets.) [dataset_difficulty_discrimination p.2]: Difficulty and discrimination are inversely related: the hardest datasets (tic-tac-toe, credit-approval, optdigits) are the least discriminating; the most discriminating (banknote-authentication, analcatdata_authorship, texture) are easy. (D and Δ form a dual space where high D implies low Δ and vice versa; used to classify dataset utility for stress vs. ranking.) [sanity_anchor_classifier p.2]: Artificial classifiers act as sanity anchors (optimal must rank first, pessimal last). (C_opt and C_pess provide normalization bounds for real classifier rankings; used to validate Glicko-2 consistency.) [nemenyi_friedman_test p.2]: 60 datasets, pairwise Nemenyi/Friedman tests on rating distributions (Friedman p ≈ 9.36×10^{-80} for real classifiers). (Friedman test maps classifier performance into statistical significance space; used to verify separability of top-ranked classifiers.) [irt_evaluation_layer p.3]: GSE implementation spec Build an IRT evaluation layer over the engine's backtest history: items = historical game-weeks (or individual spread/total picks), respondents = model versions (v5.2.7 and predecessors/challengers), responses = pick correct/incorrect. (IRT model maps pick correctness to latent ability and item difficulty, enabling Glicko-2 ranking of models.) [glicko2_ranking_system p.3]: Fit 2PL/3PL per season; extract per-pick difficulty and discrimination; compute per-model True-Score and run the Glicko-2 round-robin across seasons to rank model versions by difficulty-adjusted ability. (Glicko-2 computes dynamic ratings adjusted for variance in item difficulty, enabling robust model comparison.) [difficulty_weighted_backtesting p.3]: Use instance-difficulty metadata to (a) weight future backtests toward high-discrimination games, (b) diagnose which game types (divisional, short-rest, weather) are systematically hard items. (Backtesting weights are derived from item discrimination to prioritize informative instances.) [model_selection_criterion p.3]: Then test whether the money-weighted ranking predicts next-season ROI better than the unweighted ranking — turning a descriptive benchmark tool into a model-selection criterion for deployment. (The criterion evaluates whether weighted rankings improve out-of-sample prediction of ROI.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6ece7f991aa5501d_t1",
+      "think": "Chapter 2 introduces a benchmark validation framework grounded in item response theory and Glicko-2 rating systems. The core premise is that classifier performance should be evaluated not just on raw accuracy but through a structured lens of difficulty and discrimination parameters. These parameters are estimated from classifier response matrices across 60 datasets. The inverse relationship between difficulty and discrimination implies that the best datasets for stress-testing classifiers are not necessarily those best for ranking them—a fundamental tension in benchmark design. This insight leads to a layered approach: first, estimating classifier ability θ using Glicko-2; second, validating these estimates against artificial sanity anchors; third, applying statistical tests like Friedman/Nemenyi to assess separability of classifiers. The framework also acknowledges limitations such as leakage due to dataset exclusion and default hyperparameters, which may bias rankings. The result is a robust yet nuanced method for evaluating machine learning classifiers in a way that reflects both their inherent capacity and how they perform under varying levels of challenge and discrimination. Window 2 Synthesis: Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This work builds upon classical psychometrics and item response theory, particularly the Glicko-2 system developed for chess and similar competitive domains, adapted here for ML classifier evaluation. Retrocausal Genealogy (Window 2): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The authors model classifiers as players in a latent ability space, where performance depends on both skill and test item properties. Opposing agents include the optimal/pessimal classifiers, which serve as reference points, and the datasets themselves, which vary in difficulty and discrimination. Theory of Mind (Window 2): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that datasets with high discrimination are not also highly difficult, preventing overfitting to one dimension. Leakage is mitigated by excluding 12 datasets and acknowledging that default hyperparameters limit the scope of optimization. Cross-Layer Veto (Window 2): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6ece7f991aa5501d_t2",
+      "think": "Chapter 3 introduces a structured methodology for evaluating machine learning models in sports forecasting through item response theory (IRT) and Glicko-2 ranking. The core idea is to move beyond simple accuracy metrics by incorporating item difficulty and discrimination into model evaluation. This approach allows for a more nuanced understanding of model performance, particularly when comparing different model versions across diverse game contexts. The IRT layer fits 2PL/3PL models per season to extract per-pick difficulty and discrimination parameters, which are then used to compute True-Scores for each model. These scores are subsequently ranked using Glicko-2, a method that accounts for uncertainty in ratings and provides a dynamic measure of relative model strength. The system also leverages instance-difficulty metadata to weight future backtests, focusing on high-discrimination games and diagnosing systemic difficulties in certain game types. Finally, the framework includes a validation step where money-weighted rankings are tested against raw ROI to ensure that the evaluation method aligns with practical outcomes. This integration of statistical rigor with empirical testing creates a robust foundation for model selection and deployment in real-world applications. Window 3 Synthesis: Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This methodology builds upon classical psychometric IRT frameworks and modern Elo/Glicko systems, adapting them to sports analytics for scalable model evaluation. Retrocausal Genealogy (Window 3): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models are treated as agents with latent abilities, while game instances represent items with varying challenges. The system models how agents adapt their strategies based on item difficulty and environmental factors such as game type. Theory of Mind (Window 3): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "If item difficulty is uniform or negative discrimination dominates, IRT becomes ineffective. Similarly, if the weighting mechanism fails to capture meaningful variation in game relevance, the model selection criterion loses validity. Cross-Layer Veto (Window 3): Rooted in 0597-decoding-machine-learning-benchmarks (6ece7f991aa5501d, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

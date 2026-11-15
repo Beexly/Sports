@@ -1,0 +1,78 @@
+{
+  "book_id": "f8775a60d8e320cd",
+  "source_status": "COMPLETE",
+  "title": "syntheses",
+  "file_name": "syntheses.md",
+  "sha256": "f8775a60d8e320cdda670433a622fc77bd5b7e9c70362b5cf98938ac2aabd333",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Coaching adjustment detection integrates drift (z^t), changepoints (P(t)), aggression (τ̂), and situational splits (2nd-&-1) into a unified inference engine. Universal Lens: Rooted in syntheses (f8775a60d8e320cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian regime tracking via changepoint detection (0236) and drift monitoring (1905) enables probabilistic coaching tendency updates with conformal uncertainty bounds. GSI Mapping: Rooted in syntheses (f8775a60d8e320cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps 4th-down τ̂ regions to coach-specific WP edges, enabling dynamic state transitions in live game planning and opponent-tendency content generation. GSE Mapping: Rooted in syntheses (f8775a60d8e320cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "drift_alarm",
+      "name": "Drift Alarm",
+      "verbatim_quote": "**Drift alarm** (1905): z^t embedding over (game-context, EPA-margin) pairs; week-to-week drift flags that something changed without naming it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Time-series data is stationary under normal conditions; drift implies non-stationarity.",
+      "breakdown_regime": "Game-context, EPA-margin pairs over weeks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Z-score embedding detects regime shifts in coaching behavior without explicit labeling.",
+        "source_operator": "drift_alarm",
+        "telemetry": "Weekly z^t deviation from baseline."
+      }
+    },
+    {
+      "primitive_id": "changepoint_trigger",
+      "name": "Changepoint Trigger",
+      "verbatim_quote": "**Changepoint trigger** (0236): P(changepoint) > δ on the weekly tendency series fires mid-week, naming the week and the metric.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Trend changes occur at discrete points; probability threshold defines significance.",
+      "breakdown_regime": "Weekly tendency series with P(changepoint) > δ.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binary changepoint detection aligns with Bayesian posterior update of coaching strategy.",
+        "source_operator": "changepoint_trigger",
+        "telemetry": "Mid-week flagging of significant behavioral change."
+      }
+    },
+    {
+      "primitive_id": "aggression_thermometer",
+      "name": "Aggression Thermometer",
+      "verbatim_quote": "**Aggression thermometer** (1575): τ̂ per region×WP tells you which direction the drift goes — Monken's go4th_rate 0.131→0.250 monotonic is the league-wide aggression trend landing on one coach.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Aggression trends correlate with decision-making patterns; τ̂ captures regional variation.",
+      "breakdown_regime": "Per-region × WP bin τ̂ values.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Regional τ̂ quantifies drift direction and magnitude in strategic decisions.",
+        "source_operator": "aggression_thermometer",
+        "telemetry": "Monotonic shift in go4th_rate or τ̂ over time."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f8775a60d8e320cd_t0",
+      "think": "The synthesis integrates five distinct coaching signals—drift, changepoints, aggression, situational splits, and 4th-down decision models—into a single modular framework. Each signal operates within its own regime but converges through shared temporal and contextual axes. Drift alarms detect deviations in EPA-margin dynamics using z^t embeddings; changepoint triggers fire when P(changepoint) exceeds a threshold; aggression thermometers map τ̂ across field regions and win probabilities. Situational layers like 2nd-&-1 splits provide granular decision fingerprints. The 4th-down module refines go4th_rate into τ̂ per half and WP bin, improving prediction fidelity. These primitives form a dualistic structure: one layer for static profiling (Monken), another for dynamic adaptation (drift/changepoint). Failure modes include data gaps in time-to-throw, lack of empirical grounding in raw metrics, and misalignment between pipeline outputs and real-world coaching behavior.\n\nDeep epistemic analysis for syntheses (f8775a60d8e320cd, domain=other, pages_read=4/4): Operator 'Drift Alarm' (page 1, domain other) captures: **Drift alarm** (1905): z^t embedding over (game-context, EPA-margin) pairs; week-to-week drift flags that something changed without naming it. Assumptions: Time-series data is stationary under normal conditions; drift implies non-stationarity. Breakdown regime: Game-context, EPA-margin pairs over weeks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Z-score embedding detects regime shifts in coaching behavior without explicit labeling. Operator 'Changepoint Trigger' (page 1, domain other) captures: **Changepoint trigger** (0236): P(changepoint) > δ on the weekly tendency series fires mid-week, naming the week and the metric. Assumptions: Trend changes occur at discrete points; probability threshold defines significance. Breakdown regime: Weekly tendency series with P(changepoint) > δ. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary changepoint detection aligns with Bayesian posterior update of coaching strategy. Operator 'Aggression Thermometer' (page 1, domain other) captures: **Aggression thermometer** (1575): τ̂ per region×WP tells you which direction the drift goes — Monken's go4th_rate 0.131→0.250 monotonic is the league-wide aggression trend landing on one coach. Assumptions: Aggression trends correlate with decision-making patterns; τ̂ captures regional variation. Breakdown regime: Per-region × WP bin τ̂ values. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Regional τ̂ quantifies drift direction and magnitude in strategic decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for syntheses (f8775a60d8e320cd, domain=other, pages_read=4/4): Operator 'Drift Alarm' (page 1, domain other) captures: **Drift alarm** (1905): z^t embedding over (game-context, EPA-margin) pairs; week-to-week drift flags that something changed without naming it. Assumptions: Time-series data is stationary under normal conditions; drift implies non-stationarity. Breakdown regime: Game-context, EPA-margin pairs over weeks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Z-score embedding detects regime shifts in coaching behavior without explicit labeling. Operator 'Changepoint Trigger' (page 1, domain other) captures: **Changepoint trigger** (0236): P(changepoint) > δ on the weekly tendency series fires mid-week, naming the week and the metric. Assumptions: Trend changes occur at discrete points; probability threshold defines significance. Breakdown regime: Weekly tendency series with P(changepoint) > δ. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binary changepoint detection aligns with Bayesian posterior update of coaching strategy. Operator 'Aggression Thermometer' (page 1, domain other) captures: **Aggression thermometer** (1575): τ̂ per region×WP tells you which direction the drift goes — Monken's go4th_rate 0.131→0.250 monotonic is the league-wide aggression trend landing on one coach. Assumptions: Aggression trends correlate with decision-making patterns; τ̂ captures regional variation. Breakdown regime: Per-region × WP bin τ̂ values. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Regional τ̂ quantifies drift direction and magnitude in strategic decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian changepoint theory (0236), drift analysis (1905), and tactical regression (1575), building upon earlier work in NFL analytics and behavioral modeling. Retrocausal Genealogy: Rooted in syntheses (f8775a60d8e320cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in syntheses (f8775a60d8e320cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing agents as coaches who optimize under constraints of team identity, opponent strength, and situational context. Decision trees encode rationality, while τ̂ reflects bounded rationality. Theory of Mind & Decision Maker Model: Rooted in syntheses (f8775a60d8e320cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in syntheses (f8775a60d8e320cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures each primitive contributes unique information; leakage vetoes redundant features such as overlapping z^t and τ̂ signals. No numeric contradictions between slice and pipeline outputs. Cross-Layer Veto & Anti-Leakage Check: Rooted in syntheses (f8775a60d8e320cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in syntheses (f8775a60d8e320cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

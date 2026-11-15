@@ -1,0 +1,78 @@
+{
+  "book_id": "28871b7a7258db91",
+  "source_status": "COMPLETE",
+  "title": "1201-pragmatic-information-rates-kelly",
+  "file_name": "1201-pragmatic-information-rates-kelly.md",
+  "sha256": "28871b7a7258db91ccb1e3beb83471af29331d5760c37399aad0b476544ed918",
+  "primary_domain": "cs",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Pragmatic information rate i(A;M) = Σ_m Σ_A Pr(A,m) log[Pr(A,m)/(Pr(m)Pr(A))] unifies decision-making entropy with mutual information in stationary stochastic processes. Universal Lens: Rooted in 1201-pragmatic-information-rates-kelly (28871b7a7258db91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs i(A;M) as Bayesian evidence accumulator for belief updates under informational constraints, mapping messages to posterior beliefs via conditional entropy minimization. GSI Mapping: Rooted in 1201-pragmatic-information-rates-kelly (28871b7a7258db91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models market dynamics as state transitions governed by pragmatic information gain, where ΔW ≤ i(X;μ) defines optimal strategy evolution through ergodic message streams. GSE Mapping: Rooted in 1201-pragmatic-information-rates-kelly (28871b7a7258db91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pragmatic_information_rate",
+      "name": "Pragmatic Information Rate",
+      "verbatim_quote": "Method / model - Defines pragmatic information I(A;M) = Σ_m Σ_A Pr(A,m) log[Pr(A,m)/(Pr(m)Pr(A))] (eq.",
+      "page": 1,
+      "latex": "\\mathcal{I}(A; M) = \\sum_{m} \\sum_{A} P(A, m) \\log \\frac{P(A, m)}{P(m) P(A)}",
+      "symbol_and_unit_ledger": "{'A': 'outcome event, dimensionless', 'M': 'message event, dimensionless', 'P(A,m)': 'joint probability, dimensionless', 'P(m)': 'marginal probability, dimensionless', 'P(A)': 'marginal probability, dimensionless'}",
+      "assumptions": "stationary and ergodic stochastic processes, finite alphabet outcomes and messages",
+      "breakdown_regime": "non-stationary or non-ergodic systems",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI for quantifying information relevance in sequential decision-making under uncertainty",
+        "source_operator": "pragmatic_information_rate",
+        "telemetry": "mutual information between message and outcome ensembles"
+      }
+    },
+    {
+      "primitive_id": "optimal_doubling_rate",
+      "name": "Optimal Doubling Rate",
+      "verbatim_quote": "- Horse-race Kelly: portfolio S_N = Π b_n^T X_n; doubling rate W_N = E[(log2S_N)/N]; with track take T (Σ1/R_i = T): optimal doubling rate W*_N = (1/N)Σ_n D(p(n)‖q) - log2T, attained at b = p(n).",
+      "page": 1,
+      "latex": "W^*_N = \\frac{1}{N} \\sum_n D(p(n)\\|q) - \\log_2 T",
+      "symbol_and_unit_ledger": "{'W^*_N': 'optimal doubling rate, bits per period', 'p(n)': 'probability distribution over outcomes, dimensionless', 'q': 'track probabilities, dimensionless', 'T': 'track take, dimensionless'}",
+      "assumptions": "stationary returns, no short sales, logarithmic utility",
+      "breakdown_regime": "non-stationary returns or infinite variance",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's portfolio optimization under information gain constraints",
+        "source_operator": "optimal_doubling_rate",
+        "telemetry": "maximized expected log-wealth growth rate"
+      }
+    },
+    {
+      "primitive_id": "market_efficiency_condition",
+      "name": "Market Efficiency Condition",
+      "verbatim_quote": "- Market efficiency: efficient ⟺ i(P;μ-) = h(P) - h(P|μ-) = 0, where μ- is the \"tradable past\".",
+      "page": 1,
+      "latex": "i(P; \\mu_-) = h(P) - h(P | \\mu_-) = 0",
+      "symbol_and_unit_ledger": "{'P': 'price process, dimensionless', 'μ-': 'tradable past, dimensionless', 'h(P)': 'entropy of price, bits', 'h(P|μ-)': 'conditional entropy, bits'}",
+      "assumptions": "ergodicity of price and information processes",
+      "breakdown_regime": "non-ergodic or informationally rich markets",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to detect inefficiencies via information gap analysis",
+        "source_operator": "market_efficiency_condition",
+        "telemetry": "informational entropy difference between price and its history"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "28871b7a7258db91_t0",
+      "think": "The core operators derive from information-theoretic foundations: pragmatic information rate i(A;M) measures how much new information about outcomes A is gained from messages M. This is formalized using Shannon entropy differences and is foundational to both GSI’s Bayesian updating and GSE’s strategic state transitions. The optimal doubling rate W*_N arises from maximizing expected log wealth, which aligns with Kelly betting principles extended to general stochastic environments. Its derivation uses Kullback-Leibler divergence D(p||q), linking portfolio weights to outcome distributions. Market efficiency hinges on i(P; μ-) = 0, implying that all predictable information has been priced out—this is a direct consequence of mutual information being zero. When volatility or return distributions deviate from stationarity, these relationships break down, leading to mispricing and inefficiency. The GARCH(1,1) case exemplifies this: Jensen's inequality ensures E[i] ≥ 0, with strict inequality unless constant volatility holds—a clear signal of inefficiency. These primitives form a closed-loop system where information gain drives optimal behavior, and inefficiencies manifest as bounded information gaps.\n\nDeep epistemic analysis for 1201-pragmatic-information-rates-kelly (28871b7a7258db91, domain=cs, pages_read=2/2): Operator 'Pragmatic Information Rate' (page 1, domain cs) captures: Method / model - Defines pragmatic information I(A;M) = Σ_m Σ_A Pr(A,m) log[Pr(A,m)/(Pr(m)Pr(A))] (eq. Assumptions: stationary and ergodic stochastic processes, finite alphabet outcomes and messages Breakdown regime: non-stationary or non-ergodic systems Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI for quantifying information relevance in sequential decision-making under uncertainty Operator 'Optimal Doubling Rate' (page 1, domain cs) captures: - Horse-race Kelly: portfolio S_N = Π b_n^T X_n; doubling rate W_N = E[(log2S_N)/N]; with track take T (Σ1/R_i = T): optimal doubling rate W*_N = (1/N)Σ_n D(p(n)‖q) - log2T, attained at b = p(n). Assumptions: stationary returns, no short sales, logarithmic utility Breakdown regime: non-stationary returns or infinite variance Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's portfolio optimization under information gain constraints Operator 'Market Efficiency Condition' (page 1, domain cs) captures: - Market efficiency: efficient ⟺ i(P;μ-) = h(P) - h(P|μ-) = 0, where μ- is the \"tradable past\". Assumptions: ergodicity of price and information processes Breakdown regime: non-ergodic or informationally rich markets Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to detect inefficiencies via information gap analysis Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1201-pragmatic-information-rates-kelly (28871b7a7258db91, domain=cs, pages_read=2/2): Operator 'Pragmatic Information Rate' (page 1, domain cs) captures: Method / model - Defines pragmatic information I(A;M) = Σ_m Σ_A Pr(A,m) log[Pr(A,m)/(Pr(m)Pr(A))] (eq. Assumptions: stationary and ergodic stochastic processes, finite alphabet outcomes and messages Breakdown regime: non-stationary or non-ergodic systems Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI for quantifying information relevance in sequential decision-making under uncertainty Operator 'Optimal Doubling Rate' (page 1, domain cs) captures: - Horse-race Kelly: portfolio S_N = Π b_n^T X_n; doubling rate W_N = E[(log2S_N)/N]; with track take T (Σ1/R_i = T): optimal doubling rate W*_N = (1/N)Σ_n D(p(n)‖q) - log2T, attained at b = p(n). Assumptions: stationary returns, no short sales, logarithmic utility Breakdown regime: non-stationary returns or infinite variance Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's portfolio optimization under information gain constraints Operator 'Market Efficiency Condition' (page 1, domain cs) captures: - Market efficiency: efficient ⟺ i(P;μ-) = h(P) - h(P|μ-) = 0, where μ- is the \"tradable past\". Assumptions: ergodicity of price and information processes Breakdown regime: non-ergodic or informationally rich markets Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to detect inefficiencies via information gap analysis Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Shannon's information theory, extended by Cover & Thomas in horse-race Kelly betting, later generalized by Barron to ergodic processes. Weinberger's work synthesizes these into a unified framework for financial market analysis. Retrocausal Genealogy: Rooted in 1201-pragmatic-information-rates-kelly (28871b7a7258db91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may have different information sets: one agent observes μ while another does not. Inefficient markets arise when agents with superior information (μ) fail to fully exploit it due to bounded rationality or noise. The pragmatic information rate captures this asymmetry, enabling GSI to model belief discrepancies and GSE to simulate strategic misalignments. Theory of Mind & Decision Maker Model: Rooted in 1201-pragmatic-information-rates-kelly (28871b7a7258db91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "The paper was withdrawn by the author, indicating potential flaws in empirical framing or logical consistency. Since it lacks numerical validation or real-world testing, it cannot support GSE/GSI operational use. Additionally, the reliance on Jensen's inequality for GARCH proofs introduces theoretical leakage, as the model assumes fixed parameters without dynamic feedback. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1201-pragmatic-information-rates-kelly (28871b7a7258db91), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

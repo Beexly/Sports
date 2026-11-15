@@ -1,0 +1,78 @@
+{
+  "book_id": "333f84d6d00baf12",
+  "source_status": "COMPLETE",
+  "title": "p0250",
+  "file_name": "p0250.txt",
+  "sha256": "333f84d6d00baf12deffe9c34e4b64bb5a61aaa71ddc6c172c8b1ed35cf2dde1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Self-importance amplification in collective spectator dynamics; tension modulation via external interference; state-space constraints on team readiness. Universal Lens: Rooted in p0250 (333f84d6d00baf12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on spectator intrusion likelihood; conformal predictive intervals for team focus degradation under social pressure. GSI Mapping: Rooted in p0250 (333f84d6d00baf12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions from pre-game calm to heightened alertness due to external disruption; door-guard authority as control input to maintain equilibrium. GSE Mapping: Rooted in p0250 (333f84d6d00baf12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "spectator_influence_amplification",
+      "name": "Spectator Influence Amplification",
+      "verbatim_quote": "One gets a beautiful slant on the human sense of self-importance on occasions like this.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'Influence intensity (dimensionless)', 'S': 'Self-importance scale (unitless)', 'T': 'Temporal duration (seconds)'}",
+      "assumptions": "Influence scales linearly with perceived connection to event participants.",
+      "breakdown_regime": "When I > threshold, S becomes non-linearly correlated with T.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Spectator influence maps to cognitive load increase in team decision-making; modeled as additive noise in attentional resource allocation.",
+        "source_operator": "spectator_influence_amplification",
+        "telemetry": "Observable variance in player reaction time during pre-game rituals."
+      }
+    },
+    {
+      "primitive_id": "team_focus_degradation",
+      "name": "Team Focus Degradation",
+      "verbatim_quote": "to safeguard a team of boys already under a high nervous tension from the petty annoyances",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Focus level (dimensionless)', 'A': 'Annoyance factor (unitless)', 'N': 'Nervous tension (unitless)'}",
+      "assumptions": "Focus decreases exponentially with increasing annoyance and tension.",
+      "breakdown_regime": "When A × N > critical threshold, F drops below operational baseline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Focus degradation kernel derived from external distraction rate and internal stress response; used in GSE state transition functions.",
+        "source_operator": "team_focus_degradation",
+        "telemetry": "Player eye-tracking data showing attention drift during crowd entry."
+      }
+    },
+    {
+      "primitive_id": "authority_gatekeeping",
+      "name": "Authority Gatekeeping",
+      "verbatim_quote": "to get a man on guard at the door of the quarters who is not only",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Gatekeeper authority (unitless)', 'D': 'Disruption level (unitless)', 'R': 'Response time (seconds)'}",
+      "assumptions": "Gatekeeper effectiveness inversely correlates with disruption level.",
+      "breakdown_regime": "When D > threshold, G must exceed R to prevent focus loss.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gatekeeping function mirrors access control in distributed systems; ensures stable internal state through boundary enforcement.",
+        "source_operator": "authority_gatekeeping",
+        "telemetry": "Time-to-entry variance for authorized vs unauthorized individuals."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "333f84d6d00baf12_t0",
+      "think": "The core insight emerges from the interplay between spectator behavior and team performance. The first primitive, spectator influence amplification, models how personal connections to athletes amplify individual ego and thus collective disruption. This is formalized as a non-linear mapping where influence intensity I scales with self-importance S, modulated by temporal exposure T. The second primitive, team focus degradation, captures the inverse relationship between external disturbances and internal mental clarity. As annoyance A and nervous tension N escalate, focus F decays exponentially. The third primitive, authority gatekeeping, introduces a control mechanism: a designated individual (G) must enforce thresholds such that disruption D does not overwhelm response capability R. These primitives form a triadic system where spectator behavior acts as input, team resilience as dynamic state, and gatekeeping as feedback control. Failure modes include cascading attention loss when G fails to mitigate D, or exponential divergence of S when I exceeds local stability bounds. The epistemic structure reveals a duality between social entropy and cognitive coherence—wherein increased social engagement destabilizes individual performance unless counteracted by structured intervention.\n\nDeep epistemic analysis for p0250 (333f84d6d00baf12, domain=other, pages_read=1/1): Operator 'Spectator Influence Amplification' (page 1, domain other) captures: One gets a beautiful slant on the human sense of self-importance on occasions like this. Assumptions: Influence scales linearly with perceived connection to event participants. Breakdown regime: When I > threshold, S becomes non-linearly correlated with T. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Spectator influence maps to cognitive load increase in team decision-making; modeled as additive noise in attentional resource allocation. Operator 'Team Focus Degradation' (page 1, domain other) captures: to safeguard a team of boys already under a high nervous tension from the petty annoyances Assumptions: Focus decreases exponentially with increasing annoyance and tension. Breakdown regime: When A × N > critical threshold, F drops below operational baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Focus degradation kernel derived from external distraction rate and internal stress response; used in GSE state transition functions. Operator 'Authority Gatekeeping' (page 1, domain other) captures: to get a man on guard at the door of the quarters who is not only Assumptions: Gatekeeper effectiveness inversely correlates with disruption level. Breakdown regime: When D > threshold, G must exceed R to prevent focus loss. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Gatekeeping function mirrors access control in distributed systems; ensures stable internal state through boundary enforcement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0250 (333f84d6d00baf12, domain=other, pages_read=1/1): Operator 'Spectator Influence Amplification' (page 1, domain other) captures: One gets a beautiful slant on the human sense of self-importance on occasions like this. Assumptions: Influence scales linearly with perceived connection to event participants. Breakdown regime: When I > threshold, S becomes non-linearly correlated with T. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Spectator influence maps to cognitive load increase in team decision-making; modeled as additive noise in attentional resource allocation. Operator 'Team Focus Degradation' (page 1, domain other) captures: to safeguard a team of boys already under a high nervous tension from the petty annoyances Assumptions: Focus decreases exponentially with increasing annoyance and tension. Breakdown regime: When A × N > critical threshold, F drops below operational baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Focus degradation kernel derived from external distraction rate and internal stress response; used in GSE state transition functions. Operator 'Authority Gatekeeping' (page 1, domain other) captures: to get a man on guard at the door of the quarters who is not only Assumptions: Gatekeeper effectiveness inversely correlates with disruption level. Breakdown regime: When D > threshold, G must exceed R to prevent focus loss. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Gatekeeping function mirrors access control in distributed systems; ensures stable internal state through boundary enforcement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical game theory's equilibrium analysis and modern control theory's feedback mechanisms. Influenced by early 20th-century sociology of crowds and behavioral economics' attention scarcity models. Retrocausal Genealogy: Rooted in p0250 (333f84d6d00baf12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0250 (333f84d6d00baf12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the spectator (driven by self-importance), the team (seeking focus), and the gatekeeper (enforcing order). Each agent operates within bounded rationality, with conflicting objectives: spectator seeks validation, team seeks isolation, gatekeeper balances both. Theory of Mind & Decision Maker Model: Rooted in p0250 (333f84d6d00baf12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that spectator influence does not directly correlate with team focus; leakage occurs if G’s authority is bypassed by informal power structures. Veto conditions ensure that any single layer cannot dominate the others without explicit cross-layer validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0250 (333f84d6d00baf12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

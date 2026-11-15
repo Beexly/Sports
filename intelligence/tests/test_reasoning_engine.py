@@ -23,9 +23,11 @@ from reasoning import (
 )
 from reasoning.enums import ChecklistVerdict
 
-try:  # absolute package import — unambiguous under run_all.py (tests/ AND
-    # qb-behavior/tests/ both end up on sys.path; the bare name is shadowed)
-    from tests import fixtures as fx
+try:  # absolute package import — intelligence/tests/fixtures.py owns t1_request/
+    # t1_context. `from tests import fixtures` resolves to the root tests/fixtures
+    # namespace package (odds data), which shadows the real fixtures and has no
+    # t1_request, so import the intelligence.tests package explicitly.
+    from intelligence.tests import fixtures as fx
 except ImportError:  # unittest discover -s tests (tests/ itself on sys.path)
     import fixtures as fx
 

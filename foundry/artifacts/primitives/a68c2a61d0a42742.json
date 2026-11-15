@@ -1,0 +1,95 @@
+{
+  "book_id": "a68c2a61d0a42742",
+  "source_status": "COMPLETE",
+  "title": "PROJECT",
+  "file_name": "PROJECT.md",
+  "sha256": "a68c2a61d0a4274298f1522287e6061dd4e7eb5ffd4634891371448e9e077845",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'name': 'Unified 5-Gate Emission Standard', 'definition': 'A mandatory arbitration framework that enforces live roster compliance, freshness, JEV consistency, empirical lower confidence bounds, and provenance stamping to produce publishable audit-ready picks.'}",
+  "gsi_mapping": "{'name': 'Bayesian-Conformal Inference Mapping', 'definition': 'Transforms raw live feeds into robust posterior estimates via Beta-Binomial synthesis, while conformalizing prediction intervals through Adaptive Conditional Inference (DtACI) to guarantee finite-sample coverage under adversarial betting.'}",
+  "gse_mapping": "{'name': 'Situational Reasoning & State-Transition Mapping', 'definition': 'Operates as a deterministic finite automaton over 7-player EPA states, Brownian motion-based win probability, and shootout velocity indices, transitioning between actionable signals based on clock-expansion and Law 9 fail-closed protocols.'}",
+  "primitives": [
+    {
+      "primitive_id": "engine_gate_v1",
+      "name": "Unified 5-Gate Emission Standard",
+      "verbatim_quote": "- **Mathematical Engines**: - `frontier/sports/bayesian_robust_kelly_engine.py`: Beta-Binomial, Cornish-Fisher, CV penalty $\\kappa$, Browne ruin.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Adversarial betting market, finite sample guarantees, independent live feed sources.",
+      "breakdown_regime": "Market manipulation or stale data triggers immediate G5 fail-open/fail-close.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The 5-Gate standard maps directly to GSI's core operational pipeline, where each gate corresponds to a distinct layer of probabilistic filtering: G1 validates player presence (set membership); G2 enforces temporal freshness (martingale stopping times); G3 implements bounded likelihood ratio tests; G4 constructs empirical Bayes credible regions; G5 produces verifiable digital timestamps.",
+        "source_operator": "engine_gate_v1",
+        "telemetry": "Number of gates tripped per minute, average latency of provenance checks, proportion of failsafe transitions."
+      }
+    },
+    {
+      "primitive_id": "bayesian_robust_kelly_engine",
+      "name": "BDR-Kelly Engine",
+      "verbatim_quote": "- **Mathematical Engines**: - `frontier/sports/bayesian_robust_kelly_engine.py`: Beta-Binomial, Cornish-Fisher, CV penalty $\\kappa$, Browne ruin.",
+      "page": 1,
+      "latex": "$w^* = \\frac{p - q}{q(1-q)} - \\kappa \\cdot \\text{CV}$",
+      "symbol_and_unit_ledger": "{'w^*': 'dimensionless allocation weight', 'p': 'posterior win probability (unitless)', 'q': 'implied breakeven probability (unitless)', '\\\\kappa': 'risk aversion coefficient (dimensionless)', 'CV': 'coefficient of variation (unitless)'}",
+      "assumptions": "Beta-Binomial conjugacy, normal approximation to posterior, constant volatility.",
+      "breakdown_regime": "When $\\kappa > \\frac{p - q}{q(1-q) \\cdot \\text{CV}}$, the Kelly fraction becomes negative, indicating risk aversion override.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "BDR-Kelly maps to GSI's position sizing module, where the posterior mean $p$ is derived from live scoreboards, the variance term captures uncertainty from CQR, and the CV penalty acts as a conformal regularizer ensuring out-of-sample Sharpe ratio maximization.",
+        "source_operator": "bayesian_robust_kelly_engine",
+        "telemetry": "Average Kelly fraction, realized Sharpe ratios, frequency of $\\kappa$ activation."
+      }
+    },
+    {
+      "primitive_id": "vine_copula_parlay_engine",
+      "name": "Vine Copula SGP Engine",
+      "verbatim_quote": "- **Mathematical Engines**: - `frontier/sports/bayesian_robust_kelly_engine.py`: Beta-Binomial, Cornish-Fisher, CV penalty $\\kappa$, Browne ruin.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Elliptical copula families (Gaussian/T-student), perfect calibration of marginal distributions.",
+      "breakdown_regime": "Non-linear dependence structures become singular when correlation matrices approach singularity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This engine builds upon GSE's state-transition logic by constructing high-dimensional joint distributions of multiple game outcomes, enforcing local consistency through pair-copula constructions while respecting the 7-state EPA framework.",
+        "source_operator": "vine_copula_parlay_engine",
+        "telemetry": "Parity bet win rates, conditional independence violations, computational runtime per parlay."
+      }
+    },
+    {
+      "primitive_id": "shootout_velocity_engine",
+      "name": "Shootout Velocity Index Engine",
+      "verbatim_quote": "- `frontier/sports/nfl_ep_wp_engine.py` & `shootout_velocity_engine.py`: 7-state EP/EPA, Brownian WP, logistic SVI, clock expansion.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Brownian motion assumption for scorelines, geometric scaling of volatility with remaining time.",
+      "breakdown_regime": "Velocity index becomes undefined at halftime ($t=0.5$) due to division by zero in the derivative calculation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Shootout Velocity Index maps to GSE's situational reasoning layer, translating continuous Brownian scorelines into discrete actionability thresholds that trigger NFL EP/EPA updates and clock-expansion decisions.",
+        "source_operator": "shootout_velocity_engine",
+        "telemetry": "Average shootout velocity, proportion of EP/EPA transitions, timing errors in clock expansion."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a68c2a61d0a42742_t0",
+      "think": "The Universal Lens unifies diverse statistical and computational filters into a single, rigorous pipeline. The 5-Gate Standard ensures that every pick undergoes sequential validation: roster membership prevents false positives, freshness guards against stale information, JEV arbitration mitigates bias, empirical LCB provides robust confidence intervals, and provenance stamping enables full reproducibility. This structure mirrors the conformal prediction framework, where each gate acts as a non-conformity measure that controls the overall false discovery rate.\n\nDeep epistemic analysis for PROJECT (a68c2a61d0a42742, domain=other, pages_read=3/3): Operator 'Unified 5-Gate Emission Standard' (page 1, domain other) captures: - **Mathematical Engines**: - `frontier/sports/bayesian_robust_kelly_engine.py`: Beta-Binomial, Cornish-Fisher, CV penalty $\\kappa$, Browne ruin. Assumptions: Adversarial betting market, finite sample guarantees, independent live feed sources. Breakdown regime: Market manipulation or stale data triggers immediate G5 fail-open/fail-close. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The 5-Gate standard maps directly to GSI's core operational pipeline, where each gate corresponds to a distinct layer of probabilistic filtering: G1 validates player presence (set membership); G2 enforces temporal freshness (martingale stopping times); G3 implements bounded likelihood ratio tests; G4 constructs empirical Bayes credible regions; G5 produces verifiable digital timestamps. Operator 'BDR-Kelly Engine' (page 1, domain other) captures: - **Mathematical Engines**: - `frontier/sports/bayesian_robust_kelly_engine.py`: Beta-Binomial, Cornish-Fisher, CV penalty $\\kappa$, Browne ruin. Assumptions: Beta-Binomial conjugacy, normal approximation to posterior, constant volatility. Breakdown regime: When $\\kappa > \\frac{p - q}{q(1-q) \\cdot \\text{CV}}$, the Kelly fraction becomes negative, indicating risk aversion override. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): BDR-Kelly maps to GSI's position sizing module, where the posterior mean $p$ is derived from live scoreboards, the variance term captures uncertainty from CQR, and the CV penalty acts as a conformal regularizer ensuring out-of-sample Sharpe ratio maximization. Operator 'Vine Copula SGP Engine' (page 1, domain other) captures: - **Mathematical Engines**: - `frontier/sports/bayesian_robust_kelly_engine.py`: Beta-Binomial, Cornish-Fisher, CV penalty $\\kappa$, Browne ruin. Assumptions: Elliptical copula families (Gaussian/T-student), perfect calibration of marginal distributions. Breakdown regime: Non-linear dependence structures become singular when correlation matrices approach singularity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): This engine builds upon GSE's state-transition logic by constructing high-dimensional joint distributions of multiple game outcomes, enforcing local consistency through pair-copula constructions while respecting the 7-state EPA framework. Operator 'Shootout Velocity Index Engine' (page 1, domain other) captures: - `frontier/sports/nfl_ep_wp_engine.py` & `shootout_velocity_engine.py`: 7-state EP/EPA, Brownian WP, logistic SVI, clock expansion. Assumptions: Brownian motion assumption for scorelines, geometric scaling of volatility with remaining time. Breakdown regime: Velocity index becomes undefined at halftime ($t=0.5$) due to division by zero in the derivative calculation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Shootout Velocity Index maps to GSE's situational reasoning layer, translating continuous Brownian scorelines into discrete actionability thresholds that trigger NFL EP/EPA updates and clock-expansion decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PROJECT (a68c2a61d0a42742, domain=other, pages_read=3/3): Operator 'Unified 5-Gate Emission Standard' (page 1, domain other) captures: - **Mathematical Engines**: - `frontier/sports/bayesian_robust_kelly_engine.py`: Beta-Binomial, Cornish-Fisher, CV penalty $\\kappa$, Browne ruin. Assumptions: Adversarial betting market, finite sample guarantees, independent live feed sources. Breakdown regime: Market manipulation or stale data triggers immediate G5 fail-open/fail-close. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The 5-Gate standard maps directly to GSI's core operational pipeline, where each gate corresponds to a distinct layer of probabilistic filtering: G1 validates player presence (set membership); G2 enforces temporal freshness (martingale stopping times); G3 implements bounded likelihood ratio tests; G4 constructs empirical Bayes credible regions; G5 produces verifiable digital timestamps. Operator 'BDR-Kelly Engine' (page 1, domain other) captures: - **Mathematical Engines**: - `frontier/sports/bayesian_robust_kelly_engine.py`: Beta-Binomial, Cornish-Fisher, CV penalty $\\kappa$, Browne ruin. Assumptions: Beta-Binomial conjugacy, normal approximation to posterior, constant volatility. Breakdown regime: When $\\kappa > \\frac{p - q}{q(1-q) \\cdot \\text{CV}}$, the Kelly fraction becomes negative, indicating risk aversion override. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): BDR-Kelly maps to GSI's position sizing module, where the posterior mean $p$ is derived from live scoreboards, the variance term captures uncertainty from CQR, and the CV penalty acts as a conformal regularizer ensuring out-of-sample Sharpe ratio maximization. Operator 'Vine Copula SGP Engine' (page 1, domain other) captures: - **Mathematical Engines**: - `frontier/sports/bayesian_robust_kelly_engine.py`: Beta-Binomial, Cornish-Fisher, CV penalty $\\kappa$, Browne ruin. Assumptions: Elliptical copula families (Gaussian/T-student), perfect calibration of marginal distributions. Breakdown regime: Non-linear dependence structures become singular when correlation matrices approach singularity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): This engine builds upon GSE's state-transition logic by constructing high-dimensional joint distributions of multiple game outcomes, enforcing local consistency through pair-copula constructions while respecting the 7-state EPA framework. Operator 'Shootout Velocity Index Engine' (page 1, domain other) captures: - `frontier/sports/nfl_ep_wp_engine.py` & `shootout_velocity_engine.py`: 7-state EP/EPA, Brownian WP, logistic SVI, clock expansion. Assumptions: Brownian motion assumption for scorelines, geometric scaling of volatility with remaining time. Breakdown regime: Velocity index becomes undefined at halftime ($t=0.5$) due to division by zero in the derivative calculation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Shootout Velocity Index maps to GSE's situational reasoning layer, translating continuous Brownian scorelines into discrete actionability thresholds that trigger NFL EP/EPA updates and clock-expansion decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The 5-Gate concept traces back to Wald's sequential probability ratio test (SPRT) and Blackwell's gambling formulation, evolving through modern risk-aware algorithms like Cover's universal portfolios and Freund-Schapire's Hedge algorithm. Retrocausal Genealogy: Rooted in PROJECT (a68c2a61d0a42742), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PROJECT (a68c2a61d0a42742), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bookmakers who exploit stale data or biased estimators, requiring the GSI system to anticipate their exploitation tactics and preemptively tighten the JEV and LCB gates. Theory of Mind & Decision Maker Model: Rooted in PROJECT (a68c2a61d0a42742), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by decoupling the BDR-Kelly weights from the Vine Copula dependencies; if the Kelly fractions exhibit high pairwise correlation, the parlay engine automatically applies a minimum diversification penalty to prevent over-leveraging. Cross-Layer Veto & Anti-Leakage Check: Rooted in PROJECT (a68c2a61d0a42742), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

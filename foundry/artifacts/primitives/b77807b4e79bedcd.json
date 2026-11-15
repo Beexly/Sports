@@ -1,0 +1,95 @@
+{
+  "book_id": "b77807b4e79bedcd",
+  "source_status": "COMPLETE",
+  "title": "FULL_SCALE_2462_GAMES_MEASUREMENT",
+  "file_name": "FULL_SCALE_2462_GAMES_MEASUREMENT.md",
+  "sha256": "b77807b4e79bedcdd8dea8ede4dc0ed2d066030aa71e3235656cdcb783d6954f",
+  "primary_domain": "math",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'id': 'b77807b4e79bedcd_u0', 'name': 'Universal Lens: Structural Mathematical Unification', 'summary': 'A 42-word formula that integrates Brier score, log-loss, and weighted linear combination into a coherent predictive framework for sports betting.'} Universal Lens: Rooted in FULL_SCALE_2462_GAMES_MEASUREMENT (b77807b4e79bedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "{'id': 'b77807b4e79bedcd_g0', 'name': 'GSI Mapping: Bayesian/Conformal Inference', 'summary': 'Bayesian updating via log-odds space with conformal calibration ensures sharp probability forecasts and proper scoring rules.'} GSI Mapping: Rooted in FULL_SCALE_2462_GAMES_MEASUREMENT (b77807b4e79bedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "{'id': 'b77807b4e79bedcd_g1', 'name': 'GSE Mapping: Situational Reasoning & State-Transition', 'summary': 'State-transition logic governs weight promotion based on cross-layer veto conditions and empirical verification metrics.'} GSE Mapping: Rooted in FULL_SCALE_2462_GAMES_MEASUREMENT (b77807b4e79bedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "b77807b4e79bedcd_p1",
+      "name": "Weighted Linear Combination",
+      "verbatim_quote": "Under Addendum 4, the prior 79-game evaluation freeze (which showed $\\Delta\\text{Brier} = -0.000039$ on 2026 Weeks",
+      "page": 1,
+      "latex": "$\\text{Forecast}_i = \\text{logit}^{-1}\\Big(\\text{logit}(P_{\\text{closing\\_market}, i}) + w \\cdot \\delta_{\\text{mind}, i}\\Big)$",
+      "symbol_and_unit_ledger": "{'P_closing_market,i': 'Closing market probability (dimensionless)', 'w': 'Evaluator weight (dimensionless)', 'δ_mind,i': \"Mind's deviation from closing market (dimensionless)\", 'Forecast_i': 'Final forecast probability (dimensionless)'}",
+      "assumptions": "Logit link function, linear combination in log-odds space, constant evaluator weight.",
+      "breakdown_regime": "Singularity when P_closing_market,i approaches 0 or 1, leading to infinite log-odds.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual representation of GSI conformal prediction intervals and GSE state-action value functions.",
+        "source_operator": "b77807b4e79bedcd_p1",
+        "telemetry": "Cross-validated Brier score and log-loss on holdout samples."
+      }
+    },
+    {
+      "primitive_id": "b77807b4e79bedcd_p2",
+      "name": "Brier Score Decomposition",
+      "verbatim_quote": "**entire 2,462-game locked historical universe** spanning 10 complete NFL seasons. ### Outcome: - **Market Baseline (w=0.0)**:",
+      "page": 1,
+      "latex": "Brier = \\frac{1}{N}\\sum_i (y_i - p_i)^2",
+      "symbol_and_unit_ledger": "{'Brier': 'Mean squared error (dimensionless)', 'N': 'Number of games (dimensionless)', 'y_i': 'True outcome indicator (0 or 1)', 'p_i': 'Predicted probability (dimensionless)'}",
+      "assumptions": "Binary outcomes, proper scoring rule, unbiased probability estimates.",
+      "breakdown_regime": "Perfect prediction yields Brier = 0, random guessing yields Brier = 0.25.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Connection to GSI quadratic scoring rule and GSE return variance minimization.",
+        "source_operator": "b77807b4e79bedcd_p2",
+        "telemetry": "Brier decomposition into refinement, calibration, and uncertainty terms."
+      }
+    },
+    {
+      "primitive_id": "b77807b4e79bedcd_p3",
+      "name": "Log-Likelihood Loss",
+      "verbatim_quote": "**entire 2,462-game locked historical universe** spanning 10 complete NFL seasons. ### Outcome: - **Market Baseline (w=0.0)**:",
+      "page": 1,
+      "latex": "Log-Loss = -\\frac{1}{N}\\sum_i \\Big(y_i \\log p_i + (1-y_i)\\log(1-p_i)\\Big)",
+      "symbol_and_unit_ledger": "{'Log-Loss': 'Shannon information (nats per sample)', 'p_i': 'Predicted probability (dimensionless)', 'y_i': 'True outcome (0 or 1)'}",
+      "assumptions": "Maximum likelihood estimation under Bernoulli model, proper scoring rule.",
+      "breakdown_regime": "Perfect prediction yields Log-Loss = 0, divergence as p_i → 0 or 1.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI log-score calibration and GSE policy gradient objective via Girsanov theorem.",
+        "source_operator": "b77807b4e79bedcd_p3",
+        "telemetry": "Average log-likelihood on test data."
+      }
+    },
+    {
+      "primitive_id": "b77807b4e79bedcd_p4",
+      "name": "Evaluator Weight Promotion",
+      "verbatim_quote": "2023) - **Promotion Action**: `CORPUS_EVALUATOR_DEFAULT_WEIGHT` is set to **`0.05`** in `packages/prediction-engine/src/reasoning/corpus-evaluator.ts`. --## 2. Complete Aggregate Performance",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Ad hoc thresholding based on historical performance across multiple seasons.",
+      "breakdown_regime": "Discrete promotion event triggered when 6 out of 10 seasons beat market.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Multi-armed bandit selection between market baseline and literature-grounded mind.",
+        "source_operator": "b77807b4e79bedcd_p4",
+        "telemetry": "Historical win-rate against market closing line per season."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b77807b4e79bedcd_t0",
+      "think": "The core challenge is reconciling noisy short-term performance with long-term strategic value. The 79-game freeze exhibited small-sample variance, yielding ΔBrier = -0.000039, which is statistically insignificant. Retiring it acknowledges that pure statistical significance does not guarantee practical utility. The weighted linear combination operator projects the mind's deviation onto the closing market's log-odds scale, effectively blending prior beliefs with observed data. This fusion respects both the efficient market hypothesis (represented by the closing market) and the literature-grounded model's potential alpha. The promotion action occurs only when the mind demonstrates robust skill across six out of ten seasons, filtering out luck-based success. This multi-season validation mitigates overfitting to specific years (e.g., 2021's weak performance). The primitives form a compositional architecture: Brier and log-loss provide dual loss functions (proper scoring rules) that measure calibration and discrimination; the weighted combination enables online adaptation; and the weight promotion serves as a meta-learning mechanism that updates the system's operating point based on empirical verification. Crucially, the cross-layer veto condition prevents leakage: if the mind's signal is merely noise, the weight remains low, avoiding degradation of the baseline. Conversely, if the mind provides genuine predictive power, the weight amplifies its impact while maintaining proper calibration through the logit transformation. This design aligns with optimal transport theory, where the Brier score corresponds to Wasserstein distance and log-loss to Kullback-Leibler divergence, offering a geometric interpretation of the trade-off between these metrics.\n\nDeep epistemic analysis for FULL_SCALE_2462_GAMES_MEASUREMENT (b77807b4e79bedcd, domain=math, pages_read=2/2): Operator 'Weighted Linear Combination' (page 1, domain math) captures: Under Addendum 4, the prior 79-game evaluation freeze (which showed $\\Delta\\text{Brier} = -0.000039$ on 2026 Weeks Assumptions: Logit link function, linear combination in log-odds space, constant evaluator weight. Breakdown regime: Singularity when P_closing_market,i approaches 0 or 1, leading to infinite log-odds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual representation of GSI conformal prediction intervals and GSE state-action value functions. Operator 'Brier Score Decomposition' (page 1, domain math) captures: **entire 2,462-game locked historical universe** spanning 10 complete NFL seasons. ### Outcome: - **Market Baseline (w=0.0)**: Assumptions: Binary outcomes, proper scoring rule, unbiased probability estimates. Breakdown regime: Perfect prediction yields Brier = 0, random guessing yields Brier = 0.25. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Connection to GSI quadratic scoring rule and GSE return variance minimization. Operator 'Log-Likelihood Loss' (page 1, domain math) captures: **entire 2,462-game locked historical universe** spanning 10 complete NFL seasons. ### Outcome: - **Market Baseline (w=0.0)**: Assumptions: Maximum likelihood estimation under Bernoulli model, proper scoring rule. Breakdown regime: Perfect prediction yields Log-Loss = 0, divergence as p_i → 0 or 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI log-score calibration and GSE policy gradient objective via Girsanov theorem. Operator 'Evaluator Weight Promotion' (page 1, domain math) captures: 2023) - **Promotion Action**: `CORPUS_EVALUATOR_DEFAULT_WEIGHT` is set to **`0.05`** in `packages/prediction-engine/src/reasoning/corpus-evaluator.ts`. --## 2. Complete Aggregate Performance Assumptions: Ad hoc thresholding based on historical performance across multiple seasons. Breakdown regime: Discrete promotion event triggered when 6 out of 10 seasons beat market. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Multi-armed bandit selection between market baseline and literature-grounded mind. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FULL_SCALE_2462_GAMES_MEASUREMENT (b77807b4e79bedcd, domain=math, pages_read=2/2): Operator 'Weighted Linear Combination' (page 1, domain math) captures: Under Addendum 4, the prior 79-game evaluation freeze (which showed $\\Delta\\text{Brier} = -0.000039$ on 2026 Weeks Assumptions: Logit link function, linear combination in log-odds space, constant evaluator weight. Breakdown regime: Singularity when P_closing_market,i approaches 0 or 1, leading to infinite log-odds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual representation of GSI conformal prediction intervals and GSE state-action value functions. Operator 'Brier Score Decomposition' (page 1, domain math) captures: **entire 2,462-game locked historical universe** spanning 10 complete NFL seasons. ### Outcome: - **Market Baseline (w=0.0)**: Assumptions: Binary outcomes, proper scoring rule, unbiased probability estimates. Breakdown regime: Perfect prediction yields Brier = 0, random guessing yields Brier = 0.25. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Connection to GSI quadratic scoring rule and GSE return variance minimization. Operator 'Log-Likelihood Loss' (page 1, domain math) captures: **entire 2,462-game locked historical universe** spanning 10 complete NFL seasons. ### Outcome: - **Market Baseline (w=0.0)**: Assumptions: Maximum likelihood estimation under Bernoulli model, proper scoring rule. Breakdown regime: Perfect prediction yields Log-Loss = 0, divergence as p_i → 0 or 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI log-score calibration and GSE policy gradient objective via Girsanov theorem. Operator 'Evaluator Weight Promotion' (page 1, domain math) captures: 2023) - **Promotion Action**: `CORPUS_EVALUATOR_DEFAULT_WEIGHT` is set to **`0.05`** in `packages/prediction-engine/src/reasoning/corpus-evaluator.ts`. --## 2. Complete Aggregate Performance Assumptions: Ad hoc thresholding based on historical performance across multiple seasons. Breakdown regime: Discrete promotion event triggered when 6 out of 10 seasons beat market. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Multi-armed bandit selection between market baseline and literature-grounded mind. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The framework builds on seminal work by Dawid (1982) on proper scoring rules, extending it with modern computational implementations. It draws inspiration from reinforcement learning's exploration-exploitation dilemma (Sutton & Barto, 1998) and combines it with conformal prediction's distribution-free calibration guarantees (Vovk et al., 2005). The multi-season validation echoes cross-validation techniques from machine learning, while the weighted combination mirrors Kalman filtering principles.",
+      "theory_of_mind": "Opposing agents include liquidity providers who maintain the closing market, risk managers who enforce capital constraints, and systematic bettors seeking mispriced opportunities. The mind's operator must anticipate their reactions: aggressive weight promotion could trigger adverse selection, while conservative weighting might miss profitable signals. The primitives account for bounded rationality by incorporating transaction costs implicitly through the discrete promotion threshold. Theory of Mind & Decision Maker Model: Rooted in FULL_SCALE_2462_GAMES_MEASUREMENT (b77807b4e79bedcd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring independent validation across seasons rather than using the same data for training and testing. Leakage is prevented because the mind's predictions are never directly used without conformal calibration, ensuring that downstream systems (e.g., portfolio optimization) receive properly calibrated probabilities. The veto condition also guards against spurious correlations: if the mind's signal is merely capturing noise, it will fail to beat the market consistently, triggering zero weight."
+    }
+  ]
+}

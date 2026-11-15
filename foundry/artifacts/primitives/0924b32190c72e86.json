@@ -1,0 +1,78 @@
+{
+  "book_id": "0924b32190c72e86",
+  "source_status": "COMPLETE",
+  "title": "prerequisites",
+  "file_name": "prerequisites.md",
+  "sha256": "0924b32190c72e864fa6fb0c4c049e67668c87a7fa5cbc9fe4379e3972e1451b",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Toolchain dependency verification and environmental readiness as a Boolean satisfiability problem over discrete state spaces. Universal Lens: Rooted in prerequisites (0924b32190c72e86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on tool availability using conditional probability distributions over executable environments. GSI Mapping: Rooted in prerequisites (0924b32190c72e86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates stage-specific toolsets and transitions between compliant vs. non-compliant execution paths. GSE Mapping: Rooted in prerequisites (0924b32190c72e86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "toolchain_verification",
+      "name": "Executable Environment Validator",
+      "verbatim_quote": "## Check ```bash for tool in python3 higgsfield node npx rsvg-convert magick convert soffice pdftoppm pdfimages pdffonts fc-cache fc-match; do command -v \"$tool\" >/dev/null 2>&1 && printf '%-14s ok\\n' \"$tool\" || printf '%-14s missing\\n' \"$tool\" done ``` Either `magick` or `convert` satisfies the ImageMagick requirement.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'set of tools {python3, higgsfield, node, npx, rsvg-convert, magick, convert, soffice, pdftoppm, pdfimages, pdffonts, fc-cache, fc-match}', 'V(t)': 'boolean valuation function for tool t ∈ T'}",
+      "assumptions": "All tools are installed in standard PATH; user has read permissions.",
+      "breakdown_regime": "V(t) = false for any t ∈ T implies stage failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Boolean satisfiability of toolset membership maps to GSI's probabilistic model of system readiness.",
+        "source_operator": "toolchain_verification",
+        "telemetry": "Tool presence flags returned by shell commands."
+      }
+    },
+    {
+      "primitive_id": "render_format_capability",
+      "name": "Render Format Resolver",
+      "verbatim_quote": "# Local prerequisites Brandkit runs in the user's local Claude Code, Codex, or compatible agent environment.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'set of supported render formats {HTML, PNG, SVG, PDF, PPTX}', 'E': 'environmental context (local agent)'}",
+      "assumptions": "Environment supports all required rendering backends.",
+      "breakdown_regime": "R ∩ E = ∅ implies format exclusion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Set intersection of render capabilities and environment constraints defines valid output space.",
+        "source_operator": "render_format_capability",
+        "telemetry": "Output format validity determined via capability matrix lookup."
+      }
+    },
+    {
+      "primitive_id": "stage_dependency_matrix",
+      "name": "Stage Dependency Kernel",
+      "verbatim_quote": "State clearly which export or review format cannot be produced.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'set of stages {state_gen, html_gen, screenshot, crop, svg_export, pdf_inspect, brandbook, deck}', 'D(s)': 'dependency set for stage s ∈ S'}",
+      "assumptions": "Each stage requires a unique subset of tools.",
+      "breakdown_regime": "∃s ∈ S such that D(s) ⊈ T implies stage infeasibility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dependency graph structure mirrors GSI's logical inference chain for operational feasibility.",
+        "source_operator": "stage_dependency_matrix",
+        "telemetry": "Failure mode diagnostics based on missing dependencies."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0924b32190c72e86_t0",
+      "think": "The core logic of Brandkit’s prerequisites forms a discrete-state automaton where each stage is a configuration of tool availability. Toolchain verification acts as a predicate over a finite domain of executables, mapping to a Boolean vector indicating readiness. This vector determines whether a given stage can proceed. Render format resolution operates through a kernel of compatibility between environmental context and output type, modeled as a set intersection. The stage dependency matrix encodes these relationships into a directed acyclic graph, enabling causal reasoning about feasibility. Each primitive corresponds to a projection onto a subspace of possible configurations, with failure modes emerging at boundary conditions where dependencies are violated. These primitives collectively define a compositional logic framework for system readiness.\n\nDeep epistemic analysis for prerequisites (0924b32190c72e86, domain=other, pages_read=1/1): Operator 'Executable Environment Validator' (page 1, domain other) captures: ## Check ```bash for tool in python3 higgsfield node npx rsvg-convert magick convert soffice pdftoppm pdfimages pdffonts fc-cache fc-match; do command -v \"$tool\" >/dev/null 2>&1 && printf '%-14s ok\\n' \"$tool\" || printf '%-14s missing\\n' \"$tool\" done ``` Either `magick` or `convert` satisfies the ImageMagick requirement. Assumptions: All tools are installed in standard PATH; user has read permissions. Breakdown regime: V(t) = false for any t ∈ T implies stage failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Boolean satisfiability of toolset membership maps to GSI's probabilistic model of system readiness. Operator 'Render Format Resolver' (page 1, domain other) captures: # Local prerequisites Brandkit runs in the user's local Claude Code, Codex, or compatible agent environment. Assumptions: Environment supports all required rendering backends. Breakdown regime: R ∩ E = ∅ implies format exclusion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Set intersection of render capabilities and environment constraints defines valid output space. Operator 'Stage Dependency Kernel' (page 1, domain other) captures: State clearly which export or review format cannot be produced. Assumptions: Each stage requires a unique subset of tools. Breakdown regime: ∃s ∈ S such that D(s) ⊈ T implies stage infeasibility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dependency graph structure mirrors GSI's logical inference chain for operational feasibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for prerequisites (0924b32190c72e86, domain=other, pages_read=1/1): Operator 'Executable Environment Validator' (page 1, domain other) captures: ## Check ```bash for tool in python3 higgsfield node npx rsvg-convert magick convert soffice pdftoppm pdfimages pdffonts fc-cache fc-match; do command -v \"$tool\" >/dev/null 2>&1 && printf '%-14s ok\\n' \"$tool\" || printf '%-14s missing\\n' \"$tool\" done ``` Either `magick` or `convert` satisfies the ImageMagick requirement. Assumptions: All tools are installed in standard PATH; user has read permissions. Breakdown regime: V(t) = false for any t ∈ T implies stage failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Boolean satisfiability of toolset membership maps to GSI's probabilistic model of system readiness. Operator 'Render Format Resolver' (page 1, domain other) captures: # Local prerequisites Brandkit runs in the user's local Claude Code, Codex, or compatible agent environment. Assumptions: Environment supports all required rendering backends. Breakdown regime: R ∩ E = ∅ implies format exclusion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Set intersection of render capabilities and environment constraints defines valid output space. Operator 'Stage Dependency Kernel' (page 1, domain other) captures: State clearly which export or review format cannot be produced. Assumptions: Each stage requires a unique subset of tools. Breakdown regime: ∃s ∈ S such that D(s) ⊈ T implies stage infeasibility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dependency graph structure mirrors GSI's logical inference chain for operational feasibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in computational complexity theory and formal language recognition, this structure echoes the Church-Turing thesis applied to interactive systems. It builds upon early work in automated theorem proving and constraint satisfaction. Retrocausal Genealogy: Rooted in prerequisites (0924b32190c72e86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in prerequisites (0924b32190c72e86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents must reason about their own toolset limitations and infer what outputs are impossible. Opposing actors may attempt to exploit misconfigured environments or misreport tool availability, necessitating robust validation mechanisms. Theory of Mind & Decision Maker Model: Rooted in prerequisites (0924b32190c72e86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that no two primitives share overlapping symbolic domains without explicit coordination. Leakage vetoes prevent cross-contamination of tool states across layers, maintaining orthogonality in reasoning chains. Cross-Layer Veto & Anti-Leakage Check: Rooted in prerequisites (0924b32190c72e86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in prerequisites (0924b32190c72e86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

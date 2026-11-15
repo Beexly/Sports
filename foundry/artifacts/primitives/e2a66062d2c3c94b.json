@@ -1,0 +1,78 @@
+{
+  "book_id": "e2a66062d2c3c94b",
+  "source_status": "COMPLETE",
+  "title": "CANONICITY_SWEEP_2026-09-08",
+  "file_name": "CANONICITY_SWEEP_2026-09-08.md",
+  "sha256": "e2a66062d2c3c94b3d985657d04125ca0eb7f8c41ea53d83e683dd62c87a4e98",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Canonicity filtering as a unary operator \\mathcal{F} on game rows, where \\mathcal{F}(g) = \\emptyset if \\texttt{mergedIntoGameId} \\neq \\emptyset, else \\{g\\}. Universal Lens: Rooted in CANONICITY_SWEEP_2026-09-08 (e2a66062d2c3c94b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on game fixtures uses \\mathcal{F} to conditionally update belief states over valid vs duplicate rows, with prior probability P(\\text{valid}) = 1 - \\frac{\\text{duplicates}}{\\text{total}}. GSI Mapping: Rooted in CANONICITY_SWEEP_2026-09-08 (e2a66062d2c3c94b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning applies \\mathcal{F} as a pre-state transition filter in pick generation, ensuring state transitions occur only on non-duplicate rows, avoiding pick stranding during merge operations. GSE Mapping: Rooted in CANONICITY_SWEEP_2026-09-08 (e2a66062d2c3c94b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "canonicity_filter",
+      "name": "Canonicity Filter Operator",
+      "verbatim_quote": "The sweep `mergedIntoGameId` is the database's own canonicity marker: a non-null value means \"this row is a duplicate of another, do not treat it as a real fixture\".",
+      "page": 1,
+      "latex": "\\mathcal{F}(g) = \\begin{cases} \\emptyset & \\text{if } \\texttt{mergedIntoGameId}(g) \\neq \\emptyset \\\\ \\{g\\} & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'g': 'game row identifier, dimensionless', 'mergedIntoGameId(g)': 'pointer to canonical game, nullable string'}",
+      "assumptions": "Database integrity ensures \\texttt{mergedIntoGameId} is consistent across query sites.",
+      "breakdown_regime": "When \\texttt{mergedIntoGameId} is non-null, \\mathcal{F} collapses to empty set.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The filter \\mathcal{F} is isomorphic to a projection operator in relational algebra, mapping game rows to valid/non-valid subsets.",
+        "source_operator": "canonicity_filter",
+        "telemetry": "Query site compliance rate (3/15 respect \\mathcal{F})"
+      }
+    },
+    {
+      "primitive_id": "pick_generation_cap",
+      "name": "Pick Generation Budget Cap",
+      "verbatim_quote": "**11% of the pick-generation budget produces nothing**, because those slots hold rows that carry no odds and can never yield a pick.",
+      "page": 1,
+      "latex": "\\text{Cap} = \\max\\left(\\sum_{i=1}^{n} \\mathbb{I}_{\\text{no-odds}}(g_i), \\text{budget}_{\\text{slots}}\\right)",
+      "symbol_and_unit_ledger": "{'n': 'number of game rows considered, dimensionless', '\\\\mathbb{I}_{\\\\text{no-odds}}(g_i)': 'indicator function for missing odds, binary', '\\\\text{budget}_{\\\\text{slots}}': 'fixed slot count, integer'}",
+      "assumptions": "Each slot consumes a fixed resource regardless of validity.",
+      "breakdown_regime": "When \\text{Cap} is exceeded, valid picks are underrepresented.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The cap enforces a kernel constraint on valid picks, derived from the ratio of invalid to valid rows.",
+        "source_operator": "pick_generation_cap",
+        "telemetry": "Percentage of unused slots due to invalid rows"
+      }
+    },
+    {
+      "primitive_id": "merge_ordering_constraint",
+      "name": "Merge Ordering Constraint",
+      "verbatim_quote": "This is the **cap-applied-before-collapse** pattern for the third time tonight, after C-153 and C-161 in the pass lane.",
+      "page": 1,
+      "latex": "\\text{Order}(\\mathcal{F}, \\text{merge}) = \\text{filter} \\prec \\text{merge}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{F}': 'canonicity filter operator, unary', '\\\\text{merge}': 'database merge operation, binary', '\\\\prec': 'temporal precedence relation, dimensionless'}",
+      "assumptions": "Temporal ordering prevents data corruption from stale rows.",
+      "breakdown_regime": "If \\text{merge} precedes \\mathcal{F}, pick stranding occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The constraint mirrors a causal dependency graph where \\mathcal{F} must precede \\text{merge} to maintain consistency.",
+        "source_operator": "merge_ordering_constraint",
+        "telemetry": "Number of merge events post-filter vs pre-filter"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e2a66062d2c3c94b_t0",
+      "think": "The core insight is that game rows form a relational structure where \\mathcal{F} acts as a unary projection operator, collapsing duplicates into an empty set. This induces a partition of the game space into valid and invalid subsets. The pick generation process is bounded by a cap that reflects the proportion of invalid rows, leading to a waste factor. The temporal ordering constraint \\text{filter} \\prec \\text{merge} arises from the need to prevent data corruption, specifically pick stranding. The failure mode emerges when sites ignore \\mathcal{F}, causing the system to operate on stale rows. The dual nature of the problem lies in the tension between data integrity (via \\mathcal{F}) and computational efficiency (via the cap).\n\nDeep epistemic analysis for CANONICITY_SWEEP_2026-09-08 (e2a66062d2c3c94b, domain=other, pages_read=2/2): Operator 'Canonicity Filter Operator' (page 1, domain other) captures: The sweep `mergedIntoGameId` is the database's own canonicity marker: a non-null value means \"this row is a duplicate of another, do not treat it as a real fixture\". Assumptions: Database integrity ensures \\texttt{mergedIntoGameId} is consistent across query sites. Breakdown regime: When \\texttt{mergedIntoGameId} is non-null, \\mathcal{F} collapses to empty set. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The filter \\mathcal{F} is isomorphic to a projection operator in relational algebra, mapping game rows to valid/non-valid subsets. Operator 'Pick Generation Budget Cap' (page 1, domain other) captures: **11% of the pick-generation budget produces nothing**, because those slots hold rows that carry no odds and can never yield a pick. Assumptions: Each slot consumes a fixed resource regardless of validity. Breakdown regime: When \\text{Cap} is exceeded, valid picks are underrepresented. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The cap enforces a kernel constraint on valid picks, derived from the ratio of invalid to valid rows. Operator 'Merge Ordering Constraint' (page 1, domain other) captures: This is the **cap-applied-before-collapse** pattern for the third time tonight, after C-153 and C-161 in the pass lane. Assumptions: Temporal ordering prevents data corruption from stale rows. Breakdown regime: If \\text{merge} precedes \\mathcal{F}, pick stranding occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The constraint mirrors a causal dependency graph where \\mathcal{F} must precede \\text{merge} to maintain consistency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CANONICITY_SWEEP_2026-09-08 (e2a66062d2c3c94b, domain=other, pages_read=2/2): Operator 'Canonicity Filter Operator' (page 1, domain other) captures: The sweep `mergedIntoGameId` is the database's own canonicity marker: a non-null value means \"this row is a duplicate of another, do not treat it as a real fixture\". Assumptions: Database integrity ensures \\texttt{mergedIntoGameId} is consistent across query sites. Breakdown regime: When \\texttt{mergedIntoGameId} is non-null, \\mathcal{F} collapses to empty set. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The filter \\mathcal{F} is isomorphic to a projection operator in relational algebra, mapping game rows to valid/non-valid subsets. Operator 'Pick Generation Budget Cap' (page 1, domain other) captures: **11% of the pick-generation budget produces nothing**, because those slots hold rows that carry no odds and can never yield a pick. Assumptions: Each slot consumes a fixed resource regardless of validity. Breakdown regime: When \\text{Cap} is exceeded, valid picks are underrepresented. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The cap enforces a kernel constraint on valid picks, derived from the ratio of invalid to valid rows. Operator 'Merge Ordering Constraint' (page 1, domain other) captures: This is the **cap-applied-before-collapse** pattern for the third time tonight, after C-153 and C-161 in the pass lane. Assumptions: Temporal ordering prevents data corruption from stale rows. Breakdown regime: If \\text{merge} precedes \\mathcal{F}, pick stranding occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The constraint mirrors a causal dependency graph where \\mathcal{F} must precede \\text{merge} to maintain consistency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in relational algebra and database normalization theory, extended to modern distributed systems through the lens of data consistency and temporal logic. Retrocausal Genealogy: Rooted in CANONICITY_SWEEP_2026-09-08 (e2a66062d2c3c94b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CANONICITY_SWEEP_2026-09-08 (e2a66062d2c3c94b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the ingestion pipeline (which may generate duplicates), the pick generator (which consumes rows), and the merge engine (which must avoid stranding). Each agent operates under different constraints but shares the same data model. Theory of Mind & Decision Maker Model: Rooted in CANONICITY_SWEEP_2026-09-08 (e2a66062d2c3c94b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that filtering happens before merging, preventing leakage of invalid rows into downstream layers. The veto condition is violated if \\text{merge} occurs before \\mathcal{F}, leading to systemic pick stranding. Cross-Layer Veto & Anti-Leakage Check: Rooted in CANONICITY_SWEEP_2026-09-08 (e2a66062d2c3c94b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -25,6 +25,7 @@ vi.mock("@sports/data-ingestion", () => ({
 }));
 vi.mock("@/lib/data-sources/multi-source-scores", () => ({
   fetchScoresMultiSource: mocks.fetchScoresMultiSource,
+  scoreSourceChain: () => ["espn-public-api"],
 }));
 vi.mock("@/lib/data-sources/free-adapters/henrygd-ncaa", () => ({
   fetchHenrygdScoreboard: vi.fn(async () => []),

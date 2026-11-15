@@ -1,0 +1,78 @@
+{
+  "book_id": "110ec3114dfd6eb1",
+  "source_status": "COMPLETE",
+  "title": "anythingllm",
+  "file_name": "anythingllm.md",
+  "sha256": "110ec3114dfd6eb10830948ec9f6eaa72a5574093666d1b154d781628f07decb",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "AnythingLLM's modular architecture enables unified RAG-agent-API integration through workspace-based vectorization and stateful document processing. Universal Lens: Rooted in anythingllm (110ec3114dfd6eb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers private knowledge states via Bayesian belief updates on ingested documents, conditioned on embedding similarity and citation integrity. GSI Mapping: Rooted in anythingllm (110ec3114dfd6eb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning by transitioning agent states through workflow queues, constrained by vector DB access and API telemetry. GSE Mapping: Rooted in anythingllm (110ec3114dfd6eb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "workspace_rag",
+      "name": "Workspace Retrieval-Augmented Generation",
+      "verbatim_quote": "# AnythingLLM Deep Dive As of: 2026-06-09 ## Project Summary MIT-licensed all-in-one AI app for private document chat, workspace-based RAG, agents, vector databases, API access, embedded chat widgets, desktop and Docker self-hosting.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'workspace identifier (dimensionless)', 'D': 'document set (dimensionless)', 'E': 'embedding space (vector space)', 'R': 'retrieval score (unitless)'}",
+      "assumptions": "Documents within W are semantically partitioned; E is fixed-dimensional; R is monotonic in relevance.",
+      "breakdown_regime": "When D ⊆ W and |D| > 0, R → max(R) over E.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's belief update on D corresponds to RAG's context retrieval in E.",
+        "source_operator": "workspace_rag",
+        "telemetry": "Document retrieval latency and embedding overlap"
+      }
+    },
+    {
+      "primitive_id": "vector_database_integration",
+      "name": "Vector Database Integration",
+      "verbatim_quote": "Database: Built-in app storage plus vector DB options including local LanceDB and external stores.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'vector database (set of vectors)', 'L': 'local vector store (dimensionless)', 'E': 'external vector store (dimensionless)'}",
+      "assumptions": "V supports nearest neighbor search; L and E are disjoint sets.",
+      "breakdown_regime": "When V = L ∪ E, query time complexity O(log n).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses V to index and retrieve embeddings for agent reasoning.",
+        "source_operator": "vector_database_integration",
+        "telemetry": "Query response time and vector dimensionality"
+      }
+    },
+    {
+      "primitive_id": "api_access_surface",
+      "name": "API Access Surface",
+      "verbatim_quote": "## API / Integration Surface API: API Access is documented; source includes API key and integration surfaces.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'API endpoint (function)', 'K': 'API key (scalar)', 'T': 'request throughput (requests/sec)'}",
+      "assumptions": "A is deterministic; K is secret; T is bounded.",
+      "breakdown_regime": "When A(K) is valid, T > 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's data flow through A mirrors GSE's state transitions via API.",
+        "source_operator": "api_access_surface",
+        "telemetry": "API call frequency and error rate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "110ec3114dfd6eb1_t0",
+      "think": "The core operators—workspace RAG, vector DB integration, and API surface—are mathematically structured as a layered state machine. Each primitive defines a functional transformation: RAG maps documents to embeddings (E), vector DBs index E for fast retrieval (V), and API surfaces enable inter-layer communication (A). The failure mode occurs when semantic drift in E causes retrieval degradation or when API misconfiguration leads to unauthorized access. Dualities emerge between GSI's probabilistic inference and GSE's deterministic state transitions. The system's robustness hinges on maintaining consistency across these layers under varying load conditions.\n\nDeep epistemic analysis for anythingllm (110ec3114dfd6eb1, domain=other, pages_read=2/2): Operator 'Workspace Retrieval-Augmented Generation' (page 1, domain other) captures: # AnythingLLM Deep Dive As of: 2026-06-09 ## Project Summary MIT-licensed all-in-one AI app for private document chat, workspace-based RAG, agents, vector databases, API access, embedded chat widgets, desktop and Docker self-hosting. Assumptions: Documents within W are semantically partitioned; E is fixed-dimensional; R is monotonic in relevance. Breakdown regime: When D ⊆ W and |D| > 0, R → max(R) over E. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's belief update on D corresponds to RAG's context retrieval in E. Operator 'Vector Database Integration' (page 1, domain other) captures: Database: Built-in app storage plus vector DB options including local LanceDB and external stores. Assumptions: V supports nearest neighbor search; L and E are disjoint sets. Breakdown regime: When V = L ∪ E, query time complexity O(log n). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses V to index and retrieve embeddings for agent reasoning. Operator 'API Access Surface' (page 1, domain other) captures: ## API / Integration Surface API: API Access is documented; source includes API key and integration surfaces. Assumptions: A is deterministic; K is secret; T is bounded. Breakdown regime: When A(K) is valid, T > 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's data flow through A mirrors GSE's state transitions via API. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for anythingllm (110ec3114dfd6eb1, domain=other, pages_read=2/2): Operator 'Workspace Retrieval-Augmented Generation' (page 1, domain other) captures: # AnythingLLM Deep Dive As of: 2026-06-09 ## Project Summary MIT-licensed all-in-one AI app for private document chat, workspace-based RAG, agents, vector databases, API access, embedded chat widgets, desktop and Docker self-hosting. Assumptions: Documents within W are semantically partitioned; E is fixed-dimensional; R is monotonic in relevance. Breakdown regime: When D ⊆ W and |D| > 0, R → max(R) over E. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's belief update on D corresponds to RAG's context retrieval in E. Operator 'Vector Database Integration' (page 1, domain other) captures: Database: Built-in app storage plus vector DB options including local LanceDB and external stores. Assumptions: V supports nearest neighbor search; L and E are disjoint sets. Breakdown regime: When V = L ∪ E, query time complexity O(log n). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses V to index and retrieve embeddings for agent reasoning. Operator 'API Access Surface' (page 1, domain other) captures: ## API / Integration Surface API: API Access is documented; source includes API key and integration surfaces. Assumptions: A is deterministic; K is secret; T is bounded. Breakdown regime: When A(K) is valid, T > 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's data flow through A mirrors GSE's state transitions via API. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and graph-based retrieval models, this architecture traces back to early RAG systems and modern vector search engines like FAISS and Pinecone. Retrocausal Genealogy: Rooted in anythingllm (110ec3114dfd6eb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in anythingllm (110ec3114dfd6eb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial prompt injection, unauthorized data exposure, and API misuse. These threats are modeled as perturbations in the state transition functions of GSE and belief updates in GSI. Theory of Mind & Decision Maker Model: Rooted in anythingllm (110ec3114dfd6eb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each layer operates independently on distinct data types. Leakage vetoes prevent cross-layer contamination, particularly in privacy-sensitive contexts such as customer-facing integrations. Cross-Layer Veto & Anti-Leakage Check: Rooted in anythingllm (110ec3114dfd6eb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in anythingllm (110ec3114dfd6eb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

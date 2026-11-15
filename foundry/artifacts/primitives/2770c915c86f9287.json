@@ -1,0 +1,605 @@
+{
+  "book_id": "2770c915c86f9287",
+  "shard": "2",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_FOOTBALL_ROBUST_OPT_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Burer, 'Robust Rankings for College Football', Journal of Quantitative Analysis in Sports 2012, Manuscript 1405 (Samuel Burer, University of Iowa), 22 pages. The first explicit robust football ranking: the Colley Matrix (one of six BCS computer rankings, the only fully published one) is shown sensitive to inconsequential-game outcomes (2010 LSU/Boise State flip from one omitted FCS game, BCS gap .0063), and a robust Colley Matrix Plus (CM+) variant is formulated as a min-max worst-case violation over a Gamma-budget of switched inconsequential games (bottom teams, win%<0.3). Key algebra: antisymmetric switch leaves C unchanged (schedule-only), b shifts linearly; the p=2 min-max reformulates to a strictly convex QP solved by cutting-plane constraint generation in <1 min (CPLEX). Switch measure (top-25 rank displacement) drops from CM mean 5.1/worst 20 to CM+ Gamma=5 mean 1.8/worst 10 (L=1). Data 2006-2011 (Wilson/Wolfe archive). Extracted faithfully (not a derivative summary). Equations 1-2 (Colley C/b), 3 (b perturbation), 4 (min-max), 6 (convex QP), the switch measure, and perturbation sets are printed in a shifted/custom math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Domain football matches catalog; American college football (FBS). The robust min-max rating formulation, Gamma conservatism budget (Bertsimas-Sim), schedule-invariant perturbation algebra, constraint-generation solver, switch-measure sensitivity metric, and signal-vs-noise selectivity are directly isomorphic to GSE's robust rating and sensitivity-analysis layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "cm_one_of_six_bcs",
+      "name": "Colley Matrix = one of six BCS computer rankings (only one fully published)",
+      "verbatim_quote": "one of six computer rankings used by the Bowl Championship Series",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Samuel Burer, University of Iowa; JQAS 2012 Manuscript 1405) investigates the Colley Matrix (CM), one of six computer rankings used by the Bowl Championship Series and the only one fully published in the open literature, hence systematically investigable; the study is the first explicit attempt to make football rankings robust."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The published-rating-system focus is the same transparent-model audit GSE prefers over black-box ratings.",
+        "source_operator": "cm_one_of_six_bcs",
+        "telemetry": "Colley Matrix; 1 of 6 BCS computer rankings; only fully published; first robust-ranking attempt"
+      }
+    },
+    {
+      "primitive_id": "cm_win_loss_not_points",
+      "name": "CM uses win-loss only (BCS requirement), not points; adjusts for strength of schedule",
+      "verbatim_quote": "b does not depend in any way on the points scored in the games",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The CM method uses only win-loss information (as required by the BCS) and automatically adjusts for opponent quality (strength of schedule); the vector b depends only on win-loss outcomes, not points scored, so the method naturally incorporates robustness to hypothetical point-margin perturbations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The win-loss-only schedule-adjusted rating is the same margin-free strength-of-schedule rating GSE uses.",
+        "source_operator": "cm_win_loss_not_points",
+        "telemetry": "CM win-loss only (BCS); b independent of points; auto strength-of-schedule; margin-robust"
+      }
+    },
+    {
+      "primitive_id": "lsu_boise_0063_omission",
+      "name": "Motivation: one omitted FCS game flipped LSU/Boise State (BCS gap .0063)",
+      "verbatim_quote": "LSU and Boise State are so close in the overall BCS rankings (.0063) that this one error switches the order",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The 2010 motivation: Colley's submitted rankings omitted the Appalachian State-Western Illinois FCS playoff game, so LSU (ranked 9th) and Boise State (10th) should have been switched, as should Alabama/Nebraska (17th/18th); LSU and Boise State were so close in the overall BCS rankings (0.0063) that this single omitted FCS game switched their order — demonstrating CM sensitivity to an inconsequential game."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The single-game ranking-flip is literally GSE's sensitivity-to-noise concern for close ratings.",
+        "source_operator": "lsu_boise_0063_omission",
+        "telemetry": "2010 omitted FCS game (App State-W Illinois); LSU/Boise flip; BCS gap .0063; Alabama/Nebraska swap"
+      }
+    },
+    {
+      "primitive_id": "robustness_inconsequential_games",
+      "name": "Robustness = top rankings stable vs inconsequential-game outcome changes",
+      "verbatim_quote": "the top rankings provided by computer systems should be more robust against the outcomes of inconsequential games",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The proposal is that top computer rankings should be more robust against the outcomes of inconsequential games (games between teams that should clearly not be top ranked), protecting against modest hypothetical win-loss changes of actual inconsequential games; this is the paper's chosen definition of robustness, adjustable to other definitions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The inconsequential-game robustness is the same noise-insensitivity GSE demands of top ratings.",
+        "source_operator": "robustness_inconsequential_games",
+        "telemetry": "robust = top rankings stable vs inconsequential-game (bottom-team) outcome switches"
+      }
+    },
+    {
+      "primitive_id": "still_sensitive_important_games",
+      "name": "Top rankings must STILL be sensitive to important games between contenders",
+      "verbatim_quote": "the top rankings should still be sensitive to important games played between top contenders",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The top rankings should still be sensitive to important games played between top contenders, or between one top contender and one non-contender; robustness targets only inconsequential games, not a blanket insensitivity that would discard genuine signal."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The signal-vs-noise selectivity is the same preserve-important-sensitivity GSE enforces while damping noise.",
+        "source_operator": "still_sensitive_important_games",
+        "telemetry": "still sensitive to important games (contender-contender, contender-noncontender); not blanket insensitivity"
+      }
+    },
+    {
+      "primitive_id": "few_unknown_switches",
+      "name": "Protect against a few unknown switches, not delete inconsequential games",
+      "verbatim_quote": "Suppose the outcomes of just a few of the inconsequential games switched, but we do not necessarily know which ones",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The approach does not delete inconsequential games (collectively they matter greatly to top teams) but asks: suppose the outcomes of just a few inconsequential games switched, without knowing which ones — can a ranking be devised robust to these hypothesized switches? This is a worst-case protection over an unknown subset."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The unknown-subset protection is the same distribution-free worst-case robustness GSE uses.",
+        "source_operator": "few_unknown_switches",
+        "telemetry": "don't delete inconsequential games (collectively matter); protect few unknown switches; worst-case subset"
+      }
+    },
+    {
+      "primitive_id": "gamma_conservatism_budget",
+      "name": "Gamma = number of switched inconsequential games to protect against (conservatism)",
+      "verbatim_quote": "the number of switched inconsequential games to protect against",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The method depends on a user-supplied integer Gamma >= 0, the number of switched inconsequential games to protect against, signifying the user's conservatism (mimicking Bertsimas-Sim 2004): Gamma=0 gives the usual CM ratings, Gamma=10 protects against up to 10 switches; there is no best a priori choice of Gamma, depending on user experience and conservatism."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Gamma budget is literally GSE's Bertsimas-Sim-style conservatism parameter for robust decisions.",
+        "source_operator": "gamma_conservatism_budget",
+        "telemetry": "Gamma>=0 = # switched games to protect; conservatism (Bertsimas-Sim 2004); Gamma=0 -> CM; no best a priori"
+      }
+    },
+    {
+      "primitive_id": "not_stochastic_worst_case",
+      "name": "Not stochastic: no distribution assumptions, single worst-case ranking",
+      "verbatim_quote": "we do not make any assumptions about the distributions of switched inconsequential games, and we do not study average rankings",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The approach is not stochastic: no assumptions about distributions of switched inconsequential games and no study of average rankings; instead a single set of rankings intelligently accounts for the possibility of Gamma switched games without knowing anything else about them, characteristic of robust optimization versus stochastic approaches."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The distribution-free single-ranking approach is the same robust-vs-stochastic distinction GSE makes.",
+        "source_operator": "not_stochastic_worst_case",
+        "telemetry": "not stochastic; no distribution assumptions; no average rankings; single robust ranking; worst-case"
+      }
+    },
+    {
+      "primitive_id": "minlp_about_minute",
+      "name": "Robust variant = mixed-integer nonlinear program, ~1 minute to solve",
+      "verbatim_quote": "which requires about a minute of computation time",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The robust variant is based on solving a mixed-integer nonlinear program (MINLP), the robust version of the system Cr=b, requiring about a minute of computation time; solving it provides a robust ratings vector r sorted to obtain final robust rankings just as in CM."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The MINLP robust formulation is the same tractable worst-case optimization GSE uses for robust ratings.",
+        "source_operator": "minlp_about_minute",
+        "telemetry": "robust CM = MINLP (robust Cr=b); ~1 min; robust r sorted like CM"
+      }
+    },
+    {
+      "primitive_id": "colley_C_diagonally_dominant",
+      "name": "Colley C = 2I + Diag((W+W^T)e) - (W+W^T); b = e + (1/2)(W-W^T)e; C PD",
+      "verbatim_quote": "Colley shows that C is diagonally dominant and hence positive definite",
+      "page": 7,
+      "latex": "C=2I+\\mathrm{Diag}\\!\\big((W+W^{\\mathsf T})e\\big)-(W+W^{\\mathsf T}),\\qquad b=e+\\tfrac12(W-W^{\\mathsf T})e,\\qquad r=C^{-1}b",
+      "symbol_and_unit_ledger": {
+        "W_{ij}": "number of times team i beat team j [games]",
+        "e": "all-ones vector",
+        "I": "identity matrix",
+        "Diag": "places vector on diagonal",
+        "C": "Colley matrix (schedule-dependent), positive definite",
+        "b": "win-loss-dependent RHS vector",
+        "r": "ratings vector (sorted descending for ranks)"
+      },
+      "assumptions": [
+        "With W_{ij} = times team i beat team j, the Colley matrix is C = 2I + Diag((W+W^T)e) - (W+W^T) (Eq 1) and b = e + (1/2)(W-W^T)e (Eq 2); C is diagonally dominant hence positive definite so C^{-1} exists, and the ratings r = C^{-1}b are sorted descending. Equations 1-2 are printed in a shifted math font and reconstructed here.",
+        "Equations 1-2 (Colley C and b) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "C diagonally dominant -> positive definite -> invertible; unique solution",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Colley linear system is the same schedule-adjusted rating solve GSE uses.",
+        "source_operator": "colley_C_diagonally_dominant",
+        "telemetry": "C=2I+Diag((W+W^T)e)-(W+W^T); b=e+(1/2)(W-W^T)e; C diag-dominant PD; r=C^-1 b"
+      }
+    },
+    {
+      "primitive_id": "data_2010_772_fbs_games",
+      "name": "Data 2006-2011; 2010: 3960 games/730 teams, 772 FBS-involved -> n=195",
+      "verbatim_quote": "of the 3,960 games, 772 involved at least one FBS team",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Data are 2006-2011 regular seasons from the Wilson/Wolfe archive (no post-season); the 2010 season had 3,960 games among 730 teams, of which 120 were FBS and 772 games involved at least one FBS team, yielding n=195 rated teams (120 FBS + 75 outside); all n teams are rated but non-FBS teams are deleted from r before sorting to focus FBS rankings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The FBS-focused rating with outside opponents is the same cross-division strength-of-schedule handling GSE uses.",
+        "source_operator": "data_2010_772_fbs_games",
+        "telemetry": "2006-2011 Wilson/Wolfe; 2010 3960 games/730 teams/120 FBS/772 FBS games -> n=195; rate all, delete non-FBS before sort"
+      }
+    },
+    {
+      "primitive_id": "inconsequential_bottom_teams",
+      "name": "Inconsequential game = between two bottom teams (win% < omega=0.3); top t=25",
+      "verbatim_quote": "We call a game inconsequential if it has occurred between two bottom teams",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "T is the top t teams (t=25) and B the bottom teams with winning percentage below omega (omega=0.3); a game is inconsequential if between two bottom teams i,j in B, with I the set of such pairs; for 2006-2011 with t=25 and omega=0.3, T and B never intersect; B does not depend on rankings while T does."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The bottom-team inconsequential definition is the same noise-source identification GSE uses.",
+        "source_operator": "inconsequential_bottom_teams",
+        "telemetry": "T=top 25; B=win%<0.3; inconsequential = B x B game; I=pairs; T,B never intersect (2006-2011)"
+      }
+    },
+    {
+      "primitive_id": "switch_measure_definition",
+      "name": "Switch measure delta = sum of top-team rank changes (1-norm)",
+      "verbatim_quote": "if the top 2 teams switch places but no other ranks change",
+      "page": 9,
+      "latex": "\\delta(W,W')=\\sum_{i\\in T}\\left|\\pi_i-\\pi'_i\\right|",
+      "symbol_and_unit_ledger": {
+        "pi": "original CM ranking permutation",
+        "pi'": "perturbed ranking permutation",
+        "T": "index set of top t=25 teams",
+        "delta": "switch measure (total top-team rank displacement) [rank positions]"
+      },
+      "assumptions": [
+        "The switch measure delta(W,W') = sum_{i in T} |pi_i - pi'_i| is the 1-norm of the top-team rank-change subvector: if the top 2 teams swap delta=2, if 1st and 3rd swap delta=4, if the top team drops to 4th delta=6; it is even if all top-t teams stay in the top t, odd if some drop out. The definition is printed shifted-font and reconstructed here.",
+        "Switch measure definition printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Even if all top-t stay in top t; odd if a team drops out",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The switch measure is literally GSE's ranking-sensitivity metric under perturbation.",
+        "source_operator": "switch_measure_definition",
+        "telemetry": "delta=sum_{i in T}|pi_i-pi'_i|; top-2 swap=2, 1st-3rd swap=4, top->4th=6; 1-norm"
+      }
+    },
+    {
+      "primitive_id": "cm_sensitivity_undesirable",
+      "name": "CM top-25 quite sensitive: L=1 mean delta 5.1, worst case 20",
+      "verbatim_quote": "such sensitivity is an undesirable property of the CM rankings",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For L=1 switched game the switch measure has mean 5.1, median 4, max (worst case) 20, stdev 4.9; for L=2 mean 6.5, median 4, max 28, stdev 6.3; the author judges such sensitivity undesirable given how heavily rankings are relied upon in college football."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The baseline sensitivity statistics are the same fragility benchmark GSE measures before robustifying.",
+        "source_operator": "cm_sensitivity_undesirable",
+        "telemetry": "CM L=1 delta mean 5.1/median 4/max 20/stdev 4.9; L=2 mean 6.5/max 28/stdev 6.3; undesirable"
+      }
+    },
+    {
+      "primitive_id": "marshall_rice_worst_case",
+      "name": "Worst-case example: switching Marshall-Rice (both <30%) reshuffles top-25, delta=20",
+      "verbatim_quote": "both Marshall and Rice had winning percentages below 30%, and Marshall beat Rice in real life",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Table 1's worst-case 2007 example switches the inconsequential Marshall-Rice game (both winning percentages below 30%, Marshall beat Rice in real life), producing delta=20 and significant top-25 shuffling; some shuffling is logical (West Virginia beat Marshall, so a hypothetical Marshall loss weakens West Virginia)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The worst-case single-game reshuffle is the same extreme-sensitivity demonstration GSE uses to motivate robustness.",
+        "source_operator": "marshall_rice_worst_case",
+        "telemetry": "2007 Marshall-Rice switch (both <30%); delta=20; top-25 reshuffle; West Virginia weakened logically"
+      }
+    },
+    {
+      "primitive_id": "west_virginia_excessive_drop",
+      "name": "But West Virginia dropping 4 spots seems excessive (illogical sensitivity)",
+      "verbatim_quote": "What is unclear, however, is why West Virginia drops four spots, which in our opinion seems excessive",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "While some ranking shuffling after the Marshall-Rice switch is logical, it is unclear why West Virginia drops four spots, which the author judges excessive — illustrating that CM sensitivity includes illogical over-reactions, not just justified adjustments."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The excessive-drop critique is the same over-reaction-to-noise diagnosis GSE makes of fragile ratings.",
+        "source_operator": "west_virginia_excessive_drop",
+        "telemetry": "West Virginia drops 4 spots (excessive); illogical over-reaction vs justified adjustment"
+      }
+    },
+    {
+      "primitive_id": "C_invariant_schedule_only",
+      "name": "Key insight: perturbation leaves C unchanged (schedule fixed); only b shifts linearly",
+      "verbatim_quote": "This makes sense because C depends only on the schedule of games, which is not changed",
+      "page": 12,
+      "latex": "C'=C,\\qquad b'=b+\\tfrac12(\\Delta-\\Delta^{\\mathsf T})e",
+      "symbol_and_unit_ledger": {
+        "Delta": "win-matrix perturbation (antisymmetric switch), Delta+Delta^T=0",
+        "C'": "perturbed Colley matrix = C (schedule unchanged)",
+        "b'": "perturbed RHS, linear in Delta",
+        "e": "all-ones vector"
+      },
+      "assumptions": [
+        "Because the switch perturbation Delta is antisymmetric (Delta+Delta^T=0), C'=C: the perturbation does not alter C since C depends only on the schedule, which is unchanged; only b shifts linearly, b'=b+(1/2)(Delta-Delta^T)e (Eq 3), so the perturbed systems are Cr=b'. Equations are printed shifted-font and reconstructed here.",
+        "C-invariance and Eq 3 (b perturbation) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "C depends only on schedule; outcome switches affect only b",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The schedule-invariant C is the same structural-vs-data separation GSE exploits for efficient robustness.",
+        "source_operator": "C_invariant_schedule_only",
+        "telemetry": "Delta+Delta^T=0 -> C'=C (schedule fixed); b'=b+(1/2)(Delta-Delta^T)e (Eq3); Cr=b'"
+      }
+    },
+    {
+      "primitive_id": "minmax_worst_violation",
+      "name": "Robust objective: min_r max_{Delta in D(Gamma)} ||Cr-b'||_p (worst-case violation)",
+      "verbatim_quote": "search for an r that minimizes the worst-possible violation",
+      "page": 12,
+      "latex": "\\min_{r}\\ \\max_{\\Delta\\in D(\\Gamma)}\\ \\|Cr-b'\\|_p",
+      "symbol_and_unit_ledger": {
+        "r": "ratings vector to optimize",
+        "D(Gamma)": "perturbation set switching <=Gamma inconsequential games",
+        "b'": "perturbed RHS = b+(1/2)(Delta-Delta^T)e",
+        "||.||_p": "user-specified p-norm (p=2 used)"
+      },
+      "assumptions": [
+        "Since no single r solves Cr=b' for all Delta in D(Gamma) except Gamma=0, robust optimization searches for r minimizing the worst-possible violation: min_r max_{Delta in D(Gamma)} ||Cr-b'||_p (Eq 4), with a user-specified p-norm; the paper focuses on p=2 (originally p=infinity, but that gave many alternative optima and ranking ambiguity, so referees suggested switching). Equation 4 is printed shifted-font and reconstructed here.",
+        "Equation 4 (min-max robust objective) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "NP-hard MINLP in general; p=2 admits exact constraint-generation procedure",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The min-max worst-case objective is literally GSE's robust-optimization formulation.",
+        "source_operator": "minmax_worst_violation",
+        "telemetry": "min_r max_{Delta in D(Gamma)} ||Cr-b'||_p (Eq4); p=2 (p=inf gave ambiguous optima)"
+      }
+    },
+    {
+      "primitive_id": "strictly_convex_qp_unique",
+      "name": "With auxiliary t, becomes strictly convex QP with unique optimum (one constraint per Delta)",
+      "verbatim_quote": "is a strictly convex quadratic program with a unique optimal solution",
+      "page": 13,
+      "latex": "\\min_{r,t}\\ \\|Cr-b\\|^2+t\\quad\\text{s.t.}\\quad (b-Cr)^{\\mathsf T}(\\bar\\Delta-\\bar\\Delta^{\\mathsf T})e+\\tfrac14\\|(\\bar\\Delta-\\bar\\Delta^{\\mathsf T})e\\|^2\\le t\\ \\ \\forall\\bar\\Delta\\in D(\\Gamma)",
+      "symbol_and_unit_ledger": {
+        "t": "auxiliary worst-case violation variable",
+        "r": "ratings vector",
+        "bar Delta": "a fixed scenario (constraint index), not a variable",
+        "D(Gamma)": "scenario set (<=Gamma switches)"
+      },
+      "assumptions": [
+        "Introducing auxiliary variable t, the inner maximization is rewritten with explicit linear constraints (Eq 6): min_{r,t} ||Cr-b||^2 + t subject to (b-Cr)^T(Delta-Delta^T)e + (1/4)||(Delta-Delta^T)e||^2 <= t for each Delta in D(Gamma); Delta is no longer a variable but one linear constraint per scenario, making (6) a strictly convex quadratic program with a unique optimal solution solvable by CPLEX. Equation 6 is printed shifted-font and reconstructed here.",
+        "Equation 6 (convex QP reformulation) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Strictly convex QP -> unique optimum (avoids p=inf alternative-optima ambiguity)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The convex-QP reformulation is the same tractable robust-counterpart GSE solves.",
+        "source_operator": "strictly_convex_qp_unique",
+        "telemetry": "aux t; min ||Cr-b||^2+t s.t. one linear constraint per Delta; strictly convex QP; unique optimum; CPLEX"
+      }
+    },
+    {
+      "primitive_id": "constraint_generation_cutting_plane",
+      "name": "Constraint generation: solve subset, find violated constraint via subproblem, repeat",
+      "verbatim_quote": "this constraint is added to the approximate model and the process is repeated",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Since D(Gamma) has sum_{gamma=0}^Gamma C(N,gamma) elements (too many to enumerate), a cutting-plane strategy solves (6) over a limited subset to get (r-bar,t-bar), then solves the subproblem max_{Delta in D(Gamma)} (b-Cr-bar)^T(Delta-Delta^T)e + (1/4)||(Delta-Delta^T)e||^2 - t-bar; if positive, a violated constraint is added and the process repeats; if nonnegative, optimality is proved and r-bar is the robust ratings vector."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The constraint-generation loop is literally GSE's cutting-plane scalability technique for huge scenario sets.",
+        "source_operator": "constraint_generation_cutting_plane",
+        "telemetry": "D(Gamma)=sum C(N,gamma) too large; solve subset -> subproblem -> add violated constraint -> repeat; nonnegative=optimal"
+      }
+    },
+    {
+      "primitive_id": "compute_under_minute_weekly",
+      "name": "Solve <1 min (CPLEX 12.2/Matlab); not an obstacle since rankings recalculated weekly",
+      "verbatim_quote": "the time needed to compute the robust rankings (typically less than a minute) is not an obstacle since rankings would be recalculated about once per week in practice",
+      "page": 20,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Solving (4) via (6) and constraint generation takes less than a minute using CPLEX 12.2 within Matlab R2010b on an Intel Core 2 Quad 2.4 GHz with 4 GB RAM under Linux; larger N and Gamma may take minutes or hours, but the typical sub-minute time is not an obstacle since rankings are recalculated about once per week in practice."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The tractable weekly-recompute cost is the same operational-feasibility argument GSE makes for robust ratings.",
+        "source_operator": "compute_under_minute_weekly",
+        "telemetry": "<1 min CPLEX 12.2/Matlab R2010b/Core2Quad 2.4GHz/4GB/Linux; larger N,Gamma -> min/hours; weekly recompute"
+      }
+    },
+    {
+      "primitive_id": "gamma0_equals_cm",
+      "name": "Extreme 1: Gamma=0 -> robust rankings identical to CM (as sensitive)",
+      "verbatim_quote": "the robust rankings are clearly as sensitive as the CM rankings since they are exactly the CM rankings",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "At Gamma=0 the robust rankings are exactly the CM rankings and thus as sensitive; this is the lower extreme of the conservatism spectrum, anchoring the robust method to the baseline."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Gamma=0 baseline anchor is the same nested-baseline property GSE verifies in robust formulations.",
+        "source_operator": "gamma0_equals_cm",
+        "telemetry": "Gamma=0 -> robust = CM (identical, as sensitive); lower extreme"
+      }
+    },
+    {
+      "primitive_id": "gamma_large_completely_insensitive",
+      "name": "Extreme 2: Gamma>=N -> completely insensitive (all-switch scenario set identical)",
+      "verbatim_quote": "the robust rankings are completely insensitive to L switches",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "When Gamma is sufficiently large (Gamma>=N, N the total inconsequential games), the robust rankings are completely insensitive to L switches: both the original and perturbed rankings optimize over the same all-switch scenario set, so pi=pi' for any perturbation; between Gamma=0 and Gamma>=N, sensitivity decreases as Gamma increases."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The full-budget insensitivity is the same worst-case-saturation property GSE recognizes in robust optimization.",
+        "source_operator": "gamma_large_completely_insensitive",
+        "telemetry": "Gamma>=N -> completely insensitive; pi=pi' (same all-switch scenario set); sensitivity decreases as Gamma rises"
+      }
+    },
+    {
+      "primitive_id": "robust_distributions_lower",
+      "name": "Gamma=5 robust: L=1 mean delta 1.8/max 10 (vs CM 5.1/20); L=2 mean 2.5/max 14",
+      "verbatim_quote": "the distributions in Figure 4 are considerably lower than those in Figure 1",
+      "page": 19,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "At Gamma=5 the robust switch-measure distributions are considerably lower than CM: L=1 mean 1.8, median 0, max 10, stdev 2.4 (vs CM 5.1/4/20/4.9); L=2 mean 2.5, median 2, max 14, stdev 2.8 (vs CM 6.5/4/28/6.3); higher Gamma further stabilizes the rankings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The robust-vs-baseline sensitivity reduction is the same empirical robustness gain GSE quantifies.",
+        "source_operator": "robust_distributions_lower",
+        "telemetry": "Gamma=5 L=1 delta mean 1.8/median 0/max 10/stdev 2.4 (CM 5.1/20); L=2 mean 2.5/max 14 (CM 6.5/28)"
+      }
+    },
+    {
+      "primitive_id": "bubble_below_xy_line",
+      "name": "Per-instance bubble chart: most points below x=y -> CM+ less sensitive on each instance",
+      "verbatim_quote": "the fact that most bubbles are below the x = y line illustrates that, on any given instance, the switch measure for CM+ is less than that of CM",
+      "page": 19,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A bubble chart plots CM switch measure (x) versus CM+ switch measure (y) for the same switched instances (Gamma=5, L=1,2), bubble area proportional to frequency; most bubbles lie below the x=y line, showing that on any given instance CM+ is less sensitive than CM."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The per-instance dominance is the same instance-level robustness verification GSE uses beyond averages.",
+        "source_operator": "bubble_below_xy_line",
+        "telemetry": "bubble chart CM(x) vs CM+(y), Gamma=5 L=1,2; most below x=y -> CM+ less sensitive per instance"
+      }
+    },
+    {
+      "primitive_id": "worst_case_lessening",
+      "name": "CM+ particularly reduces the WORST-CASE switch measures (CM ~15-20 L=1, 20-25 L=2)",
+      "verbatim_quote": "the CM+ rankings are particularly successful at lessening the sensitivity of the worst-case switch measures",
+      "page": 19,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "CM+ is particularly successful at lessening the sensitivity of the worst-case switch measures for CM (approximately 15-20 for L=1 and 20-25 for L=2), which is exactly the tail robust optimization targets."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The worst-case-tail reduction is literally the goal of GSE's robust optimization (protect the tail, not the mean).",
+        "source_operator": "worst_case_lessening",
+        "telemetry": "CM+ reduces worst-case delta (CM ~15-20 L=1, 20-25 L=2); tail-focused robustness"
+      }
+    },
+    {
+      "primitive_id": "top15_mostly_robust",
+      "name": "2008: top-3 retain rank across Gamma; top-15 mostly robust (except Utah/Texas Tech)",
+      "verbatim_quote": "the top-15 CM rankings are conﬁrmed to be mostly robust (with the exception of Utah and Texas Tech)",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For 2008, the top-3 teams (Oklahoma, Florida, Texas) each retain their rank as Gamma increases, affirming the CM rankings for those teams; the top-15 CM rankings are confirmed mostly robust except Utah and Texas Tech; each team moves at most two positions over Gamma<=10, changes occur within separate groups of closely-ranked teams, and ranks stabilize for 7<=Gamma<=10."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The top-rank stability confirmation is the same robustness-validation of headline ratings GSE performs.",
+        "source_operator": "top15_mostly_robust",
+        "telemetry": "2008 top-3 (Oklahoma/Florida/Texas) stable; top-15 mostly robust except Utah/Texas Tech; <=2 pos move; stabilize 7<=Gamma<=10"
+      }
+    },
+    {
+      "primitive_id": "extensions_close_games",
+      "name": "Extensions: other sports, adjust omega, include FCS, or protect close games (<3 pts)",
+      "verbatim_quote": "one may wish to protect the rankings against games that were very close, e.g., where the winner was determined by less than 3 points",
+      "page": 20,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The approach extends to other sports (robust basketball/chess rankings), and the robustness notion is user-modifiable: alter omega (bottom-team winning percentage), include FCS games in the inconsequential set I, or manually choose a different I — e.g., protect against very close games where the winner was determined by less than 3 points; the methodology goes through unchanged."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The customizable inconsequential-set is the same user-defined noise-source flexibility GSE builds into robustness.",
+        "source_operator": "extensions_close_games",
+        "telemetry": "extensions: other sports; adjust omega; include FCS; custom I (e.g., close games <3 pts); methodology unchanged"
+      }
+    },
+    {
+      "primitive_id": "derived_robust_optimization",
+      "name": "Derived from robust optimization (Ben-Tal) + robust equations (El Ghaoui-Lebret)",
+      "verbatim_quote": "Our approach is derived from the fields of robust optimization",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The approach is derived from robust optimization (Ben-Tal, El Ghaoui, Nemirovski 2009) and robust systems of equations (El Ghaoui-Lebret 1997), leading to the MINLP robust version of Cr=b; the Gamma budget mimics Bertsimas-Sim's 'Price of Robustness' (2004), and related ranking work includes Keener's Perron-Frobenius (1993), Massey, and Chartier et al.'s sensitivity/stability study (2011)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The robust-optimization heritage is the same theoretical foundation GSE draws on for worst-case decisions.",
+        "source_operator": "derived_robust_optimization",
+        "telemetry": "robust optimization (Ben-Tal/El Ghaoui/Nemirovski 2009) + robust equations (El Ghaoui-Lebret 1997); Bertsimas-Sim 2004; Keener/Massey/Chartier"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "robustrank2012_trace",
+      "think": "The retrocausal genealogy of this paper is the importation of robust optimization into sports rankings. Samuel Burer, in the Department of Management Sciences at the University of Iowa, publishing in the Journal of Quantitative Analysis in Sports in 2012 as Manuscript 1405, takes the Colley Matrix, one of the six computer rankings used by the Bowl Championship Series and the only one fully published in the open literature, and asks whether its top rankings can be made robust. The motivation is concrete and slightly scandalous: at the end of the 2010 regular season, Colley's submitted rankings omitted a single Football Championship Subdivision playoff game between Appalachian State and Western Illinois, and because LSU and Boise State were separated by only six thousandths of a point in the overall BCS standings, that one omitted game flipped their order. The paper sits in the lineage of robust optimization from Ben-Tal, El Ghaoui, and Nemirovski, robust least-squares from El Ghaoui and Lebret, and the Bertsimas-Sim price-of-robustness budget, alongside ranking methods from Colley, Keener's Perron-Frobenius approach, and Massey. The recursive theory of mind is the Colley linear system and its perturbation algebra. The Colley matrix C equals two I plus the diagonal of the games-played vector minus the symmetric win matrix, and the right-hand side b equals the ones vector plus half the win-loss spread; C is diagonally dominant and positive definite, so the ratings r equal C inverse b are unique and sorted descending. The crucial structural insight is that switching a game's outcome is an antisymmetric perturbation Delta with Delta plus Delta transpose equal to zero, which leaves C unchanged because C depends only on the schedule, while b shifts linearly by half the antisymmetric part of Delta times the ones vector. The robust method, called Colley Matrix Plus, therefore seeks a single ratings vector minimizing the worst-case violation of the perturbed system over all scenarios that switch at most Gamma inconsequential games, where Gamma is a user-supplied conservatism budget and inconsequential games are those between bottom teams with winning percentage below zero point three. Cross-layer veto adjudication is the tractable reformulation and the empirical sensitivity comparison. The min-max problem with the two-norm is reformulated via an auxiliary variable into a strictly convex quadratic program with one linear constraint per scenario, which has a unique optimum and avoids the ambiguous alternative optima of the infinity-norm version; because the scenario set is exponentially large, a cutting-plane constraint-generation loop solves a subset, finds a violated constraint through a subproblem, and repeats until optimality is proved, all in under a minute with CPLEX. The sensitivity is measured by the switch measure, the sum of absolute rank changes among the top twenty-five teams: the basic Colley rankings show a mean switch of five point one and a worst case of twenty for a single switched game, while the robust rankings at Gamma five cut the mean to one point eight and the worst case to ten, with most per-instance bubble-chart points below the equality line and the worst-case tail particularly reduced. The implementation invariants map directly onto GSE. The Colley schedule-adjusted rating is GSE's strength-of-schedule rating solve; the Gamma budget is GSE's Bertsimas-Sim-style conservatism parameter; the min-max worst-case objective is GSE's robust-optimization formulation; the schedule-invariant C is GSE's structural-versus-data separation that makes robustness cheap; and the constraint-generation loop is GSE's cutting-plane scalability technique. The switch measure is GSE's ranking-sensitivity metric, and the distinction between protecting inconsequential games while remaining sensitive to important contender games is GSE's signal-versus-noise selectivity. The outputs are robust ratings from win-loss data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The behavioral results make the robustness concrete and honest. As Gamma increases from zero to ten in the 2008 season, no team moves more than two positions, changes occur within separate groups of closely ranked teams such as Utah and Texas Tech swapping, the top three of Oklahoma, Florida, and Texas retain their ranks throughout, and the rankings stabilize for Gamma between seven and ten; the two extremes are Gamma zero, identical to Colley and equally sensitive, and Gamma at least the total number of inconsequential games, completely insensitive because both the original and perturbed rankings optimize over the same all-switch scenario set. The author is candid that comparing two rankings objectively is hard without further analysis, and that Gamma eight is more robust than Gamma three only by construction. The caveats close the account with the scope and customization limits. The method protects against switched outcomes of inconsequential games, not omitted games, which the author argues can be prevented by careful data handling; it is non-stochastic, making no distributional assumptions and computing a single worst-case ranking rather than an average; and the inconsequential set is user-customizable, extendable to other sports, to including FCS games, or to protecting very close games decided by fewer than three points. The invariant for GSE is to carry the robust min-max rating formulation, the Gamma conservatism budget, the schedule-invariant perturbation algebra, and the constraint-generation solver while recording the non-stochastic worst-case scope, the subjective Gamma choice, and the difficulty of objectively comparing rankings before any quantitative reuse, treating robustness as protection of the top ratings against noise without dulling their response to genuine signal.",
+      "retrocausal_genealogy": "Import robust optimization into sports rankings. Samuel Burer, U Iowa Management Sciences; JQAS 2012 Manuscript 1405. Colley Matrix (1 of 6 BCS computer rankings, only fully published). Motivation: 2010 omitted App State-W Illinois FCS game flipped LSU/Boise State (BCS gap .0063). Lineage: robust optimization (Ben-Tal/El Ghaoui/Nemirovski 2009), robust least-squares (El Ghaoui-Lebret 1997), Bertsimas-Sim price of robustness (2004); Colley/Keener Perron-Frobenius/Massey/Chartier sensitivity (2011). First explicit robust football ranking. CM+ method.",
+      "theory_of_mind": "Colley C=2I+Diag((W+W^T)e)-(W+W^T) (Eq1), b=e+(1/2)(W-W^T)e (Eq2); C diag-dominant PD; r=C^-1 b sorted. W_ij=times i beat j; win-loss only (no points). Switch Delta antisymmetric (Delta+Delta^T=0) -> C'=C (schedule fixed), b'=b+(1/2)(Delta-Delta^T)e (Eq3). Inconsequential = bottom teams win%<omega=0.3; T=top 25. Robust min_r max_{Delta in D(Gamma)} ||Cr-b'||_p (Eq4, p=2; p=inf ambiguous). Aux t -> strictly convex QP (Eq6), one constraint/scenario, unique optimum. D(Gamma)=sum C(N,gamma); cutting-plane constraint generation. Switch measure delta=sum_{i in T}|pi_i-pi'_i|. CPLEX 12.2/Matlab <1 min. Equations shifted-font reconstructed.",
+      "cross_layer_veto": "CM sensitivity: L=1 delta mean 5.1/median 4/max 20/stdev 4.9; L=2 mean 6.5/max 28. CM+ Gamma=5: L=1 mean 1.8/median 0/max 10/stdev 2.4; L=2 mean 2.5/max 14; bubble chart most below x=y; worst-case tail (CM 15-20 L=1/20-25 L=2) particularly reduced. Extremes: Gamma=0=CM (as sensitive); Gamma>=N completely insensitive (same all-switch scenario set). 2008 top-3 (Oklahoma/Florida/Texas) stable; top-15 mostly robust except Utah/Texas Tech; <=2 pos move; stabilize 7<=Gamma<=10. Marshall-Rice 2007 worst case delta=20; West Virginia 4-spot drop excessive. Non-stochastic worst-case; protects switches not omissions; custom I (close games <3 pts). Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A robust-optimization treatment of the Colley Matrix college-football ranking shows the basic method is fragile to inconsequential games (one omitted FCS game flipped LSU and Boise State separated by 0.0063 in the BCS), and proposes Colley Matrix Plus: a min-max worst-case ratings solve over a user Gamma-budget of switched games between bottom teams, exploiting the fact that an antisymmetric outcome switch leaves the schedule-dependent Colley matrix unchanged and shifts only the right-hand side, reformulated as a strictly convex quadratic program solved by cutting-plane constraint generation in under a minute, which cuts the top-25 switch measure from a mean of 5.1 and worst case of 20 down to 1.8 and 10 while preserving sensitivity to important contender games.",
+  "gsi_mapping": "GSI treats Colley C=2I+Diag((W+W^T)e)-(W+W^T)/b=e+(1/2)(W-W^T)e (Eqs1-2), C PD, r=C^-1 b; win-loss only (BCS, no points); motivation 2010 LSU/Boise flip (omitted FCS game, gap .0063); robustness = top rankings stable vs inconsequential (bottom teams win%<0.3) switches, still sensitive to contender games; Gamma>=0 conservatism budget (Bertsimas-Sim 2004), Gamma=0=CM, Gamma>=N completely insensitive; non-stochastic worst-case; antisymmetric Delta -> C'=C, b'=b+(1/2)(Delta-Delta^T)e (Eq3); min_r max_{D(Gamma)} ||Cr-b'||_p (Eq4, p=2); aux-t strictly convex QP (Eq6) unique optimum; D(Gamma)=sum C(N,gamma) cutting-plane constraint generation; switch measure delta=sum_{i in T}|pi_i-pi'_i| (top 25); CM L=1 mean 5.1/max 20 vs CM+ Gamma=5 mean 1.8/max 10; bubble below x=y; worst-case tail reduced; 2008 top-3 stable/top-15 mostly robust; <1 min CPLEX; data 2006-2011 Wilson/Wolfe (2010 n=195); equations shifted-font reconstructed.",
+  "gse_mapping": "GSE lifts the robust min-max rating formulation, the Gamma conservatism budget, the schedule-invariant perturbation algebra (C fixed, b linear), the strictly-convex-QP-plus-constraint-generation solver, and the switch-measure sensitivity metric as its robust rating and sensitivity-analysis layer; treats the protection of inconsequential games while preserving contender-game sensitivity as signal-vs-noise selectivity, the non-stochastic worst-case scope and subjective Gamma choice as honest limits, and the difficulty of objectively comparing rankings as a validation caveat; all outputs are robust ratings from win-loss data, never sportsbook lines, and robustness protects top ratings against noise without dulling their response to genuine signal."
+}

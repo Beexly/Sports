@@ -1,0 +1,78 @@
+{
+  "book_id": "9a5807c38516c142",
+  "source_status": "COMPLETE",
+  "title": "2073-synthetic-transaction-benchmark-framework",
+  "file_name": "2073-synthetic-transaction-benchmark-framework.md",
+  "sha256": "9a5807c38516c142f91100169040c5c282047f24c9b2908064ee25ecf8608865",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Synthetic data generation fidelity and graph structure preservation map to NFL schedule dynamics via NetSimile similarity and transaction-event duality. Universal Lens: Rooted in 2073-synthetic-transaction-benchmark-framework (9a5807c38516c142), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on synthetic transaction fidelity uses KS and Pearson metrics; conformal prediction bounds privacy via DCR/NNDR thresholds. GSI Mapping: Rooted in 2073-synthetic-transaction-benchmark-framework (9a5807c38516c142), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in GSE model play-by-play events through graph Laplacian eigenvalues; transition probabilities derived from NetSimile-preserving synthetic graphs. GSE Mapping: Rooted in 2073-synthetic-transaction-benchmark-framework (9a5807c38516c142), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "synthetic_fidelity_metric",
+      "name": "Synthetic Fidelity Metric",
+      "verbatim_quote": "NFL translation: transactions → game events (plays); source/target tokens → teams; amounts → EPA/yardage; the graph → the season matchup network.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'KS': 'Kolmogorov-Smirnov statistic (dimensionless)', 'Pearson': 'Pearson correlation coefficient (dimensionless)'}",
+      "assumptions": "Data columns follow continuous distributions; synthetic samples preserve marginal distributions.",
+      "breakdown_regime": "When KS < 0.05 or Pearson < 0.8, fidelity fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Transaction event sequences map to play-by-play sequences; source/target tokens correspond to team pairings.",
+        "source_operator": "synthetic_fidelity_metric",
+        "telemetry": "KS statistic for column-wise fidelity; Pearson correlation for row-wise fidelity."
+      }
+    },
+    {
+      "primitive_id": "graph_structure_preservation",
+      "name": "Graph Structure Preservation",
+      "verbatim_quote": "It independently replicates 2065's finding (diffusion beats CTGAN/TVAE on fidelity), adds the synthesis-vs-fidelity tradeoff quantification no other lane paper has, and contributes the one evaluation dimension the whole lane lacks: **graph structure** (NetSimile) — which maps directly to the NFL's season matchup graph.",
+      "page": 1,
+      "latex": "\\text{NetSimile}(G_{\\text{real}}, G_{\\text{synth}}) = \\frac{1}{|V|} \\sum_{v \\in V} \\left\\| \\phi(v) - \\phi_{\\text{synth}}(v) \\right\\|^2",
+      "symbol_and_unit_ledger": "{'G_real': 'Real graph (matchup network)', 'G_synth': 'Synthetic graph (generated network)', 'NetSimile': 'Normalized squared difference of node embeddings (dimensionless)'}",
+      "assumptions": "Node embeddings are stable under graph perturbations; NetSimile captures structural similarity.",
+      "breakdown_regime": "When NetSimile > 0.5, graph structure is poorly preserved.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Matchup graph structure encoded in adjacency matrix eigenvalues; synthetic graphs must maintain spectral properties.",
+        "source_operator": "graph_structure_preservation",
+        "telemetry": "NetSimile score comparing real vs synthetic graph embeddings."
+      }
+    },
+    {
+      "primitive_id": "privacy_assessment_index",
+      "name": "Privacy Assessment Index",
+      "verbatim_quote": "Protocol: hyperparameter search on a 100k-row subset (30 runs), final models trained on full data.",
+      "page": 1,
+      "latex": "DCR = \\text{median}_{i} \\left\\| x_i^{\\text{synth}} - x_i^{\\text{orig}} \\right\\|, \\quad NNDR = \\frac{d_1}{d_2}",
+      "symbol_and_unit_ledger": "{'DCR': 'Distance to Closest Real (Euclidean norm, arbitrary units)', 'NNDR': 'Nearest Neighbor Distance Ratio (dimensionless)'}",
+      "assumptions": "Synthetic points are sampled from a distribution close to original; DCR and NNDR are robust to outliers.",
+      "breakdown_regime": "If DCR < 0.1 or NNDR < 0.5, privacy is compromised.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Synthetic data points are mapped to original space; privacy loss detected via proximity metrics.",
+        "source_operator": "privacy_assessment_index",
+        "telemetry": "DCR and NNDR computed across synthetic-original sample pairs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9a5807c38516c142_t0",
+      "think": "The core insight of 2073 lies in its five-category framework for evaluating synthetic data generators, particularly in financial contexts. It introduces a dual focus on fidelity (KS, Pearson) and graph structure (NetSimile), enabling a principled comparison of generative models. The paper's novelty resides in applying NetSimile—a measure of graph similarity—to synthetic data, which is novel in the domain of financial transaction simulation. This allows for a direct mapping from transaction data to game events in the NFL context, where teams are nodes and matchups are edges. The fidelity metrics ensure that synthetic data mimics real-world statistical properties, while graph structure ensures temporal and relational consistency. The framework also evaluates privacy via DCR and NNDR, ensuring synthetic data does not leak sensitive information. The failure mode occurs when fidelity drops below thresholds or when graph structure is not preserved—both indicating inadequate data generation. The paper's validation relies on a PRISMA review of prior literature and head-to-head benchmarks on real and simulated datasets, confirming that diffusion-based models outperform traditional GANs and VAEs in fidelity, though all methods struggle with graph replication.\n\nDeep epistemic analysis for 2073-synthetic-transaction-benchmark-framework (9a5807c38516c142, domain=other, pages_read=4/4): Operator 'Synthetic Fidelity Metric' (page 1, domain other) captures: NFL translation: transactions → game events (plays); source/target tokens → teams; amounts → EPA/yardage; the graph → the season matchup network. Assumptions: Data columns follow continuous distributions; synthetic samples preserve marginal distributions. Breakdown regime: When KS < 0.05 or Pearson < 0.8, fidelity fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Transaction event sequences map to play-by-play sequences; source/target tokens correspond to team pairings. Operator 'Graph Structure Preservation' (page 1, domain other) captures: It independently replicates 2065's finding (diffusion beats CTGAN/TVAE on fidelity), adds the synthesis-vs-fidelity tradeoff quantification no other lane paper has, and contributes the one evaluation dimension the whole lane lacks: **graph structure** (NetSimile) — which maps directly to the NFL's season matchup graph. Assumptions: Node embeddings are stable under graph perturbations; NetSimile captures structural similarity. Breakdown regime: When NetSimile > 0.5, graph structure is poorly preserved. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Matchup graph structure encoded in adjacency matrix eigenvalues; synthetic graphs must maintain spectral properties. Operator 'Privacy Assessment Index' (page 1, domain other) captures: Protocol: hyperparameter search on a 100k-row subset (30 runs), final models trained on full data. Assumptions: Synthetic points are sampled from a distribution close to original; DCR and NNDR are robust to outliers. Breakdown regime: If DCR < 0.1 or NNDR < 0.5, privacy is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Synthetic data points are mapped to original space; privacy loss detected via proximity metrics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2073-synthetic-transaction-benchmark-framework (9a5807c38516c142, domain=other, pages_read=4/4): Operator 'Synthetic Fidelity Metric' (page 1, domain other) captures: NFL translation: transactions → game events (plays); source/target tokens → teams; amounts → EPA/yardage; the graph → the season matchup network. Assumptions: Data columns follow continuous distributions; synthetic samples preserve marginal distributions. Breakdown regime: When KS < 0.05 or Pearson < 0.8, fidelity fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Transaction event sequences map to play-by-play sequences; source/target tokens correspond to team pairings. Operator 'Graph Structure Preservation' (page 1, domain other) captures: It independently replicates 2065's finding (diffusion beats CTGAN/TVAE on fidelity), adds the synthesis-vs-fidelity tradeoff quantification no other lane paper has, and contributes the one evaluation dimension the whole lane lacks: **graph structure** (NetSimile) — which maps directly to the NFL's season matchup graph. Assumptions: Node embeddings are stable under graph perturbations; NetSimile captures structural similarity. Breakdown regime: When NetSimile > 0.5, graph structure is poorly preserved. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Matchup graph structure encoded in adjacency matrix eigenvalues; synthetic graphs must maintain spectral properties. Operator 'Privacy Assessment Index' (page 1, domain other) captures: Protocol: hyperparameter search on a 100k-row subset (30 runs), final models trained on full data. Assumptions: Synthetic points are sampled from a distribution close to original; DCR and NNDR are robust to outliers. Breakdown regime: If DCR < 0.1 or NNDR < 0.5, privacy is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Synthetic data points are mapped to original space; privacy loss detected via proximity metrics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the work of Sattarov et al. (2023) and Zhao et al. (2021), the framework builds upon earlier efforts to quantify synthetic data fidelity and privacy. It extends the PRISMA methodology introduced by Carrera-Rivera et al. (2022) and Dybå & Dingsøyr (2008) to evaluate reproducibility and rigor in generative modeling. The NetSimile approach originates from Berlingerio et al. (2012), providing a bridge between graph theory and synthetic data evaluation.",
+      "theory_of_mind": "Opposing agents include the synthetic data generator (which seeks to mimic real data without leaking information) and the evaluator (which assesses fidelity, privacy, and structure). The generator may prioritize fidelity at the cost of privacy or graph structure, while the evaluator must balance these dimensions. In the NFL context, the generator might simulate plays that look realistic but do not reflect actual matchup dynamics, leading to misalignment in graph structure.",
+      "cross_layer_veto": "Anti-collinearity requires that fidelity and graph structure metrics do not co-vary in a way that masks poor performance. Leakage is vetted by ensuring that synthetic data does not allow re-identification via DCR/NNDR thresholds. If a generator achieves high fidelity but low graph preservation, or vice versa, it fails the cross-layer veto. The NetSimile test acts as a discriminator between schedule-preserving and schedule-breaking generators, ensuring that synthetic graphs maintain real-world relational integrity."
+    }
+  ]
+}

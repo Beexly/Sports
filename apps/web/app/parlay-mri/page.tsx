@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
@@ -9,46 +8,27 @@ import { Atmosphere } from "@/components/ui/atmosphere";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { getPlate } from "@/lib/visual-production/asset-manifest";
 import { ParlayGenome } from "@/components/parlay/parlay-genome";
+import { ParlayXRay } from "@/components/parlay/parlay-xray";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
 
 export const metadata: Metadata = {
-  title: "Parlay MRI: The Portfolio Surgeon",
+  title: "Parlay MRI: Free Same-Game Parlay X-Ray",
   description:
-    "See a parlay's genome: per-leg risk, survivability, expected value, the compounded house edge, and hidden same-game correlation. Toggle legs and watch the math move. Risk made legible.",
+    "Books hide extra margin in same-game parlays by pricing legs like separate coin flips. X-Ray your ticket: its real chance, the price's implied chance, and the hidden hold between them. One free scan, no account.",
   alternates: { canonical: "/parlay-mri" },
 };
 
 export default async function ParlayMriPage() {
-  // Public/private surface doctrine: per-leg risk, survivability, expected
-  // value and house-edge compounding are the model internals behind the
-  // output, not the output. Internal.
-  if (!isPagePublic("/parlay-mri")) notFound();
-
+  // Launch doctrine (2026-11-13): the free X-Ray is PUBLIC — one scan for
+  // every anonymous visitor, then email capture unlocks 3 more, then Pro.
+  // The internal-surface fence now governs only the PRO genome section
+  // below (per-leg risk internals stay gated); the free tool renders for
+  // everyone. The fence itself is unchanged for every other surface.
+  const genomeSurfacePublic = isPagePublic("/parlay-mri");
   const viewer = await getViewerEntitlements();
+  const showGenome = genomeSurfacePublic && viewer.canUseParlayMri;
   const plate = getPlate("no-bet-stillness");
-  if (!viewer.canUseParlayMri) {
-    return (
-      <div className="flex min-h-screen flex-col bg-obsidian">
-        <Atmosphere />
-        <Nav />
-        <main id="main-content" className="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-28 sm:px-6">
-          <div className="text-center">
-            <p className="eyebrow justify-center">Parlay MRI</p>
-            <h1 className="mt-4 max-w-3xl text-balance font-display text-4xl leading-[1.02] tracking-tight text-ion-white sm:text-6xl">
-              Stacked risk, made <span className="gse-editorial text-[1.08em]">visible</span>.
-            </h1>
-          </div>
-          <TierGatePanel
-            need="PRO"
-            surface="The Parlay MRI"
-            blurb="Per-leg survivability, compounded house edge, hidden same-game correlation: the full genome of any parlay, with legs you can toggle live. This is the portfolio surgeon, and it operates for Pro members."
-          />
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -65,7 +45,7 @@ export default async function ParlayMriPage() {
             <Reveal>
               <p className="eyebrow inline-flex items-center gap-2">
                 <span className="live-dot" />
-                Risk, made legible
+                The hidden hold, made visible
               </p>
             </Reveal>
             <Reveal delay={90}>
@@ -75,28 +55,48 @@ export default async function ParlayMriPage() {
             </Reveal>
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ion-1">
-                Most apps sell you the payout. We show you the genome. Every leg carries risk;
-                the ticket as a whole has vitals you can read: survivability, expected value,
-                the house edge compounding across legs, and the same-game correlation the book
-                already priced. Operate on it and watch the math move.
+                Books typically hide 15-30% extra margin in same-game parlays. They price each
+                leg like a separate coin flip, but real legs move together: your quarterback
+                and his receivers rise and fall on the same drives. X-Ray your ticket to see
+                its real chance, the chance the book&apos;s price implies, and the gap between
+                them. One free scan, no account needed.
               </p>
             </Reveal>
           </div>
         </section>
 
-        {/* The tool */}
+        {/* The free public X-Ray */}
         <section className="px-4 pb-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <Reveal>
               <div className="surface-card p-5 sm:p-7">
-                <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                  <h2 className="font-display text-2xl text-ion-white">The Portfolio Surgeon</h2>
-                  <span className="rounded-full border border-mineral px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ion-1">
-                    Illustrative legs · transparent math
-                  </span>
-                </div>
-                <ParlayGenome />
+                <ParlayXRay />
               </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* PRO genome — still behind the fence + entitlement gate */}
+        <section className="px-4 pb-12 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              {showGenome ? (
+                <div className="surface-card p-5 sm:p-7">
+                  <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <h2 className="font-display text-2xl text-ion-white">The Portfolio Surgeon</h2>
+                    <span className="rounded-full border border-mineral px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ion-1">
+                      Illustrative legs · transparent math
+                    </span>
+                  </div>
+                  <ParlayGenome />
+                </div>
+              ) : (
+                <TierGatePanel
+                  need="PRO"
+                  surface="The Parlay MRI"
+                  blurb="Per-leg survivability, compounded house edge, hidden same-game correlation: the full genome of any parlay, with legs you can toggle live. This is the portfolio surgeon, and it operates for Pro members."
+                />
+              )}
             </Reveal>
           </div>
         </section>
@@ -110,9 +110,10 @@ export default async function ParlayMriPage() {
               </p>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-ion-1">
                 The whole industry hypes the longshot ticket. We&apos;d rather make its fragility
-                legible. This tool runs on illustrative legs and transparent math you can check.
-                Its job is to teach how parlay structure changes the odds, so the smartest move is
-                often the one you don&apos;t make.
+                legible. The X-Ray runs on the odds you enter and transparent math you can
+                check; the genome below it runs on illustrative legs. Their job is to teach how
+                parlay structure changes the odds, so the smartest move is often the one you
+                don&apos;t make.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Link href="/responsible-play" className="btn btn-primary">

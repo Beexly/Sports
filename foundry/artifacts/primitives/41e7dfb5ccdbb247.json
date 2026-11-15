@@ -1,0 +1,78 @@
+{
+  "book_id": "41e7dfb5ccdbb247",
+  "source_status": "COMPLETE",
+  "title": "AWS_OPERATING_INTELLIGENCE_RUNBOOK",
+  "file_name": "AWS_OPERATING_INTELLIGENCE_RUNBOOK.md",
+  "sha256": "41e7dfb5ccdbb24765a6d029c8202585e3106d98e276b61336806b8ffa9a725d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Operational intelligence primitives map AWS governance fixtures to structured validation regimes via isomorphic agent-metric duality. Universal Lens: Rooted in AWS_OPERATING_INTELLIGENCE_RUNBOOK (41e7dfb5ccdbb247), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on fixture completeness and Well-Architected pillar coverage enable probabilistic risk scoring for operational readiness. GSI Mapping: Rooted in AWS_OPERATING_INTELLIGENCE_RUNBOOK (41e7dfb5ccdbb247), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates fixture library states and transitions through control tower blueprints to detect drift or missing components. GSE Mapping: Rooted in AWS_OPERATING_INTELLIGENCE_RUNBOOK (41e7dfb5ccdbb247), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fixture_completeness_validator",
+      "name": "Fixture Completeness Validator",
+      "verbatim_quote": "- the fixture library is missing a required fixture type.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'fixture type identifier (dimensionless)', 'M': 'missing fixture count (dimensionless)', 'T': 'total required fixtures (dimensionless)'}",
+      "assumptions": "All fixture types are mutually exclusive and collectively exhaustive; missing fixtures imply incomplete coverage.",
+      "breakdown_regime": "M > 0 indicates structural gap in governance OS blueprint.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic model of missing documentation using Bayesian evidence accumulation.",
+        "source_operator": "fixture_completeness_validator",
+        "telemetry": "Number of missing fixture types detected during local validation."
+      }
+    },
+    {
+      "primitive_id": "pillar_coverage_assessor",
+      "name": "Pillar Coverage Assessor",
+      "verbatim_quote": "- the fixture library fails to cover all six Well-Architected pillars.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Well-Architected pillar identifier (dimensionless)', 'C': 'coverage status per pillar (boolean)', 'N': 'number of pillars (dimensionless)'}",
+      "assumptions": "Each pillar contributes independently to overall architecture integrity; coverage is binary.",
+      "breakdown_regime": "∑C < N implies partial compliance with architectural best practices.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's state-space transition logic to assess governance kernel robustness.",
+        "source_operator": "pillar_coverage_assessor",
+        "telemetry": "Boolean flags indicating presence/absence of each pillar in fixture library."
+      }
+    },
+    {
+      "primitive_id": "control_blueprint_integrity_check",
+      "name": "Control Blueprint Integrity Check",
+      "verbatim_quote": "- the Shadow Control Tower blueprint is missing a control type, pillar, self-explaining agent, drift card, Clean Rooms scenario, or CDK synth fixture.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'blueprint component (dimensionless)', 'D': 'deficiency indicator (boolean)', 'S': 'system state (dimensionless)'}",
+      "assumptions": "Blueprint components must be present for full system fidelity; absence leads to drift.",
+      "breakdown_regime": "D = true implies system state S is non-conformant with expected control structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's drift detection framework by aligning blueprint deficiencies with anomaly signatures.",
+        "source_operator": "control_blueprint_integrity_check",
+        "telemetry": "Presence/absence of critical blueprint elements validated against governance schema."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "41e7dfb5ccdbb247_t0",
+      "think": "The primitives form a triadic validation kernel: completeness ensures no essential fixture is omitted, coverage ensures all architectural pillars are addressed, and integrity ensures the control tower blueprint remains coherent. These operators define a dual space where each failure mode corresponds to a breakdown in either documentation fidelity or operational alignment. The system's resilience depends on the intersection of these three domains—missing fixtures, unaddressed pillars, and broken blueprints. Each primitive operates under a binary assumption that a component’s presence or absence directly impacts system behavior. The failure regime occurs when any one of these three validations returns negative, triggering a cascading effect on downstream observability and governance fidelity.\n\nDeep epistemic analysis for AWS_OPERATING_INTELLIGENCE_RUNBOOK (41e7dfb5ccdbb247, domain=other, pages_read=1/1): Operator 'Fixture Completeness Validator' (page 1, domain other) captures: - the fixture library is missing a required fixture type. Assumptions: All fixture types are mutually exclusive and collectively exhaustive; missing fixtures imply incomplete coverage. Breakdown regime: M > 0 indicates structural gap in governance OS blueprint. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic model of missing documentation using Bayesian evidence accumulation. Operator 'Pillar Coverage Assessor' (page 1, domain other) captures: - the fixture library fails to cover all six Well-Architected pillars. Assumptions: Each pillar contributes independently to overall architecture integrity; coverage is binary. Breakdown regime: ∑C < N implies partial compliance with architectural best practices. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's state-space transition logic to assess governance kernel robustness. Operator 'Control Blueprint Integrity Check' (page 1, domain other) captures: - the Shadow Control Tower blueprint is missing a control type, pillar, self-explaining agent, drift card, Clean Rooms scenario, or CDK synth fixture. Assumptions: Blueprint components must be present for full system fidelity; absence leads to drift. Breakdown regime: D = true implies system state S is non-conformant with expected control structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's drift detection framework by aligning blueprint deficiencies with anomaly signatures. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for AWS_OPERATING_INTELLIGENCE_RUNBOOK (41e7dfb5ccdbb247, domain=other, pages_read=1/1): Operator 'Fixture Completeness Validator' (page 1, domain other) captures: - the fixture library is missing a required fixture type. Assumptions: All fixture types are mutually exclusive and collectively exhaustive; missing fixtures imply incomplete coverage. Breakdown regime: M > 0 indicates structural gap in governance OS blueprint. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic model of missing documentation using Bayesian evidence accumulation. Operator 'Pillar Coverage Assessor' (page 1, domain other) captures: - the fixture library fails to cover all six Well-Architected pillars. Assumptions: Each pillar contributes independently to overall architecture integrity; coverage is binary. Breakdown regime: ∑C < N implies partial compliance with architectural best practices. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's state-space transition logic to assess governance kernel robustness. Operator 'Control Blueprint Integrity Check' (page 1, domain other) captures: - the Shadow Control Tower blueprint is missing a control type, pillar, self-explaining agent, drift card, Clean Rooms scenario, or CDK synth fixture. Assumptions: Blueprint components must be present for full system fidelity; absence leads to drift. Breakdown regime: D = true implies system state S is non-conformant with expected control structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's drift detection framework by aligning blueprint deficiencies with anomaly signatures. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from software engineering and systems theory, particularly inspired by the Dijkstra-Gries refinement calculus and the Well-Architected Framework's foundational axioms. Retrocausal Genealogy: Rooted in AWS_OPERATING_INTELLIGENCE_RUNBOOK (41e7dfb5ccdbb247), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in AWS_OPERATING_INTELLIGENCE_RUNBOOK (41e7dfb5ccdbb247), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the 'governance drift' actor, which seeks to exploit missing components, and the 'compliance auditor' actor, which enforces validation rules. Their interaction determines whether the system remains within acceptable operational bounds. Theory of Mind & Decision Maker Model: Rooted in AWS_OPERATING_INTELLIGENCE_RUNBOOK (41e7dfb5ccdbb247), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each primitive addresses distinct aspects of the system: documentation (fixture), architecture (pillar), and control (blueprint). Leakage is prevented by maintaining clear separation between these layers, avoiding cross-contamination of validation criteria. Cross-Layer Veto & Anti-Leakage Check: Rooted in AWS_OPERATING_INTELLIGENCE_RUNBOOK (41e7dfb5ccdbb247), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

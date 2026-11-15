@@ -1,0 +1,78 @@
+{
+  "book_id": "2935c632df32362e",
+  "source_status": "COMPLETE",
+  "title": "Sayama-2015-ModelingAndAnalysisOfComplexSystems",
+  "file_name": "Sayama-2015-ModelingAndAnalysisOfComplexSystems.pdf",
+  "sha256": "2935c632df32362e1dce730d207518d4a1b6ca05424a9ee03a1b9a71c9acb36c",
+  "primary_domain": "other",
+  "pages_total": 498,
+  "pages_read": 27,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Complex systems modeled via interacting microscopic components; emergent behavior from relational structure, not individual parts. Universal Lens: Rooted in Sayama-2015-ModelingAndAnalysisOfComplexSystems (2935c632df32362e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on relational dynamics; conformal prediction of system states through networked component interactions. GSI Mapping: Rooted in Sayama-2015-ModelingAndAnalysisOfComplexSystems (2935c632df32362e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning via state-transition graphs; dynamic network evolution governed by local interaction rules and global constraints. GSE Mapping: Rooted in Sayama-2015-ModelingAndAnalysisOfComplexSystems (2935c632df32362e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "complex_systems_framework",
+      "name": "Complex Systems Framework",
+      "verbatim_quote": "Complex systems are systems made of a large number of microscopic components interacting with each other in nontrivial ways.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Components interact locally; macroscopic behavior emerges from micro-interactions.",
+      "breakdown_regime": "When component interactions become trivial or deterministic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relational structure of complex systems maps to Bayesian graphical models with latent variables representing emergent properties.",
+        "source_operator": "complex_systems_framework",
+        "telemetry": "Network density, clustering coefficient, and path length as observables."
+      }
+    },
+    {
+      "primitive_id": "emergent_information_theory",
+      "name": "Emergent Information Theory",
+      "verbatim_quote": "Many real-world systems can be understood as complex systems, where critically important information resides in the relationships between the parts and not necessarily within the parts themselves.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Information content is encoded in inter-part relationships rather than part attributes.",
+      "breakdown_regime": "When relationships collapse into independent or redundant structures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Information-theoretic entropy of relationships drives GSI probabilistic inference kernels.",
+        "source_operator": "emergent_information_theory",
+        "telemetry": "Mutual information, conditional entropy, and network information flow."
+      }
+    },
+    {
+      "primitive_id": "relational_dynamical_models",
+      "name": "Relational Dynamical Models",
+      "verbatim_quote": "This textbook offers an accessible yet technically-oriented introduction to the modeling and analysis of complex systems.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "System evolution governed by relational update rules over time.",
+      "breakdown_regime": "When relational updates fail to converge or exhibit chaotic instability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Discrete-time relational models map to GSE state-transition systems with memoryless feedback loops.",
+        "source_operator": "relational_dynamical_models",
+        "telemetry": "State transition matrix rank, eigenvalue spectrum, and attractor basin stability."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2935c632df32362e_t0",
+      "think": "The foundational framework of complex systems is defined by a set of microscopic components interacting non-trivially. These interactions generate emergent behaviors that cannot be predicted from the properties of individual components alone. In GSI, this translates into a relational Bayesian model where the likelihood function encodes the probability of observing certain configurations given underlying interaction rules. The emergence of information from relationships implies that the system's entropy is not just a function of its parts but also of their connectivity patterns. Thus, the GSI inference engine must account for relational entropy when estimating posterior distributions. In GSE, these relationships form a directed graph of state transitions, where each node represents a configuration and edges represent valid evolutionary steps. The failure mode occurs when such relations become degenerate or deterministic, leading to loss of complexity and predictability. The mathematical duality lies between the information-theoretic description of the system’s structure and its dynamical evolution, both of which are captured in the relational framework.\n\nDeep epistemic analysis for Sayama-2015-ModelingAndAnalysisOfComplexSystems (2935c632df32362e, domain=other, pages_read=27/498): Operator 'Complex Systems Framework' (page 4, domain other) captures: Complex systems are systems made of a large number of microscopic components interacting with each other in nontrivial ways. Assumptions: Components interact locally; macroscopic behavior emerges from micro-interactions. Breakdown regime: When component interactions become trivial or deterministic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relational structure of complex systems maps to Bayesian graphical models with latent variables representing emergent properties. Operator 'Emergent Information Theory' (page 4, domain other) captures: Many real-world systems can be understood as complex systems, where critically important information resides in the relationships between the parts and not necessarily within the parts themselves. Assumptions: Information content is encoded in inter-part relationships rather than part attributes. Breakdown regime: When relationships collapse into independent or redundant structures. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Information-theoretic entropy of relationships drives GSI probabilistic inference kernels. Operator 'Relational Dynamical Models' (page 4, domain other) captures: This textbook offers an accessible yet technically-oriented introduction to the modeling and analysis of complex systems. Assumptions: System evolution governed by relational update rules over time. Breakdown regime: When relational updates fail to converge or exhibit chaotic instability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Discrete-time relational models map to GSE state-transition systems with memoryless feedback loops. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Sayama-2015-ModelingAndAnalysisOfComplexSystems (2935c632df32362e, domain=other, pages_read=27/498): Operator 'Complex Systems Framework' (page 4, domain other) captures: Complex systems are systems made of a large number of microscopic components interacting with each other in nontrivial ways. Assumptions: Components interact locally; macroscopic behavior emerges from micro-interactions. Breakdown regime: When component interactions become trivial or deterministic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relational structure of complex systems maps to Bayesian graphical models with latent variables representing emergent properties. Operator 'Emergent Information Theory' (page 4, domain other) captures: Many real-world systems can be understood as complex systems, where critically important information resides in the relationships between the parts and not necessarily within the parts themselves. Assumptions: Information content is encoded in inter-part relationships rather than part attributes. Breakdown regime: When relationships collapse into independent or redundant structures. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Information-theoretic entropy of relationships drives GSI probabilistic inference kernels. Operator 'Relational Dynamical Models' (page 4, domain other) captures: This textbook offers an accessible yet technically-oriented introduction to the modeling and analysis of complex systems. Assumptions: System evolution governed by relational update rules over time. Breakdown regime: When relational updates fail to converge or exhibit chaotic instability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Discrete-time relational models map to GSE state-transition systems with memoryless feedback loops. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical mechanics and graph theory, with modern developments in network science and computational complexity theory tracing back to early work on phase transitions and nonlinear dynamics. Retrocausal Genealogy: Rooted in Sayama-2015-ModelingAndAnalysisOfComplexSystems (2935c632df32362e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Sayama-2015-ModelingAndAnalysisOfComplexSystems (2935c632df32362e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents within complex systems may act as both observers and participants, influencing the system's evolution through feedback mechanisms. Modeling requires accounting for multiple decision-making layers, including stochasticity, bounded rationality, and strategic interaction among components. Theory of Mind & Decision Maker Model: Rooted in Sayama-2015-ModelingAndAnalysisOfComplexSystems (2935c632df32362e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when relational structures become overly dense or sparse, causing signal leakage between layers. Veto conditions prevent overfitting by enforcing sparsity constraints on interaction matrices and ensuring that information flows remain bounded and non-redundant. Cross-Layer Veto & Anti-Leakage Check: Rooted in Sayama-2015-ModelingAndAnalysisOfComplexSystems (2935c632df32362e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

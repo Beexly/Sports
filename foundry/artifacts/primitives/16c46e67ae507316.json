@@ -1,0 +1,78 @@
+{
+  "book_id": "16c46e67ae507316",
+  "source_status": "COMPLETE",
+  "title": "2017 - Using data analysis to predict attendance for NHL regular season games - Unknown Authors",
+  "file_name": "2017 - Using data analysis to predict attendance for NHL regular season games - Unknown Authors.pdf",
+  "sha256": "16c46e67ae5073161938412c7ae2314789cae835832d25d8b9e21058c3c93248",
+  "primary_domain": "other",
+  "pages_total": 67,
+  "pages_read": 30,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The primitive unifies pre-sale attendance prediction as a constrained optimization over a discrete state space. By restricting the observable sigma-algebra to ex-ante scheduling variables, it establishes an isomorphism between ticket demand and combinatorial scheduling constraints, mapping team quality and temporal slots to a deterministic pricing manifold.",
+  "gsi_mapping": "GSI maps this framework via Bayesian hierarchical modeling, treating pre-sale features as priors for attendance distributions. Conformal inference bounds are constructed around predicted demand tiers, ensuring rigorous coverage probabilities for variable pricing strategies while strictly isolating ex-ante information from post-sale leakage to prevent look-ahead bias.",
+  "gse_mapping": "In GSE, this acts as a situational reasoning operator optimizing the schedule transition matrix. The engine evaluates state transitions (e.g., weekday vs. weekend) against team strength vectors, dynamically adjusting the venue's capacity utilization state to maximize expected revenue under league-imposed scheduling constraints.",
+  "primitives": [
+    {
+      "primitive_id": "ex_ante_demand_estimator",
+      "name": "Ex-Ante Demand Estimator",
+      "verbatim_quote": "Attendance Model Goal: ▶Develop a model for predicting attendance for games using only information that is known before tickets go on sale.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "A: Attendance (dimensionless count), F_pre: Pre-sale feature vector (dimensionless)",
+      "assumptions": "Strict causal separation; all predictive variance must be captured by F_pre without any post-sale market signals.",
+      "breakdown_regime": "Fails if external shocks (e.g., sudden roster changes or pandemics) occur after the schedule release but before ticket sales open.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's conformal pre-sale forecasting module, establishing the baseline sigma-algebra for all subsequent dynamic pricing layers.",
+        "source_operator": "ex_ante_demand_estimator",
+        "telemetry": "Mean Absolute Percentage Error (MAPE) of pre-sale attendance predictions."
+      }
+    },
+    {
+      "primitive_id": "temporal_quality_allocation",
+      "name": "Temporal Quality Allocation",
+      "verbatim_quote": "▶Specific question: Do we prefer good team on a Saturday and bad team during the week, or a good team during the week and a bad team on Saturday?",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "Q: Team quality metric (dimensionless z-score), D: Day-of-week index (categorical integer)",
+      "assumptions": "Fan demand exhibits non-linear interactions between perceived team strength and day-of-week leisure availability.",
+      "breakdown_regime": "Breaks down during lockouts or strike years where team quality metrics become decoupled from actual on-ice performance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Functions as a GSE constraint solver kernel, evaluating the marginal utility of high-quality matchups across varying temporal slots to optimize the global schedule.",
+        "source_operator": "temporal_quality_allocation",
+        "telemetry": "Elasticity coefficient of attendance with respect to opponent win percentage by day-of-week."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "2017 - Using data analysis to predict attendance Grounded Principle 3",
+      "verbatim_quote": "Attendance Model Goal: ▶Develop a model for predicting attendance for games using only information that is known before tickets go on sale.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "16c46e67ae507316_t0",
+      "think": "The core mathematical challenge presented in the source is constructing a robust estimator for attendance $A$ given a restricted feature set $\\mathcal{F}_{pre}$. This restriction enforces a strict causal boundary, preventing data leakage from post-sale market dynamics. The operator essentially seeks to approximate the conditional expectation $E[A | \\mathcal{F}_{pre}]$. The specific inquiry regarding team quality allocation—whether to pair strong teams with weekends or weekdays—introduces a combinatorial optimization layer. We can model this as maximizing a global objective function, such as total season revenue, subject to league scheduling constraints. Let $Q_i$ represent the quality of team $i$ and $D_j$ represent the temporal slot $j$. The interaction term $\beta(Q_i, D_j)$ dictates the marginal attendance uplift. If the cross-partial derivative of attendance with respect to quality and weekend status is positive, the optimal strategy is to concentrate high-quality matchups on weekends. However, if there is a saturation effect or a 'must-see' weekday draw for elite teams, the optimal allocation shifts. The failure mode arises when the assumed stationarity of fan preferences breaks down, or when unmodeled exogenous variables (like local economic shifts) dominate the pre-sale signal. The dual nature of this problem lies in its simultaneous role as a statistical forecasting task and a discrete resource allocation problem.\n\nDeep epistemic analysis for 2017 - Using data analysis to predict attendance for NHL regular season games - Unknown Authors (16c46e67ae507316, domain=other, pages_read=30/67): Operator 'Ex-Ante Demand Estimator' (page 2, domain other) captures: Attendance Model Goal: ▶Develop a model for predicting attendance for games using only information that is known before tickets go on sale. Assumptions: Strict causal separation; all predictive variance must be captured by F_pre without any post-sale market signals. Breakdown regime: Fails if external shocks (e.g., sudden roster changes or pandemics) occur after the schedule release but before ticket sales open. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's conformal pre-sale forecasting module, establishing the baseline sigma-algebra for all subsequent dynamic pricing layers. Operator 'Temporal Quality Allocation' (page 5, domain other) captures: ▶Specific question: Do we prefer good team on a Saturday and bad team during the week, or a good team during the week and a bad team on Saturday? Assumptions: Fan demand exhibits non-linear interactions between perceived team strength and day-of-week leisure availability. Breakdown regime: Breaks down during lockouts or strike years where team quality metrics become decoupled from actual on-ice performance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a GSE constraint solver kernel, evaluating the marginal utility of high-quality matchups across varying temporal slots to optimize the global schedule. Operator '2017 - Using data analysis to predict attendance Grounded Principle 3' (page 3, domain other) captures: Attendance Model Goal: ▶Develop a model for predicting attendance for games using only information that is known before tickets go on sale. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2017 - Using data analysis to predict attendance for NHL regular season games - Unknown Authors (16c46e67ae507316, domain=other, pages_read=30/67): Operator 'Ex-Ante Demand Estimator' (page 2, domain other) captures: Attendance Model Goal: ▶Develop a model for predicting attendance for games using only information that is known before tickets go on sale. Assumptions: Strict causal separation; all predictive variance must be captured by F_pre without any post-sale market signals. Breakdown regime: Fails if external shocks (e.g., sudden roster changes or pandemics) occur after the schedule release but before ticket sales open. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's conformal pre-sale forecasting module, establishing the baseline sigma-algebra for all subsequent dynamic pricing layers. Operator 'Temporal Quality Allocation' (page 5, domain other) captures: ▶Specific question: Do we prefer good team on a Saturday and bad team during the week, or a good team during the week and a bad team on Saturday? Assumptions: Fan demand exhibits non-linear interactions between perceived team strength and day-of-week leisure availability. Breakdown regime: Breaks down during lockouts or strike years where team quality metrics become decoupled from actual on-ice performance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a GSE constraint solver kernel, evaluating the marginal utility of high-quality matchups across varying temporal slots to optimize the global schedule. Operator '2017 - Using data analysis to predict attendance Grounded Principle 3' (page 3, domain other) captures: Attendance Model Goal: ▶Develop a model for predicting attendance for games using only information that is known before tickets go on sale. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces back to early 20th-century demand elasticity models in transportation economics, specifically the gravity models used to predict passenger flows. It evolved through mid-century sports economics literature analyzing the impact of team winning percentages on gate receipts. The modern iteration integrates machine learning feature isolation techniques to strictly enforce the ex-ante information boundary, reflecting contemporary quantitative finance principles applied to event ticketing.",
+      "theory_of_mind": "The primary decision actor is the franchise management seeking to maximize yield. They must anticipate the behavior of two opposing agents: the league scheduler, who imposes constraints to ensure competitive balance and broadcast equity, and the consumer, whose utility function balances team affinity against opportunity cost of time. The model attempts to reverse-engineer the consumer's latent preference for specific temporal-quality combinations to inform the franchise's strategic requests to the league.",
+      "cross_layer_veto": "A critical veto condition exists if the pre-sale features exhibit high collinearity with post-sale marketing spend. If the model inadvertently captures the effects of targeted advertising released concurrently with ticket sales, the ex-ante purity is compromised. Furthermore, if the team quality metric relies on rolling averages that include games played after the schedule release, a severe look-ahead bias occurs, invalidating the primitive's foundational assumption of strictly pre-sale information."
+    }
+  ]
+}

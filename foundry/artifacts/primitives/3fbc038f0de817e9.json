@@ -1,0 +1,78 @@
+{
+  "book_id": "3fbc038f0de817e9",
+  "source_status": "COMPLETE",
+  "title": "0312-data-science-approach-to-predict-the",
+  "file_name": "0312-data-science-approach-to-predict-the.md",
+  "sha256": "3fbc038f0de817e9dfcec8f72f7b2ea3512fefb56676fd4883113760bd2422d3",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal feature leakage in predictive models undermines generalization; target-derived aggregates invalidate out-of-sample performance claims. Universal Lens: Rooted in 0312-data-science-approach-to-predict-the (3fbc038f0de817e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on player performance must condition on ex-ante features, not post-match outcomes, to avoid severe leakage in GSI's probabilistic forecasting framework. GSI Mapping: Rooted in 0312-data-science-approach-to-predict-the (3fbc038f0de817e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in DFS requires state transitions conditioned on ownership and stack dynamics, not static regressor predictions derived from target-contaminated data. GSE Mapping: Rooted in 0312-data-science-approach-to-predict-the (3fbc038f0de817e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "target_derived_feature_leakage",
+      "name": "Target-Derived Feature Leakage",
+      "verbatim_quote": "The paper's features include aggregates computed over data that contains the target match itself (target-derived/current-game statistics — see Section 9).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'X_{\\\\text{target}}': 'Aggregate feature set including current-game statistics', 'y': 'Player-level Dream11 fantasy score'}",
+      "assumptions": "Features are computed using data that includes the target variable, violating temporal causality.",
+      "breakdown_regime": "When feature computation incorporates future outcome data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's conformal prediction framework must exclude features derived from the same match outcome to maintain validity.",
+        "source_operator": "target_derived_feature_leakage",
+        "telemetry": "R² scores exceeding 0.99 without temporal cross-validation."
+      }
+    },
+    {
+      "primitive_id": "budget_constrained_team_selection",
+      "name": "Budget-Constrained Team Selection",
+      "verbatim_quote": "Research question The paper asks whether machine-learning regressors trained on historical cricket statistics can predict player-level Dream11 fantasy points and, combined with a budget-constrained team-selection optimizer, produce winning fantasy cricket teams.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Salary cap constraint', 'P_i': \"Player i's predicted fantasy score\", 'C_i': \"Player i's cost\", 'T': 'Team composition vector'}",
+      "assumptions": "Players' predicted scores are independent and bounded by salary constraints.",
+      "breakdown_regime": "When optimization ignores interdependencies between players' ownership and matchup effects.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE’s optimizer must integrate ownership and stacking models to avoid suboptimal team selection under market equilibrium.",
+        "source_operator": "budget_constrained_team_selection",
+        "telemetry": "Team composition accuracy vs. actual contest rankings."
+      }
+    },
+    {
+      "primitive_id": "temporal_sampling_inconsistency",
+      "name": "Temporal Sampling Inconsistency",
+      "verbatim_quote": "Features / target Batsman features: runs, balls faced, 4s, 6s, 50s, 100s, ducks, strike rate, rival (o",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_{\\\\text{train}}': 'Training time window', 't_{\\\\text{test}}': 'Testing time window', 't_{\\\\text{split}}': 'Split point in time series'}",
+      "assumptions": "Model training and testing should respect chronological order.",
+      "breakdown_regime": "When train/test splits do not follow temporal sequence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's time-series validation protocols must enforce strict temporal ordering to prevent lookahead bias.",
+        "source_operator": "temporal_sampling_inconsistency",
+        "telemetry": "Backtest consistency across different data partitioning schemes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3fbc038f0de817e9_t0",
+      "think": "The core issue lies in the paper's use of target-derived features, which introduces severe leakage—whereby the model learns patterns from data that includes the outcome it is meant to predict. This renders any claimed R² ≈ 0.99 invalid for out-of-sample generalization. The regression-based approach is mathematically sound in principle but fails due to data contamination. Temporal inconsistencies in sampling further undermine reliability. The budget-constrained team selection problem is well-defined but lacks integration with ownership and stack dynamics, which are essential for realistic DFS strategy. These failures indicate that while the framework may be structurally similar to GSE's, it cannot be directly applied without addressing these foundational flaws.\n\nDeep epistemic analysis for 0312-data-science-approach-to-predict-the (3fbc038f0de817e9, domain=other, pages_read=3/3): Operator 'Target-Derived Feature Leakage' (page 2, domain other) captures: The paper's features include aggregates computed over data that contains the target match itself (target-derived/current-game statistics — see Section 9). Assumptions: Features are computed using data that includes the target variable, violating temporal causality. Breakdown regime: When feature computation incorporates future outcome data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's conformal prediction framework must exclude features derived from the same match outcome to maintain validity. Operator 'Budget-Constrained Team Selection' (page 1, domain other) captures: Research question The paper asks whether machine-learning regressors trained on historical cricket statistics can predict player-level Dream11 fantasy points and, combined with a budget-constrained team-selection optimizer, produce winning fantasy cricket teams. Assumptions: Players' predicted scores are independent and bounded by salary constraints. Breakdown regime: When optimization ignores interdependencies between players' ownership and matchup effects. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE’s optimizer must integrate ownership and stacking models to avoid suboptimal team selection under market equilibrium. Operator 'Temporal Sampling Inconsistency' (page 1, domain other) captures: Features / target Batsman features: runs, balls faced, 4s, 6s, 50s, 100s, ducks, strike rate, rival (o Assumptions: Model training and testing should respect chronological order. Breakdown regime: When train/test splits do not follow temporal sequence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's time-series validation protocols must enforce strict temporal ordering to prevent lookahead bias. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0312-data-science-approach-to-predict-the (3fbc038f0de817e9, domain=other, pages_read=3/3): Operator 'Target-Derived Feature Leakage' (page 2, domain other) captures: The paper's features include aggregates computed over data that contains the target match itself (target-derived/current-game statistics — see Section 9). Assumptions: Features are computed using data that includes the target variable, violating temporal causality. Breakdown regime: When feature computation incorporates future outcome data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's conformal prediction framework must exclude features derived from the same match outcome to maintain validity. Operator 'Budget-Constrained Team Selection' (page 1, domain other) captures: Research question The paper asks whether machine-learning regressors trained on historical cricket statistics can predict player-level Dream11 fantasy points and, combined with a budget-constrained team-selection optimizer, produce winning fantasy cricket teams. Assumptions: Players' predicted scores are independent and bounded by salary constraints. Breakdown regime: When optimization ignores interdependencies between players' ownership and matchup effects. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE’s optimizer must integrate ownership and stacking models to avoid suboptimal team selection under market equilibrium. Operator 'Temporal Sampling Inconsistency' (page 1, domain other) captures: Features / target Batsman features: runs, balls faced, 4s, 6s, 50s, 100s, ducks, strike rate, rival (o Assumptions: Model training and testing should respect chronological order. Breakdown regime: When train/test splits do not follow temporal sequence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's time-series validation protocols must enforce strict temporal ordering to prevent lookahead bias. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This work builds upon prior studies in sports analytics and machine learning, particularly those applying regression models to player performance prediction. However, it inherits the flaw of assuming data independence from the target, a known pitfall in time-series modeling and causal inference. Retrocausal Genealogy: Rooted in 0312-data-science-approach-to-predict-the (3fbc038f0de817e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents in this domain include the model itself, which overfits to contaminated features, and the fantasy sports ecosystem, where player selection is influenced by opponent matchups, ownership distribution, and market equilibrium. The paper fails to model these interactive dynamics. Theory of Mind & Decision Maker Model: Rooted in 0312-data-science-approach-to-predict-the (3fbc038f0de817e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions require exclusion of features derived from the same match outcome. Leakage veto applies when any predictor includes information about the dependent variable post-event. Cross-layer veto ensures that GSE avoids incorporating such features into its predictive pipelines. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0312-data-science-approach-to-predict-the (3fbc038f0de817e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

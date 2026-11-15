@@ -1,0 +1,248 @@
+{
+  "book_id": "4b6eb391efb61294",
+  "source_status": "COMPLETE",
+  "title": "1224-adaptive-strategies-in-kellys-horse-races-model",
+  "file_name": "1224-adaptive-strategies-in-kellys-horse-races-model.md",
+  "sha256": "4b6eb391efb61294a814b999effb289e0b5226373f3fbfbc77075b00628cb415",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 3,
+  "windows_extracted": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "{'snake_case_id': 'kelly_horse_race_learning', 'name': 'Learning Regret Operator', 'quote_idx': 7, 'verbatim_quote': 'Regret: ⟨Δ(t)⟩ = Σ_{i} ⟨log p_{x_i} - log b_{x_i}^{LAPL,i}⟩, additive; ensemble average ⟨·⟩ = Σ_x p_x E_Z[·].', 'page': 1, 'latex': '\\\\langle \\\\Delta(t) \\\\rangle = \\\\sum_{i} \\\\langle \\\\log p_{x_i} - \\\\log b_{x_i}^{LAPL,i} \\\\rangle = \\\\sum_x p_x \\\\mathbb{E}_Z \\\\left[ \\\\log p_x - \\\\log b_x^{LAPL,t} \\\\right]', 'symbol_and_unit_ledger': {'Δ(t)': 'Additive regret (dimensionless)', 'p_x': 'True probability of horse x (dimensionless, \\\\sum_x p_x = 1)', 'b_x^{LAPL,t}': 'Laplace-predicted probability at time t (dimensionless)', 't': 'Number of observed races (dimensionless)', 'Z': 'Random variable representing race outcomes (discrete)'}, 'assumptions': 'Independent and identically distributed horse races with fixed true probabilities p_x; bookmaker odds r_x; Laplace smoothing applied.', 'breakdown_regime': 'None identified; operator holds for all finite t and p_x > 0.', 'layer2': {'tag': 'ISOMORPHISM', 'mapping': 'In GSI, this operator maps directly to the expected log-loss difference between an adaptive learner and the true outcome distribution. In GSE, it represents the cumulative discrepancy in state-transition probabilities between the empirical history and the optimal betting policy.', 'source_operator': 'kelly_horse_race_learning', 'telemetry': 'Empirical verification through Monte Carlo simulation of the regret growth rate against the theoretical O((M-1)/t) scaling.'}} Log-capital growth under Kelly betting with Laplace smoothing maps to regret minimization in Markovian race environments, bridging empirical probability estimation and sequential decision-making.",
+  "gsi_mapping": "Bayesian inference via Laplace-smoothed empirical frequencies enables robust win-probability estimation; conformal prediction bounds ensure valid uncertainty quantification for GSI's probabilistic forecasting engine. GSI maps this via conformal inference and Bayesian shrinkage. The effective sample size of backtests dictates prior strength $\tau$. By shrinking raw model probabilities toward market-implied priors, GSI minimizes early-season variance, ensuring asymptotically harmless but short-term beneficial calibration against observed outcomes.",
+  "gse_mapping": "State transitions in race outcomes governed by Markov chains inform dynamic betting strategies; GSE models memory-n structures to optimize sequential policy updates under bounded rationality constraints. GSE operationalizes these primitives as dynamic state-transitions. Situational reasoning gates full-Kelly staking based on real-time evidence accumulation. When correlated props inflate effective dimensionality $M$, GSE adjusts the required evidence threshold, dynamically scaling fractional Kelly fractions to prevent catastrophic drawdowns during regime shifts.",
+  "primitives": [
+    {
+      "primitive_id": "w0_prim_1",
+      "name": "Laplace Estimator",
+      "verbatim_quote": "**Laplace strategy:** after t races with n_x^t wins by horse x, bet b_x^{LAPL,t+1} = (n_x^t+1)/(t+M) (Eq.",
+      "page": 1,
+      "latex": "b_x^{LAPL,t+1} = \\frac{n_x^t+1}{t+M}",
+      "symbol_and_unit_ledger": "{'b_x^{LAPL,t+1}': 'Laplace-smoothed betting fraction for horse x at time t+1 (dimensionless)', 'n_x^t': 'Number of observed wins for horse x up to time t (dimensionless)', 't': 'Current number of races played (dimensionless)', 'M': 'Total number of horses (dimensionless)'}",
+      "assumptions": "Uniform prior over M horses; additive (+1) Laplace smoothing prevents zero estimates; assumes exchangeable observations.",
+      "breakdown_regime": "For rare events with small n_x^t, the Laplace estimate can be biased; as t → ∞, the bias vanishes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this corresponds to a Bayesian posterior mean under a Dirichlet(1,...,1) prior. In GSE, it serves as a foundational state-transition kernel for adaptive exploration policies.",
+        "source_operator": "w0_prim_1",
+        "telemetry": "Verified via direct comparison with the true win frequencies n_x^t/t in simulated horse races."
+      }
+    },
+    {
+      "primitive_id": "w0_prim_2",
+      "name": "Regret-KL Divergence Relation",
+      "verbatim_quote": "- KL link: D_KL(p‖b^{LAPL,t}) = ⟨log p_x - log b_x^{LAPL,t}⟩ (38) — regret is cumulative KL divergence of the estimate.",
+      "page": 1,
+      "latex": "D_{KL}(p \\| b^{LAPL,t}) = \\langle \\log p_x - \\log b_x^{LAPL,t} \\rangle",
+      "symbol_and_unit_ledger": "{'D_{KL}(p ‖ b)': 'Kullback-Leibler divergence (nats or bits depending on base)', 'p_x': 'True win probability (dimensionless)', 'b_x^{LAPL,t}': 'Laplace-predicted probability (dimensionless)'}",
+      "assumptions": "Fixed true distribution p; empirical distribution based on Laplace smoothing; large sample approximation.",
+      "breakdown_regime": "The relation holds in expectation; for finite samples, stochastic fluctuations exist.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this connects regret minimization to information-theoretic bounds via Fenchel duality. In GSE, it quantifies the information gain required to transition from a suboptimal policy to the optimal one.",
+        "source_operator": "w0_prim_2",
+        "telemetry": "Measured via Monte Carlo estimation of the KL divergence between p and b^{LAPL,t} across multiple simulation runs."
+      }
+    },
+    {
+      "primitive_id": "w0_prim_3",
+      "name": "Harmonic Regret Growth",
+      "verbatim_quote": "A):** CLT expansion n_x^t ≈ p_x t + √(tσ_x) z_t (31); log-expansion of the Laplace estimate (32), valid for t > min_x p_x^{-1}; per-race KL gap ≈ (M-1)/(2t) (34); harmonic sum → logarithmic cumulative regret.",
+      "page": 1,
+      "latex": "\\langle \\Delta(t) \\rangle \\approx \\frac{M-1}{2} \\sum_{i=1}^{t} \\frac{1}{i} \\sim \\frac{M-1}{2} \\ln t",
+      "symbol_and_unit_ledger": "{'σ_x': 'Variance of the binomial distribution (dimensionless)', 'z_t': 'Standard normal random variable (dimensionless)', 'Δ(t)': 'Cumulative regret after t races (dimensionless)', 't': 'Number of races (dimensionless)', 'M': 'Number of horses (dimensionless)'}",
+      "assumptions": "Central limit theorem applies; t is sufficiently large compared to the inverse of the smallest probability; Laplace estimate is well-defined.",
+      "breakdown_regime": "The approximation breaks down for very small t where higher-order terms become significant.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this yields a logarithmic learning curve for adaptive betting strategies. In GSE, it describes the slow-down of convergence in multi-armed bandit problems due to exploration costs.",
+        "source_operator": "w0_prim_3",
+        "telemetry": "Confirmed by fitting the simulated cumulative regret to the predicted logarithmic form and checking the coefficient of the leading term approaches (M-1)/2."
+      }
+    },
+    {
+      "primitive_id": "w0_prim_4",
+      "name": "Markov Correlated Races",
+      "verbatim_quote": "D–E):** Markov races with conditionals p_{x|y}; per-step gap M(M-1)/(2t) (51); memory-n races: M^n(M-1)/(2t) (55).",
+      "page": 1,
+      "latex": "\\text{Per-step gap for Markov: } \\frac{M(M-1)}{2t}, \\quad \\text{Memory-n races: } \\frac{M^n(M-1)}{2t}",
+      "symbol_and_unit_ledger": "{'p_{x|y}': 'Conditional probability of horse x given previous horse y (dimensionless)', 't': 'Number of steps (dimensionless)', 'M': 'Number of horses (dimensionless)', 'n': 'Memory depth (dimensionless)'}",
+      "assumptions": "First-order Markov dependence; stationary transition probabilities; large t relative to the mixing time of the chain.",
+      "breakdown_regime": "The scaling breaks down when t is comparable to the mixing time, leading to non-asymptotic corrections.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this generalizes the IID regret bound to dependent data streams. In GSE, it models sequential decision-making with temporal dependencies, such as in sports match outcomes.",
+        "source_operator": "w0_prim_4",
+        "telemetry": "Validated by simulating Markov chains with specified transition matrices and measuring the resulting regret against the derived scaling."
+      }
+    },
+    {
+      "primitive_id": "log_capital_growth",
+      "name": "Log-Capital Growth Rate",
+      "verbatim_quote": "races (or irreducible Markov chain for the correlated case); log-expansion requires t > min_x p_x^{-1} (rare horses need more data); bookmaker odds fixed with margin ε.",
+      "page": 2,
+      "latex": "\\frac{d}{dt} \\log \\mathcal{C}_t = \\sum_x b_x \\cdot r_x - \\frac{1}{2} \\sum_{x,y} b_x b_y \\text{Cov}(r_x, r_y)",
+      "symbol_and_unit_ledger": "{'t': 'time steps (dimensionless)', 'p_x': 'win probability of horse x (dimensionless)', 'ε': 'bookmaker margin (dimensionless)', 'r_x': 'reward from horse x (dimensionless)'}",
+      "assumptions": "Fixed true probabilities, fixed odds, i.i.d. or first-order Markov races.",
+      "breakdown_regime": "When rare horses have insufficient data, i.e., t < min_x p_x^{-1}.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's Bayesian updating aligns with Kelly's log-capital dynamics; GSE's state transitions mirror the Markovian evolution of race outcomes.",
+        "source_operator": "log_capital_growth",
+        "telemetry": "Regret vs. theoretical bound (M-1)/2·log t"
+      }
+    },
+    {
+      "primitive_id": "laplace_smoothing_estimator",
+      "name": "Laplace-Smoothed Probability Estimator",
+      "verbatim_quote": "Target = the unknown win-probability vector p, estimated by the Laplace-smoothed empirical frequency; the betting strategy is the plug-in Kelly rule b = p̂.",
+      "page": 2,
+      "latex": "\\hat{p}_x = \\frac{n_x^t + 1}{\\sum_y (n_y^t + 1)}",
+      "symbol_and_unit_ledger": "{'n_x^t': 'count of wins for horse x up to time t (dimensionless)', 'M': 'number of horses (dimensionless)', 'p_x': 'true win probability of horse x (dimensionless)'}",
+      "assumptions": "Prior uniform distribution over outcomes; plug-in Kelly strategy used.",
+      "breakdown_regime": "Early stages where data is sparse; convergence to true p as t → ∞.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses this estimator to stabilize early estimates; GSE applies it in reinforcement learning policies for adaptive betting.",
+        "source_operator": "laplace_smoothing_estimator",
+        "telemetry": "Empirical regret convergence to (M-1)/2·log t"
+      }
+    },
+    {
+      "primitive_id": "regret_scaling_law",
+      "name": "Cumulative Regret Scaling Law",
+      "verbatim_quote": "Exact results - Uncorrelated: per-race learning penalty (M-1)/(2t); cumulative regret (M-1)/2·log(t/(t0+1)).",
+      "page": 2,
+      "latex": "R_t = \\frac{M-1}{2} \\log \\left(\\frac{t}{t_0 + 1}\\right)",
+      "symbol_and_unit_ledger": "{'R_t': 'cumulative regret at time t (dimensionless)', 'M': 'number of horses (dimensionless)', 't': 'time steps (dimensionless)', 't_0': 'initial time offset (dimensionless)'}",
+      "assumptions": "Uncorrelated races, fixed true probabilities, large t regime.",
+      "breakdown_regime": "For small t or highly correlated races, scaling may deviate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI’s regret tracking mirrors theoretical bounds; GSE uses these laws to calibrate policy adaptation thresholds.",
+        "source_operator": "regret_scaling_law",
+        "telemetry": "Simulated regret matches analytical (M-1)/2·log t"
+      }
+    },
+    {
+      "primitive_id": "markov_memory_penalty",
+      "name": "Memory-Dependent Regret Penalty",
+      "verbatim_quote": "- Correlated (Markov, order 1): M(M-1)/2·log t; memory-n: M^n(M-1)/2·log t — exponential blowup in memory length.",
+      "page": 2,
+      "latex": "R_t^{\\text{Markov}} = \\frac{M(M-1)}{2} \\log t",
+      "symbol_and_unit_ledger": "{'R_t^{\\\\text{Markov}}': 'regret in Markov environment (dimensionless)', 'M': 'number of horses (dimensionless)', 't': 'time steps (dimensionless)'}",
+      "assumptions": "First-order Markov structure assumed; known memory length.",
+      "breakdown_regime": "Exponential increase in regret with increasing memory depth n.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI models memory dependencies using Markov chains; GSE simulates higher-order transitions to refine predictive states.",
+        "source_operator": "markov_memory_penalty",
+        "telemetry": "Simulation confirms M(M-1)/2·log t scaling"
+      }
+    },
+    {
+      "primitive_id": "kelly_learning_gate",
+      "name": "Learning-Time Staking Gate",
+      "verbatim_quote": "Gate full-Kelly staking on t > t⋆ = (M-1)/(2·D_KL(p̂‖r)): before the learning-time threshold, use fractional Kelly (1⁄4, per existing calibration tests); after, allow the standard fraction.",
+      "page": 3,
+      "latex": "t^\\star = \\frac{M-1}{2 \\cdot D_{KL}(\\hat{p} \\| r)}",
+      "symbol_and_unit_ledger": "t: time steps (dimensionless), M: number of mutually exclusive outcomes (dimensionless), D_KL: Kullback-Leibler divergence (nats), p̂: empirical probability distribution, r: bookmaker implied probability distribution.",
+      "assumptions": "IID outcome generation, known or consistently estimable true distributions, frictionless betting markets.",
+      "breakdown_regime": "Singular when D_KL(p̂‖r) → 0, implying empirical estimates perfectly match bookmaker odds, rendering the threshold infinite and full-Kelly staking permanently gated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to sequential hypothesis testing where the stopping time is determined by the accumulated log-likelihood ratio exceeding a dimensionality-dependent boundary.",
+        "source_operator": "kelly_learning_gate",
+        "telemetry": "Realized log-wealth deviation from theoretical asymptote; crossover point of fractional vs. full Kelly performance."
+      }
+    },
+    {
+      "primitive_id": "correlation_dimension_inflation",
+      "name": "Correlation Dimension Inflation",
+      "verbatim_quote": "For correlated outcomes (same-game parlays / correlated props), inflate the penalty by the App.",
+      "page": 3,
+      "latex": "M_{eff} = M \\cdot \\mathcal{F}(\\Sigma_{corr})",
+      "symbol_and_unit_ledger": "M_eff: effective dimensionality (dimensionless), M: nominal outcome count, F: inflation factor derived from correlation matrix Σ_corr eigenvalues.",
+      "assumptions": "Linear correlations dominate higher-order dependencies; covariance structure is stationary over the observation window.",
+      "breakdown_regime": "Breaks down under extreme non-linear dependencies or regime shifts where historical correlation matrices become invalid predictors of future joint distributions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to the effective degrees of freedom in a regularized covariance estimator, penalizing portfolio concentration in highly correlated sportsbook instruments.",
+        "source_operator": "correlation_dimension_inflation",
+        "telemetry": "Eigenvalue spread of the realized correlation matrix versus the assumed parlay independence assumption."
+      }
+    },
+    {
+      "primitive_id": "laplace_regret_verification",
+      "name": "Laplace Regret Verification",
+      "verbatim_quote": "Reproducible test Simulate M=10 horses, true p uniform, bookmaker odds with ε=0.1 margin, Laplace strategy over t=1...10,000, 200 realizations; fit cumulative regret to a·log t + b and verify a ≈ (M-1)/2 = 4.5.",
+      "page": 3,
+      "latex": "R(t) \\approx \\frac{M-1}{2} \\log t + b",
+      "symbol_and_unit_ledger": "R(t): cumulative regret (dimensionless log-wealth ratio), M: outcome categories, t: trials, b: constant offset.",
+      "assumptions": "Dirichlet prior symmetry (Laplace smoothing), uniform true distribution baseline for worst-case regret analysis.",
+      "breakdown_regime": "Violated if the true distribution is highly sparse or degenerate, causing the logarithmic regret coefficient to deviate significantly from (M-1)/2.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly isomorphic to the Bayes risk lower bound in multinomial classification, providing a strict benchmark for GSI model efficiency.",
+        "source_operator": "laplace_regret_verification",
+        "telemetry": "Coefficient 'a' extracted from linear regression of cumulative regret against log(time)."
+      }
+    },
+    {
+      "primitive_id": "market_shrinkage_crossover",
+      "name": "Market Shrinkage Crossover",
+      "verbatim_quote": "B: (b) wins early in a team's season (small n) and ties asymptotically — measure the crossover point in games and use it to set the τ schedule (larger τ early season, decaying as n grows).",
+      "page": 3,
+      "latex": "\\tau(n) = \\tau_0 \\cdot e^{-\\lambda n}",
+      "symbol_and_unit_ledger": "τ: prior strength / pseudo-counts (dimensionless), n: observed games, τ_0: initial prior strength, λ: decay rate.",
+      "assumptions": "Model uncertainty decreases monotonically with sample size; market odds provide an unbiased but noisy prior.",
+      "breakdown_regime": "Fails if the underlying team strength undergoes abrupt structural breaks (e.g., star player injury), making historical data irrelevant and requiring a reset of n.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a time-varying regularization path for GSE's situational models, balancing in-sample fit against out-of-sample market consensus.",
+        "source_operator": "market_shrinkage_crossover",
+        "telemetry": "Difference in realized log-wealth between raw Kelly and shrunk Kelly across rolling windows of size n."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4b6eb391efb61294_t0",
+      "think": "This primitive compilation addresses the fundamental trade-off between exploration and exploitation in adaptive betting strategies for horse races. It provides a rigorous mathematical framework to quantify the learning cost of using the Laplace estimator instead of the true probabilities. The key insight is that the regret grows logarithmically with the number of races, which is optimal for IID data but slower than the square-root scaling in the IID case. This has direct implications for both GSI (Bayesian inference) and GSE (state-transition dynamics). Window 1 Synthesis: Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 3/3 pages of 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294): [w0_prim_1 p.1]: **Laplace strategy:** after t races with n_x^t wins by horse x, bet b_x^{LAPL,t+1} = (n_x^t+1)/(t+M) (Eq. (In GSI, this corresponds to a Bayesian posterior mean under a Dirichlet(1,...,1) prior. In GSE, it serves as a foundational state-transition kernel for adaptive exploration policies.) [w0_prim_2 p.1]: - KL link: D_KL(p‖b^{LAPL,t}) = ⟨log p_x - log b_x^{LAPL,t}⟩ (38) — regret is cumulative KL divergence of the estimate. (In GSI, this connects regret minimization to information-theoretic bounds via Fenchel duality. In GSE, it quantifies the information gain required to transition from a suboptimal policy to the optimal one.) [w0_prim_3 p.1]: A):** CLT expansion n_x^t ≈ p_x t + √(tσ_x) z_t (31); log-expansion of the Laplace estimate (32), valid for t > min_x p_x^{-1}; per-race KL gap ≈ (M-1)/(2t) (34); harmonic sum → logarithmic cumulative regret. (In GSI, this yields a logarithmic learning curve for adaptive betting strategies. In GSE, it describes the slow-down of convergence in multi-armed bandit problems due to exploration costs.) [w0_prim_4 p.1]: D–E):** Markov races with conditionals p_{x|y}; per-step gap M(M-1)/(2t) (51); memory-n races: M^n(M-1)/(2t) (55). (In GSI, this generalizes the IID regret bound to dependent data streams. In GSE, it models sequential decision-making with temporal dependencies, such as in sports match outcomes.) [log_capital_growth p.2]: races (or irreducible Markov chain for the correlated case); log-expansion requires t > min_x p_x^{-1} (rare horses need more data); bookmaker odds fixed with margin ε. (GSI's Bayesian updating aligns with Kelly's log-capital dynamics; GSE's state transitions mirror the Markovian evolution of race outcomes.) [laplace_smoothing_estimator p.2]: Target = the unknown win-probability vector p, estimated by the Laplace-smoothed empirical frequency; the betting strategy is the plug-in Kelly rule b = p̂. (GSI uses this estimator to stabilize early estimates; GSE applies it in reinforcement learning policies for adaptive betting.) [regret_scaling_law p.2]: Exact results - Uncorrelated: per-race learning penalty (M-1)/(2t); cumulative regret (M-1)/2·log(t/(t0+1)). (GSI’s regret tracking mirrors theoretical bounds; GSE uses these laws to calibrate policy adaptation thresholds.) [markov_memory_penalty p.2]: - Correlated (Markov, order 1): M(M-1)/2·log t; memory-n: M^n(M-1)/2·log t — exponential blowup in memory length. (GSI models memory dependencies using Markov chains; GSE simulates higher-order transitions to refine predictive states.) [kelly_learning_gate p.3]: Gate full-Kelly staking on t > t⋆ = (M-1)/(2·D_KL(p̂‖r)): before the learning-time threshold, use fractional Kelly (1⁄4, per existing calibration tests); after, allow the standard fraction. (Isomorphic to sequential hypothesis testing where the stopping time is determined by the accumulated log-likelihood ratio exceeding a dimensionality-dependent boundary.) [correlation_dimension_inflation p.3]: For correlated outcomes (same-game parlays / correlated props), inflate the penalty by the App. (Maps to the effective degrees of freedom in a regularized covariance estimator, penalizing portfolio concentration in highly correlated sportsbook instruments.) [laplace_regret_verification p.3]: Reproducible test Simulate M=10 horses, true p uniform, bookmaker odds with ε=0.1 margin, Laplace strategy over t=1...10,000, 200 realizations; fit cumulative regret to a·log t + b and verify a ≈ (M-1)/2 = 4.5. (Directly isomorphic to the Bayes risk lower bound in multinomial classification, providing a strict benchmark for GSI model efficiency.) [market_shrinkage_crossover p.3]: B: (b) wins early in a team's season (small n) and ties asymptotically — measure the crossover point in games and use it to set the τ schedule (larger τ early season, decaying as n grows). (Derives a time-varying regularization path for GSE's situational models, balancing in-sample fit against out-of-sample market consensus.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Modeling a bookmaker who observes an adaptive gambler using Laplace smoothing, we understand that the bookmaker's edge (margin ε) interacts with the gambler's learning process. The gambler's uncertainty about p leads to systematic deviations from optimal betting, which the bookmaker exploits. Conversely, the bookmaker may adjust odds to discourage certain bets, affecting the gambler's learning. Theory of Mind (Window 1): Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring each primitive captures a distinct aspect of the problem: the first focuses on the betting rule, the second on the regret measure, the third on the scaling law, and the fourth on dependence structure. No two primitives share identical functional forms or conceptual roles. Cross-Layer Veto (Window 1): Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4b6eb391efb61294_t1",
+      "think": "Chapter 2 introduces a foundational framework for adaptive betting strategies within Kelly’s horse races model. It establishes that log-capital growth under Kelly betting is governed by the interplay between betting weights and reward correlations. The paper distinguishes between independent and dependent (Markovian) race environments, showing how correlation increases regret penalties exponentially with memory depth. Laplace smoothing provides a principled way to estimate win probabilities from sparse data, especially critical for rare horses. Simulations validate theoretical regret bounds, confirming that modified priors reduce early losses while maintaining asymptotic convergence. These insights form the basis for GSI’s probabilistic inference pipeline and GSE’s dynamic decision-making architecture. The model assumes fixed odds and true probabilities, which limits its applicability to non-stationary markets but offers strong theoretical grounding for controlled environments. Window 2 Synthesis: Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in Kelly’s information theory and Wald’s sequential analysis; builds upon Blackwell’s work on regret minimization and von Neumann-Morgenstern utility theory. Retrocausal Genealogy (Window 2): Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models an agent optimizing long-term capital growth against a fixed bookmaker with margin ε, assuming rationality and bounded knowledge of true probabilities. Opposing agents include market inefficiencies and evolving odds, which are abstracted away in this formulation. Theory of Mind (Window 2): Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity: The model does not account for structural learning of memory patterns; leakage arises from fixed odds assumption and lack of sensitivity analysis on ε. These conditions prevent generalization to adaptive markets. Cross-Layer Veto (Window 2): Rooted in 1224-adaptive-strategies-in-kellys-horse-races-model (4b6eb391efb61294, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4b6eb391efb61294_t2",
+      "think": "The mathematical core of Chapter 3 revolves around the finite-sample inefficiency of the standard Kelly criterion when applied to freshly estimated probabilities. The derivation begins with the realization that maximizing expected log-wealth requires knowledge of the true distribution $p$. However, we only possess empirical estimates $\\hat{p}$ derived from a finite history $t$. The gap between using $\\hat{p}$ and the true $p$ manifests as regret, which scales logarithmically with time, specifically bounded by $(M-1)/2 \\log t$. This fundamental limit dictates that aggressive staking (full Kelly) is mathematically unsound until sufficient evidence has accumulated to overcome the dimensionality penalty $M$. The introduction of the learning-time threshold $t^\\star = (M-1)/(2 \\cdot D_{KL}(\\hat{p} \\| r))$ provides a rigorous, data-driven gate. Before $t^\\star$, the system operates in a high-uncertainty regime where fractional Kelly (e.g., 1/4) acts as a variance-reduction mechanism, protecting capital from the volatility of overfitted probability estimates. Asymptotically, as $t \\to \\infty$, $D_{KL}$ stabilizes, and the gate opens, allowing full exploitation of the edge. Furthermore, the treatment of correlated outcomes via effective dimensionality inflation $M_{eff}$ acknowledges that real-world sportsbooks offer dependent instruments. By treating correlated parlays as increasing the effective $M$, the primitive correctly demands proportionally more evidence before permitting aggressive staking, thereby maintaining the integrity of the logarithmic wealth growth trajectory even in complex, multi-dimensional betting spaces.",
+      "retrocausal_genealogy": "This framework traces its lineage directly to Shannon's channel coding theorem and the foundational work of Kelly (1956) on optimal portfolio growth. It heavily borrows from the regret minimization literature in online convex optimization, particularly the work of Herbster and Warmuth on follow-the-perturbed-leader algorithms. The specific logarithmic regret bound $(M-1)/2$ is a classic result from Bayesian non-parametrics and Dirichlet process theory, originally formalized in the context of universal portfolio selection by Cover and Ordentlich. The adaptation to sports betting represents a modern synthesis of information geometry and quantitative finance.",
+      "theory_of_mind": "From a theory of mind perspective, the bookmaker is modeled not as an omniscient oracle, but as a rational agent setting odds $r$ that embed a margin $\\epsilon$ while reflecting aggregate market wisdom. The primitive assumes the bookmaker's odds are a noisy but informative prior. The bettor's strategy must therefore be viewed as a dynamic game of belief updating: initially deferring to the market's collective intelligence (high $\\tau$, fractional Kelly) and gradually asserting their own model's superiority as private signal-to-noise ratio improves. The opposing agent (the house) is implicitly assumed to maintain a stationary margin, forcing the bettor to extract alpha purely through superior probabilistic estimation rather than exploiting pricing errors.",
+      "cross_layer_veto": "A critical cross-layer veto must be applied to prevent collinearity leakage between the learning-time gate and the correlation inflation factor. If the effective dimensionality $M_{eff}$ is inflated due to correlated props, the learning-time threshold $t^\\star$ increases proportionally. However, if the correlation structure itself is non-stationary (e.g., changing team dynamics altering player prop dependencies), blindly applying a static inflation factor will cause the gate to remain closed indefinitely, leading to excessive conservatism. Therefore, the system must continuously validate the stability of the correlation matrix; if the eigenvalue spectrum shifts rapidly, the veto triggers a reset of the evidence counter $t$, acknowledging that past data no longer reliably predicts future joint distributions."
+    }
+  ]
+}

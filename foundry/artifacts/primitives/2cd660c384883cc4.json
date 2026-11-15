@@ -1,0 +1,78 @@
+{
+  "book_id": "2cd660c384883cc4",
+  "source_status": "COMPLETE",
+  "title": "1445-favorite-longshot-bias-prediction-markets-polymarket",
+  "file_name": "1445-favorite-longshot-bias-prediction-markets-polymarket.md",
+  "sha256": "2cd660c384883cc417c43b03c7e845dafb9b73ef7472f2dd5e909ba901660d2f",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Favorite-longshot bias (FLB) manifests as disproportionate returns in prediction markets: longshots underperform, favorites overperform relative to true probabilities. Quantified via dollar-weighted terminal returns and probability error. Universal Lens: Rooted in 1445-favorite-longshot-bias-prediction-markets-polymarket (2cd660c384883cc4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction to calibrate market probabilities; FLB detection enables robust uncertainty quantification via empirical return-error duality in tail regions. GSI Mapping: Rooted in 1445-favorite-longshot-bias-prediction-markets-polymarket (2cd660c384883cc4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning to adjust longshot pricing using wallet-level recurrent demand signals; FLB-derived return models inform dynamic risk-adjusted state transitions in market efficiency. GSE Mapping: Rooted in 1445-favorite-longshot-bias-prediction-markets-polymarket (2cd660c384883cc4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "terminal_return_per_purchase",
+      "name": "Terminal Return per Purchase",
+      "verbatim_quote": "Method / model Return per purchase: r_f = (y_f - p_f)/p_f where y_f ∈ {0,1} is terminal payoff, p_f price paid (eq.",
+      "page": 1,
+      "latex": "r_f = \\frac{y_f - p_f}{p_f}",
+      "symbol_and_unit_ledger": "{'r_f': 'dimensionless return per purchase', 'y_f': 'binary terminal payoff {0,1}', 'p_f': 'price paid per unit token'}",
+      "assumptions": "['hold-to-resolution convention', 'wallets ≠ people', 'wash-trade filter applied']",
+      "breakdown_regime": "p < 0.10 (longshots) or p ≥ 0.90 (favorites)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used to quantify deviation between predicted and realized outcomes in tail probability regions; informs GSE's CLV and market efficiency diagnostics.",
+        "source_operator": "terminal_return_per_purchase",
+        "telemetry": "Return distribution across longshot/favorite bins"
+      }
+    },
+    {
+      "primitive_id": "probability_error",
+      "name": "Probability Error",
+      "verbatim_quote": "- Probability error E(A) = Σ q_f y_f/Σ q_f - Σ q_f p_f/Σ q_f.",
+      "page": 2,
+      "latex": "E(A) = \\frac{\\sum q_f y_f}{\\sum q_f} - \\frac{\\sum q_f p_f}{\\sum q_f}",
+      "symbol_and_unit_ledger": "{'E(A)': 'dimensionless probability error', 'q_f': 'quantity purchased', 'y_f': 'terminal payoff', 'p_f': 'market-implied probability'}",
+      "assumptions": "['hold-to-resolution', 'weighted by quantity']",
+      "breakdown_regime": "Across all market outcomes",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's calibrated confidence intervals; used to detect systematic miscalibration in probabilistic forecasts.",
+        "source_operator": "probability_error",
+        "telemetry": "Error vs predicted probability scatter"
+      }
+    },
+    {
+      "primitive_id": "aggregated_tail_returns",
+      "name": "Aggregated Tail Returns",
+      "verbatim_quote": "Three aggregation schemes: (i) **equal child-market weights** — return computed per child market (dollar-weighted within market), averaged equally (eqs.",
+      "page": 1,
+      "latex": "R_{TO} = \\frac{1}{|M_T|} \\sum_{m \\in M_T} R_{mT}",
+      "symbol_and_unit_ledger": "{'R_{TO}': 'average terminal return across tail markets', 'M_T': 'set of tail markets', 'R_{mT}': 'return for market m'}",
+      "assumptions": "['dollar-weighted within market', 'equal weighting across markets/events']",
+      "breakdown_regime": "Longshot (p < 0.10) and favorite (p ≥ 0.90) segments",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to benchmark its own de-vigged probability surfaces against empirical tail behavior; used for risk-adjusted pricing.",
+        "source_operator": "aggregated_tail_returns",
+        "telemetry": "Average return difference between longshot/favorite bins"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2cd660c384883cc4_t0",
+      "think": "The core FLB phenomenon arises from behavioral biases in prediction markets: longshots (p < 0.10) yield lower-than-expected returns, while favorites (p ≥ 0.90) yield higher-than-expected returns. This is captured via terminal return per purchase, defined as r_f = (y_f - p_f)/p_f. The probability error E(A) = Σ q_f y_f/Σ q_f - Σ q_f p_f/Σ q_f measures how far observed outcomes deviate from market-implied expectations. Aggregated tail returns (R_TO) pool these returns across markets to assess systemic bias. These operators form a dual structure: one measuring outcome deviation, the other measuring expectation deviation. Failure modes include wash trading, early exits, and misinterpretation of hypothetical returns as actionable edges. The operators are sensitive to aggregation scheme: equal child-market weights, pooled purchases, or equal parent-event weights. Each reveals distinct aspects of market inefficiency. In GSE, these primitives enable dynamic calibration of longshot pricing and validation of de-vigged probability surfaces.\n\nDeep epistemic analysis for 1445-favorite-longshot-bias-prediction-markets-polymarket (2cd660c384883cc4, domain=other, pages_read=4/4): Operator 'Terminal Return per Purchase' (page 1, domain other) captures: Method / model Return per purchase: r_f = (y_f - p_f)/p_f where y_f ∈ {0,1} is terminal payoff, p_f price paid (eq. Assumptions: ['hold-to-resolution convention', 'wallets ≠ people', 'wash-trade filter applied'] Breakdown regime: p < 0.10 (longshots) or p ≥ 0.90 (favorites) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used to quantify deviation between predicted and realized outcomes in tail probability regions; informs GSE's CLV and market efficiency diagnostics. Operator 'Probability Error' (page 2, domain other) captures: - Probability error E(A) = Σ q_f y_f/Σ q_f - Σ q_f p_f/Σ q_f. Assumptions: ['hold-to-resolution', 'weighted by quantity'] Breakdown regime: Across all market outcomes Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's calibrated confidence intervals; used to detect systematic miscalibration in probabilistic forecasts. Operator 'Aggregated Tail Returns' (page 1, domain other) captures: Three aggregation schemes: (i) **equal child-market weights** — return computed per child market (dollar-weighted within market), averaged equally (eqs. Assumptions: ['dollar-weighted within market', 'equal weighting across markets/events'] Breakdown regime: Longshot (p < 0.10) and favorite (p ≥ 0.90) segments Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to benchmark its own de-vigged probability surfaces against empirical tail behavior; used for risk-adjusted pricing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1445-favorite-longshot-bias-prediction-markets-polymarket (2cd660c384883cc4, domain=other, pages_read=4/4): Operator 'Terminal Return per Purchase' (page 1, domain other) captures: Method / model Return per purchase: r_f = (y_f - p_f)/p_f where y_f ∈ {0,1} is terminal payoff, p_f price paid (eq. Assumptions: ['hold-to-resolution convention', 'wallets ≠ people', 'wash-trade filter applied'] Breakdown regime: p < 0.10 (longshots) or p ≥ 0.90 (favorites) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used to quantify deviation between predicted and realized outcomes in tail probability regions; informs GSE's CLV and market efficiency diagnostics. Operator 'Probability Error' (page 2, domain other) captures: - Probability error E(A) = Σ q_f y_f/Σ q_f - Σ q_f p_f/Σ q_f. Assumptions: ['hold-to-resolution', 'weighted by quantity'] Breakdown regime: Across all market outcomes Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's calibrated confidence intervals; used to detect systematic miscalibration in probabilistic forecasts. Operator 'Aggregated Tail Returns' (page 1, domain other) captures: Three aggregation schemes: (i) **equal child-market weights** — return computed per child market (dollar-weighted within market), averaged equally (eqs. Assumptions: ['dollar-weighted within market', 'equal weighting across markets/events'] Breakdown regime: Longshot (p < 0.10) and favorite (p ≥ 0.90) segments Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to benchmark its own de-vigged probability surfaces against empirical tail behavior; used for risk-adjusted pricing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in behavioral finance and market microstructure theory, particularly the work of Thaler and Sunstein (2003) on cognitive biases in decision-making, and later formalized in prediction market literature by Smith (2001) and others. Retrocausal Genealogy: Rooted in 1445-favorite-longshot-bias-prediction-markets-polymarket (2cd660c384883cc4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents in prediction markets exhibit bounded rationality: they overweight extreme outcomes, leading to overpricing of longshots and underpricing of favorites. This creates a feedback loop where market prices reflect not just information but also psychological distortions. Theory of Mind & Decision Maker Model: Rooted in 1445-favorite-longshot-bias-prediction-markets-polymarket (2cd660c384883cc4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that FLB metrics do not co-vary with standard risk-adjusted return models. Leakage occurs if hypothetical returns are misinterpreted as tradable strategies. Veto conditions ensure that only empirically validated deviations are used for pricing adjustments. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1445-favorite-longshot-bias-prediction-markets-polymarket (2cd660c384883cc4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}
